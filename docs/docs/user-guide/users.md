@@ -1,72 +1,72 @@
-# Users
+# 用户
 
-To manage users, log in as an **administrator** and navigate to the **Users <i class="fas fa-fw fa-users"></i>** tab.
+要管理用户，请以 **管理员** 身份登录并导航到 **用户 <i class="fas fa-fw fa-users"></i>** 选项卡。
 
-## Adding a user
+## 添加用户
 
-1. Click the **<i class="fas fa-fw fa-plus-circle"></i> Add User** button.
-2. Fill out the fields.
-3. Click the **<i class="fas fa-fw fa-save"></i> Save** button in the top right.
+1. 单击 **<i class="fas fa-fw fa-plus-circle"></i> 添加用户** 按钮。
+2. 填写字段。
+3. 单击右上角的 **<i class="fas fa-fw fa-save"></i> 保存** 按钮。
 
-## Impersonating a user
+## 冒充用户
 
-1. Hover over the user you want to login as.
-2. Click the <i class="fas fa-fw fa-sign-in-alt"><span class="visually-hidden">login as</span></i> icon on the right of the user’s name and email.
-3. You are now logged in as the user. As such, any action you perform will be done as this user.
+1. 将鼠标悬停在您要登录的用户上。
+2. 单击用户名右侧的<i class="fas fa-fw fa-sign-in-alt"><span class="visually-hidden">登录身份</span></i>图标 和电子邮件。
+3. 您现在已作为用户登录。 因此，您执行的任何操作都将以该用户身份完成。
 
-## Editing a user
+## 编辑用户
 
-The settings specified below are only available to administrators. For the regular settings, you can refer to the [Account Management](../user-guide/account) documentation.
+下面指定的设置仅适用于管理员。 常规设置可以参考【账户管理】(../user-guide/account)文档。
 
-To edit a user you can either impersonate them and click the <i class="fas fa-lg fa-fw fa-user-circle"><span class="visually-hidden">user</span></i> icon in the top right, or follow these steps:
+要编辑用户，您可以模拟他们并点击<i class="fas fa-lg fa-fw fa-user-circle"><span class="visually-hidden">用户</span></i> 右上角的图标，或按照以下步骤操作：
 
-1. Hover over the user you want to edit.
-2. Click the <i class="fas fa-fw fa-pencil-alt"><span class="visually-hidden">edit</span></i> icon on the right of the user’s name and email.
+1. 将鼠标悬停在要编辑的用户上。
+2. 单击用户姓名和电子邮件右侧的<i class="fas fa-fw fa-pencil-alt"><span class="visually-hidden">编辑</span></i>图标。
 
-## Suspending a user
+## 暂停用户
 
-1. Hover over the user you want to suspend.
-2. Click the <i class="fas fa-fw fa-pause"><span class="visually-hidden">suspend</span></i> icon on the right of the user’s name and email.
+1. 将鼠标悬停在要暂停的用户上。
+2. 单击用户姓名和电子邮件右侧的<i class="fas fa-fw fa-pause"><span class="visually-hidden">暂停</span></i>图标。
 
-## Deleting a user
+## 删除用户
 
-1. Hover over the user you want to delete.
-2. Click the <i class="fas fa-fw fa-trash"><span class="visually-hidden">delete</span></i> icon on the right of the user’s name and email.
+1. 将鼠标悬停在要删除的用户上。
+2. 单击用户姓名和电子邮件右侧的<i class="fas fa-fw fa-trash"><span class="visually-hidden">删除</span></i>图标。
 
-## User configuration
+## 用户配置
 
-### Disabling control panel access
+### 禁用控制面板访问
 
-To remove Control Panel access from a user, check the box labelled: **Do not allow user to log in to Control Panel**.
+要删除用户的控制面板访问权限，请选中标记为：**不允许用户登录控制面板**的框。
 
-### Changing role
+### 改变角色
 
-To change a user’s role change the **Role** value from the dropdown.
+要更改用户的角色，请更改下拉列表中的 **角色** 值。
 
-::: warning
-Assigning the **Administrator** role to a user will enable them to see and edit other users. They will not be able to edit the **admin** user, but will be able to see them, unless disabled in the server settings.
+::: 警告
+将 **管理员** 角色分配给用户将使他们能够查看和编辑其他用户。 他们将无法编辑 **admin** 用户，但能够看到它们，除非在服务器设置中禁用。
 :::
 
-### Changing package
+### 更换套餐
 
-To change a user’s package, change the **Package** value from the dropdown.
+要更改用户的包，请更改下拉列表中的 **Package** 值。
 
-### Changing SSH access
+### 更改 SSH 访问
 
-To change a user’s SSH access, click the **Advanced Options** button, then change the **SSH Access** value from the dropdown.
+要更改用户的 SSH 访问权限，请单击 **高级选项** 按钮，然后从下拉列表中更改 **SSH 访问权限** 值。
 
-::: warning
-Using the **nologin** shell will _not_ disable SFTP access.
+::: 警告
+使用 **nologin** shell 不会禁用 SFTP 访问。
 :::
 
-### Changing PHP CLI version
+### 更改 PHP CLI 版本
 
-To change a user’s PHP CLI version, click the **Advanced Options** button, then change the **PHP CLI Version** value from the dropdown.
+要更改用户的 PHP CLI 版本，请单击 **高级选项** 按钮，然后从下拉列表中更改 **PHP CLI 版本** 值。
 
-### Changing default name servers
+### 更改默认名称服务器
 
-To change a user’s default name servers, click the **Advanced Options** button, then edit the **Default Name Servers** fields.
+要更改用户的默认名称服务器，请单击 **高级选项** 按钮，然后编辑 **默认名称服务器** 字段。
 
-::: warning
-At least 2 default name servers are necessary. This is to provide redundancy, in case one of them fails to answer. In fact, it is suggested that both name servers be on separate servers, for better resilience. If you are the system administrator and would like to set this up, refer to our [DNS Cluster documentation](../server-administration/dns#dns-cluster-setup).
+::: 警告
+至少需要 2 个默认名称服务器。 这是为了提供冗余，以防其中一个无法回答。 事实上，建议两个名称服务器位于不同的服务器上，以获得更好的弹性。 如果您是系统管理员并且想要进行设置，请参阅我们的 [DNS 集群文档](../server-administration/dns#dns-cluster-setup)。
 :::

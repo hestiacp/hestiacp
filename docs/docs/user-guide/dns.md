@@ -1,101 +1,101 @@
 # DNS
 
-To manage your DNS zones and records, navigate to the **DNS <i class="fas fa-fw fa-atlas"></i>** tab.
+要管理您的 DNS 区域和记录，请导航至 **DNS <i class="fas fa-fw fa-atlas"></i>** 选项卡。
 
-## Adding a DNS zone
+## 添加 DNS 区域
 
-1. Click the **<i class="fas fa-fw fa-plus-circle"></i> Add DNS Zone** button.
-2. Enter the domain name in the **Domain** field.
-   - Choose the appropriate template for the zone.
-   - If the domain requires different name servers, change them in the **Advanced Options** section.
-3. Click the **<i class="fas fa-fw fa-save"></i> Save** button in the top right.
+1. 单击 **<i class="fas fa-fw fa-plus-circle"></i> 添加 DNS 区域** 按钮。
+2. 在**域**字段中输入域名。
+    - 为区域选择适当的模板。
+    - 如果域需要不同的名称服务器，请在 **高级选项** 部分中更改它们。
+3. 单击右上角的 **<i class="fas fa-fw fa-save"></i> 保存** 按钮。
 
-## Editing a DNS zone
+## 编辑 DNS 区域
 
-1. Hover over the zone you want to edit.
-2. Click the <i class="fas fa-fw fa-pencil-alt"><span class="visually-hidden">edit</span></i> icon on the right of the zone’s domain.
-3. Make the desired changes.
-4. Click the **<i class="fas fa-fw fa-save"></i> Save** button in the top right.
+1. 将鼠标悬停在要编辑的区域上。
+2. 单击区域域右侧的<i class="fas fa-fw fa-pencil-alt"><span class="visually-hidden">编辑</span></i>图标。
+3. 进行所需的更改。
+4. 单击右上角的 **<i class="fas fa-fw fa-save"></i> 保存** 按钮。
 
-## Viewing DNSSEC public keys
+## 查看 DNSSEC 公钥
 
-1. Hover over the zone whose DNSSEC keys you want to see.
-2. Click the <i class="fas fa-fw fa-key"><span class="visually-hidden">DNSSEC</span></i> icon on the right of the zone’s domain.
+1. 将鼠标悬停在您要查看其 DNSSEC 密钥的区域上。
+2. 单击区域域右侧的 <i class="fas fa-fw fa-key"><span class="visually-hidden">DNSSEC</span></i> 图标。
 
-## Suspending a DNS zone
+## 暂停 DNS 区域
 
-1. Hover over the zone you want to suspend.
-2. Click the <i class="fas fa-fw fa-pause"><span class="visually-hidden">suspend</span></i> icon on the right of the zone’s domain.
-3. To unsuspend it, click the <i class="fas fa-fw fa-play"><span class="visually-hidden">unsuspend</span></i> icon on the right of the zone’s domain.
+1. 将鼠标悬停在要暂停的区域上。
+2. 单击区域域右侧的<i class="fas fa-fw fa-pause"><span class="visually-hidden">暂停</span></i>图标。
+3. 要取消暂停，请单击区域域右侧的<i class="fas fa-fw fa-play"><span class="visually-hidden">取消暂停</span></i>图标。
 
-## Deleting a DNS zone
+## 删除 DNS 区域
 
-1. Hover over the zone you want to delete.
-2. Click the <i class="fas fa-fw fa-trash"><span class="visually-hidden">delete</span></i> icon on the right of the zone’s domain.
+1. 将鼠标悬停在要删除的区域上。
+2. 单击区域域右侧的<i class="fas fa-fw fa-trash"><span class="visually-hidden">删除</span></i>图标。
 
-## DNS zone configuration
+## DNS 区域配置
 
-### IP address
+### IP地址
 
-IP address that should be used for the root domain.
+应用于根域的 IP 地址。
 
-### Template
+### 模板
 
-- **default**: Standard DNS template. Suitable for most usecases.
-- **default-nomail**: Standard DNS template. Suitable for most usecases when you don’t want to host mail on Hestia.
-- **gmail**: When your email provider is Google Workspace.
-- **office365**: When your email provider is Microsoft 365 (Exchange).
-- **zoho**: When your email provider is Zoho.
-- **child-ns**: When you are going to use the domain as a name server.
+- **默认**：标准 DNS 模板。 适用于大多数用例。
+- **default-nomail**：标准 DNS 模板。 当您不想在 Hestia 上托管邮件时，适合大多数用例。
+- **gmail**：当您的电子邮件提供商是 Google Workspace 时。
+- **office365**：当您的电子邮件提供商是 Microsoft 365 (Exchange) 时。
+- **zoho**：当您的电子邮件提供商是 Zoho 时。
+- **child-ns**：当您打算使用域作为名称服务器时。
 
-### Expiration date
+### 截止日期
 
-This date is not used by Hestia, but can be used as a reminder.
+此日期不被 Hestia 使用，但可以用作提醒。
 
-### SOA
+### 面向服务架构
 
-A Start of Authority (SOA) record includes administrative information about your zone, as defined by the domain name system (DNS).
+授权起始点 (SOA) 记录包含有关您的区域的管理信息，如域名系统 (DNS) 所定义。
 
 ### TTL
 
-Adjust the default time-to-live. A shorter TTL means faster changes, but results in more requests to the server. If you are going to change the IP, it might be helpful to decrease it to 300 seconds (5 min).
+调整默认生存时间。 较短的 TTL 意味着更快的更改，但会导致向服务器发出更多请求。 如果您要更改 IP，将其减少到 300 秒（5 分钟）可能会有所帮助。
 
 ### DNSSEC
 
-Enable DNSSEC to improve security. However, this setting requires some changes to at your domain registrar before it is active. For more information, see the [DNS cluster](../server-administration/dns) documentation.
+启用 DNSSEC 以提高安全性。 但是，此设置需要在您的域名注册商处进行一些更改才能生效。 有关更多信息，请参阅 [DNS 集群](../server-administration/dns) 文档。
 
-## Adding a DNS record to a zone
+## 添加 DNS 记录到区域
 
-1. Click the **<i class="fas fa-fw fa-plus-circle"></i> Add Record** button.
-2. Fill out the fields.
-3. Click the **<i class="fas fa-fw fa-save"></i> Save** button in the top right.
+1. 单击 **<i class="fas fa-fw fa-plus-circle"></i> 添加记录** 按钮。
+2. 填写字段。
+3. 单击右上角的 **<i class="fas fa-fw fa-save"></i> 保存** 按钮。
 
-## Editing a DNS record
+## 编辑 DNS 记录
 
-1. Click the recordor the <i class="fas fa-fw fa-pencil-alt"><span class="visually-hidden">edit</span></i> icon that appears on hover.
-2. Make the desired changes.
-3. Click the **<i class="fas fa-fw fa-save"></i> Save** button in the top right.
+1. 单击记录器悬停时出现的<i class="fas fa-fw fa-pencil-alt"><span class="visually-hidden">编辑</span></i>图标。
+2. 进行所需的更改。
+3. 单击右上角的 **<i class="fas fa-fw fa-save"></i> 保存** 按钮。
 
-## Suspending a DNS record
+## 暂停 DNS 记录
 
-1. Hover over the record you want to suspend.
-2. Click the <i class="fas fa-fw fa-pause"><span class="visually-hidden">suspend</span></i> icon on the right of the record’s domain.
-3. To unsuspend it, click the <i class="fas fa-fw fa-play"><span class="visually-hidden">unsuspend</span></i> icon on the right of the record’s domain.
+1. 将鼠标悬停在要暂停的记录上。
+2. 单击记录域右侧的<i class="fas fa-fw fa-pause"><span class="visually-hidden">暂停</span></i>图标。
+3. 要取消暂停，请单击记录域右侧的<i class="fas fa-fw fa-play"><span class="visually-hidden">取消暂停</span></i>图标。
 
-## Deleting a DNS record
+## 删除DNS记录
 
-1. Hover over the record you want to delete.
-2. Click the <i class="fas fa-fw fa-trash"><span class="visually-hidden">delete</span></i> icon on the right of the record’s domain.
+1. 将鼠标悬停在要删除的记录上。
+2. 单击记录域右侧的<i class="fas fa-fw fa-trash"><span class="visually-hidden">删除</span></i>图标。
 
-## DNS record configuration
+## DNS记录配置
 
-### Record
+### 记录
 
-The record name. `record`.domain.tld. Use `@` for root.
+记录名称。 `记录`.domain.tld。 使用`@`作为根。
 
-### Type
+### 类型
 
-The following record types are supported:
+支持以下记录类型：
 
 - A
 - AAAA
@@ -112,14 +112,14 @@ The following record types are supported:
 - TLSA
 - TXT
 
-### IP or value
+### IP 或值
 
-IP or value of the record you want to use.
+您要使用的记录的 IP 或值。
 
-### Priority
+### 优先事项
 
-Priority of the record. Only used for MX records
+记录的优先级。 仅用于 MX 记录
 
 ### TTL
 
-Adjust the default time-to-live. A shorter TTL means faster changes, but results in more requests to the server. If you are going to change the IP, it might be helpful to decrease it to 300 seconds (5 min).
+调整默认生存时间。 较短的 TTL 意味着更快的更改，但会导致向服务器发出更多请求。 如果您要更改 IP，将其减少到 300 秒（5 分钟）可能会有所帮助。

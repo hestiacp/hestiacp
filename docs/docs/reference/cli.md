@@ -1,633 +1,625 @@
-# CLI Reference
+# CLI命令行介绍
 
-## v-acknowledge-user-notification
+::: warning 温馨提示
+自从*T爆出获取用户信息之后偶然间发现了这个服务器管理面板，由于作者对英文不友好，刚开始安装遇到了很多热心肠的人帮助。在此感谢各位。至此有了这个中文翻译站的建立。本站不提供任何数据软件包，仅支持web网站中文，如果你需要繁体中文请提交更新文件。Hestia集成开发了大量的CLI命令行，如果你是一个初学开发者建议你仔细阅读本章手册文档，（PS:高手不在本章讨论范围。）相信对你开发服务器及网页程序系统和部署其它商业性软件有不小的帮助。如你在使用中发现部分命令与描述不符，请在git修改更新或者在中文论坛发帖反馈也可。
+其他错误翻译也麻烦提交GIT更新或者发帖反馈一下！感谢你对本站的翻译支持。
+:::
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-acknowledge-user-notification)
+## 添加/修改用户权限及其它配置系列命令
 
-update user notification
+命令: v-acknowledge-user-notification
 
-**Options**: `USER` `NOTIFICATION`
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-acknowledge-user-notification)
 
-This function updates user notification.
+更新用户通知
 
-## v-add-access-key
+**选项**: `USER` `NOTIFICATION`
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-access-key)
+此功能更新用户通知。
 
-generate access key
+命令: v-add-access-key
 
-**Options**: `USER` `[PERMISSIONS]` `[COMMENT]` `[FORMAT]`
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-access-key)
 
-**Examples**:
+生成访问密钥
+
+**选项**: `USER` `[PERMISSIONS]` `[COMMENT]` `[FORMAT]`
+
+**示例**:
 
 ```bash
 v-add-access-key admin v-purge-nginx-cache,v-list-mail-accounts comment json
 ```
 
-The "PERMISSIONS" argument is optional for the admin user only.
-This function creates a key file in $HESTIA/data/access-keys/
+“PERMISSIONS”参数仅对管理员用户是可选的。
+该函数创建一个密钥文件`/HESTIA/data/access-keys/`
 
-## v-add-backup-host
+命令: v-add-backup-host
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-backup-host)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-backup-host)
 
-add backup host
+添加备份主机
 
-**Options**: `TYPE` `HOST` `USERNAME` `PASSWORD` `[PATH]` `[PORT]`
+**选项**: `TYPE` `HOST` `USERNAME` `PASSWORD` `[PATH]` `[PORT]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-add-backup-host sftp backup.acme.com admin p4$$w@Rd
 v-add-backup-host b2 bucketName keyID applicationKey
 ```
 
-Add a new remote backup location. Currently SFTP, FTP and Backblaze are supported
+添加新的远程备份位置。 目前支持 SFTP、FTP 和 Backblaze
 
-## v-add-cron-hestia-autoupdate
+命令: v-add-cron-hestia-autoupdate
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-cron-hestia-autoupdate)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-cron-hestia-autoupdate)
 
-add cron job for hestia automatic updates
+添加 cron 作业以实现 hestia 自动更新
 
-**Options**: `MODE`
+**选项**: `MODE`
 
-This function adds a cronjob for hestia automatic updates
-that can be downloaded from apt or git.
+该功能添加了一个用于 hestia 自动更新的 cronjob
+可以从 apt 或 git 下载。
 
-## v-add-cron-job
+命令: v-add-cron-job
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-cron-job)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-cron-job)
 
-add cron job
+添加计划任务
 
-**Options**: `USER` `MIN` `HOUR` `DAY` `MONTH` `WDAY` `COMMAND` `[JOB]` `[RESTART]`
+**选项**: `USER` `MIN` `HOUR` `DAY` `MONTH` `WDAY` `COMMAND` `[JOB]` `[RESTART]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-add-cron-job admin * * * * * sudo /usr/local/hestia/bin/v-backup-users
 ```
 
-This function adds a job to cron daemon. When executing commands, any output
-is mailed to user's email if parameter REPORTS is set to 'yes'.
+该函数向 cron 守护进程添加一个作业。 执行命令时，任何输出
+如果参数 REPORTS 设置为“yes”，则会邮寄到用户的电子邮件。
 
-## v-add-cron-letsencrypt-job
+命令: v-add-cron-letsencrypt-job
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-cron-letsencrypt-job)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-cron-letsencrypt-job)
 
-add cron job for Let's Encrypt certificates
+为 Let's Encrypt 证书添加 cron 作业
 
-**Options**: –
+**选项**: –
 
-This function adds a new cron job for Let's Encrypt.
+此函数为 Let's Encrypt 添加了一个新的 cron 作业。
 
-## v-add-cron-reports
+命令: v-add-cron-reports
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-cron-reports)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-cron-reports)
 
-add cron reports
+添加 cron 报告
 
-**Options**: `USER`
+**选项**: `USER`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-add-cron-reports admin
 ```
 
-This function for enabling reports on cron tasks and administrative
-notifications.
+此功能用于启用有关 cron 任务和管理的报告
+通知。
 
-## v-add-cron-restart-job
+命令: v-add-cron-restart-job
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-cron-restart-job)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-cron-restart-job)
 
-add cron reports
+添加 cron 报告
 
-**Options**: –
+**选项**: –
 
-This function for enabling restart cron tasks
+此功能用于启用重新启动 cron 任务
 
-## v-add-database
+命令: v-add-database
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-database)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-database)
 
-add database
+添加数据库
 
-**Options**: `USER` `DATABASE` `DBUSER` `DBPASS` `[TYPE]` `[HOST]` `[CHARSET]`
+**选项**: `USER` `DATABASE` `DBUSER` `DBPASS` `[TYPE]` `[HOST]` `[CHARSET]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-add-database admin wordpress_db matt qwerty123
 ```
 
-This function creates the database concatenating username and user_db.
-Supported types of databases you can get using v-list-sys-config script.
-If the host isn't stated and there are few hosts configured on the server,
-then the host will be defined by one of three algorithms. "First" will choose
-the first host in the list. "Random" will chose the host by a chance.
-"Weight" will distribute new database through hosts evenly. Algorithm and
-types of supported databases is designated in the main configuration file.
+`admin` 这是运行命令的用户或角色，`wordpress_db`这是新数据库的名称`matt` 这是新数据库的用户名。`qwerty123`这是与`matt`用户名关联的密码。
 
-## v-add-database-host
+该函数创建了连接 username 和 user_db 的数据库。您可以使用 v-list-sys-config 脚本获取支持的数据库类型。
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-database-host)
+命令: v-add-database-host
 
-add new database server
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-database-host)
 
-**Options**: `TYPE` `HOST` `DBUSER` `DBPASS` `[MAX_DB]` `[CHARSETS]` `[TEMPLATE]` `[PORT]`
+添加新的数据库服务器
 
-**Examples**:
+**选项**: `TYPE` `HOST` `DBUSER` `DBPASS` `[MAX_DB]` `[CHARSETS]` `[TEMPLATE]` `[PORT]`
+
+**示例**:
 
 ```bash
 v-add-database-host mysql localhost alice p@$$wOrd
 ```
 
-This function add new database server to the server pool. It supports local
-and remote database servers, which is useful for clusters. By adding a host
-you can set limit for number of databases on a host. Template parameter is
-used only for PostgreSQL and has an default value "template1". You can read
-more about templates in official PostgreSQL documentation.
+此函数将新的数据库服务器添加到服务器池中。 它支持本地
+和远程数据库服务器，这对于集群很有用。 通过添加主机
+您可以设置主机上数据库数量的限制。 模板参数为
+仅用于 PostgreSQL，并具有默认值“template1”。 你可以阅读
+有关模板的更多信息，请参见 PostgreSQL 官方文档。
 
-## v-add-database-temp-user
+命令: v-add-database-temp-user
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-database-temp-user)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-database-temp-user)
 
-add temp database user
+添加临时数据库用户
 
-**Options**: `USER` `DATABASE` `[TYPE]` `[HOST]` `[TTL]`
+**选项**: `USER` `DATABASE` `[TYPE]` `[HOST]` `[TTL]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-add-database-temp-user wordress wordpress_db mysql
 ```
 
-This function creates an temporary database user mysql_sso_db_XXXXXXXX and a random password
-The user has an limited validity and only granted access to the specific database
-Returns json to be read SSO Script
+该函数创建一个临时数据库用户 mysql_sso_db_XXXXXXXX 和一个随机密码
+用户的有效性有限，仅授予对特定数据库的访问权限
+返回 json 供 SSO 脚本读取
 
-## v-add-dns-domain
+命令: v-add-dns-domain
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-dns-domain)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-dns-domain)
 
-add dns domain
+添加 DNS 网站
 
-**Options**: `USER` `DOMAIN` `IP` `[NS1]` `[NS2]` `[NS3]` `[NS4]` `[NS5]` `[NS6]` `[NS7]` `[NS8]` `[RESTART]`
+**选项**: `USER` `DOMAIN` `IP` `[NS1]` `[NS2]` `[NS3]` `[NS4]` `[NS5]` `[NS6]` `[NS7]` `[NS8]` `[RESTART]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-add-dns-domain admin example.com ns1.example.com ns2.example.com '' '' '' '' '' '' yes
 ```
 
-This function adds DNS zone with records defined in the template. If the exp
-argument isn't stated, the expiration date value will be set to next year.
-The soa argument is responsible for the relevant record. By default the first
-user's NS server is used. TTL is set as common for the zone and for all of
-its records with a default value of 14400 seconds.
+此功能添加具有模板中定义的记录的 DNS 区网站。 如果不输入说明参数， 默认情况下是第一个使用用户的 NS 服务器。 TTL 设置为该区网站和所有区网站通用其记录的默认值为 14400 秒。
 
-## v-add-dns-on-web-alias
+命令: v-add-dns-on-web-alias
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-dns-on-web-alias)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-dns-on-web-alias)
 
-add dns domain or dns record after web domain alias
+在 Web 网站别名添加 dns 网站或 dns 记录
 
-**Options**: `USER` `ALIAS` `IP` `[RESTART]`
+**选项**: `USER` `ALIAS` `IP` `[RESTART]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-add-dns-on-web-alias admin www.example.com 8.8.8.8
 ```
 
-This function adds dns domain or dns record based on web domain alias.
+该功能根据Web网站别名添加dns网站或dns记录。
 
-## v-add-dns-record
+命令: v-add-dns-record
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-dns-record)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-dns-record)
 
-add dns record
+添加DNS记录
 
-**Options**: `USER` `DOMAIN` `RECORD` `TYPE` `VALUE` `[PRIORITY]` `[ID]` `[RESTART]` `[TTL]`
+**选项**: `USER` `DOMAIN` `RECORD` `TYPE` `VALUE` `[PRIORITY]` `[ID]` `[RESTART]` `[TTL]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-add-dns-record admin acme.com www A 162.227.73.112
 ```
 
-This function is used to add a new DNS record. Complex records of TXT, MX and
-SRV types can be used by a filling in the 'value' argument. This function also
-gets an ID parameter for definition of certain record identifiers or for the
-regulation of records.
+该函数用于添加新的DNS记录。 TXT、MX 等复杂记录SRV 类型可以通过填写“value”参数来使用。 这个功能还获取一个 ID 参数，用于定义某些记录标识符或记录监管。
 
-## v-add-domain
+命令: v-add-domain
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-domain)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-domain)
 
-add web/dns/mail domain
+添加 web/dns/mail 网站
 
-**Options**: `USER` `DOMAIN` `[IP]` `[RESTART]`
+**选项**: `USER` `DOMAIN` `[IP]` `[RESTART]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-add-domain admin example.com
 ```
 
-This function adds web/dns/mail domain to a server.
+此功能将 web/dns/mail 网站添加到服务器。
 
-## v-add-fastcgi-cache
+命令: v-add-fastcgi-cache
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-fastcgi-cache)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-fastcgi-cache)
 
-Enable FastCGI cache for nginx
+为 nginx 启用 FastCGI 缓存
 
-**Options**: `USER` `DOMAIN` `[DURATION]` `[RESTART]`
+**选项**: `USER` `DOMAIN` `[DURATION]` `[RESTART]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-add-fastcgi-cache user domain.tld 30m
 ```
 
-This function enables FastCGI cache for nginx
-Acceptable values for duration is time in seconds (10s) minutes (10m) or days (10d)
-Add "yes" as last parameter to restart nginx
+该函数为nginx启用FastCGI缓存可接受的持续时间值为以秒 (10s) 分钟 (10m) 或天 (10d) 为单位的时间添加“yes”作为最后一个参数以重新启动 nginx
 
-## v-add-firewall-ban
+命令: v-add-firewall-ban
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-firewall-ban)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-firewall-ban)
 
-add firewall blocking rule
+添加防火墙拦截规则
 
-**Options**: `IP` `CHAIN`
+**选项**: `IP` `CHAIN`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-add-firewall-ban 37.120.129.20 MAIL
 ```
 
-This function adds new blocking rule to system firewall
+该功能为系统防火墙添加新的拦截规则
 
-## v-add-firewall-chain
+命令: v-add-firewall-chain
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-firewall-chain)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-firewall-chain)
 
-add firewall chain
+添加防火墙规则
 
-**Options**: `CHAIN` `[PORT]` `[PROTOCOL]`
+**选项**: `CHAIN` `[PORT]` `[PROTOCOL]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-add-firewall-chain CRM 5678 TCP
 ```
 
-This function adds new rule to system firewall
+该功能为系统防火墙添加新规则
 
-## v-add-firewall-ipset
+命令: v-add-firewall-ipset
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-firewall-ipset)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-firewall-ipset)
 
-add firewall ipset
+添加防火墙ipset
 
-**Options**: `NAME` `[SOURCE]` `[IPVERSION]` `[AUTOUPDATE]` `[REFRESH]`
+**选项**: `NAME` `[SOURCE]` `[IPVERSION]` `[AUTOUPDATE]` `[REFRESH]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-add-firewall-ipset country-nl "https://raw.githubusercontent.com/ipverse/rir-ip/master/country/nl/ipv4-aggregated.txt"
 ```
 
-This function adds new ipset to system firewall
+该功能向系统防火墙添加新的ipset
 
-## v-add-firewall-rule
+命令: v-add-firewall-rule
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-firewall-rule)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-firewall-rule)
 
-add firewall rule
+添加防火墙规则
 
-**Options**: `ACTION` `IP` `PORT` `[PROTOCOL]` `[COMMENT]` `[RULE]`
+**选项**: `ACTION` `IP` `PORT` `[PROTOCOL]` `[COMMENT]` `[RULE]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-add-firewall-rule DROP 185.137.111.77 25
 ```
 
-This function adds new rule to system firewall
+该功能为系统防火墙添加新规则
 
-## v-add-fs-archive
+命令: v-add-fs-archive
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-fs-archive)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-fs-archive)
 
-archive directory
+存档目录
 
-**Options**: `USER` `ARCHIVE` `SOURCE` `[SOURCE...]`
+**选项**: `USER` `ARCHIVE` `github脚本查看` `[github脚本查看...]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-add-fs-archive admin archive.tar readme.txt
 ```
 
-This function creates tar archive
+该函数创建 tar 存档
 
-## v-add-fs-directory
+命令: v-add-fs-directory
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-fs-directory)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-fs-directory)
 
-add directory
+添加目录
 
-**Options**: `USER` `DIRECTORY`
+**选项**: `USER` `DIRECTORY`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-add-fs-directory admin mybar
 ```
 
-This function creates new directory on the file system
+该函数在文件系统上创建新目录
 
-## v-add-fs-file
+命令: v-add-fs-file
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-fs-file)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-fs-file)
 
-add file
+添加文件
 
-**Options**: `USER` `FILE`
+**选项**: `USER` `FILE`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-add-fs-file admin readme.md
 ```
 
-This function creates new files on file system
+该函数在文件系统上创建新文件
 
-## v-add-letsencrypt-domain
+命令: v-add-letsencrypt-domain
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-letsencrypt-domain)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-letsencrypt-domain)
 
-check letsencrypt domain
+检查 LetsEncrypt 网站
 
-**Options**: `USER` `DOMAIN` `[ALIASES]` `[MAIL]`
+**选项**: `USER` `DOMAIN` `[ALIASES]` `[MAIL]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-add-letsencrypt-domain admin wonderland.com www.wonderland.com,demo.wonderland.com
 example: v-add-letsencrypt-domain admin wonderland.com '' yes
 ```
 
-This function check and validates domain with Let's Encrypt
+此函数使用 Let's Encrypt 检查并验证网站
 
-## v-add-letsencrypt-host
+命令: v-add-letsencrypt-host
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-letsencrypt-host)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-letsencrypt-host)
 
-add letsencrypt for host and backend
+为主机和后端添加letencrypt
 
-**Options**: –
+**选项**: –
 
-This function check and validates the backend certificate and generate
-a new let's encrypt certificate.
+此函数检查并验证后端证书并生成新的让我们的加密证书。
 
-## v-add-letsencrypt-user
+命令: v-add-letsencrypt-user
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-letsencrypt-user)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-letsencrypt-user)
 
-register letsencrypt user account
+注册LetsEncrypt用户帐户
 
-**Options**: `USER`
+**选项**: `USER`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-add-letsencrypt-user bob
 ```
 
-This function creates and register LetsEncrypt account
+该函数创建并注册LetsEncrypt账户
 
-## v-add-mail-account
+命令: v-add-mail-account
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-mail-account)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-mail-account)
 
-add mail domain account
+添加邮件网站帐户
 
-**Options**: `USER` `DOMAIN` `ACCOUNT` `PASSWORD` `[QUOTA]`
+**选项**: `USER` `DOMAIN` `ACCOUNT` `PASSWORD` `[QUOTA]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-add-mail-account user example.com john P4$$vvOrD
 ```
 
-This function add new email account.
+此功能添加新的电子邮件帐户。
 
-## v-add-mail-account-alias
+命令: v-add-mail-account-alias
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-mail-account-alias)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-mail-account-alias)
 
-add mail account alias aka nickname
+添加邮件帐户别名
 
-**Options**: `USER` `DOMAIN` `ACCOUNT` `ALIAS`
+**选项**: `USER` `DOMAIN` `ACCOUNT` `ALIAS`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-add-mail-account-alias admin acme.com alice alicia
 ```
 
-This function add new email alias.
+此功能添加新的电子邮件别名。
 
-## v-add-mail-account-autoreply
+命令: v-add-mail-account-autoreply
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-mail-account-autoreply)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-mail-account-autoreply)
 
-add mail account autoreply message
+添加邮件帐户自动回复消息
 
-**Options**: `USER` `DOMAIN` `ACCOUNT` `MESSAGE`
+**选项**: `USER` `DOMAIN` `ACCOUNT` `MESSAGE`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-add-mail-account-autoreply admin example.com user Hello from e-mail!
 ```
 
-This function add new email account.
+此功能添加新的电子邮件帐户。
 
-## v-add-mail-account-forward
+命令: v-add-mail-account-forward
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-mail-account-forward)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-mail-account-forward)
 
-add mail account forward address
+添加邮件帐户转发地址
 
-**Options**: `USER` `DOMAIN` `ACCOUNT` `FORWARD`
+**选项**: `USER` `DOMAIN` `ACCOUNT` `FORWARD`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-add-mail-account-forward admin acme.com alice bob
 ```
 
-This function add new email account.
+此功能添加新的电子邮件转发帐号地址。
 
-## v-add-mail-account-fwd-only
+命令: v-add-mail-account-fwd-only
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-mail-account-fwd-only)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-mail-account-fwd-only)
 
-add mail account forward-only flag
+添加邮件帐户仅转发标题
 
-**Options**: `USER` `DOMAIN` `ACCOUNT`
+**选项**: `USER` `DOMAIN` `ACCOUNT`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-add-mail-account-fwd-only admin example.com user
 ```
 
-This function adds fwd-only flag
+该函数添加仅转发邮件标题
 
-## v-add-mail-domain
+命令: v-add-mail-domain
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-mail-domain)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-mail-domain)
 
-add mail domain
+添加邮件网站名
 
-**Options**: `USER` `DOMAIN` `[ANTISPAM]` `[ANTIVIRUS]` `[DKIM]` `[DKIM_SIZE]` `[RESTART]` `[REJECT_SPAM]`
+**选项**: `USER` `DOMAIN` `[ANTISPAM]` `[ANTIVIRUS]` `[DKIM]` `[DKIM_SIZE]` `[RESTART]` `[REJECT_SPAM]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-add-mail-domain admin mydomain.tld
 ```
 
-This function adds MAIL domain.
+该功能添加邮件网站名。
 
-## v-add-mail-domain-antispam
+命令: v-add-mail-domain-antispam
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-mail-domain-antispam)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-mail-domain-antispam)
 
-add mail domain antispam support
+添加邮件网站反垃圾邮件支持
 
-**Options**: `USER` `DOMAIN`
+**选项**: `USER` `DOMAIN`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-add-mail-domain-antispam admin mydomain.tld
 ```
 
-This function enables spamassasin for incoming emails.
+此功能启用 `防御垃圾信` 来接收传入的电子邮件。
 
-## v-add-mail-domain-antivirus
+命令: v-add-mail-domain-antivirus
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-mail-domain-antivirus)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-mail-domain-antivirus)
 
-add mail domain antivirus support
+添加邮件网站防病毒支持
 
-**Options**: `USER` `DOMAIN`
+**选项**: `USER` `DOMAIN`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-add-mail-domain-antivirus admin mydomain.tld
 ```
 
-This function enables clamav scan for incoming emails.
+此功能启用 clamav 扫描传入的电子邮件。
 
-## v-add-mail-domain-catchall
+命令: v-add-mail-domain-catchall
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-mail-domain-catchall)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-mail-domain-catchall)
 
-add mail domain catchall account
+添加邮件网站管理帐户
 
-**Options**: `USER` `DOMAIN` `EMAIL`
+**选项**: `USER` `DOMAIN` `EMAIL`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-add-mail-domain-catchall admin example.com master@example.com
 ```
 
-This function enables catchall account for incoming emails.
+此功能可以为传入的电子邮件启用管理邮件的帐户。
 
-## v-add-mail-domain-dkim
+命令: v-add-mail-domain-dkim
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-mail-domain-dkim)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-mail-domain-dkim)
 
-add mail domain dkim support
+添加邮件网站 dkim 支持
 
-**Options**: `USER` `DOMAIN` `[DKIM_SIZE]`
+**选项**: `USER` `DOMAIN` `[DKIM_SIZE]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-add-mail-domain-dkim admin acme.com
 ```
 
-This function adds DKIM signature to outgoing domain emails.
+此功能将 DKIM 签名添加到外发网站电子邮件中。
 
-## v-add-mail-domain-reject
+命令: v-add-mail-domain-reject
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-mail-domain-reject)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-mail-domain-reject)
 
-add mail domain reject spam support
+添加邮件网站拒绝垃圾邮件支持
 
-**Options**: `USER` `DOMAIN`
+**选项**: `USER` `DOMAIN`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-add-mail-domain-reject admin mydomain.tld
 ```
 
-The function enables spam rejection for incoming emails.
+该功能可以拒绝传入电子邮件的垃圾邮件。
 
-## v-add-mail-domain-smtp-relay
+命令: v-add-mail-domain-smtp-relay
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-mail-domain-smtp-relay)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-mail-domain-smtp-relay)
 
-Add mail domain smtp relay support
+添加邮件网站smtp中继支持
 
-**Options**: `USER` `DOMAIN` `HOST` `[USERNAME]` `[PASSWORD]` `[PORT]`
+**选项**: `USER` `DOMAIN` `HOST` `[USERNAME]` `[PASSWORD]` `[PORT]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-add-mail-domain-smtp-relay user domain.tld srv.smtprelay.tld uname123 pass12345
 ```
 
-This function adds mail domain smtp relay support.
+该功能增加邮件网站smtp中继支持。
 
-## v-add-mail-domain-ssl
+命令: v-add-mail-domain-ssl
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-mail-domain-ssl)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-mail-domain-ssl)
 
-add mail SSL for $domain
+为网站添加邮件 SSL证书
 
-**Options**: `USER` `DOMAIN` `SSL_DIR` `[RESTART]`
+**选项**: `USER` `DOMAIN` `SSL_DIR` `[RESTART]`
 
-This function turns on SSL support for a mail domain. Parameter ssl_dir
-is a path to a directory where 2 or 3 ssl files can be found. Certificate file
-mail.domain.tld.crt and its key mail.domain.tld.key are mandatory. Certificate
-authority mail.domain.tld.ca file is optional.
+此功能打开邮件网站的 SSL 支持。 参数 ssl_dir
+是可以找到 2 或 3 个 ssl 文件的目录的路径。 证书文件
+mail.domain.tld.crt 及其密钥 mail.domain.tld.key 是必需的。 中间证书 mail.domain.tld.ca 文件是可选的。
 
-## v-add-mail-domain-webmail
+命令: v-add-mail-domain-webmail
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-mail-domain-webmail)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-mail-domain-webmail)
 
-add webmail support for a domain
+添加对网站的网络邮件支持
 
-**Options**: `USER` `DOMAIN` `[WEBMAIL]` `[RESTART]` `[QUIET]`
+**选项**: `USER` `DOMAIN` `[WEBMAIL]` `[RESTART]` `[QUIET]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-add-mail-domain-webmail user domain.com
@@ -635,483 +627,477 @@ example: v-add-mail-domain-webmail user domain.com snappymail
 example: v-add-mail-domain-webmail user domain.com roundcube
 ```
 
-This function enables webmail client for a mail domain.
+此功能为邮件网站启用 Webmail 客户端。
 
-## v-add-remote-dns-domain
+命令: v-add-remote-dns-domain
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-remote-dns-domain)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-remote-dns-domain)
 
-add remote dns domain
+添加远程 DNS 网站
 
-**Options**: `USER` `DOMAIN` `[FLUSH]`
+**选项**: `USER` `DOMAIN` `[FLUSH]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-add-remote-dns-domain admin mydomain.tld yes
 ```
 
-This function synchronise dns domain with the remote server.
+此功能将 dns 网站与远程服务器同步。
 
-## v-add-remote-dns-host
+命令: v-add-remote-dns-host
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-remote-dns-host)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-remote-dns-host)
 
-add new remote dns host
+添加新的远程 DNS 主机
 
-**Options**: `HOST` `PORT` `USER` `PASSWORD` `[TYPE]` `[DNS_USER]`
+**选项**: `HOST` `PORT` `USER` `PASSWORD` `[TYPE]` `[DNS_USER]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-add-remote-dns-host slave.your_host.com 8083 admin your_passw0rd
 v-add-remote-dns-host slave.your_host.com 8083 api_key ''
 ```
 
-This function adds remote dns server to the dns cluster.
-As alternative api_key generated on the slave server.
-See v-generate-api-key can be used to connect the remote dns server
+该功能将远程dns服务器添加到dns集群中。
+作为在从服务器上生成的替代 api_key。
+查看v-generate-api-key可用于连接远程dns服务器
 
-## v-add-remote-dns-record
+命令: v-add-remote-dns-record
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-remote-dns-record)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-remote-dns-record)
 
-add remote dns domain record
+添加远程dns网站名记录
 
-**Options**: `USER` `DOMAIN` `ID`
+**选项**: `USER` `DOMAIN` `ID`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-add-remote-dns-record bob acme.com 23
 ```
 
-This function synchronise dns domain with the remote server.
+此功能将 dns 网站与远程服务器同步。
 
-## v-add-sys-api-ip
+命令: v-add-sys-api-ip
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-sys-api-ip)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-sys-api-ip)
 
-add IP address to API allow list
+将 IP 地址添加到 API 允许列表
 
-**Options**: `IP`
+**选项**: `IP`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-add-sys-api-ip 1.1.1.1
 ```
 
-## v-add-sys-dependencies
+命令: v-add-sys-dependencies
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-sys-dependencies)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-sys-dependencies)
 
-**Options**:
+**选项**:
 
-Add php dependencies to Hestia
-options: [MODE]
+**示例**:
 
-## v-add-sys-filemanager
+```bash
+v-add-sys-dependencies
+```
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-sys-filemanager)
+向 Hestia 添加 php 依赖项
 
-add file manager functionality to Hestia Control Panel
+选项: [MODE]
 
-**Options**: `[MODE]`
+命令: v-add-sys-filemanager
 
-This function installs the File Manager on the server
-for access through the Web interface.
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-sys-filemanager)
 
-## v-add-sys-firewall
+向 Hestia 控制面板添加文件管理器功能
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-sys-firewall)
+**选项**: `[MODE]`
 
-add system firewall
+此功能在服务器上安装文件管理器通过 Web 界面进行访问。
 
-**Options**: –
+命令: v-add-sys-firewall
 
-This function enables the system firewall.
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-sys-firewall)
 
-## v-add-sys-ip
+添加系统防火墙
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-sys-ip)
+**选项**: –
 
-add system IP address
+该功能启用系统防火墙。
 
-**Options**: `IP` `NETMASK` `[INTERFACE]` `[USER]` `[IP_STATUS]` `[IP_NAME]` `[NAT_IP]`
+命令: v-add-sys-ip
 
-**Examples**:
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-sys-ip)
+
+添加系统IP地址
+
+**选项**: `IP` `NETMASK` `[INTERFACE]` `[USER]` `[IP_STATUS]` `[IP_NAME]` `[NAT_IP]`
+
+**示例**:
 
 ```bash
 v-add-sys-ip 203.0.113.1 255.255.255.0
 ```
 
-This function adds IP address into a system. It also creates rc scripts. You
-can specify IP name which will be used as root domain for temporary aliases.
-For example, if you set a1.myhosting.com as name, each new domain created on
-this IP will automatically receive alias $domain.a1.myhosting.com. Of course
-you must have wildcard record \*.a1.myhosting.com pointed to IP. This feature
-is very handy when customer wants to test domain before dns migration.
+此功能将 IP 地址添加到系统中。 它还创建 rc 脚本。 你可以指定将用作临时别名的根网站的 IP 名称。
 
-## v-add-sys-pma-sso
+例如，如果您将 a1.myhosting.com 设置为名称，则创建的每个新网站该 IP 将自动接收别名 $domain.a1.myhosting.com
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-sys-pma-sso)
+当然您必须有通配符记录 \*.a1.myhosting.com 指向 IP。 此功能当客户想要在 DNS 迁移之前测试网站时非常方便。
 
-enables support for single sign on phpMyAdmin
+命令: v-add-sys-pma-sso
 
-**Options**: `[MODE]`
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-sys-pma-sso)
 
-This function enables support for SSO to phpMyAdmin
+启用对 phpMyAdmin 的单点登录支持
 
-## v-add-sys-quota
+**选项**: `[MODE]`
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-sys-quota)
+此功能启用对 phpMyAdmin 的 SSO 支持
 
-add system quota
+命令: v-add-sys-quota
 
-**Options**: –
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-sys-quota)
 
-This function enables filesystem quota on /home partition
-Some kernels do require additional packages to be installed first
+添加系统配额
 
-## v-add-sys-roundcube
+**选项**: –
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-sys-roundcube)
+此功能启用 /home 分区上的文件系统配额某些内核确实需要先安装额外的软件包
 
-Install Roundcube webmail client
+命令: v-add-sys-roundcube
 
-**Options**: `[MODE]`
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-sys-roundcube)
 
-This function installs the Roundcube webmail client.
+安装 Roundcube 网络邮件客户端
 
-## v-add-sys-sftp-jail
+**选项**: `[MODE]`
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-sys-sftp-jail)
+此函数安装 Roundcube Webmail 客户端。
 
-add system sftp jail
+命令: v-add-sys-sftp-jail
 
-**Options**: `[RESTART]`
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-sys-sftp-jail)
 
-**Examples**:
+添加系统sftp上传工具
+
+**选项**: `[RESTART]`
+
+**示例**:
 
 ```bash
 v-add-sys-sftp-jail yes
 ```
 
-This function enables sftp jailed environment.
+此功能启用21端口 sftp 上传环境。
 
-## v-add-sys-smtp
+命令: v-add-sys-smtp
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-sys-smtp)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-sys-smtp)
 
-Add SMTP Account for logging, notification and internal mail
+添加 SMTP 帐户用于日志记录、通知和内部邮件
 
-**Options**: `DOMAIN` `PORT` `SMTP_SECURITY` `USERNAME` `PASSWORD` `EMAIL`
+**选项**: `DOMAIN` `PORT` `SMTP_SECURITY` `USERNAME` `PASSWORD` `EMAIL`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-add-sys-smtp example.com 587 STARTTLS test@domain.com securepassword test@example.com
 ```
 
-This function allows configuring a SMTP account for the server to use
-for logging, notification and warn emails etc.
+此功能允许配置 SMTP 帐户以供服务器使用用于记录、通知和警告电子邮件等。
 
-## v-add-sys-smtp-relay
+命令: v-add-sys-smtp-relay
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-sys-smtp-relay)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-sys-smtp-relay)
 
-add system wide smtp relay support
+添加邮件系统的 smtp 中继支持
 
-**Options**: `HOST` `[USERNAME]` `[PASSWORD]` `[PORT]`
+**选项**: `HOST` `[USERNAME]` `[PASSWORD]` `[PORT]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-add-sys-smtp-relay srv.smtprelay.tld uname123 pass12345
 ```
 
-This function adds system wide smtp relay support.
+此功能添加了邮件系统的 smtp 中继支持。
 
-## v-add-sys-snappymail
+命令: v-add-sys-snappymail
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-sys-snappymail)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-sys-snappymail)
 
-Install SnappyMail webmail client
+安装 SnappyMail 网络邮件客户端
 
-**Options**: `[MODE]`
+**选项**: `[MODE]`
 
-This function installs the SnappyMail webmail client.
+此函数安装 SnappyMail 网络邮件客户端。
 
-## v-add-sys-web-terminal
+命令: v-add-sys-web-terminal
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-sys-web-terminal)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-sys-web-terminal)
 
-add system web terminal
+添加系统Web终端
 
-**Options**: –
+**选项**: –
 
-This function enables the web terminal.
+此功能启用网络终端。
 
-## v-add-user
+命令: v-add-user
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-user)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-user)
 
-add system user
+添加邮件系统用户
 
-**Options**: `USER` `PASSWORD` `EMAIL` `[PACKAGE]` `[NAME]` `[LASTNAME]`
+**选项**: `USER` `PASSWORD` `EMAIL` `[PACKAGE]` `[NAME]` `[LASTNAME]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-add-user user P4$$w@rD bgates@aol.com
 ```
 
-This function creates new user account.
+此功能创建新的邮件用户帐户。
 
-## v-add-user-2fa
+命令: v-add-user-2fa
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-user-2fa)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-user-2fa)
 
-add 2fa to existing user
+将 2fa 令牌添加到现有用户
 
-**Options**: `USER`
+**选项**: `USER`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-add-user-2fa admin
 ```
 
-This function creates a new 2fa token for user.
+此函数为用户创建一个新的 2fa 令牌。
 
-## v-add-user-composer
+命令: v-add-user-composer
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-user-composer)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-user-composer)
 
-add composer (php dependency manager) for a user
+为用户添加composer（php 依赖管理器）
 
-**Options**: `USER`
+**选项**: `USER`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-add-user-composer user [version]
 ```
 
-This function adds support for composer (php dependency manager)
-Homepage: <https://getcomposer.org/>
+该函数添加了对composer（php依赖管理器）的支持[composer主页](https://getcomposer.org)
 
-## v-add-user-notification
+命令: v-add-user-notification
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-user-notification)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-user-notification)
 
-add user notification
+添加用户通知
 
-**Options**: `USER` `TOPIC` `NOTICE` `[TYPE]`
+**选项**: `USER` `TOPIC` `NOTICE` `[TYPE]`
 
-This function adds a new user notification to the panel.
+此功能向面板添加新用户通知。
 
-## v-add-user-package
+命令: v-add-user-package
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-user-package)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-user-package)
 
-adding user package
+添加用户软件包
 
-**Options**: `TMPFILE` `PACKAGE` `[REWRITE]`
+**选项**: `TMPFILE` `PACKAGE` `[REWRITE]`
 
-This function adds new user package to the system.
+该功能向系统添加新的用户软件包
 
-## v-add-user-sftp-jail
+命令: v-add-user-sftp-jail
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-user-sftp-jail)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-user-sftp-jail)
 
-add user sftp jail
+添加 sftp 上传用户
 
-**Options**: `USER` `[RESTART]`
+**选项**: `USER` `[RESTART]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-add-user-sftp-jail admin
 ```
 
-This function enables sftp jailed environment
+该功能启用 sftp 上传配置
 
-## v-add-user-sftp-key
+命令: v-add-user-sftp-key
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-user-sftp-key)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-user-sftp-key)
 
-add user sftp key
+添加用户 sftp 密钥
 
-**Options**: `USER` `[TTL]`
+**选项**: `USER` `[TTL]`
 
-This function creates and updates SSH keys for used with the File Manager.
+此函数创建并更新 SSH 密钥以与文件管理器一起使用。
 
-## v-add-user-ssh-key
+命令: v-add-user-ssh-key
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-user-ssh-key)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-user-ssh-key)
 
-add ssh key
+添加 ssh 密钥
 
-**Options**: `USER` `KEY`
+**选项**: `USER` `KEY`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-add-user-ssh-key user 'valid ssh key'
 ```
 
-Function check if $user/.ssh/authorized_keys exists and create it.
-After that it append the new key(s)
+函数检查 $user/.ssh/authorized_keys 是否存在并创建它。之后它会附加新密钥
 
-## v-add-user-wp-cli
+命令: v-add-user-wp-cli
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-user-wp-cli)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-user-wp-cli)
 
-add wp-cli for a user
+为用户添加 wp-cli
 
-**Options**: `USER`
+**选项**: `USER`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-add-user-wp-cli user
 ```
 
-This function adds support for wp-cli to the user account
+此功能为用户帐户添加对 wp-cli 的支持
 
-## v-add-web-domain
+命令: v-add-web-domain
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-web-domain)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-web-domain)
 
-add web domain
+添加网络网站
 
-**Options**: `USER` `DOMAIN` `[IP]` `[RESTART]` `[ALIASES]` `[PROXY_EXTENSIONS]`
+**选项**: `USER` `DOMAIN` `[IP]` `[RESTART]` `[ALIASES]` `[PROXY_EXTENSIONS]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-add-web-domain admin wonderland.com 192.18.22.43 yes www.wonderland.com
 ```
 
-This function adds virtual host to a server. In cases when ip is
-undefined in the script, "default" template will be used. The alias of
-<www.domain.tld> type will be automatically assigned to the domain unless
-"none" is transmited as argument. If ip have associated dns name, this
-domain will also get the alias domain-tpl.$ipname. An alias with the ip
-name is useful during the site testing while dns isn't moved to server yet.
+此功能将虚拟主机添加到服务器。 如果 ip 是脚本中未定义，将使用“默认”模板。 的别名<www.domain.tld> 类型将自动分配给网站，除非“none”作为参数传输。
+如果 ip 有关联的 dns 名称，则此网站还将获得别名domain-tpl.ip名称和ip的别名，在站点测试期间很有用。
 
-## v-add-web-domain-alias
+命令: v-add-web-domain-alias
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-web-domain-alias)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-web-domain-alias)
 
-add web domain alias
+添加 Web 网站别名
 
-**Options**: `USER` `DOMAIN` `ALIASES` `[RESTART]`
+**选项**: `USER` `DOMAIN` `ALIASES` `[RESTART]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-add-web-domain-alias admin acme.com www.acme.com yes
 ```
 
-This function adds one or more aliases to a domain (it is also called
-"domain parking"). This function supports wildcards <\*.domain.tld>.
+此函数向网站添加一个或多个别名（也称为
+“网站停放”）。 该函数支持通配符<\*.domain.tld>
 
-## v-add-web-domain-allow-users
+命令: v-add-web-domain-allow-users
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-web-domain-allow-users)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-web-domain-allow-users)
 
-Allow other users create subdomains
+允许其他用户创建子网站
 
-**Options**: `USER` `DOMAIN`
+**选项**: `USER` `DOMAIN`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-add-web-domain-allow-users admin admin.com
 ```
 
-Bypass the rule check for Enforce subdomain ownership for a specific domain.
-Enforce subdomain ownership setting in /edit/server/ set to no will always overwrite this behaviour
-eg: admin adds admin.com
-user can create user.admin.com
+绕过对特定网站强制执行子网站所有权的规则检查。将 /edit/server/ 中的子网站所有权设置强制设置为 no 将始终覆盖此行为
+例如：admin 添加 admin.com 用户可以创建user.admin.com
 
-## v-add-web-domain-backend
+命令: v-add-web-domain-backend
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-web-domain-backend)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-web-domain-backend)
 
-add web domain backend
+添加 Web 网站后端
 
-**Options**: `USER` `DOMAIN` `[TEMPLATE]` `[RESTART]`
+**选项**: `USER` `DOMAIN` `[TEMPLATE]` `[RESTART]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-add-web-domain-backend admin example.com default yes
 ```
 
-This function is used to add the web backend configuration.
+该函数用于添加Web后端配置。
 
-## v-add-web-domain-ftp
+命令: v-add-web-domain-ftp
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-web-domain-ftp)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-web-domain-ftp)
 
-add ftp account for web domain.
+添加 Web 网站的 ftp 帐户。
 
-**Options**: `USER` `DOMAIN` `FTP_USER` `FTP_PASSWORD` `[FTP_PATH]`
+**选项**: `USER` `DOMAIN` `FTP_USER` `FTP_PASSWORD` `[FTP_PATH]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-add-web-domain-ftp alice wonderland.com alice_ftp p4$$vvOrD
 ```
 
-This function creates additional ftp account for web domain.
+此功能为 Web 网站创建额外的 ftp 帐户。
 
-## v-add-web-domain-httpauth
+命令: v-add-web-domain-httpauth
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-web-domain-httpauth)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-web-domain-httpauth)
 
-add password protection for web domain
+为 Web 网站添加密码保护
 
-**Options**: `USER` `DOMAIN` `AUTH_USER` `AUTH_PASSWORD` `[RESTART]`
+**选项**: `USER` `DOMAIN` `AUTH_USER` `AUTH_PASSWORD` `[RESTART]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-add-web-domain-httpauth admin acme.com user02 super_pass
 ```
 
-This function is used for securing web domain with http auth
+此功能用于通过 http 身份验证保护 Web 网站
 
-## v-add-web-domain-proxy
+命令: v-add-web-domain-proxy
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-web-domain-proxy)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-web-domain-proxy)
 
-add webdomain proxy support
+添加Web网站代理支持
 
-**Options**: `USER` `DOMAIN` `[TEMPLATE]` `[EXTENTIONS]` `[RESTART]`
+**选项**: `USER` `DOMAIN` `[TEMPLATE]` `[EXTENTIONS]` `[RESTART]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-add-web-domain-proxy admin example.com
 ```
 
-This function enables proxy support for a domain. This can significantly
-improve website speed.
+此功能启用网站的代理支持。 这可以显着提高网站速度。
 
-## v-add-web-domain-redirect
+命令: v-add-web-domain-redirect
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-web-domain-redirect)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-web-domain-redirect)
 
-Adding force redirect to domain
+添加强制重定向到网站
 
-**Options**: `USER` `DOMAIN` `REDIRECT` `HTTPCODE` `[RESTART]`
+**选项**: `USER` `DOMAIN` `REDIRECT` `HTTPCODE` `[RESTART]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-add-web-domain-redirect user domain.tld domain.tld
@@ -1122,546 +1108,532 @@ example: v-add-web-domain-redirect user domain.tld shop.different-domain.com
 example: v-add-web-domain-redirect user domain.tld different-domain.com 302
 ```
 
-Function creates a forced redirect to a domain
+函数创建强制重定向到网站
 
-## v-add-web-domain-ssl
+命令: v-add-web-domain-ssl
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-web-domain-ssl)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-web-domain-ssl)
 
-adding ssl for domain
+为网站添加 ssl
 
-**Options**: `USER` `DOMAIN` `SSL_DIR` `[SSL_HOME]` `[RESTART]`
+**选项**: `USER` `DOMAIN` `SSL_DIR` `[SSL_HOME]` `[RESTART]`
 
-**Examples**:
+**示例**:
 
 ```bash
-v-add-web-domain-ssl admin example.com /home/admin/conf/web/example.com
+v-add-web-domain-ssl admin example.com /home/admin/conf/example.com/web
 ```
 
-This function turns on SSL support for a domain. Parameter ssl_dir is a path
-to directory where 2 or 3 ssl files can be found. Certificate file
-domain.tld.crt and its key domain.tld.key are mandatory. Certificate
-authority domain.tld.ca file is optional. If home directory parameter
-(ssl_home) is not set, https domain uses public_shtml as separate
-documentroot directory.
+此函数打开对网站的 SSL 支持。 参数 ssl_dir 是一个路径到可以找到 2 或 3 个 ssl 文件的目录。 证书文件domain.tld.crt 及其密钥domain.tld.key 是强制性的。
 
-## v-add-web-domain-ssl-force
+中间证书domain.tld.ca 文件是可选的。如果主目录参数(ssl_home) 未设置，https 网站使用 public_shtml 作为单独的文档根目录。
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-web-domain-ssl-force)
+命令: v-add-web-domain-ssl-force
 
-Adding force SSL for a domain
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-web-domain-ssl-force)
 
-**Options**: `USER` `DOMAIN` `[RESTART]` `[QUIET]`
+为网站添加强制 SSL
 
-**Examples**:
+**选项**: `USER` `DOMAIN` `[RESTART]` `[QUIET]`
+
+**示例**:
 
 ```bash
 v-add-web-domain-ssl-force admin acme.com
 ```
 
-This function forces SSL for the requested domain.
+此函数对请求的网站强制使用 SSL。
 
-## v-add-web-domain-ssl-hsts
+命令: v-add-web-domain-ssl-hsts
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-web-domain-ssl-hsts)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-web-domain-ssl-hsts)
 
-Adding hsts to a domain
+将严格传输安全性`hsts`添加到网站
 
-**Options**: `USER` `DOMAIN` `[RESTART]` `[QUIET]`
+**选项**: `USER` `DOMAIN` `[RESTART]` `[QUIET]`
 
-This function enables HSTS for the requested domain.
+此函数为请求的网站启用严格传输安全性 HSTS 协议。是一个Web安全策略机制。
 
-## v-add-web-domain-ssl-preset
+命令: v-add-web-domain-ssl-preset
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-web-domain-ssl-preset)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-web-domain-ssl-preset)
 
-Adding force SSL for a domain
+为网站添加强制 SSL
 
-**Options**: `USER` `DOMAIN` `[SSL]`
+**选项**: `USER` `DOMAIN` `[SSL]`
 
-Up on creating an web domain set the SSL Force values due to the delay of LE due to DNS propergation over DNS cluster
-When LE has been activated it will set the actions
+创建 Web 网站时，由于 DNS 集群上的 DNS 属性导致 LE 延迟，因此设置 SSL 强制值当 LE 被激活时，它将设置操作
 
-## v-add-web-domain-stats
+命令: v-add-web-domain-stats
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-web-domain-stats)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-web-domain-stats)
 
-add log analyser to generate domain statistics
+添加日志分析器以生成网站统计信息
 
-**Options**: `USER` `DOMAIN` `TYPE`
+**选项**: `USER` `DOMAIN` `TYPE`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-add-web-domain-stats admin example.com awstats
 ```
 
-This function is used for enabling log analyser system to a domain. For viewing
-the domain statistics use <http://domain.tld/vstats/> link. Access this page
-is not protected by default. If you want to secure it with passwords you
-should use v-add-web-domain_stat_auth script.
+该功能用于为网站启用日志分析系统。 供观看网站统计信息使用 <http://domain.tld/vstats/> 链接。 访问此页面。默认情况下不受保护。 如果您想使用密码保护它应该使用 `v-add-web-domain_stat_auth` 脚本。
 
-## v-add-web-domain-stats-user
+命令: v-add-web-domain-stats-user
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-web-domain-stats-user)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-web-domain-stats-user)
 
-add password protection to web domain statistics
+为网站网站统计添加密码保护
 
-**Options**: `USER` `DOMAIN` `STATS_USER` `STATS_PASSWORD` `[RESTART]`
+**选项**: `USER` `DOMAIN` `STATS_USER` `STATS_PASSWORD` `[RESTART]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-add-web-domain-stats-user admin example.com watchdog your_password
 ```
 
-This function is used for securing the web statistics page.
+此功能用于保护网络统计页面的安全。
 
-## v-add-web-php
+命令: v-add-web-php
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-web-php)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-web-php)
 
-add php fpm version
+添加 php 版本
 
-**Options**: `VERSION`
+**选项**: `VERSION`
 
-**Examples**:
+**示例**:
 
 ```bash
-v-add-web-php 8.0
+v-add-web-php 8.3
 ```
 
-Install php-fpm for provided version.
+安装 php 版本
 
-## v-backup-user
+命令: v-backup-user
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-backup-user)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-backup-user)
 
-backup system user with all its objects
+备份系统用户及其所有对象
 
-**Options**: `USER` `NOTIFY`
+**选项**: `USER` `NOTIFY`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-backup-user admin yes
 ```
 
-This function is used for backing up user with all its domains and databases.
+此功能用于备份用户及其所有网站和数据库。
 
-## v-backup-users
+命令: v-backup-users
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-backup-users)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-backup-users)
 
-backup all users
+备份所有用户
 
-**Options**: –
+**选项**: –
 
-This function backups all system users.
+此功能备份所有系统用户。
 
-## v-change-cron-job
+命令: v-change-cron-job
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-cron-job)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-cron-job)
 
-change cron job
+修改 cron 定时任务
 
-**Options**: `USER` `JOB` `MIN` `HOUR` `DAY` `MONTH` `WDAY` `COMMAND`
+**选项**: `USER` `JOB` `MIN` `HOUR` `DAY` `MONTH` `WDAY` `COMMAND`
 
-**Examples**:
-
-```bash
-v-change-cron-job admin 7 * * * * * /usr/bin/uptime
-```
-
-This function is used for changing existing job. It fully replace job
-parameters with new one but with same id.
-
-## v-change-database-host-password
-
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-database-host-password)
-
-change database server password
-
-**Options**: `TYPE` `HOST` `USER` `PASSWORD`
-
-**Examples**:
+**示例**:
 
 ```bash
-v-change-database-host-password mysql localhost wp_user pA$$w@rD
+v-change-cron-job admin 7 * * * * * * /usr/bin/uptime
 ```
 
-This function changes database server password.
+该功能用于改变现有的工作。 它完全取代了工作
+参数为新参数但具有相同的 id。
 
-## v-change-database-owner
+命令: v-change-database-host-password
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-database-owner)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-database-host-password)
 
-change database owner
+修改数据库服务器密码
 
-**Options**: `DATABASE` `USER`
+**选项**: `TYPE` `HOST` `USER` `PASSWORD`
 
-**Examples**:
+**示例**:
+
+```bash
+v-change-database-host-password mysql localhost www_user pA$$w@rD
+```
+
+此功能修改数据库服务器密码。`mysql`为数据库类型`www_user`为数据库账户 `pA$$w@rD`为密码
+
+命令: v-change-database-owner
+
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-database-owner)
+
+修改数据库所有者
+
+**选项**: `DATABASE` `USER`
+
+**示例**:
 
 ```bash
 v-change-database-owner mydb alice
 ```
 
-This function for changing database owner.
+此功能用于修改数据库所有者。
 
-## v-change-database-password
+命令: v-change-database-password
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-database-password)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-database-password)
 
-change database password
+修改数据库密码
 
-**Options**: `USER` `DATABASE` `DBPASS`
+**选项**: `USER` `DATABASE` `DBPASS`
 
-**Examples**:
+**示例**:
 
 ```bash
-v-change-database-password admin wp_db neW_pAssWorD
+v-change-database-password admin www_db neW_pAssWorD
 ```
 
-This function for changing database user password to a database. It uses the
-full name of database as argument.
+该函数用于修改数据库的数据库用户密码。 它使用数据库的全名作为参数。
 
-## v-change-database-user
+命令: v-change-database-user
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-database-user)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-database-user)
 
-change database username
+修改数据库用户名
 
-**Options**: `USER` `DATABASE` `DBUSER` `[DBPASS]`
+**选项**: `USER` `DATABASE` `DBUSER` `[DBPASS]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-change-database-user admin my_db joe_user
 ```
 
-This function for changing database user. It uses the
+该功能用于修改数据库用户名
 
-## v-change-dns-domain-dnssec
+命令: v-change-dns-domain-dnssec
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-dns-domain-dnssec)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-dns-domain-dnssec)
 
-change dns domain dnssec status
+修改 dns 网站 dnssec 状态
 
-**Options**: `USER` `DOMAIN` `STATUS`
+**选项**: `USER` `DOMAIN` `STATUS`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-change-dns-domain-dnssec admin domain.pp.ua yes
 ```
 
-## v-change-dns-domain-exp
+命令: v-change-dns-domain-exp
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-dns-domain-exp)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-dns-domain-exp)
 
-change dns domain expiration date
+修改 dns 网站到期日期
 
-**Options**: `USER` `DOMAIN` `EXP`
+**选项**: `USER` `DOMAIN` `EXP`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-change-dns-domain-exp admin domain.pp.ua 2020-11-20
 ```
 
-This function of changing the term of expiration domain's registration. The
-serial number will be refreshed automatically during update.
+更改网站名注册期限的功能。 更新时序列号会自动刷新。
 
-## v-change-dns-domain-ip
+命令: v-change-dns-domain-ip
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-dns-domain-ip)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-dns-domain-ip)
 
-change dns domain ip address
+更改dns网站名ip地址
 
-**Options**: `USER` `DOMAIN` `IP` `[RESTART]`
+**选项**: `USER` `DOMAIN` `IP` `[RESTART]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-change-dns-domain-ip admin domain.com 123.212.111.222
 ```
 
-This function for changing the main ip of DNS zone.
+此功能用于更改 DNS 网站的主ip。
 
-## v-change-dns-domain-soa
+命令: v-change-dns-domain-soa
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-dns-domain-soa)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-dns-domain-soa)
 
-change dns domain soa record
+更改dns网站soa记录
 
-**Options**: `USER` `DOMAIN` `SOA` `[RESTART]`
+**选项**: `USER` `DOMAIN` `SOA` `[RESTART]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-change-dns-domain-soa admin acme.com d.ns.domain.tld
 ```
 
-This function for changing SOA record. This type of records can not be
-modified by v-change-dns-record call.
+该函数用于更改 SOA 记录。 此类记录不能通过 `v-change-dns-record` 调用修改。
 
-## v-change-dns-domain-tpl
+命令: v-change-dns-domain-tpl
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-dns-domain-tpl)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-dns-domain-tpl)
 
-change dns domain template
+更改 dns 网站模板
 
-**Options**: `USER` `DOMAIN` `TEMPLATE` `[RESTART]`
+**选项**: `USER` `DOMAIN` `TEMPLATE` `[RESTART]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-change-dns-domain-tpl admin example.com child-ns yes
 ```
 
-This function for changing the template of records. By updating old records
-will be removed and new records will be generated in accordance with
-parameters of new template.
+此功能用于更改记录模板。 通过更新旧记录将被删除并根据以下规则生成新记录新模板的参数。
 
-## v-change-dns-domain-ttl
+命令: v-change-dns-domain-ttl
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-dns-domain-ttl)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-dns-domain-ttl)
 
-change dns domain ttl
+更改 dns 网站 ttl
 
-**Options**: `USER` `DOMAIN` `TTL` `[RESTART]`
+**选项**: `USER` `DOMAIN` `TTL` `[RESTART]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-change-dns-domain-ttl alice example.com 14400
 ```
 
-This function for changing the time to live TTL parameter for all records.
+此函数用于更改所有记录的生存时间 TTL 参数。
 
-## v-change-dns-record
+命令: v-change-dns-record
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-dns-record)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-dns-record)
 
-change dns domain record
+更改dns网站名记录
 
-**Options**: `USER` `DOMAIN` `ID` `RECORD` `TYPE` `VALUE` `[PRIORITY]` `[RESTART]` `[TTL]`
+**选项**: `USER` `DOMAIN` `ID` `RECORD` `TYPE` `VALUE` `[PRIORITY]` `[RESTART]` `[TTL]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-change-dns-record admin domain.ua 42 192.18.22.43
 ```
 
-This function for changing DNS record.
+此功能用于更改 DNS 记录。
 
-## v-change-dns-record-id
+命令: v-change-dns-record-id
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-dns-record-id)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-dns-record-id)
 
-change dns domain record id
+更改dns网站名记录id
 
-**Options**: `USER` `DOMAIN` `ID` `NEWID` `[RESTART]`
+**选项**: `USER` `DOMAIN` `ID` `NEWID` `[RESTART]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-change-dns-record-id admin acme.com 24 42 yes
 ```
 
-This function for changing internal record id.
+该函数用于更改 dns 内部记录 ID。
 
-## v-change-domain-owner
+命令: v-change-domain-owner
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-domain-owner)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-domain-owner)
 
-change domain owner
+更改网站名所有者
 
-**Options**: `DOMAIN` `USER`
+**选项**: `DOMAIN` `USER`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-change-domain-owner www.example.com bob
 ```
 
-This function of changing domain ownership.
+这个改变网站名所有权的功能。
 
-## v-change-firewall-rule
+命令: v-change-firewall-rule
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-firewall-rule)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-firewall-rule)
 
-change firewall rule
+更改防火墙规则
 
-**Options**: `RULE` `ACTION` `IP` `PORT` `[PROTOCOL]` `[COMMENT]`
+**选项**: `RULE` `ACTION` `IP` `PORT` `[PROTOCOL]` `[COMMENT]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-change-firewall-rule 3 ACCEPT 5.188.123.17 443
 ```
 
-This function is used for changing existing firewall rule.
-It fully replace rule with new one but keeps same id.
+该功能用于更改现有的防火墙规则。它完全用新规则替换规则，但保留相同的 id。
 
-## v-change-fs-file-permission
+命令: v-change-fs-file-permission
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-fs-file-permission)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-fs-file-permission)
 
-change file permission
+更改文件权限
 
-**Options**: `USER` `FILE` `PERMISSIONS`
+**选项**: `USER` `FILE` `PERMISSIONS`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-change-fs-file-permission admin readme.txt 0777
 ```
 
-This function changes file access permissions on the file system
+该函数更改文件系统上的文件访问权限
 
-## v-change-mail-account-password
+命令: v-change-mail-account-password
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-mail-account-password)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-mail-account-password)
 
-change mail account password
+更改邮件帐户密码
 
-**Options**: `USER` `DOMAIN` `ACCOUNT` `PASSWORD`
+**选项**: `USER` `DOMAIN` `ACCOUNT` `PASSWORD`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-change-mail-account-password admin mydomain.tld user p4$$vvOrD
 ```
 
-This function changes email account password.
+此功能更改电子邮件帐户密码。
 
-## v-change-mail-account-quota
+命令: v-change-mail-account-quota
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-mail-account-quota)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-mail-account-quota)
 
-change mail account quota
+更改邮件帐户配额
 
-**Options**: `USER` `DOMAIN` `ACCOUNT` `QUOTA`
+**选项**: `USER` `DOMAIN` `ACCOUNT` `QUOTA`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-change-mail-account-quota admin mydomain.tld user01 unlimited
 ```
 
-This function changes email account disk quota.
+此功能更改电子邮件帐户磁盘配额。
 
-## v-change-mail-account-rate-limit
+命令: v-change-mail-account-rate-limit
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-mail-account-rate-limit)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-mail-account-rate-limit)
 
-change mail account rate limit
+更改邮件帐户速率限制
 
-**Options**: `USER` `DOMAIN` `ACCOUNT` `RATE`
+**选项**: `USER` `DOMAIN` `ACCOUNT` `RATE`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-change-mail-account-rate-limit admin mydomain.tld user01 100
 ```
 
-This function changes email account rate limit. Use system to use domain or "server" setting
+此功能更改电子邮件帐户速率限制。 使用系统使用网站名或“服务器”设置
 
-## v-change-mail-domain-catchall
+命令: v-change-mail-domain-catchall
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-mail-domain-catchall)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-mail-domain-catchall)
 
-change mail domain catchall email
+更改邮件网站电子邮件
 
-**Options**: `USER` `DOMAIN` `EMAIL`
+**选项**: `USER` `DOMAIN` `EMAIL`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-change-mail-domain-catchall user01 mydomain.tld master@mydomain.tld
 ```
 
-This function changes mail domain catchall.
+此功能更改用户邮件网站。（官方未详细说明）使用者如使用到这个命令在论坛贴个命令反馈一下。我将不定期修复。
 
-## v-change-mail-domain-rate-limit
+命令: v-change-mail-domain-rate-limit
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-mail-domain-rate-limit)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-mail-domain-rate-limit)
 
-change mail domain rate limit
+更改邮件网站速率限制
 
-**Options**: `USER` `DOMAIN` `RATE`
+**选项**: `USER` `DOMAIN` `RATE`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-change-mail-domain-rate-limit admin mydomain.tld 100
 ```
 
-This function changes email account rate limit for the domain. Account specific setting will overwrite domain setting!
+此功能更改网站的电子邮件帐户速率限制。 帐户特定设置将覆盖网站设置！
 
-## v-change-mail-domain-sslcert
+命令: v-change-mail-domain-sslcert
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-mail-domain-sslcert)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-mail-domain-sslcert)
 
-change domain ssl certificate
+更改网站名ssl证书
 
-**Options**: `USER` `DOMAIN` `SSL_DIR` `[RESTART]`
+**选项**: `USER` `DOMAIN` `SSL_DIR` `[RESTART]`
 
-This function changes SSL domain certificate and the key. If ca file present
-it will be replaced as well.
+此功能更改 SSL 网站证书和密钥。 如果存在 ca 文件它也将被替换。
 
-## v-change-remote-dns-domain-exp
+命令: v-change-remote-dns-domain-exp
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-remote-dns-domain-exp)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-remote-dns-domain-exp)
 
-change remote dns domain expiration date
+更改远程 DNS 网站到期日期
 
-**Options**: `USER` `DOMAIN`
+**选项**: `USER` `DOMAIN`
 
-This function synchronise dns domain with the remote server.
+此功能将 dns 网站与远程服务器同步。
 
-## v-change-remote-dns-domain-soa
+命令: v-change-remote-dns-domain-soa
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-remote-dns-domain-soa)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-remote-dns-domain-soa)
 
-change remote dns domain SOA
+更改远程 DNS 网站 SOA
 
-**Options**: `USER` `DOMAIN`
+**选项**: `USER` `DOMAIN`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-change-remote-dns-domain-soa admin example.org.uk
 ```
 
-This function synchronise dns domain with the remote server.
+此功能将 dns 网站与远程服务器同步。
 
-## v-change-remote-dns-domain-ttl
+命令: v-change-remote-dns-domain-ttl
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-remote-dns-domain-ttl)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-remote-dns-domain-ttl)
 
-change remote dns domain TTL
+更改远程 DNS 网站 TTL
 
-**Options**: `USER` `DOMAIN`
+**选项**: `USER` `DOMAIN`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-change-remote-dns-domain-ttl admin domain.tld
 ```
 
-This function synchronise dns domain with the remote server.
+此功能将 dns 网站与远程服务器同步。
 
-## v-change-sys-api
+命令: v-change-sys-api
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-sys-api)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-sys-api)
 
-Enable / Disable API access
+启用/禁用 API 访问
 
-**Options**: `STATUS`
+**选项**: `STATUS`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-change-sys-api enable legacy
@@ -1672,34 +1644,33 @@ v-change-sys-api disable
 # Disable API
 ```
 
-Enabled / Disable API
+此功能将启用或禁用 API
 
-## v-change-sys-config-value
+命令: v-change-sys-config-value
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-sys-config-value)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-sys-config-value)
 
-change sysconfig value
+更改系统配置值
 
-**Options**: `KEY` `VALUE`
+**选项**: `KEY` `VALUE`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-change-sys-config-value VERSION 1.0
 ```
 
-This function is for changing main config settings such as COMPANY_NAME or
-COMPANY_EMAIL and so on.
+此功能用于更改主要配置设置，例如 COMPANY_NAME 或COMPANY_EMAIL 等等。
 
-## v-change-sys-db-alias
+命令: v-change-sys-db-alias
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-sys-db-alias)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-sys-db-alias)
 
-change phpmyadmin/phppgadmin alias url
+更改 phpmyadmin/phppgadmin 别名 url
 
-**Options**: `TYPE` `ALIAS`
+**选项**: `TYPE` `ALIAS`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-change-sys-db-alias pma phpmyadmin
@@ -1708,5561 +1679,5576 @@ v-change-sys-db-alias pga phppgadmin
 # Sets phpPgAdmin alias to phppgadmin
 ```
 
-This function changes the database editor url in
-apache2 or nginx configuration.
+此函数更改数据库编辑器 urlapache2 或 nginx 配置。
 
-## v-change-sys-demo-mode
+命令: v-change-sys-demo-mode
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-sys-demo-mode)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-sys-demo-mode)
 
-enable or disable demo mode
+启用或禁用演示模式
 
-**Options**: `ACTIVE`
+**选项**: `ACTIVE`
 
-This function will set the demo mode variable,
-which will prevent usage of certain v-scripts in the backend
-and prevent modification of objects in the control panel.
-It will also disable virtual hosts for Apache and NGINX
-for domains which have been created.
+该函数将设置演示模式变量，这将阻止在后端使用某些 v 脚本并防止修改控制面板中的对象。
+它还将禁用 Apache 和 NGINX 的虚拟主机对于已创建的网站。
 
-## v-change-sys-hestia-ssl
+命令: v-change-sys-hestia-ssl
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-sys-hestia-ssl)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-sys-hestia-ssl)
 
-change hestia ssl certificate
+更改 Hestia控制面板 ssl 证书
 
-**Options**: `SSL_DIR` `[RESTART]`
+**选项**: `SSL_DIR` `[RESTART]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-change-sys-hestia-ssl /home/new/dir/path yes
 ```
 
-This function changes hestia SSL certificate and the key.
+此功能更改 hestia 控制面板的 SSL 证书和密钥。
 
-## v-change-sys-hostname
+命令: v-change-sys-hostname
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-sys-hostname)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-sys-hostname)
 
-change hostname
+更改主机名
 
-**Options**: `HOSTNAME`
+**选项**: `HOSTNAME`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-change-sys-hostname mydomain.tld
 ```
 
-This function for changing system hostname.
+该函数用于更改系统主机名。
 
-## v-change-sys-ip-name
+命令: v-change-sys-ip-name
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-sys-ip-name)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-sys-ip-name)
 
-change IP name
+更改IP名称
 
-**Options**: `IP` `NAME`
+**选项**: `IP` `NAME`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-change-sys-ip-name 203.0.113.1 acme.com
 ```
 
-This function for changing dns domain associated with IP.
+此功能用于更改与 IP 关联的 dns 域。
 
-## v-change-sys-ip-nat
+命令: v-change-sys-ip-nat
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-sys-ip-nat)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-sys-ip-nat)
 
-change NAT IP address
+更改NAT IP地址
 
-**Options**: `IP` `NAT_IP` `[RESTART]`
+**选项**: `IP` `NAT_IP` `[RESTART]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-change-sys-ip-nat 10.0.0.1 203.0.113.1
 ```
 
-This function for changing NAT IP associated with IP.
+此功能用于更改与 IP 关联的 NAT IP。
 
-## v-change-sys-ip-owner
+命令: v-change-sys-ip-owner
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-sys-ip-owner)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-sys-ip-owner)
 
-change IP owner
+更改IP所有者
 
-**Options**: `IP` `USER`
+**选项**: `IP` `USER`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-change-sys-ip-owner 203.0.113.1 admin
 ```
 
-This function of changing IP address ownership.
+这个改变IP地址所有权的功能。
 
-## v-change-sys-ip-status
+命令: v-change-sys-ip-status
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-sys-ip-status)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-sys-ip-status)
 
-change IP status
+改变IP状态
 
-**Options**: `IP` `IP_STATUS`
+**选项**: `IP` `IP_STATUS`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-change-sys-ip-status 203.0.113.1 yourstatus
 ```
 
-This function of changing an IP address's status.
+该功能改变IP地址的状态。
 
-## v-change-sys-language
+命令: v-change-sys-language
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-sys-language)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-sys-language)
 
-change sys language
+更改系统语言
 
-**Options**: `LANGUAGE` `[UPDATE_USERS]`
+**选项**: `LANGUAGE` `[UPDATE_USERS]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-change-sys-language ru
 ```
 
-This function for changing system language.
+此功能用于更改系统语言。请在最后位置输入你要更改的语言代码,具体代码请参考上面的文档，如果你看不明白请到英文中文论坛查找或者在论坛发帖询问。
 
-## v-change-sys-php
+命令: v-change-sys-php
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-sys-php)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-sys-php)
 
-Change default php version server wide
+更改服务器范围内的默认 php 版本
 
-**Options**: `VERSION`
+**选项**: `VERSION`
 
-**Examples**:
+**示例**:
+
+此功能用于更改服务器范围内的默认 php 版本
 
 ```bash
 v-change-sys-php 8.0
 ```
 
-## v-change-sys-port
+命令: v-change-sys-port
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-sys-port)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-sys-port)
 
-change system backend port
+更改系统后端端口
 
-**Options**: `PORT`
+**选项**: `PORT`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-change-sys-port 5678
 ```
 
-This function for changing the system backend port in NGINX configuration.
+此功能用于更改 NGINX 配置中的系统后端端口。
 
-## v-change-sys-release
+命令: v-change-sys-release
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-sys-release)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-sys-release)
 
-update web templates
+更新 web 模板
 
-**Options**: `[RESTART]`
+**选项**: `[RESTART]`
 
-This function for changing the release branch for the
-Hestia Control Panel. This allows the user to switch between
-stable and pre-release builds which will automaticlly update
-based on the appropriate release schedule if auto-update is
-turned on.
+该函数用于更改发布分支赫斯提亚控制面板。 这允许用户在之间切换稳定和预发布版本将自动更新如果自动更新是基于适当的发布计划
 
-## v-change-sys-service-config
+命令: v-change-sys-service-config
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-sys-service-config)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-sys-service-config)
 
-change service config
+更改服务配置
 
-**Options**: `CONFIG` `SERVICE` `[RESTART]`
+**选项**: `CONFIG` `SERVICE` `[RESTART]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-change-sys-service-config /home/admin/dovecot.conf dovecot yes
 ```
 
-This function for changing service confguration.
+此功能用于更改服务配置。
 
-## v-change-sys-timezone
+命令: v-change-sys-timezone
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-sys-timezone)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-sys-timezone)
 
-change system timezone
+更改系统时区
 
-**Options**: `TIMEZONE`
+**选项**: `TIMEZONE`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-change-sys-timezone Europe/Berlin
 ```
 
-This function for changing system timezone.
+该函数用于更改系统时区。
 
-## v-change-sys-web-terminal-port
+命令: v-change-sys-web-terminal-port
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-sys-web-terminal-port)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-sys-web-terminal-port)
 
-change system web terminal backend port
+更改系统Web终端后端端口
 
-**Options**: `PORT`
+**选项**: `PORT`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-change-sys-web-terminal-port 5678
 ```
 
-This function for changing the system's web terminal backend port in NGINX configuration.
+此功能用于在 NGINX 配置中更改系统的 Web 终端后端端口。
 
-## v-change-sys-webmail
+命令: v-change-sys-webmail
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-sys-webmail)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-sys-webmail)
 
-change webmail alias url
+更改网络邮件别名 url
 
-**Options**: `WEBMAIL`
+**选项**: `WEBMAIL`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-change-sys-webmail YourtrickyURLhere
 ```
 
-This function changes the webmail url in apache2 or nginx configuration.
+此函数更改 apache2 或 nginx 配置中的 webmail url别名。
 
-## v-change-user-config-value
+## 管理修改用户信息的系列命令
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-user-config-value)
+命令: v-change-user-config-value
 
-changes user configuration value
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-user-config-value)
 
-**Options**: `USER` `KEY` `VALUE`
+更改用户配置关键字/值
 
-**Examples**:
+**选项**: `USER` `KEY` `VALUE`
+
+**示例**:
 
 ```bash
 v-change-user-config-value admin ROLE admin
 ```
 
-Changes key/value for specified user.
+此函数更改指定用户的关键字/值。
 
-## v-change-user-contact
+命令: v-change-user-contact
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-user-contact)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-user-contact)
 
-change user contact email
+更改用户联系电子邮件
 
-**Options**: `USER` `EMAIL`
+**选项**: `USER` `EMAIL`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-change-user-contact admin admin@yahoo.com
 ```
 
-This function for changing of e-mail associated with a certain user.
+此功能用于更改与特定用户关联的电子邮件。
 
-## v-change-user-language
+命令: v-change-user-language
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-user-language)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-user-language)
 
-change user language
+更改用户语言
 
-**Options**: `USER` `LANGUAGE`
+**选项**: `USER` `LANGUAGE`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-change-user-language admin en
 ```
 
-This function for changing language.
+此功能用于更改语言。
 
-## v-change-user-name
+命令: v-change-user-name
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-user-name)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-user-name)
 
-change user full name
+更改用户全名
 
-**Options**: `USER` `NAME` `[LAST_NAME]`
+**选项**: `USER` `NAME` `[LAST_NAME]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-change-user-name admin John Smith
 ```
 
-This function allow to change user's full name.
+此功能允许更改用户的全名。
 
-## v-change-user-ns
+命令: v-change-user-ns
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-user-ns)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-user-ns)
 
-change user name servers
+更改用户名服务器
 
-**Options**: `USER` `NS1` `NS2` `[NS3]` `[NS4]` `[NS5]` `[NS6]` `[NS7]` `[NS8]`
+**选项**: `USER` `NS1` `NS2` `[NS3]` `[NS4]` `[NS5]` `[NS6]` `[NS7]` `[NS8]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-change-user-ns ns1.domain.tld ns2.domain.tld
 ```
 
-This function for changing default name servers for specific user.
+此功能用于更改特定用户的默认名称服务器。
 
-## v-change-user-package
+命令: v-change-user-package
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-user-package)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-user-package)
 
-change user package
+更改用户包
 
-**Options**: `USER` `PACKAGE` `[FORCE]`
+**选项**: `USER` `PACKAGE` `[FORCE]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-change-user-package admin yourpackage
 ```
 
-This function changes user's hosting package.
+此功能更改用户的托管套餐。
 
-## v-change-user-password
+命令: v-change-user-password
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-user-password)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-user-password)
 
-change user password
+更改用户密码
 
-**Options**: `USER` `PASSWORD`
+**选项**: `USER` `PASSWORD`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-change-user-password admin NewPassword123
 ```
 
-This function changes user's password and updates RKEY value.
+该函数更改用户密码并更新。
 
-## v-change-user-php-cli
+命令: v-change-user-php-cli
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-user-php-cli)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-user-php-cli)
 
-add php version alias to .bash_aliases
+将 php 版本别名添加到 .bash_aliases
 
-**Options**: `USER` `VERSION`
+**选项**: `USER` `VERSION`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-change-user-php-cli user 7.4
 ```
 
-add line to .bash_aliases to set default php command line
-version when multi-php is enabled.
+此功能更改将别名添加到 .bash_aliases 以设置默认 php 命令行，启用多 php 时的版本。
 
-## v-change-user-rkey
+.bash_aliases 文件是一个 Bash shell 的配置文件，用于定义别名（aliases）。别名是命令的简短替代形式，允许用户为经常使用的复杂命令或命令序列创建简单的名称。
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-user-rkey)
+使用 .bash_aliases 文件，你可以：
 
-change user random key
+简化命令：通过为常用命令创建别名，你可以减少输入，从而更快地执行命令。
 
-**Options**: `USER` `[HASH]`
+自定义命令：创建自定义的别名，执行一系列命令或复杂的操作。
 
-This function changes user's RKEY value thats has been used for security value to be used forgot password function only.
+提高可读性：为复杂的命令或命令序列创建更有意义的名称，使其更容易理解。
 
-## v-change-user-role
+组织命令：将所有别名放在一个文件中，便于管理和查找。
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-user-role)
+例如，假设你经常需要查看当前目录下的所有文件和目录，并按大小排序。你可以使用以下命令：
 
-updates user role
+```bash
+ls -lh | sort -rh -k5
+```
 
-**Options**: `USER` `ROLE`
+为了简化这个命令，你可以在 .bash_aliases 文件中添加以下行：
 
-**Examples**:
+bash
+alias lss='ls -lh | sort -rh -k5'
+
+然后，在 Bash shell 中，你只需要输入 lss 来执行这个命令。
+
+要使用 .bash_aliases 文件，你需要确保它在你的 shell 启动时被加载。
+
+这通常通过在 ~/.bashrc 或 ~/.bash_profile 文件中添加以下行来完成：
+
+```bash
+if [ -f ~/.bash_aliases ]; then  
+    source ~/.bash_aliases  
+fi
+```
+
+然后，每次你启动一个新的 Bash shell 会话时，.bash_aliases 文件中的别名都会自动加载。
+
+注意：不同的系统和 shell 配置可能会有所不同，因此请根据你的具体环境进行调整。
+
+## 配置用户权限的的系列命令
+
+命令: v-change-user-rkey
+
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-user-rkey)
+
+更改用户随机密钥
+
+**选项**: `USER` `[HASH]`
+
+此功能更改已用于安全值的用户 KEY 值，仅用于忘记密码功能。
+
+命令: v-change-user-role
+
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-user-role)
+
+更改/撤销用户管理员权限
+
+**选项**: `USER` `ROLE`
+
+**示例**:
 
 ```bash
 v-change-user-role user administrator
 ```
 
-Give/revoke user administrator rights to manage all accounts as admin
+此功能更改/撤销用户管理员权限以管理员身份管理所有帐户
 
-## v-change-user-shell
+命令: v-change-user-shell
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-user-shell)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-user-shell)
 
-change user shell
+更改禁止用户登录
 
-**Options**: `USER` `SHELL`
+**选项**: `USER` `SHELL`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-change-user-shell admin nologin
 ```
 
-This function changes system shell of a user. Shell gives ability to use ssh.
+此函数更改用户禁止登录的系统。 Shell 提供的使用 ssh 的能力。
 
-## v-change-user-sort-order
+命令: v-change-user-sort-order
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-user-sort-order)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-user-sort-order)
 
-updates user role
+更新用户角色
 
-**Options**: `USER` `SORT_ORDER`
+**选项**: `USER` `SORT_ORDER`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-change-user-sort-order user date
 ```
 
-Changes web UI display sort order for specified user.
+更改指定用户的 Web 界面显示排序顺序。
 
-## v-change-user-template
+命令: v-change-user-template
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-user-template)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-user-template)
 
-change user default template
+更改用户默认模板
 
-**Options**: `USER` `TYPE` `TEMPLATE`
+**选项**: `USER` `TYPE` `TEMPLATE`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-change-user-template admin WEB wordpress
 ```
 
-This function changes default user web template.
+此功能更改默认用户网页模板。
 
-## v-change-user-theme
+命令: v-change-user-theme
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-user-theme)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-user-theme)
 
-updates user theme
+更新用户主题
 
-**Options**: `USER` `THEME`
+**选项**: `USER` `THEME`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-change-user-theme admin dark
 example: v-change-user-theme peter vestia
 ```
 
-Changes web UI display theme for specified user.
+更改指定用户的 Web UI 显示主题。dark为主题名称
 
-## v-change-web-domain-backend-tpl
+命令: v-change-web-domain-backend-tpl
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-web-domain-backend-tpl)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-web-domain-backend-tpl)
 
-change web domain backend template
+更改Web域后端模板
 
-**Options**: `USER` `DOMAIN` `TEMPLATE` `[RESTART]`
+**选项**: `USER` `DOMAIN` `TEMPLATE` `[RESTART]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-change-web-domain-backend-tpl admin acme.com PHP-7_4
 ```
 
-This function changes backend template
+此功能更改后端模板
 
-## v-change-web-domain-dirlist
+命令: v-change-web-domain-dirlist
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-web-domain-dirlist)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-web-domain-dirlist)
 
-enable/disable directory listing
+启用/禁用目录列表
 
-**Options**: `USER` `DOMAIN` `MODE`
+**选项**: `USER` `DOMAIN` `MODE`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-change-web-domain-dirlist user demo.com on
 ```
 
-This function is used for changing the directory list mode.
+该函数用于改变目录列表模式。
 
-## v-change-web-domain-docroot
+命令: v-change-web-domain-docroot
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-web-domain-docroot)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-web-domain-docroot)
 
-Changes the document root for an existing web domain
+## 管理 WEB 的系列命令
 
-**Options**: `USER` `DOMAIN` `TARGET_DOMAIN` `[DIRECTORY]` `[PHP]`
+更改现有 Web 域的文档根
 
-**Examples**:
+**选项**: `USER` `DOMAIN` `TARGET_DOMAIN` `[DIRECTORY]` `[PHP]`
+
+**示例**:
 
 ```bash
 v-change-web-domain-docroot admin domain.tld otherdomain.tld
-# add custom docroot
-# points domain.tld to otherdomain.tld's document root.
+# 添加自定义文档根目录
+# 将domain.tld 指向otherdomain.tld 的文档根目录。
 v-change-web-domain-docroot admin test.local default
-# remove custom docroot
-# returns document root to default value for domain.
+# 删除自定义文档根目录
+# 将文档根返回到域的默认值。
 ```
 
-This call changes the document root of a chosen web domain
-to another available domain under the user context.
+这个调用将所选Web域名的文档根目录更改为用户的另一个可用域名
 
-## v-change-web-domain-ftp-password
+命令: v-change-web-domain-ftp-password
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-web-domain-ftp-password)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-web-domain-ftp-password)
 
-change ftp user password.
+修改ftp用户密码。
 
-**Options**: `USER` `DOMAIN` `FTP_USER` `FTP_PASSWORD`
+**选项**: `USER` `DOMAIN` `FTP_USER` `FTP_PASSWORD`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-change-web-domain-ftp-password admin example.com ftp_usr ftp_qwerty
 ```
 
-This function changes ftp user password.
+该函数修改ftp用户密码。
 
-## v-change-web-domain-ftp-path
+命令: v-change-web-domain-ftp-path
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-web-domain-ftp-path)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-web-domain-ftp-path)
 
-change path for ftp user.
+更改 ftp 用户的路径。
 
-**Options**: `USER` `DOMAIN` `FTP_USER` `FTP_PATH`
+**选项**: `USER` `DOMAIN` `FTP_USER` `FTP_PATH`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-change-web-domain-ftp-path admin example.com /home/admin/example.com
 ```
 
-This function changes ftp user path.
+此功能更改 ftp 用户路径。
 
-## v-change-web-domain-httpauth
+命令: v-change-web-domain-httpauth
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-web-domain-httpauth)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-web-domain-httpauth)
 
-change password for http auth user
+更改http 授权用户的密码
 
-**Options**: `USER` `DOMAIN` `AUTH_USER` `AUTH_PASSWORD` `[RESTART]`
+**选项**: `USER` `DOMAIN` `AUTH_USER` `AUTH_PASSWORD` `[RESTART]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-change-web-domain-httpauth admin acme.com alice white_rA$$bIt
 ```
 
-This function is used for changing http auth user password
+该函数用于修改http 授权用户密码
 
-## v-change-web-domain-ip
+命令: v-change-web-domain-ip
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-web-domain-ip)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-web-domain-ip)
 
-change web domain ip
+更改网站域名ip
 
-**Options**: `USER` `DOMAIN` `DOMAIN` `[RESTART]`
+**选项**: `USER` `DOMAIN` `DOMAIN` `[RESTART]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-change-web-domain-ip admin example.com 167.86.105.230 yes
 ```
 
-This function is used for changing domain ip
+该功能用于更改域名ip
 
-## v-change-web-domain-name
+命令: v-change-web-domain-name
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-web-domain-name)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-web-domain-name)
 
-change web domain name
+更改网络域名
 
-**Options**: `USER` `DOMAIN` `NEW_DOMAIN` `[RESTART]`
+**选项**: `USER` `DOMAIN` `NEW_DOMAIN` `[RESTART]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-change-web-domain-name alice wonderland.com lookinglass.com yes
 ```
 
-This function is used for changing the domain name.
+该功能用于更改域名。
 
-## v-change-web-domain-proxy-tpl
+命令: v-change-web-domain-proxy-tpl
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-web-domain-proxy-tpl)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-web-domain-proxy-tpl)
 
-change web domain proxy template
+更改 Web 域代理模板
 
-**Options**: `USER` `DOMAIN` `TEMPLATE` `[EXTENTIONS]` `[RESTART]`
+**选项**: `USER` `DOMAIN` `TEMPLATE` `[EXTENTIONS]` `[RESTART]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-change-web-domain-proxy-tpl admin domain.tld hosting
 ```
 
-This function changes proxy template
+此功能更改代理模板
 
-## v-change-web-domain-sslcert
+命令: v-change-web-domain-sslcert
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-web-domain-sslcert)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-web-domain-sslcert)
 
-change domain ssl certificate
+更改域名ssl证书
 
-**Options**: `USER` `DOMAIN` `SSL_DIR` `[RESTART]`
+**选项**: `USER` `DOMAIN` `SSL_DIR` `[RESTART]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-change-web-domain-sslcert admin example.com /home/admin/tmp
 ```
 
-This function changes SSL domain certificate and the key. If ca file present
-it will be replaced as well.
+此功能更改 SSL 域证书和密钥。 如果存在 ca 文件它也将被替换。
 
-## v-change-web-domain-sslhome
+命令: v-change-web-domain-sslhome
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-web-domain-sslhome)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-web-domain-sslhome)
 
-changing domain ssl home
+更改web域名的SSL主目录
 
-**Options**: `USER` `DOMAIN` `SSL_HOME` `[RESTART]`
+**选项**: `USER` `DOMAIN` `SSL_HOME` `[RESTART]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-change-web-domain-sslhome admin acme.com single
 example: v-change-web-domain-sslhome admin acme.com same
 ```
 
-This function changes SSL home directory. Single will separate the both public_html / public_shtml. Same will always point to public_shtml
+此函数更改web域名的SSL主目录。 Single 将分隔 public_html / public_shtml。 同样将始终指向 public_shtml
 
-## v-change-web-domain-stats
+命令: v-change-web-domain-stats
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-web-domain-stats)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-web-domain-stats)
 
-change web domain statistics
+更改网站域统计信息
 
-**Options**: `USER` `DOMAIN` `TYPE`
+**选项**: `USER` `DOMAIN` `TYPE`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-change-web-domain-stats admin example.com awstats
 ```
 
-This function of deleting site's system of statistics. Its type is
-automatically chooses from client's configuration file.
+此功能删除网站系统的统计数据。 它的类型是自动从客户端的配置文件中选择。
 
-## v-change-web-domain-tpl
+命令: v-change-web-domain-tpl
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-web-domain-tpl)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-web-domain-tpl)
 
-change web domain template
+更改 Web 域模板
 
-**Options**: `USER` `DOMAIN` `TEMPLATE` `[RESTART]`
+**选项**: `USER` `DOMAIN` `TEMPLATE` `[RESTART]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-change-web-domain-tpl admin acme.com opencart
 ```
 
-This function changes template of the web configuration file. The content
-of webdomain directories remains untouched.
+此功能更改 Web 配置文件的模板。 Web 域目录的内容保持不变。
 
-## v-check-access-key
+## 配置哈希值和令牌的系列命令
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-check-access-key)
+命令: v-check-access-key
 
-check access key
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-check-access-key)
 
-**Options**: `ACCESS_KEY_ID` `SECRET_ACCESS_KEY` `COMMAND` `[IP]` `[FORMAT]`
+检查访问密钥
 
-**Examples**:
+**选项**: `ACCESS_KEY_ID` `SECRET_ACCESS_KEY` `COMMAND` `[IP]` `[FORMAT]`
+
+**示例**:
 
 ```bash
 v-check-access-key key_id secret v-purge-nginx-cache 127.0.0.1 json
 ```
 
-- Checks if the key exists;
-- Checks if the secret belongs to the key;
-- Checks if the key user is suspended;
-- Checks if the key has permission to run the command.
+- 检查密钥是否存在；
+- 检查秘密是否属于密钥；
+- 检查关键用户是否被暂停；
+- 检查密钥是否有权运行该命令。
 
-## v-check-api-key
+命令: v-check-api-key
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-check-api-key)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-check-api-key)
 
-check api key
+检查 API 密钥
 
-**Options**: `KEY` `[IP]`
+**选项**: `KEY` `[IP]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-check-api-key random_key 127.0.0.1
 ```
 
-This function checks a key file in $HESTIA/data/keys/
+该函数检查 $HESTIA/data/keys/ 中的密钥文件
 
-## v-check-fs-permission
+命令: v-check-fs-permission
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-check-fs-permission)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-check-fs-permission)
 
-open file
+打开文件
 
-**Options**: `USER` `FILE`
+**选项**: `USER` `FILE`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-check-fs-permission admin readme.txt
 ```
 
-This function opens/reads files on the file system
+该函数打开/读取文件系统上的文件
 
-## v-check-mail-account-hash
+命令: v-check-mail-account-hash
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-check-mail-account-hash)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-check-mail-account-hash)
 
-check user password
+检查用户密码
 
-**Options**: `TYPE` `PASSWORD` `HASH`
+**选项**: `TYPE` `PASSWORD` `HASH`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-check-mail-account-hash ARGONID2 PASS HASH
 ```
 
-This function verifies email account password hash
+此函数验证电子邮件帐户密码哈希值
 
-## v-check-user-2fa
+命令: v-check-user-2fa
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-check-user-2fa)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-check-user-2fa)
 
-check user token
+检查用户令牌
 
-**Options**: `USER` `TOKEN`
+**选项**: `USER` `TOKEN`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-check-user-2fa admin 493690
 ```
 
-This function verifies user 2fa token.
+该函数验证用户 2fa 令牌。
 
-## v-check-user-hash
+命令: v-check-user-hash
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-check-user-hash)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-check-user-hash)
 
-check user hash
+检查用户哈希值
 
-**Options**: `USER` `HASH` `[IP]`
+**选项**: `USER` `HASH` `[IP]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-check-user-hash admin CN5JY6SMEyNGnyCuvmK5z4r7gtHAC4mRZ...
 ```
 
-This function verifies user hash
+该函数验证用户哈希值
 
-## v-check-user-password
+命令: v-check-user-password
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-check-user-password)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-check-user-password)
 
-check user password
+检查用户密码
 
-**Options**: `USER` `PASSWORD` `[IP]` `[RETURN_HASH]`
+**选项**: `USER` `PASSWORD` `[IP]` `[RETURN_HASH]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-check-user-password admin qwerty1234
 ```
 
-This function verifies user password from file
+该函数从文件中验证用户密码
 
-## v-copy-fs-directory
+## 复制文件的系列命令
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-copy-fs-directory)
+命令: v-copy-fs-directory
 
-copy directory
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-copy-fs-directory)
 
-**Options**: `USER` `SRC_DIRECTORY` `DST_DIRECTORY`
+复制目录
 
-**Examples**:
+**选项**: `USER` `SRC_DIRECTORY` `DST_DIRECTORY`
+
+**示例**:
 
 ```bash
 v-copy-fs-directory alice /home/alice/dir1 /home/bob/dir2
 ```
 
-This function copies directory on the file system
+该函数复制文件系统上的目录
 
-## v-copy-fs-file
+命令: v-copy-fs-file
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-copy-fs-file)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-copy-fs-file)
 
-copy file
+复制文件
+**选项**: `USER` `SRC_FILE` `DST_FILE`
 
-**Options**: `USER` `SRC_FILE` `DST_FILE`
-
-**Examples**:
+**示例**:
 
 ```bash
 v-copy-fs-file admin readme.txt readme_new.txt
 ```
 
-This function copies file on the file system
+该函数复制文件系统上的文件
 
-## v-copy-user-package
+命令: v-copy-user-package
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-copy-user-package)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-copy-user-package)
 
-duplicate existing package
+重复现有包
 
-**Options**: `PACKAGE` `NEW_PACKAGE`
+**选项**: `PACKAGE` `NEW_PACKAGE`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-copy-user-package default new
 ```
 
-This function allows the user to duplicate an existing
-package file to facilitate easier configuration.
+此功能允许用户复制现有的包文件以方便配置。
 
-## v-delete-access-key
+命令: v-delete-access-key
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-access-key)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-access-key)
 
-delete access key
+删除访问密钥
 
-**Options**: `ACCESS_KEY_ID`
+**选项**: `ACCESS_KEY_ID`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-delete-access-key mykey
 ```
 
-This function removes a key from in $HESTIA/data/access-keys/
+此函数从 $HESTIA/data/access-keys/ 中删除密钥
 
-## v-delete-backup-host
+命令: v-delete-backup-host
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-backup-host)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-backup-host)
 
-delete backup ftp server
+删除备份 ftp 服务器
 
-**Options**: `TYPE` `[HOST]`
+**选项**: `TYPE` `[HOST]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-delete-backup-host sftp
 ```
 
-This function deletes ftp backup host
+该函数删除ftp备份主机
 
-## v-delete-cron-hestia-autoupdate
+## 管理 CRON 定时任务的系列命令
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-cron-hestia-autoupdate)
+命令: v-delete-cron-hestia-autoupdate
 
-delete hestia autoupdate cron job
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-cron-hestia-autoupdate)
 
-**Options**: –
+删除 hestia 自动更新 cron 定时任务
 
-This function deletes hestia autoupdate cron job.
+**选项**: –
 
-## v-delete-cron-job
+此函数删除 hestia 自动更新 cron 定时任务。
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-cron-job)
+命令: v-delete-cron-job
 
-delete cron job
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-cron-job)
 
-**Options**: `USER` `JOB`
+删除定时任务
 
-**Examples**:
+**选项**: `USER` `JOB`
+
+**示例**:
 
 ```bash
 v-delete-cron-job admin 9
 ```
 
-This function deletes cron job.
+该函数删除 cron 定时任务。
 
-## v-delete-cron-reports
+命令: v-delete-cron-reports
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-cron-reports)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-cron-reports)
 
-delete cron reports
+删除 cron 报告
 
-**Options**: `USER`
+**选项**: `USER`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-delete-cron-reports admin
 ```
 
-This function for disabling reports on cron tasks and administrative
-notifications.
+此功能用于禁用 cron 任务和管理通知的报告。
 
-## v-delete-cron-restart-job
+命令: v-delete-cron-restart-job
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-cron-restart-job)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-cron-restart-job)
 
-delete restart job
+删除重启任务
 
-**Options**: –
+**选项**: –
 
-This function for disabling restart cron tasks
+此功能用于禁用重新启动 cron 任务
 
-## v-delete-database
+## 管理数据库的系列命令
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-database)
+命令: v-delete-database
 
-delete database
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-database)
 
-**Options**: `USER` `DATABASE`
+删除数据库
 
-**Examples**:
+**选项**: `USER` `DATABASE`
+
+**示例**:
 
 ```bash
-v-delete-database admin wp_db
+v-delete-database admin www_db
 ```
 
-This function for deleting the database. If database user have access to
-another database, he will not be deleted.
+该函数用于删除数据库。 如果数据库用户有权访问另一个数据库，他不会被删除。
 
-## v-delete-database-host
+命令: v-delete-database-host
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-database-host)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-database-host)
 
-delete database server
+删除数据库服务器
 
-**Options**: `TYPE` `HOST`
+**选项**: `TYPE` `HOST`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-delete-database-host pgsql localhost
 ```
 
-This function for deleting the database host from hestia configuration. It will
-be deleted if there are no databases created on it only.
+此函数用于它会从 hestia 删除配置中的数据库主机。 如果没有在其上创建数据库，则将其删除。
 
-## v-delete-database-temp-user
+命令: v-delete-database-temp-user
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-database-temp-user)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-database-temp-user)
 
-deletes temp database user
+删除临时数据库用户
 
-**Options**: `USER` `DBUSER` `[TYPE]` `[HOST]`
+**选项**: `USER` `DBUSER` `[TYPE]` `[HOST]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-add-database-temp-user wordress hestia_sso_user mysql
 ```
 
-Revokes "temp user" access to a database and removes the user
-To be used in combination with v-add-database-temp-user
+撤销“临时用户”对数据库的访问权限并删除该用户
+与 `v-add-database-temp-user` 结合使用
 
-## v-delete-databases
+命令: v-delete-databases
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-databases)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-databases)
 
-delete user databases
+删除用户数据库
 
-**Options**: `USER`
+**选项**: `USER`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-delete-databases admin
 ```
 
-This function deletes all user databases.
+此功能删除所有用户数据库。
 
-## v-delete-dns-domain
+## 管理 DNS 的系列命令
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-dns-domain)
+命令: v-delete-dns-domain
 
-delete dns domain
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-dns-domain)
 
-**Options**: `USER` `DOMAIN`
+删除dns域名
 
-**Examples**:
+**选项**: `USER` `DOMAIN`
+
+**示例**:
 
 ```bash
 v-delete-dns-domain alice acme.com
 ```
 
-This function for deleting DNS domain. By deleting it all records will also be
-deleted.
+此功能用于删除 DNS 域。 通过删除它，所有记录也将被删除
 
-## v-delete-dns-domains
+命令: v-delete-dns-domains
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-dns-domains)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-dns-domains)
 
-delete dns domains
+删除 dns 域
 
-**Options**: `USER` `[RESTART]`
+**选项**: `USER` `[RESTART]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-delete-dns-domains bob
 ```
 
-This function for deleting all users DNS domains.
+此功能用于删除所有用户的 DNS 域。
 
-## v-delete-dns-domains-src
+命令: v-delete-dns-domains-src
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-dns-domains-src)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-dns-domains-src)
 
-delete dns domains based on SRC field
+根据 SRC 字段删除 dns 域
 
-**Options**: `USER` `SRC` `[RESTART]`
+**选项**: `USER` `SRC` `[RESTART]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-delete-dns-domains-src admin '' yes
 ```
 
-This function for deleting DNS domains related to a certain host.
+该功能用于删除与某个主机相关的DNS域。
 
-## v-delete-dns-on-web-alias
+命令: v-delete-dns-on-web-alias
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-dns-on-web-alias)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-dns-on-web-alias)
 
-delete dns domain or dns record based on web domain alias
+删除 dns 域或基于 web 域别名的 dns 记录
 
-**Options**: `USER` `DOMAIN` `ALIAS` `[RESTART]`
+**选项**: `USER` `DOMAIN` `ALIAS` `[RESTART]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-delete-dns-on-web-alias admin example.com www.example.com
 ```
 
-This function deletes dns domain or dns record based on web domain alias.
+该功能根据Web域别名删除dns域或dns记录。
 
-## v-delete-dns-record
+命令: v-delete-dns-record
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-dns-record)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-dns-record)
 
-delete dns record
+删除dns记录
 
-**Options**: `USER` `DOMAIN` `ID` `[RESTART]`
+**选项**: `USER` `DOMAIN` `ID` `[RESTART]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-delete-dns-record bob acme.com 42 yes
 ```
 
-This function for deleting a certain record of DNS zone.
+该功能用于删除DNS区域的某个记录。
 
-## v-delete-domain
+命令: v-delete-domain
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-domain)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-domain)
 
-delete web/dns/mail domain
+删除 web/dns/mail 域
 
-**Options**: `USER` `DOMAIN`
+**选项**: `USER` `DOMAIN`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-delete-domain admin domain.tld
 ```
 
-This function deletes web/dns/mail domain.
+此功能删除 web/dns/mail 域。
 
-## v-delete-fastcgi-cache
+命令: v-delete-fastcgi-cache
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-fastcgi-cache)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-fastcgi-cache)
 
-Disable FastCGI cache for nginx
+禁用 nginx 的 FastCGI 缓存
 
-**Options**: `USER` `DOMAIN` `[RESTART]`
+**选项**: `USER` `DOMAIN` `[RESTART]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-delete-fastcgi-cache user domain.tld
 ```
 
-This function disables FastCGI cache for nginx
+该函数禁用 nginx 的 FastCGI 缓存
 
-## v-delete-firewall-ban
+## 管理防火墙的系列命令
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-firewall-ban)
+命令: v-delete-firewall-ban
 
-delete firewall blocking rule
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-firewall-ban)
 
-**Options**: `IP` `CHAIN`
+删除防火墙拦截规则
 
-**Examples**:
+**选项**: `IP` `CHAIN`
+
+**示例**:
 
 ```bash
 v-delete-firewall-ban 198.11.130.250 MAIL
 ```
 
-This function deletes blocking rule from system firewall
+该功能删除系统防火墙的拦截规则
 
-## v-delete-firewall-chain
+命令: v-delete-firewall-chain
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-firewall-chain)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-firewall-chain)
 
-delete firewall chain
+删除防火墙链
 
-**Options**: `CHAIN`
+**选项**: `CHAIN`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-delete-firewall-chain WEB
 ```
 
-This function adds new rule to system firewall
+该功能为系统防火墙添加新规则
 
-## v-delete-firewall-ipset
+命令: v-delete-firewall-ipset
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-firewall-ipset)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-firewall-ipset)
 
-delete firewall ipset
+删除防火墙ipset
 
-**Options**: `NAME`
+**选项**: `NAME`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-delete-firewall-ipset country-nl
 ```
 
-This function removes ipset from system and from hestia
+此函数从系统和 Hestia 中删除 ipset
 
-## v-delete-firewall-rule
+命令: v-delete-firewall-rule
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-firewall-rule)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-firewall-rule)
 
-delete firewall rule
+删除防火墙规则
 
-**Options**: `RULE`
+**选项**: `RULE`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-delete-firewall-rule SSH_BLOCK
 ```
 
-This function deletes firewall rule.
+该功能删除防火墙规则。
 
-## v-delete-fs-directory
+命令: v-delete-fs-directory
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-fs-directory)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-fs-directory)
 
-delete directory
+删除目录
 
-**Options**: `USER` `DIRECTORY`
+**选项**: `USER` `DIRECTORY`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-delete-fs-directory admin report1
 ```
 
-This function deletes directory on the file system
+该函数删除文件系统上的目录
 
-## v-delete-fs-file
+命令: v-delete-fs-file
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-fs-file)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-fs-file)
 
-delete file
+删除文件
 
-**Options**: `USER` `FILE`
+**选项**: `USER` `FILE`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-delete-fs-file admin readme.txt
 ```
 
-This function deletes file on the file system
+该函数删除文件系统上的文件
 
-## v-delete-letsencrypt-domain
+## 管理配置 SSL证书和电子邮件系统的系列命令
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-letsencrypt-domain)
+命令: v-delete-letsencrypt-domain
 
-deleting letsencrypt ssl cetificate for domain
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-letsencrypt-domain)
 
-**Options**: `USER` `DOMAIN` `[RESTART]` `[MAIL]`
+删除域的 LetsEncrypt SSL 证书
 
-**Examples**:
+**选项**: `USER` `DOMAIN` `[RESTART]` `[MAIL]`
+
+**示例**:
 
 ```bash
 v-delete-letsencrypt-domain admin acme.com yes
 ```
 
-This function turns off letsencrypt SSL support for a domain.
+此函数关闭对域的 LetsEncrypt SSL 支持。
 
-## v-delete-mail-account
+命令: v-delete-mail-account
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-mail-account)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-mail-account)
 
-delete mail account
+删除邮件帐户
 
-**Options**: `USER` `DOMAIN` `ACCOUNT`
+**选项**: `USER` `DOMAIN` `ACCOUNT`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-delete-mail-account admin acme.com alice
 ```
 
-This function deletes email account.
+此功能删除电子邮件帐户。
 
-## v-delete-mail-account-alias
+命令: v-delete-mail-account-alias
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-mail-account-alias)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-mail-account-alias)
 
-delete mail account alias aka nickname
+删除邮件帐户别名又名昵称
 
-**Options**: `USER` `DOMAIN` `ACCOUNT` `ALIAS`
+**选项**: `USER` `DOMAIN` `ACCOUNT` `ALIAS`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-delete-mail-account-alias admin example.com alice alicia
 ```
 
-This function deletes email account alias.
+此功能删除电子邮件帐户别名。
 
-## v-delete-mail-account-autoreply
+命令: v-delete-mail-account-autoreply
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-mail-account-autoreply)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-mail-account-autoreply)
 
-delete mail account autoreply message
+删除邮件帐户自动回复消息
 
-**Options**: `USER` `DOMAIN` `ACCOUNT` `ALIAS`
+**选项**: `USER` `DOMAIN` `ACCOUNT` `ALIAS`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-delete-mail-account-autoreply admin mydomain.tld bob
 ```
 
-This function deletes an email accounts autoreply.
+此功能删除电子邮件帐户自动回复。
 
-## v-delete-mail-account-forward
+命令: v-delete-mail-account-forward
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-mail-account-forward)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-mail-account-forward)
 
-delete mail account forward
+删除邮件帐户转发
 
-**Options**: `USER` `DOMAIN` `ACCOUNT` `EMAIL`
+**选项**: `USER` `DOMAIN` `ACCOUNT` `EMAIL`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-delete-mail-account-forward admin acme.com tony bob@acme.com
 ```
 
-This function deletes an email accounts forwarding address.
+此功能删除电子邮件帐户转发地址。
 
-## v-delete-mail-account-fwd-only
+命令: v-delete-mail-account-fwd-only
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-mail-account-fwd-only)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-mail-account-fwd-only)
 
-delete mail account forward-only flag
+删除邮件帐户转发标题配置
 
-**Options**: `USER` `DOMAIN` `ACCOUNT`
+**选项**: `USER` `DOMAIN` `ACCOUNT`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-delete-mail-account-fwd-only admin example.com jack
 ```
 
-This function deletes fwd-only flag
+该函数删除仅转发标题配置
 
-## v-delete-mail-domain
+命令: v-delete-mail-domain
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-mail-domain)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-mail-domain)
 
-delete mail domain
+删除邮件域
 
-**Options**: `USER` `DOMAIN`
+**选项**: `USER` `DOMAIN`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-delete-mail-domain admin mydomain.tld
 ```
 
-This function for deleting MAIL domain. By deleting it all accounts will
-also be deleted.
+此功能用于删除电子邮件域。 通过删除它，所有帐户都会被删除。
 
-## v-delete-mail-domain-antispam
+命令: v-delete-mail-domain-antispam
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-mail-domain-antispam)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-mail-domain-antispam)
 
-delete mail domain antispam support
+删除邮件域反垃圾邮件支持
 
-**Options**: `USER` `DOMAIN`
+**选项**: `USER` `DOMAIN`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-delete-mail-domain-antispam admin mydomain.tld
 ```
 
-This function disable spamassasin for incoming emails.
+此功能禁用 spamassasin 接收传入电子邮件。
 
-## v-delete-mail-domain-antivirus
+命令: v-delete-mail-domain-antivirus
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-mail-domain-antivirus)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-mail-domain-antivirus)
 
-delete mail domain antivirus support
+删除邮件域防病毒配置
 
-**Options**: `USER` `DOMAIN`
+**选项**: `USER` `DOMAIN`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-delete-mail-domain-antivirus admin mydomain.tld
 ```
 
-This function disables clamav scan for incoming emails.
+此功能禁用 clamav 扫描传入电子邮件。
 
-## v-delete-mail-domain-catchall
+命令: v-delete-mail-domain-catchall
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-mail-domain-catchall)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-mail-domain-catchall)
 
-delete mail domain catchall email
+删除邮件域的电子邮件捕获(Catch-all)功能
 
-**Options**: `USER` `DOMAIN`
+**选项**: `USER` `DOMAIN`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-delete-mail-domain-catchall admin mydomain.tld
 ```
 
-This function disables mail domain cathcall.
+此功能禁用邮件域捕获(Catch-all)功能
 
-## v-delete-mail-domain-dkim
+命令: v-delete-mail-domain-dkim
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-mail-domain-dkim)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-mail-domain-dkim)
 
-delete mail domain dkim support
+删除邮件域 dkim 支持
 
-**Options**: `USER` `DOMAIN`
+**选项**: `USER` `DOMAIN`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-delete-mail-domain-dkim admin mydomain.tld
 ```
 
-This function delete DKIM domain pem.
+此功能删除 DKIM 域 pem配置。删除后将无法正常使用邮箱收发邮件。
 
-## v-delete-mail-domain-reject
+命令: v-delete-mail-domain-reject
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-mail-domain-reject)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-mail-domain-reject)
 
-delete mail domain reject spam support
+删除邮件域拒绝垃圾邮件支持
 
-**Options**: `USER` `DOMAIN`
+**选项**: `USER` `DOMAIN`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-delete-mail-domain-reject admin mydomain.tld
 ```
 
-The function disables spam rejection for incoming emails.
+该功能禁用传入电子邮件的垃圾邮件拒绝。
 
-## v-delete-mail-domain-smtp-relay
+命令: v-delete-mail-domain-smtp-relay
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-mail-domain-smtp-relay)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-mail-domain-smtp-relay)
 
-Remove mail domain smtp relay support
+删除邮件域 smtp 中继支持
 
-**Options**: `USER` `DOMAIN`
+**选项**: `USER` `DOMAIN`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-delete-mail-domain-smtp-relay user domain.tld
 ```
 
-This function removes mail domain smtp relay support.
+此功能删除邮件域 smtp 中继支持。
 
-## v-delete-mail-domain-ssl
+命令: v-delete-mail-domain-ssl
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-mail-domain-ssl)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-mail-domain-ssl)
 
-delete mail domain ssl support
+删除邮件域 ssl 支持
 
-**Options**: `USER` `DOMAIN`
+**选项**: `USER` `DOMAIN`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-delete-mail-domain-ssl user demo.com
 ```
 
-This function delete ssl certificates.
+此函数删除邮件域 ssl 证书。
 
-## v-delete-mail-domain-webmail
+命令: v-delete-mail-domain-webmail
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-mail-domain-webmail)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-mail-domain-webmail)
 
-delete webmail support for a domain
+删除对域的网络邮件支持
 
-**Options**: `USER` `DOMAIN` `[RESTART]` `[QUIET]`
+**选项**: `USER` `DOMAIN` `[RESTART]` `[QUIET]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-delete-mail-domain-webmail user demo.com
 ```
 
-This function removes support for webmail from
-a specified mail domain.
+此功能删除了对网络邮件的支持指定的邮件域。
 
-## v-delete-mail-domains
+命令: v-delete-mail-domains
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-mail-domains)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-mail-domains)
 
-delete mail domains
+删除邮件域
 
-**Options**: `USER`
+**选项**: `USER`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-delete-mail-domains admin
 ```
 
-This function for deleting all users mail domains.
+此功能用于删除所有用户的邮件域。
 
-## v-delete-remote-dns-domain
+## 管理 DNS 的系列命令
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-remote-dns-domain)
+命令: v-delete-remote-dns-domain
 
-delete remote dns domain
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-remote-dns-domain)
 
-**Options**: `USER` `DOMAIN`
+删除远程 DNS 域
 
-**Examples**:
+**选项**: `USER` `DOMAIN`
+
+**示例**:
 
 ```bash
 v-delete-remote-dns-domain admin example.tld
 ```
 
-This function synchronise dns with the remote server.
+此功能将删除 dns 与远程服务器同步的配置。
 
-## v-delete-remote-dns-domains
+命令: v-delete-remote-dns-domains
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-remote-dns-domains)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-remote-dns-domains)
 
-delete remote dns domains
+删除远程 DNS 域
 
-**Options**: `[HOST]`
+**选项**: `[HOST]`
 
-This function deletes remote dns domains.
+此功能删除远程 dns 域。
 
-## v-delete-remote-dns-host
+命令: v-delete-remote-dns-host
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-remote-dns-host)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-remote-dns-host)
 
-delete remote dns host
+删除远程dns主机
 
-**Options**: `HOST`
+**选项**: `HOST`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-delete-remote-dns-host example.org
 ```
 
-This function for deleting the remote dns host from hestia configuration.
+此功能用于从 hestia 配置中删除远程服务器的 dns 主机。
 
-## v-delete-remote-dns-record
+命令: v-delete-remote-dns-record
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-remote-dns-record)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-remote-dns-record)
 
-delete remote dns domain record
+删除远程dns域记录
 
-**Options**: `USER` `DOMAIN` `ID`
+**选项**: `USER` `DOMAIN` `ID`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-delete-remote-dns-record user07 acme.com 44
 ```
 
-This function synchronise dns with the remote server.
+此功能将删除 dns 与远程服务器同步。
 
-## v-delete-sys-api-ip
+## 管理IP的系列命令
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-sys-api-ip)
+命令: v-delete-sys-api-ip
 
-delete ip adresss from allowed ip list api
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-sys-api-ip)
 
-**Options**: `IP`
+从允许的 ip 列表中删除 api 地址
 
-**Examples**:
+**选项**: `IP`
+
+**示例**:
 
 ```bash
 v-delete-sys-api-ip 1.1.1.1
 ```
 
-## v-delete-sys-filemanager
+命令: v-delete-sys-filemanager
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-sys-filemanager)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-sys-filemanager)
 
-remove file manager functionality from Hestia Control Panel
+从 Hestia 控制面板中禁用文件管理器功能
 
-**Options**: `[MODE]`
+**选项**: `[MODE]`
 
-This function removes the File Manager and its entry points
+此功能删除文件管理器及其入口
 
-## v-delete-sys-firewall
+命令: v-delete-sys-firewall
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-sys-firewall)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-sys-firewall)
 
-delete system firewall
+删除系统防火墙
 
-**Options**: –
+**选项**: –
 
-This function disables firewall support
+此功能禁用防火墙支持
 
-## v-delete-sys-ip
+命令: v-delete-sys-ip
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-sys-ip)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-sys-ip)
 
-delete system IP
+删除系统IP
 
-**Options**: `IP`
+**选项**: `IP`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-delete-sys-ip 203.0.113.1
 ```
 
-This function for deleting a system IP. It does not allow to delete first IP
-on interface and do not allow to delete IP which is used by a web domain.
+该函数用于删除系统IP。 不允许删除第一个IP在接口上，不允许删除 Web 域使用的 IP。
 
-## v-delete-sys-mail-queue
+命令: v-delete-sys-mail-queue
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-sys-mail-queue)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-sys-mail-queue)
 
-delete exim mail queue
+删除 exim 邮件队列
 
-**Options**: –
+**选项**: –
 
-This function checks for messages stuck in the exim mail queue
-and prompts the user to clear the queue if desired.
+此函数检查滞留在 exim 邮件队列中的邮件并提示用户根据需要清除的邮件列表。
 
-## v-delete-sys-pma-sso
+命令: v-delete-sys-pma-sso
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-sys-pma-sso)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-sys-pma-sso)
 
-disables support for single sign on PHPMYADMIN
+禁用 PHPMYADMIN 上对单点登录的支持
 
-**Options**: `[MODE]`
+**选项**: `[MODE]`
 
-Disables support for SSO to phpMyAdmin
+禁用对 phpMyAdmin 的 单点登录 支持
 
-## v-delete-sys-quota
+命令: v-delete-sys-quota
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-sys-quota)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-sys-quota)
 
-delete system quota
+删除系统配额
 
-**Options**: –
+**选项**: –
 
-This function disables filesystem quota on /home partition
+此功能禁用 /home 分区上的文件系统容量配额
 
-## v-delete-sys-sftp-jail
+命令: v-delete-sys-sftp-jail
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-sys-sftp-jail)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-sys-sftp-jail)
 
-delete system sftp jail
+删除系统sftp的jail环境
 
-**Options**: –
+**选项**: –
 
-This function disables sftp jailed environment
+此功能删除 sftp 的jail（通常指的是一个限制用户访问的目录环境）配置。
 
-## v-delete-sys-smtp
+命令: v-delete-sys-smtp
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-sys-smtp)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-sys-smtp)
 
-Remove SMTP Account for logging, notification and internal mail
+删除用于记录、通知和内部邮件的 SMTP 帐户
 
-**Options**: –
+**选项**: –
 
-This function allows configuring a SMTP account for the server to use
-for logging, notification and warn emails etc.
+此功能允许配置 SMTP 帐户以供服务器使用，用于记录、通知和警告电子邮件等。
 
-## v-delete-sys-smtp-relay
+命令: v-delete-sys-smtp-relay
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-sys-smtp-relay)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-sys-smtp-relay)
 
-disable system wide smtp relay support
+删除系统范围的 SMTP 中继支持
 
-**Options**:
+**选项**:
 
-options:
+命令: v-delete-sys-web-terminal
 
-## v-delete-sys-web-terminal
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-sys-web-terminal)
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-sys-web-terminal)
+删除网络终端
 
-delete web terminal
+**选项**: –
 
-**Options**: –
+此功能禁用网络终端。
 
-This function disables the web terminal.
+命令: v-delete-user
 
-## v-delete-user
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-user)
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-user)
+## 管理用户的系列命令
 
-delete user
+删除用户
 
-**Options**: `USER` `[RESTART]`
+**选项**: `USER` `[RESTART]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-delete-user whistler
 ```
 
-This function deletes a certain user and all his resources such as domains,
-databases, cron jobs, etc.
+该功能删除某个用户及其所有资源，例如域、数据库、cron 作业等
 
-## v-delete-user-2fa
+命令: v-delete-user-2fa
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-user-2fa)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-user-2fa)
 
-delete 2fa of existing user
+删除现有用户的2fa
 
-**Options**: `USER`
+**选项**: `USER`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-delete-user-2fa admin
 ```
 
-This function deletes 2fa token of a user.
+该函数删除用户的2fa令牌。
 
-## v-delete-user-auth-log
+命令: v-delete-user-auth-log
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-user-auth-log)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-user-auth-log)
 
-Delete auth log file for user
+删除用户的身份验证日志文件
 
-**Options**:
+**选项**:
 
-This function for deleting a users auth log file
+此功能用于删除用户身份验证日志文件
 
-## v-delete-user-backup
+命令: v-delete-user-backup
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-user-backup)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-user-backup)
 
-delete user backup
+## 管理备份的系列命令
 
-**Options**: `USER` `BACKUP`
+删除用户备份
 
-**Examples**:
+**选项**: `USER` `BACKUP`
+
+**示例**:
 
 ```bash
 v-delete-user-backup admin admin.2012-12-21_00-10-00.tar
 ```
 
-This function deletes user backup.
+该功能删除用户备份。
 
-## v-delete-user-backup-exclusions
+命令: v-delete-user-backup-exclusions
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-user-backup-exclusions)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-user-backup-exclusions)
 
-delete backup exclusion
+删除备份排除
 
-**Options**: `USER` `[SYSTEM]`
+**选项**: `USER` `[SYSTEM]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-delete-user-backup-exclusions admin
 ```
 
-This function for deleting backup exclusion
+此功能用于删除备份排除(用户可以定义排除项来指定哪些文件或目录不应该被包括在备份中。这个命令可能用于删除之前设置的这些排除项。)
 
-## v-delete-user-ips
+命令: v-delete-user-ips
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-user-ips)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-user-ips)
 
-delete user ips
+删除用户ip
 
-**Options**: `USER`
+**选项**: `USER`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-delete-user-ips admin
 ```
 
-This function deletes all user's ip addresses.
+此功能删除用户的所有 IP 地址。
 
-## v-delete-user-log
+命令: v-delete-user-log
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-user-log)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-user-log)
 
-Delete log file for user
+删除用户的日志文件
 
-**Options**: `USER`
+**选项**: `USER`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-delete-user-log user
 ```
 
-This function for deleting a users log file
+该函数用于删除用户日志文件
 
-## v-delete-user-notification
+命令: v-delete-user-notification
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-user-notification)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-user-notification)
 
-delete user notification
+删除用户通知
 
-**Options**: `USER` `NOTIFICATION`
+**选项**: `USER` `NOTIFICATION`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-delete-user-notification admin 1
 ```
 
-This function deletes user notification.
+该功能删除用户通知。
 
-## v-delete-user-package
+命令: v-delete-user-package
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-user-package)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-user-package)
 
-delete user package
+删除用户软件包
 
-**Options**: `PACKAGE`
+**选项**: `PACKAGE`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-delete-user-package admin palegreen
 ```
 
-This function for deleting user package.
+该功能用于删除用户软件包。
 
-## v-delete-user-sftp-jail
+命令: v-delete-user-sftp-jail
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-user-sftp-jail)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-user-sftp-jail)
 
-delete user sftp jail
+删除用户 sftp jail
 
-**Options**: `USER`
+**选项**: `USER`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-delete-user-sftp-jail whistler
 ```
 
-This function disables sftp jailed environment for USER
+此功能禁用 USER 的 sftp 的jail（通常指的是一个限制用户访问的目录环境）配置。
 
-## v-delete-user-ssh-key
+命令: v-delete-user-ssh-key
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-user-ssh-key)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-user-ssh-key)
 
-add ssh key
+删除用户 ssh 密钥
 
-**Options**: `USER` `KEY`
+**选项**: `USER` `KEY`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-delete-user-ssh-key user unique_id
 ```
 
-Delete user ssh key from authorized_keys
+从authorized_keys中删除用户ssh密钥
 
-## v-delete-user-stats
+命令: v-delete-user-stats
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-user-stats)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-user-stats)
 
-delete user usage statistics
+删除用户使用统计
 
-**Options**: `USER` `DOMAIN`
+**选项**: `USER` `DOMAIN`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-delete-user-stats user
 example: v-delete-user-stats admin overall
 ```
 
-This function deletes user statistics data.
+该功能删除用户统计数据。
 
-## v-delete-web-domain
+命令: v-delete-web-domain
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-web-domain)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-web-domain)
 
-delete web domain
+删除网络域
 
-**Options**: `USER` `DOMAIN` `[RESTART]`
+**选项**: `USER` `DOMAIN` `[RESTART]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-delete-web-domain admin wonderland.com
 ```
 
-The call of function leads to the removal of domain and all its components
-(statistics, folders contents, ssl certificates, etc.). This operation is
-not fully supported by "undo" function, so the data recovery is possible
-only with a help of reserve copy.
+函数的调用导致域及其所有组件的删除（统计数据、文件夹内容、ssl 证书等）。 这个操作是不完全支持“撤消”功能，因此可以恢复数据，仅在保留副本的前提下。
 
-## v-delete-web-domain-alias
+命令: v-delete-web-domain-alias
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-web-domain-alias)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-web-domain-alias)
 
-delete web domain alias
+删除 Web 域别名
 
-**Options**: `USER` `DOMAIN` `ALIAS` `[RESTART]`
+**选项**: `USER` `DOMAIN` `ALIAS` `[RESTART]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-delete-web-domain-alias admin example.com www.example.com
 ```
 
-This function of deleting the alias domain (parked domain). By this call
-default www aliase can be removed as well.
+此功能删除别名域（域名文件夹名称）。 通过这个命令默认的 www 别名也可以删除。
 
-## v-delete-web-domain-allow-users
+命令: v-delete-web-domain-allow-users
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-web-domain-allow-users)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-web-domain-allow-users)
 
-disables other users create subdomains
+禁止其他用户创建子域
 
-**Options**: `USER` `DOMAIN`
+**选项**: `USER` `DOMAIN`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-delete-web-domain-allow-users admin admin.com
 ```
 
-Enable the rule check for Enforce subdomain ownership for a specific domain.
-Enforce subdomain ownership setting in /edit/server/ set to no will always overwrite this behaviour
-eg: admin adds admin.com
-user can create user.admin.com
+启用对特定域强制执行子域所有权的规则检查。将 /edit/server/ 中的子域所有权设置强制设置为 no 将始终覆盖此行为。例如：admin 添加 admin.com
 
-## v-delete-web-domain-backend
+用户可以创建user.admin.com
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-web-domain-backend)
+命令: v-delete-web-domain-backend
 
-deleting web domain backend configuration
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-web-domain-backend)
 
-**Options**: `USER` `DOMAIN` `[RESTART]`
+删除Web域后端配置
 
-**Examples**:
+**选项**: `USER` `DOMAIN` `[RESTART]`
+
+**示例**:
 
 ```bash
 v-delete-web-domain-backend admin acme.com
 ```
 
-This function of deleting the virtualhost backend configuration.
+该功能删除虚拟主机后端配置。
 
-## v-delete-web-domain-ftp
+命令: v-delete-web-domain-ftp
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-web-domain-ftp)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-web-domain-ftp)
 
-delete webdomain ftp account
+删除web网站的 ftp帐户
 
-**Options**: `USER` `DOMAIN` `FTP_USER`
+**选项**: `USER` `DOMAIN` `FTP_USER`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-delete-web-domain-ftp admin wonderland.com bob_ftp
 ```
 
-This function deletes additional ftp account.
+此功能删除网站的 ftp 帐户。
 
-## v-delete-web-domain-httpauth
+命令: v-delete-web-domain-httpauth
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-web-domain-httpauth)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-web-domain-httpauth)
 
-delete http auth user
+删除用户的http验证
 
-**Options**: `USER` `DOMAIN` `AUTH_USER` `[RESTART]`
+**选项**: `USER` `DOMAIN` `AUTH_USER` `[RESTART]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-delete-web-domain-httpauth admin example.com alice
 ```
 
-This function is used for deleting http auth user
+## 管理修改域名配置信息的系列命令
 
-## v-delete-web-domain-proxy
+该函数用于删除 Web 域名的HTTP认证设置的命令
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-web-domain-proxy)
+命令: v-delete-web-domain-proxy
 
-deleting web domain proxy configuration
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-web-domain-proxy)
 
-**Options**: `USER` `DOMAIN` `[RESTART]`
+删除Web域代理配置
 
-**Examples**:
+**选项**: `USER` `DOMAIN` `[RESTART]`
+
+**示例**:
 
 ```bash
 v-delete-web-domain-proxy alice lookinglass.com
 ```
 
-This function of deleting the virtualhost proxy configuration.
+此功能删除虚拟主机代理配置。
 
-## v-delete-web-domain-redirect
+命令: v-delete-web-domain-redirect
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-web-domain-redirect)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-web-domain-redirect)
 
-Delete force redirect to domain
+删除强制重定向到域
 
-**Options**: `USER` `DOMAIN` `[RESTART]`
+**选项**: `USER` `DOMAIN` `[RESTART]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-add-web-domain-redirect user domain.tld
 ```
 
-Function delete a forced redirect to a domain
+删除强制重定向到域功能
 
-## v-delete-web-domain-ssl
+命令: v-delete-web-domain-ssl
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-web-domain-ssl)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-web-domain-ssl)
 
-delete web domain SSL support
+删除 Web 域 SSL 支持
 
-**Options**: `USER` `DOMAIN` `[RESTART]`
+**选项**: `USER` `DOMAIN` `[RESTART]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-delete-web-domain-ssl admin acme.com
 ```
 
-This function disable https support and deletes SSL certificates.
+此函数禁用 https 支持并删除 SSL 证书。
 
-## v-delete-web-domain-ssl-force
+命令: v-delete-web-domain-ssl-force
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-web-domain-ssl-force)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-web-domain-ssl-force)
 
-remove ssl force from domain
+从域中强制删除 ssl
 
-**Options**: `USER` `DOMAIN` `[RESTART]` `[QUIET]`
+**选项**: `USER` `DOMAIN` `[RESTART]` `[QUIET]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-delete-web-domain-ssl-force admin domain.tld
 ```
 
-This function removes force SSL configurations.
+此功能删除强制 SSL 配置。
 
-## v-delete-web-domain-ssl-hsts
+命令: v-delete-web-domain-ssl-hsts
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-web-domain-ssl-hsts)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-web-domain-ssl-hsts)
 
-remove ssl force from domain
+从域中强制删除 (HSTS)配置
 
-**Options**: `USER` `DOMAIN` `[RESTART]` `[QUIET]`
+**选项**: `USER` `DOMAIN` `[RESTART]` `[QUIET]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-delete-web-domain-ssl-hsts user domain.tld
 ```
 
-This function removes force SSL configurations.
+此功能删除强制 SSL 严格传输安全性 (HSTS)配置
 
-## v-delete-web-domain-stats
+::: warning 介绍
+HTTP严格传输安全（HSTS）是一种安全策略机制，它允许网站通过HTTP响应头来告知浏览器只能通过HTTPS来访问该网站，即使用户尝试通过HTTP访问。也无法成功访问。
+:::
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-web-domain-stats)
+命令: v-delete-web-domain-stats
 
-delete web domain statistics
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-web-domain-stats)
 
-**Options**: `USER` `DOMAIN`
+删除网站域统计信息
 
-**Examples**:
+**选项**: `USER` `DOMAIN`
+
+**示例**:
 
 ```bash
 v-delete-web-domain-stats user02 h1.example.com
 ```
 
-This function of deleting site's system of statistics. Its type is
-automatically chooses from client's configuration file.
+此功能删除网站系统的统计数据。 它的类型是自动从客户端的配置文件中选择。
 
-## v-delete-web-domain-stats-user
+命令: v-delete-web-domain-stats-user
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-web-domain-stats-user)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-web-domain-stats-user)
 
-disable web domain stats authentication support
+禁用 Web 域统计身份验证支持
 
-**Options**: `USER` `DOMAIN` `[RESTART]`
+**选项**: `USER` `DOMAIN` `[RESTART]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-delete-web-domain-stats-user admin acme.com
 ```
 
-This function removes authentication of statistics system. If the script is
-called without naming a certain user, all users will be removed. After
-deleting all of them statistics will be accessible for view without an
-authentication.
+该功能消除了统计系统的认证。 如果不命名某个用户而调用，则所有用户都将被删除。删除所有统计数据即可查看，无需验证。
 
-## v-delete-web-domains
+命令: v-delete-web-domains
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-web-domains)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-web-domains)
 
-delete web domains
+删除网站域名称
 
-**Options**: `USER` `[RESTART]`
+**选项**: `USER` `[RESTART]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-delete-web-domains admin
 ```
 
-This function deletes all user's webdomains.
+此功能删除用户所有的网站域。
 
-## v-delete-web-php
+命令: v-delete-web-php
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-web-php)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-web-php)
 
-delete php fpm version
+删除 php fpm 版本
 
-**Options**: `VERSION`
+**选项**: `VERSION`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-delete-web-php 7.3
 ```
 
-This function checks and delete a fpm php version if not used by any domain.
+此函数检查并删除 fpm php 版本（如果没有被任何域使用）。
 
-## v-download-backup
+## 下载备份的系列命令
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-download-backup)
+命令: v-download-backup
 
-Download backup
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-download-backup)
 
-**Options**: `USER` `BACKUP`
+下载备份
 
-**Examples**:
+**选项**: `USER` `BACKUP`
+
+**示例**:
 
 ```bash
 v-download-backup admin admin.2020-11-05_05-10-21.tar
 ```
 
-This function download back-up from remote server
+此功能从远程服务器下载备份
 
-## v-dump-database
+命令: v-dump-database
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-dump-database)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-dump-database)
 
-Dumps database contents in STDIN / file
+将数据库内容转储到 STDIN/文件中
 
-**Options**: `USER` `DATABASE` `[FILE]`
+**选项**: `USER` `DATABASE` `[FILE]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-dump-database user user_databse > test.sql
 example: v-dump-database user user_databse file
 ```
 
-Dumps database in STDIN or /backup/user.database.type.sql
+以 STDIN 或 /backup/user.database.type.sql 转储数据库
 
-## v-dump-site
+命令: v-dump-site
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-dump-site)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-dump-site)
 
-Dumps the files of a site into a zip archive
+将站点的文件转储到 zip 存档中
 
-**Options**: `USER` `DOMAIN` `[TYPE]`
+**选项**: `USER` `DOMAIN` `[TYPE]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-dump-site user domain
 example: v-dump-site user domain full
 ```
 
-Dumps site files in /backup/user.domain.timestamp.zip
+将站点文件转储到 /backup/user.domain.timestamp.zip 中
 
-## v-export-rrd
+命令: v-export-rrd
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-export-rrd)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-export-rrd)
 
-export rrd charts as json
+将rrd图表导出为json
 
-**Options**: `[CHART]` `[TIMESPAN]`
+**选项**: `[CHART]` `[TIMESPAN]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-export-rrd chart format
 ```
 
-## v-extract-fs-archive
+命令: v-extract-fs-archive
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-extract-fs-archive)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-extract-fs-archive)
 
-archive to directory
+存档到目录
 
-**Options**: `USER` `ARCHIVE` `DIRECTORY` `[SELECTED_DIR]` `[STRIP]` `[TEST]`
+**选项**: `USER` `ARCHIVE` `DIRECTORY` `[SELECTED_DIR]` `[STRIP]` `[TEST]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-extract-fs-archive admin latest.tar.gz /home/admin
 ```
 
-This function extracts archive into directory on the file system
+此函数将存档提取到文件系统上的目录中
 
-## v-generate-api-key
+命令: v-generate-api-key
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-generate-api-key)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-generate-api-key)
 
-generate api key
+## 配置API密钥哈希值命令
 
-**Options**: –
+生成API密钥
 
-This function creates a key file in $HESTIA/data/keys/
+**选项**: –
 
-## v-generate-debug-report
+该函数在 $HESTIA/data/keys/ 中创建一个密钥文件
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-generate-debug-report)
+命令: v-generate-debug-report
 
-**Options**:
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-generate-debug-report)
 
-Includes
-shellcheck source=/etc/hestiacp/hestia.conf
+**选项**:
 
-## v-generate-password-hash
+shellcheck github脚本查看=/etc/hestiacp/hestia.conf
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-generate-password-hash)
+命令: v-generate-password-hash
 
-generate password hash
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-generate-password-hash)
 
-**Options**: `HASH_METHOD` `SALT` `PASSWORD`
+生成密码哈希
 
-**Examples**:
+**选项**: `HASH_METHOD` `SALT` `PASSWORD`
+
+**示例**:
 
 ```php
 		v-generate-password-hash sha-512 rAnDom_string yourPassWord
 ```
 
-This function generates password hash
+该函数生成密码哈希值
 
-## v-generate-ssl-cert
+命令: v-generate-ssl-cert
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-generate-ssl-cert)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-generate-ssl-cert)
 
-generate self signed certificate and CSR request
+生成自签名证书和 CSR 请求
 
-**Options**: `DOMAIN` `EMAIL` `COUNTRY` `STATE` `CITY` `ORG` `UNIT` `[ALIASES]` `[FORMAT]`
+**选项**: `DOMAIN` `EMAIL` `COUNTRY` `STATE` `CITY` `ORG` `UNIT` `[ALIASES]` `[FORMAT]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-generate-ssl-cert example.com mail@yahoo.com USA California Monterey ACME.COM IT
 ```
 
-This function generates self signed SSL certificate and CSR request
+此函数生成自签名 SSL 证书和 CSR 请求
 
-## v-get-dns-domain-value
+命令: v-get-dns-domain-value
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-get-dns-domain-value)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-get-dns-domain-value)
 
-get dns domain value
+获取dns域名值
 
-**Options**: `USER` `DOMAIN` `KEY`
+**选项**: `USER` `DOMAIN` `KEY`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-get-dns-domain-value admin example.com SOA
 ```
 
-This function for getting a certain DNS domain parameter.
+该函数用于获取某个DNS域参数。
 
-## v-get-fs-file-type
+命令: v-get-fs-file-type
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-get-fs-file-type)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-get-fs-file-type)
 
-get file type
+获取文件类型
 
-**Options**: `USER` `FILE`
+**选项**: `USER` `FILE`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-get-fs-file-type admin index.html
 ```
 
-This function shows file type
+该函数显示文件类型
 
-## v-get-mail-account-value
+命令: v-get-mail-account-value
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-get-mail-account-value)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-get-mail-account-value)
 
-get mail account value
+获取邮件帐户值
 
-**Options**: `USER` `DOMAIN` `ACCOUNT` `KEY`
+**选项**: `USER` `DOMAIN` `ACCOUNT` `KEY`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-get-mail-account-value admin example.tld tester QUOTA
 ```
 
-This function for getting a certain mail account parameter.
+该函数用于获取某个邮件帐户参数。
 
-## v-get-mail-domain-value
+命令: v-get-mail-domain-value
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-get-mail-domain-value)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-get-mail-domain-value)
 
-get mail domain value
+获取邮件域名值
 
-**Options**: `USER` `DOMAIN` `KEY`
+**选项**: `USER` `DOMAIN` `KEY`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-get-mail-domain-value admin example.com DKIM
 ```
 
-This function for getting a certain mail domain parameter.
+该函数用于获取某个邮件域参数。
 
-## v-get-sys-timezone
+命令: v-get-sys-timezone
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-get-sys-timezone)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-get-sys-timezone)
 
-get system timezone
+## 设置系统时区哈希值命令
 
-**Options**: `[FORMAT]`
+获取系统时区
 
-This function to get system timezone
+**选项**: `[FORMAT]`
 
-## v-get-sys-timezones
+该函数获取系统时区
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-get-sys-timezones)
+命令: v-get-sys-timezones
 
-list system timezone
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-get-sys-timezones)
 
-**Options**: `[FORMAT]`
+查看系统时区
 
-**Examples**:
+**选项**: `[FORMAT]`
+
+**示例**:
 
 ```bash
 v-get-sys-timezones json
 ```
 
-This function checks system timezone settings
+该函数检查系统时区设置
 
-## v-get-user-salt
+命令: v-get-user-salt
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-get-user-salt)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-get-user-salt)
 
-get user salt
+获取用户加密盐值（salt）
 
-**Options**: `USER` `[IP]` `[FORMAT]`
+**选项**: `USER` `[IP]` `[FORMAT]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-get-user-salt admin
 ```
 
-This function provides users salt
+该函数为用户提供加密盐值（salt）的命令。在密码学中，盐值通常与密码哈希一起使用，以增加哈希的安全性并防止彩虹表攻击。
 
-## v-get-user-value
+命令: v-get-user-value
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-get-user-value)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-get-user-value)
 
-get user value
+获取用户参数
 
-**Options**: `USER` `KEY`
+**选项**: `USER` `KEY`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-get-user-value admin FNAME
 ```
 
-This function for obtaining certain user's parameters.
+该函数用于获取某些用户的参数。
 
-## v-import-cpanel
+命令: v-import-cpanel
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-import-cpanel)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-import-cpanel)
 
-Import Cpanel backup to a new user
+将 Cpanel 备份导入到新用户
 
-**Options**: `BACKUP` `[MX]`
+**选项**: `BACKUP` `[MX]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-import-cpanel /backup/backup.tar.gz yes
 ```
 
-Based on sk-import-cpanel-backup-to-vestacp
-Credits: Maks Usmanov (skamasle) and contributors:
-Thanks to <https://github.com/Skamasle/sk-import-cpanel-backup-to-vestacp/graphs/contributors>
+基于 sk-import-cpanel-backup-to-vestacp
+致谢：Maks Usmanov (skamasle) 和贡献者：[感谢](https://github.com/Skamasle/sk-import-cpanel-backup-to-vestacp/graphs/contributors)
 
-## v-import-directadmin
+## 写入DNS的系列命令
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-import-directadmin)
+命令: v-insert-dns-domain
 
-Import DirectAdmin backup to a new user
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-insert-dns-domain)
 
-**Examples**:
+插入 DNS 域
 
-```bash
-v-import-directadmin /backup/backup.tar.gz
-```
+**选项**: `USER` `DATA` `[SRC]` `[FLUSH]` `#`
 
-What will be imported from DirectAdmin backups:
+此函数将原始记录插入到 dns.conf配置中
 
-1. The user account information
-2. The domains structure included all the files from `public_html` and/or `private_html`
-3. All databases
-   - **WARNING**: Only the first user with password will be imported because of HestiCP limits.
-4. All the e-mail accounts including the e-mails.
+命令: v-insert-dns-record
 
-Based on sk-da-importer and v-import-cpanel
-Credits: Maks Usmanov (skamasle), Jaap Marcus (jaapmarcus) and contributors:
-Thanks to <https://github.com/Skamasle/sk-import-cpanel-backup-to-vestacp/graphs/contributors>
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-insert-dns-record)
 
-## v-insert-dns-domain
+插入DNS记录
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-insert-dns-domain)
+**选项**: `USER` `DOMAIN` `DATA`
 
-insert dns domain
+此函数将原始 dns 记录插入域conf
 
-**Options**: `USER` `DATA` `[SRC]` `[FLUSH]` `#`
+命令: v-insert-dns-records
 
-This function inserts raw record to the dns.conf
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-insert-dns-records)
 
-## v-insert-dns-record
+插入 dns 记录
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-insert-dns-record)
+**选项**: `USER` `DOMAIN` `DATA_FILE`
 
-insert dns record
+该函数将dns记录复制到域conf中
 
-**Options**: `USER` `DOMAIN` `DATA`
+## 查看API的系列命令
 
-This function inserts raw dns record to the domain conf
+命令: v-list-access-key
 
-## v-insert-dns-records
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-access-key)
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-insert-dns-records)
+查看所有 API 访问密钥
 
-inserts dns records
+**选项**: `ACCESS_KEY_ID` `[FORMAT]`
 
-**Options**: `USER` `DOMAIN` `DATA_FILE`
-
-This function copy dns record to the domain conf
-
-## v-list-access-key
-
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-access-key)
-
-list all API access keys
-
-**Options**: `ACCESS_KEY_ID` `[FORMAT]`
-
-**Examples**:
+**示例**:
 
 ```bash
 v-list-access-key 1234567890ABCDefghij json
 ```
 
-## v-list-access-keys
+命令: v-list-access-keys
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-access-keys)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-access-keys)
 
-list all API access keys
+查看所有 API 访问密钥
 
-**Options**: `[FORMAT]`
+**选项**: `[FORMAT]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-list-access-keys json
 ```
 
-## v-list-api
+命令: v-list-api
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-api)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-api)
 
-list api
+查看API
 
-**Options**: `API` `[FORMAT]`
+**选项**: `API` `[FORMAT]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-list-api mail-accounts json
 ```
 
-## v-list-apis
+命令: v-list-apis
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-apis)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-apis)
 
-list available APIs
+查看可用的 API
 
-**Options**: `[FORMAT]`
+**选项**: `[FORMAT]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-list-apis json
 ```
 
-## v-list-backup-host
+命令: v-list-backup-host
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-backup-host)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-backup-host)
 
-list backup host
+查看备份主机
 
-**Options**: `TYPE` `[FORMAT]`
+**选项**: `TYPE` `[FORMAT]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-list-backup-host local
 ```
 
-This function for obtaining the list of backup host parameters.
+该函数用于获取备份主机参数列表。
 
-## v-list-cron-job
+命令: v-list-cron-job
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-cron-job)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-cron-job)
 
-list cron job
+查看 cron 作业
 
-**Options**: `USER` `JOB` `[FORMAT]`
+**选项**: `USER` `JOB` `[FORMAT]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-list-cron-job admin 7
 ```
 
-This function of obtaining cron job parameters.
+该函数获取cron作业参数。
 
-## v-list-cron-jobs
+命令: v-list-cron-jobs
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-cron-jobs)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-cron-jobs)
 
-list user cron jobs
+查看用户 cron 作业
 
-**Options**: `USER` `[FORMAT]`
+**选项**: `USER` `[FORMAT]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-list-cron-jobs admin
 ```
 
-This function for obtaining the list of all users cron jobs.
+该函数用于获取所有用户的 cron 作业列表。
 
-## v-list-database
+命令: v-list-database
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-database)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-database)
 
-list database
+查看数据库
 
-**Options**: `USER` `DATABASE` `[FORMAT]`
+**选项**: `USER` `DATABASE` `[FORMAT]`
 
-**Examples**:
+**示例**:
 
 ```bash
-v-list-database wp_db
+v-list-database www_db
 ```
 
-This function for obtaining of all database's parameters.
+该函数用于获取所有数据库的参数。
 
-## v-list-database-host
+命令: v-list-database-host
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-database-host)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-database-host)
 
-list database host
+查看数据库主机
 
-**Options**: `TYPE` `HOST` `[FORMAT]`
+**选项**: `TYPE` `HOST` `[FORMAT]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-list-database-host mysql localhost
 ```
 
-This function for obtaining database host parameters.
+该函数用于获取数据库主机参数。
 
-## v-list-database-hosts
+命令: v-list-database-hosts
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-database-hosts)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-database-hosts)
 
-list database hosts
+查看数据库主机
 
-**Options**: `[FORMAT]`
+**选项**: `[FORMAT]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-list-database-hosts json
 ```
 
-This function for obtaining the list of all configured database hosts.
+该函数用于获取所有配置的数据库主机的列表。
 
-## v-list-database-types
+命令: v-list-database-types
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-database-types)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-database-types)
 
-list supported database types
+查看支持的数据库类型
 
-**Options**: `[FORMAT]`
+**选项**: `[FORMAT]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-list-database-types json
 ```
 
-This function for obtaining the list of database types.
+该函数用于获取数据库类型列表。
 
-## v-list-databases
+命令: v-list-databases
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-databases)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-databases)
 
-listing databases
+查看数据库
 
-**Options**: `USER` `[FORMAT]`
+**选项**: `USER` `[FORMAT]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-list-databases user json
 ```
 
-This function for obtaining the list of all user's databases.
+该函数用于获取所有用户的数据库列表。
 
-## v-list-default-php
+命令: v-list-default-php
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-default-php)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-default-php)
 
-list default PHP version used by default.tpl
+查看默认模板使用的默认 PHP 版本
 
-**Options**: `[FORMAT]`
+**选项**: `[FORMAT]`
 
-List the default version used by the default template
+查看默认模板使用的默认PHP 版本
 
-## v-list-dns-domain
+命令: v-list-dns-domain
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-dns-domain)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-dns-domain)
 
-list dns domain
+查看 DNS 域
 
-**Options**: `USER` `DOMAIN` `[FORMAT]`
+**选项**: `USER` `DOMAIN` `[FORMAT]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-list-dns-domain alice wonderland.com
 ```
 
-This function of obtaining the list of dns domain parameters.
+该功能获取dns域名参数列表。
 
-## v-list-dns-domains
+命令: v-list-dns-domains
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-dns-domains)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-dns-domains)
 
-list dns domains
+查看 DNS 域
 
-**Options**: `USER` `[FORMAT]`
+**选项**: `USER` `[FORMAT]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-list-dns-domains admin
 ```
 
-This function for obtaining all DNS domains of a user.
+该函数用于获取用户的所有DNS域名。
 
-## v-list-dns-records
+命令: v-list-dns-records
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-dns-records)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-dns-records)
 
-list dns domain records
+查看 dns 域记录
 
-**Options**: `USER` `DOMAIN` `[FORMAT]`
+**选项**: `USER` `DOMAIN` `[FORMAT]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-list-dns-records admin example.com
 ```
 
-This function for getting all DNS domain records.
+该函数用于获取所有 DNS 域记录。
 
-## v-list-dns-template
+命令: v-list-dns-template
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-dns-template)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-dns-template)
 
-list dns template
+查看 DNS 模板
 
-**Options**: `TEMPLATE` `[FORMAT]`
+**选项**: `TEMPLATE` `[FORMAT]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-list-dns-template zoho
 ```
 
-This function for obtaining the DNS template parameters.
+该函数用于获取DNS模板参数。
 
-## v-list-dns-templates
+命令: v-list-dns-templates
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-dns-templates)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-dns-templates)
 
-list dns templates
+查看 DNS 模板
 
-**Options**: `[FORMAT]`
+**选项**: `[FORMAT]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-list-dns-templates json
 ```
 
-This function for obtaining the list of all DNS templates available.
+此函数用于获取所有可用 DNS 模板的列表。
 
-## v-list-dnssec-public-key
+命令: v-list-dnssec-public-key
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-dnssec-public-key)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-dnssec-public-key)
 
-list public dnssec key
+查看公共 DNSSEC 密钥
 
-**Options**: `USER` `DOMAIN` `[FROMAT]`
+**选项**: `USER` `DOMAIN` `[FROMAT]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-list-dns-public-key admin acme.com
 ```
 
-This function list the public key to be used with DNSSEC and needs to be added to the domain register.
+此函数查看了与 DNSSEC 一起使用的公钥，并且需要添加到域寄存器中。
 
-## v-list-firewall
+命令: v-list-firewall
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-firewall)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-firewall)
 
-list iptables rules
+查看 iptables 规则
 
-**Options**: `[FORMAT]`
+**选项**: `[FORMAT]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-list-firewall json
 ```
 
-This function of obtaining the list of all iptables rules.
+该函数获取所有iptables规则列表。
 
-## v-list-firewall-ban
+命令: v-list-firewall-ban
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-firewall-ban)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-firewall-ban)
 
-list firewall block list
+查看防火墙阻止列表
 
-**Options**: `[FORMAT]`
+**选项**: `[FORMAT]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-list-firewall-ban json
 ```
 
-This function of obtaining the list of currently blocked ips.
+该功能获取当前被阻止的ip列表。
 
-## v-list-firewall-ipset
+命令: v-list-firewall-ipset
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-firewall-ipset)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-firewall-ipset)
 
-List firewall ipset
+查看防火墙 ipset
 
-**Options**: `[FORMAT]`
+**选项**: `[FORMAT]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-list-firewall-ipset json
 ```
 
-This function prints defined ipset lists
+此函数打印定义的 ipset 列表
 
-## v-list-firewall-rule
+命令: v-list-firewall-rule
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-firewall-rule)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-firewall-rule)
 
-list firewall rule
+查看防火墙规则
 
-**Options**: `RULE` `[FORMAT]`
+**选项**: `RULE` `[FORMAT]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-list-firewall-rule 2
 ```
 
-This function of obtaining firewall rule parameters.
+该功能获取防火墙规则参数。
 
-## v-list-fs-directory
+命令: v-list-fs-directory
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-fs-directory)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-fs-directory)
 
-list directory
+查看目录
 
-**Options**: `USER` `DIRECTORY`
+**选项**: `USER` `DIRECTORY`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-list-fs-directory /home/admin/web
 ```
 
-This function lists directory on the file system
+该函数查看文件系统上的目录
 
-## v-list-letsencrypt-user
+命令: v-list-letsencrypt-user
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-letsencrypt-user)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-letsencrypt-user)
 
-list letsencrypt key
+查看加密密钥
 
-**Options**: `USER` `[FORMAT]`
+**选项**: `USER` `[FORMAT]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-list-letsencrypt-user admin
 ```
 
-This function for obtaining the letsencrypt key thumbprint
+此函数用于获取 LetsEncrypt 密钥指纹
 
-## v-list-mail-account
+命令: v-list-mail-account
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-mail-account)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-mail-account)
 
-list mail domain account
+查看邮件域帐户
 
-**Options**: `USER` `DOMAIN` `ACCOUNT` `[FORMAT]`
+**选项**: `USER` `DOMAIN` `ACCOUNT` `[FORMAT]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-list-mail-account admin domain.tld tester
 ```
 
-This function of obtaining the list of account parameters.
+该函数获取账户参数列表。
 
-## v-list-mail-account-autoreply
+命令: v-list-mail-account-autoreply
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-mail-account-autoreply)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-mail-account-autoreply)
 
-list mail account autoreply
+查看邮件帐户自动回复
 
-**Options**: `USER` `DOMAIN` `ACCOUNT` `[FORMAT]`
+**选项**: `USER` `DOMAIN` `ACCOUNT` `[FORMAT]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-list-mail-account-autoreply admin example.com testing
 ```
 
-This function of obtaining mail account autoreply message.
+此功能获取邮件帐户自动回复消息。
 
-## v-list-mail-accounts
+命令: v-list-mail-accounts
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-mail-accounts)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-mail-accounts)
 
-list mail domain accounts
+查看邮件域帐户
 
-**Options**: `USER` `DOMAIN` `[FORMAT]`
+**选项**: `USER` `DOMAIN` `[FORMAT]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-list-mail-accounts admin acme.com
 ```
 
-This function of obtaining the list of all user domains.
+该功能获取所有用户域的列表。
 
-## v-list-mail-domain
+命令: v-list-mail-domain
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-mail-domain)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-mail-domain)
 
-list mail domain
+查看邮件域
 
-**Options**: `USER` `DOMAIN` `[FORMAT]`
+**选项**: `USER` `DOMAIN` `[FORMAT]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-list-mail-domain user01 mydomain.com
 ```
 
-This function of obtaining the list of domain parameters.
+该函数获取域参数列表。
 
-## v-list-mail-domain-dkim
+命令: v-list-mail-domain-dkim
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-mail-domain-dkim)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-mail-domain-dkim)
 
-list mail domain dkim
+查看邮件域 dkim
 
-**Options**: `USER` `DOMAIN` `[FORMAT]`
+**选项**: `USER` `DOMAIN` `[FORMAT]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-list-mail-domain-dkim admin maildomain.tld
 ```
 
-This function of obtaining domain dkim files.
+这个获取域dkim文件的配置。
 
-## v-list-mail-domain-dkim-dns
+命令: v-list-mail-domain-dkim-dns
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-mail-domain-dkim-dns)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-mail-domain-dkim-dns)
 
-list mail domain dkim dns records
+查看邮件域 dkim dns 记录
 
-**Options**: `USER` `DOMAIN` `[FORMAT]`
+**选项**: `USER` `DOMAIN` `[FORMAT]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-list-mail-domain-dkim-dns admin example.com
 ```
 
-This function of obtaining domain dkim dns records for proper setup.
+此功能获取域 dkim dns 记录以进行正确设置。
 
-## v-list-mail-domain-ssl
+命令: v-list-mail-domain-ssl
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-mail-domain-ssl)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-mail-domain-ssl)
 
-list mail domain ssl certificate
+查看邮件域 ssl 证书
 
-**Options**: `USER` `DOMAIN` `[FORMAT]`
+**选项**: `USER` `DOMAIN` `[FORMAT]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-list-mail-domain-ssl user acme.com json
 ```
 
-This function of obtaining domain ssl files.
+这个获取域名ssl文件的功能。
 
-## v-list-mail-domains
+命令: v-list-mail-domains
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-mail-domains)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-mail-domains)
 
-list mail domains
+查看邮件域
 
-**Options**: `USER` `[FORMAT]`
+**选项**: `USER` `[FORMAT]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-list-mail-domains admin
 ```
 
-This function of obtaining the list of all user domains.
+该功能获取所有用户域的列表。
 
-## v-list-remote-dns-hosts
+命令: v-list-remote-dns-hosts
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-remote-dns-hosts)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-remote-dns-hosts)
 
-list remote dns host
+查看远程 DNS 主机
 
-**Options**: `[FORMAT]`
+**选项**: `[FORMAT]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-list-remote-dns-hosts json
 ```
 
-This function for obtaining the list of remote dns host.
+该函数用于获取远程dns主机列表。
 
-## v-list-sys-clamd-config
+命令: v-list-sys-clamd-config
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-clamd-config)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-clamd-config)
 
-list clamd config parameters
+查看clamd配置参数
 
-**Options**: `[FORMAT]`
+**选项**: `[FORMAT]`
 
-This function for obtaining the list of clamd config parameters.
+**示例**:
 
-## v-list-sys-config
+```bash
+v-list-sys-clamd-config
+```
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-config)
+该函数用于获取clamd配置参数列表。
 
-list system configuration
+命令: v-list-sys-config
 
-**Options**: `[FORMAT]`
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-config)
 
-**Examples**:
+查看系统配置
+
+**选项**: `[FORMAT]`
+
+**示例**:
 
 ```bash
 v-list-sys-config json
 ```
 
-This function for obtaining the list of system parameters.
+该函数用于获取系统参数列表。
 
-## v-list-sys-cpu-status
+命令: v-list-sys-cpu-status
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-cpu-status)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-cpu-status)
 
-list system cpu info
+查看系统CPU信息
 
-**Options**:
+**选项**:
 
-options:
+选项:
 
-## v-list-sys-db-status
+命令: v-list-sys-db-status
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-db-status)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-db-status)
 
-list db status
+查看数据库状态
 
-**Options**:
+**选项**:
 
-options:
+选项:
 
-## v-list-sys-disk-status
+命令: v-list-sys-disk-status
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-disk-status)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-disk-status)
 
-list disk information
+查看磁盘信息
 
-**Options**:
+**选项**:
 
-options:
+选项:
 
-## v-list-sys-dns-status
+命令: v-list-sys-dns-status
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-dns-status)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-dns-status)
 
-list dns status
+查看 DNS 状态
 
-**Options**:
+**选项**:
 
-options:
+选项:
 
-## v-list-sys-dovecot-config
+命令: v-list-sys-dovecot-config
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-dovecot-config)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-dovecot-config)
 
-list dovecot config parameters
+查看 dovecot 配置参数
 
-**Options**: `[FORMAT]`
+**选项**: `[FORMAT]`
 
-This function for obtaining the list of dovecot config parameters.
+该函数用于获取 dovecot 配置参数列表。
 
-## v-list-sys-hestia-autoupdate
+命令: v-list-sys-hestia-autoupdate
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-hestia-autoupdate)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-hestia-autoupdate)
 
-list hestia autoupdate settings
+查看 Hestia 自动更新设置
 
-**Options**: `[FORMAT]`
+**选项**: `[FORMAT]`
 
-This function for obtaining autoupdate settings.
+该函数用于获取自动更新设置。
 
-## v-list-sys-hestia-ssl
+命令: v-list-sys-hestia-ssl
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-hestia-ssl)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-hestia-ssl)
 
-list hestia ssl certificate
+查看 Hestia ssl 证书
 
-**Options**: `[FORMAT]`
+**选项**: `[FORMAT]`
 
-This function of obtaining hestia ssl files.
+这个获取hestia ssl文件的功能。
 
-## v-list-sys-hestia-updates
+命令: v-list-sys-hestia-updates
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-hestia-updates)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-hestia-updates)
 
-list system updates
+查看系统更新
 
-**Options**: `[FORMAT]`
+**选项**: `[FORMAT]`
 
-This function checks available updates for hestia packages.
+此函数检查 hestia 软件包的可用更新。
 
-## v-list-sys-info
+命令: v-list-sys-info
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-info)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-info)
 
-list system os
+查看系统操作系统
 
-**Options**: `[FORMAT]`
+**选项**: `[FORMAT]`
 
-This function checks available updates for hestia packages.
+此函数检查 hestia 软件包的可用更新。
 
-## v-list-sys-interfaces
+命令: v-list-sys-interfaces
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-interfaces)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-interfaces)
 
-list system interfaces
+查看系统接口
 
-**Options**: `[FORMAT]`
+**选项**: `[FORMAT]`
 
-This function for obtaining the list of network interfaces.
+该函数用于获取网络接口列表。
 
-## v-list-sys-ip
+命令: v-list-sys-ip
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-ip)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-ip)
 
-list system IP
+查看系统IP
 
-**Options**: `IP` `[FORMAT]`
+**选项**: `IP` `[FORMAT]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-list-sys-ip 203.0.113.1
 ```
 
-This function for getting the list of system IP parameters.
+该函数用于获取系统IP参数列表。
 
-## v-list-sys-ips
+命令: v-list-sys-ips
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-ips)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-ips)
 
-list system IPs
+查看系统IP
 
-**Options**: `[FORMAT]`
+**选项**: `[FORMAT]`
 
-This function for obtaining the list of system IP addresses.
+该函数用于获取系统IP地址列表。
 
-## v-list-sys-languages
+命令: v-list-sys-languages
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-languages)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-languages)
 
-list system languages
+查看系统语言
 
-**Options**: `[FORMAT]`
+**选项**: `[FORMAT]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-list-sys-languages json
 ```
 
-This function for obtaining the available languages for HestiaCP
-Output is always in the ISO language code
+此函数用于获取 HestiaCP 的可用语言，输出始终采用 ISO 语言代码
 
-## v-list-sys-mail-status
+命令: v-list-sys-mail-status
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-mail-status)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-mail-status)
 
-list mail status
+查看邮件状态
 
-**Options**:
+**选项**:
 
-options:
+选项:
 
-## v-list-sys-memory-status
+命令: v-list-sys-memory-status
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-memory-status)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-memory-status)
 
-list virtual memory info
+查看虚拟内存信息
 
-**Options**:
+**选项**:
 
-options:
+选项:
 
-## v-list-sys-mysql-config
+命令: v-list-sys-mysql-config
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-mysql-config)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-mysql-config)
 
-list mysql config parameters
+查看 mysql 配置参数
 
-**Options**: `[FORMAT]`
+**选项**: `[FORMAT]`
 
 This function for obtaining the list of mysql config parameters.
 
-## v-list-sys-network-status
+命令: v-list-sys-network-status
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-network-status)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-network-status)
 
-list system network status
+查看系统网络状态
 
-**Options**:
+**选项**:
 
-options:
+选项:
 
-## v-list-sys-nginx-config
+命令: v-list-sys-nginx-config
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-nginx-config)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-nginx-config)
 
-list nginx config parameters
+查看 nginx 配置参数
 
-**Options**: `[FORMAT]`
+**选项**: `[FORMAT]`
 
-This function for obtaining the list of nginx config parameters.
+该函数用于获取nginx配置参数列表。
 
-## v-list-sys-pgsql-config
+命令: v-list-sys-pgsql-config
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-pgsql-config)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-pgsql-config)
 
-list postgresql config parameters
+查看 postgresql 配置参数
 
-**Options**: `[FORMAT]`
+**选项**: `[FORMAT]`
 
-This function for obtaining the list of postgresql config parameters.
+该函数用于获取 postgresql 配置参数列表。
 
-## v-list-sys-php
+命令: v-list-sys-php
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-php)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-php)
 
-listing available PHP versions installed
+查看已安装的可用 PHP 版本
 
-**Options**: `[FORMAT]`
+**选项**: `[FORMAT]`
 
-List /etc/php/\* version check if folder fpm is available
+查看 /etc/php/\* 版本检查文件夹 fpm 是否可用
 
-## v-list-sys-php-config
+命令: v-list-sys-php-config
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-php-config)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-php-config)
 
-list php config parameters
+查看 php 配置参数
 
-**Options**: `[FORMAT]`
+**选项**: `[FORMAT]`
 
-This function for obtaining the list of php config parameters.
+该函数用于获取php配置参数列表。
 
-## v-list-sys-proftpd-config
+命令: v-list-sys-proftpd-config
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-proftpd-config)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-proftpd-config)
 
-list proftpd config parameters
+查看 proftpd 配置参数
 
-**Options**: `[FORMAT]`
+**选项**: `[FORMAT]`
 
-This function for obtaining the list of proftpd config parameters.
+该函数用于获取proftpd配置参数列表。
 
-## v-list-sys-rrd
+命令: v-list-sys-rrd
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-rrd)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-rrd)
 
-list system rrd charts
+查看系统rrd图表
 
-**Options**: `[FORMAT]`
+**选项**: `[FORMAT]`
 
-List available rrd graphics, its titles and paths.
+查看可用的 rrd 图形、其标题和路径。
 
-## v-list-sys-services
+命令: v-list-sys-services
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-services)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-services)
 
-list system services
+查看系统服务
 
-**Options**: `[FORMAT]`
+**选项**: `[FORMAT]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-list-sys-services json
 ```
 
-This function for obtaining the list of configured system services.
+该函数用于获取已配置的系统服务列表。
 
-## v-list-sys-shells
+命令: v-list-sys-shells
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-shells)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-shells)
 
-list system shells
+查看系统 shell
 
-**Options**: `[FORMAT]`
+**选项**: `[FORMAT]`
 
-This function for obtaining the list of system shells.
+该函数用于获取系统 shell 列表。
 
-## v-list-sys-spamd-config
+命令: v-list-sys-spamd-config
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-spamd-config)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-spamd-config)
 
-list spamassassin config parameters
+查看 spamassassin 配置参数
 
-**Options**: `[FORMAT]`
+**选项**: `[FORMAT]`
 
-This function for obtaining the list of spamassassin config parameters.
+该函数用于获取 spamassassin 配置参数列表，是一种安装在邮件伺服主机上的邮件过滤器。
 
-## v-list-sys-sshd-port
+命令: v-list-sys-sshd-port
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-sshd-port)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-sshd-port)
 
-list sshd port
+查看 sshd 端口
 
-**Options**: `[FORMAT]`
+**选项**: `[FORMAT]`
 
-This function for obtainings the port of sshd listens to
+该函数用于获取sshd监听的端口
 
-## v-list-sys-themes
+命令: v-list-sys-themes
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-themes)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-themes)
 
-list system themes
+查看系统主题
 
-**Options**: `[FORMAT]`
+**选项**: `[FORMAT]`
 
-This function for obtaining the list of themes in the theme
-library and displaying them in the backend or user interface.
+该函数用于获取主题中的主题列表库并在后端或用户界面中显示它们。
 
-## v-list-sys-users
+命令: v-list-sys-users
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-users)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-users)
 
-list system users
+查看系统用户
 
-**Options**: `[FORMAT]`
+**选项**: `[FORMAT]`
 
-This function for obtaining the list of system users without
-detailed information.
+该函数用于获取系统用户列表，无需详细资料。
 
-## v-list-sys-vsftpd-config
+命令: v-list-sys-vsftpd-config
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-vsftpd-config)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-vsftpd-config)
 
-list vsftpd config parameters
+查看 vsftpd 配置参数
 
-**Options**: `[FORMAT]`
+**选项**: `[FORMAT]`
 
-This function for obtaining the list of vsftpd config parameters.
+该函数用于获取 vsftpd 配置参数列表。
 
-## v-list-sys-web-status
+命令: v-list-sys-web-status
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-web-status)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-web-status)
 
-list web status
+查看网络状态
 
-**Options**:
+**选项**:
 
-options:
+选项:
 
-## v-list-sys-webmail
+命令: v-list-sys-webmail
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-webmail)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-webmail)
 
-listing available webmail clients
+查看可用的网络邮件客户端
 
-**Options**: `[FORMAT]`
+**选项**: `[FORMAT]`
 
-List available webmail clients
+查看可用的网络邮件客户端
 
-## v-list-user
+命令: v-list-user
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-user)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-user)
 
-list user parameters
+查看用户参数
 
-**Options**: `USER` `[FORMAT]`
+**选项**: `USER` `[FORMAT]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-list-user admin
 ```
 
-This function to obtain user parameters.
+该函数获取用户参数。
 
-## v-list-user-auth-log
+命令: v-list-user-auth-log
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-user-auth-log)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-user-auth-log)
 
-list user log
+查看用户日志
 
-**Options**: `USER` `[FORMAT]`
+**选项**: `USER` `[FORMAT]`
 
-This function of obtaining the list of 10 last users commands.
+此功能获取最后 10 个用户命令的列表。
 
-## v-list-user-backup
+命令: v-list-user-backup
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-user-backup)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-user-backup)
 
-list user backup
+查看用户备份
 
-**Options**: `USER` `BACKUP` `[FORMAT]`
+**选项**: `USER` `BACKUP` `[FORMAT]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-list-user-backup admin admin.2019-05-19_03-31-30.tar
 ```
 
-This function of obtaining the list of backup parameters. This call, just as
-all v*list*\* calls, supports 3 formats - json, shell and plain.
+该功能获取备份参数列表。 这个调用，正如所有 v*list*\* 调用，支持 3 种格式 - json、shell 和 plain。
 
-## v-list-user-backup-exclusions
+命令: v-list-user-backup-exclusions
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-user-backup-exclusions)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-user-backup-exclusions)
 
-list backup exclusions
+查看备份排除项
 
-**Options**: `USER` `[FORMAT]`
+**选项**: `USER` `[FORMAT]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-list-user-backup-exclusions admin
 ```
 
-This function for obtaining the backup exclusion list
+该函数用于获取备份排除列表
 
-## v-list-user-backups
+命令: v-list-user-backups
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-user-backups)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-user-backups)
 
-list user backups
+查看用户备份
 
-**Options**: `USER` `[FORMAT]`
+**选项**: `USER` `[FORMAT]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-list-user-backups admin
 ```
 
-This function for obtaining the list of available user backups.
+此功能用于获取可用用户备份的列表。
 
-## v-list-user-ips
+命令: v-list-user-ips
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-user-ips)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-user-ips)
 
-list user IPs
+查看用户IP
 
-**Options**: `USER` `[FORMAT]`
+**选项**: `USER` `[FORMAT]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-list-user-ips admin
 ```
 
-This function for obtaining the list of available IP addresses.
+该函数用于获取可用IP地址列表。
 
-## v-list-user-log
+命令: v-list-user-log
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-user-log)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-user-log)
 
-list user log
+查看用户日志
 
-**Options**: `USER` `[FORMAT]`
+**选项**: `USER` `[FORMAT]`
 
-This function of obtaining the list of 100 last users commands.
+此功能获取最后 100 个用户命令的列表。
 
-## v-list-user-notifications
+命令: v-list-user-notifications
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-user-notifications)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-user-notifications)
 
-list user notifications
+查看用户通知
 
-**Options**: `USER` `[FORMAT]`
+**选项**: `USER` `[FORMAT]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-list-user-notifications admin
 ```
 
-This function for getting the list notifications
+该函数用于获取列表通知
 
-## v-list-user-ns
+命令: v-list-user-ns
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-user-ns)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-user-ns)
 
-list user nameservers
+查看用户名称服务器
 
-**Options**: `USER` `[FORMAT]`
+**选项**: `USER` `[FORMAT]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-list-user-ns admin
 ```
 
-Function for obtaining the list of user's DNS servers.
+获取用户DNS服务器列表的功能。
 
-## v-list-user-package
+命令: v-list-user-package
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-user-package)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-user-package)
 
-list user package
+查看用户软件包
 
-**Options**: `PACKAGE` `[FORMAT]`
+**选项**: `PACKAGE` `[FORMAT]`
 
-This function for getting the list of system ip parameters.
+该函数用于获取系统ip参数列表。
 
-## v-list-user-packages
+命令: v-list-user-packages
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-user-packages)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-user-packages)
 
-list user packages
+此功能用于查看用户软件包
 
-**Options**: `[FORMAT]`
+**选项**: `[FORMAT]`
 
-This function for obtaining the list of available hosting packages.
+该函数用于获取可用托管包的列表。
 
-## v-list-user-ssh-key
+命令: v-list-user-ssh-key
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-user-ssh-key)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-user-ssh-key)
 
-add ssh key
+添加 ssh 密钥
 
-**Options**: `USER` `[FORMAT]`
+**选项**: `USER` `[FORMAT]`
 
 Lists $user/.ssh/authorized_keys
 
-## v-list-user-stats
+命令: v-list-user-stats
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-user-stats)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-user-stats)
 
-list user stats
+查看用户统计信息
 
-**Options**: `USER` `[FORMAT]`
+**选项**: `USER` `[FORMAT]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-list-user-stats admin
 ```
 
-This function for listing user statistics
+此功能用于查看用户统计信息
 
-## v-list-users
+命令: v-list-users`
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-users)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-users)
 
-list users
+查看用户
 
-**Options**: `[FORMAT]`
+**选项**: `[FORMAT]`
 
-This function to obtain the list of all system users.
+该函数获取所有系统用户的列表。
 
-## v-list-users-stats
+命令: `v-list-users-stats`
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-users-stats)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-users-stats)
 
-list overall user stats
+查看总体用户统计数据
 
-**Options**: `[FORMAT]`
+**选项**: `[FORMAT]`
 
-This function for listing overall user statistics
+此功能用于查看总体用户统计数据
 
-## v-list-web-domain
+命令: `v-list-web-domain`
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-web-domain)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-web-domain)
 
-list web domain parameters
+查看 Web 域参数
 
-**Options**: `USER` `DOMAIN` `[FORMAT]`
+**选项**: `USER` `DOMAIN` `[FORMAT]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-list-web-domain admin example.com
 ```
 
-This function to obtain web domain parameters.
+该函数用于获取web域参数。
 
-## v-list-web-domain-accesslog
+命令: v-list-web-domain-accesslog
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-web-domain-accesslog)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-web-domain-accesslog)
 
-list web domain access log
+查看Web域访问日志
 
-**Options**: `USER` `DOMAIN` `[LINES]` `[FORMAT]`
+**选项**: `USER` `DOMAIN` `[LINES]` `[FORMAT]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-list-web-domain-accesslog admin example.com
 ```
 
-This function of obtaining raw access web domain logs.
+该功能获取原始访问Web域日志。
 
-## v-list-web-domain-errorlog
+命令: v-list-web-domain-errorlog
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-web-domain-errorlog)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-web-domain-errorlog)
 
-list web domain error log
+查看 Web 域错误日志
 
-**Options**: `USER` `DOMAIN` `[LINES]` `[FORMAT]`
+**选项**: `USER` `DOMAIN` `[LINES]` `[FORMAT]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-list-web-domain-errorlog admin acme.com
 ```
 
-This function of obtaining raw error web domain logs.
+该功能获取原始错误Web域日志。
 
-## v-list-web-domain-ssl
+命令: v-list-web-domain-ssl
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-web-domain-ssl)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-web-domain-ssl)
 
-list web domain ssl certificate
+查看 Web 域 ssl 证书
 
-**Options**: `USER` `DOMAIN` `[FORMAT]`
+**选项**: `USER` `DOMAIN` `[FORMAT]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-list-web-domain-ssl admin wonderland.com
 ```
 
-This function of obtaining domain ssl files.
+这个获取域名ssl文件的功能。
 
-## v-list-web-domains
+命令: v-list-web-domains
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-web-domains)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-web-domains)
 
-list web domains
+查看网络域
 
-**Options**: `USER` `[FORMAT]`
+**选项**: `USER` `[FORMAT]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-list-web-domains alice
 ```
 
-This function to obtain the list of all user web domains.
+此函数用于获取所有用户 Web 域的列表。
 
-## v-list-web-stats
+命令: v-list-web-stats
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-web-stats)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-web-stats)
 
-list web statistics
+查看网络统计数据
 
-**Options**: `[FORMAT]`
+**选项**: `[FORMAT]`
 
-This function for obtaining the list of web statistics analyzer.
+该函数用于获取网页统计分析器列表。
 
-## v-list-web-templates
+命令: v-list-web-templates
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-web-templates)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-web-templates)
 
-list web templates
+查看网页模板
 
-**Options**: `[FORMAT]`
+**选项**: `[FORMAT]`
 
-This function for obtaining the list of web templates available to a user.
+该函数用于获取用户可用的网页模板列表。
 
-## v-list-web-templates-backend
+命令: v-list-web-templates-backend
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-web-templates-backend)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-web-templates-backend)
 
-listing backend templates
+查看后端模板
 
-**Options**: `[FORMAT]`
+**选项**: `[FORMAT]`
 
-This function for obtaining the list of available backend templates.
+该函数用于获取可用后端模板的列表。
 
-## v-list-web-templates-proxy
+命令: v-list-web-templates-proxy
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-web-templates-proxy)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-web-templates-proxy)
 
-listing proxy templates
+查看代理模板
 
-**Options**: `[FORMAT]`
+**选项**: `[FORMAT]`
 
-This function for obtaining the list of proxy templates available to a user.
+此函数用于获取用户可用的代理模板列表。
 
-## v-log-action
+命令: v-log-action
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-log-action)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-log-action)
 
-adds action event to user or system log
+将操作事件添加到用户或系统日志
 
-**Options**: `LOG_TYPE` `USER`
+**选项**: `LOG_TYPE` `USER`
 
-Event Levels:
-info, warning, error
+## 打开和移动文件及重命名的系列命令
 
-## v-log-user-login
+命令: v-log-user-login
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-log-user-login)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-log-user-login)
 
-add user login
+添加用户登录
 
-**Options**: `USER` `IP` `STATUS` `[FINGERPRINT]`
+**选项**: `USER` `IP` `STATUS` `[FINGERPRINT]`
 
-## v-log-user-logout
+命令: v-log-user-logout
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-log-user-logout)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-log-user-logout)
 
-Log User logout event
+记录用户注销事件
 
-**Options**: `USER` `FINGERPRINT`
+**选项**: `USER` `FINGERPRINT`
 
-## v-move-fs-directory
+命令: v-move-fs-directory
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-move-fs-directory)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-move-fs-directory)
 
-move file
+移动文件
 
-**Options**: `USER` `SRC_DIRECTORY` `DST_DIRECTORY`
+**选项**: `USER` `SRC_DIRECTORY` `DST_DIRECTORY`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-move-fs-directory admin /home/admin/web /home/user02/
 ```
 
-This function moved file or directory on the file system. This function
-can also be used to rename files just like normal mv command.
+此函数移动文件系统上的文件或目录。 这个功能也可以像普通的 mv 命令一样用于重命名文件。
 
-## v-move-fs-file
+命令: v-move-fs-file
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-move-fs-file)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-move-fs-file)
 
-move file
+移动文件
 
-**Options**: `USER` `SRC_FILE` `DST_FILE`
+**选项**: `USER` `SRC_FILE` `DST_FILE`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-move-fs-file admin readme.txt new_readme.txt
 ```
 
-This function moved file or directory on the file system. This function
-can also be used to rename files just like normal mv command.
+此函数移动文件系统上的文件或目录。 这个功能也可以像普通的 mv 命令一样用于重命名文件。
 
-## v-open-fs-config
+命令: v-open-fs-config
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-open-fs-config)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-open-fs-config)
 
-open config
+打开配置
 
-**Options**: `CONFIG`
+**选项**: `CONFIG`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-open-fs-config /etc/mysql/my.cnf
 ```
 
-This function opens/reads config files on the file system
+该函数打开/读取文件系统上的配置文件
 
-## v-open-fs-file
+命令: v-open-fs-file
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-open-fs-file)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-open-fs-file)
 
 open file
 
-**Options**: `USER` `FILE`
+**选项**: `USER` `FILE`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-open-fs-file admin README.md
 ```
 
-This function opens/reads files on the file system
+该函数打开/读取文件系统上的文件
 
-## v-purge-nginx-cache
+命令: v-purge-nginx-cache
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-purge-nginx-cache)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-purge-nginx-cache)
 
-Purge nginx cache
+清除 nginx 缓存
 
-**Options**: `USER` `DOMAIN`
+**选项**: `USER` `DOMAIN`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-purge-nginx-cache user domain.tld
 ```
 
-This function purges nginx cache.
+该函数清除 nginx 缓存。
 
-## v-rebuild-all
+## 新建文件及文件夹系列命令
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-rebuild-all)
+命令: v-rebuild-all
 
-rebuild all assets for a specified user
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-rebuild-all)
 
-**Options**: `USER` `[RESTART]`
+新建指定用户的所有资产
 
-This function rebuilds all assets for a user account:
+**选项**: `USER` `[RESTART]`
 
-## v-rebuild-cron-jobs
+此函数新建用户帐户的所有资产：
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-rebuild-cron-jobs)
+命令: v-rebuild-cron-jobs
 
-rebuild cron jobs
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-rebuild-cron-jobs)
 
-**Options**: `USER` `[RESTART]`
+新建 cron 作业
 
-**Examples**:
+**选项**: `USER` `[RESTART]`
+
+**示例**:
 
 ```bash
 v-rebuild-cron-jobs admin yes
 ```
 
-This function rebuilds system cron config file for specified user.
+此功能为指定用户新建系统 cron 配置文件。
 
-## v-rebuild-database
+命令: v-rebuild-database
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-rebuild-database)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-rebuild-database)
 
-rebuild databases
+新建数据库
 
-**Options**: `USER` `DATABASE`
+**选项**: `USER` `DATABASE`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-rebuild-database user user_wordpress
 ```
 
-This function for rebuilding a single database for a user
+该功能用于为用户新建单个数据库
 
-## v-rebuild-databases
+命令: v-rebuild-databases
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-rebuild-databases)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-rebuild-databases)
 
-rebuild databases
+新建数据库
 
-**Options**: `USER`
+**选项**: `USER`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-rebuild-databases admin
 ```
 
-This function for rebuilding of all databases of a single user.
+该功能用于新建单个用户的所有数据库。
 
-## v-rebuild-dns-domain
+命令: v-rebuild-dns-domain
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-rebuild-dns-domain)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-rebuild-dns-domain)
 
-rebuild dns domain
+新建dns域名
 
-**Options**: `USER` `DOMAIN` `[RESTART]` `[UPDATE_SERIAL]`
+**选项**: `USER` `DOMAIN` `[RESTART]` `[UPDATE_SERIAL]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-rebuild-dns-domain alice wonderland.com
 ```
 
-This function rebuilds DNS configuration files.
+此功能新建 DNS 配置文件。
 
-## v-rebuild-dns-domains
+命令: v-rebuild-dns-domains
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-rebuild-dns-domains)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-rebuild-dns-domains)
 
-rebuild dns domains
+新建dns域
 
-**Options**: `USER` `[RESTART]` `[UPDATE_SERIAL]`
+**选项**: `USER` `[RESTART]` `[UPDATE_SERIAL]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-rebuild-dns-domains alice
 ```
 
-This function rebuilds DNS configuration files.
+此功能新建 DNS 配置文件。
 
-## v-rebuild-mail-domain
+命令: v-rebuild-mail-domain
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-rebuild-mail-domain)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-rebuild-mail-domain)
 
-rebuild mail domain
+新建邮件域
 
-**Options**: `USER` `DOMAIN`
+**选项**: `USER` `DOMAIN`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-rebuild-mail-domain user domain.tld
 ```
 
-This function rebuilds configuration files for a single domain.
+此功能为单个域新建配置文件。
 
-## v-rebuild-mail-domains
+命令: v-rebuild-mail-domains
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-rebuild-mail-domains)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-rebuild-mail-domains)
 
-rebuild mail domains
+新建邮件域
 
-**Options**: `USER`
+**选项**: `USER`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-rebuild-mail-domains admin
 ```
 
-This function rebuilds EXIM configuration files for all mail domains.
+此功能新建所有邮件域的 EXIM 配置文件。
 
-## v-rebuild-user
+命令: v-rebuild-user
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-rebuild-user)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-rebuild-user)
 
-rebuild system user
+新建系统用户
 
-**Options**: `USER` `[RESTART]`
+**选项**: `USER` `[RESTART]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-rebuild-user admin yes
 ```
 
-This function rebuilds system user account.
+此功能新建系统用户帐户。
 
-## v-rebuild-users
+命令: v-rebuild-users
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-rebuild-users)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-rebuild-users)
 
-rebuild system users
+新建系统用户
 
-**Options**: `[RESTART]`
+**选项**: `[RESTART]`
 
-This function rebuilds user configuration for all users.
+此功能为所有用户新建用户配置。
 
-## v-rebuild-web-domain
+命令: v-rebuild-web-domain
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-rebuild-web-domain)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-rebuild-web-domain)
 
-rebuild web domain
+新建网站域名
 
-**Options**: `USER` `DOMAIN` `[RESTART]`
+**选项**: `USER` `DOMAIN` `[RESTART]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-rebuild-web-domain user domain.tld
 ```
 
-This function rebuilds web configuration files.
+此功能新建 Web 配置文件。
 
-## v-rebuild-web-domains
+命令: v-rebuild-web-domains
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-rebuild-web-domains)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-rebuild-web-domains)
 
-rebuild web domains
+新建网域
 
-**Options**: `USER` `[RESTART]`
+**选项**: `USER` `[RESTART]`
 
-This function rebuilds web configuration files.
+此功能新建 Web 配置文件。
 
-## v-refresh-sys-theme
+命令: v-refresh-sys-theme
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-refresh-sys-theme)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-refresh-sys-theme)
 
-change active system theme
+更改活动系统主题
 
-**Options**: –
+**选项**: –
 
-This function for changing the currently active system theme.
+此功能用于更改当前活动的系统主题。
 
-## v-rename-user-package
+命令: v-rename-user-package
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-rename-user-package)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-rename-user-package)
 
-change package name
+更改软件包名称
 
-**Options**: `OLD_NAME` `NEW_NAME` `[MODE]`
+**选项**: `OLD_NAME` `NEW_NAME` `[MODE]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-rename-package package package2
 ```
 
-This function changes the name of an existing package.
+此函数更改现有软件包的名称。
 
-## v-repair-sys-config
+## 恢复和重启系列命令 
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-repair-sys-config)
+命令: v-repair-sys-config
 
-Restore system configuration
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-repair-sys-config)
 
-**Options**: `[SYSTEM]`
+恢复系统配置
 
-This function repairs or restores the system configuration file.
+**选项**: `[SYSTEM]`
 
-## v-restart-cron
+该功能修复或恢复系统配置文件。
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-restart-cron)
+命令: v-restart-cron
 
-restart cron service
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-restart-cron)
 
-**Options**: –
+重新启动 cron 服务
 
-This function tells crond service to reread its configuration files.
+**选项**: –
 
-## v-restart-dns
+该函数告诉 crond 服务重新读取其配置文件。
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-restart-dns)
+命令: v-restart-dns
 
-restart dns service
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-restart-dns)
 
-**Options**: –
+重启dns服务
 
-This function tells BIND service to reload dns zone files.
+**选项**: –
 
-## v-restart-ftp
+此函数告诉 BIND 服务重新加载 dns 区域文件。
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-restart-ftp)
+命令: v-restart-ftp
 
-restart ftp service
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-restart-ftp)
 
-**Options**: –
+重新启动 ftp 服务
 
-This function tells ftp server to reread its configuration.
+**选项**: –
 
-## v-restart-mail
+该函数告诉 ftp 服务器重新读取其配置。
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-restart-mail)
+命令: v-restart-mail
 
-restart mail service
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-restart-mail)
 
-**Options**: `[RESTART]`
+重新启动邮件服务
 
-This function tells exim or dovecot services to reload configuration files.
+**选项**: `[RESTART]`
 
-## v-restart-proxy
+此函数告诉 exim 或 dovecot 服务重新加载配置文件。
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-restart-proxy)
+命令: v-restart-proxy
 
-restart proxy server
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-restart-proxy)
 
-**Options**: –
+重新启动代理服务器
 
-**Examples**:
+**选项**: –
+
+**示例**:
 
 ```bash
 v-restart-proxy [RESTART]
 ```
 
-This function reloads proxy server configuration.
+此函数重新加载代理服务器配置。
 
-## v-restart-service
+命令: v-restart-service
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-restart-service)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-restart-service)
 
-restart service
+重启服务
 
-**Options**: `SERVICE` `[RESTART]`
+**选项**: `SERVICE` `[RESTART]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-restart-service apache2
 ```
 
-This function restarts system service.
+该函数会重启系统服务。
 
-## v-restart-system
+命令: v-restart-system
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-restart-system)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-restart-system)
 
-restart operating system
+重新启动操作系统
 
-**Options**: `RESTART` `[DELAY]`
+**选项**: `RESTART` `[DELAY]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-restart-system yes
 ```
 
-This function restarts operating system.
+该函数会重新启动操作系统。
 
-## v-restart-web
+命令: v-restart-web
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-restart-web)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-restart-web)
 
-restart web server
+重新启动网络服务器
 
-**Options**: `[RESTARRT]`
+**选项**: `[RESTARRT]`
 
-This function reloads web server configuration.
+此函数重新加载 Web 服务器配置。
 
-## v-restart-web-backend
+命令: v-restart-web-backend
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-restart-web-backend)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-restart-web-backend)
 
-restart php interpreter
+重启php解释器
 
-**Options**: –
+**选项**: –
 
-This function reloads php interpreter configuration.
+该函数重新加载 php 解释器配置。
 
-## v-restore-cron-job
+命令: v-restore-cron-job
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-restore-cron-job)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-restore-cron-job)
 
-restore single cron job
+恢复单个 cron 作业
 
-**Options**: `USER` `BACKUP` `DOMAIN` `[NOTIFY]`
+**选项**: `USER` `BACKUP` `DOMAIN` `[NOTIFY]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-restore-cron-job USER BACKUP CRON [NOTIFY]
 ```
 
-This function allows the user to restore a single cron job
-from a backup archive.
+该功能允许用户恢复单个 cron 作业来自备份存档。
 
-## v-restore-database
+命令: v-restore-database
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-restore-database)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-restore-database)
 
-restore single database
+恢复单个数据库
 
-**Options**: `USER` `BACKUP` `DATABASE` `[NOTIFY]`
+**选项**: `USER` `BACKUP` `DATABASE` `[NOTIFY]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-restore-database USER BACKUP DATABASE [NOTIFY]
 ```
 
-This function allows the user to restore a single database
-from a backup archive.
+该功能允许用户恢复单个数据库来自备份存档。
 
-## v-restore-dns-domain
+命令: v-restore-dns-domain
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-restore-dns-domain)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-restore-dns-domain)
 
-restore single dns domain
+恢复单个 DNS 域
 
-**Options**: `USER` `BACKUP` `DOMAIN` `[NOTIFY]`
+**选项**: `USER` `BACKUP` `DOMAIN` `[NOTIFY]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-restore-dns-domain USER BACKUP DOMAIN [NOTIFY]
 ```
 
-This function allows the user to restore a single DNS domain
-from a backup archive.
+此功能允许用户恢复单个 DNS 域，来自备份存档。
 
-## v-restore-mail-domain
+命令: v-restore-mail-domain
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-restore-mail-domain)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-restore-mail-domain)
 
-restore single mail domain
+恢复单个邮件域
 
-**Options**: `USER` `BACKUP` `DOMAIN` `[NOTIFY]`
+**选项**: `USER` `BACKUP` `DOMAIN` `[NOTIFY]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-restore-mail-domain USER BACKUP DOMAIN [NOTIFY]
 ```
 
-This function allows the user to restore a single mail domain
-from a backup archive.
+该功能允许用户恢复单个邮件域。来自备份存档。
 
-## v-restore-user
+命令: v-restore-user
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-restore-user)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-restore-user)
 
-restore user
+恢复用户
 
-**Options**: `USER` `BACKUP` `[WEB]` `[DNS]` `[MAIL]` `[DB]` `[CRON]` `[UDIR]` `[NOTIFY]`
+**选项**: `USER` `BACKUP` `[WEB]` `[DNS]` `[MAIL]` `[DB]` `[CRON]` `[UDIR]` `[NOTIFY]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-restore-user admin 2019-04-22_01-00-00.tar
 ```
 
-This function for restoring user from backup. To be able to restore the backup,
-the archive needs to be placed in /backup.
+此功能用于从备份中恢复用户。 为了能够恢复备份，存档需要放置在/backup 中。
 
-## v-restore-web-domain
+命令: v-restore-web-domain
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-restore-web-domain)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-restore-web-domain)
 
-restore single web domain
+恢复单个 Web 域
 
-**Options**: `USER` `BACKUP` `DOMAIN` `[NOTIFY]`
+**选项**: `USER` `BACKUP` `DOMAIN` `[NOTIFY]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-restore-web-domain USER BACKUP DOMAIN [NOTIFY]
 ```
 
-This function allows the user to restore a single web domain
-from a backup archive.
+此功能允许用户恢复单个 Web 域。来自备份存档。
 
-## v-revoke-api-key
+命令: v-revoke-api-key
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-revoke-api-key)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-revoke-api-key)
 
-revokes api key
+撤销 API 密钥
 
-**Options**: `[HASH]`
+**选项**: `[HASH]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-revoke-api-key mykey
 ```
 
-This function removes a key from in $HESTIA/data/keys/
+此函数从 $HESTIA/data/keys/ 中删除一个密钥
 
-## v-run-cli-cmd
+## 运行系列命令
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-run-cli-cmd)
+命令:`v-run-cli-cmd`
 
-run cli command
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-run-cli-cmd)
 
-**Options**: `USER` `CMD` `[ARG...]`
+运行 cli 命令
 
-**Examples**:
+**选项**: `USER` `CMD` `[ARG...]`
+
+**示例**:
 
 ```bash
 v-run-cli-cmd user composer require package
 ```
 
-This function runs a limited list of cli commands with dropped privileges as the specific hestia user
+此函数运行有限的 cli 命令列表，并删除特定 hestia 用户的权限
 
-## v-schedule-letsencrypt-domain
+命令: v-schedule-letsencrypt-domain
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-schedule-letsencrypt-domain)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-schedule-letsencrypt-domain)
 
-adding cronjob for letsencrypt cetificate installation
+添加 cron 作业来安装 LetsEncrypt 证书
 
-**Options**: `USER` `DOMAIN` `[ALIASES]`
+**选项**: `USER` `DOMAIN` `[ALIASES]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-schedule-letsencrypt-domain admin example.com www.example.com
 ```
 
-This function adds cronjob for letsencrypt ssl certificate installation
+该函数添加了letsencrypt ssl证书安装的cronjob
 
-## v-schedule-user-backup
+命令: v-schedule-user-backup
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-schedule-user-backup)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-schedule-user-backup)
 
-schedule user backup creation
+安排用户备份创建
 
-**Options**: `USER`
+**选项**: `USER`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-schedule-user-backup admin
 ```
 
-This function for scheduling user backup creation.
+此功能用于安排用户备份创建。
 
-## v-schedule-user-backup-download
+命令: v-schedule-user-backup-download
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-schedule-user-backup-download)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-schedule-user-backup-download)
 
-Schedule a backup
+安排备份
 
-**Options**: `USER` `BACKUP`
+**选项**: `USER` `BACKUP`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-schedule-user-backup-download admin 2019-04-22_01-00-00.tar
 ```
 
-This function for scheduling user backup creation.
+此功能用于安排用户备份创建。
 
-## v-schedule-user-restore
+命令: v-schedule-user-restore
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-schedule-user-restore)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-schedule-user-restore)
 
-schedule user backup restoration
+安排用户备份恢复
 
-**Options**: `USER` `BACKUP` `[WEB]` `[DNS]` `[MAIL]` `[DB]` `[CRON]` `[UDIR]`
+**选项**: `USER` `BACKUP` `[WEB]` `[DNS]` `[MAIL]` `[DB]` `[CRON]` `[UDIR]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-schedule-user-restore 2019-04-22_01-00-00.tar
 ```
 
-This function for scheduling user backup restoration.
+该功能用于安排用户备份恢复。
 
-## v-search-command
+## 搜索系统命令
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-search-command)
+命令: v-search-command
 
-search for available commands
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-search-command)
 
-**Options**: `ARG1` `[ARG...]`
+搜索可用命令
 
-**Examples**:
+**选项**: `ARG1` `[ARG...]`
+
+**示例**:
 
 ```bash
 v-search-command web
 ```
 
-This function searches for available Hestia Control Panel commands
-and returns results based on the specified criteria.
-Originally developed for VestaCP by Federico Krum
-<https://github.com/FastDigitalOceanDroplets/VestaCP/blob/master/files/v-search-command>
+此功能搜索可用的 Hestia 控制面板命令
+并根据指定条件返回结果。
+最初由 Federico Krum 为 VestaCP 开发[Federico Krum的github](https://github.com/FastDigitalOceanDroplets/VestaCP/blob/master/files/v-search-command)
 
-## v-search-domain-owner
+命令: v-search-domain-owner
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-search-domain-owner)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-search-domain-owner)
 
-search domain owner
+搜索域名所有者
 
-**Options**: `DOMAIN` `[TYPE]`
+**选项**: `DOMAIN` `[TYPE]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-search-domain-owner acme.com
 ```
 
-This function that allows to find user objects.
+该函数允许查找用户对象。
 
-## v-search-fs-object
+命令: v-search-fs-object
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-search-fs-object)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-search-fs-object)
 
-search file or directory
+搜索文件或目录
 
-**Options**: `USER` `OBJECT` `[PATH]`
+**选项**: `USER` `OBJECT` `[PATH]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-search-fs-object admin hello.txt
 ```
 
-This function search files and directories on the file system
+该函数搜索文件系统上的文件和目录
 
-## v-search-object
+命令: v-search-object
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-search-object)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-search-object)
 
-search objects
+搜索对象
 
-**Options**: `OBJECT` `[FORMAT]`
+**选项**: `OBJECT` `[FORMAT]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-search-object example.com json
 ```
 
-This function that allows to find system objects.
+该函数允许查找系统对象。
 
-## v-search-user-object
+命令: v-search-user-object
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-search-user-object)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-search-user-object)
 
-search objects
+搜索对象
 
-**Options**: `USER` `OBJECT` `[FORMAT]`
+**选项**: `USER` `OBJECT` `[FORMAT]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-search-user-object admin example.com json
 ```
 
-This function that allows to find user objects.
+该函数允许查找用户对象。
 
-## v-start-service
+## 启动/暂停/停止系列命令
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-start-service)
+命令: v-start-service
 
-start service
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-start-service)
 
-**Options**: `SERVICE`
+启动服务
 
-**Examples**:
+**选项**: `SERVICE`
+
+**示例**:
 
 ```bash
 v-start-service mysql
 ```
 
-This function starts system service.
+该函数启动系统服务。
 
-## v-stop-firewall
+命令: v-stop-firewall
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-stop-firewall)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-stop-firewall)
 
-stop system firewall
+停止系统防火墙
 
-**Options**: –
+**选项**: –
 
-This function stops iptables
+该函数用于停止系统防火墙
 
-## v-stop-service
+命令: v-stop-service
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-stop-service)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-stop-service)
 
-stop service
+停止服务
 
-**Options**: `SERVICE`
+**选项**: `SERVICE`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-stop-service apache2
 ```
 
-This function stops system service.
+该函数停止系统服务。
 
-## v-suspend-cron-job
+命令: v-suspend-cron-job
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-suspend-cron-job)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-suspend-cron-job)
 
-suspend cron job
+暂停 cron 作业
 
-**Options**: `USER` `JOB` `[RESTART]`
+**选项**: `USER` `JOB` `[RESTART]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-suspend-cron-job admin 5 yes
 ```
 
-This function suspends a certain job of the cron scheduler.
+该函数暂停 cron 调度程序的某个作业。
 
-## v-suspend-cron-jobs
+命令: v-suspend-cron-jobs
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-suspend-cron-jobs)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-suspend-cron-jobs)
 
-Suspending sys cron jobs
+暂停 sys cron 作业
 
-**Options**: `USER` `[RESTART]`
+**选项**: `USER` `[RESTART]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-suspend-cron-jobs admin
 ```
 
-This function suspends all user cron jobs.
+此函数暂停所有用户 cron 作业。
 
-## v-suspend-database
+命令: v-suspend-database
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-suspend-database)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-suspend-database)
 
-suspend database
+暂停数据库
 
-**Options**: `USER` `DATABASE`
+**选项**: `USER` `DATABASE`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-suspend-database admin admin_wordpress_db
 ```
 
-This function for suspending a certain user database.
+该函数用于暂停某个用户数据库。
 
-## v-suspend-database-host
+命令: v-suspend-database-host
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-suspend-database-host)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-suspend-database-host)
 
-suspend database server
+暂停数据库服务器
 
-**Options**: `TYPE` `HOST`
+**选项**: `TYPE` `HOST`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-suspend-database-host mysql localhost
 ```
 
-This function for suspending a database server.
+该函数用于暂停数据库服务器。
 
-## v-suspend-databases
+命令: v-suspend-databases
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-suspend-databases)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-suspend-databases)
 
-suspend databases
+暂停数据库
 
-**Options**: `USER`
+**选项**: `USER`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-suspend-databases admin
 ```
 
-This function for suspending of all databases of a single user.
+该功能用于暂停单个用户的所有数据库。
 
-## v-suspend-dns-domain
+命令: v-suspend-dns-domain
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-suspend-dns-domain)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-suspend-dns-domain)
 
-suspend dns domain
+暂停 DNS 域
 
-**Options**: `USER` `DOMAIN` `[RESTART]`
+**选项**: `USER` `DOMAIN` `[RESTART]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-suspend-dns-domain alice acme.com
 ```
 
-This function suspends a certain user's domain.
+该功能可以暂停某个用户的域。
 
-## v-suspend-dns-domains
+命令: v-suspend-dns-domains
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-suspend-dns-domains)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-suspend-dns-domains)
 
-suspend dns domains
+暂停 DNS 域
 
-**Options**: `USER` `[RESTART]`
+**选项**: `USER` `[RESTART]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-suspend-dns-domains admin yes
 ```
 
-This function suspends all user's DNS domains.
+此功能暂停所有用户的 DNS 域。
 
-## v-suspend-dns-record
+命令: v-suspend-dns-record
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-suspend-dns-record)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-suspend-dns-record)
 
-suspend dns domain record
+暂停DNS域名记录
 
-**Options**: `USER` `DOMAIN` `ID` `[RESTART]`
+**选项**: `USER` `DOMAIN` `ID` `[RESTART]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-suspend-dns-record alice wonderland.com 42 yes
 ```
 
-This function suspends a certain domain record.
+该功能暂停某个域记录。
 
-## v-suspend-domain
+命令: v-suspend-domain
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-suspend-domain)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-suspend-domain)
 
-suspend web/dns/mail domain
+暂停 web/dns/mail 域
 
-**Options**: `USER` `DOMAIN`
+**选项**: `USER` `DOMAIN`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-suspend-domain admin example.com
 ```
 
-This function suspends web/dns/mail domain.
+此功能暂停 web/dns/mail 域。
 
-## v-suspend-firewall-rule
+命令: v-suspend-firewall-rule
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-suspend-firewall-rule)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-suspend-firewall-rule)
 
-suspend firewall rule
+暂停防火墙规则
 
-**Options**: `RULE`
+**选项**: `RULE`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-suspend-firewall-rule 7
 ```
 
-This function suspends a certain firewall rule.
+该功能暂停某个防火墙规则。
 
-## v-suspend-mail-account
+命令: v-suspend-mail-account
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-suspend-mail-account)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-suspend-mail-account)
 
-suspend mail account
+暂停邮件帐户
 
-**Options**: `USER` `DOMAIN` `ACCOUNT`
+**选项**: `USER` `DOMAIN` `ACCOUNT`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-suspend-mail-account admin acme.com bob
 ```
 
-This function suspends mail account.
+此功能暂停邮件帐户。
 
-## v-suspend-mail-accounts
+命令: v-suspend-mail-accounts
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-suspend-mail-accounts)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-suspend-mail-accounts)
 
-suspend all mail domain accounts
+暂停所有邮件域帐户
 
-**Options**: `USER` `DOMAIN`
+**选项**: `USER` `DOMAIN`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-suspend-mail-accounts admin example.com
 ```
 
-This function suspends all mail domain accounts.
+此功能暂停所有邮件域帐户。
 
-## v-suspend-mail-domain
+命令: v-suspend-mail-domain
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-suspend-mail-domain)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-suspend-mail-domain)
 
-suspend mail domain
+暂停邮件域
 
-**Options**: `USER` `DOMAIN`
+**选项**: `USER` `DOMAIN`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-suspend-mail-domain admin domain.com
 ```
 
-This function suspends mail domain.
+此功能暂停邮件域。
 
-## v-suspend-mail-domains
+命令: v-suspend-mail-domains
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-suspend-mail-domains)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-suspend-mail-domains)
 
-suspend mail domains
+暂停邮件域
 
-**Options**: `USER`
+**选项**: `USER`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-suspend-mail-domains admin
 ```
 
-This function suspends all user's MAIL domains.
+此功能暂停所有用户的 MAIL 域。
 
-## v-suspend-remote-dns-host
+命令: v-suspend-remote-dns-host
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-suspend-remote-dns-host)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-suspend-remote-dns-host)
 
-suspend remote dns server
+暂停远程 DNS 服务器
 
-**Options**: `HOST`
+**选项**: `HOST`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-suspend-remote-dns-host hostname.tld
 ```
 
-This function for suspending remote dns server.
+该功能用于暂停远程dns服务器。
 
-## v-suspend-user
+命令: v-suspend-user
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-suspend-user)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-suspend-user)
 
-suspend user
+暂停用户
 
-**Options**: `USER` `[RESTART]`
+**选项**: `USER` `[RESTART]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-suspend-user alice yes
 ```
 
-This function suspends a certain user and all his objects.
+该函数暂停某个用户及其所有对象。
 
-## v-suspend-web-domain
+命令: v-suspend-web-domain
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-suspend-web-domain)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-suspend-web-domain)
 
-suspend web domain
+暂停域名
 
-**Options**: `USER` `DOMAIN` `[RESTART]`
+**选项**: `USER` `DOMAIN` `[RESTART]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-suspend-web-domain admin example.com yes
 ```
 
-This function for suspending the site's operation. After blocking it all
-visitors will be redirected to a web page explaining the reason of suspend.
-By blocking the site the content of all its directories remains untouched.
+该功能用于暂停网站的运行。 全部封锁之后访问者将被重定向到解释暂停原因的网页。通过阻止该站点，其所有目录的内容将保持不变。
 
-## v-suspend-web-domains
+命令: v-suspend-web-domains
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-suspend-web-domains)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-suspend-web-domains)
 
-suspend web domains
+暂停域名
 
-**Options**: `USER` `[RESTART]`
+**选项**: `USER` `[RESTART]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-suspend-web-domains bob
 ```
 
-This function of suspending all user's sites.
+此功能暂停所有用户的网站。
 
-## v-sync-dns-cluster
+## 恢复和同步文件及文件夹系列命令
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-sync-dns-cluster)
+命令: v-sync-dns-cluster
 
-synchronize dns domains
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-sync-dns-cluster)
 
-**Options**: `HOST`
+同步 DNS 域
 
-This function synchronise all dns domains.
+**选项**: `HOST`
 
-## v-unsuspend-cron-job
+此功能同步所有 dns 域。
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-unsuspend-cron-job)
+命令: v-unsuspend-cron-job
 
-unsuspend cron job
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-unsuspend-cron-job)
 
-**Options**: `USER` `JOB` `[RESTART]`
+恢复暂停 cron 作业
 
-**Examples**:
+**选项**: `USER` `JOB` `[RESTART]`
+
+**示例**:
 
 ```bash
 v-unsuspend-cron-job admin 7 yes
 ```
 
-This function unsuspend certain cron job.
+此功能恢复暂停某些 cron 作业。
 
-## v-unsuspend-cron-jobs
+命令: v-unsuspend-cron-jobs
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-unsuspend-cron-jobs)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-unsuspend-cron-jobs)
 
-unsuspend sys cron
+恢复暂停系统 cron
 
-**Options**: `USER` `[RESTART]`
+**选项**: `USER` `[RESTART]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-unsuspend-cron-jobs admin no
 ```
 
-This function unsuspends all suspended cron jobs.
+此函数恢复暂停所有暂停的 cron 作业。
 
-## v-unsuspend-database
+命令: v-unsuspend-database
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-unsuspend-database)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-unsuspend-database)
 
-unsuspend database
+恢复暂停数据库
 
-**Options**: `USER` `DATABASE`
+**选项**: `USER` `DATABASE`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-unsuspend-database admin mydb
 ```
 
-This function for unsuspending database.
+该函数用于恢复暂停数据库。
 
-## v-unsuspend-database-host
+命令: v-unsuspend-database-host
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-unsuspend-database-host)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-unsuspend-database-host)
 
-unsuspend database server
+该函数用于恢复暂停数据库。
 
-**Options**: `TYPE` `HOST`
+**选项**: `TYPE` `HOST`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-unsuspend-database-host mysql localhost
 ```
 
-This function for unsuspending a database server.
+该函数用于恢复暂停数据库服务器。
 
-## v-unsuspend-databases
+命令: v-unsuspend-databases
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-unsuspend-databases)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-unsuspend-databases)
 
-unsuspend databases
+恢复暂停数据库
 
-**Options**: `USER`
+**选项**: `USER`
 
-This function for unsuspending all user's databases.
+此功能用于恢复暂停所有用户的数据库。
 
-## v-unsuspend-dns-domain
+命令: v-unsuspend-dns-domain
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-unsuspend-dns-domain)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-unsuspend-dns-domain)
 
-unsuspend dns domain
+恢复暂停 DNS 域
 
-**Options**: `USER` `DOMAIN`
+**选项**: `USER` `DOMAIN`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-unsuspend-dns-domain alice wonderland.com
 ```
 
-This function unsuspends a certain user's domain.
+此功能恢复暂停某个用户的域。
 
-## v-unsuspend-dns-domains
+命令: v-unsuspend-dns-domains
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-unsuspend-dns-domains)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-unsuspend-dns-domains)
 
-unsuspend dns domains
+恢复暂停 DNS 域
 
-**Options**: `USER` `[RESTART]`
+**选项**: `USER` `[RESTART]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-unsuspend-dns-domains alice
 ```
 
-This function unsuspends all user's DNS domains.
+此功能恢复暂停所有用户的 DNS 域。
 
-## v-unsuspend-dns-record
+命令: v-unsuspend-dns-record
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-unsuspend-dns-record)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-unsuspend-dns-record)
 
-unsuspend dns domain record
+恢复暂停 DNS 域名记录
 
-**Options**: `USER` `DOMAIN` `ID` `[RESTART]`
+**选项**: `USER` `DOMAIN` `ID` `[RESTART]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-unsuspend-dns-record admin example.com 33
 ```
 
-This function unsuspends a certain domain record.
+此功能恢复暂停某个域记录。
 
-## v-unsuspend-domain
+命令: v-unsuspend-domain
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-unsuspend-domain)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-unsuspend-domain)
 
-unsuspend web/dns/mail domain
+恢复暂停 web/dns/mail 域
 
-**Options**: `USER` `DOMAIN`
+**选项**: `USER` `DOMAIN`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-unsuspend-domain admin acme.com
 ```
 
-This function unsuspends web/dns/mail domain.
+此功能恢复暂停 web/dns/mail 域。
 
-## v-unsuspend-firewall-rule
+命令: v-unsuspend-firewall-rule
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-unsuspend-firewall-rule)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-unsuspend-firewall-rule)
 
-unsuspend firewall rule
+恢复暂停防火墙规则
 
-**Options**: `RULE`
+**选项**: `RULE`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-unsuspend-firewall-rule 7
 ```
 
-This function unsuspends a certain firewall rule.
+此功能恢复暂停某个防火墙规则。
 
-## v-unsuspend-mail-account
+命令: v-unsuspend-mail-account
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-unsuspend-mail-account)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-unsuspend-mail-account)
 
-unsuspend mail account
+恢复暂停邮件帐户
 
-**Options**: `USER` `DOMAIN` `ACCOUNT`
+**选项**: `USER` `DOMAIN` `ACCOUNT`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-unsuspend-mail-account admin acme.com tester
 ```
 
-This function unsuspends mail account.
+此功能可恢复暂停邮件帐户。
 
-## v-unsuspend-mail-accounts
+命令: v-unsuspend-mail-accounts
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-unsuspend-mail-accounts)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-unsuspend-mail-accounts)
 
-unsuspend all mail domain accounts
+恢复暂停所有邮件域帐户
 
-**Options**: `USER` `DOMAIN`
+**选项**: `USER` `DOMAIN`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-unsuspend-mail-accounts admin acme.com
 ```
 
-This function unsuspends all mail domain accounts.
+此功能恢复暂停所有邮件域帐户。
 
-## v-unsuspend-mail-domain
+命令: v-unsuspend-mail-domain
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-unsuspend-mail-domain)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-unsuspend-mail-domain)
 
-unsuspend mail domain
+恢复暂停邮件域
 
-**Options**: `USER` `DOMAIN`
+**选项**: `USER` `DOMAIN`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-unsuspend-mail-domain user02 acme.com
 ```
 
-This function unsuspends mail domain.
+此功能恢复挂起邮件域。
 
-## v-unsuspend-mail-domains
+命令: v-unsuspend-mail-domains
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-unsuspend-mail-domains)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-unsuspend-mail-domains)
 
-unsuspend mail domains
+恢复暂停邮件域
 
-**Options**: `USER`
+**选项**: `USER`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-unsuspend-mail-domains admin
 ```
 
-This function unsuspends all user's MAIL domains.
+此功能恢复暂停所有用户的 MAIL 域。
 
-## v-unsuspend-remote-dns-host
+命令: v-unsuspend-remote-dns-host
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-unsuspend-remote-dns-host)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-unsuspend-remote-dns-host)
 
-unsuspend remote dns server
+恢复挂起远程 DNS 服务器
 
-**Options**: `HOST`
+**选项**: `HOST`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-unsuspend-remote-dns-host hosname.com
 ```
 
-This function for unsuspending remote dns server.
+此功能用于恢复挂起远程 dns 服务器。
 
-## v-unsuspend-user
+命令: v-unsuspend-user
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-unsuspend-user)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-unsuspend-user)
 
-unsuspend user
+恢复暂停用户
 
-**Options**: `USER` `[RESTART]`
+**选项**: `USER` `[RESTART]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-unsuspend-user bob
 ```
 
-This function unsuspends user and all his objects.
+此函数恢复暂停用户及其所有对象。
 
-## v-unsuspend-web-domain
+命令: v-unsuspend-web-domain
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-unsuspend-web-domain)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-unsuspend-web-domain)
 
-unsuspend web domain
+恢复暂停域名
 
-**Options**: `USER` `DOMAIN` `[RESTART]`
+**选项**: `USER` `DOMAIN` `[RESTART]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-unsuspend-web-domain admin acme.com
 ```
 
-This function of unsuspending the domain.
+这个功能就是恢复域名挂起。
 
-## v-unsuspend-web-domains
+命令: v-unsuspend-web-domains
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-unsuspend-web-domains)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-unsuspend-web-domains)
 
-unsuspend web domains
+恢复暂停域名
 
-**Options**: `USER` `[RESTART]`
+**选项**: `USER` `[RESTART]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-unsuspend-web-domains admin
 ```
 
-This function of unsuspending all user's sites.
+此功能可以恢复暂停所有用户的站点。
 
-## v-update-database-disk
+## 更新配置和文件系列命令
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-database-disk)
+命令: v-update-database-disk
 
-update database disk usage
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-database-disk)
 
-**Options**: `USER` `DATABASE`
+更新数据库磁盘使用情况
 
-**Examples**:
+**选项**: `USER` `DATABASE`
+
+**示例**:
 
 ```bash
-v-update-database-disk admin wp_db
+v-update-database-disk admin www_db
 ```
 
-This function recalculates disk usage for specific database.
+此函数重新计算特定数据库的磁盘使用情况。
 
-## v-update-databases-disk
+命令: v-update-databases-disk
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-databases-disk)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-databases-disk)
 
-update databases disk usage
+更新数据库磁盘使用情况
 
-**Options**: `USER`
+**选项**: `USER`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-update-databases-disk admin
 ```
 
-This function recalculates disk usage for all user databases.
+此函数重新计算所有用户数据库的磁盘使用情况。
 
-## v-update-dns-templates
+命令: v-update-dns-templates
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-dns-templates)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-dns-templates)
 
-update dns templates
+更新 DNS 模板
 
-**Options**: `[RESTART]`
+**选项**: `[RESTART]`
 
-This function for obtaining updated dns templates from Hestia package.
+此函数用于从 Hestia 包获取更新的 dns 模板。
 
-## v-update-firewall
+命令: v-update-firewall
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-firewall)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-firewall)
 
-update system firewall rules
+更新系统防火墙规则
 
-**Options**: –
+**选项**: –
 
-This function updates iptables rules
+该函数更新系统防火墙规则
 
-## v-update-firewall-ipset
+命令: v-update-firewall-ipset
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-firewall-ipset)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-firewall-ipset)
 
-update firewall ipset
+更新防火墙ipset
 
-**Options**: `[REFRESH]`
+**选项**: `[REFRESH]`
 
-This function creates ipset lists and updates the lists if they are expired or ondemand
+此函数创建 ipset 列表，并在列表过期或按需时更新列表
 
-## v-update-host-certificate
+命令: v-update-host-certificate
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-host-certificate)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-host-certificate)
 
-update host certificate for hestia
+更新 hestia 的主机证书
 
-**Options**: `USER` `HOSTNAME`
+**选项**: `USER` `HOSTNAME`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-update-host-certificate admin example.com
 ```
 
-This function updates the SSL certificate used for Hestia Control Panel.
+此功能更新用于 Hestia 控制面板的 SSL 证书.
 
-## v-update-letsencrypt-ssl
+命令: v-update-letsencrypt-ssl
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-letsencrypt-ssl)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-letsencrypt-ssl)
 
-update letsencrypt ssl certificates
+更新letsencrypt ssl证书
 
-**Options**: –
+**选项**: –
 
 This function for renew letsencrypt expired ssl certificate for all users
 
-## v-update-mail-domain-disk
+命令: v-update-mail-domain-disk
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-mail-domain-disk)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-mail-domain-disk)
 
-update mail domain disk usage
+更新邮件域磁盘使用情况
 
-**Options**: `USER` `DOMAIN`
+**选项**: `USER` `DOMAIN`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-update-mail-domain-disk admin example.com
 ```
 
-This function updates domain disk usage.
+此功能更新域磁盘使用情况。
 
-## v-update-mail-domain-ssl
+命令: v-update-mail-domain-ssl
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-mail-domain-ssl)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-mail-domain-ssl)
 
-updating ssl certificate for domain
+更新域的 ssl 证书
 
-**Options**: `USER` `DOMAIN` `SSL_DIR` `[RESTART]`
+**选项**: `USER` `DOMAIN` `SSL_DIR` `[RESTART]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-update-mail-domain-ssl admin domain.com /home/admin/tmp
 ```
 
-This function updates the SSL certificate for a domain. Parameter ssl_dir is a path
-to directory where 2 or 3 ssl files can be found. Certificate file
-domain.tld.crt and its key domain.tld.key are mandatory. Certificate
-authority domain.tld.ca file is optional.
+此函数更新域的 SSL 证书。 参数 ssl_dir 是一个路径到可以找到 2 或 3 个 ssl 文件的目录。 证书文件domain.tld.crt 及其密钥domain.tld.key 是强制性的。中间证书权限domain.tld.ca 文件是可选的。
 
-## v-update-mail-domains-disk
+命令: v-update-mail-domains-disk
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-mail-domains-disk)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-mail-domains-disk)
 
-calculate disk usage for all mail domains
+计算所有邮件域的磁盘使用情况
 
-**Options**: `USER`
+**选项**: `USER`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-update-mail-domains-disk admin
 ```
 
-This function calculates disk usage for all mail domains.
+此函数计算所有邮件域的磁盘使用情况。
 
-## v-update-mail-templates
+命令: v-update-mail-templates
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-mail-templates)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-mail-templates)
 
-update mail templates
+更新邮件模板
 
-**Options**: `[RESTART]` `[SKIP]`
+**选项**: `[RESTART]` `[SKIP]`
 
-This function for obtaining updated webmail templates from Hestia package.
+此功能用于从 Hestia 包获取更新的网络邮件模板。
 
-## v-update-sys-defaults
+命令: v-update-sys-defaults
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-sys-defaults)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-sys-defaults)
 
-update default key database
+更新默认密钥数据库
 
-**Options**: `[SYSTEM]`
+**选项**: `[SYSTEM]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-update-sys-defaults
 example: v-update-sys-defaults user
 ```
 
-This function updates the known key/value pair database
+该函数对数据库更新已知的键/值
 
-## v-update-sys-hestia
+命令: v-update-sys-hestia
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-sys-hestia)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-sys-hestia)
 
-update hestia package/configs
+更新 hestia 软件包/配置
 
-**Options**: `PACKAGE`
+**选项**: `PACKAGE`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-update-sys-hestia hestia-php
 ```
 
-This function runs as apt update trigger. It pulls shell script from hestia
-server and runs it. (hestia, hestia-nginx and hestia-php are valid options)
+该函数作为 apt update 触发器运行。 它从 Hestia 中提取 shell 脚本
+服务器并运行它。 （hestia、hestia-nginx 和 hestia-php 是有效选项）
 
-## v-update-sys-hestia-all
+命令: v-update-sys-hestia-all
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-sys-hestia-all)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-sys-hestia-all)
 
-update all hestia packages
+更新所有 hestia 软件包
 
-**Options**: –
+**选项**: –
 
-This function of updating all hestia packages
+此功能更新所有 hestia 软件包
 
-## v-update-sys-hestia-git
+命令: v-update-sys-hestia-git
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-sys-hestia-git)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-sys-hestia-git)
 
-Install update from Git repository
+从 Git 存储库安装更新
 
-**Options**: `REPOSITORY` `BRANCH` `INSTALL`
+**选项**: `REPOSITORY` `BRANCH` `INSTALL`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-update-sys-hestia-git hestiacp staging/beta install
-# Will download from the hestiacp repository
-# Pulls code from staging/beta branch
-# install: installs package immediately
-# install-auto: installs package and schedules automatic updates from Git
+# 将从 hestiacp 存储库下载
+# 从 staging/beta 分支中提取代码
+# install: 立即安装包
+# install-auto：安装包并安排 Git 自动更新
 ```
 
-Downloads and compiles/installs packages from GitHub repositories
+从 GitHub 存储库下载并编译/安装包
 
-## v-update-sys-ip
+命令: v-update-sys-ip
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-sys-ip)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-sys-ip)
 
-update system IP
+更新系统IP
 
-**Options**: –
+**选项**: –
 
-**Examples**:
+**示例**:
 
 ```bash
 v-update-sys-ip
-# Intended for internal usage
+# 扫描系统中配置的IP并将其注册到Hestia内部数据库
 ```
 
-This function scans configured IP in the system and register them with Hestia
-internal database. This call is intended for use on vps servers, where IP is
-set by hypervisor.
+该功能扫描系统中配置的IP并将其注册到Hestia内部数据库。 此调用旨在用于 vps 服务器，其中 IP 是由管理程序设置。
 
-## v-update-sys-ip-counters
+命令: v-update-sys-ip-counters
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-sys-ip-counters)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-sys-ip-counters)
 
-update IP usage counters
+更新 IP 使用计数器
 
-**Options**: `IP`
+**选项**: `IP`
 
-Function updates usage U_WEB_ADOMAINS and U_SYS_USERS counters.
+函数更新 U_WEB_ADOMAINS 和 U_SYS_USERS 计数器的使用情况。
 
-## v-update-sys-queue
+命令: v-update-sys-queue
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-sys-queue)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-sys-queue)
 
-update system queue
+更新系统队列
 
-**Options**: `PIPE`
+**选项**: `PIPE`
 
-This function is responsible queue processing. Restarts of services,
-scheduled backups, web log parsing and other heavy resource consuming
-operations are handled by this script. It helps to optimize system behaviour.
-In a nutshell Apache will be restarted only once even if 10 domains are
-added or deleted.
+该函数负责队列处理。 重新启动服务，计划备份、Web 日志解析和其他重度 regithub 脚本查看操作由该脚本处理。 它有助于优化系统行为。
+简而言之，即使有 10 个域，Apache 也只会重新启动一次添加或删除。
 
-## v-update-sys-rrd
+命令: v-update-sys-rrd
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-sys-rrd)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-sys-rrd)
 
-update system rrd charts
+更新系统rrd图表
 
-**Options**: –
+**选项**: –
 
-This function is wrapper for all rrd functions. It updates all
-v-update-sys-rrd\_\* at once.
+该函数是所有rrd 函数的包装器。 它立即更新 allv-update-sys-rrd\_\* 。
 
-## v-update-sys-rrd-apache2
+命令: v-update-sys-rrd-apache2
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-sys-rrd-apache2)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-sys-rrd-apache2)
 
-update apache2 rrd
+更新apache2rrd
 
-**Options**: `PERIOD`
+**选项**: `PERIOD`
 
-This function is for updating apache rrd database and graphic.
+该功能用于更新apache rrd数据库和图形。
 
-## v-update-sys-rrd-ftp
+命令: v-update-sys-rrd-ftp
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-sys-rrd-ftp)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-sys-rrd-ftp)
 
-update ftp rrd
+更新 ftp RRD
 
-**Options**: `PERIOD`
+**选项**: `PERIOD`
 
-This function is for updating ftpd rrd database and graphic.
+此功能用于更新 ftpd rrd 数据库和图形。
 
-## v-update-sys-rrd-httpd
+命令: v-update-sys-rrd-httpd
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-sys-rrd-httpd)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-sys-rrd-httpd)
 
-update httpd rrd
+更新httpd rrd
 
-**Options**: `PERIOD`
+**选项**: `PERIOD`
 
-This function is for updating apache rrd database and graphic.
+该功能用于更新apache rrd数据库和图形。
 
-## v-update-sys-rrd-la
+命令: v-update-sys-rrd-la
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-sys-rrd-la)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-sys-rrd-la)
 
-update load average rrd
+更新平均负载 rrd
 
-**Options**: `PERIOD`
+**选项**: `PERIOD`
 
-This function is for updating load average rrd database and graphic.
+该功能用于更新平均负载rrd数据库和图形。
 
-## v-update-sys-rrd-mail
+命令: v-update-sys-rrd-mail
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-sys-rrd-mail)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-sys-rrd-mail)
 
-update mail rrd
+更新邮件rrd
 
-**Options**: `PERIOD`
+**选项**: `PERIOD`
 
-This function is for updating mail rrd database and graphic.
+该功能用于更新邮件rrd数据库和图形。
 
-## v-update-sys-rrd-mem
+命令: v-update-sys-rrd-mem
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-sys-rrd-mem)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-sys-rrd-mem)
 
-update memory rrd
+更新内存 rrd
 
-**Options**: `PERIOD`
+**选项**: `PERIOD`
 
-This function is for updating memory rrd database and graphic.
+该功能用于更新内存rrd数据库和图形。
 
-## v-update-sys-rrd-mysql
+命令: v-update-sys-rrd-mysql
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-sys-rrd-mysql)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-sys-rrd-mysql)
 
-update MySQL rrd
+更新MySQL rrd
 
-**Options**: `PERIOD`
+**选项**: `PERIOD`
 
-This function is for updating mysql rrd database and graphic.
+该功能用于更新mysql rrd数据库和图形。
 
-## v-update-sys-rrd-net
+命令: v-update-sys-rrd-net
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-sys-rrd-net)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-sys-rrd-net)
 
-update network rrd
+更新网络 rrd
 
-**Options**: `PERIOD`
+**选项**: `PERIOD`
 
-This function is for updating network usage rrd database and graphic.
+该功能用于更新网络使用rrd数据库和图形。
 
-## v-update-sys-rrd-nginx
+命令: v-update-sys-rrd-nginx
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-sys-rrd-nginx)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-sys-rrd-nginx)
 
-update nginx rrd
+更新 nginx rrd
 
-**Options**: `PERIOD`
+**选项**: `PERIOD`
 
-This function is for updating nginx rrd database and graphic.
+该函数用于更新nginx rrd数据库和图形。
 
-## v-update-sys-rrd-pgsql
+命令: v-update-sys-rrd-pgsql
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-sys-rrd-pgsql)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-sys-rrd-pgsql)
 
-update PostgreSQL rrd
+更新 PostgreSQL rrd
 
-**Options**: `PERIOD`
+**选项**: `PERIOD`
 
-This function is for updating postgresql rrd database and graphic.
+该函数用于更新postgresql rrd数据库和图形。
 
-## v-update-sys-rrd-ssh
+命令: v-update-sys-rrd-ssh
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-sys-rrd-ssh)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-sys-rrd-ssh)
 
-update ssh rrd
+更新 ssh rrd
 
-**Options**: `PERIOD`
+**选项**: `PERIOD`
 
-This function is for updating ssh rrd database and graphic.
+该功能用于更新ssh rrd数据库和图形。
 
-## v-update-user-backup-exclusions
+命令: v-update-user-backup-exclusions
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-user-backup-exclusions)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-user-backup-exclusions)
 
-update backup exclusion list
+更新备份排除列表
 
-**Options**: `USER` `FILE`
+**选项**: `USER` `FILE`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-update-user-backup-exclusions admin /tmp/backup_exclusions
 ```
 
-This function for updating backup exclusion list
+此功能用于更新备份排除列表
 
-## v-update-user-counters
+命令: v-update-user-counters
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-user-counters)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-user-counters)
 
-update user usage counters
+更新用户使用计数器
 
-**Options**: `USER`
+**选项**: `USER`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-update-user-counters admin
 ```
 
-Function updates usage counters like U_WEB_DOMAINS, U_MAIL_ACCOUNTS, etc.
+函数更新使用计数器，如 U_WEB_DOMAINS、U_MAIL_ACCOUNTS 等。
 
-## v-update-user-disk
+命令: v-update-user-disk
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-user-disk)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-user-disk)
 
-update user disk usage
+更新用户磁盘使用情况
 
-**Options**: `USER`
+**选项**: `USER`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-update-user-disk admin
 ```
 
-The functions recalculates disk usage and updates database.
+该函数重新计算磁盘使用情况并更新数据库。
 
-## v-update-user-package
+命令: v-update-user-package
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-user-package)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-user-package)
 
-update user package
+更新用户软件包
 
-**Options**: `PACKAGE`
+**选项**: `PACKAGE`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-update-user-package default
 ```
 
-This function propagates package to connected users.
+此函数将软件包传播给连接的用户。
 
-## v-update-user-quota
+命令: v-update-user-quota
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-user-quota)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-user-quota)
 
-update user disk quota
+更新用户磁盘配额
 
-**Options**: `USER`
+**选项**: `USER`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-update-user-quota alice
 ```
 
-The functions upates disk quota for specific user
+该功能更新特定用户的磁盘配额
 
-## v-update-user-stats
+命令: v-update-user-stats
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-user-stats)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-user-stats)
 
-update user statistics
+更新用户统计数据
 
-**Options**: `USER`
+**选项**: `USER`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-update-user-stats admin
 ```
 
-Function logs user parameters into statistics database.
+功能将用户参数记录到统计数据库中。
 
-## v-update-web-domain-disk
+命令: v-update-web-domain-disk
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-web-domain-disk)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-web-domain-disk)
 
-update disk usage for domain
+更新域的磁盘使用情况
 
-**Options**: `USER` `DOMAIN`
+**选项**: `USER` `DOMAIN`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-update-web-domain-disk alice wonderland.com
 ```
 
-This function recalculates disk usage for specific webdomain.
+此函数重新计算特定 Web 域的磁盘使用情况。
 
-## v-update-web-domain-ssl
+命令: v-update-web-domain-ssl
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-web-domain-ssl)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-web-domain-ssl)
 
-updating ssl certificate for domain
+更新域的 ssl 证书
 
-**Options**: `USER` `DOMAIN` `SSL_DIR` `[RESTART]`
+**选项**: `USER` `DOMAIN` `SSL_DIR` `[RESTART]`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-update-web-domain-ssl admin domain.com /home/admin/tmp
 ```
 
-This function updates the SSL certificate for a domain. Parameter ssl_dir is a path
-to directory where 2 or 3 ssl files can be found. Certificate file
-domain.tld.crt and its key domain.tld.key are mandatory. Certificate
-authority domain.tld.ca file is optional.
+此函数更新域的 SSL 证书。 参数 ssl_dir 是一个路径到可以找到 2 或 3 个 ssl 文件的目录。 证书文件domain.tld.crt 及其密钥domain.tld.key 是强制性的。 证书权限domain.tld.ca 文件是可选的。
 
-## v-update-web-domain-stat
+命令: v-update-web-domain-stat
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-web-domain-stat)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-web-domain-stat)
 
-update domain statistics
+更新域统计信息
 
-**Options**: `USER` `DOMAIN`
+**选项**: `USER` `DOMAIN`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-update-web-domain-stat alice acme.com
 ```
 
-This function runs log analyser for specific webdomain.
+此函数运行特定 Web 域的日志分析器。
 
-## v-update-web-domain-traff
+命令: v-update-web-domain-traff
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-web-domain-traff)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-web-domain-traff)
 
-update domain bandwidth usage
+更新域带宽使用情况
 
-**Options**: `USER` `DOMAIN`
+**选项**: `USER` `DOMAIN`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-update-web-domain-traff admin example.com
 ```
 
-This function recalculates bandwidth usage for specific domain.
+此函数重新计算特定域的带宽使用情况。
 
-## v-update-web-domains-disk
+命令: v-update-web-domains-disk
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-web-domains-disk)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-web-domains-disk)
 
-update domains disk usage
+更新域磁盘使用情况
 
-**Options**: `USER`
+**选项**: `USER`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-update-web-domains-disk alice
 ```
 
-This function recalculates disk usage for all user webdomains.
+此函数重新计算所有用户网站域的磁盘使用情况。
 
-## v-update-web-domains-stat
+命令: v-update-web-domains-stat
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-web-domains-stat)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-web-domains-stat)
 
-update domains statistics
+更新域统计信息
 
-**Options**: `USER`
+**选项**: `USER`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-update-web-domains-stat admin
 ```
 
-This function runs log analyser usage for all user webdomains.
+此函数运行所有用户 Web 域的日志分析器使用情况。
 
-## v-update-web-domains-traff
+命令: v-update-web-domains-traff
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-web-domains-traff)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-web-domains-traff)
 
-update domains bandwidth usage
+更新域带宽使用情况
 
-**Options**: `USER`
+**选项**: `USER`
 
-**Examples**:
+**示例**:
 
 ```bash
 v-update-web-domains-traff bob
 ```
 
-This function recalculates bandwidth usage for all user webdomains.
+此函数重新计算所有用户网域的带宽使用情况。
 
-## v-update-web-templates
+命令: v-update-web-templates
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-web-templates)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-web-templates)
 
-update web templates
+更新网页模板
 
-**Options**: `[RESTART]` `[SKIP]`
+**选项**: `[RESTART]` `[SKIP]`
 
-This function for obtaining updated web (Nginx/Apache2/PHP) templates from the Hestia package.
+此函数用于从 Hestia 包获取更新的 Web (Nginx/Apache2/PHP) 模板。
 
-## v-update-white-label-logo
+命令: v-update-white-label-logo
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-white-label-logo)
+[github脚本查看](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-white-label-logo)
 
-update white label logo's
+更新logo标志
 
-**Options**: `[DOWNLOAD]`
+**选项**: `[DOWNLOAD]`
 
-Replace Hestia logos with User created logo's
+用用户创建的徽标替换默认 Hestia 徽标

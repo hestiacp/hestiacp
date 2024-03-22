@@ -1,48 +1,48 @@
-# Hestia CP Security policy
+# Hestia CP 安全政策
 
-Welcome and thanks for taking interest in Hestia CP!
+欢迎并感谢您对 Hestia CP 的关注！
 
-We are mostly interested in reports by actual Hestia CP users but all high quality contributions are welcome.
+我们最感兴趣的是实际 Hestia CP 用户的报告，但欢迎所有高质量的贡献。
 
-If you believe that you have have discovered a vulnerability in Hestia Control Panel, please let our development team know by sending an email to <info@hestiacp.com>
+如果您认为自己发现了 Hestia 控制面板中的漏洞，请发送电子邮件至 <info@hestiacp.com> 告知我们的开发团队
 
-We ask you to include a detailed description of the vulnerability, a list of services involved (e.g. exim, dovecot) and the versions which you've tested, full steps to reproduce the vulnerability, and include your findings and expected results.
+我们要求您提供漏洞的详细描述、涉及的服务列表（例如 exim、dovecot）和您测试过的版本、重现漏洞的完整步骤，并包括您的发现和预期结果。
 
-Please do not open any public issue on Github or any other social media before the report has been published and a fix has been released.
+在报告发布和修复程序发布之前，请不要在 Github 或任何其他社交媒体上打开任何公共问题。
 
-With that, good luck hacking us ;)
+就这样，祝我们好运；）
 
-## Supported versions
+## 支持的版本
 
-| Version | Supported          |
-| ------- | ------------------ |
-| Latest  | :white_check_mark: |
+| 版本 | 支持 |
+| -------- | ------------------ |
+| 最新 | :white_check_mark: |
 
-## Qualifying Vulnerabilities
+## 合格漏洞
 
-### Vulnerabilities we really care about
+### 我们真正关心的漏洞
 
-- Remote command execution
-- Code/SQL Injection
-- Authentication bypass
-- Privilege Escalation
-- Cross-site scripting (XSS)
-- Performing limited admin actions without authorization
-- CSRF
+- 远程命令执行
+- 代码/SQL注入
+- 身份验证绕过
+- 权限提升
+- 跨站脚本（XSS）
+- 未经授权执行有限的管理操作
+-CSRF
 
-### Vulnerabilities we accept
+### 我们接受的漏洞
 
-- Open redirects
-- Password brute-forcing that circumvents rate limiting
+- 打开重定向
+- 密码暴力破解可以绕过速率限制
 
-## Non-Qualifying Vulnerabilities
+## 不合格的漏洞
 
-- Theoretical attacks without proof of exploitability
-- Attacks that are the result of a third party library should be reported to the library maintainers
-- Social engineering
-- Reflected file download
-- Physical attacks
-- Weak SSL/TLS/SSH algorithms or protocols
-- Attacks involving physical access to a user’s device, or involving a device or network that’s already seriously compromised (eg man-in-the-middle).
-- The user attacks themselves
-- anything in `/test/` folder
+- 没有可利用性证明的理论攻击
+- 第三方库造成的攻击应报告给库维护人员
+- 社会工程学
+- 反映文件下载
+- 物理攻击
+- SSL/TLS/SSH 算法或协议较弱
+- 涉及对用户设备的物理访问，或涉及已严重受损的设备或网络的攻击（例如中间人）。
+- 用户攻击自己
+- `/test/` 文件夹中的任何内容

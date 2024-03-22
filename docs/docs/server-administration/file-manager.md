@@ -1,53 +1,52 @@
-# File manager
+# 文件管理器
 
-## How can I enable or disable the file manager
+## 如何启用或禁用文件管理器
 
-In a new install, the file manager will be enabled by default.
+在新安装中，文件管理器将默认启用。
 
-To enable or update the file manager, please run the following command:
+要启用或更新文件管理器，请运行以下命令：
 
 ```bash
 v-add-sys-filemanager
 ```
 
-To disable the file manager, please run the following command:
+要禁用文件管理器，请运行以下命令：
 
 ```bash
 v-delete-sys-filemanager
 ```
 
-## File manager gives “Unknown Error” message
+## 文件管理器给出“未知错误”消息
 
-This seems to occur specifically when the line `Subsystem sftp /usr/lib/openssh/sftp-server` is removed or changed in `/etc/ssh/sshd_config` in such a way that the install script cannot update it to `Subsystem sftp internal-sftp`.
-
-Short answer: add `Subsystem sftp internal-sftp` to `/etc/ssh/sshd_config`.
-
-Long answer: Refer to the install script `./install/hst-install-{distro}.sh` for all the changes made to `/etc/ssh/sshd_config`. For Debian, the changes can be summarised as follows:
+当`/etc/ssh/sshd_config`中的`Subsystem sftp /usr/lib/openssh/sftp-server`行被删除或更改时，尤其会发生这种情况，
+导致安装脚本无法将其更新为`Subsystem sftp internal-sftp`。将`Subsystem sftp internal-sftp`添加到`/etc/ssh/sshd_config`。
+请参阅安装脚本`./install/hst-install-{distro}.sh`，了解对`/etc/ssh/sshd_config`所做的所有更改。 对于 Debian，变化可以总结如下：
 
 ```bash
-# HestiaCP Changes to the default /etc/ssh/sshd_config in Debian 10 Buster
+# HestiaCP 更改 Debian 12 中的默认配置 
+nano /etc/ssh/sshd_config
 
-# Forced default yes
+# 强制默认yes
 PasswordAuthentication yes
 
-# Changed from default 2m to 1m
+# 从默认的2m改为1m
 LoginGraceTime 1m
 
-# Changed from default /usr/lib/openssh/sftp-server to internal-sftp
+# 从默认的/usr/lib/openssh/sftp-server更改为internal-sftp
 Subsystem sftp internal-sftp
 
-# Changed from default yes
+# 从默认值更改为 yes
 DebianBanner no
 ```
 
-Changing all of the other parameters to their defaults and also changing to `PasswordAuthentication no` did not reproduce the error, thus it would seem to be isolated to the `Subsystem sftp internal-sftp` parameter.
+将所有其他参数更改为默认值并更改为`PasswordAuthentication no`不会重现错误，因此它似乎与`Subsystem sftp internal-sftp`参数隔离。
 
-For more information regarding debugging, inspect the Hestia Nginx log:
+有关调试的更多信息，请检查 Hestia Nginx 日志：
 
 ```bash
 tail -f -s0.1 /var/log/hestia/nginx-error.log
 ```
 
-## I changed SSH port and I cannot use the file manager anymore
+## 我更改了 SSH 端口，并且无法再使用文件管理器
 
-The SSH port is loaded in a PHP session. Logging out and logging back in will reset the session, fixing the issue.
+SSH 端口在 PHP 会话中加载。 注销并重新登录将重置会话，从而解决问题。

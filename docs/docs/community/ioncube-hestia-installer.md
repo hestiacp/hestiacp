@@ -1,12 +1,12 @@
-# Install Ioncube on Hestia
+# 在 Hestia 上安装 Ioncube
 
-By [Jaap Marcus](https://github.com/jaapmarcus/)  
-[Source code](https://github.com/jaapmarcus/ioncube-hestia-installer)
+作者：[Jaap Marcus](https://github.com/jaapmarcus/)
+[源代码](https://github.com/jaapmarcus/ioncube-hestia-installer)
 
-Simple tool to download and install [Ioncube loaders](https://www.ioncube.com/loaders.php) for each available PHP version that is installed.
+用于为已安装的每个可用 PHP 版本下载并安装扩展 [Ioncube 加载程序](https://www.ioncube.com/loaders.php) 的简单工具。
 
-```bash
+````bash
 wget https://raw.githubusercontent.com/jaapmarcus/ioncube-hestia-installer/main/install_ioncube.sh
 chmod +x install_ioncube.sh
 ./install_ioncube.sh
-```
+````

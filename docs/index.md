@@ -1,46 +1,46 @@
 ---
 layout: home
 
-title: Hestia Control Panel
-titleTemplate: Open-source web server control panel.
+title: Hestia 控制面板
+titleTemplate: 开源 Web 服务器控制面板
 
 hero:
-  name: Hestia Control Panel
-  text: Open-source web server control panel
-  tagline: Fast, reliable, open-source. The control panel you’ve always wanted is just a command away.
+  name: Hestia 服务器控制面板
+  text: 开源Web服务器控制面板
+  tagline: 快速、可靠、开源。 您一直想要的控制面板只需一个命令即可。
   image:
     src: /logo.svg
     alt: Hestia Logo
   actions:
     - theme: brand
-      text: Get started
+      text: 开始吧！
       link: /docs/introduction/getting-started
     - theme: alt
-      text: Try the demo
+      text: 查看演示
       link: https://demo.hestiacp.com:8083/
     - theme: alt
-      text: View on GitHub
+      text: 在 GitHub 上查看
       link: https://github.com/hestiacp/hestiacp
 
 features:
   - icon: 🚀
-    title: Fast & easy to learn
-    details: Hestia is made with ease of use in mind. Creating a user or a website is as easy as clicking a button and filling out a couple of fields, while advanced features are easily accessible.
+    title: 快速且简单易学
+    details: Hestia 的设计考虑到了易用性。 创建用户或网站就像单击按钮并填写几个字段一样简单，而且可以轻松访问高级功能。
     link: /docs/introduction/getting-started
-    linkText: Documentation
+    linkText: 文档
   - icon: ❤️
-    title: Made with love & pride
-    details: Hestia is open-source software that is built by passionate people from around the world. This means that the code is reviewed by multiple people and that anybody can contribute to it!
+    title: 用心制作&满怀骄傲
+    details: Hestia 是由来自世界各地充满热情的人们构建的开源软件。 这意味着代码由多人审核，任何人都可以为其做出贡献！
     link: /team
-    linkText: See the team
+    linkText: 团队
   - icon: 🛠️
-    title: Extendable & powerful
-    details: Hestia is extendable while being easy to learn. You can build your own themes, web templates, quick install applications and can interact with it using third party software via its API.
+    title: 可扩展且强大
+    details: Hestia 具有可扩展性，同时易于学习。 您可以构建自己的主题、网页模板、快速安装应用程序，并可以通过其 API 使用第三方软件与之交互！
     link: /docs/contributing/development
-    linkText: Help develop Hestia
+    linkText: 帮助开发Hestia面板
   - icon: 🤝
-    title: Supported by the community
-    details: Hestia has a great support community - join the forum! To keep the project running, we rely on donations, which can be made via PayPal or cryptocurrency.
+    title: 社区支持
+    details: Hestia 拥有强大的支持社区 - 加入论坛！ 为了维持该项目的运行，我们依靠捐款，可以通过 PayPal 或加密货币进行捐款。
     link: /donate
-    linkText: Donate
+    linkText: 捐赠
 ---

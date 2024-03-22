@@ -1,124 +1,124 @@
-# Packages
+# 软件包
 
-To manage packages, log in as an **administrator** and navigate to the **Users <i class="fas fa-fw fa-users"></i>** tab.
+要管理软件软件包，请以 **管理员** 身份登录并导航到 **用户 <i class="fas fa-fw fa-users"></i>** 选项卡。
 
-## Adding a new package
+## 添加新软件包
 
-1. Click the **<i class="fas fa-fw fa-plus-circle"></i> Add Package** button.
-2. Fill out the form. When clicking on <i class="fas fa-fw fa-infinity"><span class="visually-hidden">unlimited</span></i> icon, the limits will be set to unlimited.
-3. Click the **<i class="fas fa-fw fa-save"></i> Save** button in the top right.
+1. 单击 **<i class="fas fa-fw fa-plus-circle"></i> 添加软件包** 按钮。
+2. 填写表格。 当点击<i class="fas fa-fw fa-infinity"><span class="visually-hidden">无限制</span></i>图标时，限制将被设置为无限制。
+3. 单击右上角的 **<i class="fas fa-fw fa-save"></i> 保存** 按钮。
 
-## Copying a package
+## 复制软件包
 
-1. Hover over the package you want to copy.
-2. Click the <i class="fas fa-fw fa-clone"><span class="visually-hidden">copy</span></i> icon on the right of the package name.
+1. 将鼠标悬停在要复制的软件包上。
+2. 单击软件软件包名称右侧的<i class="fas fa-fw fa-clone"><span class="visually-hidden">复制</span></i>图标。
 
-## Editing a package
+## 编辑软件包
 
-::: info
-The **system** package can’t be edited or renamed.
+::: 信息
+**system** 软件包无法编辑或重命名。
 :::
 
-1. Hover over the package you want to edit.
-2. Click the <i class="fas fa-fw fa-pencil-alt"><span class="visually-hidden">edit</span></i> icon on the right of the package name.
+1. 将鼠标悬停在要编辑的软件包上。
+2. 单击软件软件包名称右侧的<i class="fas fa-fw fa-pencil-alt"><span class="visually-hidden">编辑</span></i>图标。
 
-## Deleting a package
+## 删除软件包
 
-::: info
-The **system** package can’t be deleted.
+::: 信息
+**system**软件包无法删除。
 :::
 
-1. Hover over the package you want to delete.
-2. Click the <i class="fas fa-fw fa-trash"><span class="visually-hidden">delete</span></i> icon on the right of the package name.
+1. 将鼠标悬停在要删除的软件包上。
+2. 单击软件软件包名称右侧的<i class="fas fa-fw fa-trash"><span class="visually-hidden">删除</span></i>图标。
 
-## Importing existing packages from a different server
+## 从不同服务器导入现有软件包
 
-Packages are stored in `/usr/local/hestia/data/packages` as `package-name.pkg`. Simply copy these package files to other servers.
+软件软件包作为`package-name.pkg`存储在`/usr/local/hestia/data/packages`中。 只需将这些软件包文件复制到其他服务器即可。
 
-## Package configuration
+## 软件包配置
 
-::: info
-Some options may not be available depending on your setup.
+::: 信息
+根据您的设置，某些选项可能不可用。
 :::
 
-### Quota
+### 配额
 
-Total available storage space including the websites, email accounts, databases and the home folder. If you have enabled **File Quotas** during install or in the server settings, this value enforces the quota limit on websites, email accounts and the home folder. Databases are excluded.
+总可用存储空间，软件包括网站、电子邮件帐户、数据库和主文件夹。 如果您在安装过程中或在服务器设置中启用了**文件配额**，则此值会对网站、电子邮件帐户和主文件夹强制实施配额限制。 数据库被排除在外。
 
-### Bandwidth
+### 带宽
 
-Allocated bandwidth. Only outgoing traffic over web is accounted for.
+分配的带宽。 仅考虑通过网络传出的流量。
 
-There’s currently no methods of auto-suspending available.
+目前没有可用的自动暂停方法。
 
-### Backups
+### 备份
 
-Maximum number of backups that can be stored.
+可以存储的最大备份数。
 
-## Web domains
+## 网站域名
 
-### Web domains
+### 网站域名
 
-Maximum number of web domains that can be created.
+可以创建的最大 Web 域数量。
 
-### Aliases
+### 别名
 
-Maximum number of aliases that can be added per domain.
+每个域可以添加的最大别名数。
 
-### Proxy Template
+### 代理模板
 
-Default proxy template for created domains.
+创建的域的默认代理模板。
 
-### Web Template
+### 网页模板
 
-Default web template for created domains.
+创建域的默认 Web 模板。
 
 ## DNS
 
-### DNS Template
+### DNS 模板
 
-Default DNS template that get assigned on domain creation.
+创建域时分配的默认 DNS 模板。
 
-### DNS Domains
+### DNS 域名
 
-Maximum number of DNS domains that can be created.
+可以创建的最大 DNS 域数。
 
-### DNS records
+### DNS 记录
 
-Maximum number of DNS records that can be added per domain.
+每个域可以添加的最大 DNS 记录数。
 
-### Name Servers
+### 名称服务器
 
-Default name servers to be used by the user. Up to 8 different name servers can be added.
+用户使用的默认名称服务器。 最多可以添加 8 个不同的名称服务器。
 
-## Mail
+＃＃ 邮件
 
-### Mail Domains
+### 邮件域
 
-Maximum number of mail domains that can be created.
+可以创建的邮件域的最大数量。
 
-### Mail accounts
+### 邮件帐户
 
-Maximum number of mail accounts that can be added per domain.
+每个域可以添加的邮件帐户的最大数量。
 
-### Rate limit
+### 速率限制
 
-Maximum number of emails that accounts can send per hour.
+帐户每小时可以发送的最大电子邮件数。
 
-## Databases
+## 数据库
 
-Maximum number of databases that can be created.
+可以创建的最大数据库数。
 
-## System
+### 系统
 
-### Cron jobs
+### 计划任务
 
-Maximum number of cron jobs that can be created.
+可以创建的 cron 作业的最大数量。
 
-### Shell access
+### shell访问
 
-Select the shell that will be shown to the user when logging in via SSH.
+选择通过 SSH 登录时向用户显示的 shell。
 
-::: warning
-When set to `nologin`, SSH access is disabled but SFTP access is still allowed.
+::: 警告
+当设置为 `nologin`时，将禁用 SSH 访问，但仍允许 SFTP 访问。
 :::

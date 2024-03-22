@@ -1,60 +1,60 @@
-# Firewall
+# 防火墙
 
-::: warning
-After every edit or update the firewall, Hestia will clear the current iptables unless the rules are added via Hestia and [custom script](#how-can-i-customize-iptables-rules).
+::: 警告
+每次编辑或更新防火墙后，Hestia 都会清除当前的 iptables，除非通过 Hestia 和 [自定义脚本](# 如何自定义 iptables 规则？) 添加规则。
 :::
 
-## How can I open or block a port or IP?
+## 如何打开或阻止端口或 IP？
 
-1. Navigate to the server settings by clicking the <i class="fas fa-fw fa-cog"><span class="visually-hidden">Server</span></i> icon in the top right.
-2. Click the **<i class="fas fa-fw fa-shield-alt"></i> Firewall** button.
-3. Click the **<i class="fas fa-fw fa-plus-circle"></i> Add Rule** button.
-4. Select the desired action.
-5. Select the desired protocol.
-6. Enter the port(s) you want this rule to apply to (`0` for all ports).
-7. Set the IP this rule applies to (`0.0.0.0/0` for all IPs) or select an IPSet.
-8. Optionally describe the rule’s function.
-9. Click the **<i class="fas fa-fw fa-save"></i> Save** button in the top right.
+1. 进入Hestia web 控制面版单击右上角的 <i class="fas fa-fw fa-cog"><span class="visually-hidden">服务器</span></i> 图标导航至服务器设置。
+2. 单击 **<i class="fas fa-fw fa-shield-alt"></i> 防火墙** 按钮。
+3. 单击**<i class="fas fa-fw fa-plus-circle"></i>添加规则**按钮。
+4. 选择所需的操作。
+5. 选择所需的协议。
+6. 输入您希望应用此规则的端口（“0”表示所有端口）。
+7. 设置此规则适用的 IP（所有 IP 为“0.0.0.0/0”）或选择一个 IP 地址。
+8. （可选）描述规则的功能。
+9. 单击右上角的 **<i class="fas fa-fw fa-save"></i> 保存** 按钮。
 
-You can also use the [v-add-firewall-rule](../reference/cli#v-add-firewall-rule) command.
+您还可以使用 [v-add-firewall-rule](../reference/cli#v-add-firewall-rule) 命令。
 
-## How do I setup an IPSet blacklist or whitelist?
+## 如何设置 IPSet 黑名单或白名单？
 
-IPSet are large lists of IP addresses or subnets. They can be used for blacklists and whitelists.
+IPSet 是 IP 地址或子网的大型列表。 它们可用于黑名单和白名单。
 
-1. Navigate to the server settings by clicking the <i class="fas fa-fw fa-cog"><span class="visually-hidden">Server</span></i> icon in the top right.
-2. Click the **<i class="fas fa-fw fa-shield-alt"></i> Firewall** button.
-3. Click the **<i class="fas fa-fw fa-list"></i> Manage IP lists** button.
-4. Click the **<i class="fas fa-fw fa-plus-circle"></i> Add IP list** button.
-5. Name your IP list.
-6. Select the data source by entering one of the following:
-   - URL: `http://ipverse.net/ipblocks/data/countries/nl.zone`
-   - Script (with `chmod 755`): `/usr/local/hestia/install/deb/firewall/ipset/blacklist.sh`
-   - File: `file:/location/of/file`
-   - You can also use one of Hestia’s included sources.
-7. Selected the desired IP version (v4 or v6).
-8. Choose whether to auto-update the list or not.
-9. Click the **<i class="fas fa-fw fa-save"></i> Save** button in the top right.
+1. 单击右上角的 <i class="fas fa-fw fa-cog"><span class="visually-hidden">服务器</span></i> 图标导航至服务器设置。
+2. 单击 **<i class="fas fa-fw fa-shield-alt"></i> 防火墙** 按钮。
+3. 单击**<i class="fas fa-fw fa-list"></i>管理 IP 列表**按钮。
+4. 单击 **<i class="fas fa-fw fa-plus-circle"></i> 添加 IP 列表** 按钮。
+5. 为您的 IP 列表命名。
+6. 通过输入以下内容之一来选择数据源：
+    - URL：`http://ipverse.net/ipblocks/data/countries/nl.zone`
+    - 脚本（使用 `chmod 755`为脚本赋予权限）：`/usr/local/hestia/install/deb/firewall/ipset/blacklist.sh`
+    - 文件：`file:/location/of/file`
+    - 您还可以使用 Hestia 包含的来源之一。
+7. 选择所需的 IP 版本（v4 或 v6）。
+8. 选择是否自动更新列表。
+9. 单击右上角的 **<i class="fas fa-fw fa-save"></i> 保存** 按钮。
 
-## How can I customize iptables rules?
+## 如何自定义 iptables 规则？
 
-::: danger
-This is dangerously advanced feature, please make sure you understand what you are doing.
+::: 危险
+这是危险的高级功能，请确保您了解自己在做什么。
 :::
 
-Hestia supports setting custom rules, chains or flags, etc. using script.
+Hestia 支持使用脚本设置自定义规则、链或标志等。
 
-Script must be here: `/usr/local/hestia/data/firewall/custom.sh`
+脚本必须位于：`/usr/local/hestia/data/firewall/custom.sh`
 
-1. Create custom.sh: `touch /usr/local/hestia/data/firewall/custom.sh`
-2. Make it executable: `chmod +x /usr/local/hestia/data/firewall/custom.sh`
-3. Edit it with your favorite editor.
-4. Test and make sure it works.
-5. To make custom rules persistent, run: `v-update-firewall`
+1. 创建custom.sh：`touch /usr/local/hestia/data/firewall/custom.sh`
+2. 使其可执行：`chmod +x /usr/local/hestia/data/firewall/custom.sh`
+3. 使用您最喜欢的编辑器对其进行编辑。
+4. 测试并确保其有效。
+5. 要使自定义规则持久化，请运行：`v-update-firewall`
 
-**IMPLICIT PROTECTION:** Before making the rules persistent, if you screw up or lock yourself out of the server, just reboot.
+**隐式保护：** 在使规则生效之前，如果您搞砸了或将自己锁定在服务器之外，只需重新启动即可。
 
-custom.sh example:
+自定义.sh 示例：
 
 ```bash
 #!/bin/bash
@@ -67,13 +67,13 @@ $IPTABLES -I YOURCHAIN -s 0.0.0.0/0 -j RETURN
 $IPTABLES -I INPUT -p TCP -m multiport --dports 1:65535 -j YOURCHAIN
 ```
 
-## My IPSet doesn’t work
+## 我的 IP 集群不起作用
 
-An IPSet must contain at least 10 IP or IP ranges.
+ IP集群必须包含至少 10 个 IP 或 IP 范围。
 
-## Can I combine multiple sources in one?
+## 我可以将多个源合并为一个吗？
 
-If you want to combine multiple IP sources together, you can do so by using the following script:
+如果您想将多个 IP 源组合在一起，可以使用以下脚本来实现：
 
 ```bash
 #!/bin/bash

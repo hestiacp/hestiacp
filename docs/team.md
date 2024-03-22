@@ -11,19 +11,19 @@ title: The Team
 
 <VPTeamPage>
   <VPTeamPageTitle>
-    <template #title>The Team</template>
+    <template #title>开源团队介绍</template>
     <template #lead>
-      The development of Hestia is guided by an international team, some of whom have chosen to be featured below.
+      Hestia 的开发由国际团队指导，选择性的在下面进行介绍。
     </template>
   </VPTeamPageTitle>
   <VPTeamPageSection>
-    <template #title>Project Managers</template>
+    <template #title>项目经理</template>
     <template #members>
       <VPTeamMembers :members="projectManagers" />
     </template>
   </VPTeamPageSection>
   <VPTeamPageSection>
-    <template #title>Team Members</template>
+    <template #title>团队成员</template>
     <template #members>
       <VPTeamMembers :members="teamMembers" />
     </template>

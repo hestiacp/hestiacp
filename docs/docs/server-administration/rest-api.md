@@ -1,55 +1,55 @@
-# REST API
+# API 系统介绍
 
-The Hestia REST API is available to perform core functions of the Control Panel. For example, we use it internally to synchronise DNS clusters and to integrate the WHMCS billing system. The API can also be used to create new user accounts, domains, databases or even to build an alternative web interface.
+Hestia REST API 可用于执行控制面板的核心功能。 例如，我们在内部使用它来同步 DNS 集群并集成 WHMCS 计费系统。 该 API 还可用于创建新的用户帐户、域、数据库，甚至构建替代的 Web 界面。
 
-The [API reference](../reference/api) provides PHP code samples demonstrating how you can integrate the API into your application or script. However, you also can use any other language to communicate with the API.
+[API 参考](../reference/api) 提供 PHP 代码示例，演示如何将 API 集成到应用程序或脚本中。 但是，您也可以使用任何其他语言与 API 进行通信。
 
-With the release of Hestia v1.6.0, we have introduced a more advanced API system and it will allow non-admin users to use specific commands.
+随着 Hestia v1.6.0 的发布，我们引入了更先进的 API 系统，它将允许非管理员用户使用特定命令。
 
-## I’m unable to connect to the API
+## 我无法连接到 API
 
-With the release of Hestia v1.4.0, we have decided the security needed to be tightened. If you want to connect to the API from a remote server, you will first need to whitelist its IP address. To add multiple addresses, separate them with a new line.
+随着 Hestia v1.4.0 的发布，我们决定需要加强安全性。 如果您想从远程服务器连接到 API，您首先需要将其 IP 地址列入白名单。 要添加多个地址，请用新行分隔它们。
 
-## Can I disable the API?
+## 我可以禁用 API 吗？
 
-Yes, you can disable the API via the server settings. The file will be deleted from the server and all connections will get ignored. Please note that some functions may not work with the API disabled.
+是的，您可以通过服务器设置禁用 API。 该文件将从服务器中删除，所有连接都将被忽略。 请注意，禁用 API 后某些功能可能无法使用。
 
-## Password vs API key vs access keys
+## 密码 vs API 密钥 vs 访问密钥
 
-### Password
+＃＃＃ 密码
 
-- Should only be used by the admin user.
-- Changing the admin password requires updating it everywhere it’s used.
-- Allowed to run all commands.
+- 只能由管理员用户使用。
+- 更改管理员密码需要在使用该密码的所有地方进行更新。
+- 允许运行所有命令。
 
-### API key
+### API 密钥
 
-- Should only be used by the admin user.
-- Changing the admin password does not have consequences.
-- Allowed to run all commands.
+- 只能由管理员用户使用。
+- 更改管理员密码不会产生任何后果。
+- 允许运行所有命令。
 
-### Access keys
+### 访问键
 
-- User-specific.
-- Can limit permissions. For example only `v-purge-nginx-cache`.
-- Ability to disable login via other methods but still allow the use of api keys
-- Can be restricted to admin user only or allowed for all users.
+- 用户特定。
+- 可以限制权限。 例如仅`v-purge-nginx-cache`。
+- 能够禁用通过其他方法登录，但仍然允许使用 api 密钥
+- 可以仅限于管理员用户或允许所有用户。
 
-## Setup access/secret key authentication
+## 设置访问/密钥认证
 
-To create an access key, follow [the guide in our documentation](../user-guide/account#api-access-keys).
+要创建访问密钥，请遵循[我们文档中的指南](../user-guide/account#api-access-keys)。
 
-If the software you are using already supports the hash format, use `ACCESS_KEY:SECRET_KEY` instead of your old API key.
+如果您使用的软件已经支持哈希格式，请使用“ACCESS_KEY:SECRET_KEY”而不是旧的 API 密钥。
 
-## Create an API key
+## 创建 API 密钥
 
-::: warning
-This method has been replaced by the above access/secret key authentication. We **highly** recommend using this more secure method instead.
+：：： 警告
+该方法已被上述访问/密钥认证所取代。 我们**强烈**建议使用这种更安全的方法。
 :::
 
-Run the command `v-generate-api-key`.
+运行命令`v-generate-api-key`。
 
-## Return codes
+## 返回代码
 
 | Value | Name          | Comment                                                      |
 | ----- | ------------- | ------------------------------------------------------------ |

@@ -1,3 +1,3 @@
-# Contributing to Hestia’s translations
+# 为 Hestia 的翻译做出贡献
 
-If you are a non-English speaker and would like to improve the quality of the translations used in Hestia’s web interface, please go to [Hestia Translate](https://translate.hestiacp.com/) to review the translations database. For more information, please read [How to contribute with Translations](https://forum.hestiacp.com/t/how-to-contribute-with-translations/1664) on our forum.
+如果您使用的语言不是英语或其他语言如藏语，并且希望提高Hestia网页界面中使用的翻译质量，请前往 [Hestia Translate](https://translate.hestiacp.com/projects/) 查看翻译数据库 。 欲了解更多信息，请阅读我们论坛上的[如何通过翻译做出贡献](https://forum.hestiacp.com/t/how-to-contribute-with-translations/1664)。

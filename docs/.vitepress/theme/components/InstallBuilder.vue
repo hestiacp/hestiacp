@@ -2,22 +2,16 @@
 	<div class="InstallBuilder">
 		<div class="container">
 			<div class="output-card">
-				<h2 class="u-text-center">Installation instructions</h2>
-				<p class="u-mb10">
-					Log in to your server e.g.
-					<code>ssh root@your.server</code> then download the installation script:
-				</p>
+				<h2 class="u-text-center">安装说明</h2>
+				<p class="u-mb10">登录到您的服务器，例如<code>ssh root@your.server</code>，然后下载安装脚本：</p>
 				<CopyToClipboardInput
 					class="u-mb10"
 					value="wget https://raw.githubusercontent.com/hestiacp/hestiacp/release/install/hst-install.sh"
 				/>
-				<p class="u-mb10">
-					Check you are running as the <code>root</code> user, configure the options you want below,
-					then run:
-				</p>
+				<p class="u-mb10">检查您是否以 <code>root</code> 用户身份运行，配置下面所需的选项，然后运行：</p>
 				<CopyToClipboardInput class="u-mb10" :value="installCommand" />
 			</div>
-			<h2 class="u-text-center">Configure options</h2>
+			<h2 class="u-text-center">配置选项</h2>
 			<ul class="option-list">
 				<li
 					v-for="option in options"

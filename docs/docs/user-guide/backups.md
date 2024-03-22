@@ -1,81 +1,81 @@
-# Backups
+# 备份
 
-To manage your backups, navigate to the **Backups <i class="fas fa-fw fa-file-archive"></i>** tab.
+要管理备份，请导航至**备份<i class="fas fa-fw fa-file-archive"></i>**选项卡。
 
-## Manually creating a backup
+## 手动创建备份
 
-Click the **<i class="fas fa-fw fa-plus-circle"></i> Create backup** button.
+单击 **<i class="fas fa-fw fa-plus-circle"></i> 创建备份** 按钮。
 
-A popup will be shown with the following message:
+将显示一个弹出窗口，其中包含以下消息：
 
-**Task has been added to the queue. You will receive an email notification when your backup is ready for download.**
+**任务已添加到队列中。 当您的备份可供下载时，您将收到一封电子邮件通知。**
 
-## Downloading a backup
+## 下载备份
 
-1. Hover over the backup you want to download.
-2. Click the <i class="fas fa-fw fa-file-download"><span class="visually-hidden">Download</span></i> icon on the right of the backup’s filename.
+1. 将鼠标悬停在要下载的备份上。
+2. 单击备份文件名右侧的<i class="fas fa-fw fa-file-download"><span class="visually-hidden">下载</span></i>图标。
 
-If the backup is stored on a remote server, the file is downloaded to the server and you will get notified by email when the download is available.
+如果备份存储在远程服务器上，文件将下载到服务器，并且当下载可用时您将收到电子邮件通知。
 
-## Restoring a backup
+## 恢复备份
 
-1. Hover over the backup you want to restore.
-2. Click the backup’s filename or the <i class="fas fa-fw fa-undo"><span class="visually-hidden">Restore</span></i> icon on the right of the backup’s filename.
-3. Restore the backup in one of the following ways:
-   1. You can restore the whole backup by clicking the **<i class="fas fa-fw fa-undo"></i> Restore backup** button on the top right.
-   2. Restore multiple parts of the backup, by selecting them, then selecting **Restore** in the **Apply to selected** menu in the top right and clicking on the <i class="fas fa-fw fa-arrow-right"><span class="visually-hidden">Apply</span></i> button.
-   3. Restore one part of the backup by hovering over it and clicking the <i class="fas fa-fw fa-undo"><span class="visually-hidden">Restore</span></i> icon on the right.
+1. 将鼠标悬停在要恢复的备份上。
+2. 单击备份的文件名或备份文件名右侧的<i class="fas fa-fw fa-undo"><span class="visually-hidden">恢复</span></i>图标。
+3. 通过以下方式之一恢复备份：
+    1. 您可以通过点击右上角的**<i class="fas fa-fw fa-undo"></i>恢复备份**按钮来恢复整个备份。
+    2. 恢复备份的多个部分，方法是选择它们，然后在右上角的 **应用到所选** 菜单中选择 **恢复**，然后单击 <i class="fas fa-fw fa-arrow -right"><span class="visually-hidden">应用</span></i>按钮。
+    3. 将鼠标悬停在备份的一部分上并单击<i class="fas fa-fw fa-undo"><span class="visually-hidden">恢复</span></i>图标来恢复备份的一部分 正确的。
 
-## Deleting a backup
+## 删除备份
 
-1. Hover over the backup you want to delete.
-2. Click the <i class="fas fa-fw fa-trash"><span class="visually-hidden">delete</span></i> icon on the right of the backup’s filename.
+1. 将鼠标悬停在要删除的备份上。
+2. 单击备份文件名右侧的<i class="fas fa-fw fa-trash"><span class="visually-hidden">删除</span></i>图标。
 
-## Excluding components from backups
+## 从备份中排除组件
 
-1. Click the **<i class="fas fa-fw fa-folder-minus"></i> Backup Exclusion** button.
-2. Click the **<i class="fas fa-fw fa-pencil-alt"></i> Edit backup exclusions** button.
+1. 单击 **<i class="fas fa-fw fa-folder-minus"></i> 备份排除** 按钮。
+2. 单击**<i class="fas fa-fw fa-pencil-alt"></i>编辑备份排除**按钮。
 
-### Excluding a web domain
+### 排除 Web 域
 
-In the box labeled **Web Domains**, enter each domain you want to exclude, one per line.
+在标有 **Web Domains** 的框中，输入要排除的每个域，每行一个。
 
-To exclude a specific folder from a domain use the following syntax:
+要从域中排除特定文件夹，请使用以下语法：
 
 ```bash
 domain.tld:public_html/wp-content/uploads:public_html/cache
 ```
 
-This will exclude both `public_html/wp-content/uploads/` and `public_html/cache/` from that domain.
+这将从该域中排除`public_html/wp-content/uploads/`和`public_html/cache/`。
 
-To exclude all domains, use `*`.
+要排除所有域，请使用“ ` * ` ”。
 
-### Excluding a mail domain
+### 排除邮件域
 
-In the box labeled **Mail Domains**, enter each domain you want to exclude, one per line.
+在标有“**邮件域**”的框中，输入要排除的每个域，每行一个。
 
-To exclude only one or multiple mail account use the following syntax:
+要仅排除一个或多个邮件帐户，请使用以下语法：
 
 ```bash
 domain.tld:info:support
 ```
 
-This will exclude both `info@domain.tld` and `support@domain.tld`.
+这将排除 `info@domain.tld`和 `support@domain.tld`。
 
-To exclude all domains, use `*`.
+要排除所有域，请使用  ` * `
 
-### Excluding a database
+### 排除数据库
 
-In the box labeled **Databases**, enter the name of each database you want to exclude, one per line.
+在标有 **数据库** 的框中，输入要排除的每个数据库的名称，每行一个。
 
-To exclude all databases, use `*`.
+要排除所有数据库，请使用` * `
 
-### Excluding a user directory
+### 排除用户目录
 
-In the box labeled **User Directories**, enter the name of each directory you want to exclude, one per line.
+在标有 **用户目录** 的框中，输入要排除的每个目录的名称，每行一个。
 
-To exclude all directories, use `*`.
+要排除所有目录，请使用` * `
 
-## Editing the number of backups
+## 编辑备份数量
 
-To edit the number of backups, please read the [Packages](../user-guide/packages) and [Users](../user-guide/users) documentation. You will need to create or edit a package, and assign it to the desired user.
+要编辑备份数量，请阅读 [软件包](../user-guide/packages) 和 [用户](../user-guide/users) 文档。 您将需要创建或编辑软件包，并将其分配给所需的用户。

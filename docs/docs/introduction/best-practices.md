@@ -1,15 +1,15 @@
-# Best Practices
+# hestiacp官方建议
 
-Managing a server is not easy. Here are some best practices you should try to adhere to while managing your Hestia server.
+管理服务器并不容易。 以下是您在管理 Hestia 服务器时应尝试遵循的一些最佳实践。
 
-## Use a regular user
+## 使用普通用户
 
-::: danger Never run a web or mail domain with the **admin** user
-By default, the **admin** user has elevated privileges. This can pose a **security threat** to your server. For example, if you run WordPress under your **admin** user and a vulnerability is found in WordPress or a plugin, a malicious user might be able to run commands as **root**!
+::: danger 切勿使用 **admin** 用户运行 Web 或邮件域
+默认情况下，**admin** 用户具有提升的权限。 这可能会对您的服务器构成**安全威胁**。 例如，如果您在 **admin** 用户下运行 WordPress，并且在 WordPress 或插件中发现漏洞，则恶意用户可能能够以 **root** 身份运行命令！
 :::
 
-Before adding any web or mail domain on your server, you should create a regular user. To do this, you can refer to our [User Management Guide](../user-guide/users#adding-a-user).
+在服务器上添加任何 Web 或邮件域之前，您应该创建一个普通用户。 为此，您可以参考我们的[用户管理指南](../user-guide/users#adding-a-user)。
 
-## Enable two-factor authentication (2FA) for the _admin_ user
+## 为_admin_用户启用双因素身份验证（2FA）
 
-Since the **admin** user has full control on the server, as well as elevated privileges, it is **greatly** recommended that you enable 2FA on this account. To do this, you can refer to our [Account Management](../user-guide/account#two-factor-authentication-2fa).
+由于 **admin** 用户对服务器拥有完全控制权以及提升的权限，因此**强烈**建议您在此帐户上启用 2FA。 为此，您可以参考我们的[账户管理](../user-guide/account#two-factor-authentication-2fa)。

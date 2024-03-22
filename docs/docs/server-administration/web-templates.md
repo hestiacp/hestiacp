@@ -1,22 +1,22 @@
-# Web Templates and FastCGI/Proxy Cache
+# Web 模板和 FastCGI/代理缓存
 
-## How do web templates work?
+## 网页模板如何工作？
 
-::: warning
-Modifying templates could cause errors on the server and may cause some services to not be able to reload or start.
+：：： 警告
+修改模板可能会导致服务器出现错误，并可能导致某些服务无法重新加载或启动。
 :::
 
-Every time you rebuild the user or domain, the config files of the domain are overwritten by the new templates.
+每次重建用户或域时，域的配置文件都会被新模板覆盖。
 
-This happens when:
+出现这种情况时：
 
-- HestiaCP is updated.
-- The admin initiates it.
-- The user modifies settings.
+- HestiaCP 已更新。
+- 管理员启动它。
+- 用户修改设置。
 
-The templates can be found in `/usr/local/hestia/data/templates/web/`.
+模板可以在`/usr/local/hestia/data/templates/web/`中找到。
 
-| Service                 | Location                                              |
+| 服务                    | 路径                                                   |
 | ----------------------- | ----------------------------------------------------- |
 | Nginx (Proxy)           | /usr/local/hestia/data/templates/web/nginx/           |
 | Nginx - PHP FPM         | /usr/local/hestia/data/templates/web/nginx/php-fpm/   |
@@ -24,24 +24,26 @@ The templates can be found in `/usr/local/hestia/data/templates/web/`.
 | Apache2 - PHP FPM       | /usr/local/hestia/data/templates/web/apache2/php-fpm/ |
 | PHP-FPM                 | /usr/local/hestia/data/templates/web/php-fpm/         |
 
-::: warning
-Avoid modifying default templates as they are overwritten by updates. To prevent that, copy them instead:
+::: 警告
+避免修改默认模板，因为它们会被更新覆盖。 为了防止这种情况，请复制它们：
 
 ```bash
 cp original.tpl new.tpl
+
 cp original.stpl new.stpl
+
 cp original.sh new.sh
 ```
 
 :::
 
-When you are done editing your template, enable it for the desired domain from the control panel.
+编辑完模板后，从控制面板为所需的域启用它。
 
-After modifying an existing template, you need to rebuild the user configuration. This can be done using the [v-rebuild-user](../reference/cli#v-rebuild-user) command or the bulk operation in the web interface..
+修改现有模板后，需要重建用户配置。 这可以使用 [v-rebuild-user](../reference/cli#v-rebuild-user) 命令或 Web 界面中的批量操作来完成。
 
-### Available variables
+### 可用变量
 
-| Name                 | Description                                           | Example                                    |
+| 名称                 | 描述                                           | 示例                                         |
 | -------------------- | ----------------------------------------------------- | ------------------------------------------ |
 | `%ip%`               | IP Address of Server                                  | `123.123.123.123`                          |
 | `%proxy_port%`       | Port of Proxy                                         | `80`                                       |
@@ -59,58 +61,56 @@ After modifying an existing template, you need to rebuild the user configuration
 | `%home%`             | Default home directory                                | `/home`                                    |
 | `%user%`             | Username of current user                              | `username`                                 |
 | `%backend_lsnr%`     | Your default FPM Server                               | `proxy:fcgi://127.0.0.1:9000`              |
-| `%proxy_extentions%` | Extensions that should be handled by the proxy server | A list of extensions                       |
+| `%proxy_extentions%` | 应由代理服务器处理的扩展                                 | 扩展列表                      |
 
-::: tip
-`%sdocroot%` can also be set to `%docroot%` with settings
+::: 提示
+`%sdocroot%` 也可以通过设置设置为 `%docroot%`
 :::
 
-## How can I change settings for a specific domain
+## 如何更改特定域的设置
 
-With the switch to PHP-FPM there are currently 2 different ways:
+切换到 PHP-FPM 目前有 2 种不同的方式：
 
-1. Using `.user.ini` in the home directory `/home/user/web/domain.tld/public_html`.
-2. Via the PHP-FPM pool config.
+1. 使用主目录`/home/user/web/domain.tld/public_html`中的`.user.ini`。
+2. 通过 PHP-FPM 池配置。
 
-Config templates for the PHP pool can be found in `/usr/local/hestia/data/templates/web/php-fpm/`.
+PHP 池的配置模板可以在 `/usr/local/hestia/data/templates/web/php-fpm/` 中找到。
 
-::: warning
-Due to the fact we use multi PHP we need to recognise the PHP version to be used. Therefore we use the following naming scheme: `YOURNAME-PHP-X_Y.tpl`, where X_Y is your PHP version.
+：：： 警告
+由于我们使用多 PHP，我们需要识别要使用的 PHP 版本。 因此，我们使用以下命名方案：`YOURNAME-PHP-X_Y.tpl`，其中 `X_Y`是您的 PHP 版本。
 
-For example a PHP 8.1 template would be `YOURNAME-PHP-8_1.tpl`.
+例如，PHP 8.1 模板将为`YOURNAME-PHP-8_1.tpl`。
 :::
-
-## Installing PHP modules
 
 ```bash
 apt install php-package-name
 ```
 
-For example, the following command will install `php-memcached` and `php-redis`, including the required additional packages for PHP.
+例如，以下命令将安装`php-memcached”和“php-redis`，包括 PHP 所需的附加包。
 
 ```bash
 apt install php-memcached php-redis
 ```
 
-## Nginx FastCGI Cache
+## Nginx FastCGI 缓存
 
-::: tip
-FastCGI only applies for Nginx + PHP-FPM servers. If you use Nginx + Apache2 + PHP-FPM, this will not apply to you!
+：：： 提示
+FastCGI仅适用于Nginx + PHP-FPM服务器。 如果您使用 Nginx + Apache2 + PHP-FPM，则这不适用于您！
 :::
 
-FastCGI cache is an option within Nginx allowing to cache the output of FastCGI (in this case PHP). It will temporarily create a file with the contents of the output. If another user requests the same page, Nginx will check if the age of the cached file is still valid and if it is, then it will send the cached file to the user, instead of requesting it to FastCGI.
+FastCGI 缓存是 Nginx 中的一个选项，允许缓存 FastCGI 的输出（在本例中为 PHP）。 它将临时创建一个包含输出内容的文件。 如果另一个用户请求同一页面，Nginx 将检查缓存文件的年龄是否仍然有效，如果有效，则将缓存文件发送给该用户，而不是向 FastCGI 请求。
 
-FastCGI cache works best for sites get a lot of request and where the pages don’t change that often, for example a news site. For more dynamic sites, changes might be required to the configuration or it might require totally disabling it.
+FastCGI 缓存最适合收到大量请求且页面不经常更改的网站，例如新闻网站。 对于更多动态站点，可能需要更改配置，或者可能需要完全禁用它。
 
-### Why does software package x and y not work with FastCGI cache
+### 为什么软件包 x 和 y 不能与 FastCGI 缓存一起使用
 
-As we have over 20 different templates and we don’t use them all, we have decided to stop releasing new ones the future and hope the community helps improving the templates by [submitting a Pull Request](https://github.com/hestiacp/hestiacp/pulls).
+由于我们有 20 多个不同的模板，并且我们不会全部使用它们，因此我们决定将来停止发布新模板，并希望社区通过[提交 Pull 请求](https://github.com/hestiacp/hestiacp/pulls).
 
-If you want to add support to a certain template, follow the instructions below.
+如果您想添加对某个模板的支持，请按照以下说明操作。
 
-### How do I enable FastCGI cache for my custom template
+### 如何为我的自定义模板启用 FastCGI 缓存
 
-Locate the block where you call `fastcgi_pass`:
+找到调用“fastcgi_pass”的块：
 
 ```bash
 location ~ [^/]\.php(/|$) {
@@ -122,7 +122,7 @@ location ~ [^/]\.php(/|$) {
 }
 ```
 
-Add the following lines under `include /etc/nginx/fastcgi_params;`:
+在 `include /etc/nginx/fastcgi_params;` 下添加以下行：
 
 ```bash
 include %home%/%user%/conf/web/%domain%/nginx.fastcgi_cache.conf*;
@@ -132,30 +132,30 @@ if ($request_uri ~* "/path/with/exceptions/regex/whatever") {
 }
 ```
 
-### How can I clear the cache?
+### 如何清除缓存？
 
-When FastCGI cache is enabled a **<i class="fas fa-fw fa-trash"></i> Purge Nginx Cache** button is added to the web domain’s **Edit** page. You can also use the API, or the following command:
+启用 FastCGI 缓存后，**<i class="fas fa-fw fa-trash"></i> 清除 Nginx 缓存** 按钮将添加到 Web 域的 **编辑** 页面。 您还可以使用API或以下命令：
 
 ```bash
 v-purge-nginx-cache user domain.tld
 ```
 
-### Why don’t I have the option to use FastCGI cache
+### 为什么我没有使用 FastCGI 缓存的选项
 
-FastCGI cache is an option for Nginx mode only. If you are using Nginx + Apache2, you can select the proxy caching template and proxy cache will be enabled. It is functionally almost the same. In fact, the proxy caching will also work if you use a Docker image or a Node.js app.
+FastCGI 缓存仅适用于 Nginx 模式。 如果您使用的是Nginx + Apache2，则可以选择代理缓存模板并启用代理缓存。 它的功能几乎相同。 事实上，如果您使用 Docker 映像或 Node.js 应用程序，代理缓存也将起作用。
 
-To write custom caching templates, use the following naming scheme:
+要编写自定义缓存模板，请使用以下命名方案：
 
-`caching-yourname.tpl`, `caching-yourname.stpl` and `caching-yourname.sh`
+`caching-yourname.tpl`、`caching-yourname.stpl` 和 `caching-yourname.sh`
 
-### Does Hestia support Web socket support
+### Hestia 是否支持 Web 套接字支持
 
-Yes, Hestia works fine with Web sockets how ever our default templates include on default:
+是的，Hestia 可以很好地与 Web 套接字配合使用，但我们的默认模板默认包含以下内容：
 
 ```bash
 proxy_hide_header Upgrade
 ```
 
-This resolved an issue with Safari from loading websites.
+这解决了 Safari 加载网站的问题。
 
-To allow the use of Web sockets remove this line. Other wise Web sockets will not work
+要允许使用 Web 套接字，请删除此行。 否则 Web 套接字将无法工作

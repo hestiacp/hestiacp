@@ -1,54 +1,61 @@
-# Beta and release candidate testing
+# 开发版和候选版本测试
 
-::: tip
-If there is a beta or release candidate available, we will announce it via our Discord server or our forum.
+::: 提示
+如果有可用的测试版或候选版本，我们将通过我们的 Discord 服务器或论坛宣布。
 :::
 
-In the last few months, we have seen a growing number of issues when releasing minor and major updates. To prevent this from happening, we have decided to setup a beta apt server so we can push more regular updates, enabling us to test at a larger scale than only 4 or 5 users.
+在过去的几个月中，我们在发布次要和主要更新时发现了越来越多的问题。 为了防止这种情况发生，我们决定设置一个 beta apt 服务器，这样我们就可以推送更多的定期更新，使我们能够进行比只有 4 或 5 个用户更大的测试规模。
 
-## Activating the beta repo on an existing install
+## 在现有安装上激活开发存储库
 
-::: danger
-Betas and release candidates might still contain bugs and can possibly break your server. We cannot guarantee it will be fixed directly! Please be careful when testing on servers in production or containing important data!
+::: 危险
+测试版和候选版本可能仍然包含错误，并且可能会破坏您的服务器。 我们不能保证它会被直接修复！ 在生产服务器或包含重要数据的服务器上进行测试时请小心！
 :::
 
-Run the following commands as root:
+以 root 身份运行以下命令：
 
 ```bash
-# Collecting system data
+# 收集系统数据
 ARCH=$(arch)
 case $(arch) in x86_64) ARCH="amd64" ;; aarch64) ARCH="arm64" ;; esac
 codename="$(lsb_release -s -c)"
 apt="/etc/apt/sources.list.d"
 
-# Add the beta repo to hestia.list
+# 将开发版密钥存储库添加到 hestia.list
 sed -i 's/^/#/' $apt/hestia.list
 echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/hestia-beta-keyring.gpg] https://beta-apt.hestiacp.com/ $codename main" >> $apt/hestia.list
 curl -s "https://beta-apt.hestiacp.com/pubkey.gpg" | gpg --dearmor | tee /usr/share/keyrings/hestia-beta-keyring.gpg > /dev/null 2>&1
 
-# Update to the beta version
-apt update && apt upgrade
+# 更新至测试版
+apt update -y && apt upgrade -y
 ```
 
-## Install from beta repo
+## 从 beta 存储库安装
 
-If you want to install a new Hestia installation form the beta server.
+如果您想从 Beta 服务器安装新的 Hestia。
 
 ```bash
 # Debian
 wget https://beta-apt.hestiacp.com/hst-install-debian.sh
-# or Ubuntu
+#  Ubuntu
 wget https://beta-apt.hestiacp.com/hst-install-ubuntu.sh
 ```
 
-Then install via bash hst-install-debian.sh or bash hst-install-ubuntu.sh
+然后通过 bash hst-install-debian.sh 或 bash hst-install-ubuntu.sh 安装
 
-## Disabling the beta repo
+```bash
+# Debian
+bash hst-install-debian.sh
+#  Ubuntu
+bash hst-install-ubuntu.sh
+```
 
-Edit `/etc/apt/sources.list.d/hestia.list` and remove the `#` in front of `apt.hestiacp.com`, and add a `#` in front of `beta-apt.hestiacp.com`.
+## 禁用测试版存储库
 
-Once that’s done, run `apt update && apt upgrade` to rollback to the regular release.
+编辑`/etc/apt/sources.list.d/hestia.list`，删除`apt.hestiacp.com`前面的`#`，并在`beta-apt.hestiacp.com`之前添加`#`。
 
-## Reporting bugs
+完成后，运行“apt-update&&apt-upgrade”以回滚到常规版本。
 
-If you encounter a bug, please [open an issue](https://github.com/hestiacp/hestiacp/issues/new/choose) or [submit a Pull Request](https://github.com/hestiacp/hestiacp/pulls). You can also report it on our forum or our Discord server
+## 报告错误
+
+如果您遇到错误，请[打开一个问题](https://github.com/hestiacp/hestiacp/issues/new/choose)或[提交拉取请求](https://github.com/hestiacp/hestiacp/pulls). 您也可以在我们的论坛或Discord服务器上报告

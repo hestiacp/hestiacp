@@ -11,12 +11,8 @@ title: Install
 
 <InstallPage>
   <PageHeader>
-    <template #title>Install</template>
-    <template #aside>
-      <a class="header-button" href="./docs/introduction/getting-started.html#requirements">
-        View requirements
-      </a>
-    </template>
+    <template #title>安装Hestia服务器面板</template>
+    <template #aside><a class="header-button" href="./docs/introduction/getting-started.html#requirements">查看安装要求</a></template>
   </PageHeader>
   <InstallBuilder :options="options"></InstallBuilder>
 </InstallPage>

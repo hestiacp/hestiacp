@@ -1,16 +1,16 @@
 # API
 
-::: info
-This page is work in progress. A lot of information will be missing.
+::: 信息
+此页面正在进行中。 很多信息将会丢失。
 :::
 
-## Examples
+＃＃ 示例
 
-Examples can be found in a separate [repo](https://github.com/hestiacp/hestiacp-api-examples).
+示例可以在单独的[repo](https://github.com/hestiacp/hestiacp-api-examples)中找到。
 
-## Upgrading from username/password authentication to access/secret keys
+## 从用户名/密码身份验证升级到访问/密钥身份验证
 
-Replace the following code:
+替换以下代码:
 
 ```php
 // Prepare POST query
@@ -23,7 +23,7 @@ $postvars = [
 ];
 ```
 
-With the following:
+具有以下内容:
 
 ```php
 // Prepare POST query

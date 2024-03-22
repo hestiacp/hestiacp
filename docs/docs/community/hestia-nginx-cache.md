@@ -1,10 +1,12 @@
-# Hestia Nginx Cache
+# Hestia Nginx 缓存
 
-By [Jakob Bouchard](https://github.com/jakobbouchard/)  
-[View the project](https://wordpress.org/plugins/hestia-nginx-cache/) – [Source code](https://github.com/jakobbouchard/hestia-nginx-cache)
+作者
+[Jakob Bouchard](https://github.com/jakobbouchard/)  
+[View the project](https://wordpress.org/plugins/hestia-nginx-cache/)
+[Source code](https://github.com/jakobbouchard/hestia-nginx-cache)
 
-::: info
-Requires **Hestia >= 1.6.0**, as it uses the latest API.
+::: tip 注意
+需要 **Hestia 版本 >= 1.8.0**，因为它使用最新的 API。
 :::
 
-WordPress plugin that automatically purges the Nginx cache after you make a website change such as updating a post or changing your theme. You also have the ability to manually purge the cache using a button in the WordPress admin bar.
+WordPress 插件会在您进行网站更改（例如更新帖子或更改主题）后自动清除 Nginx 缓存。 您还可以使用 WordPress 管理栏中的按钮手动清除缓存。

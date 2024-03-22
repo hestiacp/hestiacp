@@ -1,8 +1,8 @@
 import { defineConfig } from 'vitepress';
 import { version } from '../../package.json';
-
 export default defineConfig({
 	lang: 'en-US',
+	base: '/hestiamb.github.io/',
 	title: 'Hestia 服务器控制面板',
 	description: '开源网络服务器控制面板.',
 

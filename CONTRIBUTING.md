@@ -1,76 +1,76 @@
-# Hestia Control Panel - Contribution Guidelines
+# Hestia 控制面板 - 贡献指南
 
-## Ways to contribute
+## 贡献方式
 
-- **Beta testing**:
-  - Download and install builds from the `beta` branch. If you encounter an issue with a beta build, file an issue report on [GitHub](https://www.github.com/hestiacp/hestiacp/issues).<br>
-    `v-update-sys-hestia-git hestiacp beta install` will install the latest beta build from our GitHub repository.
-- **Code review and bug fixes**:
-  - Read over the code and if you notice errors (even spelling mistakes), submit a pull request with your changes.
-- **New features**:
-  - Is there an awesome feature that you'd love to see included? Submit a pull request with your changes, and if approved your PR will be reviewed and merged for inclusion in an upcoming release. While our development team tries to accommodate all reasonable requests please remember that it does take time to develop, implement and test new features and as such we may not be able to fulfill all requests or may have to put a feature on backlog for a later date.
-- **Translations**:
-  - If you are a non-English speaker and would like to improve the quality of the translations used in Hestia Control Panel's web interface, please go to [Hestia Translate](https://translate.hestiacp.com/projects/hestiacp/) to review the translations database. For more information please read [How to contribute with Translations](https://forum.hestiacp.com/t/how-to-contribute-with-translations/1664) on our forum. You can also open an issue report [GitHub](https://www.github.com/hestiacp/hestiacp/issues) highlighting the issue with the current translation so that it can be corrected.
-- **Donations**:
-  - If you're not a developer but you still want to make a contribution to support Hestia Control Panel and our developers, you can make a donation to the Hestia Control Panel project to further its development (or if you'd just like to buy our developers a lunch, we'd appreciate that too). We currently accept donations through [PayPal](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=ST87LQH2CHGLA).
+- **Beta 测试**：
+  - 从“beta”分支下载并安装版本。 如果您在 Beta 版本中遇到问题，请在 [GitHub](https://www.github.com/hestiacp/hestiacp/issues) 上提交问题报告。<br>
+     `v-update-sys-hestia-git hestiacp beta install` 将从我们的 GitHub 存储库安装最新的 beta 版本。
+- **代码审查和错误修复**：
+  - 仔细阅读代码，如果您发现错误（甚至拼写错误），请提交包含更改的拉取请求。
+- **新功能**：
+  - 您希望看到其中包含哪些很棒的功能吗？ 提交包含您的更改的拉取请求，如果获得批准，您的 PR 将接受审核并合并以包含在即将发布的版本中。 虽然我们的开发团队试图满足所有合理的请求，但请记住，开发、实施和测试新功能确实需要时间，因此我们可能无法满足所有请求，或者可能不得不将某个功能放在待办事项中以供以后使用 。
+- **翻译**：
+  - 如果您的母语不是英语，并且希望提高 Hestia 控制面板网络界面中使用的翻译质量，请访问 [Hestia 翻译](https://translate.hestiacp.com/projects/hestiacp/) 查看翻译数据库。 有关更多信息，请阅读我们论坛上的[如何通过翻译做出贡献](https://forum.hestiacp.com/t/how-to-contribute-with-translations/1664)。 您还可以打开问题报告 [GitHub](https://www.github.com/hestiacp/hestiacp/issues)，突出显示当前翻译的问题，以便可以更正。
+- **捐款**：
+  - 如果您不是开发人员，但仍想为支持 Hestia 控制面板和我们的开发人员做出贡献，您可以向 Hestia 控制面板项目捐款以进一步发展（或者如果您只是想购买 我们的开发人员共进午餐，我们也将不胜感激）。 我们目前通过 [PayPal](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=ST87LQH2CHGLA) 接受捐款。
 
-## Development Guidelines
+## 开发指南
 
-Additional information on how to contribute to Hestia Control Panel can be found in the [Development](docs/docs/contributing/development.md) documentation.
+有关如何为 Hestia 控制面板做出贡献的更多信息，请参阅[开发](docs/docs/contributing/development.md) 文档。
 
-### Code formatting and comments
+### 代码格式和注释
 
-We ask that you follow existing naming schemes and coding conventions where possible, and that you add comments in your source code where appropriate to aid other developers in debugging and understanding your code in the future.
+我们要求您尽可能遵循现有的命名方案和编码约定，并在适当的情况下在源代码中添加注释，以帮助其他开发人员将来调试和理解您的代码。
 
-To ensure your changes meet our formatting requirements, please run `npm install` from the root of the repository before committing your changes. This will set up pre-commit hooks for automatic formatting, which will help to get your changes merged as quickly as possible.
+为了确保您的更改满足我们的格式要求，请在提交更改之前从存储库的根目录运行“npm install”。 这将为自动格式化设置预提交挂钩，这将有助于尽快合并您的更改。
 
-### Workflow and process
+### 工作流程和过程
 
-Development for this project takes place in branches to effectively develop, manage, and test new features and code changes. Our tiered approach allows us to closely control the quality of code as it is checked in for inclusion.
+该项目的开发在分支机构中进行，以有效地开发、管理和测试新功能和代码更改。 我们的分层方法使我们能够在签入代码时密切控制代码的质量。
 
-We have three primary or "evergreen" branches, which exist throughout our product's lifetime. Please refer to the following table for a description:
+我们有三个主要或“常青”分支，它们存在于我们产品的整个生命周期中。 说明请参见下表：
 
-| Branch    |                                                                          Description                                                                           |
-| --------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------: |
-| `main`    |              Contains a snapshot of the latest development code.<br>**Not intended for production use and contains code from a merge snapshot.**               |
-| `beta`    | Contains a snapshot of the next version which is currently in testing.<br>**Not intended for production use, however code from this branch should be stable.** |
-| `release` |     Contains a snapshot of the latest stable release.<br>**Intended for production use. This repository contains the same code as our compiled packages.**     |
+| 分公司| 描述 |
+| ---------| :---------------------------------------------------------------- -------------------------------------------------- -------------------------------------------------- --------：|
+| `主要` | 包含最新开发代码的快照。<br>**不适合生产使用，包含合并快照中的代码。** |
+| `测试版` | 包含当前正在测试的下一个版本的快照。<br>**不适合生产使用，但此分支中的代码应该是稳定的。** |
+| `释放` | 包含最新稳定版本的快照。<br>**用于生产使用。 该存储库包含与我们编译的包相同的代码。** |
 
-### Creating a new branch and submitting pull requests
+### 创建新分支并提交拉取请求
 
-The first step is to create a fork of the `hestiacp/hestiacp` repository under your GitHub account so that you may submit pull requests and patches.
+第一步是在您的 GitHub 帐户下创建 `hestiacp/hestiacp` 存储库的分支，以便您可以提交拉取请求和补丁。
 
-Once you've created your fork, clone the repository to your computer and make sure that you've checked out the `main` branch. **Always** create a new topic branch for your work.
+创建分支后，将存储库克隆到您的计算机，并确保您已签出“main”分支。 **始终**为您的工作创建一个新的主题分支。
 
-### Branch naming convention
+### 分支命名约定
 
-- **Prefix:** `topic/` (such as **fix**, **feature**, **refactor**, etc.)
-- **ID**: `888` (GitHub Issue ID if an issue exists)
-- **Title:** `my-awesome-patch`
+- **前缀：** `topic/` （如**fix**、**feature**、**refactor**等）
+- **ID**：`888`（GitHub 问题 ID，如果存在问题）
+- **标题：** `我的很棒的补丁`
 
-Branch name examples:
+分支名称示例：
 
-- `feature/777-my-awesome-new-feature` or `feature/my-other-new-feature`
-- `fix/000-some-bug-fix` or `fix/this-feature-is-broken`
-- `refactor/v-change-domain-owner`
-- `test/mail-domain-ssl`
+- `feature/777-my-awesome-new-feature` 或 `feature/my-other-new-feature`
+- `fix/000-some-bug-fix` 或 `fix/this-feature-is-broken`
+- `重构/v-change-domain-owner`
+- `测试/邮件域-ssl`
 
-### Squashing commits for smaller changes
+### 压缩较小更改的提交
 
-To aid other developers and keep the project's commit history clean, please **squash your commits** when it's appropriate. For example with smaller commits related to the same piece of code, such as commits labelled "Fixed item 1", "Adjusted color of button XYZ", "Adjusted alignment of button XYZ" can be squashed into one commit with the title "Fixed button issues in item".
+为了帮助其他开发人员并保持项目的提交历史记录干净，请 **squas在适当的时候进行您的提交**。 例如，与同一段代码相关的较小提交，例如标记为“固定项目 1”、“调整按钮 XYZ 颜色”、“调整按钮 XYZ 对齐”的提交可以压缩为标题为“固定按钮”的提交 项目中的问题”。
 
-### What happens when I submit a pull request?
+### 当我提交拉取请求时会发生什么？
 
-- Our internal development team will review your work and validate your request.
-- Your changes will be tested to ensure that there are no issues.
-- If changes need to be made, you will be notified via GitHub.
-- Once approved, your code will be merged for inclusion in an upcoming release of Hestia Control Panel.
+- 我们的内部开发团队将审查您的工作并验证您的请求。
+- 您的更改将经过测试以确保没有问题。
+- 如果需要进行更改，您将通过 GitHub 收到通知。
+- 一旦获得批准，您的代码将被合并以包含在即将发布的 Hestia 控制面板中。
 
-All pull requests must include a brief but descriptive title, and a detailed description of the changes that you've made. **Only include commits that are related to your feature, bug fix, or patch in your pull request!**
+所有拉取请求都必须包含简短但描述性的标题，以及您所做更改的详细描述。 **仅在拉取请求中包含与您的功能、错误修复或补丁相关的提交！**
 
-## Thank you
+＃＃ 谢谢
 
-We appreciate **all** contributions no matter what size; your feedback and input directly shapes the future of Hestia Control Panel and we could not do it without your support.
+我们感谢**所有**贡献，无论规模大小； 您的反馈和意见直接塑造了 Hestia 控制面板的未来，没有您的支持我们就无法做到这一点。
 
-Thank you for your time and we look forward to seeing your pull requests,<br>
-The Hestia Control Panel development team
+感谢您的宝贵时间，我们期待看到您的拉取请求，<br>
+Hestia 控制面板开发团队

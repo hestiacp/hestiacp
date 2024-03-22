@@ -1,8 +1,8 @@
-# Troubleshooting
+# 故障排除
 
-## Command not found when I try to run a v-command as root
+## 当我尝试以 root 身份运行 v 命令时找不到命令
 
-Add to /root/.bashrc the following code:
+在/root/.bashrc中添加以下代码：
 
 ```bash
 if [ "${PATH#*/usr/local/hestia/bin*}" = "$PATH" ]; then
@@ -10,30 +10,30 @@ if [ "${PATH#*/usr/local/hestia/bin*}" = "$PATH" ]; then
 fi
 ```
 
-And logout and login again.
+并注销并再次登录。
 
-After that you are able to run any v-command you want.
+之后您就可以运行任何您想要的 v 命令。
 
-## Disabling “Use IP address allow list for login attempts” via command line
+## 通过命令行禁用“使用 IP 地址允许列表进行登录尝试”
 
-With the introduction of Hestia v1.4.0 we have added certain security features, including the possibility to limit login to certain IP addresses. If your IP address changes, you will not able to login anymore. To disable this feature, run the following commands:
+随着 Hestia v1.4.0 的推出，我们添加了某些安全功能，包括限制登录某些 IP 地址的可能性。 如果您的 IP 地址发生变化，您将无法再登录。 要禁用此功能，请运行以下命令：
 
 ```bash
-# Disable the feature
+# 禁用该功能
 v-change-user-config-value admin LOGIN_USE_IPLIST 'no'
-# Remove listed IP addresses
+# 删除列出的IP地址
 v-change-user-config-value admin LOGIN_ALLOW_IPS ''
 ```
 
-## Can I update my cronjobs via `crontab -e`?
+## 我可以通过 `crontab -e` 更新我的 cronjobs 吗？
 
-No, you cannot. When you update HestiaCP, the crontab will simply get overwritten. The changes will not get saved in backups either.
+你不能。 当您更新 HestiaCP 时，crontab 将被覆盖。 更改也不会保存在备份中。
 
-## After update Apache2 I am not able to restart Apache2 or Nginx
+## 更新 Apache2 后，我无法重新启动 Apache2 或 Nginx
 
-The error message states (98) Address already in use: AG0072: make_sock: could not bind to address 0.0.0.0:80
+错误消息指出 (98) 地址已在使用中：AG0072: make_sock: 无法绑定到地址 0.0.0.0:80
 
-When a package update sometimes comes with a new config and probally it has been overwritten...
+当软件包更新有时附带新配置并且可能已被覆盖时......
 
 ```bash
 Configuration file '/etc/apache2/apache2.conf'
@@ -48,53 +48,51 @@ Configuration file '/etc/apache2/apache2.conf'
 *** apache2.conf (Y/I/N/O/D/Z) [default=N] ?
 ```
 
-If you see this message **ALWAYS** press "N" or **ENTER** to select the default value!
+如果您看到此消息**始终**，请按`N`或**ENTER** 选择默认值！
 
-How ever if you entered Y or I. Then replace the config that can be found in /root/hst_backups/xxxxx/conf/apache2/ folder and copy over apache2.conf and ports.conf to /etc/apache2/ folder
+但是，如果您输入` Y `或` I `。然后替换 `/root/hst_backups/xxxxx/conf/apache2/` 文件夹中的配置，并将 `apache2.conf` 和 `ports.conf` 复制到 `/etc/apache2/` 文件夹
 
-xxxxxx is the date/time the backup is made during the last update of HestiaCP
+如果您没有备份，您也可以将 `/usr/local/hestia/install/deb/apache2/apache2.conf` 中的配置复制到 `/etc/apache2.conf` 并清空 /`etc/apache2/ports .conf`
 
-If you don't have have a backup made you can also copy the config in /usr/local/hestia/install/deb/apache2/apache2.conf to /etc/apache2.conf and also empty /etc/apache2/ports.conf
+## 无法绑定地址
 
-## Unable to bind adress
-
-In rare cases the network service might be slower than Apache2 and or Nginx. In that case Nginx or Apache2 will refuse to start up successfully start.
+在极少数情况下，网络服务可能比 Apache2 和/或 Nginx 慢。 这种情况下Nginx或者Apache2会拒绝启动而无法成功启动。
 
 ```bash
 systemctl status nginx
 ```
 
-Will create the error an error
+导致会造成错误的错误
 
 ```bash
 nginx: [emerg] bind to x.x.x.x:80 failed (99: cannot assign requested address)
 ```
 
-or in case of Aapche2
+或者如果是 Aapche2
 
 ```bash
 (99)Cannot assign requested address: AH00072: make_sock: could not bind to address x.x.x.x:8443
 ```
 
-The following command should allow services to assign to non existing ip addresses
+以下命令应允许服务分配给不存在的 IP 地址
 
 ```bash
 sysctl -w net.ipv4.ip_nonlocal_bind=1
 ```
 
-## Error: 24: Too many open files
+## 错误：24：打开的文件太多
 
 ```bash
 2022/02/21 15:04:38 [emerg] 51772#51772: open() "/var/log/apache2/domains/<redactedforprivacy>.error.log" failed (24: Too many open files)
 ```
 
-or
+或者
 
 ```bash
 2022/02/21 15:04:38 [emerg] 2724394#2724394: open() "/var/log/nginx/domains/xxx.error.log" failed (24: Too many open files)
 ```
 
-This error means that there are to many open files with Nginx. To resolve this issue:
+这个错误意味着 Nginx 打开的文件过多。 为了解决这个问题:
 
 /etc/systemd/system/nginx.service.d/override.conf
 
@@ -103,21 +101,27 @@ This error means that there are to many open files with Nginx. To resolve this i
 LimitNOFILE=65536
 ```
 
-Then run:
+然后运行:
 
 ```bash
 systemctl daemon-reload
 ```
 
-Add this to the Nginx config file (Needs to be smaller or equal to LimitNOFILE!)
+将其添加到 Nginx 配置文件中（需要小于或等于 LimitNOFILE！）
 
 ```bash
 worker_rlimit_nofile 16384
 ```
 
-And then restart nginx with systemctl restart nginx
+然后用
 
-To verifiy run:
+```bash
+systemctl restart nginx
+```
+
+重新启动nginx
+
+要验证运行：
 
 ```bash
 cat /proc/ < nginx-pid > /limits

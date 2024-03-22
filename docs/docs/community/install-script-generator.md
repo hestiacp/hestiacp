@@ -1,15 +1,12 @@
-# Install script generator
+# 脚本安装自动生成器
 
-These are some install script generators created by the community:
+这些是社区创建的安装脚本生成器：- [hestiacp-scriptline-generator](https://github.com/gabizz/hestiacp-scriptline-generator)
 
-- [hestiacp-scriptline-generator](https://github.com/gabizz/hestiacp-scriptline-generator)
+微型在线应用程序旨在为自动安装 Hestia 控制面板安装生成必要的命令。- [HestiaCP-Command-Creator](https://github.com/turbopixel/HestiaCP-Command-Creator)
 
-  Tiny online app aimed to generate the necessary command for an unattended Hestia Control Panel installation.
+基于 Vue.js 的 Web 应用程序可生成用于无人值守 Hestia 控制面板安装的命令行。
+我们感谢社区开发者的这些贡献，我们的[官方安装脚本生成器](/install) 正是受到了这些贡献的启发。
 
-- [HestiaCP-Command-Creator](https://github.com/turbopixel/HestiaCP-Command-Creator)
-
-  Vue.js based web app to generate the command line for an unattended Hestia Control Panel installation.
-
-We thank the community for these contributions, which our [official install script generator](/install) is inspired by.
-
-Please note that that we can only ensure that the official install script generator is up to date with the latest release.
+::: warning 注意
+请注意，我们只能确保官方安装脚本生成器是最新版本。
+:::

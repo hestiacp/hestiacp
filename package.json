@@ -52,7 +52,7 @@
 		"prettier-plugin-sql": "^0.18.0",
 		"stylelint": "^16.3.0",
 		"stylelint-config-standard": "^36.0.0",
-		"vitepress": "^1.0.0-rc.45",
+		"vitepress": "^1.0.1",
 		"vitest": "^1.4.0",
 		"vue": "^3.4.21"
 	},

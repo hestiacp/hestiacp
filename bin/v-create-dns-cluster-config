@@ -1,0 +1,76 @@
+#!/bin/bash
+# info: creates local and remote transfer keys for bind.
+# options: HOST IP
+#
+# This function creates a new transfer key for the host
+# provided and sends it to the new host
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Argument definition
+host=$1
+ip=$2
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '2' "$#" 'HOST IP'
+is_system_enabled "$DNS_SYSTEM" 'DNS_SYSTEM'
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+#check if openssl is installed
+openssl_installed=$(which openssl | grep openssl)
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Transfer-Key File
+transfer_key_file='/etc/bind/transferkeys.conf'
+
+# DNS Config file
+dns_conf='/etc/bind/named.conf'
+
+# create new transfer-key
+hostkey=$(openssl rand -base64 64 | tr -d '\n')
+
+# Insert values into transferkeys file
+keyfile_text="key \"$host\" {"
+echo "$keyfile_text" >> $transfer_key_file
+keyfile_text="	transkey algorithm hmac-sha384;"
+echo "$keyfile_text" >> $transfer_key_file
+keyfile_text="	transkey secret \"$hostkey\";" 
+echo "$keyfile_text" >> $transfer_key_file
+keyfile_text="};"
+echo "$keyfile_text" >> $transfer_key_file
+
+srv="server \"$ip\" { keys { $host; }; };"
+echo $srv >> $dns_conf
+
+tmp_file="/tmp/vst-sync.transferkeys"
+cluster_file "/etc/bind/transferkeys.conf" "$tmp_file"
+check_result $? "$HOST connection failed" "$E_CONNECT"
+
+cluster_cmd v-add-dns-transfer-key "$tmp_file" "transferkeys.conf" $host $ip
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Logging
+log_event "$OK" "$ARGUMENTS"
+
+exit

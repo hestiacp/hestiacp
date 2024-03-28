@@ -29,3 +29,12 @@ To manage your cron jobs, navigate to the **Cron <i class="fas fa-fw fa-clock"><
 
 1. Hover over the job you want to delete.
 2. Click the <i class="fas fa-fw fa-trash"><span class="visually-hidden">delete</span></i> icon on the right of the job’s command.
+
+
+## Example commands
+
+If you want to run a php script for a user, you can enter the command like this, using the full binary path of the application to run:
+
+```
+/usr/bin/php8.2 -f /home/user/web/domain.example.com/public_html/cron.php
+```

@@ -2,7 +2,7 @@
 # info: Delete SnappyMail webmail client
 # options: None
 #
-# This function installs the SnappyMail webmail client.
+# This function removes the SnappyMail webmail client.
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #
@@ -39,12 +39,12 @@ if [ -z "$HESTIA" ]; then
 fi
 
 if [ -z "$HOMEDIR" ] || [ -z "$HESTIA_INSTALL_DIR" ]; then
-	echo "ERROR: Environment variables not present, installation aborted."
+	echo "ERROR: Environment variables not present, uninstallation aborted."
 	exit 2
 fi
 
 if [ -z "$(echo "$DB_SYSTEM" | grep -w 'mysql')" ]; then
-	echo "ERROR: Mysql not available. Installation aborted"
+	echo "ERROR: Mysql not available. Uninstallation aborted"
 	exit 2
 fi
 

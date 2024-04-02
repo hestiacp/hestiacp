@@ -97,9 +97,9 @@ if [ "$UPDATE" == "no" ]; then
 	admin_account="admin_$key"
 	admin_password=$(generate_password)
 
-	echo "Username: admin_$suffix" > ~/.snappymail
+	echo "Username: admin_$key" > ~/.snappymail
 	echo "Password: $admin_password" >> ~/.snappymail
-	echo "Admin Panel key: admin_$key" >> ~/.snappymail
+	echo "Admin Panel key: admin_$suffix" >> ~/.snappymail
 
 	tar -xzf ${SM_INSTALL_DIR}/${SM_FILE}
 	# Get current version
@@ -125,7 +125,7 @@ if [ "$UPDATE" == "no" ]; then
 	fi
 	# Temporarily set the permissions to www-data
 	chown -R www-data:www-data $SM_CONFIG_DIR/
-	php -f $HESTIA_COMMON_DIR/snappymail/install.php "admin_$suffix" "admin_$key" "$admin_password" "$r" "$BACKEND_PORT"
+	php -f $HESTIA_COMMON_DIR/snappymail/install.php "admin_$key" "admin_$suffix" "$admin_password" "$r" "$BACKEND_PORT"
 
 	# Set the permissions back to hestiamail
 	chown -R hestiamail:www-data $SM_CONFIG_DIR/

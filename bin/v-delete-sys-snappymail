@@ -50,10 +50,10 @@ fi
 
 # Get current version
 if [ -f "/var/lib/snappymail/data/VERSION" ]; then
-    version=$(cat /var/lib/snappymail/data/VERSION)
-else 
-    echo "Error: SnappyMail is not installed"
-    exit 2
+	version=$(cat /var/lib/snappymail/data/VERSION)
+else
+	echo "Error: SnappyMail is not installed"
+	exit 2
 fi
 
 # Perform verification if read-only mode is enabled
@@ -68,16 +68,16 @@ rm -f -r $SM_CONFIG_DIR
 rm ~/.snappymail
 
 if [ -f '/usr/bin/mariadb' ]; then
-    mariadb -e "DROP DATABASE snappymail" 2>&1
-    mariadb -e "DROP USER snappymail@localhost"
+	mariadb -e "DROP DATABASE snappymail" 2>&1
+	mariadb -e "DROP USER snappymail@localhost"
 else
-    mysql -e "DROP DATABASE snappymail" 2>&1
-    mysql -e "DROP USER snappymail@localhost"
+	mysql -e "DROP DATABASE snappymail" 2>&1
+	mysql -e "DROP USER snappymail@localhost"
 fi
 # Updating hestia.conf
 if [ -z "$(echo "$WEBMAIL_SYSTEM" | grep -w 'snappymail')" ]; then
-    # remove snappymail from webmail list and make sure the string doesn't start with a comma
-    $BIN/v-change-sys-config-value 'WEBMAIL_SYSTEM' "$(echo "$WEBMAIL_SYSTEM" | sed "s/snappymail//g" | sed 's/^,//g')"
+	# remove snappymail from webmail list and make sure the string doesn't start with a comma
+	$BIN/v-change-sys-config-value 'WEBMAIL_SYSTEM' "$(echo "$WEBMAIL_SYSTEM" | sed "s/snappymail//g" | sed 's/^,//g')"
 fi
 
 #----------------------------------------------------------#

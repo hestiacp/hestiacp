@@ -92,7 +92,6 @@ if [ "$UPDATE" == "no" ]; then
 		exit 2
 	fi
 
-	# Get current version
 
 	key=$(openssl rand -hex 4)
 	suffix=$(openssl rand -hex 4)
@@ -104,6 +103,8 @@ if [ "$UPDATE" == "no" ]; then
 	echo "Admin Panel key: admin_$key" >> ~/.snappymail
 
 	tar -xzf ${SM_INSTALL_DIR}/${SM_FILE}
+	# Get current version
+	version=$(cat ./data/VERSION)
 
 	mv ./data $SM_CONFIG_DIR/
 	ln -s $SM_CONFIG_DIR/data/ ./data

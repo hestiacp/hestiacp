@@ -1600,6 +1600,7 @@ if [ "$apache" = 'yes' ]; then
 	a2enmod suexec > /dev/null 2>&1
 	a2enmod ssl > /dev/null 2>&1
 	a2enmod actions > /dev/null 2>&1
+  a2enmod headers > /dev/null 2>&1
 	a2dismod --quiet status > /dev/null 2>&1
 	a2enmod --quiet hestia-status > /dev/null 2>&1
 

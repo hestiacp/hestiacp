@@ -2,8 +2,12 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<a class="button button-secondary button-back js-button-back" href="/list/backup/"><i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?></a>
-			<a href="/schedule/restore/?token=<?= $_SESSION["token"] ?>&backup=<?= htmlentities($_GET["backup"]) ?>" class="button button-secondary"><i class="fas fa-arrow-rotate-left icon-green"></i><?= _("Restore All") ?></a>
+			<a class="button button-secondary button-back js-button-back" href="/list/backup/">
+				<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
+			</a>
+			<a href="/schedule/restore/?token=<?= $_SESSION["token"] ?>&backup=<?= htmlentities($_GET["backup"]) ?>" class="button button-secondary">
+				<i class="fas fa-arrow-rotate-left icon-green"></i><?= _("Restore All") ?>
+			</a>
 		</div>
 		<div class="toolbar-right">
 			<form x-data x-bind="BulkEdit" action="/bulk/restore/" method="post">
@@ -72,9 +76,11 @@
 					<ul class="units-table-row-actions">
 						<li class="units-table-row-action shortcut-enter" data-key-action="href">
 							<a
-								class="units-table-row-action-link"
+								class="units-table-row-action-link data-controls js-confirm-action"
 								href="/schedule/restore/?backup=<?= $backup ?>&type=web&object=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
 								title="<?= _("Restore") ?>"
+								data-confirm-title="<?= _("Restore") ?>"
+								data-confirm-message="<?= sprintf(_("Are you sure you want to restore %s?"), $key) ?>"
 							>
 								<i class="fas fa-arrow-rotate-left icon-green"></i>
 								<span class="u-hide-desktop"><?= _("Restore") ?></span>
@@ -110,9 +116,11 @@
 					<ul class="units-table-row-actions">
 						<li class="units-table-row-action shortcut-enter" data-key-action="href">
 							<a
-								class="units-table-row-action-link"
+								class="units-table-row-action-link data-controls js-confirm-action"
 								href="/schedule/restore/?backup=<?= $backup ?>&type=mail&object=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
 								title="<?= _("Restore") ?>"
+								data-confirm-title="<?= _("Restore") ?>"
+								data-confirm-message="<?= sprintf(_("Are you sure you want to restore %s?"), $key) ?>"
 							>
 								<i class="fas fa-arrow-rotate-left icon-green"></i>
 								<span class="u-hide-desktop"><?= _("Restore") ?></span>
@@ -148,9 +156,11 @@
 					<ul class="units-table-row-actions">
 						<li class="units-table-row-action shortcut-enter" data-key-action="href">
 							<a
-								class="units-table-row-action-link"
+								class="units-table-row-action-link data-controls js-confirm-action"
 								href="/schedule/restore/?backup=<?= $backup ?>&type=dns&object=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
 								title="<?= _("Restore") ?>"
+								data-confirm-title="<?= _("Restore") ?>"
+								data-confirm-message="<?= sprintf(_("Are you sure you want to restore %s?"), $key) ?>"
 							>
 								<i class="fas fa-arrow-rotate-left icon-green"></i>
 								<span class="u-hide-desktop"><?= _("Restore") ?></span>
@@ -186,9 +196,11 @@
 					<ul class="units-table-row-actions">
 						<li class="units-table-row-action shortcut-enter" data-key-action="href">
 							<a
-								class="units-table-row-action-link"
+								class="units-table-row-action-link data-controls js-confirm-action"
 								href="/schedule/restore/?backup=<?= $backup ?>&type=db&object=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
 								title="<?= _("Restore") ?>"
+								data-confirm-title="<?= _("Restore") ?>"
+								data-confirm-message="<?= sprintf(_("Are you sure you want to restore %s?"), $key) ?>"
 							>
 								<i class="fas fa-arrow-rotate-left icon-green"></i>
 								<span class="u-hide-desktop"><?= _("Restore") ?></span>
@@ -221,9 +233,11 @@
 					<ul class="units-table-row-actions">
 						<li class="units-table-row-action shortcut-enter" data-key-action="href">
 							<a
-								class="units-table-row-action-link"
+								class="units-table-row-action-link data-controls js-confirm-action"
 								href="/schedule/restore/?backup=<?= $backup ?>&type=cron&object=records&token=<?= $_SESSION["token"] ?>"
 								title="<?= _("Restore") ?>"
+								data-confirm-title="<?= _("Restore") ?>"
+								data-confirm-message="<?= sprintf(_("Are you sure you want to restore %s?"), $key) ?>"
 							>
 								<i class="fas fa-arrow-rotate-left icon-green"></i>
 								<span class="u-hide-desktop"><?= _("Restore") ?></span>
@@ -259,9 +273,11 @@
 					<ul class="units-table-row-actions">
 						<li class="units-table-row-action shortcut-enter" data-key-action="href">
 							<a
-								class="units-table-row-action-link"
+								class="units-table-row-action-link data-controls js-confirm-action"
 								href="/schedule/restore/?backup=<?= $backup ?>&type=udir&object=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
 								title="<?= _("Restore") ?>"
+								data-confirm-title="<?= _("Restore") ?>"
+								data-confirm-message="<?= sprintf(_("Are you sure you want to restore %s?"), $key) ?>"
 							>
 								<i class="fas fa-arrow-rotate-left icon-green"></i>
 								<span class="u-hide-desktop"><?= _("Restore") ?></span>
@@ -273,12 +289,10 @@
 		<?php }} ?>
 	</div>
 
-</div>
-
-<footer class="app-footer">
-	<div class="container app-footer-inner">
+	<div class="units-table-footer">
 		<p>
 			<?php printf(ngettext("%d item", "%d items", $i), $i); ?>
 		</p>
 	</div>
-</footer>
+
+</div>

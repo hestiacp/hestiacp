@@ -39,6 +39,7 @@ $v_php_versions = [
 	"php-8.0",
 	"php-8.1",
 	"php-8.2",
+	"php-8.3",
 ];
 sort($v_php_versions);
 
@@ -358,7 +359,9 @@ if (!empty($_POST["save"])) {
 					$return_var,
 				);
 				check_return_code($return_var, $output);
-				$v_timezone = $_POST["v_timezone"];
+				if (in_array($_POST["v_timezone"], $v_timezones)) {
+					$v_timezone = $_POST["v_timezone"];
+				}
 				unset($output);
 			}
 		}
@@ -574,6 +577,30 @@ if (!empty($_POST["save"])) {
 				unset($output);
 				if (empty($_SESSION["error_msg"])) {
 					$_SESSION["DISK_QUOTA"] = "no";
+				}
+			}
+		}
+	}
+
+	// Set systen resources limit support
+	if (empty($_SESSION["error_msg"])) {
+		if (
+			!empty($_POST["v_resources_limit"]) &&
+			$_SESSION["RESOURCES_LIMIT"] != $_POST["v_resources_limit"]
+		) {
+			if ($_POST["v_resources_limit"] == "yes") {
+				exec(HESTIA_CMD . "v-add-sys-cgroups", $output, $return_var);
+				check_return_code($return_var, $output);
+				unset($output);
+				if (empty($_SESSION["error_msg"])) {
+					$_SESSION["RESOURCES_LIMIT"] = "yes";
+				}
+			} else {
+				exec(HESTIA_CMD . "v-delete-sys-cgroups", $output, $return_var);
+				check_return_code($return_var, $output);
+				unset($output);
+				if (empty($_SESSION["error_msg"])) {
+					$_SESSION["RESOURCES_LIMIT"] = "no";
 				}
 			}
 		}

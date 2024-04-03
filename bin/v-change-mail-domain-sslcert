@@ -13,7 +13,8 @@
 user=$1
 domain=$2
 domain_idn=$2
-restart=$3
+ssl_dir=$3
+restart=$4
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -40,7 +41,7 @@ is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'mail' 'DOMAIN' "$domain_idn"
 is_object_unsuspended 'mail' 'DOMAIN' "$domain_idn"
-is_object_value_empty 'mail' 'DOMAIN' "$domain_idn" '$SSL'
+is_object_value_exist 'mail' 'DOMAIN' "$domain_idn" '$SSL'
 is_web_domain_cert_valid
 
 # Perform verification if read-only mode is enabled

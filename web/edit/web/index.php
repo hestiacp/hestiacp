@@ -1187,6 +1187,7 @@ if (!empty($_POST["save"])) {
 				}
 
 				// Add ftp account
+				$v_ftp_username_for_emailing = $v_ftp_user_data["v_ftp_user"];
 				$v_ftp_username = $v_ftp_user_data["v_ftp_user"];
 				$v_ftp_username_full = $user . "_" . $v_ftp_user_data["v_ftp_user"];
 				$v_ftp_user = quoteshellarg($v_ftp_username);
@@ -1363,6 +1364,26 @@ if (!empty($_POST["save"])) {
 					unset($output);
 				}
 				// Change FTP account password
+				if (!empty($v_ftp_user_data["v_ftp_password"])) {
+					$v_ftp_password = tempnam("/tmp", "vst");
+					$fp = fopen($v_ftp_password, "w");
+					fwrite($fp, $v_ftp_user_data["v_ftp_password"] . "\n");
+					fclose($fp);
+					exec(
+						HESTIA_CMD .
+							"v-change-web-domain-ftp-password " .
+							$user .
+							" " .
+							quoteshellarg($v_domain) .
+							" " .
+							$v_ftp_username .
+							" " .
+							$v_ftp_password,
+						$output,
+						$return_var,
+					);
+					unlink($v_ftp_password);
+				}
 				if (!empty($v_ftp_user_data["v_ftp_email"]) && empty($_SESSION["error_msg"])) {
 					$to = $v_ftp_user_data["v_ftp_email"];
 					$template = get_email_template("ftp_credentials", $_SESSION["language"]);

@@ -55,6 +55,18 @@ is_package_consistent() {
 	if [ "$DISK_QUOTA" != 'unlimited' ]; then
 		is_int_format_valid "$DISK_QUOTA" 'DISK_QUOTA'
 	fi
+	if [ "$CPU_QUOTA" != 'unlimited' ]; then
+		is_valid_cpu_quota "$CPU_QUOTA" 'CPU_QUOTA'
+	fi
+	if [ "$CPU_QUOTA_PERIOD" != 'unlimited' ]; then
+		is_valid_cpu_quota_period "$CPU_QUOTA_PERIOD" 'CPU_QUOTA_PERIOD'
+	fi
+	if [ "$MEMORY_LIMIT" != 'unlimited' ]; then
+		is_valid_memory_size "$MEMORY_LIMIT" 'MEMORY_LIMIT'
+	fi
+	if [ "$SWAP_LIMIT" != 'unlimited' ]; then
+		is_valid_swap_size "$SWAP_LIMIT" 'SWAP_LIMIT'
+	fi
 	if [ "$BANDWIDTH" != 'unlimited' ]; then
 		is_int_format_valid "$BANDWIDTH" 'BANDWIDTH'
 	fi
@@ -81,6 +93,7 @@ is_package_consistent() {
 	fi
 
 	is_format_valid_shell "$SHELL"
+	is_boolean_format_valid "$SHELL_JAIL_ENABLED" 'SHELL_JAIL_ENABLED'
 }
 
 #----------------------------------------------------------#
@@ -129,9 +142,14 @@ RATE_LIMIT='$RATE_LIMIT'
 DATABASES='$DATABASES'
 CRON_JOBS='$CRON_JOBS'
 DISK_QUOTA='$DISK_QUOTA'
+CPU_QUOTA='$CPU_QUOTA'
+CPU_QUOTA_PERIOD='$CPU_QUOTA_PERIOD'
+MEMORY_LIMIT='$MEMORY_LIMIT'
+SWAP_LIMIT='$SWAP_LIMIT'
 BANDWIDTH='$BANDWIDTH'
 NS='$NS'
 SHELL='$SHELL'
+SHELL_JAIL_ENABLED='$SHELL_JAIL_ENABLED'
 BACKUPS='$BACKUPS'
 TIME='$time'
 DATE='$date'

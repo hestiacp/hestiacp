@@ -37,7 +37,7 @@ cp original.sh new.sh
 
 When you are done editing your template, enable it for the desired domain from the control panel.
 
-After modifying an existing template, you need to rebuild the user configuration. This can be done using the [v-rebuild-user](../reference/cli.md#v-rebuild-user) command or the bulk operation in the web interface..
+After modifying an existing template, you need to rebuild the user configuration. This can be done using the [v-rebuild-user](../reference/cli#v-rebuild-user) command or the bulk operation in the web interface..
 
 ### Available variables
 

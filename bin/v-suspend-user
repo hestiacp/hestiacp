@@ -30,7 +30,7 @@ check_args '1' "$#" 'USER [RESTART]'
 is_format_valid 'user'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
-if [ "$user" = 'admin' ]; then
+if [ "$user" = "$ROOT_USER" ]; then
 	exit
 fi
 
@@ -96,7 +96,7 @@ check_result $? "Cron restart failed" > /dev/null
 
 # Changing suspend value
 update_user_value "$user" '$SUSPENDED' 'yes'
-increase_user_value 'admin' '$SUSPENDED_USERS'
+increase_user_value "$ROOT_USER" '$SUSPENDED_USERS'
 
 # Logging
 $BIN/v-log-action "system" "Info" "Users" "Suspended user account (Name: $user)."

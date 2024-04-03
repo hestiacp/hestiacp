@@ -10,14 +10,12 @@ export default {
 
 <template>
 	<ul class="FeatureList">
-		<li v-for="item in items">
-			<span v-html="item.text"></span>
-			<ul v-if="item.items">
-				<li v-for="nested in item.items">
-					<span v-html="nested.text"></span>
-				</li>
-			</ul>
-		</li>
+		<template v-for="item in items" :key="item.id">
+			<li>
+				<span v-html="item.text"></span>
+				<FeatureList v-if="item.items" :items="item.items" />
+			</li>
+		</template>
 	</ul>
 </template>
 
@@ -27,19 +25,17 @@ export default {
 	padding-left: 1em;
 	list-style: disc;
 	line-height: 1.5;
-}
 
-.FeatureList ul {
-	padding-left: 1em;
-	list-style: disc;
-}
+	& ul {
+		padding-left: 1em;
+		list-style: disc;
+	}
 
-.FeatureList li {
-	margin-top: 0.5em;
-}
+	& li {
+		margin-top: 0.5em;
+	}
 
-@media (min-width: 640px) {
-	.FeatureList {
+	@media (min-width: 640px) {
 		font-size: 1.15rem;
 	}
 }

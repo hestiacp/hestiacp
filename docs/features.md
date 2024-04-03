@@ -4,16 +4,16 @@ title: Features
 ---
 
 <script setup>
-  import FeaturePageTitle from "./.vitepress/theme/components/FeaturePageTitle.vue";
+  import PageHeader from "./.vitepress/theme/components/PageHeader.vue";
   import FeaturePageSection from "./.vitepress/theme/components/FeaturePageSection.vue";
   import FeatureList from "./.vitepress/theme/components/FeatureList.vue";
   import { users, webDomains, mail, dns, databases, serverAdmin } from "./_data/features";
 </script>
 
 <FeaturePage>
-  <FeaturePageTitle>
+  <PageHeader>
     <template #title>Features</template>
-  </FeaturePageTitle>
+  </PageHeader>
   <FeaturePageSection image="/images/undraw_two_factor_authentication_namy.svg">
     <template #title>Users</template>
     <template #lead>Share access to your server with other users and restrict their resources.</template>

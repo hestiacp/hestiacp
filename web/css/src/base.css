@@ -31,9 +31,9 @@ body {
 	font-family: var(--font-family);
 	font-size: 0.85rem;
 	line-height: 1.5;
-	height: 100%;
 	color: var(--color-text);
 	background-color: var(--color-background);
+	height: 100%;
 }
 
 a {

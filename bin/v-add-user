@@ -2,7 +2,7 @@
 # info: add system user
 # options: USER PASSWORD EMAIL [PACKAGE] [NAME] [LASTNAME]
 #
-# example: v-add-user admin2 P4$$w@rD bgates@aol.com
+# example: v-add-user user P4$$w@rD bgates@aol.com
 #
 # This function creates new user account.
 
@@ -21,6 +21,9 @@ name=$5
 if [ -n "$6" ]; then
 	name="$name $6"
 fi
+
+FROM_V_ADD_USER=true
+
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
 source /etc/hestiacp/hestia.conf
@@ -32,12 +35,14 @@ source_conf "$HESTIA/conf/hestia.conf"
 is_user_free() {
 	# these names may cause issues with MariaDB/MySQL database names and should be reserved:
 	# sudo has been added due to Privilege escalation as sudo group has always sudo permission
-	check_sysuser=$(php -r '$reserved_names=array("aria", "aria_log", "mysql", "mysql_upgrade", "ib", "ib_buffer",
- "ddl", "ddl_recovery", "performance", "sudo"); if(in_array(strtolower($argv[1]), $reserved_names, true)){echo implode(", ", $reserved_names);}' "$user")
-	if [ -n "$check_sysuser" ]; then
-		check_result "$E_INVALID" "The user name '$user' is reserved and cannot be used. List of reserved names: $check_sysuser"
-		return
-	fi
+	reserved_names=("aria" "aria_log" "mysql" "mysql_upgrade" "ib" "ib_buffer" "ddl" "ddl_recovery" "performance" "sudo")
+	for value in "${reserved_names[@]}"; do
+		if [ "${user,,}" = "$value" ]; then
+			check_result "$E_INVALID" "The user name '$user' is reserved and cannot be used. List of reserved names: ${reserved_names[*]}"
+			return
+		fi
+	done
+
 	check_sysuser=$(cut -f 1 -d : /etc/passwd | grep "^$user$")
 	if [ -n "$check_sysuser" ] || [ -e "$USER_DATA" ]; then
 		check_result "$E_EXISTS" "user $user exists"
@@ -69,7 +74,7 @@ check_hestia_demo_mode
 pkg_data=$(cat $HESTIA/data/packages/$package.pkg | egrep -v "TIME|DATE")
 
 # Checking shell
-shell_conf=$(echo "$pkg_data" | grep 'SHELL' | cut -f 2 -d \')
+shell_conf=$(echo "$pkg_data" | grep -m1 'SHELL' | cut -f 2 -d \')
 shell=$(grep -w "$shell_conf" /etc/shells | head -n1)
 
 # Adding user
@@ -92,8 +97,8 @@ if [ -z "$(grep ^hestia-users: /etc/group)" ]; then
 fi
 
 # Add membership to hestia-users group to non-admin users
-if [ "$user" = "admin" ]; then
-	setfacl -m "g:admin:r-x" "$HOMEDIR/$user"
+if [ "$user" = "$ROOT_USER" ]; then
+	setfacl -m "g:$ROOT_USER:r-x" "$HOMEDIR/$user"
 else
 	usermod -a -G "hestia-users" "$user"
 	setfacl -m "u:$user:r-x" "$HOMEDIR/$user"
@@ -198,8 +203,8 @@ time=$(echo "$time_n_date" | cut -f 1 -d \ )
 date=$(echo "$time_n_date" | cut -f 2 -d \ )
 
 # Filling user config
-if [ "$user" != 'admin' ]; then
-	ip_avail=$($BIN/v-list-user-ips admin plain | grep -w shared | wc -l)
+if [ "$user" != "$ROOT_USER" ]; then
+	ip_avail=$($BIN/v-list-user-ips "$ROOT_USER" plain | grep -w shared | wc -l)
 	u_users=0
 else
 	ip_avail=0
@@ -261,9 +266,14 @@ if [ "$DISK_QUOTA" = 'yes' ]; then
 	$BIN/v-update-user-quota "$user"
 fi
 
+# Update resource limitation (cgroup)
+if [ "$RESOURCES_LIMIT" = 'yes' ]; then
+	$BIN/v-update-user-cgroup "$user"
+fi
+
 # Updating admin counter
-if [ "$user" != 'admin' ]; then
-	increase_user_value 'admin' '$U_USERS'
+if [ "$user" != "$ROOT_USER" ]; then
+	increase_user_value "$ROOT_USER" '$U_USERS'
 fi
 
 # Run template trigger
@@ -273,6 +283,11 @@ fi
 
 # Adding jailed sftp env
 $BIN/v-add-user-sftp-jail $user
+
+# Adding jailed ssh env
+if [ "$SHELL_JAIL_ENABLED" = 'yes' ]; then
+	$BIN/v-add-user-ssh-jail $user
+fi
 
 #----------------------------------------------------------#
 #                       Hestia                             #

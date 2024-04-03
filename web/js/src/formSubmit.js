@@ -1,13 +1,18 @@
 import { enableUnlimitedInputs } from './unlimitedInput';
 import { updateAdvancedTextarea } from './toggleAdvanced';
-import { showSpinner } from './helpers';
+import { isDesktopSafari, showSpinner, delay } from './helpers';
 
 export default function handleFormSubmit() {
 	const mainForm = document.querySelector('#main-form');
 	if (mainForm) {
-		mainForm.addEventListener('submit', () => {
-			// Show loading spinner
+		mainForm.addEventListener('submit', async (event) => {
+			event.preventDefault();
 			showSpinner();
+
+			// Wait if Desktop Safari to ensure spinner is shown
+			if (isDesktopSafari()) {
+				await delay(500);
+			}
 
 			// Enable any disabled inputs to ensure all fields are submitted
 			if (mainForm.classList.contains('js-enable-inputs-on-submit')) {
@@ -24,13 +29,14 @@ export default function handleFormSubmit() {
 			if (basicOptionsWrapper && !basicOptionsWrapper.classList.contains('u-hidden')) {
 				updateAdvancedTextarea();
 			}
+
+			mainForm.submit();
 		});
 	}
 
 	const bulkEditForm = document.querySelector('[x-bind="BulkEdit"]');
 	if (bulkEditForm) {
 		bulkEditForm.addEventListener('submit', () => {
-			// Show loading spinner
 			showSpinner();
 		});
 	}

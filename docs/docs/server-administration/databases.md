@@ -19,6 +19,21 @@ v-list-database-hosts
 
 For security reasons, we have decided to disable this option. Please use `https://host.domain.tld/phpmyadmin/` instead.
 
+## How to create PhpMyAdmin root user credentials
+
+Replace `myrootusername` & `myrootusername_password` with preferred credentials:
+
+```bash
+mysql -uroot
+```
+
+```sql
+CREATE USER 'myrootusername'@'localhost' IDENTIFIED BY 'myrootusername_password';
+GRANT ALL PRIVILEGES ON *.* TO 'myrootusername'@'localhost' WITH GRANT OPTION;
+FLUSH PRIVILEGES;
+QUIT;
+```
+
 ## How can I enable access to `http://ip/phpmyadmin/`
 
 ### For Apache2
@@ -59,7 +74,7 @@ include     /etc/nginx/conf.d/phppgadmin.inc*;
 ## How can I connect from a remote location to the database
 
 By default, connections to port 3306 are disabled in the firewall. Open
-port 3306 in the firewall ([documentation](./firewall.md)), then edit `/etc/mysql/mariadb.conf.d/50-server.cnf`:
+port 3306 in the firewall ([documentation](./firewall)), then edit `/etc/mysql/mariadb.conf.d/50-server.cnf`:
 
 ```bash
 nano /etc/mysql/mariadb.conf.d/50-server.cnf
@@ -70,6 +85,8 @@ bind-address = "your.server.ip.address"
 ```
 
 ## PhpMyAdmin Single Sign On
+
+NOTE: PhpMyAdmin Single Sign On enabled only for individual databases. Primary "PhpMyAdmin" button for existing database credintials only.
 
 ### Unable to activate phpMyAdmin Single Sign on
 
@@ -104,7 +121,7 @@ For example:
 v-add-database-host mysql db.hestiacp.com root mypassword 500
 ```
 
-If you want you can setup phpMyAdmin on the host server to allow to connect to the database. Create a copy of `01-localhost` file in /etc/phpmyadmin/conf.d and change:
+If you want you can setup phpMyAdmin on the host server to allow to connect to the database. Create a copy of `01-localhost` file in `/etc/phpmyadmin/conf.d` and change:
 
 ```php
 $cfg["Servers"][$i]["host"] = "localhost";

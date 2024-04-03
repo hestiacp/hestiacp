@@ -25,8 +25,6 @@ steps:
       - git submodule update --init --recursive
   - name: Build Hestia package and install
     commands:
-      - npm ci --ignore-scripts
-      - npm run build
       - ./src/hst_autocompile.sh --hestia --install '~localsrc'
   - name: Reset Web templates
     commands:
@@ -83,8 +81,6 @@ steps:
       - git submodule update --init --recursive
   - name: Build Hestia package install
     commands:
-      - npm ci --ignore-scripts
-      - npm run build
       - ./src/hst_autocompile.sh --hestia --install '~localsrc'
   - name: Reset Web templates
     commands:
@@ -134,10 +130,10 @@ steps:
       - npm ci --ignore-scripts
       - npm run build
   - name: Build
-    image: debian:bullseye
+    image: debian:bookworm
     commands:
       - ln -snf /etc/localtime && echo CET > /etc/timezone
-      - ./src/hst_autocompile.sh --dontinstalldeps --hestia --debug --cross --noinstall --keepbuild --debug '~localsrc'
+      - ./src/hst_autocompile.sh --dontinstalldeps --hestia --debug --cross --noinstall --keepbuild '~localsrc'
       - mkdir -p ./hestia/
       - mv /tmp/hestiacp-src/deb/*.deb ./hestia/
   - name: Upload

@@ -27,11 +27,11 @@ if ($_SESSION["userContext"] === "admin") {
 			break;
 		case "suspend":
 			$cmd = "v-suspend-user";
-			$restart = "no";
+			$restart = "yes";
 			break;
 		case "unsuspend":
 			$cmd = "v-unsuspend-user";
-			$restart = "no";
+			$restart = "yes";
 			break;
 		case "update counters":
 			$cmd = "v-update-user-counters";
@@ -46,11 +46,9 @@ if ($_SESSION["userContext"] === "admin") {
 			break;
 		case "rebuild web":
 			$cmd = "v-rebuild-web-domains";
-			$restart = "no";
 			break;
 		case "rebuild dns":
 			$cmd = "v-rebuild-dns-domains";
-			$restart = "no";
 			break;
 		case "rebuild mail":
 			$cmd = "v-rebuild-mail-domains";

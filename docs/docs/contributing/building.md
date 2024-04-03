@@ -20,11 +20,6 @@ cd ./hestiacp/
 # Replace main with the branch you want to test
 git checkout main
 
-# Install Dependencies
-npm install
-# Build
-npm run build
-
 cd ./src/
 
 # Compile packages

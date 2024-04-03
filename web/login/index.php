@@ -264,12 +264,6 @@ function authenticate_user($user, $password, $twofa = "") {
 				}
 
 				if ($data[$user]["TWOFA"] != "") {
-					exec(
-						HESTIA_CMD . "v-check-user-2fa " . $v_user . " " . $v_twofa,
-						$output,
-						$return_var,
-					);
-					$error = _("Invalid or missing 2FA token");
 					if (empty($twofa)) {
 						$_SESSION["login"]["username"] = $user;
 						$_SESSION["login"]["password"] = $password;
@@ -460,3 +454,4 @@ if (!empty($_SESSION["login"]["password"])) {
 		($_SESSION["LOGIN_STYLE"] != "old" ? "" : "_a") .
 		".php";
 }
+require_once "../templates/includes/login-footer.php";

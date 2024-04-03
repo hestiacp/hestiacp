@@ -38,9 +38,14 @@ json_list() {
         "DATABASES": "'$DATABASES'",
         "CRON_JOBS": "'$CRON_JOBS'",
         "DISK_QUOTA": "'$DISK_QUOTA'",
+        "CPU_QUOTA":"'$CPU_QUOTA'",
+        "CPU_QUOTA_PERIOD":"'$CPU_QUOTA_PERIOD'",
+        "MEMORY_LIMIT":"'$MEMORY_LIMIT'",
+        "SWAP_LIMIT":"'$SWAP_LIMIT'",
         "BANDWIDTH": "'$BANDWIDTH'",
         "NS": "'$NS'",
         "SHELL": "'$SHELL'",
+        "SHELL_JAIL_ENABLED": "'$SHELL_JAIL_ENABLED'",
         "BACKUPS": "'$BACKUPS'",
         "TIME": "'$TIME'",
         "DATE": "'$DATE'"
@@ -50,27 +55,32 @@ json_list() {
 
 # SHELL list function
 shell_list() {
-	echo "PACKAGE:          $PACKAGE"
-	echo "WEB TEMPLATE:     $WEB_TEMPLATE"
-	echo "BACKEND TEMPLATE: $BACKEND_TEMPLATE"
-	echo "PROXY TEMPLATE:   $PROXY_TEMPLATE"
-	echo "DNS TEMPLATE:     $DNS_TEMPLATE"
-	echo "WEB DOMAINS:      $WEB_DOMAINS"
-	echo "WEB ALIASES:      $WEB_ALIASES"
-	echo "DNS DOMAINS:      $DNS_DOMAINS"
-	echo "DNS RECORDS:      $DNS_RECORDS"
-	echo "MAIL DOMAINS:     $MAIL_DOMAINS"
-	echo "MAIL ACCOUNTS:    $MAIL_ACCOUNTS"
-	echo "RATE_LIMIT:       $RATE_LIMIT"
-	echo "DATABASES:        $DATABASES"
-	echo "CRON JOBS:        $CRON_JOBS"
-	echo "DISK QUOTA:       $DISK_QUOTA"
-	echo "BANDWIDTH:        $BANDWIDTH"
-	echo "NS:               $NS"
-	echo "SHELL:            $SHELL"
-	echo "BACKUPS:          $BACKUPS"
-	echo "TIME:             $TIME"
-	echo "DATE:             $DATE"
+	echo "PACKAGE:          	$PACKAGE"
+	echo "WEB TEMPLATE:     	$WEB_TEMPLATE"
+	echo "BACKEND TEMPLATE: 	$BACKEND_TEMPLATE"
+	echo "PROXY TEMPLATE:   	$PROXY_TEMPLATE"
+	echo "DNS TEMPLATE:     	$DNS_TEMPLATE"
+	echo "WEB DOMAINS:      	$WEB_DOMAINS"
+	echo "WEB ALIASES:      	$WEB_ALIASES"
+	echo "DNS DOMAINS:      	$DNS_DOMAINS"
+	echo "DNS RECORDS:      	$DNS_RECORDS"
+	echo "MAIL DOMAINS:     	$MAIL_DOMAINS"
+	echo "MAIL ACCOUNTS:    	$MAIL_ACCOUNTS"
+	echo "RATE_LIMIT:       	$RATE_LIMIT"
+	echo "DATABASES:        	$DATABASES"
+	echo "CRON JOBS:        	$CRON_JOBS"
+	echo "DISK QUOTA:       	$DISK_QUOTA"
+	echo "CPU_QUOTA: 					$CPU_QUOTA"
+	echo "CPU_QUOTA_PERIOD:		$CPU_QUOTA_PERIOD"
+	echo "MEMORY_LIMIT:				$MEMORY_LIMIT"
+	echo "SWAP_LIMIT: 				$SWAP_LIMIT"
+	echo "BANDWIDTH:        	$BANDWIDTH"
+	echo "NS:               	$NS"
+	echo "SHELL:            	$SHELL"
+	echo "SHELL_JAIL_ENABLED:	$SHELL_JAIL_ENABLED"
+	echo "BACKUPS:          	$BACKUPS"
+	echo "TIME:             	$TIME"
+	echo "DATE:             	$DATE"
 }
 
 # PLAIN list function
@@ -78,7 +88,8 @@ plain_list() {
 	echo -ne "$PACKAGE\t$WEB_TEMPLATE\t$BACKEND_TEMPLATE\t$PROXY_TEMPLATE\t$DNS_TEMPLATE\t"
 	echo -ne "$WEB_DOMAINS\t$WEB_ALIASES\t$DNS_DOMAINS\t$DNS_RECORDS\t"
 	echo -ne "$MAIL_DOMAINS\t$MAIL_ACCOUNTS\t$RATE_LIMIT\t$DATABASES\t$CRON_JOBS\t"
-	echo -e "$DISK_QUOTA\t$BANDWIDTH\t$NS\t$SHELL\t$BACKUPS\t$TIME\t$DATE"
+	echo -ne "$CPU_QUOTA\t$CPU_QUOTA_PERIOD\t$MEMORY_LIMIT\t$SWAP_LIMIT\t"
+	echo -e "$DISK_QUOTA\t$BANDWIDTH\t$NS\t$SHELL\t$SHELL_JAIL_ENABLED\t$BACKUPS\t$TIME\t$DATE"
 }
 
 # CSV list function
@@ -86,11 +97,11 @@ csv_list() {
 	echo -n "PACKAGE,WEB_TEMPLATE,BACKEND_TEMPLATE,PROXY_TEMPLATE,DNS_TEMPLATE,"
 	echo -n "WEB_DOMAINS,WEB_ALIASES,DNS_DOMAINS,DNS_RECORDS,"
 	echo -n "MAIL_DOMAINS,MAIL_ACCOUNTS,RATE_LIMIT,DATABASES,CRON_JOBS,"
-	echo "DISK_QUOTA,BANDWIDTH,NS,SHELL,BACKUPS,TIME,DATE"
+	echo "DISK_QUOTA,CPU_QUOTA,CPU_QUOTA_PERIOD,MEMORY_LIMIT,SWAP_LIMIT,BANDWIDTH,NS,SHELL,SHELL_JAIL_ENABLED,BACKUPS,TIME,DATE"
 	echo -n "$PACKAGE,$WEB_TEMPLATE,$BACKEND_TEMPLATE,$PROXY_TEMPLATE,$DNS_TEMPLATE,"
 	echo -n "$WEB_DOMAINS,$WEB_ALIASES,$DNS_DOMAINS,$DNS_RECORDS,"
 	echo -n "$MAIL_DOMAINS,$MAIL_ACCOUNTS,$RATE_LIMIT,$DATABASES,$CRON_JOBS,"
-	echo "$DISK_QUOTA,$BANDWIDTH,\"$NS\",$SHELL,$BACKUPS,$TIME,$DATE"
+	echo "$DISK_QUOTA,$CPU_QUOTA,$CPU_QUOTA_PERIOD,$MEMORY_LIMIT,$SWAP_LIMIT,$BANDWIDTH,\"$NS\",$SHELL,$BACKUPS,$TIME,$DATE"
 }
 
 #----------------------------------------------------------#

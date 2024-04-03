@@ -1,7 +1,7 @@
 /* eslint-env node */
 /* eslint-disable no-console */
 
-// Build JS and CSS using esbuild and PostCSS
+// Build JS and CSS using esbuild and Lightning CSS
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
 import browserslist from 'browserslist';
@@ -12,6 +12,7 @@ import * as lightningcss from 'lightningcss';
 const externalPackages = [
 	'chart.js/auto',
 	'alpinejs/dist/cdn.min.js',
+	'@alpinejs/collapse/dist/cdn.min.js',
 	'xterm',
 	'xterm-addon-webgl',
 	'xterm-addon-canvas',
@@ -63,6 +64,8 @@ function getOutputPath(pkg) {
 
 	if (pkg.startsWith('alpinejs')) {
 		pkgName = 'alpinejs';
+	} else if (pkg.startsWith('@alpinejs/collapse')) {
+		pkgName = 'alpinejs-collapse';
 	} else {
 		pkgName = pkg.replace(/\//g, '-');
 	}

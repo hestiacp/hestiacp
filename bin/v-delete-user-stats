@@ -38,7 +38,7 @@ check_hestia_demo_mode
 #                       Actions                            #
 #----------------------------------------------------------#
 
-if [ "$user" = 'admin' ] && [ "$mode" = "overall" ]; then
+if [ "$user" = "$ROOT_USER" ] && [ "$mode" = "overall" ]; then
 	log_file="$USER_DATA/overall_stats.log"
 else
 	log_file="$USER_DATA/stats.log"

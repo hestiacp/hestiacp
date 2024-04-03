@@ -6,12 +6,36 @@
 #                                                                           #
 #===========================================================================#
 
+# Source conf function for correct variable initialisation
+source_conf() {
+	while IFS='= ' read -r lhs rhs; do
+		if [[ ! $lhs =~ ^\ *# && -n $lhs ]]; then
+			rhs="${rhs%%^\#*}" # Del in line right comments
+			rhs="${rhs%%*( )}" # Del trailing spaces
+			rhs="${rhs%\'*}"   # Del opening string quotes
+			rhs="${rhs#\'*}"   # Del closing string quotes
+			declare -g $lhs="$rhs"
+		fi
+	done < $1
+}
+
+if [ -z "$user" ]; then
+	if [ -z "$ROOT_USER" ]; then
+		if [ -z "$HESTIA" ]; then
+			# shellcheck source=/etc/hestiacp/hestia.conf
+			source /etc/hestiacp/hestia.conf
+		fi
+		source_conf "$HESTIA/conf/hestia.conf" # load config file
+	fi
+	user="$ROOT_USER"
+fi
+
 # Internal variables
 HOMEDIR='/home'
 BACKUP='/backup'
 BACKUP_GZIP=9
 BACKUP_DISK_LIMIT=95
-BACKUP_LA_LIMIT=$(cat /proc/cpuinfo | grep processor | wc -l)
+BACKUP_LA_LIMIT=$(grep -c '^processor' /proc/cpuinfo)
 RRD_STEP=300
 BIN=$HESTIA/bin
 HESTIA_INSTALL_DIR="$HESTIA/install/deb"
@@ -120,7 +144,7 @@ log_history() {
 
 	# Log system events to system log file
 	if [ "$log_user" = "system" ]; then
-		log=$HESTIA/data/users/admin/system.log
+		log=$HESTIA/log/activity.log
 	else
 		if ! $BIN/v-list-user "$log_user" > /dev/null; then
 			return $E_NOTEXIST
@@ -208,11 +232,11 @@ is_package_full() {
 # User owner for reseller plugin
 get_user_owner() {
 	if [ -z "$RESELLER_KEY" ]; then
-		owner='admin'
+		owner="$ROOT_USER"
 	else
 		owner=$(grep "^OWNER" $USER_DATA/user.conf | cut -f 2 -d \')
 		if [ -z "$owner" ]; then
-			owner='admin'
+			owner="$ROOT_USER"
 		fi
 	fi
 }
@@ -680,7 +704,30 @@ sync_cron_jobs() {
 	chmod 600 $crontab
 }
 
-# User format validator
+# Validates Local part email and mail alias
+is_localpart_format_valid() {
+	if [ ${#1} -eq 1 ]; then
+		if ! [[ "$1" =~ ^^[[:alnum:]]$ ]]; then
+			check_result "$E_INVALID" "invalid $2 format :: $1"
+		fi
+	else
+		if [ -n "$3" ]; then
+			maxlenght=$(($3 - 2))
+			if ! [[ "$1" =~ ^[[:alnum:]][-|\.|_[:alnum:]]{0,$maxlenght}[[:alnum:]]$ ]]; then
+				check_result "$E_INVALID" "invalid $2 format :: $1"
+			fi
+		else
+			if ! [[ "$1" =~ ^[[:alnum:]][-|\.|_[:alnum:]]{0,28}[[:alnum:]]$ ]]; then
+				check_result "$E_INVALID" "invalid $2 format :: $1"
+			fi
+		fi
+	fi
+	if [ "$1" != "${1//[^[:ascii:]]/}" ]; then
+		check_result "$E_INVALID" "invalid $2 format :: $1"
+	fi
+}
+
+# Username / ftp username format validator
 is_user_format_valid() {
 	if [ ${#1} -eq 1 ]; then
 		if ! [[ "$1" =~ ^^[[:alnum:]]$ ]]; then
@@ -700,6 +747,13 @@ is_user_format_valid() {
 	fi
 	if [ "$1" != "${1//[^[:ascii:]]/}" ]; then
 		check_result "$E_INVALID" "invalid $2 format :: $1"
+	fi
+
+	# Only for new users
+	if [[ "$FROM_V_ADD_USER" == "true" ]]; then
+		if ! [[ "$1" =~ ^[a-zA-Z][-|.|_[:alnum:]]{0,28}[[:alnum:]]$ ]]; then
+			check_result "$E_INVALID" "invalid $2 format :: $1"
+		fi
 	fi
 }
 
@@ -1014,9 +1068,16 @@ is_fw_port_format_valid() {
 			check_result "$E_INVALID" "invalid port format :: $1"
 		fi
 	else
-		if ! [[ "$1" =~ ^[0-9][-|,|:|0-9]{0,30}[0-9]$ ]]; then
-			check_result "$E_INVALID" "invalid port format :: $1"
+		if ! [[ "$1" =~ ^[0-9][-|,|:|0-9]{0,76}[0-9]$ ]]; then
+			check_result "$E_INVALID" "invalid port format and/or more than 78 chars used :: $1"
 		fi
+	fi
+}
+
+# DNS record id validator
+is_id_format_valid() {
+	if ! echo "$1" | grep -qE '^[1-9][0-9]{0,}$'; then
+		check_result "$E_INVALID" "invalid $2 format :: $1"
 	fi
 }
 
@@ -1089,6 +1150,34 @@ is_cron_format_valid() {
 	fi
 }
 
+# Validate CPU Quota:
+is_valid_cpu_quota() {
+	if [[ ! "$1" =~ ^[0-9]+%$ ]]; then
+		check_result "$E_INVALID" "Invalid CPU Quota format :: $1"
+	fi
+}
+
+# Validate CPU Quota Period:
+is_valid_cpu_quota_period() {
+	if [[ ! "$1" =~ ^[0-9]+(ms|s)$ ]]; then
+		check_result "$E_INVALID" "Invalid CPU Quota Period format :: $1"
+	fi
+}
+
+# Validate Memory Size:
+is_valid_memory_size() {
+	if [[ ! "$1" =~ ^[0-9]+[KMGTK]?$ ]]; then
+		check_result "$E_INVALID" "Invalid Memory Size format :: $1"
+	fi
+}
+
+# Validate Swap Size:
+is_valid_swap_size() {
+	if [[ ! "$1" =~ ^[0-9]+[KMGTK]?$ ]]; then
+		check_result "$E_INVALID" "Invalid Swap Size format :: $1"
+	fi
+}
+
 is_object_name_format_valid() {
 	if ! [[ "$1" =~ ^[-|\ |\.|_[:alnum:]]{0,50}$ ]]; then
 		check_result "$E_INVALID" "invalid $2 format :: $1"
@@ -1154,7 +1243,7 @@ is_format_valid() {
 		if [ -n "$arg" ]; then
 			case $arg_name in
 				access_key_id) is_access_key_id_format_valid "$arg" "$arg_name" ;;
-				account) is_user_format_valid "$arg" "$arg_name" '64' ;;
+				account) is_localpart_format_valid "$arg" "$arg_name" '64' ;;
 				action) is_fw_action_format_valid "$arg" ;;
 				active) is_boolean_format_valid "$arg" 'active' ;;
 				aliases) is_alias_format_valid "$arg" ;;
@@ -1186,7 +1275,7 @@ is_format_valid() {
 				hash) is_hash_format_valid "$arg" "$arg_name" ;;
 				host) is_object_format_valid "$arg" "$arg_name" ;;
 				hour) is_cron_format_valid "$arg" $arg_name ;;
-				id) is_int_format_valid "$arg" 'id' ;;
+				id) is_id_format_valid "$arg" 'id' ;;
 				iface) is_interface_format_valid "$arg" ;;
 				ip) is_ip_format_valid "$arg" ;;
 				ipv6) is_ipv6_format_valid "$arg" ;;
@@ -1195,7 +1284,7 @@ is_format_valid() {
 				ip_status) is_ip_status_format_valid "$arg" ;;
 				job) is_int_format_valid "$arg" 'job' ;;
 				key) is_common_format_valid "$arg" "$arg_name" ;;
-				malias) is_user_format_valid "$arg" "$arg_name" '64' ;;
+				malias) is_localpart_format_valid "$arg" "$arg_name" '64' ;;
 				max_db) is_int_format_valid "$arg" 'max db' ;;
 				min) is_cron_format_valid "$arg" $arg_name ;;
 				month) is_cron_format_valid "$arg" $arg_name ;;
@@ -1232,6 +1321,7 @@ is_format_valid() {
 				soa) is_domain_format_valid "$arg" 'SOA' ;;
 				#missing command: is_format_valid_shell
 				shell) is_format_valid_shell "$arg" ;;
+				shell_jail_enabled) is_boolean_format_valid "$arg" 'shell_jail_enabled' ;;
 				ssl_dir) is_folder_exists "$arg" "$arg_name" ;;
 				stats_pass) is_password_format_valid "$arg" ;;
 				stats_user) is_user_format_valid "$arg" "$arg_name" ;;
@@ -1352,7 +1442,7 @@ check_access_key_cmd() {
 			if [[ -z "$(echo ",${allowed_commands}," | grep ",${hst_command},")" ]]; then
 				check_result "$E_FORBIDEN" "Key $access_key_id don't have permission to run the command $hst_command"
 			fi
-		elif [[ -z "$PERMISSIONS" && "$USER" != "admin" ]]; then
+		elif [[ -z "$PERMISSIONS" && "$USER" != "$ROOT_USER" ]]; then
 			check_result "$E_FORBIDEN" "Key $access_key_id don't have permission to run the command $hst_command"
 		fi
 		user_arg_position="0"
@@ -1368,11 +1458,11 @@ check_access_key_cmd() {
 			if [[ -z "$(echo ",${allowed_commands}," | grep ",${hst_command},")" ]]; then
 				check_result "$E_FORBIDEN" "Key $access_key_id don't have permission to run the command $hst_command"
 			fi
-		elif [[ -z "$PERMISSIONS" && "$USER" != "admin" ]]; then
+		elif [[ -z "$PERMISSIONS" && "$USER" != "$ROOT_USER" ]]; then
 			check_result "$E_FORBIDEN" "Key $access_key_id don't have permission to run the command $hst_command"
 		fi
 
-		if [[ "$USER" == "admin" ]]; then
+		if [[ "$USER" == "$ROOT_USER" ]]; then
 			# Admin can run commands for any user
 			user_arg_position="0"
 		else
@@ -1570,18 +1660,6 @@ no_symlink_chmod() {
 	done
 }
 
-source_conf() {
-	while IFS='= ' read -r lhs rhs; do
-		if [[ ! $lhs =~ ^\ *# && -n $lhs ]]; then
-			rhs="${rhs%%^\#*}" # Del in line right comments
-			rhs="${rhs%%*( )}" # Del trailing spaces
-			rhs="${rhs%\'*}"   # Del opening string quotes
-			rhs="${rhs#\'*}"   # Del closing string quotes
-			declare -g $lhs="$rhs"
-		fi
-	done < $1
-}
-
 format_no_quotes() {
 	exclude="['|\"]"
 	if [[ "$1" =~ $exclude ]]; then
@@ -1610,7 +1688,7 @@ is_key_permissions_format_valid() {
 	local permissions="$1"
 	local user="$2"
 
-	if [[ "$user" != "admin" && -z "$permissions" ]]; then
+	if [[ "$user" != "$ROOT_USER" && -z "$permissions" ]]; then
 		check_result "$E_INVALID" "Non-admin users need a permission list"
 	fi
 
@@ -1624,7 +1702,7 @@ is_key_permissions_format_valid() {
 			fi
 
 			source_conf "$HESTIA/data/api/$permission"
-			if [ "$ROLE" = "admin" ] && [ "$user" != "admin" ]; then
+			if [ "$ROLE" = "admin" ] && [ "$user" != "$ROOT_USER" ]; then
 				check_result "$E_INVALID" "Only the admin can run this API"
 			fi
 			#            elif [[ ! -e "$BIN/$permission" ]]; then
@@ -1725,15 +1803,26 @@ add_chroot_jail() {
 		chown 0:0 /srv/jail/$user/home
 		chmod 755 /srv/jail/$user/home
 	fi
+	if [ ! -d /srv/jail/$user/home/$user ]; then
+		mkdir -p /srv/jail/$user/home/$user
+		chown 0:0 /srv/jail/$user/home/$user
+		chmod 755 /srv/jail/$user/home/$user
+	fi
+	if [ ! -d /srv/jail/$user/tmp ]; then
+		mkdir -p /srv/jail/$user/tmp
+		chown "$user:$user" /srv/jail/$user/tmp
+		chmod 755 /srv/jail/$user/tmp
+	fi
 
-	cat > /etc/systemd/system/srv-jail-$user-home.mount << EOF
+	systemd=$(systemd-escape -p --suffix=mount "/srv/jail/$user/home/$user")
+	cat > "/etc/systemd/system/$systemd" << EOF
 [Unit]
 Description=Mount $user's home directory to the jail chroot
 Before=local-fs.target
 
 [Mount]
 What=$(getent passwd $user | cut -d : -f 6)
-Where=/srv/jail/$user/home
+Where=/srv/jail/$user/home/$user
 Type=none
 Options=bind
 LazyUnmount=yes
@@ -1743,17 +1832,26 @@ RequiredBy=local-fs.target
 EOF
 
 	systemctl daemon-reload > /dev/null 2>&1
-	systemctl enable srv-jail-$user-home.mount > /dev/null 2>&1
-	systemctl start srv-jail-$user-home.mount > /dev/null 2>&1
+	systemctl enable "$systemd" > /dev/null 2>&1
+	systemctl start "$systemd" > /dev/null 2>&1
 }
 
 delete_chroot_jail() {
 	local user=$1
 
-	systemctl stop srv-jail-$user-home.mount > /dev/null 2>&1
-	systemctl disable srv-jail-$user-home.mount > /dev/null 2>&1
-	rm -f /etc/systemd/system/srv-jail-$user-home.mount
+	# Backwards compatibility with old style home jail
+	systemd=$(systemd-escape -p --suffix=mount "/srv/jail/$user/home")
+	systemctl stop "$systemd" > /dev/null 2>&1
+	systemctl disable "$systemd" > /dev/null 2>&1
+	rm -f "/etc/systemd/system/$systemd"
+
+	# Remove the new style home jail
+	systemd=$(systemd-escape -p --suffix=mount "/srv/jail/$user/home/$user")
+	systemctl stop "$systemd" > /dev/null 2>&1
+	systemctl disable "$systemd" > /dev/null 2>&1
+	rm -f "/etc/systemd/system/$systemd"
+
 	systemctl daemon-reload > /dev/null 2>&1
-	rmdir /srv/jail/$user/home > /dev/null 2>&1
+	rm -r /srv/jail/$user/ > /dev/null 2>&1
 	rmdir /srv/jail/$user > /dev/null 2>&1
 }

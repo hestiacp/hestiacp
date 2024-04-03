@@ -1,0 +1,71 @@
+#!/bin/bash
+# info: delete user ssh jail
+# options: USER
+#
+# example: v-delete-user-ssh-jail whistler
+#
+# This function disables ssh jailed environment for USER
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '1' "$#" 'USER'
+is_format_valid 'user'
+user_str=$(grep "^$user:" /etc/passwd)
+if [ -z "$user_str" ]; then
+	exit
+fi
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+user_shell_rssh_nologin=$(grep "^$user:" /etc/passwd | egrep "rssh|nologin")
+
+# Only remove the jail when it's not needed for rssh or nologin
+if [ -z "$user_shell_rssh_nologin" ]; then
+	# chown permissions back to user:user
+	if [ -d "/home/$user" ]; then
+		chown "$user":"$user" "/home/$user"
+	fi
+
+	# Deleting chroot jail for SSH
+	delete_chroot_jail "$user"
+fi
+
+# Deleting user from groups
+gpasswd -d "$user" ssh-jailed > /dev/null 2>&1
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Disabling user jail
+update_user_value "$user" '$SHELL_JAIL_ENABLED' "no"
+
+# Restart ssh service
+service sshd restart > /dev/null 2>&1
+
+# Logging
+log_event "$OK" "$ARGUMENTS"
+
+exit

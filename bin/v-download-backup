@@ -89,7 +89,7 @@ if [ ! -e "$BACKUP/$backup" ]; then
 	else
 		if [ -e "$BACKUP/$backup" ]; then
 			chmod 0640 $BACKUP/$backup
-			chown admin:admin $BACKUP/$backup
+			chown hestiaweb:hestiaweb $BACKUP/$backup
 			echo "rm $BACKUP/$backup" | at now + 1 day
 		fi
 	fi

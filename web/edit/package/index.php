@@ -51,6 +51,11 @@ $v_cron_jobs = $data[$v_package]["CRON_JOBS"];
 $v_disk_quota = $data[$v_package]["DISK_QUOTA"];
 $v_bandwidth = $data[$v_package]["BANDWIDTH"];
 $v_shell = $data[$v_package]["SHELL"];
+$v_shell_jail_enabled = $data[$v_package]["SHELL_JAIL_ENABLED"];
+$v_cpu_quota = $data[$v_package]["CPU_QUOTA"];
+$v_cpu_quota_period = $data[$v_package]["CPU_QUOTA_PERIOD"];
+$v_memory_limit = $data[$v_package]["MEMORY_LIMIT"];
+$v_swap_limit = $data[$v_package]["SWAP_LIMIT"];
 $v_ns = $data[$v_package]["NS"];
 $nameservers = explode(",", $v_ns);
 if (empty($nameservers[0])) {
@@ -192,6 +197,19 @@ if (!empty($_POST["save"])) {
 		$errors[] = _("Bandwidth");
 	}
 
+	if (!isset($_POST["v_cpu_quota"])) {
+		$errors[] = _("CPU quota");
+	}
+	if (!isset($_POST["v_cpu_quota_period"])) {
+		$errors[] = _("CPU quota period");
+	}
+	if (!isset($_POST["v_memory_limit"])) {
+		$errors[] = _("Memory Limit");
+	}
+	if (!isset($_POST["v_swap_limit"])) {
+		$errors[] = _("Swap Limit");
+	}
+
 	// Check if name server entries are blank if DNS server is installed
 	if (isset($_SESSION["DNS_SYSTEM"]) && !empty($_SESSION["DNS_SYSTEM"])) {
 		if (empty($_POST["v_ns1"])) {
@@ -200,6 +218,15 @@ if (!empty($_POST["save"])) {
 		if (empty($_POST["v_ns2"])) {
 			$errors[] = _("Nameserver 2");
 		}
+	}
+
+	if (
+		isset($_POST["v_shell"]) &&
+		isset($_POST["v_shell_jail_enabled"]) &&
+		in_array($_POST["v_shell"], ["nologin", "rssh"]) &&
+		$_POST["v_shell_jail_enabled"] == "yes"
+	) {
+		$_SESSION["error_msg"] = _("Cannot combine nologin and rssh shell with jailed shell.");
 	}
 
 	if (!empty($errors[0])) {
@@ -229,6 +256,11 @@ if (!empty($_POST["save"])) {
 	} else {
 		$v_shell = "nologin";
 	}
+	if (!empty($_POST["v_shell_jail_enabled"])) {
+		$v_shell_jail_enabled = quoteshellarg($_POST["v_shell_jail_enabled"]);
+	} else {
+		$v_shell_jail_enabled = "no";
+	}
 	$v_web_domains = quoteshellarg($_POST["v_web_domains"]);
 	$v_web_aliases = quoteshellarg($_POST["v_web_aliases"]);
 	$v_dns_domains = quoteshellarg($_POST["v_dns_domains"]);
@@ -241,6 +273,10 @@ if (!empty($_POST["save"])) {
 	$v_backups = quoteshellarg($_POST["v_backups"]);
 	$v_disk_quota = quoteshellarg($_POST["v_disk_quota"]);
 	$v_bandwidth = quoteshellarg($_POST["v_bandwidth"]);
+	$v_cpu_quota = quoteshellarg($_POST["v_cpu_quota"]);
+	$v_cpu_quota_period = quoteshellarg($_POST["v_cpu_quota_period"]);
+	$v_memory_limit = quoteshellarg($_POST["v_memory_limit"]);
+	$v_swap_limit = quoteshellarg($_POST["v_swap_limit"]);
 	$v_ns1 = !empty($_POST["v_ns1"]) ? trim($_POST["v_ns1"], ".") : "";
 	$v_ns2 = !empty($_POST["v_ns2"]) ? trim($_POST["v_ns2"], ".") : "";
 	$v_ns3 = !empty($_POST["v_ns3"]) ? trim($_POST["v_ns3"], ".") : "";
@@ -287,9 +323,14 @@ if (!empty($_POST["save"])) {
 	$pkg .= "DATABASES=" . $v_databases . "\n";
 	$pkg .= "CRON_JOBS=" . $v_cron_jobs . "\n";
 	$pkg .= "DISK_QUOTA=" . $v_disk_quota . "\n";
+	$pkg .= "CPU_QUOTA=" . $v_cpu_quota . "\n";
+	$pkg .= "CPU_QUOTA_PERIOD=" . $v_cpu_quota_period . "\n";
+	$pkg .= "MEMORY_LIMIT=" . $v_memory_limit . "\n";
+	$pkg .= "SWAP_LIMIT=" . $v_swap_limit . "\n";
 	$pkg .= "BANDWIDTH=" . $v_bandwidth . "\n";
 	$pkg .= "NS=" . $v_ns . "\n";
 	$pkg .= "SHELL=" . $v_shell . "\n";
+	$pkg .= "SHELL_JAIL_ENABLED=" . $v_shell_jail_enabled . "\n";
 	$pkg .= "BACKUPS=" . $v_backups . "\n";
 	$pkg .= "TIME=" . $v_time . "\n";
 	$pkg .= "DATE=" . $v_date . "\n";

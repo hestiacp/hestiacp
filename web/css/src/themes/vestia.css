@@ -241,15 +241,6 @@ h1 {
 	}
 }
 
-/* Spinner
-   ========================================================================== */
-
-.spinner-overlay {
-	& .fas {
-		box-shadow: 0 2px 11px 0 rgb(0 0 0 / 50%);
-	}
-}
-
 /* Buttons
    ========================================================================== */
 
@@ -388,10 +379,10 @@ h1 {
 	border-radius: 0;
 }
 
-/* Collapse component
+/* Box collapse component
    ========================================================================== */
 
-.collapse-header {
+.box-collapse-header {
 	background: #fafafa;
 	box-shadow: none;
 	color: #444;
@@ -429,8 +420,8 @@ h1 {
 /* Login
    ========================================================================== */
 
-.body-login,
-.body-reset {
+.page-login,
+.page-reset {
 	background: #ededed;
 }
 
@@ -441,7 +432,9 @@ h1 {
 
 	@media (--viewport-small) {
 		background-color: rgb(255 255 255 / 100%);
-		box-shadow: 0 2px 5px rgb(0 0 0 / 30%), inset 0 0 2px rgb(255 255 255);
+		box-shadow:
+			0 2px 5px rgb(0 0 0 / 30%),
+			inset 0 0 2px rgb(255 255 255);
 		border-radius: 0;
 	}
 }

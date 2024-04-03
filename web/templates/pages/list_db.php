@@ -186,7 +186,7 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
 									<a
 										class="units-table-row-action-link"
 										href="<?= $db_myadmin_link?>hestia-sso.php?database=<?= $key ?>&user=<?= $user_plain?>&exp=<?= $time?>&hestia_token=<?=password_hash($key.$user_plain.$_SESSION['user_combined_ip'].$time.$_SESSION['PHPMYADMIN_KEY'], PASSWORD_DEFAULT) ?>"
-										title="phpMyAdmin"
+										title="phpMyAdmin" target="_blank"
 									>
 										<i class="fas fa-right-to-bracket icon-orange"></i>
 										<span class="u-hide-desktop">phpMyAdmin</span>
@@ -259,12 +259,10 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
 		<?php } ?>
 	</div>
 
-</div>
-
-<footer class="app-footer">
-	<div class="container app-footer-inner">
+	<div class="units-table-footer">
 		<p>
 			<?php printf(ngettext("%d database", "%d databases", $i), $i); ?>
 		</p>
 	</div>
-</footer>
+
+</div>

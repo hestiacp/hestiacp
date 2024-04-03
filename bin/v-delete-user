@@ -36,7 +36,7 @@ source_conf "$HESTIA/conf/hestia.conf"
 check_args '1' "$#" 'USER [RESTART]'
 is_format_valid 'user'
 is_object_valid 'user' 'USER' "$user"
-if [ "$user" = 'admin' ]; then
+if [ "$user" = "$ROOT_USER" ]; then
 	exit
 fi
 
@@ -89,6 +89,9 @@ sed -i "/ $user$/d" "$HESTIA/data/queue/traffic.pipe"
 # Deleting sftp jail
 $BIN/v-delete-user-sftp-jail "$user"
 
+# Deleting ssh jail
+$BIN/v-delete-user-ssh-jail "$user"
+
 # Deleting system user
 /usr/sbin/userdel -f "$user" >> /dev/null 2>&1
 if [ $? -ne 0 ]; then
@@ -110,8 +113,8 @@ rm -f /var/spool/cron/crontabs/$user
 rm -rf $USER_DATA
 
 # Updating admin counter
-if [ "$user" != 'admin' ]; then
-	decrease_user_value 'admin' '$U_USERS'
+if [ "$user" != "$ROOT_USER" ]; then
+	decrease_user_value "$ROOT_USER" '$U_USERS'
 fi
 
 #----------------------------------------------------------#

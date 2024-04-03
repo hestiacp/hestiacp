@@ -7,7 +7,7 @@
 			</a>
 		</div>
 		<div class="toolbar-buttons">
-			<?php if (($user_plain == "admin" && $accept === "true") || $user_plain !== "admin") { ?>
+			<?php if (($_SESSION["role"] == "admin" && $accept === "true") || $_SESSION["role"] !== "admin") { ?>
 				<button type="submit" class="button" form="main-form">
 					<i class="fas fa-floppy-disk icon-purple"></i><?= _("Save") ?>
 				</button>
@@ -33,19 +33,19 @@
 		<div class="form-container">
 			<h1 class="u-mb20"><?= _("Add DNS Zone") ?></h1>
 			<?php show_alert_message($_SESSION); ?>
-			<?php if ($user_plain == "admin" && $accept !== "true") { ?>
+			<?php if ($_SESSION["role"] == "admin" && $accept !== "true") { ?>
 				<div class="alert alert-danger" role="alert">
 					<i class="fas fa-exclamation"></i>
 					<p><?= htmlify_trans(sprintf(_("It is strongly advised to {create a standard user account} before adding %s to the server due to the increased privileges the admin account possesses and potential security risks."), _('a dns domain')), '</a>', '<a href="/add/user/">'); ?></p>
 				</div>
 			<?php } ?>
-			<?php if ($user_plain == "admin" && empty($accept)) { ?>
+			<?php if ($_SESSION["role"] == "admin" && empty($accept)) { ?>
 				<div class="u-side-by-side u-mt20">
 					<a href="/add/user/" class="button u-width-full u-mr10"><?= _("Add User") ?></a>
 					<a href="/add/dns/?accept=true" class="button button-danger u-width-full u-ml10"><?= _("Continue") ?></a>
 				</div>
 			<?php } ?>
-			<?php if (($user_plain == "admin" && $accept === "true") || $user_plain !== "admin") { ?>
+			<?php if (($_SESSION["role"] == "admin" && $accept === "true") || $_SESSION["role"] !== "admin") { ?>
 				<div class="u-mb10">
 					<label for="v_domain" class="form-label"><?= _("Domain") ?></label>
 					<input type="text" class="form-control" name="v_domain" id="v_domain" value="<?= htmlentities(trim($v_domain, "'")) ?>" required>
@@ -89,7 +89,7 @@
 						<?= _("Advanced Options") ?>
 					</button>
 				</div>
-				<div x-cloak  x-show="showAdvanced" id="advtable">
+				<div x-cloak x-show="showAdvanced" id="advtable">
 					<?php if ($_SESSION["DNS_CLUSTER_SYSTEM"] == "hestia-zone" && $_SESSION["SUPPORT_DNSSEC"] == "yes") { ?>
 						<div class="form-check u-mb10">
 							<input class="form-check-input" type="checkbox" name="v_dnssec" id="v_dnssec" value="yes" <?php if ($v_dnssec === 'yes'){ echo ' checked'; } ?>>
@@ -115,44 +115,7 @@
 					<div class="u-mb5">
 						<input type="text" class="form-control" name="v_ns2" value="<?= htmlentities(trim($v_ns2, "'")) ?>">
 					</div>
-					<?php
-						if ($v_ns3) {
-							echo '<div class="u-side-by-side u-mb5">
-								<input type="text" class="form-control" name="v_ns3" value="' . htmlentities(trim($v_ns3, "'")) . '">
-								<span class="form-link form-link-danger u-ml10 js-remove-ns">' . _('Delete') . '</span>
-							</div>';
-						}
-						if ($v_ns4) {
-							echo '<div class="u-side-by-side u-mb5">
-								<input type="text" class="form-control" name="v_ns4" value="' . htmlentities(trim($v_ns4, "'")) . '">
-								<span class="form-link form-link-danger u-ml10 js-remove-ns">' . _('Delete') . '</span>
-							</div>';
-						}
-						if ($v_ns5) {
-							echo '<div class="u-side-by-side u-mb5">
-								<input type="text" class="form-control" name="v_ns5" value="' . htmlentities(trim($v_ns5, "'")) . '">
-								<span class="form-link form-link-danger u-ml10 js-remove-ns">' . _('Delete') . '</span>
-							</div>';
-						}
-						if ($v_ns6) {
-							echo '<div class="u-side-by-side u-mb5">
-								<input type="text" class="form-control" name="v_ns6" value="' . htmlentities(trim($v_ns6, "'")) . '">
-								<span class="form-link form-link-danger u-ml10 js-remove-ns">' . _('Delete') . '</span>
-							</div>';
-						}
-						if ($v_ns7) {
-							echo '<div class="u-side-by-side u-mb5">
-								<input type="text" class="form-control" name="v_ns7" value="' . htmlentities(trim($v_ns7, "'")) . '">
-								<span class="form-link form-link-danger u-ml10 js-remove-ns">' . _('Delete') . '</span>
-							</div>';
-						}
-						if ($v_ns8) {
-							echo '<div class="u-side-by-side u-mb5">
-								<input type="text" class="form-control" name="v_ns8" value="' . htmlentities(trim($v_ns8, "'")) . '">
-								<span class="form-link form-link-danger u-ml10 js-remove-ns">' . _('Delete') . '</span>
-							</div>';
-						}
-					?>
+					<?php require $_SERVER["HESTIA"] . "/web/templates/includes/extra-ns-fields.php"; ?>
 					<button type="button" class="form-link u-mt20 js-add-ns" <?php if ($v_ns8) echo 'style="display:none;"'; ?>>
 						<?= _("Add Name Server") ?>
 					</button>

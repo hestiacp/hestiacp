@@ -10,7 +10,7 @@ class MediaWikiSetup extends BaseSetup {
 		"name" => "MediaWiki",
 		"group" => "cms",
 		"enabled" => true,
-		"version" => "1.40.0",
+		"version" => "1.41.1",
 		"thumbnail" => "MediaWiki-2020-logo.svg", //Max size is 300px by 300px
 	];
 
@@ -26,7 +26,7 @@ class MediaWikiSetup extends BaseSetup {
 		"database" => true,
 		"resources" => [
 			"archive" => [
-				"src" => "https://releases.wikimedia.org/mediawiki/1.40/mediawiki-1.40.0.zip",
+				"src" => "https://releases.wikimedia.org/mediawiki/1.41/mediawiki-1.41.1.zip",
 			],
 		],
 		"server" => [
@@ -34,7 +34,7 @@ class MediaWikiSetup extends BaseSetup {
 				"template" => "default",
 			],
 			"php" => [
-				"supported" => ["7.4", "8.0"],
+				"supported" => ["8.0", "8.1", "8.2"],
 			],
 		],
 	];
@@ -60,7 +60,7 @@ class MediaWikiSetup extends BaseSetup {
 
 		$this->appcontext->runUser(
 			"v-copy-fs-directory",
-			[$this->getDocRoot($this->extractsubdir . "/mediawiki-1.39.2/."), $this->getDocRoot()],
+			[$this->getDocRoot($this->extractsubdir . "/mediawiki-1.41.1/."), $this->getDocRoot()],
 			$result,
 		);
 

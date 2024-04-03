@@ -247,3 +247,4 @@ if (empty($_GET["action"])) {
 		require_once "../templates/pages/login/reset_3.php";
 	}
 }
+require_once "../templates/includes/login-footer.php";

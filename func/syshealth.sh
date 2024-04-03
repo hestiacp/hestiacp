@@ -403,7 +403,7 @@ function syshealth_repair_system_config() {
 	# Theme editor
 	if [[ -z $(check_key_exists 'POLICY_USER_CHANGE_THEME') ]]; then
 		echo "[ ! ] Adding missing variable to hestia.conf: POLICY_USER_CHANGE_THEME ('yes')"
-		$BIN/v-change-sys-config-value "POLICY_USER_CHANGE_THEME" "true"
+		$BIN/v-change-sys-config-value "POLICY_USER_CHANGE_THEME" "yes"
 	fi
 	# Protect admin user
 	if [[ -z $(check_key_exists 'POLICY_SYSTEM_PROTECTED_ADMIN') ]]; then
@@ -428,12 +428,12 @@ function syshealth_repair_system_config() {
 	# Allow users to edit web templates
 	if [[ -z $(check_key_exists 'POLICY_USER_EDIT_WEB_TEMPLATES') ]]; then
 		echo "[ ! ] Adding missing variable to hestia.conf: POLICY_USER_EDIT_WEB_TEMPLATES ('yes')"
-		$BIN/v-change-sys-config-value "POLICY_USER_EDIT_WEB_TEMPLATES" "true"
+		$BIN/v-change-sys-config-value "POLICY_USER_EDIT_WEB_TEMPLATES" "yes"
 	fi
 	# View user logs
 	if [[ -z $(check_key_exists 'POLICY_USER_VIEW_LOGS') ]]; then
 		echo "[ ! ] Adding missing variable to hestia.conf: POLICY_USER_VIEW_LOGS ('yes')"
-		$BIN/v-change-sys-config-value "POLICY_USER_VIEW_LOGS" "true"
+		$BIN/v-change-sys-config-value "POLICY_USER_VIEW_LOGS" "yes"
 	fi
 	# Allow users to login (read only) when suspended
 	if [[ -z $(check_key_exists 'POLICY_USER_VIEW_SUSPENDED') ]]; then
@@ -534,6 +534,14 @@ function syshealth_repair_system_config() {
 		echo "[ ! ] Adding missing variable to hestia.conf: POLICY_BACKUP_SUSPENDED_USERS ('no')"
 		$BIN/v-change-sys-config-value "POLICY_BACKUP_SUSPENDED_USERS" "no"
 	fi
+	if [[ -z $(check_key_exists 'ROOT_USER') ]]; then
+		echo "[ ! ] Adding missing variable to hestia.conf: ROOT_USER ('admin')"
+		$BIN/v-change-sys-config-value "ROOT_USER" "admin"
+	fi
+	if [[ -z $(check_key_exists 'DOMAINDIR_WRITABLE') ]]; then
+		echo "[ ! ] Adding missing variable to hestia.conf: DOMAINDIR_WRITABLE ('no')"
+		$BIN/v-change-sys-config-value "DOMAINDIR_WRITABLE" "no"
+	fi
 
 	touch $HESTIA/conf/hestia.conf.new
 	while IFS='= ' read -r lhs rhs; do
@@ -559,21 +567,28 @@ function syshealth_repair_system_config() {
 		cp $HESTIA/conf/hestia.conf.new $HESTIA/conf/hestia.conf
 		rm $HESTIA/conf/hestia.conf.new
 	fi
+
+	source_conf "$HESTIA/conf/hestia.conf"
 }
 
 # Repair System Cron Jobs
-# Add default cron jobs to "admin" user account's cron tab
+# Add default cron jobs to "hestiaweb" user account's cron tab
 function syshealth_repair_system_cronjobs() {
-	$BIN/v-add-cron-job 'admin' '*/2' '*' '*' '*' '*' "sudo $BIN/v-update-sys-queue restart" '' 'no'
-	$BIN/v-add-cron-job 'admin' '10' '00' '*' '*' '*' "sudo $BIN/v-update-sys-queue daily" '' 'no'
-	$BIN/v-add-cron-job 'admin' '15' '02' '*' '*' '*' "sudo $BIN/v-update-sys-queue disk" '' 'no'
-	$BIN/v-add-cron-job 'admin' '10' '00' '*' '*' '*' "sudo $BIN/v-update-sys-queue traffic" '' 'no'
-	$BIN/v-add-cron-job 'admin' '30' '03' '*' '*' '*' "sudo $BIN/v-update-sys-queue webstats" '' 'no'
-	$BIN/v-add-cron-job 'admin' '*/5' '*' '*' '*' '*' "sudo $BIN/v-update-sys-queue backup" '' 'no'
-	$BIN/v-add-cron-job 'admin' '10' '05' '*' '*' '*' "sudo $BIN/v-backup-users" '' 'no'
-	$BIN/v-add-cron-job 'admin' '20' '00' '*' '*' '*' "sudo $BIN/v-update-user-stats" '' 'no'
-	$BIN/v-add-cron-job 'admin' '*/5' '*' '*' '*' '*' "sudo $BIN/v-update-sys-rrd" '' 'no'
-	$BIN/v-restart-cron
+	min=$(gen_pass '012345' '2')
+	hour=$(gen_pass '1234567' '1')
+	echo "MAILTO=$email" > /var/spool/cron/crontabs/hestiaweb
+	echo "CONTENT_TYPE=\"text/plain; charset=utf-8\"" >> /var/spool/cron/crontabs/hestiaweb
+	echo "*/2 * * * * sudo /usr/local/hestia/bin/v-update-sys-queue restart" >> /var/spool/cron/crontabs/hestiaweb
+	echo "10 00 * * * sudo /usr/local/hestia/bin/v-update-sys-queue daily" >> /var/spool/cron/crontabs/hestiaweb
+	echo "15 02 * * * sudo /usr/local/hestia/bin/v-update-sys-queue disk" >> /var/spool/cron/crontabs/hestiaweb
+	echo "10 00 * * * sudo /usr/local/hestia/bin/v-update-sys-queue traffic" >> /var/spool/cron/crontabs/hestiaweb
+	echo "30 03 * * * sudo /usr/local/hestia/bin/v-update-sys-queue webstats" >> /var/spool/cron/crontabs/hestiaweb
+	echo "*/5 * * * * sudo /usr/local/hestia/bin/v-update-sys-queue backup" >> /var/spool/cron/crontabs/hestiaweb
+	echo "10 05 * * * sudo /usr/local/hestia/bin/v-backup-users" >> /var/spool/cron/crontabs/hestiaweb
+	echo "20 00 * * * sudo /usr/local/hestia/bin/v-update-user-stats" >> /var/spool/cron/crontabs/hestiaweb
+	echo "*/5 * * * * sudo /usr/local/hestia/bin/v-update-sys-rrd" >> /var/spool/cron/crontabs/hestiaweb
+	echo "$min $hour * * * sudo /usr/local/hestia/bin/v-update-letsencrypt-ssl" >> /var/spool/cron/crontabs/hestiaweb
+	echo "41 4 * * * sudo /usr/local/hestia/bin/v-update-sys-hestia-all" >> /var/spool/cron/crontabs/hestiaweb
 }
 
 # Adapt Port Listing in HESTIA NGINX Backend
@@ -611,4 +626,23 @@ function syshealth_adapt_hestia_nginx_listen_ports() {
 	cmp --silent "$NGINX_BCONF" "$NGINX_BCONF_TEMP"
 	[ $? -ne 0 ] && NGINX_BCONF_CHANGED="yes"
 	rm -f "$NGINX_BCONF_TEMP" > /dev/null 2>&1
+}
+
+syshealth_adapt_nginx_resolver() {
+	NGINX_CONF="/usr/local/hestia/nginx/conf/nginx.conf"
+	if grep -qw "1.0.0.1 8.8.4.4 1.1.1.1 8.8.8.8" "$NGINX_CONF"; then
+		for nameserver in $(grep -is '^nameserver' /etc/resolv.conf | cut -d' ' -f2 | tr '\r\n' ' ' | xargs); do
+			if echo "$nameserver" | grep -Pq "^(\d{1,3}\.){3}\d{1,3}$"; then
+				if [ -z "$resolver" ]; then
+					resolver="$nameserver"
+				else
+					resolver="$resolver $nameserver"
+				fi
+			fi
+		done
+
+		if [ -n "$resolver" ]; then
+			sed -i "s/1.0.0.1 8.8.4.4 1.1.1.1 8.8.8.8/$resolver/g" "$NGINX_CONF"
+		fi
+	fi
 }

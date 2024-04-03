@@ -99,25 +99,32 @@
 											x-bind:id="`notification-${notification.ID}`"
 											x-bind:class="notification.ACK && 'unseen'"
 											class="top-bar-notification-item"
+											x-data="{ open: true }"
+											x-show="open"
+											x-collapse
 										>
-											<div class="top-bar-notification-header">
-												<p x-text="notification.TOPIC" class="top-bar-notification-title"></p>
-												<button
-													x-on:click="remove(notification.ID)"
-													type="button"
-													class="top-bar-notification-delete"
-													title="<?= _("Delete notification") ?>"
-												>
-													<i class="fas fa-xmark"></i>
-												</button>
+											<div class="top-bar-notification-inner">
+												<div class="top-bar-notification-header">
+													<p x-text="notification.TOPIC" class="top-bar-notification-title"></p>
+													<button
+														x-on:click="open = false; setTimeout(() => remove(notification.ID), 300);"
+														type="button"
+														class="top-bar-notification-delete"
+														title="<?= _("Delete notification") ?>"
+													>
+														<i class="fas fa-xmark"></i>
+														<span class="u-hidden-visually"><?= _("Delete notification") ?></span>
+													</button>
+												</div>
+												<div class="top-bar-notification-content" x-html="notification.NOTICE"></div>
+												<p class="top-bar-notification-timestamp">
+													<time
+														:datetime="`${notification.TIMESTAMP_ISO}`"
+														x-bind:title="`${notification.TIMESTAMP_TITLE}`"
+														x-text="`${notification.TIMESTAMP_TEXT}`"
+													></time>
+												</p>
 											</div>
-											<div class="top-bar-notification-content" x-html="notification.NOTICE"></div>
-											<p class="top-bar-notification-timestamp">
-												<time
-													:datetime="`${notification.DATE}T${notification.TIME}`"
-													x-text="`${notification.TIME} ${notification.DATE}`"
-												></time>
-											</p>
 										</li>
 									</template>
 								</ul>

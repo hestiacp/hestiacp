@@ -34,7 +34,7 @@ Currently HestiaCP only support restoring backups made using:
 
 ## How to edit the number of backups?
 
-To edit the number of backups, please read the [Packages](../user-guide/packages.md) and [Users](../user-guide/users.md) documentation. You will need to create or edit a package, and assign it to the desired user.
+To edit the number of backups, please read the [Packages](../user-guide/packages) and [Users](../user-guide/users) documentation. You will need to create or edit a package, and assign it to the desired user.
 
 ## Not enough disk space available to preform the backup
 
@@ -103,7 +103,7 @@ sudo -v
 curl https://rclone.org/install.sh | sudo bash
 ```
 
-Once the download and installation is complete, run `rclone config` and then `n`. Follow the instruction on the screen, then save when completed.
+Once the download and installation is complete, run `rclone config` as the `root` user and then select the option `n`. Follow the instruction on the screen, then save when completed.
 
 To verify if it is working run as intended:
 

@@ -17,7 +17,7 @@ export default function handleSyncEmailValues() {
 
 	emailInput.addEventListener(
 		'input',
-		debounce(() => syncEmailValues())
+		debounce(() => syncEmailValues()),
 	);
 	sendWelcomeEmailCheckbox.addEventListener('change', syncEmailValues);
 }

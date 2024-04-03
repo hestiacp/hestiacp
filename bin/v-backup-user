@@ -174,7 +174,7 @@ start_time=$(date '+%s')
 
 # Set notification email and subject
 subj="$user → backup failed"
-email=$(grep CONTACT "$HESTIA/data/users/admin/user.conf" | cut -f 2 -d \')
+email=$(grep CONTACT "$HESTIA/data/users/$ROOT_USER/user.conf" | cut -f 2 -d \')
 
 # Validate available disk space (take usage * 2, due to the backup handling)
 let u_disk=$(($(get_user_disk_usage) * 2))
@@ -390,9 +390,9 @@ if [ -n "$WEB_SYSTEM" ] && [ "$WEB" != '*' ]; then
 
 		# Backup files
 		if [ "$BACKUP_MODE" = 'zstd' ]; then
-			tar "${fargs[@]}" -cpf- * | pzstd -"$BACKUP_GZIP" - > $tmpdir/web/$domain/domain_data.tar.zst
+			tar "${fargs[@]}" -cpf- . | pzstd -"$BACKUP_GZIP" - > $tmpdir/web/$domain/domain_data.tar.zst
 		else
-			tar "${fargs[@]}" -cpf- * | gzip -"$BACKUP_GZIP" - > $tmpdir/web/$domain/domain_data.tar.gz
+			tar "${fargs[@]}" -cpf- . | gzip -"$BACKUP_GZIP" - > $tmpdir/web/$domain/domain_data.tar.gz
 		fi
 	done
 
@@ -637,7 +637,7 @@ fi
 
 # User Directories
 if [ "$USER" != '*' ]; then
-	echo -e "\n-- User Dir --" | tee -a $BACKUP/$user.log
+	echo -e "\n-- USER DIRECTORIES --" | tee -a $BACKUP/$user.log
 	mkdir $tmpdir/user_dir
 	cd $HOMEDIR/$user
 

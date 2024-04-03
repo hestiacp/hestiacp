@@ -33,7 +33,7 @@ check_hestia_demo_mode
 
 if [ ! -d "$HESTIA/data/keys/" ]; then
 	mkdir -p $HESTIA/data/keys/
-	chown admin:root $HESTIA/data/keys/
+	chown hestiaweb:root $HESTIA/data/keys/
 	chmod 750 $HESTIA/data/keys/
 fi
 

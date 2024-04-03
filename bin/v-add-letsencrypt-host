@@ -30,7 +30,7 @@ if [ -z $domain ]; then
 	domain=$HOSTNAME
 fi
 user="$($BIN/v-search-domain-owner "$domain" web)"
-[[ -z "$user" ]] && user="admin"
+[[ -z "$user" ]] && user="$ROOT_USER"
 
 USER_DATA=$HESTIA/data/users/$user
 

@@ -384,6 +384,48 @@ function check_ip_not_banned(){
 	assert_output --partial 'Error: invalid user format'
 }
 
+@test "User: Add new user Failed 4" {
+	run v-add-user '1234'  $user $user@hestiacp2.com default "Super Test"
+	assert_failure $E_INVALID
+	assert_output --partial 'Error: invalid user format'
+}
+
+@test "User: Add new user Failed 5" {
+	run v-add-user '1aap'  $user $user@hestiacp2.com default "Super Test"
+	assert_failure $E_INVALID
+	assert_output --partial 'Error: invalid user format'
+}
+
+@test "User: Add new user Failed 6" {
+	run v-add-user 'ib_Buffer'  $user $user@hestiacp2.com default "Super Test"
+	assert_failure $E_INVALID
+	assert_output --partial 'Error: The user name'
+}
+
+@test "User: Add new user Success 1" {
+	run v-add-user 'jaap01'  $user $user@hestiacp2.com default "Super Test"
+	assert_success
+	refute_output
+}
+
+@test "User: Add new user Success 1 Delete" {
+	run v-delete-user jaap01
+	assert_success
+	refute_output
+}
+
+@test "User: Add new user Success 2" {
+	run v-add-user 'buffer'  $user $user@hestiacp2.com default "Super Test"
+	assert_success
+	refute_output
+}
+
+@test "User: Add new user Success 2 Delete" {
+	run v-delete-user buffer
+	assert_success
+	refute_output
+}
+
 @test "User: Change user password" {
     run v-change-user-password "$user" "$userpass2"
     assert_success
@@ -409,29 +451,43 @@ function check_ip_not_banned(){
 }
 
 @test "User: Change user shell" {
-    run v-change-user-shell $user bash
+    run v-change-user-shell $user bash no
     assert_success
     refute_output
 
     run stat -c '%U' /home/$user
     assert_output --partial "$user"
+		mount_file=$(systemd-escape -p --suffix=mount "/srv/jail/$user/home")
+		assert_file_not_exist /etc/systemd/system/$mount_file
 }
 
 @test "User: Change user invalid shell" {
-    run v-change-user-shell $user bashinvalid
+    run v-change-user-shell $user bashinvalid no
     assert_failure $E_INVALID
     assert_output --partial 'shell bashinvalid is not valid'
 }
 
 @test "User: Change user nologin" {
-    run v-change-user-shell $user nologin
+    run v-change-user-shell $user nologin no
     assert_success
     refute_output
 
     run stat -c '%U' /home/$user
     assert_output --partial 'root'
+		mount_file=$(systemd-escape -p --suffix=mount "/srv/jail/$user/home/$user")
+		assert_file_exist /etc/systemd/system/$mount_file
 }
 
+@test "User: Change user bash with jail" {
+    run v-change-user-shell $user bash yes
+    assert_success
+    refute_output
+
+    run stat -c '%U' /home/$user
+    assert_output --partial 'root'
+		mount_file=$(systemd-escape -p --suffix=mount "/srv/jail/$user/home/$user")
+		assert_file_exist /etc/systemd/system/$mount_file
+}
 
 @test "User: Change user default ns" {
     run v-change-user-ns $user ns0.com ns1.com ns2.com ns3.com
@@ -1308,6 +1364,11 @@ function check_ip_not_banned(){
     refute_output
 }
 
+@test "DNS: Add domain record *.domain.com with ID 0" {
+		run v-add-dns-record $user $domain '*' A 198.18.0.125 '' 0
+		assert_failure $E_INVALID
+}
+
 @test "DNS: Change DNS record" {
   run v-change-dns-record $user $domain 20 test A 198.18.0.125 "" "" 1500
   assert_success
@@ -1625,6 +1686,19 @@ function check_ip_not_banned(){
 	refute_output
 }
 
+@test "MAIL: Add account 5" {
+		run v-add-mail-account $user $domain 01 "$userpass2"
+		assert_success
+		assert_file_contains /etc/exim4/domains/$domain/limits "01@$domain"
+		refute_output
+}
+
+@test "MAIL: Add account 6" {
+		run v-add-mail-account $user $domain "0aa" "$userpass2"
+		assert_success
+		assert_file_contains /etc/exim4/domains/$domain/limits "0aa@$domain"
+		refute_output
+}
 
 @test "MAIL: Add account alias Invalid length" {
 	run v-add-mail-account-alias $user $domain test 'hestiacp-realy-rocks-but-i-want-to-have-feature-xyz-and-i-want-it-now'
@@ -1835,6 +1909,7 @@ function check_ip_not_banned(){
     # validate_database mysql database_name database_user password
     validate_database mysql $database $dbuser 1234
 }
+
 @test "MYSQL: Add Database (Duplicate)" {
     run v-add-database $user database dbuser 1234 mysql
     assert_failure $E_EXISTS

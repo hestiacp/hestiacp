@@ -12,6 +12,7 @@ To manage your cron jobs, navigate to the **Cron <i class="fas fa-fw fa-clock"><
 1. Click the **<i class="fas fa-fw fa-plus-circle"></i> Add job** button.
 2. Enter the command you want to execute.
 3. Enter the schedule on which you want to execute the command. You can use the generator to help you, or a tool such as [Crontab.guru](https://crontab.guru/).
+4. **Important.** If you use a normal user then you cannot use sudo in cron jobs, Hestia does not add normal users to the sudoers configuration file.
 
 ## Editing a cron job
 
@@ -28,3 +29,11 @@ To manage your cron jobs, navigate to the **Cron <i class="fas fa-fw fa-clock"><
 
 1. Hover over the job you want to delete.
 2. Click the <i class="fas fa-fw fa-trash"><span class="visually-hidden">delete</span></i> icon on the right of the job’s command.
+
+## Example commands
+
+If you want to run a php script for a user, you can enter the command like this, using the full binary path of the application to run:
+
+```bash
+/usr/bin/php8.2 -f /home/user/web/domain.example.com/public_html/cron.php
+```

@@ -12,7 +12,7 @@ Source0:        hestia-%{version}.tar.gz
 Source1:        hestia.service
 Vendor:         hestiacp.com
 Requires:       redhat-release >= 8
-Requires:       bash, chkconfig, gawk, sed, acl, sysstat, (setpriv or util-linux), zstd, jq
+Requires:       bash, chkconfig, gawk, sed, acl, sysstat, (setpriv or util-linux), zstd, jq, jailkit
 Conflicts:      vesta
 Provides:       hestia = %{version}
 BuildRequires:  systemd
@@ -36,7 +36,7 @@ cp -R %{_builddir}/hestiacp/* %{buildroot}/usr/local/hestia/
 
 %pre
 # Run triggers only on updates
-if [ -e "/usr/local/hestia/data/users/admin" ]; then
+if [ -e "/usr/local/hestia/data/users/" ]; then
     # Validate version number and replace if different
     HESTIA_V=$(rpm --queryformat="%{VERSION}" -q hestia)
     if [ ! "$HESTIA_V" = "%{version}" ]; then
@@ -56,7 +56,7 @@ if [ ! -e /etc/profile.d/hestia.sh ]; then
     source /etc/profile.d/hestia.sh
 fi
 
-if [ -e "/usr/local/hestia/data/users/admin" ]; then
+if [ -e "/usr/local/hestia/data/users/" ]; then
     ###############################################################
     #                Initialize functions/variables               #
     ###############################################################

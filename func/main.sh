@@ -707,17 +707,19 @@ sync_cron_jobs() {
 # Validates Local part email and mail alias
 is_localpart_format_valid() {
 	if [ ${#1} -eq 1 ]; then
-		if ! [[ "$1" =~ ^^[[:alnum:]]$ ]]; then
+		if ! [[ "$1" =~ ^[[:alnum:]]$ ]]; then
 			check_result "$E_INVALID" "invalid $2 format :: $1"
 		fi
 	else
 		if [ -n "$3" ]; then
 			maxlenght=$(($3 - 2))
-			if ! [[ "$1" =~ ^[[:alnum:]][-|\.|_[:alnum:]]{0,$maxlenght}[[:alnum:]]$ ]]; then
+			# Allow leading and trailing special characters by adjusting the regex
+			if ! [[ "$1" =~ ^[[:alnum:]_.-][[:alnum:]_.-]{0,$maxlenght}[[:alnum:]_.-]$ ]]; then
 				check_result "$E_INVALID" "invalid $2 format :: $1"
 			fi
 		else
-			if ! [[ "$1" =~ ^[[:alnum:]][-|\.|_[:alnum:]]{0,28}[[:alnum:]]$ ]]; then
+			# Allow leading and trailing special characters by adjusting the regex
+			if ! [[ "$1" =~ ^[[:alnum:]_.-][[:alnum:]_.-]{0,28}[[:alnum:]_.-]$ ]]; then
 				check_result "$E_INVALID" "invalid $2 format :: $1"
 			fi
 		fi

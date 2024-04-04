@@ -7,8 +7,9 @@ $oConfig = \RainLoop\Api::Config();
 
 // Change default login data / key
 $oConfig->Set("security", "admin_login", $argv[1]);
-$oConfig->Set("security", "admin_panel_key", $argv[1]);
-$oConfig->SetPassword($argv[2]);
+$oConfig->Set("security", "admin_panel_key", $argv[2]);
+$newPassword = new \SnappyMail\SensitiveString($argv[3]);
+$oConfig->SetPassword($newPassword);
 
 // Allow Contacts to be saved in database
 $oConfig->Set("contacts", "enable", "On");
@@ -16,7 +17,7 @@ $oConfig->Set("contacts", "allow_sync", "On");
 $oConfig->Set("contacts", "type", "mysql");
 $oConfig->Set("contacts", "pdo_dsn", "mysql:host=127.0.0.1;port=3306;dbname=snappymail");
 $oConfig->Set("contacts", "pdo_user", "snappymail");
-$oConfig->Set("contacts", "pdo_password", $argv[3]);
+$oConfig->Set("contacts", "pdo_password", $argv[4]);
 
 // Plugins
 $oConfig->Set("plugins", "enable", "On");

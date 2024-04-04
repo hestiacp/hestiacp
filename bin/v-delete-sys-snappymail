@@ -1,0 +1,89 @@
+#!/bin/bash
+# info: Delete SnappyMail webmail client
+# options: None
+#
+# This function removes the SnappyMail webmail client.
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+# upgrade config file
+source "$HESTIA/install/upgrade/upgrade.conf"
+
+# Folder paths
+SM_INSTALL_DIR="/var/lib/snappymail"
+SM_CONFIG_DIR="/etc/snappymail"
+SM_LOG="/var/log/snappymail"
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+# Checking root permissions
+if [ "x$(id -u)" != 'x0' ]; then
+	echo "ERROR: v-delete-sys-snappymail can only be executed by the root user"
+	exit 10
+fi
+
+# Ensure that $HESTIA (/usr/local/hestia/) and other variables are valid.
+if [ -z "$HESTIA" ]; then
+	HESTIA="/usr/local/hestia"
+fi
+
+if [ -z "$HOMEDIR" ] || [ -z "$HESTIA_INSTALL_DIR" ]; then
+	echo "ERROR: Environment variables not present, uninstallation aborted."
+	exit 2
+fi
+
+if [ -z "$(echo "$DB_SYSTEM" | grep -w 'mysql')" ]; then
+	echo "ERROR: Mysql not available. Uninstallation aborted"
+	exit 2
+fi
+
+# Get current version
+if [ -f "/var/lib/snappymail/data/VERSION" ]; then
+	version=$(cat /var/lib/snappymail/data/VERSION)
+else
+	echo "Error: SnappyMail is not installed"
+	exit 2
+fi
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+rm -f -r $SM_INSTALL_DIR
+rm -f -r $SM_CONFIG_DIR
+rm ~/.snappymail
+
+if [ -f '/usr/bin/mariadb' ]; then
+	mariadb -e "DROP DATABASE snappymail" 2>&1
+	mariadb -e "DROP USER snappymail@localhost"
+else
+	mysql -e "DROP DATABASE snappymail" 2>&1
+	mysql -e "DROP USER snappymail@localhost"
+fi
+# Updating hestia.conf
+if [ -z "$(echo "$WEBMAIL_SYSTEM" | grep -w 'snappymail')" ]; then
+	# remove snappymail from webmail list and make sure the string doesn't start with a comma
+	$BIN/v-change-sys-config-value 'WEBMAIL_SYSTEM' "$(echo "$WEBMAIL_SYSTEM" | sed "s/snappymail//g" | sed 's/^,//g')"
+fi
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+$BIN/v-log-action "system" "Info" "Plugins" "SnappyMail removed (Version: $version)."
+
+log_event "$OK" "$ARGUMENTS"

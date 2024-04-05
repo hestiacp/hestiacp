@@ -1497,6 +1497,19 @@
 						</select>
 					</div>
 					<div class="u-mb10">
+						<label for="v_resources_limit" class="form-label">
+							<?= _("Limit System Resources") ?>
+						</label>
+						<select class="form-select" name="v_resources_limit" id="v_resources_limit">
+							<option value="no">
+								<?= _("No") ?>
+							</option>
+							<option value="yes" <?= $_SESSION["RESOURCES_LIMIT"] == "yes" ? "selected" : "" ?>>
+								<?= _("Yes") ?>
+							</option>
+						</select>
+					</div>
+					<div class="u-mb10">
 						<label for="v_quota" class="form-label">
 							<?= _("File System Disk Quota") ?>
 						</label>

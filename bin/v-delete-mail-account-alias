@@ -42,7 +42,7 @@ is_object_valid 'user' 'USER' "$user"
 is_object_valid 'mail' 'DOMAIN' "$domain"
 is_object_valid "mail/$domain" 'ACCOUNT' "$account"
 aliases=$(get_object_value "mail/$domain" 'ACCOUNT' "$account" '$ALIAS')
-if [ -z "$(echo $aliases | grep -w $malias)" ]; then
+if [ -z "$(echo $aliases | grep -w -e $malias)" ]; then
 	echo "Error: alias $malias doesn't exist"
 	log_event "$E_NOTEXIST $ARGUMENTS"
 	exit "$E_NOTEXIST"

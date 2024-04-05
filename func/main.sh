@@ -714,17 +714,19 @@ sync_cron_jobs() {
 # Validates Local part email and mail alias
 is_localpart_format_valid() {
 	if [ ${#1} -eq 1 ]; then
-		if ! [[ "$1" =~ ^^[[:alnum:]]$ ]]; then
+		if ! [[ "$1" =~ ^[[:alnum:]]$ ]]; then
 			check_result "$E_INVALID" "invalid $2 format :: $1"
 		fi
 	else
 		if [ -n "$3" ]; then
 			maxlenght=$(($3 - 2))
-			if ! [[ "$1" =~ ^[[:alnum:]][-|\.|_[:alnum:]]{0,$maxlenght}[[:alnum:]]$ ]]; then
+			# Allow leading and trailing special characters by adjusting the regex
+			if ! [[ "$1" =~ ^[[:alnum:]_.-][[:alnum:]_.-]{0,$maxlenght}[[:alnum:]_.-]$ ]]; then
 				check_result "$E_INVALID" "invalid $2 format :: $1"
 			fi
 		else
-			if ! [[ "$1" =~ ^[[:alnum:]][-|\.|_[:alnum:]]{0,28}[[:alnum:]]$ ]]; then
+			# Allow leading and trailing special characters by adjusting the regex
+			if ! [[ "$1" =~ ^[[:alnum:]_.-][[:alnum:]_.-]{0,28}[[:alnum:]_.-]$ ]]; then
 				check_result "$E_INVALID" "invalid $2 format :: $1"
 			fi
 		fi
@@ -1154,6 +1156,34 @@ is_cron_format_valid() {
 	done
 	if [ "$check_format" != 'ok' ]; then
 		check_result "$E_INVALID" "invalid $2 format :: $1"
+	fi
+}
+
+# Validate CPU Quota:
+is_valid_cpu_quota() {
+	if [[ ! "$1" =~ ^[0-9]+%$ ]]; then
+		check_result "$E_INVALID" "Invalid CPU Quota format :: $1"
+	fi
+}
+
+# Validate CPU Quota Period:
+is_valid_cpu_quota_period() {
+	if [[ ! "$1" =~ ^[0-9]+(ms|s)$ ]]; then
+		check_result "$E_INVALID" "Invalid CPU Quota Period format :: $1"
+	fi
+}
+
+# Validate Memory Size:
+is_valid_memory_size() {
+	if [[ ! "$1" =~ ^[0-9]+[KMGTK]?$ ]]; then
+		check_result "$E_INVALID" "Invalid Memory Size format :: $1"
+	fi
+}
+
+# Validate Swap Size:
+is_valid_swap_size() {
+	if [[ ! "$1" =~ ^[0-9]+[KMGTK]?$ ]]; then
+		check_result "$E_INVALID" "Invalid Swap Size format :: $1"
 	fi
 }
 

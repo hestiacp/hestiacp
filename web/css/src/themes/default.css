@@ -212,7 +212,6 @@
 	color: #6f6f6f;
 	font-size: 0.8rem;
 	border-bottom: 1px solid #e9e4e4;
-	padding: 15px 20px;
 
 	&:last-child {
 		border-bottom: none;
@@ -231,6 +230,10 @@
 	& a {
 		font-weight: 600;
 	}
+}
+
+.top-bar-notification-inner {
+	padding: 15px 20px;
 
 	@media (--viewport-small) {
 		padding-left: 15px;
@@ -2305,7 +2308,7 @@
 
 	& .fas {
 		border-radius: 50%;
-		box-shadow: 0 8px 40px 0 rgb(0 0 0 / 35%);
+		box-shadow: 0 0 40px 0 rgb(0 0 0 / 35%);
 	}
 }
 

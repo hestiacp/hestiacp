@@ -92,21 +92,25 @@ if [ "$UPDATE" == "no" ]; then
 		exit 2
 	fi
 
-	# Get current version
-
 	key=$(openssl rand -hex 4)
-
+	suffix=$(openssl rand -hex 4)
 	admin_account="admin_$key"
 	admin_password=$(generate_password)
 
 	echo "Username: admin_$key" > ~/.snappymail
 	echo "Password: $admin_password" >> ~/.snappymail
-	echo "Secret key: admin_$key" >> ~/.snappymail
+	echo "Admin Panel key: admin_$suffix" >> ~/.snappymail
 
 	tar -xzf ${SM_INSTALL_DIR}/${SM_FILE}
+	# Get current version
+	version=$(cat ./data/VERSION)
 
 	mv ./data $SM_CONFIG_DIR/
 	ln -s $SM_CONFIG_DIR/data/ ./data
+
+	# Create cache folder and set permissions
+	mkdir -p "$SM_CONFIG_DIR/data/_data_/_default_/cache/"
+	chown -R www-data:www-data ./data
 
 	if [ -f '/usr/bin/mariadb' ]; then
 		mariadb -e "CREATE DATABASE snappymail" 2>&1
@@ -119,11 +123,14 @@ if [ "$UPDATE" == "no" ]; then
 		mysql -e "GRANT ALL ON snappymail.*
 		 TO snappymail@localhost IDENTIFIED BY '$r'"
 	fi
-	php -f $HESTIA_COMMON_DIR/snappymail/install.php "admin_$key" "$admin_password" "$r" "$BACKEND_PORT"
-
-	chown -R www-data:www-data ./data
+	# Temporarily set the permissions to www-data
 	chown -R www-data:www-data $SM_CONFIG_DIR/
+	php -f $HESTIA_COMMON_DIR/snappymail/install.php "admin_$key" "admin_$suffix" "$admin_password" "$r" "$BACKEND_PORT"
 
+	# Set the permissions back to hestiamail
+	chown -R hestiamail:www-data $SM_CONFIG_DIR/
+
+	# Remove the downloaded file
 	rm ${SM_INSTALL_DIR}/${SM_FILE}
 	# Add robots.txt
 	echo "User-agent: *" > $SM_INSTALL_DIR/robots.txt

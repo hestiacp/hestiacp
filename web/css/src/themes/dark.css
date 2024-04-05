@@ -742,7 +742,7 @@
 
 .spinner-overlay {
 	& .fas {
-		box-shadow: 0 8px 25px rgb(0 0 0 / 90%);
+		box-shadow: 0 0 25px rgb(0 0 0 / 90%);
 	}
 }
 

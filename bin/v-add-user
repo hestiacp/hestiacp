@@ -266,6 +266,11 @@ if [ "$DISK_QUOTA" = 'yes' ]; then
 	$BIN/v-update-user-quota "$user"
 fi
 
+# Update resource limitation (cgroup)
+if [ "$RESOURCES_LIMIT" = 'yes' ]; then
+	$BIN/v-update-user-cgroup "$user"
+fi
+
 # Updating admin counter
 if [ "$user" != "$ROOT_USER" ]; then
 	increase_user_value "$ROOT_USER" '$U_USERS'

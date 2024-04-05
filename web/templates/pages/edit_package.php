@@ -100,52 +100,56 @@
 						</label>
 						<select class="form-select" name="v_web_template" id="v_web_template">
 							<?php
-								foreach ($web_templates as $key => $value) {
-									echo "\t\t\t\t<option value=\"".htmlentities($value)."\"";
-									if ((!empty($v_web_template)) && ( $value == trim($v_web_template, "'"))){
-										echo ' selected' ;
-									}
-									echo ">".htmlentities($value)."</option>\n";
+							foreach ($web_templates as $key => $value) {
+								echo "\t\t\t\t<option value=\"" . htmlentities($value) . "\"";
+								if ((!empty($v_web_template)) && ($value == trim($v_web_template, "'"))) {
+									echo ' selected';
 								}
+								echo ">" . htmlentities($value) . "</option>\n";
+							}
 							?>
 						</select>
 					</div>
-					<?php if (!empty($_SESSION['WEB_BACKEND'])) { echo ""; ?>
+					<?php if (!empty($_SESSION['WEB_BACKEND'])) {
+						echo ""; ?>
 						<div class="u-mb10">
 							<label for="v_backend_template" class="form-label">
 								<?= _("Backend Template") . "<span class='optional'>" . strtoupper($_SESSION["WEB_BACKEND"]) . "</span>" ?>
 							</label>
 							<select class="form-select" name="v_backend_template" id="v_backend_template">
 								<?php
-									foreach ($backend_templates as $key => $value) {
-										echo "\t\t\t\t<option value=\"".$value."\"";
-										if ((!empty($v_backend_template)) && ( $value == trim($v_backend_template, "'"))){
-											echo ' selected' ;
-										}
-										echo ">".htmlentities($value)."</option>\n";
+								foreach ($backend_templates as $key => $value) {
+									echo "\t\t\t\t<option value=\"" . $value . "\"";
+									if ((!empty($v_backend_template)) && ($value == trim($v_backend_template, "'"))) {
+										echo ' selected';
 									}
+									echo ">" . htmlentities($value) . "</option>\n";
+								}
 								?>
 							</select>
 						</div>
-					<?=""; }?>
-					<?php if (!empty($_SESSION['PROXY_SYSTEM'])) { echo ""; ?>
+						<?= "";
+					} ?>
+					<?php if (!empty($_SESSION['PROXY_SYSTEM'])) {
+						echo ""; ?>
 						<div class="u-mb10">
 							<label for="v_proxy_template" class="form-label">
 								<?= _("Proxy Template") . "<span class='optional'>" . strtoupper($_SESSION["PROXY_SYSTEM"]) . "</span>" ?>
 							</label>
 							<select class="form-select" name="v_proxy_template" id="v_proxy_template">
 								<?php
-									foreach ($proxy_templates as $key => $value) {
-										echo "\t\t\t\t<option value=\"".htmlentities($value)."\"";
-										if ((!empty($v_proxy_template)) && ( $value == trim($v_proxy_template, "'"))){
-											echo ' selected' ;
-										}
-										echo ">".htmlentities($value)."</option>\n";
+								foreach ($proxy_templates as $key => $value) {
+									echo "\t\t\t\t<option value=\"" . htmlentities($value) . "\"";
+									if ((!empty($v_proxy_template)) && ($value == trim($v_proxy_template, "'"))) {
+										echo ' selected';
 									}
+									echo ">" . htmlentities($value) . "</option>\n";
+								}
 								?>
 							</select>
 						</div>
-					<?=""; }?>
+						<?= "";
+					} ?>
 				</div>
 			</details>
 			<details class="collapse" id="dns-options">
@@ -159,16 +163,16 @@
 						</label>
 						<select class="form-select" name="v_dns_template" id="v_dns_template">
 							<?php
-								foreach ($dns_templates as $key => $value) {
-									echo "\t\t\t\t<option value=\"".htmlentities($value)."\"";
-									if ((!empty($v_dns_template)) && ( $value == $v_dns_template)){
-										echo ' selected' ;
-									}
-									if ((!empty($v_dns_template)) && ( $value == trim($v_dns_template, "'"))){
-										echo ' selected' ;
-									}
-									echo ">".htmlentities($value)."</option>\n";
+							foreach ($dns_templates as $key => $value) {
+								echo "\t\t\t\t<option value=\"" . htmlentities($value) . "\"";
+								if ((!empty($v_dns_template)) && ($value == $v_dns_template)) {
+									echo ' selected';
 								}
+								if ((!empty($v_dns_template)) && ($value == trim($v_dns_template, "'"))) {
+									echo ' selected';
+								}
+								echo ">" . htmlentities($value) . "</option>\n";
+							}
 							?>
 						</select>
 					</div>
@@ -285,13 +289,76 @@
 						</select>
 					</div>
 					<div class="form-check u-mb10">
-						<input class="form-check-input" type="checkbox" name="v_shell_jail_enabled" id="v_shell_jail_enabled" value="yes" <?php if (htmlentities(trim($v_shell_jail_enabled, "'")) == "yes") echo 'checked' ?>>
+						<input class="form-check-input" type="checkbox" name="v_shell_jail_enabled" id="v_shell_jail_enabled"
+							   value="yes" <?php if (htmlentities(trim($v_shell_jail_enabled, "'")) == "yes") echo 'checked' ?>>
 						<label for="v_shell_jail_enabled">
 							<?= _("Jail User Shell") ?>
 						</label>
 					</div>
 				</div>
 			</details>
+
+			<?php if ($_SESSION['RESOURCES_LIMIT'] == 'yes') { ?>
+				<details class="collapse" id="system-resources-options">
+					<summary class="collapse-header">
+						<?= _("System Resources") ?>
+					</summary>
+					<div class="collapse-content">
+						<div class="u-mb10">
+							<label for="cfs_quota" class="form-label">
+								<?= _("CPU Quota (in %)") ?>
+							</label>
+							<div class="u-pos-relative">
+								<input type="text" class="form-control" name="v_cpu_quota" id="v_cpu_quota" value="<?= htmlentities(trim($v_cpu_quota, "'")) ?>">
+								<button type="button" class="unlimited-toggle js-unlimited-toggle" title="<?= _("Unlimited") ?>">
+									<i class="fas fa-infinity"></i>
+								</button>
+							</div>
+							<small class="form-text text-muted"><?= _("CPUQuota=20% ensures that the executed processes will never get more than 20% CPU time on one CPU.") ?></small>
+						</div>
+
+						<div class="u-mb10">
+							<label for="cfs_period" class="form-label">
+								<?= _("CPU Quota Period (in ms for milliseconds or s for seconds.)") ?>
+							</label>
+							<div class="u-pos-relative">
+								<input type="text" class="form-control" name="v_cpu_quota_period" id="v_cpu_quota_period" value="<?= htmlentities(trim($v_cpu_quota_period, "'")) ?>">
+								<button type="button" class="unlimited-toggle js-unlimited-toggle" title="<?= _("Unlimited") ?>">
+									<i class="fas fa-infinity"></i>
+								</button>
+							</div>
+							<small class="form-text text-muted"><?= _("CPUQuotaPeriodSec=10ms to request that the CPU quota is measured in periods of 10ms.") ?></small>
+						</div>
+
+						<div class="u-mb10">
+							<label for="memory_limit" class="form-label">
+								<?= _("Memory Limit (in bytes or with units like '2G')") ?>
+							</label>
+							<div class="u-pos-relative">
+								<input type="text" class="form-control" name="v_memory_limit" id="v_memory_limit" value="<?= htmlentities(trim($v_memory_limit, "'")) ?>">
+								<button type="button" class="unlimited-toggle js-unlimited-toggle" title="<?= _("Unlimited") ?>">
+									<i class="fas fa-infinity"></i>
+								</button>
+							</div>
+							<small class="form-text text-muted"><?= _("Takes a memory size in bytes. If the value is suffixed with K, M, G or T, the specified memory size is parsed as Kilobytes, Megabytes, Gigabytes, or Terabytes (with the base 1024), respectively") ?></small>
+						</div>
+
+						<div class="u-mb10">
+							<label for="swap_limit" class="form-label">
+								<?= _("Swap Limit (in bytes or with units like '2G')") ?>
+							</label>
+							<div class="u-pos-relative">
+								<input type="text" class="form-control" name="v_swap_limit" id="v_swap_limit" value="<?= htmlentities(trim($v_swap_limit, "'")) ?>">
+								<button type="button" class="unlimited-toggle js-unlimited-toggle" title="<?= _("Unlimited") ?>">
+									<i class="fas fa-infinity"></i>
+								</button>
+							</div>
+							<small class="form-text text-muted"><?= _("Takes a swap size in bytes. If the value is suffixed with K, M, G or T, the specified swap size is parsed as Kilobytes, Megabytes, Gigabytes, or Terabytes (with the base 1024), respectively") ?></small>
+						</div>
+					</div>
+				</details>
+			<?php } ?>
+
 		</div>
 
 	</form>

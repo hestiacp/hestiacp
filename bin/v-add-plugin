@@ -46,20 +46,20 @@ mkdir -p $HESTIA/web/plugin
 final_plugin_name=""
 
 if [[ -d "$plugin_source" ]]; then
-    # Install from local source
-    plugin_install_from_path "$plugin_source" "no"
+	# Install from local source
+	plugin_install_from_path "$plugin_source" "no"
 elif [[ "$(echo "$plugin_source" | grep -E ".zip$")" ]]; then
-    # Install from zip local or in URL
-    plugin_install_from_zip "$plugin_source" "no"
+	# Install from zip local or in URL
+	plugin_install_from_zip "$plugin_source" "no"
 else
-    # Install from Github repository
-    github_archive="$(plugin_get_from_github "$plugin_source" "archive")"
+	# Install from Github repository
+	github_archive="$(plugin_get_from_github "$plugin_source" "archive")"
 
-    if [[ "$github_archive" ]]; then
-        plugin_install_from_zip "$github_archive" "no"
+	if [[ "$github_archive" ]]; then
+		plugin_install_from_zip "$github_archive" "no"
 	else
 		check_result "$E_INVALID" "Plugin format not supported"
-    fi
+	fi
 fi
 
 $BIN/v-list-plugin "$final_plugin_name" "$format"

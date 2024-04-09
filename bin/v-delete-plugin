@@ -43,14 +43,14 @@ $HESTIA/bin/v-disable-plugin "$plugin_name"
 
 # Check pre_uninstall hook
 if [[ -f "$HESTIA/plugins/$plugin_name/hook/pre_uninstall" ]]; then
-    bash "$HESTIA/plugins/$plugin_name/hook/pre_uninstall"
+	bash "$HESTIA/plugins/$plugin_name/hook/pre_uninstall"
 fi
 
 # Remove plugin files
 if [[ -L "$plugin_path" ]]; then
-    unlink "$plugin_path"
+	unlink "$plugin_path"
 else
-    rm -rf "$plugin_path"
+	rm -rf "$plugin_path"
 fi
 
 # Remove plugin from hestia plugins list

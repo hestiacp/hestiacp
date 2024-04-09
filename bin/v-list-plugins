@@ -29,8 +29,8 @@ init_plugins_conf_if_not_exists
 #----------------------------------------------------------#
 
 case "$format" in
-    json)   cat $HESTIA/conf/plugins.json ;;
-    plain)  json_to 'plain' $HESTIA/conf/plugins.json "name|version|repository|enabled|date" ;;
-    shell)  json_to 'shell' $HESTIA/conf/plugins.json "name|version|repository|enabled|date" ;;
-    csv)    json_to 'csv' $HESTIA/conf/plugins.json "name|version|repository|enabled|date|description" ;;
+	json) cat $HESTIA/conf/plugins.json ;;
+	plain) json_to 'plain' $HESTIA/conf/plugins.json "name|version|repository|enabled|date" ;;
+	shell) json_to 'shell' $HESTIA/conf/plugins.json "name|version|repository|enabled|date" ;;
+	csv) json_to 'csv' $HESTIA/conf/plugins.json "name|version|repository|enabled|date|description" ;;
 esac

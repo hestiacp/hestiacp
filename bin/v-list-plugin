@@ -37,10 +37,10 @@ plugin="$(echo "${plugins_list}" | jq -r ".\"$plugin_name\"")"
 #----------------------------------------------------------#
 
 if [[ "$plugin" && "$plugin" != "null" ]]; then
-    case "$format" in
-        json)   echo "$plugin" ;;
-        plain)  json_to 'plain' "[$plugin]" "name|version|repository|enabled|date" ;;
-        shell)  json_to 'shell' "[$plugin]" "name|version|repository|enabled|date" ;;
-        csv)    json_to 'csv' "[$plugin]" "name|version|repository|enabled|date|description" ;;
-    esac
+	case "$format" in
+		json) echo "$plugin" ;;
+		plain) json_to 'plain' "[$plugin]" "name|version|repository|enabled|date" ;;
+		shell) json_to 'shell' "[$plugin]" "name|version|repository|enabled|date" ;;
+		csv) json_to 'csv' "[$plugin]" "name|version|repository|enabled|date|description" ;;
+	esac
 fi

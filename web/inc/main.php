@@ -1277,8 +1277,12 @@ hst_add_action(
 		}
 
 		// Plugin Manager
-		if ($_SESSION["userContext"] === "admin" && $_SESSION["user"] === "admin" && empty($_SESSION["look"])) {
-			hst_add_header_menu(_('Plugins'), '/list/plugin/', 'puzzle-piece', 'PLUGINS', 5);
+		if (
+			$_SESSION["userContext"] === "admin" &&
+			$_SESSION["user"] === "admin" &&
+			empty($_SESSION["look"])
+		) {
+			hst_add_header_menu(_("Plugins"), "/list/plugin/", "puzzle-piece", "PLUGINS", 5);
 		}
 
 		// Server Settings

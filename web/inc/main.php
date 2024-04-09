@@ -1262,10 +1262,24 @@ hst_add_action(
 			hst_add_header_menu(_("File manager"), "/fm/", "folder-open", "FM", 5);
 		}
 
+		// Web Terminal
+		if (
+			!empty($_SESSION["WEB_TERMINAL"]) &&
+			$_SESSION["WEB_TERMINAL"] == "true" &&
+			!(
+				$_SESSION["userContext"] === "admin" &&
+				(isset($_SESSION["look"]) &&
+					$_SESSION["look"] === "admin" &&
+					$_SESSION["POLICY_SYSTEM_PROTECTED_ADMIN"] == "yes")
+			)
+		) {
+			hst_add_header_menu(_("Web Terminal"), "/list/terminal/", "terminal", "TERMINAL", 5);
+		}
+
 		// Plugin Manager
-		//if ($_SESSION["userContext"] === "admin" && $_SESSION["user"] === "admin" && empty($_SESSION["look"])) {
-		//	hst_add_header_menu(_('Plugins'), '/list/plugin/', 'puzzle-piece', 'PLUGINS', 5);
-		//}
+		if ($_SESSION["userContext"] === "admin" && $_SESSION["user"] === "admin" && empty($_SESSION["look"])) {
+			hst_add_header_menu(_('Plugins'), '/list/plugin/', 'puzzle-piece', 'PLUGINS', 5);
+		}
 
 		// Server Settings
 		if (

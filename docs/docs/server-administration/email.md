@@ -143,14 +143,34 @@ Open port 4190 in the firewall. [Read the firewall documentation](./firewall).
 
 ## How can I enable ManageSieve for Snappymail?
 
-Edit `/etc/snappymail/data/_data_/_default_/domains/default.ini` and modify the following settings:
+Edit `/etc/snappymail/data/_data_/_default_/domains/default.json` and modify the following settings:
 
-```bash
-sieve_use = On
-sieve_allow_raw = Off
-sieve_host = "localhost"
-sieve_port = 4190
-sieve_secure = "None"
+```json
+"Sieve": {
+	"host": "localhost",
+	"port": 4190,
+	"type": 0,
+	"timeout": 10,
+	"shortLogin": false,
+	"lowerLogin": true,
+	"sasl": [
+		"SCRAM-SHA3-512",
+		"SCRAM-SHA-512",
+		"SCRAM-SHA-256",
+		"SCRAM-SHA-1",
+		"PLAIN",
+		"LOGIN"
+	],
+	"ssl": {
+		"verify_peer": false,
+		"verify_peer_name": false,
+		"allow_self_signed": false,
+		"SNI_enabled": true,
+		"disable_compression": true,
+		"security_level": 1
+	},
+	"enabled": false # Change this to true
+},
 ```
 
 ## Oracle Cloud + SMTP relay

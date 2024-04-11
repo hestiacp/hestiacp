@@ -147,30 +147,30 @@ Edit `/etc/snappymail/data/_data_/_default_/domains/default.json` and modify the
 
 ```bash
 "Sieve": {
-        "host": "localhost",
-        "port": 4190,
-        "type": 0,
-        "timeout": 10,
-        "shortLogin": false,
-        "lowerLogin": true,
-        "sasl": [
-            "SCRAM-SHA3-512",
-            "SCRAM-SHA-512",
-            "SCRAM-SHA-256",
-            "SCRAM-SHA-1",
-            "PLAIN",
-            "LOGIN"
-        ],
-        "ssl": {
-            "verify_peer": false, 
-            "verify_peer_name": false,
-            "allow_self_signed": false,
-            "SNI_enabled": true,
-            "disable_compression": true,
-            "security_level": 1
-        },
-        "enabled": false # Change this to true
-    },
+"host": "localhost",
+"port": 4190,
+"type": 0,
+"timeout": 10,
+"shortLogin": false,
+"lowerLogin": true,
+"sasl": [
+"SCRAM-SHA3-512",
+"SCRAM-SHA-512",
+"SCRAM-SHA-256",
+"SCRAM-SHA-1",
+"PLAIN",
+"LOGIN"
+],
+"ssl": {
+"verify_peer": false,
+"verify_peer_name": false,
+"allow_self_signed": false,
+"SNI_enabled": true,
+"disable_compression": true,
+"security_level": 1
+},
+"enabled": false # Change this to true
+},
 ```
 
 ## Oracle Cloud + SMTP relay

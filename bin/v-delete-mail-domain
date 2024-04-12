@@ -78,6 +78,22 @@ if [ -n "$WEB_SYSTEM" ] || [ -n "$PROXY_SYSTEM" ]; then
 	fi
 fi
 
+# Delete domain in Proxmox Mail Gateway
+if [ -n "$SMTP_RELAY_PMG" ]; then
+	pmg_auth=$(curl -s --request POST  -d "username=$SMTP_RELAY_PMG_USER&password=$SMTP_RELAY_PMG_PASS" \
+    --url https://$SMTP_RELAY_PMG_HOST:$SMTP_RELAY_PMG_PORT/api2/json/access/ticket)
+	pmg_ticket=$(echo $pmg_auth | jq -r '.data.ticket')
+	pmg_csrf=$(echo $pmg_auth | jq -r '.data.CSRFPreventionToken')
+	if [ -n "$pmg_ticket" ]; then
+		pmg_config_domain=$(curl -s --request DELETE \
+		-H "CSRFPreventionToken: $pmg_csrf" -H "Cookie: PMGAuthCookie=$pmg_ticket" \
+		https://$SMTP_RELAY_PMG_HOST:$SMTP_RELAY_PMG_PORT/api2/json/config/domains/$domain)
+		pmg_config_transport=$(curl -s --request DELETE \
+		-H "CSRFPreventionToken: $pmg_csrf" -H "Cookie: PMGAuthCookie=$pmg_ticket" \
+		https://$SMTP_RELAY_PMG_HOST:$SMTP_RELAY_PMG_PORT/api2/json/config/transport/$domain)
+	fi
+fi
+
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#

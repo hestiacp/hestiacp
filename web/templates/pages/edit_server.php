@@ -32,6 +32,7 @@
 			theme: '<?= $_SESSION["THEME"] ?>',
 			language: '<?= $_SESSION["LANGUAGE"] ?>',
 			hasSmtpRelay: <?= $v_smtp_relay == "true" ? "true" : "false" ?>,
+			hasSmtpRelayPmg: <?= $v_smtp_relay_pmg == "true" ? "true" : "false" ?>,
 			remoteBackupEnabled: <?= !empty($v_backup_remote_adv) ? "true" : "false" ?>,
 			backupType: '<?= !empty($v_backup_type) ? trim($v_backup_type, "'") : "" ?>',
 			webmailAlias: '<?= $_SESSION["WEBMAIL_ALIAS"] ?? "" ?>',
@@ -477,6 +478,86 @@
 										id="v_smtp_relay_pass"
 									>
 								</div>
+							</div>
+						</div>
+						<div class="form-check u-mt20">
+							<input
+								x-model="hasSmtpRelayPmg"
+								class="form-check-input"
+								type="checkbox"
+								name="v_smtp_relay_pmg"
+								id="v_smtp_relay_pmg"
+							>
+							<label for="v_smtp_relay_pmg">
+								<?= _("Proxmox Mail Gateway SMTP Relay") ?>
+							</label>
+						</div>
+						<div
+							x-cloak
+							x-show="hasSmtpRelayPmg"
+							class="u-pl30 u-mt20"
+						>
+							<div class="u-mb10">
+								<label for="v_smtp_relay_pmg_host" class="form-label">
+									<?= _("Host") ?>
+								</label>
+								<input
+									type="text"
+									class="form-control"
+									name="v_smtp_relay_pmg_host"
+									id="v_smtp_relay_pmg_host"
+									value="<?= htmlentities(trim($v_smtp_relay_pmg_host, "'")) ?>"
+								>
+							</div>
+							<div class="u-mb10">
+								<label for="v_smtp_relay_pmg_port" class="form-label">
+									<?= _("Port") ?>
+								</label>
+								<input
+									type="text"
+									class="form-control"
+									name="v_smtp_relay_pmg_port"
+									id="v_smtp_relay_pmg_port"
+									value="<?= htmlentities(trim($v_smtp_relay_pmg_port, "'")) ?>"
+								>
+							</div>
+							<div class="u-mb10">
+								<label for="v_smtp_relay_pmg_user" class="form-label">
+									<?= _("Username") ?>
+								</label>
+								<input
+									type="text"
+									class="form-control"
+									name="v_smtp_relay_pmg_user"
+									id="v_smtp_relay_pmg_user"
+									value="<?= htmlentities(trim($v_smtp_relay_pmg_user, "'")) ?>"
+								>
+							</div>
+							<div class="u-mb10">
+								<label for="v_smtp_relay_pmg_pass" class="form-label">
+									<?= _("Password") ?>
+								</label>
+								<div class="u-pos-relative">
+									<input
+										type="text"
+										class="form-control js-password-input"
+										name="v_smtp_relay_pmg_pass"
+										id="v_smtp_relay_pmg_pass"
+										value="<?= htmlentities(trim($v_smtp_relay_pmg_pass, "'")) ?>"
+									>
+								</div>
+							</div>
+							<div class="u-mb20">
+								<label for="v_smtp_relay_pmg_local_ip" class="form-label"><?= _("IP Address") ?></label>
+								<select class="form-select" name="v_smtp_relay_pmg_local_ip" id="v_smtp_relay_pmg_local_ip">
+									<?php
+										foreach ($sys_ips as $ip => $value) {
+											$display_ip = htmlentities(empty($value['NAT']) ? $ip : "{$value['NAT']}");
+											$ip_selected = (!empty($v_smtp_relay_pmg_local_ip) && $ip == $v_smtp_relay_pmg_local_ip) ? 'selected' : '';
+											echo "\t\t\t\t<option value=\"{$ip}\" {$ip_selected}>{$display_ip}</option>\n";
+										}
+									?>
+								</select>
 							</div>
 						</div>
 					</div>

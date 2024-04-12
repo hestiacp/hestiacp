@@ -1,0 +1,60 @@
+#!/bin/bash
+# info: add proxmox mail gateway smtp relay support
+# options: HOST USERNAME PASSWORD LOCAL_IP PORT
+#
+# example: v-add-sys-smtp-relay pmg.smtprelay.tld uname123 pass12345 1.2.3.4 8006
+#
+# This function adds system wide proxmox mail gateway smtp relay support.
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Argument definition
+host=$1
+username=$2
+password=$3
+local_ip=$4
+port=${5-8006}
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '1' "$#" 'HOST USERNAME PASSWORD LOCAL_IP PORT'
+is_format_valid 'port' 'host' 'password' 'ip'
+is_username_format_valid "$username" 'username'
+format_no_quotes "$password" 'passowrd'
+is_system_enabled "$MAIL_SYSTEM" 'MAIL_SYSTEM'
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+change_sys_value 'SMTP_RELAY_PMG' 'true'
+change_sys_value 'SMTP_RELAY_PMG_HOST' "$host"
+change_sys_value 'SMTP_RELAY_PMG_PORT' "$port"
+change_sys_value 'SMTP_RELAY_PMG_USER' "$username"
+change_sys_value 'SMTP_RELAY_PMG_PASS' "$password"
+change_sys_value 'SMTP_RELAY_PMG_LOCAL_IP' "$local_ip"
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Logging
+$BIN/v-log-action "system" "Info" "Mail" "Server-wide Proxmox Mail Gateway SMTP Relay enabled (Host: $host, Port: $port)."
+log_event "$OK" "$ARGUMENTS"
+
+exit

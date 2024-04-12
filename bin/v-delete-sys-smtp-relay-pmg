@@ -1,0 +1,47 @@
+#!/bin/bash
+# info: disable system wide smtp relay support
+# options:
+#
+# example: v-delete-sys-smtp-relay
+#
+# This function disables system wide smtp relay support.
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+change_sys_value "SMTP_RELAY_PMG" "false"
+change_sys_value "SMTP_RELAY_PMG_HOST" ""
+change_sys_value "SMTP_RELAY_PMG_PORT" ""
+change_sys_value "SMTP_RELAY_PMG_USER" ""
+change_sys_value "SMTP_RELAY_PMG_PASS" ""
+change_sys_value "SMTP_RELAY_PMG_LOCAL_IP" ""
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Logging
+$BIN/v-log-action "system" "Info" "Mail" "Global Proxmox Mail Gateway SMTP Relay disabled."
+log_event "$OK" "$ARGUMENTS"
+
+exit

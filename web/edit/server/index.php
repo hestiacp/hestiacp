@@ -147,6 +147,42 @@ if (empty($_POST["v_policy_user_view_suspended"])) {
 	$_POST["v_policy_user_view_suspended"] = "false";
 }
 
+// List PMG settings
+exec(HESTIA_CMD . "v-list-sys-ips json", $output, $return_var);
+$sys_ips = json_decode(implode("", $output), true);
+unset($output);
+
+if (!empty($_SESSION["SMTP_RELAY_PMG"])) {
+	$v_smtp_relay_pmg = $_SESSION["SMTP_RELAY_PMG"];
+} else {
+	$v_smtp_relay_pmg = "";
+}
+if (!empty($_SESSION["SMTP_RELAY_PMG_HOST"])) {
+	$v_smtp_relay_pmg_host = $_SESSION["SMTP_RELAY_PMG_HOST"];
+} else {
+	$v_smtp_relay_pmg_host = "";
+}
+if (!empty($_SESSION["SMTP_RELAY_PMG_PORT"])) {
+	$v_smtp_relay_pmg_port = $_SESSION["SMTP_RELAY_PMG_PORT"];
+} else {
+	$v_smtp_relay_pmg_port = "";
+}
+if (!empty($_SESSION["SMTP_RELAY_PMG_USER"])) {
+	$v_smtp_relay_pmg_user = $_SESSION["SMTP_RELAY_PMG_USER"];
+} else {
+	$v_smtp_relay_pmg_user = "";
+}
+if (!empty($_SESSION["SMTP_RELAY_PMG_PASS"])) {
+	$v_smtp_relay_pmg_pass = $_SESSION["SMTP_RELAY_PMG_PASS"];
+} else {
+	$v_smtp_relay_pmg_pass = "";
+}
+if (!empty($_SESSION["SMTP_RELAY_PMG_LOCAL_IP"])) {
+	$v_smtp_relay_pmg_local_ip = $_SESSION["SMTP_RELAY_PMG_LOCAL_IP"];
+} else {
+	$v_smtp_relay_pmg_local_ip = "";
+}
+
 // List Database hosts
 exec(HESTIA_CMD . "v-list-database-hosts json", $output, $return_var);
 $db_hosts = json_decode(implode("", $output), true);
@@ -707,6 +743,60 @@ if (!empty($_POST["save"])) {
 			$v_smtp_relay = false;
 			$v_smtp_relay_host = $v_smtp_relay_user = $v_smtp_relay_pass = $v_smtp_relay_port = "";
 			exec(HESTIA_CMD . "v-delete-sys-smtp-relay", $output, $return_var);
+			check_return_code($return_var, $output);
+			unset($output);
+		}
+	}
+
+	//Update Proxmox Mail Gateway smtp relay
+	if (empty($_SESSION["error_msg"])) {
+		if (isset($_POST["v_smtp_relay"]) && isset($_POST["v_smtp_relay_pmg"]))
+		{
+
+			if(
+				isset($_POST['v_smtp_relay_pmg_host']) && 
+				isset($_POST['v_smtp_relay_pmg_port']) &&
+				isset($_POST['v_smtp_relay_pmg_user']) &&
+				isset($_POST['v_smtp_relay_pmg_pass']) &&
+				isset($_POST['v_smtp_relay_pmg_local_ip'])
+			) {
+				if(
+					$_POST['v_smtp_relay_pmg_host'] != $v_smtp_relay_pmg_host ||
+					$_POST['v_smtp_relay_pmg_port'] != $v_smtp_relay_pmg_port ||
+					$_POST['v_smtp_relay_pmg_user'] != $v_smtp_relay_pmg_user ||
+					$_POST['v_smtp_relay_pmg_pass'] != $v_smtp_relay_pmg_pass ||
+					$_POST['v_smtp_relay_pmg_local_ip'] != $v_smtp_relay_pmg_local_ip
+				){
+					$v_smtp_relay_pmg = true;
+					$v_smtp_relay_pmg_host = quoteshellarg($_POST['v_smtp_relay_pmg_host']);
+					$v_smtp_relay_pmg_port = quoteshellarg($_POST['v_smtp_relay_pmg_port']);
+					$v_smtp_relay_pmg_user = quoteshellarg($_POST['v_smtp_relay_pmg_user']);
+					$v_smtp_relay_pmg_pass = quoteshellarg($_POST['v_smtp_relay_pmg_pass']);
+					$v_smtp_relay_pmg_local_ip = quoteshellarg($_POST['v_smtp_relay_pmg_local_ip']);
+					exec(
+						HESTIA_CMD .
+							"v-add-sys-smtp-relay-pmg " .
+							$v_smtp_relay_pmg_host .
+							" " .
+							$v_smtp_relay_pmg_user .
+							" " .
+							$v_smtp_relay_pmg_pass .
+							" " .
+							$v_smtp_relay_pmg_local_ip .
+							" " .
+							$v_smtp_relay_pmg_port,
+						$output,
+						$return_var,
+					);
+					check_return_code($return_var, $output);
+					unset($output);
+				}
+			}
+		}
+		if (!isset($_POST["v_smtp_relay_pmg"]) && $v_smtp_relay_pmg == true) {
+			$v_smtp_relay_pmg = false;
+			$v_smtp_relay_pmg_host = $v_smtp_relay_pmg_user = $v_smtp_relay_pmg_pass = $v_smtp_relay_pmg_port = "";
+			exec(HESTIA_CMD . "v-delete-sys-smtp-relay-pmg", $output, $return_var);
 			check_return_code($return_var, $output);
 			unset($output);
 		}

@@ -197,7 +197,7 @@ if (!empty($_POST["save"])) {
 		$errors[] = _("Bandwidth");
 	}
 
-	if ($_SESSION['RESOURCES_LIMIT'] == 'yes') {
+	if ($_SESSION["RESOURCES_LIMIT"] == "yes") {
 		if (!isset($_POST["v_cpu_quota"])) {
 			$errors[] = _("CPU quota");
 		}
@@ -276,10 +276,14 @@ if (!empty($_POST["save"])) {
 	$v_disk_quota = quoteshellarg($_POST["v_disk_quota"]);
 	$v_bandwidth = quoteshellarg($_POST["v_bandwidth"]);
 
-	$v_cpu_quota = $_SESSION['RESOURCES_LIMIT'] == 'yes' ? quoteshellarg($_POST["v_cpu_quota"]) : '';
-	$v_cpu_quota_period = $_SESSION['RESOURCES_LIMIT'] == 'yes' ? quoteshellarg($_POST["v_cpu_quota_period"]) : '';
-	$v_memory_limit = $_SESSION['RESOURCES_LIMIT'] == 'yes' ? quoteshellarg($_POST["v_memory_limit"]) : '';
-	$v_swap_limit = $_SESSION['RESOURCES_LIMIT'] == 'yes' ? quoteshellarg($_POST["v_swap_limit"]) : '';
+	$v_cpu_quota =
+		$_SESSION["RESOURCES_LIMIT"] == "yes" ? quoteshellarg($_POST["v_cpu_quota"]) : "";
+	$v_cpu_quota_period =
+		$_SESSION["RESOURCES_LIMIT"] == "yes" ? quoteshellarg($_POST["v_cpu_quota_period"]) : "";
+	$v_memory_limit =
+		$_SESSION["RESOURCES_LIMIT"] == "yes" ? quoteshellarg($_POST["v_memory_limit"]) : "";
+	$v_swap_limit =
+		$_SESSION["RESOURCES_LIMIT"] == "yes" ? quoteshellarg($_POST["v_swap_limit"]) : "";
 
 	$v_ns1 = !empty($_POST["v_ns1"]) ? trim($_POST["v_ns1"], ".") : "";
 	$v_ns2 = !empty($_POST["v_ns2"]) ? trim($_POST["v_ns2"], ".") : "";

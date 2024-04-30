@@ -231,9 +231,9 @@ if [ -e "/etc/redhat-release" ]; then
 else
 	HESTIA_V="${BUILD_VER}_${BUILD_ARCH}"
 fi
-OPENSSL_V='3.1.2'
-PCRE_V='10.42'
-ZLIB_V='1.3'
+OPENSSL_V='3.3.0'
+PCRE_V='10.43'
+ZLIB_V='1.3.1'
 
 # Create build directories
 if [ "$KEEPBUILD" != 'true' ]; then

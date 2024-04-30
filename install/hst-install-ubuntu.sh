@@ -6,7 +6,7 @@
 # https://www.hestiacp.com/
 #
 # Currently Supported Versions:
-# Ubuntu 20.04, 22.04 LTS
+# Ubuntu 20.04, 22.04, 24.04 LTS
 #
 # ======================================================== #
 
@@ -51,7 +51,7 @@ software="acl apache2 apache2.2-common apache2-suexec-custom apache2-utils appar
   php$fpm_v php$fpm_v-apcu php$fpm_v-bz2 php$fpm_v-cgi php$fpm_v-cli php$fpm_v-common php$fpm_v-curl php$fpm_v-gd
   php$fpm_v-imagick php$fpm_v-imap php$fpm_v-intl php$fpm_v-ldap php$fpm_v-mbstring php$fpm_v-mysql php$fpm_v-opcache
   php$fpm_v-pgsql php$fpm_v-pspell php$fpm_v-readline php$fpm_v-xml php$fpm_v-zip postgresql postgresql-contrib
-  proftpd-basic quota rrdtool rsyslog setpriv spamassassin sudo sysstat unzip vim-common vsftpd whois zip zstd jailkit"
+  proftpd-basic quota rrdtool rsyslog util-linux spamassassin sudo sysstat unzip vim-common vsftpd whois zip zstd jailkit"
 
 installer_dependencies="apt-transport-https ca-certificates curl dirmngr gnupg openssl software-properties-common wget"
 
@@ -1046,11 +1046,10 @@ if [ -d "$withdebs" ]; then
 	software=$(echo "$software" | sed -e "s/hestia=${HESTIA_INSTALL_VER}//")
 fi
 if [ "$release" = '20.04' ]; then
-	software=$(echo "$software" | sed -e "s/setpriv/util-linux/")
 	software=$(echo "$software" | sed -e "s/libzip4/libzip5/")
 fi
-if [ "$release" = '22.04' ]; then
-	software=$(echo "$software" | sed -e "s/setpriv/util-linux/")
+if [ "$release" = '24.04' ]; then
+	software=$(echo "$software" | sed -e "s/libzip4/libzip4t64/")
 fi
 
 #----------------------------------------------------------#
@@ -1484,7 +1483,7 @@ if [ "$release" = "20.04" ]; then
 	elif grep -qw "^system_default = system_default_sect$" /etc/ssl/openssl.cnf 2> /dev/null; then
 		sed -i '/^system_default = system_default_sect$/a system_default = hestia_openssl_sect\n\n[hestia_openssl_sect]\nCiphersuites = '"$tls13_ciphers"'\nOptions = PrioritizeChaCha' /etc/ssl/openssl.cnf
 	fi
-elif [ "$release" = "22.04" ]; then
+elif [ "$release" != "20.04" ]; then
 	sed -i '/^system_default = system_default_sect$/a system_default = hestia_openssl_sect\n\n[hestia_openssl_sect]\nCiphersuites = '"$tls13_ciphers"'\nOptions = PrioritizeChaCha' /etc/ssl/openssl.cnf
 fi
 
@@ -1495,7 +1494,7 @@ $HESTIA/bin/v-generate-ssl-cert $(hostname) '' 'US' 'California' \
 
 # Parsing certificate file
 crt_end=$(grep -n "END CERTIFICATE-" /tmp/hst.pem | cut -f 1 -d:)
-if [ "$release" = "22.04" ]; then
+if [ "$release" != "20.04" ]; then
 	key_start=$(grep -n "BEGIN PRIVATE KEY" /tmp/hst.pem | cut -f 1 -d:)
 	key_end=$(grep -n "END PRIVATE KEY" /tmp/hst.pem | cut -f 1 -d:)
 else
@@ -1733,7 +1732,7 @@ if [ "$proftpd" = 'yes' ]; then
 	systemctl start proftpd >> $LOG
 	check_result $? "proftpd start failed"
 
-	if [ "$release" = '22.04' ]; then
+	if [ "$release" != '20.04' ]; then
 		unit_files="$(systemctl list-unit-files | grep proftpd)"
 		if [[ "$unit_files" =~ "disabled" ]]; then
 			systemctl enable proftpd

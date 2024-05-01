@@ -55,16 +55,16 @@ is_package_consistent() {
 	if [ "$DISK_QUOTA" != 'unlimited' ]; then
 		is_int_format_valid "$DISK_QUOTA" 'DISK_QUOTA'
 	fi
-	if [ "$CPU_QUOTA" != 'unlimited' ]; then
+	if [ "$CPU_QUOTA" != 'unlimited' ] && [ "$RESOURCES_LIMIT" = 'yes' ]; then
 		is_valid_cpu_quota "$CPU_QUOTA" 'CPU_QUOTA'
 	fi
-	if [ "$CPU_QUOTA_PERIOD" != 'unlimited' ]; then
+	if [ "$CPU_QUOTA_PERIOD" != 'unlimited' ] && [ "$RESOURCES_LIMIT" = 'yes' ]; then
 		is_valid_cpu_quota_period "$CPU_QUOTA_PERIOD" 'CPU_QUOTA_PERIOD'
 	fi
-	if [ "$MEMORY_LIMIT" != 'unlimited' ]; then
+	if [ "$MEMORY_LIMIT" != 'unlimited' ] && [ "$RESOURCES_LIMIT" = 'yes' ]; then
 		is_valid_memory_size "$MEMORY_LIMIT" 'MEMORY_LIMIT'
 	fi
-	if [ "$SWAP_LIMIT" != 'unlimited' ]; then
+	if [ "$SWAP_LIMIT" != 'unlimited' ] && [ "$RESOURCES_LIMIT" = 'yes' ]; then
 		is_valid_swap_size "$SWAP_LIMIT" 'SWAP_LIMIT'
 	fi
 	if [ "$BANDWIDTH" != 'unlimited' ]; then

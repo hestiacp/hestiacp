@@ -53,8 +53,8 @@
 		"stylelint": "^16.5.0",
 		"stylelint-config-standard": "^36.0.0",
 		"vitepress": "^1.1.4",
-		"vitest": "^1.5.2",
-		"vue": "^3.4.25"
+		"vitest": "^1.6.0",
+		"vue": "^3.4.26"
 	},
 	"browserslist": [
 		"defaults"

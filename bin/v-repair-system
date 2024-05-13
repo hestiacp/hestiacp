@@ -105,7 +105,7 @@ hestia_exclusions="data ssl web"
 $(check_ownership $hestia_main_dir "root:root" "1" "$hestia_exclusions") > /dev/null 2>&1
 
 # Session
-$(check_ownership "$HESTIA/data/sessions" "admin:admin" "0") > /dev/null 2>&1
+$(check_ownership "$HESTIA/data/sessions" "admin:admin" "1") > /dev/null 2>&1
 
 # File manager
 $(check_ownership "$HESTIA/web/fm/private" "admin:admin") > /dev/null 2>&1

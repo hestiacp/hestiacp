@@ -1,0 +1,20 @@
+#!/bin/bash
+# info: fix hestiacp system
+# options:
+#
+# example: v-list-sys-languages json
+#
+# This function is for correcting the hestiacp problems and
+# derivative file system problems
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"

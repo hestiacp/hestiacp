@@ -36,7 +36,7 @@
 		"@testing-library/vue": "^8.0.3",
 		"@vitejs/plugin-vue": "^5.0.4",
 		"browserslist": "^4.23.0",
-		"esbuild": "^0.20.2",
+		"esbuild": "^0.21.2",
 		"eslint": "^8.57.0",
 		"eslint-config-prettier": "^9.1.0",
 		"eslint-plugin-editorconfig": "^4.0.3",
@@ -54,7 +54,7 @@
 		"stylelint-config-standard": "^36.0.0",
 		"vitepress": "^1.1.4",
 		"vitest": "^1.6.0",
-		"vue": "^3.4.26"
+		"vue": "^3.4.27"
 	},
 	"browserslist": [
 		"defaults"

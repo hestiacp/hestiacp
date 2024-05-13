@@ -1,8 +1,7 @@
 #!/bin/bash
 # info: fix hestiacp system
-# options:
 #
-# example: v-list-sys-languages json
+# example: v-repair-system
 #
 # This function is for correcting the hestiacp problems and
 # derivative file system problems
@@ -18,3 +17,87 @@ source /etc/hestiacp/hestia.conf
 source $HESTIA/func/main.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
+
+#
+# function check_ownership
+#
+# @param string full path directory
+#
+# @param string ownership
+# @example "root:root"
+#
+# @param string recursive
+# values "0" - no; "1" - yes
+#
+# @param excludes
+# @example "test ssl base"
+#
+check_ownership() {
+	recursive="0"
+	exclusions=""
+	if [[ -z $0 ]]; then
+		echo "Error Invalid Directory/file: $($0) 1st parameter cannot be empty"
+		exit 1
+	fi
+	if [[ -z $1 ]]; then
+		echo "Error Invalid permissions: $($1) 2nd parameter cannot be empty"
+		exit 1
+	fi
+	if [[ $1 =~ ^[0-9a-fA-F_]{,1}:[0-9a-fA-F_]{,1} ]]; then
+		ownership="$1"
+	else
+		echo "Error ownership format: $($1) the format must be $(example:example)"
+		exit 1
+	fi
+	if [[ -d $0 || -f $0 ]]; then
+		dir_file=$0
+	else
+		echo "$PASSED is not valid"
+		exit 1
+	fi
+	if [[ -n $2 && $2 == "1" && -d $0 ]]; then
+		recursive="1"
+	fi
+	if [[ -n $3 ]]; then
+		exclusions=$3
+	fi
+	if [[ -f $0 ]]; then
+		file_ownership=$(stat -c %U:%G "$dir_file")
+		if [[ $file_ownership != $ownership ]]; then
+			$(chown $ownership $dir_file) > /dev/null 2>&1
+		fi
+	else
+		dir_ownership=$(stat -c %U:%G "$dir_file")
+		main_dir=$dir_file
+		if [[ $dir_ownership != $ownership ]]; then
+			$(chown $ownership $dir_file) > /dev/null 2>&1
+		fi
+		for dir_or_file in $main_dir; do
+			bypass="0"
+			if [[ $exclusions != "" ]]; then
+				for exclude in $exclusions; do
+					if [[ $exclude == $dir_file || $exclude == "$main_dir/$dir_file" ]]; then
+						bypass="1"
+					fi
+				done
+			fi
+			if [[ $bypass == "0" ]]; then
+				working_file_or_dir="$main_dir/$dir_or_file"
+				dir_or_file_ownership=$(stat -c %U:%G "$working_file_or_dir")
+				if [[ $dir_or_file_ownership != $ownership ]]; then
+					$(chown $ownership $working_file_or_dir) > /dev/null 2>&1
+				fi
+				if [[ $recursive == "1" && -d $working_file_or_dir ]]; then
+					check_ownership $working_file_or_dir $ownership $recursive
+				fi
+			fi
+		done
+	fi
+}
+
+#----------------------------------------------------------#
+#               check hestia directory                     #
+#----------------------------------------------------------#
+hestia_main_dir= ls $HESTIA
+hestia_exclusions="data ssl web"
+$(check_ownership $hestia_main_dir "root:root" "1" "$hestia_exclusions") > /dev/null 2>&1

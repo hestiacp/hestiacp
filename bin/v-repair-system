@@ -36,23 +36,24 @@ check_ownership() {
 	recursive="0"
 	exclusions=""
 	if [[ -z $0 ]]; then
-		echo "Error Invalid Directory/file: $($0) 1st parameter cannot be empty"
+		echo "Error Invalid Directory/file: '$0' 1st parameter cannot be empty"
 		exit 1
 	fi
 	if [[ -z $1 ]]; then
-		echo "Error Invalid permissions: $($1) 2nd parameter cannot be empty"
+		echo "Error Invalid permissions: '$1' 2nd parameter cannot be empty"
 		exit 1
 	fi
-	if [[ $1 =~ ^[0-9a-fA-F_-]{,1}:[0-9a-fA-F_-]{,1} ]]; then
+	ownership_regex="^[0-9a-fA-F_-]{,1}[:][0-9a-fA-F_-]{,1}$"
+	if [[ $1 =~ $ownership_regex ]]; then
 		ownership="$1"
 	else
-		echo "Error ownership format: $($1) the format must be $(example:example)"
+		echo "Error ownership format: '$1' the format must be 'example:example'"
 		exit 1
 	fi
 	if [[ -d $0 || -f $0 ]]; then
 		dir_file=$0
 	else
-		echo "$PASSED is not valid"
+		echo "'$dir_file' is not valid"
 		exit 1
 	fi
 	if [[ -n $2 && $2 == "1" && -d $0 ]]; then
@@ -99,15 +100,17 @@ check_ownership() {
 #----------------------------------------------------------#
 #               check hestia directories                   #
 #----------------------------------------------------------#
-hestia_main_dir= ls $HESTIA
+echo "Checking and correcting Hestia Directory ownerships"
 hestia_exclusions="data ssl web"
-
-$(check_ownership $hestia_main_dir "root:root" "1" "$hestia_exclusions") > /dev/null 2>&1
+echo "Base:"
+$(check_ownership $HESTIA "root:root" "1" "$hestia_exclusions") > /dev/null 2>&1
 
 # Session
+echo "Session"
 $(check_ownership "$HESTIA/data/sessions" "admin:admin" "1") > /dev/null 2>&1
 
 # File manager
+echo "File Manager"
 $(check_ownership "$HESTIA/web/fm/private" "admin:admin") > /dev/null 2>&1
 $(check_ownership "$HESTIA/web/fm/private/tmp" "admin:admin") > /dev/null 2>&1
 $(check_ownership "$HESTIA/web/fm/private/logs" "admin:admin") > /dev/null 2>&1
@@ -115,10 +118,12 @@ $(check_ownership "$HESTIA/web/fm/private/logs/app.log" "admin:admin") > /dev/nu
 $(check_ownership "$HESTIA/web/fm/repository" "admin:admin") > /dev/null 2>&1
 
 # Mail
+echo "Mail"
 $(check_ownership "$HESTIA/ssl/certificate.key" "Debian-exim:mail") > /dev/null 2>&1
 $(check_ownership "$HESTIA/ssl/certificate.crt" "Debian-exim:mail") > /dev/null 2>&1
 
 # Missing dir: $HESTIA/ssl/mail/*
+echo "Mail Server Certificates"
 $(check_ownership "$HESTIA/ssl/mail" "Debian-exim:mail" "1") > /dev/null 2>&1
 
 # Done HestiaCP Ownership
@@ -126,7 +131,8 @@ $(check_ownership "$HESTIA/ssl/mail" "Debian-exim:mail" "1") > /dev/null 2>&1
 #----------------------------------------------------------#
 #      check hestia base package package checksums         #
 #----------------------------------------------------------#
-
+echo "Checking Dependencies"
+echo "dependency: 'debsums'"
 hestiacp_checksum_installed_package=$(dpkg -l | grep -e debsums) > /dev/null 2>&1
 if [[ -z "$hestiacp_checksum_installed_package" ]]; then
 	echo "Updating apt repository"
@@ -135,7 +141,13 @@ if [[ -z "$hestiacp_checksum_installed_package" ]]; then
 	echo "Installing Dependency $(debsums)"
 	$(apt install debsums -y) > /dev/null 2>&1
 	echo "Installed"
+else
+	echo "Already Installed"
 fi
+
+echo "Checking HestiaCP install, packages: 'hestia', 'hestia-php', 'hestia-nginx'"
+echo "Base package: hestia"
+
 hestia_base_checksums=$(debsums hestia | grep "FAILED" | awk '{print $1}' | awk '{printf "%s ",$0} END {print ""}')
 allowed_files=(
 	"$HESTIA/web/favicon.ico"
@@ -156,23 +168,37 @@ for file in $hestia_base_checksums; do
 done
 
 if [[ $repair_install == "1" ]]; then
-	echo "reinstall hestia"
+	echo "reinstall needed: 'hestia'"
+else
+	echo "package 'hestia' is OK"
 fi
 
 #----------------------------------------------------------#
 #       check hestia php package package checksums         #
 #----------------------------------------------------------#
+echo "Base package: hestia-php"
 hestia_php_checksums=$(debsums hestia-php | grep "FAILED" | awk '{print $1}' | awk '{printf "%s ",$0} END {print ""}')
 if [[ -n $hestia_php_checksums ]]; then
-	echo "reinstall hestia-php"
+	echo "reinstall needed: 'hestia-php'"
+else
+	echo "package 'hestia-php' is OK"
 fi
 
 #----------------------------------------------------------#
 #      check hestia nginx package package checksums        #
 #----------------------------------------------------------#
+echo "Base package: hestia-nginx"
 hestia_nginx_checksums=$(debsums hestia-nginx | grep "FAILED" | awk '{print $1}' | awk '{printf "%s",$0} END {print ""}')
+
+reinstall_hestia_nginx="0"
 if [[ -n $hestia_nginx_checksums ]]; then
 	if [[ $hestia_nginx_checksums != "$HESTIA/nginx/conf/nginx.conf" ]]; then
-		echo "reinstall hestia-nginx"
+		reinstall_hestia_nginx="1"
+		echo "reinstall needed: 'hestia-nginx'"
 	fi
+fi
+if [[ $reinstall_hestia_nginx == "1" ]]; then
+	echo "reinstall needed: 'hestia-nginx'"
+else
+	echo "package 'hestia-nginx' is OK"
 fi

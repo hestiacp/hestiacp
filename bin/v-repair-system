@@ -119,5 +119,6 @@ $(check_ownership "$HESTIA/ssl/certificate.key" "Debian-exim:mail") > /dev/null 
 $(check_ownership "$HESTIA/ssl/certificate.crt" "Debian-exim:mail") > /dev/null 2>&1
 
 # Missing dir: $HESTIA/ssl/mail/*
+$(check_ownership "$HESTIA/ssl/mail" "Debian-exim:mail" "1") > /dev/null 2>&1
 
 #done HestiaCP

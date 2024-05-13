@@ -68,7 +68,8 @@ check_ownership() {
 		fi
 	else
 		dir_ownership=$(stat -c %U:%G "$dir_file")
-		main_dir=$dir_file
+
+		main_dir=$(ls $dir_file)
 		if [[ $dir_ownership != $ownership ]]; then
 			$(chown $ownership $dir_file) > /dev/null 2>&1
 		fi
@@ -76,13 +77,13 @@ check_ownership() {
 			bypass="0"
 			if [[ $exclusions != "" ]]; then
 				for exclude in $exclusions; do
-					if [[ $exclude == $dir_file || $exclude == "$main_dir/$dir_file" ]]; then
+					if [[ $exclude == $dir_or_file || $exclude == "$dir_file/$dir_or_file" ]]; then
 						bypass="1"
 					fi
 				done
 			fi
 			if [[ $bypass == "0" ]]; then
-				working_file_or_dir="$main_dir/$dir_or_file"
+				working_file_or_dir="$dir_file/$dir_or_file"
 				dir_or_file_ownership=$(stat -c %U:%G "$working_file_or_dir")
 				if [[ $dir_or_file_ownership != $ownership ]]; then
 					$(chown $ownership $working_file_or_dir) > /dev/null 2>&1

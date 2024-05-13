@@ -122,3 +122,57 @@ $(check_ownership "$HESTIA/ssl/certificate.crt" "Debian-exim:mail") > /dev/null 
 $(check_ownership "$HESTIA/ssl/mail" "Debian-exim:mail" "1") > /dev/null 2>&1
 
 # Done HestiaCP Ownership
+
+#----------------------------------------------------------#
+#      check hestia base package package checksums         #
+#----------------------------------------------------------#
+
+hestiacp_checksum_installed_package=$(dpkg -l | grep -e debsums) > /dev/null 2>&1
+if [[ -z "$hestiacp_checksum_installed_package" ]]; then
+	echo "Updating apt repository"
+	$(apt update) > /dev/null 2>&1
+	echo "done"
+	echo "Installing Dependency $(debsums)"
+	$(apt install debsums -y) > /dev/null 2>&1
+	echo "Installed"
+fi
+hestia_base_checksums=$(debsums hestia | grep "FAILED" | awk '{print $1}' | awk '{printf "%s ",$0} END {print ""}')
+allowed_files=(
+	"$HESTIA/web/favicon.ico"
+	"$HESTIA/web/images/favicon.png"
+	"$HESTIA/web/images/logo-header.svg"
+	"$HESTIA/web/images/logo.png"
+	"$HESTIA/web/images/logo.svg"
+)
+repair_install="0"
+for file in $hestia_base_checksums; do
+	if [[ $repair_install == "1" ]]; then
+		break
+	fi
+	find_in_array=$(echo "${allowed_files[@]}" | grep -ow "$file" | wc -w)
+	if [[ $find_in_array != 1 ]]; then
+		repair_install="1"
+	fi
+done
+
+if [[ $repair_install == "1" ]]; then
+	echo "reinstall hestia"
+fi
+
+#----------------------------------------------------------#
+#       check hestia php package package checksums         #
+#----------------------------------------------------------#
+hestia_php_checksums=$(debsums hestia-php | grep "FAILED" | awk '{print $1}' | awk '{printf "%s ",$0} END {print ""}')
+if [[ -n $hestia_php_checksums ]]; then
+	echo "reinstall hestia-php"
+fi
+
+#----------------------------------------------------------#
+#      check hestia nginx package package checksums        #
+#----------------------------------------------------------#
+hestia_nginx_checksums=$(debsums hestia-nginx | grep "FAILED" | awk '{print $1}' | awk '{printf "%s",$0} END {print ""}')
+if [[ -n $hestia_nginx_checksums ]]; then
+	if [[ $hestia_nginx_checksums != "$HESTIA/nginx/conf/nginx.conf" ]]; then
+		echo "reinstall hestia-nginx"
+	fi
+fi

@@ -43,7 +43,7 @@ check_ownership() {
 		echo "Error Invalid permissions: $($1) 2nd parameter cannot be empty"
 		exit 1
 	fi
-	if [[ $1 =~ ^[0-9a-fA-F_]{,1}:[0-9a-fA-F_]{,1} ]]; then
+	if [[ $1 =~ ^[0-9a-fA-F_-]{,1}:[0-9a-fA-F_-]{,1} ]]; then
 		ownership="$1"
 	else
 		echo "Error ownership format: $($1) the format must be $(example:example)"

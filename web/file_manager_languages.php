@@ -117,7 +117,6 @@ switch (get_language_from_system()) {
 	case "et":
 		$dist_conf["language"] = "estonian";
 		break;
-	case "en":
 	default:
 		$dist_conf["language"] = "english";
 		break;

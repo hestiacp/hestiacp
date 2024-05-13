@@ -17,11 +17,19 @@ if (!isset($dist_config)) {
 function get_language_from_system() {
 	include $_SERVER["DOCUMENT_ROOT"] . "/inc/main.php";
 	/**
-	 * get data
+	 * get All supported language
 	 */
 	exec(HESTIA_CMD . "v-list-sys-languages json", $output, $return_var);
 	$languages = json_decode(implode("", $output), true);
-	return in_array($_SESSION["language"], $languages) ? $_SESSION["language"] : "en";
+
+	/**
+	 * - check if the session language exists
+	 * - check if language is supported by hestia,
+	 * - return default if both are false
+	 */
+	return isset($_SESSION["language"]) && in_array($_SESSION["language"], $languages)
+		? $_SESSION["language"]
+		: "en";
 }
 
 /**

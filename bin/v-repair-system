@@ -97,8 +97,27 @@ check_ownership() {
 }
 
 #----------------------------------------------------------#
-#               check hestia directory                     #
+#               check hestia directories                   #
 #----------------------------------------------------------#
 hestia_main_dir= ls $HESTIA
 hestia_exclusions="data ssl web"
+
 $(check_ownership $hestia_main_dir "root:root" "1" "$hestia_exclusions") > /dev/null 2>&1
+
+# Session
+$(check_ownership "$HESTIA/data/sessions" "admin:admin" "0") > /dev/null 2>&1
+
+# File manager
+$(check_ownership "$HESTIA/web/fm/private" "admin:admin") > /dev/null 2>&1
+$(check_ownership "$HESTIA/web/fm/private/tmp" "admin:admin") > /dev/null 2>&1
+$(check_ownership "$HESTIA/web/fm/private/logs" "admin:admin") > /dev/null 2>&1
+$(check_ownership "$HESTIA/web/fm/private/logs/app.log" "admin:admin") > /dev/null 2>&1
+$(check_ownership "$HESTIA/web/fm/repository" "admin:admin") > /dev/null 2>&1
+
+# Mail
+$(check_ownership "$HESTIA/ssl/certificate.key" "Debian-exim:mail") > /dev/null 2>&1
+$(check_ownership "$HESTIA/ssl/certificate.crt" "Debian-exim:mail") > /dev/null 2>&1
+
+# Missing dir: $HESTIA/ssl/mail/*
+
+#done HestiaCP

@@ -33,64 +33,81 @@ source_conf "$HESTIA/conf/hestia.conf"
 # @example "test ssl base"
 #
 check_ownership() {
-	recursive="0"
-	exclusions=""
-	if [[ -z $0 ]]; then
-		echo "Error Invalid Directory/file: '$0' 1st parameter cannot be empty"
-		exit 1
+	dir_file="$1"
+	ownership="$2"
+	recursive="$3"
+	exclusions="$4"
+
+	if [[ -z $recursive ]]; then
+		recursive="0"
 	fi
+
+	if [[ -z $exclusions ]]; then
+		exclusions=""
+	fi
+
 	if [[ -z $1 ]]; then
-		echo "Error Invalid permissions: '$1' 2nd parameter cannot be empty"
-		exit 1
+		echo "Error Invalid Directory/file: '$1' 1st parameter cannot be empty"
+		return 1
 	fi
-	ownership_regex="^[0-9a-fA-F_-]{,1}[:][0-9a-fA-F_-]{,1}$"
-	if [[ $1 =~ $ownership_regex ]]; then
-		ownership="$1"
-	else
-		echo "Error ownership format: '$1' the format must be 'example:example'"
-		exit 1
+
+	if [[ -z $2 ]]; then
+		echo "Error Invalid permissions: '$2' 2nd parameter cannot be empty"
+		return 1
 	fi
-	if [[ -d $0 || -f $0 ]]; then
-		dir_file=$0
-	else
-		echo "'$dir_file' is not valid"
-		exit 1
+
+	ownership_regex="^[0-9a-zA-Z\_\-]*:[0-9a-zA-Z\_\-]*$"
+
+	if ! [[ $ownership =~ $ownership_regex ]]; then
+		echo "Error ownership format: '$ownership' the format must be 'example:example'"
+		return 1
 	fi
-	if [[ -n $2 && $2 == "1" && -d $0 ]]; then
-		recursive="1"
+
+	if ! [[ -d $1 || -f $1 ]]; then
+		echo "'$dir_file' is not a directory nor a file"
+		return 1
 	fi
-	if [[ -n $3 ]]; then
-		exclusions=$3
+
+	if [[ $recursive != "0" && $recursive != "1" ]]; then
+		echo "recursive can only be '1' or '0'. '$recursive' provided"
+		return 1
 	fi
-	if [[ -f $0 ]]; then
+
+	echo "working on INPUT: $dir_file"
+	if [[ -f $dir_file ]]; then
 		file_ownership=$(stat -c %U:%G "$dir_file")
 		if [[ $file_ownership != $ownership ]]; then
-			$(chown $ownership $dir_file) > /dev/null 2>&1
+			chown -h "$ownership" "$dir_file"
 		fi
-	else
+	elif [[ -d $dir_file ]]; then
+		#check if the base dir has the permissions set
 		dir_ownership=$(stat -c %U:%G "$dir_file")
-
-		main_dir=$(ls $dir_file)
-		if [[ $dir_ownership != $ownership ]]; then
-			$(chown $ownership $dir_file) > /dev/null 2>&1
+		if [[ "$dir_ownership" != "$ownership" ]]; then
+			echo "changed ownership of: $dir_file"
+			chown -h "$ownership" "$dir_file"
 		fi
-		for dir_or_file in $main_dir; do
+		children_work=$(ls $dir_file)
+		echo "exclusions: $exclusions"
+		for work in $children_work; do
 			bypass="0"
-			if [[ $exclusions != "" ]]; then
+			if [[ "$exclusions" != "" ]]; then
 				for exclude in $exclusions; do
-					if [[ $exclude == $dir_or_file || $exclude == "$dir_file/$dir_or_file" ]]; then
+					if [[ "$exclude" == "$work" || "$exclude" == "$dir_file/$work" ]]; then
 						bypass="1"
 					fi
 				done
 			fi
-			if [[ $bypass == "0" ]]; then
-				working_file_or_dir="$dir_file/$dir_or_file"
-				dir_or_file_ownership=$(stat -c %U:%G "$working_file_or_dir")
-				if [[ $dir_or_file_ownership != $ownership ]]; then
-					$(chown $ownership $working_file_or_dir) > /dev/null 2>&1
+			work_with="$dir_file/$work"
+			if ! [[ -d $work_with || -f $work_with ]]; then
+				echo "directory or file not found: $work_with"
+			elif [[ -n "$work_with" && $bypass == "0" ]]; then
+				work_ownership=$(stat -c %U:%G "$work_with")
+				if [[ "$work_ownership" != "$ownership" ]]; then
+					chown -h "$ownership" "$work_with"
 				fi
-				if [[ $recursive == "1" && -d $working_file_or_dir ]]; then
-					check_ownership $working_file_or_dir $ownership $recursive
+				if [[ -d "$work_with" && "$recursive" == "1" ]]; then
+					# prevent direct scope vars from interfering
+					prevent_direct_var_access=$(check_ownership "$work_with" "$ownership" "$recursive" "$exclusions" > /dev/tty)
 				fi
 			fi
 		done
@@ -103,28 +120,28 @@ check_ownership() {
 echo "Checking and correcting Hestia Directory ownerships"
 hestia_exclusions="data ssl web"
 echo "Base:"
-$(check_ownership $HESTIA "root:root" "1" "$hestia_exclusions") > /dev/null 2>&1
+check_ownership "$HESTIA" "root:root" "1" "$hestia_exclusions"
 
 # Session
 echo "Session"
-$(check_ownership "$HESTIA/data/sessions" "admin:admin" "1") > /dev/null 2>&1
+check_ownership "$HESTIA/data/sessions" "admin:admin" "1"
 
 # File manager
 echo "File Manager"
-$(check_ownership "$HESTIA/web/fm/private" "admin:admin") > /dev/null 2>&1
-$(check_ownership "$HESTIA/web/fm/private/tmp" "admin:admin") > /dev/null 2>&1
-$(check_ownership "$HESTIA/web/fm/private/logs" "admin:admin") > /dev/null 2>&1
-$(check_ownership "$HESTIA/web/fm/private/logs/app.log" "admin:admin") > /dev/null 2>&1
-$(check_ownership "$HESTIA/web/fm/repository" "admin:admin") > /dev/null 2>&1
+check_ownership "$HESTIA/web/fm/private" "admin:admin"
+check_ownership "$HESTIA/web/fm/private/tmp" "admin:admin"
+check_ownership "$HESTIA/web/fm/private/logs" "admin:admin"
+check_ownership "$HESTIA/web/fm/private/logs/app.log" "admin:admin"
+check_ownership "$HESTIA/web/fm/repository" "admin:admin"
 
 # Mail
 echo "Mail"
-$(check_ownership "$HESTIA/ssl/certificate.key" "Debian-exim:mail") > /dev/null 2>&1
-$(check_ownership "$HESTIA/ssl/certificate.crt" "Debian-exim:mail") > /dev/null 2>&1
+check_ownership "$HESTIA/ssl/certificate.key" "Debian-exim:mail"
+check_ownership "$HESTIA/ssl/certificate.crt" "Debian-exim:mail"
 
 # Missing dir: $HESTIA/ssl/mail/*
 echo "Mail Server Certificates"
-$(check_ownership "$HESTIA/ssl/mail" "Debian-exim:mail" "1") > /dev/null 2>&1
+check_ownership "$HESTIA/ssl/mail" "Debian-exim:mail" "1"
 
 # Done HestiaCP Ownership
 

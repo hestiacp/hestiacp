@@ -198,6 +198,7 @@ done
 
 if [[ $repair_install == "1" ]]; then
 	echo "reinstall needed: 'hestia'"
+	$(apt install hestia --reinstall)
 else
 	echo "package 'hestia' is OK"
 fi
@@ -209,6 +210,7 @@ echo "Base package: hestia-php"
 hestia_php_checksums=$(debsums hestia-php | grep "FAILED" | awk '{print $1}' | awk '{printf "%s ",$0} END {print ""}')
 if [[ -n $hestia_php_checksums ]]; then
 	echo "reinstall needed: 'hestia-php'"
+	$(apt install hestia-php --reinstall)
 else
 	echo "package 'hestia-php' is OK"
 fi
@@ -228,6 +230,7 @@ if [[ -n $hestia_nginx_checksums ]]; then
 fi
 if [[ $reinstall_hestia_nginx == "1" ]]; then
 	echo "reinstall needed: 'hestia-nginx'"
+	$(apt install hestia-nginx --reinstall)
 else
 	echo "package 'hestia-nginx' is OK"
 fi

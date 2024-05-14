@@ -124,7 +124,7 @@ check_ownership "$HESTIA" "root:root" "1" "$hestia_exclusions"
 
 # Session
 echo "Session"
-check_ownership "$HESTIA/data/sessions" "admin:admin" "1"
+check_ownership "$HESTIA/data/sessions" "hestiaweb:hestiaweb" "1"
 
 # File manager
 echo "File Manager"
@@ -139,11 +139,23 @@ echo "Mail"
 check_ownership "$HESTIA/ssl/certificate.key" "Debian-exim:mail"
 check_ownership "$HESTIA/ssl/certificate.crt" "Debian-exim:mail"
 
-# Missing dir: $HESTIA/ssl/mail/*
+# Mail Server Certificates
 echo "Mail Server Certificates"
 check_ownership "$HESTIA/ssl/mail" "Debian-exim:mail" "1"
 
 # Done HestiaCP Ownership
+
+# PHP My Admin
+echo "Check PHP My Admin"
+check_ownership "/usr/share/phpmyadmin/tmp" "root:hestiamail" "1"
+
+# Dovecot
+echo "Check Dovecot"
+check_ownership "/etc/dovecot" "root:root" "1"
+
+# Hestia cron tabs
+echo "Cron Tasks"
+check_ownership "/var/spool/cron/crontabs/hestiaweb" "hestiaweb:hestiaweb" "0" # Is a file, not a dir
 
 #----------------------------------------------------------#
 #      check hestia base package package checksums         #

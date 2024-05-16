@@ -147,7 +147,7 @@ check_ownership "$HESTIA/ssl/mail" "Debian-exim:mail" "1"
 
 # PHP My Admin
 echo "Check PHP My Admin"
-check_ownership "/usr/share/phpmyadmin/tmp" "root:hestiamail" "1"
+check_ownership "/usr/share/phpmyadmin/tmp" "www-data:www-data" "1"
 
 # Dovecot
 echo "Check Dovecot"

@@ -154,6 +154,13 @@ check_ownership "/usr/share/phpmyadmin" "hestiaweb:hestiaweb" "1"
 # check : https://github.com/hestiacp/hestiacp/blob/main/install/hst-install-debian.sh#L1870
 # check : https://github.com/hestiacp/hestiacp/blob/main/install/hst-install-ubuntu.sh#L1880
 
+# check if the file contains
+isInFile=$(cat "/etc/phpmyadmin/config.inc.php" | grep -c "\$cfg\['TempDir'\] = '/tmp';")
+if [ $isInFile -eq 0 ]; then
+	# default temp dir not defined, define in the end of the config file
+	echo "\$cfg['TempDir'] = '/tmp';" >> "/etc/phpmyadmin/config.inc.php"
+fi
+
 # PostgresSQL
 echo "check phppgadmin"
 check_ownership "/usr/share/phppgadmin" "hestiaweb:hestiaweb" "1"

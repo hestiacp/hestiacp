@@ -147,7 +147,9 @@ check_ownership "$HESTIA/ssl/mail" "Debian-exim:mail" "1"
 
 # PHP My Admin
 echo "Check PHP My Admin"
-check_ownership "/usr/share/phpmyadmin/tmp" "www-data:www-data" "1"
+check_ownership "/usr/share/phpmyadmin" "root:www-data" "1" # note - latest hestia install makes this permissions recursive on the end of the script
+#check : https://github.com/hestiacp/hestiacp/blob/main/install/hst-install-debian.sh#L1870
+#check : https://github.com/hestiacp/hestiacp/blob/main/install/hst-install-ubuntu.sh#L1880
 
 # Dovecot
 echo "Check Dovecot"

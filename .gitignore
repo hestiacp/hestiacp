@@ -49,3 +49,6 @@ npm-debug.log
 
 # optional eslint cache
 .eslintcache
+
+# Hestiacp VSCode workspace exclusion
+hestiacp.code-workspace

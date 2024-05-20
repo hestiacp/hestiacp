@@ -2677,7 +2677,7 @@ deletes temp database user
 **Examples**:
 
 ```bash
-v-add-database-temp-user wordress hestia_sso_user mysql
+v-delete-database-temp-user wordpress hestia_sso_user mysql
 ```
 
 Revokes "temp user" access to a database and removes the user

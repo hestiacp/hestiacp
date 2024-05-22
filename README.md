@@ -7,8 +7,9 @@
 <p align="center"><strong>Latest stable release:</strong> Version 1.8.10 | <a href="https://github.com/hestiacp/hestiacp/blob/release/CHANGELOG.md">View Changelog</a></p>
 
 <p align="center">
-	<a href="https://www.hestiacp.com/">HestiaCP.com</a> |
-	<a href="https://docs.hestiacp.com/">Documentation</a> |
+	<a href="https://hestiacp.com">HestiaCP.com</a> |
+	<a href="https://hestiamb.org">中文站点</a> |
+	<a href="https://hestiacp.com/docs/introduction/getting-started.html">Documentation</a> |
 	<a href="https://forum.hestiacp.com/">Forum</a>
 	<br/><br/>
 	<a href="https://drone.hestiacp.com/hestiacp/hestiacp">
@@ -18,6 +19,8 @@
 		<img src="https://github.com/hestiacp/hestiacp/actions/workflows/lint.yml/badge.svg" alt="Lint Status"/>
 	</a>
 </p>
+
+## [中文文档](zh-CN.README.md)
 
 ## **Welcome!**
 

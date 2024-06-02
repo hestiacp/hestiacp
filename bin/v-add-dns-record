@@ -71,7 +71,7 @@ fi
 if [ "$rtype" != "CAA" ]; then
 	dvalue=${dvalue//\"/}
 	# Add support for DS key
-	if [ "$rtype" != "DNSKEY" ] && [ "$rtype" != "DS" ]; then
+	if [ "$rtype" != "DNSKEY" ] && [ "$rtype" != "DS" ] && [ "$rtype" != "TLSA" ]; then
 		if [ "$rtype" != 'SRV' ] && [[ "$dvalue" =~ [\;[:space:]] ]]; then
 			dvalue='"'"$dvalue"'"'
 		fi

@@ -868,9 +868,7 @@ gpg --no-default-keyring --keyring /usr/share/keyrings/hestia-keyring.gpg --keys
 
 # Installing Node.js 20.x repo
 echo "[ * ] Node.js 20.x"
-echo "deb [signed-by=/usr/share/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x nodistro main" > $apt/nodesource.list
-echo "deb-src [signed-by=/usr/share/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x nodistro main" >> $apt/nodesource.list
-curl -s https://deb.nodesource.com/gpgkey/nodesource.gpg.key | gpg --dearmor | tee /usr/share/keyrings/nodesource.gpg > /dev/null 2>&1
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo bash - > /dev/null 2>&1
 
 # Installing PostgreSQL repo
 if [ "$postgresql" = 'yes' ]; then

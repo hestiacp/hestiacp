@@ -814,7 +814,7 @@ echo "[ * ] PHP"
 LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php > /dev/null 2>&1
 
 # Installing sury Apache2 repo
-if [ "$apache" = 'yes' ]; then
+if [ "$apache" = 'yes' ] && [ "$release" != '24.04' ]; then
 	echo "[ * ] Apache2"
 	echo "deb http://ppa.launchpad.net/ondrej/apache2/ubuntu $codename main" > $apt/apache2.list
 fi

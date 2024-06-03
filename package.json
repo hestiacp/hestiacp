@@ -34,7 +34,7 @@
 	"devDependencies": {
 		"@prettier/plugin-php": "^0.22.2",
 		"@testing-library/vue": "^8.1.0",
-		"@vitejs/plugin-vue": "^5.0.4",
+		"@vitejs/plugin-vue": "^5.0.5",
 		"browserslist": "^4.23.0",
 		"esbuild": "^0.21.4",
 		"eslint": "^8.57.0",

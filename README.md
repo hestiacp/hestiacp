@@ -4,7 +4,7 @@
 
 <h2 align="center">适用于现代网络的轻量级且功能强大的服务器控制面板</h2>
 
-<p align="center"><strong>最新稳定版本:</strong> 1.8.10 | <a href="https://github.com/hestiacp/hestiacp/blob/release/CHANGELOG.md">查看更新日志</a></p>
+<p align="center"><strong>最新稳定版本:</strong> 1.8.11 | <a href="https://github.com/hestiacp/hestiacp/blob/release/CHANGELOG.md">查看更新日志</a></p>
 
 <p align="center">
 	<a href="https://hestiamb.org">中文官网</a> |

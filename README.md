@@ -83,7 +83,7 @@ bash hst-install.sh
 bash hst-install.sh -h
 ```
 
-另外，您还可以使用 <https://hestiacp.com/install.html>，它允许您通过图形用户界面（GUI）轻松生成安装命令。
+另外，您还可以使用 <https://hestiamb.org/install.html>，它允许您通过图形用户界面（GUI）轻松生成安装命令。
 
 ## 如何升级现有安装
 

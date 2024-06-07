@@ -16,6 +16,8 @@
 !.vscode/launch.json
 !.vscode/extensions.json
 !.vscode/*.code-snippets
+nbproject/project.properties
+nbproject/project.xml
 
 # macOS
 .DS_Store

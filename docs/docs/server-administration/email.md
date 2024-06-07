@@ -44,7 +44,7 @@ If not, you have 2 options:
 2. Setup a mail relay under the mail domain settings or set it up generally for the server in system settings. For this you need to use an SMTP relay service like:
    - [Amazon SES](https://aws.amazon.com/ses/)
    - [SMTP2GO](https://www.smtp2go.com)
-   - [Sendinblue](https://www.sendinblue.com)
+   - [Brevo](https://www.brevo.com/)
 
 ## What is an SMTP relay service and how to set it up
 

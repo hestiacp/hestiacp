@@ -19,18 +19,19 @@ source /etc/hestiacp/hestia.conf
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
-if [ ! -e /usr/bin/rsync ] || [ ! -e /usr/bin/file ]; then
-	echo "#######################################"
-	echo "rsync not installed, try install it"
-	echo "This script need: rsync, file"
-	echo "#######################################"
-	if [ -e /etc/redhat-release ]; then
-		echo "Run: yum install rync file"
-	else
-		echo "Run: apt-get install rsync file"
-	fi
-	exit 3
+# Check required binaries
+if [ ! -e /usr/bin/rsync ] || [ ! -e /usr/bin/file ] || [ ! -e /usr/bin/zstd ]; then
+    echo "#######################################"
+    echo "rsync, file, and/or zstd not installed. Please install them:"
+    if [ -e /etc/redhat-release ]; then
+        echo "Run: yum install rsync file zstd"
+    else
+        echo "Run: apt-get install rsync file zstd"
+    fi
+    echo "#######################################"
+    exit 3
 fi
+
 # Put this to 0 if you want use bash -x to debug it
 debug=1
 hestia_package=default
@@ -63,42 +64,79 @@ tput sgr0
 tput setaf 2
 echo "Checking provided file..."
 tput sgr0
-if file $backup_file | grep -q -c "gzip compressed data,"; then
-	tput setaf 2
-	echo "OK - Gziped File"
-	tput sgr0
-	if [ ! -d /backup/${tmp_dir} ]; then
-		echo "Creating tmp.."
-		mkdir /backup/${tmp_dir}
-	fi
-	echo "Extracting backup..."
-	if [ "$debug" != 0 ]; then
-		tar xzvf $backup_file -C /backup/${tmp_dir} 2>&1 \
-			| while read extracted_file; do
-				ex=$((ex + 1))
-				echo -en "wait... $ex files extracted\r"
-			done
-	else
-		tar xzf $backup_file -C /backup/${tmp_dir}
-	fi
-	if [ $? -eq 0 ]; then
-		tput setaf 2
-		echo "Backup extracted whitout errors..."
-		tput sgr0
-	else
-		tput setaf 1
-		echo "Error on backup extraction, check your file, try extract it manually"
-		tput sgr0
-		delete_tmp
-		exit 1
-	fi
+
+if file "$backup_file" | grep -q -c "gzip compressed data"; then
+    tput setaf 2
+    echo "OK - Gzipped File"
+    tput sgr0
+
+    if [ ! -d /backup/${tmp_dir} ]; then
+        echo "Creating temporary directory..."
+        mkdir /backup/${tmp_dir}
+    fi
+
+    echo "Extracting backup..."
+    if [ "$debug" != 0 ]; then
+        tar xzvf "$backup_file" -C /backup/${tmp_dir} 2>&1 | while read -r extracted_file; do
+            ex=$((ex + 1))
+            echo -en "wait... $ex files extracted\r"
+        done
+    else
+        tar xzf "$backup_file" -C /backup/${tmp_dir}
+    fi
+
+    if [ $? -eq 0 ]; then
+        tput setaf 2
+        echo "Backup extracted without errors..."
+        tput sgr0
+    else
+        tput setaf 1
+        echo "Error on backup extraction, check your file and try extracting it manually"
+        tput sgr0
+        delete_tmp
+        exit 1
+    fi
+
+elif file "$backup_file" | grep -q -c "Zstandard compressed data"; then
+    tput setaf 2
+    echo "OK - Zstandard Compressed File"
+    tput sgr0
+
+    if [ ! -d /backup/${tmp_dir} ]; then
+        echo "Creating temporary directory..."
+        mkdir /backup/${tmp_dir}
+    fi
+
+    echo "Extracting backup..."
+    if [ "$debug" != 0 ]; then
+        tar --use-compress-program=unzstd -xvf "$backup_file" -C /backup/${tmp_dir} 2>&1 | while read -r extracted_file; do
+            ex=$((ex + 1))
+            echo -en "wait... $ex files extracted\r"
+        done
+    else
+        tar --use-compress-program=unzstd -xf "$backup_file" -C /backup/${tmp_dir}
+    fi
+
+    if [ $? -eq 0 ]; then
+        tput setaf 2
+        echo "Backup extracted without errors..."
+        tput sgr0
+    else
+        tput setaf 1
+        echo "Error on backup extraction, check your file and try extracting it manually"
+        tput sgr0
+        delete_tmp
+        exit 1
+    fi
+
 else
-	tput setaf 1
-	echo "Error 3 not-gzip - no standard gziped backup provided of file not installed ( Try yum install file, or apt-get install file )"
-	tput sgr0
-	delete_tmp
-	exit 3
+    tput setaf 1
+    echo "Error: Unsupported file format or 'file' command not installed (Try 'yum install file' or 'apt-get install file')"
+    tput sgr0
+    delete_tmp
+    exit 3
 fi
+
 cd /backup/${tmp_dir}/
 main_dir=$(pwd)
 echo "Access tmp directory $main_dir"

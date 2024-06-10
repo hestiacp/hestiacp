@@ -20,16 +20,17 @@ source /etc/hestiacp/hestia.conf
 source_conf "$HESTIA/conf/hestia.conf"
 
 # Check required binaries
-if [ ! -e /usr/bin/rsync ] || [ ! -e /usr/bin/file ] || [ ! -e /usr/bin/zstd ]; then
-    echo "#######################################"
-    echo "rsync, file, and/or zstd not installed. Please install them:"
-    if [ -e /etc/redhat-release ]; then
-        echo "Run: yum install rsync file zstd"
-    else
-        echo "Run: apt-get install rsync file zstd"
-    fi
-    echo "#######################################"
-    exit 3
+if [ ! -e /usr/bin/rsync ] || [ ! -e /usr/bin/file ]; then
+	echo "#######################################"
+	echo "rsync not installed, try install it"
+	echo "This script need: rsync, file"
+	echo "#######################################"
+	if [ -e /etc/redhat-release ]; then
+		echo "Run: yum install rync file"
+	else
+		echo "Run: apt-get install rsync file"
+	fi
+	exit 3
 fi
 
 # Put this to 0 if you want use bash -x to debug it
@@ -66,75 +67,75 @@ echo "Checking provided file..."
 tput sgr0
 
 if file "$backup_file" | grep -q -c "gzip compressed data"; then
-    tput setaf 2
-    echo "OK - Gzipped File"
-    tput sgr0
+	tput setaf 2
+	echo "OK - Gzipped File"
+	tput sgr0
 
-    if [ ! -d /backup/${tmp_dir} ]; then
-        echo "Creating temporary directory..."
-        mkdir /backup/${tmp_dir}
-    fi
+	if [ ! -d /backup/${tmp_dir} ]; then
+		echo "Creating temporary directory..."
+		mkdir /backup/${tmp_dir}
+	fi
 
-    echo "Extracting backup..."
-    if [ "$debug" != 0 ]; then
-        tar xzvf "$backup_file" -C /backup/${tmp_dir} 2>&1 | while read -r extracted_file; do
-            ex=$((ex + 1))
-            echo -en "wait... $ex files extracted\r"
-        done
-    else
-        tar xzf "$backup_file" -C /backup/${tmp_dir}
-    fi
+	echo "Extracting backup..."
+	if [ "$debug" != 0 ]; then
+		tar xzvf "$backup_file" -C /backup/${tmp_dir} 2>&1 | while read -r extracted_file; do
+			ex=$((ex + 1))
+			echo -en "wait... $ex files extracted\r"
+		done
+	else
+		tar xzf "$backup_file" -C /backup/${tmp_dir}
+	fi
 
-    if [ $? -eq 0 ]; then
-        tput setaf 2
-        echo "Backup extracted without errors..."
-        tput sgr0
-    else
-        tput setaf 1
-        echo "Error on backup extraction, check your file and try extracting it manually"
-        tput sgr0
-        delete_tmp
-        exit 1
-    fi
+	if [ $? -eq 0 ]; then
+		tput setaf 2
+		echo "Backup extracted without errors..."
+		tput sgr0
+	else
+		tput setaf 1
+		echo "Error on backup extraction, check your file and try extracting it manually"
+		tput sgr0
+		delete_tmp
+		exit 1
+	fi
 
 elif file "$backup_file" | grep -q -c "Zstandard compressed data"; then
-    tput setaf 2
-    echo "OK - Zstandard Compressed File"
-    tput sgr0
+	tput setaf 2
+	echo "OK - Zstandard Compressed File"
+	tput sgr0
 
-    if [ ! -d /backup/${tmp_dir} ]; then
-        echo "Creating temporary directory..."
-        mkdir /backup/${tmp_dir}
-    fi
+	if [ ! -d /backup/${tmp_dir} ]; then
+		echo "Creating temporary directory..."
+		mkdir /backup/${tmp_dir}
+	fi
 
-    echo "Extracting backup..."
-    if [ "$debug" != 0 ]; then
-        tar --use-compress-program=unzstd -xvf "$backup_file" -C /backup/${tmp_dir} 2>&1 | while read -r extracted_file; do
-            ex=$((ex + 1))
-            echo -en "wait... $ex files extracted\r"
-        done
-    else
-        tar --use-compress-program=unzstd -xf "$backup_file" -C /backup/${tmp_dir}
-    fi
+	echo "Extracting backup..."
+	if [ "$debug" != 0 ]; then
+		tar --use-compress-program=pzstd -xvf "$backup_file" -C /backup/${tmp_dir} 2>&1 | while read -r extracted_file; do
+			ex=$((ex + 1))
+			echo -en "wait... $ex files extracted\r"
+		done
+	else
+		tar --use-compress-program=pzstd -xf "$backup_file" -C /backup/${tmp_dir}
+	fi
 
-    if [ $? -eq 0 ]; then
-        tput setaf 2
-        echo "Backup extracted without errors..."
-        tput sgr0
-    else
-        tput setaf 1
-        echo "Error on backup extraction, check your file and try extracting it manually"
-        tput sgr0
-        delete_tmp
-        exit 1
-    fi
+	if [ $? -eq 0 ]; then
+		tput setaf 2
+		echo "Backup extracted without errors..."
+		tput sgr0
+	else
+		tput setaf 1
+		echo "Error on backup extraction, check your file and try extracting it manually"
+		tput sgr0
+		delete_tmp
+		exit 1
+	fi
 
 else
-    tput setaf 1
-    echo "Error: Unsupported file format or 'file' command not installed (Try 'yum install file' or 'apt-get install file')"
-    tput sgr0
-    delete_tmp
-    exit 3
+	tput setaf 1
+	echo "Error: Unsupported file format or 'file' command not installed (Try 'yum install file' or 'apt-get install file')"
+	tput sgr0
+	delete_tmp
+	exit 3
 fi
 
 cd /backup/${tmp_dir}/
@@ -177,7 +178,7 @@ echo "Start with databases"
 tput sgr0
 
 echo "Get local databases"
-mysql -e "SHOW DATABASES" > server_dbs
+mysql -e "SHOW DATABASES" >server_dbs
 da_db_list=$(ls -1 backup/ | grep ".conf")
 function run_da_db() {
 	for da_db in $da_db_list; do
@@ -194,7 +195,7 @@ function run_da_db() {
 				echo " Create and restore ${db} "
 				tput sgr0
 				mysql -e "CREATE DATABASE $db"
-				mysql ${db} < backup/${db}.sql
+				mysql ${db} <backup/${db}.sql
 				#Get all the users of the database
 				while IFS= read -r line; do
 
@@ -208,10 +209,10 @@ function run_da_db() {
 						echo "udb: $db_user"
 						echo "Password: ${md5}"
 
-						echo "DB='$db' DBUSER='$db_user' MD5='$md5' HOST='localhost' TYPE='mysql' CHARSET='UTF8' U_DISK='0' SUSPENDED='no' TIME='$time' DATE='$data'" >> /usr/local/hestia/data/users/$directadmin_user/db.conf
+						echo "DB='$db' DBUSER='$db_user' MD5='$md5' HOST='localhost' TYPE='mysql' CHARSET='UTF8' U_DISK='0' SUSPENDED='no' TIME='$time' DATE='$data'" >>/usr/local/hestia/data/users/$directadmin_user/db.conf
 					fi
 
-				done < "backup/${da_db}"
+				done <"backup/${da_db}"
 
 				# Leave hestia restore passwords and create users
 				tput setaf 2
@@ -256,13 +257,13 @@ for directadmin_domain in $directadmin_domain_list; do
 		tput sgr0
 	elif [ -d /home/${directadmin_user}/web/${directadmin_domain} ]; then
 		echo "Domain $directadmin_domain added, restoring files"
-		echo $directadmin_domain >> restored_domains
+		echo $directadmin_domain >>restored_domains
 		rm -f /home/$directadmin_user/web/$directadmin_domain/public_html/index.html
 		rm -f /home/$directadmin_user/web/$directadmin_domain/public_html/robots.txt
 
 		public_sync_count=0
-		rsync -av domains/${directadmin_domain}/public_html/ /home/$directadmin_user/web/$directadmin_domain/public_html 2>&1 \
-			| while read file_dm; do
+		rsync -av domains/${directadmin_domain}/public_html/ /home/$directadmin_user/web/$directadmin_domain/public_html 2>&1 |
+			while read file_dm; do
 				public_sync_count=$(($public_sync_count + 1))
 				echo -en "-- $public_sync_count restored files\r"
 			done
@@ -275,8 +276,8 @@ for directadmin_domain in $directadmin_domain_list; do
 		else
 			private_sync_count=0
 
-			rsync -av domains/${directadmin_domain}/private_html/ /home/$directadmin_user/web/$directadmin_domain/private 2>&1 \
-				| while read file_dm; do
+			rsync -av domains/${directadmin_domain}/private_html/ /home/$directadmin_user/web/$directadmin_domain/private 2>&1 |
+				while read file_dm; do
 					private_sync_count=$(($private_sync_count + 1))
 					echo -en "-- $private_sync_count restored files\r"
 				done
@@ -316,8 +317,8 @@ if [ -e restored_domains ]; then
 				tmp_pass=$(generate_password)
 				$BIN/v-add-mail-account $directadmin_user $da_mail_domain $da_imap tmp_pass
 				if [ "$debug" != 0 ]; then
-					rsync -av imap/${da_mail_domain}/${da_imap}/Maildir/ /home/${directadmin_user}/mail/${da_mail_domain}/${da_imap} 2>&1 \
-						| while read backup_file_dm; do
+					rsync -av imap/${da_mail_domain}/${da_imap}/Maildir/ /home/${directadmin_user}/mail/${da_mail_domain}/${da_imap} 2>&1 |
+						while read backup_file_dm; do
 							sk_sync=$((sk_sync + 1))
 							echo -en "-- $sk_sync restored files\r"
 						done

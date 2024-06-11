@@ -78,6 +78,11 @@ if [ -n "$WEB_SYSTEM" ] || [ -n "$PROXY_SYSTEM" ]; then
 	fi
 fi
 
+# Run extension trigger
+if [ -x "$HESTIA/data/extensions/delete-mail-domain.sh" ]; then
+        $HESTIA/data/extensions/delete-mail-domain.sh "$domain"
+fi
+
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#

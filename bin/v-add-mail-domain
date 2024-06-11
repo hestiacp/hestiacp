@@ -200,7 +200,7 @@ fi
 
 # Run extension trigger
 if [ -x "$HESTIA/data/extensions/add-mail-domain.sh" ]; then
-        $HESTIA/data/extensions/add-mail-domain.sh "$domain"
+        $HESTIA/data/extensions/add-mail-domain.sh "$user" "$domain"
 fi
 
 #----------------------------------------------------------#

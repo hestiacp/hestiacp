@@ -198,6 +198,11 @@ if [ -n "$WEB_SYSTEM" ] || [ -n "$PROXY_SYSTEM" ]; then
 	fi
 fi
 
+# Run extension trigger
+if [ -x "$HESTIA/data/extensions/add-mail-domain.sh" ]; then
+        $HESTIA/data/extensions/add-mail-domain.sh "$domain"
+fi
+
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#

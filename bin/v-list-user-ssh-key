@@ -28,8 +28,8 @@ json_list() {
 	objects=$(echo "$keys" | wc -l)
 	echo "{"
 	for str in $keys; do
-		KEY=$(echo $str | awk '{print $(NF-2)}')
-		ID=$(echo $str | awk '{print $(NF-1)}')
+		KEY=$(echo $str | awk '{for (i=2; i<=NF; i++) printf $i " "; print ""}')
+		ID=$(echo $str | awk '{for (i=3; i<NF; i++) printf $i " "; print ""}')
 		echo -n '    "'$ID'": {
         "ID": "'$ID'",
         "KEY": "'$KEY'"
@@ -47,8 +47,8 @@ shell_list() {
 	echo "ID~KEY"
 	echo "----~----~---"
 	for str in $keys; do
-		KEY=$(echo $str | awk '{print $(NF-2)}')
-		ID=$(echo $str | awk '{print $(NF-1)}')
+		KEY=$(echo $str | awk '{for (i=2; i<=NF; i++) printf $i " "; print ""}')
+		ID=$(echo $str | awk '{for (i=3; i<NF; i++) printf $i " "; print ""}')
 		echo "$ID~$KEY"
 	done
 }
@@ -57,8 +57,8 @@ shell_list() {
 plain_list() {
 	IFS=$'\n'
 	for str in $keys; do
-		KEY=$(echo $str | awk '{print $(NF-2)}')
-		ID=$(echo $str | awk '{print $(NF-1)}')
+		KEY=$(echo $str | awk '{for (i=2; i<=NF; i++) printf $i " "; print ""}')
+		ID=$(echo $str | awk '{for (i=3; i<NF; i++) printf $i " "; print ""}')
 		echo -e "$ID\t$KEY"
 	done
 }
@@ -68,8 +68,8 @@ csv_list() {
 	IFS=$'\n'
 	echo "ID,KEY"
 	for str in $keys; do
-		KEY=$(echo $str | awk '{print $(NF-2)}')
-		ID=$(echo $str | awk '{print $(NF-1)}')
+		KEY=$(echo $str | awk '{for (i=2; i<=NF; i++) printf $i " "; print ""}')
+		ID=$(echo $str | awk '{for (i=3; i<NF; i++) printf $i " "; print ""}')
 		echo "\"$ID\",\"$KEY\""
 	done
 }

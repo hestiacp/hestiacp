@@ -194,16 +194,18 @@
 									<span class="u-hide-desktop"><?= _("Mail Accounts") ?></span>
 								</a>
 							</li>
-							<li class="units-table-row-action shortcut-l" data-key-action="href">
-								<a
-									class="units-table-row-action-link"
-									href="?domain=<?= $key ?>&dns=1&token=<?= $_SESSION["token"] ?>"
-									title="<?= _("DNS Records") ?>"
-								>
-									<i class="fas fa-book-atlas icon-blue"></i>
-									<span class="u-hide-desktop"><?= _("DNS Records") ?></span>
-								</a>
-							</li>
+							<?php if ($_SESSION["DNS_SYSTEM"]) { ?>
+								<li class="units-table-row-action shortcut-l" data-key-action="href">
+									<a
+										class="units-table-row-action-link"
+										href="?domain=<?= $key ?>&dns=1&token=<?= $_SESSION["token"] ?>"
+										title="<?= _("DNS Records") ?>"
+									>
+										<i class="fas fa-book-atlas icon-blue"></i>
+										<span class="u-hide-desktop"><?= _("DNS Records") ?></span>
+									</a>
+								</li>
+							<?php } ?>
 							<?php if ($data[$key]["SUSPENDED"] == "no") { ?>
 								<li class="units-table-row-action" data-key-action="href">
 									<a
@@ -255,16 +257,18 @@
 									</a>
 								</li>
 							<?php } ?>
-							<li class="units-table-row-action shortcut-l" data-key-action="href">
-								<a
-									class="units-table-row-action-link"
-									href="?domain=<?= $key ?>&dns=1&token=<?= $_SESSION["token"] ?>"
-									title="<?= _("DNS Records") ?>"
-								>
-									<i class="fas fa-book-atlas icon-blue"></i>
-									<span class="u-hide-desktop"><?= _("DNS Records") ?></span>
-								</a>
-							</li>
+							<?php if ($_SESSION["DNS_SYSTEM"]) { ?>
+								<li class="units-table-row-action shortcut-l" data-key-action="href">
+									<a
+										class="units-table-row-action-link"
+										href="?domain=<?= $key ?>&dns=1&token=<?= $_SESSION["token"] ?>"
+										title="<?= _("DNS Records") ?>"
+									>
+										<i class="fas fa-book-atlas icon-blue"></i>
+										<span class="u-hide-desktop"><?= _("DNS Records") ?></span>
+									</a>
+								</li>
+							<?php } ?>
 							<li class="units-table-row-action shortcut-s" data-key-action="js">
 								<a
 									class="units-table-row-action-link data-controls js-confirm-action"

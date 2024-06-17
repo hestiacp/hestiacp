@@ -6,7 +6,7 @@
 # https://www.hestiacp.com/
 #
 # Currently Supported Versions:
-# Debian 10, 11
+# Debian 10, 11 12
 #
 # ======================================================== #
 

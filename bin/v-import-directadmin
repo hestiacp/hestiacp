@@ -371,7 +371,7 @@ if [ -f "backup/crontab.conf" ]; then
         # Extract cron job details (handle cases where command contains spaces)
         IFS=' ' read -r min hour day month wday command <<< "$cron_line"
 
-        # Ensure it is a valid cron job line (i.e., min, hour, day, month, wday should be numeric or valid cron symbols)
+        # Ensure it is a valid cron job line
         if ! [[ "$min" =~ ^[\*0-9,-/]+$ && "$hour" =~ ^[\*0-9,-/]+$ && "$day" =~ ^[\*0-9,-/]+$ && "$month" =~ ^[\*0-9,-/]+$ && "$wday" =~ ^[\*0-9,-/]+$ ]]; then
             echo "Invalid cron job format: $cron_line"
             continue
@@ -428,7 +428,6 @@ echo "# ENABLE LETSENCRYPT "
 echo "#######################################"
 tput sgr0
 
-# Enable Let's Encrypt for each domain
 if [ "$letsencrypt_enable" = 1 ]; then
     for directadmin_domain in $directadmin_domain_list; do
         echo "Enabling Let's Encrypt for $directadmin_domain"

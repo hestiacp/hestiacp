@@ -178,7 +178,7 @@ echo "Start with databases"
 tput sgr0
 
 echo "Get local databases"
-mysql -e "SHOW DATABASES" >server_dbs
+mysql -e "SHOW DATABASES" > server_dbs
 da_db_list=$(ls -1 backup/ | grep ".conf")
 function run_da_db() {
 	for da_db in $da_db_list; do
@@ -195,7 +195,7 @@ function run_da_db() {
 				echo " Create and restore ${db} "
 				tput sgr0
 				mysql -e "CREATE DATABASE $db"
-				mysql ${db} <backup/${db}.sql
+				mysql ${db} < backup/${db}.sql
 				#Get all the users of the database
 				while IFS= read -r line; do
 
@@ -209,10 +209,10 @@ function run_da_db() {
 						echo "udb: $db_user"
 						echo "Password: ${md5}"
 
-						echo "DB='$db' DBUSER='$db_user' MD5='$md5' HOST='localhost' TYPE='mysql' CHARSET='UTF8' U_DISK='0' SUSPENDED='no' TIME='$time' DATE='$data'" >>/usr/local/hestia/data/users/$directadmin_user/db.conf
+						echo "DB='$db' DBUSER='$db_user' MD5='$md5' HOST='localhost' TYPE='mysql' CHARSET='UTF8' U_DISK='0' SUSPENDED='no' TIME='$time' DATE='$data'" >> /usr/local/hestia/data/users/$directadmin_user/db.conf
 					fi
 
-				done <"backup/${da_db}"
+				done < "backup/${da_db}"
 
 				# Leave hestia restore passwords and create users
 				tput setaf 2
@@ -257,13 +257,13 @@ for directadmin_domain in $directadmin_domain_list; do
 		tput sgr0
 	elif [ -d /home/${directadmin_user}/web/${directadmin_domain} ]; then
 		echo "Domain $directadmin_domain added, restoring files"
-		echo $directadmin_domain >>restored_domains
+		echo $directadmin_domain >> restored_domains
 		rm -f /home/$directadmin_user/web/$directadmin_domain/public_html/index.html
 		rm -f /home/$directadmin_user/web/$directadmin_domain/public_html/robots.txt
 
 		public_sync_count=0
-		rsync -av domains/${directadmin_domain}/public_html/ /home/$directadmin_user/web/$directadmin_domain/public_html 2>&1 |
-			while read file_dm; do
+		rsync -av domains/${directadmin_domain}/public_html/ /home/$directadmin_user/web/$directadmin_domain/public_html 2>&1 \
+			| while read file_dm; do
 				public_sync_count=$(($public_sync_count + 1))
 				echo -en "-- $public_sync_count restored files\r"
 			done
@@ -276,8 +276,8 @@ for directadmin_domain in $directadmin_domain_list; do
 		else
 			private_sync_count=0
 
-			rsync -av domains/${directadmin_domain}/private_html/ /home/$directadmin_user/web/$directadmin_domain/private 2>&1 |
-				while read file_dm; do
+			rsync -av domains/${directadmin_domain}/private_html/ /home/$directadmin_user/web/$directadmin_domain/private 2>&1 \
+				| while read file_dm; do
 					private_sync_count=$(($private_sync_count + 1))
 					echo -en "-- $private_sync_count restored files\r"
 				done
@@ -317,8 +317,8 @@ if [ -e restored_domains ]; then
 				tmp_pass=$(generate_password)
 				$BIN/v-add-mail-account $directadmin_user $da_mail_domain $da_imap tmp_pass
 				if [ "$debug" != 0 ]; then
-					rsync -av imap/${da_mail_domain}/${da_imap}/Maildir/ /home/${directadmin_user}/mail/${da_mail_domain}/${da_imap} 2>&1 |
-						while read backup_file_dm; do
+					rsync -av imap/${da_mail_domain}/${da_imap}/Maildir/ /home/${directadmin_user}/mail/${da_mail_domain}/${da_imap} 2>&1 \
+						| while read backup_file_dm; do
 							sk_sync=$((sk_sync + 1))
 							echo -en "-- $sk_sync restored files\r"
 						done

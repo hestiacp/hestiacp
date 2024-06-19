@@ -194,23 +194,34 @@ function run_da_db() {
 		if [ $? == "1" ]; then
 			if [ -e "backup/${database_name}.sql" ]; then
 
-				#Get the database name
+				# Get the database name
 				db=$(grep db_collation backup/"${da_db}" | tr '&' '\n ' | grep SCHEMA_NAME | cut -d "=" -f 2)
 
 				tput setaf 2
 				echo " Create and restore ${db} "
 				tput sgr0
 				mysql -e "CREATE DATABASE $db"
-				mysql "${db}" < backup/"${db}".sql
-				#Get all the users of the database
-				while IFS= read -r line; do
 
+				# Preprocess the SQL file to remove problematic lines: https://jira.mariadb.org/browse/MDEV-34203
+				grep -vE '^/\*!(999999\\-)' "backup/${database_name}.sql" > "backup/${database_name}_processed.sql" 2>/dev/null
+
+				# Import the preprocessed SQL file with --force to ignore errors and continue
+				mysql --force "${db}" < "backup/${database_name}_processed.sql"
+
+				if [ $? -ne 0 ]; then
+				    tput setaf 1
+				    echo "Error importing database $db"
+				    tput sgr0
+				    continue
+				fi
+
+				# Get all the users of the database
+				while IFS= read -r line; do
 					selectdb_line=$(echo "$line" | grep passwd)
 					if [ ! -z "$selectdb_line" ]; then
-
-                      db_user=$(echo "$selectdb_line" | tr '&' '\n ' | grep "${directadmin_user}" | cut -d "=" -f 1)
-                        encoded_md5=$(echo "$selectdb_line" | tr '&' '\n ' | grep passwd | cut -d "=" -f 2)
-                        md5=$(urldecode "$encoded_md5")
+						db_user=$(echo "$selectdb_line" | tr '&' '\n ' | grep "${directadmin_user}" | cut -d "=" -f 1)
+						encoded_md5=$(echo "$selectdb_line" | tr '&' '\n ' | grep passwd | cut -d "=" -f 2)
+						md5=$(urldecode "$encoded_md5")
 
 						echo "DB: $db"
 						echo "udb: $db_user"
@@ -218,18 +229,17 @@ function run_da_db() {
 
 						echo "DB='$db' DBUSER='$db_user' MD5='$md5' HOST='localhost' TYPE='mysql' CHARSET='UTF8' U_DISK='0' SUSPENDED='no' TIME='$time' DATE='$date'" >> /usr/local/hestia/data/users/"$directadmin_user"/db.conf
 					fi
-
 				done < "backup/${da_db}"
 
-				# Leave hestia restore passwords and create users
+				# Leave Hestia to restore passwords and create users
 				tput setaf 2
-				echo "Rebuild databases files for $directadmin_user"
+				echo "Rebuild database files for $directadmin_user"
 				tput sgr0
 				"$BIN"/v-rebuild-databases "$directadmin_user"
 			fi
 		else
 			tput setaf 1
-			echo "Error: Cant restore database $db already exists in mysql server"
+			echo "Error: Can't restore database $db, it already exists on the MySQL server"
 			tput sgr0
 		fi
 	done

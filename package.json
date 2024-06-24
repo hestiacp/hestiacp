@@ -19,9 +19,9 @@
 		"prepare": "husky"
 	},
 	"dependencies": {
-		"@alpinejs/collapse": "^3.14.0",
+		"@alpinejs/collapse": "^3.14.1",
 		"@fortawesome/fontawesome-free": "^6.5.2",
-		"alpinejs": "^3.14.0",
+		"alpinejs": "^3.14.1",
 		"chart.js": "^4.4.3",
 		"check-password-strength": "^2.0.10",
 		"floating-vue": "^5.2.2",
@@ -54,7 +54,7 @@
 		"stylelint-config-standard": "^36.0.0",
 		"vitepress": "^1.2.3",
 		"vitest": "^1.6.0",
-		"vue": "^3.4.29"
+		"vue": "^3.4.30"
 	},
 	"browserslist": [
 		"defaults"

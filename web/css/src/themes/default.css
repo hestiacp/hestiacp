@@ -568,8 +568,8 @@
 	}
 
 	@media (--viewport-large) {
-		padding-left: 25px;
-		padding-right: 25px;
+		padding-left: 15px;
+		padding-right: 15px;
 	}
 }
 
@@ -1229,6 +1229,20 @@
 .card-title {
 	font-size: 1rem;
 	font-weight: 600;
+}
+
+/* Command output
+   ========================================================================== */
+
+.command-output {
+	padding: 30px 0;
+
+	& .output_content {
+		background: #3a3a3a;
+		color: #fff;
+		padding: 20px 24px;
+		overflow-x: auto;
+	}
 }
 
 /* Statistics

@@ -1,8 +1,12 @@
 <link rel="alternate icon" href="/images/favicon.png" type="image/png">
 <link rel="icon" href="/images/logo.svg" type="image/svg+xml">
 <link rel="stylesheet" href="/css/themes/default.min.css?<?= JS_LATEST_UPDATE ?>">
-
 <?php
+$list_css = hst_apply_filters("css", []);
+foreach ($list_css as $link) {
+	echo "<link rel=\"stylesheet\" href=\"$link\" />\n";
+}
+
 $selected_theme = !empty($_SESSION["userTheme"]) ? $_SESSION["userTheme"] : $_SESSION["THEME"];
 // Load non-default theme
 if ($selected_theme !== "default") {

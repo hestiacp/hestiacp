@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+# info: list plugins
+#
+# example: v-list-plugins
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+format="${1:-shell}"
+
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/plugins.sh
+source $HESTIA/func/plugins.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+init_plugins_conf_if_not_exists
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+case "$format" in
+	json) cat $HESTIA/conf/plugins.json ;;
+	plain) json_to 'plain' $HESTIA/conf/plugins.json "name|version|repository|enabled|date" ;;
+	shell) json_to 'shell' $HESTIA/conf/plugins.json "name|version|repository|enabled|date" ;;
+	csv) json_to 'csv' $HESTIA/conf/plugins.json "name|version|repository|enabled|date|description" ;;
+esac

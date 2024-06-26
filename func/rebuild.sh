@@ -635,7 +635,7 @@ rebuild_mail_domain_conf() {
 		touch $HOMEDIR/$user/conf/mail/$domain/limits
 
 		# Setting outgoing ip address
-		if [ -n "$local_ip" ]; then
+		if [ -n "$local_ip" ] && [ "$U_SMTP_RELAY" != 'true' ]; then
 			echo "$local_ip" > $HOMEDIR/$user/conf/mail/$domain/ip
 		fi
 

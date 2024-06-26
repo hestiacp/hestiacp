@@ -140,7 +140,8 @@ mkdir $HOMEDIR/$user/.config \
 	$HOMEDIR/$user/.composer \
 	$HOMEDIR/$user/.vscode-server \
 	$HOMEDIR/$user/.ssh \
-	$HOMEDIR/$user/.npm
+	$HOMEDIR/$user/.npm \
+	$HOMEDIR/$user/.wp-cli
 
 chown $user:$user \
 	$HOMEDIR/$user/.config \
@@ -149,7 +150,8 @@ chown $user:$user \
 	$HOMEDIR/$user/.composer \
 	$HOMEDIR/$user/.vscode-server \
 	$HOMEDIR/$user/.ssh \
-	$HOMEDIR/$user/.npm
+	$HOMEDIR/$user/.npm \
+	$HOMEDIR/$user/.wp-cli
 
 # Set permissions
 chmod a+x $HOMEDIR/$user

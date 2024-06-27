@@ -51,6 +51,9 @@ class JoomlaSetup extends BaseSetup {
 			],
 		],
 		"server" => [
+			"nginx" => [
+				"template" => "joomla",
+			],
 			"php" => [
 				"supported" => ["7.4", "8.0", "8.1", "8.2"],
 			],

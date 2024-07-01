@@ -331,6 +331,11 @@ function translate_date($date) {
 	return $date->format("d") . " " . _($date->format("M")) . " " . $date->format("Y");
 }
 
+function convert_datetime($date, $format = "Y-m-d H:i:s") {
+	$date = new DateTime($date);
+	return $date->format($format);
+}
+
 function humanize_time($usage) {
 	if ($usage > 60) {
 		$usage = $usage / 60;

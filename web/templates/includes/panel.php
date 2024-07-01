@@ -392,7 +392,7 @@
 
 				<!-- Backups tab -->
 				<?php if (isset($_SESSION["BACKUP_SYSTEM"]) && !empty($_SESSION["BACKUP_SYSTEM"])) { ?>
-					<?php if ($panel[$user]["BACKUPS"] != "0" || $panel[$user]["U_BACKUPS"] != "0") { ?>
+					<?php if ($panel[$user]["BACKUPS"] != "0" || $panel[$user]["U_BACKUPS"] != "0" || $panel[$user]["BACKUPS_INCREMENTAL"] == "yes") { ?>
 						<li class="main-menu-item">
 							<a class="main-menu-item-link <?php if ($TAB == 'BACKUP') echo 'active' ?>" href="/list/backup/" title="<?= _("Backups") ?>: <?= $panel[$user]['U_BACKUPS'] ?>&#13;<?= _("Limit") ?>: <?= $panel[$user]['BACKUPS']=='unlimited' ? "∞" : $panel[$user]['BACKUPS'] ?>">
 								<p class="main-menu-item-label"><?= _("BACKUP") ?><i class="fas fa-file-zipper"></i></p>

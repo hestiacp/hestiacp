@@ -6,6 +6,7 @@
 				<a href="/schedule/backup/?token=<?= $_SESSION["token"] ?>" class="button button-secondary"><i class="fas fa-circle-plus icon-green"></i><?= _("Create Backup") ?></a>
 				<a href="/list/backup/exclusions/" class="button button-secondary"><i class="fas fa-folder-minus icon-orange"></i><?= _("Backup Exclusions") ?></a>
 			<?php } ?>
+			<a href="/list/backup/incremental/" class="button button-secondary"><i class="fas fa-vault icon-blue"></i><?= _("Incremental Backups") ?></a>
 		</div>
 		<div class="toolbar-right">
 			<?php if ($read_only !== "true") { ?>

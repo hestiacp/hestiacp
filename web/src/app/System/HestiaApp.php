@@ -161,15 +161,15 @@ class HestiaApp {
 
 	// Effective user
 	public function user(): string {
-		$user = $this->realuser();
+		$user = strval($this->realuser());
 		if ($_SESSION["userContext"] === "admin" && !empty($_SESSION["look"])) {
 			$user = $_SESSION["look"];
 		}
 
-		if (strpos($user, DIRECTORY_SEPARATOR) !== false) {
+		if (strpos(strval($user), DIRECTORY_SEPARATOR) !== false) {
 			throw new \Exception("illegal characters in username");
 		}
-		return $user;
+		return strval($user);
 	}
 
 	public function getUserHomeDir() {

@@ -80,7 +80,7 @@ fi
 
 # Run extension trigger
 if [ -x "$HESTIA/data/extensions/delete-mail-domain.sh" ]; then
-        $HESTIA/data/extensions/delete-mail-domain.sh "$user" "$domain"
+	$HESTIA/data/extensions/delete-mail-domain.sh "$user" "$domain"
 fi
 
 #----------------------------------------------------------#

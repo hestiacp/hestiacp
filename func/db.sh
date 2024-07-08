@@ -651,3 +651,29 @@ delete_pgsql_user() {
 	query="DROP ROLE $old_dbuser"
 	psql_query "$query" > /dev/null
 }
+
+# Check if database exists
+check_if_database_exists() {
+    USER_DATA_PATH=$HESTIA/data/users/$1
+    if [ ! -d "$USER_DATA_PATH" ]; then
+        echo "no"
+        return;
+    fi
+    counter=$(grep -c "DB='$2'" $USER_DATA_PATH/db.conf)
+    if [ "$counter" = "0" ]; then
+        echo "no"
+    else
+        echo "yes"
+    fi
+}
+
+# GENERATE RANDOM PASSWORD
+generate_password() {
+  local length="${1:-12}"  # Default length: 12 characters
+  local charset="${2:-abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789}"
+  local password=""
+  while [ ${#password} -lt "$length" ]; do
+    password="${password}${charset:$(($RANDOM % ${#charset})),1}"
+  done
+  echo "$password"
+}

@@ -1,8 +1,6 @@
 #!/bin/bash
 # info: WordPress installer in one command line
 # options: USER DOMAIN EMAIL USERNAME PASSWORD
-# EMAIL USERNAME and PASSWORD are for WordPress credentials. The database creadentials are generated automatically
-# TESTED WITH HTTPS.
 #
 # Credits to Luka Paunović for wp-cli implememtation for VESTA
 # Credits to Mawaki Bidjada for adapting to v-intall-wordpress from VESTA TO HESTIA
@@ -37,16 +35,16 @@ source /usr/local/hestia/func/handle_parameters.sh
 source_conf "$HESTIA/conf/hestia.conf"
 
 if [ -z "$domain" ]; then
-	check_result $E_NOTEXIST "domain $domain doesn't exist"
+    check_result $E_NOTEXIST "domain $domain doesn't exist"
 fi
 
 if [ "$user" != "$domain_user" ]; then
-	check_result $E_NOTEXIST "domain $domain doesn't exist for this user"
+  check_result $E_NOTEXIST "domain $domain doesn't exist for this user"
 fi
 
 if [[ $(is_package_full 'DATABASES') = *reached* ]]; then
-	echo "Database limit is reached. Delete database or upgrade user package."
-	exit
+        echo "Database limit is reached. Delete database or upgrade user package."
+        exit
 fi
 
 #----------------------------------------------------------#
@@ -68,44 +66,44 @@ check_hestia_demo_mode
 source /usr/local/hestia/func/handle_parameters.sh
 
 if [ -z "$database" ]; then
-	if [ ! -z "$MAX_DBUSER_LEN" ] && [ "$MAX_DBUSER_LEN" -ge 80 ]; then
-		database=$(echo "$domain" | sed 's#\.#_#g')
-	else
-		database="wp"
-	fi
+    if [ ! -z "$MAX_DBUSER_LEN" ] && [ "$MAX_DBUSER_LEN" -ge 80  ]; then
+        database=$(echo "$domain" | sed 's#\.#_#g')
+    else
+       database="wp"
+    fi
 fi
 
 if [ -z "$email" ]; then
-	email="info@$domain"
+    email="info@$domain";
 fi
 
 if [ ! -d "/home/$user" ]; then
-	echo "User doesn't exist"
-	exit 1
+    echo "User doesn't exist";
+    exit 1;
 fi
 
 if [ ! -d "/home/$user/web/$domain/public_html" ]; then
-	echo "Domain doesn't exist"
-	exit 1
+    echo "Domain doesn't exist";
+    exit 1;
 fi
 
-DBUSERSUF="$database"
-DBUSERSUFB="$database"
-DBUSER=$user\_$DBUSERSUFB
+DBUSERSUF="$database";
+DBUSERSUFB="$database";
+DBUSER=$user\_$DBUSERSUFB;
 DB_EXISTS=$(check_if_database_exists "$user" "$DBUSER")
 
 if [ "$DB_EXISTS" = "yes" ]; then
-	# echo "Database already exists"
-	i=1
-	while [ $i -lt 99 ]; do
-		i=$((i + 1))
-		DBUSERSUF="${DBUSERSUFB}${i}"
-		DBUSER=$user\_$DBUSERSUF
-		DB_EXISTS=$(check_if_database_exists "$user" "$DBUSER")
-		if [ "$DB_EXISTS" = "no" ]; then
-			break
-		fi
-	done
+    # echo "Database already exists"
+    i=1;
+    while [ $i -lt 99 ]; do
+        i=$((i+1));
+        DBUSERSUF="${DBUSERSUFB}${i}";
+        DBUSER=$user\_$DBUSERSUF;
+        DB_EXISTS=$(check_if_database_exists "$user" "$DBUSER")
+        if [ "$DB_EXISTS" = "no" ]; then
+            break;
+        fi
+    done
 fi
 
 PASSWDDB=$(generate_password)
@@ -118,60 +116,52 @@ PASSWDDB=$(generate_password)
 parse_object_kv_list $(grep "DOMAIN='$domain'" $USER_DATA/web.conf)
 # echo "ssl is $SSL"
 
-PROTOCOL='http'
+PROTOCOL='https'
 if [ -z "$SKIP_LE" ]; then
-	if [ "$SSL" != 'yes' ]; then
-		/usr/local/hestia/bin/v-add-letsencrypt-domain "$user" "$domain" "www.$domain" "yes"
-	else
-		PROTOCOL='https'
-	fi
+    if [ "$SSL" != 'yes' ]; then
+        /usr/local/hestia/bin/v-add-letsencrypt-domain "$user" "$domain" "www.$domain" "yes"
+    fi
 else
-	PROTOCOL='https'
+    PROTOCOL='https'
 fi
 
 # change template if needed
-TPL_CHANGED=0
+TPL_CHANGED=0;
 
 if [ -f "/home/$user/conf/web/$domain/ssl/$domain.ca" ] || [ ! -z "$SKIP_LE" ]; then
-	PROTOCOL='https'
-	if [ -f "/usr/local/hestia/data/templates/web/nginx/force-https-firewall-wordpress.stpl" ] && [ $TPL_CHANGED -eq 0 ]; then
-		TPL_CHANGED=1
-		/usr/local/hestia/bin/v-change-web-domain-proxy-tpl "$user" "$domain" "force-https-firewall-wordpress" "jpeg,jpg,png,gif,bmp,ico,svg,tif,tiff,css,js,ttf,otf,webp,txt,csv,rtf,doc,docx,xls,xlsx,ppt,pptx,odf,odp,ods,odt,pdf,psd,ai,eot,eps,ps,zip,tar,tgz,gz,rar,bz2,7z,aac,m4a,mp3,mp4,ogg,wav,wma,3gp,avi,flv,m4v,mkv,mov,mpeg,mpg,wmv,exe,iso,dmg,swf,woff,woff2" "yes"
-	fi
-	if [ -f "/usr/local/hestia/data/templates/web/nginx/force-https.stpl" ] && [ $TPL_CHANGED -eq 0 ]; then
-		TPL_CHANGED=1
-		/usr/local/hestia/bin/v-change-web-domain-proxy-tpl "$user" "$domain" "force-https" "jpeg,jpg,png,gif,bmp,ico,svg,tif,tiff,css,js,ttf,otf,webp,txt,csv,rtf,doc,docx,xls,xlsx,ppt,pptx,odf,odp,ods,odt,pdf,psd,ai,eot,eps,ps,zip,tar,tgz,gz,rar,bz2,7z,aac,m4a,mp3,mp4,ogg,wav,wma,3gp,avi,flv,m4v,mkv,mov,mpeg,mpg,wmv,exe,iso,dmg,swf,woff,woff2" "yes"
-	fi
+    PROTOCOL='https'
+    if [ -f "/usr/local/hestia/data/templates/web/nginx/force-https-firewall-wordpress.stpl" ] && [ $TPL_CHANGED -eq 0 ]; then
+        TPL_CHANGED=1;
+        /usr/local/hestia/bin/v-change-web-domain-proxy-tpl  "$user" "$domain" "force-https-firewall-wordpress" "jpeg,jpg,png,gif,bmp,ico,svg,tif,tiff,css,js,ttf,otf,webp,txt,csv,rtf,doc,docx,xls,xlsx,ppt,pptx,odf,odp,ods,odt,pdf,psd,ai,eot,eps,ps,zip,tar,tgz,gz,rar,bz2,7z,aac,m4a,mp3,mp4,ogg,wav,wma,3gp,avi,flv,m4v,mkv,mov,mpeg,mpg,wmv,exe,iso,dmg,swf,woff,woff2" "yes"
+    fi
+    if [ -f "/usr/local/hestia/data/templates/web/nginx/force-https.stpl" ] && [ $TPL_CHANGED -eq 0 ]; then
+        TPL_CHANGED=1;
+        /usr/local/hestia/bin/v-change-web-domain-proxy-tpl  "$user" "$domain" "force-https" "jpeg,jpg,png,gif,bmp,ico,svg,tif,tiff,css,js,ttf,otf,webp,txt,csv,rtf,doc,docx,xls,xlsx,ppt,pptx,odf,odp,ods,odt,pdf,psd,ai,eot,eps,ps,zip,tar,tgz,gz,rar,bz2,7z,aac,m4a,mp3,mp4,ogg,wav,wma,3gp,avi,flv,m4v,mkv,mov,mpeg,mpg,wmv,exe,iso,dmg,swf,woff,woff2" "yes"
+    fi
 else
-	if [ -f "/usr/local/hestia/data/templates/web/nginx/hosting.stpl" ] && [ $TPL_CHANGED -eq 0 ]; then
-		TPL_CHANGED=1
-		/usr/local/hestia/bin/v-change-web-domain-proxy-tpl "$user" "$domain" "hosting" "jpeg,jpg,png,gif,bmp,ico,svg,tif,tiff,css,js,ttf,otf,webp,txt,csv,rtf,doc,docx,xls,xlsx,ppt,pptx,odf,odp,ods,odt,pdf,psd,ai,eot,eps,ps,zip,tar,tgz,gz,rar,bz2,7z,aac,m4a,mp3,mp4,ogg,wav,wma,3gp,avi,flv,m4v,mkv,mov,mpeg,mpg,wmv,exe,iso,dmg,swf,woff,woff2" "yes"
-	fi
+    if [ -f "/usr/local/hestia/data/templates/web/nginx/hosting.stpl" ] && [ $TPL_CHANGED -eq 0 ]; then
+        TPL_CHANGED=1;
+        /usr/local/hestia/bin/v-change-web-domain-proxy-tpl  "$user" "$domain" "hosting" "jpeg,jpg,png,gif,bmp,ico,svg,tif,tiff,css,js,ttf,otf,webp,txt,csv,rtf,doc,docx,xls,xlsx,ppt,pptx,odf,odp,ods,odt,pdf,psd,ai,eot,eps,ps,zip,tar,tgz,gz,rar,bz2,7z,aac,m4a,mp3,mp4,ogg,wav,wma,3gp,avi,flv,m4v,mkv,mov,mpeg,mpg,wmv,exe,iso,dmg,swf,woff,woff2" "yes"
+    fi
 fi
 
-echo "Creating database" >> /var/log/v-wordpress.log
 # CREATE DATABASE
 /usr/local/hestia/bin/v-add-database "$user" "$DBUSERSUF" "$DBUSERSUF" "$PASSWDDB" "mysql"
 
-if [ ! -f "/usr/local/bin/wp" ]; then
-	echo "=== Downloading latest wp-cli"
-	wget -nv https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar -O /usr/local/bin/wp
-	chmod +x /usr/local/bin/wp
-fi
-
-echo "Starting installation v-install-wordpress" >> /var/log/v-wordpress.log
 # INSTALLATION
+/usr/local/hestia/bin/v-add-user-wp-cli "$user"
+
 WORKINGDIR="/home/$user/web/$domain/public_html"
 rm -rf $WORKINGDIR/*
 cd $WORKINGDIR
 
-sudo -H -u$user wp core download
-sudo -H -u$user wp core config --dbname=$DBUSER --dbuser=$DBUSER --dbpass=$PASSWDDB
+/usr/local/hestia/bin/v-run-cli-cmd $user wp core download
+/usr/local/hestia/bin/v-run-cli-cmd $user wp core config --dbname=$DBUSER --dbuser=$DBUSER --dbpass=$PASSWDDB
 
 wpadmin=$username
 wppassword=$password
 
-sudo -H -u$user wp core install --url="$domain" --title="$domain" --admin_user="$wpadmin" --admin_password="$wppassword" --admin_email="$email" --path=$WORKINGDIR
+/usr/local/hestia/bin/v-run-cli-cmd $user wp core install --url="$domain" --title="$domain" --admin_user="$wpadmin" --admin_password="$wppassword" --admin_email="$email" --path=$WORKINGDIR
 
 mysql -u$DBUSER -p$PASSWDDB -e "USE $DBUSER; update wp_options set option_value = '$PROTOCOL://$domain' where option_name = 'siteurl'; update wp_options set option_value = '$PROTOCOL://$domain' where option_name = 'home';"
 
@@ -193,7 +183,7 @@ chown -R $user:$user $WORKINGDIR
 #----------------------------------------------------------#
 
 echo "v-install-wordpress: Done."
-echo "Finished installation v-install-wordpress" >> /var/log/v-wordpress.log
 log_event "$OK" "$ARGUMENTS"
 
 exit
+

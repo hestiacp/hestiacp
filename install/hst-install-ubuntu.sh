@@ -2046,14 +2046,14 @@ fi
 #----------------------------------------------------------#
 
 if [ "$spamd" = 'yes' ]; then
-        # Set SpamAssassin Service Name
-        if [ "$release" = '24.04' ]; then
-            spamd_srvname="spamd"
-        else
-            spamd_srvname="spamassassin"
-        fi
+	# Set SpamAssassin Service Name
+	if [ "$release" = '24.04' ]; then
+		spamd_srvname="spamd"
+	else
+		spamd_srvname="spamassassin"
+	fi
 	echo "[ * ] Configuring SpamAssassin..."
-        update-rc.d $spamd_srvname defaults > /dev/null 2>&1
+	update-rc.d $spamd_srvname defaults > /dev/null 2>&1
 	sed -i "s/ENABLED=0/ENABLED=1/" /etc/default/$spamd_srvname
 	systemctl start $spamd_srvname >> $LOG
 	check_result $? "$spamd_srvname start failed"

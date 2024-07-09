@@ -282,10 +282,7 @@ if [ "$dontinstalldeps" != 'true' ]; then
 		codename="$(lsb_release -s -c)"
 
 		if [ -z $(which "node") ]; then
-			echo "Adding Node.js 20.x repo..."
-			echo "deb [signed-by=/usr/share/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x $codename main" > $apt/nodesource.list
-			echo "deb-src [signed-by=/usr/share/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x $codename main" >> $apt/nodesource.list
-			curl -s https://deb.nodesource.com/gpgkey/nodesource.gpg.key | gpg --dearmor | tee /usr/share/keyrings/nodesource.gpg > /dev/null 2>&1
+			curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
 		fi
 
 		echo "Installing Node.js..."

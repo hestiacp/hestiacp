@@ -811,6 +811,10 @@ curl -s https://nginx.org/keys/nginx_signing.key | gpg --dearmor | tee /usr/shar
 # Installing sury PHP repo
 # add-apt-repository does not yet support signed-by see: https://bugs.launchpad.net/ubuntu/+source/software-properties/+bug/1862764
 echo "[ * ] PHP"
+if [ "$release" = '24.04' ]; then
+	# Workaround for Ubuntu 24.04 due to weak key warning it sheduled to be fixed in 24.04.1
+	echo 'APT::Key::Assert-Pubkey-Algo "";' > /etc/apt/apt.conf.d/99weakkey-warning
+fi
 LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php > /dev/null 2>&1
 
 # Installing sury Apache2 repo
@@ -831,9 +835,13 @@ echo "[ * ] Hestia Control Panel"
 echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/hestia-keyring.gpg] https://$RHOST/ $codename main" > $apt/hestia.list
 gpg --no-default-keyring --keyring /usr/share/keyrings/hestia-keyring.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys A189E93654F0B0E5 > /dev/null 2>&1
 
-# Installing Node.js 20.x repo
+# Detect if nodejs is allready installed if not add the repo
 echo "[ * ] Node.js 20.x"
-curl -fsSL https://deb.nodesource.com/setup_20.x | sudo bash - > /dev/null 2>&1
+if [ -z $(which "node") ]; then
+	curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+else
+	echo "- Node.js is already installed"
+fi
 
 # Installing PostgreSQL repo
 if [ "$postgresql" = 'yes' ]; then

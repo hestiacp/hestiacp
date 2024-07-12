@@ -1,0 +1,85 @@
+#!/usr/bin/env bash
+# info: update plugin
+# options: PLUGIN_NAME
+#
+# example: v-update-plugin pluginname
+#
+# Obs: Only works for plugins installed from Github
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+plugin_name="$1"
+
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/plugins.sh
+source $HESTIA/func/plugins.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '1' "$#" 'PLUGIN_NAME'
+
+init_plugins_conf_if_not_exists
+
+plugin_name="$(echo "$plugin_name" | awk '{gsub(/^[ \t]+| [ \t]+$/,""); print $0 }')"
+plugin_conf="$($HESTIA/bin/v-list-plugin "$plugin_name" plain)"
+
+if [[ -z "$plugin_conf" ]]; then
+	check_result "$E_INVALID" "Plugin \"$plugin_name\" is not installed"
+fi
+
+# Reinstall from the same source as the current plugin
+plugin_repo="$(echo "$plugin_conf" | awk '{print $3}')"
+if [[ -z "$plugin_repo" || "$plugin_repo" == "null" ]]; then
+	check_result "$E_UPDATE" "Plugin $plugin_name don't have a repository defined to perform the update."
+fi
+
+# Check update
+new_version="$(plugin_check_update "$plugin_name")"
+if [[ -z "$new_version" ]]; then
+	check_result "$E_UPDATE" "Plugin $plugin_name is already updated."
+fi
+
+# Install from Github repository
+github_archive="$(plugin_get_from_github "$plugin_repo" "archive")"
+if [[ -z "$github_archive" ]]; then
+	check_result "$E_UPDATE" "The installer was unable to get the file download link"
+fi
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+old_version="$(echo "$plugin_conf" | awk '{print $2}')"
+
+echo "Updating $plugin_name plugin to version $new_version"
+
+# Check pre_update hook
+if [[ -f "$HESTIA/plugins/$plugin_name/hook/pre_update" ]]; then
+	bash "$HESTIA/plugins/$plugin_name/hook/pre_update" "$new_version" "$old_version"
+fi
+
+# Disable plugin
+$HESTIA/bin/v-disable-plugin "$plugin_name"
+
+# Install new version
+plugin_install_from_zip "$github_archive" "yes"
+
+# Check post_update hook
+if [[ -f "$HESTIA/plugins/$plugin_name/hook/post_update" ]]; then
+	bash "$HESTIA/plugins/$plugin_name/hook/post_update" "$new_version" "$old_version"
+fi
+
+# Logging
+log_history "Plugin $plugin_name updated" "Info" "admin" "Plugin"
+log_event "$OK" "$ARGUMENTS"
+
+exit

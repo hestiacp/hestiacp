@@ -31,7 +31,7 @@ if [ ! -e /usr/bin/rsync ] || [ ! -e /usr/bin/file ]; then
 	echo "rsync not installed, try install it"
 	echo "This script need: rsync, file"
 	echo "#######################################"
-    echo "Run: apt-get install rsync file"
+	echo "Run: apt-get install rsync file"
 	exit 3
 fi
 
@@ -275,27 +275,25 @@ fi
 
 # Parked domains
 if [ -s pds ]; then
-    cat pds | while read parked
-    do
-        echo "Procesing parked domain: $parked"
-        parkedfor=$(cat userdata/cache.json |  jq --arg domain "$parked" '.[$domain][3]' |sed 's/"//g')
-        $BIN/v-add-web-domain-alias $new_user $parkedfor $parked
-    done
+	cat pds | while read parked; do
+		echo "Procesing parked domain: $parked"
+		parkedfor=$(cat userdata/cache.json | jq --arg domain "$parked" '.[$domain][3]' | sed 's/"//g')
+		$BIN/v-add-web-domain-alias $new_user $parkedfor $parked
+	done
 else
 
-    echo "No parked domains found"
+	echo "No parked domains found"
 
 fi
 
 # Try SSL
 tput setaf 2
-    echo "Copy SSL files"
+echo "Copy SSL files"
 tput sgr0
-for ssl_domain in apache_tls/*
-do
-    domain=$(echo $ssl_domain | awk -F '/' '{ print $2 }')
-    mkdir -p apache_tls/ssl/$domain
-    awk -v RS="-----BEGIN CERTIFICATE-----" -v ssl_domain="$domain"  '
+for ssl_domain in apache_tls/*; do
+	domain=$(echo $ssl_domain | awk -F '/' '{ print $2 }')
+	mkdir -p apache_tls/ssl/$domain
+	awk -v RS="-----BEGIN CERTIFICATE-----" -v ssl_domain="$domain" '
         NR==1 {
             cert_file = "apache_tls/ssl/" ssl_domain "/" ssl_domain ".key";
             print $0 > cert_file;
@@ -310,7 +308,7 @@ do
             cert_file = "apache_tls/ssl/" ssl_domain "/" ssl_domain ".ca";
             print "-----BEGIN CERTIFICATE-----" $0 > cert_file;
         } ' $ssl_domain
-        $BIN/v-add-web-domain-ssl $new_user $domain apache_tls/ssl/${domain}/
+	$BIN/v-add-web-domain-ssl $new_user $domain apache_tls/ssl/${domain}/
 done
 
 ##################
@@ -325,13 +323,13 @@ for folder in *; do
 	if [ -d "$folder" ]; then
 		if [[ "$folder" != "cur" && "$folder" != "new" && "$folder" != "tmp" ]]; then
 			echo "Domain: $folder"
-            # This is needed as parked domains have emails but not added 
-            if ! $BIN/v-list-mail-domains $new_user plain | awk '{ print $1 }' |grep "^${folder}$"; then
-                tput setaf 3
-	        	echo "Found Parked domain $folder  not added in hestia mail, adding..."
-	    	    tput sgr0
-	            $BIN/v-add-mail-domain $new_user $folder	    
-	        fi
+			# This is needed as parked domains have emails but not added
+			if ! $BIN/v-list-mail-domains $new_user plain | awk '{ print $1 }' | grep "^${folder}$"; then
+				tput setaf 3
+				echo "Found Parked domain $folder  not added in hestia mail, adding..."
+				tput sgr0
+				$BIN/v-add-mail-domain $new_user $folder
+			fi
 			cd $folder
 
 			mail_account_count=$(find . -maxdepth 1 -mindepth 1 -type d \( ! -name cur ! -name new ! -name tmp \) | wc -l)
@@ -433,33 +431,33 @@ if [ -f "$CRON_FILE" ] && [ -s "$CRON_FILE" ]; then
 		dow=$(echo "$cron_job" | awk '{print $5}')
 		cmd=$(echo "$cron_job" | awk '{for (i=6; i<=NF; i++) printf $i " "; print ""}')
 		#This try fix PHP crons converting cpanel paths to hestia paths
-        if [[ $cmd =~ "ea-php" ]]; then
-            EAPHP=$(echo $cmd | awk '{ print $1 }')
-            # /opt/cpanel/ea-php70/root/bin/php
-            # /usr/local/bin/ea-php70
-            # default hestia /usr/bin/php
-            DEFAULT_PHP="/usr/bin/php"
-            vPHP="ea-php71 ea-php72 ea-php73 ea-php74 ea-php80 ea-php81 ea-php82 ea-php83"
-            EAOPT="opt/cpanel/ea-php"
-            EABIN="usr/local/bin/ea"
-            if [[ $EAPHP =~ $EAOPT ]]; then
-                EAVERSION=$( echo $EAPHP |awk -F '/' '{ print $4}')
-            elif [[ $EAPHP =~ $EABIN ]]; then
-                EAVERSION=$( echo $EAPHP |awk -F '/' '{ print $5}')
-            else
-                echo "Diferent EA Path"
-            fi
-            vPHP=$(echo $EAVERSION | sed "s/ea-php//")
-            N1=${vPHP:0:1}
-            N2=${vPHP:1:1}
-            vPHP=$(echo /usr/bin/php${N1}.${N2})
-            
-            if [ -e $vPHP ]; then
-                cmd=$(echo $cmd | sed "s#$EAPHP#$vPHP#")
-            else
-                cmd=$(echo $cmd | sed "s#$EAPHP#$DEFAULT_PHP#")
-            fi
-        fi
+		if [[ $cmd =~ "ea-php" ]]; then
+			EAPHP=$(echo $cmd | awk '{ print $1 }')
+			# /opt/cpanel/ea-php70/root/bin/php
+			# /usr/local/bin/ea-php70
+			# default hestia /usr/bin/php
+			DEFAULT_PHP="/usr/bin/php"
+			vPHP="ea-php71 ea-php72 ea-php73 ea-php74 ea-php80 ea-php81 ea-php82 ea-php83"
+			EAOPT="opt/cpanel/ea-php"
+			EABIN="usr/local/bin/ea"
+			if [[ $EAPHP =~ $EAOPT ]]; then
+				EAVERSION=$(echo $EAPHP | awk -F '/' '{ print $4}')
+			elif [[ $EAPHP =~ $EABIN ]]; then
+				EAVERSION=$(echo $EAPHP | awk -F '/' '{ print $5}')
+			else
+				echo "Diferent EA Path"
+			fi
+			vPHP=$(echo $EAVERSION | sed "s/ea-php//")
+			N1=${vPHP:0:1}
+			N2=${vPHP:1:1}
+			vPHP=$(echo /usr/bin/php${N1}.${N2})
+
+			if [ -e $vPHP ]; then
+				cmd=$(echo $cmd | sed "s#$EAPHP#$vPHP#")
+			else
+				cmd=$(echo $cmd | sed "s#$EAPHP#$DEFAULT_PHP#")
+			fi
+		fi
 		$BIN/v-add-cron-job $new_user "$min" "$hour" "$day" "$month" "$dow" "$cmd"
 	done < "$CRON_FILE"
 	echo "Cron jobs restored for user $new_user."

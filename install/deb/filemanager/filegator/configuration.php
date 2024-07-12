@@ -1,8 +1,7 @@
 <?php
 use function Hestiacp\quoteshellarg\quoteshellarg;
-
 $dist_config = require __DIR__ . "/configuration_sample.php";
-
+session_start();
 $dist_config["public_path"] = "/fm/";
 $dist_config["frontend_config"]["app_name"] = "File Manager - Hestia Control Panel";
 $dist_config["frontend_config"]["logo"] = "../images/logo.svg";
@@ -34,6 +33,106 @@ $dist_config["frontend_config"]["editable"] = [
 $dist_config["frontend_config"]["date_format"] = "YY/MM/DD H:mm:ss";
 $dist_config["frontend_config"]["guest_redirection"] = "/login/";
 $dist_config["frontend_config"]["upload_max_size"] = 1024 * 1024 * 1024;
+if (!empty($_SESSION["language"])) {
+	$lang = $_SESSION["language"];
+} elseif (!empty($_SESSION["LANGUAGE"])) {
+	$lang = $_SESSION["LANGUAGE"];
+} else {
+	$lang = "en";
+}
+// Update list of languages when new language is added on Hestia or Filegator side
+switch ($lang) {
+	case "es":
+		$dist_config["frontend_config"]["language"] = "spanish";
+		break;
+	case "de":
+		$dist_config["frontend_config"]["language"] = "german";
+		break;
+	case "id":
+		$dist_config["frontend_config"]["language"] = "indonesian";
+		break;
+	case "tr":
+		$dist_config["frontend_config"]["language"] = "turkish";
+		break;
+	case "lt":
+		$dist_config["frontend_config"]["language"] = "lithuanian";
+		break;
+	case "pt":
+	case "pt-pt":
+		$dist_config["frontend_config"]["language"] = "portuguese";
+		break;
+	case "nl":
+		$dist_config["frontend_config"]["language"] = "dutch";
+		break;
+	case "zh":
+	case "zh-cn":
+	case "zh-tw":
+		$dist_config["frontend_config"]["language"] = "chinese";
+		break;
+	case "bg":
+		$dist_config["frontend_config"]["language"] = "bulgarian";
+		break;
+	case "sr":
+		$dist_config["frontend_config"]["language"] = "serbian";
+		break;
+	case "fr":
+		$dist_config["frontend_config"]["language"] = "french";
+		break;
+	case "sk":
+		$dist_config["frontend_config"]["language"] = "slovak";
+		break;
+	case "pl":
+		$dist_config["frontend_config"]["language"] = "polish";
+		break;
+	case "it":
+		$dist_config["frontend_config"]["language"] = "italian";
+		break;
+	case "ko":
+		$dist_config["frontend_config"]["language"] = "korean";
+		break;
+	case "cs":
+		$dist_config["frontend_config"]["language"] = "czech";
+		break;
+	case "gl":
+		$dist_config["frontend_config"]["language"] = "galician";
+		break;
+	case "ru":
+		$dist_config["frontend_config"]["language"] = "russian";
+		break;
+	case "hu":
+		$dist_config["frontend_config"]["language"] = "hungarian";
+		break;
+	case "sv":
+		$dist_config["frontend_config"]["language"] = "swedish";
+		break;
+	case "ja":
+		$dist_config["frontend_config"]["language"] = "japanese";
+		break;
+	case "sl":
+		$dist_config["frontend_config"]["language"] = "slovenian";
+		break;
+	case "he":
+		$dist_config["frontend_config"]["language"] = "hebrew";
+		break;
+	case "ro":
+		$dist_config["frontend_config"]["language"] = "romanian";
+		break;
+	case "ar":
+		$dist_config["frontend_config"]["language"] = "arabic";
+		break;
+	case "pt-br":
+		$dist_config["frontend_config"]["language"] = "portuguese_br";
+		break;
+	case "fa":
+		$dist_config["frontend_config"]["language"] = "persian";
+		break;
+	case "et":
+		$dist_config["frontend_config"]["language"] = "estonian";
+		break;
+	default:
+		$dist_config["frontend_config"]["language"] = "english";
+		break;
+}
 
 $dist_config["services"]["Filegator\Services\Storage\Filesystem"]["config"][
 	"adapter"
@@ -172,142 +271,5 @@ $dist_config["services"]["Filegator\Services\View\ViewInterface"]["config"] = [
     }, 200);
 </script>',
 ];
-
-/***********************************************************************/
-/**
- * Language Chooser
- *
- * @since 1.8.12
- *
- * @author Tiago Dias
- *
- * @see https://github.com/hestiacp/hestiacp/issues/4275
- */
-
-/**
- * get_language_from_system()
- *
- * isolate the hestiacp commands from this file
- *
- * @return string the language code
- */
-function get_language_from_system() {
-	include $_SERVER["DOCUMENT_ROOT"] . "/inc/main.php";
-	/**
-	 * get All supported language
-	 */
-	exec(HESTIA_CMD . "v-list-sys-languages json", $output, $return_var);
-	$languages = json_decode(implode("", $output), true);
-
-	/**
-	 * - check if the session language exists
-	 * - check if language is supported by hestia,
-	 * - return default if both are false
-	 */
-	return isset($_SESSION["language"]) && in_array($_SESSION["language"], $languages)
-		? $_SESSION["language"]
-		: "en";
-}
-
-/**
- * Language Switch for filegator based on session or if not available
- * use default 'english'
- *
- * @see https://docs.filegator.io/translations/default.html#rtl-support
- *
- * @see https://github.com/hestiacp/hestiacp/issues/4275
- */
-switch (get_language_from_system()) {
-	case "es":
-		$dist_conf["language"] = "spanish";
-		break;
-	case "de":
-		$dist_conf["language"] = "german";
-		break;
-	case "id":
-		$dist_conf["language"] = "indonesian";
-		break;
-	case "tr":
-		$dist_conf["language"] = "turkish";
-		break;
-	case "lt":
-		$dist_conf["language"] = "lithuanian";
-		break;
-	case "pt":
-	case "pt-pt":
-		$dist_conf["language"] = "portuguese";
-		break;
-	case "nl":
-		$dist_conf["language"] = "dutch";
-		break;
-	case "zh":
-	case "zh-cn":
-	case "zh-tw":
-		$dist_conf["language"] = "chinese";
-		break;
-	case "bg":
-		$dist_conf["language"] = "bulgarian";
-		break;
-	case "sr":
-		$dist_conf["language"] = "serbian";
-		break;
-	case "fr":
-		$dist_conf["language"] = "french";
-		break;
-	case "sk":
-		$dist_conf["language"] = "slovak";
-		break;
-	case "pl":
-		$dist_conf["language"] = "polish";
-		break;
-	case "it":
-		$dist_conf["language"] = "italian";
-		break;
-	case "ko":
-		$dist_conf["language"] = "korean";
-		break;
-	case "cs":
-		$dist_conf["language"] = "czech";
-		break;
-	case "gl":
-		$dist_conf["language"] = "galician";
-		break;
-	case "ru":
-		$dist_conf["language"] = "russian";
-		break;
-	case "hu":
-		$dist_conf["language"] = "hungarian";
-		break;
-	case "sv":
-		$dist_conf["language"] = "swedish";
-		break;
-	case "ja":
-		$dist_conf["language"] = "japanese";
-		break;
-	case "sl":
-		$dist_conf["language"] = "slovenian";
-		break;
-	case "he":
-		$dist_conf["language"] = "hebrew";
-		break;
-	case "ro":
-		$dist_conf["language"] = "romanian";
-		break;
-	case "ar":
-		$dist_conf["language"] = "arabic";
-		break;
-	case "pt-br":
-		$dist_conf["language"] = "portuguese_br";
-		break;
-	case "fa":
-		$dist_conf["language"] = "persian";
-		break;
-	case "et":
-		$dist_conf["language"] = "estonian";
-		break;
-	default:
-		$dist_conf["language"] = "english";
-		break;
-}
 
 return $dist_config;

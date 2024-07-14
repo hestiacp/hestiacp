@@ -231,9 +231,9 @@ if [ -e "/etc/redhat-release" ]; then
 else
 	HESTIA_V="${BUILD_VER}_${BUILD_ARCH}"
 fi
-OPENSSL_V='3.1.2'
-PCRE_V='10.42'
-ZLIB_V='1.3'
+OPENSSL_V='3.3.1'
+PCRE_V='10.44'
+ZLIB_V='1.3.1'
 
 # Create build directories
 if [ "$KEEPBUILD" != 'true' ]; then
@@ -282,10 +282,7 @@ if [ "$dontinstalldeps" != 'true' ]; then
 		codename="$(lsb_release -s -c)"
 
 		if [ -z $(which "node") ]; then
-			echo "Adding Node.js 20.x repo..."
-			echo "deb [signed-by=/usr/share/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x $codename main" > $apt/nodesource.list
-			echo "deb-src [signed-by=/usr/share/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x $codename main" >> $apt/nodesource.list
-			curl -s https://deb.nodesource.com/gpgkey/nodesource.gpg.key | gpg --dearmor | tee /usr/share/keyrings/nodesource.gpg > /dev/null 2>&1
+			curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
 		fi
 
 		echo "Installing Node.js..."
@@ -593,6 +590,10 @@ if [ "$PHP_B" = true ]; then
 		if [[ "$os" = "Ubuntu" ]] && [[ "$release" = "20.04" ]]; then
 			sed -i "/Conflicts: libzip5/d" "$BUILD_DIR_HESTIAPHP/DEBIAN/control"
 			sed -i "s/libzip4/libzip5/g" "$BUILD_DIR_HESTIAPHP/DEBIAN/control"
+		fi
+		if [[ "$os" = "Ubuntu" ]] && [[ "$release" = "24.04" ]]; then
+			sed -i "/Conflicts: libzip5/d" "$BUILD_DIR_HESTIAPHP/DEBIAN/control"
+			sed -i "s/libzip4/libzip4t64/g" "$BUILD_DIR_HESTIAPHP/DEBIAN/control"
 		fi
 
 		get_branch_file 'src/deb/php/copyright' "$BUILD_DIR_HESTIAPHP/DEBIAN/copyright"

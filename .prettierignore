@@ -19,6 +19,7 @@
 
 # Bin folder
 /bin/v-generate-password-hash
+/bin/v-quick-install-app
 
 # Exclude bats submodules if present
 /test/test_helper/*

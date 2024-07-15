@@ -6,7 +6,9 @@
 //# example: v-quick-install-app install admin domain.com wordpress email="info@hestiacp" password="123456" username="admin" site_name="HestiaCP Demo" install_directory="/" language="nl_NL" php_version="8.2" database_create="true"
 //# example: v-quick-install-app apps
 //# example: v-quick-install-app options admin domain.com wordpress
-//# Install Quick Install Web App via CLI run v-quick-install-app list for supported apps. v-quick-install-app options for the app options and v-quick-install-app install to install the app please note app names are case sensitive
+//# Install Quick Install Web App via CLI run v-quick-install-app apps for supported apps.
+//# v-quick-install-app options for the app options and v-quick-install-app install to install the app
+//# Please note app names are case sensitive
 
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Input\InputArgument;

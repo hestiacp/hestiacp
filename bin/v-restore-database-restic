@@ -1,0 +1,131 @@
+#!/bin/bash
+# info: restore Database
+# options: USER SNAPSHOT DATABASE
+#
+# example: v-restore-database-restic user snapshot user_database
+# example: v-restore-database-restic user snapshot 'user_database,user_database2'
+# example: v-restore-database-restic user snapshot '*'
+#
+# This function for restoring database from restic snapshot.
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+snapshot=$2
+database=$3
+notify=${4-no}
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/db.sh
+source $HESTIA/func/db.sh
+# shellcheck source=/usr/local/hestia/func/rebuild.sh
+source $HESTIA/func/rebuild.sh
+# shellcheck source=/usr/local/hestia/func/syshealth.sh
+source $HESTIA/func/syshealth.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+args_usage='USER SNAPSHOT DATABSE [NOTIFY]'
+check_args '3' "$#" "$args_usage"
+is_format_valid 'user'
+is_object_valid 'user' 'USER' "$user"
+
+source_conf $HESTIA/conf/restic.conf
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+tmpdir=$(mktemp -p /home/$user/tmp/ -d)
+if [ ! -f "$tmpdir/backup.conf" ]; then
+	restic --repo "$REPO$user" --password-file "$USER_DATA/restic.conf" --json dump "$snapshot" "/home/$user/backup/backup.conf" > "$tmpdir/backup.conf"
+	if [ "$?" -ne 0 ]; then
+		check_result "$E_NOTEXIST" "Unable to download snapshot"
+	fi
+fi
+
+parse_object_kv_list $(cat "$tmpdir/backup.conf")
+
+IFS=','
+read -a databases_array <<< "$database"
+read -a databases <<< "$DB"
+
+for db in $DB; do
+	if [[ "${IFS}${databases_array[*]}${IFS}" =~ "${IFS}${db}${IFS}" || "$databases_array" = '*' ]]; then
+		check_config=$(grep "DB='$db'" $USER_DATA/db.conf)
+		if [ -z "$check_config" ]; then
+			restic --repo "$REPO$user" --password-file "$USER_DATA/restic.conf" --json dump "$snapshot" "/home/$user/backup/db/$db/hestia/db.conf" > "$tmpdir/db.conf"
+			if [ "$?" -ne 0 ]; then
+				check_result "$E_NOTEXIST" "Unable to download user data"
+			fi
+			parse_object_kv_list $(cat "$tmpdir/db.conf")
+			# @todo add support for renaming user
+			str="DB='$DB' DBUSER='$DBUSER' MD5='$MD5' HOST='$HOST'"
+			str="$str TYPE='$TYPE' CHARSET='$CHARSET' U_DISK='$U_DISK'"
+			str="$str SUSPENDED='no' TIME='$(date +%T)' DATE='$(date +%F)'"
+			echo "$str" >> $USER_DATA/db.conf
+		else
+			parse_object_kv_list $(grep "DB='$db'" $USER_DATA/db.conf)
+		fi
+
+		# Download databse
+		if [ "$BACKUP_MODE" = "zstd" ]; then
+			restic --repo "$REPO$user" --password-file "$USER_DATA/restic.conf" dump "$snapshot" "/home/$user/backup/db/$db/$db.$TYPE.sql.zst" > $tmpdir/$db.$TYPE.sql.zst
+			if [ "$?" -ne 0 ]; then
+				check_result $E_NOTEXIST "Unable to download database"
+			fi
+			pzstd -d "$tmpdir/$db.$TYPE.sql.zst"
+		else
+			restic --repo "$REPO$user" --password-file "$USER_DATA/restic.conf" dump "$snapshot" "/home/$user/backup/db/$db/$db.$TYPE.sql.gz" > $tmpdir/$db.$TYPE.sql.gz
+			if [ "$?" -ne 0 ]; then
+				check_result $E_NOTEXIST "Unable to download database"
+			fi
+			gzip -d "$tmpdir/$db.$TYPE.sql.gz"
+		fi
+
+		# Restore and rebuild
+		echo "- Restore database: $db (Type: $TYPE)"
+		database_dump="$tmpdir/$db.$TYPE.sql"
+		case $TYPE in
+			mysql)
+				delete_mysql_database
+				rebuild_mysql_database
+				import_mysql_database $database_dump
+				;;
+			pgsql)
+				delete_pgsql_database
+				rebuild_pgsql_database
+				import_pgsql_database $database_dump
+				;;
+		esac
+	fi
+done
+
+rm -fr $tmpdir
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Update user counters
+$BIN/v-update-user-counters $user
+$BIN/v-update-user-counters admin
+$BIN/v-update-sys-ip-counters
+
+sed -i "/v-restore-database-restic '$user' '$snapshot' '$database' /d" $HESTIA/data/queue/backup.pipe
+
+# Logging
+$BIN/v-log-action "system" "Info" "Backup" "Database successfully restored (User: $user, Snapshot: $snapshot, Databse: $database)."
+$BIN/v-log-action "$user" "Info" "Backup" "Database successfully restored (User: $user, Snapshot: $snapshot, Databse: $database)."
+log_event "$OK" "$ARGUMENTS"
+exit

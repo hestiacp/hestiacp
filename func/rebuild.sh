@@ -473,8 +473,8 @@ rebuild_web_domain_conf() {
 	if [ "$DOMAINDIR_WRITABLE" = 'yes' ]; then DOMAINDIR_MODE=751; fi
 
 	# Set folder permissions
-	no_symlink_chmod $DOMAINDIR_MODE $HOMEDIR/$user/web/$domain
-	no_symlink_chmod 551 $HOMEDIR/$user/web/$domain/stats \
+	no_symlink_chmod 751 $HOMEDIR/$user/web/$domain \
+		$HOMEDIR/$user/web/$domain/stats \
 		$HOMEDIR/$user/web/$domain/logs
 	no_symlink_chmod 751 $HOMEDIR/$user/web/$domain/private \
 		$HOMEDIR/$user/web/$domain/cgi-bin \

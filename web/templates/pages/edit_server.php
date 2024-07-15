@@ -33,7 +33,8 @@
 			language: '<?= $_SESSION["LANGUAGE"] ?>',
 			hasSmtpRelay: <?= $v_smtp_relay == "true" ? "true" : "false" ?>,
 			remoteBackupEnabled: <?= !empty($v_backup_remote_adv) ? "true" : "false" ?>,
-			backupType: '<?= !empty($v_backup_type) ? trim($v_backup_type, "'") : "" ?>',
+			incrementalBackups: '<?=$v_backup_incremental ?? '' ?>',
+			backupType: '<?= (!empty($v_backup_type)) ? trim($v_backup_type, "'") : "" ?>',
 			webmailAlias: '<?= $_SESSION["WEBMAIL_ALIAS"] ?? "" ?>',
 			apiSystem: '<?= $_SESSION["API_SYSTEM"] ?>',
 			legacyApi: '<?= $_SESSION["API"] ?>',
@@ -902,6 +903,100 @@
 									value="<?= htmlentities(trim($v_rclone_path, "'")) ?>"
 								>
 							</div>
+						</div>
+					</div>
+				</div>
+			</details>
+			<details class="box-collapse u-mb10">
+				<summary class="box-collapse-header">
+					<i class="fas fa-arrows-rotate u-mr10"></i><?= _("Incremental Backups") ?>
+				</summary>
+				<div class="box-collapse-content">
+					<div class="u-mb10">
+						<label for="v_backup_incremental" class="form-label">
+							<?= _("Enable incremental backup") ?>
+						</label>
+						<select class="form-select" name="v_backup_incremental" id="v_backup_incremental" x-model="incrementalBackups">
+							<option value="no">
+								<?= _("No") ?>
+							</option>
+							<option value="yes" <?= $v_backup_incremental == "yes" ? "selected" : "" ?>>
+								<?= _("Yes") ?>
+							</option>
+						</select>
+					</div>
+						<div x-cloak x-show="incrementalBackups == 'yes'">
+						<div class="u-mb10">
+							<label for="v_repo" class="form-label">
+								<?= _("Repository") ?>
+							</label>
+							<input
+								type="text"
+								class="form-control"
+								name="v_repo"
+								id="v_repo"
+								value="<?= trim($v_repo, "'") ?>"
+							>
+						</div>
+						<div class="u-mb10">
+							<label for="v_repo" class="form-label">
+								<?= _("Snapshots") ?>
+							</label>
+							<input
+								type="text"
+								class="form-control"
+								name="v_snapshots"
+								id="v_snapshots"
+								value="<?= trim($v_snapshots, "'") ?>"
+							>
+						</div>
+						<div class="u-mb10">
+							<label for="v_repo" class="form-label">
+								<?= _("Keep last daily backups") ?>
+							</label>
+							<input
+								type="text"
+								class="form-control"
+								name="v_keep_daily"
+								id="v_keep_daily"
+								value="<?= trim($v_keep_daily, "'") ?>"
+							>
+						</div>
+						<div class="u-mb10">
+							<label for="v_repo" class="form-label">
+								<?= _("Keep last weekly backups") ?>
+							</label>
+							<input
+								type="text"
+								class="form-control"
+								name="v_keep_weekly"
+								id="v_keep_weekly"
+								value="<?= trim($v_keep_weekly, "'") ?>"
+							>
+						</div>
+						<div class="u-mb10">
+							<label for="v_repo" class="form-label">
+								<?= _("Keep last monthly backups") ?>
+							</label>
+							<input
+								type="text"
+								class="form-control"
+								name="v_keep_monthly"
+								id="v_keep_monthly"
+								value="<?= trim($v_keep_monthly, "'") ?>"
+							>
+						</div>
+						<div class="u-mb10">
+							<label for="v_repo" class="form-label">
+								<?= _("Keep last yearly backups") ?>
+							</label>
+							<input
+								type="text"
+								class="form-control"
+								name="v_keep_yearly"
+								id="v_keep_yearly"
+								value="<?= trim($v_keep_yearly, "'") ?>"
+							>
 						</div>
 					</div>
 				</div>

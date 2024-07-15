@@ -1,0 +1,81 @@
+#!/bin/bash
+# info: restore single cron job
+# options: USER SNAPSHOT [NOTIFY]
+#
+# example: v-restore-cron-job USER BACKUP [NOTIFY]
+#
+# This function allows the user to restore a cron jobs
+# from a snapshot.
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+snapshot=$2
+notify=${3-no}
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
+source $HESTIA/func/domain.sh
+# shellcheck source=/usr/local/hestia/func/ip.sh
+source $HESTIA/func/ip.sh
+# shellcheck source=/usr/local/hestia/func/rebuild.sh
+source $HESTIA/func/rebuild.sh
+# shellcheck source=/usr/local/hestia/func/syshealth.sh
+source $HESTIA/func/syshealth.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+args_usage='USER SNAPSHOT [NOTIFY]'
+check_args '2' "$#" "$args_usage"
+is_format_valid 'user'
+is_object_valid 'user' 'USER' "$user"
+
+source_conf $HESTIA/conf/restic.conf
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+tmpdir=$(mktemp -p /home/$user/tmp/ -d)
+
+restic --repo "$REPO$user" --password-file "$USER_DATA/restic.conf" --json dump "$snapshot" "/home/$user/backup/cron/cron.conf" > "$tmpdir/cron.conf"
+
+# Restoring cron jobs
+cp "$tmpdir/cron.conf" "$USER_DATA/cron.conf"
+
+# Rebuilding cron jobs
+sync_cron_jobs
+
+# Restarting cron
+$BIN/v-restart-cron
+check_result $? "CRON restart failed"
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+rm -fr "$tmpdir"
+
+# Update user counters
+$BIN/v-update-user-counters $user
+$BIN/v-update-user-counters admin
+$BIN/v-update-sys-ip-counters
+
+sed -i "/v-restore-cron-job-restic '$user' '$snapshot'/d" $HESTIA/data/queue/backup.pipe
+
+# Logging
+$BIN/v-log-action "system" "Info" "Backup" "Cron jobs successfully restored (User: $user, Snapshot: $snapshot)."
+$BIN/v-log-action "$user" "Info" "Backup" "Cron jobs  successfully restored (User: $user, Snapshot: $snapshot)."
+log_event "$OK" "$ARGUMENTS"
+exit

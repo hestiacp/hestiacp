@@ -1,0 +1,130 @@
+#!/bin/bash
+# info: restore user via Restic
+# options: USER SNAPSHOT KEY
+#
+# example: v-restore-user-full-restic user snapshot key
+#
+# Full user restore from a non existing user
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+snapshot=$2
+key=${3}
+notify=${4-no}
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
+source $HESTIA/func/domain.sh
+# shellcheck source=/usr/local/hestia/func/ip.sh
+source $HESTIA/func/ip.sh
+# shellcheck source=/usr/local/hestia/func/rebuild.sh
+source $HESTIA/func/rebuild.sh
+# shellcheck source=/usr/local/hestia/func/syshealth.sh
+source $HESTIA/func/syshealth.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+args_usage='USER SNAPSHOT KEY [NOTIFY]'
+check_args '3' "$#" "$args_usage"
+is_format_valid 'user'
+
+source_conf $HESTIA/conf/restic.conf
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+check_user=$(is_object_valid 'user' 'USER' "$user")
+
+if [ -n "$check_user" ]; then
+	if [ -z "$key" ]; then
+		check_result "$E_PASSWORD" "Invalid Restic encryption key"
+	fi
+	$BIN/v-add-user "$user" "$key" 'info@hestiacp.com'
+
+	echo "$key" > $USER_DATA/restic.conf
+
+	restic --repo "$REPO$user" --password-file $USER_DATA/restic.conf snapshots
+	if [ "$?" -ne 0 ]; then
+		check_result "$E_PASSWORD" "Invalid Restic repository / encryption key"
+	fi
+fi
+
+tmpdir=$(mktemp -p "/home/$user/tmp/" -d)
+if [ ! -f "$tmpdir/backup.conf" ]; then
+	restic --repo "$REPO$user" --password-file "$USER_DATA/restic.conf" dump "$snapshot" "/home/$user/backup/backup.conf" > "$tmpdir/backup.conf"
+	if [ "$?" -ne 0 ]; then
+		check_result "$E_NOTEXIST" "Invalid snapshot"
+	fi
+fi
+
+# Download user data
+restic --repo "$REPO$user" --password-file "$USER_DATA/restic.conf" restore "$snapshot" --include "/home/$user/backup/" --target "$tmpdir"
+if [ "$?" -ne 0 ]; then
+	check_result "$E_NOTEXIST" "Unable to download user data"
+fi
+
+cp "$tmpdir/home/$user/backup/hestia/user.conf" "$USER_DATA/"
+cp -r "$tmpdir/home/$user/backup/hestia/ssl" "$USER_DATA/" > /dev/null 2>&1
+cp -r" $tmpdir/home/$user/backup/hestia/backup-excludes.conf" "$USER_DATA"/ > /dev/null 2>&1
+
+old_uid=$(cut -f 3 -d : $tmpdir/home/$user/backup/pam/passwd)
+# Rebuilding user
+rebuild_user_conf
+
+# Restore web domains
+echo "[ * ] Restore Web domains"
+$BIN/v-restore-web-domain-restic "$user" "$snapshot" '*' 'no' 'yes'
+echo "[ * ] Restore DNS domains"
+$BIN/v-restore-dns-domain-restic "$user" "$snapshot" '*'
+echo "[ * ] Restore Mail domains"
+$BIN/v-restore-mail-domain-restic "$user" "$snapshot" '*'
+echo "[ * ] Restore Databases"
+$BIN/v-restore-database-restic "$user" "$snapshot" '*'
+echo "[ * ] Restore Cronjobs"
+$BIN/v-restore-cron-job-restic "$user" "$snapshot"
+echo "[ * ] Restore user files"
+restic --repo "$REPO$user" --password-file "$USER_DATA/restic.conf" restore "$snapshot" --exclude "/home/$user/web/" --exclude "/home/$user/conf" --exclude "/home/$user/mail" --target /
+if [ "$?" -ne 0 ]; then
+	check_result "$E_NOTEXIST" "Unable to download user folders"
+fi
+
+find $HOMEDIR/$user/ -user $old_uid \
+	-exec chown -h "$user":"$user" {} \;
+
+find $HOMEDIR/$user/ -group $old_uid \
+	-exec chown -h "$user":"$user" {} \;
+
+# Rebuilding user
+rebuild_user_conf
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+rm -fr $tmpdir
+
+# Update user counters
+$BIN/v-update-user-counters $user
+$BIN/v-update-user-counters admin
+$BIN/v-update-sys-ip-counters
+
+sed -i "/v-restore-user-full-restic '$user' /d" $HESTIA/data/queue/backup.pipe
+
+# Logging
+$BIN/v-log-action "system" "Info" "Backup" "Mail domain successfully restored (User: $user, Snapshot: $snapshot, Databse: $database)."
+$BIN/v-log-action "$user" "Info" "Backup" "Mail domain successfully restored (User: $user, Snapshot: $snapshot, Databse: $database)."
+log_event "$OK" "$ARGUMENTS"
+exit

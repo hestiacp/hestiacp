@@ -111,7 +111,8 @@ rebuild_user_conf() {
 		$HOMEDIR/$user/.composer \
 		$HOMEDIR/$user/.vscode-server \
 		$HOMEDIR/$user/.ssh \
-		$HOMEDIR/$user/.npm
+		$HOMEDIR/$user/.npm \
+		$HOMEDIR/$user/.wp-cli
 	chmod a+x $HOMEDIR/$user
 	chmod a+x $HOMEDIR/$user/conf
 	chown --no-dereference $user:$user \
@@ -122,7 +123,8 @@ rebuild_user_conf() {
 		$HOMEDIR/$user/.composer \
 		$HOMEDIR/$user/.vscode-server \
 		$HOMEDIR/$user/.ssh \
-		$HOMEDIR/$user/.npm
+		$HOMEDIR/$user/.npm \
+		$HOMEDIR/$user/.wp-cli
 	chown root:root $HOMEDIR/$user/conf
 
 	$BIN/v-add-user-sftp-jail "$user"
@@ -635,7 +637,7 @@ rebuild_mail_domain_conf() {
 		touch $HOMEDIR/$user/conf/mail/$domain/limits
 
 		# Setting outgoing ip address
-		if [ -n "$local_ip" ]; then
+		if [ -n "$local_ip" ] && [ "$U_SMTP_RELAY" != 'true' ]; then
 			echo "$local_ip" > $HOMEDIR/$user/conf/mail/$domain/ip
 		fi
 

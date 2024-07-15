@@ -10,7 +10,6 @@
 #
 # Debian 10, 11, 12
 # Ubuntu 20.04, 22.04
-# AlmaLinux, EuroLinux, Red Hat EnterPrise Linux, Rocky Linux 8, 9
 #
 # ======================================================== #
 

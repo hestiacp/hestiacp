@@ -6,7 +6,7 @@
 # https://www.hestiacp.com/
 #
 # Currently Supported Versions:
-# Ubuntu 20.04, 22.04 LTS
+# Ubuntu 20.04, 22.04, 24.04 LTS
 #
 # ======================================================== #
 
@@ -33,14 +33,14 @@ VERBOSE='no'
 # Define software versions
 HESTIA_INSTALL_VER='1.9.0~alpha'
 # Supported PHP versions
-multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0" "8.1" "8.2","8.3")
+multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0" "8.1" "8.2" "8.3")
 # One of the following PHP versions is required for Roundcube / phpmyadmin
-multiphp_required=("7.3" "7.4" "8.0" "8.1" "8.2","8.3")
+multiphp_required=("7.3" "7.4" "8.0" "8.1" "8.2" "8.3")
 
 # Default PHP version if none supplied
-fpm_v="8.2"
+fpm_v="8.3"
 # MariaDB version
-mariadb_v="10.11"
+mariadb_v="11.4"
 
 # Defining software pack for all distros
 software="acl apache2 apache2.2-common apache2-suexec-custom apache2-utils apparmor-utils awstats bc bind9 bsdmainutils bsdutils
@@ -51,7 +51,7 @@ software="acl apache2 apache2.2-common apache2-suexec-custom apache2-utils appar
   php$fpm_v php$fpm_v-apcu php$fpm_v-bz2 php$fpm_v-cgi php$fpm_v-cli php$fpm_v-common php$fpm_v-curl php$fpm_v-gd
   php$fpm_v-imagick php$fpm_v-imap php$fpm_v-intl php$fpm_v-ldap php$fpm_v-mbstring php$fpm_v-mysql php$fpm_v-opcache
   php$fpm_v-pgsql php$fpm_v-pspell php$fpm_v-readline php$fpm_v-xml php$fpm_v-zip postgresql postgresql-contrib
-  proftpd-basic quota rrdtool rsyslog setpriv spamassassin sudo sysstat unzip vim-common vsftpd whois zip zstd jailkit restic"
+  proftpd-basic quota rrdtool rsyslog util-linux spamassassin sudo sysstat unzip vim-common vsftpd whois zip zstd jailkit restic"
 
 installer_dependencies="apt-transport-https ca-certificates curl dirmngr gnupg openssl software-properties-common wget"
 
@@ -811,10 +811,14 @@ curl -s https://nginx.org/keys/nginx_signing.key | gpg --dearmor | tee /usr/shar
 # Installing sury PHP repo
 # add-apt-repository does not yet support signed-by see: https://bugs.launchpad.net/ubuntu/+source/software-properties/+bug/1862764
 echo "[ * ] PHP"
+if [ "$release" = '24.04' ]; then
+	# Workaround for Ubuntu 24.04 due to weak key warning it sheduled to be fixed in 24.04.1
+	echo 'APT::Key::Assert-Pubkey-Algo "";' > /etc/apt/apt.conf.d/99weakkey-warning
+fi
 LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php > /dev/null 2>&1
 
 # Installing sury Apache2 repo
-if [ "$apache" = 'yes' ]; then
+if [ "$apache" = 'yes' ] && [ "$release" != '24.04' ]; then
 	echo "[ * ] Apache2"
 	echo "deb http://ppa.launchpad.net/ondrej/apache2/ubuntu $codename main" > $apt/apache2.list
 fi
@@ -831,11 +835,13 @@ echo "[ * ] Hestia Control Panel"
 echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/hestia-keyring.gpg] https://$RHOST/ $codename main" > $apt/hestia.list
 gpg --no-default-keyring --keyring /usr/share/keyrings/hestia-keyring.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys A189E93654F0B0E5 > /dev/null 2>&1
 
-# Installing Node.js 20.x repo
+# Detect if nodejs is allready installed if not add the repo
 echo "[ * ] Node.js 20.x"
-echo "deb [signed-by=/usr/share/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x $codename main" > $apt/nodesource.list
-echo "deb-src [signed-by=/usr/share/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x $codename main" >> $apt/nodesource.list
-curl -s https://deb.nodesource.com/gpgkey/nodesource.gpg.key | gpg --dearmor | tee /usr/share/keyrings/nodesource.gpg > /dev/null 2>&1
+if [ -z $(which "node") ]; then
+	curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+else
+	echo "- Node.js is already installed"
+fi
 
 # Installing PostgreSQL repo
 if [ "$postgresql" = 'yes' ]; then
@@ -1046,11 +1052,10 @@ if [ -d "$withdebs" ]; then
 	software=$(echo "$software" | sed -e "s/hestia=${HESTIA_INSTALL_VER}//")
 fi
 if [ "$release" = '20.04' ]; then
-	software=$(echo "$software" | sed -e "s/setpriv/util-linux/")
 	software=$(echo "$software" | sed -e "s/libzip4/libzip5/")
 fi
-if [ "$release" = '22.04' ]; then
-	software=$(echo "$software" | sed -e "s/setpriv/util-linux/")
+if [ "$release" = '24.04' ]; then
+	software=$(echo "$software" | sed -e "s/libzip4/libzip4t64/")
 fi
 
 #----------------------------------------------------------#
@@ -1484,7 +1489,7 @@ if [ "$release" = "20.04" ]; then
 	elif grep -qw "^system_default = system_default_sect$" /etc/ssl/openssl.cnf 2> /dev/null; then
 		sed -i '/^system_default = system_default_sect$/a system_default = hestia_openssl_sect\n\n[hestia_openssl_sect]\nCiphersuites = '"$tls13_ciphers"'\nOptions = PrioritizeChaCha' /etc/ssl/openssl.cnf
 	fi
-elif [ "$release" = "22.04" ]; then
+elif [ "$release" != "20.04" ]; then
 	sed -i '/^system_default = system_default_sect$/a system_default = hestia_openssl_sect\n\n[hestia_openssl_sect]\nCiphersuites = '"$tls13_ciphers"'\nOptions = PrioritizeChaCha' /etc/ssl/openssl.cnf
 fi
 
@@ -1495,7 +1500,7 @@ $HESTIA/bin/v-generate-ssl-cert $(hostname) '' 'US' 'California' \
 
 # Parsing certificate file
 crt_end=$(grep -n "END CERTIFICATE-" /tmp/hst.pem | cut -f 1 -d:)
-if [ "$release" = "22.04" ]; then
+if [ "$release" != "20.04" ]; then
 	key_start=$(grep -n "BEGIN PRIVATE KEY" /tmp/hst.pem | cut -f 1 -d:)
 	key_end=$(grep -n "END PRIVATE KEY" /tmp/hst.pem | cut -f 1 -d:)
 else
@@ -1733,7 +1738,7 @@ if [ "$proftpd" = 'yes' ]; then
 	systemctl start proftpd >> $LOG
 	check_result $? "proftpd start failed"
 
-	if [ "$release" = '22.04' ]; then
+	if [ "$release" != '20.04' ]; then
 		unit_files="$(systemctl list-unit-files | grep proftpd)"
 		if [[ "$unit_files" =~ "disabled" ]]; then
 			systemctl enable proftpd
@@ -1757,8 +1762,8 @@ if [ "$mysql" = 'yes' ] || [ "$mysql8" = 'yes' ]; then
 	fi
 
 	if [ "$mysql_type" = 'MariaDB' ]; then
-		# Run mysql_install_db
-		mysql_install_db >> $LOG
+		# Run mariadb-install-db
+		mariadb-install-db >> $LOG
 	fi
 
 	# Remove symbolic link
@@ -2049,16 +2054,22 @@ fi
 #----------------------------------------------------------#
 
 if [ "$spamd" = 'yes' ]; then
+	# Set SpamAssassin Service Name
+	if [ "$release" = '24.04' ]; then
+		spamd_srvname="spamd"
+	else
+		spamd_srvname="spamassassin"
+	fi
 	echo "[ * ] Configuring SpamAssassin..."
-	update-rc.d spamassassin defaults > /dev/null 2>&1
-	sed -i "s/ENABLED=0/ENABLED=1/" /etc/default/spamassassin
-	systemctl start spamassassin >> $LOG
-	check_result $? "spamassassin start failed"
+	update-rc.d $spamd_srvname defaults > /dev/null 2>&1
+	sed -i "s/ENABLED=0/ENABLED=1/" /etc/default/$spamd_srvname
+	systemctl start $spamd_srvname >> $LOG
+	check_result $? "$spamd_srvname start failed"
 	unit_files="$(systemctl list-unit-files | grep spamassassin)"
 	if [[ "$unit_files" =~ "disabled" ]]; then
-		systemctl enable spamassassin > /dev/null 2>&1
+		systemctl enable $spamd_srvname > /dev/null 2>&1
 	fi
-	sed -i "s/#CRON=1/CRON=1/" /etc/default/spamassassin
+	sed -i "s/#CRON=1/CRON=1/" /etc/default/$spamd_srvname
 fi
 
 #----------------------------------------------------------#
@@ -2165,11 +2176,12 @@ if [ "$sieve" = 'yes' ]; then
 		mkdir -p $RC_CONFIG_DIR/plugins/managesieve
 		cp -f $HESTIA_COMMON_DIR/roundcube/plugins/config_managesieve.inc.php $RC_CONFIG_DIR/plugins/managesieve/config.inc.php
 		ln -s $RC_CONFIG_DIR/plugins/managesieve/config.inc.php $RC_INSTALL_DIR/plugins/managesieve/config.inc.php
-		chown -R root:hestiamail $RC_CONFIG_DIR/
+		chown -R hestiamail:www-data $RC_CONFIG_DIR/
 		chmod 751 -R $RC_CONFIG_DIR
 		chmod 644 $RC_CONFIG_DIR/*.php
 		chmod 644 $RC_CONFIG_DIR/plugins/managesieve/config.inc.php
 		sed -i "s/\"archive\"/\"archive\", \"managesieve\"/g" $RC_CONFIG_DIR/config.inc.php
+		chmod 640 $RC_CONFIG_DIR/config.inc.php
 	fi
 
 	# Restart Dovecot and exim4

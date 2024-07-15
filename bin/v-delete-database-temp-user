@@ -2,7 +2,7 @@
 # info: deletes temp database user
 # options: USER DBUSER [TYPE] [HOST]
 #
-# example: v-add-database-temp-user wordress hestia_sso_user mysql
+# example: v-delete-database-temp-user wordpress hestia_sso_user mysql
 #
 # Revokes "temp user" access to a database and removes the user
 # To be used in combination with v-add-database-temp-user

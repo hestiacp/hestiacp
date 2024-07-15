@@ -24,10 +24,10 @@ class WordpressSetup extends BaseSetup {
 			//],
 
 			"site_name" => ["type" => "text", "value" => "WordPress Blog"],
-			"wordpress_account_username" => ["value" => "wpadmin"],
-			"wordpress_account_email" => "text",
-			"wordpress_account_password" => "password",
-			"install_directory" => ["type" => "text", "value" => "", "placeholder" => "/"],
+			"username" => ["value" => "wpadmin"],
+			"email" => "text",
+			"password" => "password",
+			"install_directory" => ["type" => "text", "value" => "/", "placeholder" => "/"],
 			"language" => [
 				"type" => "select",
 				"value" => "en_US",
@@ -249,13 +249,13 @@ class WordpressSetup extends BaseSetup {
 					"weblog_title=" .
 						rawurlencode($options["site_name"]) .
 						"&user_name=" .
-						rawurlencode($options["wordpress_account_username"]) .
+						rawurlencode($options["username"]) .
 						"&admin_password=" .
-						rawurlencode($options["wordpress_account_password"]) .
+						rawurlencode($options["password"]) .
 						"&admin_password2=" .
-						rawurlencode($options["wordpress_account_password"]) .
+						rawurlencode($options["password"]) .
 						"&admin_email=" .
-						rawurlencode($options["wordpress_account_email"]),
+						rawurlencode($options["email"]),
 				),
 			$output,
 			$return_var,

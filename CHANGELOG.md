@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.9.0] - Feature / Major release
+
+### Notes
+
+- To improve security we have deciced to allow users to rename the default admin user. And use a new user "hestia-web" to become the default user to run Hestia on.
+
+### Features
+
+- Add support for Ubuntu 24.04 Noble release (#4411 #4451)
+- Add support for Jailed SSH (#4052) @rjd222
+- Implement CLI for Quick Install Apps (#4443)
+- Add Joompla for Quick Install Apps (#4433)
+- Add support for Directadmin / Cpanel imports ( #4415 #4426)
+- Add support for Increamental Backups via Restic
+- Add support for Triggers in
+
+### Bug fixes
+
+- Allow filegator to be translated (#4382 #4275)
+- Fix bug caused by new release robthree/twofactorauth (#4410)
+
 ## [1.8.11] - Service release
 
 ### Features

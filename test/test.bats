@@ -965,7 +965,7 @@ function check_ip_not_banned(){
    run v-add-web-domain $user idn-tést.eu 198.18.0.125
    assert_success
    refute_output
-	 assert_file_exist /home/$user/idn-tést.eu/public_html/index.html
+	 assert_file_exist /home/$user/web/idn-tést.eu/public_html/index.html
 }
 
 @test "WEB: Add IDN domain ASCII idn-tést.eu" {
@@ -1382,7 +1382,7 @@ function check_ip_not_banned(){
   assert_success
   refute_output
   # Change back
-  run v-change-dns-record-id $user $domain 21 20
+  run v-change-dns-record-id $user $domain 31 30
 }
 
 @test "DNS: Change DNS record id (no update)" {

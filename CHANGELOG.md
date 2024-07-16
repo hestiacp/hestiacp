@@ -14,14 +14,21 @@ All notable changes to this project will be documented in this file.
 - Add support for Jailed SSH (#4052) @rjd222
 - Implement CLI for Quick Install Apps (#4443)
 - Add Joompla for Quick Install Apps (#4433)
-- Add support for Directadmin / Cpanel imports ( #4415 #4426)
+- Add support for Directadmin / Cpanel imports ( #4415 #4426 #4252)
 - Add support for Increamental Backups via Restic
-- Add support for Triggers in
+- Add support for Triggers in v-add-mail-domain / v-add-delete-mail-domain #4416 (See Docs)
+- Joompla Quick Install App (#4433)
+- Add support for resources limit (#4372)
 
 ### Bug fixes
 
 - Allow filegator to be translated (#4382 #4275)
 - Fix bug caused by new release robthree/twofactorauth (#4410)
+- Create .wp-cli folder on create new user (#4403)
+- Fix SMTP Relay routing issue (#4389)
+- Fix Roundcube permissions (#4387)
+- Fix v-add-dns-record when adding TLSA records (#4376)
+- Fix handling of Snappymail (#4349)
 
 ## [1.8.11] - Service release
 

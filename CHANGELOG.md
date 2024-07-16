@@ -11,14 +11,14 @@ All notable changes to this project will be documented in this file.
 ### Features
 
 - Add support for Ubuntu 24.04 Noble release (#4411 #4451)
-- Add support for Jailed SSH (#4052) @rjd222
+- Add support for Jailed SSH (#4052 #4245) @rjd222
 - Implement CLI for Quick Install Apps (#4443)
 - Add Joompla for Quick Install Apps (#4433)
-- Add support for Directadmin / Cpanel imports ( #4415 #4426 #4252)
+- Add support for Directadmin / Cpanel imports ( #4177 #4415 #4426 #4252 #4241)
 - Add support for Increamental Backups via Restic
 - Add support for Triggers in v-add-mail-domain / v-add-delete-mail-domain #4416 (See Docs)
 - Joompla Quick Install App (#4433)
-- Add support for resources limit (#4372)
+- Add support for Limit CPU and RAM for Each User Using cgroup (#4372 #4325)
 
 ### Bug fixes
 
@@ -29,6 +29,37 @@ All notable changes to this project will be documented in this file.
 - Fix Roundcube permissions (#4387)
 - Fix v-add-dns-record when adding TLSA records (#4376)
 - Fix handling of Snappymail (#4349)
+- Added creation of dovecot.log and permission setup to dovecot installation step (#4352)
+- Fix to the Localpart Mail validator so it can accept aliases starting and ending with (#4351)
+- Apache2: Enable mod_headers by default. (#4350)
+- Update MediaWiki to 1.41.1 (#4344)
+- Add support for compressing via GZ or ZSTD (#4300 #4322)
+- Simplify spinner styles (#4319)
+- Animate deletion of notifications (#4316)
+- Update v-run-cli-cmd (#4310)
+- Show database server port in notification email (#4301)
+- Fixes permissions issue related with Issue #4248 (#4268)
+- remove PHP code, and fix installer warning (#4279)
+- Prevent \* from expanding in command (#4085)
+- Drop v-generate-debug-report (#4266)
+- Fix missing dot file backups
+- vsftpd use_localtime No #4261
+- Fix broken mysql v8 install on Debian (#4259)
+- Use standard y/N format in installer to indicate default (#4251)
+- Fix broken HTML on login/reset pages (#4247)
+- Checks for usernames starting with a alphabetic character. (#4195 #4181)
+- Correct formatting of user dir (#4098)
+- Add mjs as a file to serve statically (#4240)
+- Display system time on cron pages (#4236)
+- Patch Dokuwiki installer for issue #3889 (#4229)
+- Corrected path to ssl certs (#4202)
+- Add value to input type text (#4193)
+
+### Depencies
+
+- Update hestia-nginx to 1.27.0
+- Update hestia-php to 8.3.9
+- Update Roundcube, Filegator, Snappy mail to the latest version
 
 ## [1.8.11] - Service release
 

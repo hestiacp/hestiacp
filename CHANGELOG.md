@@ -19,6 +19,7 @@ All notable changes to this project will be documented in this file.
 - Add support for Triggers in v-add-mail-domain / v-add-delete-mail-domain #4416 (See Docs)
 - Joompla Quick Install App (#4433)
 - Add support for Limit CPU and RAM for Each User Using cgroup (#4372 #4325)
+- Add Web terminal (#3859)
 
 ### Bug fixes
 
@@ -54,6 +55,7 @@ All notable changes to this project will be documented in this file.
 - Patch Dokuwiki installer for issue #3889 (#4229)
 - Corrected path to ssl certs (#4202)
 - Add value to input type text (#4193)
+- Correctly get the session cookie for web terminal (#3969)
 
 ### Depencies
 

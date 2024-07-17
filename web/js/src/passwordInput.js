@@ -16,9 +16,41 @@ export default function handlePasswordInput() {
 		generatePasswordButton.addEventListener('click', () => {
 			const passwordInput =
 				generatePasswordButton.parentNode.nextElementSibling.querySelector('.js-password-input');
+			const passwordLength =
+				document.getElementById('v_password_length') &&
+				document.getElementById('v_password_length').value
+					? document.getElementById('v_password_length').value
+					: 16;
+			const passwordOptions = document.querySelector(
+				'input.password_options_radios[type=radio]:checked',
+			)
+				? document.querySelector('input.password_options_radios[type=radio]:checked').value
+				: null;
+			const passwordSymbols = document.getElementById('v_password_options_symbols')
+				? document.getElementById('v_password_options_symbols').value
+				: null;
 			if (passwordInput) {
-				passwordInput.value = randomPassword();
+				passwordInput.value = randomPassword(+passwordLength, passwordOptions, passwordSymbols);
 				passwordInput.dispatchEvent(new Event('input'));
+			}
+		});
+	});
+
+	// Listen for clicks on toggle password options
+	document.querySelectorAll('.js-toggle-generate-password').forEach((toggleBtn) => {
+		toggleBtn.addEventListener('click', () => {
+			const caret = toggleBtn.querySelector('i.fas');
+			const panel = document.querySelector('div.password-options');
+			if (panel.classList.contains('u-hidden')) {
+				panel.classList.add('animate__animated', 'animate__fadeIn');
+				panel.classList.remove('u-hidden');
+				caret.classList.remove('fa-caret-down');
+				caret.classList.add('fa-caret-up');
+			} else {
+				panel.classList.remove('animate__animated', 'animate__fadeIn');
+				panel.classList.add('u-hidden');
+				caret.classList.add('fa-caret-down');
+				caret.classList.remove('fa-caret-up');
 			}
 		});
 	});

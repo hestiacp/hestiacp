@@ -43,6 +43,7 @@
 					<button type="button" title="<?= _("Generate") ?>" class="u-unstyled-button u-ml5 js-generate-password">
 						<i class="fas fa-arrows-rotate icon-green"></i>
 					</button>
+					<?= render_fragment("/templates/includes/password-options.php") ?>
 				</label>
 				<div class="u-pos-relative u-mb10">
 					<input type="text" class="form-control js-password-input" name="v_password" id="v_password" value="<?= htmlentities(trim($v_password, "'")) ?>">

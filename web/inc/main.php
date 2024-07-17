@@ -216,6 +216,20 @@ function render_page($user, $TAB, $page) {
 	include $__template_dir . "footer.php";
 }
 
+/**
+ * Renders a php fragment inside another page.
+ * The base directory is /usr/local/hestia/web
+ * Fragment must starts with / and must be relative to the base directory
+ */
+function render_fragment($fragment) {
+	$file = dirname(__DIR__) . $fragment;
+	if (file_exists($file)) {
+		include_once $file;
+	} else {
+		return "Fragment does not exists";
+	}
+}
+
 // Match $_SESSION['token'] against $_GET['token'] or $_POST['token']
 // Usage: verify_csrf($_POST) or verify_csrf($_GET); Use verify_csrf($_POST,true) to return on failure instead of redirect
 function verify_csrf($method, $return = false) {

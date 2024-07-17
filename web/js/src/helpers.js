@@ -1,12 +1,22 @@
 import { customAlphabet } from 'nanoid';
 
 // Generates a random password that always passes password requirements
-export function randomPassword(length = 16) {
+export function randomPassword(length = 16, options = null, _symbols = null) {
 	const uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 	const lowercase = 'abcdefghijklmnopqrstuvwxyz';
 	const numbers = '0123456789';
-	const symbols = '!@#$%^&*()_+-=[]{}|;:/?';
-	const allCharacters = uppercase + lowercase + numbers + symbols;
+	const symbols = _symbols ?? '!@#$%^&*()_+-=[]{}|;:/?';
+	let allCharacters;
+	switch (options) {
+		case 'numbers':
+			allCharacters = uppercase + lowercase + numbers;
+			break;
+		case 'both':
+		default:
+			allCharacters = uppercase + lowercase + numbers + symbols;
+			break;
+	}
+
 	const generate = customAlphabet(allCharacters, length);
 
 	let password;

@@ -46,8 +46,7 @@ class JoomlaSetup extends BaseSetup {
 		"database" => true,
 		"resources" => [
 			"archive" => [
-				"src" =>
-					"https://www.joomla.org/latest",
+				"src" => "https://www.joomla.org/latest",
 			],
 		],
 		"server" => [

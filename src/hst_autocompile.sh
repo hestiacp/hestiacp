@@ -282,7 +282,7 @@ if [ "$dontinstalldeps" != 'true' ]; then
 		codename="$(lsb_release -s -c)"
 
 		if [ -z $(which "node") ]; then
-			curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+			curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
 		fi
 
 		echo "Installing Node.js..."

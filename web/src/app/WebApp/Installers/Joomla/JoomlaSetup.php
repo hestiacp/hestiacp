@@ -10,7 +10,7 @@ class JoomlaSetup extends BaseSetup {
 		"name" => "Joomla",
 		"group" => "cms",
 		"enabled" => true,
-		"version" => "5.1.2",
+		"version" => "latest",
 		"thumbnail" => "joomla_thumb.png",
 	];
 
@@ -47,7 +47,7 @@ class JoomlaSetup extends BaseSetup {
 		"resources" => [
 			"archive" => [
 				"src" =>
-					"https://downloads.joomla.org/cms/joomla5/5-1-2/Joomla_5-1-2-Stable-Full_Package.zip?format=zip",
+					"https://www.joomla.org/latest",
 			],
 		],
 		"server" => [

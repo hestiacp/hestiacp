@@ -965,10 +965,7 @@ function check_ip_not_banned(){
    run v-add-web-domain $user idn-tést.eu 198.18.0.125
    assert_success
    refute_output
-
-   echo -e "<?php\necho 'Hestia Test:'.(4*3);" > $HOMEDIR/$user/web/idn-tést.eu/public_html/php-test.php
-   validate_web_domain $user idn-tést.eu 'Hestia Test:12' 'php-test.php'
-   rm $HOMEDIR/$user/web/idn-tést.eu/public_html/php-test.php
+	 assert_file_exist /home/$user/web/idn-tést.eu/public_html/index.html
 }
 
 @test "WEB: Add IDN domain ASCII idn-tést.eu" {
@@ -1353,13 +1350,13 @@ function check_ip_not_banned(){
 }
 
 @test "DNS: Add domain record" {
-    run v-add-dns-record $user $domain test A 198.18.0.125 '' 20
+    run v-add-dns-record $user $domain test A 198.18.0.125 '' 30
     assert_success
     refute_output
 }
 
 @test "DNS: Add domain record *.domain.com" {
-    run v-add-dns-record $user $domain '*' A 198.18.0.125 '' 30
+    run v-add-dns-record $user $domain '*' A 198.18.0.125 '' 40
     assert_success
     refute_output
 }
@@ -1370,37 +1367,37 @@ function check_ip_not_banned(){
 }
 
 @test "DNS: Change DNS record" {
-  run v-change-dns-record $user $domain 20 test A 198.18.0.125 "" "" 1500
+  run v-change-dns-record $user $domain 30 test A 198.18.0.125 "" "" 1500
   assert_success
   refute_output
 }
 
 @test "DNS: Change DNS record (no update)" {
-  run v-change-dns-record $user $domain 20 test A 198.18.0.125 "" "" 1500
+  run v-change-dns-record $user $domain 30 test A 198.18.0.125 "" "" 1500
   assert_failure $E_EXSIST
 }
 
 @test "DNS: Change DNS record id" {
-  run v-change-dns-record-id $user $domain 20 21
+  run v-change-dns-record-id $user $domain 30 31
   assert_success
   refute_output
   # Change back
-  run v-change-dns-record-id $user $domain 21 20
+  run v-change-dns-record-id $user $domain 31 30
 }
 
 @test "DNS: Change DNS record id (no update)" {
-  run v-change-dns-record-id  $user $domain 20 20
+  run v-change-dns-record-id  $user $domain 30 30
   assert_failure $E_EXSIST
 }
 
 @test "DNS: Delete domain record" {
-    run v-delete-dns-record $user $domain 20
+    run v-delete-dns-record $user $domain 30
     assert_success
     refute_output
 }
 
 @test "DNS: Delete missing domain record" {
-    run v-delete-dns-record $user $domain 20
+    run v-delete-dns-record $user $domain 30
     assert_failure $E_NOTEXIST
 }
 

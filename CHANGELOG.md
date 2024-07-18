@@ -20,6 +20,7 @@ All notable changes to this project will be documented in this file.
 - Joompla Quick Install App (#4433)
 - Add support for Limit CPU and RAM for Each User Using cgroup (#4372 #4325)
 - Add Web terminal (#3859)
+- Improve email account sidebar layout (#4154)
 
 ### Bug fixes
 

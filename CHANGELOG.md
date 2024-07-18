@@ -13,13 +13,13 @@ All notable changes to this project will be documented in this file.
 - Add support for Ubuntu 24.04 Noble release (#4411 #4451)
 - Add support for Jailed SSH (#4052 #4245) @rjd222
 - Implement CLI for Quick Install Apps (#4443)
-- Add Joompla for Quick Install Apps (#4433)
 - Add support for Directadmin / Cpanel imports ( #4177 #4415 #4426 #4252 #4241)
 - Add support for Increamental Backups via Restic
 - Add support for Triggers in v-add-mail-domain / v-add-delete-mail-domain #4416 (See Docs)
-- Joompla Quick Install App (#4433)
+- Add Joomla Quick Install App (#4433)
 - Add support for Limit CPU and RAM for Each User Using cgroup (#4372 #4325)
 - Add Web terminal (#3859)
+- Improve email account sidebar layout (#4154)
 
 ### Bug fixes
 

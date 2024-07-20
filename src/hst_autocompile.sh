@@ -269,7 +269,6 @@ if [ "$dontinstalldeps" != 'true' ]; then
 			mock -r rocky+epel-9-$(arch) --init
 		fi
 	else
-		DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends tzdata
 		# Set package dependencies for compiling
 		SOFTWARE='wget tar git curl build-essential libxml2-dev libz-dev libzip-dev libgmp-dev libcurl4-gnutls-dev unzip openssl libssl-dev pkg-config libsqlite3-dev libonig-dev lsb-release'
 

@@ -11,6 +11,12 @@
 # Clear previous screen output
 clear
 
+# Issue with TZDATA
+echo "UTC" > /etc/timezone
+dpkg-reconfigure -f noninteractive tzdata
+
+timedatectl set-timezone UTC
+
 # Define download function
 download_file() {
 	local url=$1

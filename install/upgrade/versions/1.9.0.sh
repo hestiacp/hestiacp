@@ -91,5 +91,5 @@ for package in $packages; do
 	done
 done
 
-$BIN/v-add-user-notification 'admin' 'Hestia securirty has been upgraded' 'Here should come a nice message about the upgrade and how to change the user name of the admin user!'
-add_upgrade_message 'Here should come a nice message about the upgrade and how to change the user name of the admin user!'
+$BIN/v-add-user-notification 'admin' 'Hestia securirty has been upgraded' ' A new user "hestiaweb" has been created and is used for login. Make sure other Hestia packages are updated as well otherwise the system may not work as expected.'
+add_upgrade_message 'Security has been upgraded, A new user "hestiaweb" has been created and is used for login. Make sure other Hestia packages are updated as well otherwise the system may not work as expected.'

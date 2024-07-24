@@ -838,7 +838,7 @@ gpg --no-default-keyring --keyring /usr/share/keyrings/hestia-keyring.gpg --keys
 # Detect if nodejs is allready installed if not add the repo
 echo "[ * ] Node.js 20.x"
 if [ -z $(which "node") ]; then
-	curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+	curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
 else
 	echo "- Node.js is already installed"
 fi

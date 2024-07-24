@@ -7,7 +7,7 @@
         <label for="v_password_length" class="form-label">
             <?= _("Length") ?>
         </label>
-        <input type="number" class="form-control js-password-length" name="v_password_length" id="v_password_length" min="8" value="16">
+        <input type="number" class="form-control" name="v_password_length" id="v_password_length" min="8" value="16" style="max-width: 3.8rem">
     </div>
     <div class="u-mb20">
         <label for="v_password_options_symbols" class="form-label">

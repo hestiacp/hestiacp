@@ -40,6 +40,8 @@ multiphp_required=("7.3" "7.4" "8.0" "8.1" "8.2","8.3")
 fpm_v="8.3"
 # MariaDB version
 mariadb_v="11.4"
+# Node.js version
+node_v="20"
 
 # Defining software pack for all distros
 software="acl apache2 apache2-suexec-custom apache2-suexec-pristine apache2-utils awstats bc bind9 bsdmainutils bsdutils
@@ -690,7 +692,7 @@ if [ "$interactive" = 'yes' ]; then
 	fi
 fi
 
-#Validate Username / Password / Email / Hostname even when interactive = no
+# Validate Username / Password / Email / Hostname even when interactive = no
 if [ -z "$username" ]; then
 	while validate_username; do
 		read -p 'Please enter administrator username: ' username
@@ -701,7 +703,7 @@ else
 	fi
 fi
 
-#Ask for the password
+# Ask for password
 if [ -z "$vpass" ]; then
 	while validate_password; do
 		read -p 'Please enter administrator password: ' vpass
@@ -791,7 +793,7 @@ echo
 #                      Checking swap                       #
 #----------------------------------------------------------#
 
-# Checking swap on small instances
+# Add swap for low memory servers
 if [ -z "$(swapon -s)" ] && [ "$memory" -lt 1000000 ]; then
 	fallocate -l 1G /swapfile
 	chmod 600 /swapfile
@@ -807,7 +809,7 @@ fi
 # Define apt conf location
 apt=/etc/apt/sources.list.d
 
-# Create new folder if not all-ready exists
+# Create new folder if it doesn't exist
 mkdir -p /root/.gnupg/ && chmod 700 /root/.gnupg/
 
 # Updating system
@@ -815,7 +817,6 @@ echo "Adding required repositories to proceed with installation:"
 echo
 
 # Installing Nginx repo
-
 echo "[ * ] NGINX"
 echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/nginx-keyring.gpg] https://nginx.org/packages/mainline/$VERSION/ $codename nginx" > $apt/nginx.list
 curl -s https://nginx.org/keys/nginx_signing.key | gpg --dearmor | tee /usr/share/keyrings/nginx-keyring.gpg > /dev/null 2>&1
@@ -834,12 +835,11 @@ fi
 
 # Installing MariaDB repo
 if [ "$mysql" = 'yes' ]; then
+	echo "[ * ] MariaDB $mariadb_v"
 	if [ "$release" != '12' ]; then
-		echo "[ * ] MariaDB"
 		echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/mariadb-keyring.gpg] https://dlm.mariadb.com/repo/mariadb-server/$mariadb_v/repo/$VERSION $codename main" > $apt/mariadb.list
 		curl -s https://mariadb.org/mariadb_release_signing_key.asc | gpg --dearmor | tee /usr/share/keyrings/mariadb-keyring.gpg > /dev/null 2>&1
 	else
-		echo "[ * ] MariaDB"
 		echo "#deb [arch=$ARCH signed-by=/usr/share/keyrings/mariadb-keyring.gpg] https://dlm.mariadb.com/repo/mariadb-server/$mariadb_v/repo/$VERSION $codename main" > $apt/mariadb.list
 		curl -s https://mariadb.org/mariadb_release_signing_key.asc | gpg --dearmor | tee /usr/share/keyrings/mariadb-keyring.gpg > /dev/null 2>&1
 	fi
@@ -866,12 +866,12 @@ echo "[ * ] Hestia Control Panel"
 echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/hestia-keyring.gpg] https://$RHOST/ $codename main" > $apt/hestia.list
 gpg --no-default-keyring --keyring /usr/share/keyrings/hestia-keyring.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys A189E93654F0B0E5 > /dev/null 2>&1
 
-# Detect if nodejs is allready installed if not add the repo
-echo "[ * ] Node.js 20.x"
-if [ -z $(which "node") ]; then
-	curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
-else
-	echo "- Node.js is already installed"
+# Installing Node.js repo
+if [ "$webterminal" = 'yes' ]; then
+	echo "[ * ] Node.js $node_v"
+	echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/nodejs.gpg] https://deb.nodesource.com/node_$node_v.x nodistro main" > $apt/nodejs.list
+	curl -s https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor | tee /usr/share/keyrings/nodejs.gpg > /dev/null 2>&1
+	curl -fsSL https://deb.nodesource.com/setup_$node_v.x | bash -
 fi
 
 # Installing PostgreSQL repo
@@ -1220,7 +1220,7 @@ if [ ! -f "/etc/default/ntpsec-ntpdate " ]; then
 	systemctl start systemd-timesyncd
 fi
 # Restrict access to /proc fs
-# - Prevent unpriv users from seeing each other running processes
+# Prevent unpriv users from seeing each other running processes
 mount -o remount,defaults,hidepid=2 /proc > /dev/null 2>&1
 if [ $? -ne 0 ]; then
 	echo "Info: Cannot remount /proc (LXC containers require additional perm added to host apparmor profile)"
@@ -1278,7 +1278,7 @@ touch $HESTIA/conf/hestia.conf
 chmod 660 $HESTIA/conf/hestia.conf
 
 # Write default port value to hestia.conf
-# If a custom port is specified it will be set at the end of the installation process.
+# If a custom port is specified it will be set at the end of the installation process
 write_config_value "BACKEND_PORT" "8083"
 
 # Web stack
@@ -1389,7 +1389,7 @@ write_config_value "BACKUP_MODE" "zstd"
 # Language
 write_config_value "LANGUAGE" "$lang"
 
-# Login in screen
+# Login screen style
 write_config_value "LOGIN_STYLE" "default"
 
 # Theme
@@ -1454,7 +1454,7 @@ if [ "$named" = "no" ]; then
 	sed -i "/COMMENT='DNS'/d" $HESTIA/data/firewall/rules.conf
 fi
 
-# Installing apis
+# Installing API
 cp -rf $HESTIA_COMMON_DIR/api $HESTIA/data/
 
 # Configuring server hostname
@@ -1502,12 +1502,12 @@ rm /tmp/hst.pem
 # Install dhparam.pem
 cp -f $HESTIA_INSTALL_DIR/ssl/dhparam.pem /etc/ssl
 
-# Enable sftp jail
+# Enable SFTP jail
 echo "[ * ] Enabling SFTP jail..."
 $HESTIA/bin/v-add-sys-sftp-jail > /dev/null 2>&1
 check_result $? "can't enable sftp jail"
 
-# Enable ssh jail
+# Enable SSH jail
 echo "[ * ] Enabling SSH jail..."
 $HESTIA/bin/v-add-sys-ssh-jail > /dev/null 2>&1
 check_result $? "can't enable ssh jail"
@@ -1868,7 +1868,7 @@ if [ "$mysql" = 'yes' ] || [ "$mysql8" = 'yes' ]; then
 	# shellcheck source=/usr/local/hestia/install/deb/phpmyadmin/pma.sh
 	source $HESTIA_INSTALL_DIR/phpmyadmin/pma.sh > /dev/null 2>&1
 
-	# limit access to /etc/phpmyadmin/
+	# Limit access to /etc/phpmyadmin/
 	chown -R root:www-data /etc/phpmyadmin/
 	chmod -R 640 /etc/phpmyadmin/*
 	chmod 750 /etc/phpmyadmin/conf.d/
@@ -2006,7 +2006,7 @@ if [ "$dovecot" = 'yes' ]; then
 	touch /var/log/dovecot.log
 	chown -R dovecot:mail /var/log/dovecot.log
 	chmod 660 /var/log/dovecot.log
-	#Alter config for 2.2
+	# Alter config for 2.2
 	version=$(dovecot --version | cut -f -2 -d .)
 	if [ "$version" = "2.2" ]; then
 		echo "[ * ] Downgrade dovecot config to sync with 2.2 settings"
@@ -2200,7 +2200,7 @@ if [ "$sieve" = 'yes' ]; then
 		chmod 640 $RC_CONFIG_DIR/config.inc.php
 	fi
 
-	# Restart Dovecot and exim4
+	# Restart Dovecot and Exim4
 	systemctl restart dovecot > /dev/null 2>&1
 	systemctl restart exim4 > /dev/null 2>&1
 fi

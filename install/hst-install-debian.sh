@@ -871,7 +871,7 @@ if [ "$webterminal" = 'yes' ]; then
 	echo "[ * ] Node.js $node_v"
 	echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/nodejs.gpg] https://deb.nodesource.com/node_$node_v.x nodistro main" > $apt/nodejs.list
 	curl -s https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor | tee /usr/share/keyrings/nodejs.gpg > /dev/null 2>&1
-	curl -fsSL https://deb.nodesource.com/setup_$node_v.x | bash -
+	apt-get -y install nodejs > $LOG
 fi
 
 # Installing PostgreSQL repo
@@ -2352,7 +2352,7 @@ chown hestiaweb:hestiaweb /var/spool/cron/crontabs/hestiaweb
 # Enable automatic updates
 $HESTIA/bin/v-add-cron-hestia-autoupdate apt
 
-# Building initital rrd images
+# Building initial rrd images
 $HESTIA/bin/v-update-sys-rrd
 
 # Enabling file system quota

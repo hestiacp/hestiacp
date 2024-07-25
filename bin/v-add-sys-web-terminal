@@ -36,21 +36,32 @@ check_hestia_demo_mode
 # Updating WEB_TERMINAL value
 $BIN/v-change-sys-config-value "WEB_TERMINAL" "true"
 
-# Check if Node.js is installed if not install repo
+# Detect and install Node.js if necessary
 apt="/etc/apt/sources.list.d"
-codename="$(lsb_release -s -c)"
+node_v="20"
 
-if [ ! -z $(which "node") ]; then
-	echo "Adding Node.js 20.x repo..."
-	echo "deb [signed-by=/usr/share/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x $codename main" > $apt/nodesource.list
-	echo "deb-src [signed-by=/usr/share/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x $codename main" >> $apt/nodesource.list
-	curl -s https://deb.nodesource.com/gpgkey/nodesource.gpg.key | gpg --dearmor | tee /usr/share/keyrings/nodesource.gpg > /dev/null 2>&1
+if [ $(uname -m) = "x86_64" ]; then
+	ARCH=amd64
+elif [ $(uname -m) = "aarch64" ]; then
+	ARCH=arm64
+fi
+
+if [ -z $(which "node") ]; then
+	echo "Installing Node.js $node_v"
+	echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/nodejs.gpg] https://deb.nodesource.com/node_$node_v.x nodistro main" > $apt/nodejs.list
+	curl -s https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor | tee /usr/share/keyrings/nodejs.gpg > /dev/null 2>&1
+	apt-get -qq install nodejs -y
+else
+	node_v_installed=$(/usr/bin/node -v | cut -f1 -d'.' | sed 's/v//g')
+	if [ "$node_v_installed" -lt "$node_v" ]; then
+		echo "Web Terminal requires Node.js 20.x or higher"
+		exit 1
+	fi
 fi
 
 if [ ! -f "$HESTIA/web-terminal/server.js" ]; then
-	# Install hestia-web-terminal package + nodejs
 	apt-get -qq update
-	apt-get -qq install nodejs hestia-web-terminal -y
+	apt-get -qq install hestia-web-terminal -y
 else
 	# Starting web terminal websocket server
 	$BIN/v-start-service "hestia-web-terminal"

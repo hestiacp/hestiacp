@@ -868,10 +868,10 @@ gpg --no-default-keyring --keyring /usr/share/keyrings/hestia-keyring.gpg --keys
 
 # Installing Node.js repo
 if [ "$webterminal" = 'yes' ]; then
-        echo "[ * ] Node.js $node_v"
-        echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/nodejs.gpg] https://deb.nodesource.com/node_$node_v.x nodistro main" > $apt/nodejs.list
-        curl -s https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor | tee /usr/share/keyrings/nodejs.gpg > /dev/null 2>&1
-        curl -fsSL https://deb.nodesource.com/setup_$node_v.x | bash -
+	echo "[ * ] Node.js $node_v"
+	echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/nodejs.gpg] https://deb.nodesource.com/node_$node_v.x nodistro main" > $apt/nodejs.list
+	curl -s https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor | tee /usr/share/keyrings/nodejs.gpg > /dev/null 2>&1
+	curl -fsSL https://deb.nodesource.com/setup_$node_v.x | bash -
 fi
 
 # Installing PostgreSQL repo

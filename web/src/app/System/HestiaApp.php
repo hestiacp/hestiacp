@@ -352,7 +352,7 @@ class HestiaApp {
 	}
 
 	public function cleanupTmpDir(): void {
-		$files = glob(self::TMPDIR_DOWNLOADS . '/*');
+		$files = glob(self::TMPDIR_DOWNLOADS . "/*");
 		foreach ($files as $file) {
 			if (is_file($file)) {
 				unlink($file);

@@ -30,12 +30,13 @@ $BIN/v-add-sys-sftp-jail
 codename="$(lsb_release -s -c)"
 apt=/etc/apt/sources.list.d
 
-# Installing Node.js 20.x repo
-if [ ! -f $apt/nodesource.list ] && [ ! -z $(which "node") ]; then
-	echo "[ * ] Adding Node.js 20.x repo"
-	echo "deb [signed-by=/usr/share/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x $codename main" > $apt/nodesource.list
-	echo "deb-src [signed-by=/usr/share/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x $codename main" >> $apt/nodesource.list
-	curl -s https://deb.nodesource.com/gpgkey/nodesource.gpg.key | gpg --dearmor | tee /usr/share/keyrings/nodesource.gpg > /dev/null 2>&1
+# Installing Node.js repo
+if [ "$webterminal" = 'yes' ]; then
+	node_v="20"
+	echo "[ * ] Adding Node.js $node_v repo and install"
+	echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/nodejs.gpg] https://deb.nodesource.com/node_$node_v.x nodistro main" > $apt/nodejs.list
+	curl -s https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor | tee /usr/share/keyrings/nodejs.gpg > /dev/null 2>&1
+	curl -fsSL https://deb.nodesource.com/setup_$node_v.x | bash -
 fi
 
 # Check if hestiaweb exists
@@ -91,5 +92,5 @@ for package in $packages; do
 	done
 done
 
-$BIN/v-add-user-notification 'admin' 'Hestia securirty has been upgraded' ' A new user "hestiaweb" has been created and is used for login. Make sure other Hestia packages are updated as well otherwise the system may not work as expected.'
+$BIN/v-add-user-notification 'admin' 'Hestia security has been upgraded' ' A new user "hestiaweb" has been created and is used for login. Make sure other Hestia packages are updated as well otherwise the system may not work as expected.'
 add_upgrade_message 'Security has been upgraded, A new user "hestiaweb" has been created and is used for login. Make sure other Hestia packages are updated as well otherwise the system may not work as expected.'

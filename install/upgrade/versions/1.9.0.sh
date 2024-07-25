@@ -27,18 +27,6 @@ upgrade_config_set_value 'UPGRADE_UPDATE_FILEMANAGER_CONFIG' 'false'
 $BIN/v-delete-sys-sftp-jail
 $BIN/v-add-sys-sftp-jail
 
-codename="$(lsb_release -s -c)"
-apt=/etc/apt/sources.list.d
-
-# Installing Node.js repo
-if [ "$webterminal" = 'yes' ]; then
-	node_v="20"
-	echo "[ * ] Adding Node.js $node_v repo and install"
-	echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/nodejs.gpg] https://deb.nodesource.com/node_$node_v.x nodistro main" > $apt/nodejs.list
-	curl -s https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor | tee /usr/share/keyrings/nodejs.gpg > /dev/null 2>&1
-	curl -fsSL https://deb.nodesource.com/setup_$node_v.x | bash -
-fi
-
 # Check if hestiaweb exists
 if [ -z "$(grep ^hestiaweb: /etc/passwd)" ]; then
 	# Generate a random password
@@ -50,7 +38,7 @@ if [ -z "$(grep ^hestiaweb: /etc/passwd)" ]; then
 	cp $HESTIA_COMMON_DIR/sudo/hestiaweb /etc/sudoers.d/
 	# Keep enabled for now
 	# Remove sudo permissions admin user
-	#rm /etc/sudoers.d/admin/
+	# rm /etc/sudoers.d/admin/
 fi
 
 # Check if cronjobs have been migrated

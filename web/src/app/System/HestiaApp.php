@@ -147,7 +147,7 @@ class HestiaApp {
 		if (!is_file($wp)) {
 			$this->runUser("v-add-user-wp-cli", []);
 		} else {
-			$this->runUser("v-run-cli-cmd", [$wp, "cli", "update"]);
+			$this->runUser("v-run-cli-cmd", [$wp, "cli", "update", "--yes"]);
 		}
 		array_unshift($args, $wp);
 

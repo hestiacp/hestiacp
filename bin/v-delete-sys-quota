@@ -64,6 +64,9 @@ fi
 # Updating hestia.conf value
 $BIN/v-change-sys-config-value "DISK_QUOTA" "no"
 
+# Delete quota package
+apt-get -y purge quota > /dev/null 2>&1
+
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#

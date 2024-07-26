@@ -871,7 +871,7 @@ if [ "$webterminal" = 'yes' ]; then
 	echo "[ * ] Node.js $node_v"
 	echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/nodejs.gpg] https://deb.nodesource.com/node_$node_v.x nodistro main" > $apt/nodejs.list
 	curl -s https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor | tee /usr/share/keyrings/nodejs.gpg > /dev/null 2>&1
-	apt-get -y install nodejs > $LOG
+	apt-get -y install nodejs >> $LOG
 fi
 
 # Installing PostgreSQL repo
@@ -1196,7 +1196,7 @@ systemctl restart ssh
 
 # Disable AWStats cron
 rm -f /etc/cron.d/awstats
-# Replace awstatst function
+# Replace AWStats function
 cp -f $HESTIA_INSTALL_DIR/logrotate/httpd-prerotate/* /etc/logrotate.d/httpd-prerotate/
 
 # Set directory color

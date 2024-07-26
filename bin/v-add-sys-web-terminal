@@ -54,7 +54,7 @@ if [ -z $(which "node") ]; then
 else
 	node_v_installed=$(/usr/bin/node -v | cut -f1 -d'.' | sed 's/v//g')
 	if [ "$node_v_installed" -lt "$node_v" ]; then
-		echo "Web Terminal requires Node.js 20.x or higher"
+		echo "Web Terminal requires Node.js $node_v or latest"
 		exit 1
 	fi
 fi

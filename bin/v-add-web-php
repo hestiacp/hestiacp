@@ -63,14 +63,14 @@ check_hestia_demo_mode
 mph="php$version-common php$version-mbstring php$version-bcmath php$version-cli php$version-curl
      php$version-fpm php$version-gd php$version-intl php$version-mysql
      php$version-soap php$version-xml php$version-zip php$version-json php$version-bz2
-     php$version-pspell php$version-imagick php$version-pgsql php$version-imap php$version-ldap"
+     php$version-pspell php$version-imagick php$version-pgsql php$version-imap php$version-ldap php$version-apcu"
 
-# Check is version is 7.1 or below to add mcrypt
+# Check if version is 7.1 or below to add mcrypt
 if [[ $(echo "$version 7.2" | awk '{print ($1 < $2)}') == 1 ]]; then
 	mph="$mph php$version-mcrypt"
 fi
 
-# Check if version is 8.0 or higher and drop php json.
+# Check if version is 8.0 or higher and drop json
 if [[ ${version:0:1} == "8" ]]; then
 	mph=$(echo "$mph" | sed -e "s/php$version-json//")
 fi

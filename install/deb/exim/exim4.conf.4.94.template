@@ -14,6 +14,8 @@ smtp_active_hostname = ${lookup dnsdb{>: defer_never,ptr=$interface_address}{${l
 add_environment = <; PATH=/bin:/usr/bin
 keep_environment =
 disable_ipv6 = true
+smtp_accept_max = 100
+smtp_accept_max_per_host = 20
 
 smtputf8_advertise_hosts =
 domainlist local_domains = dsearch;/etc/exim4/domains/

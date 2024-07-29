@@ -26,7 +26,7 @@ class SymfonySetup extends BaseSetup {
 				"template" => "symfony4-5",
 			],
 			"php" => [
-				"supported" => ["8.1", "8.2"],
+				"supported" => ["8.2", "8.3"],
 			],
 		],
 	];

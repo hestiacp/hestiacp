@@ -1216,12 +1216,12 @@ fi
 # Configuring NTP
 if [ ! -f "/etc/default/ntpsec-ntpdate" ]; then
 	if [ -f /etc/systemd/timesyncd.conf ]; then
- 		# Not installed by default in debian 12, consider add systemd-timesyncd to 
-   		# package list for install
- 		sed -i 's/#NTP=/NTP=pool.ntp.org/' /etc/systemd/timesyncd.conf
+		# Not installed by default in debian 12, consider add systemd-timesyncd to
+		# package list for install
+		sed -i 's/#NTP=/NTP=pool.ntp.org/' /etc/systemd/timesyncd.conf
 		systemctl enable systemd-timesyncd
 		systemctl start systemd-timesyncd
-  	fi
+	fi
 fi
 # Restrict access to /proc fs
 # Prevent unpriv users from seeing each other running processes

@@ -1700,6 +1700,9 @@ if [ "$vsftpd" = 'yes' ]; then
 	touch /var/log/xferlog
 	chown root:adm /var/log/xferlog
 	chmod 640 /var/log/xferlog
+	if [ -s /etc/logrotate.d/vsftpd ] && ! grep -Fq "/var/log/xferlog" /etc/logrotate.d/vsftpd; then
+		sed -i 's|/var/log/vsftpd.log|/var/log/vsftpd.log /var/log/xferlog|g' /etc/logrotate.d/vsftpd
+	fi
 	update-rc.d vsftpd defaults > /dev/null 2>&1
 	systemctl start vsftpd >> $LOG
 	check_result $? "vsftpd start failed"

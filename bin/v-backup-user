@@ -178,7 +178,7 @@ email=$(grep CONTACT "$HESTIA/data/users/$ROOT_USER/user.conf" | cut -f 2 -d \')
 
 # Validate available disk space (take usage * 2, due to the backup handling)
 let u_disk=$(($(get_user_disk_usage) * 2))
-let v_disk=$(($(stat -f --format="%a*%S" $BACKUP)))/1024/1024
+let v_disk=$(echo "$(stat -f --format='%a*%S' $BACKUP) / 1024 / 1024" | bc)
 
 if [ "$u_disk" -gt "$v_disk" ]; then
 	let u_disk_original=$(get_user_disk_usage)

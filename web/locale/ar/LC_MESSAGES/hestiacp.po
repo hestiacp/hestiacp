@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: hestiacp\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-07-24 11:26+0000\n"
-"PO-Revision-Date: 2024-07-24 20:19\n"
+"PO-Revision-Date: 2024-08-04 20:32\n"
 "Last-Translator: \n"
 "Language-Team: Arabic\n"
 "Language: ar_SA\n"
@@ -30,7 +30,7 @@ msgstr "خطأ: هيستيا لم يرجع أي إخراج."
 
 #: ../../web/schedule/backup/incremental/index.php:17
 msgid "Snapshot has been sheduled"
-msgstr ""
+msgstr "تم جدولة اللقطة"
 
 #: ../../web/schedule/backup/index.php:12
 msgid "Task has been added to the queue. You will receive an email notification when your backup is ready for download."
@@ -69,15 +69,15 @@ msgstr "المجلد"
 
 #: ../../web/list/backup/incremental/index.php:14
 msgid "File"
-msgstr ""
+msgstr "ملف"
 
 #: ../../web/list/backup/incremental/index.php:17
 msgid "Symlink"
-msgstr ""
+msgstr "الارتباط الرمزي"
 
 #: ../../web/list/backup/incremental/index.php:20
 msgid "Unknown"
-msgstr ""
+msgstr "غير معروف"
 
 #: ../../web/reset/index.php:60
 msgid "Hello {{name}},\n\n"
@@ -186,7 +186,7 @@ msgstr "كلمة المرور لا تتطابق مع الحد الأدنى من 
 #: ../../web/edit/user/index.php:380 ../../web/edit/package/index.php:235
 #: ../../web/add/package/index.php:120
 msgid "Cannot combine nologin and rssh shell with jailed shell."
-msgstr ""
+msgstr "لا يمكن الجمع بين nologin وRSSH Shell مع Shell المسجون."
 
 #: ../../web/edit/user/index.php:432 ../../web/edit/web/index.php:1173
 #: ../../web/edit/mail/index.php:748 ../../web/add/user/index.php:50
@@ -237,7 +237,7 @@ msgstr "المعلومات (وضع القراءة فقط): لا يمكن تحر�
 
 #: ../../web/edit/server/index.php:1279
 msgid "Repository can not be empty"
-msgstr ""
+msgstr "لا يمكن أن يكون المستودع فارغاً"
 
 #: ../../web/edit/server/index.php:1381
 msgid "Inactive session timeout can not lower than 1 minute."
@@ -462,20 +462,20 @@ msgstr "أباتشي نموذج"
 #: ../../web/templates/pages/edit_web.php:302
 #: ../../web/templates/pages/edit_package.php:117
 msgid "Backend Template"
-msgstr "Backend نموذج"
+msgstr "قالب Backend"
 
 #: ../../web/edit/package/index.php:155 ../../web/add/package/index.php:38
 #: ../../web/templates/pages/add_package.php:132
 #: ../../web/templates/pages/edit_web.php:332
 #: ../../web/templates/pages/edit_package.php:137
 msgid "Proxy Template"
-msgstr "Proxy نموذج"
+msgstr "قالب Proxy"
 
 #: ../../web/edit/package/index.php:159 ../../web/add/package/index.php:45
 #: ../../web/templates/pages/add_package.php:156
 #: ../../web/templates/pages/edit_package.php:162
 msgid "DNS Template"
-msgstr "نموذج DNS"
+msgstr "قالب DNS"
 
 #: ../../web/edit/package/index.php:162 ../../web/add/package/index.php:48
 #: ../../web/templates/pages/list_packages.php:57
@@ -498,7 +498,7 @@ msgstr "شل"
 #: ../../web/templates/pages/list_user.php:274
 #: ../../web/templates/pages/edit_package.php:78
 msgid "Web Domains"
-msgstr "نطاقات ويب"
+msgstr "نطاقات الويب"
 
 #: ../../web/edit/package/index.php:168 ../../web/add/package/index.php:54
 #: ../../web/templates/pages/add_package.php:86
@@ -643,7 +643,7 @@ msgstr "نسخ احتياطية"
 #: ../../web/templates/pages/edit_package.php:64
 #: ../../web/templates/pages/list_backup.php:9
 msgid "Incremental Backups"
-msgstr ""
+msgstr "النسخ الاحتياطية التزايدية"
 
 #: ../../web/edit/package/index.php:198 ../../web/add/package/index.php:81
 #: ../../web/templates/pages/add_package.php:37
@@ -682,19 +682,19 @@ msgstr "تبادل البيانات"
 
 #: ../../web/edit/package/index.php:206 ../../web/add/package/index.php:92
 msgid "CPU quota"
-msgstr ""
+msgstr "حصة المعالج"
 
 #: ../../web/edit/package/index.php:209 ../../web/add/package/index.php:95
 msgid "CPU quota period"
-msgstr ""
+msgstr "فترة حصة المعالج"
 
 #: ../../web/edit/package/index.php:212 ../../web/add/package/index.php:98
 msgid "Memory Limit"
-msgstr ""
+msgstr "حد الذاكرة"
 
 #: ../../web/edit/package/index.php:215 ../../web/add/package/index.php:101
 msgid "Swap Limit"
-msgstr ""
+msgstr "حد المبادلة"
 
 #: ../../web/edit/package/index.php:222 ../../web/add/package/index.php:108
 msgid "Nameserver 1"
@@ -1509,7 +1509,7 @@ msgstr "إضافة اسم الخادم"
 
 #: ../../web/templates/pages/list_backup_incremental.php:7
 msgid "Create Snapshot"
-msgstr ""
+msgstr "إنشاء لقطة"
 
 #: ../../web/templates/pages/list_backup_incremental.php:16
 #: ../../web/templates/pages/list_backup_incremental.php:19
@@ -1557,7 +1557,7 @@ msgstr "تنطبق على محدد"
 
 #: ../../web/templates/pages/list_backup_incremental.php:17
 msgid "Delete Snapshot"
-msgstr ""
+msgstr "حذف اللقطة"
 
 #: ../../web/templates/pages/list_backup_incremental.php:27
 #: ../../web/templates/pages/list_backup_incremental.php:28
@@ -1599,7 +1599,7 @@ msgstr "بحث"
 #: ../../web/templates/pages/list_backup_incremental.php:40
 #: ../../web/templates/pages/edit_server.php:943
 msgid "Snapshots"
-msgstr ""
+msgstr "اللقطات"
 
 #: ../../web/templates/pages/list_backup_incremental.php:45
 #: ../../web/templates/pages/list_firewall_banlist.php:35
@@ -1628,7 +1628,7 @@ msgstr "حدد الكل"
 #: ../../web/templates/pages/list_backup_incremental.php:68
 #: ../../web/templates/pages/list_backup_incremental.php:71
 msgid "Snapshot"
-msgstr ""
+msgstr "لقطة"
 
 #: ../../web/templates/pages/list_backup_incremental.php:49
 #: ../../web/templates/pages/list_backup_incremental.php:89
@@ -1773,18 +1773,18 @@ msgstr "اﻹستعادة"
 
 #: ../../web/templates/pages/list_backup_incremental.php:80
 msgid "Browse"
-msgstr ""
+msgstr "تصفح"
 
 #: ../../web/templates/pages/list_backup_incremental.php:115
 #, php-format
 msgid "%d snapshot"
 msgid_plural "%d snapshots"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
-msgstr[4] ""
-msgstr[5] ""
+msgstr[0] "%d لقطات"
+msgstr[1] "%d لقطات"
+msgstr[2] "%d لقطات"
+msgstr[3] "%d لقطة"
+msgstr[4] "%d لقطات"
+msgstr[5] "%d لقطة"
 
 #: ../../web/templates/pages/add_package.php:29
 #: ../../web/templates/pages/list_packages.php:9
@@ -1957,52 +1957,52 @@ msgstr "دخول SSH"
 #: ../../web/templates/pages/edit_user.php:227
 #: ../../web/templates/pages/edit_package.php:295
 msgid "Jail User Shell"
-msgstr ""
+msgstr "تقيد مستخدم شيل"
 
 #: ../../web/templates/pages/add_package.php:294
 #: ../../web/templates/pages/edit_package.php:304
 msgid "System Resources"
-msgstr ""
+msgstr "موارد النظام"
 
 #: ../../web/templates/pages/add_package.php:299
 #: ../../web/templates/pages/edit_package.php:309
 msgid "CPU Quota (in %)"
-msgstr ""
+msgstr "حصة المعالج (بال %)"
 
 #: ../../web/templates/pages/add_package.php:307
 #: ../../web/templates/pages/edit_package.php:317
 msgid "CPUQuota=20% ensures that the executed processes will never get more than 20% CPU time on one CPU."
-msgstr ""
+msgstr "CPUQuota=20% يضمن أن العمليات المنفذة لن تحصل أبدًا على أكثر من 20% من وقت وحدة المعالجة المركزية على وحدة معالجة مركزية واحدة."
 
 #: ../../web/templates/pages/add_package.php:312
 #: ../../web/templates/pages/edit_package.php:322
 msgid "CPU Quota Period (in ms for milliseconds or s for seconds.)"
-msgstr ""
+msgstr "فترة حصة المعالج (بالمللي ثانية أو ثانية للثوان.)"
 
 #: ../../web/templates/pages/add_package.php:320
 #: ../../web/templates/pages/edit_package.php:330
 msgid "CPUQuotaPeriodSec=10ms to request that the CPU quota is measured in periods of 10ms."
-msgstr ""
+msgstr "CPUQuotaPeriodSec=10ms لطلب قياس حصة وحدة المعالجة المركزية بفترات 10 مللي ثانية."
 
 #: ../../web/templates/pages/add_package.php:325
 #: ../../web/templates/pages/edit_package.php:335
 msgid "Memory Limit (in bytes or with units like '2G')"
-msgstr ""
+msgstr "حد الذاكرة (بالبايت أو مع وحدات مثل '2G')"
 
 #: ../../web/templates/pages/add_package.php:333
 #: ../../web/templates/pages/edit_package.php:343
 msgid "Takes a memory size in bytes. If the value is suffixed with K, M, G or T, the specified memory size is parsed as Kilobytes, Megabytes, Gigabytes, or Terabytes (with the base 1024), respectively"
-msgstr ""
+msgstr "يأخذ حجم الذاكرة بالبايت. إذا كانت القيمة ملحقة بـ K أو M أو G أو T، فسيتم تحليل حجم الذاكرة المحدد بالكيلوبايت أو الميجابايت أو الجيجابايت أو تيرابايت (مع الأساس 1024)، على التوالي"
 
 #: ../../web/templates/pages/add_package.php:338
 #: ../../web/templates/pages/edit_package.php:348
 msgid "Swap Limit (in bytes or with units like '2G')"
-msgstr ""
+msgstr "حد الذاكرة (بالبايت أو مع وحدات مثل '2G')"
 
 #: ../../web/templates/pages/add_package.php:346
 #: ../../web/templates/pages/edit_package.php:356
 msgid "Takes a swap size in bytes. If the value is suffixed with K, M, G or T, the specified swap size is parsed as Kilobytes, Megabytes, Gigabytes, or Terabytes (with the base 1024), respectively"
-msgstr ""
+msgstr "يأخذ حجم الذاكرة بالبايت. إذا كانت القيمة ملحقة بـ K أو M أو G أو T، فسيتم تحليل حجم الذاكرة المحدد بالكيلوبايت أو الميجابايت أو الجيجابايت أو تيرابايت (مع الأساس 1024)، على التوالي"
 
 #: ../../web/templates/pages/list_log.php:28
 #: ../../web/templates/pages/list_log.php:29
@@ -2540,11 +2540,11 @@ msgstr "أسماء الحزم"
 
 #: ../../web/templates/pages/list_updates.php:68
 msgid "Update available"
-msgstr ""
+msgstr "التحديث متوفر"
 
 #: ../../web/templates/pages/list_updates.php:70
 msgid "Package up-to-date"
-msgstr ""
+msgstr "الحزمة محدثة"
 
 #: ../../web/templates/pages/edit_dns.php:25
 #: ../../web/templates/pages/list_dns.php:159
@@ -3030,7 +3030,7 @@ msgstr "استرجاع الكل"
 
 #: ../../web/templates/pages/list_backup_detail_incremental.php:16
 msgid "Restore Snapshot"
-msgstr ""
+msgstr "استعادة اللقطة"
 
 #: ../../web/templates/pages/list_backup_detail_incremental.php:39
 #: ../../web/templates/pages/list_backup_detail.php:40
@@ -3065,11 +3065,11 @@ msgstr "مجال البريد"
 
 #: ../../web/templates/pages/list_backup_detail_incremental.php:133
 msgid "DNS Domain"
-msgstr ""
+msgstr "نطاق DNS"
 
 #: ../../web/templates/pages/list_backup_detail_incremental.php:201
 msgid "Cronjob"
-msgstr ""
+msgstr "Cronjob"
 
 #: ../../web/templates/pages/list_backup_detail_incremental.php:224
 #: ../../web/templates/pages/list_backup_detail.php:294
@@ -3569,27 +3569,27 @@ msgstr "النسخ الاحتياطي عن بعد"
 
 #: ../../web/templates/pages/edit_server.php:917
 msgid "Enable incremental backup"
-msgstr ""
+msgstr "تمكين النسخ الاحتياطي التراكمي"
 
 #: ../../web/templates/pages/edit_server.php:931
 msgid "Repository"
-msgstr ""
+msgstr "المستودع"
 
 #: ../../web/templates/pages/edit_server.php:955
 msgid "Keep last daily backups"
-msgstr ""
+msgstr "الاحتفاظ بآخر النسخ الاحتياطية اليومية"
 
 #: ../../web/templates/pages/edit_server.php:967
 msgid "Keep last weekly backups"
-msgstr ""
+msgstr "الاحتفاظ بآخر النسخ الاحتياطية الأسبوعية"
 
 #: ../../web/templates/pages/edit_server.php:979
 msgid "Keep last monthly backups"
-msgstr ""
+msgstr "الاحتفاظ بآخر النسخ الاحتياطية الشهرية"
 
 #: ../../web/templates/pages/edit_server.php:991
 msgid "Keep last yearly backups"
-msgstr ""
+msgstr "الاحتفاظ بآخر النسخ الاحتياطية السنوية"
 
 #: ../../web/templates/pages/edit_server.php:1008
 #: ../../web/templates/pages/list_web.php:86
@@ -3764,7 +3764,7 @@ msgstr "محطة ويب"
 
 #: ../../web/templates/pages/edit_server.php:1501
 msgid "Limit System Resources"
-msgstr ""
+msgstr "الحد من موارد النظام"
 
 #: ../../web/templates/pages/edit_server.php:1514
 msgid "File System Disk Quota"
@@ -3817,7 +3817,7 @@ msgstr "إضافة وظيفة مجدولة"
 #: ../../web/templates/pages/add_cron.php:28
 #: ../../web/templates/pages/edit_cron.php:28
 msgid "System time"
-msgstr ""
+msgstr "وقت النظام"
 
 #: ../../web/templates/pages/add_cron.php:66
 #: ../../web/templates/pages/edit_cron.php:66
@@ -4109,7 +4109,7 @@ msgstr "تحميل الموقع"
 #: ../../web/templates/pages/list_weblog.php:43
 #: ../../web/templates/pages/list_weblog.php:45
 msgid "View Logs"
-msgstr ""
+msgstr "عرض السجلات"
 
 #: ../../web/templates/pages/list_web.php:349
 #, php-format
@@ -4161,7 +4161,7 @@ msgstr "مراقب المهام"
 
 #: ../../web/templates/pages/list_services.php:26
 msgid "Are you sure you want to restart the server?"
-msgstr ""
+msgstr "هل أنت متأكد من إعادة تشغيل الخادم؟"
 
 #: ../../web/templates/pages/list_services.php:36
 #: ../../web/templates/pages/list_services.php:113
@@ -4208,17 +4208,17 @@ msgstr "الذاكرة"
 #: ../../web/templates/pages/list_services.php:171
 #, php-format
 msgid "Are you sure you want to restart the %s service?"
-msgstr ""
+msgstr "هل أنت متأكد من إعادة تشغيل %s خدمة؟"
 
 #: ../../web/templates/pages/list_services.php:183
 #, php-format
 msgid "Are you sure you want to stop the %s service?"
-msgstr ""
+msgstr "هل أنت متأكد من إيقاف %s خدمة؟"
 
 #: ../../web/templates/pages/list_services.php:183
 #, php-format
 msgid "Are you sure you want to start the %s service?"
-msgstr ""
+msgstr "هل أنت متأكد من تشغيل %s خدمة؟"
 
 #: ../../web/templates/pages/list_services.php:205
 msgid "MB"
@@ -4507,7 +4507,7 @@ msgstr "نُِفَذت جزئيا"
 #: ../../web/templates/pages/list_backup_detail.php:280
 #, php-format
 msgid "Are you sure you want to restore %s?"
-msgstr ""
+msgstr "هل أنت متأكد من أنك تريد استعادة %s؟"
 
 #: ../../web/templates/pages/list_backup_detail.php:149
 msgid "DNS Zone"
@@ -4766,7 +4766,7 @@ msgstr "هل أنت متأكد من أنك تريد تعليق قاعدة الج
 #: ../../web/templates/pages/list_firewall.php:152
 #, php-format
 msgid "Are you sure you want to delete rule #%s?"
-msgstr ""
+msgstr "هل أنت متأكد من أنك تريد حذف القاعدة #%s؟"
 
 #: ../../web/templates/pages/list_firewall.php:182
 #, php-format
@@ -4851,19 +4851,19 @@ msgstr "إضافة قائمة بروتوكولات الإنترنت IPset لجد
 
 #: ../../web/templates/pages/add_firewall_ipset.php:76
 msgid "URL, script or file"
-msgstr ""
+msgstr "URL, سكربت أو ملف"
 
 #: ../../web/templates/pages/list_files_incremental.php:24
 msgid "Restore Files"
-msgstr ""
+msgstr "استعادة الملفات"
 
 #: ../../web/templates/pages/list_files_incremental.php:46
 msgid "Files"
-msgstr ""
+msgstr "الملفات"
 
 #: ../../web/templates/pages/list_files_incremental.php:119
 msgid "Date / Time"
-msgstr ""
+msgstr "التاريخ / الوقت"
 
 #: ../../web/templates/footer.php:25 ../../web/templates/footer.php:61
 #: ../../web/templates/footer.php:64
@@ -4936,15 +4936,15 @@ msgstr "انتقل للأسفل خلال لائحة العناصر"
 
 #: ../../web/templates/includes/password-requirements.php:1
 msgid "Password must include"
-msgstr ""
+msgstr "كلمة المرور يجب أن تتضمن"
 
 #: ../../web/templates/includes/password-requirements.php:3
 msgid "8 characters minimum"
-msgstr ""
+msgstr "8 أحرف كحد أدنى"
 
 #: ../../web/templates/includes/extra-ns-fields.php:8
 msgid "Remove"
-msgstr ""
+msgstr "إزالة"
 
 #: ../../web/templates/includes/js.php:10
 #: ../../web/templates/includes/panel.php:92
@@ -4974,14 +4974,14 @@ msgstr "إعدادات الحساب الشائعة"
 
 #: ../../web/templates/includes/email-settings-panel.php:4
 msgid "Connect to this account using credentials:"
-msgstr ""
+msgstr "الاتصال بهذا الحساب باستخدام بيانات الاعتماد:"
 
 #: ../../web/templates/includes/email-settings-panel.php:10
 #: ../../web/templates/includes/email-settings-panel.php:19
 #: ../../web/templates/includes/email-settings-panel.php:29
 #: ../../web/templates/includes/email-settings-panel.php:39
 msgid "Copy to clipboard"
-msgstr ""
+msgstr "نسخ إلى الحافظة"
 
 #: ../../web/templates/includes/email-settings-panel.php:26
 msgid "Webmail"

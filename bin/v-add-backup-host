@@ -201,6 +201,12 @@ if [ "$type" = 'ftp' ]; then
 	if [ -z $port ]; then
 		port=21
 	fi
+	PORT=$port
+	USERNAME=$user
+	PASSWORD=$password
+	HOST=$host
+	PRIVATEKEY=$privatekey
+
 	fconn=$(ftpc 2>&1)
 	ferror=$(echo $fconn \
 		| grep -i -e failed -e error -e "can't" -e "not conn" -e "incorrect")
@@ -231,6 +237,10 @@ if [ "$type" = 'sftp' ]; then
 	if [ -z $port ]; then
 		port=22
 	fi
+	PORT=$port
+	USERNAME=$user
+	PASSWORD=$password
+	HOST=$host
 	if [ -z $path ]; then
 		sftmpdir="vst.bK76A9SUkt"
 		sftpc "mkdir $sftmpdir" "rmdir $sftmpdir" > /dev/null 2>&1

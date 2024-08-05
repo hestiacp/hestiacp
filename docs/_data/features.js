@@ -2,7 +2,7 @@
 
 /** @type {FeatureListItem[]} */
 export const users = [
-	{ text: 'Support for SFTP chroot jails' },
+	{ text: 'Support for SFTP and SSH chroot jails' },
 	{ text: 'Two-Factor Authentication support for the Admin Panel' },
 	{ text: 'SSH keys for login via SFTP and SSH' },
 ];
@@ -15,7 +15,7 @@ export const webDomains = [
 	{ text: 'MultiIP support for Web/Mail/DNS' },
 	{ text: 'Support for PHP  version 5.6 up to 8.3 with PHP8.2 as default' },
 	{
-		text: 'One-Click Install Apps',
+		text: 'One-Click Install Apps (Via CLI or Admin Panel)',
 		items: [
 			{ text: 'WordPress' },
 			{ text: 'Dokuwiki' },
@@ -27,6 +27,7 @@ export const webDomains = [
 			{ text: 'OpenCart' },
 			{ text: 'Prestashop' },
 			{ text: 'Symphony' },
+			{ text: 'Joomla' },
 		],
 	},
 ];

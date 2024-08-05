@@ -192,7 +192,7 @@ if (!empty($_POST["save"])) {
 		$errors[] = _("Backups");
 	}
 	if (!isset($_POST["v_backups_incremental"])) {
-		$errors[] = _("v_backups_incremental");
+		$errors[] = _("Incremental Backups");
 	}
 	if (!isset($_POST["v_disk_quota"])) {
 		$errors[] = _("Quota");

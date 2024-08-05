@@ -402,6 +402,13 @@ function check_ip_not_banned(){
 	assert_output --partial 'Error: The user name'
 }
 
+@test "User: Add new user Failed 7" {
+	run v-add-user 'hello.com'  $user $user@hestiacp2.com default "Super Test"
+	assert_failure $E_INVALID
+	assert_output --partial 'Error: invalid user format'
+}
+
+
 @test "User: Add new user Success 1" {
 	run v-add-user 'jaap01'  $user $user@hestiacp2.com default "Super Test"
 	assert_success

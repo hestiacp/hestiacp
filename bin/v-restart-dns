@@ -63,7 +63,7 @@ else
 fi
 
 if [ ! -e "/usr/sbin/named-checkconf" ]; then
-	ln -s "$(which named-checkconf)" /sbin/named-checkconf
+	ln -s "$(which named-checkconf)" /usr/sbin/named-checkconf
 fi
 
 /usr/sbin/named-checkconf "$dns_conf" > /dev/null 2>&1

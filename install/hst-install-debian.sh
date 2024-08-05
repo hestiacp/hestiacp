@@ -426,6 +426,13 @@ if [ -d "/usr/local/hestia" ]; then
 	check_result 1 "Hestia install detected. Unable to continue"
 fi
 
+type=$(grep "^ID=" /etc/os-release | cut -f 2 -d '=')
+if [ "$type" = "ubuntu" ]; then
+	check_result 1 "You are running the wrong installer for Ubuntu. Please run hst-install.sh or hst-install-ubuntu.sh instead."
+elif [ "$type" != "debian" ]; then
+	check_result 1 "You are running an unsupported OS."
+fi
+
 # Clear the screen once launch permissions have been verified
 clear
 

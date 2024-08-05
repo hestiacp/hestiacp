@@ -125,7 +125,9 @@ chown root:$user /var/log/$WEB_SYSTEM/domains/$domain.* $conf
 chmod 640 /var/log/$WEB_SYSTEM/domains/$domain.*
 user_exec chmod 751 $HOMEDIR/$user/web/$domain/*
 user_exec chmod 551 $HOMEDIR/$user/web/$domain/stats $HOMEDIR/$user/web/$domain/logs
-user_exec chmod 644 $HOMEDIR/$user/web/$domain/public_*html/*
+# Apply 755 to directories and 644 to files
+find $HOMEDIR/$user/web/$domain/public_html -type d | xargs chmod 755
+find $HOMEDIR/$user/web/$domain/public_html -type f | xargs chmod 644
 
 # domain folder permissions: DOMAINDIR_WRITABLE: default-val:no source:hestia.conf
 DOMAINDIR_MODE=551

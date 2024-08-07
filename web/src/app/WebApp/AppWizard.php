@@ -14,6 +14,7 @@ class AppWizard {
 
 	private $database_config = [
 		"database_create" => ["type" => "boolean", "value" => true],
+		"database_host" => ["type" => "select"],
 		"database_name" => ["type" => "text", "placeholder" => "auto"],
 		"database_user" => ["type" => "text", "placeholder" => "auto"],
 		"database_password" => ["type" => "password", "placeholder" => "auto"],
@@ -72,6 +73,18 @@ class AppWizard {
 		]);
 
 		if ($this->appsetup->withDatabase()) {
+			exec(HESTIA_CMD . "v-list-database-hosts json", $output, $return_var);
+			$db_hosts_tmp1 = json_decode(implode("", $output), true);
+			$db_hosts_tmp2 = array_map(function ($host) {
+				return $host["HOST"];
+			}, $db_hosts_tmp1);
+			$db_hosts = array_values(array_unique($db_hosts_tmp2));
+			unset($output);
+			unset($db_hosts_tmp1);
+			unset($db_hosts_tmp2);
+
+			$this->database_config["database_host"]["options"] = $db_hosts;
+
 			$options = array_merge($options, $this->database_config);
 		}
 		return $options;
@@ -119,6 +132,8 @@ class AppWizard {
 					$options["database_name"],
 					$options["database_user"],
 					$options["database_password"],
+					"mysql",
+					$options["database_host"],
 				)
 			) {
 				$this->errors[] = "Error adding database";

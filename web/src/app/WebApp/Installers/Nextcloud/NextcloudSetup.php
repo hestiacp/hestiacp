@@ -51,6 +51,7 @@ class NextcloudSetup extends BaseSetup {
 				"maintenance:install",
 				"--database mysql",
 				"--database-name " . $this->appcontext->user() . "_" . $options["database_name"],
+				"--database-host " . $options["database_host"],
 				"--database-user " . $this->appcontext->user() . "_" . $options["database_user"],
 				"--database-pass " . $options["database_password"],
 				"--admin-user " . $options["username"],

@@ -34,6 +34,7 @@ If you do not have an authenticator app, here are a couple of recommendations.
 - [1Password](https://1password.com/) – Paid password manager
 - [Bitwarden](https://bitwarden.com/) – Password manager. 2FA in premium plan only
 - [Vaultwarden](https://docs.cloudron.io/apps/vaultwarden) (AGPL, [self-hosted](https://hub.docker.com/r/vaultwarden/server)), optionally with [Bitwarden](https://linuxiac.com/how-to-install-vaultwarden-password-manager-with-docker) clients
+- [FreeOTP+](https://github.com/helloworld1/FreeOTPPlus) - Open Source, Android only [F-Droid](https://f-droid.org/en/packages/org.liberty.android.freeotpplus/)
 
 :::
 

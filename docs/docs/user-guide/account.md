@@ -27,7 +27,6 @@ If you do not have an authenticator app, here are a couple of recommendations.
 - iCloud Keychain – [Windows](https://9to5mac.com/2022/07/25/icloud-passwords-windows-2fa-code/), [macOS](https://9to5mac.com/2021/11/16/use-safari-password-manager-and-2fa-autofill/), [iOS](https://9to5mac.com/2022/03/07/use-ios-15-2fa-code-generator-plus-autofill-iphone/)
 - [Tofu Authenticator](https://www.tofuauth.com/) – Open-source, iOS only
 - [Aegis Authenticator](https://getaegis.app/) – Open-source, Android only
-- [Raivo OTP](https://github.com/raivo-otp/) – Open-source, iOS and macOS only
 - [Google Authenticator](https://googleauthenticator.net/)
 - [Microsoft Authenticator](https://www.microsoft.com/en-ca/security/mobile-authenticator-app)
 - [Authy](https://authy.com/) – Free, has a cloud sync feature

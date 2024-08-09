@@ -135,7 +135,7 @@ class WordpressSetup extends BaseSetup {
 						"'," .
 						$padding .
 						"'" .
-						addcslashes("localhost", "\\'") .
+						addcslashes($options["database_host"], "\\'") .
 						"' );";
 					break;
 				case "DB_CHARSET":

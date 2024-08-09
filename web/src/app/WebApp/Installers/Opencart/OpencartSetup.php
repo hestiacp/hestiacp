@@ -82,6 +82,7 @@ class OpencartSetup extends BaseSetup {
 				"/usr/bin/php" . $options["php_version"],
 				$this->getDocRoot("/install/cli_install.php"),
 				"install",
+				"--db_hostname " . $options["database_host"],
 				"--db_username " . $this->appcontext->user() . "_" . $options["database_user"],
 				"--db_password " . $options["database_password"],
 				"--db_database " . $this->appcontext->user() . "_" . $options["database_name"],

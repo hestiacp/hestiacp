@@ -70,7 +70,9 @@ class DrupalSetup extends BaseSetup {
 				$options["database_user"] .
 				":" .
 				$options["database_password"] .
-				"@localhost:3306/" .
+				"@" .
+				$options["database_host"] .
+				":3306/" .
 				$this->appcontext->user() .
 				"_" .
 				$options["database_name"] .

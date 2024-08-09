@@ -71,6 +71,7 @@ class JoomlaSetup extends BaseSetup {
 		}
 
 		// Database credentials
+		$dbHost = $options["database_host"];
 		$dbName = $this->appcontext->user() . "_" . $options["database_name"];
 		$dbUser = $this->appcontext->user() . "_" . $options["database_user"];
 		$dbPass = $options["database_password"];
@@ -95,7 +96,7 @@ class JoomlaSetup extends BaseSetup {
 			"--db-pass=" . $dbPass,
 			"--db-name=" . $dbName,
 			"--db-prefix=" . Util::generate_string(5, false) . "_",
-			"--db-host=localhost",
+			"--db-host=" . $dbHost,
 			"--db-type=mysqli",
 		];
 

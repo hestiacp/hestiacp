@@ -69,7 +69,7 @@ class MediaWikiSetup extends BaseSetup {
 			[
 				"/usr/bin/php" . $options["php_version"],
 				$this->getDocRoot("maintenance/install.php"),
-				"--dbserver=localhost",
+				"--dbserver=" . $options["database_host"],
 				"--dbname=" . $this->appcontext->user() . "_" . $options["database_name"],
 				"--installdbuser=" . $this->appcontext->user() . "_" . $options["database_user"],
 				"--installdbpass=" . $options["database_password"],

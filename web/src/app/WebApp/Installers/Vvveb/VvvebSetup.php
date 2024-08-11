@@ -24,8 +24,7 @@ class VvvebSetup extends BaseSetup {
 		"database" => true,
 		"resources" => [
 			"archive" => [
-				"src" =>
-					"https://www.vvveb.com/latest.zip",
+				"src" => "https://www.vvveb.com/latest.zip",
 			],
 		],
 		"server" => [

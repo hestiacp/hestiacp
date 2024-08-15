@@ -2,7 +2,7 @@
 # info: backup all users
 # options: NONE
 #
-# example: v-backup-users-restic
+# example: v-backup-users
 #
 # This function backups all system users.
 
@@ -44,7 +44,7 @@ for user in $("$BIN/v-list-users" list); do
 		echo -e "================================" >> $log
 		echo -e "$user" >> $log
 		echo -e "--------------------------------\n" >> $log
-		nice -n 19 ionice -c2 -n7 $BIN/v-backup-user-restic $user >> $log 2>&1
+		nice -n 19 ionice -c2 -n7 $BIN/v-backup-user $user >> $log 2>&1
 		echo -e "\n--------------------------------\n\n" >> $log
 	fi
 done

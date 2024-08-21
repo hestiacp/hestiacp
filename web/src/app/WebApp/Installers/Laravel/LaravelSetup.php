@@ -11,7 +11,7 @@ class LaravelSetup extends BaseSetup {
 		"name" => "Laravel",
 		"group" => "framework",
 		"enabled" => true,
-		"version" => "10.x",
+		"version" => "11.x",
 		"thumbnail" => "laravel-thumb.png",
 	];
 

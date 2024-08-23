@@ -1087,9 +1087,8 @@ if [ -f /etc/locale.gen ]; then
 	locale-gen > /dev/null 2>&1
 elif [ -f /usr/bin/localectl ]; then
 	apt-get -y install locales-all >> $LOG
- 	localectl set-locale LANG=en_US.UTF-8  > /dev/null 2>&1
+	localectl set-locale LANG=en_US.UTF-8 > /dev/null 2>&1
 fi
-	
 
 # Disabling daemon autostart on apt-get install
 echo -e '#!/bin/sh\nexit 101' > /usr/sbin/policy-rc.d

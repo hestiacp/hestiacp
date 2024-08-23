@@ -1082,8 +1082,14 @@ fi
 #----------------------------------------------------------#
 
 # Enable en_US.UTF-8
-sed -i "s/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/g" /etc/locale.gen
-locale-gen > /dev/null 2>&1
+if [ -f /etc/locale.gen ]; then
+	sed -i "s/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/g" /etc/locale.gen
+	locale-gen > /dev/null 2>&1
+elif [ -f /usr/bin/localectl ]; then
+	apt-get -y install locales-all >> $LOG
+ 	localectl set-locale LANG=en_US.UTF-8  > /dev/null 2>&1
+fi
+	
 
 # Disabling daemon autostart on apt-get install
 echo -e '#!/bin/sh\nexit 101' > /usr/sbin/policy-rc.d

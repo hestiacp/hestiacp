@@ -536,7 +536,7 @@ rebuild_dns_domain_conf() {
 		dns_conf='/etc/bind/named.conf'
 	fi
 
-	# Bind config check
+	# Bind config creation
 	if [ "$SUSPENDED" = 'yes' ]; then
 		rm_string=$(grep -n /etc/namedb/$domain.db $dns_conf | cut -d : -f 1)
 		if [ -n "$rm_string" ]; then

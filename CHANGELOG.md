@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ### Security
 
 - Restrict hestiamail file permissions (todo should probably have a link here)
+- Fix roundcube permissions ( https://github.com/hestiacp/hestiacp/pull/4387 )
 
 ## [1.8.11] - Service release
 

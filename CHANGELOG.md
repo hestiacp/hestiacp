@@ -6,8 +6,6 @@ All notable changes to this project will be documented in this file.
 
 ### Security
 
-### Security
-
 - Restrict hestiamail file permissions (todo should probably have a link here)
 
 

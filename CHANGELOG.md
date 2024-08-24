@@ -8,7 +8,6 @@ All notable changes to this project will be documented in this file.
 
 - Restrict hestiamail file permissions (todo should probably have a link here)
 
-
 ## [1.8.11] - Service release
 
 ### Features

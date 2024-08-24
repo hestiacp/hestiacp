@@ -97,4 +97,5 @@ fi
 
 $BIN/v-add-user-notification 'admin' 'Hestia security has been upgraded' ' A new user "hestiaweb" has been created and is used for login. Make sure other Hestia packages are updated as well otherwise the system may not work as expected.'
 add_upgrade_message 'Security has been upgraded, A new user "hestiaweb" has been created and is used for login. Make sure other Hestia packages are updated as well otherwise the system may not work as expected.'
+# Ensures proper permissions for Hestia service interactions.
 /usr/sbin/adduser hestiamail hestia-users

@@ -628,8 +628,7 @@ function syshealth_adapt_hestia_nginx_listen_ports() {
 	else
 		sed -i 's/#\([ \t]*listen[ \t]*\[\:\:\]\:[0-9]\{1,5\}.*\)/\1/' "$NGINX_BCONF"
 	fi
-	cmp --silent "$NGINX_BCONF" "$NGINX_BCONF_TEMP"
-	[ $? -ne 0 ] && NGINX_BCONF_CHANGED="yes"
+	cmp --silent "$NGINX_BCONF" "$NGINX_BCONF_TEMP" || NGINX_BCONF_CHANGED="yes"
 	rm -f "$NGINX_BCONF_TEMP" > /dev/null 2>&1
 }
 

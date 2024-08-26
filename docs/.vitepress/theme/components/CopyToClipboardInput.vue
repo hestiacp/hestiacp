@@ -43,7 +43,7 @@ const copyToClipboard = (event) => {
 		},
 		(err) => {
 			console.error("Could not copy to clipboard:", err);
-		},
+		}
 	);
 };
 </script>

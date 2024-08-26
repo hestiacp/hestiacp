@@ -398,9 +398,7 @@
 			rgb(255 255 255 / 60%) 30%,
 			rgb(255 255 255 / 95%) 95%
 		);
-		box-shadow:
-			inset 0 0 1px #fff,
-			inset -1px -1px 4px rgb(220 220 220 / 40%);
+		box-shadow: inset 0 0 1px #fff, inset -1px -1px 4px rgb(220 220 220 / 40%);
 	}
 
 	&.active {
@@ -778,9 +776,7 @@
 				rgb(190 221 246 / 100%) 51%,
 				rgb(227 240 251 / 100%) 100%
 			);
-			box-shadow:
-				inset 0 0 1px #fff,
-				inset 0 0 6px rgb(255 255 255 / 60%);
+			box-shadow: inset 0 0 1px #fff, inset 0 0 6px rgb(255 255 255 / 60%);
 		}
 
 		&:active,
@@ -794,9 +790,7 @@
 			);
 			color: #046c98;
 			text-shadow: 0 -1px 1px rgb(255 255 255 / 50%);
-			box-shadow:
-				inset 0 0 1px #fff,
-				inset -1px -1px 4px rgb(220 220 220 / 40%);
+			box-shadow: inset 0 0 1px #fff, inset -1px -1px 4px rgb(220 220 220 / 40%);
 		}
 	}
 
@@ -812,9 +806,7 @@
 	border-left: 0;
 	background-color: rgb(255 255 255 / 90%);
 	border-radius: 0 var(--border-radius-base) var(--border-radius-base) 0;
-	box-shadow:
-		inset 0 0 1px rgb(41 90 152 / 10%),
-		inset 0 0 2px rgb(255 255 255 / 100%);
+	box-shadow: inset 0 0 1px rgb(41 90 152 / 10%), inset 0 0 2px rgb(255 255 255 / 100%);
 	text-shadow: 1px 1px rgb(255 255 255 / 90%);
 	color: #069;
 	min-width: 32px;
@@ -935,11 +927,8 @@
 			rgb(247 247 247 / 100%) 0%,
 			rgb(255 255 255 / 100%) 100%
 		);
-		box-shadow:
-			inset 0 1px 1px rgb(255 255 255 / 100%),
-			inset 0 0 1px rgb(255 255 255 / 100%),
-			inset 0 0 4px rgb(255 255 255 / 80%),
-			0 1px 4px rgb(140 140 140 / 35%);
+		box-shadow: inset 0 1px 1px rgb(255 255 255 / 100%), inset 0 0 1px rgb(255 255 255 / 100%),
+			inset 0 0 4px rgb(255 255 255 / 80%), 0 1px 4px rgb(140 140 140 / 35%);
 
 		& .units-table-cell {
 			font-weight: bold;
@@ -1127,9 +1116,7 @@
 		border-radius: 13px;
 		font-weight: 700;
 		font-size: 0.75rem;
-		box-shadow:
-			0 1px 2px rgb(70 70 70 / 50%),
-			inset 0 2px 2px #fff;
+		box-shadow: 0 1px 2px rgb(70 70 70 / 50%), inset 0 2px 2px #fff;
 		color: #6c6c6c;
 		padding-left: 4px;
 		padding-right: 4px;
@@ -1706,9 +1693,7 @@
 	background-color: #f0efef;
 	border: 1px solid rgb(255 255 255 / 98%);
 	border-radius: var(--border-radius-base);
-	box-shadow:
-		inset 0 1px 3px rgb(0 0 0 / 25%),
-		0 8px 40px 0 rgb(0 0 0 / 35%);
+	box-shadow: inset 0 1px 3px rgb(0 0 0 / 25%), 0 8px 40px 0 rgb(0 0 0 / 35%);
 
 	@media (--viewport-small) {
 		min-width: 360px;
@@ -1826,10 +1811,7 @@
 			rgb(223 235 245 / 100%) 100%
 		),
 		#3b9de8;
-	box-shadow:
-		0 1px 3px rgb(0 0 0 / 25%),
-		inset 0 0 1px #fff,
-		inset 0 0 3px rgb(255 255 255 / 50%);
+	box-shadow: 0 1px 3px rgb(0 0 0 / 25%), inset 0 0 1px #fff, inset 0 0 3px rgb(255 255 255 / 50%);
 
 	&:hover {
 		color: #0077c6;
@@ -1841,10 +1823,7 @@
 			rgb(190 221 246 / 100%) 51%,
 			rgb(227 240 251 / 100%) 100%
 		);
-		box-shadow:
-			0 1px 3px rgb(0 0 0 / 25%),
-			inset 0 0 1px #fff,
-			inset 0 0 6px rgb(255 255 255 / 60%);
+		box-shadow: 0 1px 3px rgb(0 0 0 / 25%), inset 0 0 1px #fff, inset 0 0 6px rgb(255 255 255 / 60%);
 	}
 
 	&:active {
@@ -1857,9 +1836,7 @@
 			rgb(162 207 244 / 100%) 51%,
 			rgb(210 232 250 / 100%) 100%
 		);
-		box-shadow:
-			0 1px 2px rgb(0 0 0 / 20%),
-			inset 0 0 1px #fff,
+		box-shadow: 0 1px 2px rgb(0 0 0 / 20%), inset 0 0 1px #fff,
 			inset -1px -1px 4px rgb(220 220 220 / 40%);
 	}
 
@@ -1890,9 +1867,7 @@
 	&:active {
 		background: linear-gradient(to bottom, #fcd0ca 0%, #f5a69d 50%, #f9e3df 100%);
 		color: #ce1500;
-		text-shadow:
-			0 1px 1px rgb(255 255 255 / 20%),
-			0 -1px 1px rgb(255 255 255 / 60%);
+		text-shadow: 0 1px 1px rgb(255 255 255 / 20%), 0 -1px 1px rgb(255 255 255 / 60%);
 		border-color: #f4301a;
 	}
 }
@@ -2052,9 +2027,7 @@
 	background: linear-gradient(to bottom, rgb(247 247 247 / 100%) 0%, rgb(255 255 255 / 100%) 100%);
 	border: 1px solid #ddd;
 	text-shadow: 0 1px rgb(255 255 255 / 95%);
-	box-shadow:
-		inset 0 0 1px rgb(255 255 255 / 100%),
-		inset 0 0 4px rgb(255 255 255 / 80%),
+	box-shadow: inset 0 0 1px rgb(255 255 255 / 100%), inset 0 0 4px rgb(255 255 255 / 80%),
 		0 4px 6px rgb(190 190 190 / 40%);
 	font-weight: 600;
 	color: var(--color-text-link);
@@ -2127,9 +2100,7 @@
 	@media (--viewport-small) {
 		border-radius: 6px;
 		background-color: rgb(255 255 255 / 70%);
-		box-shadow:
-			0 8px 25px rgb(0 0 0 / 30%),
-			inset 0 0 2px rgb(255 255 255 / 100%);
+		box-shadow: 0 8px 25px rgb(0 0 0 / 30%), inset 0 0 2px rgb(255 255 255 / 100%);
 		padding: 70px 50px;
 		max-width: 370px;
 

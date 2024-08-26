@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.8.12] - Service release
+
+### Security
+
+- Restrict hestiamail file permissions (todo should probably have a link here)
+- Fix roundcube permissions ( GH-4387 )
+
 ## [1.8.11] - Service release
 
 ### Features

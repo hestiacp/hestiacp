@@ -614,23 +614,17 @@ function syshealth_adapt_hestia_nginx_listen_ports() {
 	done
 
 	# Adapt port listing in nginx.conf depended on availability of IPV4 and IPV6 network interface
-	NGINX_BCONF_CHANGED=""
-	NGINX_BCONF="/usr/local/hestia/nginx/conf/nginx.conf"
-	NGINX_BCONF_TEMP="/tmp/nginx.conf"
-	cp "$NGINX_BCONF" "$NGINX_BCONF_TEMP"
+	NGINX_CONF="/usr/local/hestia/nginx/conf/nginx.conf"
 	if [ -z "$ipv4_scope_global" ]; then
-		sed -i 's/^\([ \t]*listen[ \t]*[0-9]\{1,5\}.*\)/#\1/' "$NGINX_BCONF"
+		sed -i 's/^\([ \t]*listen[ \t]*[0-9]\{1,5\}.*\)/#\1/' "$NGINX_CONF"
 	else
-		sed -i 's/#\([ \t]*listen[ \t]*[0-9]\{1,5\}.*\)/\1/' "$NGINX_BCONF"
+		sed -i 's/#\([ \t]*listen[ \t]*[0-9]\{1,5\}.*\)/\1/' "$NGINX_CONF"
 	fi
 	if [ -z "$ipv6_scope_global" ]; then
-		sed -i 's/^\([ \t]*listen[ \t]*\[\:\:\]\:[0-9]\{1,5\}.*\)/#\1/' "$NGINX_BCONF"
+		sed -i 's/^\([ \t]*listen[ \t]*\[\:\:\]\:[0-9]\{1,5\}.*\)/#\1/' "$NGINX_CONF"
 	else
-		sed -i 's/#\([ \t]*listen[ \t]*\[\:\:\]\:[0-9]\{1,5\}.*\)/\1/' "$NGINX_BCONF"
+		sed -i 's/#\([ \t]*listen[ \t]*\[\:\:\]\:[0-9]\{1,5\}.*\)/\1/' "$NGINX_CONF"
 	fi
-	cmp --silent "$NGINX_BCONF" "$NGINX_BCONF_TEMP"
-	[ $? -ne 0 ] && NGINX_BCONF_CHANGED="yes"
-	rm -f "$NGINX_BCONF_TEMP" > /dev/null 2>&1
 }
 
 syshealth_adapt_nginx_resolver() {

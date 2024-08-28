@@ -1046,6 +1046,12 @@ echo "[ * ] Configuring system settings..."
 
 # Create user for php-fpm configs
 /usr/sbin/useradd "hestiamail" -c "$email" --no-create-home
+
+# Add a general group for normal users created by Hestia
+if [ -z "$(grep ^hestia-users: /etc/group)" ]; then
+	groupadd --system "hestia-users"
+fi
+
 # Ensures proper permissions for Hestia service interactions.
 /usr/sbin/adduser hestiamail hestia-users
 

@@ -107,6 +107,10 @@ const toggleOption = (option) => {
 const installCommand = ref("bash hst-install.sh");
 watchEffect(() => {
 	let cmd = "bash hst-install.sh";
+	let quoteshellarg = function (str) {
+		if (!str) return "''";
+		return "'" + str.replace(/'/g, "'\\''") + "'";
+	};
 	for (const [key, { enabled, value }] of Object.entries(selectedOptions.value)) {
 		const opt = options.find((o) => o.flag === key);
 		if (opt.flag == "force" && enabled) {
@@ -116,7 +120,8 @@ watchEffect(() => {
 				cmd += ` --${key} ${enabled ? "yes" : "no"}`;
 			}
 		} else if (enabled && value !== opt.default) {
-			cmd += ` --${key} ${value}`;
+			let value_quoted = quoteshellarg(value);
+			cmd += ` --${key} ${value_quoted}`;
 		}
 	}
 	installCommand.value = cmd;

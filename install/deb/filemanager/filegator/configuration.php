@@ -232,7 +232,7 @@ $dist_config["services"]["Filegator\Services\Archiver\ArchiverInterface"] = [
 $dist_config["services"]["Filegator\Services\Auth\AuthInterface"] = [
 	"handler" => "\Filegator\Services\Auth\Adapters\HestiaAuth",
 	"config" => [
-		"permissions" => ["read", "write", "upload", "download", "batchdownload", "zip"],
+		"permissions" => ["read", "write", "upload", "download", "batchdownload", "zip", "chmod"],
 		"private_repos" => false,
 	],
 ];

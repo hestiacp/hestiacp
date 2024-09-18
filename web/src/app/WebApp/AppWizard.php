@@ -74,7 +74,7 @@ class AppWizard {
 
 		if ($this->appsetup->withDatabase()) {
 			exec(HESTIA_CMD . "v-list-database-hosts json", $output, $return_var);
-			$db_hosts_tmp1 = json_decode(implode("", $output), true);
+			$db_hosts_tmp1 = json_decode(implode("", $output), true, flags: JSON_THROW_ON_ERROR);
 			$db_hosts_tmp2 = array_map(function ($host) {
 				return $host["HOST"];
 			}, $db_hosts_tmp1);

@@ -72,6 +72,7 @@ class PrestashopSetup extends BaseSetup {
 			[
 				"/usr/bin/php" . $options["php_version"],
 				$this->getDocRoot("/install/index_cli.php"),
+				"--db_server=" . $options["database_host"],
 				"--db_user=" . $this->appcontext->user() . "_" . $options["database_user"],
 				"--db_password=" . $options["database_password"],
 				"--db_name=" . $this->appcontext->user() . "_" . $options["database_name"],

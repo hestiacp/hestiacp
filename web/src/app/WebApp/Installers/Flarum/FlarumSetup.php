@@ -157,7 +157,7 @@ class FlarumSetup extends BaseSetup {
 		$webDomain = ($sslEnabled ? "https://" : "http://") . $this->domain;
 		$webPort = $sslEnabled ? "443" : "80";
 
-		$mysql_host = "localhost";
+		$mysql_host = $options["database_host"];
 		$mysql_database = addcslashes(
 			$this->appcontext->user() . "_" . $options["database_name"],
 			"\\'",

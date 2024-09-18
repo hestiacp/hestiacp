@@ -4,6 +4,7 @@ namespace Hestia\WebApp\Installers\Joomla;
 
 use Hestia\System\Util;
 use Hestia\WebApp\Installers\BaseSetup as BaseSetup;
+use function Hestiacp\quoteshellarg\quoteshellarg;
 
 class JoomlaSetup extends BaseSetup {
 	protected $appInfo = [

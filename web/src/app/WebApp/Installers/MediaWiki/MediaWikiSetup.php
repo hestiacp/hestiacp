@@ -4,6 +4,7 @@ namespace Hestia\WebApp\Installers\MediaWiki;
 
 use Hestia\System\Util;
 use Hestia\WebApp\Installers\BaseSetup as BaseSetup;
+use function Hestiacp\quoteshellarg\quoteshellarg;
 
 class MediaWikiSetup extends BaseSetup {
 	protected $appInfo = [
@@ -81,6 +82,26 @@ class MediaWikiSetup extends BaseSetup {
 				"--pass=" . $options["admin_password"],
 				"MediaWiki", // A Space here would trigger the next argument and preemptively set the admin username
 				$options["admin_username"],
+			],
+			$status,
+		);
+		$this->appcontext->runUser(
+			"v-run-cli-cmd",
+			[
+				"/usr/bin/php" . $options["php_version"],
+				quoteshellarg($this->getDocRoot("maintenance/install.php")),
+				"--dbserver=" . quoteshellarg($options["database_host"]),
+				"--dbname=" . quoteshellarg($this->appcontext->user() . "_" . $options["database_name"]),
+				"--installdbuser=" . quoteshellarg($this->appcontext->user() . "_" . $options["database_user"]),
+				"--installdbpass=" . quoteshellarg($options["database_password"]),
+				"--dbuser=" . quoteshellarg($this->appcontext->user() . "_" . $options["database_user"]),
+				"--dbpass=" . quoteshellarg($options["database_password"]),
+				"--server=" . quoteshellarg($webDomain),
+				"--scriptpath=", // must NOT be /
+				"--lang=" . quoteshellarg($options["language"]),
+				"--pass=" . quoteshellarg($options["admin_password"]),
+				"MediaWiki", // A Space here would trigger the next argument and preemptively set the admin username
+				quoteshellarg($options["admin_username"]),
 			],
 			$status,
 		);

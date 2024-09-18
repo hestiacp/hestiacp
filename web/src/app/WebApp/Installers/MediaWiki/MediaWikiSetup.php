@@ -65,26 +65,7 @@ class MediaWikiSetup extends BaseSetup {
 			$result,
 		);
 
-		$this->appcontext->runUser(
-			"v-run-cli-cmd",
-			[
-				"/usr/bin/php" . $options["php_version"],
-				$this->getDocRoot("maintenance/install.php"),
-				"--dbserver=" . $options["database_host"],
-				"--dbname=" . $this->appcontext->user() . "_" . $options["database_name"],
-				"--installdbuser=" . $this->appcontext->user() . "_" . $options["database_user"],
-				"--installdbpass=" . $options["database_password"],
-				"--dbuser=" . $this->appcontext->user() . "_" . $options["database_user"],
-				"--dbpass=" . $options["database_password"],
-				"--server=" . $webDomain,
-				"--scriptpath=", // must NOT be /
-				"--lang=" . $options["language"],
-				"--pass=" . $options["admin_password"],
-				"MediaWiki", // A Space here would trigger the next argument and preemptively set the admin username
-				$options["admin_username"],
-			],
-			$status,
-		);
+
 		$this->appcontext->runUser(
 			"v-run-cli-cmd",
 			[

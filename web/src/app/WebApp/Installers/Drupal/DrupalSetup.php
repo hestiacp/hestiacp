@@ -68,17 +68,17 @@ class DrupalSetup extends BaseSetup {
 				"--db-url=" .
 				quoteshellarg(
 					"mysql://" .
-					$this->appcontext->user() .
-					"_" .
-					$options["database_user"] .
-					":" .
-					$options["database_password"] .
-					"@" .
-					$options["database_host"] .
-					":3306/" .
-					$this->appcontext->user() .
-					"_" .
-					$options["database_name"]
+						$this->appcontext->user() .
+						"_" .
+						$options["database_user"] .
+						":" .
+						$options["database_password"] .
+						"@" .
+						$options["database_host"] .
+						":3306/" .
+						$this->appcontext->user() .
+						"_" .
+						$options["database_name"],
 				),
 				"--account-name=" . quoteshellarg($options["username"]),
 				"--account-pass=" . quoteshellarg($options["password"]),

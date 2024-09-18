@@ -95,7 +95,7 @@ class JoomlaSetup extends BaseSetup {
 			"--db-user=" . quoteshellarg($dbUser),
 			"--db-pass=" . quoteshellarg($dbPass),
 			"--db-name=" . quoteshellarg($dbName),
-			"--db-prefix=" . quoteshellarg(Util::generate_string(5, false)) . "_",
+			"--db-prefix=" . quoteshellarg(Util::generate_string(5, false) . "_"),
 			"--db-host=" . quoteshellarg($dbHost),
 			"--db-type=mysqli",
 		];

@@ -3,6 +3,8 @@
 namespace Hestia\WebApp\Installers\Nextcloud;
 
 use Hestia\WebApp\Installers\BaseSetup as BaseSetup;
+use function Hestiacp\quoteshellarg\quoteshellarg;
+
 
 class NextcloudSetup extends BaseSetup {
 	protected $appInfo = [
@@ -47,15 +49,15 @@ class NextcloudSetup extends BaseSetup {
 			"v-run-cli-cmd",
 			[
 				"/usr/bin/php" . $options["php_version"],
-				$this->getDocRoot("occ"),
+				quoteshellarg($this->getDocRoot("occ")),
 				"maintenance:install",
 				"--database mysql",
-				"--database-name " . $this->appcontext->user() . "_" . $options["database_name"],
-				"--database-host " . $options["database_host"],
-				"--database-user " . $this->appcontext->user() . "_" . $options["database_user"],
-				"--database-pass " . $options["database_password"],
-				"--admin-user " . $options["username"],
-				"--admin-pass " . $options["password"],
+				"--database-name " . quoteshellarg($this->appcontext->user() . "_" . $options["database_name"]),
+				"--database-host " . quoteshellarg($options["database_host"]),
+				"--database-user " . quoteshellarg($this->appcontext->user() . "_" . $options["database_user"]),
+				"--database-pass " . quoteshellarg($options["database_password"]),
+				"--admin-user " . quoteshellarg($options["username"]),
+				"--admin-pass " . quoteshellarg($options["password"]),
 			],
 			$status,
 		);
@@ -64,9 +66,9 @@ class NextcloudSetup extends BaseSetup {
 			"v-run-cli-cmd",
 			[
 				"/usr/bin/php" . $options["php_version"],
-				$this->getDocRoot("occ"),
+				quoteshellarg($this->getDocRoot("occ")),
 				"config:system:set",
-				"trusted_domains 2 --value=" . $this->domain,
+				"trusted_domains 2 --value=" . quoteshellarg($this->domain),
 			],
 			$status,
 		);

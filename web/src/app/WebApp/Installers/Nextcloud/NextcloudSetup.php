@@ -5,7 +5,6 @@ namespace Hestia\WebApp\Installers\Nextcloud;
 use Hestia\WebApp\Installers\BaseSetup as BaseSetup;
 use function Hestiacp\quoteshellarg\quoteshellarg;
 
-
 class NextcloudSetup extends BaseSetup {
 	protected $appInfo = [
 		"name" => "Nextcloud",
@@ -52,9 +51,11 @@ class NextcloudSetup extends BaseSetup {
 				quoteshellarg($this->getDocRoot("occ")),
 				"maintenance:install",
 				"--database mysql",
-				"--database-name " . quoteshellarg($this->appcontext->user() . "_" . $options["database_name"]),
+				"--database-name " .
+				quoteshellarg($this->appcontext->user() . "_" . $options["database_name"]),
 				"--database-host " . quoteshellarg($options["database_host"]),
-				"--database-user " . quoteshellarg($this->appcontext->user() . "_" . $options["database_user"]),
+				"--database-user " .
+				quoteshellarg($this->appcontext->user() . "_" . $options["database_user"]),
 				"--database-pass " . quoteshellarg($options["database_password"]),
 				"--admin-user " . quoteshellarg($options["username"]),
 				"--admin-pass " . quoteshellarg($options["password"]),

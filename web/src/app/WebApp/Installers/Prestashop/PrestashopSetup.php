@@ -74,15 +74,17 @@ class PrestashopSetup extends BaseSetup {
 				"/usr/bin/php" . $options["php_version"],
 				quoteshellarg($this->getDocRoot("/install/index_cli.php")),
 				"--db_server=" . quoteshellarg($options["database_host"]),
-				"--db_user=" . quoteshellarg($this->appcontext->user() . "_" . $options["database_user"]),
+				"--db_user=" .
+				quoteshellarg($this->appcontext->user() . "_" . $options["database_user"]),
 				"--db_password=" . quoteshellarg($options["database_password"]),
-				"--db_name=" . quoteshellarg($this->appcontext->user() . "_" . $options["database_name"]),
+				"--db_name=" .
+				quoteshellarg($this->appcontext->user() . "_" . $options["database_name"]),
 				"--firstname=" . quoteshellarg($options["prestashop_account_first_name"]),
 				"--lastname=" . quoteshellarg($options["prestashop_account_last_name"]),
 				"--password=" . quoteshellarg($options["prestashop_account_password"]),
 				"--email=" . quoteshellarg($options["prestashop_account_email"]),
 				"--domain=" . quoteshellarg($this->domain),
-				"--ssl=" . (int)$ssl_enabled,
+				"--ssl=" . (int) $ssl_enabled,
 			],
 			$status,
 		);

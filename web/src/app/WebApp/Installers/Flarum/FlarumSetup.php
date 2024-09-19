@@ -3,6 +3,7 @@ namespace Hestia\WebApp\Installers\Flarum;
 
 use Hestia\System\Util;
 use Hestia\WebApp\Installers\BaseSetup as BaseSetup;
+use function Hestiacp\quoteshellarg\quoteshellarg;
 
 class FlarumSetup extends BaseSetup {
 	protected $appInfo = [
@@ -173,36 +174,32 @@ class FlarumSetup extends BaseSetup {
 			$subfolder = "/" . $subfolder;
 		}
 
-		$cmd =
-			"/usr/bin/curl --location --post301 --insecure --resolve " .
-			$this->domain .
-			":$webPort:" .
-			$this->appcontext->getWebDomainIp($this->domain) .
-			" " .
-			escapeshellarg($webDomain . $subfolder . "/index.php") .
-			" -d " .
-			escapeshellarg(
-				"forumTitle=" .
-					rawurlencode($options["forum_title"]) .
-					"&mysqlHost=" .
-					rawurlencode($mysql_host) .
-					"&mysqlDatabase=" .
-					rawurlencode($mysql_database) .
-					"&mysqlUsername=" .
-					rawurlencode($mysql_username) .
-					"&mysqlPassword=" .
-					rawurlencode($mysql_password) .
-					"&tablePrefix=" .
-					rawurlencode($table_prefix) .
-					"&adminUsername=" .
-					rawurlencode($options["admin_username"]) .
-					"&adminEmail=" .
-					rawurlencode($options["admin_email"]) .
-					"&adminPassword=" .
-					rawurlencode($options["admin_password"]) .
-					"&adminPasswordConfirmation=" .
-					rawurlencode($options["admin_password"]),
-			);
+		$cmd = implode(" ", [
+			"/usr/bin/curl",
+			"--location",
+			"--post301",
+			"--insecure",
+			"--resolve " .
+			quoteshellarg(
+				$this->domain . ":$webPort:" . $this->appcontext->getWebDomainIp($this->domain),
+			),
+			quoteshellarg($webDomain . $subfolder . "/index.php"),
+			"--data-binary " .
+			quoteshellarg(
+				http_build_query([
+					"forumTitle" => $options["forum_title"],
+					"mysqlHost" => $mysql_host,
+					"mysqlDatabase" => $mysql_database,
+					"mysqlUsername" => $mysql_username,
+					"mysqlPassword" => $mysql_password,
+					"tablePrefix" => $table_prefix,
+					"adminUsername" => $options["admin_username"],
+					"adminEmail" => $options["admin_email"],
+					"adminPassword" => $options["admin_password"],
+					"adminPasswordConfirmation" => $options["admin_password"],
+				]),
+			),
+		]);
 		exec($cmd, $output, $return_var);
 
 		// Report any errors

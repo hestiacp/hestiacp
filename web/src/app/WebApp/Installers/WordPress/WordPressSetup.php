@@ -102,7 +102,7 @@ class WordpressSetup extends BaseSetup {
 							$this->appcontext->user() . "_" . $options["database_name"],
 							true,
 						) .
-					" );";
+						" );";
 					break;
 				case "DB_USER":
 					$result->raw[$line_num] =
@@ -114,7 +114,7 @@ class WordpressSetup extends BaseSetup {
 							$this->appcontext->user() . "_" . $options["database_user"],
 							true,
 						) .
-					" );";
+						" );";
 					break;
 				case "DB_PASSWORD":
 					$result->raw[$line_num] =
@@ -229,27 +229,31 @@ class WordpressSetup extends BaseSetup {
 				strlen($options["install_directory"]) - 1,
 			);
 		}
-		$cmd = implode(" ", array(
+		$cmd = implode(" ", [
 			"/usr/bin/curl",
 			"--location",
 			"--post301",
 			"--insecure",
-			"--resolve " . quoteshellarg( $this->domain . ":$webPort:" . $this->appcontext->getWebDomainIp($this->domain)),
-			quoteshellarg($webDomain . $options["install_directory"] . "/wp-admin/install.php?step=2"),
-			"--data-binary " . quoteshellarg(http_build_query(array(
-				"weblog_title" => $options["site_name"],
-				"user_name" => $options["username"],
-				"admin_password" => $options["password"],
-				"admin_password2" => $options["password"],
-				"admin_email" => $options["email"],
-			))),
-		));
-		
-		exec(
-			$cmd,
-			$output,
-			$return_var,
-		);
+			"--resolve " .
+			quoteshellarg(
+				$this->domain . ":$webPort:" . $this->appcontext->getWebDomainIp($this->domain),
+			),
+			quoteshellarg(
+				$webDomain . $options["install_directory"] . "/wp-admin/install.php?step=2",
+			),
+			"--data-binary " .
+			quoteshellarg(
+				http_build_query([
+					"weblog_title" => $options["site_name"],
+					"user_name" => $options["username"],
+					"admin_password" => $options["password"],
+					"admin_password2" => $options["password"],
+					"admin_email" => $options["email"],
+				]),
+			),
+		]);
+
+		exec($cmd, $output, $return_var);
 
 		if (
 			strpos(implode(PHP_EOL, $output), "Error establishing a database connection") !== false

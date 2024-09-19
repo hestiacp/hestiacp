@@ -94,59 +94,55 @@ class WordpressSetup extends BaseSetup {
 			switch ($constant) {
 				case "DB_NAME":
 					$result->raw[$line_num] =
-						"define( '" .
-						$constant .
-						"'," .
-						$padding .
-						"'" .
-						addcslashes(
+						"define( " .
+						var_export($constant, true) .
+						"," .
+						str_repeat(" ", strlen($padding)) .
+						var_export(
 							$this->appcontext->user() . "_" . $options["database_name"],
-							"\\'",
+							true,
 						) .
-						"' );";
+						" );";
 					break;
 				case "DB_USER":
 					$result->raw[$line_num] =
-						"define( '" .
-						$constant .
-						"'," .
-						$padding .
-						"'" .
-						addcslashes(
+						"define( " .
+						var_export($constant, true) .
+						"," .
+						str_repeat(" ", strlen($padding)) .
+						var_export(
 							$this->appcontext->user() . "_" . $options["database_user"],
-							"\\'",
+							true,
 						) .
-						"' );";
+						" );";
 					break;
 				case "DB_PASSWORD":
 					$result->raw[$line_num] =
-						"define( '" .
-						$constant .
-						"'," .
-						$padding .
-						"'" .
-						addcslashes($options["database_password"], "\\'") .
-						"' );";
+						"define( " .
+						var_export($constant, true) .
+						"," .
+						str_repeat(" ", strlen($padding)) .
+						var_export($options["database_password"], true) .
+						" );";
 					break;
 				case "DB_HOST":
 					$result->raw[$line_num] =
-						"define( '" .
-						$constant .
-						"'," .
-						$padding .
-						"'" .
-						addcslashes($options["database_host"], "\\'") .
-						"' );";
+						"define( " .
+						var_export($constant, true) .
+						"," .
+						str_repeat(" ", strlen($padding)) .
+						var_export($options["database_host"], true) .
+						" );";
 					break;
 				case "DB_CHARSET":
 					$result->raw[$line_num] =
-						"define( '" .
-						$constant .
-						"'," .
-						$padding .
-						"'" .
-						addcslashes("utf8mb4", "\\'") .
-						"' );";
+						"define( " .
+						var_export($constant, true) .
+						"," .
+						str_repeat(" ", strlen($padding)) .
+						var_export("utf8mb4", true) .
+						" );";
+
 					break;
 				case "AUTH_KEY":
 				case "SECURE_AUTH_KEY":
@@ -157,13 +153,12 @@ class WordpressSetup extends BaseSetup {
 				case "LOGGED_IN_SALT":
 				case "NONCE_SALT":
 					$result->raw[$line_num] =
-						"define( '" .
-						$constant .
-						"'," .
-						$padding .
-						"'" .
-						Util::generate_string(64) .
-						"' );";
+						"define( " .
+						var_export($constant, true) .
+						"," .
+						str_repeat(" ", strlen($padding)) .
+						var_export(Util::generate_string(64), true) .
+						" );";
 					break;
 			}
 		}
@@ -234,32 +229,31 @@ class WordpressSetup extends BaseSetup {
 				strlen($options["install_directory"]) - 1,
 			);
 		}
+		$cmd = implode(" ", [
+			"/usr/bin/curl",
+			"--location",
+			"--post301",
+			"--insecure",
+			"--resolve " .
+			quoteshellarg(
+				$this->domain . ":$webPort:" . $this->appcontext->getWebDomainIp($this->domain),
+			),
+			quoteshellarg(
+				$webDomain . $options["install_directory"] . "/wp-admin/install.php?step=2",
+			),
+			"--data-binary " .
+			quoteshellarg(
+				http_build_query([
+					"weblog_title" => $options["site_name"],
+					"user_name" => $options["username"],
+					"admin_password" => $options["password"],
+					"admin_password2" => $options["password"],
+					"admin_email" => $options["email"],
+				]),
+			),
+		]);
 
-		exec(
-			"/usr/bin/curl --location --post301 --insecure --resolve " .
-				$this->domain .
-				":$webPort:" .
-				$this->appcontext->getWebDomainIp($this->domain) .
-				" " .
-				quoteshellarg(
-					$webDomain . $options["install_directory"] . "/wp-admin/install.php?step=2",
-				) .
-				" -d " .
-				quoteshellarg(
-					"weblog_title=" .
-						rawurlencode($options["site_name"]) .
-						"&user_name=" .
-						rawurlencode($options["username"]) .
-						"&admin_password=" .
-						rawurlencode($options["password"]) .
-						"&admin_password2=" .
-						rawurlencode($options["password"]) .
-						"&admin_email=" .
-						rawurlencode($options["email"]),
-				),
-			$output,
-			$return_var,
-		);
+		exec($cmd, $output, $return_var);
 
 		if (
 			strpos(implode(PHP_EOL, $output), "Error establishing a database connection") !== false

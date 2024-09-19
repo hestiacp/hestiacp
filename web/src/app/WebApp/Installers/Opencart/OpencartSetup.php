@@ -84,9 +84,11 @@ class OpencartSetup extends BaseSetup {
 				quoteshellarg($this->getDocRoot("/install/cli_install.php")),
 				"install",
 				"--db_hostname " . quoteshellarg($options["database_host"]),
-				"--db_username " . quoteshellarg($this->appcontext->user() . "_" . $options["database_user"]),
+				"--db_username " .
+				quoteshellarg($this->appcontext->user() . "_" . $options["database_user"]),
 				"--db_password " . quoteshellarg($options["database_password"]),
-				"--db_database " . quoteshellarg($this->appcontext->user() . "_" . $options["database_name"]),
+				"--db_database " .
+				quoteshellarg($this->appcontext->user() . "_" . $options["database_name"]),
 				"--username " . quoteshellarg($options["opencart_account_username"]),
 				"--password " . quoteshellarg($options["opencart_account_password"]),
 				"--email " . quoteshellarg($options["opencart_account_email"]),

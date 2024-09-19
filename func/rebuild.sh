@@ -414,7 +414,7 @@ rebuild_web_domain_conf() {
 			$BIN/v-delete-web-domain-ftp "$user" "$domain" "$ftp_user"
 			# Generate temporary password to add user but update afterwards
 			temp_password=$(generate_password)
-			$BIN/v-add-web-domain-ftp "$user" "$domain" "${ftp_user#*_}" "$temp_password" "$ftp_path"
+			$BIN/v-add-web-domain-ftp "$user" "$domain" "${ftp_user##*_}" "$temp_password" "$ftp_path"
 			# Updating ftp user password
 			chmod u+w /etc/shadow
 			sed -i "s|^$ftp_user:[^:]*:|$ftp_user:$ftp_md5:|" /etc/shadow

@@ -65,17 +65,19 @@ class MediaWikiSetup extends BaseSetup {
 			$result,
 		);
 
-
 		$this->appcontext->runUser(
 			"v-run-cli-cmd",
 			[
 				"/usr/bin/php" . $options["php_version"],
 				quoteshellarg($this->getDocRoot("maintenance/install.php")),
 				"--dbserver=" . quoteshellarg($options["database_host"]),
-				"--dbname=" . quoteshellarg($this->appcontext->user() . "_" . $options["database_name"]),
-				"--installdbuser=" . quoteshellarg($this->appcontext->user() . "_" . $options["database_user"]),
+				"--dbname=" .
+				quoteshellarg($this->appcontext->user() . "_" . $options["database_name"]),
+				"--installdbuser=" .
+				quoteshellarg($this->appcontext->user() . "_" . $options["database_user"]),
 				"--installdbpass=" . quoteshellarg($options["database_password"]),
-				"--dbuser=" . quoteshellarg($this->appcontext->user() . "_" . $options["database_user"]),
+				"--dbuser=" .
+				quoteshellarg($this->appcontext->user() . "_" . $options["database_user"]),
 				"--dbpass=" . quoteshellarg($options["database_password"]),
 				"--server=" . quoteshellarg($webDomain),
 				"--scriptpath=", // must NOT be /

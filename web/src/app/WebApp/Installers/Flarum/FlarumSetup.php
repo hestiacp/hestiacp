@@ -174,26 +174,32 @@ class FlarumSetup extends BaseSetup {
 			$subfolder = "/" . $subfolder;
 		}
 
-		$cmd = implode(" ", array(
+		$cmd = implode(" ", [
 			"/usr/bin/curl",
 			"--location",
 			"--post301",
 			"--insecure",
-			"--resolve " . quoteshellarg($this->domain . ":$webPort:" . $this->appcontext->getWebDomainIp($this->domain)),
+			"--resolve " .
+			quoteshellarg(
+				$this->domain . ":$webPort:" . $this->appcontext->getWebDomainIp($this->domain),
+			),
 			quoteshellarg($webDomain . $subfolder . "/index.php"),
-			"--data-binary " . quoteshellarg(http_build_query(array(
-				"forumTitle" => $options["forum_title"],
-				"mysqlHost" => $mysql_host,
-				"mysqlDatabase" => $mysql_database,
-				"mysqlUsername" => $mysql_username,
-				"mysqlPassword" => $mysql_password,
-				"tablePrefix" => $table_prefix,
-				"adminUsername" => $options["admin_username"],
-				"adminEmail" => $options["admin_email"],
-				"adminPassword" => $options["admin_password"],
-				"adminPasswordConfirmation" => $options["admin_password"],
-			))),
-		));
+			"--data-binary " .
+			quoteshellarg(
+				http_build_query([
+					"forumTitle" => $options["forum_title"],
+					"mysqlHost" => $mysql_host,
+					"mysqlDatabase" => $mysql_database,
+					"mysqlUsername" => $mysql_username,
+					"mysqlPassword" => $mysql_password,
+					"tablePrefix" => $table_prefix,
+					"adminUsername" => $options["admin_username"],
+					"adminEmail" => $options["admin_email"],
+					"adminPassword" => $options["admin_password"],
+					"adminPasswordConfirmation" => $options["admin_password"],
+				]),
+			),
+		]);
 		exec($cmd, $output, $return_var);
 
 		// Report any errors

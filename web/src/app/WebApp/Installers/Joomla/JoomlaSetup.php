@@ -4,6 +4,7 @@ namespace Hestia\WebApp\Installers\Joomla;
 
 use Hestia\System\Util;
 use Hestia\WebApp\Installers\BaseSetup as BaseSetup;
+use function Hestiacp\quoteshellarg\quoteshellarg;
 
 class JoomlaSetup extends BaseSetup {
 	protected $appInfo = [
@@ -85,18 +86,18 @@ class JoomlaSetup extends BaseSetup {
 		// Initialize Joomla using the CLI
 		$cliCmd = [
 			"/usr/bin/php",
-			"$installDir/installation/joomla.php",
+			quoteshellarg("$installDir/installation/joomla.php"),
 			"install",
-			"--site-name=" . $siteName,
-			"--admin-user=" . $adminUsername,
-			"--admin-username=" . $adminUsername,
-			"--admin-password=" . $adminPassword,
-			"--admin-email=" . $adminEmail,
-			"--db-user=" . $dbUser,
-			"--db-pass=" . $dbPass,
-			"--db-name=" . $dbName,
-			"--db-prefix=" . Util::generate_string(5, false) . "_",
-			"--db-host=" . $dbHost,
+			"--site-name=" . quoteshellarg($siteName),
+			"--admin-user=" . quoteshellarg($adminUsername),
+			"--admin-username=" . quoteshellarg($adminUsername),
+			"--admin-password=" . quoteshellarg($adminPassword),
+			"--admin-email=" . quoteshellarg($adminEmail),
+			"--db-user=" . quoteshellarg($dbUser),
+			"--db-pass=" . quoteshellarg($dbPass),
+			"--db-name=" . quoteshellarg($dbName),
+			"--db-prefix=" . quoteshellarg(Util::generate_string(5, false) . "_"),
+			"--db-host=" . quoteshellarg($dbHost),
 			"--db-type=mysqli",
 		];
 

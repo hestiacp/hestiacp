@@ -1,7 +1,7 @@
 {
 	"editor.defaultFormatter": "esbenp.prettier-vscode",
 	"[php]": {
-		"editor.defaultFormatter": "bmewburn.vscode-intelephense-client"
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
 	},
 	// Optional nesting patterns, set explorer.fileNesting.enabled to true to enable
 	"explorer.fileNesting.patterns": {
@@ -9,8 +9,5 @@
 		"*.js": "${capture}.js.map",
 		"package.json": ".editorconfig, .eslint*, .lintstaged*, .markdownlint-cli2*, .prettier*, .stylelint*, jsconfig.json, package-lock.json, renovate.json",
 		"readme*": "changelog*, contributing*, license*, security*"
-	},
-	"[c]": {
-		"editor.defaultFormatter": "ms-vscode.cpptools"
 	}
 }

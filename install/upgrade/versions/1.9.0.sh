@@ -100,5 +100,4 @@ add_upgrade_message 'Security has been upgraded, A new user "hestiaweb" has been
 # Ensures proper permissions for Hestia service interactions.
 /usr/sbin/adduser hestiamail hestia-users
 
-
 sudo /usr/bin/php "$(dirname $0)/1.9.0_extras/migrate_SetHandler_to_ProxySetMatch.php" --non-interactive

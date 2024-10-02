@@ -153,7 +153,7 @@ foreach ($conf_files as $conf_file) {
 	}
 }
 passthru("/usr/sbin/service apache2 reload", $exitCode);
-if($exitCode !== 0) {
-    echo "Failed to reload apache2: exit code $exitCode\n";
-    exit(1);
+if ($exitCode !== 0) {
+	echo "Failed to reload apache2: exit code $exitCode\n";
+	exit(1);
 }

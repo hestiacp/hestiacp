@@ -152,3 +152,8 @@ foreach ($conf_files as $conf_file) {
 		file_put_contents($conf_file, $modified_conf_string, LOCK_EX);
 	}
 }
+passthru("/usr/sbin/service apache2 reload", $exitCode);
+if($exitCode !== 0) {
+    echo "Failed to reload apache2: exit code $exitCode\n";
+    exit(1);
+}

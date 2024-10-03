@@ -1,4 +1,4 @@
-if $h_X-Spam-Status: matches ^Yes\$
+if $h_X-Spam-Status: matches ^[Yy]es
 then
     headers add "Old-Subject: $h_subject"
     headers remove "Subject"

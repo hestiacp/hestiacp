@@ -135,7 +135,7 @@ Preparing your **Master** server:
    also-notify { second.slave.ip.address; };
    ```
 
-3. On the slave server, open `/etc/bind/named.options`, do the following changes, then restart bind9 with `systemctl restart bind9`:
+3. On the slave server, open `/etc/bind/named.conf.options`, do the following changes, then restart bind9 with `systemctl restart bind9`:
 
    ```bash
    # Change this line

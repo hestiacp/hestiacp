@@ -1161,9 +1161,9 @@ is_cron_format_valid() {
 
 # Validate CPU Quota:
 is_valid_cpu_quota() {
-	if [[ ! "$1" =~ ^[0-9]+%$ ]]; then
-		check_result "$E_INVALID" "Invalid CPU Quota format :: $1"
-	fi
+    if [[ ! "$cpu_quota" =~ ^[1-9][0-9]{0,2}%$ ]] || [[ "${cpu_quota%?}" -gt 100 ]]; then
+        check_result "$E_INVALID" "Invalid CPU Quota format: $cpu_quota"
+    fi
 }
 
 # Validate CPU Quota Period:

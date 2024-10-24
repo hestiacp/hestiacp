@@ -18,7 +18,7 @@ pm = dynamic
 pm.max_children = 8
 pm.start_servers = 1
 pm.min_spare_servers = 1
-pm.max_spare_servers = 3
+pm.max_spare_servers = 2
 pm.max_requests = 4000
 pm.status_path = /status
 

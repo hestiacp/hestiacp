@@ -1,3 +1,4 @@
+; origin-src: deb/php-fpm/multiphp.tpl
 ;#=========================================================================#
 ;# Default Web Domain Template                                             #
 ;# DO NOT MODIFY THIS FILE! CHANGES WILL BE LOST WHEN REBUILDING DOMAINS   #

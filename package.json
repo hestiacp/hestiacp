@@ -19,10 +19,10 @@
 		"prepare": "husky"
 	},
 	"dependencies": {
-		"@alpinejs/collapse": "^3.14.1",
+		"@alpinejs/collapse": "^3.14.3",
 		"@fortawesome/fontawesome-free": "^6.6.0",
-		"alpinejs": "^3.14.1",
-		"chart.js": "^4.4.4",
+		"alpinejs": "^3.14.3",
+		"chart.js": "^4.4.5",
 		"check-password-strength": "^2.0.10",
 		"floating-vue": "^5.2.2",
 		"nanoid": "^5.0.7",
@@ -35,7 +35,7 @@
 		"@prettier/plugin-php": "^0.22.2",
 		"@testing-library/vue": "^8.1.0",
 		"@vitejs/plugin-vue": "^5.1.4",
-		"browserslist": "^4.24.0",
+		"browserslist": "^4.24.2",
 		"esbuild": "^0.24.0",
 		"eslint": "^8.57.1",
 		"eslint-config-prettier": "^9.1.0",
@@ -50,11 +50,11 @@
 		"prettier-plugin-nginx": "^1.0.3",
 		"prettier-plugin-sh": "^0.14.0",
 		"prettier-plugin-sql": "^0.18.1",
-		"stylelint": "^16.9.0",
+		"stylelint": "^16.10.0",
 		"stylelint-config-standard": "^36.0.1",
-		"vitepress": "^1.3.4",
-		"vitest": "^2.1.2",
-		"vue": "^3.5.11"
+		"vitepress": "^1.4.1",
+		"vitest": "^2.1.3",
+		"vue": "^3.5.12"
 	},
 	"browserslist": [
 		"defaults"

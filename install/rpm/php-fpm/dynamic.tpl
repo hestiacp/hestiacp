@@ -1,6 +1,5 @@
 ; origin-src: rpm/php-fpm/multiphp.tpl
 
-
 [%domain%]
 listen = /run/php/php%backend_version%-fpm-%domain%.sock
 listen.owner = %user%

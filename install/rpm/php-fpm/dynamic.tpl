@@ -1,9 +1,9 @@
-; origin-src: rpm/php-fpm/multiphp.tpl
+; origin-src: rhel/php-fpm/multiphp.tpl
 
 [%domain%]
 listen = /run/php/php%backend_version%-fpm-%domain%.sock
 listen.owner = %user%
-listen.group = www-data
+listen.group = apache
 listen.mode = 0660
 
 user = %user%

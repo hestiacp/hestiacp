@@ -1,9 +1,5 @@
-; origin-src: deb/php-fpm/multiphp.tpl
-;#=========================================================================#
-;# Default Web Domain Template                                             #
-;# DO NOT MODIFY THIS FILE! CHANGES WILL BE LOST WHEN REBUILDING DOMAINS   #
-;# https://hestiacp.com/docs/server-administration/web-templates.html      #
-;#=========================================================================#
+; origin-src: rpm/php-fpm/multiphp.tpl
+
 
 [%domain%]
 listen = /run/php/php%backend_version%-fpm-%domain%.sock

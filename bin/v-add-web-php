@@ -154,6 +154,8 @@ sed -i "s/;opcache.max_accelerated_files=10000/opcache.max_accelerated_files=100
 # Install backend template
 cp -f $HESTIA_INSTALL_DIR/php-fpm/multiphp.tpl \
 	$HESTIA/data/templates/web/php-fpm/PHP-${version/\./_}.tpl
+cp -f $HESTIA_INSTALL_DIR/php-fpm/dynamic.tpl \
+	$HESTIA/data/templates/web/php-fpm/dynamic-PHP-${version/\./_}.tpl
 
 #----------------------------------------------------------#
 #                       Hestia                             #

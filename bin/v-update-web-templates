@@ -55,6 +55,7 @@ for php_ver in $versions_list; do
 	version=$(echo $php_ver | sed 's/.*\///')
 	[ ! -d "/etc/php/$version/fpm/pool.d/" ] && continue
 	cp -f $HESTIA_INSTALL_DIR/php-fpm/multiphp.tpl ${WEBTPL}/php-fpm/PHP-${version/\./_}.tpl
+	cp -f $HESTIA_INSTALL_DIR/php-fpm/dynamic.tpl ${WEBTPL}/php-fpm/dynamic-PHP-${version/\./_}.tpl
 done
 
 if [ -n "$awstats_patch" ]; then

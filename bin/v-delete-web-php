@@ -43,6 +43,7 @@ fi
 
 # Remove backend template
 [ -f $HESTIA/data/templates/web/php-fpm/PHP-${version/\./_}.tpl ] && rm -f $HESTIA/data/templates/web/php-fpm/PHP-${version/\./_}.tpl
+[ -f $HESTIA/data/templates/web/php-fpm/dynamic-PHP-${version/\./_}.tpl ] && rm -f $HESTIA/data/templates/web/php-fpm/dynamic-PHP-${version/\./_}.tpl
 
 # Check if php version exists
 version_check=$($BIN/v-list-sys-php plain | grep "$version")

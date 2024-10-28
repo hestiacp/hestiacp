@@ -20,7 +20,8 @@ location /%pma_alias% {
 		fastcgi_pass  127.0.0.1:9000;
 	}
 
+	# Serve static files like CSS and JS
 	location /%pma_alias%/(.+\.(jpg|jpeg|gif|css|png|webp|js|ico|html|xml|txt))$ {
-		root /usr/share/phpmyadmin/;
+		alias /usr/share/phpmyadmin/;
 	}
 }

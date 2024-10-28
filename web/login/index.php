@@ -122,8 +122,8 @@ function authenticate_user($user, $password, $twofa = "") {
 		}
 
 		// Handling IPv4-mapped IPv6 address
-		if ((strpos($ip, ':') === 0) && (strpos($ip, '.') > 0)) {
-			$ip = substr($ip, strrpos($ip, ':')+1); // Strip IPv4 Compatibility notation
+		if (strpos($ip, ":") === 0 && strpos($ip, ".") > 0) {
+			$ip = substr($ip, strrpos($ip, ":") + 1); // Strip IPv4 Compatibility notation
 		}
 
 		$v_ip = quoteshellarg($ip);

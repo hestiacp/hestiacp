@@ -115,8 +115,8 @@ function get_real_user_ip() {
 	}
 
 	// Handling IPv4-mapped IPv6 address
-	if ((strpos($ip, ':') === 0) && (strpos($ip, '.') > 0)) {
-		$ip = substr($ip, strrpos($ip, ':')+1); // Strip IPv4 Compatibility notation
+	if (strpos($ip, ":") === 0 && strpos($ip, ".") > 0) {
+		$ip = substr($ip, strrpos($ip, ":") + 1); // Strip IPv4 Compatibility notation
 	}
 	return $ip;
 }

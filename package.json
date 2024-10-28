@@ -25,7 +25,7 @@
 		"chart.js": "^4.4.5",
 		"check-password-strength": "^2.0.10",
 		"floating-vue": "^5.2.2",
-		"nanoid": "^5.0.7",
+		"nanoid": "^5.0.8",
 		"normalize.css": "^8.0.1",
 		"xterm": "^5.3.0",
 		"xterm-addon-canvas": "^0.5.0",

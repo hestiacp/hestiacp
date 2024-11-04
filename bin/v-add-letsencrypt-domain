@@ -237,26 +237,29 @@ for identifier in $(echo $domain,$aliases | tr ',' '\n' | sort -u); do
 done
 payload=$(echo "$payload" | sed "s/,$//")
 payload=$payload']}'
-answer=$(query_le_v2 "$url" "$payload" "$nonce")
-nonce=$(echo "$answer" | grep -i nonce | cut -f2 -d \  | tr -d '\r\n')
-authz=$(echo "$answer" | grep "acme/authz" | cut -f2 -d '"')
-finalize=$(echo "$answer" | grep 'finalize":' | cut -f4 -d '"')
-status=$(echo "$answer" | grep HTTP/ | tail -n1 | cut -f2 -d ' ')
-order=$(echo -e "$answer" | grep -i location | cut -f2 -d \  | tr -d '\r\n')
+validation='pending'
+while [ "$validation" = 'pending' ]; do
+	answer=$(query_le_v2 "$url" "$payload" "$nonce")
+	nonce=$(echo "$answer" | grep -i nonce | cut -f2 -d \  | tr -d '\r\n')
+	authz=$(echo "$answer" | grep "acme/authz" | cut -f2 -d '"')
+	finalize=$(echo "$answer" | grep 'finalize":' | cut -f4 -d '"')
+	status=$(echo "$answer" | grep HTTP/ | tail -n1 | cut -f2 -d ' ')
+	order=$(echo -e "$answer" | grep -i location | cut -f2 -d \  | tr -d '\r\n')
 
-debug_log "Step 2" "- status: ${status}\n- nonce: ${nonce}\n- authz: ${authz}\n- finalize: ${finalize}\n- payload: ${payload}\n- answer: ${answer}\n order: ${order}"
+	debug_log "Step 2" "- status: ${status}\n- nonce: ${nonce}\n- authz: ${authz}\n- finalize: ${finalize}\n- payload: ${payload}\n- answer: ${answer}\n order: ${order}"
 
-if [[ "$status" -ne 201 ]]; then
-	# Delete DNS CAA record
-	if [ -n "$DNS_SYSTEM" ]; then
-		if [ "$dns_domain" = "$domain" ]; then
-			if [ -n "$caa_record" ]; then
-				$BIN/v-delete-dns-record "$user" "$domain" "$caa_record"
+	if [[ "$status" -ne 201 ]]; then
+		# Delete DNS CAA record
+		if [ -n "$DNS_SYSTEM" ]; then
+			if [ "$dns_domain" = "$domain" ]; then
+				if [ -n "$caa_record" ]; then
+					$BIN/v-delete-dns-record "$user" "$domain" "$caa_record"
+				fi
 			fi
 		fi
+		check_result $E_CONNECT "Let's Encrypt new auth status $status ($domain)"
 	fi
-	check_result $E_CONNECT "Let's Encrypt new auth status $status ($domain)"
-fi
+done
 
 # Requesting authorization token / STEP 3
 for auth in $authz; do

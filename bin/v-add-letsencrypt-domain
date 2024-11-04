@@ -378,12 +378,18 @@ for auth in $authz; do
 	# Doing pol check on status
 	i=1
 	while [ "$validation" = 'pending' ]; do
-		payload='{}'
-		answer=$(query_le_v2 "$url" "$payload" "$nonce")
-		validation=$(echo "$answer" | grep -A1 $proto | tail -n1 | cut -f4 -d \")
-		nonce=$(echo "$answer" | grep -i nonce | cut -f2 -d \  | tr -d '\r\n')
-		status=$(echo "$answer" | grep HTTP/ | tail -n1 | cut -f 2 -d ' ')
-		details=$(echo "$answer" | grep detail | cut -f 1 -d ',' | cut -f 2-4 -d ':' | cut -f 2 -d '"')
+		while true; do
+			payload='{}'
+			answer=$(query_le_v2 "$url" "$payload" "$nonce")
+			validation=$(echo "$answer" | grep -A1 $proto | tail -n1 | cut -f4 -d \")
+			nonce=$(echo "$answer" | grep -i nonce | cut -f2 -d \  | tr -d '\r\n')
+			status=$(echo "$answer" | grep HTTP/ | tail -n1 | cut -f 2 -d ' ')
+			details=$(echo "$answer" | grep detail | cut -f 1 -d ',' | cut -f 2-4 -d ':' | cut -f 2 -d '"')
+			if [[ $(echo "$answer" | grep addressesResolved) != "" ]]; then
+				break
+			fi
+			sleep 2
+		done
 
 		debug_log "Step 5" "- status: ${status}\n- url: ${url}\n- nonce: ${nonce}\n- validation: ${validation}\n- details: ${details}\n- answer: ${answer}"
 

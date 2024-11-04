@@ -21,7 +21,7 @@ location /%pma_alias% {
 	}
 
 	# Serve static files like CSS and JS
-	location /%pma_alias%/(.+\.(jpg|jpeg|gif|css|png|webp|js|ico|html|xml|txt))$ {
-		alias /usr/share/phpmyadmin/;
+	location ~ ^/%pma_alias%/(.*\.(jpg|jpeg|gif|css|png|webp|js|ico|html|xml|txt))$ {
+		alias /usr/share/phpmyadmin/$1; # Corrected from root to alias
 	}
 }

@@ -12,6 +12,6 @@
 	},
 	"devDependencies": {
 		"@types/ws": "^8.5.12",
-		"@types/node": "^20.17.1"
+		"@types/node": "^22.8.7"
 	}
 }

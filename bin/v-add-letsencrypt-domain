@@ -245,6 +245,7 @@ while [ "$validation" = 'pending' ]; do
 	finalize=$(echo "$answer" | grep 'finalize":' | cut -f4 -d '"')
 	status=$(echo "$answer" | grep HTTP/ | tail -n1 | cut -f2 -d ' ')
 	order=$(echo -e "$answer" | grep -i location | cut -f2 -d \  | tr -d '\r\n')
+	validation=$(echo "$answer" | grep 'status":' | cut -f4 -d '"')
 
 	debug_log "Step 2" "- status: ${status}\n- nonce: ${nonce}\n- authz: ${authz}\n- finalize: ${finalize}\n- payload: ${payload}\n- answer: ${answer}\n order: ${order}"
 

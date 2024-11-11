@@ -8,6 +8,6 @@
         "filp/whoops": "2.16.0"
     },
     "require": {
-        "symfony/console": "^7.1.6"
+        "symfony/console": "^7.1.7"
     }
 }

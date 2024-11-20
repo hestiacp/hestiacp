@@ -149,7 +149,7 @@ All notable changes to this project will be documented in this file.
 ### Dependencies
 
 - Update phpquoteshellarg to 1.1.0
-- Update Roundcube to 1.6.3
+- Update Roundcube to 1.6.9
 - Update Blackblaze CLI to 3.10.0
 - Update Phppgadmin to 7.4.16
 

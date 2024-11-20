@@ -1,12 +1,12 @@
 Source: hestia-web-terminal
 Package: hestia-web-terminal
 Priority: optional
-Version: 1.0.0
+Version: 1.0.1
 Section: admin
 Maintainer: HestiaCP <info@hestiacp.com>
 Homepage: https://www.hestiacp.com
 Architecture: amd64
-Depends: hestia, nodejs (>= 18.0.0)
+Depends: hestia, nodejs (>= 20.0.0)
 Description: hestia web terminal
  hestia is an open source hosting control panel.
  hestia has a clean and focused interface without the clutter.

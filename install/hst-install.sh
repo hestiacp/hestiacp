@@ -57,20 +57,23 @@ if [ -e "/etc/os-release" ] && [ ! -e "/etc/redhat-release" ]; then
 		VERSION='debian'
 	fi
 elif [ -e "/etc/os-release" ] && [ -e "/etc/redhat-release" ]; then
-	type=$(grep "^ID=" /etc/os-release | cut -f 2 -d '"')
-	if [ "$type" = "rhel" ]; then
-		release=$(cat /etc/redhat-release | cut -f 1 -d '.' | awk '{print $3}')
-		VERSION='rhel'
-	elif [ "$type" = "almalinux" ]; then
-		release=$(cat /etc/redhat-release | cut -f 1 -d '.' | awk '{print $3}')
-		VERSION='almalinux'
-	elif [ "$type" = "eurolinux" ]; then
-		release=$(cat /etc/redhat-release | cut -f 1 -d '.' | awk '{print $3}')
-		VERSION='eurolinux'
-	elif [ "$type" = "rocky" ]; then
-		release=$(cat /etc/redhat-release | cut -f 1 -d '.' | awk '{print $3}')
-		VERSION='rockylinux'
-	fi
+	# type=$(grep "^ID=" /etc/os-release | cut -f 2 -d '"')
+	# if [ "$type" = "rhel" ]; then
+	# 	release=$(cat /etc/redhat-release | cut -f 1 -d '.' | awk '{print $3}')
+	# 	VERSION='rhel'
+	# elif [ "$type" = "almalinux" ]; then
+	# 	release=$(cat /etc/redhat-release | cut -f 1 -d '.' | awk '{print $3}')
+	# 	VERSION='almalinux'
+	# elif [ "$type" = "eurolinux" ]; then
+	# 	release=$(cat /etc/redhat-release | cut -f 1 -d '.' | awk '{print $3}')
+	# 	VERSION='eurolinux'
+	# elif [ "$type" = "rocky" ]; then
+	# 	release=$(cat /etc/redhat-release | cut -f 1 -d '.' | awk '{print $3}')
+	# 	VERSION='rockylinux'
+	# fi
+
+	# >> nosupport for rhel base, because hst-install-rhel already removed
+	type="NoSupport"
 else
 	type="NoSupport"
 fi

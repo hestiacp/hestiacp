@@ -55,25 +55,24 @@ if [ -e "/etc/os-release" ] && [ ! -e "/etc/redhat-release" ]; then
 	elif [ "$type" = "debian" ]; then
 		release=$(cat /etc/debian_version | grep -o "[0-9]\{1,2\}" | head -n1)
 		VERSION='debian'
-	fi
-elif [ -e "/etc/os-release" ] && [ -e "/etc/redhat-release" ]; then
-	# type=$(grep "^ID=" /etc/os-release | cut -f 2 -d '"')
-	# if [ "$type" = "rhel" ]; then
-	# 	release=$(cat /etc/redhat-release | cut -f 1 -d '.' | awk '{print $3}')
-	# 	VERSION='rhel'
-	# elif [ "$type" = "almalinux" ]; then
-	# 	release=$(cat /etc/redhat-release | cut -f 1 -d '.' | awk '{print $3}')
-	# 	VERSION='almalinux'
-	# elif [ "$type" = "eurolinux" ]; then
-	# 	release=$(cat /etc/redhat-release | cut -f 1 -d '.' | awk '{print $3}')
-	# 	VERSION='eurolinux'
-	# elif [ "$type" = "rocky" ]; then
-	# 	release=$(cat /etc/redhat-release | cut -f 1 -d '.' | awk '{print $3}')
-	# 	VERSION='rockylinux'
-	# fi
-
-	# >> nosupport for rhel base, because hst-install-rhel already removed
-	type="NoSupport"
+	else
+ 		type="NoSupport"
+   	fi
+# elif [ -e "/etc/os-release" ] && [ -e "/etc/redhat-release" ]; then
+# 	type=$(grep "^ID=" /etc/os-release | cut -f 2 -d '"')
+# 	if [ "$type" = "rhel" ]; then
+# 		release=$(cat /etc/redhat-release | cut -f 1 -d '.' | awk '{print $3}')
+# 		VERSION='rhel'
+# 	elif [ "$type" = "almalinux" ]; then
+# 		release=$(cat /etc/redhat-release | cut -f 1 -d '.' | awk '{print $3}')
+# 		VERSION='almalinux'
+# 	elif [ "$type" = "eurolinux" ]; then
+# 		release=$(cat /etc/redhat-release | cut -f 1 -d '.' | awk '{print $3}')
+# 		VERSION='eurolinux'
+# 	elif [ "$type" = "rocky" ]; then
+# 		release=$(cat /etc/redhat-release | cut -f 1 -d '.' | awk '{print $3}')
+# 		VERSION='rockylinux'
+# 	fi
 else
 	type="NoSupport"
 fi
@@ -98,16 +97,16 @@ fi
 check_wget_curl() {
 	# Check wget
 	if [ -e '/usr/bin/wget' ]; then
-		if [ -e '/etc/redhat-release' ]; then
-			wget -q https://raw.githubusercontent.com/hestiacp/hestiacp/release/install/hst-install-rhel.sh -O hst-install-rhel.sh
-			if [ "$?" -eq '0' ]; then
-				bash hst-install-rhel.sh $*
-				exit
-			else
-				echo "Error: hst-install-rhel.sh download failed."
-				exit 1
-			fi
-		else
+		# if [ -e '/etc/redhat-release' ]; then
+		# 	wget -q https://raw.githubusercontent.com/hestiacp/hestiacp/release/install/hst-install-rhel.sh -O hst-install-rhel.sh
+		# 	if [ "$?" -eq '0' ]; then
+		# 		bash hst-install-rhel.sh $*
+		# 		exit
+		# 	else
+		# 		echo "Error: hst-install-rhel.sh download failed."
+		# 		exit 1
+		# 	fi
+		# else
 			wget -q https://raw.githubusercontent.com/hestiacp/hestiacp/release/install/hst-install-$type.sh -O hst-install-$type.sh
 			if [ "$?" -eq '0' ]; then
 				bash hst-install-$type.sh $*
@@ -116,21 +115,21 @@ check_wget_curl() {
 				echo "Error: hst-install-$type.sh download failed."
 				exit 1
 			fi
-		fi
+		# fi
 	fi
 
 	# Check curl
 	if [ -e '/usr/bin/curl' ]; then
-		if [ -e '/etc/redhat-release' ]; then
-			curl -s -O https://raw.githubusercontent.com/hestiacp/hestiacp/release/install/hst-install-rhel.sh
-			if [ "$?" -eq '0' ]; then
-				bash hst-install-rhel.sh $*
-				exit
-			else
-				echo "Error: hst-install-rhel.sh download failed."
-				exit 1
-			fi
-		else
+		# if [ -e '/etc/redhat-release' ]; then
+		# 	curl -s -O https://raw.githubusercontent.com/hestiacp/hestiacp/release/install/hst-install-rhel.sh
+		# 	if [ "$?" -eq '0' ]; then
+		# 		bash hst-install-rhel.sh $*
+		# 		exit
+		# 	else
+		# 		echo "Error: hst-install-rhel.sh download failed."
+		# 		exit 1
+		# 	fi
+		# else
 			curl -s -O https://raw.githubusercontent.com/hestiacp/hestiacp/release/install/hst-install-$type.sh
 			if [ "$?" -eq '0' ]; then
 				bash hst-install-$type.sh $*
@@ -139,7 +138,7 @@ check_wget_curl() {
 				echo "Error: hst-install-$type.sh download failed."
 				exit 1
 			fi
-		fi
+		# fi
 	fi
 }
 
@@ -147,8 +146,8 @@ check_wget_curl() {
 # of OS-specific installer, and throw error message if unsupported OS detected.
 if [[ "$release" =~ ^(10|11|12|20.04|22.04|24.04)$ ]]; then
 	check_wget_curl $*
-elif [[ -e "/etc/redhat-release" ]] && [[ "$release" =~ ^(8|9)$ ]]; then
-	check_wget_curl $*
+# elif [[ -e "/etc/redhat-release" ]] && [[ "$release" =~ ^(8|9)$ ]]; then
+# 	check_wget_curl $*
 else
 	no_support_message
 fi

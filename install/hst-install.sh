@@ -56,8 +56,8 @@ if [ -e "/etc/os-release" ] && [ ! -e "/etc/redhat-release" ]; then
 		release=$(cat /etc/debian_version | grep -o "[0-9]\{1,2\}" | head -n1)
 		VERSION='debian'
 	else
- 		type="NoSupport"
-   	fi
+		type="NoSupport"
+	fi
 # elif [ -e "/etc/os-release" ] && [ -e "/etc/redhat-release" ]; then
 # 	type=$(grep "^ID=" /etc/os-release | cut -f 2 -d '"')
 # 	if [ "$type" = "rhel" ]; then
@@ -107,14 +107,14 @@ check_wget_curl() {
 		# 		exit 1
 		# 	fi
 		# else
-			wget -q https://raw.githubusercontent.com/hestiacp/hestiacp/release/install/hst-install-$type.sh -O hst-install-$type.sh
-			if [ "$?" -eq '0' ]; then
-				bash hst-install-$type.sh $*
-				exit
-			else
-				echo "Error: hst-install-$type.sh download failed."
-				exit 1
-			fi
+		wget -q https://raw.githubusercontent.com/hestiacp/hestiacp/release/install/hst-install-$type.sh -O hst-install-$type.sh
+		if [ "$?" -eq '0' ]; then
+			bash hst-install-$type.sh $*
+			exit
+		else
+			echo "Error: hst-install-$type.sh download failed."
+			exit 1
+		fi
 		# fi
 	fi
 
@@ -130,14 +130,14 @@ check_wget_curl() {
 		# 		exit 1
 		# 	fi
 		# else
-			curl -s -O https://raw.githubusercontent.com/hestiacp/hestiacp/release/install/hst-install-$type.sh
-			if [ "$?" -eq '0' ]; then
-				bash hst-install-$type.sh $*
-				exit
-			else
-				echo "Error: hst-install-$type.sh download failed."
-				exit 1
-			fi
+		curl -s -O https://raw.githubusercontent.com/hestiacp/hestiacp/release/install/hst-install-$type.sh
+		if [ "$?" -eq '0' ]; then
+			bash hst-install-$type.sh $*
+			exit
+		else
+			echo "Error: hst-install-$type.sh download failed."
+			exit 1
+		fi
 		# fi
 	fi
 }

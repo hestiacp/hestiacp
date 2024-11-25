@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ### Notes
 
 - To improve security we have deciced to allow users to rename the default admin user. And use a new user "hestia-web" to become the default user to run Hestia on.
+- Dropped support Debian 10 due to EOL
 
 ### Features
 

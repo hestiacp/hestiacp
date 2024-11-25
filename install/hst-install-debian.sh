@@ -6,7 +6,7 @@
 # https://www.hestiacp.com/
 #
 # Currently Supported Versions:
-# Debian 10, 11 12
+# Debian 11 12
 #
 # ======================================================== #
 
@@ -1353,7 +1353,7 @@ if [ "$exim" = 'yes' ]; then
 		write_config_value "ANTIVIRUS_SYSTEM" "clamav-daemon"
 	fi
 	if [ "$spamd" = 'yes' ]; then
-		if [ "$release" = '10' ] || [ "$release" = '11' ]; then
+		if [ "$release" = '11' ]; then
 			write_config_value "ANTISPAM_SYSTEM" "spamassassin"
 		else
 			write_config_value "ANTISPAM_SYSTEM" "spamd"
@@ -1476,7 +1476,7 @@ $HESTIA/bin/v-change-sys-hostname $servername > /dev/null 2>&1
 # Configuring global OpenSSL options
 echo "[ * ] Configuring OpenSSL to improve TLS performance..."
 tls13_ciphers="TLS_AES_128_GCM_SHA256:TLS_CHACHA20_POLY1305_SHA256:TLS_AES_256_GCM_SHA384"
-if [ "$release" = "10" ] || [ "$release" = "11" ]; then
+if [ "$release" = "11" ]; then
 	sed -i '/^system_default = system_default_sect$/a system_default = hestia_openssl_sect\n\n[hestia_openssl_sect]\nCiphersuites = '"$tls13_ciphers"'\nOptions = PrioritizeChaCha' /etc/ssl/openssl.cnf
 elif [ "$release" = "12" ]; then
 	if ! grep -qw "^ssl_conf = ssl_sect$" /etc/ssl/openssl.cnf 2> /dev/null; then
@@ -1726,11 +1726,6 @@ if [ "$proftpd" = 'yes' ]; then
 	echo "127.0.0.1 $servername" >> /etc/hosts
 	cp -f $HESTIA_INSTALL_DIR/proftpd/proftpd.conf /etc/proftpd/
 	cp -f $HESTIA_INSTALL_DIR/proftpd/tls.conf /etc/proftpd/
-
-	# Disable TLS 1.3 support for ProFTPD versions older than v1.3.7a
-	if [ "$release" -eq 10 ]; then
-		sed -i 's/TLSProtocol                             TLSv1.2 TLSv1.3/TLSProtocol                             TLSv1.2/' /etc/proftpd/tls.conf
-	fi
 
 	update-rc.d proftpd defaults > /dev/null 2>&1
 	systemctl start proftpd >> $LOG
@@ -1983,10 +1978,6 @@ if [ "$exim" = 'yes' ]; then
 		sed -i "s/#CLAMD/CLAMD/g" /etc/exim4/exim4.conf.template
 	fi
 
-	if [ "$release" = 10 ]; then
-		sed -i "/^smtputf8_advertise_hosts =/d" /etc/exim4/exim4.conf.template
-	fi
-
 	# Generate SRS KEY If not support just created it will get ignored anyway
 	srs=$(gen_pass)
 	echo $srs > /etc/exim4/srs.conf
@@ -2079,7 +2070,7 @@ fi
 if [ "$spamd" = 'yes' ]; then
 	echo "[ * ] Configuring SpamAssassin..."
 	update-rc.d spamassassin defaults > /dev/null 2>&1
-	if [ "$release" = "10" ] || [ "$release" = "11" ]; then
+	if [ "$release" = "11" ]; then
 		update-rc.d spamassassin enable > /dev/null 2>&1
 		systemctl start spamassassin >> $LOG
 		check_result $? "spamassassin start failed"

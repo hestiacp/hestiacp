@@ -20,7 +20,7 @@
 	},
 	"dependencies": {
 		"@alpinejs/collapse": "^3.14.3",
-		"@fortawesome/fontawesome-free": "^6.6.0",
+		"@fortawesome/fontawesome-free": "^6.7.1",
 		"alpinejs": "^3.14.3",
 		"chart.js": "^4.4.6",
 		"check-password-strength": "^2.0.10",
@@ -41,7 +41,7 @@
 		"eslint-config-prettier": "^9.1.0",
 		"eslint-plugin-editorconfig": "^4.0.3",
 		"eslint-plugin-import": "^2.31.0",
-		"husky": "^9.1.6",
+		"husky": "^9.1.7",
 		"jsdom": "^25.0.1",
 		"lightningcss": "^1.28.1",
 		"lint-staged": "^15.2.10",

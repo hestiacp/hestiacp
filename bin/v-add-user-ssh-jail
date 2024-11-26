@@ -66,7 +66,7 @@ if [ ! -d "$chroot" ]; then
 
 	# Installing shell files into the user chroot directory
 	# - IMPORTANT - MODIFY THE FOLLOWING LINES AND THE FILE jk_init.ini ACCORDING TO YOUR SYSTEM AND YOUR PREFERENCES
-	/sbin/jk_init -f -j "$chroot" extendedshell netutils ssh sftp scp git php php5_6 php7_0 php7_1 php7_2 php7_3 php7_4 php8_0 php8_1 php8_2 php8_3 > /dev/null 2>&1
+	/sbin/jk_init -f -j "$chroot" extendedshell netutils ssh sftp scp git php php5_6 php7_0 php7_1 php7_2 php7_3 php7_4 php8_0 php8_1 php8_2 php8_3 php8_4 > /dev/null 2>&1
 	/sbin/jk_cp -f -j "$chroot" /bin/id > /dev/null 2>&1
 
 	# Jailing user to make sure passwd and groups are set correctly within the jail.

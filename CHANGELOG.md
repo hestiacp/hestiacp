@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file.
 
 ### Features
 
+- Added support for PHP 8.4
 - Add support for Ubuntu 24.04 Noble release (#4411 #4451)
 - Add support for Jailed SSH (#4052 #4245) @rjd222
 - Implement CLI for Quick Install Apps (#4443)

@@ -33,7 +33,7 @@ VERBOSE='no'
 # Define software versions
 HESTIA_INSTALL_VER='1.9.0~alpha'
 # Supported PHP versions
-multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0" "8.1" "8.2" "8.3")
+multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0" "8.1" "8.2" "8.3" "8.4")
 # One of the following PHP versions is required for Roundcube / phpmyadmin
 multiphp_required=("7.3" "7.4" "8.0" "8.1" "8.2" "8.3")
 # Default PHP version if none supplied
@@ -1082,8 +1082,13 @@ fi
 #----------------------------------------------------------#
 
 # Enable en_US.UTF-8
-sed -i "s/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/g" /etc/locale.gen
-locale-gen > /dev/null 2>&1
+if [ -f /etc/locale.gen ]; then
+	sed -i "s/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/g" /etc/locale.gen
+	locale-gen > /dev/null 2>&1
+elif [ -f /usr/bin/localectl ]; then
+	apt-get -y install locales-all >> $LOG
+	localectl set-locale LANG=en_US.UTF-8 > /dev/null 2>&1
+fi
 
 # Disabling daemon autostart on apt-get install
 echo -e '#!/bin/sh\nexit 101' > /usr/sbin/policy-rc.d
@@ -1163,8 +1168,15 @@ random_password=$(gen_pass '32')
 # do not allow login into hestiaweb user
 echo hestiaweb:$random_password | sudo chpasswd -e
 
+# Add a general group for normal users created by Hestia
+if [ -z "$(grep ^hestia-users: /etc/group)" ]; then
+	groupadd --system "hestia-users"
+fi
+
 # Create user for php-fpm configs
 /usr/sbin/useradd "hestiamail" -c "$email" --no-create-home
+# Ensures proper permissions for Hestia service interactions.
+/usr/sbin/adduser hestiamail hestia-users
 
 # Enable SFTP subsystem for SSH
 sftp_subsys_enabled=$(grep -iE "^#?.*subsystem.+(sftp )?sftp-server" /etc/ssh/sshd_config)
@@ -1874,16 +1886,16 @@ if [ "$mysql" = 'yes' ] || [ "$mysql8" = 'yes' ]; then
 
 	# Create copy of config file
 	cp -f $HESTIA_INSTALL_DIR/phpmyadmin/config.inc.php /etc/phpmyadmin/
-	#mkdir -p /var/lib/phpmyadmin/tmp
-	#chmod 770 /var/lib/phpmyadmin/tmp
-	chown root:www-data /usr/share/phpmyadmin/tmp
+	mkdir -p /var/lib/phpmyadmin/tmp
+	chmod 770 /var/lib/phpmyadmin/tmp
+	chown -R root:www-data /usr/share/phpmyadmin/tmp/
 
 	# Set config and log directory
 	sed -i "s|'configFile' => ROOT_PATH . 'config.inc.php',|'configFile' => '/etc/phpmyadmin/config.inc.php',|g" /usr/share/phpmyadmin/libraries/vendor_config.php
 
 	# Create temporary folder and change permission
 	chmod 770 /usr/share/phpmyadmin/tmp
-	chown root:www-data /usr/share/phpmyadmin/tmp
+	chown -R root:www-data /usr/share/phpmyadmin/tmp/
 
 	# Generate blow fish
 	blowfish=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 32)
@@ -1903,7 +1915,7 @@ if [ "$mysql" = 'yes' ] || [ "$mysql8" = 'yes' ]; then
 
 	# Limit access to /etc/phpmyadmin/
 	chown -R root:www-data /etc/phpmyadmin/
-	chmod -R 640 /etc/phpmyadmin/*
+	chmod 640 /etc/phpmyadmin/config.inc.php
 	chmod 750 /etc/phpmyadmin/conf.d/
 fi
 

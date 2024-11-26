@@ -95,5 +95,12 @@ if [ -s /etc/exim4/exim4.conf.template ] && ! grep -Fq "smtp_accept_max" /etc/ex
 	sed -i '/disable_ipv6 = true/a\smtp_accept_max = 100\nsmtp_accept_max_per_host = 20' /etc/exim4/exim4.conf.template
 fi
 
+# Update phymyadmin.inc for nginx
+if [ -s /etc/nginx/conf.d/phpmyadmin.inc ]; then
+	cp -f $HESTIA_INSTALL_DIR/install/deb/nginx/phpmyadmin.inc /etc/nginx/conf.d/phpmyadmin.inc
+fi
+
 $BIN/v-add-user-notification 'admin' 'Hestia security has been upgraded' ' A new user "hestiaweb" has been created and is used for login. Make sure other Hestia packages are updated as well otherwise the system may not work as expected.'
 add_upgrade_message 'Security has been upgraded, A new user "hestiaweb" has been created and is used for login. Make sure other Hestia packages are updated as well otherwise the system may not work as expected.'
+# Ensures proper permissions for Hestia service interactions.
+/usr/sbin/adduser hestiamail hestia-users

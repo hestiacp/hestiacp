@@ -6,7 +6,7 @@
 # https://www.hestiacp.com/
 #
 # Currently Supported Versions:
-# Debian 10, 11 12
+# Debian 11 12
 #
 # ======================================================== #
 
@@ -33,7 +33,7 @@ VERBOSE='no'
 # Define software versions
 HESTIA_INSTALL_VER='1.9.0~alpha'
 # Supported PHP versions
-multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0" "8.1" "8.2" "8.3")
+multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0" "8.1" "8.2" "8.3" "8.4")
 # One of the following PHP versions is required for Roundcube / phpmyadmin
 multiphp_required=("7.3" "7.4" "8.0" "8.1" "8.2" "8.3")
 # Default PHP version if none supplied
@@ -1171,8 +1171,15 @@ random_password=$(gen_pass '32')
 # do not allow login into hestiaweb user
 echo hestiaweb:$random_password | sudo chpasswd -e
 
+# Add a general group for normal users created by Hestia
+if [ -z "$(grep ^hestia-users: /etc/group)" ]; then
+	groupadd --system "hestia-users"
+fi
+
 # Create user for php-fpm configs
 /usr/sbin/useradd "hestiamail" -c "$email" --no-create-home
+# Ensures proper permissions for Hestia service interactions.
+/usr/sbin/adduser hestiamail hestia-users
 
 # Enable SFTP subsystem for SSH
 sftp_subsys_enabled=$(grep -iE "^#?.*subsystem.+(sftp )?sftp-server" /etc/ssh/sshd_config)
@@ -1346,7 +1353,7 @@ if [ "$exim" = 'yes' ]; then
 		write_config_value "ANTIVIRUS_SYSTEM" "clamav-daemon"
 	fi
 	if [ "$spamd" = 'yes' ]; then
-		if [ "$release" = '10' ] || [ "$release" = '11' ]; then
+		if [ "$release" = '11' ]; then
 			write_config_value "ANTISPAM_SYSTEM" "spamassassin"
 		else
 			write_config_value "ANTISPAM_SYSTEM" "spamd"
@@ -1469,7 +1476,7 @@ $HESTIA/bin/v-change-sys-hostname $servername > /dev/null 2>&1
 # Configuring global OpenSSL options
 echo "[ * ] Configuring OpenSSL to improve TLS performance..."
 tls13_ciphers="TLS_AES_128_GCM_SHA256:TLS_CHACHA20_POLY1305_SHA256:TLS_AES_256_GCM_SHA384"
-if [ "$release" = "10" ] || [ "$release" = "11" ]; then
+if [ "$release" = "11" ]; then
 	sed -i '/^system_default = system_default_sect$/a system_default = hestia_openssl_sect\n\n[hestia_openssl_sect]\nCiphersuites = '"$tls13_ciphers"'\nOptions = PrioritizeChaCha' /etc/ssl/openssl.cnf
 elif [ "$release" = "12" ]; then
 	if ! grep -qw "^ssl_conf = ssl_sect$" /etc/ssl/openssl.cnf 2> /dev/null; then
@@ -1720,11 +1727,6 @@ if [ "$proftpd" = 'yes' ]; then
 	cp -f $HESTIA_INSTALL_DIR/proftpd/proftpd.conf /etc/proftpd/
 	cp -f $HESTIA_INSTALL_DIR/proftpd/tls.conf /etc/proftpd/
 
-	# Disable TLS 1.3 support for ProFTPD versions older than v1.3.7a
-	if [ "$release" -eq 10 ]; then
-		sed -i 's/TLSProtocol                             TLSv1.2 TLSv1.3/TLSProtocol                             TLSv1.2/' /etc/proftpd/tls.conf
-	fi
-
 	update-rc.d proftpd defaults > /dev/null 2>&1
 	systemctl start proftpd >> $LOG
 	check_result $? "proftpd start failed"
@@ -1850,16 +1852,16 @@ if [ "$mysql" = 'yes' ] || [ "$mysql8" = 'yes' ]; then
 
 	# Create copy of config file
 	cp -f $HESTIA_INSTALL_DIR/phpmyadmin/config.inc.php /etc/phpmyadmin/
-	#mkdir -p /var/lib/phpmyadmin/tmp
-	#chmod 770 /var/lib/phpmyadmin/tmp
-	chown root:www-data /usr/share/phpmyadmin/tmp
+	mkdir -p /var/lib/phpmyadmin/tmp
+	chmod 770 /var/lib/phpmyadmin/tmp
+	chown -R root:www-data /usr/share/phpmyadmin/tmp/
 
 	# Set config and log directory
 	sed -i "s|'configFile' => ROOT_PATH . 'config.inc.php',|'configFile' => '/etc/phpmyadmin/config.inc.php',|g" /usr/share/phpmyadmin/libraries/vendor_config.php
 
 	# Create temporary folder and change permission
 	chmod 770 /usr/share/phpmyadmin/tmp
-	chown root:www-data /usr/share/phpmyadmin/tmp
+	chown -R root:www-data /usr/share/phpmyadmin/tmp/
 
 	# Generate blow fish
 	blowfish=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 32)
@@ -1879,7 +1881,7 @@ if [ "$mysql" = 'yes' ] || [ "$mysql8" = 'yes' ]; then
 
 	# Limit access to /etc/phpmyadmin/
 	chown -R root:www-data /etc/phpmyadmin/
-	chmod -R 640 /etc/phpmyadmin/*
+	chmod 640 /etc/phpmyadmin/config.inc.php
 	chmod 750 /etc/phpmyadmin/conf.d/
 fi
 
@@ -1976,10 +1978,6 @@ if [ "$exim" = 'yes' ]; then
 		sed -i "s/#CLAMD/CLAMD/g" /etc/exim4/exim4.conf.template
 	fi
 
-	if [ "$release" = 10 ]; then
-		sed -i "/^smtputf8_advertise_hosts =/d" /etc/exim4/exim4.conf.template
-	fi
-
 	# Generate SRS KEY If not support just created it will get ignored anyway
 	srs=$(gen_pass)
 	echo $srs > /etc/exim4/srs.conf
@@ -2072,7 +2070,7 @@ fi
 if [ "$spamd" = 'yes' ]; then
 	echo "[ * ] Configuring SpamAssassin..."
 	update-rc.d spamassassin defaults > /dev/null 2>&1
-	if [ "$release" = "10" ] || [ "$release" = "11" ]; then
+	if [ "$release" = "11" ]; then
 		update-rc.d spamassassin enable > /dev/null 2>&1
 		systemctl start spamassassin >> $LOG
 		check_result $? "spamassassin start failed"

@@ -7,19 +7,22 @@ All notable changes to this project will be documented in this file.
 ### Notes
 
 - To improve security we have deciced to allow users to rename the default admin user. And use a new user "hestia-web" to become the default user to run Hestia on.
+- Dropped support Debian 10 due to EOL
 
 ### Features
 
+- Added support for PHP 8.4
 - Add support for Ubuntu 24.04 Noble release (#4411 #4451)
 - Add support for Jailed SSH (#4052 #4245) @rjd222
 - Implement CLI for Quick Install Apps (#4443)
 - Add support for Directadmin / Cpanel imports ( #4177 #4415 #4426 #4252 #4241)
 - Add support for Increamental Backups via Restic
 - Add support for Triggers in v-add-mail-domain / v-add-delete-mail-domain #4416 (See Docs)
-- Add Joomla Quick Install App (#4433)
+- Add new Quick Install Apps (#4433, #4509, #4327)
 - Add support for Limit CPU and RAM for Each User Using cgroup (#4372 #4325)
 - Add Web terminal (#3859)
 - Improve email account sidebar layout (#4154)
+- Allow Chmod in Filegator #4548
 
 ### Bug fixes
 
@@ -56,12 +59,28 @@ All notable changes to this project will be documented in this file.
 - Corrected path to ssl certs (#4202)
 - Add value to input type text (#4193)
 - Correctly get the session cookie for web terminal (#3969)
+- Fix Bug with 403 errors Letsencrypt (#4622)
+- Update phpmyadmin.inc to improve loading static files
+- Fix issues with mapping ipv4 to ipv6 setups when server is behind proxies with login (#4606)
+- Fix issue with v-change-sys-ip-nat with VSFTPD and systems behind NAT (#4591)
+- Fix issues with IDN domains and Apache2 and PHP (#4583)
+- Improve Owncloud templates (#4572)
+- Improve security Quick Install Apps (#457 #4569 #4568 #4567 #4566 #4565 #4564 #4563)
+- Add hestia-mail to hestia-users group and create hestia-users group on new install #4540 #4531
 
 ### Depencies
 
 - Update hestia-nginx to 1.27.0
 - Update hestia-php to 8.3.9
 - Update Roundcube, Filegator, Snappy mail to the latest version
+- Update Quick Installer apps to latest version (#4594)
+
+## [1.8.12] - Service release
+
+### Security
+
+- Restrict hestiamail file permissions (todo should probably have a link here)
+- Fix roundcube permissions ( GH-4387 )
 
 ## [1.8.11] - Service release
 
@@ -138,7 +157,8 @@ All notable changes to this project will be documented in this file.
 
 ### Dependencies
 
-- Update Roundcube to 1.6.3
+- Update phpquoteshellarg to 1.1.0
+- Update Roundcube to 1.6.9
 - Update Blackblaze CLI to 3.10.0
 - Update Phppgadmin to 7.4.16
 

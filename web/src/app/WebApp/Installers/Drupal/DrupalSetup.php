@@ -3,6 +3,7 @@
 namespace Hestia\WebApp\Installers\Drupal;
 
 use Hestia\WebApp\Installers\BaseSetup as BaseSetup;
+use function Hestiacp\quoteshellarg\quoteshellarg;
 
 class DrupalSetup extends BaseSetup {
 	protected $appname = "drupal";
@@ -61,26 +62,28 @@ class DrupalSetup extends BaseSetup {
 			"v-run-cli-cmd",
 			[
 				"/usr/bin/php" . $options["php_version"],
-				$this->getDocRoot("/vendor/drush/drush/drush"),
+				quoteshellarg($this->getDocRoot("/vendor/drush/drush/drush")),
 				"site-install",
 				"standard",
-				"--db-url=mysql://" .
-				$this->appcontext->user() .
-				"_" .
-				$options["database_user"] .
-				":" .
-				$options["database_password"] .
-				"@localhost:3306/" .
-				$this->appcontext->user() .
-				"_" .
-				$options["database_name"] .
-				"",
-				"--account-name=" .
-				$options["username"] .
-				" --account-pass=" .
-				$options["password"],
+				"--db-url=" .
+				quoteshellarg(
+					"mysql://" .
+						$this->appcontext->user() .
+						"_" .
+						$options["database_user"] .
+						":" .
+						$options["database_password"] .
+						"@" .
+						$options["database_host"] .
+						":3306/" .
+						$this->appcontext->user() .
+						"_" .
+						$options["database_name"],
+				),
+				"--account-name=" . quoteshellarg($options["username"]),
+				"--account-pass=" . quoteshellarg($options["password"]),
 				"--site-name=Drupal",
-				"--site-mail=" . $options["email"],
+				"--site-mail=" . quoteshellarg($options["email"]),
 			],
 			$status,
 		);

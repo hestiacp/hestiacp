@@ -66,7 +66,7 @@ describe('InstallBuilder', () => {
 		const textInput = screen.getByLabelText(options[1].description);
 		await fireEvent.update(textInput, 'custom-value');
 
-		expect(screen.getByDisplayValue(/bash hst-install.sh --option2 custom-value/)).toBeTruthy();
+		expect(screen.getByDisplayValue(/bash hst-install.sh --option2 'custom-value'/)).toBeTruthy();
 	});
 
 	it('updates the installation command when option select input changes', async () => {

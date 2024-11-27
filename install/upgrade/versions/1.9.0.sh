@@ -97,7 +97,7 @@ fi
 
 # Update phymyadmin.inc for nginx
 if [ -s /etc/nginx/conf.d/phpmyadmin.inc ]; then
-	cp -f $HESTIA_INSTALL_DIR/install/deb/nginx/phpmyadmin.inc /etc/nginx/conf.d/phpmyadmin.inc
+	cp -f $HESTIA_INSTALL_DIR/nginx/phpmyadmin.inc /etc/nginx/conf.d/phpmyadmin.inc
 fi
 
 $BIN/v-add-user-notification 'admin' 'Hestia security has been upgraded' ' A new user "hestiaweb" has been created and is used for login. Make sure other Hestia packages are updated as well otherwise the system may not work as expected.'

@@ -129,6 +129,9 @@ switch ($lang) {
 	case "et":
 		$dist_config["frontend_config"]["language"] = "estonian";
 		break;
+	case "uk":
+		$dist_config["frontend_config"]["language"] = "ukrainian";
+		break;
 	default:
 		$dist_config["frontend_config"]["language"] = "english";
 		break;

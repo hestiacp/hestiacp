@@ -76,8 +76,8 @@ if [[ ${version:0:1} == "8" ]]; then
 fi
 
 # Check if version is 8.4 and drop imagick
-if [[ $(echo "$version 8.4" | awk '{print ($1 < $2)}') == 1 ]]; then
-	mph=$(echo "$mph" | sed -e "/php$version-imagick//")
+if [[ ${version} == "8.4" ]]; then
+	mph=$(echo "$mph" | sed -e "s/php$version-imagick//")
 fi
 
 if ! echo "$DB_SYSTEM" | grep -w 'mysql' > /dev/null; then

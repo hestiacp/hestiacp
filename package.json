@@ -19,13 +19,13 @@
 		"prepare": "husky"
 	},
 	"dependencies": {
-		"@alpinejs/collapse": "^3.14.3",
+		"@alpinejs/collapse": "^3.14.5",
 		"@fortawesome/fontawesome-free": "^6.7.1",
-		"alpinejs": "^3.14.3",
-		"chart.js": "^4.4.6",
+		"alpinejs": "^3.14.5",
+		"chart.js": "^4.4.7",
 		"check-password-strength": "^2.0.10",
 		"floating-vue": "^5.2.2",
-		"nanoid": "^5.0.8",
+		"nanoid": "^5.0.9",
 		"normalize.css": "^8.0.1",
 		"xterm": "^5.3.0",
 		"xterm-addon-canvas": "^0.5.0",
@@ -34,7 +34,7 @@
 	"devDependencies": {
 		"@prettier/plugin-php": "^0.22.2",
 		"@testing-library/vue": "^8.1.0",
-		"@vitejs/plugin-vue": "^5.2.0",
+		"@vitejs/plugin-vue": "^5.2.1",
 		"browserslist": "^4.24.2",
 		"esbuild": "^0.24.0",
 		"eslint": "^8.57.1",
@@ -43,7 +43,7 @@
 		"eslint-plugin-import": "^2.31.0",
 		"husky": "^9.1.7",
 		"jsdom": "^25.0.1",
-		"lightningcss": "^1.28.1",
+		"lightningcss": "^1.28.2",
 		"lint-staged": "^15.2.10",
 		"markdownlint-cli2": "^0.15.0",
 		"prettier": "^3.4.1",
@@ -53,7 +53,7 @@
 		"stylelint": "^16.11.0",
 		"stylelint-config-standard": "^36.0.1",
 		"vitepress": "^1.5.0",
-		"vitest": "^2.1.5",
+		"vitest": "^2.1.6",
 		"vue": "^3.5.13"
 	},
 	"browserslist": [

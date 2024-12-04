@@ -86,7 +86,7 @@ class ThirtyBeesSetup extends BaseSetup {
             $status,
         );
 
-    // Eliminar el directorio de instalación
+    // Delete install directory
     $installDir = $this->getDocRoot() . "/install";
     if (is_dir($installDir)) {
         $this->appcontext->runUser("v-delete-fs-directory", [$installDir]);

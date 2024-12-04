@@ -17,6 +17,9 @@
 	<a href="https://github.com/hestiacp/hestiacp/actions/workflows/lint.yml">
 		<img src="https://github.com/hestiacp/hestiacp/actions/workflows/lint.yml/badge.svg" alt="Lint Status"/>
 	</a>
+	<a href="https://gurubase.io/g/hestia">
+		<img src="https://img.shields.io/badge/Gurubase-Ask%20Hestia%20Guru-006BFF" alt="Gurubase"/>
+	</a>
 </p>
 
 ## **Welcome!**

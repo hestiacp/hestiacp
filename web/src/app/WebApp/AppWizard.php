@@ -68,6 +68,8 @@ class AppWizard {
 		unset($output);
 		unset($db_hosts_tmp1);
 		unset($db_hosts_tmp2);
+
+		return $db_hosts;
 	}
 
 	public function getOptions() {

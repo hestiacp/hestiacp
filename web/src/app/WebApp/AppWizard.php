@@ -58,6 +58,18 @@ class AppWizard {
 		return $this->formNamespace;
 	}
 
+	private function getDatabaseHosts() {
+		exec(HESTIA_CMD . "v-list-database-hosts json", $output, $return_var);
+		$db_hosts_tmp1 = json_decode(implode("", $output), true, flags: JSON_THROW_ON_ERROR);
+		$db_hosts_tmp2 = array_map(function ($host) {
+			return $host["HOST"];
+		}, $db_hosts_tmp1);
+		$db_hosts = array_values(array_unique($db_hosts_tmp2));
+		unset($output);
+		unset($db_hosts_tmp1);
+		unset($db_hosts_tmp2);
+	}
+
 	public function getOptions() {
 		$options = $this->appsetup->getOptions();
 
@@ -73,17 +85,7 @@ class AppWizard {
 		]);
 
 		if ($this->appsetup->withDatabase()) {
-			exec(HESTIA_CMD . "v-list-database-hosts json", $output, $return_var);
-			$db_hosts_tmp1 = json_decode(implode("", $output), true, flags: JSON_THROW_ON_ERROR);
-			$db_hosts_tmp2 = array_map(function ($host) {
-				return $host["HOST"];
-			}, $db_hosts_tmp1);
-			$db_hosts = array_values(array_unique($db_hosts_tmp2));
-			unset($output);
-			unset($db_hosts_tmp1);
-			unset($db_hosts_tmp2);
-
-			$this->database_config["database_host"]["options"] = $db_hosts;
+			$this->database_config["database_host"]["options"] = $this->getDatabaseHosts();
 
 			$options = array_merge($options, $this->database_config);
 		}
@@ -120,6 +122,12 @@ class AppWizard {
 
 			if (empty($options["database_password"])) {
 				$options["database_password"] = bin2hex(random_bytes(10));
+			}
+			// get first database from the list
+
+			if (empty($options["database_host"])) {
+				$database_host = $this->getDatabaseHosts();
+				$options["database_host"] = $database_host[0];
 			}
 
 			if (!$this->appcontext->checkDatabaseLimit()) {

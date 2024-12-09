@@ -19,9 +19,9 @@
 		"prepare": "husky"
 	},
 	"dependencies": {
-		"@alpinejs/collapse": "^3.14.5",
+		"@alpinejs/collapse": "^3.14.7",
 		"@fortawesome/fontawesome-free": "^6.7.1",
-		"alpinejs": "^3.14.5",
+		"alpinejs": "^3.14.7",
 		"chart.js": "^4.4.7",
 		"check-password-strength": "^2.0.10",
 		"floating-vue": "^5.2.2",
@@ -45,7 +45,7 @@
 		"jsdom": "^25.0.1",
 		"lightningcss": "^1.28.2",
 		"lint-staged": "^15.2.10",
-		"markdownlint-cli2": "^0.15.0",
+		"markdownlint-cli2": "^0.16.0",
 		"prettier": "^3.4.2",
 		"prettier-plugin-nginx": "^1.0.3",
 		"prettier-plugin-sh": "^0.14.0",
@@ -53,7 +53,7 @@
 		"stylelint": "^16.11.0",
 		"stylelint-config-standard": "^36.0.1",
 		"vitepress": "^1.5.0",
-		"vitest": "^2.1.6",
+		"vitest": "^2.1.8",
 		"vue": "^3.5.13"
 	},
 	"browserslist": [

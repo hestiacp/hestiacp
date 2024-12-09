@@ -75,7 +75,10 @@ if [ "$period" = 'daily' ]; then
 	a=0
 	a=$(ps aux | grep "$FTP_SYSTEM" | grep -v grep | grep -v nobody \
 		| grep -v root | wc -l)
-
+	if [ "$FTP_SYSTEM" = 'proftpd' ]; then
+		# Decrease numeber of connnections by 1 for proftpd ps aux always returns 1
+		a=$((a - 1))
+	fi
 	# Updating rrd database
 	rrdtool update $RRD/ftp/ftp.rrd N:$a
 fi

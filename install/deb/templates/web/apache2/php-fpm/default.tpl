@@ -28,7 +28,9 @@
         Options +Includes -Indexes +ExecCGI
     </Directory>
 
-    ProxyPassMatch ^/(.*\.php)(?:$|\?) "%backend_lsnr%|fcgi://localhost%docroot%/$1" nocanon
+    <FilesMatch \.php$>
+        SetHandler "proxy:%backend_lsnr%|fcgi://localhost"
+    </FilesMatch>
     SetEnvIf Authorization .+ HTTP_AUTHORIZATION=$0
 
     IncludeOptional %home%/%user%/conf/web/%domain%/%web_system%.conf_*

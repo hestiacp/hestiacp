@@ -25,7 +25,9 @@
     SSLCertificateKeyFile %ssl_key%
     %ssl_ca_str%SSLCertificateChainFile %ssl_ca%
 
-    ProxyPassMatch ^/(.*\.php)(?:$|\?) "%backend_lsnr%|fcgi://localhost%sdocroot%/$1" nocanon
+    <FilesMatch \.php$>
+        SetHandler "proxy:%backend_lsnr%|fcgi://localhost"
+    </FilesMatch>
     SetEnvIf Authorization .+ HTTP_AUTHORIZATION=$0
 
     IncludeOptional %home%/%user%/conf/web/%domain%/%web_system%.ssl.conf_*

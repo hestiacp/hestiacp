@@ -420,6 +420,7 @@ remote_forwarded_smtp:
   hosts_try_fastopen = !*.l.google.com
   interface = ${if exists{OUTGOING_IP}{${readfile{OUTGOING_IP}}}}
   # modify the envelope from, for mails that we forward
+	headers_remove = Received : X-Originating-IP
   max_rcpt = 1
   return_path = ${srs_encode {SRS_SECRET} {$return_path} {$original_domain}}
 

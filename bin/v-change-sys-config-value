@@ -47,15 +47,15 @@ rm -f $HESTIA/conf/hestia.conf.bak
 
 # Check if the variable "$key" has the value "APP_NAME"
 if [ "$key" == "APP_NAME" ]; then
-    # Path to the file manager configuration file where the change will be made.
-    config_file="$HESTIA/web/fm/configuration.php"
-    new_app_name="File Manager - $value"
+	# Path to the file manager configuration file where the change will be made.
+	config_file="$HESTIA/web/fm/configuration.php"
+	new_app_name="File Manager - $value"
 
-    # Verify if configuration.php exists and is writable
-    if [ -f "$config_file" ] && [ -w "$config_file" ]; then
-        # Sed replaces only the value after "File Manager -"
-        sed -i "s|\(\$dist_config\[\"frontend_config\"\]\[\"app_name\"\] = \"File Manager - \).*\";|\1${value}\";|" "$config_file"
-    fi
+	# Verify if configuration.php exists and is writable
+	if [ -f "$config_file" ] && [ -w "$config_file" ]; then
+		# Sed replaces only the value after "File Manager -"
+		sed -i "s|\(\$dist_config\[\"frontend_config\"\]\[\"app_name\"\] = \"File Manager - \).*\";|\1${value}\";|" "$config_file"
+	fi
 fi
 
 #----------------------------------------------------------#

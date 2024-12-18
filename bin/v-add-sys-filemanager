@@ -106,7 +106,7 @@ cp -f $HESTIA_INSTALL_DIR/filemanager/filegator/configuration.php $HESTIA/web/fm
 config_file="$HESTIA/web/fm/configuration.php"
 app_name="File Manager - $APP_NAME"
 
-# # Sed replaces only the value after "File Manager -"
+# Sed replaces only the value after "File Manager -"
 sed -i "s|\(\$dist_config\[\"frontend_config\"\]\[\"app_name\"\] = \"File Manager - \).*\";|\1${APP_NAME}\";|" "$config_file"
 
 echo "$fm_v" > "${FM_INSTALL_DIR}/version"

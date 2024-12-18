@@ -687,6 +687,14 @@ upgrade_filemanager() {
 					echo "[ ! ] Updating File Manager configuration..."
 					# Update configuration.php
 					cp -f $HESTIA_INSTALL_DIR/filemanager/filegator/configuration.php $HESTIA/web/fm/configuration.php
+
+					# Path to the file manager configuration file where the change will be made.
+					config_file="$HESTIA/web/fm/configuration.php"
+					app_name="File Manager - $APP_NAME"
+
+					# Sed replaces only the value after "File Manager -"
+					sed -i "s|\(\$dist_config\[\"frontend_config\"\]\[\"app_name\"\] = \"File Manager - \).*\";|\1${APP_NAME}\";|" "$config_file"
+
 					# Set environment variable for interface
 					$BIN/v-change-sys-config-value 'FILE_MANAGER' 'true'
 				fi

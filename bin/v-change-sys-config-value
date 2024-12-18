@@ -48,7 +48,7 @@ rm -f $HESTIA/conf/hestia.conf.bak
 # Check if the variable "$key" has the value "APP_NAME"
 if [ "$key" == "APP_NAME" ]; then
     # Path to the file manager configuration file where the change will be made.
-    config_file="/usr/local/hestia/web/fm/configuration.php"
+    config_file="$HESTIA/web/fm/configuration.php"
     new_app_name="File Manager - $value"
 
     # Verify if configuration.php exists and is writable

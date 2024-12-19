@@ -38,7 +38,7 @@ add backup host
 **Examples**:
 
 ```bash
-v-add-backup-host sftp backup.acme.com admin p4$$w@Rd
+v-add-backup-host sftp backup.acme.com admin 'P4$$w@rD'
 v-add-backup-host b2 bucketName keyID applicationKey
 ```
 
@@ -864,7 +864,7 @@ add system user
 **Examples**:
 
 ```bash
-v-add-user user P4$$w@rD bgates@aol.com
+v-add-user user 'P4$$w@rD' bgates@aol.com
 ```
 
 This function creates new user account.

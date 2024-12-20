@@ -92,7 +92,8 @@ Preparing your **Slave** server(s):
 
 Preparing your **Master** server:
 
-1. On the **Master** server, open `/etc/bind/named.conf.options`, do the following changes, then restart bind9 with `systemctl restart bind9`.
+1. On the **Master** server, open `/usr/local/hestia/conf/hestia.conf`, change `DNS_CLUSTER_SYSTEM='hestia'` to `DNS_CLUSTER_SYSTEM='hestia-zone'`.
+2. Edit `/etc/bind/named.conf.options`, do the following changes, then restart bind9 with `systemctl restart bind9`.
 
    ```bash
    # Change this line
@@ -105,7 +106,7 @@ Preparing your **Master** server:
    also-notify { second.slave.ip.address; };
    ```
 
-2. Run the following command to enable each Slave DNS server, and wait a short while for it to complete zone transfers:
+3. Run the following command to enable each Slave DNS server, and wait a short while for it to complete zone transfers:
 
    ```bash
    v-add-remote-dns-host <your slave host name> <port number> '<accesskey>:<secretkey>' '' 'api' '<your chosen slave user name>'
@@ -117,12 +118,12 @@ Preparing your **Master** server:
    v-add-remote-dns-host slave.yourhost.com 8083 'admin' 'strongpassword' 'api' 'user-name'
    ```
 
-3. Check it worked by listing the DNS zones on the **Slave** for the dns-user with the CLI command `v-list-dns-domains dns-user` or by connecting to the web interface as dns-user and reviewing the DNS zones.
+4. Check it worked by listing the DNS zones on the **Slave** for the dns-user with the CLI command `v-list-dns-domains dns-user` or by connecting to the web interface as dns-user and reviewing the DNS zones.
 
 ### Converting an existing DNS cluster to Master -> Slave
 
-1. In `/usr/local/hestia/conf/hestia.conf`, change `DNS_CLUSTER_SYSTEM='hestia'` to `DNS_CLUSTER_SYSTEM='hestia-zone'`.
-2. On the master server, open `/etc/bind/named.conf.options`, do the following changes, then restart bind9 with `systemctl restart bind9`.
+1. On **Master** and **Slave** servers, open `/usr/local/hestia/conf/hestia.conf`, change `DNS_CLUSTER_SYSTEM='hestia'` to `DNS_CLUSTER_SYSTEM='hestia-zone'`.
+2. On the **Master** server, open `/etc/bind/named.conf.options`, do the following changes, then restart bind9 with `systemctl restart bind9`.
 
    ```bash
    # Change this line
@@ -135,7 +136,7 @@ Preparing your **Master** server:
    also-notify { second.slave.ip.address; };
    ```
 
-3. On the slave server, open `/etc/bind/named.conf.options`, do the following changes, then restart bind9 with `systemctl restart bind9`:
+3. On the **Slave** server, open `/etc/bind/named.conf.options`, do the following changes, then restart bind9 with `systemctl restart bind9`:
 
    ```bash
    # Change this line

@@ -449,6 +449,17 @@ function check_ip_not_banned(){
 		assert_file_exist /etc/systemd/system/$mount_file
 }
 
+@test "User: Change user bash with bubblewrap jail" {
+    run v-change-user-shell $user jailbash no
+    assert_success
+    refute_output
+
+    run stat -c '%U' /home/$user
+    assert_output --partial "$user"
+		mount_file=$(systemd-escape -p --suffix=mount "/srv/jail/$user/home")
+		assert_file_not_exist /etc/systemd/system/$mount_file
+}
+
 @test "User: Change user default ns" {
     run v-change-user-ns $user ns0.com ns1.com ns2.com ns3.com
     assert_success

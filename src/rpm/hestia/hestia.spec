@@ -12,7 +12,7 @@ Source0:        hestia-%{version}.tar.gz
 Source1:        hestia.service
 Vendor:         hestiacp.com
 Requires:       redhat-release >= 8
-Requires:       bash, chkconfig, gawk, sed, acl, sysstat, (setpriv or util-linux), zstd, jq, jailkit
+Requires:       bash, chkconfig, gawk, sed, acl, sysstat, (setpriv or util-linux), zstd, jq, jailkit, bubblewrap
 Conflicts:      vesta
 Provides:       hestia = %{version}
 BuildRequires:  systemd

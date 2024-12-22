@@ -67,11 +67,8 @@ class DokuWikiSetup extends BaseSetup {
 		parent::setup($options);
 
 		//check if ssl is enabled
-		$this->appcontext->run(
-			"v-list-web-domain",
-			[$this->appcontext->user(), $this->domain, "json"],
-			$status,
-		);
+		$this->appcontext->runUser("v-list-web-domain", [$this->domain, "json"], $status);
+
 		$sslEnabled = $status->json[$this->domain]["SSL"] == "no" ? 0 : 1;
 
 		$webDomain = ($sslEnabled ? "https://" : "http://") . $this->domain . "/";

@@ -58,11 +58,7 @@ class DolibarrSetup extends BaseSetup {
 			$status,
 		);
 
-		$this->appcontext->run(
-			"v-list-web-domain",
-			[$this->appcontext->user(), $this->domain, "json"],
-			$status,
-		);
+		$this->appcontext->runUser("v-list-web-domain", [$this->domain, "json"], $status);
 
 		$sslEnabled = $status->json[$this->domain]["SSL"] == "no" ? false : true;
 		$webDomain = ($sslEnabled ? "https://" : "http://") . $this->domain;

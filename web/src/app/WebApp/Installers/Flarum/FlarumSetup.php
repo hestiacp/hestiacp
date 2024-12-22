@@ -149,11 +149,8 @@ class FlarumSetup extends BaseSetup {
 		);
 
 		// POST install
-		$this->appcontext->run(
-			"v-list-web-domain",
-			[$this->appcontext->user(), $this->domain, "json"],
-			$status,
-		);
+		$this->appcontext->runUser("v-list-web-domain", [$this->domain, "json"], $status);
+
 		$sslEnabled = $status->json[$this->domain]["SSL"] == "no" ? 0 : 1;
 		$webDomain = ($sslEnabled ? "https://" : "http://") . $this->domain;
 		$webPort = $sslEnabled ? "443" : "80";

@@ -5,7 +5,7 @@ namespace Hestia\WebApp\Installers\Opencart;
 use Hestia\WebApp\Installers\BaseSetup as BaseSetup;
 use function Hestiacp\quoteshellarg\quoteshellarg;
 
-class OpencartSetup extends BaseSetup {
+class OpenCartSetup extends BaseSetup {
 	protected $appInfo = [
 		"name" => "OpenCart",
 		"group" => "ecommerce",

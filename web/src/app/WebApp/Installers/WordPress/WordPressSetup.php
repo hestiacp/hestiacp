@@ -210,11 +210,12 @@ class WordpressSetup extends BaseSetup {
 			);
 		}
 
-		$this->appcontext->run(
+		$this->appcontext->runUser(
 			"v-list-web-domain",
-			[$this->appcontext->user(), $this->domain, "json"],
+			[$this->domain, "json"],
 			$status,
 		);
+
 		$sslEnabled = $status->json[$this->domain]["SSL"] == "no" ? 0 : 1;
 		$webDomain = ($sslEnabled ? "https://" : "http://") . $this->domain . "/";
 		$webPort = $sslEnabled ? "443" : "80";

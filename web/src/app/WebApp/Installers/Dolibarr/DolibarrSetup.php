@@ -58,9 +58,9 @@ class DolibarrSetup extends BaseSetup {
 			$status,
 		);
 
-		$this->appcontext->run(
+		$this->appcontext->runUser(
 			"v-list-web-domain",
-			[$this->appcontext->user(), $this->domain, "json"],
+			[$this->domain, "json"],
 			$status,
 		);
 

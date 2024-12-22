@@ -53,9 +53,9 @@ class ThirtyBeesSetup extends BaseSetup {
 
 		// Verificación del estado SSL del dominio
 		$status = null;
-		$this->appcontext->run(
+		$this->appcontext->runUser(
 			"v-list-web-domain",
-			[$this->appcontext->user(), $this->domain, "json"],
+			[$this->domain, "json"],
 			$status,
 		);
 

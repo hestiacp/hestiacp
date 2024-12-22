@@ -49,11 +49,12 @@ class PrestaShopSetup extends BaseSetup {
 			$this->getDocRoot(),
 		);
 		//check if ssl is enabled
-		$this->appcontext->run(
+		$this->appcontext->runUser(
 			"v-list-web-domain",
-			[$this->appcontext->user(), $this->domain, "json"],
+			[$this->domain, "json"],
 			$status,
 		);
+
 		if ($status->code !== 0) {
 			throw new \Exception("Cannot list domain");
 		}

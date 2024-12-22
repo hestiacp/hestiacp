@@ -63,11 +63,7 @@ class OpenCartSetup extends BaseSetup {
 			$this->getDocRoot(".htaccess"),
 		]);
 		#Check if SSL is enabled
-		$this->appcontext->runUser(
-			"v-list-web-domain",
-			[$this->domain, "json"],
-			$status,
-		);
+		$this->appcontext->runUser("v-list-web-domain", [$this->domain, "json"], $status);
 
 		if ($status->code !== 0) {
 			throw new \Exception("Cannot list domain");

@@ -358,7 +358,7 @@ class HestiaApp {
 		$cmd_result = (object) $result;
 		if ($exit_code > 0) {
 			//log error message in nginx-error.log
-			trigger_error($cli_script . " " . $cli_arguments . " | " .$result["text"]);
+			trigger_error($cli_script . " " . $cli_arguments . " | " . $result["text"]);
 			//throw exception if command fails
 			throw new \Exception($result["text"]);
 		}

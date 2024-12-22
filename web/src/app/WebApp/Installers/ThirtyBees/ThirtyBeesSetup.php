@@ -53,11 +53,7 @@ class ThirtyBeesSetup extends BaseSetup {
 
 		// Verificación del estado SSL del dominio
 		$status = null;
-		$this->appcontext->runUser(
-			"v-list-web-domain",
-			[$this->domain, "json"],
-			$status,
-		);
+		$this->appcontext->runUser("v-list-web-domain", [$this->domain, "json"], $status);
 
 		if ($status->code !== 0) {
 			throw new \Exception("No se puede listar el dominio");

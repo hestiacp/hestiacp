@@ -71,7 +71,7 @@
 							<select class="form-select" name="<?= $field_name ?>" id="<?= $field_name ?>">
 								<?php foreach ($form_control["options"] as $key => $option):
 									$key = !is_numeric($key) ? $key : $option;
-									$selected = !empty($form_control["value"] && $key == $form_control["value"]) ? "selected" : ""; ?>
+									$selected = (!empty($form_control["value"]) && $key == $form_control["value"]) ? "selected" : ""; ?>
 									<option value="<?= $key ?>" <?= $selected ?>>
 										<?= htmlentities($option) ?>
 									</option>

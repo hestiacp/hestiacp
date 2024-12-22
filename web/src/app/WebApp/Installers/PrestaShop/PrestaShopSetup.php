@@ -5,7 +5,7 @@ namespace Hestia\WebApp\Installers\Prestashop;
 use Hestia\WebApp\Installers\BaseSetup as BaseSetup;
 use function Hestiacp\quoteshellarg\quoteshellarg;
 
-class PrestashopSetup extends BaseSetup {
+class PrestaShopSetup extends BaseSetup {
 	protected $appInfo = [
 		"name" => "PrestaShop",
 		"group" => "ecommerce",

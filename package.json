@@ -20,7 +20,7 @@
 	},
 	"dependencies": {
 		"@alpinejs/collapse": "^3.14.7",
-		"@fortawesome/fontawesome-free": "^6.7.1",
+		"@fortawesome/fontawesome-free": "^6.7.2",
 		"alpinejs": "^3.14.7",
 		"chart.js": "^4.4.7",
 		"check-password-strength": "^2.0.10",
@@ -36,7 +36,7 @@
 		"@testing-library/vue": "^8.1.0",
 		"@vitejs/plugin-vue": "^5.2.1",
 		"browserslist": "^4.24.3",
-		"esbuild": "^0.24.0",
+		"esbuild": "^0.24.2",
 		"eslint": "^8.57.1",
 		"eslint-config-prettier": "^9.1.0",
 		"eslint-plugin-editorconfig": "^4.0.3",

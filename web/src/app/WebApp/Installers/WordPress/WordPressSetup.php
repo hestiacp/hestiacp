@@ -79,11 +79,11 @@ class WordpressSetup extends BaseSetup {
 			$result,
 		);
 		foreach ($result->raw as $line_num => $line) {
-			if ('$table_prefix =' === substr($line, 0, 15)) {
+			if (str_starts_with($line, '$table_prefix =')) {
 				$result->raw[$line_num] =
-					'$table_prefix = \'' .
-					addcslashes(Util::generate_string(5, false) . "_", "\\'") .
-					"';\r\n";
+					'$table_prefix = ' .
+					var_export("wp_" . Util::generate_string(5, false) . "_", true) .
+					";\r\n";
 				continue;
 			}
 			if (!preg_match('/^define\(\s*\'([A-Z_]+)\',([ ]+)/', $line, $match)) {

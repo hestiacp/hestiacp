@@ -40,38 +40,6 @@ if [ -x /usr/sbin/jailbash ]; then
 	service apparmor reload > /dev/null 2>&1
 fi
 
-# Checking sshd directives
-config='/etc/ssh/sshd_config'
-ssh_i=$(grep -n "^# Hestia SSH Chroot" $config)
-
-# Backing up config
-cp $config $config.bak
-
-# Disabling jailed ssh
-if [ -n "$ssh_i" ]; then
-	fline=$(echo "$ssh_i" | cut -f 1 -d :)
-	lline=$((fline + 4))
-	sed -i "${fline},${lline}d" $config
-	restart='yes'
-fi
-
-# Validating opensshd config
-if [ "$restart" = 'yes' ]; then
-	subj="OpenSSH restart failed"
-	email=$(grep CONTACT "$HESTIA/data/users/$ROOT_USER/user.conf" | cut -f 2 -d \')
-	/usr/sbin/sshd -t > /dev/null 2>&1
-	if [ "$?" -ne 0 ]; then
-		mail_text="OpenSSH can not be restarted. Please check config:
-            \n\n$(/usr/sbin/sshd -t)"
-		echo -e "$mail_text" | $SENDMAIL -s "$subj" $email
-	else
-		service sshd restart > /dev/null 2>&1
-	fi
-fi
-
-# Remove group ssh-jailed
-groupdel ssh-jailed 2> /dev/null
-
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#

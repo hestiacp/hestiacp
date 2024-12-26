@@ -1,8 +1,8 @@
 #!/bin/bash
 # info: change user shell
-# options: USER SHELL JAIL_ENABLED
+# options: USER SHELL
 #
-# example: v-change-user-shell admin nologin no
+# example: v-change-user-shell admin nologin
 #
 # This function changes system shell of a user. Shell gives ability to use ssh.
 
@@ -13,7 +13,6 @@
 # Argument definition
 user=$1
 shell=$2
-shell_jail_enabled=${3-no}
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -27,14 +26,10 @@ source $HESTIA/conf/hestia.conf
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'USER SHELL SHELL_JAIL_ENABLED'
-is_format_valid 'user' 'shell shell_jail_enabled'
+check_args '2' "$#" 'USER SHELL'
+is_format_valid 'user' 'shell'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
-
-if [[ "$shell" =~ nologin ]] || [[ "$shell" =~ rssh ]] && [[ "$shell_jail_enabled" =~ yes ]]; then
-	check_result "$E_INVALID" "nologin and rssh can't be jailed"
-fi
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
@@ -55,13 +50,6 @@ if [[ "$shell" =~ nologin ]] || [[ "$shell" =~ rssh ]]; then
 	$BIN/v-add-user-sftp-jail "$user" > /dev/null 2>&1
 else
 	$BIN/v-delete-user-sftp-jail "$user" > /dev/null 2>&1
-fi
-
-# Adding jailed ssh env
-if [[ "$shell_jail_enabled" =~ yes ]]; then
-	$BIN/v-add-user-ssh-jail "$user" > /dev/null 2>&1
-else
-	$BIN/v-delete-user-ssh-jail "$user" > /dev/null 2>&1
 fi
 
 #----------------------------------------------------------#

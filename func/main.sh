@@ -1331,7 +1331,6 @@ is_format_valid() {
 				soa) is_domain_format_valid "$arg" 'SOA' ;;
 				#missing command: is_format_valid_shell
 				shell) is_format_valid_shell "$arg" ;;
-				shell_jail_enabled) is_boolean_format_valid "$arg" 'shell_jail_enabled' ;;
 				ssl_dir) is_folder_exists "$arg" "$arg_name" ;;
 				stats_pass) is_password_format_valid "$arg" ;;
 				stats_user) is_user_format_valid "$arg" "$arg_name" ;;
@@ -1817,11 +1816,6 @@ add_chroot_jail() {
 		mkdir -p /srv/jail/$user/home/$user
 		chown 0:0 /srv/jail/$user/home/$user
 		chmod 755 /srv/jail/$user/home/$user
-	fi
-	if [ ! -d /srv/jail/$user/tmp ]; then
-		mkdir -p /srv/jail/$user/tmp
-		chown "$user:$user" /srv/jail/$user/tmp
-		chmod 755 /srv/jail/$user/tmp
 	fi
 
 	systemd=$(systemd-escape -p --suffix=mount "/srv/jail/$user/home/$user")

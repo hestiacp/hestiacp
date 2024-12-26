@@ -81,9 +81,9 @@ class WordpressSetup extends BaseSetup {
 		foreach ($result->raw as $line_num => $line) {
 			if (str_starts_with($line, '$table_prefix =')) {
 				$result->raw[$line_num] =
-					'$table_prefix = ' .
-					var_export("wp_" . Util::generate_string(5, false) . "_", true) .
-					";\r\n";
+					sprintf( "\$table_prefix = %s;\r\n",
+						var_export("wp_".Util::generate_string(5, false)."_",true)
+					);
 				continue;
 			}
 			if (!preg_match('/^define\(\s*\'([A-Z_]+)\',([ ]+)/', $line, $match)) {

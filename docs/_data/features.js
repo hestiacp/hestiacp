@@ -28,6 +28,7 @@ export const webDomains = [
 			{ text: 'Prestashop' },
 			{ text: 'Symphony' },
 			{ text: 'Joomla' },
+			{ text: 'NodeJS' },
 		],
 	},
 ];

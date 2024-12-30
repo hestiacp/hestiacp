@@ -19,9 +19,9 @@
 		"prepare": "husky"
 	},
 	"dependencies": {
-		"@alpinejs/collapse": "^3.14.7",
+		"@alpinejs/collapse": "^3.14.8",
 		"@fortawesome/fontawesome-free": "^6.7.2",
-		"alpinejs": "^3.14.7",
+		"alpinejs": "^3.14.8",
 		"chart.js": "^4.4.7",
 		"check-password-strength": "^2.0.10",
 		"floating-vue": "^5.2.2",
@@ -44,8 +44,8 @@
 		"husky": "^9.1.7",
 		"jsdom": "^25.0.1",
 		"lightningcss": "^1.28.2",
-		"lint-staged": "^15.2.11",
-		"markdownlint-cli2": "^0.16.0",
+		"lint-staged": "^15.3.0",
+		"markdownlint-cli2": "^0.17.0",
 		"prettier": "^3.4.2",
 		"prettier-plugin-nginx": "^1.0.3",
 		"prettier-plugin-sh": "^0.14.0",

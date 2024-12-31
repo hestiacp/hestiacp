@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 namespace Hestia\System;
+use RuntimeException;
 use function Hestiacp\quoteshellarg\quoteshellarg;
 
 class HestiaApp {
@@ -13,6 +14,115 @@ class HestiaApp {
 
 	public function __construct() {
 		@mkdir(self::TMPDIR_DOWNLOADS);
+	}
+
+	public function addDirectory(string $path): void
+	{
+		$status = null;
+
+		$this->runUser(
+			"v-add-fs-directory",
+			[$path],
+			$status,
+		);
+
+		if ($status->code !== 0) {
+			throw new RuntimeException(
+				sprintf('Failed to add directory "%s"', $path)
+			);
+		}
+	}
+
+	public function copyDirectory(string $fromPath, string $toPath): void
+	{
+		$status = null;
+
+		$this->runUser(
+			"v-copy-fs-directory",
+			[$fromPath, $toPath],
+			$status,
+		);
+
+		if ($status->code !== 0) {
+			throw new RuntimeException(
+				sprintf('Failed to copy directory "%s" to "%s"', $fromPath, $toPath)
+			);
+		}
+	}
+
+	public function moveFile(string $fromPath, string $toPath): void
+	{
+		$status = null;
+
+		$this->runUser(
+			"v-move-fs-file",
+			[$fromPath, $toPath],
+			$status,
+		);
+
+		if ($status->code !== 0) {
+			throw new RuntimeException(
+				sprintf('Failed to move file "%s" to "%s"', $fromPath, $toPath)
+			);
+		}
+	}
+
+	public function changeFilePermissions(string $filePath, string $permission): void
+	{
+		$status = null;
+
+		$this->runUser(
+			"v-change-fs-file-permission",
+			[$filePath, $permission],
+			$status,
+		);
+
+		if ($status->code !== 0) {
+			throw new RuntimeException(
+				sprintf('Failed to change file "%s" permissions to "%s"', $filePath, $permission)
+			);
+		}
+	}
+
+	public function deleteFile(string $filePath): void
+	{
+		$status = null;
+
+		$this->runUser(
+			"v-delete-fs-file",
+			[$filePath],
+			$status,
+		);
+
+		if ($status->code !== 0) {
+			throw new RuntimeException(sprintf('Failed to delete file "%s"', $filePath));
+		}
+	}
+
+	public function sendPostRequest($url, array $formData, array $headers = []): void
+	{
+		$ch = curl_init($url);
+
+		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+		curl_setopt($ch, CURLOPT_MAXREDIRS, 3);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_POST, true);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($formData));
+
+		if ($headers !== []) {
+			curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+		}
+
+		curl_exec($ch);
+
+		$error = curl_error($ch);
+		$errno = curl_errno($ch);
+
+		curl_close($ch);
+
+		if (0 !== $errno) {
+			throw new RuntimeException($error, $errno);
+		}
 	}
 
 	public function runUser(string $cmd, $args, &$cmd_result = null): bool {
@@ -244,10 +354,26 @@ class HestiaApp {
 		}
 	}
 
-	public function getWebDomainIp(string $domain) {
-		$this->runUser("v-list-web-domain", [$domain, "json"], $result);
-		$ip = $result->json[$domain]["IP"];
-		return filter_var($ip, FILTER_VALIDATE_IP);
+	public function getWebDomain(string $domainName): WebDomain
+	{
+		$result = null;
+
+		$this->runUser(
+			"v-list-web-domain",
+			[$domainName, "json"],
+			$result,
+		);
+
+		if ($result === null && $result->code !== 0) {
+			throw new \Exception("Cannot find domain for user");
+		}
+
+		return new WebDomain(
+			$domainName,
+			Util::join_paths($this->getUserHomeDir(), "web", $domainName),
+			filter_var($result->json[$domainName]["IP"], FILTER_VALIDATE_IP),
+			$result->json[$domainName]["SSL"] === "yes"
+		);
 	}
 
 	public function getWebDomainPath(string $domain) {

@@ -1,7 +1,8 @@
 #!/bin/bash
-# info: enable multiphp
+# info: Removes Jailkit and migrates to Bubblewrap
 #
-# This function enables php-fpm backend for standalone apache2 configurations.
+# Jailkit was availble for a short period in 1.9.0 Beta releases
+# How ever it has been replaced by Bubblewrap
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

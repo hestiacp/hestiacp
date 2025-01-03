@@ -65,9 +65,6 @@ chown hestiaweb:hestiaweb /usr/local/hestia/data/sessions
 packages=$(ls --sort=time $HESTIA/data/packages | grep .pkg)
 # Update Hestia Packages
 for package in $packages; do
-	if [ -z "$(grep -e 'SHELL_JAIL_ENABLED' $HESTIA/data/packages/$package)" ]; then
-		echo "SHELL_JAIL_ENABLED='no'" >> $HESTIA/data/packages/$package
-	fi
 	if [ -z "$(grep -e 'BACKUPS_INCREMENTAL' $HESTIA/data/packages/$package)" ]; then
 		echo "BACKUPS_INCREMENTAL='no'" >> $HESTIA/data/packages/$package
 	fi

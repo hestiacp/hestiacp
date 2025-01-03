@@ -75,7 +75,6 @@ pkg_data=$(cat $HESTIA/data/packages/$package.pkg | egrep -v "TIME|DATE")
 
 # Checking shell
 shell_conf=$(echo "$pkg_data" | grep -m1 'SHELL' | cut -f 2 -d \')
-jail_enabled=$(echo "$pkg_data" | grep -m1 'SHELL_JAIL_ENABLED' | cut -f 2 -d \')
 resource_enaled=$(echo "$pkg_data" | grep -m1 'RESOURCES_LIMIT' | cut -f 2 -d \')
 disk_quota_enabled=$(echo "$pkg_data" | grep -m1 'DISK_QUOTA' | cut -f 2 -d \')
 shell=$(grep -w "$shell_conf" /etc/shells | head -n1)
@@ -288,11 +287,6 @@ fi
 
 # Adding jailed sftp env
 $BIN/v-add-user-sftp-jail $user
-
-# Adding jailed ssh env
-if [ "$jail_enabled" = 'yes' ]; then
-	$BIN/v-add-user-ssh-jail $user
-fi
 
 #----------------------------------------------------------#
 #                       Hestia                             #

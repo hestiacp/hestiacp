@@ -411,7 +411,7 @@ function check_ip_not_banned(){
 }
 
 @test "User: Change user shell" {
-    run v-change-user-shell $user bash no
+    run v-change-user-shell $user bash
     assert_success
     refute_output
 
@@ -422,24 +422,13 @@ function check_ip_not_banned(){
 }
 
 @test "User: Change user invalid shell" {
-    run v-change-user-shell $user bashinvalid no
+    run v-change-user-shell $user bashinvalid
     assert_failure $E_INVALID
     assert_output --partial 'shell bashinvalid is not valid'
 }
 
 @test "User: Change user nologin" {
-    run v-change-user-shell $user nologin no
-    assert_success
-    refute_output
-
-    run stat -c '%U' /home/$user
-    assert_output --partial 'root'
-		mount_file=$(systemd-escape -p --suffix=mount "/srv/jail/$user/home/$user")
-		assert_file_exist /etc/systemd/system/$mount_file
-}
-
-@test "User: Change user bash with jail" {
-    run v-change-user-shell $user bash yes
+    run v-change-user-shell $user nologin
     assert_success
     refute_output
 
@@ -450,7 +439,7 @@ function check_ip_not_banned(){
 }
 
 @test "User: Change user bash with bubblewrap jail" {
-    run v-change-user-shell $user jailbash no
+    run v-change-user-shell $user jailbash
     assert_success
     refute_output
 

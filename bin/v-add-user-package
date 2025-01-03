@@ -94,7 +94,6 @@ is_package_consistent() {
 	fi
 
 	is_format_valid_shell "$SHELL"
-	is_boolean_format_valid "$SHELL_JAIL_ENABLED" 'SHELL_JAIL_ENABLED'
 }
 
 #----------------------------------------------------------#
@@ -150,7 +149,6 @@ SWAP_LIMIT='$SWAP_LIMIT'
 BANDWIDTH='$BANDWIDTH'
 NS='$NS'
 SHELL='$SHELL'
-SHELL_JAIL_ENABLED='$SHELL_JAIL_ENABLED'
 BACKUPS='$BACKUPS'
 BACKUPS_INCREMENTAL='$BACKUP_INCREMENTAL'
 TIME='$time'

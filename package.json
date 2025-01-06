@@ -45,7 +45,7 @@
 		"jsdom": "^25.0.1",
 		"lightningcss": "^1.28.2",
 		"lint-staged": "^15.3.0",
-		"markdownlint-cli2": "^0.17.0",
+		"markdownlint-cli2": "^0.17.1",
 		"prettier": "^3.4.2",
 		"prettier-plugin-nginx": "^1.0.3",
 		"prettier-plugin-sh": "^0.14.0",

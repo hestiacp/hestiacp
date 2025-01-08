@@ -791,117 +791,27 @@ is_alias_format_valid() {
 
 # IP format validator
 is_ip_format_valid() {
-	object_name=${2-ip}
-	ip_regex='([1-9]?[0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])'
-	ip_clean=$(echo "${1%/*}")
-	if ! [[ $ip_clean =~ ^$ip_regex\.$ip_regex\.$ip_regex\.$ip_regex$ ]]; then
-		check_result "$E_INVALID" "invalid $object_name format :: $1"
-	fi
-	if [ $1 != "$ip_clean" ]; then
-		ip_cidr="$ip_clean/"
-		ip_cidr=$(echo "${1#$ip_cidr}")
-		if [[ "$ip_cidr" -gt 32 ]] || [[ "$ip_cidr" =~ [:alnum:] ]]; then
-			check_result "$E_INVALID" "invalid $object_name format :: $1"
-		fi
-	fi
+    object_name=${2-ip}
+    valid=$($HESTIA_PHP -r '$ip="$argv[1]"; echo (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) ? 0 : 1);' $1);
+    if [ "$valid" -ne 0 ]; then
+        check_result "$E_INVALID" "invalid $object_name :: $1"
+    fi
 }
 
 # IPv6 format validator
 is_ipv6_format_valid() {
-	object_name=${2-ipv6}
-	ip_regex='([1-9]?[0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])'
-	t_ip=$(echo $1 | awk -F / '{print $1}')
-	t_cidr=$(echo $1 | awk -F / '{print $2}')
-	valid_cidr=1
-
-	WORD="[0-9A-Fa-f]\{1,4\}"
-	# flat address, no compressed words
-	FLAT="^${WORD}\(:${WORD}\)\{7\}$"
-
-	COMP2="^\(${WORD}:\)\{1,1\}\(:${WORD}\)\{1,6\}$"
-	COMP3="^\(${WORD}:\)\{1,2\}\(:${WORD}\)\{1,5\}$"
-	COMP4="^\(${WORD}:\)\{1,3\}\(:${WORD}\)\{1,4\}$"
-	COMP5="^\(${WORD}:\)\{1,4\}\(:${WORD}\)\{1,3\}$"
-	COMP6="^\(${WORD}:\)\{1,5\}\(:${WORD}\)\{1,2\}$"
-	COMP7="^\(${WORD}:\)\{1,6\}\(:${WORD}\)\{1,1\}$"
-	# trailing :: edge case, includes case of only :: (all 0's)
-	EDGE_TAIL="^\(\(${WORD}:\)\{1,7\}\|:\):$"
-	# leading :: edge case
-	EDGE_LEAD="^:\(:${WORD}\)\{1,7\}$"
-
-	echo $t_ip | grep --silent "\(${FLAT}\)\|\(${COMP2}\)\|\(${COMP3}\)\|\(${COMP4}\)\|\(${COMP5}\)\|\(${COMP6}\)\|\(${COMP7}\)\|\(${EDGE_TAIL}\)\|\(${EDGE_LEAD}\)"
-	if [ $? -ne 0 ]; then
-		check_result "$E_INVALID" "invalid $object_name format :: $1"
-	fi
-
-	if [ -n "$(echo $1 | grep '/')" ]; then
-		if [[ "$t_cidr" -lt 0 ]] || [[ "$t_cidr" -gt 128 ]]; then
-			valid_cidr=0
-		fi
-		if ! [[ "$t_cidr" =~ ^[0-9]+$ ]]; then
-			valid_cidr=0
-		fi
-	fi
-	if [ "$valid_cidr" -eq 0 ]; then
-		check_result "$E_INVALID" "invalid $object_name format :: $1"
-	fi
+    object_name=${2-ipv6}
+    valid=$($HESTIA_PHP -r '$ip="$argv[1]"; echo (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) ? 0 : 1);' $1);
+    if [ "$valid" -ne 0 ]; then
+        check_result "$E_INVALID" "invalid $object_name :: $1"
+    fi
 }
 
 is_ip46_format_valid() {
-	t_ip=$(echo $1 | awk -F / '{print $1}')
-	t_cidr=$(echo $1 | awk -F / '{print $2}')
-	valid_octets=0
-	valid_cidr=1
-	for octet in ${t_ip//./ }; do
-		if [[ $octet =~ ^[0-9]{1,3}$ ]] && [[ $octet -le 255 ]]; then
-			((++valid_octets))
-		fi
-	done
-
-	if [ -n "$(echo $1 | grep '/')" ]; then
-		if [[ "$t_cidr" -lt 0 ]] || [[ "$t_cidr" -gt 32 ]]; then
-			valid_cidr=0
-		fi
-		if ! [[ "$t_cidr" =~ ^[0-9]+$ ]]; then
-			valid_cidr=0
-		fi
-	fi
-	if [ "$valid_octets" -lt 4 ] || [ "$valid_cidr" -eq 0 ]; then
-		#Check IPV6
-		ipv6_valid=""
-		WORD="[0-9A-Fa-f]\{1,4\}"
-		# flat address, no compressed words
-		FLAT="^${WORD}\(:${WORD}\)\{7\}$"
-
-		COMP2="^\(${WORD}:\)\{1,1\}\(:${WORD}\)\{1,6\}$"
-		COMP3="^\(${WORD}:\)\{1,2\}\(:${WORD}\)\{1,5\}$"
-		COMP4="^\(${WORD}:\)\{1,3\}\(:${WORD}\)\{1,4\}$"
-		COMP5="^\(${WORD}:\)\{1,4\}\(:${WORD}\)\{1,3\}$"
-		COMP6="^\(${WORD}:\)\{1,5\}\(:${WORD}\)\{1,2\}$"
-		COMP7="^\(${WORD}:\)\{1,6\}\(:${WORD}\)\{1,1\}$"
-		# trailing :: edge case, includes case of only :: (all 0's)
-		EDGE_TAIL="^\(\(${WORD}:\)\{1,7\}\|:\):$"
-		# leading :: edge case
-		EDGE_LEAD="^:\(:${WORD}\)\{1,7\}$"
-
-		echo $t_ip | grep --silent "\(${FLAT}\)\|\(${COMP2}\)\|\(${COMP3}\)\|\(${COMP4}\)\|\(${COMP5}\)\|\(${COMP6}\)\|\(${COMP7}\)\|\(${EDGE_TAIL}\)\|\(${EDGE_LEAD}\)"
-		if [ $? -ne 0 ]; then
-			ipv6_valid="INVALID"
-		fi
-
-		if [ -n "$(echo $1 | grep '/')" ]; then
-			if [[ "$t_cidr" -lt 0 ]] || [[ "$t_cidr" -gt 128 ]]; then
-				valid_cidr=0
-			fi
-			if ! [[ "$t_cidr" =~ ^[0-9]+$ ]]; then
-				valid_cidr=0
-			fi
-		fi
-
-		if [ -n "$ipv6_valid" ] || [ "$valid_cidr" -eq 0 ]; then
-			check_result "$E_INVALID" "invalid IP format :: $1"
-		fi
-	fi
+    valid=$($HESTIA_PHP -r '$ip="$argv[1]"; echo (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_IPV6) ? 0 : 1);' $1);
+    if [ "$valid" -ne 0 ]; then
+        check_result "$E_INVALID" "invalid IP format :: $1"
+    fi
 }
 
 # Proxy extention format validator

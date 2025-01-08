@@ -2,6 +2,7 @@
 namespace Hestia\WebApp\Installers\Flarum;
 
 use Hestia\System\Util;
+use Hestia\WebApp\InstallationTarget;
 use Hestia\WebApp\Installers\BaseSetup;
 
 class FlarumSetup extends BaseSetup {
@@ -25,24 +26,24 @@ class FlarumSetup extends BaseSetup {
 			"composer" => ["src" => "flarum/flarum"],
 		],
 		"server" => [
+			"apache2" => [
+				"document_root" => "public",
+			],
 			"nginx" => [
 				"template" => "flarum",
 			],
 			"php" => [
 				"supported" => ["8.2", "8.3"],
 			],
-			"document_root" => "public",
 		],
 	];
 
-	public function install(array $options = null): bool {
-		parent::install($options);
+	public function install(InstallationTarget $target, array $options = null): void {
+		parent::install($target, $options);
 		parent::setup($options);
 
-		$installationTarget = $this->getInstallationTarget();
-
 		$this->appcontext->sendPostRequest(
-			$installationTarget->getUrl(),
+			$target->getUrl(),
 			[
 				"forumTitle" => $options["forum_title"],
 				"mysqlHost" => $options["database_host"],
@@ -56,7 +57,5 @@ class FlarumSetup extends BaseSetup {
 				"adminPasswordConfirmation" => $options["admin_password"],
 			],
 		);
-
-		return true;
 	}
 }

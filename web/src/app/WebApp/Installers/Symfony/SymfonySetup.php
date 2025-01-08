@@ -2,6 +2,7 @@
 
 namespace Hestia\WebApp\Installers\Symfony;
 
+use Hestia\WebApp\InstallationTarget;
 use Hestia\WebApp\Installers\BaseSetup;
 
 class SymfonySetup extends BaseSetup {
@@ -20,6 +21,9 @@ class SymfonySetup extends BaseSetup {
 			"composer" => ["src" => "symfony/website-skeleton", "dst" => "/"],
 		],
 		"server" => [
+			"apache2" => [
+				"document_root" => "public",
+			],
 			"nginx" => [
 				"template" => "symfony4-5",
 			],
@@ -29,35 +33,27 @@ class SymfonySetup extends BaseSetup {
 		],
 	];
 
-	public function install(array $options = null): bool {
-		parent::install($options);
-
-		$installationTarget = $this->getInstallationTarget();
-
-		$result = null;
-
-		$htaccess_rewrite = '
-<IfModule mod_rewrite.c>
-		RewriteEngine On
-		RewriteRule ^(.*)$ public/$1 [L]
-</IfModule>';
+	public function install(InstallationTarget $target, array $options = null): void {
+		parent::install($target, $options);
 
 		$this->appcontext->runComposer(
-			["config", "-d " . $installationTarget->getDocRoot(), "extra.symfony.allow-contrib", "true"],
-			$result,
+			$options["php_version"],
+			[
+				"config",
+				"-d",
+				$target->getDocRoot(),
+				"extra.symfony.allow-contrib",
+				"true",
+			],
 		);
 		$this->appcontext->runComposer(
-			["require", "-d " . $installationTarget->getDocRoot(), "symfony/apache-pack"],
-			$result,
+			$options["php_version"],
+			[
+				"require",
+				"-d",
+				$target->getDocRoot(),
+				"symfony/apache-pack",
+			],
 		);
-
-		$tmp_configpath = $this->saveTempFile($htaccess_rewrite);
-		$this->appcontext->runUser(
-			"v-move-fs-file",
-			[$tmp_configpath, $installationTarget->getDocRoot(".htaccess")],
-			$result,
-		);
-
-		return $result->code === 0;
 	}
 }

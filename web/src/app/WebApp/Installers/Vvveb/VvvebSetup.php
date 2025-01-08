@@ -2,6 +2,7 @@
 
 namespace Hestia\WebApp\Installers\Vvveb;
 
+use Hestia\WebApp\InstallationTarget;
 use Hestia\WebApp\Installers\BaseSetup;
 
 class VvvebSetup extends BaseSetup {
@@ -35,31 +36,23 @@ class VvvebSetup extends BaseSetup {
 		],
 	];
 
-	public function install(array $options = null): bool {
-		parent::install($options);
+	public function install(InstallationTarget $target, array $options = null): void {
+		parent::install($target, $options);
 		parent::setup($options);
 
-		$installationTarget = $this->getInstallationTarget();
-
-		$this->appcontext->runUser(
-			"v-run-cli-cmd",
+		$this->appcontext->runPHP(
+			$options["php_version"],
+			$target->getDocRoot("/cli.php"),
 			[
-				"/usr/bin/php" . $options["php_version"],
-				$installationTarget->getDocRoot("/cli.php"),
 				"install",
-				"host=" . addcslashes("localhost", "\\'"),
+				"host=" . $options["database_host"],
 				"user=" . $this->appcontext->user() . "_" . $options["database_user"],
 				"password=" . $options["database_password"],
 				"database=" . $this->appcontext->user() . "_" . $options["database_name"],
 				"admin[user]=" . $options["vvveb_account_username"],
 				"admin[password]=" . $options["vvveb_account_password"],
 				"admin[email]=" . $options["vvveb_account_email"],
-			],
-			$status,
+			]
 		);
-
-		$this->cleanup();
-
-		return $status->code === 0;
 	}
 }

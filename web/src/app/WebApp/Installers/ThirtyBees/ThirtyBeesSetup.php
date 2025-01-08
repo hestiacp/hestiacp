@@ -2,6 +2,7 @@
 
 namespace Hestia\WebApp\Installers\ThirtyBees;
 
+use Hestia\WebApp\InstallationTarget;
 use Hestia\WebApp\Installers\BaseSetup;
 
 class ThirtyBeesSetup extends BaseSetup {
@@ -17,16 +18,15 @@ class ThirtyBeesSetup extends BaseSetup {
 
 	protected $config = [
 		"form" => [
-			"thirtybees_account_first_name" => ["value" => "John"],
-			"thirtybees_account_last_name" => ["value" => "Doe"],
+			"thirtybees_account_first_name" => ["value" => ""],
+			"thirtybees_account_last_name" => ["value" => ""],
 			"thirtybees_account_email" => "text",
 			"thirtybees_account_password" => "password",
 		],
 		"database" => true,
 		"resources" => [
 			"archive" => [
-				"src" =>
-					"https://github.com/thirtybees/thirtybees/releases/download/1.5.1/thirtybees-v1.5.1-php7.4.zip",
+				"src" => "https://github.com/thirtybees/thirtybees/releases/download/1.6.0/thirtybees-v1.6.0-php7.4.zip",
 			],
 		],
 		"server" => [
@@ -34,22 +34,20 @@ class ThirtyBeesSetup extends BaseSetup {
 				"template" => "prestashop",
 			],
 			"php" => [
-				"supported" => ["7.4", "8.0"],
+				"supported" => ["7.4", "8.0", "8.1", "8.2", "8.3"],
 			],
 		],
 	];
 
-	public function install(array $options = null): bool {
-		parent::install($options);
+	public function install(InstallationTarget $target, array $options = null): void {
+		parent::install($target, $options);
 		parent::setup($options);
 
-		$installationTarget = $this->getInstallationTarget();
-
-		$this->appcontext->runUser(
-			"v-run-cli-cmd",
+		$this->appcontext->runPHP(
+			$options["php_version"],
+			$target->getDocRoot("/install/index_cli.php"),
 			[
-				"/usr/bin/php" . $options["php_version"],
-				$installationTarget->getDocRoot("/install/index_cli.php"),
+				"--db_server=" . $options["database_host"],
 				"--db_user=" . $this->appcontext->user() . "_" . $options["database_user"],
 				"--db_password=" . $options["database_password"],
 				"--db_name=" . $this->appcontext->user() . "_" . $options["database_name"],
@@ -57,22 +55,11 @@ class ThirtyBeesSetup extends BaseSetup {
 				"--lastname=" . $options["thirtybees_account_last_name"],
 				"--password=" . $options["thirtybees_account_password"],
 				"--email=" . $options["thirtybees_account_email"],
-				"--domain=" . $installationTarget->domainName,
-				"--ssl=" . $installationTarget->isSslEnabled,
-			],
-			$status,
+				"--domain=" . $target->domainName,
+				"--ssl=" . $target->isSslEnabled,
+			]
 		);
 
-		// Delete install directory
-		$installDir = $installationTarget->getDocRoot("/install");
-		if (is_dir($installDir)) {
-			$this->appcontext->runUser("v-delete-fs-directory", [$installDir]);
-		} else {
-			error_log(
-				"No se pudo encontrar el directorio de instalación para eliminar: " . $installDir,
-			);
-		}
-
-		return $status->code === 0;
+		$this->appcontext->deleteDirectory($target->getDocRoot("/install"));
 	}
 }

@@ -2,6 +2,7 @@
 
 namespace Hestia\WebApp\Installers\Dolibarr;
 
+use Hestia\WebApp\InstallationTarget;
 use Hestia\WebApp\Installers\BaseSetup;
 
 class DolibarrSetup extends BaseSetup {
@@ -37,49 +38,49 @@ class DolibarrSetup extends BaseSetup {
 			],
 		],
 		"server" => [
+			"apache2" => [
+				"document_root" => "htdocs",
+			],
 			"nginx" => [
 				"template" => "dolibarr",
 			],
 			"php" => [
 				"supported" => ["7.4", "8.0", "8.1", "8.2", "8.3"],
 			],
-			"document_root" => "htdocs",
 		],
 	];
 
-	public function install(array $options = null): bool {
-		parent::install($options);
+	public function install(InstallationTarget $target, array $options = null): void {
+		parent::install($target, $options);
 		parent::setup($options);
 
-		$installationTarget = $this->getInstallationTarget();
-
 		$this->appcontext->copyDirectory(
-			$installationTarget->getDocRoot("/dolibarr-" . $this->appInfo["version"] . "/."),
-			$installationTarget->getDocRoot()
+			$target->getDocRoot("/dolibarr-" . $this->appInfo["version"] . "/."),
+			$target->getDocRoot()
 		);
 
 		$language = $options["language"] ?? "en_EN";
 
 		$this->appcontext->moveFile(
-			$installationTarget->getDocRoot("htdocs/conf/conf.php.example"),
-			$installationTarget->getDocRoot("htdocs/conf/conf.php"),
+			$target->getDocRoot("htdocs/conf/conf.php.example"),
+			$target->getDocRoot("htdocs/conf/conf.php"),
 		);
 
 		$this->appcontext->changeFilePermissions(
-			$installationTarget->getDocRoot("htdocs/conf/conf.php"),
+			$target->getDocRoot("htdocs/conf/conf.php"),
 			"666"
 		);
 
-		$this->appcontext->addDirectory($installationTarget->getDocRoot("documents"));
+		$this->appcontext->addDirectory($target->getDocRoot("documents"));
 
 		$this->appcontext->sendPostRequest(
-			$installationTarget->getUrl() . "/install/step1.php",
+			$target->getUrl() . "/install/step1.php",
 			[
 				'testpost' => 'ok',
 				'action' => 'set',
-				'main_dir' => $installationTarget->getDocRoot("htdocs"),
-				'main_data_dir' => $installationTarget->getDocRoot("documents"),
-				'main_url' => $installationTarget->getUrl(),
+				'main_dir' => $target->getDocRoot("htdocs"),
+				'main_data_dir' => $target->getDocRoot("documents"),
+				'main_url' => $target->getUrl(),
 				'db_type' => 'mysqli',
 				'db_host' => 'localhost',
 				'db_port' => '3306',
@@ -92,7 +93,7 @@ class DolibarrSetup extends BaseSetup {
 		);
 
 		$this->appcontext->sendPostRequest(
-			$installationTarget->getUrl() . "/install/step2.php",
+			$target->getUrl() . "/install/step2.php",
 			[
 				'testpost' => 'ok',
 				'action' => 'set',
@@ -103,7 +104,7 @@ class DolibarrSetup extends BaseSetup {
 		);
 
 		$this->appcontext->sendPostRequest(
-			$installationTarget->getUrl() . "/install/step4.php",
+			$target->getUrl() . "/install/step4.php",
 			[
 				'testpost' => 'ok',
 				'action' => 'set',
@@ -113,7 +114,7 @@ class DolibarrSetup extends BaseSetup {
 		);
 
 		$this->appcontext->sendPostRequest(
-			$installationTarget->getUrl() . "/install/step5.php",
+			$target->getUrl() . "/install/step5.php",
 			[
 				'testpost' => 'ok',
 				'login' => $options["dolibarr_account_username"],
@@ -121,9 +122,5 @@ class DolibarrSetup extends BaseSetup {
 				'selectlang' => $language,
 			]
 		);
-
-		$this->cleanup();
-
-		return true;
 	}
 }

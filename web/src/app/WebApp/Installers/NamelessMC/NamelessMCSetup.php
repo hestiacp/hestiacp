@@ -3,6 +3,7 @@
 namespace Hestia\WebApp\Installers\NamelessMC;
 
 use Hestia\System\Util;
+use Hestia\WebApp\InstallationTarget;
 use Hestia\WebApp\Installers\BaseSetup;
 
 class NamelessMCSetup extends BaseSetup {
@@ -42,11 +43,7 @@ class NamelessMCSetup extends BaseSetup {
 		],
 	];
 
-	public function install(array $options = null) {
-		parent::install($options);
-
-		$status = 0;
-
-		return $status === 0;
+	public function install(InstallationTarget $target, array $options = null): void {
+		parent::install($target, $options);
 	}
 }

@@ -5,11 +5,15 @@ declare(strict_types=1);
 namespace Hestia\System;
 use Exception;
 use RuntimeException;
+use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
-use function array_unshift;
+use function _;
+use function array_filter;
 use function chmod;
-use function Hestiacp\quoteshellarg\quoteshellarg;
-use function is_file;
+use function explode;
+use function realpath;
+use function sprintf;
+use function str_starts_with;
 use function trigger_error;
 use function unlink;
 use const DIRECTORY_SEPARATOR;
@@ -17,27 +21,22 @@ use const DIRECTORY_SEPARATOR;
 class HestiaApp {
 	/** @var string[] */
 	public $errors;
-	protected const TMPDIR_DOWNLOADS = "/tmp/hestia-webapp";
 	protected $phpsupport = false;
-
-	public function __construct() {
-		@mkdir(self::TMPDIR_DOWNLOADS);
-	}
 
 	public function addDirectory(string $path): void
 	{
-		$result = $this->runUser("v-add-fs-directory", [$path]);
-
-		if ($result->exitCode !== 0) {
+		try {
+			$this->runUser("v-add-fs-directory", [$path]);
+		} catch (ProcessFailedException) {
 			throw new RuntimeException(sprintf('Failed to add directory "%s"', $path));
 		}
 	}
 
 	public function copyDirectory(string $fromPath, string $toPath): void
 	{
-		$result = $this->runUser("v-copy-fs-directory", [$fromPath, $toPath]);
-
-		if ($result->exitCode !== 0) {
+		try {
+			$this->runUser("v-copy-fs-directory", [$fromPath, $toPath]);
+		} catch (ProcessFailedException) {
 			throw new RuntimeException(
 				sprintf('Failed to copy directory "%s" to "%s"', $fromPath, $toPath)
 			);
@@ -46,9 +45,35 @@ class HestiaApp {
 
 	public function deleteDirectory(string $path): void
 	{
-		$result = $this->runUser("v-delete-fs-directory", [$path]);
+		try {
+			$this->runUser("v-delete-fs-directory", [$path]);
+		} catch (ProcessFailedException) {
+			throw new RuntimeException(sprintf('Failed to remove directory "%s"', $path));
+		}
+	}
 
-		if ($result->exitCode !== 0) {
+	/**
+	 * @param string $path
+	 * @return string[]
+	 */
+	public function listFiles(string $path): array
+	{
+		try {
+			$result = $this->runUser("v-run-cli-cmd", ["ls", $path]);
+
+			return array_filter(explode('\n', $result->output));
+		} catch (ProcessFailedException) {
+			throw new RuntimeException("Cannot list domain files");
+		}
+	}
+
+	public function readFile(string $path): string
+	{
+		try {
+			$result = $this->runUser("v-open-fs-file", [$path]);
+
+			return $result->output;
+		} catch (ProcessFailedException) {
 			throw new RuntimeException(sprintf('Failed to remove directory "%s"', $path));
 		}
 	}
@@ -74,9 +99,9 @@ class HestiaApp {
 
 	public function moveFile(string $fromPath, string $toPath): void
 	{
-		$result = $this->runUser("v-move-fs-file", [$fromPath, $toPath]);
-
-		if ($result->exitCode !== 0) {
+		try {
+			$this->runUser("v-move-fs-file", [$fromPath, $toPath]);
+		} catch (ProcessFailedException) {
 			throw new RuntimeException(
 				sprintf('Failed to move file "%s" to "%s"', $fromPath, $toPath)
 			);
@@ -85,9 +110,9 @@ class HestiaApp {
 
 	public function changeFilePermissions(string $filePath, string $permission): void
 	{
-		$result = $this->runUser("v-change-fs-file-permission", [$filePath, $permission]);
-
-		if ($result->exitCode !== 0) {
+		try {
+			$this->runUser("v-change-fs-file-permission", [$filePath, $permission]);
+		} catch (ProcessFailedException) {
 			throw new RuntimeException(
 				sprintf('Failed to change file "%s" permissions to "%s"', $filePath, $permission)
 			);
@@ -96,15 +121,32 @@ class HestiaApp {
 
 	public function deleteFile(string $filePath): void
 	{
-		$result = $this->runUser("v-delete-fs-file", [$filePath]);
-
-		if ($result->exitCode !== 0) {
+		try {
+			$this->runUser("v-delete-fs-file", [$filePath]);
+		} catch (ProcessFailedException) {
 			throw new RuntimeException(sprintf('Failed to delete file "%s"', $filePath));
 		}
 	}
 
-	public function sendPostRequest($url, array $formData, array $headers = []): void
-	{
+	public function archiveExtract(string $filePath, string $extractDirectoryPath): void {
+		if (!realpath($filePath)) {
+			throw new Exception("Error extracting archive: archive file not found");
+		}
+
+		if (empty($extractDirectoryPath)) {
+			throw new Exception("Error extracting archive: missing target folder");
+		}
+
+		try {
+			$this->runUser("v-extract-fs-archive", [$filePath, $extractDirectoryPath]);
+
+			unlink($filePath);
+		} catch (ProcessFailedException) {
+			throw new RuntimeException(sprintf('Failed to extract "%s"', $filePath));
+		}
+	}
+
+	public function sendPostRequest($url, array $formData, array $headers = []): void {
 		$ch = curl_init($url);
 
 		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
@@ -129,43 +171,25 @@ class HestiaApp {
 		}
 	}
 
-	public function runComposer($phpVersion, $args): HestiaCommandResult {
-		$this->runUser("v-add-user-composer", []);
-
-		$composerBin = $this->getUserHomeDir() . "/.composer/composer";
-
-		return $this->runPHP($phpVersion, $composerBin, $args);
-	}
-
-	public function runWp($phpVersion, $args): HestiaCommandResult {
-		$this->runUser("v-add-user-wp-cli", []);
-
-		$wpCliBin = $this->getUserHomeDir() . "/.wp-cli/wp";
-
-		return $this->runPHP($phpVersion, $wpCliBin, $args);
-	}
-
-	public function runPHP(string $phpVersion, string $command, array $arguments): HestiaCommandResult
-	{
-		$phpCommand = [
-			"/usr/bin/php" . $phpVersion,
-			$command,
-			...$arguments,
-		];
-
-		$result = $this->runUser("v-run-cli-cmd", $phpCommand);
-
-		if ($result->exitCode !== 0) {
-			throw new RuntimeException(
-				sprintf('Failed to run php command "%s"', $result->command)
+	public function downloadUrl(string $url, string $path): void {
+		try {
+			$this->runUser(
+				"v-run-cli-cmd",
+				[
+					"/usr/bin/wget",
+					"--tries",
+					"3",
+					"--timeout=30",
+					"--no-dns-cache",
+					"-nv",
+					$url,
+					"-P",
+					$path,
+				],
 			);
+		} catch (ProcessFailedException) {
+			throw new RuntimeException(sprintf('Failed to download "%s"', $url));
 		}
-
-		return $result;
-	}
-
-	public function runUser(string $cmd, array $args): HestiaCommandResult {
-		return $this->run($cmd, [$this->user(), ...$args]);
 	}
 
 	// Effective user
@@ -188,19 +212,28 @@ class HestiaApp {
 	}
 
 	public function userOwnsDomain(string $domain): bool {
-		$result = $this->runUser("v-list-web-domain", [$domain, "json"]);
+		try {
+			$this->runUser("v-list-web-domain", [$domain, "json"]);
 
-		return $result->exitCode === 0;
+			return true;
+		} catch (ProcessFailedException) {
+			return false;
+		}
 	}
 
 	public function checkDatabaseLimit(): bool {
-		$result = $this->runUser("v-list-user", ["json"]);
+		try {
+			$result = $this->runUser("v-list-user", ["json"]);
 
-		$userInfo = $result->getOutputJson()[$this->user()];
+			$userInfo = $result->getOutputJson()[$this->user()];
 
-		return $userInfo["DATABASES"] === "unlimited"
-			|| ($userInfo["DATABASES"] - $userInfo["U_DATABASES"]) < 1;
+			return $userInfo["DATABASES"] === "unlimited"
+				|| ($userInfo["DATABASES"] - $userInfo["U_DATABASES"]) < 1;
+		} catch (ProcessFailedException) {
+			throw new RuntimeException('Unable to check database limit');
+		}
 	}
+
 	public function databaseAdd(
 		string $dbname,
 		string $dbuser,
@@ -209,23 +242,26 @@ class HestiaApp {
 		string $dbhost = "localhost",
 		string $charset = "utf8mb4",
 	) {
-		$v_password = tempnam("/tmp", "hst");
-		$fp = fopen($v_password, "w");
+		$passwordFile = tempnam("/tmp", "hst");
+
+		$fp = fopen($passwordFile, "w");
 		fwrite($fp, $dbpass . "\n");
 		fclose($fp);
-		$status = $this->runUser("v-add-database", [
-			$dbname,
-			$dbuser,
-			$v_password,
-			$dbtype,
-			$dbhost,
-			$charset,
-		]);
-		if ($status->exitCode !== 0) {
-			$this->errors[] = _("Unable to add database!");
+
+		try {
+			$this->runUser("v-add-database", [
+				$dbname,
+				$dbuser,
+				$passwordFile,
+				$dbtype,
+				$dbhost,
+				$charset,
+			]);
+		} catch (ProcessFailedException) {
+			throw new RuntimeException(_("Unable to add database!"));
+		} finally {
+			unlink($passwordFile);
 		}
-		unlink($v_password);
-		return $status;
 	}
 
 	public function getCurrentBackendTemplate(string $domain) {
@@ -294,98 +330,62 @@ class HestiaApp {
 
 	public function getWebDomain(string $domainName): WebDomain
 	{
-		$result = $this->runUser("v-list-web-domain", [$domainName, "json"]);
+		try {
+			$result = $this->runUser("v-list-web-domain", [$domainName, "json"]);
 
-		if ($result->exitCode !== 0) {
+			return new WebDomain(
+				$domainName,
+				Util::join_paths($this->getUserHomeDir(), "web", $domainName),
+				filter_var($result->getOutputJson()[$domainName]["IP"], FILTER_VALIDATE_IP),
+				$result->getOutputJson()[$domainName]["SSL"] === "yes"
+			);
+		} catch (ProcessFailedException) {
 			throw new Exception("Cannot find domain for user");
 		}
-
-		return new WebDomain(
-			$domainName,
-			Util::join_paths($this->getUserHomeDir(), "web", $domainName),
-			filter_var($result->getOutputJson()[$domainName]["IP"], FILTER_VALIDATE_IP),
-			$result->getOutputJson()[$domainName]["SSL"] === "yes"
-		);
 	}
 
 	public function getWebDomainPath(string $domain) {
 		return Util::join_paths($this->getUserHomeDir(), "web", $domain);
 	}
 
-	public function downloadUrl(string $src, $path = null, &$result = null) {
-		if (strpos($src, "http://") !== 0 && strpos($src, "https://") !== 0) {
-			return false;
-		}
+	public function runComposer($phpVersion, $args): HestiaCommandResult {
+		$this->runUser("v-add-user-composer", ["2", "yes"]);
 
-		exec(
-			"/usr/bin/wget --tries 3 --timeout=30 --no-dns-cache -nv " .
-				quoteshellarg($src) .
-				" -P " .
-				quoteshellarg(self::TMPDIR_DOWNLOADS) .
-				" 2>&1",
-			$output,
-			$return_var,
-		);
-		if ($return_var !== 0) {
-			return false;
-		}
+		$composerBin = $this->getUserHomeDir() . "/.composer/composer";
 
-		if (
-			!preg_match(
-				'/URL:\s*(.+?)\s*\[(.+?)\]\s*->\s*"(.+?)"/',
-				implode(PHP_EOL, $output),
-				$matches,
-			)
-		) {
-			return false;
-		}
-
-		if (empty($matches) || count($matches) != 4) {
-			return false;
-		}
-
-		$status["url"] = $matches[1];
-		$status["file"] = $matches[3];
-		$result = (object) $status;
-		return true;
+		return $this->runPHP($phpVersion, $composerBin, $args);
 	}
 
-	public function archiveExtract(string $src, string $path, $skip_components = null) {
-		if (empty($path)) {
-			throw new Exception("Error extracting archive: missing target folder");
-		}
+	public function runWp($phpVersion, $args): HestiaCommandResult {
+		$this->runUser("v-add-user-wp-cli", ["yes"]);
 
-		if (realpath($src)) {
-			$archive_file = $src;
-		} else {
-			if (!$this->downloadUrl($src, null, $download_result)) {
-				throw new Exception("Error downloading archive");
-			}
-			$archive_file = $download_result->file;
-		}
+		$wpCliBin = $this->getUserHomeDir() . "/.wp-cli/wp";
 
-		$result = $this->runUser("v-extract-fs-archive", [
-			$archive_file,
-			$path,
-			null,
-			$skip_components,
-		]);
-		unlink($archive_file);
-
-		return $result;
+		return $this->runPHP($phpVersion, $wpCliBin, $args);
 	}
 
-	public function cleanupTmpDir(): void {
-		$files = glob(self::TMPDIR_DOWNLOADS . "/*");
-		foreach ($files as $file) {
-			if (is_file($file)) {
-				unlink($file);
-			}
+	public function runPHP(string $phpVersion, string $command, array $arguments): HestiaCommandResult
+	{
+		$phpCommand = [
+			"/usr/bin/php" . $phpVersion,
+			$command,
+			...$arguments,
+		];
+
+		try {
+			return $this->runUser("v-run-cli-cmd", $phpCommand);
+		} catch (ProcessFailedException $exception) {
+			throw new RuntimeException(
+				sprintf(
+					'Failed to run php command "%s"',
+					$exception->getProcess()->getCommandLine(),
+				),
+			);
 		}
 	}
 
-	public function __destruct() {
-		$this->cleanupTmpDir();
+	private function runUser(string $cmd, array $args): HestiaCommandResult {
+		return $this->run($cmd, [$this->user(), ...$args]);
 	}
 
 	private function run(string $cmd, array $args): HestiaCommandResult
@@ -398,6 +398,12 @@ class HestiaApp {
 			...$args,
 		];
 
+		// Escape spaces to disallow splitting commands and allow spaces in names like site names
+		$command = array_map(
+			fn (string $argument) => str_replace(" ", "\\ ", $argument),
+			$command,
+		);
+
 		$process = new Process($command);
 		$process->run();
 
@@ -405,7 +411,7 @@ class HestiaApp {
 			//log error message in nginx-error.log
 			trigger_error($process->getCommandLine() . " | " . $process->getOutput());
 			//throw exception if command fails
-			throw new RuntimeException($process->getErrorOutput());
+			throw new ProcessFailedException($process);
 		}
 
 		return new HestiaCommandResult(

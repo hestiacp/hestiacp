@@ -2,6 +2,7 @@
 
 namespace Hestia\WebApp\Installers\Drupal;
 
+use Hestia\WebApp\InstallationTarget;
 use Hestia\WebApp\Installers\BaseSetup;
 use function sprintf;
 
@@ -25,6 +26,9 @@ class DrupalSetup extends BaseSetup {
 			"composer" => ["src" => "drupal/recommended-project", "dst" => "/"],
 		],
 		"server" => [
+			"apache2" => [
+				"document_root" => "web",
+			],
 			"nginx" => [
 				"template" => "drupal-composer",
 			],
@@ -34,26 +38,13 @@ class DrupalSetup extends BaseSetup {
 		],
 	];
 
-	public function install(array $options = null): bool {
-		parent::install($options);
+	public function install(InstallationTarget $target, array $options = null): void {
+		parent::install($target, $options);
 		parent::setup($options);
-
-		$installationTarget = $this->getInstallationTarget();
 
 		$this->appcontext->runComposer(
 			$options["php_version"],
-			["require", "-d " . $installationTarget->getDocRoot(), "drush/drush"],
-		);
-
-		$htaccessContents = '
-<IfModule mod_rewrite.c>
-		RewriteEngine On
-		RewriteRule ^(.*)$ web/$1 [L]
-</IfModule>';
-
-		$this->appcontext->createFile(
-			$installationTarget->getDocRoot(".htaccess"),
-			$htaccessContents,
+			["require", "-d", $target->getDocRoot(), "drush/drush"],
 		);
 
 		$databaseUrl = sprintf(
@@ -66,18 +57,16 @@ class DrupalSetup extends BaseSetup {
 
 		$this->appcontext->runPHP(
 			$options["php_version"],
-			$installationTarget->getDocRoot("/vendor/drush/drush/drush.php"),
+			$target->getDocRoot("/vendor/drush/drush/drush.php"),
 			[
 				"site-install",
 				"standard",
 				"--db-url=" . $databaseUrl,
 				"--account-name=" . $options["username"],
 				"--account-pass=" . $options["password"],
-				"--site-name=Drupal",
+				"--site-name=Drupal", // Sadly even when escaped spaces are splitted up
 				"--site-mail=" . $options["email"],
 			]
 		);
-
-		return true;
 	}
 }

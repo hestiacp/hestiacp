@@ -6,6 +6,7 @@ namespace Hestia\WebApp;
 use Hestia\System\HestiaApp;
 use function array_filter;
 use function explode;
+use function in_array;
 use function var_dump;
 
 class AppWizard {
@@ -34,34 +35,16 @@ class AppWizard {
 		$this->appsetup = $app;
 	}
 
-	public function getStatus() {
-		return $this->errors;
-	}
-
 	public function isDomainRootClean() {
 		$installationTarget = $this->appsetup->getInstallationTarget();
+		$files = $this->appcontext->listFiles($installationTarget->getDocRoot());
 
-		$result = $this->appcontext->runUser(
-			"v-run-cli-cmd",
-			["ls", $installationTarget->getDocRoot()]
+		$filteredFiles = array_filter(
+			$files,
+			fn (string $file) => in_array($file, ["index.html", "robots.txt"])
 		);
 
-		if ($result->exitCode !== 0) {
-			throw new \Exception("Cannot list domain files");
-		}
-
-		$files = array_filter(explode('\n', $result->output));
-
-		if (count($files) > 2) {
-			return false;
-		}
-
-		foreach ($files as $file) {
-			if (!in_array($file, ["index.html", "robots.txt"])) {
-				return false;
-			}
-		}
-		return true;
+		return count($filteredFiles) > 0;
 	}
 
 	public function formNs() {
@@ -115,7 +98,9 @@ class AppWizard {
 		return $filteredoptions;
 	}
 
-	public function execute(array $options) {
+	public function execute(array $options): void {
+		$target = $this->appsetup->getInstallationTarget();
+
 		$options = $this->filterOptions($options);
 
 		$random_num = (string) random_int(10000, 99999);
@@ -134,7 +119,8 @@ class AppWizard {
 
 			if (!$this->appcontext->checkDatabaseLimit()) {
 				$this->errors[] = _("Unable to add database! Limit reached!");
-				return false;
+
+				return;
 			}
 
 			if (
@@ -147,12 +133,13 @@ class AppWizard {
 				)
 			) {
 				$this->errors[] = "Error adding database";
-				return false;
+
+				return;
 			}
 		}
 
 		if (empty($this->errors)) {
-			return $this->appsetup->install($options);
+			$this->appsetup->install($target, $options);
 		}
 	}
 }

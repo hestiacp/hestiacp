@@ -2,6 +2,7 @@
 
 namespace Hestia\WebApp\Installers\DokuWiki;
 
+use Hestia\WebApp\InstallationTarget;
 use Hestia\WebApp\Installers\BaseSetup;
 
 class DokuWikiSetup extends BaseSetup {
@@ -57,20 +58,18 @@ class DokuWikiSetup extends BaseSetup {
 		],
 	];
 
-	public function install(array $options = null, &$status = null) {
-		parent::install($options);
+	public function install(InstallationTarget $target, array $options = null): void {
+		parent::install($target, $options);
 		parent::setup($options);
-
-		$installationTarget = $this->getInstallationTarget();
 
 		// Enable htaccess
 		$this->appcontext->moveFile(
-			$installationTarget->getDocRoot(".htaccess.dist"),
-			$installationTarget->getDocRoot(".htaccess")
+			$target->getDocRoot(".htaccess.dist"),
+			$target->getDocRoot(".htaccess")
 		);
 
 		$this->appcontext->sendPostRequest(
-			$installationTarget->getUrl() . "/install.php",
+			$target->getUrl() . "/install.php",
 			[
 				'l' => 'en',
 				'd[title]' => $options["wiki_name"],
@@ -90,9 +89,6 @@ class DokuWikiSetup extends BaseSetup {
 		);
 
 		// remove temp folder
-		$this->appcontext->deleteFile($installationTarget->getDocRoot("install.php"));
-		$this->cleanup();
-
-		return true;
+		$this->appcontext->deleteFile($target->getDocRoot("install.php"));
 	}
 }

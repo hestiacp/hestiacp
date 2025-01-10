@@ -624,7 +624,7 @@ upgrade_phpmyadmin() {
 				chown root:hestiamail /var/lib/phpmyadmin/blowfish_secret.inc.php
 				chmod 0640 /var/lib/phpmyadmin/blowfish_secret.inc.php
 			fi
-			chown root:hestiamail /usr/share/phpmyadmin/tmp
+			chown hestiamail:hestiamail /usr/share/phpmyadmin/tmp
 			chmod 0770 /usr/share/phpmyadmin/tmp
 		else
 			# Display upgrade information
@@ -649,7 +649,7 @@ upgrade_phpmyadmin() {
 			# Create temporary folder and change permissions
 			if [ ! -d /usr/share/phpmyadmin/tmp ]; then
 				mkdir /usr/share/phpmyadmin/tmp
-				chown root:hestiamail /usr/share/phpmyadmin/tmp
+				chown hestiamail:hestiamail /usr/share/phpmyadmin/tmp
 				chmod 0770 /usr/share/phpmyadmin/tmp
 
 			fi

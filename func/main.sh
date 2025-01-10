@@ -814,6 +814,14 @@ is_ip46_format_valid() {
     fi
 }
 
+is_netmask_format_valid() {
+    object_name=${2-netmask}
+    valid=$($HESTIA_PHP -r '$netmask="$argv[1]"; echo (preg_match("/^(128|192|224|240|248|252|254|255)\.(0|128|192|224|240|248|252|254|255)\.(0|128|192|224|240|248|252|254|255)\.(0|128|192|224|240|248|252|254|255)/", $netmask) ? 0 : 1);' $1);
+    if [ "$valid" -ne 0 ]; then
+        check_result "$E_INVALID" "invalid $object_name :: $1"
+    fi
+}
+
 # Proxy extention format validator
 is_extention_format_valid() {
 	exclude="[!|#|$|^|&|(|)|+|=|{|}|:|@|<|>|?|/|\|\"|'|;|%|\`| ]"
@@ -1215,7 +1223,7 @@ is_format_valid() {
 				month) is_cron_format_valid "$arg" $arg_name ;;
 				name) is_name_format_valid "$arg" "name" ;;
 				nat_ip) is_ip_format_valid "$arg" ;;
-				netmask) is_ip_format_valid "$arg" 'netmask' ;;
+				netmask) is_netmask_format_valid "$arg" 'netmask' ;;
 				newid) is_int_format_valid "$arg" 'id' ;;
 				ns1) is_domain_format_valid "$arg" 'ns1' ;;
 				ns2) is_domain_format_valid "$arg" 'ns2' ;;

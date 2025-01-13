@@ -348,7 +348,7 @@
 							</div>
 							<div class="u-mb10">
 								<label for="v_proxy_url" class="form-label">
-									<?php print _("Proxy Template Url"); ?> <span class="optional">(<?= _("Optional") ?>)</span>
+									<?php print _("Revers Proxy Url"); ?>
 								</label>
 								<input type="text" class="form-control" name="v_proxy_url" id="v_proxy_url" value="<?= htmlentities(trim((!empty($v_proxy_url) ? $v_proxy_url : 'http://127.0.0.1:8080'), "'")) ?>">
 							</div>

@@ -418,11 +418,13 @@ if (!empty($_POST["save"])) {
 			$ext = preg_replace("/\s+/", " ", $ext);
 			$ext = trim($ext);
 			$ext = str_replace(" ", ", ", $ext);
-			if ($v_proxy_template != $_POST["v_proxy_template"] || $v_proxy_ext != $ext) {
-				$v_proxy_url = $_POST["v_proxy_url"];
+			if ($v_proxy_template != $_POST["v_proxy_template"] || $v_proxy_ext != $ext || $v_proxy_url != $_POST["v_proxy_url"]) {
 				$ext = str_replace(", ", ",", $ext);
 				if (!empty($_POST["v_proxy_template"])) {
 					$v_proxy_template = $_POST["v_proxy_template"];
+				}
+				if (!empty($_POST["v_proxy_url"])) {
+					$v_proxy_url = $_POST["v_proxy_url"];
 				}
 				exec(
 					HESTIA_CMD .

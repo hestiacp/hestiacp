@@ -1318,6 +1318,7 @@ is_format_valid() {
 				port_ext) is_fw_port_format_valid "$arg" ;;
 				protocol) is_fw_protocol_format_valid "$arg" ;;
 				proxy_ext) is_extention_format_valid "$arg" ;;
+				proxy_url) is_domain_format_valid "$arg" ;;
 				quota) is_int_format_valid "$arg" 'quota' ;;
 				rate) is_int_format_valid "$arg" 'rate' ;;
 				record) is_common_format_valid "$arg" 'record' ;;

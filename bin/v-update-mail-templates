@@ -26,6 +26,10 @@ source_conf "$HESTIA/conf/hestia.conf"
 #                       Action                             #
 #----------------------------------------------------------#
 
+check_args '1' "$#" '[RESTART]' '[SKIP]'
+is_format_valid 'restart'
+
+is_boolean_format_valid "$skip" 'skip'
 # Update templates
 cp -rf $HESTIA_INSTALL_DIR/templates/mail $HESTIA/data/templates/
 

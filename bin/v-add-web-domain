@@ -50,7 +50,7 @@ domain_utf=$(idn2 --quiet -d "$domain_idn")
 
 is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
 check_args '2' "$#" 'USER DOMAIN [IP] [RESTART] [ALIASES] [PROXY_EXTENSIONS]'
-is_format_valid 'user' 'domain' 'aliases' 'ip' 'proxy_ext'
+is_format_valid 'user' 'domain' 'aliases' 'ip' 'proxy_ext' 'restart'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 is_package_full 'WEB_DOMAINS'

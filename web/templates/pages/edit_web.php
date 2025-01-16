@@ -349,7 +349,7 @@
 							</div>
 							<div x-show="statsProxyUrlFilled" class="u-mb10 js-proxy-url-field">
 								<label for="v_proxy_url" class="form-label">
-									<?php print _("Revers Proxy Url"); ?>
+									<?php print _("Reverse Proxy Url"); ?>
 								</label>
 								<input type="text" class="form-control" name="v_proxy_url" id="v_proxy_url" value="<?= htmlentities(trim((!empty($v_proxy_url) ? $v_proxy_url : 'http://127.0.0.1:8080'), "'")) ?>">
 								<small>http://localhost:8080</small>

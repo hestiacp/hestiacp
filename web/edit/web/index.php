@@ -436,9 +436,9 @@ if (!empty($_POST["save"])) {
 						quoteshellarg($v_proxy_template) .
 						" " .
 						quoteshellarg($ext) .
+						" 'no'" .
 						" " .
-						quoteshellarg($v_proxy_url) .
-						" 'no'",
+						quoteshellarg($v_proxy_url),
 					$output,
 					$return_var,
 				);
@@ -476,9 +476,9 @@ if (!empty($_POST["save"])) {
 					quoteshellarg($v_proxy_template) .
 					" " .
 					quoteshellarg($ext) .
+					" 'no'" .
 					" " .
-					quoteshellarg($v_proxy_url) .
-					" 'no'",
+					quoteshellarg($v_proxy_url),
 				$output,
 				$return_var,
 			);

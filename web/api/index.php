@@ -110,7 +110,9 @@ function api_legacy(array $request_data) {
 			unset($output);
 			exec(
 				HESTIA_CMD .
-					'v-check-user-password "admin" ' .
+					"v-check-user-password " .
+					quoteshellarg($root_user) .
+					" " .
 					quoteshellarg($v_password) .
 					" " .
 					$v_ip .
@@ -222,7 +224,7 @@ function api_connection(array $request_data) {
 	exec(HESTIA_CMD . "v-list-sys-config json", $output, $return_var);
 	$settings = json_decode(implode("", $output), true);
 	unset($output, $return_var);
-
+	$root_user = $settings["config"]["ROOT_USER"];
 	// Get the status of api
 	$api_status =
 		!empty($settings["config"]["API_SYSTEM"]) && is_numeric($settings["config"]["API_SYSTEM"])
@@ -292,13 +294,13 @@ function api_connection(array $request_data) {
 			: -1;
 
 	# Check if API access is enabled for nonadmin users
-	if ($key_user != "admin" && $api_status < 2) {
+	if ($key_user != $root_user && $api_status < 2) {
 		api_error(E_API_DISABLED, "API has been disabled", $hst_return);
 	}
 
 	// Checks if the value entered in the "user" argument matches the user of the key
 	if (
-		$key_user != "admin" &&
+		$key_user != $root_user &&
 		$user_arg_position > 0 &&
 		$hst_cmd_args["arg{$user_arg_position}"] != $key_user
 	) {

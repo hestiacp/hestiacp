@@ -81,5 +81,4 @@ function translate_email($string, $replace) {
  * @return string Language code (such as 'en' and 'ja')
  */
 
-function detect_login_language() {
-}
+function detect_login_language() {}

@@ -32,7 +32,7 @@
 		"xterm-addon-webgl": "^0.16.0"
 	},
 	"devDependencies": {
-		"@prettier/plugin-php": "^0.22.2",
+		"@prettier/plugin-php": "^0.22.4",
 		"@testing-library/vue": "^8.1.0",
 		"@vitejs/plugin-vue": "^5.2.1",
 		"browserslist": "^4.24.4",
@@ -44,15 +44,15 @@
 		"husky": "^9.1.7",
 		"jsdom": "^25.0.1",
 		"lightningcss": "^1.29.1",
-		"lint-staged": "^15.3.0",
-		"markdownlint-cli2": "^0.17.1",
+		"lint-staged": "^15.4.1",
+		"markdownlint-cli2": "^0.17.2",
 		"prettier": "^3.4.2",
 		"prettier-plugin-nginx": "^1.0.3",
 		"prettier-plugin-sh": "^0.14.0",
 		"prettier-plugin-sql": "^0.18.1",
 		"stylelint": "^16.13.2",
 		"stylelint-config-standard": "^36.0.1",
-		"vitepress": "^1.5.0",
+		"vitepress": "^1.6.3",
 		"vitest": "^2.1.8",
 		"vue": "^3.5.13"
 	},

@@ -19,7 +19,7 @@ class SymfonySetup extends BaseSetup
 
     protected array $config = [
         'form' => [],
-        'database' => true,
+        'database' => false,
         'resources' => [
             'composer' => ['src' => 'symfony/website-skeleton', 'dst' => '/'],
         ],

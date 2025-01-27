@@ -5,7 +5,7 @@
         }
     },
     "require-dev": {
-        "filp/whoops": "2.16.0"
+        "filp/whoops": "2.17.0"
     },
     "require": {
         "symfony/console": "^7.2.1"

@@ -97,6 +97,11 @@ if [ -s /etc/nginx/conf.d/phpmyadmin.inc ]; then
 	cp -f $HESTIA_INSTALL_DIR/nginx/phpmyadmin.inc /etc/nginx/conf.d/phpmyadmin.inc
 fi
 
+# Fix MySQL lc-messages-dir path for mariadb
+if [ -x /usr/bin/mariadb ]; then
+	sed -i 's|/usr/share/mysql|/usr/share/mariadb|g' /etc/mysql/my.cnf
+fi
+
 $BIN/v-add-user-notification 'admin' 'Hestia security has been upgraded' ' A new user "hestiaweb" has been created and is used for login. Make sure other Hestia packages are updated as well otherwise the system may not work as expected.'
 add_upgrade_message 'Security has been upgraded, A new user "hestiaweb" has been created and is used for login. Make sure other Hestia packages are updated as well otherwise the system may not work as expected.'
 # Ensures proper permissions for Hestia service interactions.

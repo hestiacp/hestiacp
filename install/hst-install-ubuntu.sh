@@ -1810,6 +1810,7 @@ if [ "$mysql" = 'yes' ] || [ "$mysql8" = 'yes' ]; then
 	fi
 
 	if [ "$mysql_type" = 'MariaDB' ]; then
+		sed -i 's|/usr/share/mysql|/usr/share/mariadb|g' /etc/mysql/my.cnf
 		update-rc.d mariadb defaults > /dev/null 2>&1
 		systemctl -q enable mariadb 2> /dev/null
 		systemctl start mariadb >> $LOG

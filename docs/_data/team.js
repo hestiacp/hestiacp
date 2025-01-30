@@ -9,10 +9,7 @@ export const projectManagers = [
 	{
 		avatar: 'https://www.github.com/jaapmarcus.png',
 		name: 'Jaap Marcus 🇳🇱',
-		links: [
-			{ icon: 'github', link: 'https://github.com/jaapmarcus' },
-			{ icon: 'twitter', link: 'https://twitter.com/jaapmarcus' },
-		],
+		links: [{ icon: 'github', link: 'https://github.com/jaapmarcus' }],
 	},
 	{
 		avatar: 'https://www.github.com/Lupul.png',

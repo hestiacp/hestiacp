@@ -308,6 +308,7 @@ if (!empty($_POST["save"])) {
 		unset($output);
 		$v_hostname = $_POST["v_hostname"];
 	}
+
 	if ($_SESSION["WEB_BACKEND"] == "php-fpm") {
 		// Install/remove php versions
 		if (empty($_SESSION["error_msg"])) {

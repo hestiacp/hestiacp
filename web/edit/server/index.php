@@ -1330,13 +1330,7 @@ if (!empty($_POST["save"])) {
 		}
 	}
 	if (empty($_SESSION["error_msg"])) {
-		if (
-			$v_incremental_backups["SNAPSHOTS"] != $_POST["v_snapshots"] ||
-			$v_incremental_backups["KEEP_DAILY"] != $_POST["v_keep_daily"] ||
-			$v_incremental_backups["KEEP_WEEKLY"] != $_POST["v_keep_weekly"] ||
-			$v_incremental_backups["KEEP_MONTHLY"] != $_POST["v_keep_montly"] ||
-			$v_incremental_backups["KEEP_YEARLY"] != $_POST["v_keep_yearly"]
-		) {
+		if ($_POST["v_backup_incremental"] !== "yes" && $_SESSION["BACKUP_INCREMENTAL"] === "yes") {
 			exec(HESTIA_CMD . "v-delete-backup-host-restic ", $output, $return);
 			check_return_code($return_var, $output);
 			unset($output);

@@ -10,10 +10,9 @@ use Hestia\WebApp\InstallationTarget\InstallationTarget;
 
 class JoomlaSetup extends BaseSetup
 {
-    protected array $appInfo = [
+    protected array $info = [
         'name' => 'Joomla',
         'group' => 'cms',
-        'enabled' => true,
         'version' => 'latest',
         'thumbnail' => 'joomla_thumb.png',
     ];

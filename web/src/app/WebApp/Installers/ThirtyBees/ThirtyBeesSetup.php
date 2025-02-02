@@ -9,10 +9,9 @@ use Hestia\WebApp\InstallationTarget\InstallationTarget;
 
 class ThirtyBeesSetup extends BaseSetup
 {
-    protected array $appInfo = [
+    protected array $info = [
         'name' => 'ThirtyBees',
         'group' => 'ecommerce',
-        'enabled' => true,
         'version' => '1.5.1',
         'thumbnail' => 'thirtybees-thumb.png',
     ];

@@ -9,10 +9,9 @@ use Hestia\WebApp\InstallationTarget\InstallationTarget;
 
 class GravSetup extends BaseSetup
 {
-    protected array $appInfo = [
+    protected array $info = [
         'name' => 'Grav',
         'group' => 'cms',
-        'enabled' => true,
         'version' => 'latest',
         'thumbnail' => 'grav-symbol.svg',
     ];

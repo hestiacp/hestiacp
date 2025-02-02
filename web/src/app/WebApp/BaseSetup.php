@@ -18,16 +18,23 @@ use function str_starts_with;
 
 abstract class BaseSetup implements InstallerInterface
 {
-    protected array $appInfo;
+    protected array $info;
     protected array $config;
 
     public function __construct(protected HestiaApp $appcontext)
     {
     }
 
-    public function getApplicationName(): string
+    public function getInfo(): InstallerInfo
     {
-        return $this->appInfo['name'];
+        $supportedPHPVersions = $this->appcontext->getSupportedPHPVersions(
+            $this->config['server']['php']['supported'],
+        );
+
+        return InstallerInfo::fromArray([
+            ...$this->info,
+            'supportedPHPVersions' => $supportedPHPVersions,
+        ]);
     }
 
     public function getConfig(string $section = ''): mixed
@@ -68,12 +75,6 @@ abstract class BaseSetup implements InstallerInterface
             } else {
                 $this->appcontext->changeWebTemplate($domainName, 'default');
             }
-            if (isset($this->config['server']['apache2']['document_root'])) {
-                $this->appcontext->changeWebDocumentRoot(
-                    $domainName,
-                    $this->config['server']['apache2']['document_root'],
-                );
-            }
         }
         if ($_SESSION['WEB_BACKEND'] === 'php-fpm') {
             if (isset($this->config['server']['php']['supported'])) {
@@ -94,7 +95,7 @@ abstract class BaseSetup implements InstallerInterface
 
     private function setupDatabase(TargetDatabase $database): void
     {
-        if (!$database->isCreated) {
+        if ($database->createDatabase) {
             if (!$this->appcontext->checkDatabaseLimit()) {
                 throw new RuntimeException('Unable to add database! Limit reached!');
             }
@@ -115,7 +116,7 @@ abstract class BaseSetup implements InstallerInterface
 
     private function retrieveResources(InstallationTarget $target, array $options): void
     {
-        foreach ($this->getConfig('resources') as $resourceType => $resourceData) {
+        foreach ($this->config['resources'] as $resourceType => $resourceData) {
             $resourceLocation = $resourceData['src'];
 
             if (!empty($resourceData['dst']) && is_string($resourceData['dst'])) {
@@ -143,7 +144,7 @@ abstract class BaseSetup implements InstallerInterface
                     'core',
                     'download',
                     '--locale=' . $options['language'],
-                    '--version=' . $this->appInfo['version'],
+                    '--version=' . $this->info['version'],
                     '--path=' . $destinationPath,
                 ]);
 
@@ -151,15 +152,26 @@ abstract class BaseSetup implements InstallerInterface
             }
 
             if ($resourceType === 'archive') {
-                // Download archive
                 if (
-                    str_starts_with($resourceLocation, 'http://') ||
-                    str_starts_with($resourceLocation, 'https://')
+                    !str_starts_with($resourceLocation, 'http://') &&
+                    !str_starts_with($resourceLocation, 'https://')
                 ) {
-                    $this->appcontext->downloadUrl($resourceLocation, $destinationPath);
+                    // only unpack file archive
+                    $this->appcontext->archiveExtract($resourceLocation, $destinationPath);
+
+                    return;
                 }
 
+                // Download archive, unpack, delete download
+                $resourceLocation = $this->appcontext->downloadUrl(
+                    $resourceLocation,
+                    $destinationPath,
+                );
+
                 $this->appcontext->archiveExtract($resourceLocation, $destinationPath);
+                $this->appcontext->deleteFile($resourceLocation);
+
+                return;
             }
 
             throw new RuntimeException(sprintf('Unknown resource type "%s"', $resourceType));

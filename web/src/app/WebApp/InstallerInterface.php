@@ -8,7 +8,7 @@ use Hestia\WebApp\InstallationTarget\InstallationTarget;
 
 interface InstallerInterface
 {
-    public function getApplicationName(): string;
+    public function getInfo(): InstallerInfo;
 
     public function getConfig(string $section = ''): mixed;
 

@@ -9,10 +9,9 @@ use Hestia\WebApp\InstallationTarget\InstallationTarget;
 
 class LaravelSetup extends BaseSetup
 {
-    protected array $appInfo = [
+    protected array $info = [
         'name' => 'Laravel',
         'group' => 'framework',
-        'enabled' => true,
         'version' => 'latest',
         'thumbnail' => 'laravel-thumb.png',
     ];
@@ -24,9 +23,6 @@ class LaravelSetup extends BaseSetup
             'composer' => ['src' => 'laravel/laravel', 'dst' => '/'],
         ],
         'server' => [
-            'apache2' => [
-                'document_root' => 'public',
-            ],
             'nginx' => [
                 'template' => 'laravel',
             ],
@@ -38,6 +34,12 @@ class LaravelSetup extends BaseSetup
 
     protected function setupApplication(InstallationTarget $target, array $options): void
     {
-        // Nothing to do after installation of resources
+        $this->appcontext->createFile(
+            $target->getDocRoot('.htaccess'),
+            '<IfModule mod_rewrite.c>
+                    RewriteEngine On
+                    RewriteRule ^(.*)$ public/$1 [L]
+            </IfModule>',
+        );
     }
 }

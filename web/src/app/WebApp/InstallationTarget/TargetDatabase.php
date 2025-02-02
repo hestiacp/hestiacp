@@ -11,7 +11,7 @@ class TargetDatabase
         public readonly string $name,
         public readonly string $user,
         public readonly string $password,
-        public readonly bool $isCreated,
+        public readonly bool $createDatabase,
     ) {
     }
 

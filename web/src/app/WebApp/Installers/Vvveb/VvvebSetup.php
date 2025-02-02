@@ -9,10 +9,9 @@ use Hestia\WebApp\InstallationTarget\InstallationTarget;
 
 class VvvebSetup extends BaseSetup
 {
-    protected array $appInfo = [
+    protected array $info = [
         'name' => 'Vvveb',
         'group' => 'cms',
-        'enabled' => true,
         'version' => 'latest',
         'thumbnail' => 'vvveb-symbol.svg',
     ];

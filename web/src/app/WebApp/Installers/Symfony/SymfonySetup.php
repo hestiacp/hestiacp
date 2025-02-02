@@ -9,10 +9,9 @@ use Hestia\WebApp\InstallationTarget\InstallationTarget;
 
 class SymfonySetup extends BaseSetup
 {
-    protected array $appInfo = [
+    protected array $info = [
         'name' => 'Symfony',
         'group' => 'framework',
-        'enabled' => true,
         'version' => 'latest',
         'thumbnail' => 'symfony-thumb.png',
     ];
@@ -24,9 +23,6 @@ class SymfonySetup extends BaseSetup
             'composer' => ['src' => 'symfony/website-skeleton', 'dst' => '/'],
         ],
         'server' => [
-            'apache2' => [
-                'document_root' => 'public',
-            ],
             'nginx' => [
                 'template' => 'symfony4-5',
             ],
@@ -38,6 +34,14 @@ class SymfonySetup extends BaseSetup
 
     protected function setupApplication(InstallationTarget $target, array $options = null): void
     {
+        $this->appcontext->createFile(
+            $target->getDocRoot('.htaccess'),
+            '<IfModule mod_rewrite.c>
+                    RewriteEngine On
+                    RewriteRule ^(.*)$ public/$1 [L]
+            </IfModule>',
+        );
+
         $this->appcontext->runComposer($options['php_version'], [
             'config',
             '-d',

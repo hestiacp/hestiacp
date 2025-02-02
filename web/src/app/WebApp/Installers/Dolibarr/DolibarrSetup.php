@@ -9,10 +9,9 @@ use Hestia\WebApp\InstallationTarget\InstallationTarget;
 
 class DolibarrSetup extends BaseSetup
 {
-    protected array $appInfo = [
+    protected array $info = [
         'name' => 'Dolibarr',
         'group' => 'CRM',
-        'enabled' => true,
         'version' => '20.0.2',
         'thumbnail' => 'dolibarr-thumb.png',
     ];
@@ -41,9 +40,6 @@ class DolibarrSetup extends BaseSetup
             ],
         ],
         'server' => [
-            'apache2' => [
-                'document_root' => 'htdocs',
-            ],
             'nginx' => [
                 'template' => 'dolibarr',
             ],
@@ -56,7 +52,7 @@ class DolibarrSetup extends BaseSetup
     protected function setupApplication(InstallationTarget $target, array $options): void
     {
         $this->appcontext->copyDirectory(
-            $target->getDocRoot('/dolibarr-' . $this->appInfo['version'] . '/.'),
+            $target->getDocRoot('/dolibarr-' . $this->info['version'] . '/.'),
             $target->getDocRoot(),
         );
 
@@ -73,6 +69,14 @@ class DolibarrSetup extends BaseSetup
         );
 
         $this->appcontext->addDirectory($target->getDocRoot('documents'));
+
+        $this->appcontext->createFile(
+            $target->getDocRoot('.htaccess'),
+            '<IfModule mod_rewrite.c>
+                    RewriteEngine On
+                    RewriteRule ^(.*)$ htdocs/$1 [L]
+            </IfModule>',
+        );
 
         $this->appcontext->sendPostRequest($target->getUrl() . '/install/step1.php', [
             'testpost' => 'ok',

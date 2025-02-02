@@ -9,10 +9,9 @@ use Hestia\WebApp\InstallationTarget\InstallationTarget;
 
 class MediaWikiSetup extends BaseSetup
 {
-    protected array $appInfo = [
+    protected array $info = [
         'name' => 'MediaWiki',
         'group' => 'cms',
-        'enabled' => true,
         'version' => '1.43.0',
         'thumbnail' => 'MediaWiki-2020-logo.svg', //Max size is 300px by 300px
     ];

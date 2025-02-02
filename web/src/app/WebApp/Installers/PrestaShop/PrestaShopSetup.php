@@ -9,10 +9,9 @@ use Hestia\WebApp\InstallationTarget\InstallationTarget;
 
 class PrestaShopSetup extends BaseSetup
 {
-    protected array $appInfo = [
+    protected array $info = [
         'name' => 'PrestaShop',
         'group' => 'ecommerce',
-        'enabled' => true,
         'version' => '8.1.0',
         'thumbnail' => 'prestashop-thumb.png',
     ];

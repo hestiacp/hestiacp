@@ -11,10 +11,9 @@ use function sprintf;
 
 class DrupalSetup extends BaseSetup
 {
-    protected array $appInfo = [
+    protected array $info = [
         'name' => 'Drupal',
         'group' => 'cms',
-        'enabled' => 'yes',
         'version' => 'latest',
         'thumbnail' => 'drupal-thumb.png',
     ];
@@ -30,9 +29,6 @@ class DrupalSetup extends BaseSetup
             'composer' => ['src' => 'drupal/recommended-project', 'dst' => '/'],
         ],
         'server' => [
-            'apache2' => [
-                'document_root' => 'web',
-            ],
             'nginx' => [
                 'template' => 'drupal-composer',
             ],
@@ -44,6 +40,14 @@ class DrupalSetup extends BaseSetup
 
     protected function setupApplication(InstallationTarget $target, array $options): void
     {
+        $this->appcontext->createFile(
+            $target->getDocRoot('.htaccess'),
+            '<IfModule mod_rewrite.c>
+                    RewriteEngine On
+                    RewriteRule ^(.*)$ web/$1 [L]
+            </IfModule>',
+        );
+
         $this->appcontext->runComposer($options['php_version'], [
             'require',
             '-d',

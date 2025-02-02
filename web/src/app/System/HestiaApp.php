@@ -12,6 +12,7 @@ use Symfony\Component\Process\Process;
 use function _;
 use function array_column;
 use function array_filter;
+use function basename;
 use function chmod;
 use function explode;
 use function in_array;
@@ -21,6 +22,7 @@ use function str_contains;
 use function trigger_error;
 use function unlink;
 
+use function var_dump;
 use const DIRECTORY_SEPARATOR;
 
 class HestiaApp
@@ -141,11 +143,40 @@ class HestiaApp
         }
 
         try {
-            $this->runUser('v-extract-fs-archive', [$filePath, $extractDirectoryPath]);
+            $this->runUser('v-extract-fs-archive', [$filePath, $extractDirectoryPath, '', 1]);
 
             unlink($filePath);
         } catch (ProcessFailedException) {
             throw new RuntimeException(sprintf('Failed to extract "%s"', $filePath));
+        }
+    }
+
+    public function downloadUrl(string $url, string $path): string
+    {
+        try {
+            $result = $this->runUser('v-run-cli-cmd', [
+                '/usr/bin/wget',
+                '--tries',
+                '3',
+                '--timeout=30',
+                '--no-dns-cache',
+                '-nv',
+                $url,
+                '-P',
+                $path,
+            ]);
+
+            $pattern = '/URL:\s*.+?\s*\[.+?\]\s*->\s*"(.+?)"/';
+            if (preg_match($pattern, $result->output, $matches) && count($matches) > 1) {
+                return $matches[1];
+            }
+
+            // Fallback on guessed result
+            return $path . '/' . basename($url);
+        } catch (ProcessFailedException) {
+            throw new RuntimeException(
+                sprintf('Failed to download "%s" to path "%s"', $url, $path),
+            );
         }
     }
 
@@ -172,25 +203,6 @@ class HestiaApp
 
         if (0 !== $errno) {
             throw new RuntimeException($error, $errno);
-        }
-    }
-
-    public function downloadUrl(string $url, string $path): void
-    {
-        try {
-            $this->runUser('v-run-cli-cmd', [
-                '/usr/bin/wget',
-                '--tries',
-                '3',
-                '--timeout=30',
-                '--no-dns-cache',
-                '-nv',
-                $url,
-                '-P',
-                $path,
-            ]);
-        } catch (ProcessFailedException) {
-            throw new RuntimeException(sprintf('Failed to download "%s"', $url));
         }
     }
 
@@ -288,17 +300,6 @@ class HestiaApp
             $this->runUser('v-change-web-domain-tpl', [$domain, $template]);
         } catch (ProcessFailedException) {
             throw new RuntimeException(sprintf('Failed to change to template "%s"', $template));
-        }
-    }
-
-    public function changeWebDocumentRoot(string $domain, string $docroot): void
-    {
-        $docroot = rtrim($docroot, '/');
-
-        try {
-            $this->runUser('v-change-web-domain-docroot', [$domain, $domain, $docroot, 'yes']);
-        } catch (ProcessFailedException) {
-            throw new RuntimeException(sprintf('Failed to change document root to "%s"', $docroot));
         }
     }
 

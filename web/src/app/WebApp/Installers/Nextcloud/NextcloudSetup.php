@@ -9,10 +9,9 @@ use Hestia\WebApp\InstallationTarget\InstallationTarget;
 
 class NextcloudSetup extends BaseSetup
 {
-    protected array $appInfo = [
+    protected array $info = [
         'name' => 'Nextcloud',
         'group' => 'cloud',
-        'enabled' => true,
         'version' => 'latest',
         'thumbnail' => 'nextcloud-thumb.png',
     ];

@@ -54,17 +54,13 @@ class AppWizard
     public function getOptions(): array
     {
         $form = $this->installer->getConfig('form');
-        $config = $this->installer->getConfig();
-
-        $supportedPHPVersions = $this->appcontext->getSupportedPHPVersions(
-            $config['server']['php']['supported'],
-        );
+        $info = $this->installer->getInfo();
 
         $form = array_merge($form, [
             'php_version' => [
                 'type' => 'select',
-                'value' => (string) max($supportedPHPVersions),
-                'options' => $supportedPHPVersions,
+                'value' => (string) max($info->supportedPHPVersions),
+                'options' => $info->supportedPHPVersions,
             ],
         ]);
 
@@ -102,7 +98,7 @@ class AppWizard
 
     public function applicationName(): string
     {
-        return $this->installer->getApplicationName();
+        return $this->installer->getInfo()->name;
     }
 
     /**
@@ -149,7 +145,7 @@ class AppWizard
                     $this->appcontext->user() . '_' . $options['database_name'],
                     $this->appcontext->user() . '_' . $options['database_user'],
                     $options['database_password'],
-                    empty($options['database_create']),
+                    !empty($options['database_create']),
                 ),
             );
         }

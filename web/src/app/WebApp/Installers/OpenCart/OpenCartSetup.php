@@ -9,10 +9,9 @@ use Hestia\WebApp\InstallationTarget\InstallationTarget;
 
 class OpenCartSetup extends BaseSetup
 {
-    protected array $appInfo = [
+    protected array $info = [
         'name' => 'OpenCart',
         'group' => 'ecommerce',
-        'enabled' => true,
         'version' => '4.0.2.2',
         'thumbnail' => 'opencart-thumb.png',
     ];

@@ -9,10 +9,9 @@ use Hestia\WebApp\InstallationTarget\InstallationTarget;
 
 class NamelessMCSetup extends BaseSetup
 {
-    protected array $appInfo = [
+    protected array $info = [
         'name' => 'NamelessMC',
         'group' => 'cms',
-        'enabled' => true,
         'version' => '2.1.2',
         'thumbnail' => 'namelessmc.png',
     ];

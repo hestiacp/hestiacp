@@ -6,13 +6,13 @@ namespace Hestia\WebApp\Installers\DokuWiki;
 
 use Hestia\WebApp\BaseSetup;
 use Hestia\WebApp\InstallationTarget\InstallationTarget;
+use function var_dump;
 
 class DokuWikiSetup extends BaseSetup
 {
-    protected array $appInfo = [
+    protected array $info = [
         'name' => 'DokuWiki',
         'group' => 'wiki',
-        'enabled' => true,
         'version' => 'latest',
         'thumbnail' => 'dokuwiki-logo.svg',
     ];
@@ -81,13 +81,12 @@ class DokuWikiSetup extends BaseSetup
                 'd[password]' => $options['password'],
                 'd[confirm]' => $options['password'],
                 'd[policy]' => substr($options['initial_ACL_policy'], 0, 1),
-                'd[licence]' => explode(':', $options['content_license'])[0],
+                'd[license]' => explode(':', $options['content_license'])[0],
                 'submit' => '',
             ],
             ['Content-Type: application/x-www-form-urlencoded'],
         );
 
-        // remove temp folder
         $this->appcontext->deleteFile($target->getDocRoot('install.php'));
     }
 }

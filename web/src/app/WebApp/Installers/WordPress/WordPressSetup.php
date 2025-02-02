@@ -12,10 +12,9 @@ use function file_get_contents;
 
 class WordPressSetup extends BaseSetup
 {
-    protected array $appInfo = [
+    protected array $info = [
         'name' => 'WordPress',
         'group' => 'cms',
-        'enabled' => true,
         'version' => 'latest',
         'thumbnail' => 'wp-thumb.png',
     ];

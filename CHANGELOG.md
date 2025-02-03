@@ -6,92 +6,92 @@ All notable changes to this project will be documented in this file.
 
 ### Notes
 
-- To improve security we have deciced to allow users to rename the default admin user. And use a new user "hestia-web" to become the default user to run Hestia on.
--
-- In initial versions of HestiaCP we had Jailed SSH enabled via Jailkit. It had major disadvantages we have decided it to replace with Bubble Wrap. Users running Jailed SSH in the past are adviced to run the migration script! Found in /usr/local/hestia/upgrade/manual/migrate_jailkit_to_bubblewrap.sh. See #4698
-- We are aware that Cgroups are currently not working as it should be. It works fine if you login with SSH as the user how ever it doesn't work for PHP-FPM yet.
-- Dropped support Debian 10 due to EOL.
+- To improve security, we now allow users to rename the default `admin` user.
+- Hestia now runs under a new `hestia-web` user.
+- In initial versions of HestiaCP, we used Jailkit to enabled Jailed SSH. It had major disadvantages, so we have decided it to replace it with [bubblewrap](https://github.com/containers/bubblewrap). Users running Jailed SSH in the past are advised to run the migration script! It can be found in `/usr/local/hestia/upgrade/manual/migrate_jailkit_to_bubblewrap.sh`. See [#4698](https://github.com/hestiacp/hestiacp/pull/4698)
+- We are aware that cgroups are currently not working as they should be. They work fine if you login with SSH as the user, but they don't work for PHP-FPM yet.
+- Dropped support for Debian 10 due to EOL.
 
 ### Security
 
 - Fix issue where CIRD was not propperly validated CVE-XXXX-XXX-XXX
 - Restrict PHP-FPM permissions to a new user to prevent permission escalation to admin users. CVE-XXXX-XXX-XXX
-- Solve security issues where restart flag did accecpt unvalidated values. CVE-XXXX-XXX-XXX
+- Solve security issues where restart flag accepted unvalidated values. CVE-XXXX-XXX-XXX
 
 ### Features
 
-- Added support for PHP 8.4
+- Add support for PHP 8.4
 - Add support for Ubuntu 24.04 Noble release (#4411 #4451)
 - Add support for Jailed SSH (#4052 #4245, #4698 #4687)
 - Implement CLI for Quick Install Apps (#4443)
-- Add support for Directadmin / Cpanel imports ( #4177 #4415 #4426 #4252 #4241)
-- Add support for Increamental Backups via Restic
-- Add support for Triggers in v-add-mail-domain / v-add-delete-mail-domain #4416 (See Docs)
+- Add support for DirectAdmin & cPanel imports (#4177 #4415 #4426 #4252 #4241)
+- Add support for Incremental Backups via Restic
+- Add support for Triggers in `v-add-mail-domain` / `v-add-delete-mail-domain` #4416 (See Docs)
 - Add new Quick Install Apps (#4433, #4509, #4327)
 - Add support for Limit CPU and RAM for Each User Using cgroup (#4372 #4325)
 - Add Web terminal (#3859)
 - Improve email account sidebar layout (#4154)
-- Allow Chmod in Filegator #4548
+- Allow chmod in FileGator #4548
 
 ### Bug fixes
 
-- Allow filegator to be translated (#4382 #4275)
+- Allow FileGator to be translated (#4382 #4275)
 - Fix bug caused by new release robthree/twofactorauth (#4410)
-- Create .wp-cli folder on create new user (#4403)
+- Create `.wp-cli` folder on create new user (#4403)
 - Fix SMTP Relay routing issue (#4389)
 - Fix Roundcube permissions (#4387)
-- Fix v-add-dns-record when adding TLSA records (#4376)
-- Fix handling of Snappymail (#4349)
-- Added creation of dovecot.log and permission setup to dovecot installation step (#4352)
-- Fix to the Localpart Mail validator so it can accept aliases starting and ending with (#4351)
-- Apache2: Enable mod_headers by default. (#4350)
+- Fix `v-add-dns-record` when adding TLSA records (#4376)
+- Fix handling of SnappyMail (#4349)
+- Added creation of `dovecot.log` and permission setup to the dovecot installation step (#4352)
+- Fix to the Localpart Mail validator so it can accept aliases starting and ending with `-` (#4351)
+- Apache2: Enable `mod_headers` by default. (#4350)
 - Update MediaWiki to 1.41.1 (#4344)
 - Add support for compressing via GZ or ZSTD (#4300 #4322)
 - Simplify spinner styles (#4319)
 - Animate deletion of notifications (#4316)
-- Update v-run-cli-cmd (#4310)
+- Update `v-run-cli-cmd` (#4310)
 - Show database server port in notification email (#4301)
-- Fixes permissions issue related with Issue #4248 (#4268)
-- remove PHP code, and fix installer warning (#4279)
+- Fix permissions issue related with Issue #4248 (#4268)
+- Remove PHP code, and fix installer warning (#4279)
 - Prevent \* from expanding in command (#4085)
 - Drop v-generate-debug-report (#4266)
 - Fix missing dot file backups
-- vsftpd use_localtime No #4261
-- Fix broken mysql v8 install on Debian (#4259)
+- Disable `use_localtime` for vsftpd (#4261)
+- Fix broken MySQL v8 install on Debian (#4259)
 - Use standard y/N format in installer to indicate default (#4251)
 - Fix broken HTML on login/reset pages (#4247)
-- Checks for usernames starting with a alphabetic character. (#4195 #4181)
+- Add checks for usernames starting with an alphabetic character. (#4195 #4181)
 - Correct formatting of user dir (#4098)
-- Add mjs as a file to serve statically (#4240)
+- Add `.mjs` as a file to serve statically (#4240)
 - Display system time on cron pages (#4236)
 - Patch Dokuwiki installer for issue #3889 (#4229)
-- Corrected path to ssl certs (#4202)
+- Corrected path to SSL certs (#4202)
 - Add value to input type text (#4193)
 - Correctly get the session cookie for web terminal (#3969)
 - Fix Bug with 403 errors Letsencrypt (#4622)
-- Update phpmyadmin.inc to improve loading static files
+- Update `phpmyadmin.inc` to improve loading static files
 - Fix issues with mapping ipv4 to ipv6 setups when server is behind proxies with login (#4606)
-- Fix issue with v-change-sys-ip-nat with VSFTPD and systems behind NAT (#4591)
+- Fix issue with `v-change-sys-ip-nat` with VSFTPD and systems behind NAT (#4591)
 - Fix issues with IDN domains and Apache2 and PHP (#4583)
-- Improve Owncloud templates (#4572)
-- Improve security Quick Install Apps (#457 #4569 #4568 #4567 #4566 #4565 #4564 #4563)
-- Add hestia-mail to hestia-users group and create hestia-users group on new install #4540 #4531
+- Improve OwnCloud templates (#4572)
+- Improve security for Quick Install Apps (#457 #4569 #4568 #4567 #4566 #4565 #4564 #4563)
+- Add `hestia-mail` to `hestia-users` group and create `hestia-users` group on new install #4540 #4531
 - Fix translations MariaDB / PHPMyadmin (#4725)
-- Some left overs from the old admin user still remaind (#4721)
-- Disallow ` character in cronjobs to avoid errors in cron list #4708
-- Drop Maxmind high-risk-ip-sample-list (#4692)
+- Remove some left overs from the old admin user (#4721)
+- Disallow `` ` `` character in cronjobs to avoid errors in cron list #4708
+- Drop Maxmind `high-risk-ip-sample-list` (#4692)
 - Hardening of installer security and improving usability (#4690)
 - White label for file manager (#4681) @MaxiZamorano
-- Fixed with cronjob v-add-letsencrypt-domain created new cronjob onder "admin" user that didn't have sudo permisions
+- Fixed with cronjob `v-add-letsencrypt-domain` created new cronjob under "admin" user that didn't have sudo permissions
 - Customization of the file manager with interface improvements (#4678) @MaxiZamorano
 - Fix: Proftpd FTP Usage is showing incorrect information (#4672)
-- template for using webasyst with nginx+php-fpm (#4660)
+- Add template for using webasyst with nginx+php-fpm (#4660)
 
-### Depencies
+### Dependencies
 
 - Update hestia-nginx to 1.27.3
 - Update hestia-php to 8.3.16
-- Update Roundcube, Filegator, Snappy mail to the latest version
+- Update Roundcube, FileGator and SnappyMail to the latest version
 - Update Quick Installer apps to latest version (#4594)
 
 ## [1.8.12] - Service release

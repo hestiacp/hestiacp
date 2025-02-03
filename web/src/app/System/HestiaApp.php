@@ -63,7 +63,7 @@ class HestiaApp
     public function listFiles(string $path): array
     {
         try {
-            $result = $this->runUser('v-run-cli-cmd', ['ls', $path]);
+            $result = $this->runUser('v-run-cli-cmd', ['ls', '-A', $path]);
 
             return array_filter(explode("\n", $result->output));
         } catch (ProcessFailedException) {
@@ -282,7 +282,7 @@ class HestiaApp
         $passwordFile = tempnam('/tmp', 'hst');
 
         $fp = fopen($passwordFile, 'w');
-        fwrite($fp, $password . '\n');
+        fwrite($fp, $password . "\n");
         fclose($fp);
 
         try {

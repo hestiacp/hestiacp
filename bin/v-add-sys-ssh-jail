@@ -1,8 +1,8 @@
 #!/bin/bash
 # info: add system ssh jail
-# options: [RESTART]
+# options: NONE
 #
-# example: v-add-sys-ssh-jail yes
+# example: v-add-sys-ssh-jail
 #
 # This function enables ssh jailed environment.
 

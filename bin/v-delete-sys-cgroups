@@ -1,10 +1,10 @@
 #!/bin/bash
-# info: delete all cgroup
+# info: delete all cgroups
 # options: NONE
 #
-# example: v-delete-sys-cgroup
+# example: v-delete-sys-cgroups
 #
-# This function disables cgroup
+# This function disables cgroups
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

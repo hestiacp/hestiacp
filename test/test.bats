@@ -918,7 +918,7 @@ function check_ip_not_banned(){
 }
 
 @test "WEB: Use quick install app on web domain" {
-    run v-quick-install-app --user=$user --domain=$domain --app=Laravel
+    run v-quick-install-app install $user $domain Laravel
     assert_success
     refute_output
 }

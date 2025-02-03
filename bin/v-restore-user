@@ -21,6 +21,7 @@ db=$6
 cron=$7
 udir=$8
 notify=${9-no}
+dbhost=${10}
 
 # Define backup dir
 if [ -z "$BACKUP" ]; then
@@ -51,7 +52,7 @@ source_conf "$HESTIA/conf/hestia.conf"
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-args_usage='USER BACKUP [WEB] [DNS] [MAIL] [DB] [CRON] [UDIR] [NOTIFY]'
+args_usage='USER BACKUP [WEB] [DNS] [MAIL] [DB] [CRON] [UDIR] [NOTIFY] [DBHOST]'
 check_args '2' "$#" "$args_usage"
 is_format_valid 'user' 'backup'
 
@@ -146,11 +147,11 @@ backup_system="hestia"
 backup_mode="gzip"
 
 # Check if it is a Vesta backup
-if tar -tf "$BACKUP/$backup" ./vesta > /dev/null 2>&1; then
+if tar -tf "$BACKUP/$backup" ./vesta >/dev/null 2>&1; then
 	backup_system="vesta"
 fi
 
-if tar -tf "$BACKUP/$backup" ./.zstd > /dev/null 2>&1; then
+if tar -tf "$BACKUP/$backup" ./.zstd >/dev/null 2>&1; then
 	backup_mode="zstd"
 fi
 
@@ -158,7 +159,7 @@ fi
 if [ "$create_user" = 'yes' ]; then
 
 	# Add check if user already exists as Linux User
-	getent passwd "$user" > /dev/null 2>&1
+	getent passwd "$user" >/dev/null 2>&1
 	if [ "$?" == 0 ]; then
 		check_result "$E_EXISTS" "User already exists"
 	fi
@@ -167,7 +168,7 @@ if [ "$create_user" = 'yes' ]; then
 	echo -e "$(date "+%F %T") $user" | tee -a $tmpdir/restore.log
 
 	# Unpacking user container
-	tar xf "$BACKUP/$backup" -C "$tmpdir" --no-wildcards "./$backup_system" 2> /dev/null
+	tar xf "$BACKUP/$backup" -C "$tmpdir" --no-wildcards "./$backup_system" 2>/dev/null
 	if [ "$?" -ne 0 ]; then
 		rm -rf $tmpdir
 		echo "Can't unpack user container" | $SENDMAIL -s "$subj" $email $notify
@@ -178,8 +179,8 @@ if [ "$create_user" = 'yes' ]; then
 	# Restoring user.conf
 	mkdir $USER_DATA
 	cp $tmpdir/$backup_system/user.conf $USER_DATA/
-	cp -r $tmpdir/$backup_system/ssl $USER_DATA/ > /dev/null 2>&1
-	cp $tmpdir/$backup_system/backup-excludes.conf $USER_DATA/ > /dev/null 2>&1
+	cp -r $tmpdir/$backup_system/ssl $USER_DATA/ >/dev/null 2>&1
+	cp $tmpdir/$backup_system/backup-excludes.conf $USER_DATA/ >/dev/null 2>&1
 
 	# Rebuilding user
 	rebuild_user_conf
@@ -213,7 +214,7 @@ if [ "$web" != 'no' ] && [ -n "$WEB_SYSTEM" ]; then
 	if [ -z "$web" ] || [ "$web" = '*' ]; then
 		domains="$backup_domains"
 	else
-		echo "$web" | tr ',' '\n' > $tmpdir/selected.txt
+		echo "$web" | tr ',' '\n' >$tmpdir/selected.txt
 		domains=$(echo "$backup_domains" | egrep -x -f $tmpdir/selected.txt)
 	fi
 
@@ -255,11 +256,11 @@ if [ "$web" != 'no' ] && [ -n "$WEB_SYSTEM" ]; then
 			for dom_alias in ${ALIAS//,/ }; do
 				check_new=$(is_domain_new 'web' $dom_alias)
 				if [ -n "$check_new" ]; then
-					ALIAS=$(echo "$ALIAS" \
-						| sed "s/,/\n/g" \
-						| sed "s/^$dom_alias$//g" \
-						| sed "/^$/d" \
-						| sed ':a;N;$!ba;s/\n/,/g')
+					ALIAS=$(echo "$ALIAS" |
+						sed "s/,/\n/g" |
+						sed "s/^$dom_alias$//g" |
+						sed "/^$/d" |
+						sed ':a;N;$!ba;s/\n/,/g')
 				fi
 			done
 
@@ -333,7 +334,7 @@ if [ "$web" != 'no' ] && [ -n "$WEB_SYSTEM" ]; then
 			str="$str STATS_USER='$STATS_USER' STATS_CRYPT='$STATS_CRYPT'"
 			str="$str U_DISK='$U_DISK' U_BANDWIDTH='0' SUSPENDED='no'"
 			str="$str TIME='$(date +%T)' DATE='$(date +%F)'"
-			echo $str >> $USER_DATA/web.conf
+			echo $str >>$USER_DATA/web.conf
 
 			# Rebuilding backend
 			if [ -n "$WEB_BACKEND" ]; then
@@ -400,7 +401,7 @@ if [ "$web" != 'no' ] && [ -n "$WEB_SYSTEM" ]; then
 
 	# Adding user to traffic queue
 	sed -i "/ $user /d" $HESTIA/data/queue/traffic.pipe
-	echo "$BIN/v-update-web-domains-traff $user" >> $HESTIA/data/queue/traffic.pipe
+	echo "$BIN/v-update-web-domains-traff $user" >>$HESTIA/data/queue/traffic.pipe
 
 	# Restarting web server
 	$BIN/v-restart-web
@@ -422,7 +423,7 @@ if [ "$dns" != 'no' ] && [ -n "$DNS_SYSTEM" ]; then
 	if [ -z "$dns" ] || [ "$dns" = '*' ]; then
 		domains="$backup_domains"
 	else
-		echo "$dns" | tr ',' '\n' > $tmpdir/selected.txt
+		echo "$dns" | tr ',' '\n' >$tmpdir/selected.txt
 		domains=$(echo "$backup_domains" | egrep -x -f $tmpdir/selected.txt)
 	fi
 
@@ -480,7 +481,7 @@ if [ "$dns" != 'no' ] && [ -n "$DNS_SYSTEM" ]; then
 			str="$str SOA='$SOA' RECORDS='$RECORDS'  DNSSEC='$DNSSEC'"
 			str="$str KEY='$KEY' SLAVE='$SLAVE' MASTER='$MASTER' SUSPENDED='no'"
 			str="$str TIME='$(date +%T)' DATE='$(date +%F)'"
-			echo $str >> $USER_DATA/dns.conf
+			echo $str >>$USER_DATA/dns.conf
 		fi
 
 		if [ "$DNSSEC" = "yes" ]; then
@@ -505,7 +506,7 @@ if [ "$dns" != 'no' ] && [ -n "$DNS_SYSTEM" ]; then
 		# Updating dns-cluster queue
 		if [ -n "$DNS_CLUSTER" ]; then
 			cmd="$BIN/v-add-remote-dns-domain $user $domain yes"
-			echo "$cmd" >> $HESTIA/data/queue/dns-cluster.pipe
+			echo "$cmd" >>$HESTIA/data/queue/dns-cluster.pipe
 		fi
 	done
 
@@ -525,7 +526,7 @@ if [ "$mail" != 'no' ] && [ -n "$MAIL_SYSTEM" ]; then
 	if [ -z "$mail" ] || [ "$mail" = '*' ]; then
 		domains="$backup_domains"
 	else
-		echo "$mail" | tr ',' '\n' > $tmpdir/selected.txt
+		echo "$mail" | tr ',' '\n' >$tmpdir/selected.txt
 		domains=$(echo "$backup_domains" | egrep -x -f $tmpdir/selected.txt)
 	fi
 
@@ -566,7 +567,7 @@ if [ "$mail" != 'no' ] && [ -n "$MAIL_SYSTEM" ]; then
 
 		# Restoring mail.conf
 		if [ -z "$check_config" ]; then
-			cat $tmpdir/mail/$domain/$backup_system/mail.conf >> $USER_DATA/mail.conf
+			cat $tmpdir/mail/$domain/$backup_system/mail.conf >>$USER_DATA/mail.conf
 		fi
 
 		# Restoring DKIM
@@ -593,8 +594,8 @@ if [ "$mail" != 'no' ] && [ -n "$MAIL_SYSTEM" ]; then
 				cp -f $tmpdir/mail/$domain/$backup_system/ssl/$domain.crt $USER_DATA/ssl/mail.$domain.pem
 				if [ -e "$tmpdir/mail/$domain/$backup_system/ssl/$domain.ca" ]; then
 					cp -f $tmpdir/mail/$domain/$backup_system/ssl/$domain.ca $USER_DATA/ssl/mail.$domain.ca
-					echo >> $USER_DATA/ssl/mail.$domain.pem
-					cat $USER_DATA/ssl/mail.$domain.ca >> $USER_DATA/ssl/mail.$domain.pem
+					echo >>$USER_DATA/ssl/mail.$domain.pem
+					cat $USER_DATA/ssl/mail.$domain.ca >>$USER_DATA/ssl/mail.$domain.pem
 				fi
 			elif [ -f "$tmpdir/mail/$domain/conf/ssl/$domain.crt" ]; then
 				cp -f $tmpdir/mail/$domain/conf/ssl/$domain.crt $USER_DATA/ssl/mail.$domain.crt
@@ -602,8 +603,8 @@ if [ "$mail" != 'no' ] && [ -n "$MAIL_SYSTEM" ]; then
 				cp -f $tmpdir/mail/$domain/conf/ssl/$domain.crt $USER_DATA/ssl/mail.$domain.pem
 				if [ -e "$tmpdir/mail/$domain/conf/ssl/$domain.ca" ]; then
 					cp -f $tmpdir/mail/$domain/conf/ssl/$domain.ca $USER_DATA/ssl/mail.$domain.ca
-					echo >> $USER_DATA/ssl/mail.$domain.pem
-					cat $USER_DATA/ssl/mail.$domain.ca >> $USER_DATA/ssl/mail.$domain.pem
+					echo >>$USER_DATA/ssl/mail.$domain.pem
+					cat $USER_DATA/ssl/mail.$domain.ca >>$USER_DATA/ssl/mail.$domain.pem
 				fi
 
 			fi
@@ -627,11 +628,11 @@ if [ "$mail" != 'no' ] && [ -n "$MAIL_SYSTEM" ]; then
 				rm -f /etc/dovecot/conf.d/domains/$domain.conf
 			fi
 
-			echo "" >> /etc/dovecot/conf.d/domains/$domain.conf
-			echo "local_name mail.$domain {" >> /etc/dovecot/conf.d/domains/$domain.conf
-			echo "  ssl_cert = <$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem" >> /etc/dovecot/conf.d/domains/$domain.conf
-			echo "  ssl_key = <$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.key" >> /etc/dovecot/conf.d/domains/$domain.conf
-			echo "}" >> /etc/dovecot/conf.d/domains/$domain.conf
+			echo "" >>/etc/dovecot/conf.d/domains/$domain.conf
+			echo "local_name mail.$domain {" >>/etc/dovecot/conf.d/domains/$domain.conf
+			echo "  ssl_cert = <$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem" >>/etc/dovecot/conf.d/domains/$domain.conf
+			echo "  ssl_key = <$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.key" >>/etc/dovecot/conf.d/domains/$domain.conf
+			echo "}" >>/etc/dovecot/conf.d/domains/$domain.conf
 
 			if [ ! -d /usr/local/hestia/ssl/mail ]; then
 				mkdir /usr/local/hestia/ssl/mail
@@ -720,82 +721,145 @@ fi
 
 # Restoring databases
 if [ "$db" != 'no' ] && [ -n "$DB_SYSTEM" ]; then
-	echo -e "\n-- DB --" | tee -a $tmpdir/restore.log
+    echo -e "\n-- DB --" | tee -a $tmpdir/restore.log
 
-	# Creating database restore list
-	backup_databases=$(tar -tf $BACKUP/$backup | grep "^./db")
-	backup_databases=$(echo "$backup_databases" | grep db.conf)
-	backup_databases=$(echo "$backup_databases" | cut -f 3 -d / | sort -u)
-	if [ -z "$db" ] || [ "$db" = '*' ]; then
-		databases="$backup_databases"
-	else
-		echo "$db" | tr ',' '\n' > $tmpdir/selected.txt
-		databases=$(echo "$backup_databases" | egrep -x -f $tmpdir/selected.txt)
-	fi
+    # Create the list of databases to restore
+    backup_databases=$(tar -tf $BACKUP/$backup | grep "^./db")
+    backup_databases=$(echo "$backup_databases" | grep db.conf)
+    backup_databases=$(echo "$backup_databases" | cut -f 3 -d / | sort -u)
+    if [ -z "$db" ] || [ "$db" = '*' ]; then
+        databases="$backup_databases"
+    else
+        echo "$db" | tr ',' '\n' > $tmpdir/selected.txt
+        databases=$(echo "$backup_databases" | egrep -x -f $tmpdir/selected.txt)
+    fi
 
-	# Restoring database
-	for database in $databases; do
-		echo -e "$(date "+%F %T") $database" | tee -a $tmpdir/restore.log
+    # Restore each database
+    for database in $databases; do
+        echo -e "$(date "+%F %T") $database" | tee -a $tmpdir/restore.log
 
-		# Cleanup previous config keys
-		unset -v DB DBUSER MD5 HOST TYPE CHARSET U_DISK
+        # Clear any previous database variables
+        unset -v DB DBUSER MD5 HOST TYPE CHARSET U_DISK
 
-		# Checking database existence
-		check_config=$(grep "DB='$database'" $USER_DATA/db.conf)
+        # Check if this database already exists in the user's db.conf file
+        check_config=$(grep "DB='$database'" $USER_DATA/db.conf)
 
-		# Unpacking database container
-		tar xf $BACKUP/$backup -C $tmpdir ./db/$database
-		if [ "$?" -ne 0 ]; then
-			rm -rf $tmpdir
-			error="Can't unpack $database database container"
-			echo "$error" | $SENDMAIL -s "$subj" $email $notify
-			sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
-			check_result "$E_PARSING" "$error"
-		fi
+        # Extract the database container from the backup archive
+        tar xf $BACKUP/$backup -C $tmpdir ./db/$database
+        if [ "$?" -ne 0 ]; then
+            rm -rf $tmpdir
+            error="Can't unpack $database database container"
+            echo "$error" | $SENDMAIL -s "$subj" $email $notify
+            sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
+            check_result "$E_PARSING" "$error"
+        fi
 
-		# Restore database config
-		if [ -z "$check_config" ]; then
-			parse_object_kv_list $(cat $tmpdir/db/$database/$backup_system/db.conf)
+        # If no previous config exists, parse it from the backup and store it
+        if [ -z "$check_config" ]; then
+            parse_object_kv_list $(cat $tmpdir/db/$database/$backup_system/db.conf)
+            if [ -z "$MD5" ]; then
+                echo "Warning!: Database ${DB} backup does not contain a password for user ${DBUSER}."
+                echo "- Please use the web interface to set a password after the restore process finishes."
+            fi
 
-			if [ -z "$MD5" ]; then
-				echo "Warning!: Database ${DB} backup does not contain a password for user ${DBUSER}."
-				echo "- Please use the web interface to set a password after the restore process finishes."
-			fi
+            # Adjust names by removing the old user's prefix and prefixing with the current user
+            DB=$(echo "$DB" | sed -e "s/${old_user}_//")
+            DB="${user}_${DB}"
+            DBUSER=$(echo "$DBUSER" | sed -e "s/${old_user}_//")
+            DBUSER="${user}_${DBUSER}"
 
-			DB=$(echo "$DB" | sed -e "s/${old_user}_//")
-			DB="${user}_${DB}"
-			DBUSER=$(echo "$DBUSER" | sed -e "s/${old_user}_//")
-			DBUSER="${user}_${DBUSER}"
-			str="DB='$DB' DBUSER='$DBUSER' MD5='$MD5' HOST='$HOST'"
-			str="$str TYPE='$TYPE' CHARSET='$CHARSET' U_DISK='$U_DISK'"
-			str="$str SUSPENDED='no' TIME='$(date +%T)' DATE='$(date +%F)'"
-			echo $str >> $USER_DATA/db.conf
-		else
-			parse_object_kv_list $(grep "DB='$database'" $USER_DATA/db.conf)
-		fi
+            # Determine the host to use for the database:
+            if [ -n "$dbhost" ]; then
+                NEW_DB_HOST="$dbhost"
+            else
+                if [ "$TYPE" = "mysql" ]; then
+                    conf_file="/usr/local/hestia/conf/mysql.conf"
+                elif [ "$TYPE" = "pgsql" ]; then
+                    conf_file="/usr/local/hestia/conf/pgsql.conf"
+                else
+                    conf_file="/usr/local/hestia/conf/mysql.conf"
+                fi
+                raw_host=$(grep "^HOST=" "$conf_file" | head -n1 | cut -d"'" -f2)
+                IFS=',' read -ra host_array <<< "$raw_host"
+                num_hosts=${#host_array[@]}
+                if [ "$num_hosts" -gt 1 ]; then
+                    index=$(($RANDOM % $num_hosts))
+                    NEW_DB_HOST=${host_array[$index]}
+                else
+                    NEW_DB_HOST=${host_array[0]}
+                fi
+            fi
 
-		# Unzipping database dump
-		if [ $backup_mode = 'zstd' ]; then
-			pzstd -d $tmpdir/db/$database/$database.*.sql.zst
-		else
-			gzip -d $tmpdir/db/$database/$database.*.sql.gz
-		fi
+            # Build and save the database configuration line
+            str="DB='$DB' DBUSER='$DBUSER' MD5='$MD5' HOST='$NEW_DB_HOST' TYPE='$TYPE' CHARSET='$CHARSET' U_DISK='$U_DISK' SUSPENDED='no' TIME='$(date +%T)' DATE='$(date +%F)'"
+            echo $str >> $USER_DATA/db.conf
+        else
+            parse_object_kv_list $(grep "DB='$database'" $USER_DATA/db.conf)
+        fi
 
-		# Importing database dump
-		database_dump="$tmpdir/db/$database/$database.$TYPE.sql"
-		case $TYPE in
-			mysql)
-				delete_mysql_database
-				rebuild_mysql_database
-				import_mysql_database $database_dump
-				;;
-			pgsql)
-				delete_pgsql_database
-				rebuild_pgsql_database
-				import_pgsql_database $database_dump
-				;;
-		esac
-	done
+        # Decompress the database dump (using zstd or gzip)
+        if [ $backup_mode = 'zstd' ]; then
+            pzstd -d $tmpdir/db/$database/$database.*.sql.zst
+        else
+            gzip -d $tmpdir/db/$database/$database.*.sql.gz
+        fi
+
+        # Define the path to the decompressed dump file
+        database_dump="$tmpdir/db/$database/$database.$TYPE.sql"
+
+        if [ "$TYPE" = "mysql" ]; then
+            # Generate the temporary MySQL defaults file with correct credentials
+            mysql_connect "$NEW_DB_HOST"
+
+            # Check if the database exists (use -N to avoid headers)
+            exists=$(mysql --defaults-extra-file="$mycnf" -N -e "SHOW DATABASES LIKE '$DB';")
+            if [ -z "$exists" ]; then
+                echo "Database $DB does not exist. Creating it..."
+                mysql --defaults-extra-file="$mycnf" -e "CREATE DATABASE \`$DB\` CHARACTER SET $CHARSET;"
+            else
+                echo "Database $DB already exists."
+            fi
+
+            # Check if the user exists
+            user_exists=$(mysql --defaults-extra-file="$mycnf" -N -e "SELECT COUNT(*) FROM mysql.user WHERE user='$DBUSER';")
+            if [ "$user_exists" -eq 0 ]; then
+                echo "User $DBUSER does not exist. Creating user and granting privileges..."
+                create_mysql_user_with_policy
+                if [ "$?" -ne 0 ]; then
+                    echo "Failed to create MySQL user $DBUSER. Aborting restoration."
+                    exit 1
+                fi
+            else
+                echo "User $DBUSER already exists."
+            fi
+
+            # If a grant file exists in the backup, apply it; otherwise, apply default privileges.
+            grant_file="$tmpdir/db/$database/conf/$database.mysql.$database"
+            if [ -f "$grant_file" ]; then
+                echo "Applying grant file: $grant_file"
+                # Procesar el archivo de GRANT para asegurarse de que cada línea termine con un punto y coma.
+                processed_grant_file=$(mktemp)
+                sed -e 's/[[:space:]]*$/;/' "$grant_file" > "$processed_grant_file"
+                mysql --defaults-extra-file="$mycnf" "$DB" < "$processed_grant_file"
+                rm -f "$processed_grant_file"
+            else
+                echo "No grant file found. Applying default privileges..."
+                mysql --defaults-extra-file="$mycnf" -e "GRANT ALL ON \`$DB\`.* TO '$DBUSER'@'%';"
+                mysql --defaults-extra-file="$mycnf" -e "GRANT ALL ON \`$DB\`.* TO '$DBUSER'@'localhost';"
+                mysql --defaults-extra-file="$mycnf" -e "FLUSH PRIVILEGES;"
+            fi
+
+            # Finally, import the database dump
+            import_mysql_database "$database_dump"
+        elif [ "$TYPE" = "pgsql" ]; then
+            exists=$(psql -h "$NEW_DB_HOST" -U postgres -lqt | cut -d \| -f 1 | grep -w "$DB")
+            if [ -z "$exists" ]; then
+                psql -h "$NEW_DB_HOST" -U postgres -c "CREATE DATABASE \"$DB\" WITH ENCODING '$CHARSET';"
+            fi
+            import_pgsql_database "$database_dump"
+        fi
+
+    done
 fi
 
 # Restoring cron jobs
@@ -857,7 +921,7 @@ if [ "$udir" != 'no' ]; then
 		if [ -z "$udir" ] || [ "$udir" = '*' ]; then
 			user_dirs="$backup_dirs"
 		else
-			echo "$udir" | tr ',' '\n' > $tmpdir/selected.txt
+			echo "$udir" | tr ',' '\n' >$tmpdir/selected.txt
 			user_dirs=$(echo "$backup_dirs" | egrep -x -f $tmpdir/selected.txt)
 		fi
 

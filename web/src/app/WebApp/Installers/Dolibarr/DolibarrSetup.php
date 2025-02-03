@@ -6,6 +6,7 @@ namespace Hestia\WebApp\Installers\Dolibarr;
 
 use Hestia\WebApp\BaseSetup;
 use Hestia\WebApp\InstallationTarget\InstallationTarget;
+use function file_get_contents;
 
 class DolibarrSetup extends BaseSetup
 {
@@ -72,10 +73,7 @@ class DolibarrSetup extends BaseSetup
 
         $this->appcontext->createFile(
             $target->getDocRoot('.htaccess'),
-            '<IfModule mod_rewrite.c>
-                    RewriteEngine On
-                    RewriteRule ^(.*)$ htdocs/$1 [L]
-            </IfModule>',
+            file_get_contents(__DIR__ . '/.htaccess'),
         );
 
         $this->appcontext->sendPostRequest($target->getUrl() . '/install/step1.php', [

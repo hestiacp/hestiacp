@@ -13,17 +13,12 @@ class JoomlaSetup extends BaseSetup
     protected array $info = [
         'name' => 'Joomla',
         'group' => 'cms',
-        'version' => 'latest',
+        'version' => '5.2.3',
         'thumbnail' => 'joomla_thumb.png',
     ];
 
     protected array $config = [
         'form' => [
-            'site_name' => [
-                'type' => 'text',
-                'value' => 'Joomla Site',
-                'placeholder' => 'Joomla Site',
-            ],
             'admin_username' => [
                 'type' => 'text',
                 'value' => 'admin',
@@ -36,14 +31,15 @@ class JoomlaSetup extends BaseSetup
             ],
             'admin_email' => [
                 'type' => 'text',
-                'value' => 'admin@example.com',
+                'value' => '',
                 'placeholder' => 'Admin Email',
             ],
         ],
         'database' => true,
         'resources' => [
             'archive' => [
-                'src' => 'https://www.joomla.org/latest',
+                'src' => 'https://downloads.joomla.org/cms/'
+                    . 'joomla5/5-2-3/Joomla_5-2-3-Stable-Full_Package.zip?format=zip',
             ],
         ],
         'server' => [
@@ -58,12 +54,17 @@ class JoomlaSetup extends BaseSetup
 
     protected function setupApplication(InstallationTarget $target, array $options): void
     {
+        $this->appcontext->moveFile(
+            $target->getDocRoot('htaccess.txt'),
+            $target->getDocRoot('.htaccess'),
+        );
+
         $this->appcontext->runPHP(
             $options['php_version'],
-            $target->getDocRoot('/installation/joomla.php'),
+            $target->getDocRoot('installation/joomla.php'),
             [
                 'install',
-                '--site-name=' . $options['site_name'],
+                '--site-name=Joomla',
                 '--admin-user=' . $options['admin_username'],
                 '--admin-username=' . $options['admin_username'],
                 '--admin-password=' . $options['admin_password'],
@@ -71,9 +72,9 @@ class JoomlaSetup extends BaseSetup
                 '--db-user=' . $target->database->user,
                 '--db-pass=' . $target->database->password,
                 '--db-name=' . $target->database->name,
-                '--db-prefix=' . 'jl' . Util::generateString(5, false) . '_',
                 '--db-host=' . $target->database->host,
                 '--db-type=mysqli',
+                '--no-interaction',
             ],
         );
     }

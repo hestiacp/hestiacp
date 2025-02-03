@@ -129,6 +129,7 @@ abstract class BaseSetup implements InstallerInterface
                 $this->appcontext->runComposer($options['php_version'], [
                     'create-project',
                     '--no-progress',
+                    '--no-interaction',
                     '--prefer-dist',
                     $resourceData['src'],
                     '-d',

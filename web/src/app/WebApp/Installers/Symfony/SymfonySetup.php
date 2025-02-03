@@ -6,6 +6,7 @@ namespace Hestia\WebApp\Installers\Symfony;
 
 use Hestia\WebApp\BaseSetup;
 use Hestia\WebApp\InstallationTarget\InstallationTarget;
+use function file_get_contents;
 
 class SymfonySetup extends BaseSetup
 {
@@ -36,10 +37,7 @@ class SymfonySetup extends BaseSetup
     {
         $this->appcontext->createFile(
             $target->getDocRoot('.htaccess'),
-            '<IfModule mod_rewrite.c>
-                    RewriteEngine On
-                    RewriteRule ^(.*)$ public/$1 [L]
-            </IfModule>',
+            file_get_contents(__DIR__ . '/.htaccess'),
         );
 
         $this->appcontext->runComposer($options['php_version'], [

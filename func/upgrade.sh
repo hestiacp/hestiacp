@@ -625,6 +625,8 @@ upgrade_phpmyadmin() {
 				chmod 0640 /var/lib/phpmyadmin/blowfish_secret.inc.php
 			fi
 			chown hestiamail:hestiamail /usr/share/phpmyadmin/tmp
+			chown -R root:hestiamail /etc/phpmyadmin/
+
 			chmod 0770 /usr/share/phpmyadmin/tmp
 		else
 			# Display upgrade information
@@ -658,6 +660,9 @@ upgrade_phpmyadmin() {
 				chown root:hestiamail /var/lib/phpmyadmin/blowfish_secret.inc.php
 				chmod 0640 /var/lib/phpmyadmin/blowfish_secret.inc.php
 			fi
+
+			# Make sure to give it the correct permissions
+			chown -R root:hestiamail /etc/phpmyadmin/
 
 			# Clean up source files
 			rm -fr phpMyAdmin-$pma_v-all-languages

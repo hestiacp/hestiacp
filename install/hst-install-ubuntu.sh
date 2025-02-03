@@ -1887,16 +1887,14 @@ if [ "$mysql" = 'yes' ] || [ "$mysql8" = 'yes' ]; then
 
 	# Create copy of config file
 	cp -f $HESTIA_INSTALL_DIR/phpmyadmin/config.inc.php /etc/phpmyadmin/
-	mkdir -p /var/lib/phpmyadmin/tmp
-	chmod 770 /var/lib/phpmyadmin/tmp
-	chown -R root:www-data /usr/share/phpmyadmin/tmp/
 
 	# Set config and log directory
 	sed -i "s|'configFile' => ROOT_PATH . 'config.inc.php',|'configFile' => '/etc/phpmyadmin/config.inc.php',|g" /usr/share/phpmyadmin/libraries/vendor_config.php
 
 	# Create temporary folder and change permission
-	chmod 770 /usr/share/phpmyadmin/tmp
-	chown -R root:www-data /usr/share/phpmyadmin/tmp/
+	mkdir -p /var/lib/phpmyadmin/tmp
+	chmod 770 /var/lib/phpmyadmin/tmp
+	chown -R hestiamail:www-data /usr/share/phpmyadmin/tmp/
 
 	# Generate blow fish
 	blowfish=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 32)
@@ -1915,7 +1913,7 @@ if [ "$mysql" = 'yes' ] || [ "$mysql8" = 'yes' ]; then
 	source $HESTIA_INSTALL_DIR/phpmyadmin/pma.sh > /dev/null 2>&1
 
 	# Limit access to /etc/phpmyadmin/
-	chown -R root:www-data /etc/phpmyadmin/
+	chown -R root:hestiamail /etc/phpmyadmin/
 	chmod 640 /etc/phpmyadmin/config.inc.php
 	chmod 750 /etc/phpmyadmin/conf.d/
 fi
@@ -1949,6 +1947,10 @@ if [ "$postgresql" = 'yes' ]; then
 	rm phppgadmin-v$pga_v.tar.gz
 	write_config_value "DB_PGA_ALIAS" "phppgadmin"
 	$HESTIA/bin/v-change-sys-db-alias 'pga' "phppgadmin"
+
+	# Limit access to /etc/phppgadmin/
+	chown -R root:hestiamail /etc/phppgadmin/
+	chmod 640 /etc/phppgadmin/config.inc.php
 fi
 
 #----------------------------------------------------------#

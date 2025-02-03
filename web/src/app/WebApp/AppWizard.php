@@ -37,7 +37,7 @@ class AppWizard
 
         $filteredFiles = array_filter(
             $files,
-            fn(string $file) => in_array($file, ['index.html', 'robots.txt']),
+            fn(string $file) => !in_array($file, ['index.html', 'robots.txt']),
         );
 
         return count($filteredFiles) <= 0;

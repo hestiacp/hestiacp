@@ -19,6 +19,7 @@ class FlarumSetup extends BaseSetup
 
     protected array $config = [
         'form' => [
+            'forum_title' => ['type' => 'text', 'value' => 'Flarum Forum'],
             'admin_username' => ['value' => 'fladmin'],
             'admin_email' => 'text',
             'admin_password' => 'password',
@@ -29,7 +30,7 @@ class FlarumSetup extends BaseSetup
         ],
         'server' => [
             'nginx' => [
-                'template' => 'flarum',
+                'template' => 'flarum-composer',
             ],
             'php' => [
                 'supported' => ['8.2', '8.3'],
@@ -41,14 +42,11 @@ class FlarumSetup extends BaseSetup
     {
         $this->appcontext->createFile(
             $target->getDocRoot('.htaccess'),
-            '<IfModule mod_rewrite.c>
-                    RewriteEngine On
-                    RewriteRule ^(.*)$ public/$1 [L]
-            </IfModule>',
+            file_get_contents(__DIR__ . '/.htaccess'),
         );
 
         $this->appcontext->sendPostRequest($target->getUrl(), [
-            'forumTitle' => 'Flarum',
+            'forumTitle' => $options['forum_title'],
             'mysqlHost' => $target->database->host,
             'mysqlDatabase' => $target->database->name,
             'mysqlUsername' => $target->database->user,

@@ -7,13 +7,22 @@ All notable changes to this project will be documented in this file.
 ### Notes
 
 - To improve security we have deciced to allow users to rename the default admin user. And use a new user "hestia-web" to become the default user to run Hestia on.
-- Dropped support Debian 10 due to EOL
+-
+- In initial versions of HestiaCP we had Jailed SSH enabled via Jailkit. It had major disadvantages we have decided it to replace with Bubble Wrap. Users running Jailed SSH in the past are adviced to run the migration script! Found in /usr/local/hestia/upgrade/manual/migrate_jailkit_to_bubblewrap.sh. See #4698
+- We are aware that Cgroups are currently not working as it should be. It works fine if you login with SSH as the user how ever it doesn't work for PHP-FPM yet.
+- Dropped support Debian 10 due to EOL.
+
+### Security
+
+- Fix issue where CIRD was not propperly validated CVE-XXXX-XXX-XXX
+- Restrict PHP-FPM permissions to a new user to prevent permission escalation to admin users. CVE-XXXX-XXX-XXX
+- Solve security issues where restart flag did accecpt unvalidated values. CVE-XXXX-XXX-XXX
 
 ### Features
 
 - Added support for PHP 8.4
 - Add support for Ubuntu 24.04 Noble release (#4411 #4451)
-- Add support for Jailed SSH (#4052 #4245) @rjd222
+- Add support for Jailed SSH (#4052 #4245, #4698 #4687)
 - Implement CLI for Quick Install Apps (#4443)
 - Add support for Directadmin / Cpanel imports ( #4177 #4415 #4426 #4252 #4241)
 - Add support for Increamental Backups via Restic
@@ -67,11 +76,21 @@ All notable changes to this project will be documented in this file.
 - Improve Owncloud templates (#4572)
 - Improve security Quick Install Apps (#457 #4569 #4568 #4567 #4566 #4565 #4564 #4563)
 - Add hestia-mail to hestia-users group and create hestia-users group on new install #4540 #4531
+- Fix translations MariaDB / PHPMyadmin (#4725)
+- Some left overs from the old admin user still remaind (#4721)
+- Disallow ` character in cronjobs to avoid errors in cron list #4708
+- Drop Maxmind high-risk-ip-sample-list (#4692)
+- Hardening of installer security and improving usability (#4690)
+- White label for file manager (#4681) @MaxiZamorano
+- Fixed with cronjob v-add-letsencrypt-domain created new cronjob onder "admin" user that didn't have sudo permisions
+- Customization of the file manager with interface improvements (#4678) @MaxiZamorano
+- Fix: Proftpd FTP Usage is showing incorrect information (#4672)
+- template for using webasyst with nginx+php-fpm (#4660)
 
 ### Depencies
 
-- Update hestia-nginx to 1.27.0
-- Update hestia-php to 8.3.9
+- Update hestia-nginx to 1.27.3
+- Update hestia-php to 8.3.16
 - Update Roundcube, Filegator, Snappy mail to the latest version
 - Update Quick Installer apps to latest version (#4594)
 
@@ -114,7 +133,7 @@ All notable changes to this project will be documented in this file.
 
 ### Security
 
-- Restrict PHP-FPM permissions to a new user to prevent permission escalation to admin or other users [CVE-xxxx-xxxxx](https://huntr.com/bounties/21125f12-64a0-42a3-b218-26b9945a5bc0/)
+- Restrict PHP-FPM permissions to a new user to prevent permission escalation to admin or other users [CVE-2023-5839](https://huntr.com/bounties/21125f12-64a0-42a3-b218-26b9945a5bc0/)
 - Reduce Nginx keepalive_requests to 1000 ([Nginx default](https://www.nginx.com/blog/http-2-rapid-reset-attack-impacting-f5-nginx-products/#http2_max_concurrent_streams)) to limit risks of [CVE-2023-44487](https://www.cve.org/CVERecord?id=CVE-2023-44487)
 
 ### Bug fixes

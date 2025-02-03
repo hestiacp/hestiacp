@@ -6,6 +6,7 @@ namespace Hestia\WebApp\Installers\Laravel;
 
 use Hestia\WebApp\BaseSetup;
 use Hestia\WebApp\InstallationTarget\InstallationTarget;
+use function file_get_contents;
 
 class LaravelSetup extends BaseSetup
 {
@@ -36,10 +37,7 @@ class LaravelSetup extends BaseSetup
     {
         $this->appcontext->createFile(
             $target->getDocRoot('.htaccess'),
-            '<IfModule mod_rewrite.c>
-                    RewriteEngine On
-                    RewriteRule ^(.*)$ public/$1 [L]
-            </IfModule>',
+            file_get_contents(__DIR__ . '/.htaccess'),
         );
     }
 }

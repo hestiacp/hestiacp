@@ -158,6 +158,37 @@ For Blackblaze use
 v-add-backup-host 'rclone' 'b2' '' '' 'hestiacp'
 ```
 
+## Setting up Incremental Backups
+
+Enable Incremental Backups in the user packages.
+
+### Using Rclone
+
+Since 1.9 we include Rclone by default in Hestia Installation. Run `rclone config` as the `root` user and then select the option `n`. Follow the instruction on the screen, then save when completed.
+
+Run the following command:
+
+```bash
+v-add-backup-host-restic 'rclone:target:/folder/' '30' '8' '5' '3' '-1'
+```
+
+```bash
+v-backup-users-restic
+```
+
+or
+
+```bash
+v-backup-user-restic username
+```
+
+::warning
+A new restic repository is initiated on the first time you run this command. An encryption key is generated at the same time in /usr/local/hestia/data/users/{users}/restic.conf. Please make sure to backup this file somewhere incase the server gets comprimised or the user gets deleted. Without this "secret" key we don't provide any method to restore the user data. This is the reason why we alway advice to keep the orignal backup still working.
+
+### Other methods
+
+Other methods as long Restic supports it are supported how ever as we run the command as root we are not able to provide keys / password and so on before hand. This is why Rclone is in favor for other methods!
+
 ## How to change default backup folder
 
 For security reasons, symlinks are not allowed. To change the default backup folder, you can do the following:

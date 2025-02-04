@@ -108,7 +108,7 @@ if [ -n "$DB_PMA_ALIAS" ]; then
 	$BIN/v-change-sys-db-alias pma "$old"
 fi
 if [ -n "$DB_PGA_ALIAS" ]; then
-	old=$DB_PMA_ALIAS
+	old=$DB_PGA_ALIAS
 	$BIN/v-change-sys-db-alias pga "randomstring"
 	$BIN/v-change-sys-db-alias pga "$old"
 fi

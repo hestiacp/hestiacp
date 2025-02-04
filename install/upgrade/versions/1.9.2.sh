@@ -33,3 +33,11 @@ done
 
 # Update permissiosn /usr/local/hestia/data/sessions
 chown -R hestiaweb:hestiaweb /usr/local/hestia/data/sessions
+
+if [ -n $DB_PGA_ALIAS ]; then
+	if [ -n $DB_PMA_ALIAS ]; then
+		if [ "$DB_PMA_ALIAS" == "$DB_PGA_ALIAS" ]; then
+			$BIN/v-change-sys-db-alias pga "phppgadmin"
+		fi
+	fi
+fi

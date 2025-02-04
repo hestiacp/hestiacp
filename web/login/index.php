@@ -116,8 +116,13 @@ function authenticate_user($user, $password, $twofa = "") {
 		$ip = $_SERVER["REMOTE_ADDR"];
 		$user_agent = $_SERVER["HTTP_USER_AGENT"];
 
-		if (!empty($_SERVER["HTTP_CF_CONNECTING_IP"]) &&
-			filter_var($_SERVER["HTTP_CF_CONNECTING_IP"], FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_IPV6)
+		if (
+			!empty($_SERVER["HTTP_CF_CONNECTING_IP"]) &&
+			filter_var(
+				$_SERVER["HTTP_CF_CONNECTING_IP"],
+				FILTER_VALIDATE_IP,
+				FILTER_FLAG_IPV4 | FILTER_FLAG_IPV6,
+			)
 		) {
 			$ip = $_SERVER["HTTP_CF_CONNECTING_IP"];
 		}

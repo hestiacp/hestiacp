@@ -26,5 +26,5 @@ upgrade_config_set_value 'UPGRADE_UPDATE_FILEMANAGER_CONFIG' 'false'
 # Update hestia-event.conf
 if [ -f "/etc/apache2/conf.d/hestia-event.conf" ]; then
 	rm -f /etc/apache2/conf.d/hestia-event.conf
-	cp $HESTIA/data/templates/web/apache2/hestia-event.conf /etc/apache2/conf.d/
+	$HESTIA_INSTALL_DIR/apache2/hestia-event.conf /etc/apache2/conf.d/
 fi

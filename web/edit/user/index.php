@@ -373,7 +373,6 @@ if (!empty($_POST["save"])) {
 				empty($_SESSION["error_msg"])
 			) {
 				$v_shell = quoteshellarg($_POST["v_shell"]);
-				$v_shell_jail_enabled = quoteshellarg($_POST["v_shell_jail_enabled"]);
 
 				exec(
 					HESTIA_CMD .

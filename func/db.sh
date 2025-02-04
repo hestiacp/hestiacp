@@ -36,25 +36,25 @@ database_set_default_ports() {
 
 # MySQL
 mysql_connect() {
-	# Leer toda la línea de configuración de MySQL desde el archivo
+	# Read the entire MySQL configuration line from the file
 	local conf_line
 	conf_line=$(cat "$HESTIA/conf/mysql.conf")
 
-	# Extraer las credenciales usando sed y asignarlas a variables propias
+	# Extract credentials using sed and assign them to local variables
 	MYSQL_HOST=$(echo "$conf_line" | sed -n "s/.*HOST='\([^']*\)'.*/\1/p")
 	MYSQL_USER=$(echo "$conf_line" | sed -n "s/.*USER='\([^']*\)'.*/\1/p")
 	MYSQL_PASSWORD=$(echo "$conf_line" | sed -n "s/.*PASSWORD='\([^']*\)'.*/\1/p")
 	PORT=$(echo "$conf_line" | sed -n "s/.*PORT='\([^']*\)'.*/\1/p")
 	if [ -z "$PORT" ]; then PORT=3306; fi
 
-	# Verificar que se hayan obtenido todos los valores necesarios
+	# Verify that all necessary values have been obtained
 	if [ -z "$MYSQL_HOST" ] || [ -z "$MYSQL_USER" ] || [ -z "$MYSQL_PASSWORD" ]; then
 		echo "Error: mysql config parsing failed"
 		log_event "$E_PARSING" "$ARGUMENTS"
 		exit $E_PARSING
 	fi
 
-	# Crear el archivo de configuración temporal para el cliente MySQL
+	# Create the temporary configuration file for the MySQL client
 	mycnf="$HESTIA/conf/.mysql.$MYSQL_HOST"
 	{
 		echo "[client]"
@@ -65,7 +65,7 @@ mysql_connect() {
 	} >"$mycnf"
 	chmod 600 "$mycnf"
 
-	# Probar la conexión usando el archivo de configuración
+	# Test the connection using the configuration file
 	mysql_out=$(mktemp)
 	if [ -f '/usr/bin/mariadb' ]; then
 		mariadb --defaults-file="$mycnf" -e 'SELECT VERSION()' >"$mysql_out" 2>&1
@@ -134,124 +134,123 @@ mysql_dump() {
 }
 
 generate_policy_based_password() {
-    # Se requiere que el archivo de configuración temporal (mycnf) ya esté creado.
-    # Consultamos las variables de la política de contraseñas.
-    local length=$(mysql --defaults-extra-file="$mycnf" -N -e "SHOW VARIABLES LIKE 'validate_password.length';" | awk '{print $2}')
-    local mixed_case_count=$(mysql --defaults-extra-file="$mycnf" -N -e "SHOW VARIABLES LIKE 'validate_password.mixed_case_count';" | awk '{print $2}')
-    local number_count=$(mysql --defaults-extra-file="$mycnf" -N -e "SHOW VARIABLES LIKE 'validate_password.number_count';" | awk '{print $2}')
-    local special_char_count=$(mysql --defaults-extra-file="$mycnf" -N -e "SHOW VARIABLES LIKE 'validate_password.special_char_count';" | awk '{print $2}')
+	# The temporary configuration file (mycnf) is required to be created already.
+	# Query the password policy variables.
+	local length=$(mysql --defaults-extra-file="$mycnf" -N -e "SHOW VARIABLES LIKE 'validate_password.length';" | awk '{print $2}')
+	local mixed_case_count=$(mysql --defaults-extra-file="$mycnf" -N -e "SHOW VARIABLES LIKE 'validate_password.mixed_case_count';" | awk '{print $2}')
+	local number_count=$(mysql --defaults-extra-file="$mycnf" -N -e "SHOW VARIABLES LIKE 'validate_password.number_count';" | awk '{print $2}')
+	local special_char_count=$(mysql --defaults-extra-file="$mycnf" -N -e "SHOW VARIABLES LIKE 'validate_password.special_char_count';" | awk '{print $2}')
 
-    # Si alguna consulta falla, se asignan valores predeterminados
-    [ -z "$length" ] && length=8
-    [ -z "$mixed_case_count" ] && mixed_case_count=1
-    [ -z "$number_count" ] && number_count=1
-    [ -z "$special_char_count" ] && special_char_count=1
+	# If any query fails, default values ​​are assigned
+	[ -z "$length" ] && length=8
+	[ -z "$mixed_case_count" ] && mixed_case_count=1
+	[ -z "$number_count" ] && number_count=1
+	[ -z "$special_char_count" ] && special_char_count=1
 
-    # Definir conjuntos de caracteres
-    local lower='abcdefghijklmnopqrstuvwxyz'
-    local upper='ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-    local digits='0123456789'
-    local specials='!@#$%^&*()-_=+[]{};:,.<>?/'
+	# Define character sets
+	local lower='abcdefghijklmnopqrstuvwxyz'
+	local upper='ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+	local digits='0123456789'
+	local specials='!@#$%^&*()-_=+[]{};:,.<>?/'
 
-    local p_lower=""
-    local p_upper=""
-    local p_digit=""
-    local p_special=""
+	local p_lower=""
+	local p_upper=""
+	local p_digit=""
+	local p_special=""
 
-    # Generar al menos mixed_case_count caracteres minúsculas y mixed_case_count en mayúsculas
-    for i in $(seq 1 $mixed_case_count); do
-        p_lower+=$(tr -dc "$lower" </dev/urandom | head -c 1)
-        p_upper+=$(tr -dc "$upper" </dev/urandom | head -c 1)
-    done
+	# Generate at least mixed_case_count lowercase characters and mixed_case_count uppercase characters
+	for i in $(seq 1 $mixed_case_count); do
+		p_lower+=$(tr -dc "$lower" </dev/urandom | head -c 1)
+		p_upper+=$(tr -dc "$upper" </dev/urandom | head -c 1)
+	done
 
-    # Generar al menos number_count dígitos
-    for i in $(seq 1 $number_count); do
-        p_digit+=$(tr -dc "$digits" </dev/urandom | head -c 1)
-    done
+	# Generate at least number_count digits
+	for i in $(seq 1 $number_count); do
+		p_digit+=$(tr -dc "$digits" </dev/urandom | head -c 1)
+	done
 
-    # Generar al menos special_char_count caracteres especiales
-    for i in $(seq 1 $special_char_count); do
-        p_special+=$(tr -dc "$specials" </dev/urandom | head -c 1)
-    done
+	# Generate at least special_char_count special characters
+	for i in $(seq 1 $special_char_count); do
+		p_special+=$(tr -dc "$specials" </dev/urandom | head -c 1)
+	done
 
-    # Calcular la cantidad de caracteres restantes
-    local mandatory_count=$(( mixed_case_count*2 + number_count + special_char_count ))
-    local rest_length=$(( length - mandatory_count ))
-    if [ $rest_length -lt 0 ]; then
-        rest_length=0
-    fi
+	# Calculate the number of remaining characters
+	local mandatory_count=$((mixed_case_count * 2 + number_count + special_char_count))
+	local rest_length=$((length - mandatory_count))
+	if [ $rest_length -lt 0 ]; then
+		rest_length=0
+	fi
 
-    # Generar los caracteres restantes de cualquier tipo
-    local all="$lower$upper$digits$specials"
-    local p_rest=$(tr -dc "$all" </dev/urandom | head -c $rest_length)
+	# Generate the remaining characters of any type
+	local all="$lower$upper$digits$specials"
+	local p_rest=$(tr -dc "$all" </dev/urandom | head -c $rest_length)
 
-    # Concatenar todas las partes
-    local password="$p_lower$p_upper$p_digit$p_special$p_rest"
+	# Concatenate all parts
+	local password="$p_lower$p_upper$p_digit$p_special$p_rest"
 
-    # Mezclar aleatoriamente para evitar patrones fijos
-    echo "$password" | fold -w1 | shuf | tr -d '\n'
-    echo ""  # Salto de línea final
+	# Shuffle randomly to avoid fixed patterns
+	echo "$password" | fold -w1 | shuf | tr -d '\n'
+	echo ""
 }
 
 create_mysql_user_with_policy() {
-    local err_file="/tmp/create_user.err"
-    rm -f "$err_file"
+	local err_file="/tmp/create_user.err"
+	rm -f "$err_file"
 
-    # Verificar si el usuario ya existe (sin importar el host)
-    local user_exists
-    user_exists=$(mysql --defaults-extra-file="$mycnf" -N -e "SELECT COUNT(*) FROM mysql.user WHERE user='$DBUSER';")
-    if [ "$user_exists" -gt 0 ]; then
-        echo "User $DBUSER already exists. Skipping creation."
-        return 0
-    fi
+	# Check if user already exists (regardless of host)
+	local user_exists
+	user_exists=$(mysql --defaults-extra-file="$mycnf" -N -e "SELECT COUNT(*) FROM mysql.user WHERE user='$DBUSER';")
+	if [ "$user_exists" -gt 0 ]; then
+		echo "User $DBUSER already exists. Skipping creation."
+		return 0
+	fi
 
-    local create_cmd
+	local create_cmd
 
-    # Intentar crear el usuario usando la contraseña del respaldo (hash MD5)
-    # NOTA: Usamos "IDENTIFIED WITH mysql_native_password BY ..." para crear el usuario
-    create_cmd="CREATE USER IF NOT EXISTS '$DBUSER'@'%' IDENTIFIED WITH mysql_native_password BY '$dbpass';"
-    mysql --defaults-extra-file="$mycnf" -e "$create_cmd" 2> "$err_file"
-    create_cmd="CREATE USER IF NOT EXISTS '$DBUSER'@'localhost' IDENTIFIED WITH mysql_native_password BY '$dbpass';"
-    mysql --defaults-extra-file="$mycnf" -e "$create_cmd" 2>> "$err_file"
+	# Try to create the user using the backup password (MD5 hash)
+	# NOTE: We used "IDENTIFIED WITH mysql_native_password BY ..." to create the user
+	create_cmd="CREATE USER IF NOT EXISTS '$DBUSER'@'%' IDENTIFIED WITH mysql_native_password BY '$dbpass';"
+	mysql --defaults-extra-file="$mycnf" -e "$create_cmd" 2>"$err_file"
+	create_cmd="CREATE USER IF NOT EXISTS '$DBUSER'@'localhost' IDENTIFIED WITH mysql_native_password BY '$dbpass';"
+	mysql --defaults-extra-file="$mycnf" -e "$create_cmd" 2>>"$err_file"
 
-    # Si se detecta un error de política de contraseñas, se asume que la contraseña del respaldo no es válida
-    if grep -q "Your password does not satisfy" "$err_file"; then
-        echo "Backup password for $DBUSER does not meet the current policy requirements."
-        # Generar una nueva contraseña que cumpla la política actual
-        newpass=$(generate_policy_based_password)
-        echo "Generated strong password for $DBUSER: $newpass"
-        # Actualizar la variable para usar la nueva contraseña
-        dbpass="$newpass"
-        # Intentar nuevamente la creación del usuario con la nueva contraseña
-        create_cmd="CREATE USER IF NOT EXISTS '$DBUSER'@'%' IDENTIFIED WITH mysql_native_password BY '$dbpass';"
-        mysql --defaults-extra-file="$mycnf" -e "$create_cmd" 2> "$err_file"
-        create_cmd="CREATE USER IF NOT EXISTS '$DBUSER'@'localhost' IDENTIFIED WITH mysql_native_password BY '$dbpass';"
-        mysql --defaults-extra-file="$mycnf" -e "$create_cmd" 2>> "$err_file"
-    fi
+	# If a password policy error is detected, it is assumed that the backup password is invalid
+	if grep -q "Your password does not satisfy" "$err_file"; then
+		echo "Backup password for $DBUSER does not meet the current policy requirements."
+		# Generar una nueva contraseña que cumpla la política actual
+		newpass=$(generate_policy_based_password)
+		echo "Generated strong password for $DBUSER: $newpass"
+		# Actualizar la variable para usar la nueva contraseña
+		dbpass="$newpass"
+		# Intentar nuevamente la creación del usuario con la nueva contraseña
+		create_cmd="CREATE USER IF NOT EXISTS '$DBUSER'@'%' IDENTIFIED WITH mysql_native_password BY '$dbpass';"
+		mysql --defaults-extra-file="$mycnf" -e "$create_cmd" 2>"$err_file"
+		create_cmd="CREATE USER IF NOT EXISTS '$DBUSER'@'localhost' IDENTIFIED WITH mysql_native_password BY '$dbpass';"
+		mysql --defaults-extra-file="$mycnf" -e "$create_cmd" 2>>"$err_file"
+	fi
 
-    # Si se detecta el error 1410 (falta de privilegios para otorgar) en alguno de los comandos anteriores, abortar
-    if grep -q "ERROR 1410" "$err_file"; then
-        echo "Error: Insufficient privileges to create user $DBUSER with GRANT."
-        echo "Please ensure that the MySQL account used for restoration has the necessary privileges (CREATE USER, GRANT OPTION, etc.)."
-        rm -f "$err_file"
-        return 1
-    fi
+	# If error 1410 (lack of privileges to grant) is detected in any of the above commands, abort
+	if grep -q "ERROR 1410" "$err_file"; then
+		echo "Error: Insufficient privileges to create user $DBUSER with GRANT."
+		echo "Please ensure that the MySQL account used for restoration has the necessary privileges (CREATE USER, GRANT OPTION, etc.)."
+		rm -f "$err_file"
+		return 1
+	fi
 
-    # Otorgar todos los privilegios sobre la base de datos al usuario
-    mysql --defaults-extra-file="$mycnf" -e "GRANT ALL ON \`$DB\`.* TO '$DBUSER'@'%';" 2>> "$err_file"
-    mysql --defaults-extra-file="$mycnf" -e "GRANT ALL ON \`$DB\`.* TO '$DBUSER'@'localhost';" 2>> "$err_file"
-    mysql --defaults-extra-file="$mycnf" -e "FLUSH PRIVILEGES;" 2>> "$err_file"
+	# Grant all privileges on the database to the user
+	mysql --defaults-extra-file="$mycnf" -e "GRANT ALL ON \`$DB\`.* TO '$DBUSER'@'%';" 2>>"$err_file"
+	mysql --defaults-extra-file="$mycnf" -e "GRANT ALL ON \`$DB\`.* TO '$DBUSER'@'localhost';" 2>>"$err_file"
+	mysql --defaults-extra-file="$mycnf" -e "FLUSH PRIVILEGES;" 2>>"$err_file"
 
-    if grep -q "ERROR 1410" "$err_file"; then
-        echo "Error: Insufficient privileges to grant privileges to $DBUSER."
-        rm -f "$err_file"
-        return 1
-    fi
+	if grep -q "ERROR 1410" "$err_file"; then
+		echo "Error: Insufficient privileges to grant privileges to $DBUSER."
+		rm -f "$err_file"
+		return 1
+	fi
 
-    rm -f "$err_file"
-    return 0
+	rm -f "$err_file"
+	return 0
 }
-
 
 # PostgreSQL
 psql_connect() {

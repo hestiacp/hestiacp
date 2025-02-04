@@ -837,7 +837,7 @@ if [ "$db" != 'no' ] && [ -n "$DB_SYSTEM" ]; then
             grant_file="$tmpdir/db/$database/conf/$database.mysql.$database"
             if [ -f "$grant_file" ]; then
                 echo "Applying grant file: $grant_file"
-                # Procesar el archivo de GRANT para asegurarse de que cada línea termine con un punto y coma.
+                # Process the GRANT file to ensure that each line ends with a semicolon.
                 processed_grant_file=$(mktemp)
                 sed -e 's/[[:space:]]*$/;/' "$grant_file" > "$processed_grant_file"
                 mysql --defaults-extra-file="$mycnf" "$DB" < "$processed_grant_file"

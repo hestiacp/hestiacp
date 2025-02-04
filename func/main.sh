@@ -791,51 +791,51 @@ is_alias_format_valid() {
 
 # IP format validator
 is_ip_format_valid() {
-    object_name=${2-ip}
-    valid=$($HESTIA_PHP -r '$ip="$argv[1]"; echo (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) ? 0 : 1);' $1);
-    if [ "$valid" -ne 0 ]; then
-        check_result "$E_INVALID" "invalid $object_name :: $1"
-    fi
+	object_name=${2-ip}
+	valid=$($HESTIA_PHP -r '$ip="$argv[1]"; echo (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) ? 0 : 1);' $1)
+	if [ "$valid" -ne 0 ]; then
+		check_result "$E_INVALID" "invalid $object_name :: $1"
+	fi
 }
 
 # IPv6 format validator
 is_ipv6_format_valid() {
-    object_name=${2-ipv6}
-    valid=$($HESTIA_PHP -r '$ip="$argv[1]"; echo (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) ? 0 : 1);' $1);
-    if [ "$valid" -ne 0 ]; then
-        check_result "$E_INVALID" "invalid $object_name :: $1"
-    fi
+	object_name=${2-ipv6}
+	valid=$($HESTIA_PHP -r '$ip="$argv[1]"; echo (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) ? 0 : 1);' $1)
+	if [ "$valid" -ne 0 ]; then
+		check_result "$E_INVALID" "invalid $object_name :: $1"
+	fi
 }
 
 is_ip46_format_valid() {
-    valid=$($HESTIA_PHP -r '$ip="$argv[1]"; echo (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_IPV6) ? 0 : 1);' $1);
-    if [ "$valid" -ne 0 ]; then
-        check_result "$E_INVALID" "invalid IP format :: $1"
-    fi
+	valid=$($HESTIA_PHP -r '$ip="$argv[1]"; echo (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_IPV6) ? 0 : 1);' $1)
+	if [ "$valid" -ne 0 ]; then
+		check_result "$E_INVALID" "invalid IP format :: $1"
+	fi
 }
 
 is_ipv4_cidr_format_valid() {
-    object_name=${2-ip}
-    valid=$($HESTIA_PHP -r '$cidr="$argv[1]"; list($ip, $netmask) = [...explode("/", $cidr), 32]; echo ((filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) && $netmask <= 32) ? 0 : 1);' $1);
-    if [ "$valid" -ne 0 ]; then
-        check_result "$E_INVALID" "invalid $object_name :: $1"
-    fi
+	object_name=${2-ip}
+	valid=$($HESTIA_PHP -r '$cidr="$argv[1]"; list($ip, $netmask) = [...explode("/", $cidr), 32]; echo ((filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) && $netmask <= 32) ? 0 : 1);' $1)
+	if [ "$valid" -ne 0 ]; then
+		check_result "$E_INVALID" "invalid $object_name :: $1"
+	fi
 }
 
 is_ipv6_cidr_format_valid() {
-    object_name=${2-ipv6}
-    valid=$($HESTIA_PHP -r '$cidr="$argv[1]"; list($ip, $netmask) = [...explode("/", $cidr), 128]; echo ((filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) && $netmask <= 128) ? 0 : 1);' $1);
-    if [ "$valid" -ne 0 ]; then
-        check_result "$E_INVALID" "invalid $object_name :: $1"
-    fi
+	object_name=${2-ipv6}
+	valid=$($HESTIA_PHP -r '$cidr="$argv[1]"; list($ip, $netmask) = [...explode("/", $cidr), 128]; echo ((filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) && $netmask <= 128) ? 0 : 1);' $1)
+	if [ "$valid" -ne 0 ]; then
+		check_result "$E_INVALID" "invalid $object_name :: $1"
+	fi
 }
 
 is_netmask_format_valid() {
-    object_name=${2-netmask}
-    valid=$($HESTIA_PHP -r '$netmask="$argv[1]"; echo (preg_match("/^(128|192|224|240|248|252|254|255)\.(0|128|192|224|240|248|252|254|255)\.(0|128|192|224|240|248|252|254|255)\.(0|128|192|224|240|248|252|254|255)/", $netmask) ? 0 : 1);' $1);
-    if [ "$valid" -ne 0 ]; then
-        check_result "$E_INVALID" "invalid $object_name :: $1"
-    fi
+	object_name=${2-netmask}
+	valid=$($HESTIA_PHP -r '$netmask="$argv[1]"; echo (preg_match("/^(128|192|224|240|248|252|254|255)\.(0|128|192|224|240|248|252|254|255)\.(0|128|192|224|240|248|252|254|255)\.(0|128|192|224|240|248|252|254|255)/", $netmask) ? 0 : 1);' $1)
+	if [ "$valid" -ne 0 ]; then
+		check_result "$E_INVALID" "invalid $object_name :: $1"
+	fi
 }
 
 # Proxy extention format validator

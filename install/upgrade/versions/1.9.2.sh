@@ -30,3 +30,6 @@ for user in $(v-list-sys-users plain); do
 		rm -f /home/$user/.ssh/hst-filemanager-key
 	fi
 done
+
+# Update permissiosn /usr/local/hestia/data/sessions
+chown -R hestiaweb:hestiaweb /usr/local/hestia/data/sessions

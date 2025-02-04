@@ -24,7 +24,7 @@ upgrade_config_set_value 'UPGRADE_REBUILD_USERS' 'no'
 upgrade_config_set_value 'UPGRADE_UPDATE_FILEMANAGER_CONFIG' 'false'
 
 # Delete all ssh keys for the filemanager make sure hestiaweb can read them.
-for user in $(v-list-sys-users plain); do
+for user in $($BIN/v-list-sys-users plain); do
 	if [ -f /home/$user/.ssh/hst-filemanager-key ]; then
 		# Remove old filemanager key
 		rm -f /home/$user/.ssh/hst-filemanager-key

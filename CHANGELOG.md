@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.9.2] - Service release
+
+- Backups change owner files to hestiaweb (#4779)
+- PHP-FPM Include missing info (#4766)
+- Fix bug where PHPMyadmin / PHPPGadmin where named phpmyadmin in 1.9.0 if this is the case it will reset to phppgadmin (#4767)
+- Fix warning caused by some old jailed code left (#4751)
+- Fix issues with Filemanger (#4761)
+- Update <www.conf> (#4743)
+
 ## [1.9.1] - Service release
 
 - Fixed an issue with webmail / phpmydmin unavailble
@@ -12,7 +21,7 @@ All notable changes to this project will be documented in this file.
 
 - To improve security, we now allow users to rename the default `admin` user.
 - Hestia now runs under a new `hestia-web` user.
-- In initial versions of HestiaCP, we used Jailkit to enabled Jailed SSH. It had major disadvantages, so we have decided it to replace it with [bubblewrap](https://github.com/containers/bubblewrap). Users running Jailed SSH in the past are advised to run the migration script! It can be found in `/usr/local/hestia/upgrade/manual/migrate_jailkit_to_bubblewrap.sh`. See [#4698](https://github.com/hestiacp/hestiacp/pull/4698)
+- In initial versions of HestiaCP, we used Jailkit to enabled Jailed SSH. It had major disadvantages, so we have decided it to replace it with [bubblewrap](https://github.com/containers/bubblewrap). Users running Jailed SSH in the past are advised to run the migration script! It can be found in `/usr/local/hestia/install/upgrade/manual/migrate_jailkit_to_bubblewrap.sh`. See [#4698](https://github.com/hestiacp/hestiacp/pull/4698)
 - We are aware that cgroups are currently not working as they should be. They work fine if you login with SSH as the user, but they don't work for PHP-FPM yet.
 - Dropped support for Debian 10 due to EOL.
 

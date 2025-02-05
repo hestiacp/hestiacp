@@ -47,3 +47,4 @@ chown -R hestiaweb /backup/*.tar
 
 # Fix typo in www.conf
 find /etc/php/ /usr/local/hestia/install/deb/php-fpm -type f -name 'www.conf' -print0 | xargs -0 -I {} sed -i 's/\[wwww\]/\[www\]/' {}
+find /etc/php/ /usr/local/hestia/install/deb/php-fpm -type f -name 'dummy.conf' -print0 | xargs -0 -I {} sed -i 's/\[wwww\]/\[www\]/' {}

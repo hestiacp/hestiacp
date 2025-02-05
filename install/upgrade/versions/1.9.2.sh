@@ -41,3 +41,6 @@ if [ -n "$DB_PGA_ALIAS" ]; then
 		fi
 	fi
 fi
+
+# Change owner of backups
+chown -R hestiaweb /backup/*.tar

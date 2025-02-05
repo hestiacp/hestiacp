@@ -604,7 +604,7 @@ upgrade_phppgadmin() {
 			if ! version_ge "$pga_release" "7.14.0"; then
 				cp -f $HESTIA_INSTALL_DIR/pga/config.inc.php /etc/phppgadmin/
 			fi
-			if [ ! -f /usr/share/phppgadmin/conf/config.inc.php ]; then
+			if [ ! -L /usr/share/phppgadmin/conf/config.inc.php ]; then
 				ln -s /etc/phppgadmin/config.inc.php /usr/share/phppgadmin/conf
 			fi
 

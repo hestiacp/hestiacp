@@ -13,12 +13,12 @@ Hestia must be installed on top of a fresh operating system installation to ensu
 If on a VPS/KVM, and there is already an admin account, either delete that default admin ID, or use `--force` to continue with the installation. See custom installation below for further details.
 :::
 
-|                      | Minimum                                        | Recommended                          |
-| -------------------- | ---------------------------------------------- | ------------------------------------ |
-| **CPU**              | 1 core, 64-bit                                 | 4 cores                              |
-| **Memory**           | 1 GB (no SpamAssassin and ClamAV)              | 4 GB                                 |
-| **Disk**             | 10 GB HDD                                      | 40 GB SSD                            |
-| **Operating System** | Debian 10, 11 or 12<br>Ubuntu 20.04, 22.04 LTS | Latest Debian <br> Latest Ubuntu LTS |
+|                      | Minimum                                    | Recommended                          |
+| -------------------- | ------------------------------------------ | ------------------------------------ |
+| **CPU**              | 1 core, 64-bit                             | 4 cores                              |
+| **Memory**           | 1 GB (no SpamAssassin and ClamAV)          | 4 GB                                 |
+| **Disk**             | 10 GB HDD                                  | 40 GB SSD                            |
+| **Operating System** | Debian 11 or 12<br>Ubuntu 22.04, 24.04 LTS | Latest Debian <br> Latest Ubuntu LTS |
 
 ::: warning
 Hestia only runs on AMD64 / x86_64 and ARM64 / aarch64 processors. It also requires a 64bit operating system!
@@ -27,11 +27,11 @@ We currently do not support i386 or ARM7-based processors.
 
 ### Supported operating systems
 
-- Debian 10, 11 or 12
-- Ubuntu 20.04 or 22.04
+- Debian 11 or 12
+- Ubuntu 22.04 or 24.04
 
 ::: warning
-Hestia does not support non-LTS Operating systems. If you install it on, for example, Ubuntu 21.10, you will not receive support from us.
+Hestia does not support non-LTS Operating systems. If you install it on, for example, Ubuntu 23.10, you will not receive support from us.
 :::
 
 ## Regular installation

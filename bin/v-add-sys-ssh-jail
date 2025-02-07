@@ -52,6 +52,13 @@ if [ -z "$(grep ^/usr/sbin/jailbash /etc/shells)" ]; then
 	echo "/usr/sbin/jailbash" >> /etc/shells
 fi
 
+# Use sftp-server binary so the sftp process can run inside jailbash
+if [ -z "$(grep 'Subsystem sftp /usr/lib/sftp-server' /etc/ssh/sshd_config)" ]; then
+	sed -i -E "s/Subsystem sftp internal-sftp/Subsystem sftp \/usr\/lib\/sftp-server/g" /etc/ssh/sshd_config
+
+	service ssh restart > /dev/null 2>&1
+fi
+
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#

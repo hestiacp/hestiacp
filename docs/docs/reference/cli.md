@@ -5436,6 +5436,34 @@ v-purge-nginx-cache user domain.tld
 
 This function purges nginx cache.
 
+## v-quick-install-app app
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-quick-install-app)
+
+list available web applications for quick installation
+
+**Options**:
+
+**Description**:
+
+The `v-quick-install-app app` command is used to retrieve a list of web applications that can be quickly installed through the `v-quick-install-app install` command in the Hestia Control Panel. This command provides a convenient overview of supported applications and their versions, allowing users to choose which application they would like to deploy on their server. The names of the applications are case sensitive.
+
+## v-quick-install-app install
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-quick-install-app)
+
+quickly install web applications
+
+**Options**: `[USER] [DOMAIN] [APP_TYPE] [APP_OPTIONS]`
+
+**Examples of WordPress installation**:
+
+```bash
+v-quick-install-app install username example.com WordPress username="wp_user" email="wp_user@example.com" password="your_password" site_name="Site name" database_host="localhost" database_name="db" database_user="user"
+```
+
+The `v-quick-install-app` command is used to automate the installation of web applications on a server managed by Hestia Control Panel. This function helps users quickly deploy applications by specifying a few parameters instead of manually going through the installation process.
+
 ## v-rebuild-all
 
 [Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-rebuild-all)

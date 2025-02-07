@@ -11,10 +11,7 @@ $api_status =
 	!empty($_SESSION["API_SYSTEM"]) && is_numeric($_SESSION["API_SYSTEM"])
 		? $_SESSION["API_SYSTEM"]
 		: 0;
-if (
-	($user_plain == $_SESSION["ROOT_USER"] && $api_status < 1) ||
-	($_SESSION["ROOT_USER"] != "admin" && $api_status < 2)
-) {
+if ($api_status < 1 || ($user_plain != $_SESSION["ROOT_USER"] && $api_status < 2)) {
 	header("Location: /edit/user/");
 	exit();
 }

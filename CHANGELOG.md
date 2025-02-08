@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.9.3] - Service release
+
+-
+
 ## [1.9.2] - Service release
 
 - Backups change owner files to hestiaweb (#4779)

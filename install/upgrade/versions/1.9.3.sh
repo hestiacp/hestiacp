@@ -27,3 +27,8 @@ upgrade_config_set_value 'UPGRADE_UPDATE_FILEMANAGER_CONFIG' 'false'
 if [ ! -f /etc/apparmor.d/abi/4.0 ]; then
 	rm -f /etc/apparmor.d/bwrap-userns-restrict
 fi
+
+if [ -x /usr/sbin/jailbash ]; then
+	$HESTIA/bin/v-delete-sys-ssh-jail
+	$HESTIA/bin/v-add-sys-ssh-jail
+fi

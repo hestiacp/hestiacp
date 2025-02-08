@@ -10,6 +10,8 @@ set -euo pipefail
 	--ro-bind-try /lib64 /lib64 \
 	--tmpfs /usr/lib/modules \
 	--tmpfs /usr/lib/systemd \
+	--tmpfs /usr/local/hestia \
+	--tmpfs /usr/share \
 	--ro-bind /bin /bin \
 	--ro-bind /sbin /sbin \
 	--dir /var \

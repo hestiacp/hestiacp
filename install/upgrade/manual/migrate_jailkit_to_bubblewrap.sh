@@ -90,7 +90,7 @@ if [ -n "$ssh_i" ]; then
             \n\n$(/usr/sbin/sshd -t)"
 		echo -e "$message"
 	else
-		service sshd restart > /dev/null 2>&1
+		service ssh restart > /dev/null 2>&1
 	fi
 fi
 

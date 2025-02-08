@@ -49,6 +49,7 @@ fi
 basecmd="$(basename "$clicmd")"
 if [ "$basecmd" != 'ps' -a \
 	"$basecmd" != 'ls' -a \
+	"$basecmd" != 'wget' -a \
 	"$basecmd" != 'tar' -a \
 	"$basecmd" != 'zip' -a \
 	"$basecmd" != 'unzip' -a \

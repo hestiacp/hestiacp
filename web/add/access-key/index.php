@@ -20,7 +20,7 @@ if ($api_status < 1 || ($user_plain != $_SESSION["ROOT_USER"] && $api_status < 2
 exec(HESTIA_CMD . "v-list-apis json", $output, $return_var);
 $apis = json_decode(implode("", $output), true);
 $apis = array_filter($apis, function ($api) use ($user_plain) {
-	return $user_plain == "admin" || $api["ROLE"] == "user";
+	return $user_plain == $_SESSION["ROOT_USER"] || $api["ROLE"] == "user";
 });
 ksort($apis);
 unset($output);

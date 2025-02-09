@@ -127,7 +127,7 @@ if [ -z "$check_cron" ] && [ ! -z "$CRON_SYSTEM" ]; then
 	day='*'
 	month='*'
 	wday='*'
-	echo "$min $hour * * * sudo /usr/local/hestia/bin/$cmd" > "/var/spool/cron/crontabs/hestiaweb"
+	sed -i -e "\$a$min $hour * * * sudo /usr/local/hestia/bin/$cmd" "/var/spool/cron/crontabs/hestiaweb"
 fi
 
 # Logging

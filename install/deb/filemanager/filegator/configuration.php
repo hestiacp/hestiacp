@@ -204,17 +204,7 @@ $dist_config["services"]["Filegator\Services\Storage\Filesystem"]["config"][
 		}
 	}
 
-	preg_match(
-		'/(Hestia SFTP Chroot\nMatch User)(.*)/i',
-		file_get_contents("/etc/ssh/sshd_config"),
-		$matches,
-	);
-	$user_list = explode(",", $matches[2]);
-	if (in_array($v_user, $user_list)) {
-		$root = "/";
-	} else {
-		$root = "/home/" . $v_user;
-	}
+	$root = "/home/" . $v_user;
 
 	return new \League\Flysystem\Sftp\SftpAdapter([
 		"host" => "127.0.0.1",

@@ -7,9 +7,9 @@
 //# example: v-quick-install-app app
 //# example: v-quick-install-app options admin domain.com WordPress
 //#
+//# - The v-quick-install-app install command is used to automate the installation of web applications on a server managed by Hestia Control Panel.
 //# - The v-quick-install-app app command is used to retrieve a list of web applications that can be quickly installed through the v-quick-install-app install command in the Hestia Control Panel. This command provides a convenient overview of supported applications and their versions, allowing users to choose which application they would like to deploy on their server. The names of the applications are case sensitive.
-//# - The v-quick-install-app command is used to automate the installation of web applications on a server managed by Hestia Control Panel.
-//# - This function helps users quickly deploy applications by specifying a few parameters instead of manually going through the installation process.
+//# - v-quick-install-app options admin domain.com WordPress list all the options available for the specified web application. This command provides a list of all the required and optional fields that need to be filled in when installing the application. The command also provides the default values for each field, if available.
 
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Input\InputArgument;

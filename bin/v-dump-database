@@ -84,7 +84,7 @@ if [ "$output" = "file" ]; then
 	echo "$BACKUP/${user}_${database}_${TYPE}_${timestamp}.${extension}"
 
 	# cleanup
-	echo "rm $BACKUP/${user}_${database}_${TYPE}_${timestamp}.${extension}" | at now + 1 hour
+	echo "rm $BACKUP/${user}_${database}_${TYPE}_${timestamp}.${extension}" | at now + 1 hour > /dev/null 2>&1
 else
 	cat $dump
 fi

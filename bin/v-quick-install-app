@@ -6,7 +6,6 @@
 //# example: v-quick-install-app install admin domain.com WordPress email="info@hestiacp" password="123456" username="admin" site_name="HestiaCP Demo" install_directory="/" language="nl_NL" php_version="8.2" database_create="true"
 //# example: v-quick-install-app app
 //# example: v-quick-install-app options admin domain.com WordPress
-//#
 //# The v-quick-install-app app command is used to retrieve a list of web applications that can be quickly installed through the v-quick-install-app install command in the Hestia Control Panel.
 //# This command provides a convenient overview of supported applications and their versions, allowing users to choose which application they would like to deploy on their server.
 //# The names of the applications are case sensitive.

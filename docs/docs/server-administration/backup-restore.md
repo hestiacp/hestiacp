@@ -182,8 +182,9 @@ or
 v-backup-user-restic username
 ```
 
-::warning
+:::warning
 A new restic repository is initiated on the first time you run this command. An encryption key is generated at the same time in /usr/local/hestia/data/users/{users}/restic.conf. Please make sure to backup this file somewhere incase the server gets comprimised or the user gets deleted. Without this "secret" key we don't provide any method to restore the user data. This is the reason why we alway advice to keep the orignal backup still working.
+:::
 
 ### Other methods
 

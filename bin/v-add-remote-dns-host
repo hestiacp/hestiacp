@@ -123,7 +123,7 @@ cmd="v-update-sys-queue dns-cluster"
 check_cron=$(grep "$cmd" "/var/spool/cron/crontabs/hestiaweb" 2> /dev/null)
 if [ -z "$check_cron" ] && [ ! -z "$CRON_SYSTEM" ]; then
 	min='*/5'
-	hour='0'
+	hour='*'
 	day='*'
 	month='*'
 	wday='*'

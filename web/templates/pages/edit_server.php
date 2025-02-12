@@ -376,6 +376,17 @@
 								<i class="fas fa-pencil icon-orange"></i>
 							</a>
 						</p>
+						<?php if (!empty($_SESSION["IMAP_SYSTEM"])) { ?>
+						<p>
+							<?= _("IMAP Server") ?>:
+							<span class="u-ml5">
+								<?= $_SESSION["IMAP_SYSTEM"] ?>
+							</span>
+							<a href="/edit/server/<? echo $_SESSION["IMAP_SYSTEM"] ?>/" class="u-ml5">
+								<i class="fas fa-pencil icon-orange"></i>
+							</a>
+						</p>
+						<?php } ?>
 						<?php if (!empty($_SESSION["ANTIVIRUS_SYSTEM"])) { ?>
 							<p>
 								<?= _("Anti-Virus") ?>:

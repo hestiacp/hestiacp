@@ -32,3 +32,16 @@ if [ -x /usr/sbin/jailbash ]; then
 	$HESTIA/bin/v-delete-sys-ssh-jail
 	$HESTIA/bin/v-add-sys-ssh-jail
 fi
+
+# Check if file exists
+if [ -f "/etc/cron.d/hestiaweb" ]; then
+	# Just remove it
+	rm -f /etc/cron.d/hestiaweb
+	# Check if not duplicate
+
+	if [ -z "$(grep /usr/local/hestia/bin/v-update-letsencrypt "/etc/cron.d/hestiaweb")" ]; then
+		min=$(generate_password '012345' '2')
+		hour=$(generate_password '1234567' '1')
+		sed -i -e "\$a*/5 * * * * sudo /usr/local/hestia/bin/v-update-letsencrypt" "/var/spool/cron/crontabs/hestiaweb"
+	fi
+fi

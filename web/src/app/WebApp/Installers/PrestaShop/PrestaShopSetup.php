@@ -1,94 +1,74 @@
 <?php
 
-namespace Hestia\WebApp\Installers\Prestashop;
+declare(strict_types=1);
 
-use Hestia\WebApp\Installers\BaseSetup as BaseSetup;
-use function Hestiacp\quoteshellarg\quoteshellarg;
+namespace Hestia\WebApp\Installers\PrestaShop;
 
-class PrestaShopSetup extends BaseSetup {
-	protected $appInfo = [
-		"name" => "PrestaShop",
-		"group" => "ecommerce",
-		"enabled" => true,
-		"version" => "8.1.0",
-		"thumbnail" => "prestashop-thumb.png",
-	];
+use Hestia\WebApp\BaseSetup;
+use Hestia\WebApp\InstallationTarget\InstallationTarget;
 
-	protected $appname = "prestashop";
-	protected $extractsubdir = "/tmp-prestashop";
+class PrestaShopSetup extends BaseSetup
+{
+    protected array $info = [
+        'name' => 'PrestaShop',
+        'group' => 'ecommerce',
+        'version' => '8.1.0',
+        'thumbnail' => 'prestashop-thumb.png',
+    ];
 
-	protected $config = [
-		"form" => [
-			"prestashop_account_first_name" => ["value" => "John"],
-			"prestashop_account_last_name" => ["value" => "Doe"],
-			"prestashop_account_email" => "text",
-			"prestashop_account_password" => "password",
-		],
-		"database" => true,
-		"resources" => [
-			"archive" => [
-				"src" =>
-					"https://github.com/PrestaShop/PrestaShop/releases/download/8.1.0/prestashop_8.1.0.zip",
-			],
-		],
-		"server" => [
-			"nginx" => [
-				"template" => "prestashop",
-			],
-			"php" => [
-				"supported" => ["8.0", "8.1"],
-			],
-		],
-	];
+    protected array $config = [
+        'form' => [
+            'prestashop_account_first_name' => ['value' => ''],
+            'prestashop_account_last_name' => ['value' => ''],
+            'prestashop_account_email' => 'text',
+            'prestashop_account_password' => 'password',
+        ],
+        'database' => true,
+        'resources' => [
+            'archive' => [
+                'src' =>
+                    'https://github.com/PrestaShop/PrestaShop/releases/download/8.2.0/prestashop_8.2.0.zip',
+                'dst' => '/tmp-prestashop',
+            ],
+        ],
+        'server' => [
+            'nginx' => [
+                'template' => 'prestashop',
+            ],
+            'php' => [
+                'supported' => ['8.0', '8.1', '8.2', '8.3'],
+            ],
+        ],
+    ];
 
-	public function install(array $options = null): bool {
-		parent::install($options);
-		parent::setup($options);
-		$this->appcontext->archiveExtract(
-			$this->getDocRoot($this->extractsubdir . "/prestashop.zip"),
-			$this->getDocRoot(),
-		);
-		//check if ssl is enabled
-		$this->appcontext->runUser("v-list-web-domain", [$this->domain, "json"], $status);
+    protected function setupApplication(InstallationTarget $target, array $options = null): void
+    {
+        $extractDirectory = $this->config['resources']['archive']['dst'];
 
-		if ($status->code !== 0) {
-			throw new \Exception("Cannot list domain");
-		}
+        $this->appcontext->archiveExtract(
+            $target->getDocRoot($extractDirectory . '/prestashop.zip'),
+            $target->getDocRoot(),
+        );
 
-		if ($status->json[$this->domain]["SSL"] == "no") {
-			$ssl_enabled = 0;
-		} else {
-			$ssl_enabled = 1;
-		}
+        $this->appcontext->runPHP(
+            $options['php_version'],
+            $target->getDocRoot('/install/index_cli.php'),
+            [
+                '--db_server=' . $target->database->host,
+                '--db_user=' . $target->database->user,
+                '--db_password=' . $target->database->password,
+                '--db_name=' . $target->database->name,
+                '--firstname=' . $options['prestashop_account_first_name'],
+                '--lastname=' . $options['prestashop_account_last_name'],
+                '--password=' . $options['prestashop_account_password'],
+                '--email=' . $options['prestashop_account_email'],
+                '--domain=' . $target->domain->domainName,
+                '--ssl=' . $target->domain->isSslEnabled ? 1 : 0,
+            ],
+        );
 
-		$php_version = $this->appcontext->getSupportedPHP(
-			$this->config["server"]["php"]["supported"],
-		);
-
-		$this->appcontext->runUser(
-			"v-run-cli-cmd",
-			[
-				"/usr/bin/php" . $options["php_version"],
-				quoteshellarg($this->getDocRoot("/install/index_cli.php")),
-				"--db_server=" . quoteshellarg($options["database_host"]),
-				"--db_user=" .
-				quoteshellarg($this->appcontext->user() . "_" . $options["database_user"]),
-				"--db_password=" . quoteshellarg($options["database_password"]),
-				"--db_name=" .
-				quoteshellarg($this->appcontext->user() . "_" . $options["database_name"]),
-				"--firstname=" . quoteshellarg($options["prestashop_account_first_name"]),
-				"--lastname=" . quoteshellarg($options["prestashop_account_last_name"]),
-				"--password=" . quoteshellarg($options["prestashop_account_password"]),
-				"--email=" . quoteshellarg($options["prestashop_account_email"]),
-				"--domain=" . quoteshellarg($this->domain),
-				"--ssl=" . (int) $ssl_enabled,
-			],
-			$status,
-		);
-
-		// remove install folder
-		$this->appcontext->runUser("v-delete-fs-directory", [$this->getDocRoot("/install")]);
-		$this->cleanup();
-		return $status->code === 0;
-	}
+        // remove install folder
+        $this->appcontext->deleteDirectory($target->getDocRoot('/install'));
+        $this->appcontext->deleteDirectory($target->getDocRoot($extractDirectory));
+    }
 }

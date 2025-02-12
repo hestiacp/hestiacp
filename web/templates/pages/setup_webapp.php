@@ -24,7 +24,7 @@
 			<input type="hidden" name="ok" value="true">
 
 			<div class="form-container">
-				<h1 class="u-mb20"><?= sprintf(_("Install %s"), $WebappInstaller->info()["name"]) ?></h1>
+				<h1 class="u-mb20"><?= sprintf(_("Install %s"), $WebappInstaller->applicationName()) ?></h1>
 				<?php show_alert_message($_SESSION); ?>
 				<?php if (!$WebappInstaller->isDomainRootClean()) { ?>
 					<div class="alert alert-info u-mb10" role="alert">
@@ -37,7 +37,7 @@
 					</div>
 				<?php } ?>
 				<?php foreach ($WebappInstaller->getOptions() as $form_name => $form_control) {
-					$field_name = $WebappInstaller->formNs() . "_" . $form_name;
+					$field_name = $WebappInstaller->formNamespace() . $form_name;
 					$field_type = $form_control;
 					$field_value = "";
 					$field_label =

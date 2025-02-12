@@ -1,148 +1,189 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Hestia\WebApp;
 
 use Hestia\System\HestiaApp;
+use Hestia\WebApp\InstallationTarget\InstallationTarget;
+use Hestia\WebApp\InstallationTarget\TargetDatabase;
+use Hestia\WebApp\InstallationTarget\TargetDomain;
+use RuntimeException;
 
-class AppWizard {
-	private $domain;
-	private $appsetup;
-	private $appcontext;
-	private $formNamespace = "webapp";
-	private $errors;
+use function array_filter;
+use function bin2hex;
+use function in_array;
+use function max;
+use function str_replace;
+use function str_starts_with;
+use function strtolower;
 
-	private $database_config = [
-		"database_create" => ["type" => "boolean", "value" => true],
-		"database_host" => ["type" => "select"],
-		"database_name" => ["type" => "text", "placeholder" => "auto"],
-		"database_user" => ["type" => "text", "placeholder" => "auto"],
-		"database_password" => ["type" => "password", "placeholder" => "auto"],
-	];
+class AppWizard
+{
+    public function __construct(
+        private readonly InstallerInterface $installer,
+        private readonly string $domain,
+        private readonly HestiaApp $appcontext,
+    ) {
+        if (!$appcontext->userOwnsDomain($domain)) {
+            throw new RuntimeException('User does not have access to domain [$domain]');
+        }
+    }
 
-	public function __construct(InstallerInterface $app, string $domain, HestiaApp $context) {
-		$this->domain = $domain;
-		$this->appcontext = $context;
+    public function isDomainRootClean(): bool
+    {
+        $installationTarget = $this->getInstallationTarget($this->domain);
+        $files = $this->appcontext->listFiles($installationTarget->getDocRoot());
 
-		if (!$this->appcontext->userOwnsDomain($domain)) {
-			throw new \Exception("User does not have access to domain [$domain]");
-		}
+        $filteredFiles = array_filter(
+            $files,
+            fn(string $file) => !in_array($file, ['index.html', 'robots.txt']),
+        );
 
-		$this->appsetup = $app;
-	}
+        return count($filteredFiles) <= 0;
+    }
 
-	public function getStatus() {
-		return $this->errors;
-	}
+    public function formNamespace(): string
+    {
+        return 'webapp_';
+    }
 
-	public function isDomainRootClean() {
-		$this->appcontext->runUser("v-run-cli-cmd", ["ls", $this->appsetup->getDocRoot()], $status);
-		if ($status->code !== 0) {
-			throw new \Exception("Cannot list domain files");
-		}
+    /**
+     * @return mixed[]
+     */
+    public function getOptions(): array
+    {
+        $form = $this->installer->getConfig('form');
+        $info = $this->installer->getInfo();
 
-		$files = $status->raw;
-		if (count($files) > 2) {
-			return false;
-		}
+        $form = array_merge($form, [
+            'php_version' => [
+                'type' => 'select',
+                'value' => (string) max($info->supportedPHPVersions),
+                'options' => $info->supportedPHPVersions,
+            ],
+        ]);
 
-		foreach ($files as $file) {
-			if (!in_array($file, ["index.html", "robots.txt"])) {
-				return false;
-			}
-		}
-		return true;
-	}
+        if ($this->installer->getConfig('database') === true) {
+            $databaseName = $this->generateDatabaseName();
 
-	public function formNs() {
-		return $this->formNamespace;
-	}
+            $databaseOptions = [
+                'database_create' => [
+                    'type' => 'boolean',
+                    'value' => true,
+                ],
+                'database_host' => [
+                    'type' => 'select',
+                    'options' => $this->appcontext->getDatabaseHosts('mysql'),
+                ],
+                'database_name' => [
+                    'type' => 'text',
+                    'value' => $databaseName,
+                ],
+                'database_user' => [
+                    'type' => 'text',
+                    'value' => $databaseName,
+                ],
+                'database_password' => [
+                    'type' => 'password',
+                    'placeholder' => 'auto',
+                ],
+            ];
 
-	public function getOptions() {
-		$options = $this->appsetup->getOptions();
+            $form = array_merge($form, $databaseOptions);
+        }
 
-		$config = $this->appsetup->getConfig();
-		$options = array_merge($options, [
-			"php_version" => [
-				"type" => "select",
-				"value" => $this->appcontext->getCurrentBackendTemplate($this->domain),
-				"options" => $this->appcontext->getSupportedPHP(
-					$config["server"]["php"]["supported"],
-				),
-			],
-		]);
+        return $form;
+    }
 
-		if ($this->appsetup->withDatabase()) {
-			exec(HESTIA_CMD . "v-list-database-hosts json", $output, $return_var);
-			$db_hosts_tmp1 = json_decode(implode("", $output), true, flags: JSON_THROW_ON_ERROR);
-			$db_hosts_tmp2 = array_map(function ($host) {
-				return $host["HOST"];
-			}, $db_hosts_tmp1);
-			$db_hosts = array_values(array_unique($db_hosts_tmp2));
-			unset($output);
-			unset($db_hosts_tmp1);
-			unset($db_hosts_tmp2);
+    public function applicationName(): string
+    {
+        return $this->installer->getInfo()->name;
+    }
 
-			$this->database_config["database_host"]["options"] = $db_hosts;
+    /**
+     * @param mixed[] $options
+     * @return mixed[]
+     */
+    public function filterOptions(array $options): array
+    {
+        $filteredOptions = [];
 
-			$options = array_merge($options, $this->database_config);
-		}
-		return $options;
-	}
+        foreach ($options as $key => $value) {
+            if (!str_starts_with($key, $this->formNamespace())) {
+                continue;
+            }
 
-	public function info() {
-		return $this->appsetup->info();
-	}
+            $filteredOptions[str_replace($this->formNamespace(), '', $key)] = $value;
+        }
 
-	public function filterOptions(array $options) {
-		$filteredoptions = [];
-		array_walk($options, function ($value, $key) use (&$filteredoptions) {
-			if (strpos($key, $this->formNs() . "_") === 0) {
-				$option = str_replace($this->formNs() . "_", "", $key);
-				$filteredoptions[$option] = $value;
-			}
-		});
-		return $filteredoptions;
-	}
+        return $filteredOptions;
+    }
 
-	public function execute(array $options) {
-		$options = $this->filterOptions($options);
+    public function execute(array $options): void
+    {
+        $target = $this->getInstallationTarget($this->domain);
 
-		$random_num = (string) random_int(10000, 99999);
-		if ($this->appsetup->withDatabase() && !empty($options["database_create"])) {
-			if (empty($options["database_name"])) {
-				$options["database_name"] = $random_num;
-			}
+        $options = $this->filterOptions($options);
 
-			if (empty($options["database_user"])) {
-				$options["database_user"] = $random_num;
-			}
+        if ($this->installer->getConfig('database') === true) {
+            if (empty($options['database_name'])) {
+                $options['database_name'] = $this->generateDatabaseName();
+            }
 
-			if (empty($options["database_password"])) {
-				$options["database_password"] = bin2hex(random_bytes(10));
-			}
+            if (empty($options['database_user'])) {
+                $options['database_user'] = $this->generateDatabaseName();
+            }
 
-			if (!$this->appcontext->checkDatabaseLimit()) {
-				$this->errors[] = _("Unable to add database! Limit reached!");
-				return false;
-			}
+            if (empty($options['database_password'])) {
+                $options['database_password'] = bin2hex(random_bytes(10));
+            }
 
-			if (
-				!$this->appcontext->databaseAdd(
-					$options["database_name"],
-					$options["database_user"],
-					$options["database_password"],
-					"mysql",
-					$options["database_host"],
-				)
-			) {
-				$this->errors[] = "Error adding database";
-				return false;
-			}
-		}
+            $target->addTargetDatabase(
+                new TargetDatabase(
+                    $options['database_host'],
+                    $this->appcontext->user() . '_' . $options['database_name'],
+                    $this->appcontext->user() . '_' . $options['database_user'],
+                    $options['database_password'],
+                    !empty($options['database_create']),
+                ),
+            );
+        }
 
-		if (empty($this->errors)) {
-			return $this->appsetup->install($options);
-		}
-	}
+        $this->installer->install($target, $options);
+    }
+
+    private function getInstallationTarget(string $domainName): InstallationTarget
+    {
+        $webDomain = $this->appcontext->getWebDomain($domainName);
+
+        if (empty($webDomain->domainPath) || !is_dir($webDomain->domainPath)) {
+            throw new RuntimeException(
+                sprintf(
+                    'Web domain path "%s" not found for domain "%s"',
+                    $webDomain->domainPath,
+                    $webDomain->domainName,
+                ),
+            );
+        }
+
+        return new InstallationTarget(
+            new TargetDomain(
+                $webDomain->domainName,
+                $webDomain->domainPath,
+                $webDomain->ipAddress,
+                $webDomain->isSslEnabled,
+            ),
+            TargetDatabase::noDatabase(),
+        );
+    }
+
+    private function generateDatabaseName(): string
+    {
+        // Make the database and user easy to recognise but hard to guess
+        $safeAppName = str_replace(' ', '_', strtolower($this->applicationName()));
+        $randomString = bin2hex(random_bytes(5));
+
+        return $safeAppName . '_' . $randomString;
+    }
 }

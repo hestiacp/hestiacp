@@ -4,7 +4,12 @@ All notable changes to this project will be documented in this file.
 
 ## [1.9.3] - Service release
 
--
+- Include at as an dependency (#4829)
+- Fix output v-dump-database (#4831)
+- Delete cron correctly (#4833)
+- Fix bug in v-update-user-stats (#4842)
+- Fix bug in v-add-web-domain-ssl (#4835)
+- Update v-add-remote-dns-host (#4837)
 
 ## [1.9.2] - Service release
 

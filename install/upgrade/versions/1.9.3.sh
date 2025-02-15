@@ -38,10 +38,9 @@ if [ -f "/etc/cron.d/hestiaweb" ]; then
 	# Just remove it
 	rm -f /etc/cron.d/hestiaweb
 	# Check if not duplicate
-
-	if [ -z "$(grep /usr/local/hestia/bin/v-update-letsencrypt "/etc/cron.d/hestiaweb")" ]; then
+	if [ -z "$(grep $BIN/v-update-letsencrypt "/var/spool/cron/crontabs/hestiaweb")" ]; then
 		min=$(generate_password '012345' '2')
 		hour=$(generate_password '1234567' '1')
-		sed -i -e "\$a*/5 * * * * sudo /usr/local/hestia/bin/v-update-letsencrypt" "/var/spool/cron/crontabs/hestiaweb"
+		sed -i -e "\$a*/5 * * * * sudo $BIN/v-update-letsencrypt" "/var/spool/cron/crontabs/hestiaweb"
 	fi
 fi

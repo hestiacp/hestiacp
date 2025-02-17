@@ -280,7 +280,8 @@
 
 		&.active {
 			color: #fff;
-			background: linear-gradient(
+			background:
+				linear-gradient(
 					to bottom,
 					rgb(15 15 15 / 60%) 0%,
 					rgb(45 45 45 / 75%) 30%,
@@ -603,7 +604,8 @@
 	text-shadow: 0 1px 1px rgb(0 0 0 / 35%);
 	font-weight: 400;
 	border-color: #707070;
-	background: linear-gradient(
+	background:
+		linear-gradient(
 			0deg,
 			rgb(48 48 48 / 100%) 0%,
 			rgb(53 53 53 / 100%) 35%,
@@ -619,7 +621,8 @@
 		color: #fff;
 		text-shadow: 1px 1px rgb(0 0 0 / 25%);
 		border-color: #0098ff;
-		background: linear-gradient(
+		background:
+			linear-gradient(
 				0deg,
 				rgb(58 58 58 / 100%) 0%,
 				rgb(68 68 68 / 100%) 35%,
@@ -651,7 +654,8 @@
 
 .button-secondary {
 	border-color: #454545;
-	background: linear-gradient(
+	background:
+		linear-gradient(
 			0deg,
 			rgb(48 48 48 / 100%) 0%,
 			rgb(53 53 53 / 100%) 100%,
@@ -660,7 +664,8 @@
 		#343434;
 
 	&:hover {
-		background: linear-gradient(
+		background:
+			linear-gradient(
 				0deg,
 				rgb(48 48 48 / 100%) 0%,
 				rgb(53 53 53 / 100%) 100%,
@@ -672,8 +677,8 @@
 
 .button-danger {
 	&:hover {
-		background: linear-gradient(0deg, rgb(133 0 0 / 100%) 0%, rgb(203 0 0 / 100%) 100%),
-			rgb(133 0 0);
+		background:
+			linear-gradient(0deg, rgb(133 0 0 / 100%) 0%, rgb(203 0 0 / 100%) 100%), rgb(133 0 0);
 		color: #fff;
 		text-shadow: 0 1px rgb(0 0 0 / 45%);
 		border-color: rgb(170 0 0);
@@ -681,8 +686,8 @@
 
 	&:active,
 	&:focus {
-		background: linear-gradient(180deg, rgb(133 0 0 / 100%) 0%, rgb(203 0 0 / 100%) 100%),
-			rgb(133 0 0);
+		background:
+			linear-gradient(180deg, rgb(133 0 0 / 100%) 0%, rgb(203 0 0 / 100%) 100%), rgb(133 0 0);
 		color: #4d0000;
 		text-shadow: 0 -1px 1px rgb(255 255 255 / 30%);
 		border-color: rgb(251 71 51);

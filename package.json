@@ -25,7 +25,7 @@
 		"chart.js": "^4.4.7",
 		"check-password-strength": "^2.0.10",
 		"floating-vue": "^5.2.2",
-		"nanoid": "^5.0.9",
+		"nanoid": "^5.1.0",
 		"normalize.css": "^8.0.1",
 		"xterm": "^5.3.0",
 		"xterm-addon-canvas": "^0.5.0",
@@ -53,7 +53,7 @@
 		"stylelint": "^16.14.1",
 		"stylelint-config-standard": "^36.0.1",
 		"vitepress": "^1.6.3",
-		"vitest": "^2.1.8",
+		"vitest": "^2.1.9",
 		"vue": "^3.5.13"
 	},
 	"browserslist": [

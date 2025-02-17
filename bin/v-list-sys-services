@@ -94,9 +94,9 @@ get_srv_state() {
 	used_pgrep=0
 	if [ -z "$pids" ] && [ "$name" != 'nginx' ]; then
                 if [[ ${#name} -ge 15 ]]; then
-                    pids=$(pgrep -f $name | tr '\n' '|')
+                        pids=$(pgrep -f $name | tr '\n' '|')
                 else
-                    pids=$(pgrep $name | tr '\n' '|')
+                        pids=$(pgrep $name | tr '\n' '|')
                 fi
 		used_pgrep=1
 	fi

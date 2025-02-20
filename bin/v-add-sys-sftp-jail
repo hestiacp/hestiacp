@@ -36,9 +36,10 @@ config='/etc/ssh/sshd_config'
 sftp_n=$(grep -n "Subsystem.*sftp" $config | grep -v internal | grep -v ":#")
 sftp_i=$(grep -n "^# Hestia SFTP Chroot" $config)
 
+# Disabling normal sftp
 if [ -n "$sftp_n" ]; then
 	fline=$(echo $sftp_n | cut -f 1 -d :)
-	sed -i "${fline}s/Subsystem.*sftp/Subsystem sftp/" $config
+	sed -i "${fline}s/Subsystem.*sftp/Subsystem sftp internal-sftp/" $config
 	restart='yes'
 fi
 

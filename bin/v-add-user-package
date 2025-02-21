@@ -71,7 +71,7 @@ is_package_consistent() {
 		is_int_format_valid "$BANDWIDTH" 'BANDWIDTH'
 	fi
 	is_int_format_valid "$BACKUPS" 'BACKUPS'
-	is_boolean_format_valid "$BACKUPS_INCREMENTAL" 'BACKUP_INCREMENTAL'
+	is_boolean_format_valid "$BACKUPS_INCREMENTAL" 'BACKUPS_INCREMENTAL'
 	if [ -n "$WEB_TEMPLATE" ]; then
 		is_web_template_valid "$WEB_TEMPLATE"
 	fi
@@ -150,7 +150,7 @@ BANDWIDTH='$BANDWIDTH'
 NS='$NS'
 SHELL='$SHELL'
 BACKUPS='$BACKUPS'
-BACKUPS_INCREMENTAL='$BACKUP_INCREMENTAL'
+BACKUPS_INCREMENTAL='$BACKUPS_INCREMENTAL'
 TIME='$time'
 DATE='$date'
 " > "$HESTIA/data/packages/$package.pkg"

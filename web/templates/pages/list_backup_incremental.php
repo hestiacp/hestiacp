@@ -10,11 +10,11 @@
 		</div>
 		<div class="toolbar-right">
 			<?php if ($read_only !== "true") { ?>
-				<form x-data x-bind="BulkEdit" action="/bulk/backup/incremental" method="post">
+				<form x-data x-bind="BulkEdit" action="/bulk/backup/incremental/" method="post">
 					<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 					<select class="form-select" name="action">
 						<option value=""><?= _("Apply to selected") ?></option>
-						<option value="delete"><?= _("Delete Snapshot") ?></option>
+						<option value="delete"><?= _("Delete") ?></option>
 					</select>
 					<button type="submit" class="toolbar-input-submit" title="<?= _("Apply to selected") ?>">
 						<i class="fas fa-arrow-right"></i>
@@ -59,7 +59,7 @@
 		<div class="units-table-row js-unit">
 			<div class="units-table-cell">
 				<div>
-					<input id="check<?= $i ?>" class="js-unit-checkbox" type="checkbox" title="<?= _("Select") ?>" name="backup[]" value="<?= $key ?>" <?= $display_mode ?>>					<span class="u-hide-desktop"><label for="check<?= $i ?>" class="u-hide-desktop"><?= _("Select") ?></label></span>
+					<input id="check<?= $i ?>" class="js-unit-checkbox" type="checkbox" title="<?= _("Select") ?>" name="backup[]" value="<?= $value['short_id'] ?>" <?= $display_mode ?>>					<span class="u-hide-desktop"><label for="check<?= $i ?>" class="u-hide-desktop"><?= _("Select") ?></label></span>
 				</div>
 			</div>
 			<div class="units-table-cell units-table-heading-cell u-text-bold">

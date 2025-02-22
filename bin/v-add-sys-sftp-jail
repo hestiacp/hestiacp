@@ -51,7 +51,7 @@ if [ -z "$sftp_i" ]; then
 	echo "    ChrootDirectory /srv/jail/%u" >> $config
 	echo "    X11Forwarding no" >> $config
 	echo "    AllowTCPForwarding no" >> $config
-	echo "    ForceCommand internal-sftp -d /home" >> $config
+	echo "    ForceCommand internal-sftp -d /home/%u" >> $config
 	restart='yes'
 fi
 

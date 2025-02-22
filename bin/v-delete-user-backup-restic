@@ -38,7 +38,7 @@ source_conf $HESTIA/conf/restic.conf
 #----------------------------------------------------------#
 
 args_usage='USER SNAPSHOT'
-check_args '3' "$#" "$args_usage"
+check_args '2' "$#" "$args_usage"
 is_format_valid 'user'
 is_object_valid 'user' 'USER' "$user"
 

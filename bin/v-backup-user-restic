@@ -60,7 +60,7 @@ if [ ! -f "$USER_DATA/restic.conf" ]; then
 	fi
 else
 	# Check if repo exists and is accessible with restic key
-	restic --repo "$REPO$user" --password-file $USER_DATA/restic.conf --json snapshots
+	restic --repo "$REPO$user" --password-file $USER_DATA/restic.conf --json snapshots > /dev/null
 	if [ $? -ne 0 ]; then
 		# Send an email
 		echo "Unable to open restic backup. It might not exists or key is incorrect" | $SENDMAIL -s "$subj" "$email" "yes"

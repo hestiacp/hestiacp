@@ -66,12 +66,14 @@ else
 		echo "Unable to open restic backup. It might not exists or key is incorrect" | $SENDMAIL -s "$subj" "$email" "yes"
 		check_result $E_CONNECT "Unable to access restic repo"
 	fi
-	rm /home/$user/tmp/backup.conf
 fi
 
 # create backup of the user.conf an database
 $BIN/v-backup-user-config $user
-restic --repo "$REPO$user" GOMAXPROCS=2 RESTIC_READ_CONCURRENCY=2 ionice -c2 -n7 nice -n 19 --limit-upload 10240 --read-concurrency 1 --password-file $USER_DATA/restic.conf backup /home/$user
+GOMAXPROCS=2
+RESTIC_READ_CONCURRENCY=2
+ionice -c2 -n7 nice -n 19 restic --repo "$REPO$user" --limit-upload 10240 --read-concurrency 2 --password-file $USER_DATA/restic.conf backup /home/$user
+
 if [ $? -ne 0 ]; then
 	echo "Unable to create the backup" | $SENDMAIL -s "$subj" "$email" "yes"
 	check_result $E_BACKUP "Unable to backup user"

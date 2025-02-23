@@ -9,8 +9,9 @@
 		</div>
 		<div class="toolbar-right">
 			<?php if ($read_only !== "true") { ?>
-				<form x-data x-bind="BulkEdit" action="/bulk/backup/incremental" method="post">
+				<form x-data x-bind="BulkEdit" action="/bulk/restore/incremental/" method="post">
 					<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
+					<input type="hidden" name="snapshot" value="<?= htmlentities($_GET["snapshot"]) ?>">
 					<select class="form-select" name="action">
 						<option value=""><?= _("Apply to selected") ?></option>
 						<option value="restore"><?= _("Restore Snapshot") ?></option>

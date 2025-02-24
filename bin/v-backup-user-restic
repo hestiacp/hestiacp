@@ -2,9 +2,10 @@
 # info: backup system user with all its objects to restic backup
 # options: USER NOTIFY
 #
-# example: v-backup-user admin yes
+# example: v-backup-user-restic admin yes
 #
-# This function is used for backing up user with all its domains and databases.
+# Backup user with all its objects to restic backup. If the repo doesn't exists a new one will be created.
+#
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

@@ -1,7 +1,7 @@
 Source: hestia-php
 Package: hestia-php
 Priority: optional
-Version: 8.3.16
+Version: 8.3.17
 Section: admin
 Maintainer: HestaCP <info@hestiacp.com>
 Homepage: https://www.hestiacp.com

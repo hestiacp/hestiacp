@@ -75,10 +75,10 @@ fi
 # Check if $repo starts with rclone
 if [[ $repo == "rclone:"* ]]; then
 	# remove rclone: from $repo
-	repo=$(echo "$repo" | sed 's/rclone://')
+	repo2=$(echo "$repo" | sed 's/rclone://')
 	# check if rclone is working
-	if ! rclone lsd "$repo" > /dev/null 2>&1; then
-		check_result $E_NOTEXIST "Rclone repository '$repo' does not exist"
+	if ! rclone lsd "$repo2" > /dev/null 2>&1; then
+		check_result $E_NOTEXIST "Rclone repository '$repo2' does not exist"
 	fi
 fi
 

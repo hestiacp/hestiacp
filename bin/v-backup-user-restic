@@ -2,9 +2,10 @@
 # info: backup system user with all its objects to restic backup
 # options: USER NOTIFY
 #
-# example: v-backup-user admin yes
+# example: v-backup-user-restic admin yes
 #
-# This function is used for backing up user with all its domains and databases.
+# Backup user with all its objects to restic backup. If the repo doesn't exists a new one will be created.
+#
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #
@@ -60,18 +61,20 @@ if [ ! -f "$USER_DATA/restic.conf" ]; then
 	fi
 else
 	# Check if repo exists and is accessible with restic key
-	restic --repo "$REPO$user" --password-file $USER_DATA/restic.conf --json dump $snapshot /home/$user/backup/backup.conf > /home/$user/tmp/backup.conf
+	restic --repo "$REPO$user" --password-file $USER_DATA/restic.conf --json snapshots > /dev/null
 	if [ $? -ne 0 ]; then
 		# Send an email
 		echo "Unable to open restic backup. It might not exists or key is incorrect" | $SENDMAIL -s "$subj" "$email" "yes"
 		check_result $E_CONNECT "Unable to access restic repo"
 	fi
-	rm /home/$user/tmp/backup.conf
 fi
 
 # create backup of the user.conf an database
 $BIN/v-backup-user-config $user
-restic --repo "$REPO$user" --password-file $USER_DATA/restic.conf backup /home/$user
+export GOMAXPROCS=2
+export RESTIC_READ_CONCURRENCY=2
+ionice -c2 -n7 nice -n 19 restic --repo "$REPO$user" --limit-upload 10240 --read-concurrency 2 --password-file $USER_DATA/restic.conf backup /home/$user
+
 if [ $? -ne 0 ]; then
 	echo "Unable to create the backup" | $SENDMAIL -s "$subj" "$email" "yes"
 	check_result $E_BACKUP "Unable to backup user"

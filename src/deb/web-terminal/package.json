@@ -8,10 +8,10 @@
 	},
 	"dependencies": {
 		"node-pty": "^1.0.0",
-		"ws": "^8.18.0"
+		"ws": "^8.18.1"
 	},
 	"devDependencies": {
 		"@types/ws": "^8.5.14",
-		"@types/node": "^22.13.4"
+		"@types/node": "^22.13.5"
 	}
 }

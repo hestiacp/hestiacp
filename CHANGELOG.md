@@ -35,6 +35,7 @@ All notable changes to this project will be documented in this file.
 ### Dependencies
 
 - Bump Roundcube version to 1.6.10 (#4813)
+- Bump Filegator to 7.13.0
 
 ## [1.9.2] - Service release
 

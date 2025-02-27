@@ -27,6 +27,8 @@ All notable changes to this project will be documented in this file.
 - Replaced "echo" with "sed" to avoid "Permission denied" in multiple commands (#4818 #4819 #4817 #4186)
 - Admin are unable to add access keys #4799 (#4810)
 - Make jail for work sftp by using the binary sftp-server (#4803)
+- Update v-add-mail-domain (#4868)
+- Change filegator pagination to remove unlimited and add bigger steps (#4869)
 
 ### Quick install apps
 

@@ -1,135 +1,94 @@
 <?php
 
-namespace Hestia\WebApp\Installers\Opencart;
+declare(strict_types=1);
 
-use Hestia\WebApp\Installers\BaseSetup as BaseSetup;
-use function Hestiacp\quoteshellarg\quoteshellarg;
+namespace Hestia\WebApp\Installers\OpenCart;
 
-class OpenCartSetup extends BaseSetup {
-	protected $appInfo = [
-		"name" => "OpenCart",
-		"group" => "ecommerce",
-		"enabled" => true,
-		"version" => "4.0.2.2",
-		"thumbnail" => "opencart-thumb.png",
-	];
+use Hestia\WebApp\BaseSetup;
+use Hestia\WebApp\InstallationTarget\InstallationTarget;
 
-	protected $appname = "opencart";
-	protected $extractsubdir = "/tmp-opencart";
+class OpenCartSetup extends BaseSetup
+{
+    protected array $info = [
+        'name' => 'OpenCart',
+        'group' => 'ecommerce',
+        'version' => '4.0.2.2',
+        'thumbnail' => 'opencart-thumb.png',
+    ];
 
-	protected $config = [
-		"form" => [
-			"opencart_account_username" => ["value" => "ocadmin"],
-			"opencart_account_email" => "text",
-			"opencart_account_password" => "password",
-		],
-		"database" => true,
-		"resources" => [
-			"archive" => [
-				"src" =>
-					"https://github.com/opencart/opencart/releases/download/4.0.2.2/opencart-4.0.2.2.zip",
-			],
-		],
-		"server" => [
-			"nginx" => [
-				"template" => "opencart",
-			],
-			"php" => [
-				"supported" => ["7.4", "8.0", "8.1", "8.2"],
-			],
-		],
-	];
+    protected array $config = [
+        'form' => [
+            'opencart_account_username' => ['value' => 'ocadmin'],
+            'opencart_account_email' => 'text',
+            'opencart_account_password' => 'password',
+        ],
+        'database' => true,
+        'resources' => [
+            'archive' => [
+                'src' =>
+                    'https://github.com/opencart/opencart/releases/download/4.0.2.2/opencart-4.0.2.2.zip',
+                'dst' => '/tmp-prestashop',
+            ],
+        ],
+        'server' => [
+            'nginx' => [
+                'template' => 'opencart',
+            ],
+            'php' => [
+                'supported' => ['7.4', '8.0', '8.1', '8.2', '8.3'],
+            ],
+        ],
+    ];
 
-	public function install(array $options = null): bool {
-		parent::install($options);
-		parent::setup($options);
+    protected function setupApplication(InstallationTarget $target, array $options = null): void
+    {
+        $extractDirectory = $this->config['resources']['archive']['dst'];
 
-		$this->appcontext->runUser(
-			"v-copy-fs-directory",
-			[$this->getDocRoot($this->extractsubdir . "/upload/."), $this->getDocRoot()],
-			$result,
-		);
+        $this->appcontext->copyDirectory(
+            $target->getDocRoot($extractDirectory . '/upload/.'),
+            $target->getDocRoot(),
+        );
 
-		$this->appcontext->runUser("v-copy-fs-file", [
-			$this->getDocRoot("config-dist.php"),
-			$this->getDocRoot("config.php"),
-		]);
-		$this->appcontext->runUser("v-copy-fs-file", [
-			$this->getDocRoot("admin/config-dist.php"),
-			$this->getDocRoot("admin/config.php"),
-		]);
-		$this->appcontext->runUser("v-copy-fs-file", [
-			$this->getDocRoot(".htaccess.txt"),
-			$this->getDocRoot(".htaccess"),
-		]);
-		#Check if SSL is enabled
-		$this->appcontext->runUser("v-list-web-domain", [$this->domain, "json"], $status);
+        $this->appcontext->moveFile(
+            $target->getDocRoot('config-dist.php'),
+            $target->getDocRoot('config.php'),
+        );
 
-		if ($status->code !== 0) {
-			throw new \Exception("Cannot list domain");
-		}
-		if ($status->json[$this->domain]["SSL"] == "no") {
-			$protocol = "http://";
-		} else {
-			$protocol = "https://";
-		}
+        $this->appcontext->moveFile(
+            $target->getDocRoot('admin/config-dist.php'),
+            $target->getDocRoot('admin/config.php'),
+        );
 
-		$this->appcontext->runUser(
-			"v-run-cli-cmd",
-			[
-				"/usr/bin/php" . $options["php_version"],
-				quoteshellarg($this->getDocRoot("/install/cli_install.php")),
-				"install",
-				"--db_hostname " . quoteshellarg($options["database_host"]),
-				"--db_username " .
-				quoteshellarg($this->appcontext->user() . "_" . $options["database_user"]),
-				"--db_password " . quoteshellarg($options["database_password"]),
-				"--db_database " .
-				quoteshellarg($this->appcontext->user() . "_" . $options["database_name"]),
-				"--username " . quoteshellarg($options["opencart_account_username"]),
-				"--password " . quoteshellarg($options["opencart_account_password"]),
-				"--email " . quoteshellarg($options["opencart_account_email"]),
-				"--http_server " . quoteshellarg($protocol . $this->domain . "/"),
-			],
-			$status,
-		);
+        $this->appcontext->moveFile(
+            $target->getDocRoot('.htaccess.txt'),
+            $target->getDocRoot('.htaccess'),
+        );
 
-		// After install, 'storage' folder must be moved to a location where the web server is not allowed to serve file
-		// - Opencart Nginx template and Apache ".htaccess" forbids acces to /storage folder
-		$this->appcontext->runUser(
-			"v-move-fs-directory",
-			[$this->getDocRoot("system/storage"), $this->getDocRoot()],
-			$result,
-		);
-		$this->appcontext->runUser(
-			"v-run-cli-cmd",
-			["sed", "-i", "s/'storage\//'..\/storage\// ", $this->getDocRoot("config.php")],
-			$status,
-		);
-		$this->appcontext->runUser(
-			"v-run-cli-cmd",
-			["sed", "-i", "s/'storage\//'..\/storage\// ", $this->getDocRoot("admin/config.php")],
-			$status,
-		);
-		$this->appcontext->runUser(
-			"v-run-cli-cmd",
-			["sed", "-i", "s/\^system\/storage\//^\/storage\// ", $this->getDocRoot(".htaccess")],
-			$status,
-		);
+        $this->appcontext->runPHP(
+            $options['php_version'],
+            $target->getDocRoot('/install/cli_install.php'),
+            [
+                'install',
+                '--db_hostname',
+                $target->database->host,
+                '--db_username',
+                $target->database->user,
+                '--db_password',
+                $target->database->password,
+                '--db_database',
+                $target->database->name,
+                '--username',
+                $options['opencart_account_username'],
+                '--password',
+                $options['opencart_account_password'],
+                '--email',
+                $options['opencart_account_email'],
+                '--http_server',
+                $target->getUrl() . '/',
+            ],
+        );
 
-		$this->appcontext->runUser("v-change-fs-file-permission", [
-			$this->getDocRoot("config.php"),
-			"640",
-		]);
-		$this->appcontext->runUser("v-change-fs-file-permission", [
-			$this->getDocRoot("admin/config.php"),
-			"640",
-		]);
-
-		// remove install folder
-		$this->appcontext->runUser("v-delete-fs-directory", [$this->getDocRoot("/install")]);
-		$this->cleanup();
-
-		return $status->code === 0;
-	}
+        $this->appcontext->deleteDirectory($target->getDocRoot('/install'));
+        $this->appcontext->deleteDirectory($target->getDocRoot($extractDirectory));
+    }
 }

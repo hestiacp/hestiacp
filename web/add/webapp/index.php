@@ -42,25 +42,15 @@ if (!empty($_GET["app"])) {
 	$app_installer_class = "\Hestia\WebApp\Installers\\" . $app . "\\" . $app . "Setup";
 	if (class_exists($app_installer_class)) {
 		try {
-			$app_installer = new $app_installer_class($v_domain, $hestia);
-			$info = $app_installer->info();
-			foreach ($php_versions as $version) {
-				if (in_array($version, $info["php_support"])) {
-					$supported = true;
-					$supported_versions[] = $version;
-				}
-			}
-			if ($supported) {
-				$info["enabled"] = true;
-			} else {
-				$info["enabled"] = false;
+			$app_installer = new $app_installer_class($hestia);
+			$info = $app_installer->getInfo();
+
+			if (!$info->isInstallable()) {
 				$_SESSION["error_msg"] = sprintf(
-					_("Unable to install %s, %s is not available."),
+					_("Unable to install %s, required php version is not available."),
 					$app,
-					"PHP-" . end($info["php_support"]),
 				);
-			}
-			if ($info["enabled"] == true) {
+			} else {
 				$installer = new \Hestia\WebApp\AppWizard($app_installer, $v_domain, $hestia);
 				$GLOBALS["WebappInstaller"] = $installer;
 			}
@@ -81,19 +71,12 @@ if (!empty($_POST["ok"]) && !empty($app)) {
 
 	if ($installer) {
 		try {
-			if (!$installer->execute($_POST)) {
-				$result = $installer->getStatus();
-				if (!empty($result)) {
-					$_SESSION["error_msg"] = implode(PHP_EOL, $result);
-				}
-			} else {
-				$_SESSION["ok_msg"] = sprintf(
-					_("%s installed successfully."),
-					htmlspecialchars($app),
-				);
-				header("Location: /add/webapp/?domain=" . $v_domain);
-				exit();
-			}
+			$installer->execute($_POST);
+
+			$_SESSION["ok_msg"] = sprintf(_("%s installed successfully."), htmlspecialchars($app));
+
+			header("Location: /add/webapp/?domain=" . $v_domain);
+			exit();
 		} catch (Exception $e) {
 			$_SESSION["error_msg"] = $e->getMessage();
 			header("Location: /add/webapp/?app=" . rawurlencode($app) . "&domain=" . $v_domain);
@@ -105,39 +88,21 @@ if (!empty($_POST["ok"]) && !empty($app)) {
 if (!empty($installer)) {
 	render_page($user, $TAB, "setup_webapp");
 } else {
+	$hestia = new \Hestia\System\HestiaApp();
 	$appInstallers = glob(__DIR__ . "/../../src/app/WebApp/Installers/*/*.php");
+
 	$v_web_apps = [];
 	foreach ($appInstallers as $app) {
-		$hestia = new \Hestia\System\HestiaApp();
-		if (
-			preg_match(
-				"/Installers\/([a-zA-Z][a-zA-Z0,9].*)\/([a-zA-Z][a-zA-Z0,9].*).php/",
-				$app,
-				$matches,
-			)
-		) {
-			if ($matches[1] != "Resources") {
-				$app_installer_class =
-					"\Hestia\WebApp\Installers\\" . $matches[1] . "\\" . $matches[1] . "Setup";
-				$app_installer = new $app_installer_class($v_domain, $hestia);
-				$appInstallerInfo = $app_installer->info();
-				$supported = false;
-				$supported_versions = [];
-				foreach ($php_versions as $version) {
-					if (in_array($version, $appInstallerInfo["php_support"])) {
-						$supported = true;
-						$supported_versions[] = $version;
-					}
-				}
-				if ($supported) {
-					$appInstallerInfo["enabled"] = true;
-				} else {
-					$appInstallerInfo["enabled"] = false;
-				}
-				$v_web_apps[] = $appInstallerInfo;
-			}
+		$pattern = "/Installers\/([a-zA-Z][a-zA-Z0,9].*)\/([a-zA-Z][a-zA-Z0,9].*)Setup\.php/";
+		$class = "\Hestia\WebApp\Installers\%s\%sSetup";
+
+		if (preg_match($pattern, $app, $matches)) {
+			$app_installer_class = sprintf($class, $matches[1], $matches[1]);
+
+			$v_web_apps[] = (new $app_installer_class($hestia))->getInfo();
 		}
 	}
+
 	render_page($user, $TAB, "list_webapps");
 }
 

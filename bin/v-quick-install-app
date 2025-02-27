@@ -61,7 +61,7 @@ $application -> register('install')
 			return Command::FAILURE;
 		}
 		$app_installer_class = "\Hestia\WebApp\Installers\\" . $app . "\\" . $app . "Setup";
-		$app_installer = new $app_installer_class($v_domain, $hestia);
+		$app_installer = new $app_installer_class($hestia);
 
 		// check for default fields
 		$WebappInstaller = new \Hestia\WebApp\AppWizard($app_installer, $v_domain, $hestia);

@@ -16,7 +16,18 @@ Yes, you can disable the API via the server settings. The file will be deleted f
 
 ## Password vs API key vs access keys
 
+### Access keys
+
+- User-specific.
+- Can limit permissions. For example only `v-purge-nginx-cache`.
+- Ability to disable login via other methods but still allow the use of api keys
+- Can be restricted to admin user only or allowed for all users
+
 ### Password
+
+:::danger
+Method has been Deprecated
+:::
 
 - Should only be used by the admin user.
 - Changing the admin password requires updating it everywhere it’s used.
@@ -24,20 +35,43 @@ Yes, you can disable the API via the server settings. The file will be deleted f
 
 ### API key
 
+:::danger
+Method has been Deprecated
+:::
+
 - Should only be used by the admin user.
 - Changing the admin password does not have consequences.
 - Allowed to run all commands.
 
-### Access keys
-
-- User-specific.
-- Can limit permissions. For example only `v-purge-nginx-cache`.
-- Ability to disable login via other methods but still allow the use of api keys
-- Can be restricted to admin user only or allowed for all users.
-
 ## Setup access/secret key authentication
 
 To create an access key, follow [the guide in our documentation](../user-guide/account#api-access-keys).
+
+:::tip
+Or create it with the following commad. To create a acccess that requires administrator permissions create the api key via the initial admin user!
+:::
+
+```bash
+v-add-access-key 'admin' 'profile' test json
+```
+
+If you want to use the api key with all commands supported use
+
+```bash
+v-add-access-key 'admin' '*' test json
+```
+
+### Creating own API key profiles
+
+Create a new file in `/usr/local/hestia/data/api/` with the following contents
+
+```bash
+ROLE='admin'
+COMMANDS='v-list-web-domains,v-add-web-domain,v-list-web-domain'
+```
+
+- Role: user or admin.
+- Commands: Comma seperated list with all the command you require.
 
 If the software you are using already supports the hash format, use `ACCESS_KEY:SECRET_KEY` instead of your old API key.
 

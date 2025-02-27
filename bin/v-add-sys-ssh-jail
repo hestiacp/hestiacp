@@ -37,8 +37,12 @@ check_hestia_demo_mode
 # Move jailbash to /usr/sbin
 if [ ! -x /usr/sbin/jailbash ]; then
 	cp -f $HESTIA_COMMON_DIR/bubblewrap/jailbash /usr/sbin/jailbash
-	cp -f $HESTIA_COMMON_DIR/bubblewrap/bwrap-userns-restrict /etc/apparmor.d/bwrap-userns-restrict
 	chmod +x /usr/sbin/jailbash
+
+	# only install the apparmor profile is abi 4.0 is available
+	if [ -f /etc/apparmor.d/abi/4.0 ]; then
+		cp -f $HESTIA_COMMON_DIR/bubblewrap/bwrap-userns-restrict /etc/apparmor.d/bwrap-userns-restrict
+	fi
 
 	service apparmor reload > /dev/null 2>&1
 fi
@@ -46,6 +50,13 @@ fi
 # Register /usr/sbin/jailbash
 if [ -z "$(grep ^/usr/sbin/jailbash /etc/shells)" ]; then
 	echo "/usr/sbin/jailbash" >> /etc/shells
+fi
+
+# Use sftp-server binary so the sftp process can run inside jailbash
+if [ -z "$(grep 'Subsystem sftp /usr/lib/sftp-server' /etc/ssh/sshd_config)" ]; then
+	sed -i -E "s/Subsystem sftp internal-sftp/Subsystem sftp \/usr\/lib\/sftp-server/g" /etc/ssh/sshd_config
+
+	service ssh restart > /dev/null 2>&1
 fi
 
 #----------------------------------------------------------#

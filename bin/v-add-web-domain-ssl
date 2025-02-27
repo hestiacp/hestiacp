@@ -59,7 +59,7 @@ is_object_valid 'web' 'DOMAIN' "$domain"
 is_object_unsuspended 'web' 'DOMAIN' "$domain"
 is_object_value_empty 'web' 'DOMAIN' "$domain" '$SSL'
 if [ -n "$restart" ]; then
-	is_restart_valid 'restart' "$restart"
+	is_restart_format_valid "$restart" 'restart'
 fi
 is_web_domain_cert_valid
 

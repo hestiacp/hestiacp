@@ -60,7 +60,7 @@ is_object_valid 'mail' 'DOMAIN' "$domain"
 is_object_unsuspended 'mail' 'DOMAIN' "$domain"
 is_object_value_empty 'mail' 'DOMAIN' "$domain" '$SSL'
 if [ -n "$restart" ]; then
-	is_restart_valid 'restart' "$restart"
+	is_restart_format_valid "$restart" 'restart'
 fi
 
 is_web_domain_cert_valid

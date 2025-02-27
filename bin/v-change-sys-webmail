@@ -29,7 +29,7 @@ restart=${2-yes}
 
 check_args '1' "$#" 'ALIAS [RESTART]'
 is_common_format_valid "$NEW_ALIAS" "Alias"
-is_restart_valid "$restart"
+is_restart_format_valid "$restart"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode

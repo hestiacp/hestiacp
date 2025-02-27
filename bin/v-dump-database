@@ -79,16 +79,12 @@ else
 fi
 
 if [ "$output" = "file" ]; then
-	# echo filename for use in the php
-	echo "${user}_${database}_${TYPE}_${timestamp}.${extension}"
-
 	cp $dump $BACKUP/${user}_${database}_${TYPE}_${timestamp}.${extension}
-
 	# echo file location for use in the php
 	echo "$BACKUP/${user}_${database}_${TYPE}_${timestamp}.${extension}"
 
 	# cleanup
-	echo "rm $BACKUP/${user}_${database}_${TYPE}_${timestamp}.${extension}" | at now + 1 hour
+	echo "rm $BACKUP/${user}_${database}_${TYPE}_${timestamp}.${extension}" | at now + 1 hour > /dev/null 2>&1
 else
 	cat $dump
 fi

@@ -6,19 +6,29 @@ if [ "$1" != "configure" ]; then
 	exit 0
 fi
 
+# Run triggers only on updates
+if [ ! -e "/usr/local/hestia/data/users/" ]; then
+	exit
+fi
+
+# Prevent running and causes issues with outdated hestia version
+if ! id "hestiaweb" &> /dev/null; then
+	exit
+fi
+
 # Touch and set permisions on default log files on installation
 update-rc.d hestia defaults > /dev/null
 invoke-rc.d hestia start || true
 
 # Adapt Port Listing in HESTIA NGINX Backend
 source /usr/local/hestia/func/syshealth.sh # Load syshealth functions
-syshealth_adapt_hestia_nginx_listen_ports  # Adapt port listing
-syshealth_adapt_nginx_resolver
 
-# Run triggers only on updates
-if [ ! -e "/usr/local/hestia/data/users/" ]; then
+# Check if the function syshealth_adapt_hestia_nginx_listen_ports exists
+if ! declare -f syshealth_adapt_hestia_nginx_listen_ports > /dev/null; then
 	exit
 fi
+syshealth_adapt_hestia_nginx_listen_ports # Adapt port listing
+syshealth_adapt_nginx_resolver
 
 ###############################################################
 #                Initialize functions/variables               #

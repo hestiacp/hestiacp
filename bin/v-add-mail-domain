@@ -130,6 +130,7 @@ if [[ "$MAIL_SYSTEM" =~ exim ]]; then
 	touch $HOMEDIR/$user/conf/mail/$domain/passwd
 	touch $HOMEDIR/$user/conf/mail/$domain/fwd_only
 	touch $HOMEDIR/$user/conf/mail/$domain/accounts
+	touch $HOMEDIR/$user/conf/mail/$domain/limits
 	ln -s $HOMEDIR/$user/conf/mail/$domain \
 		/etc/$MAIL_SYSTEM/domains/$domain_idn
 

@@ -33,6 +33,7 @@ $dist_config["frontend_config"]["editable"] = [
 $dist_config["frontend_config"]["date_format"] = "YY/MM/DD H:mm:ss";
 $dist_config["frontend_config"]["guest_redirection"] = "/login/";
 $dist_config["frontend_config"]["upload_max_size"] = 1024 * 1024 * 1024;
+$dist_config["frontend_config"]["pagination"] = [100, 50, 25];
 if (!empty($_SESSION["language"])) {
 	$lang = $_SESSION["language"];
 } elseif (!empty($_SESSION["LANGUAGE"])) {
@@ -204,17 +205,7 @@ $dist_config["services"]["Filegator\Services\Storage\Filesystem"]["config"][
 		}
 	}
 
-	preg_match(
-		'/(Hestia SFTP Chroot\nMatch User)(.*)/i',
-		file_get_contents("/etc/ssh/sshd_config"),
-		$matches,
-	);
-	$user_list = explode(",", $matches[2]);
-	if (in_array($v_user, $user_list)) {
-		$root = "/";
-	} else {
-		$root = "/home/" . $v_user;
-	}
+	$root = "/home/" . $v_user;
 
 	return new \League\Flysystem\Sftp\SftpAdapter([
 		"host" => "127.0.0.1",

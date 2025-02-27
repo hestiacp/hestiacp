@@ -1306,7 +1306,7 @@ if (!empty($_POST["save"])) {
 				);
 				check_return_code($return_var, $output);
 				unset($output);
-
+				$v_backup_incremental = "yes";
 				$v_repo = $_POST["v_repo"];
 				$v_snapshots = $_POST["v_snapshots"];
 				$v_keep_daily = $_POST["v_keep_daily"];
@@ -1321,7 +1321,7 @@ if (!empty($_POST["save"])) {
 			exec(HESTIA_CMD . "v-delete-backup-host-restic ", $output, $return);
 			check_return_code($return_var, $output);
 			unset($output);
-
+			$v_backup_incremental = "";
 			$v_repo = "";
 			$v_snapshots = "";
 			$v_keep_daily = "";
@@ -1331,7 +1331,7 @@ if (!empty($_POST["save"])) {
 		}
 	}
 	if (empty($_SESSION["error_msg"])) {
-		if ($_POST["v_backup_incremental"] !== "yes" && $_SESSION["BACKUP_INCREMENTAL"] === "yes") {
+		if ($_POST["v_backup_incremental"] === "yes" && $_SESSION["BACKUP_INCREMENTAL"] === "yes") {
 			exec(HESTIA_CMD . "v-delete-backup-host-restic ", $output, $return);
 			check_return_code($return_var, $output);
 			unset($output);

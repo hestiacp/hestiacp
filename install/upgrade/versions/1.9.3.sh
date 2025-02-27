@@ -47,3 +47,11 @@ if [ -f "/etc/cron.d/hestiaweb" ]; then
 		sed -i -e "\$a*/5 * * * * sudo $BIN/v-update-letsencrypt" "/var/spool/cron/crontabs/hestiaweb"
 	fi
 fi
+
+php_versions=$($BIN/v-list-sys-php plain)
+# Substitute php-fpm service name formats
+for version in $php_versions; do
+	if [ -f "/etc/php/$version/fpm/pool.d/dummy.conf" ]; then
+		sed -i "s/%domain%/dummy/g" /etc/php/$version/fpm/pool.d/dummy.conf
+	fi
+done

@@ -4,7 +4,40 @@ All notable changes to this project will be documented in this file.
 
 ## [1.9.3] - Service release
 
--
+### Bug fixes
+
+- Fix deleting snapshot not working #4812
+- Fix bulk restore
+- Set priority to a lower value for backup process and limit disk speed and upload speed #4853
+- Fix sftp homedir staring in /home and not /home/{user} (#4862)
+- Temp workaround for Ubuntu 24.04 i18n GUI support (#4857)
+- Fix multiple smaller bugs with incremental backups (#4861)
+- SFTP get completely disabled in certain setups when enableling it (#4859)
+- mysqladmin got renamed on MariaDB systems to mariadb-admin (#4850)
+- Update dummy.conf (#4855)
+- Avoid warning using pgrep if service name has 15 or more characters (#4851)
+- Move v-update-letsencrypt-ssl cron to /var/spool/cron (#4823)
+- Update v-add-remote-dns-host (#4837)
+- Fix bug in v-add-web-domain-ssl (#4835)
+- Fix bug in v-update-user-stats (#4842)
+- Fix output v-dump-database (#4831)
+- Update configuration.php (#4827)
+- Include at as an dependency (#4829)
+- Replace is_restart_valid with is_restart_format_valid
+- Replaced "echo" with "sed" to avoid "Permission denied" in multiple commands (#4818 #4819 #4817 #4186)
+- Admin are unable to add access keys #4799 (#4810)
+- Make jail for work sftp by using the binary sftp-server (#4803)
+- Update v-add-mail-domain (#4868)
+- Change filegator pagination to remove unlimited and add bigger steps (#4869)
+
+### Quick install apps
+
+- Enable PHP8.4 support for Laravel and Symfony (#4820, #4821)
+
+### Dependencies
+
+- Bump Roundcube version to 1.6.10 (#4813)
+- Bump Filegator to 7.13.0
 
 ## [1.9.2] - Service release
 

@@ -1,7 +1,0 @@
-[mysql80-community]
-name = MySQL 8.0 Server for RHEL $releasever - $basearch
-baseurl = http://repo.mysql.com/yum/mysql-8.0-community/el/$releasever/$basearch/
-module_hotfixes=1
-gpgkey=https://repo.mysql.com/RPM-GPG-KEY-mysql-2022
-gpgcheck=1
-enabled=1

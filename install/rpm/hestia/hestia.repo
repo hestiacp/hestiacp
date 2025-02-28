@@ -1,6 +1,0 @@
-[hestiacp]
-name=HestiaCP Repository for RHEL $releasever - $basearch
-baseurl=https://rpm.hestiacp.com/rhel/$releasever/$basearch/
-gpgkey=https://rpm.hestiacp.com/RPM-GPG-KEY-HESTIACP
-gpgcheck=1
-enabled=1

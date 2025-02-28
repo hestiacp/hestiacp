@@ -43,19 +43,10 @@ if [[ "$current_hostname" == "$domain" ]]; then
 fi
 
 hostname "$domain"
-if [ -d "/etc/sysconfig" ]; then
-	# RHEL/CentOS/Amazon
-	touch /etc/sysconfig/network
-	if [ -z "$(grep HOSTNAME /etc/sysconfig/network)" ]; then
-		echo "HOSTNAME='$domain'" >> /etc/sysconfig/network
-	else
-		sed -i "s/HOSTNAME=.*/HOSTNAME='$domain'/" /etc/sysconfig/network
-	fi
-else
-	# Debian/Ubuntu
-	hostnamectl set-hostname "$domain"
-	echo "$domain" > /etc/hostname
-fi
+
+# Debian/Ubuntu
+hostnamectl set-hostname "$domain"
+echo "$domain" > /etc/hostname
 
 # Update webmail's password plugin configuration
 if [ -d /etc/roundcube/ ]; then

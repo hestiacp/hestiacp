@@ -84,13 +84,9 @@ if ! echo "$DB_SYSTEM" | grep -w 'pgsql' > /dev/null; then
 fi
 
 # Install php packages
-if [ -f '/etc/redhat-release' ]; then
-	dnf makecache -q
-	dnf install -q -y $mph > /dev/null 2>&1 &
-else
-	apt-get -qq update
-	apt-get -y -qq -o Dpkg::Options::="--force-confold" install $mph > /dev/null 2>&1 &
-fi
+apt-get -qq update
+apt-get -y -qq -o Dpkg::Options::="--force-confold" install $mph > /dev/null 2>&1 &
+
 BACK_PID=$!
 
 # Check if package installation is done, print a spinner
@@ -108,11 +104,7 @@ echo
 # Check if installation was successful
 if [ ! -f "$php_fpm" ]; then
 	echo "ERROR: Installation failed, please run the following command manually for debugging:"
-	if [ -f '/etc/redhat-release' ]; then
-		echo "dnf install $mph"
-	else
-		echo "apt-get install $mph"
-	fi
+	echo "apt-get install $mph"
 fi
 
 # Check if required modules for apache2 are enabled

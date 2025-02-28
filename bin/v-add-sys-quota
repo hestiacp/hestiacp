@@ -33,12 +33,8 @@ fi
 
 # Checking quota package
 if ! type -P quota &> /dev/null; then
-	if [ -f "/etc/redhat-release" ]; then
-		dnf -y install quota > /dev/null 2>&1
-	else
-		export DEBIAN_FRONTEND=noninteractive
-		apt-get -y install quota > /dev/null 2>&1
-	fi
+	export DEBIAN_FRONTEND=noninteractive
+	apt-get -y install quota > /dev/null 2>&1
 	check_result $? "quota package installation failed" "$E_UPDATE"
 fi
 

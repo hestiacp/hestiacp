@@ -70,11 +70,7 @@ if [[ $(echo "$version 7.2" | awk '{print ($1 < $2)}') == 1 ]]; then
 fi
 
 # Purge php packages
-if [ -f '/etc/redhat-release' ]; then
-	dnf remove -y $mph > /dev/null 2>&1 &
-else
-	apt-get -y purge $mph > /dev/null 2>&1 &
-fi
+apt-get -y purge $mph > /dev/null 2>&1 &
 BACK_PID=$!
 
 # Check if package removal is done, print a spinner
@@ -92,11 +88,7 @@ echo
 # Check if removal was successful
 if [ -f "$php_fpm" ]; then
 	echo "ERROR: Uninstallation failed, please run the following command manually for debugging:"
-	if [ -f '/etc/redhat-release' ]; then
-		echo "dnf remove $mph"
-	else
-		echo "apt-get purge $mph"
-	fi
+	echo "apt-get purge $mph"
 	exit 1
 fi
 

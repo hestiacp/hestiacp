@@ -69,12 +69,6 @@ if [ -n "$interface" ]; then
 	fi
 fi
 
-# Deleting startup conf on RHEL/CentOS/Fedora
-# Need RHEL experts to fix me
-if [ -e "/etc/sysconfig/network-scripts/ifcfg-$interface" ]; then
-	rm -f /etc/sysconfig/network-scripts/ifcfg-$interface
-fi
-
 # Deleting startup conf on Debian/Ubuntu
 if [ -f "/etc/netplan/60-hestia.yaml" ]; then
 	sed -i "/$ip\//d" /etc/netplan/60-hestia.yaml

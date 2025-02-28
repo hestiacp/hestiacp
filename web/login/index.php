@@ -73,7 +73,7 @@ if (isset($_SESSION["user"])) {
 		// Obtain account properties
 		$v_user = quoteshellarg(
 			$_SESSION[
-				$_SESSION["userContext"] === "admin" && isset($_SESSION["look"]) ? "look" : "user"
+				$_SESSION["userContext"] === "admin" && $_SESSION["look"] !== "" ? "look" : "user"
 			],
 		);
 
@@ -115,11 +115,23 @@ function authenticate_user($user, $password, $twofa = "") {
 		$v_user = quoteshellarg($user);
 		$ip = $_SERVER["REMOTE_ADDR"];
 		$user_agent = $_SERVER["HTTP_USER_AGENT"];
-		if (isset($_SERVER["HTTP_CF_CONNECTING_IP"])) {
-			if (!empty($_SERVER["HTTP_CF_CONNECTING_IP"])) {
-				$ip = $_SERVER["HTTP_CF_CONNECTING_IP"];
-			}
+
+		if (
+			!empty($_SERVER["HTTP_CF_CONNECTING_IP"]) &&
+			filter_var(
+				$_SERVER["HTTP_CF_CONNECTING_IP"],
+				FILTER_VALIDATE_IP,
+				FILTER_FLAG_IPV4 | FILTER_FLAG_IPV6,
+			)
+		) {
+			$ip = $_SERVER["HTTP_CF_CONNECTING_IP"];
 		}
+
+		// Handling IPv4-mapped IPv6 address
+		if (strpos($ip, ":") === 0 && strpos($ip, ".") > 0) {
+			$ip = substr($ip, strrpos($ip, ":") + 1); // Strip IPv4 Compatibility notation
+		}
+
 		$v_ip = quoteshellarg($ip);
 		$v_user_agent = quoteshellarg($user_agent);
 
@@ -264,12 +276,6 @@ function authenticate_user($user, $password, $twofa = "") {
 				}
 
 				if ($data[$user]["TWOFA"] != "") {
-					exec(
-						HESTIA_CMD . "v-check-user-2fa " . $v_user . " " . $v_twofa,
-						$output,
-						$return_var,
-					);
-					$error = _("Invalid or missing 2FA token");
 					if (empty($twofa)) {
 						$_SESSION["login"]["username"] = $user;
 						$_SESSION["login"]["password"] = $password;
@@ -460,3 +466,4 @@ if (!empty($_SESSION["login"]["password"])) {
 		($_SESSION["LOGIN_STYLE"] != "old" ? "" : "_a") .
 		".php";
 }
+require_once "../templates/includes/login-footer.php";

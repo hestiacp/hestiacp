@@ -26,13 +26,16 @@ source_conf "$HESTIA/conf/hestia.conf"
 #                       Action                             #
 #----------------------------------------------------------#
 
+check_args '1' "$#" '[RESTART]' '[SKIP]'
+is_format_valid 'restart'
+
 # Update templates
 cp -rf $HESTIA_INSTALL_DIR/templates/mail $HESTIA/data/templates/
 
 # Rebuild mail domains if mail services are enabled
 if [ -z "$skip" ]; then
 	if [ -n "$MAIL_SYSTEM" ]; then
-		for user in $($BIN/v-list-sys-users plain); do
+		for user in $("$BIN/v-list-users" list); do
 			$BIN/v-rebuild-mail-domains "$user" no
 		done
 	fi

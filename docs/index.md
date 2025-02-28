@@ -40,7 +40,7 @@ features:
     linkText: Help develop Hestia
   - icon: 🤝
     title: Supported by the community
-    details: Hestia has a great support community - join the forum or the Discord server! To keep the project running, we rely on donations, which can be made via PayPal or cryptocurrency.
+    details: Hestia has a great support community - join the forum! To keep the project running, we rely on donations, which can be made via PayPal or cryptocurrency.
     link: /donate
     linkText: Donate
 ---

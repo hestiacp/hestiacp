@@ -16,7 +16,7 @@ domain=$2
 antispam=${3-yes}
 antivirus=${4-yes}
 dkim=${5-yes}
-dkim_size=${6-1024}
+dkim_size=${6-2048}
 restart="$7"
 reject=${8-no}
 
@@ -130,6 +130,7 @@ if [[ "$MAIL_SYSTEM" =~ exim ]]; then
 	touch $HOMEDIR/$user/conf/mail/$domain/passwd
 	touch $HOMEDIR/$user/conf/mail/$domain/fwd_only
 	touch $HOMEDIR/$user/conf/mail/$domain/accounts
+	touch $HOMEDIR/$user/conf/mail/$domain/limits
 	ln -s $HOMEDIR/$user/conf/mail/$domain \
 		/etc/$MAIL_SYSTEM/domains/$domain_idn
 
@@ -196,6 +197,11 @@ if [ -n "$WEB_SYSTEM" ] || [ -n "$PROXY_SYSTEM" ]; then
 	if [ -n "$IMAP_SYSTEM" ]; then
 		$BIN/v-add-mail-domain-webmail "$user" "$domain" '' 'no'
 	fi
+fi
+
+# Run extension trigger
+if [ -x "$HESTIA/data/extensions/add-mail-domain.sh" ]; then
+	$HESTIA/data/extensions/add-mail-domain.sh "$user" "$domain"
 fi
 
 #----------------------------------------------------------#

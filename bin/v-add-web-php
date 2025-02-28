@@ -35,7 +35,7 @@ fi
 php_fpm="/etc/init.d/php$version-fpm"
 
 # Verify php version format
-if [[ ! $version =~ ^[0-9]\.[0-9]+ ]]; then
+if [[ ! $version =~ ^[0-9]+\.[0-9]+ ]]; then
 	echo "The specified PHP version format is invalid, it should look like [0-9].[0-9]."
 	echo "Example: 7.0, 7.4, 8.0"
 	exit "$E_INVALID"
@@ -63,14 +63,14 @@ check_hestia_demo_mode
 mph="php$version-common php$version-mbstring php$version-bcmath php$version-cli php$version-curl
      php$version-fpm php$version-gd php$version-intl php$version-mysql
      php$version-soap php$version-xml php$version-zip php$version-json php$version-bz2
-     php$version-pspell php$version-imagick php$version-pgsql php$version-imap php$version-ldap"
+     php$version-pspell php$version-imagick php$version-pgsql php$version-imap php$version-ldap php$version-apcu"
 
-# Check is version is 7.1 or below to add mcrypt
+# Check if version is 7.1 or below to add mcrypt
 if [[ $(echo "$version 7.2" | awk '{print ($1 < $2)}') == 1 ]]; then
 	mph="$mph php$version-mcrypt"
 fi
 
-# Check if version is 8.0 or higher and drop php json.
+# Check if version is 8.0 or higher and drop json
 if [[ ${version:0:1} == "8" ]]; then
 	mph=$(echo "$mph" | sed -e "s/php$version-json//")
 fi
@@ -130,7 +130,7 @@ update-rc.d php$version-fpm defaults > /dev/null 2>&1
 v_tpl=${version//./}
 rm -f /etc/php/$version/fpm/pool.d/*
 cp -f $HESTIA_INSTALL_DIR/php-fpm/dummy.conf /etc/php/$version/fpm/pool.d/
-sed -i "s/9999/99$v_tpl/g" /etc/php/$version/fpm/pool.d/dummy.conf
+sed -i "s/%backend_version%/$version/g" /etc/php/$version/fpm/pool.d/dummy.conf
 cp -f $HESTIA_INSTALL_DIR/php-fpm/php-fpm.conf /etc/php/$version/fpm/
 sed -i "s/fpm_v/$version/g" /etc/php/$version/fpm/php-fpm.conf
 
@@ -138,6 +138,17 @@ sed -i "s/fpm_v/$version/g" /etc/php/$version/fpm/php-fpm.conf
 sed -i "s/upload_max_filesize = 2M/upload_max_filesize = 100M/g" /etc/php/$version/fpm/php.ini
 sed -i "s/post_max_size = 8M/post_max_size = 100M/g" /etc/php/$version/fpm/php.ini
 sed -i "s/max_execution_time = 30/max_execution_time = 60/g" /etc/php/$version/fpm/php.ini
+sed -i "s/;max_input_vars = 1000/max_input_vars = 4000/g" /etc/php/$version/fpm/php.ini
+
+# Disable exec and other harmfull php functions
+sed -i "s/disable_functions =.*/disable_functions = pcntl_alarm,pcntl_fork,pcntl_waitpid,pcntl_wait,pcntl_wifexited,pcntl_wifstopped,pcntl_wifsignaled,pcntl_wifcontinued,pcntl_wexitstatus,pcntl_wtermsig,pcntl_wstopsig,pcntl_signal,pcntl_signal_dispatch,pcntl_get_last_error,pcntl_strerror,pcntl_sigprocmask,pcntl_sigwaitinfo,pcntl_sigtimedwait,pcntl_exec,pcntl_getpriority,pcntl_setpriority,exec,system,passthru,shell_exec,proc_open,popen/g" /etc/php/$version/fpm/php.ini
+
+sed -i "s/disable_functions =.*/disable_functions = pcntl_alarm,pcntl_fork,pcntl_waitpid,pcntl_wait,pcntl_wifexited,pcntl_wifstopped,pcntl_wifsignaled,pcntl_wifcontinued,pcntl_wexitstatus,pcntl_wtermsig,pcntl_wstopsig,pcntl_signal,pcntl_signal_dispatch,pcntl_get_last_error,pcntl_strerror,pcntl_sigprocmask,pcntl_sigwaitinfo,pcntl_sigtimedwait,pcntl_exec,pcntl_getpriority,pcntl_setpriority/g" /etc/php/$version/cli/php.ini
+
+# Other use full changes
+sed -i "s/;opcache.enable=1/opcache.enable=1/g" /etc/php/$version/fpm/php.ini
+sed -i "s/;opcache.memory_consumption=128/opcache.memory_consumption=512/g" /etc/php/$version/fpm/php.ini
+sed -i "s/;opcache.max_accelerated_files=10000/opcache.max_accelerated_files=100000/g" /etc/php/$version/fpm/php.ini
 
 # Install backend template
 cp -f $HESTIA_INSTALL_DIR/php-fpm/multiphp.tpl \

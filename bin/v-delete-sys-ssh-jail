@@ -1,0 +1,58 @@
+#!/bin/bash
+# info: delete system ssh jail
+# options: NONE
+#
+# example: v-delete-sys-ssh-jail
+#
+# This function disables ssh jailed environment
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Unregister /usr/sbin/jailbash
+sed -i "/\/usr\/sbin\/jailbash/d" /etc/shells
+
+# Remove jailbash from /usr/sbin
+if [ -x /usr/sbin/jailbash ]; then
+	rm -f /usr/sbin/jailbash
+	rm -f /etc/apparmor.d/bwrap-userns-restrict
+
+	service apparmor reload > /dev/null 2>&1
+fi
+
+# Revert back to internal-sftp
+if [ -z "$(grep 'Subsystem sftp internal-sftp' /etc/ssh/sshd_config)" ]; then
+	sed -i -E "s/Subsystem sftp \/usr\/lib\/sftp-server/Subsystem sftp internal-sftp/g" /etc/ssh/sshd_config
+
+	service ssh restart > /dev/null 2>&1
+fi
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Logging
+$BIN/v-log-action "system" "Warning" "Plugins" "SSH Chroot Jail disabled."
+log_event "$OK" "$ARGUMENTS"
+
+exit

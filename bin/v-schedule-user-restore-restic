@@ -1,0 +1,71 @@
+#!/bin/bash
+# info: schedule user backup restoration
+# options: USER BACKUP [WEB] [DNS] [MAIL] [DB] [CRON] [UDIR]
+#
+# example: v-schedule-user-restore 2019-04-22_01-00-00.tar
+#
+# This function for scheduling user backup restoration.
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+snapshot=$2
+object=$3
+value=$4
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '2' "$#" 'USER SNAPSHOT OBJECT VALUE'
+is_format_valid 'user'
+is_system_enabled "$BACKUP_SYSTEM" 'BACKUP_SYSTEM'
+is_object_valid 'user' 'USER' "$user"
+is_backup_scheduled 'restore'
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+log=$HESTIA/log/restore.log
+
+if [ -z "$object" ]; then
+	echo "$BIN/v-restore-user-restic '$user' '$snapshot' '' '' '' '' '' '' 'yes' >> $log 2>&1" >> $HESTIA/data/queue/backup.pipe
+else
+	if [ "$object" = "web" ]; then
+		echo "$BIN/v-restore-web-domain-restic '$user' '$snapshot' '$value' 'yes' >> $log 2>&1" >> $HESTIA/data/queue/backup.pipe
+	elif [ "$object" = "dns" ]; then
+		echo "$BIN/v-restore-dns-domain-restic '$user' '$snapshot' '$value' 'yes' >> $log 2>&1" >> $HESTIA/data/queue/backup.pipe
+	elif [ "$object" = "mail" ]; then
+		echo "$BIN/v-restore-mail-domain-restic '$user' '$snapshot' '$value' 'yes' >> $log 2>&1" >> $HESTIA/data/queue/backup.pipe
+	elif [ "$object" = "db" ]; then
+		echo "$BIN/v-restore-database-restic '$user' '$snapshot' '$value' 'yes' >> $log 2>&1" >> $HESTIA/data/queue/backup.pipe
+	elif [ "$object" = "cron" ]; then
+		echo "$BIN/v-restore-cron-restic '$user' '$snapshot' 'yes' >> $log 2>&1" >> $HESTIA/data/queue/backup.pipe
+	else
+		check_result "$E_INVALID" "Not supported"
+	fi
+fi
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Logging
+$BIN/v-log-action "system" "Info" "Backup" "Restore of backup snapshot requested (User: $user, Archive: $snapshot)."
+log_event "$OK" "$ARGUMENTS"
+
+exit

@@ -62,12 +62,12 @@ fi
 
 # Generate the keys to secure everything
 phpmyadminkey=$(generate_password)
-apikey=$($BIN/v-add-access-key 'admin' 'phpmyadmin-sso' 'phpMyAdmin' 'plain')
+apikey=$($BIN/v-add-access-key "$ROOT_USER" 'phpmyadmin-sso' 'phpMyAdmin' 'plain')
 
 # copy config dir to /usr/share/phpmyadmin/
 cp -f $HESTIA_COMMON_DIR/phpmyadmin/hestia-sso.php $PMA_INSTALL/hestia-sso.php
 chmod 640 $PMA_INSTALL/hestia-sso.php
-chown root:www-data $PMA_INSTALL/hestia-sso.php
+chown root:hestiamail $PMA_INSTALL/hestia-sso.php
 
 sed -i "s/%PHPMYADMIN_KEY%/$phpmyadminkey/g" $PMA_INSTALL/hestia-sso.php
 sed -i "s/%API_KEY%/$apikey/g" $PMA_INSTALL/hestia-sso.php
@@ -77,7 +77,7 @@ sed -i "s/%API_HESTIA_PORT%/$BACKEND_PORT/g" $PMA_INSTALL/hestia-sso.php
 # Check if config already contains the keys
 touch $PMA_CONFIG/hestia-sso.inc.php
 chmod 640 $PMA_CONFIG/hestia-sso.inc.php
-chown root:www-data $PMA_CONFIG/hestia-sso.inc.php
+chown root:hestiamail $PMA_CONFIG/hestia-sso.inc.php
 
 echo "<?php
 if(isset(\$_GET['hestia_token']) || isset(\$_COOKIE['SignonSession'])){

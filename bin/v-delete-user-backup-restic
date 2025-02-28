@@ -1,0 +1,71 @@
+#!/bin/bash
+# info: delete a specific user snapshot from restic backup repository.
+# options: USER SNAPSHOT
+#
+# example: v-delete-user-backup-restic admin snapshot
+#
+# Delete a specific user snapshot from restic backup repository. It doesn't take in account any pruning done by the retention policy.
+# This function is used for deleting a specific user snapshot from restic backup repository.
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+snapshot=$2
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
+source $HESTIA/func/domain.sh
+# shellcheck source=/usr/local/hestia/func/ip.sh
+source $HESTIA/func/ip.sh
+# shellcheck source=/usr/local/hestia/func/rebuild.sh
+source $HESTIA/func/rebuild.sh
+# shellcheck source=/usr/local/hestia/func/syshealth.sh
+source $HESTIA/func/syshealth.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+source_conf $HESTIA/conf/restic.conf
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+args_usage='USER SNAPSHOT'
+check_args '2' "$#" "$args_usage"
+is_format_valid 'user'
+is_object_valid 'user' 'USER' "$user"
+
+source_conf $HESTIA/conf/restic.conf
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+tmpdir=$(mktemp -p /home/$user/tmp/ -d)
+if [ ! -f "$tmpdir/backup.conf" ]; then
+	restic --repo "$REPO$user" --password-file "$USER_DATA/restic.conf" dump "$snapshot" "/home/$user/backup/backup.conf" > "$tmpdir/backup.conf"
+	if [ "$?" -ne 0 ]; then
+		check_result "$E_NOTEXIST" "Unable to download from snapshot"
+	fi
+fi
+
+restic --repo "$REPO$user" --password-file "$USER_DATA/restic.conf" forget "$snapshot"
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+sed -i "/v-delete-user-backup-restic '$user' '$snapshot' /d" $HESTIA/data/queue/backup.pipe
+
+# Logging
+$BIN/v-log-action "system" "Info" "Backup" "Restic snapshot successfully deleted (User: $user, Snapshot: $snapshot)."
+$BIN/v-log-action "$user" "Info" "Backup" "Restic snapshot successfully deleted (Snapshot: $snapshot)."
+log_event "$OK" "$ARGUMENTS"
+exit

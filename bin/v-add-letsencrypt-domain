@@ -237,13 +237,13 @@ for identifier in $(echo $domain,$aliases | tr ',' '\n' | sort -u); do
 done
 payload=$(echo "$payload" | sed "s/,$//")
 payload=$payload']}'
+
 answer=$(query_le_v2 "$url" "$payload" "$nonce")
 nonce=$(echo "$answer" | grep -i nonce | cut -f2 -d \  | tr -d '\r\n')
 authz=$(echo "$answer" | grep "acme/authz" | cut -f2 -d '"')
 finalize=$(echo "$answer" | grep 'finalize":' | cut -f4 -d '"')
 status=$(echo "$answer" | grep HTTP/ | tail -n1 | cut -f2 -d ' ')
 order=$(echo -e "$answer" | grep -i location | cut -f2 -d \  | tr -d '\r\n')
-
 debug_log "Step 2" "- status: ${status}\n- nonce: ${nonce}\n- authz: ${authz}\n- finalize: ${finalize}\n- payload: ${payload}\n- answer: ${answer}\n order: ${order}"
 
 if [[ "$status" -ne 201 ]]; then
@@ -378,12 +378,23 @@ for auth in $authz; do
 	# Doing pol check on status
 	i=1
 	while [ "$validation" = 'pending' ]; do
-		payload='{}'
-		answer=$(query_le_v2 "$url" "$payload" "$nonce")
-		validation=$(echo "$answer" | grep -A1 $proto | tail -n1 | cut -f4 -d \")
-		nonce=$(echo "$answer" | grep -i nonce | cut -f2 -d \  | tr -d '\r\n')
-		status=$(echo "$answer" | grep HTTP/ | tail -n1 | cut -f 2 -d ' ')
-		details=$(echo "$answer" | grep detail | cut -f 1 -d ',' | cut -f 2-4 -d ':' | cut -f 2 -d '"')
+		i=0
+		while true; do
+			payload='{}'
+			answer=$(query_le_v2 "$url" "$payload" "$nonce")
+			validation=$(echo "$answer" | grep -A1 $proto | tail -n1 | cut -f4 -d \")
+			nonce=$(echo "$answer" | grep -i nonce | cut -f2 -d \  | tr -d '\r\n')
+			status=$(echo "$answer" | grep HTTP/ | tail -n1 | cut -f 2 -d ' ')
+			details=$(echo "$answer" | grep detail | cut -f 1 -d ',' | cut -f 2-4 -d ':' | cut -f 2 -d '"')
+			if [[ $(echo "$answer" | grep addressesResolved) != "" ]]; then
+				break
+			fi
+			i=$((i + 1))
+			if ((i > 30)); then
+				break
+			fi
+			sleep 2
+		done
 
 		debug_log "Step 5" "- status: ${status}\n- url: ${url}\n- nonce: ${nonce}\n- validation: ${validation}\n- details: ${details}\n- answer: ${answer}"
 
@@ -569,11 +580,10 @@ if [ "$?" -ne '0' ]; then
 fi
 
 # Adding LE autorenew cronjob
-if [ -z "$(grep v-update-lets $HESTIA/data/users/admin/cron.conf)" ]; then
+if [ -z "$(grep $BIN/v-update-letsencrypt "/var/spool/cron/crontabs/hestiaweb")" ]; then
 	min=$(generate_password '012345' '2')
 	hour=$(generate_password '1234567' '1')
-	cmd="sudo $BIN/v-update-letsencrypt-ssl"
-	$BIN/v-add-cron-job admin "$min" "$hour" '*' '*' '*' "$cmd" > /dev/null
+	sed -i -e "\$a*/5 * * * * sudo $BIN/v-update-letsencrypt" "/var/spool/cron/crontabs/hestiaweb"
 fi
 
 # Updating letsencrypt key

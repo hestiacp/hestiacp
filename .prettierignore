@@ -17,11 +17,21 @@
 # Bats seems to break Prettier
 *.bats
 
+# Bin folder
+/bin/v-generate-password-hash
+/bin/v-quick-install-app
+
 # Exclude bats submodules if present
 /test/test_helper/*
 
 # Web templates (for now)
 web/templates/
+
+# Modern Web (handled by PHPCS)
+web/src/
+
+# Patch files
+/install/upgrade/patch/*
 
 # Hestia Nginx.conf
 /src/deb/nginx/nginx.conf
@@ -31,8 +41,6 @@ web/templates/
 /install/common/templates/email/
 
 # Vendor/packages
-.pnp.*
-.yarn/*
 **/node_modules/
 **/vendor/
 **/composer.phar
@@ -47,12 +55,7 @@ web/templates/
 logs
 *.log
 npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
 lerna-debug.log*
 
-# PNPM, NPM and YARN
-pnpm-lock.yaml
+# npm lock file
 package-lock.json
-yarn.lock

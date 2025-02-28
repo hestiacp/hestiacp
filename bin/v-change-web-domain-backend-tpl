@@ -38,7 +38,7 @@ format_domain_idn
 #----------------------------------------------------------#
 
 check_args '3' "$#" 'USER DOMAIN TEMPLATE [RESTART]'
-is_format_valid 'user' 'domain' 'template'
+is_format_valid 'user' 'domain' 'template' 'restart'
 is_system_enabled "$WEB_BACKEND" 'WEB_BACKEND'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
@@ -177,7 +177,7 @@ if [ "$version" != "$backend_version" ]; then
 	$BIN/v-restart-web-backend "$restart" "$backend_version"
 fi
 
-check_result $? "Web backend restart failed" > /dev/null
+check_result $? "PHP restart failed" > /dev/null
 
 # Logging
 $BIN/v-log-action "$user" "Info" "Web" "Backend template applied (Domain: $domain, Template: $template)."

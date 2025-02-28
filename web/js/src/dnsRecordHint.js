@@ -14,7 +14,7 @@ export default function handleDnsRecordHint() {
 
 	recordInput.addEventListener(
 		'input',
-		debounce((evt) => updateHint(evt.target))
+		debounce((evt) => updateHint(evt.target)),
 	);
 }
 

@@ -35,8 +35,14 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
-hostname "$domain"
+current_hostname="$(hostname)"
+if [[ "$current_hostname" == "$domain" ]]; then
+	echo "Current hostname \"$current_hostname\" is the same as the new one you want to use"
+	echo "I'm not going to change it"
+	exit
+fi
 
+hostname "$domain"
 if [ -d "/etc/sysconfig" ]; then
 	# RHEL/CentOS/Amazon
 	touch /etc/sysconfig/network
@@ -51,7 +57,7 @@ else
 	echo "$domain" > /etc/hostname
 fi
 
-# Update Roundcube password plugin configuration
+# Update webmail's password plugin configuration
 if [ -d /etc/roundcube/ ]; then
 	sed -i "/password_hestia_host/c\$rcmail_config['password_hestia_host'] = '$domain';" /etc/roundcube/plugins/password/config.inc.php
 fi
@@ -62,9 +68,26 @@ if [ -d /etc/snappymail/ ]; then
 	sed -i "/\"hestia_host\":/c\\\"hestia_host\": \"$domain\"," /etc/snappymail/data/_data_/_default_/configs/plugin-change-password.json
 fi
 
+# Update /etc/hosts
 if [ -f /etc/hosts ]; then
-	if ! cat /etc/hosts | grep $domain > /dev/null; then
+	if grep -q -E "^127\.0\.0\.1\s{1,}${current_hostname}$" /etc/hosts; then
+		sed -i -E "s/127\.0\.0\.1\s{1,}${current_hostname}/127\.0\.0\.1 ${domain}/" /etc/hosts
+	else
 		echo "127.0.0.1 $domain" >> /etc/hosts
+	fi
+	# Check whether hostname entries are duplicated and remove all but the last one
+	ndup_hosts="$(grep -c -E "^127\.0\.0\.1\s{1,}${domain}$" /etc/hosts)"
+	if [[ "${ndup_hosts}" -gt "1" ]]; then
+		nlines_to_del="$((ndup_hosts - 1))"
+		lines_to_del="$(grep -n -E "^127\.0\.0\.1\s{1,}${domain}$" /etc/hosts | head -n${nlines_to_del} | awk -F ':' '{print $1}')"
+		for i in $lines_to_del; do
+			if [[ -z $list_lines ]]; then
+				list_lines="${i}d"
+			else
+				list_lines+=";${i}d"
+			fi
+		done
+		sed -i "${list_lines}" /etc/hosts
 	fi
 fi
 

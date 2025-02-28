@@ -1,4 +1,4 @@
-<div class="login animate__animated animate__zoomIn">
+<div class="login">
 	<a href="/" class="u-block u-mb40">
 		<img src="/images/logo.svg" alt="<?= htmlentities($_SESSION["APP_NAME"]) ?>" width="100" height="120">
 	</a>
@@ -31,7 +31,3 @@
 		</div>
 	</form>
 </div>
-
-</body>
-
-</html>

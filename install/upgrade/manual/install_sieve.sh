@@ -63,7 +63,7 @@ if [ "$HAS_DOVECOT_SIEVE_INSTALLED" = "0" ]; then
 	# exim4 install
 	sed -i "s/\stransport = local_delivery/ transport = dovecot_virtual_delivery/" /etc/exim4/exim4.conf.template
 
-	sed -i "s/address_pipe:/dovecot_virtual_delivery:\n  driver = pipe\n  command = \/usr\/lib\/dovecot\/dovecot-lda -e -d \$local_part@\$domain -f \$sender_address -a \$original_local_part@\$original_domain\n  delivery_date_add\n  envelope_to_add\n  return_path_add\n  log_output = true\n  log_defer_output = true\n  user = \${extract{2}{:}{\${lookup{\$local_part}lsearch{\/etc\/exim4\/domains\/\${lookup{\$domain}dsearch{\/etc\/exim4\/domains\/}}\/passwd}}}}\n  group = mail\n  return_output\n\naddress_pipe:/g" /etc/exim4/exim4.conf.template
+	sed -i "s/address_pipe:/dovecot_virtual_delivery:\n  driver = pipe\n  command = \/usr\/lib\/dovecot\/dovecot-lda -e -d \${extract{1}{:}{\${lookup{\$local_part}lsearch{\/etc\/exim4\/domains\/\${lookup{\$domain}dsearch{\/etc\/exim4\/domains\/}}\/accounts}}}}@\${lookup{\$domain}dsearch{\/etc\/exim4\/domains\/}}\n  delivery_date_add\n  envelope_to_add\n  return_path_add\n  log_output = true\n  log_defer_output = true\n  user = \${extract{2}{:}{\${lookup{\$local_part}lsearch{\/etc\/exim4\/domains\/\${lookup{\$domain}dsearch{\/etc\/exim4\/domains\/}}\/passwd}}}}\n  group = mail\n  return_output\n\naddress_pipe:/g" /etc/exim4/exim4.conf.template
 
 	# roundcube install
 	mkdir -p $RC_CONFIG_DIR/plugins/managesieve
@@ -80,7 +80,7 @@ if [ "$HAS_DOVECOT_SIEVE_INSTALLED" = "0" ]; then
 
 	chmod 644 $RC_CONFIG_DIR/plugins/managesieve/config.inc.php
 
-	sed -i "s/'archive'/'archive', 'managesieve'/g" $RC_CONFIG_DIR/config.inc.php
+	sed -i "s/\"archive\"/\"archive\", \"managesieve\"/g" $RC_CONFIG_DIR/config.inc.php
 
 	#restart dovecot and exim4
 	systemctl restart dovecot > /dev/null 2>&1
@@ -113,12 +113,12 @@ else
 
 		# Exim4
 		sed -i "s/\stransport = dovecot_virtual_delivery/ transport = local_delivery/" /etc/exim4/exim4.conf.template
-		sed -i "s/dovecot_virtual_delivery:\n  driver = pipe\n  command = \/usr\/lib\/dovecot\/dovecot-lda -e -d \$local_part@\$domain -f \$sender_address -a \$original_local_part@\$original_domain\n  delivery_date_add\n  envelope_to_add\n  return_path_add\n  log_output = true\n  log_defer_output = true\n  user = \${extract{2}{:}{\${lookup{\$local_part}lsearch{\/etc\/exim4\/domains\/\${lookup{\$domain}dsearch{\/etc\/exim4\/domains\/}}\/passwd}}}}\n  group = mail\n  return_output\n//g" /etc/exim4/exim4.conf.template
+		sed -i "s/dovecot_virtual_delivery:\n  driver = pipe\n  command = \/usr\/lib\/dovecot\/dovecot-lda -e -d \${extract{1}{:}{\${lookup{\$local_part}lsearch{\/etc\/exim4\/domains\/\${lookup{\$domain}dsearch{\/etc\/exim4\/domains/}}\/accounts}}}}@\${lookup{\$domain}dsearch{\/etc\/exim4\/domains\/}}\n  delivery_date_add\n  envelope_to_add\n  return_path_add\n  log_output = true\n  log_defer_output = true\n  user = \${extract{2}{:}{\${lookup{\$local_part}lsearch{\/etc\/exim4\/domains\/\${lookup{\$domain}dsearch{\/etc\/exim4\/domains\/}}\/passwd}}}}\n  group = mail\n  return_output\n//g" /etc/exim4/exim4.conf.template
 
 		# Roundcube
 		rm -f -r $RC_CONFIG_DIR/plugins/managesieve
 		rm -f $RC_INSTALL_DIR/plugins/managesieve/config.inc.php
-		sed -i "s/'archive', 'managesieve'/'archive'/g" $RC_CONFIG_DIR/config.inc.php
+		sed -i "s/\"archive\", \"managesieve\"/\"archive\"/g" $RC_CONFIG_DIR/config.inc.php
 
 		#restart dovecot and exim4
 		systemctl restart dovecot > /dev/null 2>&1

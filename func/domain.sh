@@ -237,6 +237,11 @@ prepare_web_domain_values() {
 	if [ "$SUSPENDED" = 'yes' ]; then
 		docroot="$HESTIA/data/templates/web/suspend"
 		sdocroot="$HESTIA/data/templates/web/suspend"
+		if [ "$PROXY_SYSTEM" == "nginx" ]; then
+			PROXY="suspended"
+		else
+			TPL="suspended"
+		fi
 	fi
 }
 
@@ -296,6 +301,8 @@ add_web_config() {
 			-e "s|%ssl_ca_str%|$ssl_ca_str|g" \
 			-e "s|%ssl_ca%|$ssl_ca|g" \
 			> $conf
+
+	process_http2_directive "$conf"
 
 	chown root:$user $conf
 	chmod 640 $conf
@@ -685,12 +692,16 @@ is_mail_domain_new() {
 is_mail_new() {
 	check_acc=$(grep "ACCOUNT='$1'" $USER_DATA/mail/$domain.conf)
 	if [ -n "$check_acc" ]; then
-		check_result "$E_EXISTS" "mail account $1 is already exists"
+		check_result "$E_EXISTS" "mail account $1 already exists"
 	fi
 	check_als=$(awk -F "ALIAS='" '{print $2}' $USER_DATA/mail/$domain.conf)
-	check_als=$(echo "$check_als" | cut -f 1 -d "'" | grep -w $1)
-	if [ -n "$check_als" ]; then
-		check_result "$E_EXISTS" "mail alias $1 is already exists"
+	match=$(echo "$check_als" | cut -f 1 -d "'" | grep $1)
+	if [ -n "$match" ]; then
+		parse_object_kv_list $(grep "ALIAS='$match'" $USER_DATA/mail/$domain.conf)
+		check_als=$(echo ",$ALIAS," | grep ",$1,")
+		if [ -n "$check_als" ]; then
+			check_result "$E_EXISTS" "mail alias $1 already exists"
+		fi
 	fi
 }
 
@@ -863,6 +874,8 @@ add_webmail_config() {
 			-e "s|%ssl_ca%|$ssl_ca|g" \
 			> $conf
 
+	process_http2_directive "$conf"
+
 	chown root:$user $conf
 	chmod 640 $conf
 
@@ -1023,4 +1036,36 @@ is_base_domain_owner() {
 			fi
 		fi
 	done
+}
+
+#----------------------------------------------------------#
+#           Process "http2" directive for NGINX            #
+#----------------------------------------------------------#
+
+process_http2_directive() {
+	if [ -e /etc/nginx/conf.d/http2-directive.conf ]; then
+		while IFS= read -r old_param; do
+			new_param="$(echo "$old_param" | sed 's/\shttp2//')"
+			sed -i "s/$old_param/$new_param/" "$1"
+		done < <(grep -E "listen.*(\bssl\b(\s|.+){1,}\bhttp2\b|\bhttp2\b(\s|.+){1,}\bssl\b).*;" "$1")
+	else
+		if version_ge "$(nginx -v 2>&1 | cut -d'/' -f2)" "1.25.1"; then
+			echo "http2 on;" > /etc/nginx/conf.d/http2-directive.conf
+
+			while IFS= read -r old_param; do
+				new_param="$(echo "$old_param" | sed 's/\shttp2//')"
+				sed -i "s/$old_param/$new_param/" "$1"
+			done < <(grep -E "listen.*(\bssl\b(\s|.+){1,}\bhttp2\b|\bhttp2\b(\s|.+){1,}\bssl\b).*;" "$1")
+		else
+			listen_ssl="$(grep -E "listen.*\s\bssl\b(?:\s)*.*;" "$1")"
+			listen_http2="$(grep -E "listen.*(\bssl\b(\s|.+){1,}\bhttp2\b|\bhttp2\b(\s|.+){1,}\bssl\b).*;" "$1")"
+
+			if [ -n "$listen_ssl" ] && [ -z "$listen_http2" ]; then
+				while IFS= read -r old_param; do
+					new_param="$(echo "$old_param" | sed 's/\sssl/ ssl http2/')"
+					sed -i "s/$old_param/$new_param/" "$1"
+				done < <(grep -E "listen.*\s\bssl\b(?:\s)*.*;" "$1")
+			fi
+		fi
+	fi
 }

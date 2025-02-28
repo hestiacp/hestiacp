@@ -27,6 +27,10 @@ NEW_ALIAS=$1
 
 restart=${2-yes}
 
+check_args '1' "$#" 'ALIAS [RESTART]'
+is_common_format_valid "$NEW_ALIAS" "Alias"
+is_restart_format_valid "$restart"
+
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
@@ -35,7 +39,7 @@ check_hestia_demo_mode
 #----------------------------------------------------------#
 
 # Delete old webmail configuration
-for user in $($BIN/v-list-sys-users plain); do
+for user in $("$BIN/v-list-users" list); do
 	for domain in $($BIN/v-list-mail-domains "$user" plain | cut -f 1); do
 		$BIN/v-delete-mail-domain-webmail "$user" "$domain"
 	done
@@ -45,13 +49,13 @@ done
 $BIN/v-change-sys-config-value 'WEBMAIL_ALIAS' $NEW_ALIAS
 
 # Add new webmail configuration
-for user in $($BIN/v-list-sys-users plain); do
+for user in $("$BIN/v-list-users" list); do
 	for domain in $($BIN/v-list-mail-domains "$user" plain | cut -f 1); do
 		$BIN/v-add-mail-domain-webmail "$user" "$domain"
 	done
 done
 
-if [ -d /etc/apache2/ ]; then
+if [ -s /etc/apache2/apache2.conf ]; then
 	sed -i "s/IncludeOptional conf.d\/domains\/$WEBMAIL_ALIAS.*.conf/IncludeOptional conf.d\/domains\/$NEW_ALIAS.*.conf/g" /etc/apache2/apache2.conf
 fi
 

@@ -10,28 +10,24 @@
 	/* Alerts */
 	--alert-box-shadow: none;
 	--alert-text-shadow: none;
-}
 
-b,
-strong {
-	font-weight: 600;
+	/* Top Bar */
+	--top-bar-background: #5070a6;
+	--top-bar-box-shadow: none;
 }
 
 /* Top bar
    ========================================================================== */
 
-.top-bar {
-	box-shadow: none;
-	background: #5070a6;
-}
-
 .top-bar-usage-inner {
 	text-shadow: none;
 }
 
-.top-bar-notifications-list {
-	box-shadow: none;
-	border: 1px solid #ccc;
+.top-bar-notifications-panel {
+	@media (--viewport-small) {
+		box-shadow: none;
+		border-color: #ccc;
+	}
 }
 
 .top-bar-menu-link {
@@ -57,33 +53,13 @@ strong {
 	background-color: #fff;
 }
 
-.units-header {
-	box-shadow: none;
-	background: #fafafa;
-}
-
-.l-unit:hover {
-	box-shadow: none;
-}
-
-.l-unit__stat-col--left {
-	& a,
-	& a:visited {
-		color: #5f7eb3;
-	}
-
-	& a:hover {
-		color: #5f7eb3;
-	}
-}
-
-.l-unit:hover,
-.units .l-unit:hover {
-	box-shadow: none;
-}
-
 /* Units table
    ========================================================================== */
+
+.units-table-header {
+	box-shadow: none;
+	border-top: 1px solid var(--chart-grid-color);
+}
 
 .units-table-row {
 	@media (--viewport-large) {
@@ -103,6 +79,12 @@ strong {
 	}
 }
 
+.units-table-badge {
+	@media (--viewport-large) {
+		box-shadow: none;
+	}
+}
+
 /* Statistics
    ========================================================================== */
 
@@ -114,26 +96,10 @@ strong {
 	}
 }
 
-/* Spinner
+/* Box collapse component
    ========================================================================== */
 
-.spinner-overlay {
-	& .fas {
-		box-shadow: 0 2px 11px 0 rgb(0 0 0 / 50%);
-	}
-}
-
-/* Badge component
-   ========================================================================== */
-
-.badge {
-	box-shadow: none;
-}
-
-/* Collapse component
-   ========================================================================== */
-
-.collapse-header {
+.box-collapse-header {
 	background: #fafafa;
 	box-shadow: none;
 }
@@ -202,14 +168,16 @@ strong {
 /* Login
    ========================================================================== */
 
-.body-login,
-.body-reset {
+.page-login,
+.page-reset {
 	background: #5f7eb3;
 }
 
 .login {
 	@media (--viewport-small) {
 		background-color: rgb(255 255 255 / 80%);
-		box-shadow: 0 2px 10px rgb(0 0 0 / 30%), inset 0 0 2px rgb(255 255 255 / 100%);
+		box-shadow:
+			0 2px 10px rgb(0 0 0 / 30%),
+			inset 0 0 2px rgb(255 255 255 / 100%);
 	}
 }

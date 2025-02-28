@@ -1,0 +1,15 @@
+{
+	"$schema": "https://docs.renovatebot.com/renovate-schema.json",
+	"branchPrefix": "dependencies/",
+	"extends": [
+		"config:recommended",
+		"schedule:weekly",
+		"group:allNonMajor",
+		"group:linters",
+		":automergeLinters",
+		":disableDependencyDashboard"
+	],
+	"ignorePaths": ["**/node_modules/**", "install/deb/filemanager/filegator/composer.json"],
+	"rangeStrategy": "bump",
+	"reviewers": ["jaapmarcus"]
+}

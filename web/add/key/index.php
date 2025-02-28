@@ -2,7 +2,6 @@
 use function Hestiacp\quoteshellarg\quoteshellarg;
 
 ob_start();
-session_start();
 $TAB = "USER";
 
 // Main include
@@ -32,7 +31,7 @@ if (!empty($_POST["ok"])) {
 		$user = quoteshellarg($_GET["user"]);
 	}
 
-	if (!$_SESSION["error_msg"]) {
+	if (empty($_SESSION["error_msg"])) {
 		if ($_POST) {
 			//key if key already exists
 			exec(HESTIA_CMD . "v-list-user-ssh-key " . $user . " json", $output, $return_var);

@@ -14,7 +14,7 @@
 user=$1
 domain=$2
 restart=$3
-update_serial=$4
+update_serial=${4-no}
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf

@@ -23,6 +23,7 @@ const E_DB = 17;
 const E_RRD = 18;
 const E_UPDATE = 19;
 const E_RESTART = 20;
+const E_API_DISABLED = 21;
 
 /**
  * Looks for a code equivalent to "exit_code" to use in http_code.
@@ -50,6 +51,7 @@ function exit_code_to_http_code(int $exit_code, int $default = 400): int {
 		case E_UNSUSPENDED:
 		case E_FORBIDEN:
 		case E_FORBIDDEN:
+		case E_API_DISABLED:
 			return 401;
 		// return 403;
 		case E_DISABLED:
@@ -110,6 +112,11 @@ function get_real_user_ip() {
 		if (filter_var($_SERVER["HTTP_CF_CONNECTING_IP"], FILTER_VALIDATE_IP)) {
 			$ip = $_SERVER["HTTP_CF_CONNECTING_IP"];
 		}
+	}
+
+	// Handling IPv4-mapped IPv6 address
+	if (strpos($ip, ":") === 0 && strpos($ip, ".") > 0) {
+		$ip = substr($ip, strrpos($ip, ":") + 1); // Strip IPv4 Compatibility notation
 	}
 	return $ip;
 }

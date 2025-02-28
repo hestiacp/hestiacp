@@ -1,0 +1,465 @@
+#!/bin/bash
+# info: Import DirectAdmin backup to a new user
+#
+# example: v-import-directadmin /backup/backup.tar.gz
+#
+# Based on sk-da-importer
+# Credits: Maks Usmanov (skamasle), Jaap Marcus (jaapmarcus) and contributors:
+# Thanks to <https://github.com/Skamasle/sk_da_importer/graphs/contributors>
+
+# This script is provided without any warranty
+# Run at your own risk
+# Version 0.1
+# This script restore backups from DA to Hestiacp
+
+# shellcheck source=/usr/local/hestia/func/main.sh
+source "$HESTIA"/func/main.sh
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+if [ ! -e /usr/bin/rsync ] || [ ! -e /usr/bin/file ]; then
+	echo "#######################################"
+	echo "rsync not installed, try install it"
+	echo "This script need: rsync, file"
+	echo "#######################################"
+	if [ -e /etc/redhat-release ]; then
+		echo "Run: yum install rync file"
+	else
+		echo "Run: apt-get install rsync file"
+	fi
+	exit 3
+fi
+# Put this to 0 if you want use bash -x to debug it
+debug=1
+hestia_package=default
+letsencrypt_enable=0
+addusertext="IMPORTED"
+tmp_dir='tmp_dir_da_backup'
+time=$(echo "$time_n_date" | cut -f 1 -d \ )
+date=$(echo "$time_n_date" | cut -f 2 -d \ )
+
+if [ -f "$1" ]; then
+	backup_file="$1"
+fi
+
+if [ -z "$BACKUP_TEMP" ]; then
+	BACKUP_TEMP=$BACKUP
+else
+	echo "File does not exists"
+	exit 1
+fi
+
+delete_tmp() {
+	echo "Removing tmp files"
+	rm -rf /backup/${tmp_dir}
+}
+
+# URL decoding function
+urldecode() {
+	local url_encoded="${1//+/ }"
+	printf '%b' "${url_encoded//%/\\x}"
+}
+
+tput setaf 3
+echo "#######################################"
+echo "# START WITH IMPORT "
+echo "#######################################"
+tput sgr0
+
+tput setaf 2
+echo "Checking provided file..."
+tput sgr0
+
+if file "$backup_file" | grep -q -c "gzip compressed data"; then
+	tput setaf 2
+	echo "OK - Gzipped File"
+	tput sgr0
+
+	if [ ! -d /backup/${tmp_dir} ]; then
+		echo "Creating temporary directory..."
+		mkdir /backup/${tmp_dir}
+	fi
+
+	echo "Extracting backup..."
+	if [ "$debug" != 0 ]; then
+		tar xzvf "$backup_file" -C /backup/${tmp_dir} 2>&1 | while read -r extracted_file; do
+			ex=$((ex + 1))
+			echo -en "wait... $ex files extracted\r"
+		done
+	else
+		tar xzf "$backup_file" -C /backup/${tmp_dir}
+	fi
+
+	if [ $? -eq 0 ]; then
+		tput setaf 2
+		echo "Backup extracted without errors..."
+		tput sgr0
+	else
+		tput setaf 1
+		echo "Error on backup extraction, check your file and try extracting it manually"
+		tput sgr0
+		delete_tmp
+		exit 1
+	fi
+
+elif file "$backup_file" | grep -q -c "Zstandard compressed data"; then
+	tput setaf 2
+	echo "OK - Zstandard Compressed File"
+	tput sgr0
+
+	if [ ! -d /backup/${tmp_dir} ]; then
+		echo "Creating temporary directory..."
+		mkdir /backup/${tmp_dir}
+	fi
+
+	echo "Extracting backup..."
+	if [ "$debug" != 0 ]; then
+		tar --use-compress-program=pzstd -xvf "$backup_file" -C /backup/${tmp_dir} 2>&1 | while read -r extracted_file; do
+			ex=$((ex + 1))
+			echo -en "wait... $ex files extracted\r"
+		done
+	else
+		tar --use-compress-program=pzstd -xf "$backup_file" -C /backup/${tmp_dir}
+	fi
+
+	if [ $? -eq 0 ]; then
+		tput setaf 2
+		echo "Backup extracted without errors..."
+		tput sgr0
+	else
+		tput setaf 1
+		echo "Error on backup extraction, check your file and try extracting it manually"
+		tput sgr0
+		delete_tmp
+		exit 1
+	fi
+
+else
+	tput setaf 1
+	echo "Error: Unsupported file format or 'file' command not installed (Try 'yum install file' or 'apt-get install file')"
+	tput sgr0
+	delete_tmp
+	exit 3
+fi
+
+cd /backup/${tmp_dir}/ || exit
+main_dir=$(pwd)
+echo "Access tmp directory $main_dir"
+directadmin_user=$(grep username backup/user.conf | cut -d "=" -f 2)
+directadmin_usermail=$(grep email backup/user.conf | cut -d "=" -f 2 | grep @)
+echo "Get User: $directadmin_user"
+if [ -z "$directadmin_usermail" ]; then
+	directadmin_usermail=$(grep domain backup/user.conf | cut -d "=" -f 2 | head -n 1)
+fi
+
+check_sysuser=$(cut -f 1 -d : /etc/passwd | grep "^$directadmin_user$")
+if [ -n "$check_sysuser" ] || [ -e "$HESTIA/data/users/$directadmin_user" ]; then
+	delete_tmp
+	check_result "$E_EXISTS" "user $directadmin_user exists"
+fi
+
+echo "Generate random password for $directadmin_user and create Hestiacp Account ..."
+new_password=$(generate_password)
+"$BIN"/v-add-user "$directadmin_user" "$new_password" "$directadmin_usermail" $hestia_package $addusertext
+if [ "$?" -ne 0 ]; then
+	tput setaf 1
+	echo "Error: Unable to create user"
+	tput sgr0
+	exit 1
+fi
+
+tput setaf 3
+echo "#######################################"
+echo "# DATABASE "
+echo "#######################################"
+tput sgr0
+
+# Restore databases
+mysql -e "SET GLOBAL max_allowed_packet=1073741824;"
+# start with databases
+tput setaf 2
+echo "Start with databases"
+tput sgr0
+
+echo "Get local databases"
+mysql -e "SHOW DATABASES" > server_dbs
+da_db_list=$(ls -1 backup/ | grep ".conf")
+function run_da_db() {
+	for da_db in $da_db_list; do
+
+		database_name=${da_db::-5}
+		grep -w "$database_name" server_dbs
+		if [ $? == "1" ]; then
+			if [ -e "backup/${database_name}.sql" ]; then
+
+				# Get the database name
+				db=$(grep db_collation backup/"${da_db}" | tr '&' '\n ' | grep SCHEMA_NAME | cut -d "=" -f 2)
+
+				tput setaf 2
+				echo " Create and restore ${db} "
+				tput sgr0
+				mysql -e "CREATE DATABASE $db"
+
+				# Preprocess the SQL file to remove problematic lines: https://jira.mariadb.org/browse/MDEV-34203
+				grep -vE '^/\*!(999999\\-)' "backup/${database_name}.sql" > "backup/${database_name}_processed.sql" 2> /dev/null
+
+				# Import the preprocessed SQL file with --force to ignore errors and continue
+				mysql --force "${db}" < "backup/${database_name}_processed.sql"
+
+				if [ $? -ne 0 ]; then
+					tput setaf 1
+					echo "Error importing database $db"
+					tput sgr0
+					continue
+				fi
+
+				# Get all the users of the database
+				while IFS= read -r line; do
+					selectdb_line=$(echo "$line" | grep passwd)
+					if [ ! -z "$selectdb_line" ]; then
+						db_user=$(echo "$selectdb_line" | tr '&' '\n ' | grep "${directadmin_user}" | cut -d "=" -f 1)
+						encoded_md5=$(echo "$selectdb_line" | tr '&' '\n ' | grep passwd | cut -d "=" -f 2)
+						md5=$(urldecode "$encoded_md5")
+
+						echo "DB: $db"
+						echo "udb: $db_user"
+						echo "Password: ${md5}"
+
+						echo "DB='$db' DBUSER='$db_user' MD5='$md5' HOST='localhost' TYPE='mysql' CHARSET='UTF8' U_DISK='0' SUSPENDED='no' TIME='$time' DATE='$date'" >> /usr/local/hestia/data/users/"$directadmin_user"/db.conf
+					fi
+				done < "backup/${da_db}"
+
+				# Leave Hestia to restore passwords and create users
+				tput setaf 2
+				echo "Rebuild database files for $directadmin_user"
+				tput sgr0
+				"$BIN"/v-rebuild-databases "$directadmin_user"
+			fi
+		else
+			tput setaf 1
+			echo "Error: Can't restore database $db, it already exists on the MySQL server"
+			tput sgr0
+		fi
+	done
+}
+
+if [[ -z $da_db_list ]]; then
+	echo "No database found"
+else
+	run_da_db
+	echo "Run"
+fi
+
+tput setaf 3
+echo "#######################################"
+echo "# DOMAINS "
+echo "#######################################"
+tput sgr0
+
+# Start with domains
+tput setaf 2
+echo "Start with domains"
+tput sgr0
+directadmin_domain_list=$(ls -1 domains/)
+for directadmin_domain in $directadmin_domain_list; do
+	tput setaf 2
+	echo "Add $directadmin_domain if not exists"
+	tput sgr0
+	"$BIN"/v-add-domain "${directadmin_user}" "$directadmin_domain"
+	if [ $? -ne 0 ]; then
+		tput setaf 4
+		echo "Domain $directadmin_domain already added in some account, skip..."
+		tput sgr0
+	elif [ -d /home/"${directadmin_user}"/web/"${directadmin_domain}" ]; then
+		echo "Domain $directadmin_domain added, restoring files"
+		echo "$directadmin_domain" >> restored_domains
+		rm -f /home/"$directadmin_user"/web/"$directadmin_domain"/public_html/index.html
+		rm -f /home/"$directadmin_user"/web/"$directadmin_domain"/public_html/robots.txt
+
+		public_sync_count=0
+		rsync -av domains/"${directadmin_domain}"/public_html/ /home/"$directadmin_user"/web/"$directadmin_domain"/public_html 2>&1 \
+			| while read file_dm; do
+				public_sync_count=$(($public_sync_count + 1))
+				echo -en "-- $public_sync_count restored files\r"
+			done
+
+		chown "${directadmin_user}":"${directadmin_user}" -R /home/"${directadmin_user}"/web/"${directadmin_domain}"/public_html
+		chmod 751 /home/"${directadmin_user}"/web/"${directadmin_domain}"/public_html
+
+		if [[ -L "domains/${directadmin_domain}/private_html" && -d "domains/${directadmin_domain}/private_html" ]]; then
+			echo "private_html is a symlink to public_html so we don't need to copy it."
+		else
+			private_sync_count=0
+
+			rsync -av domains/"${directadmin_domain}"/private_html/ /home/"$directadmin_user"/web/"$directadmin_domain"/private 2>&1 \
+				| while read file_dm; do
+					private_sync_count=$(($private_sync_count + 1))
+					echo -en "-- $private_sync_count restored files\r"
+				done
+			chown "${directadmin_user}":"${directadmin_user}" -R /home/"${directadmin_user}"/web/"${directadmin_domain}"/private
+			chmod 751 /home/"${directadmin_user}"/web/"${directadmin_domain}"/private
+		fi
+	else
+		echo "Ups.. cant restore or add domain: $directadmin_domain"
+	fi
+done
+echo "Domains restored!"
+
+tput setaf 3
+echo "#######################################"
+echo "# E-MAIL "
+echo "#######################################"
+tput sgr0
+tput setaf 2
+echo "Start restoring mails"
+tput sgr0
+function da_restore_imap_pass() {
+	#DirectAdmin passw is SHA512-CRYPT
+	da_orig_pass=$(grep -w "$1" backup/"$2"/email/passwd | tr ':' ' ' | cut -d " " -f2)
+	echo "${da_orig_pass}"
+	USER_DATA=$HESTIA/data/users/${3}/
+	update_object_value "mail/${2}" 'ACCOUNT' "${1}" '$MD5' "{SHA512-CRYPT}$da_orig_pass"
+	echo "Password for $1@$2 restored"
+}
+echo cat restored_domains
+if [ -e restored_domains ]; then
+	cat restored_domains | while read da_mail_domain; do
+		if [ "$(ls -A imap/"${da_mail_domain}"/)" ]; then
+			tput setaf 2
+			echo "Found Imap for ${da_mail_domain}"
+			tput sgr0
+			ls -1 imap/"${da_mail_domain}"/ | while read da_imap; do
+				tmp_pass=$(generate_password)
+				"$BIN"/v-add-mail-account "$directadmin_user" "$da_mail_domain" "$da_imap" "$tmp_pass"
+				if [ "$debug" != 0 ]; then
+					rsync -av imap/"${da_mail_domain}"/"${da_imap}"/Maildir/ /home/"${directadmin_user}"/mail/"${da_mail_domain}"/"${da_imap}" 2>&1 \
+						| while read backup_file_dm; do
+							sk_sync=$((sk_sync + 1))
+							echo -en "-- $sk_sync restored files\r"
+						done
+					echo " "
+				else
+					rsync imap/"${da_mail_domain}"/"${da_imap}"/Maildir/ /home/"${directadmin_user}"/mail/"${da_mail_domain}"/"${da_imap}"
+				fi
+				chown "${directadmin_user}":mail -R /home/"${directadmin_user}"/mail/"${da_mail_domain}"/"${da_imap}"
+				find /home/"$directadmin_user"/mail/"$da_mail_domain" -type f -name 'dovecot*' -delete
+				da_restore_imap_pass "$da_imap" "$da_mail_domain" "$directadmin_user"
+			done
+
+			"$BIN"/v-rebuild-mail-domain "$directadmin_user" "$da_mail_domain"
+		fi
+	done
+fi
+
+tput setaf 3
+echo "#######################################"
+echo "# CRON JOBS "
+echo "#######################################"
+tput sgr0
+
+# Restore cron jobs
+if [ -f "backup/crontab.conf" ]; then
+	while IFS= read -r cron_line; do
+		# Skip empty lines and comments
+		[[ -z "$cron_line" || "$cron_line" =~ ^#.*$ ]] && continue
+
+		# Check if the line is an environment variable
+		if [[ "$cron_line" =~ ^[A-Z]+= ]]; then
+			# Export environment variable
+			# echo "Setting environment variable: $cron_line"
+			export "$cron_line"
+			continue
+		fi
+
+		# Remove the cron job identifier and extract cron job details
+		if [[ "$cron_line" =~ ^[0-9]+= ]]; then
+			cron_line=${cron_line#*=}
+		fi
+
+		# Extract cron job details (handle cases where command contains spaces)
+		IFS=' ' read -r min hour day month wday command <<< "$cron_line"
+
+		# Ensure it is a valid cron job line
+		if ! [[ "$min" =~ ^[\*0-9,-/]+$ && "$hour" =~ ^[\*0-9,-/]+$ && "$day" =~ ^[\*0-9,-/]+$ && "$month" =~ ^[\*0-9,-/]+$ && "$wday" =~ ^[\*0-9,-/]+$ ]]; then
+			echo "Invalid cron job format: $cron_line"
+			continue
+		fi
+
+		# Reconstruct the command part
+		command="${cron_line#"${min}" "${hour}" "${day}" "${month}" "${wday}" }"
+
+		echo "Adding cron job for user $directadmin_user: $cron_line"
+		"$BIN"/v-add-cron-job "$directadmin_user" "$min" "$hour" "$day" "$month" "$wday" "$command"
+	done < "backup/crontab.conf"
+else
+	echo "No cron jobs found to restore."
+fi
+
+tput setaf 3
+echo "#######################################"
+echo "# DOMAIN ALIASES "
+echo "#######################################"
+tput sgr0
+
+# Restore domain aliases
+domain_base_dir="backup"
+
+if [ -d "$domain_base_dir" ]; then
+	for domain_subdir in "$domain_base_dir"/*/; do
+		domain_pointers_file="$domain_subdir/domain.pointers"
+		if [ -f "$domain_pointers_file" ]; then
+			while IFS= read -r pointer_line; do
+				# Skip empty lines and comments
+				[[ -z "$pointer_line" || "$pointer_line" =~ ^#.*$ ]] && continue
+
+				# Extract alias and type
+				alias_domain=$(echo "$pointer_line" | cut -d'=' -f1)
+				alias_type=$(echo "$pointer_line" | awk -F'type=' '{print $2}')
+
+				if [[ "$alias_type" == "alias" || "$alias_type" == "pointer" ]]; then
+					domain_name=$(basename "$domain_subdir")
+					echo "Adding domain alias $alias_domain for user $directadmin_user on domain $domain_name"
+					"$BIN"/v-add-web-domain-alias "$directadmin_user" "$domain_name" "$alias_domain" no
+				else
+					echo "Skipping non-alias type for $alias_domain: $alias_type"
+				fi
+			done < "$domain_pointers_file"
+		fi
+	done
+else
+	echo "No domain directories found to restore."
+fi
+
+tput setaf 3
+echo "#######################################"
+echo "# ENABLE LETSENCRYPT "
+echo "#######################################"
+tput sgr0
+
+if [ "$letsencrypt_enable" = 1 ]; then
+	for directadmin_domain in $directadmin_domain_list; do
+		echo "Enabling Let's Encrypt for $directadmin_domain"
+		letsencrypt_output=$("$BIN"/v-add-letsencrypt-domain "$directadmin_user" "$directadmin_domain" '' yes 2>&1)
+		echo "$letsencrypt_output"
+		if echo "$letsencrypt_output" | grep -q "Error: mail domain"; then
+			echo "Error with Let's Encrypt: $letsencrypt_output"
+			echo "Retrying Let's Encrypt without mail domain for $directadmin_domain"
+			"$BIN"/v-add-letsencrypt-domain "$directadmin_user" "$directadmin_domain" '' no
+		else
+			echo "Let's Encrypt enabled for $directadmin_domain"
+		fi
+	done
+else
+	echo "Let's Encrypt is not enabled for any domain."
+fi
+
+delete_tmp
+tput sgr0
+tput setaf 2
+echo "#######################################"
+echo "DirectAdmin account $directadmin_user restored"
+echo "Review your content and report any fail"
+tput sgr0
+exit

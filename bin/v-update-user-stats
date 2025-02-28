@@ -15,7 +15,7 @@ user=$1
 
 # Importing system environment  as we run this script
 #       mostly by cron wich not read it by itself
-source /etc/profile
+source /etc/profile.d/hestia.sh
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -43,7 +43,7 @@ fi
 
 # Creating user_list
 if [ -z "$user" ]; then
-	user_list=$($BIN/v-list-sys-users plain)
+	user_list=$("$BIN/v-list-users" list)
 	update_overall_stats='yes'
 else
 	user_list="$user"
@@ -133,7 +133,7 @@ done
 
 if [ "$update_overall_stats" = 'yes' ]; then
 	# Updating overall stats
-	stats="$HESTIA/data/users/admin/overall_stats.log"
+	stats="$HESTIA/data/users/$ROOT_USER/overall_stats.log"
 
 	s="DATE='$DATE' TIME='$TIME' PACKAGE='default' IP_OWNED='$TOTAL_IP_OWNED'"
 	s="$s DISK_QUOTA='0' U_DISK='$TOTAL_U_DISK' U_DISK_DIRS='$TOTAL_U_DISK_DIRS'"

@@ -28,7 +28,7 @@ if [ -z "$iface" ]; then
 fi
 
 iface="${3-$iface}"
-user="${4-admin}"
+user="$4"
 ip_status="${5-shared}"
 ip_name="$6"
 nat_ip="$7"
@@ -42,8 +42,14 @@ source $HESTIA/func/main.sh
 source $HESTIA/func/ip.sh
 # shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
+# shellcheck source=/usr/local/hestia/func/syshealth.sh
+source "$HESTIA/func/syshealth.sh"
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
+
+if [ -z "$4" ]; then
+	user="$ROOT_USER"
+fi
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -60,7 +66,7 @@ fi
 if [ -n "$nat_ip" ]; then
 	is_format_valid 'nat_ip'
 fi
-if [ "$user" != "admin" ]; then
+if [ "$user" != "$ROOT_USER" ]; then
 	ip_status="dedicated"
 fi
 
@@ -145,6 +151,7 @@ if [ -n "$WEB_SYSTEM" ]; then
 	elif [ "$WEB_SYSTEM" = 'nginx' ]; then
 		cp -f $HESTIA_INSTALL_DIR/nginx/unassigned.inc "$web_conf"
 		sed -i 's/directIP/'$ip'/g' "$web_conf"
+		process_http2_directive "$web_conf"
 	fi
 
 	if [ "$WEB_SSL" = 'mod_ssl' ]; then
@@ -164,6 +171,8 @@ if [ -n "$PROXY_SYSTEM" ]; then
 			-e "s/%proxy_port%/$PROXY_PORT/g" \
 			-e "s/%proxy_ssl_port%/$PROXY_SSL_PORT/g" \
 			> /etc/$PROXY_SYSTEM/conf.d/$ip.conf
+
+	process_http2_directive "/etc/$PROXY_SYSTEM/conf.d/$ip.conf"
 
 	# mod_extract_forwarded
 	fw_conf="/etc/$WEB_SYSTEM/conf.d/mod_extract_forwarded.conf"
@@ -190,23 +199,27 @@ if [ -n "$PROXY_SYSTEM" ]; then
 	fi
 fi
 
+# Adapt Port Listing in HESTIA NGINX Backend
+syshealth_adapt_hestia_nginx_listen_ports
+# Also update resolver
+syshealth_adapt_nginx_resolver
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
 
 # Updating user counters
 increase_user_value "$user" '$IP_OWNED'
-if [ "$user" = 'admin' ]; then
+if [ "$user" = $ROOT_USER ]; then
 	if [ "$ip_status" = 'shared' ]; then
-		for hestia_user in $($BIN/v-list-sys-users plain); do
+		for hestia_user in $("$BIN/v-list-users" list); do
 			increase_user_value "$hestia_user" '$IP_AVAIL'
 		done
 	else
-		increase_user_value 'admin' '$IP_AVAIL'
+		increase_user_value $ROOT_USER '$IP_AVAIL'
 	fi
 else
 	increase_user_value "$user" '$IP_AVAIL'
-	increase_user_value 'admin' '$IP_AVAIL'
+	increase_user_value $ROOT_USER '$IP_AVAIL'
 fi
 
 # Restarting web server
@@ -222,6 +235,12 @@ fi
 # Restarting firewall
 if [ -n "$FIREWALL_SYSTEM" ]; then
 	$BIN/v-update-firewall
+fi
+
+# Restarting hestia service if nginx backend config was changed
+if [ "$NGINX_BCONF_CHANGED" = "yes" -a -f "/etc/init.d/hestia" ]; then
+	systemctl restart hestia > /dev/null 2>&1
+	check_result $? "Hestia backend restart failed" > /dev/null
 fi
 
 # Logging

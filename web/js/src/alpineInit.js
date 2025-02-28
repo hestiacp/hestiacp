@@ -27,7 +27,7 @@ export default function alpineInit() {
 		},
 	});
 	document
-		.querySelectorAll('#vstobjects input, #vstobjects select, #vstobjects textarea')
+		.querySelectorAll('#main-form input, #main-form select, #main-form textarea')
 		.forEach((el) => {
 			el.addEventListener('change', () => {
 				Alpine.store('form').makeDirty();

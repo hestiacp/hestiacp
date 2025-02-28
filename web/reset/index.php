@@ -101,11 +101,13 @@ if (!empty($_POST["user"]) && empty($_POST["code"])) {
 							$_SERVER["HTTP_HOST"],
 						);
 						if ($port_is_defined) {
-							$port = preg_replace(
-								"/(\[?[^]]*\]?):([0-9]{1,5})$/",
-								"$2",
-								$_SERVER["HTTP_HOST"],
-							);
+							$port =
+								":" .
+								preg_replace(
+									"/(\[?[^]]*\]?):([0-9]{1,5})$/",
+									"$2",
+									$_SERVER["HTTP_HOST"],
+								);
 						} else {
 							$port = "";
 						}
@@ -121,7 +123,6 @@ if (!empty($_POST["user"]) && empty($_POST["code"])) {
 
 					putenv("LANGUAGE=" . $data[$user]["LANGUAGE"]);
 					$name = empty($data[$user]["NAME"]) ? $user : $data[$user]["NAME"];
-
 					$mailtext = translate_email($template, [
 						"name" => htmlentities($name),
 						"hostname" => htmlentities($hostname . $port),
@@ -246,3 +247,4 @@ if (empty($_GET["action"])) {
 		require_once "../templates/pages/login/reset_3.php";
 	}
 }
+require_once "../templates/includes/login-footer.php";

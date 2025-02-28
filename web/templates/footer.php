@@ -1,4 +1,6 @@
-	</main>
+		</main>
+		<?php require $_SERVER["HESTIA"] . "/web/templates/includes/app-footer.php"; ?>
+	</div> <?php // Closes `<div class="app">` in header.php ?>
 <?php if (
 	$_SESSION["userContext"] === "admin" &&
 	$_SESSION["POLICY_SYSTEM_HIDE_SERVICES"] !== "yes" &&
@@ -6,10 +8,10 @@
 ) {
 ?>
 	<p x-data="{ open: true }" x-cloak x-show="open" class="updates-banner">
-		<strong>New updates are available!</strong> To upgrade your server now, run
+		<span class="u-text-bold">New updates are available!</span> To upgrade your server now, run
 		<code>apt update && apt upgrade</code> from a shell session.
-		(<button type="button" x-on:click="open = false">
-			<strong>hide</strong>
+		(<button type="button" class="u-text-bold" x-on:click="open = false">
+			hide
 		</button>)
 	</p>
 <?php } ?>
@@ -62,18 +64,12 @@
 			<span class="u-hidden"><?= _("Shortcuts") ?></span>
 		</button>
 	</div>
-	<a
-		href="#top"
-		class="button button-secondary button-circle button-floating button-floating-top "
-		title="<?= _("Top") ?>"
-	>
-		<i class="fas fa-arrow-up"></i>
-		<span class="u-hidden"><?= _("Top") ?></span>
-	</a>
 
-<?php if ($_SESSION["DEBUG_MODE"] == "true") {
-	require $_SERVER["HESTIA"] . "/web/templates/pages/debug_panel.php";
-} ?>
+	<?php require $_SERVER["HESTIA"] . "/web/templates/includes/jump-to-top-link.php"; ?>
+
+	<?php if ($_SESSION["DEBUG_MODE"] == "true") {
+		require $_SERVER["HESTIA"] . "/web/templates/pages/debug_panel.php";
+	} ?>
 
 </body>
 </html>

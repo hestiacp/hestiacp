@@ -51,6 +51,10 @@ $v_cron_jobs = $data[$v_package]["CRON_JOBS"];
 $v_disk_quota = $data[$v_package]["DISK_QUOTA"];
 $v_bandwidth = $data[$v_package]["BANDWIDTH"];
 $v_shell = $data[$v_package]["SHELL"];
+$v_cpu_quota = $data[$v_package]["CPU_QUOTA"];
+$v_cpu_quota_period = $data[$v_package]["CPU_QUOTA_PERIOD"];
+$v_memory_limit = $data[$v_package]["MEMORY_LIMIT"];
+$v_swap_limit = $data[$v_package]["SWAP_LIMIT"];
 $v_ns = $data[$v_package]["NS"];
 $nameservers = explode(",", $v_ns);
 if (empty($nameservers[0])) {
@@ -94,6 +98,7 @@ if (empty($nameservers[7])) {
 	$v_ns8 = $nameservers[7];
 }
 $v_backups = $data[$v_package]["BACKUPS"];
+$v_backups_incremental = $data[$v_package]["BACKUPS_INCREMENTAL"];
 $v_date = $data[$v_package]["DATE"];
 $v_time = $data[$v_package]["TIME"];
 $v_status = "active";
@@ -185,11 +190,29 @@ if (!empty($_POST["save"])) {
 	if (!isset($_POST["v_backups"])) {
 		$errors[] = _("Backups");
 	}
+	if (!isset($_POST["v_backups_incremental"])) {
+		$errors[] = _("Incremental Backups");
+	}
 	if (!isset($_POST["v_disk_quota"])) {
 		$errors[] = _("Quota");
 	}
 	if (!isset($_POST["v_bandwidth"])) {
 		$errors[] = _("Bandwidth");
+	}
+
+	if ($_SESSION["RESOURCES_LIMIT"] == "yes") {
+		if (!isset($_POST["v_cpu_quota"])) {
+			$errors[] = _("CPU quota");
+		}
+		if (!isset($_POST["v_cpu_quota_period"])) {
+			$errors[] = _("CPU quota period");
+		}
+		if (!isset($_POST["v_memory_limit"])) {
+			$errors[] = _("Memory Limit");
+		}
+		if (!isset($_POST["v_swap_limit"])) {
+			$errors[] = _("Swap Limit");
+		}
 	}
 
 	// Check if name server entries are blank if DNS server is installed
@@ -224,7 +247,11 @@ if (!empty($_POST["save"])) {
 		$v_proxy_template = quoteshellarg($_POST["v_proxy_template"]);
 	}
 	$v_dns_template = quoteshellarg($_POST["v_dns_template"]);
-	$v_shell = quoteshellarg($_POST["v_shell"]);
+	if (!empty($_POST["v_shell"])) {
+		$v_shell = quoteshellarg($_POST["v_shell"]);
+	} else {
+		$v_shell = "nologin";
+	}
 	$v_web_domains = quoteshellarg($_POST["v_web_domains"]);
 	$v_web_aliases = quoteshellarg($_POST["v_web_aliases"]);
 	$v_dns_domains = quoteshellarg($_POST["v_dns_domains"]);
@@ -235,16 +262,27 @@ if (!empty($_POST["save"])) {
 	$v_databases = quoteshellarg($_POST["v_databases"]);
 	$v_cron_jobs = quoteshellarg($_POST["v_cron_jobs"]);
 	$v_backups = quoteshellarg($_POST["v_backups"]);
+	$v_backups_incremental = quoteshellarg($_POST["v_backups_incremental"]);
 	$v_disk_quota = quoteshellarg($_POST["v_disk_quota"]);
 	$v_bandwidth = quoteshellarg($_POST["v_bandwidth"]);
-	$v_ns1 = trim($_POST["v_ns1"], ".");
-	$v_ns2 = trim($_POST["v_ns2"], ".");
-	$v_ns3 = trim($_POST["v_ns3"], ".");
-	$v_ns4 = trim($_POST["v_ns4"], ".");
-	$v_ns5 = trim($_POST["v_ns5"], ".");
-	$v_ns6 = trim($_POST["v_ns6"], ".");
-	$v_ns7 = trim($_POST["v_ns7"], ".");
-	$v_ns8 = trim($_POST["v_ns8"], ".");
+
+	$v_cpu_quota =
+		$_SESSION["RESOURCES_LIMIT"] == "yes" ? quoteshellarg($_POST["v_cpu_quota"]) : "";
+	$v_cpu_quota_period =
+		$_SESSION["RESOURCES_LIMIT"] == "yes" ? quoteshellarg($_POST["v_cpu_quota_period"]) : "";
+	$v_memory_limit =
+		$_SESSION["RESOURCES_LIMIT"] == "yes" ? quoteshellarg($_POST["v_memory_limit"]) : "";
+	$v_swap_limit =
+		$_SESSION["RESOURCES_LIMIT"] == "yes" ? quoteshellarg($_POST["v_swap_limit"]) : "";
+
+	$v_ns1 = !empty($_POST["v_ns1"]) ? trim($_POST["v_ns1"], ".") : "";
+	$v_ns2 = !empty($_POST["v_ns2"]) ? trim($_POST["v_ns2"], ".") : "";
+	$v_ns3 = !empty($_POST["v_ns3"]) ? trim($_POST["v_ns3"], ".") : "";
+	$v_ns4 = !empty($_POST["v_ns4"]) ? trim($_POST["v_ns4"], ".") : "";
+	$v_ns5 = !empty($_POST["v_ns5"]) ? trim($_POST["v_ns5"], ".") : "";
+	$v_ns6 = !empty($_POST["v_ns6"]) ? trim($_POST["v_ns6"], ".") : "";
+	$v_ns7 = !empty($_POST["v_ns7"]) ? trim($_POST["v_ns7"], ".") : "";
+	$v_ns8 = !empty($_POST["v_ns8"]) ? trim($_POST["v_ns8"], ".") : "";
 	$v_ns = $v_ns1 . "," . $v_ns2;
 	if (!empty($v_ns3)) {
 		$v_ns .= "," . $v_ns3;
@@ -283,10 +321,15 @@ if (!empty($_POST["save"])) {
 	$pkg .= "DATABASES=" . $v_databases . "\n";
 	$pkg .= "CRON_JOBS=" . $v_cron_jobs . "\n";
 	$pkg .= "DISK_QUOTA=" . $v_disk_quota . "\n";
+	$pkg .= "CPU_QUOTA=" . $v_cpu_quota . "\n";
+	$pkg .= "CPU_QUOTA_PERIOD=" . $v_cpu_quota_period . "\n";
+	$pkg .= "MEMORY_LIMIT=" . $v_memory_limit . "\n";
+	$pkg .= "SWAP_LIMIT=" . $v_swap_limit . "\n";
 	$pkg .= "BANDWIDTH=" . $v_bandwidth . "\n";
 	$pkg .= "NS=" . $v_ns . "\n";
 	$pkg .= "SHELL=" . $v_shell . "\n";
 	$pkg .= "BACKUPS=" . $v_backups . "\n";
+	$pkg .= "BACKUPS_INCREMENTAL=" . $v_backups_incremental . "\n";
 	$pkg .= "TIME=" . $v_time . "\n";
 	$pkg .= "DATE=" . $v_date . "\n";
 

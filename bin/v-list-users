@@ -14,7 +14,7 @@
 # shellcheck source=/etc/hestiacp/hestia.conf
 source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
-source $HESTIA/func/main.sh
+source "$HESTIA/func/main.sh"
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
@@ -49,6 +49,10 @@ json_list() {
         "DATABASES": "'$DATABASES'",
         "CRON_JOBS": "'$CRON_JOBS'",
         "DISK_QUOTA": "'$DISK_QUOTA'",
+        "CPU_QUOTA": "'$CPU_QUOTA'",
+        "CPU_QUOTA_PERIOD": "'$CPU_QUOTA_PERIOD'",
+        "MEMORY_LIMIT": "'$MEMORY_LIMIT'",
+        "SWAP_LIMIT": "'$SWAP_LIMIT'",
         "BANDWIDTH": "'$BANDWIDTH'",
         "NS": "'$NS'",
         "SHELL": "'$SHELL'",
@@ -56,6 +60,7 @@ json_list() {
         "CONTACT": "'$CONTACT'",
         "CRON_REPORTS": "'$CRON_REPORTS'",
         "RKEY": "'$RKEY'",
+        "ROLE": "'$ROLE'",
         "SUSPENDED": "'$SUSPENDED'",
         "SUSPENDED_USERS": "'$SUSPENDED_USERS'",
         "SUSPENDED_WEB": "'$SUSPENDED_WEB'",
@@ -94,14 +99,14 @@ json_list() {
 
 # SHELL list function
 shell_list() {
-	echo "USER   PKG   WEB   DNS   MAIL   DB   DISK   BW   SPND   DATE"
-	echo "----   ---   ---   ---   ---    --   ----   --   ----   ----"
+	echo "USER   ROLE   PKG   WEB   DNS   MAIL   DB   DISK   BW   SPND   DATE"
+	echo "----   ----   ---   ---   ---   ---    --   ----   --   ----   ----"
 	while read USER; do
 		if [ ! -f "$HESTIA/data/users/$USER/user.conf" ]; then
 			continue
 		fi
 		source_conf "$HESTIA/data/users/$USER/user.conf"
-		echo -n "$USER $PACKAGE $U_WEB_DOMAINS $U_DNS_DOMAINS $U_MAIL_DOMAINS"
+		echo -n "$USER $ROLE $PACKAGE $U_WEB_DOMAINS $U_DNS_DOMAINS $U_MAIL_DOMAINS"
 		echo " $U_DATABASES $U_DISK $U_BANDWIDTH $SUSPENDED $DATE"
 	done < <(grep '@' /etc/passwd | cut -f1 -d:)
 }
@@ -117,8 +122,9 @@ plain_list() {
 		echo -ne "$BACKEND_TEMPLATE\t$PROXY_TEMPLATE\t$DNS_TEMPLATE\t"
 		echo -ne "$WEB_DOMAINS\t$WEB_ALIASES\t$DNS_DOMAINS\t$DNS_RECORDS\t"
 		echo -ne "$MAIL_DOMAINS\t$MAIL_ACCOUNTS\t$DATABASES\t$CRON_JOBS\t"
-		echo -ne "$DISK_QUOTA\t$BANDWIDTH\t$NS\t$SHELL\t$BACKUPS\t"
-		echo -ne "$CONTACT\t$CRON_REPORTS\t$RKEY\t$SUSPENDED\t"
+		echo -ne "$DISK_QUOTA\t$CPU_QUOTA\t$CPU_QUOTA_PERIOD\t$MEMORY_LIMIT\t"
+		echo -ne "$SWAP_LIMIT\t$BANDWIDTH\t$NS\t$SHELL\t$BACKUPS\t"
+		echo -ne "$CONTACT\t$CRON_REPORTS\t$RKEY\t$ROLE\t$SUSPENDED\t"
 		echo -ne "$SUSPENDED_USERS\t$SUSPENDED_WEB\t$SUSPENDED_DNS\t"
 		echo -ne "$SUSPENDED_MAIL\t$SUSPENDED_DB\t$SUSPENDED_CRON\t"
 		echo -ne "$IP_AVAIL\t$IP_OWNED\t$U_USERS\t$U_DISK\t$U_DISK_DIRS\t"
@@ -135,8 +141,9 @@ csv_list() {
 	echo -n "USER,NAME,PACKAGE,WEB_TEMPLATE,BACKEND_TEMPLATE,"
 	echo -n "PROXY_TEMPLATE,DNS_TEMPLATE,WEB_DOMAINS,WEB_ALIASES,"
 	echo -n "DNS_DOMAINS,DNS_RECORDS,MAIL_DOMAINS,MAIL_ACCOUNTS,"
-	echo -n "DATABASES,CRON_JOBS,DISK_QUOTA,BANDWIDTH,NS,HOME,SHELL,"
-	echo -n "BACKUPS,CONTACT,CRON_REPORTS,RKEY,SUSPENDED,SUSPENDED_USERS,"
+	echo -n "DATABASES,CRON_JOBS,DISK_QUOTA,CPU_QUOTA,CPU_QUOTA_PERIOD,"
+	echo -n "MEMORY_LIMIT,SWAP_LIMIT,BANDWIDTH,NS,HOME,SHELL,"
+	echo -n "BACKUPS,CONTACT,CRON_REPORTS,RKEY,ROLE,SUSPENDED,SUSPENDED_USERS,"
 	echo -n "SUSPENDED_WEB,SUSPENDED_DNS,SUSPENDED_MAIL,SUSPENDED_DB,"
 	echo -n "SUSPENDED_CRON,IP_AVAIL,IP_OWNED,U_USERS,U_DISK,U_DISK_DIRS,"
 	echo -n "U_DISK_WEB,U_DISK_MAIL,U_DISK_DB,U_BANDWIDTH,U_WEB_DOMAINS,"
@@ -152,8 +159,9 @@ csv_list() {
 		echo -n "$BACKEND_TEMPLATE,$PROXY_TEMPLATE,$DNS_TEMPLATE,"
 		echo -n "$WEB_DOMAINS,$WEB_ALIASES,$DNS_DOMAINS,$DNS_RECORDS,"
 		echo -n "$MAIL_DOMAINS,$MAIL_ACCOUNTS,$DATABASES,$CRON_JOBS,"
-		echo -n "$DISK_QUOTA,$BANDWIDTH,\"$NS\",$HOME,$SHELL,$BACKUPS,"
-		echo -n "$CONTACT,$CRON_REPORTS,\"$RKEY\",$SUSPENDED,"
+		echo -n "$DISK_QUOTA,$CPU_QUOTA,$CPU_QUOTA_PERIOD,$MEMORY_LIMIT,"
+		echo -n "$SWAP_LIMIT,$BANDWIDTH,\"$NS\",$HOME,$SHELL,$BACKUPS,"
+		echo -n "$CONTACT,$CRON_REPORTS,\"$RKEY\",$ROLE,$SUSPENDED,"
 		echo -n "$SUSPENDED_USERS,$SUSPENDED_WEB,$SUSPENDED_DNS,"
 		echo -n "$SUSPENDED_MAIL,$SUSPENDED_DB,$SUSPENDED_CRON,$IP_AVAIL,"
 		echo -n "$IP_OWNED,$U_USERS,$U_DISK,$U_DISK_DIRS,$U_DISK_WEB,"
@@ -164,14 +172,14 @@ csv_list() {
 	done < <(grep '@' /etc/passwd | cut -f1 -d:)
 }
 
-# Raw list function
-raw_list() {
+# USER ONLY list function
+only_user_list() {
 	while read USER; do
 		if [ ! -f "$HESTIA/data/users/$USER/user.conf" ]; then
 			continue
 		fi
-		echo $HESTIA/data/users/$USER/user.conf
-		cat $HESTIA/data/users/$USER/user.conf
+		source_conf "$HESTIA/data/users/$USER/user.conf"
+		echo "$USER"
 	done < <(grep '@' /etc/passwd | cut -f1 -d:)
 }
 
@@ -185,6 +193,7 @@ case $format in
 	plain) plain_list ;;
 	csv) csv_list ;;
 	shell) shell_list | column -t ;;
+	list) only_user_list ;;
 esac
 
 #----------------------------------------------------------#

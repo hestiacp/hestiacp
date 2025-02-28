@@ -6,17 +6,17 @@
 				<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
 			</a>
 			<?php
-				if (($_SESSION['userContext'] === 'admin') && (!isset($_SESSION['look'])) && ($_SESSION['user'] !== $v_username)) {
-					$ssh_key_url = "/list/key/?user=".htmlentities($user_plain)."&token=".$_SESSION['token']."";
-					$log_url = "/list/log/?user=".htmlentities($user_plain)."&token=".$_SESSION['token']."";
-					$keys_url = "/list/access-key/?user=".htmlentities($user_plain)."&token=".$_SESSION['token']."";
-				} else {
+				if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === '' ) && ($_SESSION['user'] !== $v_username)) {
+					$ssh_key_url = "/list/key/?user=".htmlentities($_GET['user'])."&token=".$_SESSION['token']."";
+					$log_url = "/list/log/?user=".htmlentities($_GET['user'])."&token=".$_SESSION['token']."";
+					$keys_url = "/list/access-key/?user=".htmlentities($_GET['user'])."&token=".$_SESSION['token']."";
+				}else{
 					$ssh_key_url = "/list/key/";
 					$log_url = "/list/log/";
 					$keys_url = "/list/access-key/";
 				}
 			?>
-			<a href="<?=$ssh_key_url; ?>" class="button button-secondary js-button-create" title="<?= _("Manage SSH Keys") ?>">
+			<a href="<?= $ssh_key_url; ?>" class="button button-secondary js-button-create" title="<?= _("Manage SSH Keys") ?>">
 				<i class="fas fa-key icon-orange"></i><?= _("Manage SSH Keys") ?>
 			</a>
 			<?php if ($_SESSION["userContext"] == "admin" || ($_SESSION["userContext"] !== "admin" && $_SESSION["POLICY_USER_VIEW_LOGS"] !== "no")) { ?>
@@ -26,14 +26,14 @@
 			<?php } ?>
 			<?php
 				$api_status = (!empty($_SESSION['API_SYSTEM']) && is_numeric($_SESSION['API_SYSTEM'])) ? $_SESSION['API_SYSTEM'] : 0;
-				if (($user_plain == 'admin' && $api_status > 0) || ($user_plain != 'admin' && $api_status > 1)) { ?>
-				<a href="<?=$keys_url; ?>" class="button button-secondary js-button-create" title="<?= _("Access Keys") ?>">
+				if (($user_plain == $_SESSION['ROOT_USER'] && $api_status > 0) || ($user_plain != $_SESSION['ROOT_USER'] && $api_status > 1)) { ?>
+				<a href="<?= $keys_url; ?>" class="button button-secondary js-button-create" title="<?= _("Access Keys") ?>">
 					<i class="fas fa-key icon-purple"></i><?= _("Access Keys") ?>
 				</a>
 			<?php } ?>
 		</div>
 		<div class="toolbar-buttons">
-			<button type="submit" class="button" form="vstobjects">
+			<button type="submit" class="button" form="main-form">
 				<i class="fas fa-floppy-disk icon-purple"></i><?= _("Save") ?>
 			</button>
 		</div>
@@ -41,7 +41,7 @@
 </div>
 <!-- End toolbar -->
 
-<div class="container animate__animated animate__fadeIn">
+<div class="container">
 
 	<form
 		x-data="{
@@ -49,7 +49,7 @@
 			useIpAllowList: <?= $v_login_use_iplist === "yes" ? "true" : "false" ?>,
 			showAdvanced: false,
 		}"
-		id="vstobjects"
+		id="main-form"
 		method="post"
 		name="v_edit_user"
 		class="<?= $v_status ?>"
@@ -58,7 +58,7 @@
 		<input type="hidden" name="save" value="save">
 
 		<div class="form-container">
-			<h1 class="form-title"><?= _("Edit User") ?></h1>
+			<h1 class="u-mb20"><?= _("Edit User") ?></h1>
 			<?php show_alert_message($_SESSION); ?>
 			<div class="u-mb10">
 				<label for="v_user" class="form-label"><?= _("Username") ?></label>
@@ -67,16 +67,16 @@
 			</div>
 			<div class="u-mb10">
 				<label for="v_name" class="form-label"><?= _("Contact Name") ?></label>
-				<input type="text" class="form-control" name="v_name" id="v_name" value="<?=htmlentities(trim($v_name, "'"))?>" <?php if (($_SESSION['userContext'] !=='admin' ) && ($_SESSION['POLICY_USER_EDIT_DETAILS'] !=='yes' )) { echo 'disabled' ; }?> required>
-				<?php if (($_SESSION['userContext'] !== 'admin') && ($_SESSION['POLICY_USER_EDIT_DETAILS'] !== 'yes')) {?>
-					<input type="hidden" name="v_name" value="<?=htmlentities(trim($v_name, "'"))?>">
+				<input type="text" class="form-control" name="v_name" id="v_name" value="<?= htmlentities(trim($v_name, "'")) ?>" <?php if (($_SESSION['userContext'] !=='admin' ) && ($_SESSION['POLICY_USER_EDIT_DETAILS'] !=='yes' )) { echo 'disabled' ; }?> required>
+				<?php if (($_SESSION['userContext'] !== 'admin') && ($_SESSION['POLICY_USER_EDIT_DETAILS'] !== 'yes')) { ?>
+					<input type="hidden" name="v_name" value="<?= htmlentities(trim($v_name, "'")) ?>">
 				<?php } ?>
 			</div>
 			<div class="u-mb10">
 				<label for="v_email" class="form-label"><?= _("Email") ?></label>
-				<input type="email" class="form-control" name="v_email" id="v_email" value="<?=htmlentities(trim($v_email, "'"))?>" <?php if (($_SESSION['userContext'] !=='admin' ) && ($_SESSION['POLICY_USER_EDIT_DETAILS'] !=='yes' )) { echo 'disabled' ; }?> required>
-				<?php if (($_SESSION['userContext'] !== 'admin') && ($_SESSION['POLICY_USER_EDIT_DETAILS'] !== 'yes')) {?>
-					<input type="hidden" name="v_email" value="<?=htmlentities(trim($v_email, "'"))?>">
+				<input type="email" class="form-control" name="v_email" id="v_email" value="<?= htmlentities(trim($v_email, "'")) ?>" <?php if (($_SESSION['userContext'] !=='admin' ) && ($_SESSION['POLICY_USER_EDIT_DETAILS'] !=='yes' )) { echo 'disabled' ; }?> required>
+				<?php if (($_SESSION['userContext'] !== 'admin') && ($_SESSION['POLICY_USER_EDIT_DETAILS'] !== 'yes')) { ?>
+					<input type="hidden" name="v_email" value="<?= htmlentities(trim($v_email, "'")) ?>">
 				<?php } ?>
 			</div>
 			<div class="u-mb10">
@@ -94,12 +94,7 @@
 				</div>
 			</div>
 			<div id="password-details" class="u-mb20">
-				<p class="u-mb10"><?= _("Your password must have at least") ?>:</p>
-				<ul class="u-list-bulleted u-mb10">
-					<li><?= _("8 characters long") ?></li>
-					<li><?= _("1 uppercase & 1 lowercase character") ?></li>
-					<li><?= _("1 number") ?></li>
-				</ul>
+				<?php require $_SERVER["HESTIA"] . "/web/templates/includes/password-requirements.php"; ?>
 				<?php if ($_SESSION["userContext"] === "admin") { ?>
 					<div class="form-check">
 						<input x-model="loginDisabled" class="form-check-input" type="checkbox" name="v_login_disabled" id="v_login_disabled">
@@ -110,7 +105,7 @@
 				<?php } ?>
 				<div x-cloak x-show="!loginDisabled" id="password-options">
 					<div class="form-check">
-						<input class="form-check-input" type="checkbox" name="v_twofa" id="v_twofa" <?php if(!empty($v_twofa)) echo 'checked' ?>>
+						<input class="form-check-input" type="checkbox" name="v_twofa" id="v_twofa" <?php if (!empty($v_twofa)) echo 'checked' ?>>
 						<label for="v_twofa">
 							<?= _("Enable two-factor authentication") ?>
 						</label>
@@ -185,11 +180,11 @@
 				<div class="u-mb10">
 					<label for="v_sort_order" class="form-label"><?= _("Default List Sort Order") ?></label>
 					<select class="form-select" name="v_sort_order" id="v_sort_order">
-						<option value='date' <?php if($v_sort_order === 'date') echo 'selected' ?>><?= _("Date") ?></option>
-						<option value='name' <?php if($v_sort_order === 'name') echo 'selected' ?>><?= _("Name") ?></option>
+						<option value='date' <?php if ($v_sort_order === 'date') echo 'selected' ?>><?= _("Date") ?></option>
+						<option value='name' <?php if ($v_sort_order === 'name') echo 'selected' ?>><?= _("Name") ?></option>
 					</select>
 				</div>
-			<?php if ($_SESSION['userContext'] === 'admin') {?>
+			<?php if ($_SESSION['userContext'] === 'admin') { ?>
 				<div class="u-mb20">
 					<label for="v_package" class="form-label"><?= _("Package") ?></label>
 					<select class="form-select" name="v_package" id="v_package" required>
@@ -245,55 +240,18 @@
 							?>
 						</select>
 					</div>
-					<?php if ((isset($_SESSION['DNS_SYSTEM'])) && (!empty($_SESSION['DNS_SYSTEM']))) {?>
+					<?php if ((isset($_SESSION['DNS_SYSTEM'])) && (!empty($_SESSION['DNS_SYSTEM']))) { ?>
 						<p class="form-label u-mb10"><?= _("Default Name Servers") ?></p>
 						<div class="u-mb5">
-							<input type="text" class="form-control" name="v_ns1" value="<?=htmlentities(trim($v_ns1, "'"))?>">
+							<input type="text" class="form-control" name="v_ns1" value="<?= htmlentities(trim($v_ns1, "'")) ?>">
 						</div>
 						<div class="u-mb5">
-							<input type="text" class="form-control" name="v_ns2" value="<?=htmlentities(trim($v_ns2, "'"))?>">
+							<input type="text" class="form-control" name="v_ns2" value="<?= htmlentities(trim($v_ns2, "'")) ?>">
 						</div>
-						<?php
-							if($v_ns3) {
-								echo '<div class="u-side-by-side u-mb5">
-									<input type="text" class="form-control" name="v_ns3" value="'.htmlentities(trim($v_ns3, "'")).'">
-									<span class="u-ml10 js-remove-ns"><i class="fas fa-trash icon-dim icon-red"></i></span>
-								</div>';
-							}
-							if($v_ns4) {
-								echo '<div class="u-side-by-side u-mb5">
-									<input type="text" class="form-control" name="v_ns4" value="'.htmlentities(trim($v_ns4, "'")).'">
-									<span class="u-ml10 js-remove-ns"><i class="fas fa-trash icon-dim icon-red"></i></span>
-								</div>';
-							}
-							if($v_ns5) {
-								echo '<div class="u-side-by-side u-mb5">
-									<input type="text" class="form-control" name="v_ns5" value="'.htmlentities(trim($v_ns5, "'")).'">
-									<span class="u-ml10 js-remove-ns"><i class="fas fa-trash icon-dim icon-red"></i></span>
-								</div>';
-							}
-							if($v_ns6) {
-								echo '<div class="u-side-by-side u-mb5">
-									<input type="text" class="form-control" name="v_ns6" value="'.htmlentities(trim($v_ns6, "'")).'">
-									<span class="u-ml10 js-remove-ns"><i class="fas fa-trash icon-dim icon-red"></i></span>
-								</div>';
-							}
-							if($v_ns7) {
-								echo '<div class="u-side-by-side u-mb5">
-									<input type="text" class="form-control" name="v_ns7" value="'.htmlentities(trim($v_ns7, "'")).'">
-									<span class="u-ml10 js-remove-ns"><i class="fas fa-trash icon-dim icon-red"></i></span>
-								</div>';
-							}
-							if($v_ns8) {
-								echo '<div class="u-side-by-side u-mb5">
-									<input type="text" class="form-control" name="v_ns8" value="'.htmlentities(trim($v_ns8, "'")).'">
-									<span class="u-ml10 js-remove-ns"><i class="fas fa-trash icon-dim icon-red"></i></span>
-								</div>';
-							}
-						?>
-						<div class="u-pt18 js-add-ns" <?php if ($v_ns8) echo 'style="display:none;"'; ?>>
-							<span class="form-link"><?= _("Add Name Server") ?></span>
-						</div>
+						<?php require $_SERVER["HESTIA"] . "/web/templates/includes/extra-ns-fields.php"; ?>
+						<button type="button" class="form-link u-mt20 js-add-ns" <?php if ($v_ns8) echo 'style="display:none;"'; ?>>
+							<?= _("Add Name Server") ?>
+						</button>
 					<?php } ?>
 				</div>
 			<?php } ?>

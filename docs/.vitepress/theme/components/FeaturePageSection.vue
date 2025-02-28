@@ -1,8 +1,6 @@
-<script lang="ts">
+<script>
 export default {
-	props: {
-		image: String,
-	},
+	props: ["image"],
 };
 </script>
 
@@ -31,7 +29,7 @@ export default {
 	padding: 0 24px;
 }
 
-.FeaturePageTitle + .FeaturePageSection {
+.PageHeader + .FeaturePageSection {
 	padding: 48px 24px 0;
 }
 
@@ -60,7 +58,7 @@ export default {
 		padding: 0 48px;
 	}
 
-	.FeaturePageTitle + .FeaturePageSection {
+	.PageHeader + .FeaturePageSection {
 		padding: 48px 48px 0;
 	}
 
@@ -86,7 +84,7 @@ export default {
 		padding: 0 64px;
 	}
 
-	.FeaturePageTitle + .FeaturePageSection {
+	.PageHeader + .FeaturePageSection {
 		padding: 64px 64px 0;
 	}
 

@@ -7,7 +7,7 @@
 			</a>
 		</div>
 		<div class="toolbar-buttons">
-			<button type="submit" class="button" form="vstobjects">
+			<button type="submit" class="button" form="main-form">
 				<i class="fas fa-floppy-disk icon-purple"></i><?= _("Save") ?>
 			</button>
 		</div>
@@ -15,14 +15,14 @@
 </div>
 <!-- End toolbar -->
 
-<div class="container animate__animated animate__fadeIn">
+<div class="container">
 
-	<form id="vstobjects" name="v_edit_firewall" method="post" class="<?= $v_status ?>">
+	<form id="main-form" name="v_edit_firewall" method="post" class="<?= $v_status ?>">
 		<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 		<input type="hidden" name="save" value="save">
 
 		<div class="form-container">
-			<h1 class="form-title"><?= _("Edit Firewall Rule") ?></h1>
+			<h1 class="u-mb20"><?= _("Edit Firewall Rule") ?></h1>
 			<?php show_alert_message($_SESSION); ?>
 			<div class="u-mb10">
 				<label for="v_action" class="form-label"><?= _("Action") ?></label>
@@ -54,7 +54,7 @@
 						class="form-select js-ip-list-select"
 						tabindex="-1"
 						onchange="this.nextElementSibling.value=this.value"
-						data-ipset-lists="<?= htmlspecialchars($ipset_lists_json, ENT_QUOTES, 'UTF-8') ?>"
+						data-ipset-lists="<?= htmlspecialchars($ipset_lists_json, ENT_QUOTES, "UTF-8") ?>"
 					>
 						<option value=""><?= _("Clear") ?></option>
 					</select>

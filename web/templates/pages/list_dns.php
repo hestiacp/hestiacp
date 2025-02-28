@@ -17,7 +17,7 @@
 						<?= $label ?> <i class="fas fa-arrow-down-a-z"></i>
 					</span>
 				</button>
-				<ul class="toolbar-sorting-menu animate__animated animate__fadeIn js-sorting-menu u-hidden">
+				<ul class="toolbar-sorting-menu js-sorting-menu u-hidden">
 					<li data-entity="sort-date" data-sort-as-int="1">
 						<span class="name <?php if ($_SESSION['userSortOrder'] === 'date') { echo 'active'; } ?>"><?= _("Date") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
 					</li>
@@ -68,6 +68,8 @@
 
 <div class="container">
 
+	<h1 class="u-text-center u-hide-desktop u-mt20 u-pr30 u-mb20 u-pl30"><?= _("DNS Records") ?></h1>
+
 	<div class="units-table js-units-container">
 		<div class="units-table-header">
 			<div class="units-table-cell">
@@ -75,12 +77,12 @@
 			</div>
 			<div class="units-table-cell"><?= _("Name") ?></div>
 			<div class="units-table-cell"></div>
-			<div class="units-table-cell"><?= _("Records") ?></div>
-			<div class="units-table-cell"><?= _("Template") ?></div>
-			<div class="units-table-cell"><?= _("TTL") ?></div>
-			<div class="units-table-cell"><?= _("SOA") ?></div>
-			<div class="units-table-cell"><?= _("DNSSEC") ?></div>
-			<div class="units-table-cell"><?= _("Expiration Date") ?></div>
+			<div class="units-table-cell u-text-center"><?= _("Records") ?></div>
+			<div class="units-table-cell u-text-center"><?= _("Template") ?></div>
+			<div class="units-table-cell u-text-center"><?= _("TTL") ?></div>
+			<div class="units-table-cell u-text-center"><?= _("SOA") ?></div>
+			<div class="units-table-cell u-text-center"><?= _("DNSSEC") ?></div>
+			<div class="units-table-cell u-text-center"><?= _("Expiration Date") ?></div>
 		</div>
 
 		<!-- Begin DNS zone list item loop -->
@@ -94,6 +96,13 @@
 					$spnd_icon = 'fa-play';
 					$spnd_icon_class = 'icon-green';
 					$spnd_confirmation = _('Are you sure you want to unsuspend domain %s?');
+					if ($data[$key]['DNSSEC'] !== 'yes') {
+						$dnssec_icon = 'fa-circle-xmark';
+						$dnssec_title = _('Disabled');
+					} else {
+						$dnssec_icon = 'fa-circle-check';
+						$dnssec_title = _('Enabled');
+					}
 				} else {
 					$status = 'active';
 					$spnd_action = 'suspend';
@@ -102,27 +111,27 @@
 					$spnd_icon_class = 'icon-highlight';
 					$spnd_confirmation = _('Are you sure you want to suspend domain %s?');
 					if ($data[$key]['DNSSEC'] !== 'yes') {
-						$dnssec_icon = 'fa-circle-xmark';
+						$dnssec_icon = 'fa-circle-xmark icon-red';
 						$dnssec_title = _('Disabled');
 					} else {
-						$dnssec_icon = 'fa-circle-check';
+						$dnssec_icon = 'fa-circle-check icon-green';
 						$dnssec_title = _('Enabled');
 					}
 				}
 			?>
-			<div class="units-table-row <?php if ($status == 'suspended') echo 'disabled'; ?> animate__animated animate__fadeIn js-unit"
-				data-sort-ip="<?=str_replace('.', '', $data[$key]['IP'])?>"
-				data-sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>"
-				data-sort-name="<?=htmlentities($key);?>"
-				data-sort-expire="<?=strtotime($data[$key]['EXP'])?>"
-				data-sort-records="<?=(int)$data[$key]['RECORDS']?>">
+			<div class="units-table-row <?php if ($status == 'suspended') echo 'disabled'; ?> js-unit"
+				data-sort-ip="<?= str_replace('.', '', $data[$key]['IP']) ?>"
+				data-sort-date="<?= strtotime($data[$key]['DATE'].' '.$data[$key]['TIME']) ?>"
+				data-sort-name="<?= htmlentities($key);?>"
+				data-sort-expire="<?= strtotime($data[$key]['EXP']) ?>"
+				data-sort-records="<?=(int)$data[$key]['RECORDS'] ?>">
 				<div class="units-table-cell">
 					<div>
 						<input id="check<?= $i ?>" class="js-unit-checkbox" type="checkbox" title="<?= _("Select") ?>" name="domain[]" value="<?= $key ?>" <?= $display_mode ?>>
 						<label for="check<?= $i ?>" class="u-hide-desktop"><?= _("Select") ?></label>
 					</div>
 				</div>
-				<div class="units-table-cell u-text-bold">
+				<div class="units-table-cell units-table-heading-cell u-text-bold">
 					<span class="u-hide-desktop"><?= _("Name") ?>:</span>
 					<a href="/list/dns/?domain=<?= htmlentities($key) ?>&token=<?= $_SESSION["token"] ?>" title="<?= _("DNS Records") ?>: <?= htmlentities($key) ?>">
 						<?= htmlentities($key) ?>
@@ -132,11 +141,11 @@
 				<div class="units-table-cell">
 					<?php if (!$read_only) { ?>
 						<ul class="units-table-row-actions">
-							<?php if ($data[$key]['SUSPENDED'] == 'no') {?>
+							<?php if ($data[$key]["SUSPENDED"] == "no") { ?>
 								<li class="units-table-row-action shortcut-n" data-key-action="href">
 									<a
 										class="units-table-row-action-link"
-										href="/add/dns/?domain=<?=htmlentities($key);?>&token=<?=$_SESSION['token']?>"
+										href="/add/dns/?domain=<?= htmlentities($key) ?>&token=<?= $_SESSION["token"] ?>"
 										title="<?= _("Add DNS Record") ?>"
 									>
 										<i class="fas fa-circle-plus icon-green"></i>
@@ -146,18 +155,18 @@
 								<li class="units-table-row-action shortcut-enter" data-key-action="href">
 									<a
 										class="units-table-row-action-link"
-										href="/edit/dns/?domain=<?=htmlentities($key);?>&token=<?=$_SESSION['token']?>"
+										href="/edit/dns/?domain=<?= htmlentities($key) ?>&token=<?= $_SESSION["token"] ?>"
 										title="<?= _("Edit DNS Domain") ?>"
 									>
 										<i class="fas fa-pencil icon-orange"></i>
 										<span class="u-hide-desktop"><?= _("Edit DNS Domain") ?></span>
 									</a>
 								</li>
-								<?php if ($data[$key]['DNSSEC'] == "yes") { ?>
+								<?php if ($data[$key]["DNSSEC"] == "yes") { ?>
 									<li class="units-table-row-action shortcut-enter" data-key-action="href">
 										<a
 											class="units-table-row-action-link"
-											href="/list/dns/?domain=<?=htmlentities($key);?>&action=dnssec&token=<?=$_SESSION['token']?>"
+											href="/list/dns/?domain=<?= htmlentities($key) ?>&action=dnssec&token=<?= $_SESSION["token"] ?>"
 											title="<?= _("View Public DNSSEC Key") ?>"
 										>
 											<i class="fas fa-key icon-orange"></i>
@@ -169,7 +178,7 @@
 							<li class="units-table-row-action shortcut-l" data-key-action="href">
 								<a
 									class="units-table-row-action-link"
-									href="/list/dns/?domain=<?=htmlentities($key);?>&token=<?=$_SESSION['token']?>"
+									href="/list/dns/?domain=<?= htmlentities($key) ?>&token=<?= $_SESSION["token"] ?>"
 									title="<?= _("DNS Records") ?>"
 								>
 									<i class="fas fa-list icon-lightblue"></i>
@@ -179,7 +188,7 @@
 							<li class="units-table-row-action shortcut-s" data-key-action="js">
 								<a
 									class="units-table-row-action-link data-controls js-confirm-action"
-									href="/<?= $spnd_action ?>/dns/?domain=<?=htmlentities($key);?>&token=<?=$_SESSION['token']?>"
+									href="/<?= $spnd_action ?>/dns/?domain=<?= htmlentities($key) ?>&token=<?= $_SESSION["token"] ?>"
 									title="<?= $spnd_action_title ?>"
 									data-confirm-title="<?= $spnd_action_title ?>"
 									data-confirm-message="<?= sprintf($spnd_confirmation, $key) ?>"
@@ -203,7 +212,7 @@
 						</ul>
 					<?php } ?>
 				</div>
-				<div class="units-table-cell">
+				<div class="units-table-cell u-text-center-desktop">
 					<span class="u-hide-desktop u-text-bold"><?= _("Records") ?>:</span>
 					<?php if ($data[$key]['RECORDS']) {
 						echo '<span>'.$data[$key]['RECORDS'].'</span>';
@@ -211,25 +220,25 @@
 						echo '<span>0</span>';
 					} ?>
 				</div>
-				<div class="units-table-cell">
+				<div class="units-table-cell u-text-center-desktop">
 					<span class="u-hide-desktop u-text-bold"><?= _("Template") ?>:</span>
 					<span class="u-text-bold">
 						<?= $data[$key]["TPL"] ?>
 					</span>
 				</div>
-				<div class="units-table-cell">
+				<div class="units-table-cell u-text-center-desktop">
 					<span class="u-hide-desktop u-text-bold"><?= _("TTL") ?>:</span>
 					<?= $data[$key]["TTL"] ?>
 				</div>
-				<div class="units-table-cell">
+				<div class="units-table-cell u-text-center-desktop">
 					<span class="u-hide-desktop u-text-bold"><?= _("SOA") ?>:</span>
 					<?= $data[$key]["SOA"] ?>
 				</div>
-				<div class="units-table-cell">
+				<div class="units-table-cell u-text-center-desktop">
 					<span class="u-hide-desktop u-text-bold"><?= _("DNSSEC") ?>:</span>
 					<i class="fas <?= $dnssec_icon ?>" title="<?= $dnssec_title ?>"></i>
 				</div>
-				<div class="units-table-cell">
+				<div class="units-table-cell u-text-center-desktop">
 					<span class="u-hide-desktop u-text-bold"><?= _("Expiration Date") ?>:</span>
 					<time class="u-text-bold" datetime="<?= $data[$key]["EXP"] ?>">
 						<?= $data[$key]["EXP"] ?>
@@ -239,12 +248,10 @@
 		<?php } ?>
 	</div>
 
-</div>
-
-<footer class="app-footer">
-	<div class="container app-footer-inner">
+	<div class="units-table-footer">
 		<p>
 			<?php printf(ngettext("%d DNS zone", "%d DNS zones", $i), $i); ?>
 		</p>
 	</div>
-</footer>
+
+</div>

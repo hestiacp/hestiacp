@@ -93,8 +93,8 @@ if (!empty($_POST["ok"])) {
 				_("IP address {%s} has been created successfully."),
 				htmlentities($_POST["v_ip"]),
 			),
-			"</b></a>",
-			'<a href="/edit/ip/?ip=' . htmlentities($_POST["v_ip"]) . '"><b>',
+			"</a>",
+			'<a href="/edit/ip/?ip=' . htmlentities($_POST["v_ip"]) . '">',
 		);
 		unset($v_ip);
 		unset($v_netmask);

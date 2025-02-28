@@ -17,7 +17,7 @@
 						<?= _("Date") ?> <i class="fas fa-arrow-down-a-z"></i>
 					</span>
 				</button>
-				<ul class="toolbar-sorting-menu animate__animated animate__fadeIn js-sorting-menu u-hidden">
+				<ul class="toolbar-sorting-menu js-sorting-menu u-hidden">
 					<li data-entity="sort-date" data-sort-as-int="1">
 						<span class="name <?php if ($_SESSION['userSortOrder'] === 'date') { echo 'active'; } ?>"><?= _("Date") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
 					</li>
@@ -41,7 +41,7 @@
 					<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 					<select class="form-select" name="action">
 						<option value=""><?= _("Apply to selected") ?></option>
-						<option value="reread IP"><?= _("Verify IP Address") ?></option>
+						<option value="reread IP"><?= _("Refresh IP Addresses") ?></option>
 						<option value="delete"><?= _("Delete") ?></option>
 					</select>
 					<button type="submit" class="toolbar-input-submit" title="<?= _("Apply to selected") ?>">
@@ -55,22 +55,21 @@
 <!-- End toolbar -->
 
 <div class="container">
-	<div class="units js-units-container">
-		<div class="header units-header">
-			<div class="l-unit__col l-unit__col--right">
-				<div>
-					<div class="clearfix l-unit__stat-col--left super-compact">
-						<input type="checkbox" class="js-toggle-all-checkbox" title="<?= _("Select all") ?>">
-					</div>
-					<div class="clearfix l-unit__stat-col--left wide-3"><b><?= _("IP Address") ?></b></div>
-					<div class="clearfix l-unit__stat-col--left compact u-text-right"><b>&nbsp;</b></div>
-					<div class="clearfix l-unit__stat-col--left u-text-center compact-5"><b><?= _("Netmask") ?></b></div>
-					<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= _("Interface") ?></b></div>
-					<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= _("Status") ?></b></div>
-					<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= _("Domains") ?></b></div>
-					<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= _("Owner") ?></b></div>
-				</div>
+
+	<h1 class="u-text-center u-hide-desktop u-mt20 u-pr30 u-mb20 u-pl30"><?= _("IP Addresses") ?></h1>
+
+	<div class="units-table js-units-container">
+		<div class="units-table-header">
+			<div class="units-table-cell">
+				<input type="checkbox" class="js-toggle-all-checkbox" title="<?= _("Select all") ?>">
 			</div>
+			<div class="units-table-cell"><?= _("IP Address") ?></div>
+			<div class="units-table-cell"></div>
+			<div class="units-table-cell u-text-center"><?= _("Netmask") ?></div>
+			<div class="units-table-cell u-text-center"><?= _("Interface") ?></div>
+			<div class="units-table-cell u-text-center"><?= _("Status") ?></div>
+			<div class="units-table-cell u-text-center"><?= _("Domains") ?></div>
+			<div class="units-table-cell u-text-center"><?= _("Owner") ?></div>
 		</div>
 
 		<!-- Begin IP address list item loop -->
@@ -78,54 +77,79 @@
 			foreach ($data as $key => $value) {
 				++$i;
 			?>
-			<div class="l-unit animate__animated animate__fadeIn js-unit"
-				data-sort-ip="<?=str_replace('.', '', $key)?>"
-				data-sort-date="<?=strtotime($data[$key]['DATE'] .' '. $data[$key]['TIME'] )?>"
-				data-sort-netmask="<?=str_replace('.', '', $data[$key]['NETMASK'])?>"
-				data-sort-interface="<?=$data[$key]['INTERFACE']?>"
-				data-sort-domains="<?=$data[$key]['U_WEB_DOMAINS']?>"
-				data-sort-owner="<?=$data[$key]['OWNER']?>">
-
-				<div class="l-unit__col l-unit__col--right">
-					<div class="clearfix l-unit__stat-col--left super-compact">
+			<div class="units-table-row js-unit"
+				data-sort-ip="<?= str_replace(".", "", $key) ?>"
+				data-sort-date="<?= strtotime($data[$key]["DATE"] . " " . $data[$key]["TIME"]) ?>"
+				data-sort-netmask="<?= str_replace(".", "", $data[$key]["NETMASK"]) ?>"
+				data-sort-interface="<?= $data[$key]["INTERFACE"] ?>"
+				data-sort-domains="<?= $data[$key]["U_WEB_DOMAINS"] ?>"
+				data-sort-owner="<?= $data[$key]["OWNER"] ?>">
+				<div class="units-table-cell">
+					<div>
 						<input id="check<?= $i ?>" class="js-unit-checkbox" type="checkbox" title="<?= _("Select") ?>" name="ip[]" value="<?= $key ?>">
+						<label for="check<?= $i ?>" class="u-hide-desktop"><?= _("Select") ?></label>
 					</div>
-					<div class="clearfix l-unit__stat-col--left wide-3"><b><a href="/edit/ip/?ip=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Edit IP Address") ?>"><?=$key?> <?php if (!empty($data[$key]['NAT'])) echo ' → ' . $data[$key]['NAT'] . ''; ?></a></b>
-					</div>
-					<!-- START QUICK ACTION TOOLBAR AREA -->
-					<div class="clearfix l-unit__stat-col--left compact u-text-right">
-						<div class="l-unit-toolbar__col l-unit-toolbar__col--right u-noselect">
-							<div class="actions-panel clearfix">
-								<div class="actions-panel__col actions-panel__logs shortcut-enter" data-key-action="href"><a href="/edit/ip/?ip=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Edit IP Address") ?>"><i class="fas fa-pencil icon-orange icon-dim"></i></a></div>
-								<div class="actions-panel__col actions-panel__delete shortcut-delete" data-key-action="js">
-									<a
-										class="data-controls js-confirm-action"
-										href="/delete/ip/?ip=<?=$key?>&token=<?=$_SESSION['token']?>"
-										data-confirm-title="<?= _("Delete") ?>"
-										data-confirm-message="<?= sprintf(_('Are you sure you want to delete IP address %s?'), $key) ?>"
-									>
-										<i class="fas fa-trash icon-red icon-dim"></i>
-									</a>
-								</div>
-							</div>
-						</div>
-					</div>
-					<!-- END QUICK ACTION TOOLBAR AREA -->
-					<div class="clearfix l-unit__stat-col--left u-text-center compact-5"><?= $data[$key]["NETMASK"] ?></div>
-					<div class="clearfix l-unit__stat-col--left u-text-center"><?= $data[$key]["INTERFACE"] ?></div>
-					<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= _($data[$key]["STATUS"]) ?></b></div>
-					<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= $data[$key]["U_WEB_DOMAINS"] ?></b></div>
-					<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= $data[$key]["OWNER"] ?></b></div>
+				</div>
+				<div class="units-table-cell units-table-heading-cell u-text-bold">
+					<span class="u-hide-desktop"><?= _("IP Address") ?>:</span>
+					<a href="/edit/ip/?ip=<?= $key ?>&token=<?= $_SESSION['token'] ?>" title="<?= _("Edit IP Address") ?>">
+						<?= $key ?> <?php if (!empty($data[$key]['NAT'])) echo ' → ' . $data[$key]['NAT'] . ''; ?>
+					</a>
+				</div>
+				<div class="units-table-cell">
+					<ul class="units-table-row-actions">
+						<li class="units-table-row-action shortcut-enter" data-key-action="href">
+							<a
+								class="units-table-row-action-link"
+								href="/edit/ip/?ip=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
+								title="<?= _("Edit IP Address") ?>"
+							>
+								<i class="fas fa-pencil icon-orange"></i>
+								<span class="u-hide-desktop"><?= _("Edit IP Address") ?></span>
+							</a>
+						</li>
+						<li class="units-table-row-action shortcut-delete" data-key-action="js">
+							<a
+								class="units-table-row-action-link data-controls js-confirm-action"
+								href="/delete/ip/?ip=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
+								title="<?= _("Delete") ?>"
+								data-confirm-title="<?= _("Delete") ?>"
+								data-confirm-message="<?= sprintf(_("Are you sure you want to delete IP address %s?"), $key) ?>"
+							>
+								<i class="fas fa-trash icon-red"></i>
+								<span class="u-hide-desktop"><?= _("Delete") ?></span>
+							</a>
+						</li>
+					</ul>
+				</div>
+				<div class="units-table-cell u-text-center-desktop">
+					<span class="u-hide-desktop u-text-bold"><?= _("Netmask") ?>:</span>
+					<?= $data[$key]["NETMASK"] ?>
+				</div>
+				<div class="units-table-cell u-text-center-desktop">
+					<span class="u-hide-desktop u-text-bold"><?= _("Interface") ?>:</span>
+					<?= $data[$key]["INTERFACE"] ?>
+				</div>
+				<div class="units-table-cell u-text-bold u-text-center-desktop">
+					<span class="u-hide-desktop"><?= _("Status") ?>:</span>
+					<?= _($data[$key]["STATUS"]) ?>
+				</div>
+				<div class="units-table-cell u-text-bold u-text-center-desktop">
+					<span class="u-hide-desktop"><?= _("Domains") ?>:</span>
+					<?= $data[$key]["U_WEB_DOMAINS"] ?>
+				</div>
+				<div class="units-table-cell u-text-bold u-text-center-desktop">
+					<span class="u-hide-desktop"><?= _("Owner") ?>:</span>
+					<?= $data[$key]["OWNER"] ?>
 				</div>
 			</div>
 		<?php } ?>
 	</div>
-</div>
 
-<footer class="app-footer">
-	<div class="container app-footer-inner">
+	<div class="units-table-footer">
 		<p>
 			<?php printf(ngettext("%d IP address", "%d IP addresses", $i), $i); ?>
 		</p>
 	</div>
-</footer>
+
+</div>

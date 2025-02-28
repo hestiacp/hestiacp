@@ -77,7 +77,7 @@ fi
 
 # Deleting startup conf on Debian/Ubuntu
 if [ -f "/etc/netplan/60-hestia.yaml" ]; then
-	sed -i "/$ip/d" /etc/netplan/60-hestia.yaml
+	sed -i "/$ip\//d" /etc/netplan/60-hestia.yaml
 	if ! grep -q '-' /etc/netplan/60-hestia.yaml; then
 		rm /etc/netplan/60-hestia.yaml
 	fi
@@ -137,9 +137,9 @@ if [ -n "$OWNER" ]; then
 	decrease_user_value "$OWNER" '$IP_OWNED'
 fi
 
-if [ "$OWNER" = 'admin' ]; then
+if [ "$OWNER" = "$ROOT_USER" ]; then
 	if [ "$STATUS" = 'shared' ]; then
-		for hestia_user in $($BIN/v-list-sys-users plain); do
+		for hestia_user in $("$BIN/v-list-users" list); do
 			decrease_user_value "$hestia_user" '$IP_AVAIL'
 		done
 	else

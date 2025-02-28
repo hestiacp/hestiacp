@@ -131,8 +131,8 @@ upgrade_complete_message() {
 	echo "The Hestia Control Panel development team                                    "
 	echo
 	echo "Web:      https://www.hestiacp.com/                                          "
+	echo "Docs:     https://docs.hestiacp.com/										   "
 	echo "Forum:    https://forum.hestiacp.com/                                        "
-	echo "Discord:  https://discord.gg/nXRUZch                                         "
 	echo "GitHub:   https://github.com/hestiacp/hestiacp/                              "
 	echo
 	echo "Help support the Hestia Control Panel project by donating via PayPal:        "
@@ -180,23 +180,31 @@ upgrade_set_branch() {
 }
 
 upgrade_send_notification_to_panel() {
+	# If ROOT_USER is not set fallback to admin
+	if [ -z "$ROOT_USER" ]; then
+		ROOT_USER="admin"
+	fi
 	# Add notification to panel if variable is set to true or is not set
 	if [[ "$new_version" =~ "alpha" ]]; then
 		# Send notifications for development releases
-		$BIN/v-add-user-notification admin 'Development snapshot installed' '<b>Version:</b> '$new_version'<br><b>Code Branch:</b> '$RELEASE_BRANCH'<br><br>Please report any bugs by <a href="https://github.com/hestiacp/hestiacp/issues" target="_blank">opening an issue on GitHub</a>, and feel free to share your feedback on our <a href="https://forum.hestiacp.com" target="_blank">discussion forum</a>.<br><br><i class="fas fa-heart icon-red"></i> The Hestia Control Panel development team'
+		$BIN/v-add-user-notification "$ROOT_USER" 'Development snapshot installed' '<p><span class="u-text-bold">Version:</span> '$new_version'<br><span class="u-text-bold">Code Branch:</span> '$RELEASE_BRANCH'</p><p>Please report any bugs by <a href="https://github.com/hestiacp/hestiacp/issues" target="_blank">opening an issue on GitHub</a>, and feel free to share your feedback on our <a href="https://forum.hestiacp.com" target="_blank">discussion forum</a>.</p><p><i class="fas fa-heart icon-red"></i> The Hestia Control Panel development team</p>'
 	elif [[ "$new_version" =~ "beta" ]]; then
 		# Send feedback notification for beta releases
-		$BIN/v-add-user-notification admin 'Thank you for testing Hestia Control Panel '$new_version'.' '<b>Please share your feedback with our development team through our <a href="https://forum.hestiacp.com" target="_blank">discussion forum</a>.<br><br>Found a bug? <a href="https://github.com/hestiacp/hestiacp/issues" target="_blank">Open an issue on GitHub</a>!</b><br><br><i class="fas fa-heart icon-red"></i> The Hestia Control Panel development team'
+		$BIN/v-add-user-notification "$ROOT_USER" 'Thank you for testing Hestia Control Panel '$new_version'.' '<p>Please share your feedback with our development team through our <a href="https://forum.hestiacp.com" target="_blank">discussion forum</a>.</p><p>Found a bug? <a href="https://github.com/hestiacp/hestiacp/issues" target="_blank">Open an issue on GitHub</a>!</p><p><i class="fas fa-heart icon-red"></i> The Hestia Control Panel development team</p>'
 	else
 		# Send normal upgrade complete notification for stable releases
-		$BIN/v-add-user-notification admin 'Upgrade complete' 'Hestia Control Panel has been updated to <b>v'$new_version'</b>.<br><a href="https://github.com/hestiacp/hestiacp/blob/release/CHANGELOG.md" target="_blank">View release notes</a><br><br>Please report any bugs by <a href="https://github.com/hestiacp/hestiacp/issues" target="_blank">opening an issue on GitHub</a>.<br><br><b>Have a wonderful day!</b><br><br><i class="fas fa-heart icon-red"></i> The Hestia Control Panel development team'
+		$BIN/v-add-user-notification "$ROOT_USER" 'Upgrade complete' '<p>Hestia Control Panel has been updated to <span class="u-text-bold">v'$new_version'</span>.</p><p><a href="https://github.com/hestiacp/hestiacp/blob/release/CHANGELOG.md" target="_blank">View release notes</a></p><p>Please report any bugs by <a href="https://github.com/hestiacp/hestiacp/issues" target="_blank">opening an issue on GitHub</a>.</p><p class="u-text-bold">Have a wonderful day!</p><p><i class="fas fa-heart icon-red"></i> The Hestia Control Panel development team</p>'
 	fi
 }
 
 upgrade_send_notification_to_email() {
+	# If ROOT_USER is not set fallback to admin
+	if [ -z "$ROOT_USER" ]; then
+		ROOT_USER="admin"
+	fi
 	if [ "$UPGRADE_SEND_EMAIL" = "true" ]; then
 		# Retrieve admin email address, sendmail path, and message temp file path
-		admin_email=$($BIN/v-list-user admin json | grep "CONTACT" | cut -d'"' -f4)
+		admin_email=$($BIN/v-list-user "$ROOT_USER" json | grep "CONTACT" | cut -d'"' -f4)
 		send_mail="$HESTIA/web/inc/mail-wrapper.php"
 		message_tmp_file="/tmp/hestia-upgrade-complete.txt"
 
@@ -238,7 +246,7 @@ upgrade_send_notification_to_email() {
 
 upgrade_send_log_to_email() {
 	if [ "$UPGRADE_SEND_EMAIL_LOG" = "true" ]; then
-		admin_email=$($BIN/v-list-user admin json | grep "CONTACT" | cut -d'"' -f4)
+		admin_email=$($BIN/v-list-user $ROOT_USER json | grep "CONTACT" | cut -d'"' -f4)
 		send_mail="$HESTIA/web/inc/mail-wrapper.php"
 		cat $LOG | $send_mail -s "Update Installation Log - v${new_version}" $admin_email
 	fi
@@ -596,7 +604,7 @@ upgrade_phppgadmin() {
 			if ! version_ge "$pga_release" "7.14.0"; then
 				cp -f $HESTIA_INSTALL_DIR/pga/config.inc.php /etc/phppgadmin/
 			fi
-			if [ ! -f /usr/share/phppgadmin/conf/config.inc.php ]; then
+			if [ ! -L /usr/share/phppgadmin/conf/config.inc.php ]; then
 				ln -s /etc/phppgadmin/config.inc.php /usr/share/phppgadmin/conf
 			fi
 
@@ -613,9 +621,13 @@ upgrade_phpmyadmin() {
 			echo "[ * ] phpMyAdmin is up to date (${pma_version})..."
 			# Update permissions
 			if [ -e /var/lib/phpmyadmin/blowfish_secret.inc.php ]; then
-				chown root:www-data /var/lib/phpmyadmin/blowfish_secret.inc.php
+				chown root:hestiamail /var/lib/phpmyadmin/blowfish_secret.inc.php
 				chmod 0640 /var/lib/phpmyadmin/blowfish_secret.inc.php
 			fi
+			chown hestiamail:hestiamail /usr/share/phpmyadmin/tmp
+			chown -R root:hestiamail /etc/phpmyadmin/
+
+			chmod 0770 /usr/share/phpmyadmin/tmp
 		else
 			# Display upgrade information
 			echo "[ * ] Upgrading phpMyAdmin to version $pma_v..."
@@ -639,15 +651,18 @@ upgrade_phpmyadmin() {
 			# Create temporary folder and change permissions
 			if [ ! -d /usr/share/phpmyadmin/tmp ]; then
 				mkdir /usr/share/phpmyadmin/tmp
-				chown root:www-data /usr/share/phpmyadmin/tmp
+				chown hestiamail:hestiamail /usr/share/phpmyadmin/tmp
 				chmod 0770 /usr/share/phpmyadmin/tmp
 
 			fi
 
 			if [ -e /var/lib/phpmyadmin/blowfish_secret.inc.php ]; then
-				chown root:www-data /var/lib/phpmyadmin/blowfish_secret.inc.php
+				chown root:hestiamail /var/lib/phpmyadmin/blowfish_secret.inc.php
 				chmod 0640 /var/lib/phpmyadmin/blowfish_secret.inc.php
 			fi
+
+			# Make sure to give it the correct permissions
+			chown -R root:hestiamail /etc/phpmyadmin/
 
 			# Clean up source files
 			rm -fr phpMyAdmin-$pma_v-all-languages
@@ -677,6 +692,14 @@ upgrade_filemanager() {
 					echo "[ ! ] Updating File Manager configuration..."
 					# Update configuration.php
 					cp -f $HESTIA_INSTALL_DIR/filemanager/filegator/configuration.php $HESTIA/web/fm/configuration.php
+
+					# Path to the file manager configuration file where the change will be made.
+					config_file="$HESTIA/web/fm/configuration.php"
+					app_name="File Manager - $APP_NAME"
+
+					# Sed replaces only the value after "File Manager -"
+					sed -i "s|\(\$dist_config\[\"frontend_config\"\]\[\"app_name\"\] = \"File Manager - \).*\";|\1${APP_NAME}\";|" "$config_file"
+
 					# Set environment variable for interface
 					$BIN/v-change-sys-config-value 'FILE_MANAGER' 'true'
 				fi
@@ -747,7 +770,7 @@ upgrade_rebuild_users() {
 		else
 			echo "[ * ] Rebuilding user accounts and domains, this may take a few minutes..."
 		fi
-		for user in $($BIN/v-list-sys-users plain); do
+		for user in $("$BIN/v-list-users" list); do
 			export restart="no"
 			if [ "$DEBUG_MODE" = "true" ]; then
 				echo "      - $user:"
@@ -855,6 +878,12 @@ upgrade_restart_services() {
 				echo "      - $FIREWALL_EXTENSION"
 			fi
 			$BIN/v-restart-service "$FIREWALL_EXTENSION"
+		fi
+		if [ "$WEB_TERMINAL" = "true" ]; then
+			if [ "$DEBUG_MODE" = "true" ]; then
+				echo "      - hestia-web-terminal"
+			fi
+			$BIN/v-restart-service "hestia-web-terminal"
 		fi
 		# Restart SSH daemon service
 		if [ "$DEBUG_MODE" = "true" ]; then

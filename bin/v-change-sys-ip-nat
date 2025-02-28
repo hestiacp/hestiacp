@@ -33,6 +33,7 @@ check_args '2' "$#" 'IP NAT_IP [RESTART]'
 is_format_valid 'ip'
 is_format_valid 'nat_ip'
 is_ip_valid "$ip"
+is_restart_format_valid "$restart"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
@@ -57,7 +58,7 @@ fi
 
 # Updating WEB configs
 if [ -n "$old" ] && [ -n "$WEB_SYSTEM" ]; then
-	for user in $($BIN/v-list-sys-users plain); do
+	for user in $("$BIN/v-list-users" list); do
 		sed -i "s/$old/$new/" $HESTIA/data/users/$user/web.conf
 		$BIN/v-rebuild-web-domains "$user" no
 	done
@@ -66,7 +67,7 @@ fi
 
 # Updating DNS configs
 if [ -n "$old" ] && [ -n "$DNS_SYSTEM" ]; then
-	for user in $($BIN/v-list-sys-users plain); do
+	for user in $("$BIN/v-list-users" list); do
 		sed -i "s/$old/$new/" "$HESTIA/data/users/$user/dns.conf"
 		if ls $HESTIA/data/users/$user/dns/*.conf > /dev/null 2>&1; then
 			sed -i "s/$old/$new/" $HESTIA/data/users/$user/dns/*.conf
@@ -90,15 +91,15 @@ if [ -n "$old" ] && [ -n "$FTP_SYSTEM" ]; then
 				sed -i "/pasv_address/d" "$ftp_conf"
 			fi
 			if [ -n "$check_pasv" ] && [ -n "$nat_ip" ]; then
-				sed -i "s/pasv_address=.*/pasv_address='$nat_ip'/g" "$ftp_conf"
+				sed -i "s/pasv_address=.*/pasv_address=$nat_ip/g" "$ftp_conf"
 			fi
 		fi
 	fi
 	if [ "$FTP_SYSTEM" = 'proftpd' ]; then
-        	ext_ip_conf="/etc/$FTP_SYSTEM/conf.d/external_ip.conf"
-        	content="MasqueradeAddress ${nat_ip}"
-        	echo "$content" > "$ext_ip_conf"
-    	fi
+		ext_ip_conf="/etc/$FTP_SYSTEM/conf.d/external_ip.conf"
+		content="MasqueradeAddress ${nat_ip}"
+		echo "$content" > "$ext_ip_conf"
+	fi
 	$BIN/v-restart-ftp "$restart"
 fi
 

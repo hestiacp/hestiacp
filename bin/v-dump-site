@@ -1,0 +1,69 @@
+#!/bin/bash
+# info: Dumps the files of a site into a zip archive
+# options: USER DOMAIN [TYPE]
+#
+# example: v-dump-site user domain
+# example: v-dump-site user domain full
+#
+# Dumps site files in /backup/user.domain.timestamp.zip
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+domain=$2
+type=$3
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+check_args '2' "$#" 'USER DOMAIN'
+is_format_valid 'user' 'domain'
+is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
+is_object_valid 'web' 'DOMAIN' "$domain"
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Create timestamp in Y-M-D_h-m-s format
+timestamp=$(date +'%G-%m-%d_%H-%M-%S')
+
+if [ "$type" = "full" ]; then
+	cd /home/$user/web/$domain/
+else
+	cd /home/$user/web/$domain/public_html/
+fi
+
+zip -rq $BACKUP/${user}_${domain}_${timestamp}.zip .
+
+if [[ -f "$BACKUP/${user}_${domain}_${timestamp}.zip" ]]; then
+	# echo filename for use in the php
+	echo "${user}_${domain}_${timestamp}.zip"
+
+	# echo file location for use in the php
+	echo "$BACKUP/${user}_${domain}_${timestamp}.zip"
+
+	# cleanup
+	echo "rm $BACKUP/${user}_${domain}_${timestamp}.zip" | at now + 1 hour
+fi
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Logging
+log_event "$OK" "$ARGUMENTS"
+
+exit

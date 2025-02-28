@@ -16,7 +16,7 @@ To manage users, log in as an **administrator** and navigate to the **Users <i c
 
 ## Editing a user
 
-The settings specified below are only available to administrators. For the regular settings, you can refer to the [Account Management](../user-guide/account.md) documentation.
+The settings specified below are only available to administrators. For the regular settings, you can refer to the [Account Management](../user-guide/account) documentation.
 
 To edit a user you can either impersonate them and click the <i class="fas fa-lg fa-fw fa-user-circle"><span class="visually-hidden">user</span></i> icon in the top right, or follow these steps:
 
@@ -68,5 +68,5 @@ To change a user’s PHP CLI version, click the **Advanced Options** button, the
 To change a user’s default name servers, click the **Advanced Options** button, then edit the **Default Name Servers** fields.
 
 ::: warning
-At least 2 default name servers are necessary. This is to provide redundancy, in case one of them fails to answer. In fact, it is suggested that both name servers be on separate servers, for better resilience. If you are the system administrator and would like to set this up, refer to our [DNS Cluster documentation](../server-administration/dns.md#dns-cluster-setup).
+At least 2 default name servers are necessary. This is to provide redundancy, in case one of them fails to answer. In fact, it is suggested that both name servers be on separate servers, for better resilience. If you are the system administrator and would like to set this up, refer to our [DNS Cluster documentation](../server-administration/dns#dns-cluster-setup).
 :::

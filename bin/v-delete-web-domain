@@ -41,7 +41,7 @@ format_domain_idn
 #----------------------------------------------------------#
 
 check_args '2' "$#" 'USER DOMAIN [RESTART]'
-is_format_valid 'user' 'domain'
+is_format_valid 'user' 'domain' 'restart'
 is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_valid 'web' 'DOMAIN' "$domain"
@@ -144,17 +144,17 @@ if [[ $BACKEND =~ ^.*PHP-([0-9])\_([0-9])$ ]]; then
 else
 	version=$(multiphp_default_version)
 fi
-# Restarting backend server
-$BIN/v-restart-web-backend "$restart" "$version"
+# Restarting web server
+$BIN/v-restart-web "$restart"
 check_result $? "Web restart failed" > /dev/null
 
 # Restarting proxy server
 $BIN/v-restart-proxy "$restart"
 check_result $? "Proxy restart failed" > /dev/null
 
-# Restarting backend server
-$BIN/v-restart-web-backend "$restart"
-check_result $? "Backend restart failed" > /dev/null
+# Restarting php interpreter
+$BIN/v-restart-web-backend "$restart" "$version"
+check_result $? "PHP restart failed" > /dev/null
 
 # Logging
 $BIN/v-log-action "$user" "Info" "Web" "Deleted web domain (Name: $domain)."

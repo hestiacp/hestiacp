@@ -1,18 +1,16 @@
 module.exports = {
 	root: true,
-	parser: '@typescript-eslint/parser',
 	parserOptions: {
 		sourceType: 'module',
 		ecmaVersion: 'latest',
 	},
 	extends: [
 		'eslint:recommended',
-		'plugin:@typescript-eslint/recommended',
 		'plugin:editorconfig/noconflict',
 		'plugin:import/recommended',
 		'prettier',
 	],
-	plugins: ['editorconfig', '@typescript-eslint', 'import'],
+	plugins: ['editorconfig', 'import'],
 	ignorePatterns: ['*.cjs'],
 	env: {
 		browser: true,
@@ -22,7 +20,7 @@ module.exports = {
 		Alpine: 'readonly',
 	},
 	rules: {
-		'@typescript-eslint/no-unused-vars': [
+		'no-unused-vars': [
 			'error',
 			{
 				argsIgnorePattern: '^_',

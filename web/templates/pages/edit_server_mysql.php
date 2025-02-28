@@ -7,7 +7,7 @@
 			</a>
 		</div>
 		<div class="toolbar-buttons">
-			<button type="submit" class="button" form="vstobjects">
+			<button type="submit" class="button" form="main-form">
 				<i class="fas fa-floppy-disk icon-purple"></i><?= _("Save") ?>
 			</button>
 		</div>
@@ -15,23 +15,23 @@
 </div>
 <!-- End toolbar -->
 
-<div class="container animate__animated animate__fadeIn">
+<div class="container">
 
-	<form id="vstobjects" name="v_configure_server" method="post">
+	<form id="main-form" name="v_configure_server" method="post">
 		<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 		<input type="hidden" name="save" value="save">
 
 		<div class="form-container">
-			<h1 class="form-title"><?= _("Configure Server") ?>: <?= $v_service_name ?></h1>
+			<h1 class="u-mb20"><?= _("Configure Server") ?>: <?= $v_service_name ?></h1>
 			<?php show_alert_message($_SESSION); ?>
 			<div class="js-basic-options">
 				<div class="u-mb10">
 					<label for="v_max_connections" class="form-label">max_connections</label>
-					<input type="text" class="form-control" data-regexp="max_connections" data-prev-value="<?=htmlentities($v_max_connections)?>" name="v_max_connections" id="v_max_connections" value="<?=htmlentities($v_max_connections)?>">
+					<input type="text" class="form-control" data-regexp="max_connections" data-prev-value="<?= htmlentities($v_max_connections) ?>" name="v_max_connections" id="v_max_connections" value="<?= htmlentities($v_max_connections) ?>">
 				</div>
 				<div class="u-mb10">
 					<label for="v_max_user_connections" class="form-label">max_user_connections</label>
-					<input type="text" class="form-control" data-regexp="max_user_connections" data-prev-value="<?=htmlentities($v_max_user_connections)?>" name="v_max_user_connections" id="v_max_user_connections" value="<?=htmlentities($v_max_user_connections)?>">
+					<input type="text" class="form-control" data-regexp="max_user_connections" data-prev-value="<?= htmlentities($v_max_user_connections) ?>" name="v_max_user_connections" id="v_max_user_connections" value="<?= htmlentities($v_max_user_connections) ?>">
 				</div>
 				<div class="u-mb10">
 					<label for="v_wait_timeout" class="form-label">wait_timeout</label>
@@ -39,11 +39,11 @@
 				</div>
 				<div class="u-mb10">
 					<label for="v_interactive_timeout" class="form-label">interactive_timeout</label>
-					<input type="text" class="form-control" data-regexp="interactive_timeout" data-prev-value="<?=htmlentities($v_interactive_timeout)?>" name="v_interactive_timeout" id="v_interactive_timeout" value="<?=htmlentities($v_interactive_timeout)?>">
+					<input type="text" class="form-control" data-regexp="interactive_timeout" data-prev-value="<?= htmlentities($v_interactive_timeout) ?>" name="v_interactive_timeout" id="v_interactive_timeout" value="<?= htmlentities($v_interactive_timeout) ?>">
 				</div>
 				<div class="u-mb20">
 					<label for="v_display_errors" class="form-label">max_allowed_packet</label>
-					<input type="text" class="form-control" data-regexp="max_allowed_packet" data-prev-value="<?=htmlentities($v_max_allowed_packet)?>" name="v_display_errors" id="v_display_errors" value="<?=htmlentities($v_max_allowed_packet)?>">
+					<input type="text" class="form-control" data-regexp="max_allowed_packet" data-prev-value="<?= htmlentities($v_max_allowed_packet) ?>" name="v_display_errors" id="v_display_errors" value="<?= htmlentities($v_max_allowed_packet) ?>">
 				</div>
 				<div class="u-mb20">
 					<button type="button" class="button button-secondary js-toggle-options">

@@ -1,0 +1,45 @@
+#=========================================================================#
+# Default Web Domain Template                                             #
+# DO NOT MODIFY THIS FILE! CHANGES WILL BE LOST WHEN REBUILDING DOMAINS   #
+# https://hestiacp.com/docs/server-administration/web-templates.html      #
+#=========================================================================#
+
+server {
+	listen      %ip%:%proxy_ssl_port% ssl;
+	server_name %domain_idn% %alias_idn%;
+	root        %sdocroot%;
+	access_log  /var/log/nginx/domains/%domain%.log combined;
+	access_log  /var/log/nginx/domains/%domain%.bytes bytes;
+	error_log   /var/log/nginx/domains/%domain%.error.log error;
+
+	ssl_certificate     %ssl_pem%;
+	ssl_certificate_key %ssl_key%;
+	ssl_stapling        on;
+	ssl_stapling_verify on;
+
+	# TLS 1.3 0-RTT anti-replay
+	if ($anti_replay = 307) { return 307 https://$host$request_uri; }
+	if ($anti_replay = 425) { return 425; }
+
+	include %home%/%user%/conf/web/%domain%/nginx.hsts.conf*;
+
+	location ~ /\.(?!well-known\/|file) {
+		deny all;
+		return 404;
+	}
+
+	location / {
+		try_files $uri /index.html;
+
+		location ~* ^.+\.(jpeg|jpg|png|webp|gif|bmp|ico|svg|css|js)$ {
+			expires max;
+			fastcgi_hide_header "Set-Cookie";
+		}
+	}
+
+	location /error/ {
+		alias %home%/%user%/web/%domain%/document_errors/;
+	}
+
+	include %home%/%user%/conf/web/%domain%/nginx.ssl.conf_*;
+}

@@ -1,19 +1,12 @@
-<div class="toolbar">
-	<div class="toolbar-inner">
-		<div class="toolbar-right">
-			<?php show_alert_message($_SESSION); ?>
-		</div>
-	</div>
-</div>
+<div class="container">
 
-<div class="container animate__animated animate__fadeIn">
-
-	<form id="vstobjects" name="v_generate_csr" method="post">
+	<form id="main-form" name="v_generate_csr" method="post">
 		<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 		<input type="hidden" name="generate" value="generate">
 
 		<div class="form-container">
-			<h1 class="form-title"><?= _("Generate Self-Signed SSL Certificate") ?></h1>
+			<h1 class="u-mb20"><?= _("Generate Self-Signed SSL Certificate") ?></h1>
+			<?php show_alert_message($_SESSION); ?>
 			<div class="u-mb10">
 				<label for="v_domain" class="form-label"><?= _("Domain") ?></label>
 				<input type="text" class="form-control" name="v_domain" id="v_domain" value="<?= htmlentities(trim($v_domain, "'")) ?>">
@@ -54,7 +47,7 @@
 				</label>
 				<input type="text" class="form-control" name="v_org" id="v_org" value="<?= htmlentities(trim($v_org, "'")) ?>">
 			</div>
-			<div class="u-side-by-side">
+			<div>
 				<button type="submit" class="button" name="generate">
 					<?= _("Generate") ?>
 				</button>

@@ -34,7 +34,7 @@ Currently HestiaCP only support restoring backups made using:
 
 ## How to edit the number of backups?
 
-To edit the number of backups, please read the [Packages](../user-guide/packages.md) and [Users](../user-guide/users.md) documentation. You will need to create or edit a package, and assign it to the desired user.
+To edit the number of backups, please read the [Packages](../user-guide/packages) and [Users](../user-guide/users) documentation. You will need to create or edit a package, and assign it to the desired user.
 
 ## Not enough disk space available to preform the backup
 
@@ -103,7 +103,7 @@ sudo -v
 curl https://rclone.org/install.sh | sudo bash
 ```
 
-Once the download and installation is complete, run `rclone config` and then `n`. Follow the instruction on the screen, then save when completed.
+Once the download and installation is complete, run `rclone config` as the `root` user and then select the option `n`. Follow the instruction on the screen, then save when completed.
 
 To verify if it is working run as intended:
 
@@ -157,6 +157,38 @@ For Blackblaze use
 ```bash
 v-add-backup-host 'rclone' 'b2' '' '' 'hestiacp'
 ```
+
+## Setting up Incremental Backups
+
+Enable Incremental Backups in the user packages.
+
+### Using Rclone
+
+Since 1.9 we include Rclone by default in Hestia Installation. Run `rclone config` as the `root` user and then select the option `n`. Follow the instruction on the screen, then save when completed.
+
+Run the following command:
+
+```bash
+v-add-backup-host-restic 'rclone:target:/folder/' '30' '8' '5' '3' '-1'
+```
+
+```bash
+v-backup-users-restic
+```
+
+or
+
+```bash
+v-backup-user-restic username
+```
+
+:::warning
+A new restic repository is initiated on the first time you run this command. An encryption key is generated at the same time in /usr/local/hestia/data/users/{users}/restic.conf. Please make sure to backup this file somewhere incase the server gets comprimised or the user gets deleted. Without this "secret" key we don't provide any method to restore the user data. This is the reason why we alway advice to keep the orignal backup still working.
+:::
+
+### Other methods
+
+Other methods as long Restic supports it are supported how ever as we run the command as root we are not able to provide keys / password and so on before hand. This is why Rclone is in favor for other methods!
 
 ## How to change default backup folder
 

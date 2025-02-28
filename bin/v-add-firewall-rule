@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: add firewall rule
-# options: ACTION IP PORT [PROTOCOL] [COMMENT] [RULE]
+# options: ACTION IPV4_CIDR PORT [PROTOCOL] [COMMENT] [RULE]
 #
 # example: v-add-firewall-rule DROP 185.137.111.77 25
 #
@@ -12,7 +12,7 @@
 
 # Argument definition
 action=$(echo $1 | tr '[:lower:]' '[:upper:]')
-ip=$2
+ipv4_cidr=$2
 port_ext=$3
 protocol=${4-TCP}
 protocol=$(echo $protocol | tr '[:lower:]' '[:upper:]')
@@ -47,21 +47,21 @@ sort_fw_rules() {
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '3' "$#" 'ACTION IP PORT [PROTOCOL] [COMMENT] [RULE]'
+check_args '3' "$#" 'ACTION IPV4_CIDR PORT [PROTOCOL] [COMMENT] [RULE]'
 is_format_valid 'action' 'protocol' 'port_ext'
 is_system_enabled "$FIREWALL_SYSTEM" 'FIREWALL_SYSTEM'
 get_next_fw_rule
 is_format_valid 'rule'
-is_object_new '../../data/firewall/rules' 'RULE' "$rule"
+is_object_new '../../../data/firewall/rules' 'RULE' "$rule"
 if [ -n "$comment" ]; then
 	is_format_valid 'comment'
 fi
-if [[ "$ip" =~ ^ipset: ]]; then
-	ipset_name="${ip#ipset:}"
+if [[ "$ipv4_cidr" =~ ^ipset: ]]; then
+	ipset_name="${ipv4_cidr#ipset:}"
 	$BIN/v-list-firewall-ipset plain | grep "^$ipset_name\s" > /dev/null
 	check_result $? 'ipset object not found' "$E_NOTEXIST"
 else
-	is_format_valid 'ip'
+	is_format_valid 'ipv4_cidr'
 fi
 
 # Perform verification if read-only mode is enabled
@@ -78,7 +78,7 @@ date=$(echo "$time_n_date" | cut -f 2 -d \ )
 
 # Concatenating rule
 str="RULE='$rule' ACTION='$action' PROTOCOL='$protocol' PORT='$port_ext'"
-str="$str IP='$ip' COMMENT='$comment' SUSPENDED='no'"
+str="$str IP='$ipv4_cidr' COMMENT='$comment' SUSPENDED='no'"
 str="$str TIME='$time' DATE='$date'"
 
 # Adding to config

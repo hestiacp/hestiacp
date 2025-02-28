@@ -7,7 +7,7 @@
 			</a>
 		</div>
 		<div class="toolbar-buttons">
-			<button type="submit" class="button" form="vstobjects">
+			<button type="submit" class="button" form="main-form">
 				<i class="fas fa-floppy-disk icon-purple"></i><?= _("Save") ?>
 			</button>
 		</div>
@@ -16,18 +16,18 @@
 <!-- End toolbar -->
 
 <!-- Begin form -->
-<div class="container animate__animated animate__fadeIn">
+<div class="container">
 
 	<?php if (!empty($WebappInstaller->getOptions())) { ?>
-		<form id="vstobjects" method="POST" name="v_setup_webapp">
+		<form id="main-form" method="POST" name="v_setup_webapp">
 			<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 			<input type="hidden" name="ok" value="true">
 
 			<div class="form-container">
-				<h1 class="form-title"><?= sprintf(_("Install %s"), $WebappInstaller->info()["name"]) ?></h1>
+				<h1 class="u-mb20"><?= sprintf(_("Install %s"), $WebappInstaller->applicationName()) ?></h1>
 				<?php show_alert_message($_SESSION); ?>
 				<?php if (!$WebappInstaller->isDomainRootClean()) { ?>
-					<div class="alert alert-info" role="alert">
+					<div class="alert alert-info u-mb10" role="alert">
 						<i class="fas fa-info"></i>
 						<div>
 							<p class="u-mb10"><?= _("Data Loss Warning!") ?></p>
@@ -36,9 +36,8 @@
 						</div>
 					</div>
 				<?php } ?>
-				<?php
-				foreach ($WebappInstaller->getOptions() as $form_name => $form_control) {
-					$field_name = $WebappInstaller->formNs() . "_" . $form_name;
+				<?php foreach ($WebappInstaller->getOptions() as $form_name => $form_control) {
+					$field_name = $WebappInstaller->formNamespace() . $form_name;
 					$field_type = $form_control;
 					$field_value = "";
 					$field_label =
@@ -68,11 +67,11 @@
 							</label>
 						<?php endif; ?>
 
-						<?php if ($field_type == 'select' && count($form_control['options'])): ?>
+						<?php if ($field_type == "select" && count($form_control["options"])): ?>
 							<select class="form-select" name="<?= $field_name ?>" id="<?= $field_name ?>">
-								<?php foreach ($form_control['options'] as $key => $option):
+								<?php foreach ($form_control["options"] as $key => $option):
 									$key = !is_numeric($key) ? $key : $option;
-									$selected = !empty($form_control['value'] && $key == $form_control['value']) ? 'selected' : ''; ?>
+									$selected = (!empty($form_control["value"]) && $key == $form_control["value"]) ? "selected" : ""; ?>
 									<option value="<?= $key ?>" <?= $selected ?>>
 										<?= htmlentities($option) ?>
 									</option>
@@ -114,6 +113,7 @@
 									name="<?= $field_name ?>"
 									id="<?= $field_name ?>"
 									placeholder="<?= $field_placeholder ?>"
+									value="<?= $field_value ?>"
 								>
 							<?php endif; ?>
 						<?php endif; ?>

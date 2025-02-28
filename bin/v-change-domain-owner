@@ -98,11 +98,10 @@ if [ -n "$web_data" ]; then
 		ssl_key=$HESTIA/data/users/$owner/ssl/$domain.key
 		ssl_ca=$HESTIA/data/users/$owner/ssl/$domain.ca
 		ssl_pem=$HESTIA/data/users/$owner/ssl/$domain.pem
-		mv $ssl_crt $HESTIA/data/users/$user/ssl/
-		mv $ssl_key $HESTIA/data/users/$user/ssl/
-		mv $ssl_ca $HESTIA/data/users/$user/ssl/ >> /dev/null 2>&1
-		mv $ssl_pem $HESTIA/data/users/$user/ssl/ >> /dev/null 2>&1
-		rm -f $HOMEDIR/$owner/conf/web/ssl.$domain.*
+		cp $ssl_crt $HESTIA/data/users/$user/ssl/
+		cp $ssl_key $HESTIA/data/users/$user/ssl/
+		cp $ssl_ca $HESTIA/data/users/$user/ssl/ >> /dev/null 2>&1
+		cp $ssl_pem $HESTIA/data/users/$user/ssl/ >> /dev/null 2>&1
 	fi
 
 	# Check ftp user account
@@ -123,6 +122,15 @@ if [ -n "$web_data" ]; then
 	# Change ownership
 	find "$HOMEDIR/$user/web/$domain" -user "$owner" \
 		-exec chown -h $user:$user {} \;
+
+	if [ "$SSL" = 'yes' ]; then
+		sleep 10
+		rm $ssl_crt
+		rm $ssl_key
+		rm $ssl_ca > /dev/null 2>&1
+		rm $ssl_pem > /dev/null 2>&1
+		rm -f $HOMEDIR/$owner/conf/web/ssl.$domain.*
+	fi
 
 	# Rebuild config
 	$BIN/v-unsuspend-web-domain "$user" "$domain" no >> /dev/null 2>&1

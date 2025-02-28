@@ -19,9 +19,11 @@
 
 upgrade_config_set_value 'UPGRADE_UPDATE_WEB_TEMPLATES' 'true'
 upgrade_config_set_value 'UPGRADE_UPDATE_DNS_TEMPLATES' 'false'
-upgrade_config_set_value 'UPGRADE_UPDATE_MAIL_TEMPLATES' 'false'
+upgrade_config_set_value 'UPGRADE_UPDATE_MAIL_TEMPLATES' 'true'
 upgrade_config_set_value 'UPGRADE_REBUILD_USERS' 'true'
 upgrade_config_set_value 'UPGRADE_UPDATE_FILEMANAGER_CONFIG' 'false'
+
+os_release="$(lsb_release -s -i | tr "[:upper:]" "[:lower:]")-$(lsb_release -s -r)"
 
 if [ "$IMAP_SYSTEM" = "dovecot" ]; then
 	if ! grep -qw "^extra_groups = mail$" /etc/dovecot/conf.d/10-master.conf 2> /dev/null; then
@@ -29,23 +31,26 @@ if [ "$IMAP_SYSTEM" = "dovecot" ]; then
 	fi
 
 	if [ -f /etc/dovecot/conf.d/90-sieve.conf ]; then
-		if ! grep -qw "^sieve_vacation_send_from_recipient$" /etc/dovecot/conf.d/90-sieve.conf 2> /dev/null; then
-			sed -i "s/^}/  # This setting determines whether vacation messages are sent with the SMTP MAIL FROM envelope address set to the recipient address of the Sieve script owner.\n  sieve_vacation_send_from_recipient = yes\n}/g" /etc/dovecot/conf.d/90-sieve.conf
+		if ! grep -q "sieve_vacation_send_from_recipient" /etc/dovecot/conf.d/90-sieve.conf 2> /dev/null; then
+			sed -i "s/^plugin {/plugin {\n  # This setting determines whether vacation messages are sent with the SMTP MAIL FROM envelope address set to the recipient address of the Sieve script owner.\n  sieve_vacation_send_from_recipient = yes\n/g" /etc/dovecot/conf.d/90-sieve.conf
 		fi
 	fi
 fi
 
 if [ -f /etc/fail2ban/jail.local ]; then
 	# Add phpmyadmin rule
-	if ! grep -qw "^[phpmyadmin-auth]$" /etc/fail2ban/jail.local 2> /dev/null; then
+	if ! grep -qw "phpmyadmin-auth" /etc/fail2ban/jail.local 2> /dev/null; then
 		sed -i '/\[recidive\]/i [phpmyadmin-auth]\nenabled  = true\nfilter   = phpmyadmin-syslog\naction   = hestia[name=WEB]\nlogpath  = /var/log/auth.log\nmaxretry = 5\n' /etc/fail2ban/jail.local
 	fi
 fi
 
 if [ "$MAIL_SYSTEM" = "exim4" ]; then
-	echo "[ * ] Disable SMTPUTF8 for Exim for now"
-	if ! grep -qw "^smtputf8_advertise_hosts =" /etc/exim4/exim4.conf.template 2> /dev/null; then
-		sed -i "/^domainlist local_domains = dsearch;\/etc\/exim4\/domains/i smtputf8_advertise_hosts =" /etc/exim4/exim4.conf.template
+	if [ "$os_release" != "debian-10" ]; then
+		# Exclude Debian 10...
+		echo "[ * ] Disable SMTPUTF8 for Exim for now"
+		if ! grep -qw "^smtputf8_advertise_hosts =" /etc/exim4/exim4.conf.template 2> /dev/null; then
+			sed -i "/^domainlist local_domains = dsearch;\/etc\/exim4\/domains/i smtputf8_advertise_hosts =" /etc/exim4/exim4.conf.template
+		fi
 	fi
 fi
 
@@ -53,7 +58,6 @@ fi
 echo '[ * ] Enable the "Enhanced and Optimized TLS" feature...'
 
 # Configuring global OpenSSL options
-os_release="$(lsb_release -s -i | tr "[:upper:]" "[:lower:]")-$(lsb_release -s -r)"
 tls13_ciphers="TLS_AES_128_GCM_SHA256:TLS_CHACHA20_POLY1305_SHA256:TLS_AES_256_GCM_SHA384"
 
 if ! grep -qw "^[hestia_openssl_sect]$" /etc/ssl/openssl.cnf 2> /dev/null; then
@@ -150,8 +154,8 @@ if [ "$WEB_SYSTEM" = "nginx" ] || [ "$PROXY_SYSTEM" = "nginx" ]; then
 
 		if [ "$nginx_conf_compare" != "same" ]; then
 			echo -e "[ ! ] Manual action required, please view:\n[ - ] $HESTIA_BACKUP/message.log"
-			add_upgrade_message "Manual Action Required [IMPORTANT]\n\nTo enable the \"Enhanced and Optimized TLS\" feature, we must update the NGINX configuration file (/etc/nginx/nginx.conf).\n\nBut for unknown reason or you edited it, may not be fully apply all the changes in this upgrade.\n\nPlease follow the default configuration file to sync it:\n$HESTIA_INSTALL_DIR/nginx/nginx.conf\n\nBacked up configuration file:\n$HESTIA_BACKUP/conf/nginx/nginx.conf\n\nLearn more:\nhttps://github.com/hestiacp/hestiacp/pull/3555"
-			"$BIN"/v-add-user-notification admin "IMPORTANT: Manual Action Required" 'To enable the <b>Enhanced and Optimized TLS</b> feature, we must update the NGINX configuration file (/etc/nginx/nginx.conf).<br><br>But for unknown reason or you edited it, may not be fully apply all the changes in this upgrade.<br><br>Please follow the default configuration file to sync it:<br>'"$HESTIA_INSTALL_DIR"'/nginx/nginx.conf<br><br>Backed up configuration file:<br>'"$HESTIA_BACKUP"'/conf/nginx/nginx.conf<br><br>Visit PR <a href="https://github.com/hestiacp/hestiacp/pull/3555" target="_blank">#3555</a> on GitHub to learn more.'
+			add_upgrade_message "Manual Action Required [IMPORTANT]\n\nTo enable the \"Enhanced and Optimized TLS\" feature, we must update the NGINX configuration file (/etc/nginx/nginx.conf).\n\nBut for unknown reason or you edited it, may not be fully apply all the changes in this upgrade.\n\nPlease follow the default configuration file to sync it:\n$HESTIA_INSTALL_DIR/nginx/nginx.conf\n\nBacked up configuration file:\n$HESTIA_BACKUP/conf/nginx/nginx.conf\n\nLearn more:\nhttps://github.com/hestiacp/hestiacp/pull/3555\n\n"
+			"$BIN"/v-add-user-notification admin "IMPORTANT: Manual Action Required" '<p>To enable the "Enhanced and Optimized TLS" feature, we must update the NGINX configuration file at <code>/etc/nginx/nginx.conf</code>.</p><p>But for unknown reason or you edited it, may not be fully apply all the changes in this upgrade.</p><p>Please follow the default configuration file to sync it:<br><code>'"$HESTIA_INSTALL_DIR"'/nginx/nginx.conf</code></p><p>Backed up configuration file:<br><code>'"$HESTIA_BACKUP"'/conf/nginx/nginx.conf</code></p><p>Visit PR <a href="https://github.com/hestiacp/hestiacp/pull/3555" target="_blank">#3555</a> on GitHub to learn more.</p>'
 
 			sed -i "s/""$(grep -m 1 "IMPORTANT: Manual Action Required" "$HESTIA"/data/users/admin/notifications.conf | awk '{print $1}')""/NID='1'/" "$HESTIA"/data/users/admin/notifications.conf
 
@@ -170,24 +174,125 @@ if [ "$WEB_SYSTEM" = "nginx" ] || [ "$PROXY_SYSTEM" = "nginx" ]; then
 			# Apply the update
 			sed -i 's/client_max_body_size            256m;/client_max_body_size            1024m;/;s/keepalive_requests              100000;/keepalive_requests              10000;/;s/fastcgi_buffers                 8 256k;/fastcgi_buffers                 512 4k;/;s/proxy_pass_header               Set-Cookie;/proxy_pass_header               Set-Cookie;\n\tproxy_buffers                   256 4k;\n\tproxy_buffer_size               32k;\n\tproxy_busy_buffers_size         32k;\n\tproxy_temp_file_write_size      256k;/;s/# Log format/# Log format\n\tlog_format                      main '"'"'$remote_addr - $remote_user [$time_local] $request "$status" $body_bytes_sent "$http_referer" "$http_user_agent" "$http_x_forwarded_for"'"'"';\n\tlog_format                      bytes '"'"'$body_bytes_sent'"'"';/;s|# Compression|# Compression\n\tgzip                            on;\n\tgzip_vary                       on;\n\tgzip_static                     on;\n\tgzip_comp_level                 6;\n\tgzip_min_length                 1024;\n\tgzip_buffers                    128 4k;\n\tgzip_http_version               1.1;\n\tgzip_types                      text/css text/javascript text/js text/plain text/richtext text/shtml text/x-component text/x-java-source text/x-markdown text/x-script text/xml image/bmp image/svg+xml image/vnd.microsoft.icon image/x-icon font/otf font/ttf font/x-woff multipart/bag multipart/mixed application/eot application/font application/font-sfnt application/font-woff application/javascript application/javascript-binast application/json application/ld+json application/manifest+json application/opentype application/otf application/rss+xml application/ttf application/truetype application/vnd.api+json application/vnd.ms-fontobject application/wasm application/xhtml+xml application/xml application/xml+rss application/x-httpd-cgi application/x-javascript application/x-opentype application/x-otf application/x-perl application/x-protobuf application/x-ttf;\n\tgzip_proxied                    any;|;s/# Cloudflare ips/# Cloudflare IPs/;s|# SSL PCI compliance|# SSL PCI compliance\n\tssl_buffer_size                 1369;\n\tssl_ciphers                     "'"$tls12_ciphers"'";\n\tssl_dhparam                     /etc/ssl/dhparam.pem;\n\tssl_early_data                  on;\n\tssl_ecdh_curve                  auto;\n\tssl_prefer_server_ciphers       on;\n\tssl_protocols                   TLSv1.2 TLSv1.3;\n\tssl_session_cache               shared:SSL:20m;\n\tssl_session_tickets             on;\n\tssl_session_timeout             7d;\n\tresolver                        1.0.0.1 8.8.4.4 1.1.1.1 8.8.8.8 valid=300s ipv6=off;\n\tresolver_timeout                5s;|;s|# Error pages|# Error pages\n\terror_page                      403 /error/404.html;\n\terror_page                      404 /error/404.html;\n\terror_page                      410 /error/410.html;\n\terror_page                      500 501 502 503 504 505 /error/50x.html;|;s|# Proxy cache|# Proxy cache\n\tproxy_cache_path                /var/cache/nginx levels=2 keys_zone=cache:10m inactive=60m max_size=1024m;\n\tproxy_cache_key                 "$scheme$request_method$host$request_uri";\n\tproxy_temp_path                 /var/cache/nginx/temp;\n\tproxy_ignore_headers            Cache-Control Expires;\n\tproxy_cache_use_stale           error timeout invalid_header updating http_502;\n\tproxy_cache_valid               any 1d;|;s|# FastCGI cache|# FastCGI cache\n\tfastcgi_cache_path              /var/cache/nginx/micro levels=1:2 keys_zone=microcache:10m inactive=30m max_size=1024m;\n\tfastcgi_cache_key               "$scheme$request_method$host$request_uri";\n\tfastcgi_ignore_headers          Cache-Control Expires Set-Cookie;\n\tfastcgi_cache_use_stale         error timeout invalid_header updating http_500 http_503;\n\tadd_header                      X-FastCGI-Cache $upstream_cache_status;|;s/# File cache (static assets)/# File cache (static assets)\n\topen_file_cache                 max=10000 inactive=30s;\n\topen_file_cache_valid           60s;\n\topen_file_cache_min_uses        2;\n\topen_file_cache_errors          off;/' /etc/nginx/nginx.conf-staging
 
+			# Apply the update for implement TLS 1.3 0-RTT anti-replay and upcoming HTTP/3 support
+			sed -i '/\/etc\/nginx\/conf\.d\/main\/\*\.conf;/d;/pid                  \/run\/nginx.pid;/a include              /etc/nginx/conf.d/main/*.conf;' /etc/nginx/nginx.conf-staging
+			sed -i '/Early-Data/d;/proxy_set_header                Host $host;/a \\tproxy_set_header                Early-Data $rfc_early_data;' /etc/nginx/nginx.conf-staging
+
 			# Verify new configuration file
 			if nginx -c /etc/nginx/nginx.conf-staging -t > /dev/null 2>&1; then
 				mv -f /etc/nginx/nginx.conf-staging /etc/nginx/nginx.conf
 			fi
 		fi
 
+		# Implement TLS 1.3 0-RTT anti-replay
+		echo -e "[ * ] TLS 1.3 0-RTT anti-replay for NGINX, please view:\n[ - ] $HESTIA_BACKUP/message.log"
+		add_upgrade_message "About TLS 1.3 0-RTT anti-replay for NGINX\n\nIf you use custom templates, please update them (*.stpl) to apply this protection.\n\nFollow the usage or other default templates:\n/etc/nginx/conf.d/0rtt-anti-replay.conf\n\nLearn more:\nhttps://github.com/hestiacp/hestiacp/pull/3692"
+		"$BIN"/v-add-user-notification admin "About TLS 1.3 0-RTT anti-replay for NGINX" '<p>If you use custom templates, please update them (*.stpl) to apply this protection.</p><p>Follow the usage or other default templates:<br><code>/etc/nginx/conf.d/0rtt-anti-replay.conf</code></p><p>Visit PR <a href="https://github.com/hestiacp/hestiacp/pull/3692" target="_blank">#3692</a> on GitHub to learn more.</p>'
+
+		if grep -qw "IMPORTANT: Manual Action Required" "$HESTIA"/data/users/admin/notifications.conf 2> /dev/null; then
+			sed -i "s/""$(grep -m 1 "About TLS 1.3 0-RTT anti-replay for NGINX" "$HESTIA"/data/users/admin/notifications.conf | awk '{print $1}')""/NID='2'/" "$HESTIA"/data/users/admin/notifications.conf
+		else
+			sed -i "s/""$(grep -m 1 "About TLS 1.3 0-RTT anti-replay for NGINX" "$HESTIA"/data/users/admin/notifications.conf | awk '{print $1}')""/NID='1'/" "$HESTIA"/data/users/admin/notifications.conf
+		fi
+
+		cp -f "$HESTIA_INSTALL_DIR"/nginx/0rtt-anti-replay.conf /etc/nginx/conf.d
+
 		# Update resolver for NGINX
-		for nameserver in $(grep -i '^nameserver' /etc/resolv.conf | cut -d' ' -f2 | tr '\r\n' ' ' | xargs); do
-			if [[ "$nameserver" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-				resolver="$nameserver $resolver"
+		for nameserver in $(grep -is '^nameserver' /etc/resolv.conf | cut -d' ' -f2 | tr '\r\n' ' ' | xargs); do
+			if [[ "$nameserver" =~ ^([0-9]{1,3}\.){3}[0-9]{1,3}$ ]]; then
+				if [ -z "$resolver" ]; then
+					resolver="$nameserver"
+				else
+					resolver="$resolver $nameserver"
+				fi
 			fi
 		done
 
 		if [ -n "$resolver" ]; then
 			sed -i "s/1.0.0.1 8.8.4.4 1.1.1.1 8.8.8.8/$resolver/g" /etc/nginx/nginx.conf
 		fi
+
+		# Update some configuration files
+		cp -f "$HESTIA_INSTALL_DIR"/nginx/phpmyadmin.inc "$HESTIA_INSTALL_DIR"/nginx/phppgadmin.inc "$HESTIA_INSTALL_DIR"/nginx/status.conf /etc/nginx/conf.d
+		[ -n "$DB_PMA_ALIAS" ] && sed -i "s|%pma_alias%|$DB_PMA_ALIAS|g" /etc/nginx/conf.d/phpmyadmin.inc
+		[ -n "$DB_PGA_ALIAS" ] && sed -i "s|%pga_alias%|$DB_PGA_ALIAS|g" /etc/nginx/conf.d/phppgadmin.inc
+
+		# Prepare for upcoming HTTP/3 support, also convenient for users to add directive to "main" context
+		mkdir -p /etc/nginx/conf.d/main
 	fi
 fi
 
 unset commit nameserver nginx_conf_commit nginx_conf_compare nginx_conf_local os_release tls12_ciphers tls13_ciphers resolver
 # Finish configuring the "Enhanced and Optimized TLS" feature
+
+# Update IPs configuration file
+# shellcheck source=/usr/local/hestia/func/domain.sh
+source $HESTIA/func/domain.sh
+
+if [ "$WEB_SYSTEM" = "nginx" ]; then
+	while IFS= read -r IP; do
+		ip_conf="/etc/nginx/conf.d/$IP.conf"
+		cp -f "$HESTIA_INSTALL_DIR"/nginx/unassigned.inc "$ip_conf"
+		sed -i "s/directIP/$IP/g" "$ip_conf"
+		process_http2_directive "$ip_conf"
+	done < <(ls "$HESTIA"/data/ips/ 2> /dev/null)
+elif [ "$PROXY_SYSTEM" = "nginx" ]; then
+	while IFS= read -r IP; do
+		cat "$WEBTPL"/nginx/proxy_ip.tpl \
+			| sed -e "s/%ip%/$IP/g" \
+				-e "s/%web_port%/$WEB_PORT/g" \
+				-e "s/%proxy_port%/$PROXY_PORT/g" \
+				-e "s/%proxy_ssl_port%/$PROXY_SSL_PORT/g" \
+				> "/etc/nginx/conf.d/$IP.conf"
+		process_http2_directive "/etc/nginx/conf.d/$IP.conf"
+	done < <(ls "$HESTIA"/data/ips/ 2> /dev/null)
+fi
+
+if [ "$MAIL_SYSTEM" = "exim4" ]; then
+	exim_version=$(exim4 --version | head -1 | awk '{print $3}' | cut -f -2 -d .)
+	# if Exim version > 4.95 or greater!
+	if version_ge "$exim_version" "4.95"; then
+		if ! grep -q 'SRS_SECRET' /etc/exim4/exim4.conf.template; then
+			srs=$(generate_password)
+			echo $srs > /etc/exim4/srs.conf
+			chmod 640 /etc/exim4/srs.conf
+			chown root:Debian-exim /etc/exim4/srs.conf
+			cp /etc/exim4/exim4.conf.template /etc/exim4/exim4.conf.template.staging
+			patch /etc/exim4/exim4.conf.template.staging $HESTIA/install/upgrade/patch/3661-exim-srs-support.patch 2>&1
+			exim -C /etc/exim4/exim4.conf.template.staging 2>&1
+			if [ "$?" -ne 0 ]; then
+				add_upgrade_message "Unable to successfully aply the SRS update patch for Exim.\n If you use SMTP relay with the SRS feature use the exim config found in /usr/local/hestia/install/deb/exim/exim4.conf.4.95.template"
+				"$BIN"/v-add-user-notification admin "Unable to apply patch to Exim config" 'Unable to successfully apply the SRS update patch for Exim.<br /> If you use SMTP relay with the SRS feature use the exim config found in /usr/local/hestia/install/deb/exim/exim4.conf.4.95.template'
+				if grep -qw "IMPORTANT: Manual Action Required" "$HESTIA"/data/users/admin/notifications.conf 2> /dev/null; then
+					sed -i "s/""$(grep -m 1 "Unable to apply patch to Exim config" "$HESTIA"/data/users/admin/notifications.conf | awk '{print $1}')""/NID='3'/" "$HESTIA"/data/users/admin/notifications.conf
+				else
+					sed -i "s/""$(grep -m 1 "Unable to apply patch to Exim config" "$HESTIA"/data/users/admin/notifications.conf | awk '{print $1}')""/NID='2'/" "$HESTIA"/data/users/admin/notifications.conf
+				fi
+				echo "[ ! ] Unable to apply SRS update patch for SMTP relay"
+			else
+				echo "[ * ] Update exim4.conf.template ..."
+				cp /etc/exim4/exim4.conf.template.staging /etc/exim4/exim4.conf.template
+			fi
+			rm /etc/exim4/exim4.conf.template.staging*
+		else
+			sed -i "s/SRS_SECRET = readfile{\/etc\/exim4\/srs.conf}/SRS_SECRET = \${readfile{\/etc\/exim4\/srs.conf}}/g" /etc/exim4/exim4.conf.template
+			chown root:Debian-exim /etc/exim4/srs.conf
+		fi
+	fi
+
+	exim_version=$(exim4 --version | head -1 | awk '{print $3}' | cut -f -2 -d .)
+	# if Exim version > 4.95 or greater!
+	if version_ge "$exim_version" "4.95"; then
+		if ! grep -q 'condition = ${lookup{$local_part@$domain}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/aliases}{false}{true}}' /etc/exim4/exim4.conf.template; then
+			for line in $(sed -n '/redirect_router = dnslookup/=' /etc/exim4/exim4.conf.template); do
+				testline=$((line - 1))
+				newline=$((line + 1))
+				if [ "$(awk NR==$testline /etc/exim4/exim4.conf.template)" = "  file_transport = local_delivery" ]; then
+					# Add new line
+					sed -i "$newline i \ \ condition = \${lookup{\$local_part@\$domain}lsearch{/etc/exim4/domains/\${lookup{\$domain}dsearch{/etc/exim4/domains/}}/aliases}{false}{true}}" /etc/exim4/exim4.conf.template
+				fi
+			done
+		fi
+	fi
+
+fi

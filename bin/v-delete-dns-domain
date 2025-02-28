@@ -33,8 +33,8 @@ source_conf "$HESTIA/conf/hestia.conf"
 format_domain
 format_domain_idn
 
-check_args '2' "$#" 'USER DOMAIN'
-is_format_valid 'user' 'domain'
+check_args '2' "$#" 'USER DOMAIN [RESTART]'
+is_format_valid 'user' 'domain' 'restart'
 is_system_enabled "$DNS_SYSTEM" 'DNS_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_valid 'dns' 'DOMAIN' "$domain"

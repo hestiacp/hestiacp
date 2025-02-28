@@ -50,7 +50,7 @@ export default function handleListSorting() {
 			state.sort_direction = span.classList.contains('up') ? 1 : -1;
 
 			// Update toggle button text and icon
-			toggleButton.querySelector('b').innerHTML = parentLi.querySelector('.name').innerHTML;
+			toggleButton.querySelector('span').innerHTML = parentLi.querySelector('.name').innerHTML;
 			const faIcon = toggleButton.querySelector('.fas');
 			faIcon.classList.remove('fa-arrow-up-a-z', 'fa-arrow-down-a-z');
 			faIcon.classList.add(span.classList.contains('up') ? 'fa-arrow-up-a-z' : 'fa-arrow-down-a-z');

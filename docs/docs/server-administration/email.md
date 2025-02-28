@@ -10,6 +10,15 @@ Execute the following script and follow the instructions:
 bash /usr/local/hestia/install/upgrade/manual/configure-server-smtp.sh
 ```
 
+The script will ask you for the following SMTP parameters:
+
+- Host (e.g. `smtp.example.com`)
+- Port (e.g. `25`, `465` or `587`)
+- Security (e.g. `STARTTLS`)
+- Username
+- Password
+- Email Address (i.e. the sender address).
+
 ## I am unable to send email
 
 First, check that port 25 is open for outgoing traffic. A lot of providers block port 25 by default to combat spam.
@@ -35,11 +44,11 @@ If not, you have 2 options:
 2. Setup a mail relay under the mail domain settings or set it up generally for the server in system settings. For this you need to use an SMTP relay service like:
    - [Amazon SES](https://aws.amazon.com/ses/)
    - [SMTP2GO](https://www.smtp2go.com)
-   - [Sendinblue](https://www.sendinblue.com)
+   - [Brevo](https://www.brevo.com/)
 
 ## What is an SMTP relay service and how to set it up
 
-SMTP mail relay is the process of transferring an email from one server to another for delivery. Often email from a server is blocked by de service provider due to fear of spam. Or the IP reputation is so low that all email go straight into the spam box. To prevent such issues a lot of companies offer a SMTP relay that takes care of the delivery part. As they send a lot email via the same ip addresses they have a better reputation.
+SMTP mail relay is the process of transferring an email from one server to another for delivery. Often email from a server is blocked by the service provider due to fear of spam. Or the IP reputation is so low that all email go straight into the spam box. To prevent such issues a lot of companies offer a SMTP relay that takes care of the delivery part. As they send a lot email via the same ip addresses they have a better reputation.
 
 To setup create a account by the provider you want or use and follow their instruction to update your DNS. When completed you can enter the SMTP user account they provider in the settings under "Global SMTP" or under the "Edit mail domain" -> "SMTP relay"
 
@@ -48,6 +57,41 @@ To setup create a account by the provider you want or use and follow their instr
 If you are unable to receive emails, make sure you have setup your DNS properly. If you are using Cloudflare, disable the use of the proxy for `mail.domain.tld`.
 
 When you are done you can check the configuration via [MXToolBox](https://mxtoolbox.com/MXLookup.aspx).
+
+## Rejected because [ip] is in black list at zen.spamhaus.org. Error open resolver: `https://www.spamhaus.org/returnc/pub/65.1.174.102`
+
+1. Go to [Spamhaus free data query account](https://www.spamhaus.com/free-trial/sign-up-for-a-free-data-query-service-account/)
+1. Fill in the form and verify your email address by via the link in the email you recive.
+1. Once logged, go to Products → DQS and you will see your Query Key and below you will see the exactly fqdn that you will need to use Zen Spamhaus black list. Something like: `HereYourQueryKey.zen.dq.spamhaus.net`
+1. Edit /etc/exim4/dnsbl.conf and replace `zen.spamhaus.org` with `HereYourQueryKey.zen.dq.spamhaus.net`
+1. Also edit /etc/exim4/exim4.conf.template on the line: `deny    message       = Rejected because $sender_host_address is in a black list at $dnslist_domain\n$dnslist_text` to `deny    message       = Rejected because $sender_host_address is in a black list` to prevent your Query key from leaking
+1. Restart exim4 with systemctl restart exim4
+
+## How do I disable internal lookup for email
+
+If you use an SMTP relay or want to use DKIM on your web server but host email on gmail you need to disable internal lookup in Exim4.
+
+```bash
+nano /etc/exim4/exim4.conf.template
+```
+
+```bash
+dnslookup:
+driver = dnslookup
+domains = !+local_domains
+transport = remote_smtp
+no_more
+```
+
+Replace with:
+
+```bash
+dnslookup:
+driver = dnslookup
+domains = *
+transport = remote_smtp
+no_more
+```
 
 ## How do I install SnappyMail?
 
@@ -81,7 +125,7 @@ No, Cloudflare’s Proxy does not work with email. If you use email hosted on yo
 - TXT record with name **mail.\_domainkey** containing `t=y; o=~DKIM key;`
 - TXT record with name **\_dmarc** containing `v=DMARC1; p=quarantine; sp=quarantine; adkim=s; aspf=s;`
 
-The DKIM key and SPF record can be found in the **Mail Domains** list ([documentation](../user-guide/mail-domains.md#get-dns-records)).
+The DKIM key and SPF record can be found in the **Mail Domains** list ([documentation](../user-guide/mail-domains#get-dns-records)).
 
 ## When sending send emails from my server, they end up in the spam folder
 
@@ -95,16 +139,112 @@ During Hestia’s installation, use the `--sieve` flag. If Hestia is already ins
 
 ## Can I allow access to ManageSieve via an external mail client?
 
-Open port 4190 in the firewall. [Read the firewall documentation](./firewall.md).
+Open port 4190 in the firewall. [Read the firewall documentation](./firewall).
 
 ## How can I enable ManageSieve for Snappymail?
 
-Edit `/etc/snappymail/data/_data_/_default_/domains/default.ini` and modify the following settings:
+Edit `/etc/snappymail/data/_data_/_default_/domains/default.json` and modify the following settings:
+
+```json
+"Sieve": {
+	"host": "localhost",
+	"port": 4190,
+	"type": 0,
+	"timeout": 10,
+	"shortLogin": false,
+	"lowerLogin": true,
+	"sasl": [
+		"SCRAM-SHA3-512",
+		"SCRAM-SHA-512",
+		"SCRAM-SHA-256",
+		"SCRAM-SHA-1",
+		"PLAIN",
+		"LOGIN"
+	],
+	"ssl": {
+		"verify_peer": false,
+		"verify_peer_name": false,
+		"allow_self_signed": false,
+		"SNI_enabled": true,
+		"disable_compression": true,
+		"security_level": 1
+	},
+	"enabled": false # Change this to true
+},
+```
+
+## Oracle Cloud + SMTP relay
+
+If you want to use the SMTP from Oracle Cloud you need to make the following changes to Exim4 Configuration:
+
+Open /etc/exim4/exim4.conf.template and replace the following code:
 
 ```bash
-sieve_use = On
-sieve_allow_raw = Off
-sieve_host = "localhost"
-sieve_port = 4190
-sieve_secure = "None"
+smtp_relay_login:
+driver = plaintext
+public_name = LOGIN
+hide client_send = : SMTP_RELAY_USER : SMTP_RELAY_PASS
+```
+
+With:
+
+```bash
+smtp_relay_login:
+driver = plaintext
+public_name = PLAIN
+hide client_send = ^SMTP_RELAY_USER^SMTP_RELAY_PASS
+```
+
+[See forum topic for more info](https://forum.hestiacp.com/t/oracle-cloud-email-as-relay-doesnt-works/11304/19?)
+
+## Setting up mail hooks
+
+Some SMTP relay services might require you to set the domain within the SMTP relay account. To automate this hooks have been added to v-add-mail-domain and v-delete-mail domains.
+
+Create: $HESTIA/data/extensions/add-mail-domain.sh and $HESTIA/data/extensions/v-delete-mail-domain.sh
+
+### Proxmox mail server
+
+See: [Github](https://github.com/hestiacp/hestiacp/pull/4365)
+
+```bash
+# v-add-mail-domain
+SMTP_RELAY_PMG_USER="user"
+SMTP_RELAY_PMG_PASS="password"
+SMTP_RELAY_PMG_HOST="host"
+SMTP_RELAY_PMG_PORT="port"
+
+pmg_auth=$(curl -s --request POST -d "username=$SMTP_RELAY_PMG_USER&password=$SMTP_RELAY_PMG_PASS" \
+	--url https://$SMTP_RELAY_PMG_HOST:$SMTP_RELAY_PMG_PORT/api2/json/access/ticket)
+pmg_ticket=$(echo $pmg_auth | jq -r '.data.ticket')
+pmg_csrf=$(echo $pmg_auth | jq -r '.data.CSRFPreventionToken')
+if [ -n "$pmg_ticket" ]; then
+	pmg_config_domain=$(curl -s --request POST -d "domain=$domain" \
+		-H "CSRFPreventionToken: $pmg_csrf" -H "Cookie: PMGAuthCookie=$pmg_ticket" \
+		https://$SMTP_RELAY_PMG_HOST:$SMTP_RELAY_PMG_PORT/api2/json/config/domains)
+	pmg_config_transport=$(curl -s --request POST -d "domain=$domain&host=$SMTP_RELAY_PMG_LOCAL_IP" \
+		-H "CSRFPreventionToken: $pmg_csrf" -H "Cookie: PMGAuthCookie=$pmg_ticket" \
+		https://$SMTP_RELAY_PMG_HOST:$SMTP_RELAY_PMG_PORT/api2/json/config/transport)
+fi
+
+# v-delete-mail-domain.sh
+SMTP_RELAY_PMG_USER="user"
+SMTP_RELAY_PMG_PASS="password"
+SMTP_RELAY_PMG_HOST="host"
+SMTP_RELAY_PMG_PORT="port"
+
+if [ -n "$SMTP_RELAY_PMG" ]; then
+	pmg_auth=$(curl -s --request POST -d "username=$SMTP_RELAY_PMG_USER&password=$SMTP_RELAY_PMG_PASS" \
+		--url https://$SMTP_RELAY_PMG_HOST:$SMTP_RELAY_PMG_PORT/api2/json/access/ticket)
+	pmg_ticket=$(echo $pmg_auth | jq -r '.data.ticket')
+	pmg_csrf=$(echo $pmg_auth | jq -r '.data.CSRFPreventionToken')
+	if [ -n "$pmg_ticket" ]; then
+		pmg_config_domain=$(curl -s --request DELETE \
+			-H "CSRFPreventionToken: $pmg_csrf" -H "Cookie: PMGAuthCookie=$pmg_ticket" \
+			https://$SMTP_RELAY_PMG_HOST:$SMTP_RELAY_PMG_PORT/api2/json/config/domains/$domain)
+		pmg_config_transport=$(curl -s --request DELETE \
+			-H "CSRFPreventionToken: $pmg_csrf" -H "Cookie: PMGAuthCookie=$pmg_ticket" \
+			https://$SMTP_RELAY_PMG_HOST:$SMTP_RELAY_PMG_PORT/api2/json/config/transport/$domain)
+	fi
+fi
 ```

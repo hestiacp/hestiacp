@@ -26,8 +26,8 @@ source_conf "$HESTIA/conf/hestia.conf"
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'USER DOMAIN'
-is_format_valid 'user' 'domain'
+check_args '2' "$#" 'USER DOMAIN [RESTART]'
+is_format_valid 'user' 'domain' 'restart'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'web' 'DOMAIN' "$domain"
@@ -56,7 +56,7 @@ else
 	hstsconf="$HOMEDIR/$user/conf/web/$domain/$PROXY_SYSTEM.hsts.conf"
 fi
 
-echo 'add_header Strict-Transport-Security "max-age=15768000;" always;' > $hstsconf
+echo 'add_header Strict-Transport-Security "max-age=31536000;" always;' > $hstsconf
 
 chown root:$user $hstsconf
 chmod 640 $hstsconf

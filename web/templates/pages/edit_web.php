@@ -7,7 +7,7 @@
 			</a>
 		</div>
 		<div class="toolbar-buttons">
-			<a href="/delete/web/cache/?domain=<?=htmlentities($v_domain);?>&token=<?=$_SESSION['token'];?>" class="button button-secondary js-clear-cache-button <?php if (!($v_nginx_cache == 'yes' || (($v_proxy_template == 'caching' || is_int(strpos($v_proxy_template, 'caching-'))) && $_SESSION['PROXY_SYSTEM'] == 'nginx'))) { echo "u-hidden"; } ?>">
+			<a href="/delete/web/cache/?domain=<?= htmlentities($v_domain);?>&token=<?= $_SESSION['token'];?>" class="button button-secondary js-clear-cache-button <?php if (!($v_nginx_cache == 'yes' || (($v_proxy_template == 'caching' || is_int(strpos($v_proxy_template, 'caching-'))) && $_SESSION['PROXY_SYSTEM'] == 'nginx'))) { echo "u-hidden"; } ?>">
 				<i class="fas fa-trash icon-red"></i><?= _("Purge NGINX Cache") ?>
 			</a>
 			<?php if ($_SESSION["PLUGIN_APP_INSTALLER"] !== "false") { ?>
@@ -15,7 +15,7 @@
 					<i class="fas fa-magic icon-blue"></i><?= _("Quick Install App") ?>
 				</a>
 			<?php } ?>
-			<button type="submit" class="button" form="vstobjects">
+			<button type="submit" class="button" form="main-form">
 				<i class="fas fa-floppy-disk icon-purple"></i><?= _("Save") ?>
 			</button>
 		</div>
@@ -23,7 +23,7 @@
 </div>
 <!-- End toolbar -->
 
-<div class="container animate__animated animate__fadeIn">
+<div class="container">
 
 	<form
 		x-data="{
@@ -37,7 +37,7 @@
 			proxySupportEnabled: <?= !empty($v_proxy) ? "true" : "false" ?>,
 			customDocumentRootEnabled: <?= !empty($v_custom_doc_root) ? "true" : "false" ?>
 		}"
-		id="vstobjects"
+		id="main-form"
 		name="v_edit_web"
 		method="post"
 		class="<?= $v_status ?> js-enable-inputs-on-submit"
@@ -46,7 +46,7 @@
 		<input type="hidden" name="save" value="save">
 
 		<div class="form-container">
-			<h1 class="form-title"><?= _("Edit Web Domain") ?></h1>
+			<h1 class="u-mb20"><?= _("Edit Web Domain") ?></h1>
 			<?php show_alert_message($_SESSION); ?>
 			<div class="u-mb10">
 				<label for="v_domain" class="form-label"><?= _("Domain") ?></label>
@@ -58,11 +58,9 @@
 				<textarea class="form-control" name="v_aliases" id="v_aliases"><?= htmlentities(trim($v_aliases, "'")) ?></textarea>
 			</div>
 			<?php if ($v_letsencrypt == "yes" || $v_letsencrypt == "on") { ?>
-				<div class="u-mb10">
-					<div class="alert alert-info" role="alert">
-						<i class="fas fa-exclamation"></i>
-						<p><?= _("If the aliases changes, Let's Encrypt will obtain a new SSL certificate.") ?></p>
-					</div>
+				<div class="alert alert-info u-mb10" role="alert">
+					<i class="fas fa-exclamation"></i>
+					<p><?= _("If the aliases changes, Let's Encrypt will obtain a new SSL certificate.") ?></p>
 				</div>
 			<?php } ?>
 			<div class="u-mb20">
@@ -134,13 +132,13 @@
 					</label>
 				</div>
 				<div class="form-check">
-					<input class="form-check-input js-redirect-custom-value" type="radio" name="v-redirect" id="v-redirect-radio-2" value="<?=htmlentities($v_domain);?>" <?php if( $v_redirect == $v_domain) echo 'checked';?> >
+					<input class="form-check-input js-redirect-custom-value" type="radio" name="v-redirect" id="v-redirect-radio-2" value="<?= htmlentities($v_domain);?>" <?php if ( $v_redirect == $v_domain) echo 'checked'; ?>>
 					<label for="v-redirect-radio-2">
 						<?= sprintf(_("Redirect visitors to %s"), htmlentities($v_domain)) ?>
 					</label>
 				</div>
 				<div class="form-check">
-					<input class="form-check-input js-redirect-custom-value" type="radio" name="v-redirect" id="v-redirect-radio-3" value="custom" <?php if( !empty($v_redirect_custom)) echo 'checked';?>>
+					<input class="form-check-input js-redirect-custom-value" type="radio" name="v-redirect" id="v-redirect-radio-3" value="custom" <?php if ( !empty($v_redirect_custom)) echo 'checked'; ?>>
 					<label for="v-redirect-radio-3">
 						<?= _("Redirect visitors to a custom domain or web address") ?>
 					</label>
@@ -177,15 +175,18 @@
 					</label>
 				</div>
 				<div class="form-check u-mb10">
-					<input class="form-check-input" type="checkbox" name="v_ssl_forcessl" id="v_ssl_forcessl" <?php if($v_ssl_forcessl == 'yes') echo 'checked' ?>>
+					<input class="form-check-input" type="checkbox" name="v_ssl_forcessl" id="v_ssl_forcessl" <?php if ($v_ssl_forcessl == 'yes') echo 'checked' ?>>
 					<label for="v_ssl_forcessl">
 						<?= _("Enable automatic HTTPS redirection") ?>
 					</label>
 				</div>
 				<div class="form-check u-mb20">
-					<input class="form-check-input" type="checkbox" name="v_ssl_hsts" id="ssl_hsts" <?php if($v_ssl_hsts == 'yes') echo 'checked' ?>>
+					<input class="form-check-input" type="checkbox" name="v_ssl_hsts" id="ssl_hsts" <?php if ($v_ssl_hsts == 'yes') echo 'checked' ?>>
 					<label for="ssl_hsts">
-						<?= _("Enable HTTP Strict Transport Security (HSTS)") ?><a href="https://en.wikipedia.org/wiki/HTTP_Strict_Transport_Security" target="_blank"><i class="fas fa-question-circle"></i></a>
+						<?= _("Enable HTTP Strict Transport Security (HSTS)") ?>
+						<a href="https://en.wikipedia.org/wiki/HTTP_Strict_Transport_Security" target="_blank">
+							<i class="fas fa-question-circle"></i>
+						</a>
 					</label>
 				</div>
 				<div x-cloak x-show="showCertificates" class="js-ssl-details">
@@ -213,7 +214,8 @@
 							<span class="values-list-label"><?= _("Issued To") ?></span>
 							<span class="values-list-value"><?= $v_ssl_subject ?></span>
 						</li>
-						<?php if ($v_ssl_aliases) { ?>
+						<?php if ($v_ssl_aliases) {
+							$v_ssl_aliases = str_replace(",", ", ", $v_ssl_aliases); ?>
 							<li class="values-list-item">
 								<span class="values-list-label"><?= _("Alternate") ?></span>
 								<span class="values-list-value"><?= $v_ssl_aliases ?></span>
@@ -346,7 +348,7 @@
 							</div>
 							<div class="u-mb10">
 								<label for="v_proxy_ext" class="form-label"><?= _("Proxy Extensions") ?></label>
-								<textarea class="form-control" name="v_proxy_ext" id="v_proxy_ext"><?php if (!empty($v_proxy_ext)) { echo htmlentities(trim($v_proxy_ext, "'"));} else { echo 'jpg, jpeg, gif, png, ico, svg, css, zip, tgz, gz, rar, bz2, exe, pdf, doc, xls, ppt, txt, odt, ods, odp, odf, tar, bmp, rtf, js, mp3, avi, mpeg, flv, html, htm'; } ?></textarea>
+								<textarea class="form-control u-min-height100" name="v_proxy_ext" id="v_proxy_ext"><?php if (!empty($v_proxy_ext)) { echo htmlentities(trim($v_proxy_ext, "'"));} else { echo 'jpg, jpeg, gif, png, ico, svg, css, zip, tgz, gz, rar, bz2, exe, pdf, doc, xls, ppt, txt, odt, ods, odp, odf, tar, bmp, rtf, js, mp3, avi, mpeg, flv, html, htm'; } ?></textarea>
 							</div>
 						</div>
 					<?php } ?>
@@ -396,50 +398,49 @@
 						?>
 						<div class="js-ftp-account js-ftp-account-nrm" name="v_add_domain_ftp" style="<?php if (empty($v_ftp_user)) { echo 'display: none;'; } ?>">
 							<div class="u-mb10">
-								<?= _("FTP") ?> #<span class="js-ftp-user-number"><?=$i + 1; ?></span>
+								<?= _("FTP") ?> #<span class="js-ftp-user-number"><?= $i + 1; ?></span>
 								<button type="button" class="form-link form-link-danger u-ml5 js-delete-ftp-account"><?= _("Delete") ?></button>
-								<input type="hidden" class="js-ftp-user-deleted" name="v_ftp_user[<?=$i ?>][delete]" value="0">
-								<input type="hidden" class="js-ftp-user-is-new" name="v_ftp_user[<?=$i ?>][is_new]" value="<?=htmlentities($ftp_user['is_new']) ?>">
+								<input type="hidden" class="js-ftp-user-deleted" name="v_ftp_user[<?= $i ?>][delete]" value="0">
+								<input type="hidden" class="js-ftp-user-is-new" name="v_ftp_user[<?= $i ?>][is_new]" value="<?= htmlentities($ftp_user['is_new']) ?>">
 							</div>
 							<div class="u-pl30 u-mb10">
-								<label for="v_ftp_user[<?=$i ?>][v_ftp_user]" class="form-label">
+								<label for="v_ftp_user[<?= $i ?>][v_ftp_user]" class="form-label">
 									<?= _("Username") ?><br>
-									<span style="color:#777;"><?=sprintf(_('Prefix %s will be added to username automatically'),$user_plain."_");?></span>
+									<span style="color:#777;"><?= sprintf(_('Prefix %s will be added to username automatically'),$user_plain."_");?></span>
 								</label>
-								<input type="text" class="form-control js-ftp-user" <?=$ftp_user['is_new'] != 1 ? 'disabled="disabled"' : '' ?>
-								name="v_ftp_user[<?=$i ?>][v_ftp_user]" id="v_ftp_user[<?=$i ?>][v_ftp_user]" value="<?=htmlentities(trim($v_ftp_user, "'"))?>">
-								<input type="hidden" name="v_record_id" value="<?=htmlentities(trim($v_record_id, "'"))?>">
+								<input type="text" class="form-control js-ftp-user" <?= $ftp_user['is_new'] != 1 ? 'disabled="disabled"' : '' ?>
+								name="v_ftp_user[<?= $i ?>][v_ftp_user]" id="v_ftp_user[<?= $i ?>][v_ftp_user]" value="<?= htmlentities(trim($v_ftp_user, "'")) ?>">
 								<small class="hint js-ftp-user-hint"></small>
 							</div>
 							<div class="u-pl30 u-mb10">
-								<label for="v_ftp_user[<?=$i ?>][v_ftp_password]" class="form-label">
+								<label for="v_ftp_user[<?= $i ?>][v_ftp_password]" class="form-label">
 									<?= _("Password") ?>
 									<button type="button" title="<?= _("Generate") ?>" class="u-unstyled-button u-ml5 js-ftp-password-generate">
 										<i class="fas fa-arrows-rotate icon-green"></i>
 									</button>
 								</label>
-								<input type="text" class="form-control js-ftp-user-psw" name="v_ftp_user[<?=$i ?>][v_ftp_password]" id="v_ftp_user[<?=$i ?>][v_ftp_password]" value="<?=htmlentities(trim($v_ftp_password, "'"))?>">
+								<input type="text" class="form-control js-ftp-user-psw" name="v_ftp_user[<?= $i ?>][v_ftp_password]" id="v_ftp_user[<?= $i ?>][v_ftp_password]" value="<?= htmlentities(trim($v_ftp_password, "'")) ?>">
 							</div>
 							<div class="u-pl30 u-mb10">
-								<label for="v_ftp_user[<?=$i ?>][v_ftp_path]" class="form-label"><?= _("Path") ?></label>
+								<label for="v_ftp_user[<?= $i ?>][v_ftp_path]" class="form-label"><?= _("Path") ?></label>
 								<input type="hidden" name="v_ftp_pre_path" value="<?=!empty($v_ftp_pre_path) ? htmlentities(trim($v_ftp_pre_path, "'")) : '/'; ?>">
-								<input type="hidden" name="v_ftp_user[<?=$i ?>][v_ftp_path_prev]" value="<?php if (!empty($v_ftp_path)) echo ($v_ftp_path[0] != '/' ? '/' : '').htmlentities(trim($v_ftp_path, "'")) ?>">
-								<input type="text" class="form-control js-ftp-path" name="v_ftp_user[<?=$i ?>][v_ftp_path]" id="v_ftp_user[<?=$i ?>][v_ftp_path]" value="<?php if (!empty($v_ftp_path)) echo ($v_ftp_path[0] != '/' ? '/' : '').htmlentities(trim($v_ftp_path, "'")) ?>">
-								<span class="hint-prefix"><?=htmlentities(trim($v_ftp_pre_path, "'"))?></span><span class="hint js-ftp-path-hint"></span>
+								<input type="hidden" name="v_ftp_user[<?= $i ?>][v_ftp_path_prev]" value="<?php if (!empty($v_ftp_path)) echo ($v_ftp_path[0] != '/' ? '/' : '').htmlentities(trim($v_ftp_path, "'")) ?>">
+								<input type="text" class="form-control js-ftp-path" name="v_ftp_user[<?= $i ?>][v_ftp_path]" id="v_ftp_user[<?= $i ?>][v_ftp_path]" value="<?php if (!empty($v_ftp_path)) echo ($v_ftp_path[0] != '/' ? '/' : '').htmlentities(trim($v_ftp_path, "'")) ?>">
+								<span class="hint-prefix"><?= htmlentities(trim($v_ftp_pre_path, "'")) ?></span><span class="hint js-ftp-path-hint"></span>
 							</div>
 							<?php if ($ftp_user['is_new'] == 1): ?>
 								<div class="u-pl30 u-mb10">
-									<label for="v_ftp_user[<?=$i ?>][v_ftp_email]" class="form-label"><?= _("Send FTP credentials to email") ?></label>
-									<input type="email" class="form-control js-email-alert-on-psw" name="v_ftp_user[<?=$i ?>][v_ftp_email]" id="v_ftp_user[<?=$i ?>][v_ftp_email]" value="<?=htmlentities(trim($v_ftp_email, "'"))?>">
+									<label for="v_ftp_user[<?= $i ?>][v_ftp_email]" class="form-label"><?= _("Send FTP credentials to email") ?></label>
+									<input type="email" class="form-control js-email-alert-on-psw" name="v_ftp_user[<?= $i ?>][v_ftp_email]" id="v_ftp_user[<?= $i ?>][v_ftp_email]" value="<?= htmlentities(trim($v_ftp_email, "'")) ?>">
 								</div>
 							<?php endif; ?>
 						</div>
 						<?php endforeach; ?>
 					</div>
 
-					<div class="u-pt18 js-add-new-ftp-user-button" style="<?php if (empty($v_ftp_user)) echo 'display: none;' ?>">
-						<button type="button" class="form-link js-add-ftp-account"><?= _("Add FTP account") ?></button>
-					</div>
+					<button type="button" class="form-link u-mt20 js-add-ftp-account" style="<?php if (empty($v_ftp_user)) echo 'display: none;' ?>">
+						<?= _("Add FTP account") ?>
+					</button>
 				<?php } ?>
 			</div>
 		</div>

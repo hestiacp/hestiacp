@@ -681,7 +681,8 @@ if (!empty($_POST["save"]) && !empty($_GET["domain"]) && empty($_GET["account"])
 			if (
 				$_POST["v_smtp_relay_host"] != $v_smtp_relay_host ||
 				$_POST["v_smtp_relay_user"] != $v_smtp_relay_user ||
-				$_POST["v_smtp_relay_port"] != $v_smtp_relay_port
+				$_POST["v_smtp_relay_port"] != $v_smtp_relay_port ||
+				$_POST["v_smtp_relay_pass"] != ""
 			) {
 				$v_smtp_relay = true;
 				$v_smtp_relay_host = quoteshellarg($_POST["v_smtp_relay_host"]);
@@ -700,11 +701,11 @@ if (!empty($_POST["save"]) && !empty($_GET["domain"]) && empty($_GET["account"])
 						quoteshellarg($v_domain) .
 						" " .
 						$v_smtp_relay_host .
-						" '" .
+						" " .
 						$v_smtp_relay_user .
-						"' '" .
+						" " .
 						$v_smtp_relay_pass .
-						"' " .
+						" " .
 						$v_smtp_relay_port,
 					$output,
 					$return_var,
@@ -750,7 +751,6 @@ if (!empty($_POST["save"]) && !empty($_GET["domain"]) && !empty($_GET["account"]
 
 	$v_account = $_POST["v_account"];
 	$v_send_email = $_POST["v_send_email"];
-	$v_credentials = $_POST["v_credentials"];
 
 	exec(
 		HESTIA_CMD .
@@ -1069,6 +1069,7 @@ if (!empty($_POST["save"]) && !empty($_GET["domain"]) && !empty($_GET["account"]
 		}
 	}
 
+	$hostname = get_hostname();
 	$webmail = "http://" . $hostname . "/" . $v_webmail_alias . "/";
 	if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
 		$webmail = $_SESSION["WEBMAIL_ALIAS"];

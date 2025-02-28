@@ -14,12 +14,14 @@
 			<a class="toolbar-link<?php if ((!empty($period)) && ($period == 'weekly')) echo " selected" ?>" href="?period=weekly"><?= _("Weekly") ?></a>
 			<a class="toolbar-link<?php if ((!empty($period)) && ($period == 'monthly')) echo " selected" ?>" href="?period=monthly"><?= _("Monthly") ?></a>
 			<a class="toolbar-link<?php if ((!empty($period)) && ($period == 'yearly')) echo " selected" ?>" href="?period=yearly"><?= _("Yearly") ?></a>
+                        <a class="toolbar-link<?php if ((!empty($period)) && ($period == 'biennially')) echo " selected" ?>" href="?period=biennially"><?= _("Biennially") ?></a>
+                        <a class="toolbar-link<?php if ((!empty($period)) && ($period == 'triennially')) echo " selected" ?>" href="?period=triennially"><?= _("Triennially") ?></a>
 		</div>
 	</div>
 </div>
 <!-- End toolbar -->
 
-<div class="container animate__animated animate__fadeIn">
+<div class="container">
 	<div class="form-container form-container-wide">
 		<!-- Begin graph list item loop -->
 		<?php foreach ($data as $key => $value) { ?>
@@ -34,6 +36,3 @@
 		<?php } ?>
 	</div>
 </div>
-
-<footer class="app-footer">
-</footer>

@@ -2,7 +2,7 @@
 # info: adding ssl for domain
 # options: USER DOMAIN SSL_DIR [SSL_HOME] [RESTART]
 #
-# example: v-add-web-domain-ssl admin example.com /home/admin/conf/example.com/web
+# example: v-add-web-domain-ssl admin example.com /tmp/folder/contains/certificate/files/
 #
 # This function turns on SSL support for a domain. Parameter ssl_dir is a path
 # to directory where 2 or 3 ssl files can be found. Certificate file
@@ -49,7 +49,8 @@ check_hestia_demo_mode
 #----------------------------------------------------------#
 
 check_args '3' "$#" 'USER DOMAIN SSL_DIR [SSL_HOME] [RESTART]'
-is_format_valid 'user' 'domain' 'ssl_dir'
+is_format_valid 'user' 'domain' 'ssl_dir' 'restart'
+format_no_quotes "$ssl_dir"
 is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
 is_system_enabled "$WEB_SSL" 'SSL_SUPPORT'
 is_object_valid 'user' 'USER' "$user"
@@ -57,6 +58,9 @@ is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'web' 'DOMAIN' "$domain"
 is_object_unsuspended 'web' 'DOMAIN' "$domain"
 is_object_value_empty 'web' 'DOMAIN' "$domain" '$SSL'
+if [ -n "$restart" ]; then
+	is_restart_format_valid "$restart" 'restart'
+fi
 is_web_domain_cert_valid
 
 #----------------------------------------------------------#

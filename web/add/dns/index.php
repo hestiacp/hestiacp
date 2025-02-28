@@ -199,8 +199,8 @@ if (!empty($_POST["ok"])) {
 				_("DNS zone {%s} has been created successfully."),
 				htmlentities($_POST["v_domain"]),
 			),
-			"</b></a>",
-			'<a href="/edit/dns/?domain=' . htmlentities($_POST["v_domain"]) . '"><b>',
+			"</a>",
+			'<a href="/edit/dns/?domain=' . htmlentities($_POST["v_domain"]) . '">',
 		);
 
 		unset($v_domain);
@@ -281,8 +281,8 @@ if (!empty($_POST["ok_rec"])) {
 				htmlentities($_POST["v_rec"]),
 				htmlentities($_POST["v_domain"]),
 			),
-			"</b>",
-			"<b>",
+			"</code>",
+			"<code>",
 		);
 		unset($v_domain);
 		unset($v_rec);
@@ -397,7 +397,7 @@ if (empty($_GET["domain"])) {
 	if (empty($v_dnssec)) {
 		$v_dnssec = "";
 	}
-
+	$accept = $_GET["accept"] ?? "";
 	render_page($user, $TAB, "add_dns_rec");
 }
 

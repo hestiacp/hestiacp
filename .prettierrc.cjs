@@ -6,10 +6,11 @@ module.exports = {
 		'prettier-plugin-sh',
 		'prettier-plugin-sql',
 	],
-	pluginSearchDirs: ['.'],
 	// PHP Settings
-	phpVersion: '8.1',
+	phpVersion: '8.2',
 	braceStyle: '1tbs',
+	endOfLine: 'lf',
+
 	// Overrides for some files
 	overrides: [
 		// JavaScript files
@@ -31,6 +32,7 @@ module.exports = {
 			files: ['**/nginx/*.inc', '**/nginx/*.conf'],
 			options: {
 				parser: 'nginx',
+				wrapParameters: false,
 			},
 		},
 	],

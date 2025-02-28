@@ -6,11 +6,11 @@ We currently only support changing the layout via CSS. You can customise HTML fi
 
 ## Adding a new theme
 
-Create a new theme in `/usr/local/hestia/web/css/theme/custom/my_theme.css`
+Create a new theme in `/usr/local/hestia/web/css/themes/custom/my_theme.css`
 
 ```css
-.body-login,
-.body-reset {
+.page-login,
+.page-reset {
 	height: auto;
 	padding-top: 10%;
 	background: rgb(231, 102, 194) !important;

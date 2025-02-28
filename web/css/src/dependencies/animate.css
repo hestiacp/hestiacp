@@ -4,7 +4,6 @@
 
 :root {
 	--animate-duration: 1s;
-	--animate-delay: 1s;
 	--animate-repeat: 1;
 }
 
@@ -12,11 +11,6 @@
 	animation-duration: 1s;
 	animation-duration: var(--animate-duration);
 	animation-fill-mode: both;
-
-	&.animate__delay-1s {
-		animation-delay: 1s;
-		animation-delay: var(--animate-delay);
-	}
 }
 
 .animate__fadeIn {

@@ -1,4 +1,5 @@
 <script defer src="/js/dist/main.min.js?<?= JS_LATEST_UPDATE ?>"></script>
+<script defer src="/js/dist/alpinejs-collapse.min.js?<?= JS_LATEST_UPDATE ?>"></script>
 <script defer src="/js/dist/alpinejs.min.js?<?= JS_LATEST_UPDATE ?>"></script>
 <script>
 	document.documentElement.classList.replace('no-js', 'js');
@@ -9,7 +10,7 @@
 			NOTIFICATIONS_EMPTY: '<?= _("No notifications") ?>',
 			NOTIFICATIONS_DELETE_ALL: '<?= _("Delete all notifications") ?>',
 			CONFIRM_LEAVE_PAGE: '<?= _("Are you sure you want to leave the page?") ?>',
-			ERROR_MESSAGE: '<?= !empty($_SESSION["error_msg"]) ? htmlentities($_SESSION["error_msg"]) : "" ?>',
+			ERROR_MESSAGE: '<?= !empty($_SESSION["error_msg"]) ? htmlentities($_SESSION["error_msg"],ENT_QUOTES) : "" ?>',
 			BLACKLIST: '<?= _("BLACKLIST") ?>',
 			IPVERSE: '<?= _("IPVERSE") ?>'
 		});

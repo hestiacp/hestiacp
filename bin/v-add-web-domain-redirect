@@ -35,7 +35,7 @@ source_conf "$HESTIA/conf/hestia.conf"
 #----------------------------------------------------------#
 
 check_args '3' "$#" 'USER DOMAIN REDIRECT [HTTP-CODE] [RESTART]'
-is_format_valid 'user' 'domain'
+is_format_valid 'user' 'domain' 'restart'
 is_number_format_valid "$code" "code"
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
@@ -97,6 +97,7 @@ if [ -n "$path" ]; then
 	lastchr=${path#${path%?}}
 	if [ "$lastchr" = "/" ]; then
 		requesturi=1
+		redirect=${redirect:0:-1}
 	fi
 else
 	requesturi=1

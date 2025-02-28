@@ -2,10 +2,10 @@
 *.min.js
 
 # Vendor/packages
-.pnp.*
-.yarn/*
 **/node_modules/
 **/vendor/
 
-# vitepress
+# VitePress
 **/.vitepress/dist/
+!docs/.vitepress/
+docs/.vitepress/cache/

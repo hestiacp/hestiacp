@@ -4,7 +4,7 @@ layout: page
 title: The Team
 ---
 
-<script setup lang="ts">
+<script setup>
   import { VPTeamPage, VPTeamPageTitle, VPTeamPageSection, VPTeamMembers } from "vitepress/theme";
   import { projectManagers, teamMembers } from "./_data/team";
 </script>

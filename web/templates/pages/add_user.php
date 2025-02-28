@@ -7,7 +7,7 @@
 			</a>
 		</div>
 		<div class="toolbar-buttons">
-			<button type="submit" class="button" form="vstobjects">
+			<button type="submit" class="button" form="main-form">
 				<i class="fas fa-floppy-disk icon-purple"></i><?= _("Save") ?>
 			</button>
 		</div>
@@ -15,13 +15,13 @@
 </div>
 <!-- End toolbar -->
 
-<div class="container animate__animated animate__fadeIn">
+<div class="container">
 
 	<form
 		x-data="{
 			loginDisabled: <?= $v_login_disabled == "yes" ? "true" : "false" ?>
 		}"
-		id="vstobjects"
+		id="main-form"
 		name="v_add_user"
 		method="post"
 	>
@@ -29,7 +29,7 @@
 		<input type="hidden" name="ok" value="Add">
 
 		<div class="form-container">
-			<h1 class="form-title"><?= _("Add User") ?></h1>
+			<h1 class="u-mb20"><?= _("Add User") ?></h1>
 			<?php show_alert_message($_SESSION); ?>
 			<div class="u-mb10">
 				<label for="v_username" class="form-label"><?= _("Username") ?></label>
@@ -57,12 +57,7 @@
 					</div>
 				</div>
 			</div>
-			<p class="u-mb10"><?= _("Your password must have at least") ?>:</p>
-			<ul class="u-list-bulleted u-mb10">
-				<li><?= _("8 characters long") ?></li>
-				<li><?= _("1 uppercase & 1 lowercase character") ?></li>
-				<li><?= _("1 number") ?></li>
-			</ul>
+			<?php require $_SERVER["HESTIA"] . "/web/templates/includes/password-requirements.php"; ?>
 			<div class="form-check">
 				<input x-model="loginDisabled" class="form-check-input" type="checkbox" name="v_login_disabled" id="v_login_disabled">
 				<label for="v_login_disabled">

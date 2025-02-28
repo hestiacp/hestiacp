@@ -1,0 +1,117 @@
+#!/bin/bash
+# info: backup system user with all its objects to restic backup
+# options: USER NOTIFY
+#
+# example: v-backup-user-restic admin yes
+#
+# Backup user with all its objects to restic backup. If the repo doesn't exists a new one will be created.
+#
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+# Argument definition
+user=$1
+notify=${2-no}
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
+source $HESTIA/func/domain.sh
+# shellcheck source=/usr/local/hestia/func/db.sh
+source $HESTIA/func/db.sh
+# shellcheck source=/usr/local/hestia/func/backup.sh
+source $HESTIA/func/backup.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '1' "$#" 'USER'
+is_format_valid 'user'
+is_system_enabled "$BACKUP_SYSTEM" 'BACKUP_SYSTEM'
+is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
+is_incremental_backup_enabled
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Set notification email and subject
+subj="$user → backup failed"
+email=$(grep CONTACT "$HESTIA/data/users/$ROOT_USER/user.conf" | cut -f 2 -d \')
+
+source_conf $HESTIA/conf/restic.conf
+
+if [ ! -f "$USER_DATA/restic.conf" ]; then
+	password=$(generate_password '' '32')
+	echo "$password" > $USER_DATA/restic.conf
+
+	restic --repo "$REPO$user" --password-file $USER_DATA/restic.conf init
+	if [ $? -ne 0 ]; then
+		check_result $E_CONNECT "Unable to create restic repo"
+	fi
+else
+	# Check if repo exists and is accessible with restic key
+	restic --repo "$REPO$user" --password-file $USER_DATA/restic.conf --json snapshots > /dev/null
+	if [ $? -ne 0 ]; then
+		# Send an email
+		echo "Unable to open restic backup. It might not exists or key is incorrect" | $SENDMAIL -s "$subj" "$email" "yes"
+		check_result $E_CONNECT "Unable to access restic repo"
+	fi
+fi
+
+# create backup of the user.conf an database
+$BIN/v-backup-user-config $user
+export GOMAXPROCS=2
+export RESTIC_READ_CONCURRENCY=2
+ionice -c2 -n7 nice -n 19 restic --repo "$REPO$user" --limit-upload 10240 --read-concurrency 2 --password-file $USER_DATA/restic.conf backup /home/$user
+
+if [ $? -ne 0 ]; then
+	echo "Unable to create the backup" | $SENDMAIL -s "$subj" "$email" "yes"
+	check_result $E_BACKUP "Unable to backup user"
+fi
+
+if [[ -n "$SNAPSHOTS" && "$SNAPSHOTS" -ge 0 ]]; then
+	restic_prune="$restic_prune --keep-last $SNAPSHOTS"
+fi
+if [[ -n "$KEEP_DAILY" && "$KEEP_DAILY" -ge 0 ]]; then
+	restic_prune="$restic_prune --keep-daily $KEEP_DAILY"
+fi
+if [[ -n "$KEEP_WEEKLY" && "$KEEP_WEEKLY" -ge 0 ]]; then
+	restic_prune="$restic_prune --keep-weekly $KEEP_WEEKLY"
+fi
+if [[ -n "$KEEP_MONTLY" && "$KEEP_MONTLY" -ge 0 ]]; then
+	restic_prune="$restic_prune --keep-monthly $KEEP_MONTLY"
+fi
+if [[ -n "$KEEP_YEARLY" && "$KEEP_YEARLY" -ge 0 ]]; then
+	restic_prune="$restic_prune --keep-yearly $KEEP_YEARLY"
+fi
+
+restic --repo "$REPO$user" --password-file $USER_DATA/restic.conf forget $restic_prune --prune
+
+# Send notification
+if [ -e "$BACKUP/$user.log" ] && [ "$notify" = "yes" ]; then
+	subj="$user → backup has been completed"
+	email=$(get_user_value '$CONTACT')
+	cat $BACKUP/$user.log | $SENDMAIL -s "$subj" "$email" "$notify"
+	$BIN/v-add-user-notification "$user" "Snapshot created successfully" "Snap shot of user successfully created"
+fi
+
+# Deleting task from queue
+sed -i "/v-backup-user-restic $user /d" $HESTIA/data/queue/backup.pipe
+
+# Logging
+$BIN/v-log-action "$user" "Info" "Backup" "Backup created."
+$BIN/v-log-action "system" "Info" "Backup" "Backup created (User: $user)."
+log_event "$OK" "$ARGUMENTS"
+
+exit

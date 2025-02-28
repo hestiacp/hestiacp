@@ -102,7 +102,7 @@ if [ -z "$check_user" ]; then
 	email=$(get_user_value '$CONTACT')
 else
 	create_user="yes"
-	email=$(grep CONTACT $HESTIA/data/users/admin/user.conf | cut -f2 -d \')
+	email=$(grep CONTACT "$HESTIA/data/users/$ROOT_USER/user.conf" | cut -f2 -d \')
 fi
 
 # Checking available disk space
@@ -291,10 +291,10 @@ if [ "$web" != 'no' ] && [ -n "$WEB_SYSTEM" ]; then
 			fi
 
 			if [ -n "$CUSTOM_DOCROOT" ]; then
-				CUSTOM_DOCROOT=$(echo "$CUSTOM_DOCROOT" | sed -e "s|/home/${old_user}/web/|/home/${user}/web/")
+				CUSTOM_DOCROOT=$(echo "$CUSTOM_DOCROOT" | sed -e "s|/home/${old_user}/web/|/home/${user}/web/|g")
 			fi
 			if [ -n "$CUSTOM_PHPROOT" ]; then
-				CUSTOM_PHPROOT=$(echo "$CUSTOM_PHPROOT" | sed -e "s|/home/${old_user}/web/|/home/${user}/web/")
+				CUSTOM_PHPROOT=$(echo "$CUSTOM_PHPROOT" | sed -e "s|/home/${old_user}/web/|/home/${user}/web/|g")
 			fi
 
 			# Converting FTP users
@@ -429,7 +429,7 @@ if [ "$dns" != 'no' ] && [ -n "$DNS_SYSTEM" ]; then
 	# Restoring DNS domain
 	for domain in $domains; do
 		echo -e "$(date "+%F %T") $domain" | tee -a $tmpdir/restore.log
-
+		domain_idn="$domain"
 		# Cleanup previous config keys
 		unset -v DOMAIN IP TPL TTL EXP SOA RECORDS DNSSEC KEY SLAVE MASTER
 
@@ -818,6 +818,7 @@ if [ "$cron" != 'no' ] && [ -n "$CRON_SYSTEM" ]; then
 		check_result "$E_PARSING" "$error"
 	fi
 
+	sed -i 's/\r//g' $tmpdir/cron/cron.conf
 	jobs=$(wc -l $tmpdir/cron/cron.conf | cut -f 1 -d' ')
 	if [ "$jobs" -eq 1 ]; then
 		echo -e "$(date "+%F %T") $jobs cron job" | tee -a $tmpdir/restore.log
@@ -826,7 +827,7 @@ if [ "$cron" != 'no' ] && [ -n "$CRON_SYSTEM" ]; then
 	fi
 
 	# Replace paths from vesta to hestia
-	if [ "$backup_system" == 'vesta' ] && [ "$user" == 'admin' ]; then
+	if [ "$backup_system" == 'vesta' ] && [ "$user" == "$ROOT_USER" ]; then
 		sed -i 's/vesta/hestia/g' $tmpdir/cron/cron.conf
 	fi
 
@@ -921,7 +922,7 @@ subj="$user → restore has been completed"
 cat $tmpdir/restore.log | $SENDMAIL -s "$subj" $email $notify
 
 # Send notification to panel
-$BIN/v-add-user-notification "$user" "Backup restored successfully" "<b>Archive:</b> $backup"
+$BIN/v-add-user-notification "$user" "Backup restored successfully" "<p><span class='u-text-bold'>Archive:</span> <code>$backup</code></p>"
 
 # Deleting temporary data
 rm -rf $tmpdir
@@ -934,8 +935,8 @@ sed -i "/v-restore-user $user /d" $HESTIA/data/queue/backup.pipe
 #----------------------------------------------------------#
 
 # Update user counters
-$BIN/v-update-user-counters $user
-$BIN/v-update-user-counters admin
+$BIN/v-update-user-counters "$user"
+$BIN/v-update-user-counters "$ROOT_USER"
 $BIN/v-update-sys-ip-counters
 
 # Logging

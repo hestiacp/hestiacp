@@ -8,7 +8,7 @@
 				</a>
 				<?php if ($panel[$user_plain]["CRON_REPORTS"] == "yes") { ?>
 					<a class="button button-secondary" href="/delete/cron/reports/?token=<?= $_SESSION["token"] ?>">
-						<i class="fas fa-toggle-off icon-green"></i><?= _("Disable Notifications") ?>
+						<i class="fas fa-toggle-on icon-green"></i><?= _("Disable Notifications") ?>
 					</a>
 				<?php } else { ?>
 					<a class="button button-secondary" href="/add/cron/reports/?token=<?= $_SESSION["token"] ?>">
@@ -26,7 +26,7 @@
 						<?= $label ?> <i class="fas fa-arrow-down-a-z"></i>
 					</span>
 				</button>
-				<ul class="toolbar-sorting-menu animate__animated animate__fadeIn js-sorting-menu u-hidden">
+				<ul class="toolbar-sorting-menu js-sorting-menu u-hidden">
 					<li data-entity="sort-name">
 						<span class="name <?php if ($_SESSION['userSortOrder'] === 'name') { echo 'active'; } ?>"><?= _("Command") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
 					</li>
@@ -39,8 +39,8 @@
 						<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 						<select class="form-select" name="action">
 							<option value=""><?= _("Apply to selected") ?></option>
-							<?php if($panel[$user_plain]['CRON_REPORTS'] == 'yes') echo '<option value="delete-cron-reports">' . _('Disable Notifications') . '</option>'; ?>
-							<?php if($panel[$user_plain]['CRON_REPORTS'] == 'no') echo '<option value="add-cron-reports">' . _('Enable Notifications') . '</option>'; ?>
+							<?php if ($panel[$user_plain]['CRON_REPORTS'] == 'yes') echo '<option value="delete-cron-reports">' . _('Disable Notifications') . '</option>'; ?>
+							<?php if ($panel[$user_plain]['CRON_REPORTS'] == 'no') echo '<option value="add-cron-reports">' . _('Enable Notifications') . '</option>'; ?>
 							<option value="suspend"><?= _("Suspend") ?></option>
 							<option value="unsuspend"><?= _("Unsuspend") ?></option>
 							<option value="delete"><?= _("Delete") ?></option>
@@ -67,6 +67,8 @@
 
 <div class="container">
 
+	<h1 class="u-text-center u-hide-desktop u-mt20 u-pr30 u-mb20 u-pl30"><?= _("Cron Jobs") ?></h1>
+
 	<div class="units-table js-units-container">
 		<div class="units-table-header">
 			<div class="units-table-cell">
@@ -74,11 +76,11 @@
 			</div>
 			<div class="units-table-cell"><?= _("Command") ?></div>
 			<div class="units-table-cell"></div>
-			<div class="units-table-cell"><?= _("Minute") ?></div>
-			<div class="units-table-cell"><?= _("Hour") ?></div>
-			<div class="units-table-cell"><?= _("Day") ?></div>
-			<div class="units-table-cell"><?= _("Month") ?></div>
-			<div class="units-table-cell"><?= _("Day of Week") ?></div>
+			<div class="units-table-cell u-text-center"><?= _("Minute") ?></div>
+			<div class="units-table-cell u-text-center"><?= _("Hour") ?></div>
+			<div class="units-table-cell u-text-center"><?= _("Day") ?></div>
+			<div class="units-table-cell u-text-center"><?= _("Month") ?></div>
+			<div class="units-table-cell u-text-center"><?= _("Day of Week") ?></div>
 		</div>
 
 		<!-- Begin cron job list item loop -->
@@ -101,33 +103,33 @@
 				$spnd_confirmation = _('Are you sure you want to suspend this cron job?') ;
 			}
 		?>
-			<div class="units-table-row <?php if ($status == 'suspended') echo 'disabled'; ?> animate__animated animate__fadeIn js-unit"
-				data-sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>"
-				data-sort-name="<?=htmlspecialchars($data[$key]['CMD'], ENT_NOQUOTES)?>">
+			<div class="units-table-row <?php if ($status == 'suspended') echo 'disabled'; ?> js-unit"
+				data-sort-date="<?= strtotime($data[$key]['DATE'].' '.$data[$key]['TIME']) ?>"
+				data-sort-name="<?= htmlspecialchars($data[$key]['CMD'], ENT_NOQUOTES) ?>">
 				<div class="units-table-cell">
 					<div>
 						<input id="check<?= $i ?>" class="js-unit-checkbox" type="checkbox" title="<?= _("Select") ?>" name="job[]" value="<?= $key ?>" <?= $display_mode ?>>
 						<label for="check<?= $i ?>" class="u-hide-desktop"><?= _("Select") ?></label>
 					</div>
 				</div>
-				<div class="units-table-cell u-text-bold">
+				<div class="units-table-cell units-table-heading-cell u-text-bold">
 					<span class="u-hide-desktop"><?= _("Command") ?>:</span>
 					<?php if ($read_only === "true" || $data[$key]["SUSPENDED"] == "yes") { ?>
 						<?= htmlspecialchars($data[$key]["CMD"], ENT_NOQUOTES) ?>
 					<?php } else { ?>
-						<a href="/edit/cron/?job=<?=$data[$key]['JOB']?>&token=<?=$_SESSION['token']?>" title="<?= _("Edit Cron Job") ?>: <?=htmlspecialchars($data[$key]['CMD'], ENT_NOQUOTES)?>">
-							<?=htmlspecialchars($data[$key]['CMD'], ENT_NOQUOTES)?>
+						<a href="/edit/cron/?job=<?= $data[$key]["JOB"] ?>&token=<?= $_SESSION["token"] ?>" title="<?= _("Edit Cron Job") ?>: <?= htmlspecialchars($data[$key]["CMD"], ENT_NOQUOTES) ?>">
+							<?= htmlspecialchars($data[$key]["CMD"], ENT_NOQUOTES) ?>
 						</a>
 					<?php } ?>
 				</div>
 				<div class="units-table-cell">
 					<?php if (!$read_only) { ?>
 						<ul class="units-table-row-actions">
-							<?php if ($data[$key]['SUSPENDED'] == 'no') {?>
+							<?php if ($data[$key]["SUSPENDED"] == "no") { ?>
 								<li class="units-table-row-action shortcut-enter" data-key-action="href">
 									<a
 										class="units-table-row-action-link"
-										href="/edit/cron/?job=<?=$data[$key]['JOB']?>&token=<?=$_SESSION['token']?>"
+										href="/edit/cron/?job=<?= $data[$key]["JOB"] ?>&token=<?= $_SESSION["token"] ?>"
 										title="<?= _("Edit") ?>"
 									>
 										<i class="fas fa-pencil icon-orange"></i>
@@ -162,23 +164,23 @@
 						</ul>
 					<?php } ?>
 				</div>
-				<div class="units-table-cell">
+				<div class="units-table-cell u-text-center-desktop">
 					<span class="u-hide-desktop u-text-bold"><?= _("Minute") ?>:</span>
 					<?= $data[$key]["MIN"] ?>
 				</div>
-				<div class="units-table-cell">
+				<div class="units-table-cell u-text-center-desktop">
 					<span class="u-hide-desktop u-text-bold"><?= _("Hour") ?>:</span>
 					<?= $data[$key]["HOUR"] ?>
 				</div>
-				<div class="units-table-cell">
+				<div class="units-table-cell u-text-center-desktop">
 					<span class="u-hide-desktop u-text-bold"><?= _("Day") ?>:</span>
 					<?= $data[$key]["DAY"] ?>
 				</div>
-				<div class="units-table-cell">
+				<div class="units-table-cell u-text-center-desktop">
 					<span class="u-hide-desktop u-text-bold"><?= _("Month") ?>:</span>
 					<?= $data[$key]["MONTH"] ?>
 				</div>
-				<div class="units-table-cell">
+				<div class="units-table-cell u-text-center-desktop">
 					<span class="u-hide-desktop u-text-bold"><?= _("Day of Week") ?>:</span>
 					<?= $data[$key]["WDAY"] ?>
 				</div>
@@ -186,12 +188,10 @@
 		<?php } ?>
 	</div>
 
-</div>
-
-<footer class="app-footer">
-	<div class="container app-footer-inner">
+	<div class="units-table-footer">
 		<p>
 			<?php printf(ngettext("%d cron job", "%d cron jobs", $i), $i); ?>
 		</p>
 	</div>
-</footer>
+
+</div>

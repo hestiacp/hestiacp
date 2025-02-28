@@ -13,7 +13,7 @@
 			<?php } ?>
 		</div>
 		<div class="toolbar-buttons">
-			<button type="submit" class="button" form="vstobjects">
+			<button type="submit" class="button" form="main-form">
 				<i class="fas fa-floppy-disk icon-purple"></i><?= _("Save") ?>
 			</button>
 		</div>
@@ -21,14 +21,14 @@
 </div>
 <!-- End toolbar -->
 
-<div class="container animate__animated animate__fadeIn">
+<div class="container">
 
-	<form id="vstobjects" name="v_add_key" method="post">
+	<form id="main-form" name="v_add_key" method="post">
 		<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 		<input type="hidden" name="ok" value="Add">
 
 		<div class="form-container">
-			<h1 class="form-title"><?= _("Add SSH Key") ?></h1>
+			<h1 class="u-mb20"><?= _("Add SSH Key") ?></h1>
 			<?php show_alert_message($_SESSION); ?>
 			<div>
 				<label for="v_key" class="form-label"><?= _("SSH Key") ?></label>

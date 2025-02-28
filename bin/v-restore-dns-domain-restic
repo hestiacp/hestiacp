@@ -1,0 +1,154 @@
+#!/bin/bash
+# info: restore DNS domain
+# options: USER SNAPSHOT DOMAIN
+#
+# example: v-restore-user user snapshot domain.com
+#
+# This function for restoring database from restic snapshot.
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+snapshot=$2
+dns=$3
+notify=${4-no}
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
+source $HESTIA/func/domain.sh
+# shellcheck source=/usr/local/hestia/func/ip.sh
+source $HESTIA/func/ip.sh
+# shellcheck source=/usr/local/hestia/func/rebuild.sh
+source $HESTIA/func/rebuild.sh
+# shellcheck source=/usr/local/hestia/func/syshealth.sh
+source $HESTIA/func/syshealth.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+args_usage='USER SNAPSHOT DOMAIN [NOTIFY]'
+check_args '3' "$#" "$args_usage"
+is_format_valid 'user'
+is_object_valid 'user' 'USER' "$user"
+
+source_conf $HESTIA/conf/restic.conf
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+tmpdir=$(mktemp -p /home/$user/tmp/ -d)
+if [ ! -f "$tmpdir/backup.conf" ]; then
+	restic --repo "$REPO$user" --password-file "$USER_DATA/restic.conf" dump "$snapshot" "/home/$user/backup/backup.conf" > "$tmpdir/backup.conf"
+	if [ "$?" -ne 0 ]; then
+		check_result "$E_NOTEXIST" "Unable to download snapshot data"
+	fi
+fi
+
+parse_object_kv_list $(cat "$tmpdir/backup.conf")
+IFS=','
+domains=''
+read -a domains_array <<< "$dns"
+read -a domains <<< "$DNS"
+for domain in $domains; do
+	if [[ "${IFS}${domains_array[*]}${IFS}" =~ "${IFS}${domain}${IFS}" || "$dns" = '*' ]]; then
+		# Cleanup previous config keys
+		unset -v DOMAIN IP TPL TTL EXP SOA RECORDS DNSSEC KEY SLAVE MASTER
+		# Checking domain existence
+		check_config=$(grep "DOMAIN='$domain'" $USER_DATA/dns.conf)
+		if [ -z "$check_config" ]; then
+			check_new=$(is_domain_new 'dns' "$domain")
+			if [ "$check_new" = "yes" ]; then
+				rm -rf $tmpdir
+				error="$domain belongs to another user"
+				echo "$error" | $SENDMAIL -s "$subj" "$email" "$notify"
+				sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
+				check_result "$E_PARSING" "$error"
+			fi
+		fi
+		restic --repo "$REPO$user" --password-file "$USER_DATA/restic.conf" restore "$snapshot" --include "/home/$user/backup/dns/$domain" --target "$tmpdir"
+		if [ "$?" -ne 0 ]; then
+			check_result $E_NOTEXIST "Unable to download domain from snapshot"
+		fi
+
+		# Restoring dns.conf
+		if [ -z "$check_config" ]; then
+			parse_object_kv_list $(cat $tmpdir/home/$user/backup/dns/$domain/hestia/dns.conf)
+
+			# Checking IP address
+			check_ip=$(is_ip_valid $IP $user)
+			if [ -n "$check_ip" ]; then
+				export local_ip=''
+				get_user_ip $user
+				old_ip=$IP
+				IP=$ip
+			fi
+
+			# Checking DNS template
+			check_tpl=$(is_dns_template_valid $TPL)
+			if [ -n "$check_tpl" ]; then
+				TPL='default'
+			fi
+
+			# Merging dns.conf keys
+			str="DOMAIN='$domain' IP='$IP' TPL='$TPL' TTL='$TTL' EXP='$EXP'"
+			str="$str SOA='$SOA' RECORDS='$RECORDS'  DNSSEC='$DNSSEC'"
+			str="$str KEY='$KEY' SLAVE='$SLAVE' MASTER='$MASTER' SUSPENDED='no'"
+			str="$str TIME='$(date +%T)' DATE='$(date +%F)'"
+			echo $str >> $USER_DATA/dns.conf
+		fi
+		if [ "$DNSSEC" = "yes" ]; then
+			format_domain_idn
+			# Probably need to change the cache dir for RHEL
+			cp $tmpdir/home/$user/backup//dns/$domain/conf/keys/* /var/cache/bind/
+			chown bind:bind /var/cache/bind/K$domain_idn*
+			chmod 644 /var/cache/bind/K$domain_idn*
+		fi
+
+		# Restoring DNS records
+		cp -f "$tmpdir/home/$user/backup/dns/$domain/hestia/$domain.conf" "$USER_DATA/dns/"
+
+		# Update IP in records
+		if [ -n "$old_ip" ]; then
+			sed -i s/$old_ip/$IP/g $USER_DATA/dns/$domain.conf
+		fi
+
+		# Rebuilding DNS domain
+		rebuild_dns_domain_conf
+
+		# Updating dns-cluster queue
+		if [ -n "$DNS_CLUSTER" ]; then
+			cmd="$BIN/v-add-remote-dns-domain $user $domain yes"
+			echo "$cmd" >> $HESTIA/data/queue/dns-cluster.pipe
+		fi
+
+	fi
+done
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+rm -fr $tmpdir
+
+# Update user counters
+$BIN/v-update-user-counters $user
+$BIN/v-update-user-counters admin
+$BIN/v-update-sys-ip-counters
+
+sed -i "/v-restore-dns-domain-restic '$user' '$snapshot' '$dns' /d" $HESTIA/data/queue/backup.pipe
+
+# Logging
+$BIN/v-log-action "system" "Info" "Backup" "DNS Domain successfully restored (User: $user, Snapshot: $snapshot, Databse: $database)."
+$BIN/v-log-action "$user" "Info" "Backup" "DNS Domain successfully restored (User: $user, Snapshot: $snapshot, Databse: $database)."
+log_event "$OK" "$ARGUMENTS"
+exit

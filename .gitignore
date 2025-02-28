@@ -16,6 +16,8 @@
 !.vscode/launch.json
 !.vscode/extensions.json
 !.vscode/*.code-snippets
+nbproject/project.properties
+nbproject/project.xml
 
 # macOS
 .DS_Store
@@ -49,15 +51,3 @@ npm-debug.log
 
 # optional eslint cache
 .eslintcache
-
-# Yarn Integrity file
-.yarn-integrity
-
-# yarn v2+
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/sdks
-!.yarn/versions
-.pnp.*

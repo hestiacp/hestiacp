@@ -62,7 +62,10 @@ shell_list_ssl() {
 # Additional argument formatting
 format_domain_idn
 if [[ "$email" = *[![:ascii:]]* ]]; then
-	email=$(idn2 --quiet $email)
+	local=$(echo "$email" | cut -f1 -d'@')
+	email_domain=$(echo "$email" | cut -f2 -d'@')
+	email_domain_idn=$(idn2 --quiet $email_domain)
+	email="$local"@"$email_domain_idn"
 fi
 
 #----------------------------------------------------------#
@@ -175,7 +178,7 @@ esac
 # Don't allow non root users view folder
 chmod 660 $workdir
 # Clean up the mess
-echo "rm -rf $workdir" | at "now +15 minute" > /dev/null 2>&1
+echo "rm -rf $workdir" | at -M "now +15 minute" > /dev/null 2>&1
 # Delete tmp dir
 #rm -rf $workdir
 

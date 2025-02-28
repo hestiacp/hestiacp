@@ -3,8 +3,6 @@ web/css/src/dependencies
 *.min.css
 
 # Vendor/packages
-.pnp.*
-.yarn/*
 **/node_modules/
 **/vendor/
 

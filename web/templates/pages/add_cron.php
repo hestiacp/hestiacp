@@ -7,7 +7,7 @@
 			</a>
 		</div>
 		<div class="toolbar-buttons">
-			<button type="submit" class="button" form="vstobjects">
+			<button type="submit" class="button" form="main-form">
 				<i class="fas fa-floppy-disk icon-purple"></i><?= _("Save") ?>
 			</button>
 		</div>
@@ -15,14 +15,22 @@
 </div>
 <!-- End toolbar -->
 
-<div class="container animate__animated animate__fadeIn">
+<div class="container">
 
-	<form id="vstobjects" name="v_add_cron" method="post">
+	<form id="main-form" name="v_add_cron" method="post">
 		<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 		<input type="hidden" name="ok" value="Add">
 
 		<div class="form-container form-container-wide">
-			<h1 class="form-title"><?= _("Add Cron Job") ?></h1>
+			<div class="u-side-by-side-tablet u-mb20">
+				<h1><?= _("Add Cron Job") ?></h1>
+				<p>
+					<?= _("System time") ?>:
+					<time datetime="<?= date("c", $current_timestamp) ?>" class="u-text-bold">
+						<?= date("d M Y, H:i", $current_timestamp) ?>
+					</time>
+				</p>
+			</div>
 			<?php show_alert_message($_SESSION); ?>
 			<div class="u-mb20">
 				<label for="v_cmd" class="form-label"><?= _("Command") ?></label>

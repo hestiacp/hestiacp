@@ -20,6 +20,8 @@ source /etc/hestiacp/hestia.conf
 source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/func/ip.sh
 source $HESTIA/func/ip.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
+source $HESTIA/func/domain.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
@@ -35,21 +37,27 @@ check_hestia_demo_mode
 #----------------------------------------------------------#
 
 # Listing system IP addresses
-# Detect "physical" NICs only (virtual NICs created by Docker, WireGuard etc. are excluded)
-physical_nics="$(ip -d -j link show | jq -r '.[] | if .link_type == "loopback" // .linkinfo.info_kind then empty else .ifname end')"
+nics="$(ip -d -j link show | jq -r '.[] | if .link_type == "loopback" then empty else .ifname end')"
 
-for nic in $physical_nics; do
-	nic_ipv4s="$(ip -4 -d -j addr show "$nic" | jq -r '.[].addr_info[] | if .scope == "global" then .local else empty end')"
+for nic in $nics; do
+	nic_type="$(ip -d -j link show "$nic" | jq -r '.[].linkinfo.info_kind')"
+	if [ "$nic_type" = "bridge" ]; then
+		break
+	fi
+	nic_ipv4s="$(ip -4 -d -j addr show "$nic" | jq -r '.[] | select(length > 0) | .addr_info[] | if .scope == "global" then .local else empty end')"
 	if [ -z "$ips" ]; then
 		ips="$nic_ipv4s"
 	else
-		ips="$ips\n$nic_ipv4s"
+		if [ -z "$nic_ipv4s" ]; then
+			break
+		fi
+		ips="$ips $nic_ipv4s"
 	fi
 done
 
 v_ips="$(ls $HESTIA/data/ips/)"
-ip_num="$(echo "$ips" | wc -l)"
-v_ip_num="$(echo "$v_ips" | wc -l)"
+ip_num="$(echo "$ips" | wc -w)"
+v_ip_num="$(echo "$v_ips" | wc -w)"
 
 # Checking primary IP change
 if [ "$ip_num" -eq "1" ] && [ "$v_ip_num" -eq "1" ]; then
@@ -88,11 +96,13 @@ if [ -n "$old_ip" ]; then
 	# Updating WEB
 	if [ -n "$WEB_SYSTEM" ]; then
 		cd /etc/$WEB_SYSTEM/conf.d
+
 		if [ -e "$old_ip.conf" ]; then
 			mv $old_ip.conf $new_ip.conf
 			sed -i "s/$old_ip/$new_ip/g" $new_ip.conf
 		fi
-		for user in $($BIN/v-list-sys-users plain); do
+
+		for user in $("$BIN/v-list-users" list); do
 			sed -i "s/$old_ip/$new_ip/g" $HESTIA/data/users/$user/web.conf
 			$BIN/v-rebuild-web-domains "$user" no
 		done
@@ -111,7 +121,7 @@ if [ -n "$old_ip" ]; then
 
 	# Updating MAIL
 	if [ -n "$IMAP_SYSTEM" ]; then
-		for user in $($BIN/v-list-sys-users plain); do
+		for user in $("$BIN/v-list-users" list); do
 			$BIN/v-rebuild-mail-domains "$user" no
 		done
 		$BIN/v-restart-mail
@@ -119,7 +129,7 @@ if [ -n "$old_ip" ]; then
 
 	# Updating DNS
 	if [ -n "$DNS_SYSTEM" ]; then
-		for user in $($BIN/v-list-sys-users plain); do
+		for user in $("$BIN/v-list-users" list); do
 			sed -i "s/$old_ip/$new_ip/g" $HESTIA/data/users/$user/dns.conf
 			sed -i "s/$old_ip/$new_ip/g" $HESTIA/data/users/$user/dns/*.conf
 			$BIN/v-rebuild-dns-domains "$user" no
@@ -151,6 +161,8 @@ for ip in $ips; do
 		prefixlen="$(ip -d -j addr show | jq --arg IP "$ip" -r '.[].addr_info[] | if .local == $IP then .prefixlen else empty end')"
 		netmask="$(convert_cidr "$prefixlen")"
 		$BIN/v-add-sys-ip "$ip" "$netmask" "$interface"
+	elif [ -e "/etc/nginx/conf.d/$ip.conf" ]; then
+		process_http2_directive "/etc/nginx/conf.d/$ip.conf"
 	fi
 done
 

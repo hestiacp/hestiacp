@@ -49,6 +49,7 @@ fi
 basecmd="$(basename "$clicmd")"
 if [ "$basecmd" != 'ps' -a \
 	"$basecmd" != 'ls' -a \
+	"$basecmd" != 'wget' -a \
 	"$basecmd" != 'tar' -a \
 	"$basecmd" != 'zip' -a \
 	"$basecmd" != 'unzip' -a \
@@ -70,6 +71,8 @@ if [ "$basecmd" != 'ps' -a \
 	"$basecmd" != 'php8.0' -a \
 	"$basecmd" != 'php8.1' -a \
 	"$basecmd" != 'php8.2' -a \
+	"$basecmd" != 'php8.3' -a \
+	"$basecmd" != 'php8.4' -a \
 	"$basecmd" != 'php' -a \
 	"$basecmd" != "wp" -a \
 	"$basecmd" != 'composer' ]; then
@@ -81,7 +84,7 @@ for ((I = 3; I <= $#; I++)); do
 	cmdArgs="$cmdArgs ${all_scriptargs[${I} - 1]}"
 done
 
-runuser -u "$user" -- $clicmd $cmdArgs
+runuser -u "$user" -- $clicmd $cmdArgs 2>&1
 if [ $? -ne 0 ]; then
 	echo "Error: cmd exited with errors"
 	exit 3

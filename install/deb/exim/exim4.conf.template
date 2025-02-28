@@ -14,6 +14,8 @@ smtp_active_hostname = ${lookup dnsdb{>: defer_never,ptr=$interface_address}{${l
 add_environment = <; PATH=/bin:/usr/bin
 keep_environment =
 disable_ipv6 = true
+smtp_accept_max = 100
+smtp_accept_max_per_host = 20
 
 smtputf8_advertise_hosts =
 domainlist local_domains = dsearch;/etc/exim4/domains/
@@ -65,6 +67,7 @@ tls_privatekey = \
 daemon_smtp_ports = 25 : 465 : 587
 tls_on_connect_ports = 465
 tls_require_ciphers = PERFORMANCE:-RSA:-VERS-ALL:+VERS-TLS1.2:+VERS-TLS1.3:%SERVER_PRECEDENCE
+auth_advertise_hosts = localhost : ${if eq{$tls_in_cipher}{}{}{*}}
 never_users = root
 host_lookup = *
 rfc1413_hosts = *
@@ -363,8 +366,6 @@ terminate_alias:
   driver = accept
   transport = devnull
   condition = ${lookup{$local_part@$domain}lsearch{/etc/exim4/domains/$domain/aliases}{true}{false}}
-
-
 
 ######################################################################
 #                      TRANSPORTS CONFIGURATION                      #

@@ -16,7 +16,7 @@ function addHintListeners(selector, updateHintFunction) {
 
 		inputElement.addEventListener(
 			'input',
-			debounce((event) => updateHintFunction(event.target, event.target.value))
+			debounce((event) => updateHintFunction(event.target, event.target.value)),
 		);
 	});
 }

@@ -97,14 +97,14 @@ export default function handleShortcuts() {
 		 */
 		unregister(combination) {
 			const shortcut = this.registeredShortcuts.find(
-				(shortcut) => JSON.stringify(shortcut.combination) == JSON.stringify(combination)
+				(shortcut) => JSON.stringify(shortcut.combination) == JSON.stringify(combination),
 			);
 			if (!shortcut) {
 				return;
 			}
 
 			this.registeredShortcuts = this.registeredShortcuts.filter(
-				(shortcut) => JSON.stringify(shortcut.combination) != JSON.stringify(combination)
+				(shortcut) => JSON.stringify(shortcut.combination) != JSON.stringify(combination),
 			);
 			shortcut.target.removeEventListener(shortcut.event, shortcut.callback, false);
 
@@ -123,22 +123,19 @@ export default function handleShortcuts() {
 
 				location.href = createButton.href;
 			},
-			{ disabledInInput: true }
+			{ disabledInInput: true },
 		)
 		.register(
 			{ key: 'A', ctrlKey: true, shiftKey: true },
 			(_evt) => {
 				const checked = document.querySelector('.js-unit-checkbox:eq(0)').checked;
 				document
-					.querySelectorAll('.l-unit')
+					.querySelectorAll('.js-unit')
 					.forEach((el) => el.classList.toggle('selected'), !checked);
 				document.querySelectorAll('.js-unit-checkbox').forEach((el) => (el.checked = !checked));
 			},
-			{ disabledInInput: true }
+			{ disabledInInput: true },
 		)
-		.register({ code: 'Enter', ctrlKey: true }, (_evt) => {
-			document.querySelector('form#vstobjects').submit();
-		})
 		.register({ code: 'Backspace', ctrlKey: true }, (_evt) => {
 			const redirect = document.querySelector('a.js-button-back').href;
 			if (!redirect) {
@@ -162,7 +159,7 @@ export default function handleShortcuts() {
 					searchBox.focus();
 				}
 			},
-			{ disabledInInput: true }
+			{ disabledInInput: true },
 		)
 		.register(
 			{ code: 'Digit1' },
@@ -181,7 +178,7 @@ export default function handleShortcuts() {
 					location.href = target.href;
 				}
 			},
-			{ disabledInInput: true }
+			{ disabledInInput: true },
 		)
 		.register(
 			{ code: 'Digit2' },
@@ -200,7 +197,7 @@ export default function handleShortcuts() {
 					location.href = target.href;
 				}
 			},
-			{ disabledInInput: true }
+			{ disabledInInput: true },
 		)
 		.register(
 			{ code: 'Digit3' },
@@ -219,7 +216,7 @@ export default function handleShortcuts() {
 					location.href = target.href;
 				}
 			},
-			{ disabledInInput: true }
+			{ disabledInInput: true },
 		)
 		.register(
 			{ code: 'Digit4' },
@@ -238,7 +235,7 @@ export default function handleShortcuts() {
 					location.href = target.href;
 				}
 			},
-			{ disabledInInput: true }
+			{ disabledInInput: true },
 		)
 		.register(
 			{ code: 'Digit5' },
@@ -257,7 +254,7 @@ export default function handleShortcuts() {
 					location.href = target.href;
 				}
 			},
-			{ disabledInInput: true }
+			{ disabledInInput: true },
 		)
 		.register(
 			{ code: 'Digit6' },
@@ -276,7 +273,7 @@ export default function handleShortcuts() {
 					location.href = target.href;
 				}
 			},
-			{ disabledInInput: true }
+			{ disabledInInput: true },
 		)
 		.register(
 			{ code: 'Digit7' },
@@ -295,7 +292,7 @@ export default function handleShortcuts() {
 					location.href = target.href;
 				}
 			},
-			{ disabledInInput: true }
+			{ disabledInInput: true },
 		)
 		.register(
 			{ key: 'H' },
@@ -307,7 +304,7 @@ export default function handleShortcuts() {
 					shortcutsDialog.showModal();
 				}
 			},
-			{ disabledInInput: true }
+			{ disabledInInput: true },
 		)
 		.register({ code: 'Escape' }, (_evt) => {
 			const openDialog = document.querySelector('dialog[open]');
@@ -321,118 +318,114 @@ export default function handleShortcuts() {
 			(_evt) => {
 				moveFocusLeft();
 			},
-			{ disabledInInput: true }
+			{ disabledInInput: true },
 		)
 		.register(
 			{ code: 'ArrowRight' },
 			(_evt) => {
 				moveFocusRight();
 			},
-			{ disabledInInput: true }
+			{ disabledInInput: true },
 		)
 		.register(
 			{ code: 'ArrowDown' },
 			(_evt) => {
 				moveFocusDown();
 			},
-			{ disabledInInput: true }
+			{ disabledInInput: true },
 		)
 		.register(
 			{ code: 'ArrowUp' },
 			(_evt) => {
 				moveFocusUp();
 			},
-			{ disabledInInput: true }
+			{ disabledInInput: true },
 		)
 		.register(
 			{ key: 'L' },
 			(_evt) => {
-				const element = document.querySelector('.js-units-container .l-unit.focus .shortcut-l');
+				const element = document.querySelector('.js-units-container .js-unit.focus .shortcut-l');
 				if (element) {
 					executeShortcut(element);
 				}
 			},
-			{ disabledInInput: true }
+			{ disabledInInput: true },
 		)
 		.register(
 			{ key: 'S' },
 			(_evt) => {
-				const element = document.querySelector('.js-units-container .l-unit.focus .shortcut-s');
+				const element = document.querySelector('.js-units-container .js-unit.focus .shortcut-s');
 				if (element) {
 					executeShortcut(element);
 				}
 			},
-			{ disabledInInput: true }
+			{ disabledInInput: true },
 		)
 		.register(
 			{ key: 'W' },
 			(_evt) => {
-				const element = document.querySelector('.js-units-container .l-unit.focus .shortcut-w');
+				const element = document.querySelector('.js-units-container .js-unit.focus .shortcut-w');
 				if (element) {
 					executeShortcut(element);
 				}
 			},
-			{ disabledInInput: true }
+			{ disabledInInput: true },
 		)
 		.register(
 			{ key: 'D' },
 			(_evt) => {
-				const element = document.querySelector('.js-units-container .l-unit.focus .shortcut-d');
+				const element = document.querySelector('.js-units-container .js-unit.focus .shortcut-d');
 				if (element) {
 					executeShortcut(element);
 				}
 			},
-			{ disabledInInput: true }
+			{ disabledInInput: true },
 		)
 		.register(
 			{ key: 'R' },
 			(_evt) => {
-				const element = document.querySelector('.js-units-container .l-unit.focus .shortcut-r');
+				const element = document.querySelector('.js-units-container .js-unit.focus .shortcut-r');
 				if (element) {
 					executeShortcut(element);
 				}
 			},
-			{ disabledInInput: true }
+			{ disabledInInput: true },
 		)
 		.register(
 			{ key: 'N' },
 			(_evt) => {
-				const element = document.querySelector('.js-units-container .l-unit.focus .shortcut-n');
+				const element = document.querySelector('.js-units-container .js-unit.focus .shortcut-n');
 				if (element) {
 					executeShortcut(element);
 				}
 			},
-			{ disabledInInput: true }
+			{ disabledInInput: true },
 		)
 		.register(
 			{ key: 'U' },
 			(_evt) => {
-				const element = document.querySelector('.js-units-container .l-unit.focus .shortcut-u');
+				const element = document.querySelector('.js-units-container .js-unit.focus .shortcut-u');
 				if (element) {
 					executeShortcut(element);
 				}
 			},
-			{ disabledInInput: true }
+			{ disabledInInput: true },
 		)
 		.register(
 			{ code: 'Delete' },
 			(_evt) => {
 				const element = document.querySelector(
-					'.js-units-container .l-unit.focus .shortcut-delete'
+					'.js-units-container .js-unit.focus .shortcut-delete',
 				);
 				if (element) {
 					executeShortcut(element);
 				}
 			},
-			{ disabledInInput: true }
+			{ disabledInInput: true },
 		)
 		.register(
 			{ code: 'Enter' },
-			(evt) => {
-				if (evt.target.tagName == 'INPUT' && evt.target.form.id == 'vstobjects') {
-					document.querySelector('form#vstobjects').submit();
-				}
-
+			() => {
 				if (Alpine.store('form').dirty) {
 					if (document.querySelector('dialog[open]')) {
 						const dialog = document.querySelector('dialog[open]');
@@ -448,7 +441,7 @@ export default function handleShortcuts() {
 					dialog.querySelector('button[type="submit"]').click();
 				} else {
 					const element = document.querySelector(
-						'.js-units-container .l-unit.focus .shortcut-enter'
+						'.js-units-container .js-unit.focus .shortcut-enter',
 					);
 					if (element) {
 						executeShortcut(element);
@@ -457,6 +450,6 @@ export default function handleShortcuts() {
 					}
 				}
 			},
-			{ propagate: true }
+			{ propagate: true },
 		);
 }

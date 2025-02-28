@@ -1,8 +1,8 @@
-<div class="login animate__animated animate__zoomIn">
+<div class="login">
 	<a href="/" class="u-block u-mb40">
 		<img src="/images/logo.svg" alt="<?= htmlentities($_SESSION["APP_NAME"]) ?>" width="100" height="120">
 	</a>
-	<form id="form_login" method="post" action="/login/">
+	<form id="login-form" method="post" action="/login/">
 		<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 		<h1 class="login-title">
 			<?= sprintf(_("Welcome to %s"), htmlentities($_SESSION["APP_NAME"])) ?>
@@ -30,7 +30,3 @@
 		</button>
 	</form>
 </div>
-
-</body>
-
-</html>

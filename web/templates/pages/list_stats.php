@@ -2,12 +2,12 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<?php if ($_SESSION["userContext"] === "admin" && !isset($_SESSION["look"])) { ?>
+			<?php if ($_SESSION["userContext"] === "admin" && $_SESSION["look"] == '') { ?>
 				<a class="button button-secondary" href='/list/stats/'><i class="fas fa-binoculars icon-lightblue"></i><?= _("Overall Statistics") ?></a>
 			<?php } ?>
 		</div>
 		<div class="toolbar-right">
-			<?php if ($_SESSION["userContext"] === "admin" && !isset($_SESSION["look"])) { ?>
+			<?php if ($_SESSION["userContext"] === "admin" && $_SESSION["look"] == '') { ?>
 				<form x-data x-bind="BulkEdit" action="/list/stats/" method="get">
 					<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 					<select class="form-select" name="user">
@@ -46,6 +46,7 @@
 <!-- End toolbar -->
 
 <div class="container">
+
 	<!-- Begin statistics list item loop -->
 	<div class="stats">
 		<?php foreach ($data as $key => $value) {
@@ -78,7 +79,7 @@
 							<li class="stats-item-summary-list-item">
 								<span>
 									<?php if ($_SESSION["userContext"] === "admin" || ($_SESSION["userContext"] === "user" && $data[$key]["IP_OWNED"] != "0")) { ?>
-										<?= _("IP Address") ?>:
+										<?= _("IP Addresses") ?>:
 									<?php } ?>
 								</span>
 								<span>
@@ -227,12 +228,11 @@
 			</div>
 		<?php } ?>
 	</div>
-</div>
 
-<footer class="app-footer">
-	<div class="container app-footer-inner">
+	<div class="units-table-footer">
 		<p>
 			<?php printf(ngettext("%d month", "%d months", $i), $i); ?>
 		</p>
 	</div>
-</footer>
+
+</div>

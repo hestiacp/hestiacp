@@ -7,7 +7,7 @@
 			</a>
 		</div>
 		<div class="toolbar-buttons">
-			<button type="submit" class="button" form="vstobjects">
+			<button type="submit" class="button" form="main-form">
 				<i class="fas fa-floppy-disk icon-purple"></i><?= _("Save") ?>
 			</button>
 		</div>
@@ -15,7 +15,7 @@
 </div>
 <!-- End toolbar -->
 
-<div class="container animate__animated animate__fadeIn">
+<div class="container">
 
 	<form
 		x-data="{
@@ -23,7 +23,7 @@
 			letsEncryptEnabled: <?= $v_letsencrypt == "yes" ? "true" : "false" ?>,
 			hasSmtpRelay: <?= $v_smtp_relay == "true" ? "true" : "false" ?>
 		}"
-		id="vstobjects"
+		id="main-form"
 		name="v_edit_mail"
 		method="post"
 		class="<?= $v_status ?> js-enable-inputs-on-submit"
@@ -32,7 +32,7 @@
 		<input type="hidden" name="save" value="save">
 
 		<div class="form-container">
-			<h1 class="form-title"><?= _("Edit Mail Domain") ?></h1>
+			<h1 class="u-mb20"><?= _("Edit Mail Domain") ?></h1>
 			<?php show_alert_message($_SESSION); ?>
 			<div class="u-mb20">
 				<label for="v_domain" class="form-label"><?= _("Domain") ?></label>
@@ -51,7 +51,7 @@
 							echo ">".htmlentities(ucfirst($client))."</option>\n";
 							}
 						?>
-						<option value="disabled" <?php if (htmlentities(trim($v_webmail,"'")) == 'disabled') { echo "selected";}?>><?= _("Disabled") ?></option>
+						<option value="disabled" <?php if (htmlentities(trim($v_webmail,"'")) == 'disabled') { echo "selected"; }?>><?= _("Disabled") ?></option>
 					</select>
 				</div>
 			<?php } ?>
@@ -63,7 +63,7 @@
 				<label for="v_rate" class="form-label">
 					<?= _("Rate Limit") ?> <span class="optional">(<?= _("email / hour / account") ?>)</span>
 				</label>
-				<input type="text" class="form-control" name="v_rate" id="v_rate" value="<?=htmlentities(trim($v_rate, "'"))?>" <?php if($_SESSION['userContext'] != "admin"){ echo "disabled";}?>>
+				<input type="text" class="form-control" name="v_rate" id="v_rate" value="<?= htmlentities(trim($v_rate, "'")) ?>" <?php if ($_SESSION['userContext'] != "admin"){ echo "disabled"; }?>>
 			</div>
 			<?php if (!empty($_SESSION["ANTISPAM_SYSTEM"])) { ?>
 				<div class="form-check u-mb10">
@@ -106,13 +106,11 @@
 						<?= _("Use Let's Encrypt to obtain SSL certificate") ?>
 					</label>
 				</div>
-				<div id="le-warning" class="u-mb20">
-					<div class="alert alert-info" role="alert">
-						<i class="fas fa-exclamation"></i>
-						<div>
-							<p><?php echo $v_webmail_alias; ?></p>
-							<p><?= sprintf(_("To enable Let's Encrypt SSL, ensure that DNS records exist for mail.%s and %s!"), $v_domain, $v_webmail_alias) ?></p>
-						</div>
+				<div class="alert alert-info u-mb20" role="alert">
+					<i class="fas fa-exclamation"></i>
+					<div>
+						<p><?php echo $v_webmail_alias; ?></p>
+						<p><?= sprintf(_("To enable Let's Encrypt SSL, ensure that DNS records exist for mail.%s and %s!"), $v_domain, $v_webmail_alias) ?></p>
 					</div>
 				</div>
 				<div x-cloak x-show="!letsEncryptEnabled">
@@ -135,12 +133,13 @@
 					</div>
 				</div>
 				<?php if ($v_ssl != "no") { ?>
-					<ul class="values-list">
+					<ul class="values-list u-mb20">
 						<li class="values-list-item">
 							<span class="values-list-label"><?= _("Issued To") ?></span>
 							<span class="values-list-value"><?= htmlentities($v_ssl_subject) ?></span>
 						</li>
-						<?php if ($v_ssl_aliases) { ?>
+						<?php if ($v_ssl_aliases) {
+							$v_ssl_aliases = str_replace(",", ", ", $v_ssl_aliases); ?>
 							<li class="values-list-item">
 								<span class="values-list-label"><?= _("Alternate") ?></span>
 								<span class="values-list-value"><?= htmlentities($v_ssl_aliases) ?></span>

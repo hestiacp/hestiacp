@@ -26,69 +26,80 @@
 <!-- End toolbar -->
 
 <div class="container">
-	<div class="units js-units-container">
-		<div class="header units-header">
-			<div class="l-unit__col l-unit__col--right">
-				<div class="clearfix l-unit__stat-col--left super-compact">
-					<input type="checkbox" class="js-toggle-all-checkbox" title="<?= _("Select all") ?>">
-				</div>
-				<div class="clearfix l-unit__stat-col--left wide-3"><b><?= _("IP List Name") ?></b></div>
-				<div class="clearfix l-unit__stat-col--left compact-4"><b>&nbsp;</b></div>
-				<div class="clearfix l-unit__stat-col--left u-text-center compact-5"><b><?= _("Auto Update") ?></b></div>
-				<div class="clearfix l-unit__stat-col--left u-text-center compact-4"><b><?= _("IP Version") ?></b></div>
-				<div class="clearfix l-unit__stat-col--left u-text-center compact-4"><b><?= _("Date") ?></b></div>
-				<div class="clearfix l-unit__stat-col--left u-text-center compact-4"><b><?= _("Time") ?></b></div>
+
+	<h1 class="u-text-center u-hide-desktop u-mt20 u-pr30 u-mb20 u-pl30"><?= _("IPset IP Lists") ?></h1>
+
+	<div class="units-table js-units-container">
+		<div class="units-table-header">
+			<div class="units-table-cell">
+				<input type="checkbox" class="js-toggle-all-checkbox" title="<?= _("Select all") ?>">
 			</div>
+			<div class="units-table-cell"><?= _("IP List Name") ?></div>
+			<div class="units-table-cell"></div>
+			<div class="units-table-cell u-text-center"><?= _("Auto Update") ?></div>
+			<div class="units-table-cell u-text-center"><?= _("IP Version") ?></div>
+			<div class="units-table-cell u-text-center"><?= _("Date") ?></div>
+			<div class="units-table-cell u-text-center"><?= _("Time") ?></div>
 		</div>
 
 		<!-- Begin firewall IP address list item loop -->
-		<?php foreach ($data as $key => $value) {
-		$listname = $key; ?>
-			<div class="l-unit animate__animated animate__fadeIn js-unit">
-				<div class="l-unit__col l-unit__col--right">
-					<div class="clearfix l-unit__stat-col--left super-compact">
+		<?php
+			foreach ($data as $key => $value) {
+				++$i;
+				$listname = $key;
+			?>
+			<div class="units-table-row js-unit">
+				<div class="units-table-cell">
+					<div>
 						<input id="check<?= $i ?>" class="js-unit-checkbox" type="checkbox" title="<?= _("Select") ?>" name="setname[]" value="<?= $listname ?>">
+						<label for="check<?= $i ?>" class="u-hide-desktop"><?= _("Select") ?></label>
 					</div>
-					<div class="clearfix l-unit__stat-col--left wide-3"><b><?= $listname ?></b></div>
-					<!-- START QUICK ACTION TOOLBAR AREA -->
-					<div class="clearfix l-unit__stat-col--left compact-4">
-						<div class="l-unit-toolbar__col l-unit-toolbar__col--right u-noselect">
-							<div class="actions-panel clearfix">
-								<div class="actions-panel__col actions-panel__delete shortcut-delete" data-key-action="js">
-									<a
-										class="data-controls js-confirm-action"
-										href="/delete/firewall/ipset/?listname=<?= $listname ?>&token=<?= $_SESSION["token"] ?>"
-										data-confirm-title="<?= _("Delete") ?>"
-										data-confirm-message="<?= sprintf(_("Are you sure you want to delete IP list %s?"), $key) ?>"
-									>
-										<i class="fas fa-trash icon-red icon-dim"></i>
-									</a>
-								</div>
-							</div>
-						</div>
-					</div>
-					<!-- END QUICK ACTION TOOLBAR AREA -->
-					<div class="clearfix l-unit__stat-col--left u-text-center compact-5"><b>
-							<?php if ($data[$key]["AUTOUPDATE"] == "no") { ?>
-								<i class="fas fa-circle-xmark icon-red"></i>
-							<?php } else { ?>
-								<i class="fas fa-circle-check icon-green"></i>
-							<?php } ?>
-						</b>
-					</div>
-					<div class="clearfix l-unit__stat-col--left u-text-center compact-4"><?= _($data[$key]["IP_VERSION"]) ?></div>
-					<div class="clearfix l-unit__stat-col--left u-text-center compact-4"><?= _($data[$key]["DATE"]) ?></div>
-					<div class="clearfix l-unit__stat-col--left u-text-center compact-4"><?= $data[$key]["TIME"] ?></div>
+				</div>
+				<div class="units-table-cell units-table-heading-cell u-text-bold">
+					<span class="u-hide-desktop"><?= _("IP List Name") ?>:</span>
+					<?= $listname ?>
+				</div>
+				<div class="units-table-cell">
+					<ul class="units-table-row-actions">
+						<li class="units-table-row-action shortcut-delete" data-key-action="js">
+							<a
+								class="units-table-row-action-link data-controls js-confirm-action"
+								href="/delete/firewall/ipset/?listname=<?= $listname ?>&token=<?= $_SESSION["token"] ?>"
+								title="<?= _("Delete") ?>"
+								data-confirm-title="<?= _("Delete") ?>"
+								data-confirm-message="<?= sprintf(_("Are you sure you want to delete IP list %s?"), $key) ?>"
+							>
+								<i class="fas fa-trash icon-red"></i>
+								<span class="u-hide-desktop"><?= _("Delete") ?></span>
+							</a>
+						</li>
+					</ul>
+				</div>
+				<div class="units-table-cell u-text-bold u-text-center-desktop">
+					<span class="u-hide-desktop"><?= _("Auto Update") ?>:</span>
+					<?php if ($data[$key]["AUTOUPDATE"] == "no") { ?>
+						<i class="fas fa-circle-xmark icon-red" title="<?= _("Disabled") ?>"></i>
+					<?php } else { ?>
+						<i class="fas fa-circle-check icon-green" title="<?= _("Enabled") ?>"></i>
+					<?php } ?>
+				</div>
+				<div class="units-table-cell u-text-center-desktop">
+					<span class="u-hide-desktop u-text-bold"><?= _("IP Version") ?>:</span>
+					<?= _($data[$key]["IP_VERSION"]) ?>
+				</div>
+				<div class="units-table-cell u-text-center-desktop">
+					<span class="u-hide-desktop u-text-bold"><?= _("Date") ?>:</span>
+					<time datetime="<?= _($data[$key]["DATE"]) ?>"><?= _($data[$key]["DATE"]) ?></time>
+				</div>
+				<div class="units-table-cell u-text-center-desktop">
+					<span class="u-hide-desktop u-text-bold"><?= _("Time") ?>:</span>
+					<?= $data[$key]["TIME"] ?>
 				</div>
 			</div>
-		<?php
-		$i++;
-	} ?>
+		<?php } ?>
 	</div>
-</div>
 
-<footer class="app-footer">
-	<div class="container app-footer-inner">
+	<div class="units-table-footer">
 		<p>
 			<?php
 				if ( $i == 0) {
@@ -99,4 +110,5 @@
 			?>
 		</p>
 	</div>
-</footer>
+
+</div>

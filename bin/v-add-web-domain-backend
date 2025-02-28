@@ -33,7 +33,7 @@ source_conf "$HESTIA/conf/hestia.conf"
 #----------------------------------------------------------#
 
 check_args '2' "$#" 'USER DOMAIN [TEMPLATE] [RESTART]'
-is_format_valid 'user' 'domain'
+is_format_valid 'user' 'domain' 'restart'
 is_system_enabled "$WEB_BACKEND" 'WEB_BACKEND'
 is_object_valid 'user' 'USER' "$user"
 is_backend_template_valid "$template"
@@ -86,9 +86,9 @@ fi
 #                       Hestia                             #
 #----------------------------------------------------------#
 
-# Restart backend server
+# Restart php interpreter
 $BIN/v-restart-web-backend "$restart" "$backend_version"
-check_result $? "Web backend restart failed" > /dev/null
+check_result $? "PHP restart failed" > /dev/null
 
 # Logging
 $BIN/v-log-action "$user" "Info" "Web" "Web domain configuration applied (Domain: $domain, Backend: $WEB_BACKEND)."

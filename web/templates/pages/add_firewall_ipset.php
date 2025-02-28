@@ -7,7 +7,7 @@
 			</a>
 		</div>
 		<div class="toolbar-buttons">
-			<button type="submit" class="button" form="vstobjects">
+			<button type="submit" class="button" form="main-form">
 				<i class="fas fa-floppy-disk icon-purple"></i><?= _("Save") ?>
 			</button>
 		</div>
@@ -15,9 +15,9 @@
 </div>
 <!-- End toolbar -->
 
-<div class="container animate__animated animate__fadeIn">
+<div class="container">
 
-	<form id="vstobjects" name="v_add_ipset" method="post">
+	<form id="main-form" name="v_add_ipset" method="post">
 		<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 		<input type="hidden" name="ok" value="Add">
 
@@ -65,7 +65,7 @@
 		?>
 
 		<div class="form-container">
-			<h1 class="form-title"><?= _("Add IPset IP List for Firewall") ?></h1>
+			<h1 class="u-mb20"><?= _("Add IPset IP List for Firewall") ?></h1>
 			<?php show_alert_message($_SESSION); ?>
 			<div class="u-mb10">
 				<label for="v_ipname" class="form-label"><?= _("IP List Name") ?></label>
@@ -73,15 +73,15 @@
 			</div>
 			<div class="u-mb10">
 				<label for="v_datasource" class="form-label">
-					<?= _("Data Source") ?> <span class="optional">(<?= _("url, script or file") ?>)</span>
+					<?= _("Data Source") ?> <span class="optional">(<?= _("URL, script or file") ?>)</span>
 				</label>
 				<div class="u-pos-relative">
 					<select
 						class="form-select js-datasource-select"
 						tabindex="-1"
 						onchange="this.nextElementSibling.value=this.value"
-						data-country-iplists="<?= htmlspecialchars(json_encode($country_iplists), ENT_QUOTES, 'UTF-8') ?>"
-						data-blacklist-iplists="<?= htmlspecialchars(json_encode($blacklist_iplists), ENT_QUOTES, 'UTF-8') ?>"
+						data-country-iplists="<?= htmlspecialchars(json_encode($country_iplists), ENT_QUOTES, "UTF-8") ?>"
+						data-blacklist-iplists="<?= htmlspecialchars(json_encode($blacklist_iplists), ENT_QUOTES, "UTF-8") ?>"
 					>
 						<option value=""><?= _("Clear") ?></option>
 					</select>

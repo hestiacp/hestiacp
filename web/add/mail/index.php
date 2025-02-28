@@ -167,11 +167,11 @@ if (!empty($_POST["ok"])) {
 						$v_domain .
 						" " .
 						$v_smtp_relay_host .
-						" '" .
+						" " .
 						$v_smtp_relay_user .
-						"' '" .
+						" " .
 						$v_smtp_relay_pass .
-						"' " .
+						" " .
 						$v_smtp_relay_port,
 					$output,
 					$return_var,
@@ -189,8 +189,8 @@ if (!empty($_POST["ok"])) {
 				_("Mail domain {%s} has been created successfully."),
 				htmlentities($_POST["v_domain"]),
 			),
-			"</b></a>",
-			'<a href="/list/mail/?domain=' . htmlentities($_POST["v_domain"]) . '"><b>',
+			"</a>",
+			'<a href="/list/mail/?domain=' . htmlentities($_POST["v_domain"]) . '">',
 		);
 		unset($v_domain, $v_webmail);
 	}
@@ -509,12 +509,12 @@ if (!empty($_POST["ok_acc"])) {
 				htmlentities(strtolower($_POST["v_account"])),
 				htmlentities($_POST["v_domain"]),
 			),
-			"</b></a>",
+			"</a>",
 			'<a href="/edit/mail/?account=' .
 				htmlentities(strtolower($_POST["v_account"])) .
 				"&domain=" .
 				htmlentities($_POST["v_domain"]) .
-				'"><b>',
+				'">',
 		);
 		unset($v_account);
 		unset($v_password);

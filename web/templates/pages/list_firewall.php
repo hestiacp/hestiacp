@@ -10,12 +10,12 @@
 			</a>
 			<?php if (!empty($_SESSION["FIREWALL_EXTENSION"])): ?>
 				<a class="button button-secondary" href="/list/firewall/banlist/">
-					<i class="fas fa-eye icon-red"></i><?= _("Fail2ban Banlists") ?>
-				</a>
-				<a class="button button-secondary" href="/list/firewall/ipset/">
-					<i class="fas fa-list icon-blue"></i><?= _("IPset IP Lists") ?>
+					<i class="fas fa-eye icon-red"></i><?= _("Banned IP Addresses") ?>
 				</a>
 			<?php endif; ?>
+			<a class="button button-secondary" href="/list/firewall/ipset/">
+				<i class="fas fa-list icon-blue"></i><?= _("IPset IP Lists") ?>
+			</a>
 		</div>
 		<div class="toolbar-right">
 			<div class="toolbar-sorting">
@@ -25,7 +25,7 @@
 						<?= _("Action") ?> <i class="fas fa-arrow-up-a-z"></i>
 					</span>
 				</button>
-				<ul class="toolbar-sorting-menu animate__animated animate__fadeIn js-sorting-menu u-hidden">
+				<ul class="toolbar-sorting-menu js-sorting-menu u-hidden">
 					<li data-entity="sort-action">
 						<span class="name"><?= _("Action") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up active"><i class="fas fa-arrow-up-a-z"></i></span>
 					</li>
@@ -59,19 +59,20 @@
 <!-- End toolbar -->
 
 <div class="container">
-	<div class="units compact js-units-container">
-		<div class="header units-header">
-			<div class="l-unit__col l-unit__col--right">
-				<div class="clearfix l-unit__stat-col--left super-compact">
-					<input type="checkbox" class="js-toggle-all-checkbox" title="<?= _("Select all") ?>">
-				</div>
-				<div class="clearfix l-unit__stat-col--left wide-1"><b><?= _("Action") ?></b></div>
-				<div class="clearfix l-unit__stat-col--left compact-2 u-text-right"><b>&nbsp;</b></div>
-				<div class="clearfix l-unit__stat-col--left wide-3"><b><?= _("Comment") ?></b></div>
-				<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= _("Protocol") ?></b></div>
-				<div class="clearfix l-unit__stat-col--left wide-3 u-text-center"><b><?= _("Port") ?></b></div>
-				<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= _("IP Address") ?></b></div>
+
+	<h1 class="u-text-center u-hide-desktop u-mt20 u-pr30 u-mb20 u-pl30"><?= _("Firewall Rules") ?></h1>
+
+	<div class="units-table js-units-container">
+		<div class="units-table-header">
+			<div class="units-table-cell">
+				<input type="checkbox" class="js-toggle-all-checkbox" title="<?= _("Select all") ?>">
 			</div>
+			<div class="units-table-cell"><?= _("Action") ?></div>
+			<div class="units-table-cell"></div>
+			<div class="units-table-cell"><?= _("Comment") ?></div>
+			<div class="units-table-cell u-text-center"><?= _("Protocol") ?></div>
+			<div class="units-table-cell u-text-center"><?= _("Port") ?></div>
+			<div class="units-table-cell u-text-center"><?= _("IP Address") ?></div>
 		</div>
 
 		<!-- Begin firewall chain/action list item loop -->
@@ -83,83 +84,103 @@
 					$spnd_action = 'unsuspend';
 					$spnd_action_title = _('Unsuspend');
 					$spnd_icon = 'fa-play';
+					$spnd_icon_class = 'icon-green';
 					$spnd_confirmation = _('Are you sure you want to unsuspend rule #%s?') ;
 				} else {
 					$status = 'active';
 					$spnd_action = 'suspend';
 					$spnd_action_title = _('Suspend');
 					$spnd_icon = 'fa-pause';
+					$spnd_icon_class = 'icon-highlight';
 					$spnd_confirmation = _('Are you sure you want to suspend rule #%s?') ;
 				}
 			?>
-			<div class="l-unit <?php if ($status == 'suspended') echo 'l-unit--suspended'; ?> animate__animated animate__fadeIn js-unit"
-				data-sort-action="<?=$data[$key]['ACTION']?>"
-				data-sort-protocol="<?=$data[$key]['PROTOCOL']?>"
-				data-sort-port="<?=$data[$key]['PORT']?>"
-				data-sort-ip="<?=str_replace('.', '', $data[$key]['IP'])?>"
-				data-sort-comment="<?=$data[$key]['COMMENT']?>">
-				<div class="l-unit__col l-unit__col--right">
+			<div class="units-table-row <?php if ($status == 'suspended') echo 'disabled'; ?> js-unit"
+				data-sort-action="<?= $data[$key]['ACTION'] ?>"
+				data-sort-protocol="<?= $data[$key]['PROTOCOL'] ?>"
+				data-sort-port="<?= $data[$key]['PORT'] ?>"
+				data-sort-ip="<?= str_replace('.', '', $data[$key]['IP']) ?>"
+				data-sort-comment="<?= $data[$key]['COMMENT'] ?>">
+				<div class="units-table-cell">
 					<div>
-						<div class="clearfix l-unit__stat-col--left super-compact">
-							<input id="check<?= $i ?>" class="js-unit-checkbox" type="checkbox" title="<?= _("Select") ?>" name="rule[]" value="<?= $key ?>">
-						</div>
-						<div class="clearfix l-unit__stat-col--left wide-1">
-							<b>
-								<a href="/edit/firewall/?rule=<?= $key ?>&token=<?= $_SESSION["token"] ?>" title="<?= _("Edit Firewall Rule") ?>">
-									<?php
-										$suspended = $data[$key]["SUSPENDED"] == "no";
-										$action = $data[$key]["ACTION"];
-										$iconClass = $action == "DROP" ? "fa-circle-minus" : "fa-circle-check";
-										$colorClass = $action == "DROP" ? "icon-red" : "icon-green";
-									?>
-									<i class="fas <?= $iconClass ?> u-mr5 <?= $suspended ? $colorClass : "" ?>"></i> <?= $action ?>
-								</a>
-							</b>
-						</div>
-						<!-- START QUICK ACTION TOOLBAR AREA -->
-						<div class="clearfix l-unit__stat-col--left compact-2 u-text-right">
-							<div class="l-unit-toolbar__col l-unit-toolbar__col--right u-noselect">
-								<div class="actions-panel clearfix" style="padding-right: 10px;">
-									<div class="actions-panel__col actions-panel__logs shortcut-enter" data-key-action="href"><a href="/edit/firewall/?rule=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Edit Firewall Rule") ?>"><i class="fas fa-pencil icon-orange icon-dim"></i></a></div>
-									<div class="actions-panel__col actions-panel__suspend shortcut-s" data-key-action="js">
-										<a
-											class="data-controls js-confirm-action"
-											href="/<?= $spnd_action ?>/firewall/?rule=<?=$key?>&token=<?=$_SESSION['token']?>"
-											data-confirm-title="<?= $spnd_action_title ?>"
-											data-confirm-message="<?= sprintf($spnd_confirmation, $key) ?>"
-										>
-											<i class="fas <?= $spnd_icon ?> icon-highlight icon-dim"></i>
-										</a>
-									</div>
-									<div class="actions-panel__col actions-panel__delete shortcut-delete" data-key-action="js">
-										<a
-											class="data-controls js-confirm-action"
-											href="/delete/firewall/?rule=<?=$key?>&token=<?=$_SESSION['token']?>"
-											data-confirm-title="<?= _("Delete") ?>"
-											data-confirm-message="<?= sprintf(_('Are you sure you want to delete rule %s'), $key) ?>"
-										>
-											<i class="fas fa-trash icon-red icon-dim"></i>
-										</a>
-									</div>
-								</div>
-							</div>
-						</div>
-						<!-- END QUICK ACTION TOOLBAR AREA -->
-						<div class="clearfix l-unit__stat-col--left wide-3"><b><?php if (!empty($data[$key]['COMMENT'])) echo '' . $data[$key]['COMMENT']; else echo "&nbsp;"; ?></b></div>
-						<div class="clearfix l-unit__stat-col--left u-text-center"><?=_($data[$key]['PROTOCOL'])?></div>
-						<div class="clearfix l-unit__stat-col--left wide-3 u-text-center"><b><?=$data[$key]['PORT']?></b></div>
-						<div class="clearfix l-unit__stat-col--left u-text-center"><?=$data[$key]['IP']?></div>
+						<input id="check<?= $i ?>" class="js-unit-checkbox" type="checkbox" title="<?= _("Select") ?>" name="rule[]" value="<?= $key ?>">
+						<label for="check<?= $i ?>" class="u-hide-desktop"><?= _("Select") ?></label>
 					</div>
+				</div>
+				<div class="units-table-cell units-table-heading-cell u-text-bold">
+					<span class="u-hide-desktop"><?= _("Action") ?>:</span>
+					<a href="/edit/firewall/?rule=<?= $key ?>&token=<?= $_SESSION["token"] ?>" title="<?= _("Edit Firewall Rule") ?>">
+						<?php
+							$suspended = $data[$key]["SUSPENDED"] == "no";
+							$action = $data[$key]["ACTION"];
+							$iconClass = $action == "DROP" ? "fa-circle-minus" : "fa-circle-check";
+							$colorClass = $action == "DROP" ? "icon-red" : "icon-green";
+						?>
+						<i class="fas <?= $iconClass ?> u-mr5 <?= $suspended ? $colorClass : "" ?>"></i> <?= $action ?>
+					</a>
+				</div>
+				<div class="units-table-cell">
+					<ul class="units-table-row-actions">
+						<li class="units-table-row-action shortcut-enter" data-key-action="href">
+							<a
+								class="units-table-row-action-link"
+								href="/edit/firewall/?rule=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
+								title="<?= _("Edit Firewall Rule") ?>"
+							>
+								<i class="fas fa-pencil icon-orange"></i>
+								<span class="u-hide-desktop"><?= _("Edit Firewall Rule") ?></span>
+							</a>
+						</li>
+						<li class="units-table-row-action shortcut-s" data-key-action="js">
+							<a
+								class="units-table-row-action-link data-controls js-confirm-action"
+								href="/<?= $spnd_action ?>/firewall/?rule=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
+								title="<?= $spnd_action_title ?>"
+								data-confirm-title="<?= $spnd_action_title ?>"
+								data-confirm-message="<?= sprintf($spnd_confirmation, $key) ?>"
+							>
+								<i class="fas <?= $spnd_icon ?> <?= $spnd_icon_class ?>"></i>
+								<span class="u-hide-desktop"><?= $spnd_action_title ?></span>
+							</a>
+						</li>
+						<li class="units-table-row-action shortcut-delete" data-key-action="js">
+							<a
+								class="units-table-row-action-link data-controls js-confirm-action"
+								href="/delete/firewall/?rule=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
+								title="<?= _("Delete") ?>"
+								data-confirm-title="<?= _("Delete") ?>"
+								data-confirm-message="<?= sprintf(_("Are you sure you want to delete rule #%s?"), $key) ?>"
+							>
+								<i class="fas fa-trash icon-red"></i>
+								<span class="u-hide-desktop"><?= _("Delete") ?></span>
+							</a>
+						</li>
+					</ul>
+				</div>
+				<div class="units-table-cell u-text-bold">
+					<span class="u-hide-desktop"><?= _("Comment") ?>:</span>
+					<?php if (!empty($data[$key]['COMMENT'])) { echo $data[$key]['COMMENT']; } ?>
+				</div>
+				<div class="units-table-cell u-text-center-desktop">
+					<span class="u-hide-desktop u-text-bold"><?= _("Protocol") ?>:</span>
+					<?= _($data[$key]["PROTOCOL"]) ?>
+				</div>
+				<div class="units-table-cell u-text-bold u-text-center-desktop">
+					<span class="u-hide-desktop"><?= _("Port") ?>:</span>
+					<?= $data[$key]["PORT"] ?>
+				</div>
+				<div class="units-table-cell u-text-center-desktop">
+					<span class="u-hide-desktop u-text-bold"><?= _("IP Address") ?>:</span>
+					<?= $data[$key]["IP"] ?>
 				</div>
 			</div>
 		<?php } ?>
 	</div>
-</div>
 
-<footer class="app-footer">
-	<div class="container app-footer-inner">
+	<div class="units-table-footer">
 		<p>
 			<?php printf(ngettext("%d firewall rule", "%d firewall rules", $i), $i); ?>
 		</p>
 	</div>
-</footer>
+
+</div>

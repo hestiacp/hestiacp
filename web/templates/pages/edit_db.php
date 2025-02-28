@@ -7,7 +7,7 @@
 			</a>
 		</div>
 		<div class="toolbar-buttons">
-			<button type="submit" class="button" form="vstobjects">
+			<button type="submit" class="button" form="main-form">
 				<i class="fas fa-floppy-disk icon-purple"></i><?= _("Save") ?>
 			</button>
 		</div>
@@ -15,14 +15,14 @@
 </div>
 <!-- End toolbar -->
 
-<div class="container animate__animated animate__fadeIn">
+<div class="container">
 
-	<form id="vstobjects" name="v_edit_db" method="post" class="<?= $v_status ?>">
+	<form id="main-form" name="v_edit_db" method="post" class="<?= $v_status ?>">
 		<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 		<input type="hidden" name="save" value="save">
 
 		<div class="form-container">
-			<h1 class="form-title"><?= _("Edit Database") ?></h1>
+			<h1 class="u-mb20"><?= _("Edit Database") ?></h1>
 			<?php show_alert_message($_SESSION); ?>
 			<div class="u-mb10">
 				<label for="v_database" class="form-label"><?= _("Database") ?></label>
@@ -51,12 +51,7 @@
 					</div>
 				</div>
 			</div>
-			<p class="u-mb10"><?= _("Your password must have at least") ?>:</p>
-			<ul class="u-list-bulleted u-mb10">
-				<li><?= _("8 characters long") ?></li>
-				<li><?= _("1 uppercase & 1 lowercase character") ?></li>
-				<li><?= _("1 number") ?></li>
-			</ul>
+			<?php require $_SERVER["HESTIA"] . "/web/templates/includes/password-requirements.php"; ?>
 			<div class="u-mb10">
 				<label for="v_type" class="form-label"><?= _("Type") ?></label>
 				<input type="text" class="form-control" name="v_type" id="v_type" value="<?= htmlentities(trim($v_type, "'")) ?>" disabled>

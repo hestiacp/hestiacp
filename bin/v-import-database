@@ -1,0 +1,78 @@
+#!/bin/bash
+# info: import database
+# options: USER DB PATH
+#
+# example: v-import-database alice mydb /full/path/to.sql
+#
+# This function for importing database.
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+database=$2
+dump=$3
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/db.sh
+source $HESTIA/func/db.sh
+# shellcheck source=/usr/local/hestia/func/rebuild.sh
+source $HESTIA/func/rebuild.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '3' "$#" 'DATABASE USER'
+is_format_valid 'database' 'user'
+is_system_enabled "$DB_SYSTEM" 'DB_SYSTEM'
+is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
+is_object_valid 'db' 'DB' "$database"
+
+if [ ! -f "$dump" ]; then
+	echo "Error: dump file doesn't exist"
+	log_event "$E_NOTEXIST" "$ARGUMENTS"
+	exit "$E_NOTEXIST"
+fi
+
+# Check db existence
+db_data=$(grep "DB='$database'" $HESTIA/data/users/$user/db.conf)
+
+parse_object_kv_list "$db_data"
+#Fix issue #1084 with "Upper case not allowed with PGSQL"
+if [ "$TYPE" == "pgsql" ]; then
+	usersmall=$(echo "$user" | tr '[:upper:]' '[:lower:]')
+else
+	usersmall=$user
+fi
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Import dump
+case $TYPE in
+	mysql) import_mysql_database "$dump" ;;
+	pgsql) import_pgsql_database "$dump" ;;
+esac
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Logging
+log_event "$OK" "$ARGUMENTS"
+
+exit

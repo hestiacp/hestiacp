@@ -12,8 +12,6 @@ The following is useful for testing a Pull Request or a branch on a fork.
 
 1. Install Node.js [Download](https://nodejs.org/en/download) or use [Node Source APT](https://github.com/nodesource/distributions)
 
-1. Install [Yarn](https://yarnpkg.com/getting-started/install) via `corepack enable`
-
 ```bash
 # Replace with https://github.com/username/hestiacp.git if you want to test a branch that you created yourself
 git clone https://github.com/hestiacp/hestiacp.git
@@ -21,13 +19,6 @@ cd ./hestiacp/
 
 # Replace main with the branch you want to test
 git checkout main
-
-# Enable Yarn 3.x
-yarn set version stable
-# Install Dependencies
-yarn install
-# Build
-yarn build
 
 cd ./src/
 
@@ -45,7 +36,7 @@ Any option can be appended to the installer command. [See the complete list](../
 
 ```bash
 # Only Hestia
-./scr/hst_autocompile.sh --hestia --noinstall --keepbuild '~localsrc'
+./hst_autocompile.sh --hestia --noinstall --keepbuild '~localsrc'
 ```
 
 ```bash
@@ -78,8 +69,6 @@ The following method only supports building the `hestia` package. If you need to
 :::
 
 1. Install Node.js [Download](https://nodejs.org/en/download) or use [Node Source APT](https://github.com/nodesource/distributions)
-
-1. Install [Yarn](https://yarnpkg.com/getting-started/install) via `corepack enable`
 
 ```bash
 v-update-sys-hestia-git [USERNAME] [BRANCH]

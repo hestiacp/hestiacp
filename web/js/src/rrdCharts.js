@@ -57,10 +57,12 @@ function prepareChartData(rrdData, period) {
 
 function formatLabel(date, period) {
 	const options = {
-		daily: { hour: '2-digit', minute: '2-digit' },
+		daily: { hour: '2-digit', minute: '2-digit', hour12: false },
 		weekly: { weekday: 'short', day: 'numeric' },
 		monthly: { month: 'short', day: 'numeric' },
 		yearly: { month: 'long' },
+		biennially: { month: 'long', year: 'numeric' },
+		triennially: { month: 'long', year: 'numeric' },
 	};
 
 	return date.toLocaleString([], options[period]);

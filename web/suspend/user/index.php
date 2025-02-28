@@ -1,9 +1,7 @@
 <?php
 use function Hestiacp\quoteshellarg\quoteshellarg;
 
-error_reporting(null);
 ob_start();
-session_start();
 $TAB = "USER";
 include $_SERVER["DOCUMENT_ROOT"] . "/inc/main.php";
 

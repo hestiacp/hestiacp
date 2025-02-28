@@ -55,10 +55,23 @@ is_package_consistent() {
 	if [ "$DISK_QUOTA" != 'unlimited' ]; then
 		is_int_format_valid "$DISK_QUOTA" 'DISK_QUOTA'
 	fi
+	if [ "$CPU_QUOTA" != 'unlimited' ] && [ "$RESOURCES_LIMIT" = 'yes' ]; then
+		is_valid_cpu_quota "$CPU_QUOTA" 'CPU_QUOTA'
+	fi
+	if [ "$CPU_QUOTA_PERIOD" != 'unlimited' ] && [ "$RESOURCES_LIMIT" = 'yes' ]; then
+		is_valid_cpu_quota_period "$CPU_QUOTA_PERIOD" 'CPU_QUOTA_PERIOD'
+	fi
+	if [ "$MEMORY_LIMIT" != 'unlimited' ] && [ "$RESOURCES_LIMIT" = 'yes' ]; then
+		is_valid_memory_size "$MEMORY_LIMIT" 'MEMORY_LIMIT'
+	fi
+	if [ "$SWAP_LIMIT" != 'unlimited' ] && [ "$RESOURCES_LIMIT" = 'yes' ]; then
+		is_valid_swap_size "$SWAP_LIMIT" 'SWAP_LIMIT'
+	fi
 	if [ "$BANDWIDTH" != 'unlimited' ]; then
 		is_int_format_valid "$BANDWIDTH" 'BANDWIDTH'
 	fi
 	is_int_format_valid "$BACKUPS" 'BACKUPS'
+	is_boolean_format_valid "$BACKUPS_INCREMENTAL" 'BACKUPS_INCREMENTAL'
 	if [ -n "$WEB_TEMPLATE" ]; then
 		is_web_template_valid "$WEB_TEMPLATE"
 	fi
@@ -109,7 +122,39 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
-cp -f "$tmpfile" "$HESTIA/data/packages/$package.pkg"
+# Generating timestamp
+time_n_date=$(date +'%T %F')
+time=$(echo "$time_n_date" | cut -f 1 -d \ )
+date=$(echo "$time_n_date" | cut -f 2 -d \ )
+
+SHELL=$(basename $SHELL)
+echo "WEB_TEMPLATE='$WEB_TEMPLATE'
+PROXY_TEMPLATE='$PROXY_TEMPLATE'
+BACKEND_TEMPLATE='$BACKEND_TEMPLATE'
+DNS_TEMPLATE='$DNS_TEMPLATE'
+WEB_DOMAINS='$WEB_DOMAINS'
+WEB_ALIASES='$WEB_ALIASES'
+DNS_DOMAINS='$DNS_DOMAINS'
+DNS_RECORDS='$DNS_RECORDS'
+MAIL_DOMAINS='$MAIL_DOMAINS'
+MAIL_ACCOUNTS='$MAIL_ACCOUNTS'
+RATE_LIMIT='$RATE_LIMIT'
+DATABASES='$DATABASES'
+CRON_JOBS='$CRON_JOBS'
+DISK_QUOTA='$DISK_QUOTA'
+CPU_QUOTA='$CPU_QUOTA'
+CPU_QUOTA_PERIOD='$CPU_QUOTA_PERIOD'
+MEMORY_LIMIT='$MEMORY_LIMIT'
+SWAP_LIMIT='$SWAP_LIMIT'
+BANDWIDTH='$BANDWIDTH'
+NS='$NS'
+SHELL='$SHELL'
+BACKUPS='$BACKUPS'
+BACKUPS_INCREMENTAL='$BACKUPS_INCREMENTAL'
+TIME='$time'
+DATE='$date'
+" > "$HESTIA/data/packages/$package.pkg"
+
 chmod 644 "$HESTIA/data/packages/$package.pkg"
 
 #----------------------------------------------------------#

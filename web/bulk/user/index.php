@@ -8,6 +8,14 @@ include $_SERVER["DOCUMENT_ROOT"] . "/inc/main.php";
 // Check token
 verify_csrf($_POST);
 
+if (empty($_POST["user"])) {
+	header("Location: /list/user");
+	exit();
+}
+if (empty($_POST["action"])) {
+	header("Location: /list/user");
+	exit();
+}
 $user = $_POST["user"];
 $action = $_POST["action"];
 
@@ -19,11 +27,11 @@ if ($_SESSION["userContext"] === "admin") {
 			break;
 		case "suspend":
 			$cmd = "v-suspend-user";
-			$restart = "no";
+			$restart = "yes";
 			break;
 		case "unsuspend":
 			$cmd = "v-unsuspend-user";
-			$restart = "no";
+			$restart = "yes";
 			break;
 		case "update counters":
 			$cmd = "v-update-user-counters";
@@ -38,11 +46,9 @@ if ($_SESSION["userContext"] === "admin") {
 			break;
 		case "rebuild web":
 			$cmd = "v-rebuild-web-domains";
-			$restart = "no";
 			break;
 		case "rebuild dns":
 			$cmd = "v-rebuild-dns-domains";
-			$restart = "no";
 			break;
 		case "rebuild mail":
 			$cmd = "v-rebuild-mail-domains";

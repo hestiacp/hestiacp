@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: delete firewall blocking rule
-# options: IP CHAIN
+# options: IPV4_CIDR CHAIN
 #
 # example: v-delete-firewall-ban 198.11.130.250 MAIL
 #
@@ -11,7 +11,7 @@
 #----------------------------------------------------------#
 
 # Argument definition
-ip=$1
+ipv4_cidr=$1
 chain=$(echo $2 | tr '[:lower:]' '[:upper:]')
 
 # Defining absolute path for iptables and modprobe
@@ -31,8 +31,8 @@ source_conf "$HESTIA/conf/hestia.conf"
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'IP CHAIN'
-is_format_valid 'ip' 'chain'
+check_args '2' "$#" 'IPV4_CIDR CHAIN'
+is_format_valid 'ipv4_cidr' 'chain'
 is_system_enabled "$FIREWALL_SYSTEM" 'FIREWALL_SYSTEM'
 
 # Perform verification if read-only mode is enabled
@@ -47,30 +47,30 @@ heal_iptables_links
 
 conf="$HESTIA/data/firewall/banlist.conf"
 if [ "$chain" == "ALL" ]; then
-	check_ip=$(grep "IP='$ip' CHAIN='*'" $conf)
+	check_ip=$(grep "IP='$ipv4_cidr' CHAIN='*'" $conf)
 	if [ -z "$check_ip" ]; then
 		exit
 	fi
-	grep "IP='$ip' CHAIN='*'" $conf | while read -r line; do
+	grep "IP='$ipv4_cidr' CHAIN='*'" $conf | while read -r line; do
 		parse_object_kv_list $line
 
 		# Deleting ip from banlist
 		sip=$(echo "$IP" | sed "s|/|\\\/|g")
 		sed -i "/IP='$sip' CHAIN='$CHAIN'/d" $conf
-		b=$($iptables -L fail2ban-$CHAIN --line-number -n | grep -w $ip | awk '{print $1}')
+		b=$($iptables -L fail2ban-$CHAIN --line-number -n | grep -w $ipv4_cidr | awk '{print $1}')
 		$iptables -D fail2ban-$CHAIN $b 2> /dev/null
 	done
 else
 	# Checking ip in banlist
-	check_ip=$(grep "IP='$ip' CHAIN='$chain'" $conf 2> /dev/null)
+	check_ip=$(grep "IP='$ipv4_cidr' CHAIN='$chain'" $conf 2> /dev/null)
 	if [ -z "$check_ip" ]; then
 		exit
 	fi
 
 	# Deleting ip from banlist
-	sip=$(echo "$ip" | sed "s|/|\\\/|g")
+	sip=$(echo "$ipv4_cidr" | sed "s|/|\\\/|g")
 	sed -i "/IP='$sip' CHAIN='$chain'/d" $conf
-	b=$($iptables -L fail2ban-$chain --line-number -n | grep -w $ip | awk '{print $1}')
+	b=$($iptables -L fail2ban-$chain --line-number -n | grep -w $ipv4_cidr | awk '{print $1}')
 	$iptables -D fail2ban-$chain $b 2> /dev/null
 fi
 
@@ -82,7 +82,7 @@ chmod 660 $conf
 #----------------------------------------------------------#
 
 # Logging
-$BIN/v-log-action "system" "Info" "Firewall" "Removed IP from ban list (IP: $ip, Service: $chain)."
+$BIN/v-log-action "system" "Info" "Firewall" "Removed IP from ban list (IP: $ipv4_cidr, Service: $chain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

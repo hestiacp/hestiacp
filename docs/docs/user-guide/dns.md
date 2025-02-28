@@ -62,7 +62,7 @@ Adjust the default time-to-live. A shorter TTL means faster changes, but results
 
 ### DNSSEC
 
-Enable DNSSEC to improve security. However, this setting requires some changes to at your domain registrar before it is active. For more information, see the [DNS cluster](../server-administration/dns.md) documentation.
+Enable DNSSEC to improve security. However, this setting requires some changes to at your domain registrar before it is active. For more information, see the [DNS cluster](../server-administration/dns) documentation.
 
 ## Adding a DNS record to a zone
 

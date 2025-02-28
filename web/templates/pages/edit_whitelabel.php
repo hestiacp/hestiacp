@@ -2,12 +2,12 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<a href="/list/server/" class="button button-secondary" id="btn-back">
+			<a href="/edit/server/" class="button button-secondary" id="btn-back">
 				<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
 			</a>
 		</div>
 		<div class="toolbar-buttons">
-			<button type="submit" class="button" form="vstobjects">
+			<button type="submit" class="button" form="main-form">
 				<i class="fas fa-floppy-disk icon-purple"></i><?= _("Save") ?>
 			</button>
 		</div>
@@ -16,12 +16,12 @@
 <!-- End toolbar -->
 
 <!-- Begin form -->
-<div class="container animate__animated animate__fadeIn">
+<div class="container">
 	<form
 		x-data="{
 			hide_docs: '<?= $v_hide_docs ?? "no" ?>',
 		}"
-		id="vstobjects"
+		id="main-form"
 		name="v_configure_server"
 		method="post"
 	>
@@ -29,18 +29,18 @@
 		<input type="hidden" name="save" value="save">
 
 		<div class="form-container">
-			<h1 class="form-title">
+			<h1 class="u-mb20">
 				<?= _("White Label Options") ?>
 			</h1>
 			<?php show_alert_message($_SESSION); ?>
 
 			<!-- Basic options section -->
-			<details class="collapse u-mb10">
-				<summary class="collapse-header">
+			<details class="box-collapse u-mb10">
+				<summary class="box-collapse-header">
 					<i class="fas fa-gear u-mr15"></i>
 					<?= _("General") ?>
 				</summary>
-				<div class="collapse-content">
+				<div class="box-collapse-content">
 					<div class="u-mb10">
 						<label for="v_app_name" class="form-label">
 							<?= _("Application Name") ?>
@@ -77,13 +77,12 @@
 							value="<?= htmlentities(trim($v_from_name, "'")) ?>"
 						>
 					</div>
-
 					<div class="u-mb10">
 						<label for="v_from_email" class="form-label">
 							<?= _("Sender Email Address") ?><span class="optional">(<?= _("Default") ?>: <?= sprintf("noreply@%s", htmlentities(trim(get_hostname(), "'"))) ?>)</span>
 						</label>
 						<input
-							type="text"
+							type="email"
 							class="form-control"
 							name="v_from_email"
 							id="v_from_email"
@@ -113,32 +112,38 @@
 					</div>
 				</div>
 			</details>
-			<!-- Basic options section -->
-			<details class="collapse u-mb10">
-				<summary class="collapse-header">
+			<!-- Custom Logo options section -->
+			<details class="box-collapse u-mb10">
+				<summary class="box-collapse-header">
 					<i class="fas fa-gear u-mr15"></i>
 					<?= _("Custom Logo") ?>
 				</summary>
-				<div class="collapse-content">
+				<div class="box-collapse-content">
 					<div class="u-mb10">
 						<label for="v_custom_logo" class="form-label">
-							<?= _("Custom logo") ?>
+							<?= _("Custom Logo") ?>
 						</label>
 					</div>
 					<div class="u-mb10">
-						<p><?= sprintf(_("Upload the files to %s"), "/usr/local/hestia/web/images/custom/") ?></p>
+						<p class="u-mb10"><?= sprintf(_("Upload the files to %s"), "/usr/local/hestia/web/images/custom/") ?></p>
 						<ul>
-							<li>logo.svg <small>(100px x 120px)</small></li>
-							<li>logo.png <small>(100px x 120px)</small></li>
-							<li>logo-header.png <small>(54x x 29px)</small></li>
-							<li>favicon.png <small>(64px x 64px)</small></li>
-							<li>favicon.ico<<small>(16px x 16px)</small></li>
+							<li><code>logo.svg</code> <small>(100px x 120px)</small></li>
+							<li><code>logo.png</code> <small>(100px x 120px)</small></li>
+							<li><code>logo-header.svg</code> <small>(54px x 29px)</small></li>
+							<li><code>favicon.png</code> <small>(64px x 64px)</small></li>
+							<li><code>favicon.ico</code> <small>(16px x 16px)</small></li>
 						</ul>
 					</div>
 					<div class="u-mb10">
-						<input type="checkbox" id="v_update_logo" name="v_update_logo">
+						<input type="checkbox" id="v_update_logo" name="v_update_logo" value="yes">
 						<label for="v_update_logo" class="form-label">
 							<?= _("Update logo") ?>
+						</label>
+					</div>
+					<div class="u-mb10">
+						<input type="checkbox" id="v_reset_logo" name="v_reset_logo" value="yes">
+						<label for="v_reset_logo" class="form-label">
+							<?= _("Reset Logo") ?>
 						</label>
 					</div>
 			</details>

@@ -8,6 +8,15 @@ include $_SERVER["DOCUMENT_ROOT"] . "/inc/main.php";
 // Check token
 verify_csrf($_POST);
 
+if (empty($_POST["backup"])) {
+	header("Location: /list/backup/");
+	exit();
+}
+if (empty($_POST["action"])) {
+	header("Location: /list/backup");
+	exit();
+}
+
 $action = $_POST["action"];
 $backup = quoteshellarg($_POST["backup"]);
 

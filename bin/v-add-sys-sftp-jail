@@ -39,7 +39,7 @@ sftp_i=$(grep -n "^# Hestia SFTP Chroot" $config)
 # Disabling normal sftp
 if [ -n "$sftp_n" ]; then
 	fline=$(echo $sftp_n | cut -f 1 -d :)
-	sed -i "${fline}s/Subsystem.*sftp/#Subsystem sftp/" $config
+	sed -i "${fline}s/Subsystem.*sftp/Subsystem sftp internal-sftp/" $config
 	restart='yes'
 fi
 
@@ -48,17 +48,17 @@ if [ -z "$sftp_i" ]; then
 	echo " " >> $config
 	echo "# Hestia SFTP Chroot" >> $config
 	echo "Match User sftp_dummy99" >> $config
-	echo "ChrootDirectory %h" >> $config
+	echo "    ChrootDirectory /srv/jail/%u" >> $config
 	echo "    X11Forwarding no" >> $config
 	echo "    AllowTCPForwarding no" >> $config
-	echo "    ForceCommand internal-sftp" >> $config
+	echo "    ForceCommand internal-sftp -d /home/%u" >> $config
 	restart='yes'
 fi
 
 # Validating opensshd config
 if [ "$restart" = 'yes' ]; then
 	subj="OpenSSH restart failed"
-	email=$(grep CONTACT $HESTIA/data/users/admin/user.conf | cut -f 2 -d \')
+	email=$(grep CONTACT "$HESTIA/data/users/$ROOT_USER/user.conf" | cut -f 2 -d \')
 	/usr/sbin/sshd -t > /dev/null 2>&1
 	if [ "$?" -ne 0 ]; then
 		mail_text="OpenSSH can not be restarted. Please check config:
@@ -72,8 +72,10 @@ fi
 # Checking users
 shells="rssh|nologin"
 for user in $(grep "$HOMEDIR" /etc/passwd | egrep "$shells" | cut -f 1 -d:); do
-	# Include all users v-add-user-sftp-jail will handle it
-	$BIN/v-add-user-sftp-jail "$user" "no"
+	if [ -d "/home/$user" ]; then
+		# Include all users v-add-user-sftp-jail will handle it
+		$BIN/v-add-user-sftp-jail "$user" "no"
+	fi
 done
 
 # Restart ssh service

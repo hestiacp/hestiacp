@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: add firewall chain
-# options: CHAIN [PORT] [PROTOCOL] [PROTOCOL]
+# options: CHAIN [PORT] [PROTOCOL]
 #
 # example: v-add-firewall-chain CRM 5678 TCP
 #
@@ -11,11 +11,12 @@
 #----------------------------------------------------------#
 
 # Argument definition
-chain=$(echo $1 | tr '[:lower:]' '[:upper:]')
-port=$2
-port_ext=$2
-protocol=${4-TCP}
-protocol=$(echo $protocol | tr '[:lower:]' '[:upper:]')
+chain=$(echo "$1" | tr '[:lower:]' '[:upper:]')
+port="$2"
+port_ext="$2"
+protocol="$3"
+[ -z "$protocol" ] && protocol='TCP'
+protocol=$(echo "$protocol" | tr '[:lower:]' '[:upper:]')
 
 # Defining absolute path to iptables
 iptables="/sbin/iptables"
@@ -24,14 +25,14 @@ iptables="/sbin/iptables"
 # shellcheck source=/etc/hestiacp/hestia.conf
 source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
-source $HESTIA/func/main.sh
+source "$HESTIA/func/main.sh"
 # shellcheck source=/usr/local/hestia/func/firewall.sh
-source $HESTIA/func/firewall.sh
+source "$HESTIA/func/firewall.sh"
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
 # Get hestia port by reading nginx.conf
-hestiaport=$(grep -m 1 'listen' $HESTIA/nginx/conf/nginx.conf | awk '{print $2}' | sed "s|;||")
+hestiaport=$(sed -ne "/listen/{s/.*listen[^0-9]*\([0-9][0-9]*\)[ \t]*ssl\;/\1/p;q}" "$HESTIA/nginx/conf/nginx.conf")
 if [ -z "$hestiaport" ]; then
 	hestiaport=8083
 fi
@@ -56,8 +57,8 @@ heal_iptables_links
 
 # Checking known chains
 case $chain in
-	SSH) # Get ssh port by reading ssh config file.
-		sshport=$(grep '^Port ' /etc/ssh/sshd_config | head -1 | cut -d ' ' -f 2)
+	SSH) # Get ssh port (or ports) using v-list-sys-sshd-port.
+		sshport="$($BIN/v-list-sys-sshd-port plain | sed ':a;N;$!ba;s/\n/,/g')"
 		if [ -z "$sshport" ]; then
 			sshport=22
 		fi
@@ -110,14 +111,15 @@ if [ $? -eq 0 ]; then
 fi
 
 # Preserving chain
-chains=$HESTIA/data/firewall/chains.conf
-check_chain=$(grep "CHAIN='$chain'" $chains 2> /dev/null)
+chains="$HESTIA/data/firewall/chains.conf"
+check_chain=""
+[ -f "$chains" ] && check_chain=$(grep "CHAIN='$chain'" "$chains")
 if [ -z "$check_chain" ]; then
-	echo "CHAIN='$chain' PORT='$port' PROTOCOL='$protocol'" >> $chains
+	echo "CHAIN='$chain' PORT='$port' PROTOCOL='$protocol'" >> "$chains"
 fi
 
 # Changing permissions
-chmod 660 $chains
+[ -f "$chains" ] && chmod 660 "$chains"
 
 #----------------------------------------------------------#
 #                       Hestia                             #

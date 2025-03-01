@@ -1,5 +1,5 @@
 import { passwordStrength } from 'check-password-strength';
-import { randomPassword, debounce } from './helpers';
+import { debounce, randomPassword } from './helpers';
 
 // Adds listeners to password inputs (to monitor strength) and generate password buttons
 export default function handlePasswordInput() {
@@ -30,7 +30,8 @@ function recalculatePasswordStrength(input) {
 
 	if (meter) {
 		if (password === '') {
-			return (meter.value = 0);
+			meter.value = 0;
+			return;
 		}
 
 		meter.value = passwordStrength(password).id + 1;

@@ -1,12 +1,12 @@
+import { createConfirmationDialog } from './helpers';
 import {
-	moveFocusLeft,
-	moveFocusRight,
-	moveFocusDown,
-	moveFocusUp,
 	enterFocused,
 	executeShortcut,
+	moveFocusDown,
+	moveFocusLeft,
+	moveFocusRight,
+	moveFocusUp,
 } from './navigation';
-import { createConfirmationDialog } from './helpers';
 
 /**
  * Shortcuts
@@ -58,8 +58,8 @@ export default function handleShortcuts() {
 
 				const validations = [
 					combination.code
-						? combination.code == evt.code
-						: combination.key.toLowerCase() == evt.key.toLowerCase(),
+						? combination.code === evt.code
+						: combination.key.toLowerCase() === evt.key.toLowerCase(),
 					(combination.altKey && evt.altKey) || (!combination.altKey && !evt.altKey),
 					(combination.ctrlKey && evt.ctrlKey) || (!combination.ctrlKey && !evt.ctrlKey),
 					(combination.metaKey && evt.metaKey) || (!combination.metaKey && !evt.metaKey),
@@ -97,14 +97,14 @@ export default function handleShortcuts() {
 		 */
 		unregister(combination) {
 			const shortcut = this.registeredShortcuts.find(
-				(shortcut) => JSON.stringify(shortcut.combination) == JSON.stringify(combination),
+				(shortcut) => JSON.stringify(shortcut.combination) === JSON.stringify(combination),
 			);
 			if (!shortcut) {
 				return;
 			}
 
 			this.registeredShortcuts = this.registeredShortcuts.filter(
-				(shortcut) => JSON.stringify(shortcut.combination) != JSON.stringify(combination),
+				(shortcut) => JSON.stringify(shortcut.combination) !== JSON.stringify(combination),
 			);
 			shortcut.target.removeEventListener(shortcut.event, shortcut.callback, false);
 
@@ -132,7 +132,9 @@ export default function handleShortcuts() {
 				document
 					.querySelectorAll('.js-unit')
 					.forEach((el) => el.classList.toggle('selected'), !checked);
-				document.querySelectorAll('.js-unit-checkbox').forEach((el) => (el.checked = !checked));
+				document.querySelectorAll('.js-unit-checkbox').forEach((el) => {
+					el.checked = !checked;
+				});
 			},
 			{ disabledInInput: true },
 		)

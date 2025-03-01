@@ -11,7 +11,9 @@ export default function handleTabPanels() {
 	tabItems.forEach((tab) => {
 		tab.addEventListener('click', (event) => {
 			// Reset state
-			panels.forEach((panel) => (panel.hidden = true));
+			panels.forEach((panel) => {
+				panel.hidden = true;
+			});
 			tabItems.forEach((tab) => {
 				tab.setAttribute('aria-selected', false);
 				tab.setAttribute('tabindex', -1);

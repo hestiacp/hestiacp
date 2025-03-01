@@ -25,7 +25,9 @@ export default function handleListUnitSelect() {
 
 	selectAllCheckbox.addEventListener('change', () => {
 		const isChecked = selectAllCheckbox.checked;
-		checkboxes.forEach((checkbox) => (checkbox.checked = isChecked));
+		checkboxes.forEach((checkbox) => {
+			checkbox.checked = isChecked;
+		});
 		units.forEach((unit) => updateUnitSelection(unit, isChecked));
 	});
 }

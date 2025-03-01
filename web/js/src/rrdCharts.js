@@ -1,4 +1,4 @@
-import { post, getCssVariable } from './helpers';
+import { getCssVariable, post } from './helpers';
 
 // Create Chart.js charts from in-page data on Task Monitor page
 export default async function initRrdCharts() {

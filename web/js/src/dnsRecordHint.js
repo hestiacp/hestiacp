@@ -8,7 +8,7 @@ export default function handleDnsRecordHint() {
 		return;
 	}
 
-	if (recordInput.value.trim() != '') {
+	if (recordInput.value.trim() !== '') {
 		updateHint(recordInput);
 	}
 

@@ -29,7 +29,7 @@ export default function handleListSorting() {
 
 	// Inner dropdown sorting behavior
 	sortingMenu.querySelectorAll('span').forEach((span) => {
-		span.addEventListener('click', function () {
+		span.addEventListener('click', () => {
 			sortingMenu.classList.add('u-hidden');
 
 			// Skip if the clicked sort is already active

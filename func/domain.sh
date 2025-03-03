@@ -432,10 +432,8 @@ is_web_domain_cert_valid() {
 	fi
 
 	if [ -e "$ssl_dir/$domain.ca" ]; then
-		s1=$(openssl x509 -text -in $ssl_dir/$domain.crt 2> /dev/null)
-		s1=$(echo "$s1" | grep Issuer | awk -F = '{print $6}' | head -n1)
-		s2=$(openssl x509 -text -in $ssl_dir/$domain.ca 2> /dev/null)
-		s2=$(echo "$s2" | grep Subject | awk -F = '{print $6}' | head -n1)
+		s1=$(openssl x509 -noout -in $ssl_dir/$domain.crt -issuer 2> /dev/null | cut -d = -f2-)
+		s2=$(openssl x509 -noout -in $ssl_dir/$domain.ca -subject 2> /dev/null | cut -d = -f2-)
 		if [ "$s1" != "$s2" ]; then
 			check_result "$E_NOTEXIST" "SSL intermediate chain is not valid"
 		fi

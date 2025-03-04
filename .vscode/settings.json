@@ -7,7 +7,7 @@
 	"explorer.fileNesting.patterns": {
 		"*.css": "${capture}.css.map",
 		"*.js": "${capture}.js.map",
-		"package.json": ".editorconfig, .eslint*, .lintstaged*, .markdownlint-cli2*, .prettier*, .stylelint*, jsconfig.json, package-lock.json, renovate.json",
+		"package.json": ".editorconfig, .biome*, .lintstaged*, .markdownlint-cli2*, .prettier*, .stylelint*, jsconfig.json, package-lock.json, renovate.json",
 		"readme*": "changelog*, contributing*, license*, security*"
 	}
 }

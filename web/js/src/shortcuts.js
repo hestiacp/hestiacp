@@ -97,14 +97,14 @@ export default function handleShortcuts() {
 		 */
 		unregister(combination) {
 			const shortcut = this.registeredShortcuts.find(
-				(shortcut) => JSON.stringify(shortcut.combination) === JSON.stringify(combination),
+				(shortcut) => JSON.stringify(shortcut.combination) == JSON.stringify(combination),
 			);
 			if (!shortcut) {
 				return;
 			}
 
 			this.registeredShortcuts = this.registeredShortcuts.filter(
-				(shortcut) => JSON.stringify(shortcut.combination) !== JSON.stringify(combination),
+				(shortcut) => JSON.stringify(shortcut.combination) != JSON.stringify(combination),
 			);
 			shortcut.target.removeEventListener(shortcut.event, shortcut.callback, false);
 

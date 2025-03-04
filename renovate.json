@@ -7,7 +7,8 @@
 		"group:allNonMajor",
 		"group:linters",
 		":automergeLinters",
-		":disableDependencyDashboard"
+		":disableDependencyDashboard",
+		"customManagers:biomeVersions"
 	],
 	"ignorePaths": ["**/node_modules/**", "install/deb/filemanager/filegator/composer.json"],
 	"rangeStrategy": "bump",

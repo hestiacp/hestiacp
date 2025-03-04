@@ -61,10 +61,17 @@ for db in $(echo $DB_SYSTEM | tr ',' '\n'); do
 						chmod 660 $mycnf
 					fi
 				fi
-				echo "MySQL $HOST status"
-				mysqladmin --defaults-file=$mycnf status | sed -e "s/  /\n/g"
-				echo
-				mysqladmin --defaults-file=$mycnf processlist
+				if [ -f '/usr/bin/mariadb-admin' ]; then
+					echo "MySQL $HOST status"
+					mariadb-admin --defaults-file=$mycnf status | sed -e "s/  /\n/g"
+					echo
+					mariadb-admin --defaults-file=$mycnf processlist
+				else
+					echo "MySQL $HOST status"
+					mysqladmin --defaults-file=$mycnf status | sed -e "s/  /\n/g"
+					echo
+					mysqladmin --defaults-file=$mycnf processlist
+				fi
 				echo -en "\n---------------------------------------------"
 				echo -en "---------------------------------------------\n\n"
 			fi

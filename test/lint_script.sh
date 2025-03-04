@@ -23,22 +23,12 @@ if [ -z "$script" ]; then
 fi
 
 # Install shellcheck
-if [ -f /etc/redhat-release ]; then
-	package_check=$(rpm -qi ShellCheck)
-	if [ $? -eq 1 ]; then
-		echo "[ * ] Updating DNF package cache..."
-		dnf makecache -q > /dev/null 2>&1
-		echo "[ * ] Installing ShellCheck code linter..."
-		dnf install -q -y ShellCheck > /dev/null 2>&1
-	fi
-else
-	package_check=$(dpkg -l | grep shellcheck)
-	if [ -z "$package_check" ]; then
-		echo "[ * ] Updating APT package cache..."
-		apt-get -qq update > /dev/null 2>&1
-		echo "[ * ] Installing shellcheck code linter..."
-		apt-get -qq install -y shellcheck > /dev/null 2>&1
-	fi
+package_check=$(dpkg -l | grep shellcheck)
+if [ -z "$package_check" ]; then
+	echo "[ * ] Updating APT package cache..."
+	apt-get -qq update > /dev/null 2>&1
+	echo "[ * ] Installing shellcheck code linter..."
+	apt-get -qq install -y shellcheck > /dev/null 2>&1
 fi
 
 # Set debug path and ensure it exists

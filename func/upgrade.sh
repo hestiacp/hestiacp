@@ -604,7 +604,7 @@ upgrade_phppgadmin() {
 			if ! version_ge "$pga_release" "7.14.0"; then
 				cp -f $HESTIA_INSTALL_DIR/pga/config.inc.php /etc/phppgadmin/
 			fi
-			if [ ! -f /usr/share/phppgadmin/conf/config.inc.php ]; then
+			if [ ! -L /usr/share/phppgadmin/conf/config.inc.php ]; then
 				ln -s /etc/phppgadmin/config.inc.php /usr/share/phppgadmin/conf
 			fi
 
@@ -624,7 +624,9 @@ upgrade_phpmyadmin() {
 				chown root:hestiamail /var/lib/phpmyadmin/blowfish_secret.inc.php
 				chmod 0640 /var/lib/phpmyadmin/blowfish_secret.inc.php
 			fi
-			chown root:hestiamail /usr/share/phpmyadmin/tmp
+			chown hestiamail:hestiamail /usr/share/phpmyadmin/tmp
+			chown -R root:hestiamail /etc/phpmyadmin/
+
 			chmod 0770 /usr/share/phpmyadmin/tmp
 		else
 			# Display upgrade information
@@ -649,7 +651,7 @@ upgrade_phpmyadmin() {
 			# Create temporary folder and change permissions
 			if [ ! -d /usr/share/phpmyadmin/tmp ]; then
 				mkdir /usr/share/phpmyadmin/tmp
-				chown root:hestiamail /usr/share/phpmyadmin/tmp
+				chown hestiamail:hestiamail /usr/share/phpmyadmin/tmp
 				chmod 0770 /usr/share/phpmyadmin/tmp
 
 			fi
@@ -658,6 +660,9 @@ upgrade_phpmyadmin() {
 				chown root:hestiamail /var/lib/phpmyadmin/blowfish_secret.inc.php
 				chmod 0640 /var/lib/phpmyadmin/blowfish_secret.inc.php
 			fi
+
+			# Make sure to give it the correct permissions
+			chown -R root:hestiamail /etc/phpmyadmin/
 
 			# Clean up source files
 			rm -fr phpMyAdmin-$pma_v-all-languages

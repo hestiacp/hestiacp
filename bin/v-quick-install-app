@@ -3,12 +3,13 @@
 //# info: Install Quick Install Web App via CLI
 //# options: action [user] [domain] [app] [options ...]
 //#
-//# example: v-quick-install-app install admin domain.com wordpress email="info@hestiacp" password="123456" username="admin" site_name="HestiaCP Demo" install_directory="/" language="nl_NL" php_version="8.2" database_create="true"
-//# example: v-quick-install-app apps
-//# example: v-quick-install-app options admin domain.com wordpress
-//# Install Quick Install Web App via CLI run v-quick-install-app apps for supported apps.
-//# v-quick-install-app options for the app options and v-quick-install-app install to install the app
-//# Please note app names are case sensitive
+//# example: v-quick-install-app install admin domain.com WordPress email="info@hestiacp" password="123456" username="admin" site_name="HestiaCP Demo" install_directory="/" language="nl_NL" php_version="8.2" database_create="true"
+//# example: v-quick-install-app app
+//# example: v-quick-install-app options admin domain.com WordPress
+//#
+//# - The v-quick-install-app install command is used to automate the installation of web applications on a server managed by Hestia Control Panel.
+//# - The v-quick-install-app app command is used to retrieve a list of web applications that can be quickly installed through the v-quick-install-app install command in the Hestia Control Panel. This command provides a convenient overview of supported applications and their versions, allowing users to choose which application they would like to deploy on their server. The names of the applications are case sensitive.
+//# - v-quick-install-app options admin domain.com WordPress list all the options available for the specified web application. This command provides a list of all the required and optional fields that need to be filled in when installing the application. The command also provides the default values for each field, if available.
 
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Input\InputArgument;
@@ -60,7 +61,7 @@ $application -> register('install')
 			return Command::FAILURE;
 		}
 		$app_installer_class = "\Hestia\WebApp\Installers\\" . $app . "\\" . $app . "Setup";
-		$app_installer = new $app_installer_class($v_domain, $hestia);
+		$app_installer = new $app_installer_class($hestia);
 
 		// check for default fields
 		$WebappInstaller = new \Hestia\WebApp\AppWizard($app_installer, $v_domain, $hestia);

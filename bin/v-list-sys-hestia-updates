@@ -33,15 +33,6 @@ check_installed_deb() {
 	TIME=$(date -d @$pkg_date +"%T")
 }
 
-# Check details of installed .rpm package function
-check_installed_rpm() {
-	rpm_data=$(rpm -qi $1)
-	ARCH=$(echo "$rpm_data" | grep Architecture | cut -f 2 -d ' ')
-	VERSION=$(echo "$rpm_data" | grep Version | cut -f 2 -d ':' | xargs)
-	DATE=$(echo "$rpm_data" | grep "Build Date" | awk '{print $5 " " $6 " " $7}')
-	TIME=$(echo "$rpm_data" | grep "Build Date" | awk '{print $8 " " $9 " " $10}')
-}
-
 # JSON list function
 json_list() {
 	IFS=$'\n'
@@ -84,22 +75,12 @@ shell_list() {
 #----------------------------------------------------------#
 
 # Checking official latest version
-if [ -f '/etc/redhat-release' ]; then
-	hestia_v=$(dnf list hestia | grep hestia | awk '{print $2}' | cut -f 1 -d '-')
-	nginx_v=$(dnf list hestia-nginx | grep hestia-nginx | awk '{print $2}' | cut -f 1 -d '-')
-	php_v=$(dnf list hestia-php | grep hestia-php | awk '{print $2}' | cut -f 1 -d '-')
-else
-	hestia_v=$(apt-cache policy hestia | grep Candidate | cut -d ':' -f 2 | xargs)
-	nginx_v=$(apt-cache policy hestia-nginx | grep Candidate | cut -d ':' -f 2 | xargs)
-	php_v=$(apt-cache policy hestia-php | grep Candidate | cut -d ':' -f 2 | xargs)
-fi
+hestia_v=$(apt-cache policy hestia | grep Candidate | cut -d ':' -f 2 | xargs)
+nginx_v=$(apt-cache policy hestia-nginx | grep Candidate | cut -d ':' -f 2 | xargs)
+php_v=$(apt-cache policy hestia-php | grep Candidate | cut -d ':' -f 2 | xargs)
 
 # Checking installed hestia version
-if [ -f '/etc/redhat-release' ]; then
-	check_installed_rpm hestia
-else
-	check_installed_deb hestia
-fi
+check_installed_deb hestia
 
 UPDATED='yes'
 if [ -n "$hestia_v" ] && [ "$hestia_v" \> "$VERSION" ]; then
@@ -110,11 +91,7 @@ data="NAME='hestia' VERSION='$VERSION' ARCH='$ARCH'"
 data="$data UPDATED='$UPDATED' DESCR='Hestia core package' TIME='$TIME' DATE='$DATE'"
 
 # Checking installed hestia-php version
-if [ -f '/etc/redhat-release' ]; then
-	check_installed_rpm hestia-php
-else
-	check_installed_deb hestia-php
-fi
+check_installed_deb hestia-php
 
 UPDATED='yes'
 if [ -n "$php_v" ] && [ "$php_v" \> "$VERSION" ]; then
@@ -126,11 +103,7 @@ data="$data ARCH='$ARCH' UPDATED='$UPDATED' DESCR='Hestia internal php interpret
 data="$data TIME='$TIME' DATE='$DATE'"
 
 # Checking installed hestia-nginx version
-if [ -f '/etc/redhat-release' ]; then
-	check_installed_rpm hestia-nginx
-else
-	check_installed_deb hestia-nginx
-fi
+check_installed_deb hestia-nginx
 
 UPDATED='yes'
 if [ -n "$nginx_v" ] && [ "$nginx_v" \> "$VERSION" ]; then

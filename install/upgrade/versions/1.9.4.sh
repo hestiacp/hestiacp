@@ -24,11 +24,9 @@ upgrade_config_set_value 'UPGRADE_REBUILD_USERS' 'no'
 upgrade_config_set_value 'UPGRADE_UPDATE_FILEMANAGER_CONFIG' 'true'
 
 if grep -q "internal-sftp-server" /etc/ssh/sshd_config; then
-	# add a line before the line that contains "internal-sftp-server"
-	sed -i '/Subsystem sftp internal-sftp-.*/i Subsystem sftp internal-sftp' /etc/ssh/sshd_config
+	sed -i 's/Subsystem sftp internal-sftp-.*/Subsystem sftp internal-sftp/' /etc/ssh/sshd_config
 fi
 
-# When jail bash is active
 if grep -q "Subsystem sftp /usr/lib/sftp-server-" /etc/ssh/sshd_config; then
-	sed -i '/Subsystem sftp \/usr\/lib\/sftp-server-.*/Subsystem sftp \/usr\/lib\/sftp-server' /etc/ssh/sshd_config
+	sed -i 's/Subsystem sftp \/usr\/lib\/sftp-server/Subsystem sftp \/usr\/lib\/sftp-server/' /etc/ssh/sshd_config
 fi

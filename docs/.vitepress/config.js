@@ -39,7 +39,7 @@ export default defineConfig({
 
 		footer: {
 			message: 'Released under the GPLv3 License.',
-			copyright: 'Copyright © 2019-present Hestia Control Panel',
+			copyright: 'Copyright © 2019-' + new Date().getFullYear() + ' Hestia Control Panel',
 		},
 
 		algolia: {

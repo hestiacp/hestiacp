@@ -3,8 +3,8 @@ module.exports = {
 	'*.md': 'markdownlint-cli2 --fix',
 	// Run Stylelint on CSS files
 	'*.css': 'stylelint --fix --allow-empty-input',
-	// Run ESLint on TS, TSX, JS, JSX files
-	'*.{ts,js}?(x)': 'eslint --fix',
-	// Run Prettier everywhere
+	// Run Biome on TS, TSX, JS, JSX files
+	'*.{ts,js}?(x)': 'npx @biomejs/biome lint --write --no-errors-on-unmatched',
+	// Run Prettier where supported
 	'*': 'prettier --write --ignore-unknown',
 };

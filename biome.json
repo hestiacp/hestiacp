@@ -1,0 +1,59 @@
+{
+	"$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+	"vcs": {
+		"enabled": false,
+		"clientKind": "git",
+		"useIgnoreFile": false
+	},
+	"files": {
+		"ignoreUnknown": false,
+		"ignore": [
+			"**/*.bats",
+			"./test/test_helper/*",
+			"**/*.min.css",
+			"**/*.min.js",
+			"**/vendor/**",
+			"**/node_modules/**",
+			"**/.vitepress/dist/",
+			"**/.vitepress/cache/",
+			"./docs/.vitepress/dist/",
+			"./docs/.vitepress/cache/"
+		]
+	},
+	"formatter": {
+		"enabled": false,
+		"useEditorconfig": true
+	},
+	"organizeImports": {
+		"enabled": true
+	},
+	"linter": {
+		"enabled": true,
+		"rules": {
+			"recommended": true,
+			"a11y": {
+				"useGenericFontNames": "off"
+			},
+			"style": {
+				"noParameterAssign": "off"
+			},
+			"complexity": {
+				"noForEach": "off"
+			},
+			"correctness": {
+				"noUnknownMediaFeatureName": "off"
+			},
+			"suspicious": {
+				"noEmptyBlock": "off",
+				"noShorthandPropertyOverrides": "off",
+				"noDoubleEquals": "off"
+			}
+		}
+	},
+	"javascript": {
+		"formatter": {
+			"quoteStyle": "single"
+		},
+		"globals": ["Alpine"]
+	}
+}

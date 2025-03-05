@@ -39,9 +39,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          repository: ${{ github.event.pull_request.head.repo.full_name }}
-          ref: ${{ github.event.pull_request.head.ref }}
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -54,23 +51,18 @@ jobs:
       - name: Check formatting
         run: npx prettier --check .
 
-  eslint:
-    name: ESLint
+  biome:
+    name: Biome
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: "lts/*"
+      - name: Setup Biome
+        uses: biomejs/setup-biome@v2
 
-      - name: Install Node packages
-        run: npm ci --ignore-scripts
-
-      - name: Run ESLint
-        run: npx eslint .
+      - name: Run Biome lint
+        run: biome lint .
 
   stylelint:
     name: Stylelint

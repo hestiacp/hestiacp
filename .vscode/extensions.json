@@ -3,7 +3,7 @@
 		"editorconfig.editorconfig",
 		"esbenp.prettier-vscode",
 		"DavidAnson.vscode-markdownlint",
-		"dbaeumer.vscode-eslint",
+		"biomejs.biome",
 		"stylelint.vscode-stylelint",
 		"timonwong.shellcheck",
 		"mrmlnc.vscode-apache",

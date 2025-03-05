@@ -18,7 +18,7 @@ apt update && apt upgrade
 
 Follow system instructions to upgrade your OS. When done, make sure to check that the files in `/etc/apt/sources.list.d` are not hashed out. If they are, remove the hash and run `apt update && apt upgrade` again.
 
-## Debian 11 Bullseye to Debian 112 Bookworm
+## Debian 11 Bullseye to Debian 12 Bookworm
 
 ### Exim config
 

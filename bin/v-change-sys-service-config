@@ -109,14 +109,17 @@ if [ "$update" = 'yes' ] && [ "$restart" != 'no' ]; then
 		fi
 	fi
 
-	$BIN/v-restart-service "$service" > /dev/null 2>&1
-
-	if [ $? -ne 0 ]; then
-		for config in $dst; do
-			cat "$config.vst.back" > "$config"
-			rm -f "$config.vst.back"
-		done
-		check_result "$E_RESTART" "ERROR: $service failed to start with new configuration."
+	if [[ "$service" != "hestiaweb" ]]; then
+		$BIN/v-restart-service "$service" > /dev/null 2>&1
+		if [ $? -ne 0 ]; then
+			for config in $dst; do
+				cat "$config.vst.back" > "$config"
+				rm -f "$config.vst.back"
+			done
+			check_result "$E_RESTART" "ERROR: $service failed to start with new configuration."
+		fi
+	else
+		rm -f "$config.vst.back"
 	fi
 fi
 

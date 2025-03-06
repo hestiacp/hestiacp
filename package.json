@@ -12,7 +12,7 @@
 		"docs:serve": "vitepress serve docs",
 		"docs:test": "vitest run --config docs/.vitepress/vitest.config.js",
 		"build": "node build.js",
-		"lint": "prettier --cache --check . && npx @biomejs/biome lint . && stylelint web/css/src/**/*.css && markdownlint-cli2 *.md docs/**/*.md",
+		"lint": "prettier --cache --check . && biome lint . && stylelint web/css/src/**/*.css && markdownlint-cli2 *.md docs/**/*.md",
 		"lint-staged": "lint-staged",
 		"format": "prettier --cache --write .",
 		"preinstall": "npx only-allow npm",

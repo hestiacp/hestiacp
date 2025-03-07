@@ -109,6 +109,7 @@ setfacl -m "g:hestia-users:---" "$HOMEDIR/$user"
 
 # Building directory tree
 mkdir $HOMEDIR/$user/conf
+chmod o+x $HOMEDIR/$user/conf
 
 if [ -n "$WEB_SYSTEM" ]; then
 	mkdir $HOMEDIR/$user/conf/web $HOMEDIR/$user/web $HOMEDIR/$user/tmp
@@ -116,6 +117,7 @@ if [ -n "$WEB_SYSTEM" ]; then
 	chmod 700 $HOMEDIR/$user/tmp
 	chown $user:$user $HOMEDIR/$user/tmp
 	chown root:$user $HOMEDIR/$user/web/
+	setfacl -m g:www-data:--x -d -m g:www-data:r-x $HOMEDIR/$user/web
 fi
 
 if [ -n "$MAIL_SYSTEM" ]; then
@@ -154,6 +156,8 @@ chown $user:$user \
 	$HOMEDIR/$user/.ssh \
 	$HOMEDIR/$user/.npm \
 	$HOMEDIR/$user/.wp-cli
+
+setfacl -m g:hestiaweb:--x $HOMEDIR/$user/.ssh
 
 # Set permissions
 chmod a+x $HOMEDIR/$user

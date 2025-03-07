@@ -2397,6 +2397,7 @@ update-rc.d hestia defaults
 systemctl start hestia
 check_result $? "hestia start failed"
 chown hestiaweb:hestiaweb $HESTIA/data/sessions
+chown hestiaweb:hestiaweb $HESTIA/web2/cache
 
 # Create backup folder and set correct permission
 mkdir -p /backup/

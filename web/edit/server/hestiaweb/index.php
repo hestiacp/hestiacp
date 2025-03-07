@@ -20,7 +20,7 @@ if (!empty($_POST["save"])) {
 		fwrite($fp, str_replace("\r\n", "\n", $_POST["v_config"]));
 		fclose($fp);
 		exec(
-			HESTIA_CMD . "v-change-sys-service-config " . $new_conf . " hestiaweb no",
+			HESTIA_CMD . "v-change-sys-service-config " . $new_conf . " hestiaweb yes",
 			$output,
 			$return_var,
 		);

@@ -28,5 +28,5 @@ if grep -q "internal-sftp-server" /etc/ssh/sshd_config; then
 fi
 
 if grep -q "Subsystem sftp /usr/lib/sftp-server-" /etc/ssh/sshd_config; then
-	sed -i 's/Subsystem sftp \/usr\/lib\/sftp-server/Subsystem sftp \/usr\/lib\/sftp-server/' /etc/ssh/sshd_config
+	sed -i 's/Subsystem sftp \/usr\/lib\/sftp-server-.*/Subsystem sftp \/usr\/lib\/sftp-server/' /etc/ssh/sshd_config
 fi

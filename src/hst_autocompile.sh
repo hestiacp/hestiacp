@@ -486,7 +486,8 @@ if [ "$PHP_B" = true ]; then
 			--with-curl \
 			--with-zip \
 			--with-gmp \
-			--enable-mbstring
+			--enable-mbstring \
+			--enable-intl
 	fi
 
 	cd $BUILD_DIR_PHP

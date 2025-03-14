@@ -88,7 +88,7 @@ is_type_format_valid() {
 check_args '2' "$#" 'TYPE HOST [FORMAT]'
 is_format_valid 'host'
 is_type_format_valid "$type"
-is_object_valid "../../conf/$type" 'HOST' "$host"
+is_object_valid "../../../conf/$type" 'HOST' "$host"
 
 # Set default port values if they don't exist in host configuration file
 database_set_default_ports

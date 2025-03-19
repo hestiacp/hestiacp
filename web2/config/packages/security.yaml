@@ -1,29 +1,34 @@
 security:
-    # https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
-    password_hashers:
-        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
-    # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
-    providers:
-        users_in_memory: { memory: null }
-    firewalls:
-        dev:
-            pattern: ^/(_(profiler|wdt)|css|images|js)/
-            security: false
-        main:
-            lazy: true
-            provider: users_in_memory
+  password_hashers:
+    App\Users\User\Infrastructure\Security\HestiaUser:
+      id: App\Users\User\Infrastructure\Security\PasswordHasher\YesCryptPasswordHasher
 
-            # activate different ways to authenticate
-            # https://symfony.com/doc/current/security.html#the-firewall
+  providers:
+    database_users:
+      id: App\Users\User\Infrastructure\Security\HestiaUserProvider
 
-            # https://symfony.com/doc/current/security/impersonating_user.html
-            # switch_user: true
+  firewalls:
+    dev:
+      pattern: ^/(_(profiler|wdt|error)|css|images|js)/
+      security: false
 
-    # Easy way to control access for large sections of your site
-    # Note: Only the *first* access control that matches will be used
-    access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
+    secured_area:
+      pattern: ^/
+      switch_user: { role: CAN_SWITCH_USER }
+      form_login:
+        check_path: user_login
+        login_path: user_login
+
+      logout:
+        path: user_logout
+        target: user_login
+
+  access_control:
+    # allow unauthenticated users to access the public locations
+    - { path: ^/login, roles: PUBLIC_ACCESS }
+
+    # but require authentication for all other routes permissions are handled by App
+    - { path: ^/, roles: IS_AUTHENTICATED_REMEMBERED }
 
 when@test:
     security:

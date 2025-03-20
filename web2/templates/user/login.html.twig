@@ -3,30 +3,30 @@
 {% block tab %}LOGIN{% endblock %}
 
 {% block body %}
-	<div class="login">
-		<a href="/" class="u-block u-mb40">
-			<img src="/images/logo.svg" alt="{{ app_name }}" width="100" height="120">
-		</a>
-		<form id="login-form" method="post" action="{{ path('user_login') }}">
-			<h1 class="login-title">
-				{{ 'Welcome to %s' | trans({ '%s': app_name }) }}
-			</h1>
+    <div class="login">
+        <a href="/" class="u-block u-mb40">
+            <img src="/images/logo.svg" alt="{{ app_name }}" width="100" height="120">
+        </a>
+        <form id="login-form" method="post" action="{{ path('user_login') }}">
+            <h1 class="login-title">
+                {{ 'Welcome to %s' | trans({ '%s': app_name }) }}
+            </h1>
 
-			{% if error %}
-				<p class="error">{{ error.messageKey|trans(error.messageData) }}</p>
-			{% endif %}
-			<div class="u-mb20">
-				<label for="username" class="form-label">{{ 'Username' | trans }}</label>
-				<input type="text" class="form-control" name="_username" id="username" autocomplete="username" required autofocus>
-			</div>
-			<div class="u-mb20">
-				<label for="password" class="form-label">{{ 'Password' | trans }}</label>
-				<input type="password" class="form-control" name="_password" id="password" autocomplete="password" required>
-			</div>
+            {% if error %}
+                <p class="error">{{ error.messageKey|trans(error.messageData) }}</p>
+            {% endif %}
+            <div class="u-mb20">
+                <label for="username" class="form-label">{{ 'Username' | trans }}</label>
+                <input type="text" class="form-control" name="_username" id="username" autocomplete="username" required autofocus>
+            </div>
+            <div class="u-mb20">
+                <label for="password" class="form-label">{{ 'Password' | trans }}</label>
+                <input type="password" class="form-control" name="_password" id="password" autocomplete="password" required>
+            </div>
 
-			<button type="submit" class="button">
-				<i class="fas fa-right-to-bracket"></i>{{ 'Next' | trans }}
-			</button>
-		</form>
-	</div>
+            <button type="submit" class="button">
+                <i class="fas fa-right-to-bracket"></i>{{ 'Next' | trans }}
+            </button>
+        </form>
+    </div>
 {% endblock %}

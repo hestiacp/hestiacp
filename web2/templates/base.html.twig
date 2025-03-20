@@ -2,41 +2,43 @@
 <html class="no-js" lang="{{ app.locale }}">
 
 <head>
-	<meta charset="utf-8">
-	<title>{% block tab %}{% endblock %}</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <title>{% block tab %}{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-	<link rel="alternate icon" href="{{ asset('/images/favicon.png') }}" type="image/png">
-	<link rel="icon" href="{{ asset('/images/logo.svg') }}" type="image/svg+xml">
-	<link rel="stylesheet" href="{{ asset('/css/themes/default.min.css') }}">
+    <link rel="alternate icon" href="{{ asset('/images/favicon.png') }}" type="image/png">
+    <link rel="icon" href="{{ asset('/images/logo.svg') }}" type="image/svg+xml">
+    <link rel="stylesheet" href="{{ asset('/css/themes/default.min.css') }}">
 
-	<!-- todo implementing non default themes -->
+{#  {% if app.user.theme and app.user.theme != 'default' %}#}
+    <link rel="stylesheet" href="{{ theme_css() }}">
+{#  {% endif %}#}
 
-	<script defer src="{{ asset('/js/dist/main.min.js') }}"></script>
-	<script defer src="{{ asset('/js/dist/alpinejs-collapse.min.js') }}"></script>
-	<script defer src="{{ asset('/js/dist/alpinejs.min.js') }}"></script>
-	<script>
-		document.documentElement.classList.replace('no-js', 'js');
-		document.addEventListener('alpine:init', () => {
-			Alpine.store('globals', {
-				USER_PREFIX: '<?= $user_plain ?>_',
-				UNLIMITED: '{{ 'Unlimited' | trans }}',
-				NOTIFICATIONS_EMPTY: '{{ 'No notifications' | trans }}',
-				NOTIFICATIONS_DELETE_ALL: '{{ 'Delete all notifications' | trans }}',
-				CONFIRM_LEAVE_PAGE: '{{ 'Are you sure you want to leave the page?' | trans }}',
-				ERROR_MESSAGE: '',
-				BLACKLIST: '{{ 'BLACKLIST' | trans }}',
-				IPVERSE: '{{ 'IPVERSE' | trans }}'
-			});
-		})
-	</script>
+    <script defer src="{{ asset('/js/dist/main.min.js') }}"></script>
+    <script defer src="{{ asset('/js/dist/alpinejs-collapse.min.js') }}"></script>
+    <script defer src="{{ asset('/js/dist/alpinejs.min.js') }}"></script>
+    <script>
+        document.documentElement.classList.replace('no-js', 'js');
+        document.addEventListener('alpine:init', () => {
+            Alpine.store('globals', {
+                USER_PREFIX: '<?= $user_plain ?>_',
+                UNLIMITED: '{{ 'Unlimited' | trans }}',
+                NOTIFICATIONS_EMPTY: '{{ 'No notifications' | trans }}',
+                NOTIFICATIONS_DELETE_ALL: '{{ 'Delete all notifications' | trans }}',
+                CONFIRM_LEAVE_PAGE: '{{ 'Are you sure you want to leave the page?' | trans }}',
+                ERROR_MESSAGE: '',
+                BLACKLIST: '{{ 'BLACKLIST' | trans }}',
+                IPVERSE: '{{ 'IPVERSE' | trans }}'
+            });
+        })
+    </script>
 
-	<!-- todo implementing customs scripts -->
+    <!-- todo implementing customs scripts -->
 </head>
 
 <body class="page-{{ block('tab') | lower }} lang-{{ app.locale }}">
-	<div class="app">
-	{% block body %}{% endblock %}
-	</div>
+    <div class="app">
+    {% block body %}{% endblock %}
+    </div>
 </body>
 </html>

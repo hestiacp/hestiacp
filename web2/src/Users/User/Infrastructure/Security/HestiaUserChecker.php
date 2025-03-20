@@ -10,36 +10,36 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class HestiaUserChecker implements UserCheckerInterface
 {
-	public function __construct(private RequestStack $requestStack)
-	{
-	}
+    public function __construct(private RequestStack $requestStack)
+    {
+    }
 
-	public function checkPreAuth(UserInterface $user): void
-	{
-		if (!$user instanceof HestiaUser) {
-			return;
-		}
+    public function checkPreAuth(UserInterface $user): void
+    {
+        if (!$user instanceof HestiaUser) {
+            return;
+        }
 
-		if (!$user->isLoginEnabled) {
-			$ex = new DisabledException('User account is disabled.');
-			$ex->setUser($user);
+        if (!$user->isLoginEnabled) {
+            $ex = new DisabledException('User account is disabled.');
+            $ex->setUser($user);
 
-			throw $ex;
-		}
+            throw $ex;
+        }
 
-		$request = $this->requestStack->getCurrentRequest();
+        $request = $this->requestStack->getCurrentRequest();
 
-		if (!$request || !$user->allowsLoginFromIp((string) $request->getClientIp())) {
-			$ex = InvalidLoginIpException::forIp($request->getClientIp());
-			$ex->setUser($user);
+        if (!$request || !$user->allowsLoginFromIp((string) $request->getClientIp())) {
+            $ex = InvalidLoginIpException::forIp($request->getClientIp());
+            $ex->setUser($user);
 
-			throw $ex;
-		}
-	}
+            throw $ex;
+        }
+    }
 
-	public function checkPostAuth(UserInterface $user): void
-	{
-		// Not using the post auth check but need to conform to interface
-	}
+    public function checkPostAuth(UserInterface $user): void
+    {
+        // Not using the post auth check but need to conform to interface
+    }
 }
 

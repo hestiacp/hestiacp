@@ -13,70 +13,70 @@ use function implode;
 
 class YesCryptPasswordHasher implements PasswordHasherInterface
 {
-	use CheckPasswordLengthTrait;
+    use CheckPasswordLengthTrait;
 
-	public function hash(string $plainPassword): string
-	{
-		$stream = new InputStream();
-		$process = new Process(['mkpasswd', '--method=yescrypt', '-s']);
-		$process->setInput($stream);
-		$process->start();
+    public function hash(string $plainPassword): string
+    {
+        $stream = new InputStream();
+        $process = new Process(['mkpasswd', '--method=yescrypt', '-s']);
+        $process->setInput($stream);
+        $process->start();
 
-		$stream->write($plainPassword);
-		$stream->close();
+        $stream->write($plainPassword);
+        $stream->close();
 
-		$process->wait();
+        $process->wait();
 
-		if (!$process->isSuccessful()) {
-			throw new LogicException(sprintf(
-				'Unable to hash password, error message: %s',
-				$process->getErrorOutput(),
-			));
-		}
+        if (!$process->isSuccessful()) {
+            throw new LogicException(sprintf(
+                'Unable to hash password, error message: %s',
+                $process->getErrorOutput(),
+            ));
+        }
 
-		return trim($process->getOutput());
-	}
+        return trim($process->getOutput());
+    }
 
-	public function verify(string $hashedPassword, string $plainPassword): bool
-	{
-		$salt = $this->extractSaltFromPassword($hashedPassword);
+    public function verify(string $hashedPassword, string $plainPassword): bool
+    {
+        $salt = $this->extractSaltFromPassword($hashedPassword);
 
-		$stream = new InputStream();
-		$process = new Process(['mkpasswd', '--method=yescrypt', '-s', '-S', $salt]);
-		$process->setInput($stream);
-		$process->start();
+        $stream = new InputStream();
+        $process = new Process(['mkpasswd', '--method=yescrypt', '-s', '-S', $salt]);
+        $process->setInput($stream);
+        $process->start();
 
-		$stream->write($plainPassword);
-		$stream->close();
+        $stream->write($plainPassword);
+        $stream->close();
 
-		$process->wait();
+        $process->wait();
 
-		if (!$process->isSuccessful()) {
-			throw new LogicException(sprintf(
-				'Unable to hash password, error message: %s',
-				$process->getErrorOutput(),
-			));
-		}
+        if (!$process->isSuccessful()) {
+            throw new LogicException(sprintf(
+                'Unable to hash password, error message: %s',
+                $process->getErrorOutput(),
+            ));
+        }
 
-		return $hashedPassword === trim($process->getOutput());
-	}
+        return $hashedPassword === trim($process->getOutput());
+    }
 
-	public function needsRehash(string $hashedPassword): bool
-	{
-		return false;
-	}
+    public function needsRehash(string $hashedPassword): bool
+    {
+        return false;
+    }
 
-	/**
-	 * extract the salt from the yescrypt password. Sending in the full password to mkpasswd will
-	 * also work. But I feel that sending in the full hashed password into mkpasswd reduces the
-	 * trust in the generated hash.
-	 */
-	private function extractSaltFromPassword(string $hashedPassword): string
-	{
-		$hashedPasswordParts = explode('$', $hashedPassword);
+    /**
+     * extract the salt from the yescrypt password. Sending in the full password to mkpasswd will
+     * also work. But I feel that sending in the full hashed password into mkpasswd reduces the
+     * trust in the generated hash.
+     */
+    private function extractSaltFromPassword(string $hashedPassword): string
+    {
+        $hashedPasswordParts = explode('$', $hashedPassword);
 
-		array_pop($hashedPasswordParts);
+        array_pop($hashedPasswordParts);
 
-		return implode('$', $hashedPasswordParts);
-	}
+        return implode('$', $hashedPasswordParts);
+    }
 }

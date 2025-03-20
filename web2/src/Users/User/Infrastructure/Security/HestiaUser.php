@@ -17,9 +17,10 @@ class HestiaUser implements UserInterface, PasswordAuthenticatedUserInterface
         private readonly string $username,
         private string $password,
         private string $salt,
-		public array $roles,
-		public array $allowedLoginIps,
-		public bool $isLoginEnabled,
+        public array $roles,
+        public array $allowedLoginIps,
+        public bool $isLoginEnabled,
+        public string $theme,
     ) {
     }
 
@@ -49,12 +50,12 @@ class HestiaUser implements UserInterface, PasswordAuthenticatedUserInterface
         $this->password = $hashedPassword;
     }
 
-	public function allowsLoginFromIp(string $ip): bool
-	{
-		if ($this->allowedLoginIps === []) {
-			return true;
-		}
+    public function allowsLoginFromIp(string $ip): bool
+    {
+        if ($this->allowedLoginIps === []) {
+            return true;
+        }
 
-		return in_array($ip, $this->allowedLoginIps, true);
-	}
+        return in_array($ip, $this->allowedLoginIps, true);
+    }
 }

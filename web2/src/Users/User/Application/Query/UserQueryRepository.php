@@ -5,5 +5,7 @@ namespace App\Users\User\Application\Query;
 
 interface UserQueryRepository
 {
-	public function findSecurityUserByUsername(string $username): ?SecurityUser;
+    public function findSecurityUserByUsername(string $username): ?SecurityUser;
+
+    public function getAllUsers(): array;
 }

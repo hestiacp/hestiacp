@@ -51,6 +51,7 @@ class HestiaUserProvider implements UserProviderInterface, PasswordUpgraderInter
             $securityUser->roles,
             $securityUser->allowedLoginIps,
             $securityUser->isLoginEnabled,
+            $securityUser->theme,
         );
     }
 
@@ -60,7 +61,7 @@ class HestiaUserProvider implements UserProviderInterface, PasswordUpgraderInter
             return;
         }
 
-		// Rehash and upgrade the password here
+        // Rehash and upgrade the password here
 
         $user->upgradeHashedPassword($newHashedPassword);
     }

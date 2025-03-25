@@ -861,7 +861,7 @@ if [ "$udir" != 'no' ]; then
 			user_dirs=$(echo "$backup_dirs" | egrep -x -f $tmpdir/selected.txt)
 		fi
 
-		for user_dir in $user_dirs; do
+		echo "$user_dirs" | while IFS= read -r user_dir; do
 			echo -e "$(date "+%F %T") $user_dir" | tee -a $tmpdir/restore.log
 			if [ $backup_mode = 'zstd' ]; then
 				tar xf "$BACKUP/$backup" -C "$tmpdir" --no-wildcards "./user_dir/$user_dir.tar.zst"

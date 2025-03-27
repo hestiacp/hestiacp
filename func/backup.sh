@@ -13,7 +13,7 @@ local_backup() {
 	rm -f $BACKUP/$user.$backup_new_date.tar
 
 	# Checking retention
-	backup_list=$(ls -lrt $BACKUP/ | awk '{print $9}' | grep "^$user\." | grep ".tar")
+	backup_list=$(ls -lrt $BACKUP/ | awk '{print $9}' | grep "^$user\.tar")
 	backups_count=$(echo "$backup_list" | wc -l)
 	if [ "$BACKUPS" -le "$backups_count" ]; then
 		backups_rm_number=$((backups_count - BACKUPS + 1))
@@ -126,9 +126,9 @@ ftp_backup() {
 
 	# Checking retention (Only include .tar files)
 	if [ -z $BPATH ]; then
-		backup_list=$(ftpc "ls" | awk '{print $9}' | grep "^$user\." | grep ".tar")
+		backup_list=$(ftpc "ls" | awk '{print $9}' | grep "^$user\.tar" )
 	else
-		backup_list=$(ftpc "cd $BPATH" "ls" | awk '{print $9}' | grep "^$user\." | grep ".tar")
+		backup_list=$(ftpc "cd $BPATH" "ls" | awk '{print $9}' | grep "^$user\.tar" )
 	fi
 	backups_count=$(echo "$backup_list" | wc -l)
 	if [ "$backups_count" -ge "$BACKUPS" ]; then

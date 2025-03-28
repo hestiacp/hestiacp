@@ -627,6 +627,10 @@ fi
 touch $HESTIA/data/queue/letsencrypt.pipe
 sed -i "/ $domain /d" $HESTIA/data/queue/letsencrypt.pipe
 
+if [ -n "$UPDATE_SSL_SCRIPT" ]; then
+	eval "$UPDATE_SSL_SCRIPT $user $domain"
+fi
+
 # Notifying user
 send_notice 'LETSENCRYPT' "$domain SSL has been installed successfully"
 

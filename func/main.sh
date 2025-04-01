@@ -1761,14 +1761,36 @@ add_chroot_jail() {
 		chmod 755 /srv/jail/$user/home/$user
 	fi
 
-	systemd=$(systemd-escape -p --suffix=mount "/srv/jail/$user/home/$user")
-	cat > "/etc/systemd/system/$systemd" << EOF
+	src=$(getent passwd $user | cut -d : -f 6)
+	srcfs=$(findmnt --noheadings --output FSTYPE --target $src)
+	srcsystemd=$(systemd-escape -p --suffix=mount $(findmnt --noheadings --output TARGET --target $src))
+	destsystemd=$(systemd-escape -p --suffix=mount "/srv/jail/$user/home/$user")
+
+	if [[ $srcfs = *nfs* ]] ; then
+		cat > "/etc/systemd/system/$destsystemd" << EOF
+[Unit]
+Description=Mount $user's home directory to the jail chroot
+After=$srcsystemd
+Requires=$srcsystemd
+
+[Mount]
+What=$src
+Where=/srv/jail/$user/home/$user
+Type=none
+Options=bind,_netdev
+LazyUnmount=yes
+
+[Install]
+RequiredBy=remote-fs.target
+EOF
+	else
+		cat > "/etc/systemd/system/$destsystemd" << EOF
 [Unit]
 Description=Mount $user's home directory to the jail chroot
 Before=local-fs.target
 
 [Mount]
-What=$(getent passwd $user | cut -d : -f 6)
+What=$src
 Where=/srv/jail/$user/home/$user
 Type=none
 Options=bind
@@ -1777,10 +1799,10 @@ LazyUnmount=yes
 [Install]
 RequiredBy=local-fs.target
 EOF
-
+	fi
 	systemctl daemon-reload > /dev/null 2>&1
-	systemctl enable "$systemd" > /dev/null 2>&1
-	systemctl start "$systemd" > /dev/null 2>&1
+	systemctl enable "$destsystemd" > /dev/null 2>&1
+	systemctl start "$destsystemd" > /dev/null 2>&1
 }
 
 delete_chroot_jail() {

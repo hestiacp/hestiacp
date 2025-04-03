@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: update user usage counters
-# options: USER
+# options: [USER]
 #
 # example: v-update-user-counters admin
 #
@@ -10,9 +10,6 @@
 #                Variables & Functions                     #
 #----------------------------------------------------------#
 
-# Argument definition
-user=$1
-
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
 source /etc/hestiacp/hestia.conf
@@ -21,11 +18,14 @@ source $HESTIA/func/main.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
+# Argument definition
+user=$1
+
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '0' "$#" 'USER'
+check_args '0' "$#" '[USER]'
 if [ -n "$user" ]; then
 	is_format_valid 'user'
 	is_object_valid 'user' 'USER' "$user"

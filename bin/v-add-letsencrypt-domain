@@ -35,8 +35,8 @@ if [[ "$LE_STAGING" = 'yes' ]]; then
 fi
 
 # LE Pre-Hook
-if [ -e "/etc/hestiacp/hooks/le_pre.sh" ]; then
-    /etc/hestiacp/hooks/le_pre.sh
+if [ -x "/etc/hestiacp/hooks/le_pre.sh" ]; then
+    /etc/hestiacp/hooks/le_pre.sh "$user" "$domain" "$aliases" "$mail"
 fi
 
 # encode base64
@@ -617,8 +617,8 @@ else
 fi
 
 # LE Post-Hook
-if [ -e "/etc/hestiacp/hooks/le_post.sh" ]; then
-    /etc/hestiacp/hooks/le_post.sh
+if [ -x "/etc/hestiacp/hooks/le_post.sh" ]; then
+    /etc/hestiacp/hooks/le_post.sh "$user" "$domain" "$aliases" "$mail"
 fi
 
 # Remove challenge folder if exist

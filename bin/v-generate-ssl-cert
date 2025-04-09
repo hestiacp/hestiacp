@@ -148,21 +148,21 @@ fi
 
 # Generate the cert 1 year
 if [ -z "$aliases" ]; then
-    openssl x509 -req -sha256 \
-        -days $DAYS \
-        -in $domain.csr \
-        -signkey $domain.key \
-        -extfile <(printf "[SAN]\nsubjectAltName=DNS:$domain") \
-        -extensions SAN \
-        -out $domain.crt >/dev/null 2>&1
+	openssl x509 -req -sha256 \
+		-days $DAYS \
+		-in $domain.csr \
+		-signkey $domain.key \
+		-extfile <(printf "[SAN]\nsubjectAltName=DNS:$domain") \
+		-extensions SAN \
+		-out $domain.crt > /dev/null 2>&1
 else
-    openssl x509 -req -sha256 \
-        -days $DAYS \
-        -in $domain.csr \
-        -signkey $domain.key \
-        -extfile <(printf "[SAN]\nsubjectAltName=$dns_aliases") \
-        -extensions SAN \
-        -out $domain.crt >/dev/null 2>&1
+	openssl x509 -req -sha256 \
+		-days $DAYS \
+		-in $domain.csr \
+		-signkey $domain.key \
+		-extfile <(printf "[SAN]\nsubjectAltName=$dns_aliases") \
+		-extensions SAN \
+		-out $domain.crt > /dev/null 2>&1
 fi
 
 # Listing certificates

@@ -1,26 +1,22 @@
-<h1 align="center"><a href="https://www.hestiacp.com/">Hestia Control Panel</a></h1>
+<div align="center">
+	
+# [Hestia Control Panel](https://www.hestiacp.com)
 
 ![HestiaCP Web Interface screenshot](https://storage.hestiacp.com/hestiascreen.png)
 
-<h2 align="center">Lightweight and powerful control panel for the modern web</h2>
+## Lightweight and powerful control panel for the modern web
 
-<p align="center"><strong>Latest stable release:</strong> Version 1.9.3 | <a href="https://github.com/hestiacp/hestiacp/blob/release/CHANGELOG.md">View Changelog</a></p>
+**Latest stable release:** Version 1.9.3 | [View Changelog](https://github.com/hestiacp/hestiacp/blob/release/CHANGELOG.md)
 
-<p align="center">
-	<a href="https://www.hestiacp.com/">HestiaCP.com</a> |
-	<a href="https://docs.hestiacp.com/">Documentation</a> |
-	<a href="https://forum.hestiacp.com/">Forum</a>
-	<br/><br/>
-	<a href="https://drone.hestiacp.com/hestiacp/hestiacp">
-		<img src="https://drone.hestiacp.com/api/badges/hestiacp/hestiacp/status.svg?ref=refs/heads/main" alt="Drone Status"/>
-	</a>
-	<a href="https://github.com/hestiacp/hestiacp/actions/workflows/lint.yml">
-		<img src="https://github.com/hestiacp/hestiacp/actions/workflows/lint.yml/badge.svg" alt="Lint Status"/>
-	</a>
-	<a href="https://gurubase.io/g/hestia">
-		<img src="https://img.shields.io/badge/Gurubase-Ask%20Hestia%20Guru-006BFF" alt="Gurubase"/>
-	</a>
-</p>
+[HestiaCP.com](https://www.hestiacp.com) |
+[Documentation](https://docs.hestiacp.com) |
+[Forum](https://forum.hestiacp.com)
+<br>
+[![Drone Status](https://drone.hestiacp.com/api/badges/hestiacp/hestiacp/status.svg?ref=refs/heads/main)](https://drone.hestiacp.com/hestiacp/hestiacp)
+[![Lint Status](https://github.com/hestiacp/hestiacp/actions/workflows/lint.yml/badge.svg)](https://github.com/hestiacp/hestiacp/actions/workflows/lint.yml)
+[![Gurubase](https://img.shields.io/badge/Gurubase-Ask%20Hestia%20Guru-006BFF)](https://gurubase.io/g/hestia)
+
+</div>
 
 ## **Welcome!**
 
@@ -28,11 +24,12 @@ Hestia Control Panel is designed to provide administrators an easy to use web an
 
 ## Donate
 
-[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=ST87LQH2CHGLA)<br /><br />
+[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=ST87LQH2CHGLA)<br><br>
 Bitcoin : bc1q48jt5wg5jaj8g9zy7c3j03cv57j2m2u5anlutu<br>
 Ethereum : 0xfF3Dd2c889bd0Ff73d8085B84A314FC7c88e5D51<br>
 Binance: bnb1l4ywvw5ejfmsgjdcx8jn5lxj7zsun8ktfu7rh8<br>
 Smart Chain: 0xfF3Dd2c889bd0Ff73d8085B84A314FC7c88e5D51<br>
+Monero/XMR: 45p5eKWfp3kYcY3cBtKq2TWpp5HGYFAbre2Xd76sRhWGXfahAj5MkxzV2oPF2VqU617pwS5JZh1h4gy6jTm73vE7PnQ48Rs
 
 ## Features and Services
 

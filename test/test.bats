@@ -465,7 +465,7 @@ function check_ip_not_banned(){
   refute_output
 }
 
-@test "User: Change user language (Does not exists)" {
+@test "User: Change user language (Does not exist)" {
   run v-change-user-language $user "aa"
   assert_failure $E_NOTEXIST
 }
@@ -482,7 +482,7 @@ function check_ip_not_banned(){
   refute_output
 }
 
-@test "User: Change user theme (Does not exists)" {
+@test "User: Change user theme (Does not exist)" {
   run v-change-user-theme $user "aa"
   assert_failure $E_NOTEXIST
 }

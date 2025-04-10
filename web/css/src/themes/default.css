@@ -267,7 +267,7 @@
 }
 
 .top-bar-notification-content {
-	word-break: break-word;
+	overflow-wrap: break-word;
 
 	& p {
 		margin-bottom: 15px;

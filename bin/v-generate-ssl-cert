@@ -118,6 +118,9 @@ if [ -z "$aliases" ]; then
 		-batch \
 		-subj "$subj" \
 		-key $domain.key \
+		-reqexts SAN \
+		-config <(cat $ssl_conf \
+			<(printf "[SAN]\nsubjectAltName=DNS:$domain")) \
 		-out $domain.csr > /dev/null 2>&1
 else
 	for alias in $(echo $domain,$aliases | tr ',' '\n' | sort -u); do
@@ -144,11 +147,23 @@ else
 fi
 
 # Generate the cert 1 year
-openssl x509 -req -sha256 \
-	-days $DAYS \
-	-in $domain.csr \
-	-signkey $domain.key \
-	-out $domain.crt > /dev/null 2>&1
+if [ -z "$aliases" ]; then
+	openssl x509 -req -sha256 \
+		-days $DAYS \
+		-in $domain.csr \
+		-signkey $domain.key \
+		-extfile <(printf "[SAN]\nsubjectAltName=DNS:$domain") \
+		-extensions SAN \
+		-out $domain.crt > /dev/null 2>&1
+else
+	openssl x509 -req -sha256 \
+		-days $DAYS \
+		-in $domain.csr \
+		-signkey $domain.key \
+		-extfile <(printf "[SAN]\nsubjectAltName=$dns_aliases") \
+		-extensions SAN \
+		-out $domain.crt > /dev/null 2>&1
+fi
 
 # Listing certificates
 if [ -e "$domain.crt" ]; then

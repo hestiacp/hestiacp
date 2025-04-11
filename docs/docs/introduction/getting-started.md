@@ -1,15 +1,4 @@
-# Getting Started
-
-This section will help you get Hestia installed on your server. If you already have Hestia installed and are just looking for options, you can skip this page.
-
-::: warning
-The installer needs to be run as **root**, either directly from the terminal or remotely, using SSH. If you do not do this, the installer will not proceed.
-:::
-
-## Requirements
-
-::: warning
-Hestia must be installed on top of a fresh operating system installation to ensure proper functionality.
+# 
 See custom installation below for further details.
 :::
 

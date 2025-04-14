@@ -495,7 +495,7 @@ if [ -n "$conflicts" ] && [ -z "$force" ]; then
 fi
 
 # Check network configuration
-if [ -d /etc/netplan ] && [ -z "$force" ]; then
+if [ -d /etc/netplan ] && [ -z "$force" ] && [ "$(systemd-detect-virt)" != "kvm" ]; then
 	if [ -z "$(ls -A /etc/netplan)" ]; then
 		echo '!!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!!'
 		echo

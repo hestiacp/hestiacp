@@ -171,7 +171,7 @@ remote_dns_health_check() {
 			log_event "$E_CONNECT" "$ARGUMENTS"
 
 			# Suspending remote host
-			dconf="../../conf/dns-cluster"
+			dconf="../../../conf/dns-cluster"
 			update_object_value "$dconf" 'HOST' "$HOST" '$SUSPENDED' 'yes'
 		fi
 	done

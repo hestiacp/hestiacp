@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Users\User\Infrastructure\Security;
 
+use App\Users\User\Application\Query\Package;
+use App\Users\User\Application\Query\Usage;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use function in_array;
@@ -14,13 +16,16 @@ class HestiaUser implements UserInterface, PasswordAuthenticatedUserInterface
      * @param string[] $roles
      */
     public function __construct(
-        private readonly string $username,
-        private string $password,
-        private string $salt,
+        public readonly string $username,
+        public string $contactName,
+        public string $password,
+        public string $salt,
         public array $roles,
         public array $allowedLoginIps,
         public bool $isLoginEnabled,
         public string $theme,
+        public Package $package,
+        public Usage $usage,
     ) {
     }
 

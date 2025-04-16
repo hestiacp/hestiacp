@@ -46,12 +46,15 @@ class HestiaUserProvider implements UserProviderInterface, PasswordUpgraderInter
 
         return new HestiaUser(
             $securityUser->username,
+            $securityUser->contactName,
             $securityUser->password,
             $securityUser->salt,
             $securityUser->roles,
             $securityUser->allowedLoginIps,
             $securityUser->isLoginEnabled,
             $securityUser->theme,
+            $securityUser->package,
+            $securityUser->usage,
         );
     }
 

@@ -9,6 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use function var_dump;
 
 class UserListController extends AbstractController
 {
@@ -16,12 +17,12 @@ class UserListController extends AbstractController
     {
     }
 
-    #[Route(path: '/user/list', name: 'user_list')]
+    #[Route(path: '/users', name: 'user_list')]
     #[IsGranted("ROLE_ADMIN")]
     public function userList(): Response
     {
-        $users = $this->userQueryRepository->getAllUsers();
+        $users = $this->userQueryRepository->getUserList();
 
-        return $this->render('user/list.html.twig', ['users' => $users]);
+        return $this->render('user/list.html.twig', ['users' => $users->users]);
     }
 }

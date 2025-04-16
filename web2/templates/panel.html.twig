@@ -1,0 +1,347 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <header class="app-header">
+
+        <div class="top-bar">
+            <div class="container top-bar-inner">
+
+                <!-- Logo / Usage Statistics wrapper -->
+                <div class="top-bar-left">
+
+                    <!-- Logo / Home Button -->
+                    <a href="/" class="top-bar-logo" title="{{ app_name }}">
+                    <img src="/images/logo-header.svg" alt="{{ app_name }}" width="54" height="29">
+                    </a>
+
+                    <!-- Usage Statistics -->
+                    <div class="top-bar-usage">
+                        <div class="top-bar-usage-inner">
+                            <span class="top-bar-usage-item">
+                                <i class="fas fa-user" title="{{ 'Logged in as' | trans }}: {{ app.user.username }}"></i>
+                                <span class="u-text-bold">
+                                    {{ app.user.username }}
+                                </span>
+                            </span>
+                            <span class="top-bar-usage-item">
+                                <i class="fas fa-hard-drive" title="{{ 'Disk' | trans }}: {{ humanize_usage_size(app.user.usage.disk) }} {{ humanize_usage_measure(app.user.usage.disk) }}"></i>
+                                <span class="u-text-bold">
+                                    {{ humanize_usage_size(app.user.usage.disk) }}
+                                </span>
+                                {{ humanize_usage_measure(app.user.usage.disk) }}
+                            </span>
+                            <span class="top-bar-usage-item">
+                                <i class="fas fa-right-left" title="{{ 'Bandwidth' | trans }}: {{ humanize_usage_size(app.user.usage.bandwidth) }} {{ humanize_usage_measure(app.user.usage.bandwidth) }}"></i>
+                                <span class="u-text-bold">
+                                    {{ humanize_usage_size(app.user.usage.bandwidth) }}
+                                </span>
+                                {{ humanize_usage_measure(app.user.usage.bandwidth) }}
+                            </span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Notifications / Menu wrapper -->
+                <div class="top-bar-right">
+
+                    <!-- Notifications -->
+{#                    <div x-data="notifications" class="top-bar-notifications">#}
+{#                        <button#}
+{#                            x-on:click="toggle()"#}
+{#                            x-bind:class="open && 'active'"#}
+{#                            class="top-bar-menu-link"#}
+{#                            type="button"#}
+{#                            title="{{ 'Notifications' | trans }}"#}
+{#                        >#}
+{#                        <i#}
+{#                            x-bind:class="{#}
+{#                                        'animate__animated animate__swing icon-orange': (!initialized && <?= $panel[$user]["NOTIFICATIONS"] == "yes" ? "true" : "false" ?>) || notifications.length != 0,#}
+{#                        'fas fa-bell': true#}
+{#                        }"#}
+{#                        ></i>#}
+{#                        <span class="u-hidden">{{ 'Notifications' | trans }}</span>#}
+{#                        </button>#}
+{#                        <div#}
+{#                            x-cloak#}
+{#                            x-show="open"#}
+{#                            x-on:click.outside="open = false"#}
+{#                            class="top-bar-notifications-panel"#}
+{#                        >#}
+{#                            <template x-if="!initialized">#}
+{#                                <div class="top-bar-notifications-empty">#}
+{#                                    <i class="fas fa-circle-notch fa-spin icon-dim"></i>#}
+{#                                    <p>{{ 'Loading...' | trans }}</p>#}
+{#                                </div>#}
+{#                            </template>#}
+{#                            <template x-if="initialized && notifications.length == 0">#}
+{#                                <div class="top-bar-notifications-empty">#}
+{#                                    <i class="fas fa-bell-slash icon-dim"></i>#}
+{#                                    <p>{{ 'No notifications' | trans }}</p>#}
+{#                                </div>#}
+{#                            </template>#}
+{#                            <template x-if="initialized && notifications.length > 0">#}
+{#                                <ul>#}
+{#                                    <template x-for="notification in notifications" :key="notification.ID">#}
+{#                                        <li#}
+{#                                            x-bind:id="`notification-${notification.ID}`"#}
+{#                                            x-bind:class="notification.ACK && 'unseen'"#}
+{#                                            class="top-bar-notification-item"#}
+{#                                            x-data="{ open: true }"#}
+{#                                            x-show="open"#}
+{#                                            x-collapse#}
+{#                                        >#}
+{#                                            <div class="top-bar-notification-inner">#}
+{#                                                <div class="top-bar-notification-header">#}
+{#                                                    <p x-text="notification.TOPIC" class="top-bar-notification-title"></p>#}
+{#                                                    <button#}
+{#                                                        x-on:click="open = false; setTimeout(() => remove(notification.ID), 300);"#}
+{#                                                        type="button"#}
+{#                                                        class="top-bar-notification-delete"#}
+{#                                                        title="{{ 'Delete notification' | trans }}"#}
+{#                                                    >#}
+{#                                                    <i class="fas fa-xmark"></i>#}
+{#                                                    <span class="u-hidden-visually">{{ 'Delete notification' | trans }}</span>#}
+{#                                                    </button>#}
+{#                                                </div>#}
+{#                                                <div class="top-bar-notification-content" x-html="notification.NOTICE"></div>#}
+{#                                                <p class="top-bar-notification-timestamp">#}
+{#                                                    <time#}
+{#                                                        :datetime="`${notification.TIMESTAMP_ISO}`"#}
+{#                                                        x-bind:title="`${notification.TIMESTAMP_TITLE}`"#}
+{#                                                        x-text="`${notification.TIMESTAMP_TEXT}`"#}
+{#                                                    ></time>#}
+{#                                                </p>#}
+{#                                            </div>#}
+{#                                        </li>#}
+{#                                    </template>#}
+{#                                </ul>#}
+{#                            </template>#}
+{#                            <template x-if="initialized && notifications.length > 2">#}
+{#                                <button#}
+{#                                    x-on:click="removeAll()"#}
+{#                                    type="button"#}
+{#                                    class="top-bar-notifications-delete-all"#}
+{#                                >#}
+{#                                    <i class="fas fa-check"></i>#}
+{#                                    {{ 'Delete all notifications' | trans }}#}
+{#                                </button>#}
+{#                            </template>#}
+{#                        </div>#}
+{#                    </div>#}
+
+                    <!-- Menu -->
+                    <nav x-data="{ open: false }" class="top-bar-menu">
+
+                        <button
+                            type="button"
+                            class="top-bar-menu-link u-hide-tablet"
+                            x-on:click="open = !open">
+                            <i class="fas fa-bars"></i>
+                            <span class="u-hidden" x-text="open ? '{{ 'Close menu' | trans }}' : '{{ 'Open menu' | trans }}'">
+                            {{ 'Open menu' | trans }}
+                            </span>
+                        </button>
+
+                        <div x-cloak x-show="open" x-on:click.outside="open = false" class="top-bar-menu-panel">
+                            <ul class="top-bar-menu-list">
+
+                                <!-- File Manager -->
+                                <li class="top-bar-menu-item">
+                                    <a title="{{ 'File manager' | trans }}" class="top-bar-menu-link <?php if ($TAB == 'FM') echo 'active' ?>" href="/fm/">
+                                    <i class="fas fa-folder-open"></i>
+                                    <span class="top-bar-menu-link-label u-hide-desktop">{{ 'File manager' | trans }}</span>
+                                    </a>
+                                </li>
+
+                                <!-- Web Terminal -->
+                                <li class="top-bar-menu-item">
+                                    <a title="{{ 'Web terminal' | trans }}" class="top-bar-menu-link <?php if ($TAB == 'TERMINAL') echo 'active' ?>" href="/list/terminal/">
+                                    <i class="fas fa-terminal"></i>
+                                    <span class="top-bar-menu-link-label u-hide-desktop">{{ 'Web terminal' | trans }}</span>
+                                    </a>
+                                </li>
+
+                                <!-- Server Settings -->
+                                <li class="top-bar-menu-item">
+                                    <a title="{{ 'Server settings' | trans }}" class="top-bar-menu-link <?php if (in_array($TAB, ['SERVER', 'IP', 'RRD', 'FIREWALL'])) echo 'active' ?>" href="/list/server/">
+                                    <i class="fas fa-gear"></i>
+                                    <span class="top-bar-menu-link-label u-hide-desktop">{{ 'Server settings' | trans }}</span>
+                                    </a>
+                                </li>
+
+                                <!-- Edit User -->
+                                <li class="top-bar-menu-item">
+                                    <a title="{{ 'Logs' | trans }}" class="top-bar-menu-link <?php if ($TAB == 'LOG') echo 'active' ?>" href="/list/log/">
+                                    <i class="fas fa-clock-rotate-left"></i>
+                                    <span class="top-bar-menu-link-label u-hide-desktop">{{ 'Logs' | trans }}</span>
+                                    </a>
+                                </li>
+
+                                <li class="top-bar-menu-item">
+                                    <a title="{{ app.user.username }} ({{ app.user.contactName }})" class="top-bar-menu-link" href="/user/{{ app.user.username }}/edit">
+                                    <i class="fas fa-circle-user"></i>
+                                    <span class="top-bar-menu-link-label u-hide-desktop">{{ app.user.username }} ({{ app.user.contactName }})</span>
+                                    </a>
+                                </li>
+
+                                <!-- Statistics -->
+                                <li class="top-bar-menu-item">
+                                    <a title="{{ 'Statistics' | trans }}" class="top-bar-menu-link <?php if ($TAB == 'STATS') echo 'active' ?>" href="/list/stats/">
+                                    <i class="fas fa-chart-line"></i>
+                                    <span class="top-bar-menu-link-label u-hide-desktop">{{ 'Statistics' | trans }}</span>
+                                    </a>
+                                </li>
+
+                                <!-- Help / Documentation -->
+                                <li class="top-bar-menu-item">
+                                    <a title="{{ 'Help' | trans }}" class="top-bar-menu-link" href="https://hestiacp.com/docs/" target="_blank" rel="noopener">
+                                    <i class="fas fa-circle-question"></i>
+                                    <span class="top-bar-menu-link-label u-hide-desktop">{{ 'Help' | trans }}</span>
+                                    </a>
+                                </li>
+
+                                <li class="top-bar-menu-item">
+                                    <a title="{{ 'Log out' | trans }}" class="top-bar-menu-link top-bar-menu-link-logout" href="/logout">
+                                    <i class="fas fa-right-from-bracket"></i>
+                                    <span class="top-bar-menu-link-label u-hide-desktop">{{ 'Log out' | trans }}</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </nav>
+                </div>
+            </div>
+        </div>
+
+        <nav x-data="{ open: false }" class="main-menu">
+            <div class="container">
+                <button x-on:click="open = !open" type="button" class="main-menu-toggle">
+                    <i class="fas fa-bars"></i>
+                    <span
+                        x-text="open ? '{{ 'Collapse main menu' | trans }}' : '{{ 'Expand main menu' | trans }}'"
+                    class="main-menu-toggle-label"
+                    >
+                    {{ 'Expand main menu' | trans }}
+                    </span>
+                </button>
+                <ul x-cloak x-show="open" class="main-menu-list">
+
+                    <!-- Users tab -->
+                    {% if is_granted("ROLE_ADMIN") %}
+                    <li class="main-menu-item">
+                        <a class="main-menu-item-link <?php if (in_array($TAB, ['USER', 'LOG'])) echo 'active' ?>" href="/list/user/">
+                        <p class="main-menu-item-label">{{ 'USER' | trans }}<i class="fas fa-users"></i></p>
+                        <ul class="main-menu-stats">
+                            <li>
+                                {{ 'Users' | trans }}: 0
+                            </li>
+                            <li>
+                                {{ 'Suspended' | trans }}: 0
+                            </li>
+                        </ul>
+                        </a>
+                    </li>
+                    {% endif %}
+
+                    <!-- Web tab -->
+                    <li class="main-menu-item">
+                        <a class="main-menu-item-link <?php if ($TAB == 'WEB') echo 'active' ?>" href="/list/web/">
+                        <p class="main-menu-item-label">{{ 'WEB' | trans }}<i class="fas fa-earth-americas"></i></p>
+                        <ul class="main-menu-stats">
+                            <li>
+                                {{ 'Domains' | trans }}: 0 / 0 (0)
+                            </li>
+                            <li>
+                                {{ 'Aliases' | trans }}: 0 / 0
+                            </li>
+                        </ul>
+                        </a>
+                    </li>
+
+                    <!-- DNS tab -->
+                    <li class="main-menu-item">
+                        <a class="main-menu-item-link <?php if ($TAB == 'DNS') echo 'active' ?>" href="/list/dns/">
+                        <p class="main-menu-item-label">{{ 'DNS' | trans }}<i class="fas fa-book-atlas"></i></p>
+                        <ul class="main-menu-stats">
+                            <li>
+                                {{ 'Zones' | trans }}: 0 / 0 (0)
+                            </li>
+                            <li>
+                                {{ 'Records' | trans }}: 0 / 0
+                            </li>
+                        </ul>
+                        </a>
+                    </li>
+
+                    <!-- Mail tab -->
+                    <li class="main-menu-item">
+                        <a class="main-menu-item-link <?php if ($TAB == 'MAIL') echo 'active' ?>" href="/list/mail/">
+                        <p class="main-menu-item-label">{{ 'MAIL' | trans }}<i class="fas fa-envelopes-bulk"></i></p>
+                        <ul class="main-menu-stats">
+                            <li>
+                                {{ 'Domains' | trans }}: 0 / 0 (0)
+                            </li>
+                            <li>
+                                {{ 'Accounts' | trans }}: 0 / 0
+                            </li>
+                        </ul>
+                        </a>
+                    </li>
+
+                    <!-- Databases tab -->
+                    <li class="main-menu-item">
+                        <a class="main-menu-item-link <?php if ($TAB == 'DB') echo 'active' ?>" href="/list/db/">
+                        <p class="main-menu-item-label">{{ 'DB' | trans }}<i class="fas fa-database"></i></p>
+                        <ul class="main-menu-stats">
+                            <li>
+                                {{ 'Databases' | trans }}: 0 / 0 (0)
+                            </li>
+                        </ul>
+                        </a>
+                    </li>
+
+                    <!-- Cron tab -->
+                    <li class="main-menu-item">
+                        <a class="main-menu-item-link <?php if ($TAB == 'CRON') echo 'active' ?>" href="/list/cron/">
+                        <p class="main-menu-item-label">{{ 'CRON' | trans }}<i class="fas fa-clock"></i></p>
+                        <ul class="main-menu-stats">
+                            <li>
+                                {{ 'Jobs' | trans }}: 0 / 0 (0)
+                            </li>
+                        </ul>
+                        </a>
+                    </li>
+
+                    <!-- Backups tab -->
+                    <li class="main-menu-item">
+                        <a class="main-menu-item-link <?php if ($TAB == 'BACKUP') echo 'active' ?>" href="/list/backup/">
+                        <p class="main-menu-item-label">{{ 'BACKUP' | trans }}<i class="fas fa-file-zipper"></i></p>
+                        <ul class="main-menu-stats">
+                            <li>
+                                {{ 'Backups' | trans }}: 0 / 0
+                            </li>
+                        </ul>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+    </header>
+
+    <main class="app-content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="app-footer">
+        <div class="container">
+            <p>
+                <a href="https://hestiacp.com/" class="app-footer-link" target="_blank">
+                    {{ 'Hestia Control Panel' | trans }}
+                </a>
+                v{{ app_version }}
+            </p>
+        </div>
+    </footer>
+{% endblock %}

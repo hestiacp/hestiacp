@@ -6,7 +6,10 @@ namespace App\Users\User\Infrastructure\Storage;
 
 use App\System\Hestia\Infrastructure\Cli\HestiaCommandRunner;
 use App\System\Hestia\Infrastructure\Cli\HestiaCommandFailed;
+use App\Users\User\Application\Query\List\UserList;
+use App\Users\User\Application\Query\Package;
 use App\Users\User\Application\Query\SecurityUser;
+use App\Users\User\Application\Query\Usage;
 use App\Users\User\Application\Query\UserQueryRepository;
 
 class HestiaUserQueryRepository implements UserQueryRepository
@@ -34,24 +37,13 @@ class HestiaUserQueryRepository implements UserQueryRepository
             return null;
         }
 
-        $allowedIps = [];
-        if ($user[$username]['LOGIN_USE_IPLIST'] === 'yes') {
-            $allowedIps = array_map('trim', explode(',', $user[$username]['LOGIN_ALLOW_IPS']));
-        }
-
-        return new SecurityUser(
-            $username,
-            $credentials['password'],
-            $credentials['salt'],
-            [$user[$username]['ROLE'] === 'admin' ? 'ROLE_ADMIN' : 'ROLE_USER'],
-            $allowedIps,
-            $user[$username]['LOGIN_DISABLED'] === 'no',
-            $user[$username]['THEME'],
-        );
+        return SecurityUser::fromState($username, $credentials, $user[$username]);
     }
 
-    public function getAllUsers(): array
+    public function getUserList(): UserList
     {
-        // TODO: Implement getAllUsers() method.
+        $result = $this->hestiaCommandRunner->run('v-list-users', ['json']);
+
+        return UserList::fromState($result->getOutputJson());
     }
 }

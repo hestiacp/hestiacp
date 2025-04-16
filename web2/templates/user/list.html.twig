@@ -45,7 +45,7 @@
                         </li>
                     </ul>
                     <form x-data x-bind="BulkEdit" action="/bulk/user/" method="post">
-                        <input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
+                        <input type="hidden" name="token" value="{{ csrf_token('bulk-edit') }}">
                         <select class="form-select" name="action">
                             <option value="">{{ 'Apply to selected' | trans }}</option>
                             <option value="rebuild">{{ 'Rebuild All' | trans }}</option>
@@ -67,8 +67,7 @@
                 </div>
                 <div class="toolbar-search">
                     <form action="/search/" method="get">
-                        <input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
-                        <input type="search" class="form-control js-search-input" name="q" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" title="{{ 'Search' | trans }}">
+                        <input type="search" class="form-control js-search-input" name="q" title="{{ 'Search' | trans }}">
                         <button type="submit" class="toolbar-input-submit" title="{{ 'Search' | trans }}">
                         <i class="fas fa-magnifying-glass"></i>
                         </button>
@@ -124,7 +123,7 @@
 
             <!-- Begin user list item loop -->
             {% for user in users %}
-            <div class="units-table-row {% if user.isSuspended %}disabled{% endif%} js-unit <?php if (($_SESSION['POLICY_SYSTEM_HIDE_ADMIN'] === 'yes') && ($_SESSION['user'] !== $_SESSION['ROOT_USER']) && ($key === 'admin')) { echo 'u-hidden'; } ?>"
+            <div class="units-table-row {% if user.isSuspended %}disabled{% endif%} js-unit"
                  data-sort-date="{{ user.createdOn }}"
                  data-sort-name="{{ user.username }}"
                  data-sort-package="{{ user.package.name }}"
@@ -162,12 +161,11 @@
                             </a>
                         </li>
                         {% endif %}
-                        <?php if (!($_SESSION["userContext"] === "admin" && $key == $_SESSION['ROOT_USER'] && $_SESSION["user"] != $_SESSION['ROOT_USER'])) { ?>
                         {% if is_granted("ROLE_ADMIN") %}
                         <li class="units-table-row-action shortcut-enter" data-key-action="href">
                             <a
                                 class="units-table-row-action-link"
-                                href="/edit/user/"
+                                href="/edit/user"
                                 title="{{ 'Edit User' | trans }}"
                             >
                                 <i class="fas fa-pencil icon-orange"></i>
@@ -180,7 +178,7 @@
                             <li class="units-table-row-action shortcut-s" data-key-action="js">
                                 <a
                                     class="units-table-row-action-link data-controls js-confirm-action"
-                                    href="/unsuspend/user/"
+                                    href="/unsuspend/user?token={{ csrf_token('unsuspend-user') }}"
                                     title="{{ 'Unsuspend' | trans }}"
                                     data-confirm-title="{{ 'Unsuspend' | trans }}"
                                     data-confirm-message="{{ 'Are you sure you want to unsuspend user %s?' | trans(user.username) }}"
@@ -193,7 +191,7 @@
                             <li class="units-table-row-action shortcut-s" data-key-action="js">
                                 <a
                                     class="units-table-row-action-link data-controls js-confirm-action"
-                                    href="/suspend/user/"
+                                    href="/suspend/user?token={{ csrf_token('suspend-user') }}"
                                     title="{{ 'Suspend' | trans }}"
                                     data-confirm-title="{{ 'Suspend' | trans }}"
                                     data-confirm-message="{{ 'Are you sure you want to suspend user %s?' | trans({username: user.username}) }}"
@@ -206,7 +204,7 @@
                             <li class="units-table-row-action shortcut-delete" data-key-action="js">
                                 <a
                                     class="units-table-row-action-link data-controls js-confirm-action"
-                                    href="/delete/user"
+                                    href="/delete/user?token={{ csrf_token('delete-user') }}"
                                     title="{{ 'Delete' | trans }}"
                                     data-confirm-title="{{ 'Delete' | trans }}"
                                     data-confirm-message="{{ 'Are you sure you want to delete user %s?' | trans({username: user.username}) }}"

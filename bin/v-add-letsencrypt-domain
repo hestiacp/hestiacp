@@ -34,6 +34,11 @@ if [[ "$LE_STAGING" = 'yes' ]]; then
 	LE_API='https://acme-staging-v02.api.letsencrypt.org'
 fi
 
+# LE Pre-Hook
+if [ -x "/etc/hestiacp/hooks/le_pre.sh" ]; then
+	/etc/hestiacp/hooks/le_pre.sh "$user" "$domain" "$aliases" "$mail"
+fi
+
 # encode base64
 encode_base64() {
 	cat | base64 | tr '+/' '-_' | tr -d '\r\n='
@@ -609,6 +614,11 @@ else
 	fi
 	update_object_value 'mail' 'DOMAIN' "$root_domain" '$LETSENCRYPT' 'yes'
 	update_object_value 'mail' 'DOMAIN' "$root_domain" '$LETSENCRYPT_FAIL_COUNT' "0"
+fi
+
+# LE Post-Hook
+if [ -x "/etc/hestiacp/hooks/le_post.sh" ]; then
+	/etc/hestiacp/hooks/le_post.sh "$user" "$domain" "$aliases" "$mail"
 fi
 
 # Remove challenge folder if exist

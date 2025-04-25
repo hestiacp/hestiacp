@@ -39,6 +39,22 @@ class User
         );
     }
 
+    public function change(
+        Password $password,
+        Role $role,
+        ContactInfo $contactInfo,
+        PanelSettings $panelSettings,
+        AuthenticationSettings $authenticationSettings,
+        ServerSettings $serverSettings,
+    ): self {
+        $this->password = $password;
+        $this->role = $role;
+        $this->contactInfo = $contactInfo;
+        $this->panelSettings = $panelSettings;
+        $this->authenticationSettings = $authenticationSettings;
+        $this->serverSettings = $serverSettings;
+    }
+
     /**
      * @param mixed[] $state
      */

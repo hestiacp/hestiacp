@@ -49,4 +49,47 @@ class UserTest extends TestCase
 
         $this->assertInstanceOf(User::class, $user);
     }
+
+    public function testUserCanBeChanged(): void
+    {
+        $user = User::add(
+            new Username('Username'),
+            new Password('Password'),
+            new ContactInfo(
+                'contact name',
+                'email@example.com',
+            ),
+            PanelSettings::initial('en'),
+            AuthenticationSettings::initial(true),
+            new ServerSettings(
+                'nologin',
+                '8.3',
+                [
+                    'ns1.example.com',
+                    'ns2.example.com',
+                ]
+            ),
+        );
+
+        $user->change(
+            new Password('Password'),
+            new Role('user'),
+            new ContactInfo(
+                'contact name',
+                'email@example.com',
+            ),
+            new PanelSettings('en', 'dark', 'date'),
+            new AuthenticationSettings(true, true, false, []),
+            new ServerSettings(
+                'nologin',
+                '8.3',
+                [
+                    'ns1.example.com',
+                    'ns2.example.com',
+                ]
+            ),
+        );
+
+        $this->assertInstanceOf(User::class, $user);
+    }
 }

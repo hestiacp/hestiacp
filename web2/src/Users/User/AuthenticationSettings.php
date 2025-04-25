@@ -9,11 +9,16 @@ readonly class AuthenticationSettings
      * @param string[] $loginIpAllowList
      */
     public function __construct(
+        private bool $isLoginEnabled,
         private bool $isTwoFAEnabled,
         private bool $isSuspended,
-        private bool $isLoginEnabled,
         private array $loginIpAllowList,
     ) {
+    }
+
+    public static function initial(bool $isLoginEnabled): self
+    {
+        return new self(true, false, false, []);
     }
 
     public function isTwoFAEnabled(): bool

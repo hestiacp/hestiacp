@@ -12,6 +12,11 @@ readonly class PanelSettings
     ) {
     }
 
+    public static function initial(string $language): self
+    {
+        return new self($language, '', 'name');
+    }
+
     public function getLanguage(): string
     {
         return $this->language;

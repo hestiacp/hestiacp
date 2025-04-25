@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\Users\User;
 
+use C;
+
 class User
 {
     private function __construct(
@@ -15,6 +17,26 @@ class User
         private ServerSettings $serverSettings,
         private readonly CreatedOn $createdOn,
     ) {
+    }
+
+    public static function add(
+        Username $username,
+        Password $password,
+        ContactInfo $contactInfo,
+        PanelSettings $panelSettings,
+        AuthenticationSettings $authenticationSettings,
+        ServerSettings $serverSettings,
+    ): self {
+        return new self(
+            $username,
+            $password,
+            new Role('user'),
+            $contactInfo,
+            $panelSettings,
+            $authenticationSettings,
+            $serverSettings,
+            CreatedOn::now(),
+        );
     }
 
     /**
@@ -70,6 +92,6 @@ class User
             'NS' => $this->serverSettings->getDefaultNameservers(),
             'DATE' => $this->createdOn->getDate(),
             'TIME' => $this->createdOn->getTime(),
-        ]
+        ];
     }
 }

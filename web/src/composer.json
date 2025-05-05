@@ -5,7 +5,7 @@
         }
     },
     "require": {
-        "symfony/console": "^7.2.5",
+        "symfony/console": "^7.2.6",
         "composer": "*",
         "symfony/process": "^7.2.5"
     },

@@ -47,7 +47,7 @@
 		"prettier-plugin-nginx": "^1.0.3",
 		"prettier-plugin-sh": "^0.17.2",
 		"prettier-plugin-sql": "^0.19.0",
-		"stylelint": "^16.18.0",
+		"stylelint": "^16.19.1",
 		"stylelint-config-standard": "^38.0.0",
 		"vitepress": "^1.6.3",
 		"vitest": "^2.1.9",

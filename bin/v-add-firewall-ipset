@@ -130,7 +130,7 @@ if [ ! -f "${IPSET_PATH}/${IPSET_FILE}.iplist" ] || [ "$refresh" = "yes" ]; then
 
 	# Validate iplist file size
 	iplist_size=$(sed -r -e '/^#|^$/d' "$iplist_tempfile" | wc -l)
-	[[ "$iplist_size" -le "$IPSET_MIN_SIZE" ]] && check_result "$E_INVALID" "IP list file too small (<${IPSET_MIN_SIZE}), ignoring"
+	[[ "$iplist_size" -lt "$IPSET_MIN_SIZE" ]] && check_result "$E_INVALID" "IP list file too small (<${IPSET_MIN_SIZE}), ignoring"
 	mv -f "$iplist_tempfile" "${IPSET_PATH}/${IPSET_FILE}.iplist"
 
 fi

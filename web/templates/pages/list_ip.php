@@ -96,7 +96,7 @@
 						<div class="clearfix l-unit__stat-col--left wide-3">
 						<b>
 							<a href="/edit/ip/?ip=<?= $key ?>&token=<?= $_SESSION['token'] ?>" title="<?= _("Edit IP Address") ?>">
-								<?= htmlentities($ip_display) ?>
+								<?= htmlentities($key) ?>
 								<?php
 								if (!empty($data[$key]['NAT'])) {
 									$nat = $data[$key]['NAT'];

@@ -16,8 +16,8 @@ if (!empty($_POST["ok"])) {
 	if (empty($_POST["v_domain"])) {
 		$errors[] = _("Domain");
 	}
-	if (empty($_POST["v_ip"])) {
-		$errors[] = _("IP Address");
+	if (empty($_POST["v_ip"]) && empty($_POST["v_ipv6"])) {
+		$errors[] = _("IPV4 and IPV6 Address");
 	}
 
 	if (!empty($errors[0])) {
@@ -37,6 +37,8 @@ if (!empty($_POST["ok"])) {
 
 	// Define domain ip address
 	$v_ip = quoteshellarg($_POST["v_ip"]);
+	// Define domain ipv6 address
+	$v_ipv6 = quoteshellarg($_POST["v_ipv6"]);
 
 	// Using public IP instead of internal IP when creating DNS
 	// Gets public IP from 'v-list-user-ips' command (that reads /hestia/data/ips/ip), precisely from 'NAT' field
@@ -72,12 +74,14 @@ if (!empty($_POST["ok"])) {
 	if (empty($_SESSION["error_msg"])) {
 		exec(
 			HESTIA_CMD .
-				"v-add-web-domain " .
+				"v-add-web-domain-ipv46 " .
 				$user .
 				" " .
 				quoteshellarg($v_domain) .
 				" " .
 				$v_ip .
+				" " .
+				$v_ipv6 .
 				" 'yes'",
 			$output,
 			$return_var,
@@ -103,6 +107,8 @@ if (!empty($_POST["ok"])) {
 				quoteshellarg($v_domain) .
 				" " .
 				$v_public_ip .
+				" " .
+				$v_ipv6 .
 				" '' '' '' '' '' '' '' '' 'no'",
 			$output,
 			$return_var,
@@ -178,7 +184,9 @@ $user_domains = json_decode(implode("", $output), true);
 $user_domains = array_keys($user_domains);
 unset($output);
 
-$accept = $_GET["accept"] ?? "";
+if (empty($_GET["accept"])) {
+	$_GET["accept"] = false;
+}
 
 $v_domain = $_POST["domain"] ?? "";
 

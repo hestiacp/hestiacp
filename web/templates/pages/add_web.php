@@ -44,13 +44,31 @@
 					<input type="text" class="form-control" name="v_domain" id="v_domain" value="<?= htmlentities(trim($v_domain, "'")) ?>" required>
 				</div>
 				<div class="u-mb20">
-					<label for="v_ip" class="form-label"><?= _("IP Address") ?></label>
+					<label for="v_ip" class="form-label"><?= _("IPV4 Address") ?></label>
 					<select class="form-select" name="v_ip" id="v_ip">
+						<option value="">none</option>
 						<?php
 							foreach ($ips as $ip => $value) {
-								$display_ip = htmlentities(empty($value['NAT']) ? $ip : "{$value['NAT']}");
-								$ip_selected = (!empty($v_ip) && $ip == $_POST['v_ip']) ? 'selected' : '';
-								echo "\t\t\t\t<option value=\"{$ip}\" {$ip_selected}>{$display_ip}</option>\n";
+								if ($value['VERSION']==4) {
+									$display_ip = htmlentities(empty($value['NAT']) ? $ip : "{$value['NAT']}");
+									$ip_selected = (!empty($v_ip) && $ip == $_POST['v_ip']) ? 'selected' : '';
+									echo "\t\t\t\t<option value=\"{$ip}\" {$ip_selected}>{$display_ip}</option>\n";
+								}
+							}
+						?>
+					</select>
+				</div>
+				<div class="u-mb20">
+					<label for="v_ipv6" class="form-label"><?= _("IPV6 Address") ?></label>
+					<select class="form-select" name="v_ipv6" id="v_ipv6">
+					<option value="">clear</option>
+						<?php
+							foreach ($ips as $ipv6 => $value) {
+								if ($value['VERSION']==6) {
+									$display_ipv6 = $ipv6;
+									$ipv6_selected = (!empty($v_ipv6) && $ipv6 == $_POST['v_ipv6']) ? 'selected' : '';
+									echo "\t\t\t\t<option value=\"{$ipv6}\" {$ipv6_selected}>{$display_ipv6}</option>\n";
+								}
 							}
 						?>
 					</select>

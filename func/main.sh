@@ -789,21 +789,124 @@ is_alias_format_valid() {
 	done
 }
 
+# Get IP format
+get_ip_format() {
+	object_name=${2-ipv4}
+	local ret_code=0
+	local ret_string=""
+
+	# IPV4 check
+	ip_regex='([1-9]?[0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])'
+	ip_clean=$(echo "${1%/*}")
+	if [[ $ip_clean =~ ^$ip_regex\.$ip_regex\.$ip_regex\.$ip_regex$ ]]; then
+		ret_string="4"
+	else
+		ret_code=1 # BIT 0: invalid IPV4 format
+	fi
+	if [ "$1" != "$ip_clean" ]; then
+		ret_string=""
+		ip_cidr="$ip_clean/"
+		ip_cidr=$(echo "${1#$ip_cidr}")
+		if [[ "$ip_cidr" =~ ^[0-9]+$ ]]; then
+			if [ $ip_cidr -le 32 ]; then
+				ret_string="4"
+			else
+				ret_code=$(($ret_code | 2)) # BIT 1
+			fi
+		else
+			ret_code=$(($ret_code | 2)) # BIT 1
+		fi
+	fi
+	if [ -n "$ret_string" ]; then
+		echo "$ret_string"
+		return $ret_code
+	fi
+
+	# IPV6 check
+	t_ipv6=$(echo $1 | awk -F / '{print $1}')
+	t_prefixlen=$(echo $1 | awk -F / '{print $2}')
+	WORD="[0-9A-Fa-f]\{1,4\}"
+
+	FLAT="^${WORD}\(:${WORD}\)\{7\}$"
+	COMP2="^\(${WORD}:\)\{1,1\}\(:${WORD}\)\{1,6\}$"
+	COMP3="^\(${WORD}:\)\{1,2\}\(:${WORD}\)\{1,5\}$"
+	COMP4="^\(${WORD}:\)\{1,3\}\(:${WORD}\)\{1,4\}$"
+	COMP5="^\(${WORD}:\)\{1,4\}\(:${WORD}\)\{1,3\}$"
+	COMP6="^\(${WORD}:\)\{1,5\}\(:${WORD}\)\{1,2\}$"
+	COMP7="^\(${WORD}:\)\{1,6\}\(:${WORD}\)\{1,1\}$"
+	EDGE_TAIL="^\(\(${WORD}:\)\{1,7\}\|:\):$"
+	EDGE_LEAD="^:\(:${WORD}\)\{1,7\}$"
+
+	echo $t_ipv6 | grep --silent "\(${FLAT}\)\|\(${COMP2}\)\|\(${COMP3}\)\|\(${COMP4}\)\|\(${COMP5}\)\|\(${COMP6}\)\|\(${COMP7}\)\|\(${EDGE_TAIL}\)\|\(${EDGE_LEAD}\)"
+	if [ $? -ne 0 ]; then
+		ret_code=$(($ret_code | 4)) # BIT 2
+		echo "$ret_string"
+		return $ret_code
+	fi
+	ret_string="6"
+	if [ -n "$(echo $1 | grep '/')" ]; then
+		if [[ "$t_prefixlen" -lt 0 ]] || [[ "$t_prefixlen" -gt 128 ]] || ! [[ "$t_prefixlen" =~ ^[0-9]+$ ]]; then
+			ret_code=$(($ret_code | 8)) # BIT 3
+			ret_string=""
+		fi
+	fi
+	echo "$ret_string"
+	[ -n "$ret_string" ] && return 0 || return $ret_code
+}
+
 # IP format validator
 is_ip_format_valid() {
-	object_name=${2-ip}
-	valid=$($HESTIA_PHP -r '$ip="$argv[1]"; echo (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) ? 0 : 1);' $1)
-	if [ "$valid" -ne 0 ]; then
-		check_result "$E_INVALID" "invalid $object_name :: $1"
+	object_name=${2-ipv4}
+	local ip_format=""
+	local ret_code=0
+	ip_format="$(get_ip_format ${1} ${object_name})"
+	ret_code=$?
+	if [ "$object_name" = "ipv6" ]; then
+		ret_code=$(($ret_code & 12)) # BIT 2 y 3
+		if [ "$ip_format" = "6" ]; then
+			return $ret_code
+		else
+			if [ "$ip_format" = "4" ]; then
+				check_result "$E_INVALID" "ipv4 but not ipv6 format :: $1"
+				return 12
+			else
+				check_result "$E_INVALID" "invalid $object_name format :: $1"
+				return $ret_code
+			fi
+		fi
+	else
+		ret_code=$(($ret_code & 3)) # BIT 0 y 1
+		if [ "$ip_format" = "4" ]; then
+			return $ret_code
+		else
+			if [ $ret_code -ne 0 ]; then
+				check_result "$E_INVALID" "invalid $object_name format :: $1"
+				return $ret_code
+			else
+				check_result "$E_INVALID" "ipv6 but not ipv4 format :: $1"
+				return 3
+			fi
+		fi
 	fi
 }
 
 # IPv6 format validator
 is_ipv6_format_valid() {
 	object_name=${2-ipv6}
-	valid=$($HESTIA_PHP -r '$ip="$argv[1]"; echo (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) ? 0 : 1);' $1)
-	if [ "$valid" -ne 0 ]; then
-		check_result "$E_INVALID" "invalid $object_name :: $1"
+	local ip_format=""
+	local ret_code=0
+	ip_format="$(get_ip_format ${1} ${object_name})"
+	ret_code=$(($? & 12)) # Solo BIT 2 y 3
+	if [ "$ip_format" = "6" ]; then
+		return $ret_code
+	else
+		if [ "$ip_format" = "4" ]; then
+			check_result "$E_INVALID" "ipv4 but not ipv6 format :: $1"
+			return 12
+		else
+			check_result "$E_INVALID" "invalid $object_name format :: $1"
+			return $ret_code
+		fi
 	fi
 }
 
@@ -1203,6 +1306,7 @@ is_format_valid() {
 				charset) is_object_format_valid "$arg" "$arg_name" ;;
 				charsets) is_common_format_valid "$arg" 'charsets' ;;
 				chain) is_object_format_valid "$arg" 'chain' ;;
+				cidr) is_ip_format_valid "$arg" 'cidr' ;;
 				comment) is_object_format_valid "$arg" 'comment' ;;
 				cron_command) is_cron_command_valid_format "$arg" ;;
 				database) is_database_format_valid "$arg" 'database' ;;
@@ -1254,6 +1358,7 @@ is_format_valid() {
 				object) is_object_name_format_valid "$arg" 'object' ;;
 				package) is_object_format_valid "$arg" "$arg_name" ;;
 				password) is_password_format_valid "$arg" ;;
+				prefix_length) is_ipv6_format_valid "$arg" 'prefix_length' ;;
 				priority) is_int_format_valid $arg ;;
 				port) is_int_format_valid "$arg" 'port' ;;
 				port_ext) is_fw_port_format_valid "$arg" ;;

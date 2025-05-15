@@ -50,7 +50,7 @@ is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
 # Check if hostname already exists as domain
 if [ "$($BIN/v-list-web-domain $user $domain plain | cut -f 1)" != "$domain" ]; then
 	# Create web domain for hostname
-	$BIN/v-add-web-domain "$user" "$domain"
+	$BIN/v-add-web-domain-ipv46 "$user" "$domain"
 fi
 
 # Validate web domain

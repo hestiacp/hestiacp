@@ -1,5 +1,6 @@
 server {
-	listen      %ip%:%proxy_port%;
+	%<i4    listen      %proxy_ipv4%:%proxy_port%;i4>%
+	%<i6    listen      %proxy_ipv6%:%proxy_port%;i6>%
 	server_name %domain_idn% %alias_idn%;
 	index       index.php index.html index.htm;
 	access_log  /var/log/nginx/domains/%domain%.log combined;
@@ -13,7 +14,7 @@ server {
 	}
 
 	location / {
-		proxy_pass http://%ip%:%web_port%;
+		proxy_pass http://%web_ip%:%web_port%;
 	}
 
 	include %home%/%user%/conf/mail/%root_domain%/%proxy_system%.conf_*;

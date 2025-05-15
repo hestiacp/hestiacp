@@ -1,0 +1,1 @@
+bin/v-list-firewall-ipv6 - este tiene el codigo del delete

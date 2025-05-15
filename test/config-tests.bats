@@ -29,10 +29,28 @@ function setup() {
         echo 'dbuser=test-5285_dbuser' >> /tmp/hestia-test-env.sh
     fi
 
+	source /tmp/hestia-le-env.sh
     source /tmp/hestia-test-env.sh
     source $HESTIA/func/main.sh
     source $HESTIA/conf/hestia.conf
     source $HESTIA/func/ip.sh
+
+}
+
+@test "Prepare for tests" {
+	run rm -f /usr/local/hestia/data/templates/web/nginx/php-fpm/*.*
+	run rm -f /usr/local/hestia/data/templates/web/nginx/*.*
+	run rm -f /usr/local/hestia/data/templates/web/apache2/php-fpm/*.*
+	run rm -f /usr/local/hestia/data/templates/web/apache2/*.*
+
+	run v-update-web-templates
+}
+
+@test "[ IPV6 ] Add IPV6 address" {
+	# Remove IPV6 Address to be removed when merged with main
+	run v-add-sys-ip $ipv6 "/64"
+	assert_success
+	refute_output
 }
 
 @test "Setup Test domain" {
@@ -40,7 +58,7 @@ function setup() {
     assert_success
     refute_output
 
-    run v-add-web-domain $user 'testhestiacp.com'
+    run v-add-web-domain-ipv46 $user 'testhestiacp.com'
     assert_success
     refute_output
 
@@ -64,7 +82,7 @@ function setup() {
 
 @test "Proxy Config test" {
     if [ "$PROXY_SYSTEM" = "nginx" ]; then
-        for template in $(v-list-proxy-templates plain); do
+        for template in $(v-list-web-templates plain); do
             run v-change-web-domain-proxy-tpl $user testhestiacp.com $template
             assert_success
             refute_output
@@ -78,4 +96,11 @@ function setup() {
     run v-delete-user $user
     assert_success
     refute_output
+}
+
+@test "[ IPV6 ] Delete IPV6 address" {
+	# Remove IPV6 Address to be removed when merged with main
+	run v-delete-sys-ip $ipv6
+	assert_success
+	refute_output
 }

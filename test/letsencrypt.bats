@@ -20,6 +20,13 @@ function setup() {
     source $HESTIA/func/ip.sh
 }
 
+@test "[ IPV6 ] Add IPV6 address" {
+	# Add IPV6 Address to be removed when merged with main
+	run v-add-sys-ip $ipv6 "/64"
+	assert_success
+	refute_output
+}
+
 @test "[ User ] Create new user" {
     run v-add-user $user $user $user@hestiacp.com default "Super Test"
     assert_success
@@ -33,13 +40,13 @@ function setup() {
 }
 
 @test "[ Web ] Create web domain" {
-    run v-add-web-domain $user $domain $ip yes "www.$domain,renewal.$domain,foobar.$domain,bar.$domain"
+    run v-add-web-domain-ipv46 $user $domain $ip $ipv6 yes "www.$domain,renewal.$domain,foobar.$domain,bar.$domain"
     assert_success
     refute_output
 }
 
 @test "[ Web ] Create 2nd web domain" {
-    run v-add-web-domain $user "hestia.$domain" $ip yes
+    run v-add-web-domain-ipv46 $user "hestia.$domain" $ip $ipv6 yes
     assert_success
     refute_output
 }
@@ -105,7 +112,7 @@ function setup() {
 }
 
 @test "[ Redirect ] Create web domain" {
-    run v-add-web-domain $user "redirect.$domain" $ip yes
+    run v-add-web-domain-ipv46 $user "redirect.$domain" $ip $ipv6 yes
     assert_success
     refute_output
 }
@@ -134,4 +141,12 @@ function setup() {
     run v-delete-user $user
     assert_success
     refute_output
+}
+
+
+@test "[ IPV6 ] Delete IPV6 address" {
+	# Remove IPV6 Address to be removed when merged with main
+	run v-delete-sys-ip $ipv6
+	assert_success
+	refute_output
 }

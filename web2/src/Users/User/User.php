@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Users\User;
 
-use C;
+use function explode;
 
 class User
 {
@@ -46,13 +46,18 @@ class User
         PanelSettings $panelSettings,
         AuthenticationSettings $authenticationSettings,
         ServerSettings $serverSettings,
-    ): self {
+    ): void {
         $this->password = $password;
         $this->role = $role;
         $this->contactInfo = $contactInfo;
         $this->panelSettings = $panelSettings;
         $this->authenticationSettings = $authenticationSettings;
         $this->serverSettings = $serverSettings;
+    }
+
+    public function delete(): void
+    {
+        // Nothing here yet but we can send out events or block deletion if user doesn't allow it
     }
 
     /**
@@ -71,15 +76,15 @@ class User
                 $state['PREF_UI_SORT'],
             ),
             new AuthenticationSettings(
+                $state['LOGIN_DISABLED'] === 'no',
                 $state['TWOFA'] === 'yes',
                 $state['SUSPENDED'] === 'yes',
-                $state['LOGIN_DISABLED'] === 'no',
-                $state['LOGIN_ALLOW_IPS'],
+                explode(',', $state['LOGIN_ALLOW_IPS']),
             ),
             new ServerSettings(
                 $state['SHELL'],
                 $state['PHPCLI'],
-                $state['NS'],
+                explode(',', $state['NS']),
             ),
             new CreatedOn($state['DATE'], $state['TIME']),
         );
@@ -99,13 +104,13 @@ class User
             'LANGUAGE' => $this->panelSettings->getLanguage(),
             'THEME' => $this->panelSettings->getTheme(),
             'PREF_UI_SORT' => $this->panelSettings->getSortOrder(),
-            'TWOFA' => $this->authenticationSettings->isTwoFAEnabled() ? 'yes' : 'no',
+            'TWOFA' => $this->authenticationSettings->isTwoFAEnabled() ? 'yes' : '',
             'SUSPENDED' => $this->authenticationSettings->isSuspended() ? 'yes' : 'no',
             'LOGIN_DISABLED' => $this->authenticationSettings->isLoginEnabled() ? 'no' : 'yes',
-            'LOGIN_ALLOW_IPS' => $this->authenticationSettings->getLoginIpAllowList(),
+            'LOGIN_ALLOW_IPS' => implode(',', $this->authenticationSettings->getLoginIpAllowList()),
             'SHELL' => $this->serverSettings->getSshAccessShell(),
             'PHPCLI' => $this->serverSettings->getPhpCliVersion(),
-            'NS' => $this->serverSettings->getDefaultNameservers(),
+            'NS' => implode(',', $this->serverSettings->getDefaultNameservers()),
             'DATE' => $this->createdOn->getDate(),
             'TIME' => $this->createdOn->getTime(),
         ];

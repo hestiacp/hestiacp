@@ -18,7 +18,23 @@ class UserTest extends TestCase
     public function testUserCanBeHydratedAndDehydrated(): void
     {
         $state = [
-
+            'USERNAME' => 'test',
+            'PASSWORD' => 'random-password-hashed',
+            'ROLE' => 'user',
+            'NAME' => 'Test',
+            'CONTACT' => 'test@test.example',
+            'LANGUAGE' => 'en',
+            'THEME' => 'dark',
+            'PREF_UI_SORT' => 'name',
+            'TWOFA' => '',
+            'SUSPENDED' => 'no',
+            'LOGIN_DISABLED' => 'no',
+            'LOGIN_ALLOW_IPS' => '',
+            'SHELL' => 'bash',
+            'PHPCLI' => '',
+            'NS' => 'ns1.example.tld,ns2.example.tld',
+            'DATE' => '2024-12-29',
+            'TIME' => '12:36:30',
         ];
 
         $user = User::hydrate($state);

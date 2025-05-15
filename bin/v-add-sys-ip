@@ -63,8 +63,14 @@ fi
 check_args '1' "$#" 'IP [NETMASK] [INTERFACE] [USER] [STATUS] [NAME] [NATED_IP]'
 
 ip_format="$(get_ip_format ${ip46})" #	ip verification and format identification
-if [ -n "$second_parameter" -a -n "$ip_format" ]; then
-	[ -n "$ip_cidr" ] && check_result 1 "cidr / prefix length double defined as IP address suffix and as separate argument!"                        # wrong parameters
+	if [ -n "$second_parameter" -a -n "$ip_format" ]; then
+		# Solo lanzar error si hay conflicto real
+	if [ -n "$ip_cidr" ] && [ -n "$second_parameter" ]; then
+		# Validar si el segundo parámetro también es una máscara válida
+		if echo "$second_parameter" | grep -Eq '^/[0-9]{1,3}$'; then
+			check_result 1 "cidr / prefix length double defined as IP address suffix and as separate argument!"
+		fi
+	fi
 	netmask="$(echo ${second_parameter} | sed -nr ''/$REGEX_IPV4/p'')"                                                                              # extract netmask from second parameter if available
 	cidr_prefixlen="$(echo ${second_parameter} | sed -ne '/^\/[0-9]\{1,3\}$/p')"                                                                    # extract cidr/prefix_length from second parameter if available
 	[ -z "$netmask" -a -z "$cidr_prefixlen" ] && check_result 2 "Wrong netmask / cidr / prefix length definition!"                                  # wrong parameters

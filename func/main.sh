@@ -1621,7 +1621,8 @@ format_no_quotes() {
 }
 
 is_username_format_valid() {
-	if [[ ! "$1" =~ ^[A-Za-z0-9._%+-]+@[[:alnum:].-]+\.[A-Za-z]{2,63}$ ]]; then
+	if [[ ! "$1" =~ ^[A-Za-z0-9._%+-]+@[[:alnum:].-]+\.[A-Za-z]{2,63}$ ]] \
+		&& [[ ! "$1" =~ ^[A-Za-z0-9._%+-]+(/|\\)[A-Za-z0-9._%+-]+$ ]]; then
 		is_string_format_valid "$1" "$2"
 	fi
 }

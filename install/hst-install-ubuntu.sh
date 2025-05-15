@@ -1660,7 +1660,7 @@ done
 if [ -n "$resolver" ]; then
 	if [ "$ipv6_support" = 'yes' ]; then
 		sed -i "s/1.1.1.1 \[2606:4700:4700::1111\] 1.1.1.1 \[2606:4700:4700::1001\]/$resolver/g" /etc/nginx/nginx.conf
-		sed -i "s/1.1.1.1 \[2606:4700:4700::1111\] 1.1.1.1 \[2606:4700:4700::1001\]/$resolver/g" /usr/local/hestia/nginx/nginx.conf
+		sed -i "s/1.1.1.1 \[2606:4700:4700::1111\] 1.1.1.1 \[2606:4700:4700::1001\]/$resolver/g" /usr/local/hestia/nginx/conf/nginx.conf
 	else
 		sed -i "s/1.1.1.1 8.8.8.8/$resolver/g" /etc/nginx/nginx.conf
 		sed -i "s/1.1.1.1 8.8.8.8/$resolver/g" /usr/local/hestia/nginx/conf/nginx.conf

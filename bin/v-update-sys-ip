@@ -1,4 +1,5 @@
 #!/bin/bash
+set -x
 # info: update system IP
 # options: NONE
 #

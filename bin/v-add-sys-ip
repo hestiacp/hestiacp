@@ -150,7 +150,7 @@ check_ip_par=""
 sys_ip_check=$(ip$check_ip_par addr | sed -ne "/inet[6]*[ \t]${ip46}\//p")
 if [ -z "$sys_ip_check" ]; then
 	# Adding system IP
-	iif [ -n "$ip_format" ] && [ $ip_format -eq 6 ]; then
+	if [ -n "$ip_format" ] && [ "$ip_format" -eq 6 ]; then
 		/sbin/ip addr add ${full_ip46} dev ${iface%:*} label ${iface}
 	else
 		ip addr add ${full_ip46} dev ${iface} broadcast ${broadcast} label ${iface}

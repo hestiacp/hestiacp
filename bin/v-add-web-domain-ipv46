@@ -84,6 +84,18 @@ if [ -n "$ip" ]; then
 fi
 
 if [ -n "$ipv6" ]; then
+	# Auto-register IPv6 if not found BEFORE validation
+	ip_file="${HESTIA}/data/ips/${ipv6}"
+	if [ ! -f "$ip_file" ]; then
+		interface=$(ip -d -j route show | jq -r '.[] | select(.dst=="default") | .dev' | head -n 1)
+		[ -z "$interface" ] && interface="eth0"
+		/usr/local/hestia/bin/v-add-sys-ip "$ipv6" /128 "$interface" "$user" dedicated
+		if [ $? -ne 0 ]; then
+			echo "Error: failed to auto-register IPv6 $ipv6"
+			exit 1
+		fi
+	fi
+
 	is_ipv6_valid "$ipv6" "$user"
 fi
 

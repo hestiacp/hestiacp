@@ -307,11 +307,11 @@ if [ "$user" = $ROOT_USER ]; then
 			increase_user_value "$hestia_user" '$IP'$add_cap_string_ipv6'_AVAIL'
 		done
 	else
-		increase_user_value 'admin' '$IP'$add_cap_string_ipv6'_AVAIL'
+		increase_user_value "$ROOT_USER" '$IP'$add_cap_string_ipv6'_AVAIL'
 	fi
 else
 	increase_user_value "$user" '$IP'$add_cap_string_ipv6'_AVAIL'
-	increase_user_value 'admin' '$IP'$add_cap_string_ipv6'_AVAIL'
+	increase_user_value "$ROOT_USER" '$IP'$add_cap_string_ipv6'_AVAIL'
 fi
 
 # Restarting web server

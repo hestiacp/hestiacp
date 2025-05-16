@@ -40,6 +40,12 @@
     <IfModule mpm_itk.c>
         AssignUserID %user% %group%
     </IfModule>
+	<IfModule mod_remoteip.c>
+        RemoteIPHeader X-Real-IP
+        RemoteIPInternalProxy 127.0.0.1
+        RemoteIPInternalProxy %web_ipv4%
+        RemoteIPInternalProxy %web_ipv6%
+    </IfModule>
 
     IncludeOptional %home%/%user%/conf/web/%domain%/%web_system%.conf_*
     IncludeOptional /etc/apache2/conf.d/*.inc

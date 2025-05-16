@@ -1,1 +1,98 @@
 #!/bin/bash
+# info: list ip6tables rules
+# options: [FORMAT]
+#
+# example: v-list-firewall-ipv6 json
+#
+# This function lists all ip6tables rules.
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Argument definition
+format=${1-shell}
+
+# Includes
+source /etc/hestiacp/hestia.conf
+source $HESTIA/func/main.sh
+source_conf "$HESTIA/conf/hestia.conf"
+
+rules="$HESTIA/data/firewallv6/rules.conf"
+
+# JSON list function
+json_list() {
+	IFS=$'\n'
+	i=1
+	objects=$(grep RULE "$rules" | wc -l)
+	echo "{"
+	while read str; do
+		[[ -z "$str" ]] && continue
+		parse_object_kv_list "$str"
+		echo -n '    "'$RULE'": {
+        "ACTION": "'$ACTION'",
+        "PROTOCOL": "'$PROTOCOL'",
+        "PORT": "'$PORT'",
+        "IP": "'$IP6'",
+        "COMMENT": "'$COMMENT'",
+        "SUSPENDED": "'$SUSPENDED'",
+        "TIME": "'$TIME'",
+        "DATE": "'$DATE'"
+    }'
+		if [ "$i" -lt "$objects" ]; then
+			echo ','
+		else
+			echo
+		fi
+		((i++))
+	done < "$rules"
+	echo '}'
+}
+
+# SHELL list function
+shell_list() {
+	IFS=$'\n'
+	echo "RULE^ACTION^PROTO^PORT^IP6^SPND^DATE"
+	echo "----^------^-----^----^---^----^----"
+	while read str; do
+		[[ -z "$str" ]] && continue
+		parse_object_kv_list "$str"
+		echo "$RULE^$ACTION^$PROTOCOL^$PORT^$IP6^$SUSPENDED^$DATE"
+	done < "$rules"
+}
+
+# PLAIN list function
+plain_list() {
+	IFS=$'\n'
+	while read str; do
+		[[ -z "$str" ]] && continue
+		parse_object_kv_list "$str"
+		echo -ne "$RULE\t$ACTION\t$PROTOCOL\t$PORT\t$IP6\t$COMMENT\t"
+		echo -e "$SUSPENDED\t$TIME\t$DATE"
+	done < "$rules"
+}
+
+# CSV list function
+csv_list() {
+	IFS=$'\n'
+	echo "RULE,ACTION,PROTOCOL,PORT,IP6,COMMENT,SUSPENDED,TIME,DATE"
+	while read str; do
+		[[ -z "$str" ]] && continue
+		parse_object_kv_list "$str"
+		echo -n "$RULE,$ACTION,$PROTOCOL,$PORT,$IP6,\"$COMMENT\","
+		echo "$SUSPENDED,$TIME,$DATE"
+	done < "$rules"
+}
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+case $format in
+	json) json_list ;;
+	plain) plain_list ;;
+	csv) csv_list ;;
+	shell) shell_list | column -t -s '^' ;;
+esac
+
+exit

@@ -1521,6 +1521,9 @@ cp -rf ${HESTIA_COMMON_DIR}/templates/web/skel/document_errors/* /var/www/docume
 # Installing firewall rules
 cp -rf ${HESTIA_COMMON_DIR}/firewall ${HESTIA}/data/
 rm -f ${HESTIA}/data/firewall/ipset/blacklist.sh ${HESTIA}/data/firewall/ipset/blacklist.ipv6.sh
+# IPv6 firewall support
+mkdir -p ${HESTIA}/data/firewallv6
+cp ${HESTIA_COMMON_DIR}/firewallv6/rules.conf ${HESTIA}/data/firewallv6/rules.conf
 
 # Delete rules for services that are not installed
 if [ "$vsftpd" = "no" ] && [ "$proftpd" = "no" ]; then

@@ -97,17 +97,31 @@ case $chain in
 esac
 
 # Adding chain
-$iptables -N fail2ban-$chain 2> /dev/null
-if [ $? -eq 0 ]; then
+if ! $iptables -L fail2ban-$chain &> /dev/null; then
+	$iptables -N fail2ban-$chain
 	$iptables -A fail2ban-$chain -j RETURN
 
-	# Adding multiport module
 	if [[ "$port" =~ ,|-|: ]]; then
 		port_str="-m multiport --dports $port"
 	else
 		port_str="--dport $port"
 	fi
 	$iptables -I INPUT -p $protocol $port_str -j fail2ban-$chain
+fi
+
+# Crear cadena equivalente en ip6tables si IPv6 está activado
+if [ "$IPV6_SUPPORT" = "yes" ]; then
+	if ! /sbin/ip6tables -L fail2ban-$chain &> /dev/null; then
+		/sbin/ip6tables -N fail2ban-$chain
+		/sbin/ip6tables -A fail2ban-$chain -j RETURN
+
+		if [[ "$port" =~ ,|-|: ]]; then
+			port_str6="-m multiport --dports $port"
+		else
+			port_str6="--dport $port"
+		fi
+		/sbin/ip6tables -I INPUT -p $protocol $port_str6 -j fail2ban-$chain
+	fi
 fi
 
 # Preserving chain

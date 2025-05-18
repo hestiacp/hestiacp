@@ -40,8 +40,17 @@ format_domain_idn
 
 check_args '3' "$#" 'USER DOMAIN IPV6 [RESTART]'
 if [ -n "$ipv6" ]; then
-	is_format_valid 'user' 'domain' 'ipv6'
-	is_ipv6_valid "$ipv6" "$user"
+    is_format_valid 'user' 'domain' 'ipv6'
+
+    # --------- PARCHE AQUI ---------
+    # Si la IPv6 no existe, la añadimos antes de validar que existe en el sistema
+    if ! is_ip_exists "$ipv6"; then
+        interface="eth0"   # O detecta la interfaz si lo necesitas
+        $BIN/v-add-sys-ip "$ipv6" "/128" "$interface" "$user" "dedicated"
+    fi
+    # --------- FIN PARCHE ----------
+
+    is_ipv6_valid "$ipv6" "$user"
 fi
 is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
 is_object_valid 'user' 'USER' "$user"

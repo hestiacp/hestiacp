@@ -157,6 +157,32 @@ exec(HESTIA_CMD . "v-list-user-ips " . $user . " json", $output, $return_var);
 $ips = json_decode(implode("", $output), true);
 unset($output);
 
+$suggested_ipv6 = [];
+foreach ($ips as $ip => $data) {
+    if ($data['VERSION'] == 6 && $data['INTERFACE'] !== '') {
+        $ip_clean = explode('/', $ip)[0];
+        $prefix_parts = explode(':', $ip_clean);
+        if (count($prefix_parts) >= 4) {
+            $prefix = implode(':', array_slice($prefix_parts, 0, 4));
+            $used_ips = array_keys($ips);
+            $suggested_ipv6[$prefix] = generate_ipv6_suggestions($prefix, $used_ips, 5);
+        }
+    }
+}
+// Función igual que en add_web
+function generate_ipv6_suggestions($prefix, $used_ips = [], $count = 5) {
+    $suggestions = [];
+    while (count($suggestions) < $count) {
+        $suffix = bin2hex(random_bytes(8));
+        $formatted_suffix = implode(':', str_split($suffix, 4));
+        $ip = strtolower($prefix . ':' . $formatted_suffix);
+        if (!in_array($ip, $used_ips)) {
+            $suggestions[] = $ip;
+        }
+    }
+    return $suggestions;
+}
+
 $v_ip_public = empty($ips[$v_ip]["NAT"]) ? $v_ip : $ips[$v_ip]["NAT"];
 
 // List web templates

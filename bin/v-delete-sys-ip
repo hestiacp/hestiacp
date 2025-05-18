@@ -21,11 +21,6 @@ normalize_ip() {
 raw_ip=${1%/*}
 ip46=$raw_ip
 
-if [[ "$ip46" == *:* ]]; then
-    normalized_ip=$(normalize_ip "$ip46")
-    [ -n "$normalized_ip" ] && echo "🧪 Normalized IP: $normalized_ip"
-fi
-
 source /etc/hestiacp/hestia.conf
 source ${HESTIA}/func/main.sh
 source ${HESTIA}/func/ip.sh
@@ -75,8 +70,12 @@ ip_file="${HESTIA}/data/ips/${raw_ip}"
 if [ -f "$ip_file" ]; then
     source "$ip_file"
 else
-    echo "⚠️  Warning: IP config file not found at $ip_file"
-    interface=$(ip -d -j addr show | jq --arg IP "$ip46" -r '.[] | .addr_info[]? | select(.local==$IP) | .label // .ifname' | head -n 1)
+    echo "Warning: IP config file not found at $ip_file"
+    if [[ "$ip46" == *:* ]]; then
+        interface=$(ip -6 addr show | awk -v ip="$ip46" '$2 == "inet6" && $4 ~ ip { print $NF; exit }')
+    else
+        interface=$(ip -4 addr show | awk -v ip="$ip46" '$2 == "inet" && $4 ~ ip { print $NF; exit }')
+    fi
     [ -z "$interface" ] && interface="eth0"
     ip_format="$(get_ip_format ${ip46})"
     NETMASK="/$([[ "$ip_format" = "6" ]] && echo "128" || echo "32")"
@@ -102,7 +101,6 @@ cidr_prefixlen=$(ip -6 addr show dev "$interface" | awk "/$ip46/ { match(\$0, \"
 [ -z "$cidr_prefixlen" ] && cidr_prefixlen="/128"
 
 interface=$(awk -v ip="$(normalize_ip "$raw_ip")" '$1 == ip { print $3 }' <($BIN/v-list-network plain))
-echo "🧪 Interface detected: $interface"
 
 number_of_ips=$(/sbin/ip${check_ip_par} addr | grep -c global)
 host_ip_check=$(hostname -i | sed -ne "/$ip46/p")
@@ -119,8 +117,6 @@ ip46=$(normalize_ip "$ip46")
 #                    Delete IP from system                 #
 #----------------------------------------------------------#
 
-echo "🧪 Deleting IP: $ip46$cidr_prefixlen from $interface"
-
 if [ "$ip_format" = "6" ]; then
     ip -6 addr del "$ip46$cidr_prefixlen" dev "$interface"
 else
@@ -128,7 +124,7 @@ else
 fi
 
 [ "$?" -ne 0 ] && {
-    echo "❌ Error: can't delete system IP address"
+    echo "Error: can't delete system IP address"
     log_event "$E_FORBIDEN" "$ARGUMENTS"
     exit "$E_FORBIDEN"
 }
@@ -147,6 +143,26 @@ elif [ -e "/etc/network/interfaces" ]; then
 fi
 
 #----------------------------------------------------------#
+#                   Update Counters & Logs                 #
+#----------------------------------------------------------#
+
+decrease_user_value "$OWNER" "IP_OWNED"
+if [ "$OWNER" = "$ROOT_USER" ]; then
+    if [ "$STATUS" = 'shared' ]; then
+        for hestia_user in $(${BIN}/v-list-sys-users plain); do
+            decrease_user_value "$hestia_user" "IP_AVAIL"
+        done
+    else
+        decrease_user_value "$OWNER" "IP_AVAIL"
+    fi
+else
+    decrease_user_value "$OWNER" "IP_AVAIL"
+    decrease_user_value "$ROOT_USER" "IP_AVAIL"
+fi
+
+grep IP_OWNED /usr/local/hestia/data/users/$OWNER/user.conf
+
+#----------------------------------------------------------#
 #                    Clean Hestia Data                     #
 #----------------------------------------------------------#
 
@@ -160,26 +176,6 @@ if [ -n "$PROXY_SYSTEM" ]; then
     rm -f /etc/${PROXY_SYSTEM}/conf.d/${raw_ip}.conf
     sed -i "/$ip46/d" /etc/${WEB_SYSTEM}/mods-enabled/rpaf.conf 2>/dev/null
     sed -i "/$ip46\$/d" /etc/${WEB_SYSTEM}/mods-enabled/remoteip.conf 2>/dev/null
-fi
-
-#----------------------------------------------------------#
-#                   Update Counters & Logs                 #
-#----------------------------------------------------------#
-
-if [ -n "$OWNER" ]; then
-    decrease_user_value "$OWNER" '$IP'$add_cap_string_ipv6'_OWNED'
-fi
-
-if [ "$OWNER" = "$ROOT_USER" ]; then
-    if [ "$STATUS" = 'shared' ]; then
-        for hestia_user in $(${BIN}/v-list-sys-users plain); do
-            decrease_user_value "$hestia_user" '$IP'$add_cap_string_ipv6'_AVAIL'
-        done
-    else
-        decrease_user_value "$OWNER" '$IP'$add_cap_string_ipv6'_AVAIL'
-    fi
-else
-    decrease_user_value "$OWNER" '$IP'$add_cap_string_ipv6'_AVAIL'
 fi
 
 ${BIN}/v-restart-web > /dev/null

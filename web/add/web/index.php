@@ -97,25 +97,20 @@ if (!empty($_POST["ok"])) {
 	if (empty($_POST["v_mail"])) {
 		$_POST["v_mail"] = "no";
 	}
-	// Add DNS domain
-	if ($_POST["v_dns"] == "on" && empty($_SESSION["error_msg"])) {
-		exec(
-			HESTIA_CMD .
-				"v-add-dns-domain " .
-				$user .
-				" " .
-				quoteshellarg($v_domain) .
-				" " .
-				$v_public_ip .
-				" " .
-				$v_ipv6 .
-				" '' '' '' '' '' '' '' '' 'no'",
-			$output,
-			$return_var,
-		);
-		check_return_code($return_var, $output);
-		unset($output);
-	}
+	exec(
+		HESTIA_CMD .
+			"v-add-dns-domain " .
+			$user .
+			" " .
+			quoteshellarg($v_domain) .
+			" " .
+			$v_public_ip .
+			" " .
+			"'' '' '' '' '' '' '' '' yes no " .
+			$v_ipv6,
+		$output,
+		$return_var,
+	);
 
 	// Add mail domain
 	if ($_POST["v_mail"] == "on" && empty($_SESSION["error_msg"])) {

@@ -1,0 +1,87 @@
+#!/bin/bash
+# info: change firewall rule
+# options: RULE [DIRECTION] [NEW_POSITON]
+#
+# example: v-move-firewall-rule 4 UP
+#
+# This function is used for changing existing firewall rule.
+# It fully replace rule with new one but keeps same id.
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Argument definition
+rule=$1
+direction=$(echo $2 | tr '[:lower:]' '[:upper:]')
+new_pos=$3
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+# recursive move function
+move_rule() {
+	local 
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '4' "$#" 'RULE ACTION IPV4_CIDR PORT [PROTOCOL] [COMMENT]'
+is_format_valid 'rule' 'action' 'protocol' 'port_ext'
+if [ ! -z "$comment" ]; then
+	is_format_valid 'comment'
+fi
+is_system_enabled "$FIREWALL_SYSTEM" 'FIREWALL_SYSTEM'
+is_object_valid '../../../data/firewall/rules' 'RULE' "$rule"
+
+if [[ "$ipv4_cidr" =~ ^ipset: ]]; then
+	ipset_name="${ipv4_cidr#ipset:}"
+	$BIN/v-list-firewall-ipset plain | grep "^$ipset_name\s" > /dev/null
+	check_result $? 'ipset object not found' "$E_NOTEXIST"
+else
+	is_format_valid 'ipv4_cidr'
+fi
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Generating timestamp
+time_n_date=$(date +'%T %F')
+time=$(echo "$time_n_date" | cut -f 1 -d \ )
+date=$(echo "$time_n_date" | cut -f 2 -d \ )
+
+# Concatenating firewall rule
+str="RULE='$rule' ACTION='$action' PROTOCOL='$protocol' PORT='$port_ext'"
+str="$str IP='$ipv4_cidr' COMMENT='$comment' SUSPENDED='no'"
+str="$str TIME='$time' DATE='$date'"
+
+# Deleting old rule
+sed -i "/RULE='$rule' /d" $HESTIA/data/firewall/rules.conf
+
+# Adding new
+echo "$str" >> $HESTIA/data/firewall/rules.conf
+
+# Sorting firewall rules by id number
+sort_fw_rules
+
+# Updating system firewall
+$BIN/v-update-firewall
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Logging
+$BIN/v-log-action "system" "Info" "Firewall" "Firewall rule changed (Rule: $rule, Action: $action, Protocol: $protocol, Port: $port_ext)."
+log_event "$OK" "$ARGUMENTS"
+exit

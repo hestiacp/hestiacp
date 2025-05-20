@@ -79,6 +79,15 @@
 		<?php
 			foreach ($data as $key => $value) {
 				++$i;
+				if ($i === 1) {
+					$move_up_enabled = false;
+				} elseif ($i == count($data)) {
+					$move_up_enabled = true;
+					$move_down_enabled = false;
+				} else {
+					$move_up_enabled = true;
+					$move_down_enabled = true;
+				}
 				if ($data[$key]['SUSPENDED'] == 'yes') {
 					$status = 'suspended';
 					$spnd_action = 'unsuspend';
@@ -121,6 +130,16 @@
 				</div>
 				<div class="units-table-cell">
 					<ul class="units-table-row-actions">
+						<li class="units-table-row-action shortcut-enter" data-key-action="href">
+							<a
+								class="units-table-row-action-link"
+								href="/update/firewall/?rule=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
+								title="<?= _("Edit Firewall Rule") ?>"
+							>
+								<i class="fas fa-arrow-up icon-orange"></i>
+								<span class="u-hide-desktop"><?= _("Move Firewall Rule Up") ?></span>
+							</a>
+						</li>
 						<li class="units-table-row-action shortcut-enter" data-key-action="href">
 							<a
 								class="units-table-row-action-link"

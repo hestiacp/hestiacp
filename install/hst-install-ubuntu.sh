@@ -960,7 +960,7 @@ mv -f /root/.my.cnf $hst_backups/mysql > /dev/null 2>&1
 systemctl stop hestia > /dev/null 2>&1
 cp -r ${HESTIA}/* $hst_backups/hestia > /dev/null 2>&1
 apt-get -y purge hestia hestia-nginx hestia-php > /dev/null 2>&1
-rm -rf $HESTIA > /dev/null 2>&1
+rm -rf ${HESTIA} > /dev/null 2>&1
 
 #----------------------------------------------------------#
 #                     Package Includes                     #

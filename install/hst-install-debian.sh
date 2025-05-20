@@ -26,8 +26,8 @@ os='debian'
 release="$(cat /etc/debian_version | tr "." "\n" | head -n1)"
 codename="$(cat /etc/os-release | grep VERSION= | cut -f 2 -d \( | cut -f 1 -d \))"
 architecture="$(arch)"
-HESTIA_INSTALL_DIR="$HESTIA/install/deb"
-HESTIA_COMMON_DIR="$HESTIA/install/common"
+HESTIA_INSTALL_DIR="${HESTIA}/install/deb"
+HESTIA_COMMON_DIR="${HESTIA}/install/common"
 VERBOSE='no'
 
 # Define software versions
@@ -164,7 +164,7 @@ set_default_port() {
 	fi
 }
 
-# Write configuration KEY/VALUE pair to $HESTIA/conf/hestia.conf
+# Write configuration KEY/VALUE pair to ${HESTIA}/conf/hestia.conf
 write_config_value() {
 	local key="$1"
 	local value="$2"
@@ -172,14 +172,14 @@ write_config_value() {
 }
 
 # Sort configuration file values
-# Write final copy to $HESTIA/conf/hestia.conf for active usage
-# Duplicate file to $HESTIA/conf/defaults/hestia.conf to restore known good installation values
+# Write final copy to ${HESTIA}/conf/hestia.conf for active usage
+# Duplicate file to ${HESTIA}/conf/defaults/hestia.conf to restore known good installation values
 sort_config_file() {
 	sort ${HESTIA}/conf/hestia.conf -o /tmp/updconf
 	mv ${HESTIA}/conf/hestia.conf ${HESTIA}/conf/hestia.conf.bak
 	mv /tmp/updconf ${HESTIA}/conf/hestia.conf
 	rm -f ${HESTIA}/conf/hestia.conf.bak
-	if [ ! -d "$HESTIA/conf/defaults/" ]; then
+	if [ ! -d "${HESTIA}/conf/defaults/" ]; then
 		mkdir -p "${HESTIA}/conf/defaults/"
 	fi
 	cp ${HESTIA}/conf/hestia.conf ${HESTIA}/conf/defaults/hestia.conf
@@ -1245,6 +1245,83 @@ if [ ! -f "/etc/default/ntpsec-ntpdate" ]; then
 		systemctl start systemd-timesyncd
 	fi
 fi
+
+# Check iptables paths and add symlinks when necessary
+if [ ! -e "/sbin/iptables" ]; then
+    if which iptables > /dev/null; then
+        ln -s "$(which iptables)" /sbin/iptables
+    elif [ -e "/usr/sbin/iptables" ]; then
+        ln -s /usr/sbin/iptables /sbin/iptables
+    elif whereis -B /bin /sbin /usr/bin /usr/sbin -f -b iptables; then
+        autoiptables=$(whereis -B /bin /sbin /usr/bin /usr/sbin -f -b iptables | cut -d '' -f 2)
+        if [ -x "$autoiptables" ]; then
+            ln -s "$autoiptables" /sbin/iptables
+        fi
+    fi
+    if [ "$ipv6_support" = 'yes' ]; then
+        if which ip6tables; then
+            ln -s "$(which ip6tables)" /sbin/ip6tables
+        elif [ -e "/usr/sbin/ip6tables" ]; then
+            ln -s /usr/sbin/ip6tables /sbin/ip6tables
+        elif whereis -B /bin /sbin /usr/bin /usr/sbin -f -b ip6tables; then
+            autoip6tables=$(whereis -B /bin /sbin /usr/bin /usr/sbin -f -b ip6tables | cut -d '' -f 2)
+            if [ -x "$autoip6tables" ]; then
+                ln -s "$autoip6tables" /sbin/ip6tables
+            fi
+        fi
+    fi
+fi
+
+if [ ! -e "/sbin/iptables-save" ]; then
+    if which iptables-save > /dev/null; then
+        ln -s "$(which iptables-save)" /sbin/iptables-save
+    elif [ -e "/usr/sbin/iptables-save" ]; then
+        ln -s /usr/sbin/iptables-save /sbin/iptables-save
+    elif whereis -B /bin /sbin /usr/bin /usr/sbin -f -b iptables-save; then
+        autoiptables_save=$(whereis -B /bin /sbin /usr/bin /usr/sbin -f -b iptables-save | cut -d '' -f 2)
+        if [ -x "$autoiptables_save" ]; then
+            ln -s "$autoiptables_save" /sbin/iptables-save
+        fi
+    fi
+    if [ "$ipv6_support" = 'yes' ]; then
+        if which ip6tables-save; then
+            ln -s "$(which ip6tables-save)" /sbin/ip6tables-save
+        elif [ -e "/usr/sbin/ip6tables-save" ]; then
+            ln -s /usr/sbin/ip6tables-save /sbin/ip6tables-save
+        elif whereis -B /bin /sbin /usr/bin /usr/sbin -f -b ip6tables-save; then
+            autoip6tables_save=$(whereis -B /bin /sbin /usr/bin /usr/sbin -f -b iptables-save | cut -d '' -f 2)
+            if [ -x "$autoip6tables_save" ]; then
+                ln -s "$autoip6tables_save" /sbin/ip6tables-save
+            fi
+        fi
+    fi
+fi
+
+if [ ! -e "/sbin/iptables-restore" ]; then
+    if which iptables-restore > /dev/null; then
+        ln -s "$(which iptables-restore)" /sbin/iptables-restore
+    elif [ -e "/usr/sbin/iptables-restore" ]; then
+        ln -s /usr/sbin/iptables-restore /sbin/iptables-restore
+    elif whereis -B /bin /sbin /usr/bin /usr/sbin -f -b iptables-restore; then
+        autoiptables_restore=$(whereis -B /bin /sbin /usr/bin /usr/sbin -f -b iptables-restore | cut -d '' -f 2)
+        if [ -x "$autoiptables_restore" ]; then
+            ln -s "$autoiptables_restore" /sbin/iptables-restore
+        fi
+    fi
+    if [ "$ipv6_support" = 'yes' ]; then
+        if which ip6tables-restore; then
+            ln -s "$(which ip6tables-restore)" /sbin/ip6tables-restore
+        elif [ -e "/usr/sbin/ip6tables-restore" ]; then
+            ln -s /usr/sbin/ip6tables-restore /sbin/ip6tables-restore
+        elif whereis -B /bin /sbin /usr/bin /usr/sbin -f -b ip6tables-restore; then
+            autoip6tables_restore=$(whereis -B /bin /sbin /usr/bin /usr/sbin -f -b iptables-restore | cut -d '' -f 2)
+            if [ -x "$autoip6tables_restore" ]; then
+                ln -s "$autoip6tables_restore" /sbin/ip6tables-restore
+            fi
+        fi
+    fi
+fi
+
 # Restrict access to /proc fs
 # Prevent unpriv users from seeing each other running processes
 mount -o remount,defaults,hidepid=2 /proc > /dev/null 2>&1
@@ -1261,7 +1338,7 @@ fi
 echo "[ * ] Configuring Hestia Control Panel..."
 # Installing sudo configuration
 mkdir -p /etc/sudoers.d
-cp -f $HESTIA_COMMON_DIR/sudo/hestiaweb /etc/sudoers.d/
+cp -f ${HESTIA_COMMON_DIR}/sudo/hestiaweb /etc/sudoers.d/
 chmod 440 /etc/sudoers.d/hestiaweb
 
 # Add Hestia global config
@@ -1464,20 +1541,20 @@ rm -f ${HESTIA}/data/firewall/ipset/blacklist.sh ${HESTIA}/data/firewall/ipset/b
 # Delete rules for services that are not installed
 if [ "$vsftpd" = "no" ] && [ "$proftpd" = "no" ]; then
 	# Remove FTP
-	sed -i "/COMMENT='FTP'/d" $HESTIA/data/firewall/rules.conf
+	sed -i "/COMMENT='FTP'/d" ${HESTIA}/data/firewall/rules.conf
 fi
 if [ "$exim" = "no" ]; then
 	# Remove SMTP
-	sed -i "/COMMENT='SMTP'/d" $HESTIA/data/firewall/rules.conf
+	sed -i "/COMMENT='SMTP'/d" ${HESTIA}/data/firewall/rules.conf
 fi
 if [ "$dovecot" = "no" ]; then
 	# Remove IMAP / Dovecot
-	sed -i "/COMMENT='IMAP'/d" $HESTIA/data/firewall/rules.conf
-	sed -i "/COMMENT='POP3'/d" $HESTIA/data/firewall/rules.conf
+	sed -i "/COMMENT='IMAP'/d" ${HESTIA}/data/firewall/rules.conf
+	sed -i "/COMMENT='POP3'/d" ${HESTIA}/data/firewall/rules.conf
 fi
 if [ "$named" = "no" ]; then
 	# Remove IMAP / Dovecot
-	sed -i "/COMMENT='DNS'/d" $HESTIA/data/firewall/rules.conf
+	sed -i "/COMMENT='DNS'/d" ${HESTIA}/data/firewall/rules.conf
 fi
 
 # Installing API
@@ -1535,7 +1612,7 @@ check_result $? "can't enable sftp jail"
 
 # Enable SSH jail
 echo "[ * ] Enabling SSH jail..."
-$HESTIA/bin/v-add-sys-ssh-jail > /dev/null 2>&1
+${HESTIA}/bin/v-add-sys-ssh-jail > /dev/null 2>&1
 check_result $? "can't enable ssh jail"
 
 # Adding Hestia admin account
@@ -1580,10 +1657,10 @@ for nameserver in $(grep -is '^nameserver' /etc/resolv.conf | cut -d' ' -f2 | tr
 			resolver="$resolver $nameserver"
 		fi
 		if [ "$ipv6_support" = 'yes' ]; then
-		if [[ $ip =~ ^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))$ ]]; then
-			resolver="[$ip] $resolver"
+			if [[ $ip =~ ^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))$ ]]; then
+				resolver="[$ip] $resolver"
+			fi
 		fi
-	fi
 	fi
 done
 if [ -n "$resolver" ]; then
@@ -1724,7 +1801,7 @@ done
 # Cleanup php session files not changed in the last 7 days (60*24*7 minutes)
 echo '#!/bin/sh' > /etc/cron.daily/php-session-cleanup
 echo "find -O3 /home/*/tmp/ -ignore_readdir_race -depth -mindepth 1 -name 'sess_*' -type f -cmin '+10080' -delete > /dev/null 2>&1" >> /etc/cron.daily/php-session-cleanup
-echo "find -O3 $HESTIA/data/sessions/ -ignore_readdir_race -depth -mindepth 1 -name 'sess_*' -type f -cmin '+10080' -delete > /dev/null 2>&1" >> /etc/cron.daily/php-session-cleanup
+echo "find -O3 ${HESTIA}/data/sessions/ -ignore_readdir_race -depth -mindepth 1 -name 'sess_*' -type f -cmin '+10080' -delete > /dev/null 2>&1" >> /etc/cron.daily/php-session-cleanup
 chmod 755 /etc/cron.daily/php-session-cleanup
 
 #----------------------------------------------------------#
@@ -2350,9 +2427,9 @@ if [ -n "$pub_ipv4" ] && [ "$pub_ipv4" != "$ip" ]; then
 	check_pve=$(uname -r | grep pve)
 	if [ ! -z "$check_pve" ]; then
 		echo 'hostname=$(hostname --fqdn)' >> /etc/rc.local
-		echo ""$HESTIA/bin/v-change-sys-hostname" "'"$hostname"'"" >> /etc/rc.local
+		echo ""${HESTIA}/bin/v-change-sys-hostname" "'"$hostname"'"" >> /etc/rc.local
 	fi
-	echo "$HESTIA/bin/v-update-sys-ip" >> /etc/rc.local
+	echo "${HESTIA}/bin/v-update-sys-ip" >> /etc/rc.local
 	echo "exit 0" >> /etc/rc.local
 	chmod +x /etc/rc.local
 	systemctl enable rc-local > /dev/null 2>&1
@@ -2550,7 +2627,7 @@ The Hestia Control Panel development team
 Made with love & pride by the open-source community around the world.
 " >> $tmpfile
 
-send_mail="$HESTIA/web/inc/mail-wrapper.php"
+send_mail="${HESTIA}/web/inc/mail-wrapper.php"
 cat $tmpfile | $send_mail -s "Hestia Control Panel" $email
 
 # Congrats

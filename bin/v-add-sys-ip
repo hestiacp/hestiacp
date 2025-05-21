@@ -75,7 +75,8 @@ add_string_ipv6=""
 add_cap_string_ipv6=""
 full_ip46=""
 netmask_prelen=""
-closed_ip=""
+# formatted_ip: stores the plain IPv4 address or the bracketed IPv6 address (for use in configs where brackets are required)
+formatted_ip=""
 if [ -n "$ip_format" ]; then
 	if [ $ip_format -eq 4 ]; then
 		ip=${ip46}
@@ -100,7 +101,7 @@ if [ -n "$ip_format" ]; then
 		broadcast=$(get_broadcast $ip $netmask) # generate broadcast
 		full_ip46="$ip$cidr"
 		netmask_prelen="${netmask}"
-		closed_ip="${ip}"
+		formatted_ip="${ip}"
 	fi
 	if [ $ip_format -eq 6 ]; then
 		ip=''
@@ -116,7 +117,7 @@ if [ -n "$ip_format" ]; then
 		broadcast=""                        # reset broadcast
 		full_ip46="$ipv6$prefix_length"
 		netmask_prelen="${prefix_length}"
-		closed_ip="[${ipv6}]"
+		formatted_ip="[${ipv6}]"
 		add_cap_string_ipv6="V6"
 	fi
 fi
@@ -182,6 +183,8 @@ if [ -z "$sys_ip_check" ]; then
 		if [ -f "/etc/netplan/60-hestia.yaml" ]; then
 			sys_ip=" - ${full_ip46}"
 		else
+			# The following indentation and spacing is intentional for valid YAML formatting required by Netplan.
+			# Please do not change the spaces or structure, as Netplan is sensitive to incorrect indentation.
 			sys_ip="# Added by Hestia, please do not edit the file manually!"
 			sys_ip="$sys_ip\nnetwork:"
 			sys_ip="$sys_ip\n  version: 2"
@@ -232,25 +235,25 @@ if [ -n "$WEB_SYSTEM" ]; then
 
 	if [ "$WEB_SYSTEM" = 'httpd' ] || [ "$WEB_SYSTEM" = 'apache2' ]; then
 		if [ -z "$(/usr/sbin/apachectl -v | grep Apache/2.4)" ]; then
-			echo "NameVirtualHost ${closed_ip}:$WEB_PORT" > ${web_conf}
+			echo "NameVirtualHost ${formatted_ip}:$WEB_PORT" > ${web_conf}
 		fi
-		echo "Listen ${closed_ip}:$WEB_PORT" >> ${web_conf}
+		echo "Listen ${formatted_ip}:$WEB_PORT" >> ${web_conf}
 		cat $HESTIA_INSTALL_DIR/apache2/unassigned.conf >> ${web_conf}
-		[ -n "$ip_format" ] && [ $ip_format -eq 6 ] && sed -i 's/\(VirtualHost \)directIP/\1'${closed_ip}'/g' ${web_conf}
+		[ -n "$ip_format" ] && [ $ip_format -eq 6 ] && sed -i 's/\(VirtualHost \)directIP/\1'${formatted_ip}'/g' ${web_conf}
 		sed -i 's/directIP/'${ip46}'/g' ${web_conf}
 		sed -i 's/directPORT/'$WEB_PORT'/g' ${web_conf}
 
 	elif [ "$WEB_SYSTEM" = 'nginx' ]; then
 		cp -f $HESTIA_INSTALL_DIR/nginx/unassigned.inc ${web_conf}
-		sed -i 's/directIP/'${closed_ip}'/g' ${web_conf}
+		sed -i 's/directIP/'${formatted_ip}'/g' ${web_conf}
 		process_http2_directive "$web_conf"
 	fi
 
 	if [ "$WEB_SSL" = 'mod_ssl' ]; then
 		if [ -z "$(/usr/sbin/apachectl -v | grep Apache/2.4)" ]; then
-			sed -i "1s/^/NameVirtualHost ${closed_ip}:$WEB_SSL_PORT\n/" ${web_conf}
+			sed -i "1s/^/NameVirtualHost ${formatted_ip}:$WEB_SSL_PORT\n/" ${web_conf}
 		fi
-		sed -i "1s/^/Listen ${closed_ip}:$WEB_SSL_PORT\n/" ${web_conf}
+		sed -i "1s/^/Listen ${formatted_ip}:$WEB_SSL_PORT\n/" ${web_conf}
 		sed -i 's/directSSLPORT/'$WEB_SSL_PORT'/g' ${web_conf}
 	fi
 fi
@@ -258,7 +261,7 @@ fi
 # Proxy support
 if [ -n "$PROXY_SYSTEM" ]; then
 	cat $WEBTPL/$PROXY_SYSTEM/proxy_ip.tpl \
-		| sed -e "s/%ip%/${closed_ip}/g" \
+		| sed -e "s/%ip%/${formatted_ip}/g" \
 			-e "s/%web_port%/$WEB_PORT/g" \
 			-e "s/%proxy_port%/$PROXY_PORT/g" \
 			-e "s/%proxy_ssl_port%/$PROXY_SSL_PORT/g" \

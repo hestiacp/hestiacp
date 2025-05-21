@@ -2,6 +2,9 @@
 #
 # !!! WRAPPER SCRIPT FOR COMPATIBILITY PURPOSES WITH OLD IPV4 SCRIPTS AND EXTERNAL CALLS !!!
 #
+# This script is a wrapper for backward compatibility with legacy scripts and external tools that call v-add-web-domain using the old IPv4-only arguments.
+# It transparently calls v-add-web-domain-ipv46, which supports both IPv4 and IPv6, ensuring existing integrations do not break.
+#
 # info: add web domain
 # options: USER DOMAIN [IPV4] [RESTART] [ALIASES] [PROXY_EXTENSIONS]
 #

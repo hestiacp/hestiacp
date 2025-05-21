@@ -9,8 +9,8 @@ server {
 
 	ssl_certificate      %ssl_pem%;
     ssl_certificate_key  %ssl_key%;
-	ssl_stapling        on;
-	ssl_stapling_verify on;
+	ssl_stapling         on;
+	ssl_stapling_verify  on;
 
 	# TLS 1.3 0-RTT anti-replay
 	if ($anti_replay = 307) { return 307 https://$host$request_uri; }

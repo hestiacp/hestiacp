@@ -128,7 +128,7 @@ if [ -z "$iface" ]; then
     exit 1
 fi
 
-# Extraer número del prefijo IPv6 para validación (quita la barra inicial)
+# Extract IPv6 prefix number for validation (removes initial slash)
 if [[ "$prefix_length" =~ ^/([0-9]{1,3})$ ]]; then
     prefix_length_num="${BASH_REMATCH[1]}"
 else

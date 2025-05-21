@@ -63,7 +63,7 @@
 					<select class="form-select" name="v_ipv6" id="v_ipv6">
 						<option value="">none</option>
 						<?php
-						// Mostrar sugerencias agrupadas por prefijo
+						// Show suggestions grouped by prefix
 						if (!empty($suggested_ipv6)) {
 							foreach ($suggested_ipv6 as $prefix => $list) {
 								echo "<optgroup label=\"{$prefix}::/64\">";

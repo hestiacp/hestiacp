@@ -109,7 +109,7 @@ if ! $iptables -L fail2ban-$chain &> /dev/null; then
 	$iptables -I INPUT -p $protocol $port_str -j fail2ban-$chain
 fi
 
-# Crear cadena equivalente en ip6tables si IPv6 está activado
+# Create equivalent chain in ip6tables if IPv6 is enabled
 if [ "$IPV6_SUPPORT" = "yes" ]; then
 	if ! /sbin/ip6tables -L fail2ban-$chain &> /dev/null; then
 		/sbin/ip6tables -N fail2ban-$chain

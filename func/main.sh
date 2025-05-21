@@ -567,7 +567,7 @@ decrease_user_value() {
     if [ "$new" -lt 0 ]; then
         new=0
     fi
-    # Cambia la primera ocurrencia aunque el valor antiguo no coincida exactamente
+    # Change the first occurrence even if the old value doesn't match exactly
     sed -i "0,/^$key='[0-9]*'/s//${key}='$new'/" "$conf"
 }
 

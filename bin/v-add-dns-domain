@@ -172,7 +172,7 @@ time=$(echo "$time_n_date" | cut -f 1 -d \ )
 date=$(echo "$time_n_date" | cut -f 2 -d \ )
 
 # Adding dns zone to the user config
-# Añadir registros AAAA si se especifica IPv6
+# Add AAAA records if IPv6 is specified
 if [ -n "$ipv6" ]; then
     max_id=$(grep -o "ID='[0-9]*'" <<< "$template_data" | sed "s/ID='//;s/'//" | sort -n | tail -1)
     id=$((max_id + 1))

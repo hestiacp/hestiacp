@@ -119,7 +119,7 @@ target_str="$target_str TIME='$time' DATE='$date'"
 # Deleting old target rule
 sed -i "/RULE='$target_rule' /d" $HESTIA/data/firewall/rules.conf
 
-# Adding new soruce and target rules
+# Adding new source and target rules
 echo "$source_str" >> $HESTIA/data/firewall/rules.conf
 echo "$target_str" >> $HESTIA/data/firewall/rules.conf
 

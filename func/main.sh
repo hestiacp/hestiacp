@@ -1149,7 +1149,7 @@ is_object_format_valid() {
 
 # Comment validator
 is_comment_format_valid() {
-	if ! [[ "$1" =~ ^[[:alnum:]][[:alnum:] ._-]{0,64}[[:alnum:]]$ ]]; then
+	if ! [[ "$1" =~ ^[[:alnum:]][[:alnum:][:space:]._-]{0,64}[[:alnum:]]$ ]]; then
 		check_result "$E_INVALID" "invalid $2 format :: $1"
 	fi
 }

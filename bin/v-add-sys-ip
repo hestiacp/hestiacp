@@ -70,7 +70,6 @@ if [ -n "$second_parameter" -a -n "$ip_format" ]; then
 	[ -z "$netmask" -a -z "$cidr_prefixlen" ] && check_result 2 "Wrong netmask / cidr / prefix length definition!"                                  # wrong parameters
 	[ -n "$netmask" -a $ip_format -ne 4 ] && check_result 3 "Netmask definition for a not IPV4 address! Define a prefix lenght instead of netmask!" # wrong parameters
 fi
-# is_ip_format_valid 'ip46'	# check for correct ipv4 or ipv6 format
 add_string_ipv6=""
 add_cap_string_ipv6=""
 full_ip46=""

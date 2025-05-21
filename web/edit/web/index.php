@@ -169,7 +169,7 @@ foreach ($ips as $ip => $data) {
         }
     }
 }
-// Función igual que en add_web
+// Same function as in add_web
 function generate_ipv6_suggestions($prefix, $used_ips = [], $count = 5) {
     $suggestions = [];
     while (count($suggestions) < $count) {

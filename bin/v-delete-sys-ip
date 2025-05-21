@@ -9,7 +9,9 @@
 #----------------------------------------------------------#
 #                      Functions                           #
 #----------------------------------------------------------#
-
+# Normalizes an IPv4 or IPv6 address to its canonical form using PHP's inet_ntop().
+# This is needed because bash utilities don't always normalize IPv6 notation,
+# but the config files and lookups may require canonical format for correct matching.
 normalize_ip() {
     php -r "echo inet_ntop(inet_pton('$1'));" 2>/dev/null
 }

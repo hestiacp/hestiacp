@@ -1147,6 +1147,13 @@ is_object_format_valid() {
 	fi
 }
 
+# Comment validator
+is_comment_format_valid() {
+	if ! [[ "$1" =~ ^[[:alnum:]][[:alnum:] ._-]{0,64}[[:alnum:]]$ ]]; then
+		check_result "$E_INVALID" "invalid $2 format :: $1"
+	fi
+}
+
 # Role validator
 is_role_valid() {
 	if ! [[ "$1" =~ ^admin$|^user$|^dns-cluster$ ]]; then
@@ -1203,7 +1210,7 @@ is_format_valid() {
 				charset) is_object_format_valid "$arg" "$arg_name" ;;
 				charsets) is_common_format_valid "$arg" 'charsets' ;;
 				chain) is_object_format_valid "$arg" 'chain' ;;
-				comment) is_object_format_valid "$arg" 'comment' ;;
+				comment) is_comment_format_valid "$arg" 'comment' ;;
 				cron_command) is_cron_command_valid_format "$arg" ;;
 				database) is_database_format_valid "$arg" 'database' ;;
 				day) is_cron_format_valid "$arg" $arg_name ;;

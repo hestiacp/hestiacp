@@ -5,12 +5,12 @@
 # example: v-move-firewall-rule 4 up
 #
 # This function is used for moving an existing firewall rule.
-# Direction can be either "up" or "down". 
-# 
-# If the direction is "up", the rule will be moved to a lower 
+# Direction can be either "up" or "down".
+#
+# If the direction is "up", the rule will be moved to a lower
 # number (higher priority).
-# 
-# If the direction is "down", the rule will be moved to a 
+#
+# If the direction is "down", the rule will be moved to a
 # higher number (lower priority).
 
 #----------------------------------------------------------#
@@ -32,7 +32,7 @@ source_conf "$HESTIA/conf/hestia.conf"
 get_rule_id() {
 	local source_rule_id=$1
 	local direction=$2
-	
+
 	if [ "$direction" == "UP" ]; then
 		target_rule_id=$(($source_rule_id - 1))
 	else
@@ -88,7 +88,6 @@ check_hestia_demo_mode
 
 target_rule=$(get_rule_id "$source_rule" "$direction")
 
-
 # Get the rule that will be moved
 parse_object_kv_list $(grep "RULE='$source_rule'" $HESTIA/data/firewall/rules.conf)
 
@@ -120,7 +119,6 @@ target_str="$target_str TIME='$time' DATE='$date'"
 # Deleting old target rule
 sed -i "/RULE='$target_rule' /d" $HESTIA/data/firewall/rules.conf
 
-
 # Adding new soruce and target rules
 echo "$source_str" >> $HESTIA/data/firewall/rules.conf
 echo "$target_str" >> $HESTIA/data/firewall/rules.conf
@@ -136,6 +134,6 @@ $BIN/v-update-firewall
 #----------------------------------------------------------#
 
 # Logging
-$BIN/v-log-action "system" "Info" "Firewall" "Firewall rule $source_rule moved $direction (Source rule: $source_rule, Target rule: $target_rule).\n (Source rule: $source_str, \n Target rule: $target_str)."
+$BIN/v-log-action "system" "Info" "Firewall" "Firewall rule $source_rule moved $direction (Source rule: $source_rule, Target rule: $target_rule)."
 log_event "$OK" "$ARGUMENTS"
 exit

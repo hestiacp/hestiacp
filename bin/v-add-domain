@@ -56,8 +56,7 @@ fi
 if [ -n "$WEB_SYSTEM" ]; then
 	check1=$(is_package_full 'WEB_DOMAINS')
 	if [ $? -eq 0 ]; then
-		ipv6="" # empty, not used yet
-		$BIN/v-add-web-domain-ipv46 "$user" "$domain" "$ip" "$ipv6" 'no'
+		$BIN/v-add-web-domain-ipv46 "$user" "$domain" "$ip" "" 'no'
 		check_result $? "can't add web domain"
 	fi
 fi

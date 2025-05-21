@@ -1,10 +1,10 @@
 #!/bin/bash
-# info: delete firewall rule (IPv6)
+# info: unsuspend firewall IPv6 rule
 # options: RULE
 #
-# example: v-delete-firewall-rule-ipv6 5
+# example: v-unsuspend-firewall-rule-ipv6 7
 #
-# This function deletes an IPv6 firewall rule by its ID.
+# This function unsuspends a certain IPv6 firewall rule.
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #
@@ -14,8 +14,11 @@
 rule=$1
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
 source /etc/hestiacp/hestia.conf
-source /usr/local/hestia/func/main.sh
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
@@ -26,24 +29,27 @@ check_args '1' "$#" 'RULE'
 is_format_valid 'rule'
 is_system_enabled "$FIREWALL_SYSTEM" 'FIREWALL_SYSTEM'
 is_object_valid '../../../data/firewall/rules6' 'RULE' "$rule"
+is_object_suspended '../../../data/firewall/rules6' 'RULE' "$rule"
 
+# Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Deleting rule
-sed -i "/RULE='$rule' /d" $HESTIA/data/firewall/rules6.conf
+# Unsuspending rule
+update_object_value '../../../data/firewall/rules6' 'RULE' "$rule" '$SUSPENDED' "no"
 
-# Updating system firewall (IPv6)
+# Updating system IPv6 firewall
 $BIN/v-update-firewall-ipv6
 
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
 
-$BIN/v-log-action "system" "Info" "Firewall" "Removed IPv6 firewall rule (ID: $rule)."
+# Logging
+$BIN/v-log-action "system" "Info" "Firewall" "Unsuspended IPv6 firewall rule (Rule: $rule)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

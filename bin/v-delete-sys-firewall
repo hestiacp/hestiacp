@@ -4,18 +4,14 @@
 #
 # example: v-delete-sys-firewall
 #
-# This function disables firewall support
+# This function disables firewall support for both IPv4 and IPv6
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #
 #----------------------------------------------------------#
 
-# Includes
-# shellcheck source=/etc/hestiacp/hestia.conf
 source /etc/hestiacp/hestia.conf
-# shellcheck source=/usr/local/hestia/func/main.sh
-source $HESTIA/func/main.sh
-# load config file
+source /usr/local/hestia/func/main.sh
 source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
@@ -26,7 +22,6 @@ if [ -z "$FIREWALL_SYSTEM" ]; then
 	exit
 fi
 
-# Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
 #----------------------------------------------------------#
@@ -36,15 +31,17 @@ check_hestia_demo_mode
 # Updating FIREWALL_SYSTEM value
 $BIN/v-change-sys-config-value "FIREWALL_SYSTEM" ""
 
-# Stopping firewall
+# Stopping IPv4 firewall
 $BIN/v-stop-firewall
+
+# Stopping IPv6 firewall (si existe el bin)
+[ -x "$BIN/v-stop-firewall-ipv6" ] && $BIN/v-stop-firewall-ipv6
 
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
 
-# Logging
-$BIN/v-log-action "system" "Warning" "Firewall" "System firewall disabled."
+$BIN/v-log-action "system" "Warning" "Firewall" "System firewall (IPv4/IPv6) disabled."
 log_event "$OK" "$ARGUMENTS"
 
 exit

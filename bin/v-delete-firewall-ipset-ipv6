@@ -1,0 +1,76 @@
+#!/bin/bash
+# info: delete firewall ipset (IPv6)
+# options: NAME
+#
+# example: v-delete-firewall-ipset-ipv6 paisesban
+#
+# This function removes IPv6 ipset from system and from Hestia.
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+ip_name=${1}
+
+# Includes
+source /etc/hestiacp/hestia.conf
+source /usr/local/hestia/func/main.sh
+source_conf "$HESTIA/conf/hestia.conf"
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '1' "$#" 'NAME'
+is_format_valid 'ip_name'
+is_system_enabled "$FIREWALL_SYSTEM" 'FIREWALL_SYSTEM'
+
+# Define variables for ipset configuration
+ipset_hstobject='../../../data/firewall/ipset'
+is_object_valid "$ipset_hstobject" 'LISTNAME' "$ip_name"
+ip_version="$(get_object_value "$ipset_hstobject" 'LISTNAME' "$ip_name" '$IP_VERSION')"
+
+if [ "$ip_version" != "v6" ]; then
+    echo "Error: This script only deletes IPv6 ipset lists (detected version: $ip_version)."
+    exit 1
+fi
+
+check_hestia_demo_mode
+
+IPSET_BIN="$(command -v ipset)"
+IPSET_PATH="$HESTIA/data/firewall/ipset"
+IPSET_FILE="${ip_name}.${ip_version}"
+
+# Install ipset package if missing
+if [ -z "$IPSET_BIN" ]; then
+    apt-get --quiet --yes install ipset > /dev/null
+    check_result $? "Installing IPset package"
+
+    IPSET_BIN="$(which ipset)"
+    check_result $? "IPset binary not found"
+fi
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+if $IPSET_BIN -quiet list "${ip_name}-tmp" > /dev/null 2>&1; then
+    $IPSET_BIN -quiet destroy "${ip_name}-tmp"
+fi
+
+if $IPSET_BIN -quiet list "${ip_name}" > /dev/null 2>&1; then
+    $IPSET_BIN -quiet destroy "${ip_name}"
+    check_result $? "ipset ${ip_name} still used by ip6tables. Cannot remove"
+fi
+
+sed -i "/LISTNAME='$ip_name'/d" "${IPSET_PATH}.conf"
+rm -f "${IPSET_PATH}/${IPSET_FILE}.iplist"
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+$BIN/v-log-action "system" "Info" "Firewall" "IPv6 IPset deleted (Name: $ip_name)."
+log_event "$OK" "$ARGUMENTS"
+
+exit

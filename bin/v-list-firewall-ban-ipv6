@@ -1,10 +1,10 @@
 #!/bin/bash
-# info: list ip6tables rules
+# info: list firewall block list (IPv6)
 # options: [FORMAT]
 #
-# example: v-list-firewall-ipv6 json
+# example: v-list-firewall-ban-ipv6 json
 #
-# This function obtains the list of all ip6tables rules.
+# This function lists the currently blocked IPv6 addresses.
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #
@@ -20,18 +20,14 @@ source_conf "$HESTIA/conf/hestia.conf"
 json_list() {
     IFS=$'\n'
     i=1
-    objects=$(grep RULE $HESTIA/data/firewall/rules6.conf | wc -l)
+    objects=$(grep IP $HESTIA/data/firewall/banlist6.conf | wc -l)
     echo "{"
     while read str; do
         [[ -z "$str" ]] && continue
         parse_object_kv_list "$str"
-        echo -n '    "'$RULE'": {
-        "ACTION": "'$ACTION'",
-        "PROTOCOL": "'$PROTOCOL'",
-        "PORT": "'$PORT'",
-        "IP6": "'$IP6'",
-        "COMMENT": "'$COMMENT'",
-        "SUSPENDED": "'$SUSPENDED'",
+        echo -n '    "'$IP'": {
+        "IP": "'$IP'",
+        "CHAIN": "'$CHAIN'",
         "TIME": "'$TIME'",
         "DATE": "'$DATE'"
     }'
@@ -41,20 +37,20 @@ json_list() {
             echo
         fi
         ((i++))
-    done < <(cat $HESTIA/data/firewall/rules6.conf)
+    done < <(cat $HESTIA/data/firewall/banlist6.conf)
     echo '}'
 }
 
 # SHELL list function
 shell_list() {
     IFS=$'\n'
-    echo "RULE^ACTION^PROTO^PORT^IP6^SPND^DATE"
-    echo "----^------^-----^----^---^----^----"
+    echo "IP   CHAIN   TIME   DATE"
+    echo "--   -----   ----   ----"
     while read str; do
         [[ -z "$str" ]] && continue
         parse_object_kv_list "$str"
-        echo "$RULE^$ACTION^$PROTOCOL^$PORT^$IP6^$SUSPENDED^$DATE"
-    done < <(cat $HESTIA/data/firewall/rules6.conf)
+        echo "$IP $CHAIN $TIME $DATE"
+    done < <(cat $HESTIA/data/firewall/banlist6.conf)
 }
 
 # PLAIN list function
@@ -63,21 +59,19 @@ plain_list() {
     while read str; do
         [[ -z "$str" ]] && continue
         parse_object_kv_list "$str"
-        echo -ne "$RULE\t$ACTION\t$PROTOCOL\t$PORT\t$IP6\t$COMMENT\t"
-        echo -e "$SUSPENDED\t$TIME\t$DATE"
-    done < <(cat $HESTIA/data/firewall/rules6.conf)
+        echo -e "$IP\t$CHAIN\t$TIME\t$DATE"
+    done < <(cat $HESTIA/data/firewall/banlist6.conf)
 }
 
 # CSV list function
 csv_list() {
     IFS=$'\n'
-    echo "RULE,ACTION,PROTOCOL,PORT,IP6,COMMENT,SUSPENDED,TIME,DATE"
+    echo "IP,CHAIN,TIME,DATE"
     while read str; do
         [[ -z "$str" ]] && continue
         parse_object_kv_list "$str"
-        echo -n "$RULE,$ACTION,$PROTOCOL,$PORT,$IP6,\"$COMMENT\","
-        echo "$SUSPENDED,$TIME,$DATE"
-    done < <(cat $HESTIA/data/firewall/rules6.conf)
+        echo "$IP,$CHAIN,$TIME,$DATE"
+    done < <(cat $HESTIA/data/firewall/banlist6.conf)
 }
 
 #----------------------------------------------------------#
@@ -88,7 +82,7 @@ case $format in
     json) json_list ;;
     plain) plain_list ;;
     csv) csv_list ;;
-    shell) shell_list | column -t -s '^' ;;
+    shell) shell_list | column -t ;;
 esac
 
 exit

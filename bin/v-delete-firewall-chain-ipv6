@@ -1,49 +1,59 @@
 #!/bin/bash
-# info: delete firewall rule (IPv6)
-# options: RULE
+# info: delete IPv6 firewall chain
+# options: CHAIN
 #
-# example: v-delete-firewall-rule-ipv6 5
+# example: v-delete-firewall-chain-ipv6 WEB
 #
-# This function deletes an IPv6 firewall rule by its ID.
+# This function deletes a custom IPv6 firewall chain and removes its rules.
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #
 #----------------------------------------------------------#
 
-# Argument definition
-rule=$1
+chain=$(echo "$1" | tr '[:lower:]' '[:upper:]')
+ip6tables='/sbin/ip6tables'
 
 # Includes
 source /etc/hestiacp/hestia.conf
 source /usr/local/hestia/func/main.sh
+source "$HESTIA/func/firewall.sh"
 source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '1' "$#" 'RULE'
-is_format_valid 'rule'
+check_args '1' "$#" 'CHAIN'
+is_format_valid 'chain'
 is_system_enabled "$FIREWALL_SYSTEM" 'FIREWALL_SYSTEM'
-is_object_valid '../../../data/firewall/rules6' 'RULE' "$rule"
-
 check_hestia_demo_mode
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Deleting rule
-sed -i "/RULE='$rule' /d" $HESTIA/data/firewall/rules6.conf
+chains="$HESTIA/data/firewall/chains6.conf"
+banlist="$HESTIA/data/firewall/banlist6.conf"
+chain_param=""
+[ -f "$chains" ] && chain_param=$(grep "CHAIN='$chain'" "$chains")
+if [ -n "$chain_param" ]; then
+    parse_object_kv_list "$chain_param"
+    sed -i "/CHAIN='$chain'/d" "$chains"
+    sed -i "/CHAIN='$chain'/d" "$banlist"
+    $ip6tables -D INPUT -p $PROTOCOL --dport $PORT -j fail2ban-$CHAIN 2> /dev/null
+fi
 
-# Updating system firewall (IPv6)
-$BIN/v-update-firewall-ipv6
+# Deleting ip6tables chain
+$ip6tables -F fail2ban-$CHAIN 2> /dev/null
+$ip6tables -X fail2ban-$CHAIN 2> /dev/null
+
+[ -f "$chains" ] && chmod 660 "$chains"
 
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
 
-$BIN/v-log-action "system" "Info" "Firewall" "Removed IPv6 firewall rule (ID: $rule)."
+$BIN/v-log-action "system" "Info" "Firewall" "Removed IPv6 firewall chain: $chain"
 log_event "$OK" "$ARGUMENTS"
 
 exit

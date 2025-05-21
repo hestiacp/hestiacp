@@ -1,60 +1,74 @@
 #!/bin/bash
-# info: change firewall rule (IPv6)
-# options: RULE ACTION IPV6_CIDR PORT [PROTOCOL] [COMMENT]
+# info: add firewall rule (IPv6)
+# options: ACTION IPV6_CIDR PORT [PROTOCOL] [COMMENT] [RULE]
 #
-# example: v-change-firewall-ipv6-rule 3 ACCEPT 2001:db8::1 443
+# example: v-add-firewall-rule-ipv6 DROP 2001:db8::1 25
 #
-# This function is used for changing existing IPv6 firewall rule.
-# It fully replaces the rule with a new one but keeps the same id.
+# This function adds new rule to system firewall (IPv6)
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
-rule=$1
-action=$(echo $2 | tr '[:lower:]' '[:upper:]')
-ipv6_cidr=$3
-port_ext=$4
-protocol=${5-TCP}
+action=$(echo $1 | tr '[:lower:]' '[:upper:]')
+ipv6_cidr=$2
+port_ext=$3
+protocol=${4-TCP}
 protocol=$(echo $protocol | tr '[:lower:]' '[:upper:]')
-comment=$6
+comment=$5
+rule=$6
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
 source /etc/hestiacp/hestia.conf
-source /usr/local/hestia/func/main.sh
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
-# Sort function
+# Get next firewall rule id
+get_next_fw_rule() {
+    if [ -z "$rule" ]; then
+        curr_str=$(grep "RULE=" $HESTIA/data/firewall/rules6.conf \
+            | cut -f 2 -d \' | sort -n | tail -n1)
+        rule="$((curr_str + 1))"
+    fi
+}
+
 sort_fw_rules() {
-    cat $HESTIA/data/firewall/rules6.conf | sort -n -k 2 -t \' > $HESTIA/data/firewall/rules6.conf.tmp
-    mv -f $HESTIA/data/firewall/rules6.conf.tmp $HESTIA/data/firewall/rules6.conf
+    cat $HESTIA/data/firewall/rules6.conf \
+        | sort -n -k 2 -t \' > $HESTIA/data/firewall/rules6.conf.tmp
+    mv -f $HESTIA/data/firewall/rules6.conf.tmp \
+        $HESTIA/data/firewall/rules6.conf
 }
 
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '4' "$#" 'RULE ACTION IPV6_CIDR PORT [PROTOCOL] [COMMENT]'
-is_format_valid 'rule' 'action' 'protocol' 'port_ext'
-if [ ! -z "$comment" ]; then
+check_args '3' "$#" 'ACTION IPV6_CIDR PORT [PROTOCOL] [COMMENT] [RULE]'
+is_format_valid 'action' 'protocol' 'port_ext'
+is_system_enabled "$FIREWALL_SYSTEM" 'FIREWALL_SYSTEM'
+get_next_fw_rule
+is_format_valid 'rule'
+is_object_new '../../../data/firewall/rules6' 'RULE' "$rule"
+if [ -n "$comment" ]; then
     is_format_valid 'comment'
 fi
-is_system_enabled "$FIREWALL_SYSTEM" 'FIREWALL_SYSTEM'
-is_object_valid '../../../data/firewall/rules6' 'RULE' "$rule"
-
 if [[ "$ipv6_cidr" =~ ^ipset: ]]; then
     ipset_name="${ipv6_cidr#ipset:}"
     $BIN/v-list-firewall-ipset-ipv6 plain | grep "^$ipset_name\s" > /dev/null
     check_result $? 'ipset object not found' "$E_NOTEXIST"
 else
-    # Validar IPv6 (simple)
+    # IPv6 validation simple (puedes mejorar la regex si lo necesitas)
     if ! echo "$ipv6_cidr" | grep -q ':'; then
         echo "Error: '$ipv6_cidr' does not appear to be a valid IPv6 address."
         exit 1
     fi
 fi
 
+# Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
 #----------------------------------------------------------#
@@ -66,29 +80,34 @@ time_n_date=$(date +'%T %F')
 time=$(echo "$time_n_date" | cut -f 1 -d \ )
 date=$(echo "$time_n_date" | cut -f 2 -d \ )
 
-# Concatenating firewall rule
+# Concatenating rule
 str="RULE='$rule' ACTION='$action' PROTOCOL='$protocol' PORT='$port_ext'"
 str="$str IP6='$ipv6_cidr' COMMENT='$comment' SUSPENDED='no'"
 str="$str TIME='$time' DATE='$date'"
 
-# Deleting old rule
-sed -i "/RULE='$rule' /d" $HESTIA/data/firewall/rules6.conf
-
-# Adding new rule
+# Adding to config
 echo "$str" >> $HESTIA/data/firewall/rules6.conf
+
+# Changing permissions
+chmod 660 $HESTIA/data/firewall/rules6.conf
 
 # Sorting firewall rules by id number
 sort_fw_rules
 
-# Updating system firewall (IPv6)
+# Updating system IPv6 firewall
 $BIN/v-update-firewall-ipv6
 
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
 
+# Fix missing port value in log if zero
+if [ -z "$port_ext" ]; then
+    port_ext="0"
+fi
+
 # Logging
-$BIN/v-log-action "system" "Info" "Firewall" "IPv6 firewall rule changed (Rule: $rule, Action: $action, Protocol: $protocol, Port: $port_ext)."
+$BIN/v-log-action "system" "Info" "Firewall" "Added IPv6 firewall rule (Action: $action, Port: $port_ext, Protocol: $protocol)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

@@ -1,0 +1,83 @@
+#!/bin/bash
+# info: delete IPv6 firewall blocking rule
+# options: IPV6_CIDR CHAIN
+#
+# example: v-delete-firewall-ban-ipv6 2001:db8::1 MAIL
+#
+# This function deletes a blocking rule from the system IPv6 firewall
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Argument definition
+ipv6_cidr=$1
+chain=$(echo $2 | tr '[:lower:]' '[:upper:]')
+
+ip6tables="/sbin/ip6tables"
+
+# Includes
+source /etc/hestiacp/hestia.conf
+source /usr/local/hestia/func/main.sh
+source "$HESTIA/func/firewall.sh"
+source_conf "$HESTIA/conf/hestia.conf"
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '2' "$#" 'IPV6_CIDR CHAIN'
+is_format_valid 'ip' 'chain'
+is_system_enabled "$FIREWALL_SYSTEM" 'FIREWALL_SYSTEM'
+
+check_hestia_demo_mode
+
+conf="$HESTIA/data/firewall/banlist6.conf"
+[ -f "$conf" ] || touch "$conf"
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+if [ "$chain" == "ALL" ]; then
+    check_ip=$(grep "IP='$ipv6_cidr' CHAIN='*'" $conf)
+    if [ -z "$check_ip" ]; then
+        exit
+    fi
+    grep "IP='$ipv6_cidr' CHAIN='*'" $conf | while read -r line; do
+        parse_object_kv_list $line
+
+        # Deleting IP from banlist
+        sip=$(echo "$IP" | sed "s|/|\\\/|g")
+        sed -i "/IP='$sip' CHAIN='$CHAIN'/d" $conf
+
+        # Delete from ip6tables
+        $ip6tables -D fail2ban-$CHAIN -s "$IP" -j REJECT 2> /dev/null
+    done
+else
+    # Checking ip in banlist
+    check_ip=$(grep "IP='$ipv6_cidr' CHAIN='$chain'" $conf 2> /dev/null)
+    if [ -z "$check_ip" ]; then
+        exit
+    fi
+
+    # Deleting ip from banlist
+    sip=$(echo "$ipv6_cidr" | sed "s|/|\\\/|g")
+    sed -i "/IP='$sip' CHAIN='$chain'/d" $conf
+
+    # Delete from ip6tables
+    $ip6tables -D fail2ban-$chain -s "$ipv6_cidr" -j REJECT 2> /dev/null
+fi
+
+# Changing permissions
+chmod 660 $conf
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Logging
+$BIN/v-log-action "system" "Info" "Firewall" "Removed IPv6 from ban list (IP: $ipv6_cidr, Service: $chain)."
+log_event "$OK" "$ARGUMENTS"
+
+exit

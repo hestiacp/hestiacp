@@ -1,0 +1,172 @@
+#!/bin/bash
+# info: update system IPv6 firewall rules
+# options: NONE
+#
+# example: v-update-firewall-ipv6
+#
+# This function updates ip6tables rules
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+ip6tables="/sbin/ip6tables"
+modprobe="/sbin/modprobe"
+sysctl="/sbin/sysctl"
+
+# Includes
+source /etc/profile.d/hestia.sh
+source /etc/hestiacp/hestia.conf
+source "$HESTIA/func/main.sh"
+source "$HESTIA/func/firewall.sh"
+source_conf "$HESTIA/conf/hestia.conf"
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+is_system_enabled "$FIREWALL_SYSTEM" 'FIREWALL_SYSTEM'
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+rules="$HESTIA/data/firewall/rules6.conf"
+chains="$HESTIA/data/firewall/chains6.conf"
+banlist="$HESTIA/data/firewall/banlist6.conf"
+
+# Ensure rule files exist
+[ -f "$rules" ] || touch "$rules"
+[ -f "$chains" ] || touch "$chains"
+[ -f "$banlist" ] || touch "$banlist"
+
+# Load IPv6 ipset lists if present
+[ -x "$BIN/v-update-firewall-ipset-ipv6" ] && "$BIN/v-update-firewall-ipset-ipv6" load 2>/dev/null
+
+# Creating temporary file
+tmp="$(mktemp)"
+
+# Flush INPUT chain and set default policy
+echo "$ip6tables -P INPUT ACCEPT" >> "$tmp"
+echo "$ip6tables -F INPUT" >> "$tmp"
+
+# Enable stateful support
+echo "$ip6tables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT" >> "$tmp"
+
+# Accept localhost traffic (::1)
+echo "$ip6tables -A INPUT -s ::1 -j ACCEPT" >> "$tmp"
+
+# Parse and apply all main rules (rules6.conf)
+IFS=$'\n'
+for line in $(sort -n -k 2 -t \' "$rules"); do
+    parse_object_kv_list "$line"
+    if [ "$SUSPENDED" = 'no' ]; then
+        proto="-p $PROTOCOL"
+        port="--dport $PORT"
+        state=""
+        action="-j $ACTION"
+
+        if [[ "$IP6" =~ ^ipset: ]]; then
+            ipset_name="${IP6#ipset:}"
+            [ -x "$BIN/v-list-firewall-ipset-ipv6" ] && "$BIN/v-list-firewall-ipset-ipv6" plain | grep "^$ipset_name\s" > /dev/null \
+                || log_event $E_NOTEXIST "IPset IP list ($ipset_name) not found"
+            ip="-m set --match-set '${ipset_name}' src"
+        else
+            ip="-s $IP6"
+        fi
+
+        # Multiport module for ranges
+        if [[ "$PORT" =~ ,|-|: ]]; then
+            port="-m multiport --dports ${PORT//-/:}"
+        fi
+
+        # Accepting all dst ports for 0/ICMP
+        if [[ "$PORT" = "0" ]] || [ "$PROTOCOL" = 'ICMP' ]; then
+            port=""
+        fi
+
+        echo "$ip6tables -A INPUT $proto $port $ip $state $action" >> "$tmp"
+    fi
+done
+
+# Set policy to DROP after rules
+echo "$ip6tables -P INPUT DROP" >> "$tmp"
+
+# Add hestia chain (placeholder, can be used for future)
+echo "$ip6tables -N hestia" >> "$tmp"
+
+# Applying base rules
+bash "$tmp" 2>/dev/null
+rm -f "$tmp"
+
+#----------------------------------------------------------#
+#                   Chains & Fail2Ban IPv6                 #
+#----------------------------------------------------------#
+
+if [ -n "$FIREWALL_EXTENSION" ]; then
+    # Custom chains
+    if [ -s "$chains" ]; then
+        tmp_chain="$(mktemp)"
+        while IFS= read -r chain; do
+            parse_object_kv_list "$chain"
+            if [[ "$PORT" =~ ,|-|: ]]; then
+                port="-m multiport --dports $PORT"
+            else
+                port="--dport $PORT"
+            fi
+            echo "$ip6tables -N fail2ban-$CHAIN" >> "$tmp_chain"
+            echo "$ip6tables -F fail2ban-$CHAIN" >> "$tmp_chain"
+            echo "$ip6tables -I fail2ban-$CHAIN -s ::/0 -j RETURN" >> "$tmp_chain"
+            echo "$ip6tables -I INPUT -p $PROTOCOL $port -j fail2ban-$CHAIN" >> "$tmp_chain"
+        done < "$chains"
+        bash "$tmp_chain" 2>/dev/null
+        rm -f "$tmp_chain"
+    fi
+
+    # Banlist for blocked IPs
+    if [ -s "$banlist" ]; then
+        tmp_ban="$(mktemp)"
+        while IFS= read -r ban; do
+            parse_object_kv_list "$ban"
+            # Insert to fail2ban chain (explicit REJECT)
+            echo -n "$ip6tables -I fail2ban-$CHAIN 1 -s $IP" >> "$tmp_ban"
+            echo " -j REJECT --reject-with icmp6-port-unreachable" >> "$tmp_ban"
+        done < "$banlist"
+        bash "$tmp_ban" 2>/dev/null
+        rm -f "$tmp_ban"
+    fi
+fi
+
+# Custom trigger for IPv6
+if [ -x "$HESTIA/data/firewall/custom6.sh" ]; then
+    bash "$HESTIA/data/firewall/custom6.sh"
+fi
+
+# Save rules for systemd/service restore
+if [ -d "/etc/sysconfig" ]; then
+    /sbin/ip6tables-save > /etc/sysconfig/ip6tables
+else
+    /sbin/ip6tables-save > /etc/ip6tables.rules
+    sd_unit="/lib/systemd/system/hestia-ip6tables.service"
+    if [ ! -e "$sd_unit" ]; then
+        echo "[Unit]" >> $sd_unit
+        echo "Description=Loading Hestia IPv6 firewall rules" >> $sd_unit
+        echo "DefaultDependencies=no" >> $sd_unit
+        echo "Wants=network-pre.target local-fs.target" >> $sd_unit
+        echo "Before=network-pre.target" >> $sd_unit
+        echo "After=local-fs.target" >> $sd_unit
+        echo "" >> $sd_unit
+        echo "[Service]" >> $sd_unit
+        echo "Type=oneshot" >> $sd_unit
+        echo "RemainAfterExit=yes" >> $sd_unit
+        echo "ExecStartPre=-${HESTIA}/bin/v-update-firewall-ipset-ipv6 load" >> $sd_unit
+        echo "ExecStart=/sbin/ip6tables-restore /etc/ip6tables.rules" >> $sd_unit
+        echo "" >> $sd_unit
+        echo "[Install]" >> $sd_unit
+        echo "WantedBy=multi-user.target" >> $sd_unit
+        systemctl -q daemon-reload
+    fi
+    systemctl -q is-enabled hestia-ip6tables 2> /dev/null || systemctl -q enable hestia-ip6tables
+fi
+
+exit

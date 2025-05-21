@@ -17,7 +17,8 @@ if ($_SESSION["userContext"] != "admin") {
 
 if (!empty($_GET["rule"])) {
 	$v_rule = quoteshellarg($_GET["rule"]);
-	exec(HESTIA_CMD . "v-move-firewall-rule " . $v_rule, $output, $return_var);
+	$v_direction = quoteshellarg($_GET["direction"]);
+	exec(HESTIA_CMD . "v-move-firewall-rule " . $v_rule . " ". $v_direction, $output, $return_var);
 }
 check_return_code($return_var, $output);
 unset($output);

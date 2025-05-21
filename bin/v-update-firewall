@@ -139,12 +139,6 @@ for line in $(sort -r -n -k 2 -t \' $rules); do
 
 		# Adding firewall rule IPv4
 		echo "$iptables -A INPUT $proto $port $ip $state $action" >> "$tmp"
-
-		# Equivalent rule for IPv6 if applicable
-		if [ "$IP" = "0.0.0.0/0" ]; then
-			ip6="-s ::/0"
-			echo "$ip6tables -A INPUT $proto $port $ip6 $state $action" >> "$tmp"
-		fi
 	fi
 done
 

@@ -40,9 +40,16 @@ if (!empty($_POST["ok"])) {
 	$v_chain = quoteshellarg($_POST["v_chain"]);
 	$v_ip = quoteshellarg($_POST["v_ip"]);
 
-	// Add firewall rule
+	// Detect version from POST (select)
+	$type = (isset($_POST['ip_version']) && $_POST['ip_version'] == 'ipv6') ? 'ipv6' : 'ipv4';
+
+	// Add firewall ban
 	if (empty($_SESSION["error_msg"])) {
-		exec(HESTIA_CMD . "v-add-firewall-ban " . $v_ip . " " . $v_chain, $output, $return_var);
+		if ($type === 'ipv6') {
+			exec(HESTIA_CMD . "v-add-firewall-ban-ipv6 " . $v_ip . " " . $v_chain, $output, $return_var);
+		} else {
+			exec(HESTIA_CMD . "v-add-firewall-ban " . $v_ip . " " . $v_chain, $output, $return_var);
+		}
 		check_return_code($return_var, $output);
 		unset($output);
 	}

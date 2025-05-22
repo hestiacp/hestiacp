@@ -24,18 +24,22 @@ if (empty($_POST["action"])) {
 	exit();
 }
 
+// Here we detect the version
+$type = (isset($_POST['ipver']) && $_POST['ipver'] == 'ipv6') ? 'ipv6' : 'ipv4';
+
 $rule = $_POST["rule"];
 $action = $_POST["action"];
 
+// We choose the command based on IPv4 or IPv6
 switch ($action) {
 	case "delete":
-		$cmd = "v-delete-firewall-rule";
+		$cmd = ($type === 'ipv6') ? "v-delete-firewall-ipv6-rule" : "v-delete-firewall-rule";
 		break;
 	case "suspend":
-		$cmd = "v-suspend-firewall-rule";
+		$cmd = ($type === 'ipv6') ? "v-suspend-firewall-rule-ipv6" : "v-suspend-firewall-rule";
 		break;
 	case "unsuspend":
-		$cmd = "v-unsuspend-firewall-rule";
+		$cmd = ($type === 'ipv6') ? "v-unsuspend-firewall-rule-ipv6" : "v-unsuspend-firewall-rule";
 		break;
 	default:
 		header("Location: /list/firewall/");
@@ -45,7 +49,7 @@ switch ($action) {
 foreach ($rule as $value) {
 	$value = quoteshellarg($value);
 	exec(HESTIA_CMD . $cmd . " " . $value, $output, $return_var);
-	$restart = "yes";
 }
 
-header("Location: /list/firewall/");
+header("Location: /list/firewall/?ipver=" . $type);
+exit();

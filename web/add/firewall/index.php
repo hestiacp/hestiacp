@@ -24,12 +24,23 @@ foreach ($data as $key => $value) {
 	if (isset($value["SUSPENDED"]) && $value["SUSPENDED"] === "yes") {
 		continue;
 	}
-	if (isset($value["IP_VERSION"]) && $value["IP_VERSION"] !== "v4") {
-		continue;
-	}
 	array_push($ipset_lists, ["name" => $key]);
 }
 $ipset_lists_json = json_encode($ipset_lists);
+
+$ipset_v4 = [];
+$ipset_v6 = [];
+
+foreach ($data as $key => $value) {
+    if (isset($value["SUSPENDED"]) && $value["SUSPENDED"] === "yes") continue;
+    if (isset($value["IP_VERSION"])) {
+        if ($value["IP_VERSION"] === "v4") {
+            $ipset_v4[] = $key;
+        } elseif ($value["IP_VERSION"] === "v6") {
+            $ipset_v6[] = $key;
+        }
+    }
+}
 
 // Check POST request
 if (!empty($_POST["ok"])) {
@@ -71,23 +82,48 @@ if (!empty($_POST["ok"])) {
 	$v_ip = quoteshellarg($_POST["v_ip"]);
 	$v_comment = quoteshellarg($_POST["v_comment"]);
 
+
+	// Detect if it's IPv4 or IPv6 (default is IPv4)
+	$type = (isset($_POST['ip_version']) && $_POST['ip_version'] == 'v6') ? 'ipv6' : 'ipv4';
+
 	// Add firewall rule
 	if (empty($_SESSION["error_msg"])) {
-		exec(
-			HESTIA_CMD .
-				"v-add-firewall-rule " .
-				$v_action .
-				" " .
-				$v_ip .
-				" " .
-				$v_port .
-				" " .
-				$v_protocol .
-				" " .
-				$v_comment,
-			$output,
-			$return_var,
-		);
+		if ($type === 'ipv6') {
+			exec(
+				HESTIA_CMD .
+					"v-add-firewall-rule-ipv6 " .
+					$v_action .
+					" " .
+					$v_ip .
+					" " .
+					$v_port .
+					" " .
+					$v_protocol .
+					" " .
+					$v_comment,
+				$output,
+				$return_var,
+			);
+			if ($return_var !== 0) {
+				echo "<pre>ERROR: "; var_dump($output); echo "</pre>";
+			}
+		} else {
+			exec(
+				HESTIA_CMD .
+					"v-add-firewall-rule " .
+					$v_action .
+					" " .
+					$v_ip .
+					" " .
+					$v_port .
+					" " .
+					$v_protocol .
+					" " .
+					$v_comment,
+				$output,
+				$return_var,
+			);
+		}
 		check_return_code($return_var, $output);
 		unset($output);
 	}

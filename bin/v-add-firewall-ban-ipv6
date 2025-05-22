@@ -40,8 +40,8 @@ check_hestia_demo_mode
 
 # Check for IPv6 format (simple)
 if ! echo "$ipv6_cidr" | grep -q ':'; then
-    echo "Error: '$ipv6_cidr' does not appear to be a valid IPv6 address."
-    exit 1
+	echo "Error: '$ipv6_cidr' does not appear to be a valid IPv6 address."
+	exit 1
 fi
 
 #----------------------------------------------------------#
@@ -53,25 +53,25 @@ fi
 
 # Checking server ip (evita banear IPs propias/localhost)
 if [ -e "$HESTIA/data/ips/$ipv6_cidr" ] || [ "$ipv6_cidr" = '::1' ]; then
-    exit
+	exit
 fi
 
 # Checking ip exclusions
 excludes="$HESTIA/data/firewall/excludes6.conf"
 if [ -f "$excludes" ]; then
-    check_excludes=$(grep "^$ipv6_cidr$" $excludes 2> /dev/null)
-    if [ -n "$check_excludes" ]; then
-        exit
-    fi
+	check_excludes=$(grep "^$ipv6_cidr$" $excludes 2> /dev/null)
+	if [ -n "$check_excludes" ]; then
+		exit
+	fi
 fi
 
 # Checking ip in banlist
 conf="$HESTIA/data/firewall/banlist6.conf"
 if [ -f "$conf" ]; then
-    check_ip=$(grep "IP='$ipv6_cidr' CHAIN='$chain'" $conf 2> /dev/null)
-    if [ -n "$check_ip" ]; then
-        exit
-    fi
+	check_ip=$(grep "IP='$ipv6_cidr' CHAIN='$chain'" $conf 2> /dev/null)
+	if [ -n "$check_ip" ]; then
+		exit
+	fi
 fi
 
 # Adding chain (asegura que la cadena existe)

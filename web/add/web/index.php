@@ -176,18 +176,18 @@ unset($output);
 $suggested_ipv6 = [];
 
 foreach ($ips as $ip => $data) {
-    if ($data['VERSION'] == 6 && $data['INTERFACE'] !== '') {
-        // Detecta si es un /64 (puedes adaptar según el formato que uses)
-        $ip_clean = explode('/', $ip)[0];
-        $prefix_parts = explode(':', $ip_clean);
+	if ($data["VERSION"] == 6 && $data["INTERFACE"] !== "") {
+		// Detecta si es un /64 (puedes adaptar según el formato que uses)
+		$ip_clean = explode("/", $ip)[0];
+		$prefix_parts = explode(":", $ip_clean);
 
-        // Si es un /64 válido, tomar los primeros 4 bloques (64 bits)
-        if (count($prefix_parts) >= 4) {
-            $prefix = implode(':', array_slice($prefix_parts, 0, 4));
-            $used_ips = array_keys($ips); // para evitar duplicados
-            $suggested_ipv6[$prefix] = generate_ipv6_suggestions($prefix, $used_ips, 5);
-        }
-    }
+		// Si es un /64 válido, tomar los primeros 4 bloques (64 bits)
+		if (count($prefix_parts) >= 4) {
+			$prefix = implode(":", array_slice($prefix_parts, 0, 4));
+			$used_ips = array_keys($ips); // para evitar duplicados
+			$suggested_ipv6[$prefix] = generate_ipv6_suggestions($prefix, $used_ips, 5);
+		}
+	}
 }
 
 // Get all user domains
@@ -204,21 +204,21 @@ $v_domain = $_POST["domain"] ?? "";
 
 // Generate IPv6 suggestions
 function generate_ipv6_suggestions($prefix, $used_ips = [], $count = 5) {
-    $suggestions = [];
+	$suggestions = [];
 
-    while (count($suggestions) < $count) {
-        // Genera un sufijo de 64 bits (16 caracteres hex)
-        $suffix = bin2hex(random_bytes(8));
-        // Formatea como grupos de 4 caracteres
-        $formatted_suffix = implode(':', str_split($suffix, 4));
-        $ip = strtolower($prefix . ':' . $formatted_suffix);
+	while (count($suggestions) < $count) {
+		// Genera un sufijo de 64 bits (16 caracteres hex)
+		$suffix = bin2hex(random_bytes(8));
+		// Formatea como grupos de 4 caracteres
+		$formatted_suffix = implode(":", str_split($suffix, 4));
+		$ip = strtolower($prefix . ":" . $formatted_suffix);
 
-        if (!in_array($ip, $used_ips)) {
-            $suggestions[] = $ip;
-        }
-    }
+		if (!in_array($ip, $used_ips)) {
+			$suggestions[] = $ip;
+		}
+	}
 
-    return $suggestions;
+	return $suggestions;
 }
 
 // Render page

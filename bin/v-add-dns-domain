@@ -174,15 +174,15 @@ date=$(echo "$time_n_date" | cut -f 2 -d \ )
 # Adding dns zone to the user config
 # Add AAAA records if IPv6 is specified
 if [ -n "$ipv6" ]; then
-    max_id=$(grep -o "ID='[0-9]*'" <<< "$template_data" | sed "s/ID='//;s/'//" | sort -n | tail -1)
-    id=$((max_id + 1))
-    template_data="${template_data}"$'\n'"ID='${id}' RECORD='@' TYPE='AAAA' PRIORITY='' VALUE='${ipv6}' SUSPENDED='no' TIME='${time}' DATE='${date}'"
-    id=$((id + 1))
-    template_data="${template_data}"$'\n'"ID='${id}' RECORD='www' TYPE='AAAA' PRIORITY='' VALUE='${ipv6}' SUSPENDED='no' TIME='${time}' DATE='${date}'"
-    id=$((id + 1))
-    template_data="${template_data}"$'\n'"ID='${id}' RECORD='ftp' TYPE='AAAA' PRIORITY='' VALUE='${ipv6}' SUSPENDED='no' TIME='${time}' DATE='${date}'"
-    id=$((id + 1))
-    template_data="${template_data}"$'\n'"ID='${id}' RECORD='mail' TYPE='AAAA' PRIORITY='' VALUE='${ipv6}' SUSPENDED='no' TIME='${time}' DATE='${date}'"
+	max_id=$(grep -o "ID='[0-9]*'" <<< "$template_data" | sed "s/ID='//;s/'//" | sort -n | tail -1)
+	id=$((max_id + 1))
+	template_data="${template_data}"$'\n'"ID='${id}' RECORD='@' TYPE='AAAA' PRIORITY='' VALUE='${ipv6}' SUSPENDED='no' TIME='${time}' DATE='${date}'"
+	id=$((id + 1))
+	template_data="${template_data}"$'\n'"ID='${id}' RECORD='www' TYPE='AAAA' PRIORITY='' VALUE='${ipv6}' SUSPENDED='no' TIME='${time}' DATE='${date}'"
+	id=$((id + 1))
+	template_data="${template_data}"$'\n'"ID='${id}' RECORD='ftp' TYPE='AAAA' PRIORITY='' VALUE='${ipv6}' SUSPENDED='no' TIME='${time}' DATE='${date}'"
+	id=$((id + 1))
+	template_data="${template_data}"$'\n'"ID='${id}' RECORD='mail' TYPE='AAAA' PRIORITY='' VALUE='${ipv6}' SUSPENDED='no' TIME='${time}' DATE='${date}'"
 fi
 
 echo "$template_data" \

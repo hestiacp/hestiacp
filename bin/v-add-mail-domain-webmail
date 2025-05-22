@@ -96,9 +96,9 @@ if [ -n "$domain_ip" ]; then
 	fi
 fi
 if [ -z "$ip" -a -z "$ipv6" ]; then
-	get_user_ipv6	#	get first available user ipv6 address as fallback, if none ip address was defined
+	get_user_ipv6 #	get first available user ipv6 address as fallback, if none ip address was defined
 	if [ -z "$ipv6" ]; then
-		get_user_ip	#	get first available user ipv4 address as fallback, if none ipv6 user address available
+		get_user_ip #	get first available user ipv4 address as fallback, if none ipv6 user address available
 	fi
 fi
 

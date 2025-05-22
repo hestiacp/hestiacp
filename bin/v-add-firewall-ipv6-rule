@@ -4,7 +4,6 @@
 #
 # The function adds new rule to system firewall
 
-
 #----------------------------------------------------------#
 #                    Variable&Function                     #
 #----------------------------------------------------------#
@@ -13,11 +12,11 @@
 source /etc/profile
 
 # Argument definition
-action=$(echo $1|tr '[:lower:]' '[:upper:]')
+action=$(echo $1 | tr '[:lower:]' '[:upper:]')
 ipv6=$2
 port_ext=$3
 protocol=${4-TCP}
-protocol=$(echo $protocol|tr '[:lower:]' '[:upper:]')
+protocol=$(echo $protocol | tr '[:lower:]' '[:upper:]')
 comment=$5
 rule=$6
 
@@ -27,20 +26,19 @@ source $HESTIA/conf/HESTIA.conf
 
 # Get next firewall rule id
 get_next_fw_rule() {
-    if [ -z "$rule" ]; then
-        curr_str=$(grep "RULE=" $HESTIA/data/firewallv6/rules.conf |\
-         cut -f 2 -d \' | sort -n | tail -n1)
-        rule="$((curr_str +1))"
-    fi
+	if [ -z "$rule" ]; then
+		curr_str=$(grep "RULE=" $HESTIA/data/firewallv6/rules.conf \
+			| cut -f 2 -d \' | sort -n | tail -n1)
+		rule="$((curr_str + 1))"
+	fi
 }
 
 sort_fw_rules() {
-    cat $HESTIA/data/firewallv6/rules.conf |\
-        sort -n -k 2 -t \' > $HESTIA/data/firewallv6/rules.conf.tmp
-    mv -f $HESTIA/data/firewallv6/rules.conf.tmp \
-        $HESTIA/data/firewallv6/rules.conf
+	cat $HESTIA/data/firewallv6/rules.conf \
+		| sort -n -k 2 -t \' > $HESTIA/data/firewallv6/rules.conf.tmp
+	mv -f $HESTIA/data/firewallv6/rules.conf.tmp \
+		$HESTIA/data/firewallv6/rules.conf
 }
-
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -53,9 +51,8 @@ get_next_fw_rule
 is_format_valid 'rule'
 is_object_new '../../data/firewallv6/rules' 'RULE' "$rule"
 if [ ! -z "$comment" ]; then
-    is_format_valid 'comment'
+	is_format_valid 'comment'
 fi
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -63,8 +60,8 @@ fi
 
 # Generating timestamp
 time_n_date=$(date +'%T %F')
-time=$(echo "$time_n_date" |cut -f 1 -d \ )
-date=$(echo "$time_n_date" |cut -f 2 -d \ )
+time=$(echo "$time_n_date" | cut -f 1 -d \ )
+date=$(echo "$time_n_date" | cut -f 2 -d \ )
 
 # Concatenating rule
 str="RULE='$rule' ACTION='$action' PROTOCOL='$protocol' PORT='$port_ext'"
@@ -82,7 +79,6 @@ sort_fw_rules
 
 # Updating system firewall
 $BIN/v-update-firewall-ipv6
-
 
 #----------------------------------------------------------#
 #                       HESTIA                              #

@@ -313,14 +313,14 @@ while getopts "a:w:v:j:k:m:M:g:d:x:z:Z:c:t:i:b:r:o:q:L:l:y:6:s:u:e:p:W:D:fOh" Op
 		l) lang=$OPTARG ;;          # Language
 		d) api=$OPTARG ;;           # Activate API
 		y) interactive=$OPTARG ;;   # Interactive install
-		6) ipv6_support=$OPTARG ;; 	# IPv6
+		6) ipv6_support=$OPTARG ;;  # IPv6
 		s) servername=$OPTARG ;;    # Hostname
 		e) email=$OPTARG ;;         # Admin email
 		u) username=$OPTARG ;;      # Admin username
 		p) vpass=$OPTARG ;;         # Admin password
 		D) withdebs=$OPTARG ;;      # Hestia debs path
 		f) force='yes' ;;           # Force install
-		O) override='yes' ;; 		# Override checks
+		O) override='yes' ;;        # Override checks
 		h) help ;;                  # Help
 		*) help ;;                  # Print help (default)
 	esac

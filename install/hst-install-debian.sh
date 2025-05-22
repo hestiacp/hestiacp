@@ -312,14 +312,14 @@ while getopts "a:w:v:j:k:m:M:g:d:x:z:Z:c:t:i:b:r:o:q:L:l:y:6:s:u:e:p:W:D:fOh" Op
 		l) lang=$OPTARG ;;          # Language
 		d) api=$OPTARG ;;           # Activate API
 		y) interactive=$OPTARG ;;   # Interactive install
-		6) ipv6_support=$OPTARG ;; 	# IPv6
+		6) ipv6_support=$OPTARG ;;  # IPv6
 		s) servername=$OPTARG ;;    # Hostname
 		e) email=$OPTARG ;;         # Admin email
 		u) username=$OPTARG ;;      # Admin username
 		p) vpass=$OPTARG ;;         # Admin password
 		D) withdebs=$OPTARG ;;      # Hestia debs path
 		f) force='yes' ;;           # Force install
-		O) override='yes' ;; 		# Override checks
+		O) override='yes' ;;        # Override checks
 		h) help ;;                  # Help
 		*) help ;;                  # Print help (default)
 	esac
@@ -1248,78 +1248,78 @@ fi
 
 # Check iptables paths and add symlinks when necessary
 if [ ! -e "/sbin/iptables" ]; then
-    if which iptables > /dev/null; then
-        ln -s "$(which iptables)" /sbin/iptables
-    elif [ -e "/usr/sbin/iptables" ]; then
-        ln -s /usr/sbin/iptables /sbin/iptables
-    elif whereis -B /bin /sbin /usr/bin /usr/sbin -f -b iptables; then
-        autoiptables=$(whereis -B /bin /sbin /usr/bin /usr/sbin -f -b iptables | cut -d '' -f 2)
-        if [ -x "$autoiptables" ]; then
-            ln -s "$autoiptables" /sbin/iptables
-        fi
-    fi
-    if [ "$ipv6_support" = 'yes' ]; then
-        if which ip6tables; then
-            ln -s "$(which ip6tables)" /sbin/ip6tables
-        elif [ -e "/usr/sbin/ip6tables" ]; then
-            ln -s /usr/sbin/ip6tables /sbin/ip6tables
-        elif whereis -B /bin /sbin /usr/bin /usr/sbin -f -b ip6tables; then
-            autoip6tables=$(whereis -B /bin /sbin /usr/bin /usr/sbin -f -b ip6tables | cut -d '' -f 2)
-            if [ -x "$autoip6tables" ]; then
-                ln -s "$autoip6tables" /sbin/ip6tables
-            fi
-        fi
-    fi
+	if which iptables > /dev/null; then
+		ln -s "$(which iptables)" /sbin/iptables
+	elif [ -e "/usr/sbin/iptables" ]; then
+		ln -s /usr/sbin/iptables /sbin/iptables
+	elif whereis -B /bin /sbin /usr/bin /usr/sbin -f -b iptables; then
+		autoiptables=$(whereis -B /bin /sbin /usr/bin /usr/sbin -f -b iptables | cut -d '' -f 2)
+		if [ -x "$autoiptables" ]; then
+			ln -s "$autoiptables" /sbin/iptables
+		fi
+	fi
+	if [ "$ipv6_support" = 'yes' ]; then
+		if which ip6tables; then
+			ln -s "$(which ip6tables)" /sbin/ip6tables
+		elif [ -e "/usr/sbin/ip6tables" ]; then
+			ln -s /usr/sbin/ip6tables /sbin/ip6tables
+		elif whereis -B /bin /sbin /usr/bin /usr/sbin -f -b ip6tables; then
+			autoip6tables=$(whereis -B /bin /sbin /usr/bin /usr/sbin -f -b ip6tables | cut -d '' -f 2)
+			if [ -x "$autoip6tables" ]; then
+				ln -s "$autoip6tables" /sbin/ip6tables
+			fi
+		fi
+	fi
 fi
 
 if [ ! -e "/sbin/iptables-save" ]; then
-    if which iptables-save > /dev/null; then
-        ln -s "$(which iptables-save)" /sbin/iptables-save
-    elif [ -e "/usr/sbin/iptables-save" ]; then
-        ln -s /usr/sbin/iptables-save /sbin/iptables-save
-    elif whereis -B /bin /sbin /usr/bin /usr/sbin -f -b iptables-save; then
-        autoiptables_save=$(whereis -B /bin /sbin /usr/bin /usr/sbin -f -b iptables-save | cut -d '' -f 2)
-        if [ -x "$autoiptables_save" ]; then
-            ln -s "$autoiptables_save" /sbin/iptables-save
-        fi
-    fi
-    if [ "$ipv6_support" = 'yes' ]; then
-        if which ip6tables-save; then
-            ln -s "$(which ip6tables-save)" /sbin/ip6tables-save
-        elif [ -e "/usr/sbin/ip6tables-save" ]; then
-            ln -s /usr/sbin/ip6tables-save /sbin/ip6tables-save
-        elif whereis -B /bin /sbin /usr/bin /usr/sbin -f -b ip6tables-save; then
-            autoip6tables_save=$(whereis -B /bin /sbin /usr/bin /usr/sbin -f -b iptables-save | cut -d '' -f 2)
-            if [ -x "$autoip6tables_save" ]; then
-                ln -s "$autoip6tables_save" /sbin/ip6tables-save
-            fi
-        fi
-    fi
+	if which iptables-save > /dev/null; then
+		ln -s "$(which iptables-save)" /sbin/iptables-save
+	elif [ -e "/usr/sbin/iptables-save" ]; then
+		ln -s /usr/sbin/iptables-save /sbin/iptables-save
+	elif whereis -B /bin /sbin /usr/bin /usr/sbin -f -b iptables-save; then
+		autoiptables_save=$(whereis -B /bin /sbin /usr/bin /usr/sbin -f -b iptables-save | cut -d '' -f 2)
+		if [ -x "$autoiptables_save" ]; then
+			ln -s "$autoiptables_save" /sbin/iptables-save
+		fi
+	fi
+	if [ "$ipv6_support" = 'yes' ]; then
+		if which ip6tables-save; then
+			ln -s "$(which ip6tables-save)" /sbin/ip6tables-save
+		elif [ -e "/usr/sbin/ip6tables-save" ]; then
+			ln -s /usr/sbin/ip6tables-save /sbin/ip6tables-save
+		elif whereis -B /bin /sbin /usr/bin /usr/sbin -f -b ip6tables-save; then
+			autoip6tables_save=$(whereis -B /bin /sbin /usr/bin /usr/sbin -f -b iptables-save | cut -d '' -f 2)
+			if [ -x "$autoip6tables_save" ]; then
+				ln -s "$autoip6tables_save" /sbin/ip6tables-save
+			fi
+		fi
+	fi
 fi
 
 if [ ! -e "/sbin/iptables-restore" ]; then
-    if which iptables-restore > /dev/null; then
-        ln -s "$(which iptables-restore)" /sbin/iptables-restore
-    elif [ -e "/usr/sbin/iptables-restore" ]; then
-        ln -s /usr/sbin/iptables-restore /sbin/iptables-restore
-    elif whereis -B /bin /sbin /usr/bin /usr/sbin -f -b iptables-restore; then
-        autoiptables_restore=$(whereis -B /bin /sbin /usr/bin /usr/sbin -f -b iptables-restore | cut -d '' -f 2)
-        if [ -x "$autoiptables_restore" ]; then
-            ln -s "$autoiptables_restore" /sbin/iptables-restore
-        fi
-    fi
-    if [ "$ipv6_support" = 'yes' ]; then
-        if which ip6tables-restore; then
-            ln -s "$(which ip6tables-restore)" /sbin/ip6tables-restore
-        elif [ -e "/usr/sbin/ip6tables-restore" ]; then
-            ln -s /usr/sbin/ip6tables-restore /sbin/ip6tables-restore
-        elif whereis -B /bin /sbin /usr/bin /usr/sbin -f -b ip6tables-restore; then
-            autoip6tables_restore=$(whereis -B /bin /sbin /usr/bin /usr/sbin -f -b iptables-restore | cut -d '' -f 2)
-            if [ -x "$autoip6tables_restore" ]; then
-                ln -s "$autoip6tables_restore" /sbin/ip6tables-restore
-            fi
-        fi
-    fi
+	if which iptables-restore > /dev/null; then
+		ln -s "$(which iptables-restore)" /sbin/iptables-restore
+	elif [ -e "/usr/sbin/iptables-restore" ]; then
+		ln -s /usr/sbin/iptables-restore /sbin/iptables-restore
+	elif whereis -B /bin /sbin /usr/bin /usr/sbin -f -b iptables-restore; then
+		autoiptables_restore=$(whereis -B /bin /sbin /usr/bin /usr/sbin -f -b iptables-restore | cut -d '' -f 2)
+		if [ -x "$autoiptables_restore" ]; then
+			ln -s "$autoiptables_restore" /sbin/iptables-restore
+		fi
+	fi
+	if [ "$ipv6_support" = 'yes' ]; then
+		if which ip6tables-restore; then
+			ln -s "$(which ip6tables-restore)" /sbin/ip6tables-restore
+		elif [ -e "/usr/sbin/ip6tables-restore" ]; then
+			ln -s /usr/sbin/ip6tables-restore /sbin/ip6tables-restore
+		elif whereis -B /bin /sbin /usr/bin /usr/sbin -f -b ip6tables-restore; then
+			autoip6tables_restore=$(whereis -B /bin /sbin /usr/bin /usr/sbin -f -b iptables-restore | cut -d '' -f 2)
+			if [ -x "$autoip6tables_restore" ]; then
+				ln -s "$autoip6tables_restore" /sbin/ip6tables-restore
+			fi
+		fi
+	fi
 fi
 
 # Restrict access to /proc fs

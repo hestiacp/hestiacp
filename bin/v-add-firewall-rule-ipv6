@@ -29,18 +29,18 @@ source_conf "$HESTIA/conf/hestia.conf"
 
 # Get next firewall rule id
 get_next_fw_rule() {
-    if [ -z "$rule" ]; then
-        curr_str=$(grep "RULE=" $HESTIA/data/firewall/rules6.conf \
-            | cut -f 2 -d \' | sort -n | tail -n1)
-        rule="$((curr_str + 1))"
-    fi
+	if [ -z "$rule" ]; then
+		curr_str=$(grep "RULE=" $HESTIA/data/firewall/rules6.conf \
+			| cut -f 2 -d \' | sort -n | tail -n1)
+		rule="$((curr_str + 1))"
+	fi
 }
 
 sort_fw_rules() {
-    cat $HESTIA/data/firewall/rules6.conf \
-        | sort -n -k 2 -t \' > $HESTIA/data/firewall/rules6.conf.tmp
-    mv -f $HESTIA/data/firewall/rules6.conf.tmp \
-        $HESTIA/data/firewall/rules6.conf
+	cat $HESTIA/data/firewall/rules6.conf \
+		| sort -n -k 2 -t \' > $HESTIA/data/firewall/rules6.conf.tmp
+	mv -f $HESTIA/data/firewall/rules6.conf.tmp \
+		$HESTIA/data/firewall/rules6.conf
 }
 
 #----------------------------------------------------------#
@@ -54,18 +54,18 @@ get_next_fw_rule
 is_format_valid 'rule'
 is_object_new '../../../data/firewall/rules6' 'RULE' "$rule"
 if [ -n "$comment" ]; then
-    is_format_valid 'comment'
+	is_format_valid 'comment'
 fi
 if [[ "$ipv6_cidr" =~ ^ipset: ]]; then
-    ipset_name="${ipv6_cidr#ipset:}"
-    $BIN/v-list-firewall-ipset-ipv6 plain | grep "^$ipset_name\s" > /dev/null
-    check_result $? 'ipset object not found' "$E_NOTEXIST"
+	ipset_name="${ipv6_cidr#ipset:}"
+	$BIN/v-list-firewall-ipset-ipv6 plain | grep "^$ipset_name\s" > /dev/null
+	check_result $? 'ipset object not found' "$E_NOTEXIST"
 else
-    # IPv6 validation simple (puedes mejorar la regex si lo necesitas)
-    if ! echo "$ipv6_cidr" | grep -q ':'; then
-        echo "Error: '$ipv6_cidr' does not appear to be a valid IPv6 address."
-        exit 1
-    fi
+	# IPv6 validation simple (puedes mejorar la regex si lo necesitas)
+	if ! echo "$ipv6_cidr" | grep -q ':'; then
+		echo "Error: '$ipv6_cidr' does not appear to be a valid IPv6 address."
+		exit 1
+	fi
 fi
 
 # Perform verification if read-only mode is enabled
@@ -103,7 +103,7 @@ $BIN/v-update-firewall-ipv6
 
 # Fix missing port value in log if zero
 if [ -z "$port_ext" ]; then
-    port_ext="0"
+	port_ext="0"
 fi
 
 # Logging

@@ -124,15 +124,15 @@ fi
 [ -z "$iface" ] && iface="$($BIN/v-list-sys-interfaces plain | head -n 1)" # Get first available system interface, if none defined
 [ -z "$iface" ] && iface=$(ip route | awk '/default/ {print $5; exit}')
 if [ -z "$iface" ]; then
-    echo "Error: Unable to determine the network interface automatically."
-    exit 1
+	echo "Error: Unable to determine the network interface automatically."
+	exit 1
 fi
 
 # Extract IPv6 prefix number for validation (removes initial slash)
 if [[ "$prefix_length" =~ ^/([0-9]{1,3})$ ]]; then
-    prefix_length_num="${BASH_REMATCH[1]}"
+	prefix_length_num="${BASH_REMATCH[1]}"
 else
-    prefix_length_num=""
+	prefix_length_num=""
 fi
 is_format_valid 'netmask' 'cidr' "$prefix_length_num" "$iface" "$user" "$ip_status"
 is_ip_free ${ip46}
@@ -267,10 +267,10 @@ if [ -n "$PROXY_SYSTEM" ]; then
 			> /etc/$PROXY_SYSTEM/conf.d/${ip46}.conf
 
 	if [ "$ip_format" -eq 6 ]; then
-  	process_http2_directive "/etc/$PROXY_SYSTEM/conf.d/${ip46}.conf"
-  else
-  	process_http2_directive "/etc/$PROXY_SYSTEM/conf.d/${ip}.conf"
-  fi
+		process_http2_directive "/etc/$PROXY_SYSTEM/conf.d/${ip46}.conf"
+	else
+		process_http2_directive "/etc/$PROXY_SYSTEM/conf.d/${ip}.conf"
+	fi
 
 	# mod_extract_forwarded
 	fw_conf="/etc/$WEB_SYSTEM/conf.d/mod_extract_forwarded.conf"
@@ -309,16 +309,16 @@ syshealth_adapt_nginx_resolver
 
 increase_user_value "$user" "IP_OWNED"
 if [ "$user" = "$ROOT_USER" ]; then
-    if [ "$ip_status" = 'shared' ]; then
-        for hestia_user in $("$BIN/v-list-users" list); do
-            increase_user_value "$hestia_user" "IP_AVAIL"
-        done
-    else
-        increase_user_value "$ROOT_USER" "IP_AVAIL"
-    fi
+	if [ "$ip_status" = 'shared' ]; then
+		for hestia_user in $("$BIN/v-list-users" list); do
+			increase_user_value "$hestia_user" "IP_AVAIL"
+		done
+	else
+		increase_user_value "$ROOT_USER" "IP_AVAIL"
+	fi
 else
-    increase_user_value "$user" "IP_AVAIL"
-    increase_user_value "$ROOT_USER" "IP_AVAIL"
+	increase_user_value "$user" "IP_AVAIL"
+	increase_user_value "$ROOT_USER" "IP_AVAIL"
 fi
 
 # Restarting web server

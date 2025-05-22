@@ -552,23 +552,23 @@ increase_user_value() {
 
 # Decrease user counter
 decrease_user_value() {
-    key="${2//$/}"
-    factor="${3-1}"
-    conf="$HESTIA/data/users/$1/user.conf"
-    old=$(grep "^$key='" "$conf" | head -n1 | cut -f 2 -d \')
-    if [ -z "$old" ]; then
-        old=0
-    fi
-    if [ "$old" -le 1 ]; then
-        new=0
-    else
-        new=$((old - factor))
-    fi
-    if [ "$new" -lt 0 ]; then
-        new=0
-    fi
-    # Change the first occurrence even if the old value doesn't match exactly
-    sed -i "0,/^$key='[0-9]*'/s//${key}='$new'/" "$conf"
+	key="${2//$/}"
+	factor="${3-1}"
+	conf="$HESTIA/data/users/$1/user.conf"
+	old=$(grep "^$key='" "$conf" | head -n1 | cut -f 2 -d \')
+	if [ -z "$old" ]; then
+		old=0
+	fi
+	if [ "$old" -le 1 ]; then
+		new=0
+	else
+		new=$((old - factor))
+	fi
+	if [ "$new" -lt 0 ]; then
+		new=0
+	fi
+	# Change the first occurrence even if the old value doesn't match exactly
+	sed -i "0,/^$key='[0-9]*'/s//${key}='$new'/" "$conf"
 }
 
 # Notify user

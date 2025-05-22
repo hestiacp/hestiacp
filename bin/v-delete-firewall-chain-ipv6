@@ -37,10 +37,10 @@ banlist="$HESTIA/data/firewall/banlist6.conf"
 chain_param=""
 [ -f "$chains" ] && chain_param=$(grep "CHAIN='$chain'" "$chains")
 if [ -n "$chain_param" ]; then
-    parse_object_kv_list "$chain_param"
-    sed -i "/CHAIN='$chain'/d" "$chains"
-    sed -i "/CHAIN='$chain'/d" "$banlist"
-    $ip6tables -D INPUT -p $PROTOCOL --dport $PORT -j fail2ban-$CHAIN 2> /dev/null
+	parse_object_kv_list "$chain_param"
+	sed -i "/CHAIN='$chain'/d" "$chains"
+	sed -i "/CHAIN='$chain'/d" "$banlist"
+	$ip6tables -D INPUT -p $PROTOCOL --dport $PORT -j fail2ban-$CHAIN 2> /dev/null
 fi
 
 # Deleting ip6tables chain

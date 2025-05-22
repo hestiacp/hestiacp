@@ -31,8 +31,8 @@ is_object_valid "$ipset_hstobject" 'LISTNAME' "$ip_name"
 ip_version="$(get_object_value "$ipset_hstobject" 'LISTNAME' "$ip_name" '$IP_VERSION')"
 
 if [ "$ip_version" != "v6" ]; then
-    echo "Error: This script only deletes IPv6 ipset lists (detected version: $ip_version)."
-    exit 1
+	echo "Error: This script only deletes IPv6 ipset lists (detected version: $ip_version)."
+	exit 1
 fi
 
 check_hestia_demo_mode
@@ -43,11 +43,11 @@ IPSET_FILE="${ip_name}.${ip_version}"
 
 # Install ipset package if missing
 if [ -z "$IPSET_BIN" ]; then
-    apt-get --quiet --yes install ipset > /dev/null
-    check_result $? "Installing IPset package"
+	apt-get --quiet --yes install ipset > /dev/null
+	check_result $? "Installing IPset package"
 
-    IPSET_BIN="$(which ipset)"
-    check_result $? "IPset binary not found"
+	IPSET_BIN="$(which ipset)"
+	check_result $? "IPset binary not found"
 fi
 
 #----------------------------------------------------------#
@@ -55,12 +55,12 @@ fi
 #----------------------------------------------------------#
 
 if $IPSET_BIN -quiet list "${ip_name}-tmp" > /dev/null 2>&1; then
-    $IPSET_BIN -quiet destroy "${ip_name}-tmp"
+	$IPSET_BIN -quiet destroy "${ip_name}-tmp"
 fi
 
 if $IPSET_BIN -quiet list "${ip_name}" > /dev/null 2>&1; then
-    $IPSET_BIN -quiet destroy "${ip_name}"
-    check_result $? "ipset ${ip_name} still used by ip6tables. Cannot remove"
+	$IPSET_BIN -quiet destroy "${ip_name}"
+	check_result $? "ipset ${ip_name} still used by ip6tables. Cannot remove"
 fi
 
 sed -i "/LISTNAME='$ip_name'/d" "${IPSET_PATH}.conf"

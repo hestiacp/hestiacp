@@ -25,7 +25,7 @@ if (empty($_POST["action"])) {
 }
 
 // Here we detect the version
-$type = (isset($_POST['ipver']) && $_POST['ipver'] == 'ipv6') ? 'ipv6' : 'ipv4';
+$type = isset($_POST["ipver"]) && $_POST["ipver"] == "ipv6" ? "ipv6" : "ipv4";
 
 $rule = $_POST["rule"];
 $action = $_POST["action"];
@@ -33,13 +33,13 @@ $action = $_POST["action"];
 // We choose the command based on IPv4 or IPv6
 switch ($action) {
 	case "delete":
-		$cmd = ($type === 'ipv6') ? "v-delete-firewall-ipv6-rule" : "v-delete-firewall-rule";
+		$cmd = $type === "ipv6" ? "v-delete-firewall-ipv6-rule" : "v-delete-firewall-rule";
 		break;
 	case "suspend":
-		$cmd = ($type === 'ipv6') ? "v-suspend-firewall-rule-ipv6" : "v-suspend-firewall-rule";
+		$cmd = $type === "ipv6" ? "v-suspend-firewall-rule-ipv6" : "v-suspend-firewall-rule";
 		break;
 	case "unsuspend":
-		$cmd = ($type === 'ipv6') ? "v-unsuspend-firewall-rule-ipv6" : "v-unsuspend-firewall-rule";
+		$cmd = $type === "ipv6" ? "v-unsuspend-firewall-rule-ipv6" : "v-unsuspend-firewall-rule";
 		break;
 	default:
 		header("Location: /list/firewall/");

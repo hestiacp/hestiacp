@@ -227,6 +227,8 @@ DATE='$date'
 VERSION='${ip_format}'" > $HESTIA/data/ips/${ip46}
 chmod 660 $HESTIA/data/ips/${ip46}
 
+server_hostname=$(hostname -f 2>/dev/null || hostname)
+
 # WEB support
 if [ -n "$WEB_SYSTEM" ]; then
 	web_conf="/etc/$WEB_SYSTEM/conf.d/${ip46}.conf"
@@ -241,6 +243,10 @@ if [ -n "$WEB_SYSTEM" ]; then
 		[ -n "$ip_format" ] && [ $ip_format -eq 6 ] && sed -i 's/\(VirtualHost \)directIP/\1'${formatted_ip}'/g' ${web_conf}
 		sed -i 's/directIP/'${ip46}'/g' ${web_conf}
 		sed -i 's/directPORT/'$WEB_PORT'/g' ${web_conf}
+		if [ "$ip_format" -eq 6 ]; then
+			server_hostname=$(hostname -f 2>/dev/null || hostname)
+			sed -i 's/^\(\s*ServerName\s*\).*/\1'"${server_hostname}"'/' ${web_conf}
+		fi
 
 	elif [ "$WEB_SYSTEM" = 'nginx' ]; then
 		cp -f $HESTIA_INSTALL_DIR/nginx/unassigned.inc ${web_conf}

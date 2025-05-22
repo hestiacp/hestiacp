@@ -71,6 +71,17 @@ ip_file="${HESTIA}/data/ips/${raw_ip}"
 
 if [ -f "$ip_file" ]; then
 	source "$ip_file"
+	if [[ "$ip_format" == "4" && "$NETMASK" =~ ^([0-9]+\.){3}[0-9]+$ ]]; then
+        # Convierte la máscara de puntos a número de bits
+        IFS=. read -r i1 i2 i3 i4 <<< "$NETMASK"
+        binmask=$(printf '%08d%08d%08d%08d\n' \
+            "$(bc <<< "obase=2;$i1")" \
+            "$(bc <<< "obase=2;$i2")" \
+            "$(bc <<< "obase=2;$i3")" \
+            "$(bc <<< "obase=2;$i4")")
+        prefix_length=$(tr -cd '1' <<< "$binmask" | wc -c)
+        NETMASK="/$prefix_length"
+    fi
 else
 	echo "Warning: IP config file not found at $ip_file"
 	if [[ "$ip46" == *:* ]]; then
@@ -90,27 +101,52 @@ fi
 #                 Normalize and Check                      #
 #----------------------------------------------------------#
 
+# Convert NETMASK to prefix if necessary (IPv4)
+if [[ "$ip_format" == "4" && "$NETMASK" =~ ^([0-9]+\.){3}[0-9]+$ ]]; then
+    IFS=. read -r i1 i2 i3 i4 <<< "$NETMASK"
+    binmask=$(printf '%08d%08d%08d%08d\n' \
+        "$(bc <<< "obase=2;$i1")" \
+        "$(bc <<< "obase=2;$i2")" \
+        "$(bc <<< "obase=2;$i3")" \
+        "$(bc <<< "obase=2;$i4")")
+    prefix_length=$(tr -cd '1' <<< "$binmask" | wc -c)
+    NETMASK="/$prefix_length"
+fi
+
 prefix_length=${NETMASK#/}
 [[ "$ip_format" = "6" ]] && max_prefix=128 || max_prefix=32
 
 if ! [[ "$prefix_length" =~ ^[0-9]{1,3}$ ]] || ((prefix_length < 0 || prefix_length > max_prefix)); then
-	echo "Error: invalid prefix length: $prefix_length"
-	exit 1
+    echo "Error: invalid prefix length: $prefix_length"
+    exit 1
 fi
 
-# Detectar el prefijo real de la IP en el sistema
-cidr_prefixlen=$(ip -6 addr show dev "$interface" | awk "/$ip46/ { match(\$0, \"/[0-9]+\", arr); print arr[0] }")
-[ -z "$cidr_prefixlen" ] && cidr_prefixlen="/128"
-
+# Find the interface where the IP is assigned in Hestia; if not, search in the system
 interface=$(awk -v ip="$(normalize_ip "$raw_ip")" '$1 == ip { print $3 }' <($BIN/v-list-network plain))
+if [ -z "$interface" ]; then
+    if [ "$ip_format" = "6" ]; then
+        interface=$(ip -6 addr show | awk "/$ip46/ { print \$NF; exit }")
+    else
+        interface=$(ip -4 addr show | awk "/$ip46/ { print \$NF; exit }")
+    fi
+fi
+
+# Detect and set the correct CIDR prefix for the IP to be deleted
+if [ "$ip_format" = "6" ]; then
+    cidr_prefixlen=$(ip -6 addr show dev "$interface" | awk "/$ip46/ { match(\$0, \"/[0-9]+\", arr); print arr[0] }")
+    [ -z "$cidr_prefixlen" ] && cidr_prefixlen="/128"
+else
+    cidr_prefixlen=$(ip -4 addr show dev "$interface" | awk "/$ip46/ { match(\$0, \"/[0-9]+\", arr); print arr[0] }")
+    [ -z "$cidr_prefixlen" ] && cidr_prefixlen="/32"
+fi
 
 number_of_ips=$(/sbin/ip${check_ip_par} addr | grep -c global)
 host_ip_check=$(hostname -i | sed -ne "/$ip46/p")
 
 if [[ (-n "$host_ip_check" && -n "$interface") || ($number_of_ips -eq 1) ]]; then
-	echo "Error: can't delete primary IP address"
-	log_event "$E_FORBIDEN" "$ARGUMENTS"
-	exit "$E_FORBIDEN"
+    echo "Error: can't delete primary IP address"
+    log_event "$E_FORBIDEN" "$ARGUMENTS"
+    exit "$E_FORBIDEN"
 fi
 
 ip46=$(normalize_ip "$ip46")

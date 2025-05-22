@@ -41,5 +41,5 @@ server {
 		alias %home%/%user%/web/%domain%/document_errors/;
 	}
 
-	include %home%/%user%/conf/web/%domain%/nginx.ssl.conf_*;
+	include %home%/%user%/conf/web/%domain%/nginx.ssl.conf_lets*;
 }

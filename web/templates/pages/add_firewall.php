@@ -8,7 +8,7 @@
 		</div>
 		<div class="toolbar-buttons">
 			<button type="submit" class="button" form="main-form">
-				<i class="fas fa-floppy-disk icon-purple"></i><?= _("Save") ?>
+				<i class="fas fa-floppy-disk icon-purple"></i><?= _("Add Rule") ?>
 			</button>
 		</div>
 	</div>
@@ -24,6 +24,15 @@
 		<div class="form-container">
 			<h1 class="u-mb20"><?= _("Add Firewall Rule") ?></h1>
 			<?php show_alert_message($_SESSION); ?>
+
+			<div class="u-mb10">
+				<label for="ip_version" class="form-label"><?= _("IP Version") ?></label>
+				<select class="form-select" name="ip_version" id="ip_version">
+					<option value="v4" <?php if (empty($_POST['ip_version']) || $_POST['ip_version'] == 'v4') echo 'selected'; ?>>IPv4</option>
+					<option value="v6" <?php if (!empty($_POST['ip_version']) && $_POST['ip_version'] == 'v6') echo 'selected'; ?>>IPv6</option>
+				</select>
+			</div>
+
 			<div class="u-mb10">
 				<label for="v_action" class="form-label"><?= _("Action") ?></label>
 				<select class="form-select" name="v_action" id="v_action">
@@ -54,9 +63,23 @@
 						class="form-select js-ip-list-select"
 						tabindex="-1"
 						onchange="this.nextElementSibling.value=this.value"
-						data-ipset-lists="<?= htmlspecialchars($ipset_lists_json, ENT_QUOTES, "UTF-8") ?>"
 					>
 						<option value=""><?= _("Clear") ?></option>
+						<?php if (!empty($ipset_v4)) : ?>
+							<optgroup label="IPv4">
+								<?php foreach ($ipset_v4 as $name): ?>
+									<option value="<?= 'ipset:' . htmlspecialchars($name) ?>"><?= htmlspecialchars($name) ?></option>
+								<?php endforeach; ?>
+							</optgroup>
+						<?php endif; ?>
+
+						<?php if (!empty($ipset_v6)) : ?>
+							<optgroup label="IPv6">
+								<?php foreach ($ipset_v6 as $name): ?>
+									<option value="<?= 'ipset:' . htmlspecialchars($name) ?>"><?= htmlspecialchars($name) ?></option>
+								<?php endforeach; ?>
+							</optgroup>
+						<?php endif; ?>
 					</select>
 					<input type="text" class="form-control list-editor" name="v_ip" id="v_ip" value="<?= htmlentities(trim($v_ip, "'")) ?>">
 				</div>

@@ -2,13 +2,13 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<a class="button button-secondary button-back js-button-back" href="/list/firewall/banlist/">
+			<a class="button button-secondary button-back js-button-back" href="/list/firewall/banlist/?ipver=<?= $type ?>">
 				<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
 			</a>
 		</div>
 		<div class="toolbar-buttons">
 			<button type="submit" class="button" form="main-form">
-				<i class="fas fa-floppy-disk icon-purple"></i><?= _("Save") ?>
+				<i class="fas fa-floppy-disk icon-purple"></i><?= _("Ban IP") ?>
 			</button>
 		</div>
 	</div>
@@ -24,6 +24,15 @@
 		<div class="form-container">
 			<h1 class="u-mb20"><?= _("Add IP Address to Banlist") ?></h1>
 			<?php show_alert_message($_SESSION); ?>
+
+			<div class="u-mb10">
+				<label for="ip_version" class="form-label"><?= _("IP Version") ?></label>
+				<select class="form-select" name="ip_version" id="ip_version">
+					<option value="ipv4" <?php if (empty($_POST['ip_version']) || $_POST['ip_version'] == 'ipv4') echo 'selected'; ?>>IPv4</option>
+					<option value="ipv6" <?php if (!empty($_POST['ip_version']) && $_POST['ip_version'] == 'ipv6') echo 'selected'; ?>>IPv6</option>
+				</select>
+			</div>
+
 			<div class="u-mb20">
 				<label for="v_ip" class="form-label">
 					<?= _("IP Address") ?> <span class="optional">(<?= _("Support CIDR format") ?>)</span>
@@ -43,7 +52,6 @@
 				</select>
 			</div>
 		</div>
-
 	</form>
 
 </div>

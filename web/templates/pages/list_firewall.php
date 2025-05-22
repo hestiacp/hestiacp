@@ -44,6 +44,7 @@
 				</ul>
 				<form x-data x-bind="BulkEdit" action="/bulk/firewall/" method="post">
 					<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
+					<input type="hidden" name="ipver" value="<?= $type ?>">
 					<select class="form-select" name="action">
 						<option value=""><?= _("Apply to selected") ?></option>
 						<option value="delete"><?= _("Delete") ?></option>
@@ -59,6 +60,14 @@
 <!-- End toolbar -->
 
 <div class="container">
+	<div style="margin-bottom: 20px;">
+		<a href="/list/firewall/?ipver=ipv4" class="button <?php if ($type=='ipv4') echo 'button-primary'; else echo 'button-secondary'; ?>">
+			IPv4
+		</a>
+		<a href="/list/firewall/?ipver=ipv6" class="button <?php if ($type=='ipv6') echo 'button-primary'; else echo 'button-secondary'; ?>">
+			IPv6
+		</a>
+	</div>
 
 	<h1 class="u-text-center u-hide-desktop u-mt20 u-pr30 u-mb20 u-pl30"><?= _("Firewall Rules") ?></h1>
 
@@ -146,7 +155,7 @@
 						<li class="units-table-row-action shortcut-delete" data-key-action="js">
 							<a
 								class="units-table-row-action-link data-controls js-confirm-action"
-								href="/delete/firewall/?rule=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
+								href="/delete/firewall/?rule=<?= $key ?>&token=<?= $_SESSION["token"] ?><?php if ($type === 'ipv6') echo '&ipver=ipv6'; ?>"
 								title="<?= _("Delete") ?>"
 								data-confirm-title="<?= _("Delete") ?>"
 								data-confirm-message="<?= sprintf(_("Are you sure you want to delete rule #%s?"), $key) ?>"
@@ -171,7 +180,7 @@
 				</div>
 				<div class="units-table-cell u-text-center-desktop">
 					<span class="u-hide-desktop u-text-bold"><?= _("IP Address") ?>:</span>
-					<?= $data[$key]["IP"] ?>
+					<?= $type === 'ipv6' ? $data[$key]["IP6"] : $data[$key]["IP"] ?>
 				</div>
 			</div>
 		<?php } ?>

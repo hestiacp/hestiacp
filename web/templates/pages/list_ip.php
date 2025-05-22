@@ -93,7 +93,22 @@
 				<div class="units-table-cell units-table-heading-cell u-text-bold">
 					<span class="u-hide-desktop"><?= _("IP Address") ?>:</span>
 					<a href="/edit/ip/?ip=<?= $key ?>&token=<?= $_SESSION['token'] ?>" title="<?= _("Edit IP Address") ?>">
-						<?= $key ?> <?php if (!empty($data[$key]['NAT'])) echo ' → ' . $data[$key]['NAT'] . ''; ?>
+						<div class="clearfix l-unit__stat-col--left wide-3">
+						<b>
+							<a href="/edit/ip/?ip=<?= $key ?>&token=<?= $_SESSION['token'] ?>" title="<?= _("Edit IP Address") ?>">
+								<?= htmlentities($key) ?>
+								<?php
+								if (!empty($data[$key]['NAT'])) {
+									$nat = $data[$key]['NAT'];
+									if (filter_var($nat, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
+										$nat = inet_ntop(inet_pton($nat));
+									}
+									echo ' → ' . htmlentities($nat);
+								}
+								?>
+							</a>
+						</b>
+					</div>
 					</a>
 				</div>
 				<div class="units-table-cell">

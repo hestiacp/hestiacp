@@ -1,0 +1,95 @@
+#!/bin/bash
+# info: List firewall ipset (IPv6)
+# options: [FORMAT]
+#
+# example: v-list-firewall-ipset-ipv6 json
+#
+# This function prints defined IPv6 ipset lists.
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+format=${1-shell}
+
+source /etc/hestiacp/hestia.conf
+source /usr/local/hestia/func/main.sh
+source $HESTIA/conf/hestia.conf
+source_conf "$HESTIA/conf/hestia.conf"
+
+is_system_enabled "$FIREWALL_SYSTEM" 'FIREWALL_SYSTEM'
+
+IPSET_CONF="$HESTIA/data/firewall/ipset.conf"
+
+# JSON list function
+json_list() {
+	IFS=$'\n'
+	i=1
+	objects=$(grep "IP_VERSION='v6'" $IPSET_CONF | wc -l)
+	echo "{"
+	while read str; do
+		[[ -z "$str" ]] && continue
+		echo "$str" | grep -q "IP_VERSION='v6'" || continue
+		parse_object_kv_list "$str"
+		echo -n '    "'$LISTNAME'": {
+        "IP_VERSION": "'$IP_VERSION'",
+        "AUTOUPDATE": "'$AUTOUPDATE'",
+        "SUSPENDED": "'$SUSPENDED'",
+        "SOURCE": "'$SOURCE'",
+        "TIME": "'$TIME'",
+        "DATE": "'$DATE'"
+    }'
+		[[ "$i" -lt "$objects" ]] && echo ',' || echo
+		((i++))
+	done < <(cat $IPSET_CONF)
+	echo '}'
+}
+
+# SHELL list function
+shell_list() {
+	IFS=$'\n'
+	echo "LISTNAME^IP_VERSION^AUTOUPDATE^SUSPENDED^SOURCE^TIME^DATE"
+	echo "----^------^-----^----^--^----^----"
+	while read str; do
+		[[ -z "$str" ]] && continue
+		echo "$str" | grep -q "IP_VERSION='v6'" || continue
+		parse_object_kv_list "$str"
+		echo "$LISTNAME^$IP_VERSION^$AUTOUPDATE^$SUSPENDED^$SOURCE^$TIME^$DATE"
+	done < <(cat $IPSET_CONF)
+}
+
+# PLAIN list function
+plain_list() {
+	IFS=$'\n'
+	while read str; do
+		[[ -z "$str" ]] && continue
+		echo "$str" | grep -q "IP_VERSION='v6'" || continue
+		parse_object_kv_list "$str"
+		echo -ne "$LISTNAME\t$IP_VERSION\t$AUTOUPDATE\t$SUSPENDED\t$SOURCE\t"
+		echo -e "$TIME\t$DATE"
+	done < <(cat $IPSET_CONF)
+}
+
+# CSV list function
+csv_list() {
+	IFS=$'\n'
+	echo "LISTNAME,IP_VERSION,AUTOUPDATE,SUSPENDED,SOURCE,TIME,DATE"
+	while read str; do
+		[[ -z "$str" ]] && continue
+		echo "$str" | grep -q "IP_VERSION='v6'" || continue
+		parse_object_kv_list "$str"
+		echo -n "$LISTNAME,$IP_VERSION,$AUTOUPDATE,$SUSPENDED,\"$SOURCE\","
+		echo "$TIME,$DATE"
+	done < <(cat $IPSET_CONF)
+}
+
+[ ! -f "$IPSET_CONF" ] && touch "$IPSET_CONF"
+
+case $format in
+	json) json_list ;;
+	plain) plain_list ;;
+	csv) csv_list ;;
+	shell) shell_list | column -t -s '^' ;;
+esac
+
+exit

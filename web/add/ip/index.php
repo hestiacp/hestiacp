@@ -109,8 +109,9 @@ $interfaces = json_decode(implode("", $output), true);
 unset($output);
 
 // List users
-exec(HESTIA_CMD . "v-list-sys-users 'json'", $output, $return_var);
-$users = json_decode(implode("", $output), true);
+exec(HESTIA_CMD . "v-list-users json", $output, $return_var);
+$users_json = json_decode(implode("", $output), true);
+$users = array_keys($users_json);
 unset($output);
 
 if (empty($v_ip)) {

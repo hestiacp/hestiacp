@@ -52,6 +52,7 @@ trigger:
     - refs/heads/servicing
     - refs/heads/tests/*
     - refs/heads/main
+    - refs/heads/ipv6
     - refs/pull/*/head
 
 ---
@@ -108,6 +109,7 @@ trigger:
     - refs/heads/servicing
     - refs/heads/tests/*
     - refs/heads/main
+    - refs/heads/ipv6
     - refs/pull/*/head
 
 ---

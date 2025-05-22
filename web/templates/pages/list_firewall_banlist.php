@@ -12,6 +12,7 @@
 		<div class="toolbar-right">
 			<form x-data x-bind="BulkEdit" action="/bulk/firewall/banlist/" method="post">
 				<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
+				<input type="hidden" name="ipver" value="<?= $type ?>">
 				<select class="form-select" name="action">
 					<option value=""><?= _("Apply to selected") ?></option>
 					<option value="delete"><?= _("Delete") ?></option>
@@ -26,6 +27,14 @@
 <!-- End toolbar -->
 
 <div class="container">
+	<div style="margin-bottom: 20px;">
+		<a href="/list/firewall/banlist/?ipver=ipv4" class="button <?php if ($type=='ipv4') echo 'button-primary'; else echo 'button-secondary'; ?>">
+			IPv4
+		</a>
+		<a href="/list/firewall/banlist/?ipver=ipv6" class="button <?php if ($type=='ipv6') echo 'button-primary'; else echo 'button-secondary'; ?>">
+			IPv6
+		</a>
+	</div>
 
 	<h1 class="u-text-center u-hide-desktop u-mt20 u-pr30 u-mb20 u-pl30"><?= _("Banned IP Addresses") ?></h1>
 

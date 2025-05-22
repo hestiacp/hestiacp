@@ -1,0 +1,102 @@
+#!/bin/bash
+# info: stop system IPv6 firewall
+# options: NONE
+#
+# example: v-stop-firewall-ipv6
+#
+# This function stops ip6tables
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+ip6tables="/sbin/ip6tables"
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/firewall.sh
+source $HESTIA/func/firewall.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# [No heal_iptables_links porque no existe heal_ip6tables_links]
+
+# Creating temporary file
+tmp="$(mktemp)"
+
+# Flushing INPUT chain
+echo "$ip6tables -P INPUT ACCEPT" >> $tmp
+echo "$ip6tables -F INPUT" >> $tmp
+
+# Deleting hestia chain
+echo "$ip6tables -X hestia" >> $tmp
+
+# Deleting custom chains
+IFS=$'\n'
+for chain in $(cat $HESTIA/data/firewall/chains6.conf 2> /dev/null); do
+	parse_object_kv_list "$chain"
+	echo "$ip6tables -F fail2ban-$CHAIN" >> $tmp
+	echo "$ip6tables -X fail2ban-$CHAIN" >> $tmp
+done
+
+# Applying rules
+bash $tmp 2> /dev/null
+
+# Deleting temporary file
+rm -f $tmp
+
+# Clean up and saving rules to the master ip6tables file
+if [ -d "/etc/sysconfig" ]; then
+	/sbin/ip6tables-save | sed -e 's/[[0-9]\+:[0-9]\+]/[0:0]/g' -e '/^-A fail2ban-[A-Z]\+ -s .\+$/d' > /etc/sysconfig/ip6tables
+else
+	/sbin/ip6tables-save | sed -e 's/[[0-9]\+:[0-9]\+]/[0:0]/g' -e '/^-A fail2ban-[A-Z]\+ -s .\+$/d' > /etc/ip6tables.rules
+	ip6tablesversion="$(ip6tables --version | head -1 | awk '{print $2}' | cut -f -2 -d .)"
+	sd_unit="/lib/systemd/system/hestia-ip6tables.service"
+	if [ ! -e "$sd_unit" ]; then
+		echo "[Unit]" >> $sd_unit
+		echo "Description=Loading Hestia IPv6 firewall rules" >> $sd_unit
+		echo "DefaultDependencies=no" >> $sd_unit
+		echo "Wants=network-pre.target local-fs.target" >> $sd_unit
+		echo "Before=network-pre.target" >> $sd_unit
+		echo "After=local-fs.target" >> $sd_unit
+		echo "" >> $sd_unit
+		echo "[Service]" >> $sd_unit
+		echo "Type=oneshot" >> $sd_unit
+		echo "RemainAfterExit=yes" >> $sd_unit
+		echo "ExecStartPre=-${HESTIA}/bin/v-update-firewall-ipset-ipv6 load" >> $sd_unit
+		if [ "$ip6tablesversion" = "v1.6" ]; then
+			echo "ExecStart=/sbin/ip6tables-restore /etc/ip6tables.rules" >> $sd_unit
+		else
+			echo "ExecStart=/sbin/ip6tables-restore --wait=10 /etc/ip6tables.rules" >> $sd_unit
+		fi
+		echo "" >> $sd_unit
+		echo "[Install]" >> $sd_unit
+		echo "WantedBy=multi-user.target" >> $sd_unit
+		systemctl -q daemon-reload
+	fi
+	systemctl -q is-enabled hestia-ip6tables 2> /dev/null && systemctl -q disable hestia-ip6tables
+	if [ -z "$FIREWALL_SYSTEM" ]; then
+		rm -f $sd_unit
+		systemctl -q daemon-reload
+	fi
+fi
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+exit

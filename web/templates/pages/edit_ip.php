@@ -70,12 +70,18 @@
 				</label>
 				<input type="text" class="form-control" name="v_name" id="v_name" value="<?= htmlentities(trim($v_name, "'")) ?>">
 			</div>
+			<?php
+				if ($v_ipv6_suffix == '') {
+			?>
 			<div class="u-mb10">
 				<label for="v_nat" class="form-label">
 					<?= _("NAT IP Association") ?> <span class="optional">(<?= _("Optional") ?>)</span>
 				</label>
 				<input type="text" class="form-control" name="v_nat" id="v_nat" value="<?= htmlentities(trim($v_nat, "'")) ?>">
 			</div>
+			<?php
+				}
+			?>
 		</div>
 
 	</form>

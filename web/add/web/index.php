@@ -16,8 +16,8 @@ if (!empty($_POST["ok"])) {
 	if (empty($_POST["v_domain"])) {
 		$errors[] = _("Domain");
 	}
-	if (empty($_POST["v_ip"])) {
-		$errors[] = _("IP Address");
+	if (empty($_POST["v_ip"]) && empty($_POST["v_ipv6"])) {
+		$errors[] = _("IPV4 and IPV6 Address");
 	}
 
 	if (!empty($errors[0])) {
@@ -37,6 +37,8 @@ if (!empty($_POST["ok"])) {
 
 	// Define domain ip address
 	$v_ip = quoteshellarg($_POST["v_ip"]);
+	// Define domain ipv6 address
+	$v_ipv6 = quoteshellarg($_POST["v_ipv6"]);
 
 	// Using public IP instead of internal IP when creating DNS
 	// Gets public IP from 'v-list-user-ips' command (that reads /hestia/data/ips/ip), precisely from 'NAT' field
@@ -72,12 +74,14 @@ if (!empty($_POST["ok"])) {
 	if (empty($_SESSION["error_msg"])) {
 		exec(
 			HESTIA_CMD .
-				"v-add-web-domain " .
+				"v-add-web-domain-ipv46 " .
 				$user .
 				" " .
 				quoteshellarg($v_domain) .
 				" " .
 				$v_ip .
+				" " .
+				$v_ipv6 .
 				" 'yes'",
 			$output,
 			$return_var,
@@ -93,23 +97,20 @@ if (!empty($_POST["ok"])) {
 	if (empty($_POST["v_mail"])) {
 		$_POST["v_mail"] = "no";
 	}
-	// Add DNS domain
-	if ($_POST["v_dns"] == "on" && empty($_SESSION["error_msg"])) {
-		exec(
-			HESTIA_CMD .
-				"v-add-dns-domain " .
-				$user .
-				" " .
-				quoteshellarg($v_domain) .
-				" " .
-				$v_public_ip .
-				" '' '' '' '' '' '' '' '' 'no'",
-			$output,
-			$return_var,
-		);
-		check_return_code($return_var, $output);
-		unset($output);
-	}
+	exec(
+		HESTIA_CMD .
+			"v-add-dns-domain " .
+			$user .
+			" " .
+			quoteshellarg($v_domain) .
+			" " .
+			$v_public_ip .
+			" " .
+			"'' '' '' '' '' '' '' '' yes no " .
+			$v_ipv6,
+		$output,
+		$return_var,
+	);
 
 	// Add mail domain
 	if ($_POST["v_mail"] == "on" && empty($_SESSION["error_msg"])) {
@@ -172,15 +173,53 @@ exec(HESTIA_CMD . "v-list-user-ips " . $user . " json", $output, $return_var);
 $ips = json_decode(implode("", $output), true);
 unset($output);
 
+$suggested_ipv6 = [];
+
+foreach ($ips as $ip => $data) {
+	if ($data["VERSION"] == 6 && $data["INTERFACE"] !== "") {
+		// Detecta si es un /64 (puedes adaptar según el formato que uses)
+		$ip_clean = explode("/", $ip)[0];
+		$prefix_parts = explode(":", $ip_clean);
+
+		// Si es un /64 válido, tomar los primeros 4 bloques (64 bits)
+		if (count($prefix_parts) >= 4) {
+			$prefix = implode(":", array_slice($prefix_parts, 0, 4));
+			$used_ips = array_keys($ips); // para evitar duplicados
+			$suggested_ipv6[$prefix] = generate_ipv6_suggestions($prefix, $used_ips, 5);
+		}
+	}
+}
+
 // Get all user domains
 exec(HESTIA_CMD . "v-list-web-domains " . $user . " json", $output, $return_var);
 $user_domains = json_decode(implode("", $output), true);
 $user_domains = array_keys($user_domains);
 unset($output);
 
-$accept = $_GET["accept"] ?? "";
+if (empty($_GET["accept"])) {
+	$_GET["accept"] = false;
+}
 
 $v_domain = $_POST["domain"] ?? "";
+
+// Generate IPv6 suggestions
+function generate_ipv6_suggestions($prefix, $used_ips = [], $count = 5) {
+	$suggestions = [];
+
+	while (count($suggestions) < $count) {
+		// Genera un sufijo de 64 bits (16 caracteres hex)
+		$suffix = bin2hex(random_bytes(8));
+		// Formatea como grupos de 4 caracteres
+		$formatted_suffix = implode(":", str_split($suffix, 4));
+		$ip = strtolower($prefix . ":" . $formatted_suffix);
+
+		if (!in_array($ip, $used_ips)) {
+			$suggestions[] = $ip;
+		}
+	}
+
+	return $suggestions;
+}
 
 // Render page
 render_page($user, $TAB, "add_web");

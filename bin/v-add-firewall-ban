@@ -32,7 +32,7 @@ source_conf "$HESTIA/conf/hestia.conf"
 #----------------------------------------------------------#
 
 check_args '2' "$#" 'IPV4_CIDR CHAIN'
-is_format_valid 'ipv4_cidr' 'chain'
+is_format_valid 'ip' 'chain'
 is_system_enabled "$FIREWALL_SYSTEM" 'FIREWALL_SYSTEM'
 
 # Perform verification if read-only mode is enabled
@@ -74,8 +74,15 @@ date=$(echo "$time_n_date" | cut -f 2 -d \ )
 
 # Adding ip to banlist
 echo "IP='$ipv4_cidr' CHAIN='$chain' TIME='$time' DATE='$date'" >> $conf
-$iptables -I fail2ban-$chain 1 -s $ipv4_cidr \
-	-j REJECT --reject-with icmp-port-unreachable 2> /dev/null
+
+if [[ "$ipv4_cidr" =~ ":" ]]; then
+	# IPv6
+	/sbin/ip6tables -I fail2ban-$chain 1 -s "$ipv4_cidr" -j REJECT
+else
+	# IPv4
+	$iptables -I fail2ban-$chain 1 -s "$ipv4_cidr" \
+		-j REJECT --reject-with icmp-port-unreachable 2> /dev/null
+fi
 
 # Changing permissions
 chmod 660 $conf

@@ -97,11 +97,10 @@ case $chain in
 esac
 
 # Adding chain
-$iptables -N fail2ban-$chain 2> /dev/null
-if [ $? -eq 0 ]; then
+if ! $iptables -L fail2ban-$chain &> /dev/null; then
+	$iptables -N fail2ban-$chain
 	$iptables -A fail2ban-$chain -j RETURN
 
-	# Adding multiport module
 	if [[ "$port" =~ ,|-|: ]]; then
 		port_str="-m multiport --dports $port"
 	else

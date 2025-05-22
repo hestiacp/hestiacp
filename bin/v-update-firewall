@@ -12,6 +12,7 @@
 
 # Defining absolute path for iptables and modprobe
 iptables="/sbin/iptables"
+ip6tables="/sbin/ip6tables"
 modprobe="/sbin/modprobe"
 sysctl="/sbin/sysctl"
 
@@ -136,7 +137,7 @@ for line in $(sort -r -n -k 2 -t \' $rules); do
 			ftp="yes"
 		fi
 
-		# Adding firewall rule
+		# Adding firewall rule IPv4
 		echo "$iptables -A INPUT $proto $port $ip $state $action" >> "$tmp"
 	fi
 done

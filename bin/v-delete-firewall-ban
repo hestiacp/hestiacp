@@ -32,7 +32,7 @@ source_conf "$HESTIA/conf/hestia.conf"
 #----------------------------------------------------------#
 
 check_args '2' "$#" 'IPV4_CIDR CHAIN'
-is_format_valid 'ipv4_cidr' 'chain'
+is_format_valid 'ip' 'chain'
 is_system_enabled "$FIREWALL_SYSTEM" 'FIREWALL_SYSTEM'
 
 # Perform verification if read-only mode is enabled
@@ -57,8 +57,14 @@ if [ "$chain" == "ALL" ]; then
 		# Deleting ip from banlist
 		sip=$(echo "$IP" | sed "s|/|\\\/|g")
 		sed -i "/IP='$sip' CHAIN='$CHAIN'/d" $conf
+		# Eliminar de iptables (IPv4)
 		b=$($iptables -L fail2ban-$CHAIN --line-number -n | grep -w $ipv4_cidr | awk '{print $1}')
-		$iptables -D fail2ban-$CHAIN $b 2> /dev/null
+		[ -n "$b" ] && $iptables -D fail2ban-$CHAIN $b 2> /dev/null
+
+		# Eliminar también de ip6tables si es IPv6
+		if [[ "$ipv4_cidr" =~ ":" ]]; then
+			/sbin/ip6tables -D fail2ban-$CHAIN -s "$ipv4_cidr" -j REJECT 2> /dev/null
+		fi
 	done
 else
 	# Checking ip in banlist
@@ -70,8 +76,14 @@ else
 	# Deleting ip from banlist
 	sip=$(echo "$ipv4_cidr" | sed "s|/|\\\/|g")
 	sed -i "/IP='$sip' CHAIN='$chain'/d" $conf
+	# Eliminar de iptables (IPv4)
 	b=$($iptables -L fail2ban-$chain --line-number -n | grep -w $ipv4_cidr | awk '{print $1}')
-	$iptables -D fail2ban-$chain $b 2> /dev/null
+	[ -n "$b" ] && $iptables -D fail2ban-$chain $b 2> /dev/null
+
+	# Eliminar también de ip6tables si es IPv6
+	if [[ "$ipv4_cidr" =~ ":" ]]; then
+		/sbin/ip6tables -D fail2ban-$chain -s "$ipv4_cidr" -j REJECT 2> /dev/null
+	fi
 fi
 
 # Changing permissions

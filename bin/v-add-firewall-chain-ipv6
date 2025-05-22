@@ -1,0 +1,128 @@
+#!/bin/bash
+# info: add firewall chain (IPv6)
+# options: CHAIN [PORT] [PROTOCOL]
+#
+# example: v-add-firewall-chain-ipv6 CRM 5678 TCP
+#
+# This function adds new rule to system firewall (IPv6)
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Argument definition
+chain=$(echo "$1" | tr '[:lower:]' '[:upper:]')
+port="$2"
+port_ext="$2"
+protocol="$3"
+[ -z "$protocol" ] && protocol='TCP'
+protocol=$(echo "$protocol" | tr '[:lower:]' '[:upper:]')
+
+# Defining absolute path to ip6tables
+ip6tables="/sbin/ip6tables"
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source "$HESTIA/func/main.sh"
+# shellcheck source=/usr/local/hestia/func/firewall.sh
+source "$HESTIA/func/firewall.sh"
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+# Get hestia port by reading nginx.conf
+hestiaport=$(sed -ne "/listen/{s/.*listen[^0-9]*\([0-9][0-9]*\)[ \t]*ssl\;/\1/p;q}" "$HESTIA/nginx/conf/nginx.conf")
+if [ -z "$hestiaport" ]; then
+	hestiaport=8083
+fi
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '1' "$#" 'CHAIN [PORT] [PROTOCOL]'
+is_format_valid 'chain' 'port_ext' 'protocol'
+is_system_enabled "$FIREWALL_SYSTEM" 'FIREWALL_SYSTEM'
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Checking known chains
+case $chain in
+	SSH) # Get ssh port (or ports) using v-list-sys-sshd-port.
+		sshport="$($BIN/v-list-sys-sshd-port plain | sed ':a;N;$!ba;s/\n/,/g')"
+		if [ -z "$sshport" ]; then
+			sshport=22
+		fi
+		port=$sshport
+		protocol=TCP
+		;;
+	FTP)
+		port=21
+		protocol=TCP
+		;;
+	MAIL)
+		port='25,465,587,110,995,143,993'
+		protocol=TCP
+		;;
+	DNS)
+		port=53
+		protocol=UDP
+		;;
+	WEB)
+		port='80,443'
+		protocol=TCP
+		;;
+	DB)
+		port='3306,5432'
+		protocol=TCP
+		;;
+	HESTIA)
+		port=$hestiaport
+		protocol=TCP
+		;;
+	RECIDIVE)
+		port='1:65535'
+		protocol=TCP
+		;;
+	*) check_args '2' "$#" 'CHAIN PORT' ;;
+esac
+
+# Adding chain to ip6tables if not exists
+if ! $ip6tables -L fail2ban-$chain &> /dev/null; then
+	$ip6tables -N fail2ban-$chain
+	$ip6tables -A fail2ban-$chain -j RETURN
+
+	if [[ "$port" =~ ,|-|: ]]; then
+		port_str="-m multiport --dports $port"
+	else
+		port_str="--dport $port"
+	fi
+	$ip6tables -I INPUT -p $protocol $port_str -j fail2ban-$chain
+fi
+
+# Preserving chain in chains6.conf
+chains6="$HESTIA/data/firewall/chains6.conf"
+check_chain=""
+[ -f "$chains6" ] && check_chain=$(grep "CHAIN='$chain'" "$chains6")
+if [ -z "$check_chain" ]; then
+	echo "CHAIN='$chain' PORT='$port' PROTOCOL='$protocol'" >> "$chains6"
+fi
+
+# Changing permissions
+[ -f "$chains6" ] && chmod 660 "$chains6"
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Logging
+$BIN/v-log-action "system" "Info" "Firewall" "Added IPv6 service to firewall (Service: $chain, Port: $port, Protocol: $protocol)."
+log_event "$OK" "$ARGUMENTS"
+
+exit

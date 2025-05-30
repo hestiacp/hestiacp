@@ -16,7 +16,12 @@ verify_csrf($_GET);
 
 if (!empty($_GET["rule"])) {
 	$v_rule = quoteshellarg($_GET["rule"]);
-	exec(HESTIA_CMD . "v-delete-firewall-rule " . $v_rule, $output, $return_var);
+	$is_ipv6 = isset($_GET["ipver"]) && $_GET["ipver"] === "ipv6";
+	if ($is_ipv6) {
+		exec(HESTIA_CMD . "v-delete-firewall-ipv6-rule " . $v_rule, $output, $return_var);
+	} else {
+		exec(HESTIA_CMD . "v-delete-firewall-rule " . $v_rule, $output, $return_var);
+	}
 }
 check_return_code($return_var, $output);
 unset($output);

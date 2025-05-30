@@ -4,18 +4,20 @@
 #                                                                    #
 ######################################################################
 
-#SPAMASSASSIN = yes
-#SPAM_SCORE = 50
-#SPAM_REJECT_SCORE = 100
-#CLAMD = yes
+SPAMASSASSIN = yes
+SPAM_SCORE = 50
+SPAM_REJECT_SCORE = 100
+CLAMD = yes
 
 smtp_banner = $smtp_active_hostname
 smtp_active_hostname = ${lookup dnsdb{>: defer_never,ptr=$interface_address}{${listextract{1}{$value}}}{$primary_hostname}}
 add_environment = <; PATH=/bin:/usr/bin
 keep_environment =
-disable_ipv6 = true
+disable_ipv6 = false
 smtp_accept_max = 100
 smtp_accept_max_per_host = 20
+
+SRS_SECRET = ${readfile{/etc/exim4/srs.conf}}
 
 smtputf8_advertise_hosts =
 domainlist local_domains = dsearch;/etc/exim4/domains/
@@ -76,12 +78,12 @@ ignore_bounce_errors_after = 2d
 timeout_frozen_after = 7d
 
 DKIM_DOMAIN = ${lc:${domain:$h_from:}}
-DKIM_FILE = /etc/exim4/domains/${lc:${domain:$h_from:}}/dkim.pem
+DKIM_FILE = /etc/exim4/domains/${lookup{${lc:${domain:$h_from:}}}dsearch{/etc/exim4/domains/}}/dkim.pem
 DKIM_PRIVATE_KEY = ${if exists{DKIM_FILE}{DKIM_FILE}{0}}
 
-OUTGOING_IP = /etc/exim4/domains/$sender_address_domain/ip
+OUTGOING_IP = /etc/exim4/domains/${lookup{$sender_address_domain}dsearch{/etc/exim4/domains}}/ip
 
-SMTP_RELAY_FILE = ${if exists{/etc/exim4/domains/${sender_address_domain}/smtp_relay.conf}{/etc/exim4/domains/$sender_address_domain/smtp_relay.conf}{/etc/exim4/smtp_relay.conf}}
+SMTP_RELAY_FILE = ${if exists{/etc/exim4/domains/${lookup{$sender_address_domain}dsearch{/etc/exim4/domains}}/smtp_relay.conf}{/etc/exim4/domains/${lookup{$sender_address_domain}dsearch{/etc/exim4/domains}}/smtp_relay.conf}{/etc/exim4/smtp_relay.conf}}
 SMTP_RELAY_HOST = ${lookup{host}lsearch{SMTP_RELAY_FILE}}
 SMTP_RELAY_PORT = ${lookup{port}lsearch{SMTP_RELAY_FILE}}
 SMTP_RELAY_USER = ${lookup{user}lsearch{SMTP_RELAY_FILE}}
@@ -121,24 +123,24 @@ acl_check_spammers:
 
 
 acl_check_mail:
-  deny  condition     = ${if eq{$sender_helo_name}{}}
-        message       = HELO required before MAIL
+	deny    condition     = ${if eq{$sender_helo_name}{}}
+			message       = HELO required before MAIL
 
-  drop  !authenticated = *
-		message       =  Helo name contains an IP address (HELO was $sender_helo_name) and not is valid
-		condition     = ${if match{$sender_helo_name}{\N((\d{1,3}[.-]\d{1,3}[.-]\d{1,3}[.-]\d{1,3})|([0-9a-f]{8})|([0-9A-F]{8}))\N}{yes}{no}}
-		condition     = ${if match {${lookup dnsdb{>: defer_never,ptr=$sender_host_address}}\}{$sender_helo_name}{no}{yes}}
-		delay         = 45s
+	drop    !authenticated = *
+			message       =  Helo name contains an IP address (HELO was $sender_helo_name) and not is valid
+			condition     = ${if match{$sender_helo_name}{\N((\d{1,3}[.-]\d{1,3}[.-]\d{1,3}[.-]\d{1,3})|([0-9a-f]{8})|([0-9A-F]{8}))\N}{yes}{no}}
+			condition     = ${if match {${lookup dnsdb{>: defer_never,ptr=$sender_host_address}}\}{$sender_helo_name}{no}{yes}}
+			delay         = 45s
 
-  drop  !authenticated = *
-		condition     = ${if isip{$sender_helo_name}}
-		message       = Access denied - Invalid HELO name (See RFC2821 4.1.3)
+	drop    !authenticated = *
+			condition     = ${if isip{$sender_helo_name}}
+			message       = Access denied - Invalid HELO name (See RFC2821 4.1.3)
 
-  drop  !authenticated = *
-		condition    = ${if eq{[$interface_address]}{$sender_helo_name}}
-		message       = $interface_address is _my_ address
+	drop    !authenticated = *
+			condition    = ${if eq{[$interface_address]}{$sender_helo_name}}
+			message       = $interface_address is _my_ address
 
-  accept
+	accept
 
 
 acl_check_rcpt:
@@ -146,11 +148,11 @@ acl_check_rcpt:
 
 # Limit per email account for SMTP auhenticated users
   deny    message       = Email account $authenticated_id is sending too many emails - rate overlimit = $sender_rate / $sender_rate_period
-      set acl_c_msg_limit  = ${if exists{/etc/exim4/domains/${lookup{${domain:$authenticated_id}}dsearch{/etc/exim4/domains/}}/limits}{${lookup {$authenticated_id} lsearch{/etc/exim4/domains/${lookup{${domain:$authenticated_id}}dsearch{/etc/exim4/domains/}}/limits}{$value}{${readfile{/etc/exim4/limit.conf}}}}}{${readfile{/etc/exim4/limit.conf}}} }
+          set acl_c_msg_limit  = ${if exists{/etc/exim4/domains/${lookup{${domain:$authenticated_id}}dsearch{/etc/exim4/domains/}}/limits}{${lookup {$authenticated_id} lsearch{/etc/exim4/domains/${lookup{${domain:$authenticated_id}}dsearch{/etc/exim4/domains/}}/limits}{$value}{${readfile{/etc/exim4/limit.conf}}}}}{${readfile{/etc/exim4/limit.conf}}} }
           ratelimit     = $acl_c_msg_limit / 1h / strict/ $authenticated_id
 
   warn    ratelimit     = ${eval:$acl_c_msg_limit / 2} / 1h / strict / $authenticated_id
-          log_message           = Sender rate [limitlog]: log / email / $authenticated_id / $sender_rate / $sender_rate_period
+  log_message           = Sender rate [limitlog]: log / email / $authenticated_id / $sender_rate / $sender_rate_period
 
   deny    message       = Restricted characters in address
           domains       = +local_domains
@@ -189,14 +191,13 @@ acl_check_rcpt:
 .endif
 
 .ifdef SPAMASSASSIN
-  warn    set acl_m1    = no
-          set acl_m3    = no
-  warn    condition     = ${if exists {/etc/exim4/domains/$domain/antispam}{yes}{no}}
-          set acl_m1    = yes
-  warn    condition     = ${if exists {/etc/exim4/domains/$domain/reject_spam}{yes}{no}}
-          set acl_m3    = yes
+ warn    set acl_m1    = no
+         set acl_m3    = no
+ warn    condition     = ${if exists {/etc/exim4/domains/$domain/antispam}{yes}{no}}
+         set acl_m1    = yes
+ warn    condition     = ${if exists {/etc/exim4/domains/$domain/reject_spam}{yes}{no}}
+         set acl_m3    = yes
 .endif
-
 
   accept
 
@@ -209,20 +210,20 @@ acl_check_data:
 .endif
 
 .ifdef SPAMASSASSIN
-  warn   !authenticated = *
-         hosts          = !+relay_from_hosts
-         condition      = ${if < {$message_size}{1024K}}
-         condition      = ${if eq{$acl_m1}{yes}{yes}{no}}
-         spam           = debian-spamd:true/defer_ok
-         add_header     = X-Spam-Score: $spam_score_int
-         add_header     = X-Spam-Bar: $spam_bar
-         add_header     = X-Spam-Report: $spam_report
-         set acl_m2     = $spam_score_int
+ warn   !authenticated = *
+        hosts          = !+relay_from_hosts
+        condition      = ${if < {$message_size}{1024K}}
+        condition      = ${if eq{$acl_m1}{yes}{yes}{no}}
+        spam           = debian-spamd:true/defer_ok
+        add_header     = X-Spam-Score: $spam_score_int
+        add_header     = X-Spam-Bar: $spam_bar
+        add_header     = X-Spam-Report: $spam_report
+        set acl_m2     = $spam_score_int
 
-  warn   condition      = ${if !eq{$acl_m2}{} {yes}{no}}
-         condition      = ${if >{$acl_m2}{SPAM_SCORE} {yes}{no}}
-         add_header     = X-Spam-Status: Yes
-         message        = SpamAssassin detected spam (from $sender_address to $recipients).
+ warn   condition      = ${if !eq{$acl_m2}{} {yes}{no}}
+        condition      = ${if >{$acl_m2}{SPAM_SCORE} {yes}{no}}
+        add_header     = X-Spam-Status: Yes
+        message        = SpamAssassin detected spam (from $sender_address to $recipients).
 
   # Deny spam at high score if spam score > SPAM_REJECT_SCORE and delete_spam is enabled
   deny   message        = This message scored $spam_score spam points
@@ -230,7 +231,6 @@ acl_check_data:
          condition      = ${if eq{$acl_m3}{yes}{yes}{no}}
          condition      = ${if >{$spam_score_int}{SPAM_REJECT_SCORE}{1}{0}}
 .endif
-
 
   accept
 
@@ -296,8 +296,11 @@ send_via_smtp_relay:
 
 dnslookup:
   driver = dnslookup
-  domains = !+local_domains
-  transport = remote_smtp
+  # if outbound, and forwarding has been done, use an alternate transport
+  domains = ! +local_domains
+  transport = ${if eq {$local_part@$domain} \
+                      {$original_local_part@$original_domain} \
+                      {remote_smtp} {remote_forwarded_smtp}}
   no_more
 
 userforward:
@@ -323,16 +326,33 @@ procmail:
 
 autoreplay:
   driver = accept
-  require_files = /etc/exim4/domains/$domain/autoreply.${local_part}.msg
-  condition = ${if exists{/etc/exim4/domains/$domain/autoreply.${local_part}.msg}{yes}{no}}
+  require_files = /etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/autoreply.${local_part}.msg
+  condition = ${if exists{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/autoreply.${local_part}.msg}{yes}{no}}
   retry_use_local_part
   transport = userautoreply
   unseen
 
+inbound_srs:
+    driver = redirect
+    senders = :
+    domains = +local_domains
+    # detect inbound bounces which are SRS'd, and decode them
+    condition = ${if inbound_srs {$local_part} {SRS_SECRET}}
+    data = $srs_recipient
+
+inbound_srs_failure:
+    driver = redirect
+    senders = :
+    domains = +local_domains
+    # detect inbound bounces which look SRS'd but are invalid
+    condition = ${if inbound_srs {$local_part} {}}
+    allow_fail
+    data = :fail: Invalid SRS recipient address
+
 aliases:
   driver = redirect
   headers_add = X-redirected: yes
-  data = ${extract{1}{:}{${lookup{$local_part@$domain}lsearch{/etc/exim4/domains/$domain/aliases}}}}
+  data = ${extract{1}{:}{${lookup{$local_part@$domain}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/aliases}}}}
   require_files = /etc/exim4/domains/$domain/aliases
   redirect_router = dnslookup
   pipe_transport = address_pipe
@@ -341,23 +361,23 @@ aliases:
 localuser_fwd_only:
   driver = accept
   transport = devnull
-  condition = ${if exists{/etc/exim4/domains/$domain/fwd_only}{${lookup{$local_part}lsearch{/etc/exim4/domains/$domain/fwd_only}{true}{false}}}}
+  condition = ${if exists{/etc/exim4/domains/$domain/fwd_only}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/fwd_only}{true}{false}}}}
 
 localuser_spam:
   driver = accept
   transport = local_spam_delivery
-  condition = ${if eq {${if match{$h_X-Spam-Status:}{\N^Yes\N}{yes}{no}}} {${lookup{$local_part}lsearch{/etc/exim4/domains/$domain/passwd}{yes}{no_such_user}}}}
+  condition = ${if eq {${if match{$h_X-Spam-Status:}{\N^Yes\N}{yes}{no}}} {${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}{yes}{no_such_user}}}}
 
 localuser:
   driver = accept
-  transport = local_delivery
-  condition = ${lookup{$local_part}lsearch{/etc/exim4/domains/$domain/passwd}{true}{false}}
+  transport = dovecot_virtual_delivery
+  condition = ${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}{true}{false}}
 
 catchall:
   driver = redirect
   headers_add = X-redirected: yes
   require_files = /etc/exim4/domains/$domain/aliases
-  data = ${extract{1}{:}{${lookup{*@$domain}lsearch{/etc/exim4/domains/$domain/aliases}}}}
+  data = ${extract{1}{:}{${lookup{*@$domain}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/aliases}}}}
   file_transport = local_delivery
   redirect_router = dnslookup
   condition = ${lookup{$local_part@$domain}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/aliases}{false}{true}}
@@ -365,7 +385,7 @@ catchall:
 terminate_alias:
   driver = accept
   transport = devnull
-  condition = ${lookup{$local_part@$domain}lsearch{/etc/exim4/domains/$domain/aliases}{true}{false}}
+  condition = ${lookup{$local_part@$domain}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/aliases}{true}{false}}
 
 ######################################################################
 #                      TRANSPORTS CONFIGURATION                      #
@@ -386,7 +406,21 @@ remote_smtp:
   dkim_canon = relaxed
   dkim_strict = 0
   hosts_try_fastopen = !*.l.google.com
-  interface = ${if exists{OUTGOING_IP}{${readfile{OUTGOING_IP}}}}
+  interface = ${if exists{/home/${authenticated_id}/conf/mail/${sender_address_domain}/ipv6}{<;${readfile{/home/${authenticated_id}/conf/mail/${sender_address_domain}/ipv6}}}{${if exists{OUTGOING_IP}{${readfile{OUTGOING_IP}}}{$interface_address}}}}
+
+remote_forwarded_smtp:
+  driver = smtp
+  helo_data = ${lookup dnsdb{>: defer_never,ptr=$sending_ip_address}{${listextract{1}{$value}}}{$primary_hostname}}
+  dkim_domain = DKIM_DOMAIN
+  dkim_selector = mail
+  dkim_private_key = DKIM_PRIVATE_KEY
+  dkim_canon = relaxed
+  dkim_strict = 0
+  hosts_try_fastopen = !*.l.google.com
+  interface = ${if exists{/home/${authenticated_id}/conf/mail/${sender_address_domain}/ipv6}{<;${readfile{/home/${authenticated_id}/conf/mail/${sender_address_domain}/ipv6}}}{${if exists{OUTGOING_IP}{${readfile{OUTGOING_IP}}}{$interface_address}}}}
+  # modify the envelope from, for mails that we forward
+  max_rcpt = 1
+  return_path = ${srs_encode {SRS_SECRET} {$return_path} {$original_domain}}
 
 procmail:
   driver = pipe
@@ -402,7 +436,7 @@ local_delivery:
   driver = appendfile
   maildir_format
   maildir_use_size_file
-  user = ${extract{2}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/$domain/passwd}}}}
+  user = ${extract{2}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}
   group = mail
   create_directory
   directory_mode = 770
@@ -411,15 +445,15 @@ local_delivery:
   delivery_date_add
   envelope_to_add
   return_path_add
-  directory = "${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/$domain/passwd}}}}/mail/$domain/$local_part"
-  quota = ${extract{6}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/$domain/passwd}}}}M
+  directory = "${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}/mail/${lookup{$domain}dsearch{/etc/exim4/domains/}}/${lookup{$local_part}dsearch{${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}/mail/${lookup{$domain}dsearch{/etc/exim4/domains/}}}}"
+  quota = ${extract{6}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}M
   quota_warn_threshold = 75%
 
 local_spam_delivery:
   driver = appendfile
   maildir_format
   maildir_use_size_file
-  user = ${extract{2}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/$domain/passwd}}}}
+  user = ${extract{2}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}
   group = mail
   create_directory
   directory_mode = 770
@@ -428,10 +462,22 @@ local_spam_delivery:
   delivery_date_add
   envelope_to_add
   return_path_add
-  directory = "${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/$domain/passwd}}}}/mail/$domain/$local_part/.Spam"
-  quota = ${extract{6}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/$domain/passwd}}}}M
-  quota_directory = "${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/$domain/passwd}}}}/mail/$domain/$local_part"
+  directory = "${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}/mail/${lookup{$domain}dsearch{/etc/exim4/domains/}}/${lookup{$local_part}dsearch{${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}/mail/${lookup{$domain}dsearch{/etc/exim4/domains/}}}}/.Spam"
+  quota = ${extract{6}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}M
+  quota_directory = "${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}/mail/${lookup{$domain}dsearch{/etc/exim4/domains/}}/${lookup{$local_part}dsearch{${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}/mail/${lookup{$domain}dsearch{/etc/exim4/domains/}}}}"
   quota_warn_threshold = 75%
+
+dovecot_virtual_delivery:
+  driver = pipe
+  command = /usr/lib/dovecot/dovecot-lda -e -d ${extract{1}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/accounts}}}}@${lookup{$domain}dsearch{/etc/exim4/domains/}}
+  delivery_date_add
+  envelope_to_add
+  return_path_add
+  log_output = true
+  log_defer_output = true
+  user = ${extract{2}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}
+  group = mail
+  return_output
 
 address_pipe:
   driver = pipe
@@ -448,8 +494,8 @@ address_reply:
 
 userautoreply:
   driver = autoreply
-  file = /etc/exim4/domains/$domain/autoreply.${local_part}.msg
-  from = "${local_part}@${domain}"
+  file = /etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/autoreply.${extract{1}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/accounts}}}}.msg
+  from = "${extract{1}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/accounts}}}}@${lookup{$domain}dsearch{/etc/exim4/domains/}}"
   headers = Content-Type: text/plain; charset=utf-8;\nContent-Transfer-Encoding: 8bit
   subject = "${if def:h_Subject: {Autoreply: \"${rfc2047:$h_Subject:}\"} {Autoreply Message}}"
   to = "${sender_address}"

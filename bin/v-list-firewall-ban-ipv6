@@ -1,0 +1,88 @@
+#!/bin/bash
+# info: list firewall block list (IPv6)
+# options: [FORMAT]
+#
+# example: v-list-firewall-ban-ipv6 json
+#
+# This function lists the currently blocked IPv6 addresses.
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+format=${1-shell}
+
+source /etc/hestiacp/hestia.conf
+source /usr/local/hestia/func/main.sh
+source_conf "$HESTIA/conf/hestia.conf"
+
+# JSON list function
+json_list() {
+	IFS=$'\n'
+	i=1
+	objects=$(grep IP $HESTIA/data/firewall/banlist6.conf | wc -l)
+	echo "{"
+	while read str; do
+		[[ -z "$str" ]] && continue
+		parse_object_kv_list "$str"
+		echo -n '    "'$IP'": {
+        "IP": "'$IP'",
+        "CHAIN": "'$CHAIN'",
+        "TIME": "'$TIME'",
+        "DATE": "'$DATE'"
+    }'
+		if [ "$i" -lt "$objects" ]; then
+			echo ','
+		else
+			echo
+		fi
+		((i++))
+	done < <(cat $HESTIA/data/firewall/banlist6.conf)
+	echo '}'
+}
+
+# SHELL list function
+shell_list() {
+	IFS=$'\n'
+	echo "IP   CHAIN   TIME   DATE"
+	echo "--   -----   ----   ----"
+	while read str; do
+		[[ -z "$str" ]] && continue
+		parse_object_kv_list "$str"
+		echo "$IP $CHAIN $TIME $DATE"
+	done < <(cat $HESTIA/data/firewall/banlist6.conf)
+}
+
+# PLAIN list function
+plain_list() {
+	IFS=$'\n'
+	while read str; do
+		[[ -z "$str" ]] && continue
+		parse_object_kv_list "$str"
+		echo -e "$IP\t$CHAIN\t$TIME\t$DATE"
+	done < <(cat $HESTIA/data/firewall/banlist6.conf)
+}
+
+# CSV list function
+csv_list() {
+	IFS=$'\n'
+	echo "IP,CHAIN,TIME,DATE"
+	while read str; do
+		[[ -z "$str" ]] && continue
+		parse_object_kv_list "$str"
+		echo "$IP,$CHAIN,$TIME,$DATE"
+	done < <(cat $HESTIA/data/firewall/banlist6.conf)
+}
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+case $format in
+	json) json_list ;;
+	plain) plain_list ;;
+	csv) csv_list ;;
+	shell) shell_list | column -t ;;
+esac
+
+exit

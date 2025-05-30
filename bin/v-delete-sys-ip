@@ -1,165 +1,226 @@
 #!/bin/bash
 # info: delete system IP
+# both kind of IP addresses, ipv4 and ipv6 are allowed
 # options: IP
 #
 # example: v-delete-sys-ip 203.0.113.1
-#
-# This function for deleting a system IP. It does not allow to delete first IP
-# on interface and do not allow to delete IP which is used by a web domain.
+# example: v-delete-sys-ip 1234:5678:abcd:ef90::1
 
 #----------------------------------------------------------#
-#                Variables & Functions                     #
+#                      Functions                           #
+#----------------------------------------------------------#
+# Normalizes an IPv4 or IPv6 address to its canonical form using PHP's inet_ntop().
+# This is needed because bash utilities don't always normalize IPv6 notation,
+# but the config files and lookups may require canonical format for correct matching.
+normalize_ip() {
+	php -r "echo inet_ntop(inet_pton('$1'));" 2> /dev/null
+}
+
+#----------------------------------------------------------#
+#                 Initialization & Includes                #
 #----------------------------------------------------------#
 
-# Argument definition
-ip="$1"
+raw_ip=${1%/*}
+ip46=$raw_ip
 
-# Includes
-# shellcheck source=/etc/hestiacp/hestia.conf
 source /etc/hestiacp/hestia.conf
-# shellcheck source=/usr/local/hestia/func/main.sh
-source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/func/ip.sh
-source $HESTIA/func/ip.sh
-# shellcheck source=/usr/local/hestia/func/domain.sh
-source $HESTIA/func/domain.sh
-# load config file
+source ${HESTIA}/func/main.sh
+source ${HESTIA}/func/ip.sh
+source ${HESTIA}/func/domain.sh
 source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
-#                    Verifications                         #
+#                     Verifications                        #
 #----------------------------------------------------------#
 
 check_args '1' "$#" 'IP'
-is_format_valid 'ip'
-is_ip_valid "$ip"
-is_ip_key_empty '$U_WEB_DOMAINS'
-is_ip_key_empty '$U_SYS_USERS'
+ip_format="$(get_ip_format ${ip46})"
+retval=$?
 
-# Perform verification if read-only mode is enabled
+check_ip_par=""
+add_cap_string_ipv6=""
+
+[ -n "$ip_format" ] && [[ $ip_format -eq 4 || $ip_format -eq 6 ]] && check_ip_par=" -${ip_format}"
+
+if [ -n "$ip_format" ]; then
+	if [ "$ip_format" -eq 6 ]; then
+		ip=""
+		ipv6="$ip46"
+		add_cap_string_ipv6="V6"
+		is_format_valid 'ipv6'
+		is_ipv6_valid "$ipv6"
+	else
+		ip="$ip46"
+		ipv6=""
+		is_format_valid 'ip'
+		is_ip_valid "$ip"
+	fi
+else
+	check_result $retval "${ip46} is not a valid IPV4/IPV6 address!"
+fi
+
+is_ip_key_empty '$U_WEB_DOMAINS' ${ip46}
+is_ip_key_empty '$U_SYS_USERS' ${ip46}
 check_hestia_demo_mode
 
 #----------------------------------------------------------#
-#                       Action                             #
+#                  Load IP Configuration                   #
 #----------------------------------------------------------#
 
-# Import IP variables
-source "$HESTIA/data/ips/$ip"
-cidr="$(convert_netmask "$NETMASK")"
+ip_file="${HESTIA}/data/ips/${raw_ip}"
 
-# Get primary IP
-default_nic="$(ip -d -j route show | jq -r '.[] | if .dst == "default" then .dev else empty end')"
-primary_ipv4="$(ip -4 -d -j addr show "$default_nic" | jq -r '.[].addr_info[] | if .scope == "global" then .local else empty end' | head -n1)"
+if [ -f "$ip_file" ]; then
+	source "$ip_file"
+	if [[ "$ip_format" == "4" && "$NETMASK" =~ ^([0-9]+\.){3}[0-9]+$ ]]; then
+        # Convierte la máscara de puntos a número de bits
+        IFS=. read -r i1 i2 i3 i4 <<< "$NETMASK"
+        binmask=$(printf '%08d%08d%08d%08d\n' \
+            "$(bc <<< "obase=2;$i1")" \
+            "$(bc <<< "obase=2;$i2")" \
+            "$(bc <<< "obase=2;$i3")" \
+            "$(bc <<< "obase=2;$i4")")
+        prefix_length=$(tr -cd '1' <<< "$binmask" | wc -c)
+        NETMASK="/$prefix_length"
+    fi
+else
+	echo "Warning: IP config file not found at $ip_file"
+	if [[ "$ip46" == *:* ]]; then
+		interface=$(ip -6 addr show | awk -v ip="$ip46" '$2 == "inet6" && $4 ~ ip { print $NF; exit }')
+	else
+		interface=$(ip -4 addr show | awk -v ip="$ip46" '$2 == "inet" && $4 ~ ip { print $NF; exit }')
+	fi
+	[ -z "$interface" ] && interface="eth0"
+	ip_format="$(get_ip_format ${ip46})"
+	NETMASK="/$([[ "$ip_format" = "6" ]] && echo "128" || echo "32")"
+	INTERFACE="$interface"
+	OWNER="$ROOT_USER"
+	STATUS="dedicated"
+fi
 
-# Checking primary IP on the interface
-interface="$(ip -d -j addr show | jq --arg IP "$ip" -r '.[] | if .addr_info[].local == $IP then .ifname else empty end')"
-if [ -n "$interface" ] && [ "$ip" = "$primary_ipv4" ]; then
-	echo "Error: can't delete primary IP address"
+#----------------------------------------------------------#
+#                 Normalize and Check                      #
+#----------------------------------------------------------#
+
+# Convert NETMASK to prefix if necessary (IPv4)
+if [[ "$ip_format" == "4" && "$NETMASK" =~ ^([0-9]+\.){3}[0-9]+$ ]]; then
+    IFS=. read -r i1 i2 i3 i4 <<< "$NETMASK"
+    binmask=$(printf '%08d%08d%08d%08d\n' \
+        "$(bc <<< "obase=2;$i1")" \
+        "$(bc <<< "obase=2;$i2")" \
+        "$(bc <<< "obase=2;$i3")" \
+        "$(bc <<< "obase=2;$i4")")
+    prefix_length=$(tr -cd '1' <<< "$binmask" | wc -c)
+    NETMASK="/$prefix_length"
+fi
+
+prefix_length=${NETMASK#/}
+[[ "$ip_format" = "6" ]] && max_prefix=128 || max_prefix=32
+
+if ! [[ "$prefix_length" =~ ^[0-9]{1,3}$ ]] || ((prefix_length < 0 || prefix_length > max_prefix)); then
+    echo "Error: invalid prefix length: $prefix_length"
+    exit 1
+fi
+
+# Find the interface where the IP is assigned in Hestia; if not, search in the system
+interface=$(awk -v ip="$(normalize_ip "$raw_ip")" '$1 == ip { print $3 }' <($BIN/v-list-network plain))
+if [ -z "$interface" ]; then
+    if [ "$ip_format" = "6" ]; then
+        interface=$(ip -6 addr show | awk "/$ip46/ { print \$NF; exit }")
+    else
+        interface=$(ip -4 addr show | awk "/$ip46/ { print \$NF; exit }")
+    fi
+fi
+
+# Detect and set the correct CIDR prefix for the IP to be deleted
+if [ "$ip_format" = "6" ]; then
+    cidr_prefixlen=$(ip -6 addr show dev "$interface" | awk "/$ip46/ { match(\$0, \"/[0-9]+\", arr); print arr[0] }")
+    [ -z "$cidr_prefixlen" ] && cidr_prefixlen="/128"
+else
+    cidr_prefixlen=$(ip -4 addr show dev "$interface" | awk "/$ip46/ { match(\$0, \"/[0-9]+\", arr); print arr[0] }")
+    [ -z "$cidr_prefixlen" ] && cidr_prefixlen="/32"
+fi
+
+number_of_ips=$(/sbin/ip${check_ip_par} addr | grep -c global)
+host_ip_check=$(hostname -i | sed -ne "/$ip46/p")
+
+if [[ (-n "$host_ip_check" && -n "$interface") || ($number_of_ips -eq 1) ]]; then
+    echo "Error: can't delete primary IP address"
+    log_event "$E_FORBIDEN" "$ARGUMENTS"
+    exit "$E_FORBIDEN"
+fi
+
+ip46=$(normalize_ip "$ip46")
+
+#----------------------------------------------------------#
+#                    Delete IP from system                 #
+#----------------------------------------------------------#
+
+if [ "$ip_format" = "6" ]; then
+	ip -6 addr del "$ip46$cidr_prefixlen" dev "$interface"
+else
+	ip addr del "$ip46$cidr_prefixlen" dev "$interface"
+fi
+
+[ "$?" -ne 0 ] && {
+	echo "Error: can't delete system IP address"
 	log_event "$E_FORBIDEN" "$ARGUMENTS"
 	exit "$E_FORBIDEN"
-fi
+}
 
-# Deleting system IP
-if [ -n "$interface" ]; then
-	ip addr del "$ip/$cidr" dev "$interface" 2> /dev/null
-	if [ "$?" -ne "0" ]; then
-		echo "Error: can't delete system IP address"
-		log_event "$E_FORBIDEN" "$ARGUMENTS"
-		exit "$E_FORBIDEN"
-	fi
-fi
+#----------------------------------------------------------#
+#                    Clean Config Files                    #
+#----------------------------------------------------------#
 
-# Deleting startup conf on Debian/Ubuntu
 if [ -f "/etc/netplan/60-hestia.yaml" ]; then
-	sed -i "/$ip\//d" /etc/netplan/60-hestia.yaml
-	if ! grep -q '-' /etc/netplan/60-hestia.yaml; then
-		rm /etc/netplan/60-hestia.yaml
-	fi
+	sed -i "/$ip46/d" /etc/netplan/60-hestia.yaml
+	! grep -q '-' /etc/netplan/60-hestia.yaml && rm /etc/netplan/60-hestia.yaml
 elif [ -e "/etc/network/interfaces" ]; then
-	ip_str="$(grep -n "$ip$" /etc/network/interfaces | cut -f1 -d:)"
-	if [ -n "$ip_str" ]; then
-		first_str="$((ip_str - 3))"
-		last_str="$((ip_str + 1))"
-		sed -i "$first_str,$last_str d" /etc/network/interfaces
-	fi
-fi
-
-# Deleting Hestia IP
-rm -f $HESTIA/data/ips/$ip
-
-# Deleting web config
-if [ -n "$WEB_SYSTEM" ]; then
-	rm -f /etc/$WEB_SYSTEM/conf.d/$ip.conf
-fi
-
-# Deleting proxy config
-if [ -n "$PROXY_SYSTEM" ]; then
-	rm -f /etc/$PROXY_SYSTEM/conf.d/$ip.conf
-
-	# mod_extract_forwarded
-	fw_conf="/etc/$WEB_SYSTEM/conf.d/mod_extract_forwarded.conf"
-	if [ -e "$fw_conf" ]; then
-		ips="$(grep 'MEFaccept 127.0.0.1' "$fw_conf")"
-		new_ips="$(echo "$ips" | sed "s/$ip//")"
-		sed -i "s/$ips/$new_ips/g" "$fw_conf"
-	fi
-
-	# mod_rpaf
-	rpaf_conf="/etc/$WEB_SYSTEM/mods-enabled/rpaf.conf"
-	if [ -e "$rpaf_conf" ]; then
-		ips="$(grep RPAFproxy_ips "$rpaf_conf")"
-		new_ips="$(echo "$ips" | sed "s/ $ip//")"
-		sed -i "s/$ips/$new_ips/g" "$rpaf_conf"
-
-		# Remove RPAFproxy_ips line when ip list is empty
-		[ "$(grep RPAFproxy_ips "$rpaf_conf" | sed 's/^[[:space:]]*//g')" = "RPAFproxy_ips" ] && sed -i "/RPAFproxy_ips/d" "$rpaf_conf"
-	fi
-
-	# mod_remoteip
-	remoteip_conf="/etc/$WEB_SYSTEM/mods-enabled/remoteip.conf"
-	if [ -e "$remoteip_conf" ]; then
-		sed -i "/RemoteIPInternalProxy $ip\$/d" "$remoteip_conf"
-	fi
+	filter_ip="$ip46$cidr_prefixlen"
+	ip_str=$(grep -n "$filter_ip" /etc/network/interfaces | cut -f1 -d:)
+	[ -n "$ip_str" ] && sed -i "$((ip_str - 4)),$((ip_str + 1))d" /etc/network/interfaces
 fi
 
 #----------------------------------------------------------#
-#                       Hestia                             #
+#                   Update Counters & Logs                 #
 #----------------------------------------------------------#
 
-# Updating user conf
-if [ -n "$OWNER" ]; then
-	decrease_user_value "$OWNER" '$IP_OWNED'
-fi
-
+decrease_user_value "$OWNER" "IP_OWNED"
 if [ "$OWNER" = "$ROOT_USER" ]; then
 	if [ "$STATUS" = 'shared' ]; then
-		for hestia_user in $("$BIN/v-list-users" list); do
-			decrease_user_value "$hestia_user" '$IP_AVAIL'
+		for hestia_user in $(${BIN}/v-list-sys-users plain); do
+			decrease_user_value "$hestia_user" "IP_AVAIL"
 		done
 	else
-		decrease_user_value "$OWNER" '$IP_AVAIL'
+		decrease_user_value "$OWNER" "IP_AVAIL"
 	fi
 else
-	decrease_user_value "$OWNER" '$IP_AVAIL'
+	decrease_user_value "$OWNER" "IP_AVAIL"
+	decrease_user_value "$ROOT_USER" "IP_AVAIL"
 fi
 
-# Restarting web server
-$BIN/v-restart-web
-check_result $? "Web restart failed" > /dev/null
+grep IP_OWNED /usr/local/hestia/data/users/$OWNER/user.conf
 
-# Restarting proxy server
+#----------------------------------------------------------#
+#                    Clean Hestia Data                     #
+#----------------------------------------------------------#
+
+rm -f ${HESTIA}/data/ips/${raw_ip}
+
+if [ -n "$WEB_SYSTEM" ]; then
+	rm -f /etc/${WEB_SYSTEM}/conf.d/${raw_ip}.conf
+fi
+
 if [ -n "$PROXY_SYSTEM" ]; then
-	$BIN/v-restart-proxy
-	check_result $? "Proxy restart failed" > /dev/null
+	rm -f /etc/${PROXY_SYSTEM}/conf.d/${raw_ip}.conf
+	sed -i "/$ip46/d" /etc/${WEB_SYSTEM}/mods-enabled/rpaf.conf 2> /dev/null
+	sed -i "/$ip46\$/d" /etc/${WEB_SYSTEM}/mods-enabled/remoteip.conf 2> /dev/null
 fi
 
-# Restarting firewall
-if [ -n "$FIREWALL_SYSTEM" ]; then
-	$BIN/v-update-firewall
-fi
+${BIN}/v-restart-web > /dev/null
+[ -n "$PROXY_SYSTEM" ] && ${BIN}/v-restart-proxy > /dev/null
+[ -n "$FIREWALL_SYSTEM" ] && ${BIN}/v-update-firewall
 
-# Logging
-$BIN/v-log-action "system" "Info" "System" "IP address deleted (IP: $ip)."
+${BIN}/v-log-action "system" "Info" "System" "IP address deleted (IP: $ip46)."
 log_event "$OK" "$ARGUMENTS"
 
-exit
+exit 0

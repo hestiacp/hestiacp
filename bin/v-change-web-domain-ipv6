@@ -1,0 +1,122 @@
+#!/bin/bash
+# info: change web domain ipv6
+# options: USER DOMAIN DOMAIN [RESTART]
+#
+# example: v-change-web-domain-ipv6 admin example.com 1111:2222:3333::1 yes
+#
+# This function is used for changing domain ipv6
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+domain=$2
+domain_idn=$2
+ipv6=$3
+restart=$4
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
+source $HESTIA/func/domain.sh
+# shellcheck source=/usr/local/hestia/func/ip.sh
+source $HESTIA/func/ip.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+# Additional argument formatting
+format_domain
+format_domain_idn
+# TODO: $domain_idn not used in this script - maybe $domain should be converted to $doman_idn ?
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '3' "$#" 'USER DOMAIN IPV6 [RESTART]'
+if [ -n "$ipv6" ]; then
+	is_format_valid 'user' 'domain' 'ipv6'
+
+	# --------- PARCHE AQUI ---------
+	# Si la IPv6 no existe, la añadimos antes de validar que existe en el sistema
+	if ! is_ip_exists "$ipv6"; then
+		interface="eth0" # O detecta la interfaz si lo necesitas
+		$BIN/v-add-sys-ip "$ipv6" "/128" "$interface" "$user" "dedicated"
+	fi
+	# --------- FIN PARCHE ----------
+
+	is_ipv6_valid "$ipv6" "$user"
+fi
+is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
+is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
+is_object_valid 'web' 'DOMAIN' "$domain"
+is_object_unsuspended 'web' 'DOMAIN' "$domain"
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Preparing variables for vhost replace
+get_domain_values 'web'
+old=$(get_real_ip "$IP6")
+new=$(get_real_ip "$ipv6")
+ip=$(get_real_ip "$IP")
+local_ip="$ip"
+
+# Replacing vhost
+replace_web_config "$WEB_SYSTEM" "$TPL.tpl"
+if [ "$SSL" = 'yes' ]; then
+	replace_web_config "$WEB_SYSTEM" "$TPL.stpl"
+fi
+
+# Replacing proxy vhost
+if [ -n "$PROXY_SYSTEM" ] && [ -n "$PROXY" ]; then
+	replace_web_config "$PROXY_SYSTEM" "$PROXY.tpl"
+	if [ "$SSL" = 'yes' ]; then
+		replace_web_config "$PROXY_SYSTEM" "$PROXY.stpl"
+	fi
+fi
+
+WEBDOMAIN="$DOMAIN"
+DOMAIN=''
+get_object_value 'mail' 'DOMAIN' ${domain}
+MAILDOMAIN="$DOMAIN"
+DOMAIN="$WEBDOMAIN"
+
+# Check for webmail
+if [ -n "$IMAP_SYSTEM" -a -n "$MAILDOMAIN" ]; then
+	$BIN/v-rebuild-mail-domain "$user" "$domain"
+fi
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Update config
+update_object_value 'web' 'DOMAIN' "$domain" '$IP6' "$3"
+
+# Update counters
+[ -n "$new" ] && increase_ip_value "$new"
+[ -n "$old" ] && decrease_ip_value "$old"
+
+# Restart web server
+$BIN/v-restart-web "$restart"
+check_result $? "WEB restart failed" > /dev/null
+
+$BIN/v-restart-proxy "$restart"
+check_result $? "Proxy restart failed" > /dev/null
+
+# Logging
+$BIN/v-log-action "$user" "Info" "Web" "Web domain IPV6 address changed (IPV6: $3, Domain: $domain)."
+log_event "$OK" "$ARGUMENTS"
+
+exit

@@ -32,6 +32,7 @@ json_list() {
 		parse_object_kv_list "$str"
 		echo -n '    "'$DOMAIN'": {
         "IP": "'$IP'",
+		"IP6": "'$IP6'",
         "TPL": "'$TPL'",
         "TTL": "'$TTL'",
         "EXP": "'$EXP'",
@@ -57,11 +58,11 @@ json_list() {
 # SHELL list function
 shell_list() {
 	IFS=$'\n'
-	echo "DOMAIN   IP   TPL   TTL   DNSSEC   REC   SPND   DATE"
-	echo "------   --   ---   ---   ------   ---   ----   ----"
+	echo "DOMAIN   IP   IP6  TPL   TTL   DNSSEC   REC   SPND   DATE"
+	echo "------   --   ---  ---   ---   ------   ---   ----   ----"
 	while read str; do
 		parse_object_kv_list "$str"
-		echo "$DOMAIN $IP $TPL $TTL $DNSSEC $RECORDS $SUSPENDED $DATE"
+		echo "$DOMAIN $IP $IP6 $TPL $TTL $DNSSEC $RECORDS $SUSPENDED $DATE"
 	done < <(cat $USER_DATA/dns.conf)
 }
 
@@ -70,7 +71,7 @@ plain_list() {
 	IFS=$'\n'
 	while read str; do
 		parse_object_kv_list "$str"
-		echo -ne "$DOMAIN\t$IP\t$TPL\t$TTL\t$EXP\t$SOA\t$DNSSEC\t$SERIAL\t"
+		echo -ne "$DOMAIN\t$IP\t$IP6\t$TPL\t$TTL\t$EXP\t$SOA\t$DNSSEC\t$SERIAL\t"
 		echo -e "$SRC\t$RECORDS\t$SUSPENDED\t$TIME\t$DATE"
 	done < <(cat $USER_DATA/dns.conf)
 }
@@ -78,10 +79,10 @@ plain_list() {
 # CSV list function
 csv_list() {
 	IFS=$'\n'
-	echo "DOMAIN,IP,TPL,TTL,EXP,SOA,SERIAL,SRC,DNSSEC,RECORDS,SUSPENDED,TIME,DATE"
+	echo "DOMAIN,IP,IP6,TPL,TTL,EXP,SOA,SERIAL,SRC,DNSSEC,RECORDS,SUSPENDED,TIME,DATE"
 	while read str; do
 		parse_object_kv_list "$str"
-		echo -n "$DOMAIN,$IP,$TPL,$TTL,$EXP,$SOA,$SERIAL,"
+		echo -n "$DOMAIN,$IP,$IP6,$TPL,$TTL,$EXP,$SOA,$SERIAL,"
 		echo "$SRC,$DNSSEC,$RECORDS,$SUSPENDED,$TIME,$DATE"
 	done < <(cat $USER_DATA/dns.conf)
 }

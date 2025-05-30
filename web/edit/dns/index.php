@@ -40,6 +40,7 @@ if (!empty($_GET["domain"]) && empty($_GET["record_id"])) {
 	$v_username = $user;
 	$v_domain = $_GET["domain"];
 	$v_ip = $data[$v_domain]["IP"];
+	$v_ipv6 = $data[$v_domain]["IP6"];
 	$v_template = $data[$v_domain]["TPL"];
 	$v_ttl = $data[$v_domain]["TTL"];
 	$v_dnssec = $data[$v_domain]["DNSSEC"];
@@ -98,7 +99,7 @@ if (!empty($_POST["save"]) && !empty($_GET["domain"]) && empty($_GET["record_id"
 	// Check token
 	verify_csrf($_POST);
 
-	// Change domain IP
+	// Change domain IPV4
 	if ($v_ip != $_POST["v_ip"] && empty($_SESSION["error_msg"])) {
 		$v_ip = quoteshellarg($_POST["v_ip"]);
 		exec(
@@ -109,6 +110,26 @@ if (!empty($_POST["save"]) && !empty($_GET["domain"]) && empty($_GET["record_id"
 				$v_domain .
 				" " .
 				$v_ip .
+				" 'no'",
+			$output,
+			$return_var,
+		);
+		check_return_code($return_var, $output);
+		$restart_dns = "yes";
+		unset($output);
+	}
+
+	// Change domain IPV6
+	if ($v_ipv6 != $_POST["v_ipv6"] && empty($_SESSION["error_msg"])) {
+		$v_ipv6 = quoteshellarg($_POST["v_ipv6"]);
+		exec(
+			HESTIA_CMD .
+				"v-change-dns-domain-ipv6 " .
+				$user .
+				" " .
+				$v_domain .
+				" " .
+				$v_ipv6 .
 				" 'no'",
 			$output,
 			$return_var,

@@ -79,6 +79,12 @@ check_hestia_demo_mode
 
 # Inherit web domain local ip address
 domain_ip=$(get_object_value 'web' 'DOMAIN' "$domain" '$IP')
+domain_ipv6=$(get_object_value 'web' 'DOMAIN' "$domain" '$IP6')
+if [ -n "$domain_ipv6" ]; then
+	local_ipv6=$(get_real_ip "$domain_ipv6")
+	is_ipv6_valid "$local_ipv6" "$user"
+	ipv6=$local_ipv6
+fi
 if [ -n "$domain_ip" ]; then
 	local_ip=$(get_real_ip "$domain_ip")
 	is_ip_valid "$local_ip" "$user"
@@ -88,8 +94,12 @@ if [ -n "$domain_ip" ]; then
 	if [ -n "$nat_ip" ]; then
 		ip=$nat_ip
 	fi
-else
-	get_user_ip
+fi
+if [ -z "$ip" -a -z "$ipv6" ]; then
+	get_user_ipv6 #	get first available user ipv6 address as fallback, if none ip address was defined
+	if [ -z "$ipv6" ]; then
+		get_user_ip #	get first available user ipv4 address as fallback, if none ipv6 user address available
+	fi
 fi
 
 # Verify that webmail alias variable exists and create it if it does not

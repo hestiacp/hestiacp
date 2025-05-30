@@ -39,6 +39,7 @@ unset($output);
 
 // Parse domain
 $v_ip = $data[$v_domain]["IP"];
+$v_ipv6 = $data[$v_domain]["IP6"];
 $v_template = $data[$v_domain]["TPL"];
 $v_aliases = str_replace(",", "\n", $data[$v_domain]["ALIAS"]);
 $valiases = explode(",", $data[$v_domain]["ALIAS"]);
@@ -158,6 +159,32 @@ exec(HESTIA_CMD . "v-list-user-ips " . $user . " json", $output, $return_var);
 $ips = json_decode(implode("", $output), true);
 unset($output);
 
+$suggested_ipv6 = [];
+foreach ($ips as $ip => $data) {
+	if ($data["VERSION"] == 6 && $data["INTERFACE"] !== "") {
+		$ip_clean = explode("/", $ip)[0];
+		$prefix_parts = explode(":", $ip_clean);
+		if (count($prefix_parts) >= 4) {
+			$prefix = implode(":", array_slice($prefix_parts, 0, 4));
+			$used_ips = array_keys($ips);
+			$suggested_ipv6[$prefix] = generate_ipv6_suggestions($prefix, $used_ips, 5);
+		}
+	}
+}
+// Same function as in add_web
+function generate_ipv6_suggestions($prefix, $used_ips = [], $count = 5) {
+	$suggestions = [];
+	while (count($suggestions) < $count) {
+		$suffix = bin2hex(random_bytes(8));
+		$formatted_suffix = implode(":", str_split($suffix, 4));
+		$ip = strtolower($prefix . ":" . $formatted_suffix);
+		if (!in_array($ip, $used_ips)) {
+			$suggestions[] = $ip;
+		}
+	}
+	return $suggestions;
+}
+
 $v_ip_public = empty($ips[$v_ip]["NAT"]) ? $v_ip : $ips[$v_ip]["NAT"];
 
 // List web templates
@@ -195,11 +222,16 @@ if (!empty($_POST["save"])) {
 
 	// Change web domain IP
 	$v_newip = "";
+	$v_newipv6 = "";
 	$v_newip_public = "";
 
 	if (!empty($_POST["v_ip"])) {
 		$v_newip = $_POST["v_ip"];
 		$v_newip_public = empty($ips[$v_newip]["NAT"]) ? $v_newip : $ips[$v_newip]["NAT"];
+	}
+
+	if (!empty($_POST["v_ipv6"])) {
+		$v_newipv6 = $_POST["v_ipv6"];
 	}
 
 	if ($v_ip != $_POST["v_ip"] && empty($_SESSION["error_msg"])) {
@@ -211,6 +243,25 @@ if (!empty($_POST["save"])) {
 				quoteshellarg($v_domain) .
 				" " .
 				quoteshellarg($_POST["v_ip"]) .
+				" 'no'",
+			$output,
+			$return_var,
+		);
+		check_return_code($return_var, $output);
+		$restart_web = "yes";
+		$restart_proxy = "yes";
+		unset($output);
+	}
+
+	if ($v_ipv6 != $_POST["v_ipv6"] && empty($_SESSION["error_msg"])) {
+		exec(
+			HESTIA_CMD .
+				"v-change-web-domain-ipv6 " .
+				$user .
+				" " .
+				quoteshellarg($v_domain) .
+				" " .
+				quoteshellarg($_POST["v_ipv6"]) .
 				" 'no'",
 			$output,
 			$return_var,
@@ -238,6 +289,32 @@ if (!empty($_POST["save"])) {
 					quoteshellarg($v_domain) .
 					" " .
 					quoteshellarg($v_newip_public) .
+					" 'no'",
+				$output,
+				$return_var,
+			);
+			check_return_code($return_var, $output);
+			unset($output);
+			$restart_dns = "yes";
+		}
+	}
+
+	if ($v_ipv6 != $_POST["v_ipv6"] && empty($_SESSION["error_msg"])) {
+		exec(
+			HESTIA_CMD . "v-list-dns-domain " . $user . " " . quoteshellarg($v_domain) . " json",
+			$output,
+			$return_var,
+		);
+		unset($output);
+		if ($return_var == 0) {
+			exec(
+				HESTIA_CMD .
+					"v-change-dns-domain-ipv6 " .
+					$user .
+					" " .
+					quoteshellarg($v_domain) .
+					" " .
+					quoteshellarg($v_newipv6) .
 					" 'no'",
 				$output,
 				$return_var,
@@ -276,8 +353,35 @@ if (!empty($_POST["save"])) {
 		}
 	}
 
+	if ($v_ipv6 != $_POST["v_ipv6"] && empty($_SESSION["error_msg"])) {
+		foreach ($valiases as $v_alias) {
+			exec(
+				HESTIA_CMD . "v-list-dns-domain " . $user . " " . quoteshellarg($v_alias) . " json",
+				$output,
+				$return_var,
+			);
+			unset($output);
+			if ($return_var == 0) {
+				exec(
+					HESTIA_CMD .
+						"v-change-dns-domain-ipv6 " .
+						$user .
+						" " .
+						quoteshellarg($v_alias) .
+						" " .
+						quoteshellarg($v_newipv6),
+					$output,
+					$return_var,
+				);
+				check_return_code($return_var, $output);
+				unset($output);
+				$restart_dns = "yes";
+			}
+		}
+	}
+
 	// Change mail domain IP
-	if ($v_ip != $_POST["v_ip"] && empty($_SESSION["error_msg"])) {
+	if (($v_ip != $_POST["v_ip"] || $v_ipv6 != $_POST["v_ipv6"]) && empty($_SESSION["error_msg"])) {
 		exec(
 			HESTIA_CMD . "v-list-mail-domain " . $user . " " . quoteshellarg($v_domain) . " json",
 			$output,

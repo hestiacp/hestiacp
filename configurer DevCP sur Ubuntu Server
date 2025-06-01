@@ -1,0 +1,68 @@
+Installer et configurer DevCP sur Ubuntu Server (la base béton)
+1. Prépare ton serveur Ubuntu (20.04 ou 22.04)
+Clean install, pas de GUI (interface graphique).
+
+Accès root ou utilisateur avec sudo.
+
+bash
+Copier
+Modifier
+sudo apt update && sudo apt upgrade -y
+sudo apt install curl wget -y
+2. Récupère le script d’install DevCP
+bash
+Copier
+Modifier
+curl -O https://raw.githubusercontent.com/Ghost-Dev9/Dev-ITpanel/main/devcp-install.sh
+chmod +x devcp-install.sh
+3. Lance l’installation
+bash
+Copier
+Modifier
+sudo bash devcp-install.sh
+(Si tu veux configurer en mode silencieux ou personnalisable, ajoute les options nécessaires au script)
+
+4. Après l’install
+Vérifie que le service tourne :
+
+bash
+Copier
+Modifier
+sudo systemctl status hestia
+Si tu as un firewall, ouvre le port 8083 :
+
+bash
+Copier
+Modifier
+sudo ufw allow 8083/tcp
+sudo ufw reload
+5. Connexion au panel
+Ouvre dans ton navigateur :
+
+cpp
+Copier
+Modifier
+https://<IP-de-ton-serveur>:8083
+Login par défaut : admin + mot de passe affiché en fin d’install.
+
+6. Sécurise ton panel (c’est crucial)
+Change le mot de passe admin rapidement.
+
+Configure un certificat SSL (let’s encrypt direct dans DevCP).
+
+Active le firewall si pas fait.
+
+Configure fail2ban (déjà installé par défaut).
+
+7. Next step : personnalise, déploie, scale
+Fork le repo DevCP.
+
+Modifie le panneau, ajoute des options.
+
+Teste sur ta VM/dev.
+
+Lance en prod quand t’es ready.
+
+Bonus tip
+Si t’es en Windows, passe en WSL2 + Ubuntu 22.04 pour coller à la prod.
+MacOS ? VM Linux. Pas d’excuses.

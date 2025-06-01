@@ -31,7 +31,7 @@ apt update && apt upgrade -y
 
 # Téléchargement du script officiel modifié
 echo -e "${GREEN}📥 Téléchargement du script d’installation DevCP...${NC}"
-wget -q https://raw.githubusercontent.com/Ghost-Dev9/DevCP/main/install/hst-install.sh -O hst-install.sh
+wget -q https://raw.githubusercontent.com/Ghost-Dev9/DevCP/refs/heads/main/install/hst-install.sh
 
 # Donner les droits d’exécution
 chmod +x hst-install.sh

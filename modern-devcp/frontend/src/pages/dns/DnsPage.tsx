@@ -1,7 +1,7 @@
 import React from 'react'
 import { motion } from 'framer-motion'
 
-const DNSPage: React.FC = () => {
+const DnsPage: React.FC = () => {
   return (
     <div className="space-y-6">
       <div>
@@ -30,4 +30,4 @@ const DNSPage: React.FC = () => {
   )
 }
 
-export default DNSPage
+export default DnsPage

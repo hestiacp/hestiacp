@@ -4,15 +4,15 @@
 
 @layer base {
   :root {
-    --toast-bg: theme('colors.white');
-    --toast-color: theme('colors.gray.900');
-    --toast-border: theme('colors.gray.200');
+    --toast-bg: #ffffff;
+    --toast-color: #111827;
+    --toast-border: #e5e7eb;
   }
 
   .dark {
-    --toast-bg: theme('colors.gray.800');
-    --toast-color: theme('colors.gray.100');
-    --toast-border: theme('colors.gray.700');
+    --toast-bg: #1f2937;
+    --toast-color: #f3f4f6;
+    --toast-border: #374151;
   }
 
   html {

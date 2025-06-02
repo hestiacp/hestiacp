@@ -1,5 +1,6 @@
 import React from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
+import { Toaster } from 'react-hot-toast'
 import { useAuthStore } from './stores/authStore'
 import { useThemeStore } from './stores/themeStore'
 
@@ -13,7 +14,7 @@ import DashboardPage from './pages/dashboard/DashboardPage'
 import UsersPage from './pages/users/UsersPage'
 import WebsitesPage from './pages/websites/WebsitesPage'
 import DatabasesPage from './pages/databases/DatabasesPage'
-import DNSPage from './pages/dns/DNSPage'
+import DnsPage from './pages/dns/DnsPage'
 import MailPage from './pages/mail/MailPage'
 import FilesPage from './pages/files/FilesPage'
 import BackupsPage from './pages/backups/BackupsPage'
@@ -44,6 +45,7 @@ function PublicRoute({ children }: { children: React.ReactNode }) {
 
 function App() {
   const { theme } = useThemeStore()
+  const isDark = theme === 'dark'
 
   // Apply theme to document
   React.useEffect(() => {
@@ -102,7 +104,7 @@ function App() {
         <Route path="/dns" element={
           <ProtectedRoute>
             <DashboardLayout>
-              <DNSPage />
+              <DnsPage />
             </DashboardLayout>
           </ProtectedRoute>
         } />
@@ -143,6 +145,31 @@ function App() {
         <Route path="/" element={<Navigate to="/dashboard" replace />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
+      
+      {/* Toast Notifications */}
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          duration: 4000,
+          style: {
+            background: isDark ? '#374151' : '#ffffff',
+            color: isDark ? '#ffffff' : '#1f2937',
+            border: `1px solid ${isDark ? '#4b5563' : '#e5e7eb'}`,
+          },
+          success: {
+            iconTheme: {
+              primary: '#10b981',
+              secondary: '#ffffff',
+            },
+          },
+          error: {
+            iconTheme: {
+              primary: '#ef4444',
+              secondary: '#ffffff',
+            },
+          },
+        }}
+      />
     </div>
   )
 }

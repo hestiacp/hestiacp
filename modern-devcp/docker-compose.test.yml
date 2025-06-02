@@ -1,0 +1,90 @@
+version: '3.8'
+
+services:
+  # Test PostgreSQL Database
+  postgres-test:
+    image: postgres:15-alpine
+    container_name: devcp-postgres-test
+    environment:
+      POSTGRES_DB: devcp_test
+      POSTGRES_USER: devcp_test
+      POSTGRES_PASSWORD: devcp_test_password
+    ports:
+      - "5433:5432"
+    networks:
+      - devcp-test-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U devcp_test -d devcp_test"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Test Redis
+  redis-test:
+    image: redis:7-alpine
+    container_name: devcp-redis-test
+    command: redis-server --requirepass devcp_test_redis
+    ports:
+      - "6380:6379"
+    networks:
+      - devcp-test-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Backend for testing
+  backend-test:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: devcp-backend-test
+    environment:
+      NODE_ENV: test
+      DATABASE_URL: postgresql://devcp_test:devcp_test_password@postgres-test:5432/devcp_test?schema=public
+      REDIS_URL: redis://:devcp_test_redis@redis-test:6379
+      JWT_SECRET: test-jwt-secret
+      JWT_REFRESH_SECRET: test-jwt-refresh-secret
+      PORT: 3001
+      HOST: 0.0.0.0
+    ports:
+      - "3001:3001"
+    networks:
+      - devcp-test-network
+    depends_on:
+      postgres-test:
+        condition: service_healthy
+      redis-test:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  # Frontend for testing
+  frontend-test:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_API_URL: http://localhost:3001/api
+        VITE_WS_URL: ws://localhost:3001
+    container_name: devcp-frontend-test
+    ports:
+      - "3000:80"
+    networks:
+      - devcp-test-network
+    depends_on:
+      backend-test:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+networks:
+  devcp-test-network:
+    driver: bridge

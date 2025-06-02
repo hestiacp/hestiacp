@@ -1,0 +1,91 @@
+{
+  "name": "devcp-modern",
+  "version": "2.0.0",
+  "description": "Modern hosting control panel built with React, Node.js, and TypeScript",
+  "main": "index.js",
+  "scripts": {
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:backend": "cd backend && npm run dev",
+    "dev:frontend": "cd frontend && npm run dev",
+    "build": "npm run build:backend && npm run build:frontend",
+    "build:backend": "cd backend && npm run build",
+    "build:frontend": "cd frontend && npm run build",
+    "build:all": "npm run install:all && npm run build",
+    "install:all": "npm install && cd backend && npm install && cd ../frontend && npm install",
+    "start": "npm run start:backend",
+    "start:backend": "cd backend && npm start",
+    "start:frontend": "cd frontend && npm run preview",
+    "test": "npm run test:backend && npm run test:frontend",
+    "test:backend": "cd backend && npm test",
+    "test:frontend": "cd frontend && npm test",
+    "test:watch": "concurrently \"npm run test:backend -- --watch\" \"npm run test:frontend -- --watch\"",
+    "test:coverage": "npm run test:backend -- --coverage && npm run test:frontend -- --coverage",
+    "test:integration": "cd backend && npm run test:integration",
+    "lint": "npm run lint:backend && npm run lint:frontend",
+    "lint:backend": "cd backend && npm run lint",
+    "lint:frontend": "cd frontend && npm run lint",
+    "lint:fix": "npm run lint:backend -- --fix && npm run lint:frontend -- --fix",
+    "type-check": "npm run type-check:backend && npm run type-check:frontend",
+    "type-check:backend": "cd backend && npm run type-check",
+    "type-check:frontend": "cd frontend && npm run type-check",
+    "db:generate": "cd backend && npx prisma generate",
+    "db:push": "cd backend && npx prisma db push",
+    "db:migrate": "cd backend && npx prisma migrate dev",
+    "db:seed": "cd backend && npx prisma db seed",
+    "db:studio": "cd backend && npx prisma studio",
+    "docker:build": "docker-compose build",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:logs": "docker-compose logs -f",
+    "docker:clean": "docker-compose down -v --remove-orphans && docker system prune -f",
+    "deploy:staging": "pm2 deploy ecosystem.config.js staging",
+    "deploy:production": "pm2 deploy ecosystem.config.js production",
+    "pm2:start": "pm2 start ecosystem.config.js",
+    "pm2:stop": "pm2 stop ecosystem.config.js",
+    "pm2:restart": "pm2 restart ecosystem.config.js",
+    "pm2:reload": "pm2 reload ecosystem.config.js",
+    "pm2:delete": "pm2 delete ecosystem.config.js",
+    "pm2:logs": "pm2 logs",
+    "pm2:monit": "pm2 monit",
+    "clean": "rm -rf node_modules backend/node_modules frontend/node_modules backend/dist frontend/dist",
+    "clean:logs": "rm -rf logs/*.log",
+    "clean:coverage": "rm -rf backend/coverage frontend/coverage",
+    "clean:all": "npm run clean && npm run clean:logs && npm run clean:coverage",
+    "setup": "npm run install:all && npm run db:generate && npm run db:push",
+    "setup:dev": "npm run setup && npm run db:seed",
+    "health": "curl -f http://localhost:3001/health && curl -f http://localhost:3000/health",
+    "backup": "cd backend && npm run backup",
+    "restore": "cd backend && npm run restore"
+  },
+  "keywords": [
+    "hosting",
+    "control-panel",
+    "react",
+    "nodejs",
+    "typescript",
+    "modern",
+    "devcp"
+  ],
+  "author": "DevCP Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Ghost-Dev9/DevCP.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Ghost-Dev9/DevCP/issues"
+  },
+  "homepage": "https://github.com/Ghost-Dev9/DevCP#readme",
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "@types/node": "^20.10.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "workspaces": [
+    "backend",
+    "frontend"
+  ]
+}

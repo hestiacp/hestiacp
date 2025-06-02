@@ -1,0 +1,249 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// User management
+model User {
+  id        String   @id @default(cuid())
+  username  String   @unique
+  email     String   @unique
+  password  String
+  role      UserRole @default(USER)
+  status    UserStatus @default(ACTIVE)
+  avatar    String?
+  
+  // Metadata
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  lastLogin DateTime?
+  
+  // Relations
+  websites  Website[]
+  databases Database[]
+  mailAccounts MailAccount[]
+  backups   Backup[]
+  sessions  UserSession[]
+  
+  @@map("users")
+}
+
+model UserSession {
+  id           String   @id @default(cuid())
+  userId       String
+  refreshToken String   @unique
+  expiresAt    DateTime
+  createdAt    DateTime @default(now())
+  
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@map("user_sessions")
+}
+
+// Website management
+model Website {
+  id          String        @id @default(cuid())
+  domain      String        @unique
+  subdomain   String?
+  status      WebsiteStatus @default(ACTIVE)
+  sslEnabled  Boolean       @default(false)
+  sslCert     String?
+  documentRoot String       @default("/public_html")
+  
+  // Configuration
+  phpVersion  String        @default("8.2")
+  bandwidth   BigInt        @default(0)
+  diskUsage   BigInt        @default(0)
+  
+  // Metadata
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  
+  // Relations
+  userId      String
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  databases   Database[]
+  dnsRecords  DnsRecord[]
+  backups     Backup[]
+  
+  @@map("websites")
+}
+
+// Database management
+model Database {
+  id          String         @id @default(cuid())
+  name        String
+  type        DatabaseType   @default(MYSQL)
+  size        BigInt         @default(0)
+  charset     String         @default("utf8mb4")
+  collation   String         @default("utf8mb4_unicode_ci")
+  
+  // Metadata
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  
+  // Relations
+  userId      String
+  user        User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  websiteId   String?
+  website     Website?       @relation(fields: [websiteId], references: [id], onDelete: SetNull)
+  backups     Backup[]
+  
+  @@unique([userId, name])
+  @@map("databases")
+}
+
+// DNS management
+model DnsRecord {
+  id        String      @id @default(cuid())
+  name      String
+  type      DnsType
+  value     String
+  ttl       Int         @default(3600)
+  priority  Int?
+  
+  // Metadata
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  
+  // Relations
+  websiteId String
+  website   Website     @relation(fields: [websiteId], references: [id], onDelete: Cascade)
+  
+  @@map("dns_records")
+}
+
+// Mail management
+model MailAccount {
+  id          String     @id @default(cuid())
+  email       String     @unique
+  password    String
+  quota       BigInt     @default(1073741824) // 1GB default
+  used        BigInt     @default(0)
+  status      MailStatus @default(ACTIVE)
+  
+  // Settings
+  forwardTo   String?
+  autoReply   Boolean    @default(false)
+  autoReplyMessage String?
+  
+  // Metadata
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  
+  // Relations
+  userId      String
+  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@map("mail_accounts")
+}
+
+// Backup management
+model Backup {
+  id          String     @id @default(cuid())
+  name        String
+  type        BackupType
+  size        BigInt
+  path        String
+  status      BackupStatus @default(PENDING)
+  
+  // Metadata
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  
+  // Relations
+  userId      String
+  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  websiteId   String?
+  website     Website?   @relation(fields: [websiteId], references: [id], onDelete: SetNull)
+  databaseId  String?
+  database    Database?  @relation(fields: [databaseId], references: [id], onDelete: SetNull)
+  
+  @@map("backups")
+}
+
+// System monitoring
+model SystemMetric {
+  id          String   @id @default(cuid())
+  type        String   // cpu, memory, disk, network
+  value       Float
+  unit        String   // percentage, bytes, etc.
+  timestamp   DateTime @default(now())
+  
+  @@map("system_metrics")
+}
+
+// Settings
+model Setting {
+  id          String   @id @default(cuid())
+  key         String   @unique
+  value       String
+  description String?
+  category    String   @default("general")
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@map("settings")
+}
+
+// Enums
+enum UserRole {
+  ADMIN
+  USER
+}
+
+enum UserStatus {
+  ACTIVE
+  SUSPENDED
+  PENDING
+}
+
+enum WebsiteStatus {
+  ACTIVE
+  SUSPENDED
+  PENDING
+}
+
+enum DatabaseType {
+  MYSQL
+  POSTGRESQL
+  MONGODB
+}
+
+enum DnsType {
+  A
+  AAAA
+  CNAME
+  MX
+  TXT
+  NS
+  PTR
+  SRV
+}
+
+enum MailStatus {
+  ACTIVE
+  SUSPENDED
+}
+
+enum BackupType {
+  FULL
+  WEBSITE
+  DATABASE
+  MAIL
+}
+
+enum BackupStatus {
+  PENDING
+  RUNNING
+  COMPLETED
+  FAILED
+}

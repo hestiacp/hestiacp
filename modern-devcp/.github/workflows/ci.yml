@@ -1,0 +1,352 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop, modern-devcp-v2 ]
+  pull_request:
+    branches: [ main, develop ]
+
+env:
+  NODE_VERSION: '18'
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  # Frontend Tests and Build
+  frontend:
+    name: Frontend CI
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./modern-devcp/frontend
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+        cache-dependency-path: './modern-devcp/frontend/package-lock.json'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Run linting
+      run: npm run lint
+
+    - name: Run type checking
+      run: npm run type-check
+
+    - name: Run tests
+      run: npm run test -- --coverage --watchAll=false
+
+    - name: Build application
+      run: npm run build
+      env:
+        VITE_API_URL: ${{ secrets.VITE_API_URL || 'http://localhost:3001/api' }}
+        VITE_WS_URL: ${{ secrets.VITE_WS_URL || 'ws://localhost:3001' }}
+
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: frontend-build
+        path: ./modern-devcp/frontend/dist
+        retention-days: 7
+
+    - name: Upload coverage reports
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./modern-devcp/frontend/coverage/lcov.info
+        flags: frontend
+
+  # Backend Tests and Build
+  backend:
+    name: Backend CI
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./modern-devcp/backend
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: devcp_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+      redis:
+        image: redis:7
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+        cache-dependency-path: './modern-devcp/backend/package-lock.json'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Generate Prisma client
+      run: npx prisma generate
+
+    - name: Run database migrations
+      run: npx prisma db push
+      env:
+        DATABASE_URL: postgresql://postgres:postgres@localhost:5432/devcp_test
+
+    - name: Run linting
+      run: npm run lint
+
+    - name: Run tests
+      run: npm run test -- --coverage --watchAll=false
+      env:
+        NODE_ENV: test
+        DATABASE_URL: postgresql://postgres:postgres@localhost:5432/devcp_test
+        JWT_SECRET: test-secret
+        JWT_REFRESH_SECRET: test-refresh-secret
+
+    - name: Build application
+      run: npm run build
+
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: backend-build
+        path: ./modern-devcp/backend/dist
+        retention-days: 7
+
+    - name: Upload coverage reports
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./modern-devcp/backend/coverage/lcov.info
+        flags: backend
+
+  # Security Scanning
+  security:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    needs: [frontend, backend]
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Run Trivy vulnerability scanner
+      uses: aquasecurity/trivy-action@master
+      with:
+        scan-type: 'fs'
+        scan-ref: './modern-devcp'
+        format: 'sarif'
+        output: 'trivy-results.sarif'
+
+    - name: Upload Trivy scan results
+      uses: github/codeql-action/upload-sarif@v2
+      with:
+        sarif_file: 'trivy-results.sarif'
+
+    - name: Run npm audit (Frontend)
+      run: |
+        cd ./modern-devcp/frontend
+        npm audit --audit-level moderate
+
+    - name: Run npm audit (Backend)
+      run: |
+        cd ./modern-devcp/backend
+        npm audit --audit-level moderate
+
+  # Docker Build and Push
+  docker:
+    name: Docker Build & Push
+    runs-on: ubuntu-latest
+    needs: [frontend, backend, security]
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop')
+
+    permissions:
+      contents: read
+      packages: write
+
+    strategy:
+      matrix:
+        component: [frontend, backend]
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Log in to Container Registry
+      uses: docker/login-action@v3
+      with:
+        registry: ${{ env.REGISTRY }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Extract metadata
+      id: meta
+      uses: docker/metadata-action@v5
+      with:
+        images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-${{ matrix.component }}
+        tags: |
+          type=ref,event=branch
+          type=ref,event=pr
+          type=sha,prefix={{branch}}-
+          type=raw,value=latest,enable={{is_default_branch}}
+
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v5
+      with:
+        context: ./modern-devcp/${{ matrix.component }}
+        push: true
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+        build-args: |
+          VITE_API_URL=${{ secrets.VITE_API_URL || 'http://localhost:3001/api' }}
+          VITE_WS_URL=${{ secrets.VITE_WS_URL || 'ws://localhost:3001' }}
+
+  # Integration Tests
+  integration:
+    name: Integration Tests
+    runs-on: ubuntu-latest
+    needs: [docker]
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop')
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Start services with Docker Compose
+      run: |
+        cd ./modern-devcp
+        docker-compose -f docker-compose.test.yml up -d
+        sleep 30
+
+    - name: Wait for services to be ready
+      run: |
+        timeout 300 bash -c 'until curl -f http://localhost:3001/health; do sleep 5; done'
+        timeout 300 bash -c 'until curl -f http://localhost:3000/health; do sleep 5; done'
+
+    - name: Run integration tests
+      run: |
+        cd ./modern-devcp
+        npm run test:integration
+
+    - name: Collect logs
+      if: failure()
+      run: |
+        cd ./modern-devcp
+        docker-compose -f docker-compose.test.yml logs > integration-logs.txt
+
+    - name: Upload logs
+      if: failure()
+      uses: actions/upload-artifact@v4
+      with:
+        name: integration-logs
+        path: ./modern-devcp/integration-logs.txt
+
+    - name: Stop services
+      if: always()
+      run: |
+        cd ./modern-devcp
+        docker-compose -f docker-compose.test.yml down -v
+
+  # Deployment (Production)
+  deploy-production:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    needs: [integration]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    environment: production
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Deploy to production server
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: ${{ secrets.PROD_HOST }}
+        username: ${{ secrets.PROD_USER }}
+        key: ${{ secrets.PROD_SSH_KEY }}
+        script: |
+          cd /opt/devcp
+          git pull origin main
+          docker-compose pull
+          docker-compose up -d --remove-orphans
+          docker system prune -f
+
+  # Deployment (Staging)
+  deploy-staging:
+    name: Deploy to Staging
+    runs-on: ubuntu-latest
+    needs: [integration]
+    if: github.ref == 'refs/heads/develop' && github.event_name == 'push'
+    environment: staging
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Deploy to staging server
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: ${{ secrets.STAGING_HOST }}
+        username: ${{ secrets.STAGING_USER }}
+        key: ${{ secrets.STAGING_SSH_KEY }}
+        script: |
+          cd /opt/devcp-staging
+          git pull origin develop
+          docker-compose pull
+          docker-compose up -d --remove-orphans
+          docker system prune -f
+
+  # Notification
+  notify:
+    name: Notify
+    runs-on: ubuntu-latest
+    needs: [deploy-production, deploy-staging]
+    if: always()
+
+    steps:
+    - name: Notify on success
+      if: ${{ needs.deploy-production.result == 'success' || needs.deploy-staging.result == 'success' }}
+      uses: 8398a7/action-slack@v3
+      with:
+        status: success
+        text: 'DevCP deployment completed successfully! 🚀'
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+    - name: Notify on failure
+      if: ${{ needs.deploy-production.result == 'failure' || needs.deploy-staging.result == 'failure' }}
+      uses: 8398a7/action-slack@v3
+      with:
+        status: failure
+        text: 'DevCP deployment failed! ❌'
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}

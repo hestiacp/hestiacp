@@ -26,12 +26,12 @@ upgrade_config_set_value 'UPGRADE_UPDATE_FILEMANAGER_CONFIG' 'false'
 # Modify existing POLICY_USER directives (POLICY_USER_CHANGE_THEME, POLICY_USER_EDIT_WEB_TEMPLATES
 # and POLICY_USER_VIEW_LOGS) that are using value 'true' instead of the correct value 'yes'
 
-hestia_conf="$HESTIA/conf/hestia.conf"
-hestia_defaults_conf="$HESTIA/conf/defaults/hestia.conf"
+hestia_conf="$HESTIA/conf/devcp.conf"
+hestia_defaults_conf="$HESTIA/conf/defaults/devcp.conf"
 
 if [ -f /etc/nginx/nginx.conf ]; then
 	echo "[ * ] Mitigate HTTP/2 Rapid Reset Attack via Nginx CVE CVE-2023-44487"
-	sed -i -E 's/(.*keepalive_requests\s{1,})10000;/\11000;/' /etc/nginx/nginx.conf /usr/local/hestia/nginx/conf/nginx.conf
+	sed -i -E 's/(.*keepalive_requests\s{1,})10000;/\11000;/' /etc/nginx/nginx.conf /usr/local/devcp/nginx/conf/nginx.conf
 fi
 
 # Fix security issue wit FPM pools

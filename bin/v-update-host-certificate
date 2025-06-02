@@ -1,5 +1,5 @@
 #!/bin/bash
-# info: update host certificate for hestia
+# info: update host certificate for devcp
 # options: USER HOSTNAME
 #
 # example: v-update-host-certificate admin example.com
@@ -21,14 +21,14 @@ user=$1
 hostname=$2
 
 # Includes
-# shellcheck source=/etc/hestiacp/hestia.conf
-source /etc/hestiacp/hestia.conf
-# shellcheck source=/usr/local/hestia/func/main.sh
+# shellcheck source=/etc/hestiacp/devcp.conf
+source /etc/hestiacp/devcp.conf
+# shellcheck source=/usr/local/devcp/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/func/ip.sh
+# shellcheck source=/usr/local/devcp/func/ip.sh
 source $HESTIA/func/ip.sh
 # load config file
-source_conf "$HESTIA/conf/hestia.conf"
+source_conf "$HESTIA/conf/devcp.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -76,13 +76,13 @@ fi
 
 # Add UPDATE_HOSTNAME_SSL if not exist
 if [ -z "$UPDATE_HOSTNAME_SSL" ]; then
-	echo "UPDATE_HOSTNAME_SSL='yes'" >> "$HESTIA/conf/hestia.conf"
+	echo "UPDATE_HOSTNAME_SSL='yes'" >> "$HESTIA/conf/devcp.conf"
 fi
 
 # Restart services
 $BIN/v-restart-mail
 $BIN/v-restart-ftp
-$BIN/v-restart-service "hestia"
+$BIN/v-restart-service "devcp"
 
 #----------------------------------------------------------#
 #                       Hestia                             #

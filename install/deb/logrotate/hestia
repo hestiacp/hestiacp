@@ -1,4 +1,4 @@
-/var/log/hestia/*.log {
+/var/log/devcp/*.log {
     rotate 12
     monthly
     missingok

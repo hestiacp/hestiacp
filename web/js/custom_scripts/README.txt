@@ -2,8 +2,8 @@
 
 subfolders will be ignored (recursive file loading is not supported. you're free to create sub-folders, but they will not be invoked automatically.)
 
-These custom files will persist across HestiaCP upgrades.
+These custom files will persist across DevCP upgrades.
 
-This directory is not meant for HestiaCP development, but meant for people wanting to customize their own HestiaCP control panel.
+This directory is not meant for DevCP development, but meant for people wanting to customize their own DevCP control panel.
 
-Warning: modifications to this README.txt may be lost during HestiaCP upgrades.
+Warning: modifications to this README.txt may be lost during DevCP upgrades.

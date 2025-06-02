@@ -4,7 +4,7 @@
 #
 # example: v-list-sys-info
 #
-# This function checks available updates for hestia packages.
+# This function checks available updates for devcp packages.
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #
@@ -14,16 +14,16 @@
 format=${1-shell}
 
 # Includes
-# shellcheck source=/etc/hestiacp/hestia.conf
-source /etc/hestiacp/hestia.conf
-# shellcheck source=/usr/local/hestia/func/main.sh
+# shellcheck source=/etc/hestiacp/devcp.conf
+source /etc/hestiacp/devcp.conf
+# shellcheck source=/usr/local/devcp/func/main.sh
 source $HESTIA/func/main.sh
 # load config file
-source_conf "$HESTIA/conf/hestia.conf"
+source_conf "$HESTIA/conf/devcp.conf"
 
 # Retrieve Hestia Control Panel version number
-HESTIA_VERSION=$(grep VERSION $HESTIA/conf/hestia.conf | cut -d '=' -f2 | sed "s|'||g")
-HESTIA_RELEASE=$(grep RELEASE_BRANCH $HESTIA/conf/hestia.conf | cut -d '=' -f2 | sed "s|'||g")
+HESTIA_VERSION=$(grep VERSION $HESTIA/conf/devcp.conf | cut -d '=' -f2 | sed "s|'||g")
+HESTIA_RELEASE=$(grep RELEASE_BRANCH $HESTIA/conf/devcp.conf | cut -d '=' -f2 | sed "s|'||g")
 
 # JSON list function
 json_list() {

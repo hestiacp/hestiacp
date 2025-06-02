@@ -12,12 +12,12 @@
 # - Importing certificates fails at the moment. Due to format changes of CPanel side
 # - It doesn't update DKIM
 
-# shellcheck source=/usr/local/hestia/func/main.sh
+# shellcheck source=/usr/local/devcp/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/etc/hestiacp/hestia.conf
-source /etc/hestiacp/hestia.conf
+# shellcheck source=/etc/hestiacp/devcp.conf
+source /etc/hestiacp/devcp.conf
 # load config file
-source_conf "$HESTIA/conf/hestia.conf"
+source_conf "$HESTIA/conf/devcp.conf"
 
 if [ $# -lt 1 ]; then
 	echo "usage: bash $0 cpanel-backup.tar.gz"
@@ -96,7 +96,7 @@ fi
 
 # Extract cPanel package name
 cpanel_package_name=$(cat ./cp/$new_user | grep 'PLAN=' | cut -f2 -d'=')
-if /usr/local/hestia/bin/v-list-user-packages | grep -qw "$cpanel_package_name"; then
+if /usr/local/devcp/bin/v-list-user-packages | grep -qw "$cpanel_package_name"; then
 	hestia_package="$cpanel_package_name"
 	echo "Package $hestia_package will be used for the user."
 else
@@ -160,12 +160,12 @@ cat uni_u_db | while read db userdb; do
 		# you will need remove && [ "$userdb" != "$sk_cp_user" ] to restore main user, but
 		# this will cause database duplication in db.conf and will interfer with hestiacp backups
 		if [ "$userdb" == "$user" ] && [ "$userdb" != "$new_user" ]; then
-			echo "DB='$db' DBUSER='$userdb' MD5='$end_user_pass' HOST='localhost' TYPE='mysql' CHARSET='UTF8' U_DISK='0' SUSPENDED='no' TIME='$time' DATE='$data'" >> /usr/local/hestia/data/users/$new_user/db.conf
+			echo "DB='$db' DBUSER='$userdb' MD5='$end_user_pass' HOST='localhost' TYPE='mysql' CHARSET='UTF8' U_DISK='0' SUSPENDED='no' TIME='$time' DATE='$data'" >> /usr/local/devcp/data/users/$new_user/db.conf
 		fi
 	done
 done
 
-# Leave hestia restore passwords and create users
+# Leave devcp restore passwords and create users
 tput setaf 2
 echo "Rebuild databases files for $new_user"
 tput sgr0
@@ -175,17 +175,17 @@ $BIN/v-rebuild-databases $new_user
 addon_domains=$(cat addons | cut -d "=" -f1)
 sed -i 's/_/./g; s/=/ /g' addons
 echo "Converting addons domains, subdomains and some other fun"
-cp sds hst_sds
-cp sds2 hst_sds2
-sed -i 's/_/./g' hst_sds
+cp sds dst_sds
+cp sds2 dst_sds2
+sed -i 's/_/./g' dst_sds
 cat addons | while read addon_domain addon_sub; do
 	echo "Converting default subdomain: $addon_sub in domain: $addon_domain"
-	sed -i -e "s/$addon_sub/$addon_domain/g" hst_sds
-	sed -i -e "s/$addon_sub/$addon_domain/g" hst_sds2
+	sed -i -e "s/$addon_sub/$addon_domain/g" dst_sds
+	sed -i -e "s/$addon_sub/$addon_domain/g" dst_sds2
 	mv userdata/$addon_sub userdata/${addon_domain}
 	mv apache_tls/$addon_sub apache_tls/${addon_domain}
 done
-sed -i 's/public_html/public@html/g; s/_/./g; s/public@html/public_html/g; s/=/ /g' hst_sds2
+sed -i 's/public_html/public@html/g; s/_/./g; s/public@html/public_html/g; s/=/ /g' dst_sds2
 
 tput setaf 2
 echo "Start restoring domains"
@@ -214,7 +214,7 @@ function get_domain_path() {
 		fi
 	done
 }
-get_domain_path < hst_sds2
+get_domain_path < dst_sds2
 
 echo $main_domain1
 $BIN/v-add-domain $new_user $main_domain1
@@ -260,7 +260,7 @@ if [ -n "$CPANEL_PHP_VERSION" ]; then
 		fi
 	else
 		tput setaf 1
-		echo "PHP version $HESTIA_PHP_VERSION is not installed on HestiaCP."
+		echo "PHP version $HESTIA_PHP_VERSION is not installed on DevCP."
 		echo "Please install and set it to avoid errors in website."
 		echo "The restoration will continue but the website may not work as expected"
 		tput sgr0
@@ -326,7 +326,7 @@ for folder in *; do
 			# This is needed as parked domains have emails but not added
 			if ! $BIN/v-list-mail-domains $new_user plain | awk '{ print $1 }' | grep "^${folder}$"; then
 				tput setaf 3
-				echo "Found Parked domain $folder  not added in hestia mail, adding..."
+				echo "Found Parked domain $folder  not added in devcp mail, adding..."
 				tput sgr0
 				$BIN/v-add-mail-domain $new_user $folder
 			fi
@@ -376,7 +376,7 @@ for folder in *; do
 						escaped=$(printf '%s\n' "$newline" | sed -e 's/[\/&]/\\&/g')
 						escaped2=$(printf '%s\n' "$newline2" | sed -e 's/[\/&]/\\&/g')
 						sed -i "s/^${mail_account}:.*/$escaped/g" /home/${new_user}/conf/mail/${folder}/passwd
-						sed -i "s/^ACCOUNT='${mail_account}.*/$escaped2/g" /usr/local/hestia/data/users/${new_user}/mail/${folder}.conf
+						sed -i "s/^ACCOUNT='${mail_account}.*/$escaped2/g" /usr/local/devcp/data/users/${new_user}/mail/${folder}.conf
 					else
 						echo "Warning: Password for $mail_account@$folder not found in shadow file."
 					fi
@@ -430,12 +430,12 @@ if [ -f "$CRON_FILE" ] && [ -s "$CRON_FILE" ]; then
 		month=$(echo "$cron_job" | awk '{print $4}')
 		dow=$(echo "$cron_job" | awk '{print $5}')
 		cmd=$(echo "$cron_job" | awk '{for (i=6; i<=NF; i++) printf $i " "; print ""}')
-		#This try fix PHP crons converting cpanel paths to hestia paths
+		#This try fix PHP crons converting cpanel paths to devcp paths
 		if [[ $cmd =~ "ea-php" ]]; then
 			EAPHP=$(echo $cmd | awk '{ print $1 }')
 			# /opt/cpanel/ea-php70/root/bin/php
 			# /usr/local/bin/ea-php70
-			# default hestia /usr/bin/php
+			# default devcp /usr/bin/php
 			DEFAULT_PHP="/usr/bin/php"
 			vPHP="ea-php71 ea-php72 ea-php73 ea-php74 ea-php80 ea-php81 ea-php82 ea-php83"
 			EAOPT="opt/cpanel/ea-php"

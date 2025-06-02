@@ -6,7 +6,7 @@ putenv("LANGUAGE=" . detect_user_language());
 setlocale(LC_ALL, "en_US.UTF-8");
 
 $domain = "hestiacp";
-$localedir = "/usr/local/hestia/web/locale";
+$localedir = "/usr/local/devcp/web/locale";
 bindtextdomain($domain, $localedir);
 textdomain($domain);
 

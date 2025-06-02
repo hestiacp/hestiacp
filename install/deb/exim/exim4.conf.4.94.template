@@ -49,19 +49,19 @@ tls_advertise_hosts = *
 tls_certificate = \
         ${if and {\
                      { eq {${domain:foo@$tls_in_sni}} {$tls_in_sni}}\
-                     { exists{/usr/local/hestia/ssl/mail/$tls_in_sni.crt} }\
+                     { exists{/usr/local/devcp/ssl/mail/$tls_in_sni.crt} }\
                  }\
-                 {/usr/local/hestia/ssl/mail/$tls_in_sni.crt}\
-                 {/usr/local/hestia/ssl/certificate.crt}\
+                 {/usr/local/devcp/ssl/mail/$tls_in_sni.crt}\
+                 {/usr/local/devcp/ssl/certificate.crt}\
          }
 
 tls_privatekey = \
         ${if and {\
                      { eq {${domain:foo@$tls_in_sni}} {$tls_in_sni}}\
-                     { exists{/usr/local/hestia/ssl/mail/$tls_in_sni.key} }\
+                     { exists{/usr/local/devcp/ssl/mail/$tls_in_sni.key} }\
                  }\
-                 {/usr/local/hestia/ssl/mail/$tls_in_sni.key}\
-                 {/usr/local/hestia/ssl/certificate.key}\
+                 {/usr/local/devcp/ssl/mail/$tls_in_sni.key}\
+                 {/usr/local/devcp/ssl/certificate.key}\
          }
 
 daemon_smtp_ports = 25 : 465 : 587

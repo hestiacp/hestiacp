@@ -20,20 +20,20 @@ mail=$3
 notify=${4-no}
 
 # Includes
-# shellcheck source=/etc/hestiacp/hestia.conf
-source /etc/hestiacp/hestia.conf
-# shellcheck source=/usr/local/hestia/func/main.sh
+# shellcheck source=/etc/hestiacp/devcp.conf
+source /etc/hestiacp/devcp.conf
+# shellcheck source=/usr/local/devcp/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/func/domain.sh
+# shellcheck source=/usr/local/devcp/func/domain.sh
 source $HESTIA/func/domain.sh
-# shellcheck source=/usr/local/hestia/func/ip.sh
+# shellcheck source=/usr/local/devcp/func/ip.sh
 source $HESTIA/func/ip.sh
-# shellcheck source=/usr/local/hestia/func/rebuild.sh
+# shellcheck source=/usr/local/devcp/func/rebuild.sh
 source $HESTIA/func/rebuild.sh
-# shellcheck source=/usr/local/hestia/func/syshealth.sh
+# shellcheck source=/usr/local/devcp/func/syshealth.sh
 source $HESTIA/func/syshealth.sh
 # load config file
-source_conf "$HESTIA/conf/hestia.conf"
+source_conf "$HESTIA/conf/devcp.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -92,14 +92,14 @@ for domain in $domains; do
 
 		# Restoring mail.conf
 		if [ -z "$check_config" ]; then
-			cat $tmpdir/home/$user/backup/mail/$domain/hestia/mail.conf >> $USER_DATA/mail.conf
+			cat $tmpdir/home/$user/backup/mail/$domain/devcp/mail.conf >> $USER_DATA/mail.conf
 		fi
 		# $tmpdir/home/$user/backup
 
 		# Restoring DKIM
-		if [ -e "$tmpdir/home/$user/backup/mail/$domain/hestia/$domain.pem" ]; then
-			cp -f $tmpdir/home/$user/backup/mail/$domain/hestia/$domain.pem $USER_DATA/mail/
-			cp -f $tmpdir/home/$user/backup/mail/$domain/hestia/$domain.pub $USER_DATA/mail/
+		if [ -e "$tmpdir/home/$user/backup/mail/$domain/devcp/$domain.pem" ]; then
+			cp -f $tmpdir/home/$user/backup/mail/$domain/devcp/$domain.pem $USER_DATA/mail/
+			cp -f $tmpdir/home/$user/backup/mail/$domain/devcp/$domain.pub $USER_DATA/mail/
 		fi
 
 		# Restore SSL
@@ -114,12 +114,12 @@ for domain in $domains; do
 			fi
 
 			# Add certificate to Hestia user configuration data directory
-			if [ -f $tmpdir/home/$user/backup/mail/$domain/hestia/ssl/$domain.crt ]; then
-				cp -f $tmpdir/home/$user/backup/mail/$domain/hestia/ssl/$domain.crt $USER_DATA/ssl/mail.$domain.crt
-				cp -f $tmpdir/home/$user/backup/mail/$domain/hestia/ssl/$domain.key $USER_DATA/ssl/mail.$domain.key
-				cp -f $tmpdir/home/$user/backup/mail/$domain/hestia/ssl/$domain.crt $USER_DATA/ssl/mail.$domain.pem
-				if [ -e "$tmpdir/home/$user/backup/mail/$domain/hestia/ssl/$domain.ca" ]; then
-					cp -f $tmpdir/home/$user/backup/mail/$domain/hestia/ssl/$domain.ca $USER_DATA/ssl/mail.$domain.ca
+			if [ -f $tmpdir/home/$user/backup/mail/$domain/devcp/ssl/$domain.crt ]; then
+				cp -f $tmpdir/home/$user/backup/mail/$domain/devcp/ssl/$domain.crt $USER_DATA/ssl/mail.$domain.crt
+				cp -f $tmpdir/home/$user/backup/mail/$domain/devcp/ssl/$domain.key $USER_DATA/ssl/mail.$domain.key
+				cp -f $tmpdir/home/$user/backup/mail/$domain/devcp/ssl/$domain.crt $USER_DATA/ssl/mail.$domain.pem
+				if [ -e "$tmpdir/home/$user/backup/mail/$domain/devcp/ssl/$domain.ca" ]; then
+					cp -f $tmpdir/home/$user/backup/mail/$domain/devcp/ssl/$domain.ca $USER_DATA/ssl/mail.$domain.ca
 					echo >> $USER_DATA/ssl/mail.$domain.pem
 					cat $USER_DATA/ssl/mail.$domain.ca >> $USER_DATA/ssl/mail.$domain.pem
 				fi
@@ -160,28 +160,28 @@ for domain in $domains; do
 			echo "  ssl_key = <$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.key" >> /etc/dovecot/conf.d/domains/$domain.conf
 			echo "}" >> /etc/dovecot/conf.d/domains/$domain.conf
 
-			if [ ! -d /usr/local/hestia/ssl/mail ]; then
-				mkdir /usr/local/hestia/ssl/mail
+			if [ ! -d /usr/local/devcp/ssl/mail ]; then
+				mkdir /usr/local/devcp/ssl/mail
 			fi
 
 			# Add domain SSL configuration to exim4
 			# Cleanup broken symlinks
-			find /usr/local/hestia/ssl/mail -xtype l -delete
+			find /usr/local/devcp/ssl/mail -xtype l -delete
 
-			ln -s -f $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem /usr/local/hestia/ssl/mail/mail.$domain.crt
-			ln -s -f $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.key /usr/local/hestia/ssl/mail/mail.$domain.key
+			ln -s -f $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem /usr/local/devcp/ssl/mail/mail.$domain.crt
+			ln -s -f $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.key /usr/local/devcp/ssl/mail/mail.$domain.key
 
 			# Set correct permissions on certificates
 			chmod 750 $HOMEDIR/$user/conf/mail/$domain/ssl
 			chown -R $MAIL_USER:mail $HOMEDIR/$user/conf/mail/$domain/ssl
 			chmod 0644 $HOMEDIR/$user/conf/mail/$domain/ssl/*
 			chown -h $user:mail $HOMEDIR/$user/conf/mail/$domain/ssl/*
-			chmod -R 0644 /usr/local/hestia/ssl/mail/*
-			chown -h $user:mail /usr/local/hestia/ssl/mail/*
+			chmod -R 0644 /usr/local/devcp/ssl/mail/*
+			chown -h $user:mail /usr/local/devcp/ssl/mail/*
 		fi
 
 		# Restoring email accounts
-		cp -f $tmpdir/home/$user/backup/mail/$domain/hestia/$domain.conf $USER_DATA/mail/
+		cp -f $tmpdir/home/$user/backup/mail/$domain/devcp/$domain.conf $USER_DATA/mail/
 
 		domain_idn=$domain
 		format_domain_idn

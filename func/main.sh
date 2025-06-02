@@ -22,10 +22,10 @@ source_conf() {
 if [ -z "$user" ]; then
 	if [ -z "$ROOT_USER" ]; then
 		if [ -z "$HESTIA" ]; then
-			# shellcheck source=/etc/hestiacp/hestia.conf
-			source /etc/hestiacp/hestia.conf
+			# shellcheck source=/etc/hestiacp/devcp.conf
+			source /etc/hestiacp/devcp.conf
 		fi
-		source_conf "$HESTIA/conf/hestia.conf" # load config file
+		source_conf "$HESTIA/conf/devcp.conf" # load config file
 	fi
 	user="$ROOT_USER"
 fi
@@ -40,7 +40,7 @@ RRD_STEP=300
 BIN=$HESTIA/bin
 HESTIA_INSTALL_DIR="$HESTIA/install/deb"
 HESTIA_COMMON_DIR="$HESTIA/install/common"
-HESTIA_BACKUP="/root/hst_backups/$(date +%d%m%Y%H%M)"
+HESTIA_BACKUP="/root/dst_backups/$(date +%d%m%Y%H%M)"
 HESTIA_PHP="$HESTIA/php/bin/php"
 USER_DATA=$HESTIA/data/users/$user
 WEBTPL=$HESTIA/data/templates/web
@@ -1375,7 +1375,7 @@ check_access_key_cmd() {
 
 	if [[ "$DEBUG_MODE" = "true" ]]; then
 		new_timestamp
-		echo "[$date:$time] $1 $2" >> /var/log/hestia/api.log
+		echo "[$date:$time] $1 $2" >> /var/log/devcp/api.log
 	fi
 	if [[ -z "$access_key_id" || ! -f "$HESTIA/data/access-keys/${access_key_id}" ]]; then
 		check_result "$E_FORBIDEN" "Access key $access_key_id doesn't exist"
@@ -1389,11 +1389,11 @@ check_access_key_cmd() {
 		local allowed_commands
 		if [[ -n "$PERMISSIONS" ]]; then
 			allowed_commands="$(get_apis_commands "$PERMISSIONS")"
-			if [[ -z "$(echo ",${allowed_commands}," | grep ",${hst_command},")" ]]; then
-				check_result "$E_FORBIDEN" "Key $access_key_id don't have permission to run the command $hst_command"
+			if [[ -z "$(echo ",${allowed_commands}," | grep ",${dst_command},")" ]]; then
+				check_result "$E_FORBIDEN" "Key $access_key_id don't have permission to run the command $dst_command"
 			fi
 		elif [[ -z "$PERMISSIONS" && "$USER" != "$ROOT_USER" ]]; then
-			check_result "$E_FORBIDEN" "Key $access_key_id don't have permission to run the command $hst_command"
+			check_result "$E_FORBIDEN" "Key $access_key_id don't have permission to run the command $dst_command"
 		fi
 		user_arg_position="0"
 	elif [[ ! -e "$BIN/$cmd" ]]; then
@@ -1405,20 +1405,20 @@ check_access_key_cmd() {
 		local allowed_commands
 		if [[ -n "$PERMISSIONS" ]]; then
 			allowed_commands="$(get_apis_commands "$PERMISSIONS")"
-			if [[ -z "$(echo ",${allowed_commands}," | grep ",${hst_command},")" ]]; then
-				check_result "$E_FORBIDEN" "Key $access_key_id don't have permission to run the command $hst_command"
+			if [[ -z "$(echo ",${allowed_commands}," | grep ",${dst_command},")" ]]; then
+				check_result "$E_FORBIDEN" "Key $access_key_id don't have permission to run the command $dst_command"
 			fi
 		elif [[ -z "$PERMISSIONS" && "$USER" != "$ROOT_USER" ]]; then
-			check_result "$E_FORBIDEN" "Key $access_key_id don't have permission to run the command $hst_command"
+			check_result "$E_FORBIDEN" "Key $access_key_id don't have permission to run the command $dst_command"
 		fi
 
 		if [[ "$USER" == "$ROOT_USER" ]]; then
 			# Admin can run commands for any user
 			user_arg_position="0"
 		else
-			user_arg_position="$(search_command_arg_position "$hst_command" "USER")"
+			user_arg_position="$(search_command_arg_position "$dst_command" "USER")"
 			if ! [[ "$user_arg_position" =~ ^[0-9]+$ ]]; then
-				check_result "$E_FORBIDEN" "Command $hst_command not found"
+				check_result "$E_FORBIDEN" "Command $dst_command not found"
 			fi
 		fi
 	fi
@@ -1536,7 +1536,7 @@ download_file() {
 }
 
 check_hestia_demo_mode() {
-	demo_mode=$(grep DEMO_MODE /usr/local/hestia/conf/hestia.conf | cut -d '=' -f2 | sed "s|'||g")
+	demo_mode=$(grep DEMO_MODE /usr/local/devcp/conf/devcp.conf | cut -d '=' -f2 | sed "s|'||g")
 	if [ -n "$demo_mode" ] && [ "$demo_mode" = "yes" ]; then
 		echo "ERROR: Unable to perform operation due to security restrictions that are in place."
 		exit 1
@@ -1590,7 +1590,7 @@ is_hestia_package() {
 # Run arbitrary cli commands with dropped privileges
 # Note: setpriv --init-groups is not available on debian9 (util-linux 2.29.2)
 # Input:
-#     - $user : Vaild hestia user
+#     - $user : Vaild devcp user
 user_exec() {
 	is_object_valid 'user' 'USER' "$user"
 
@@ -1628,11 +1628,11 @@ is_username_format_valid() {
 }
 
 change_sys_value() {
-	check_ckey=$(grep "^$1='" "$HESTIA/conf/hestia.conf")
+	check_ckey=$(grep "^$1='" "$HESTIA/conf/devcp.conf")
 	if [ -z "$check_ckey" ]; then
-		echo "$1='$2'" >> "$HESTIA/conf/hestia.conf"
+		echo "$1='$2'" >> "$HESTIA/conf/devcp.conf"
 	else
-		sed -i "s|^$1=.*|$1='$2'|g" "$HESTIA/conf/hestia.conf"
+		sed -i "s|^$1=.*|$1='$2'|g" "$HESTIA/conf/devcp.conf"
 	fi
 }
 
@@ -1713,17 +1713,17 @@ get_apis_commands() {
 	cleanup_key_permissions "$allowed_commands"
 }
 
-# Get the position of an argument by name in a hestia command using the command's documentation comment.
+# Get the position of an argument by name in a devcp command using the command's documentation comment.
 #
 # Return:
 # * 0:   It doesn't have the argument;
 # * 1-9: The position of the argument in the command.
 search_command_arg_position() {
-	local hst_command="$(basename "$1")"
+	local dst_command="$(basename "$1")"
 	local arg_name="$2"
 
-	local command_path="$BIN/$hst_command"
-	if [[ -z "$hst_command" || ! -e "$command_path" ]]; then
+	local command_path="$BIN/$dst_command"
+	if [[ -z "$dst_command" || ! -e "$command_path" ]]; then
 		echo "-1"
 		return
 	fi

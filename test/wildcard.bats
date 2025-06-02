@@ -1,7 +1,7 @@
 #!/usr/bin/env bats
 
-if [ "${PATH#*/usr/local/hestia/bin*}" = "$PATH" ]; then
-    . /etc/profile.d/hestia.sh
+if [ "${PATH#*/usr/local/devcp/bin*}" = "$PATH" ]; then
+    . /etc/profile.d/devcp.sh
 fi
 
 load 'test_helper/bats-support/load'
@@ -16,7 +16,7 @@ function random() {
 function setup() {
     source /tmp/wildcard.sh
     source $HESTIA/func/main.sh
-    source $HESTIA/conf/hestia.conf
+    source $HESTIA/conf/devcp.conf
     source $HESTIA/func/ip.sh
 }
 
@@ -40,7 +40,7 @@ function setup() {
     assert_success
     refute_output
 
-    run openssl x509 -text -in /usr/local/hestia/data/users/$user/ssl/$domain.crt
+    run openssl x509 -text -in /usr/local/devcp/data/users/$user/ssl/$domain.crt
     assert_success
     assert_output --partial "*.$domain"
 }

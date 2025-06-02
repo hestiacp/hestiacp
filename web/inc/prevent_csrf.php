@@ -3,24 +3,24 @@
 $check_csrf = true;
 
 if (
-	$_SERVER["SCRIPT_FILENAME"] == "/usr/local/hestia/web/inc/mail-wrapper.php" ||
-	$_SERVER["SCRIPT_FILENAME"] == "/usr/local/hestia//web/inc/mail-wrapper.php"
+	$_SERVER["SCRIPT_FILENAME"] == "/usr/local/devcp/web/inc/mail-wrapper.php" ||
+	$_SERVER["SCRIPT_FILENAME"] == "/usr/local/devcp//web/inc/mail-wrapper.php"
 ) {
 	$check_csrf = false;
 } // execute only from CLI
 if (
-	$_SERVER["SCRIPT_FILENAME"] == "/usr/local/hestia/web/reset/mail/index.php" ||
-	$_SERVER["SCRIPT_FILENAME"] == "/usr/local/hestia/web//reset/mail/index.php"
+	$_SERVER["SCRIPT_FILENAME"] == "/usr/local/devcp/web/reset/mail/index.php" ||
+	$_SERVER["SCRIPT_FILENAME"] == "/usr/local/devcp/web//reset/mail/index.php"
 ) {
 	$check_csrf = false;
 } // Localhost only
 if (
-	$_SERVER["SCRIPT_FILENAME"] == "/usr/local/hestia/web/api/index.php" ||
-	$_SERVER["SCRIPT_FILENAME"] == "/usr/local/hestia/web//api/index.php"
+	$_SERVER["SCRIPT_FILENAME"] == "/usr/local/devcp/web/api/index.php" ||
+	$_SERVER["SCRIPT_FILENAME"] == "/usr/local/devcp/web//api/index.php"
 ) {
 	$check_csrf = false;
 } // Own check
-if (substr($_SERVER["SCRIPT_FILENAME"], 0, 22) == "/usr/local/hestia/bin/") {
+if (substr($_SERVER["SCRIPT_FILENAME"], 0, 22) == "/usr/local/devcp/bin/") {
 	$check_csrf = false;
 }
 

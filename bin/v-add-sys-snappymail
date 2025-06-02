@@ -9,12 +9,12 @@
 #----------------------------------------------------------#
 
 # Includes
-# shellcheck source=/etc/hestiacp/hestia.conf
-source /etc/hestiacp/hestia.conf
-# shellcheck source=/usr/local/hestia/func/main.sh
+# shellcheck source=/etc/hestiacp/devcp.conf
+source /etc/hestiacp/devcp.conf
+# shellcheck source=/usr/local/devcp/func/main.sh
 source $HESTIA/func/main.sh
 # load config file
-source_conf "$HESTIA/conf/hestia.conf"
+source_conf "$HESTIA/conf/devcp.conf"
 # upgrade config file
 source "$HESTIA/install/upgrade/upgrade.conf"
 
@@ -44,9 +44,9 @@ if [ "x$(id -u)" != 'x0' ]; then
 	exit 10
 fi
 
-# Ensure that $HESTIA (/usr/local/hestia/) and other variables are valid.
+# Ensure that $HESTIA (/usr/local/devcp/) and other variables are valid.
 if [ -z "$HESTIA" ]; then
-	HESTIA="/usr/local/hestia"
+	HESTIA="/usr/local/devcp"
 fi
 
 if [ -z "$HOMEDIR" ] || [ -z "$HESTIA_INSTALL_DIR" ]; then
@@ -136,8 +136,8 @@ if [ "$UPDATE" == "no" ]; then
 	echo "User-agent: *" > $SM_INSTALL_DIR/robots.txt
 	echo "Disallow: /" >> $SM_INSTALL_DIR/robots.txt
 
-	# Updating hestia.conf
-	if [ -z "$(grep WEBMAIL_SYSTEM $HESTIA/conf/hestia.conf)" ]; then
+	# Updating devcp.conf
+	if [ -z "$(grep WEBMAIL_SYSTEM $HESTIA/conf/devcp.conf)" ]; then
 		$BIN/v-change-sys-config-value 'WEBMAIL_SYSTEM' 'snappymail'
 	else
 		if [ -z "$(echo "$WEBMAIL_SYSTEM" | grep -w 'snappymail')" ]; then
@@ -161,7 +161,7 @@ else
 	mkdir -p /tmp/snappy/
 	tar -xzf snappymail-latest.tar.gz -C /tmp/snappy/
 	version_source=$(cat /tmp/snappy/data/VERSION)
-	# Check version inside .tar.gz file in case hestia didn't update yet
+	# Check version inside .tar.gz file in case devcp didn't update yet
 	if [ "$version" != "$version_source" ]; then
 		tar -xzf ${SM_INSTALL_DIR}/${SM_FILE}
 		rm $SM_INSTALL_DIR/$SM_FILE

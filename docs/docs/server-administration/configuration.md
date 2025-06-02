@@ -3,9 +3,9 @@
 ## I am not able to login
 
 For installing dependencies we use Composer. As are currently not able
-to run it under hestia-php version. We install it via /usr/bin/php. Make
+to run it under devcp-php version. We install it via /usr/bin/php. Make
 sure proc_open is allowed in the main php version. In the future we look
-in methods to allow install via composer via hestia-php.
+in methods to allow install via composer via devcp-php.
 
 ## Where can I find more information about the config files?
 
@@ -17,7 +17,7 @@ A good starting point for every software is to check the official docs:
 
 You could also try [our Forum](https://forum.hestiacp.com)
 
-## Can I use HestiaCP behind Cloudflare CDN?
+## Can I use DevCP behind Cloudflare CDN?
 
 By default the [Cloudflare Proxy](https://developers.cloudflare.com/fundamentals/get-started/reference/network-ports/) supports only a limited number of ports. This means that Cloudflare will not forward port 8083, which is the default port for Hestia. To change the Hestia port to one that Cloudflare will forward, run this command:
 
@@ -30,7 +30,7 @@ You can also disable Cloudflare proxy feature.
 ## How to remove unused ethernet ports from RRD?
 
 ```bash
-nano /usr/local/hestia/conf/hestia.conf
+nano /usr/local/devcp/conf/devcp.conf
 ```
 
 Add the following line:
@@ -42,8 +42,8 @@ RRD_IFACE_EXCLUDE='lo'
 Add network ports as comma separated list
 
 ```bash
-rm /usr/local/hestia/web/rrd/net/*
-systemctl restart hestia
+rm /usr/local/devcp/web/rrd/net/*
+systemctl restart devcp
 ```
 
 ## What does the “Enforce subdomain ownership” policy mean?

@@ -22,7 +22,7 @@ module.exports = {
 		},
 		// Hestia CLI
 		{
-			files: ['bin/v-*', 'src/deb/*/{postinst,preinst,hestia,postrm}', 'install/common/api/*'],
+			files: ['bin/v-*', 'src/deb/*/{postinst,preinst,devcp,postrm}', 'install/common/api/*'],
 			options: {
 				parser: 'sh',
 			},

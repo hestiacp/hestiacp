@@ -28,7 +28,7 @@ Vérifie que le service tourne :
 bash
 Copier
 Modifier
-sudo systemctl status hestia
+sudo systemctl status devcp
 Si tu as un firewall, ouvre le port 8083 :
 
 bash

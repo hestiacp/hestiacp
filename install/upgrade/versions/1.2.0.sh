@@ -113,30 +113,30 @@ if [ -f "/etc/network/if-pre-up.d/iptables" ]; then
 	$BIN/v-update-firewall
 fi
 
-# Add hestia-event.conf, if the server is running apache2
+# Add devcp-event.conf, if the server is running apache2
 if [ "$WEB_SYSTEM" = "apache2" ]; then
 	echo "[ * ] Updating Apache2 configuration..."
 	# Cleanup
-	rm --force /etc/apache2/mods-available/hestia-event.conf
-	rm --force /etc/apache2/mods-enabled/hestia-event.conf
-	rm --force /etc/apache2/conf-available/hestia-event.conf
-	rm --force /etc/apache2/conf-enabled/hestia-event.conf
+	rm --force /etc/apache2/mods-available/devcp-event.conf
+	rm --force /etc/apache2/mods-enabled/devcp-event.conf
+	rm --force /etc/apache2/conf-available/devcp-event.conf
+	rm --force /etc/apache2/conf-enabled/devcp-event.conf
 
-	if [ $(a2query -M) = 'event' ] && [ ! -e "/etc/apache2/conf.d/hestia-event.conf" ]; then
-		cp -f $HESTIA_INSTALL_DIR/apache2/hestia-event.conf /etc/apache2/conf.d/
+	if [ $(a2query -M) = 'event' ] && [ ! -e "/etc/apache2/conf.d/devcp-event.conf" ]; then
+		cp -f $HESTIA_INSTALL_DIR/apache2/devcp-event.conf /etc/apache2/conf.d/
 	fi
 
 	# Move apache mod_status config to /mods-available and rename it to prevent losing changes on upgrade
-	cp -f $HESTIA_INSTALL_DIR/apache2/status.conf /etc/apache2/mods-available/hestia-status.conf
-	cp -f /etc/apache2/mods-available/status.load /etc/apache2/mods-available/hestia-status.load
+	cp -f $HESTIA_INSTALL_DIR/apache2/status.conf /etc/apache2/mods-available/devcp-status.conf
+	cp -f /etc/apache2/mods-available/status.load /etc/apache2/mods-available/devcp-status.load
 	a2dismod --quiet status > /dev/null 2>&1
-	a2enmod --quiet hestia-status > /dev/null 2>&1
+	a2enmod --quiet devcp-status > /dev/null 2>&1
 	rm --force /etc/apache2/mods-enabled/status.conf # a2dismod will not remove the file if it isn't a symlink
 fi
 
 # Install File Manager during upgrade if environment variable oesn't already exist and isn't set to false
 # so that we don't override preference
-FILE_MANAGER_CHECK=$(cat $HESTIA/conf/hestia.conf | grep "FILE_MANAGER='false'")
+FILE_MANAGER_CHECK=$(cat $HESTIA/conf/devcp.conf | grep "FILE_MANAGER='false'")
 if [ -z "$FILE_MANAGER_CHECK" ]; then
 	if [ ! -e "$HESTIA/web/fm/configuration.php" ]; then
 		echo "[ ! ] Installing File Manager..."
@@ -182,7 +182,7 @@ if [ -e /var/lib/phpmyadmin/blowfish_secret.inc.php ]; then
 fi
 
 # Ensure that backup compression level is correctly set
-GZIP_LVL_CHECK=$(cat $HESTIA/conf/hestia.conf | grep BACKUP_GZIP)
+GZIP_LVL_CHECK=$(cat $HESTIA/conf/devcp.conf | grep BACKUP_GZIP)
 if [ -z "$GZIP_LVL_CHECK" ]; then
 	echo "[ * ] Updating backup compression level variable..."
 	$BIN/v-change-sys-config-value "BACKUP_GZIP" '9'
@@ -190,7 +190,7 @@ fi
 
 # Update phpMyAdmin/phpPgAdmin templates and set missing alias variables if necessary
 if [ -e "/var/lib/phpmyadmin" ]; then
-	PMA_ALIAS_CHECK=$(cat $HESTIA/conf/hestia.conf | grep DB_PMA_ALIAS)
+	PMA_ALIAS_CHECK=$(cat $HESTIA/conf/devcp.conf | grep DB_PMA_ALIAS)
 	if [ -z "$PMA_ALIAS_CHECK" ]; then
 		echo "[ * ] Updating phpMyAdmin alias..."
 		$HESTIA/bin/v-change-sys-db-alias "pma" "phpMyAdmin"
@@ -201,7 +201,7 @@ if [ -e "/var/lib/phpmyadmin" ]; then
 fi
 
 if [ -e "/var/lib/phppgadmin" ]; then
-	PGA_ALIAS_CHECK=$(cat $HESTIA/conf/hestia.conf | grep DB_PGA_ALIAS)
+	PGA_ALIAS_CHECK=$(cat $HESTIA/conf/devcp.conf | grep DB_PGA_ALIAS)
 	if [ -z "$PGA_ALIAS_CHECK" ]; then
 		echo "[ * ] Updating phpPgAdmin alias..."
 		$HESTIA/bin/v-change-sys-db-alias "pga" "phpPgAdmin"
@@ -212,7 +212,7 @@ if [ -e "/var/lib/phppgadmin" ]; then
 fi
 
 # Ensure that backup compression level is correctly set
-GZIP_LVL_CHECK=$(cat $HESTIA/conf/hestia.conf | grep BACKUP_GZIP)
+GZIP_LVL_CHECK=$(cat $HESTIA/conf/devcp.conf | grep BACKUP_GZIP)
 if [ -z "$GZIP_LVL_CHECK" ]; then
 	echo "[ * ] Updating backup compression level variable..."
 	$BIN/v-change-sys-config-value "BACKUP_GZIP" '9'

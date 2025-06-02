@@ -2,9 +2,9 @@
 # info: list system updates
 # options: [FORMAT]
 #
-# example: v-list-sys-hestia-updates
+# example: v-list-sys-devcp-updates
 #
-# This function checks available updates for hestia packages.
+# This function checks available updates for devcp packages.
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #
@@ -14,12 +14,12 @@
 format=${1-shell}
 
 # Includes
-# shellcheck source=/etc/hestiacp/hestia.conf
-source /etc/hestiacp/hestia.conf
-# shellcheck source=/usr/local/hestia/func/main.sh
+# shellcheck source=/etc/hestiacp/devcp.conf
+source /etc/hestiacp/devcp.conf
+# shellcheck source=/usr/local/devcp/func/main.sh
 source $HESTIA/func/main.sh
 # load config file
-source_conf "$HESTIA/conf/hestia.conf"
+source_conf "$HESTIA/conf/devcp.conf"
 
 fields="\$NAME \$VERSION \$ARCH \$UPDATED \$DESCR \$TIME \$DATE"
 
@@ -75,42 +75,42 @@ shell_list() {
 #----------------------------------------------------------#
 
 # Checking official latest version
-hestia_v=$(apt-cache policy hestia | grep Candidate | cut -d ':' -f 2 | xargs)
-nginx_v=$(apt-cache policy hestia-nginx | grep Candidate | cut -d ':' -f 2 | xargs)
-php_v=$(apt-cache policy hestia-php | grep Candidate | cut -d ':' -f 2 | xargs)
+hestia_v=$(apt-cache policy devcp | grep Candidate | cut -d ':' -f 2 | xargs)
+nginx_v=$(apt-cache policy devcp-nginx | grep Candidate | cut -d ':' -f 2 | xargs)
+php_v=$(apt-cache policy devcp-php | grep Candidate | cut -d ':' -f 2 | xargs)
 
-# Checking installed hestia version
-check_installed_deb hestia
+# Checking installed devcp version
+check_installed_deb devcp
 
 UPDATED='yes'
 if [ -n "$hestia_v" ] && [ "$hestia_v" \> "$VERSION" ]; then
 	UPDATED='no'
 fi
 
-data="NAME='hestia' VERSION='$VERSION' ARCH='$ARCH'"
+data="NAME='devcp' VERSION='$VERSION' ARCH='$ARCH'"
 data="$data UPDATED='$UPDATED' DESCR='Hestia core package' TIME='$TIME' DATE='$DATE'"
 
-# Checking installed hestia-php version
-check_installed_deb hestia-php
+# Checking installed devcp-php version
+check_installed_deb devcp-php
 
 UPDATED='yes'
 if [ -n "$php_v" ] && [ "$php_v" \> "$VERSION" ]; then
 	UPDATED='no'
 fi
 
-data="$data\nNAME='hestia-php' VERSION='$VERSION'"
+data="$data\nNAME='devcp-php' VERSION='$VERSION'"
 data="$data ARCH='$ARCH' UPDATED='$UPDATED' DESCR='Hestia internal php interpreter'"
 data="$data TIME='$TIME' DATE='$DATE'"
 
-# Checking installed hestia-nginx version
-check_installed_deb hestia-nginx
+# Checking installed devcp-nginx version
+check_installed_deb devcp-nginx
 
 UPDATED='yes'
 if [ -n "$nginx_v" ] && [ "$nginx_v" \> "$VERSION" ]; then
 	UPDATED='no'
 fi
 
-data="$data\nNAME='hestia-nginx' VERSION='$VERSION'"
+data="$data\nNAME='devcp-nginx' VERSION='$VERSION'"
 data="$data ARCH='$ARCH' UPDATED='$UPDATED' DESCR='Hestia internal web server'"
 data="$data TIME='$TIME' DATE='$DATE'"
 

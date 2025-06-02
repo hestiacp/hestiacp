@@ -20,14 +20,14 @@
 # load config because we need to know if proftpd is installed
 
 # Includes
-# shellcheck source=/etc/hestiacp/hestia.conf
-source /etc/hestiacp/hestia.conf
-# shellcheck source=/usr/local/hestia/func/main.sh
+# shellcheck source=/etc/hestiacp/devcp.conf
+source /etc/hestiacp/devcp.conf
+# shellcheck source=/usr/local/devcp/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/func/ip.sh
+# shellcheck source=/usr/local/devcp/func/ip.sh
 source $HESTIA/func/ip.sh
 # load config file
-source_conf "$HESTIA/conf/hestia.conf"
+source_conf "$HESTIA/conf/devcp.conf"
 
 upgrade_config_set_value 'UPGRADE_UPDATE_WEB_TEMPLATES' 'true'
 upgrade_config_set_value 'UPGRADE_UPDATE_DNS_TEMPLATES' 'true'
@@ -107,7 +107,7 @@ if [ -f /etc/logrotate.d/httpd-prerotate/awstats ]; then
 fi
 
 if [ "$PHPMYADMIN_KEY" != "" ]; then
-	echo "[ * ] Refresh hestia-sso for PMA..."
+	echo "[ * ] Refresh devcp-sso for PMA..."
 	$BIN/v-delete-sys-pma-sso quiet
 	$BIN/v-add-sys-pma-sso quiet
 fi

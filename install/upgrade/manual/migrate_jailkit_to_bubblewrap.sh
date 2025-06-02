@@ -9,10 +9,10 @@
 #----------------------------------------------------------#
 
 # Includes
-# shellcheck source=/usr/local/hestia/func/main.sh
+# shellcheck source=/usr/local/devcp/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# shellcheck source=/usr/local/devcp/conf/devcp.conf
+source $HESTIA/conf/devcp.conf
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -98,7 +98,7 @@ fi
 groupdel ssh-jailed 2> /dev/null
 
 # Remove cronjob
-rm -f /etc/cron.d/hestia-ssh-jail
+rm -f /etc/cron.d/devcp-ssh-jail
 
 # Remove jailkit
 apt remove -qq jailkit -y > /dev/null 2>&1

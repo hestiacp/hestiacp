@@ -1,14 +1,14 @@
 # Quick install app
 
-One of Hestia’s most requested feature is to add support for Softaculous. However, due to the required use of Ioncube in hestia-php and because we are against the use of proprietary software, we have instead developed our own **Quick install app** solution.
+One of Hestia’s most requested feature is to add support for Softaculous. However, due to the required use of Ioncube in devcp-php and because we are against the use of proprietary software, we have instead developed our own **Quick install app** solution.
 
-More information can be found in the [hestia-quick-install repo](https://github.com/hestiacp/hestia-quick-install/blob/main/Example/ExampleSetup.php)
+More information can be found in the [devcp-quick-install repo](https://github.com/hestiacp/devcp-quick-install/blob/main/Example/ExampleSetup.php)
 
 ## Creating a new app
 
-1. Make a new folder called `Example` in `/usr/local/hestia/web/src/app/WebApp/Installers/`
+1. Make a new folder called `Example` in `/usr/local/devcp/web/src/app/WebApp/Installers/`
 2. Create a file named `ExampleSetup.php`.
-3. Copy the [example file’s content](https://github.com/hestiacp/hestia-quick-install/blob/main/Example/ExampleSetup.php) into your new file.
+3. Copy the [example file’s content](https://github.com/hestiacp/devcp-quick-install/blob/main/Example/ExampleSetup.php) into your new file.
 
 This will add an app called “Example” when you open the **Quick install app** page.
 
@@ -68,7 +68,7 @@ There are multiple ways to install and configure the web app after it is has bee
 - Using curl to provide configure the app over HTTP.
 
 ::: warning
-To prevent any issues, make that all commands are executed as the user, instead of `root` or `admin`. All the commands that are supplied by HestiaCP do this by default.
+To prevent any issues, make that all commands are executed as the user, instead of `root` or `admin`. All the commands that are supplied by DevCP do this by default.
 :::
 
 ## Sharing

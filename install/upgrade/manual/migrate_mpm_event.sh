@@ -7,7 +7,7 @@
 #----------------------------------------------------------#
 
 # Includes
-source $HESTIA/conf/hestia.conf
+source $HESTIA/conf/devcp.conf
 
 # Check if apache2 is in use
 if [ "$WEB_SYSTEM" != "apache2" ]; then
@@ -42,7 +42,7 @@ for module in $a2modules; do
 done
 
 a2enmod --quiet mpm_event
-cp -f /usr/local/hestia/install/deb/apache2/hestia-event.conf /etc/apache2/conf.d/
+cp -f /usr/local/devcp/install/deb/apache2/devcp-event.conf /etc/apache2/conf.d/
 
 # Check if all went well
 if ! apache2ctl configtest > /dev/null 2>&1; then
@@ -51,7 +51,7 @@ if ! apache2ctl configtest > /dev/null 2>&1; then
 	for module in $changed_a2modules; do
 		a2enmod "$module"
 	done
-	rm --force /etc/apache2/conf.d/hestia-event.conf
+	rm --force /etc/apache2/conf.d/devcp-event.conf
 
 	exit 1
 fi
@@ -63,7 +63,7 @@ if ! lsof -Pi :9000 -sTCP:LISTEN -t > /dev/null; then
 		sed -i "s/listen = 127.0.0.1:.*/listen = 127.0.0.1:9000/g" /etc/php/7.3/fpm/pool.d/www.conf
 	else
 		# Copy www.conf file
-		cp -f /usr/local/hestia/install/deb/php-fpm/www.conf /etc/php/7.3/fpm/pool.d/
+		cp -f /usr/local/devcp/install/deb/php-fpm/www.conf /etc/php/7.3/fpm/pool.d/
 	fi
 	# Restart php7.3 fpm service.
 	systemctl restart php7.3-fpm

@@ -23,7 +23,7 @@ $oConfig->Set("contacts", "pdo_password", $argv[4]);
 $oConfig->Set("plugins", "enable", "On");
 
 \SnappyMail\Repository::installPackage("plugin", "change-password");
-\SnappyMail\Repository::installPackage("plugin", "change-password-hestia");
+\SnappyMail\Repository::installPackage("plugin", "change-password-devcp");
 
 $sFile = APP_PRIVATE_DATA . "configs/plugin-change-password.json";
 if (!file_exists($sFile)) {
@@ -65,7 +65,7 @@ if (!file_exists($sFile)) {
 
 $oConfig->Save();
 
-$sFile = APP_PRIVATE_DATA . "domains/hestia.json";
+$sFile = APP_PRIVATE_DATA . "domains/devcp.json";
 if (!file_exists($sFile)) {
 	$config = json_decode(APP_PRIVATE_DATA . "domains/default.json", true);
 	$config["IMAP"]["shortLogin"] = true;

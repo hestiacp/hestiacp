@@ -1,8 +1,8 @@
 #!/bin/bash
-# info: add cron job for hestia automatic updates
+# info: add cron job for devcp automatic updates
 # options: MODE
 #
-# This function adds a cronjob for hestia automatic updates
+# This function adds a cronjob for devcp automatic updates
 # that can be downloaded from apt or git.
 
 #----------------------------------------------------------#
@@ -13,20 +13,20 @@
 mode=$1
 
 # Includes
-# shellcheck source=/etc/hestiacp/hestia.conf
-source /etc/hestiacp/hestia.conf
-# shellcheck source=/usr/local/hestia/func/main.sh
+# shellcheck source=/etc/hestiacp/devcp.conf
+source /etc/hestiacp/devcp.conf
+# shellcheck source=/usr/local/devcp/func/main.sh
 source $HESTIA/func/main.sh
 # load config file
-source_conf "$HESTIA/conf/hestia.conf"
+source_conf "$HESTIA/conf/devcp.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
 
 is_system_enabled "$CRON_SYSTEM" 'CRON_SYSTEM'
-check_cron_apt=$(grep 'v-update-sys-hestia-all' "/var/spool/cron/crontabs/hestiaweb")
-check_cron_git=$(grep 'v-update-sys-hestia-git' "/var/spool/cron/crontabs/hestiaweb")
+check_cron_apt=$(grep 'v-update-sys-devcp-all' "/var/spool/cron/crontabs/hestiaweb")
+check_cron_git=$(grep 'v-update-sys-devcp-git' "/var/spool/cron/crontabs/hestiaweb")
 if [ -n "$check_cron_apt" ] || [ -n "$check_cron_git" ]; then
 	exit
 fi
@@ -50,7 +50,7 @@ if [ -z "$mode" ] || [ "$mode" = "apt" ]; then
 	day='*'
 	month='*'
 	wday='*'
-	command='v-update-sys-hestia-all'
+	command='v-update-sys-devcp-all'
 fi
 
 if [ "$mode" = "git" ]; then
@@ -59,10 +59,10 @@ if [ "$mode" = "git" ]; then
 	day='*'
 	month='*'
 	wday='*'
-	command='v-update-sys-hestia-git'
+	command='v-update-sys-devcp-git'
 fi
 
-sed -i -e "\$a$min $hour * * * sudo /usr/local/hestia/bin/$command" "/var/spool/cron/crontabs/hestiaweb"
+sed -i -e "\$a$min $hour * * * sudo /usr/local/devcp/bin/$command" "/var/spool/cron/crontabs/hestiaweb"
 
 #----------------------------------------------------------#
 #                       Hestia                             #

@@ -9,7 +9,7 @@ if (
 	($_SESSION["userContext"] === "admin" && $_SESSION["POLICY_SYSTEM_HIDE_SERVICES"] == "no") ||
 	$_SESSION["user"] == $_SESSION["ROOT_USER"]
 ) {
-	exec(HESTIA_CMD . "v-add-cron-hestia-autoupdate", $output, $return_var);
+	exec(HESTIA_CMD . "v-add-cron-devcp-autoupdate", $output, $return_var);
 	unset($output);
 }
 

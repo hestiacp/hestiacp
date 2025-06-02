@@ -64,7 +64,7 @@ ssh root@your.server
 Download the installation script for the latest release:
 
 ```bash
-wget https://raw.githubusercontent.com/Ghost-Dev9/DevCP/main/install/hst-install.sh
+wget https://raw.githubusercontent.com/Ghost-Dev9/DevCP/main/install/dst-install.sh
 
 ```
 
@@ -79,7 +79,7 @@ apt-get update && apt-get install ca-certificates
 To begin the installation process, simply run the script and follow the on-screen prompts:
 
 ```bash
-bash hst-install.sh
+bash dst-install.sh
 ```
 
 You will receive a welcome email at the address specified during installation (if applicable) and on-screen instructions after the installation is completed to log in and access your server.
@@ -89,7 +89,7 @@ You will receive a welcome email at the address specified during installation (i
 You may specify a number of various flags during installation to only install the features in which you need. To view a list of available options, run:
 
 ```bash
-bash hst-install.sh -h
+bash dst-install.sh -h
 ```
 
 Alternatively, You can use <https://DevCP.com/install.html> which allows you to easily generate the installation command via GUI.
@@ -130,4 +130,4 @@ If you would like to contribute to the project, please [read our Contribution Gu
 
 ## License
 
-DevCP Control Panel is licensed under [GPL v3](https://github.com/DevCP/DevCP/blob/release/LICENSE) license, and is based on the [HestiaCP](https://hestiacp.com/) project.<br>
+DevCP Control Panel is licensed under [GPL v3](https://github.com/DevCP/DevCP/blob/release/LICENSE) license, and is based on the [DevCP](https://hestiacp.com/) project.<br>

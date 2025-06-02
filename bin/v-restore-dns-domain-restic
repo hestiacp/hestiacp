@@ -17,20 +17,20 @@ dns=$3
 notify=${4-no}
 
 # Includes
-# shellcheck source=/etc/hestiacp/hestia.conf
-source /etc/hestiacp/hestia.conf
-# shellcheck source=/usr/local/hestia/func/main.sh
+# shellcheck source=/etc/hestiacp/devcp.conf
+source /etc/hestiacp/devcp.conf
+# shellcheck source=/usr/local/devcp/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/func/domain.sh
+# shellcheck source=/usr/local/devcp/func/domain.sh
 source $HESTIA/func/domain.sh
-# shellcheck source=/usr/local/hestia/func/ip.sh
+# shellcheck source=/usr/local/devcp/func/ip.sh
 source $HESTIA/func/ip.sh
-# shellcheck source=/usr/local/hestia/func/rebuild.sh
+# shellcheck source=/usr/local/devcp/func/rebuild.sh
 source $HESTIA/func/rebuild.sh
-# shellcheck source=/usr/local/hestia/func/syshealth.sh
+# shellcheck source=/usr/local/devcp/func/syshealth.sh
 source $HESTIA/func/syshealth.sh
 # load config file
-source_conf "$HESTIA/conf/hestia.conf"
+source_conf "$HESTIA/conf/devcp.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -83,7 +83,7 @@ for domain in $domains; do
 
 		# Restoring dns.conf
 		if [ -z "$check_config" ]; then
-			parse_object_kv_list $(cat $tmpdir/home/$user/backup/dns/$domain/hestia/dns.conf)
+			parse_object_kv_list $(cat $tmpdir/home/$user/backup/dns/$domain/devcp/dns.conf)
 
 			# Checking IP address
 			check_ip=$(is_ip_valid $IP $user)
@@ -116,7 +116,7 @@ for domain in $domains; do
 		fi
 
 		# Restoring DNS records
-		cp -f "$tmpdir/home/$user/backup/dns/$domain/hestia/$domain.conf" "$USER_DATA/dns/"
+		cp -f "$tmpdir/home/$user/backup/dns/$domain/devcp/$domain.conf" "$USER_DATA/dns/"
 
 		# Update IP in records
 		if [ -n "$old_ip" ]; then

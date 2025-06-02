@@ -15,12 +15,12 @@
 active=$1
 
 # Includes
-# shellcheck source=/etc/hestiacp/hestia.conf
-source /etc/hestiacp/hestia.conf
-# shellcheck source=/usr/local/hestia/func/main.sh
+# shellcheck source=/etc/hestiacp/devcp.conf
+source /etc/hestiacp/devcp.conf
+# shellcheck source=/usr/local/devcp/func/main.sh
 source $HESTIA/func/main.sh
 # load config file
-source_conf "$HESTIA/conf/hestia.conf"
+source_conf "$HESTIA/conf/devcp.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -40,7 +40,7 @@ if [ "$active" = "yes" ]; then
 	$BIN/v-change-sys-config-value 'DEMO_MODE' 'yes'
 elif [ "$active" = "no" ]; then
 	# Note even v-change-sys-demo-mode can be called v-change-sys-config-value is protected to disable demo mode call
-	# Use sed -i "s|^DEMO_MODE=.*'|DEMO_MODE='no'|g" $HESTIA/conf/hestia.conf
+	# Use sed -i "s|^DEMO_MODE=.*'|DEMO_MODE='no'|g" $HESTIA/conf/devcp.conf
 	#TODO: Instructions for enabling vhosts
 	$BIN/v-change-sys-config-value 'DEMO_MODE' 'no'
 fi

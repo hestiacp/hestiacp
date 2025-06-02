@@ -38,11 +38,11 @@ unset($output);
 if (!empty($_GET["app"])) {
 	$app = basename($_GET["app"]);
 
-	$hestia = new \Hestia\System\HestiaApp();
+	$devcp = new \Hestia\System\HestiaApp();
 	$app_installer_class = "\Hestia\WebApp\Installers\\" . $app . "\\" . $app . "Setup";
 	if (class_exists($app_installer_class)) {
 		try {
-			$app_installer = new $app_installer_class($hestia);
+			$app_installer = new $app_installer_class($devcp);
 			$info = $app_installer->getInfo();
 
 			if (!$info->isInstallable()) {
@@ -51,7 +51,7 @@ if (!empty($_GET["app"])) {
 					$app,
 				);
 			} else {
-				$installer = new \Hestia\WebApp\AppWizard($app_installer, $v_domain, $hestia);
+				$installer = new \Hestia\WebApp\AppWizard($app_installer, $v_domain, $devcp);
 				$GLOBALS["WebappInstaller"] = $installer;
 			}
 		} catch (Exception $e) {
@@ -88,7 +88,7 @@ if (!empty($_POST["ok"]) && !empty($app)) {
 if (!empty($installer)) {
 	render_page($user, $TAB, "setup_webapp");
 } else {
-	$hestia = new \Hestia\System\HestiaApp();
+	$devcp = new \Hestia\System\HestiaApp();
 	$appInstallers = glob(__DIR__ . "/../../src/app/WebApp/Installers/*/*.php");
 
 	$v_web_apps = [];
@@ -99,7 +99,7 @@ if (!empty($installer)) {
 		if (preg_match($pattern, $app, $matches)) {
 			$app_installer_class = sprintf($class, $matches[1], $matches[1]);
 
-			$v_web_apps[] = (new $app_installer_class($hestia))->getInfo();
+			$v_web_apps[] = (new $app_installer_class($devcp))->getInfo();
 		}
 	}
 

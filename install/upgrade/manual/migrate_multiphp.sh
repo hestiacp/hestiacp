@@ -5,10 +5,10 @@
 #----------------------------------------------------------#
 
 # Includes
-# shellcheck source=/usr/local/hestia/func/main.sh
+# shellcheck source=/usr/local/devcp/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# shellcheck source=/usr/local/devcp/conf/devcp.conf
+source $HESTIA/conf/devcp.conf
 
 #
 # Migrate legacy multiphp to full php-fpm backend
@@ -44,8 +44,8 @@ echo "Found $num_php_versions php versions"
 if [ "$num_php_versions" -gt 1 ] && [ -z "$WEB_BACKEND" ]; then
 	# Legacy multiphp
 
-	sed -i "/^WEB_BACKEND=/d" $HESTIA/conf/hestia.conf
-	echo "WEB_BACKEND='php-fpm'" >> $HESTIA/conf/hestia.conf
+	sed -i "/^WEB_BACKEND=/d" $HESTIA/conf/devcp.conf
+	echo "WEB_BACKEND='php-fpm'" >> $HESTIA/conf/devcp.conf
 
 	for php_ver in $(v-list-sys-php); do
 		[ ! -d "/etc/php/$php_ver/fpm/pool.d/" ] && continue

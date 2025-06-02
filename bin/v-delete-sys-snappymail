@@ -9,12 +9,12 @@
 #----------------------------------------------------------#
 
 # Includes
-# shellcheck source=/etc/hestiacp/hestia.conf
-source /etc/hestiacp/hestia.conf
-# shellcheck source=/usr/local/hestia/func/main.sh
+# shellcheck source=/etc/hestiacp/devcp.conf
+source /etc/hestiacp/devcp.conf
+# shellcheck source=/usr/local/devcp/func/main.sh
 source $HESTIA/func/main.sh
 # load config file
-source_conf "$HESTIA/conf/hestia.conf"
+source_conf "$HESTIA/conf/devcp.conf"
 # upgrade config file
 source "$HESTIA/install/upgrade/upgrade.conf"
 
@@ -33,9 +33,9 @@ if [ "x$(id -u)" != 'x0' ]; then
 	exit 10
 fi
 
-# Ensure that $HESTIA (/usr/local/hestia/) and other variables are valid.
+# Ensure that $HESTIA (/usr/local/devcp/) and other variables are valid.
 if [ -z "$HESTIA" ]; then
-	HESTIA="/usr/local/hestia"
+	HESTIA="/usr/local/devcp"
 fi
 
 if [ -z "$HOMEDIR" ] || [ -z "$HESTIA_INSTALL_DIR" ]; then
@@ -74,7 +74,7 @@ else
 	mysql -e "DROP DATABASE snappymail" 2>&1
 	mysql -e "DROP USER snappymail@localhost"
 fi
-# Updating hestia.conf
+# Updating devcp.conf
 if [ -z "$(echo "$WEBMAIL_SYSTEM" | grep -w 'snappymail')" ]; then
 	# remove snappymail from webmail list and make sure the string doesn't start with a comma
 	$BIN/v-change-sys-config-value 'WEBMAIL_SYSTEM' "$(echo "$WEBMAIL_SYSTEM" | sed "s/snappymail//g" | sed 's/^,//g')"

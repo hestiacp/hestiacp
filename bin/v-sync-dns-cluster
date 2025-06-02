@@ -12,14 +12,14 @@
 host=$1
 
 # Includes
-# shellcheck source=/etc/hestiacp/hestia.conf
-source /etc/hestiacp/hestia.conf
-# shellcheck source=/usr/local/hestia/func/main.sh
+# shellcheck source=/etc/hestiacp/devcp.conf
+source /etc/hestiacp/devcp.conf
+# shellcheck source=/usr/local/devcp/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/func/remote.sh
+# shellcheck source=/usr/local/devcp/func/remote.sh
 source $HESTIA/func/remote.sh
 # load config file
-source_conf "$HESTIA/conf/hestia.conf"
+source_conf "$HESTIA/conf/devcp.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -68,7 +68,7 @@ for cluster in $hosts; do
 				unset $SLAVE
 				parse_object_kv_list "$str"
 				if [ "$SLAVE" != "yes" ]; then
-					if [ "$DNS_CLUSTER_SYSTEM" != "hestia-zone" ]; then
+					if [ "$DNS_CLUSTER_SYSTEM" != "devcp-zone" ]; then
 						# Syncing domain index
 
 						cluster_cmd v-insert-dns-domain "$DNS_USER" "$str" "$HOSTNAME" ' ' "no"
@@ -82,7 +82,7 @@ for cluster in $hosts; do
 						cluster_cmd v-insert-dns-records "$DNS_USER" "$DOMAIN" "$tmp_file" 'no'
 						check_result $? "$HOST connection failed" "$E_CONNECT"
 					fi
-					if [ "$DNS_CLUSTER_SYSTEM" = "hestia-zone" ]; then
+					if [ "$DNS_CLUSTER_SYSTEM" = "devcp-zone" ]; then
 						str=$(echo "$str" | sed "s/SLAVE='no'/SLAVE='yes'/g")
 						str=$(echo "$str" | sed "s/SLAVE=''/SLAVE='yes'/g")
 
@@ -105,7 +105,7 @@ for cluster in $hosts; do
 			done
 		fi
 	done
-	if [ "$DNS_CLUSTER_SYSTEM" != "hestia-zone" ]; then
+	if [ "$DNS_CLUSTER_SYSTEM" != "devcp-zone" ]; then
 		# Rebuilding dns zones
 		cluster_cmd v-rebuild-dns-domains "$DNS_USER" "yes" "no"
 		check_result $? "$TYPE connection to $HOST failed" "$E_CONNECT"

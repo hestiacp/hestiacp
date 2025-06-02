@@ -9,7 +9,7 @@
 source $HESTIA/func/main.sh
 # get current Roundcube version
 source $HESTIA/install/upgrade/upgrade.conf
-source $HESTIA/conf/hestia.conf
+source $HESTIA/conf/devcp.conf
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -24,7 +24,7 @@ fi
 #                       Action                             #
 #----------------------------------------------------------#
 
-echo "To remove Roundcube you will need use the root password. Password can be found in /usr/local/hestia/conf/mysql.conf"
+echo "To remove Roundcube you will need use the root password. Password can be found in /usr/local/devcp/conf/mysql.conf"
 read -p 'Would you like to continue? [y/n]' -n 1 -r
 echo # (optional) move to a new line
 if [[ $REPLY =~ ^[Yy]$ ]]; then

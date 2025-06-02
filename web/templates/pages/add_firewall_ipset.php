@@ -58,9 +58,9 @@
 		// $country_ipv6lists = generate_iplist($country, 'IPv6');
 
 		$blacklist_iplists = [
-			["name" => "[IPv4] " . _("Block Malicious IPs"), "source" => "script:/usr/local/hestia/install/common/firewall/ipset/blacklist.sh"],
+			["name" => "[IPv4] " . _("Block Malicious IPs"), "source" => "script:/usr/local/devcp/install/common/firewall/ipset/blacklist.sh"],
 			// Uncomment below for IPv6
-			// array('name' => "[IPv6] " . _("Block Malicious IPs"), 'source' => "script:/usr/local/hestia/install/common/firewall/ipset/blacklist.ipv6.sh"),
+			// array('name' => "[IPv6] " . _("Block Malicious IPs"), 'source' => "script:/usr/local/devcp/install/common/firewall/ipset/blacklist.ipv6.sh"),
 		];
 		?>
 

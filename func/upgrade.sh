@@ -7,7 +7,7 @@
 #===========================================================================#
 
 # Import system health check and repair library
-# shellcheck source=/usr/local/hestia/func/syshealth.sh
+# shellcheck source=/usr/local/devcp/func/syshealth.sh
 source $HESTIA/func/syshealth.sh
 
 #####################################################################
@@ -36,7 +36,7 @@ upgrade_health_check() {
 
 	echo "============================================================================="
 	echo "[ ! ] Performing system health check before proceeding with installation...  "
-	# Perform basic health check against hestia.conf to ensure that
+	# Perform basic health check against devcp.conf to ensure that
 	# system variables exist and are set to expected defaults.
 
 	if [ -z "$VERSION" ]; then
@@ -163,16 +163,16 @@ upgrade_cleanup_message() {
 
 upgrade_get_version() {
 	# Retrieve new version number for Hestia Control Panel from .deb package
-	new_version=$(dpkg -l | awk '$2=="hestia" { print $3 }')
+	new_version=$(dpkg -l | awk '$2=="devcp" { print $3 }')
 }
 
 upgrade_set_version() {
-	# Set new version number in hestia.conf
+	# Set new version number in devcp.conf
 	$BIN/v-change-sys-config-value "VERSION" "$@"
 }
 
 upgrade_set_branch() {
-	# Set branch in hestia.conf
+	# Set branch in devcp.conf
 	DISPLAY_VER=$(echo "$1" | sed "s|~alpha||g" | sed "s|~beta||g")
 	if [ "$DISPLAY_VER" = "$1" ]; then
 		$BIN/v-change-sys-config-value "RELEASE_BRANCH" "release"
@@ -206,7 +206,7 @@ upgrade_send_notification_to_email() {
 		# Retrieve admin email address, sendmail path, and message temp file path
 		admin_email=$($BIN/v-list-user "$ROOT_USER" json | grep "CONTACT" | cut -d'"' -f4)
 		send_mail="$HESTIA/web/inc/mail-wrapper.php"
-		message_tmp_file="/tmp/hestia-upgrade-complete.txt"
+		message_tmp_file="/tmp/devcp-upgrade-complete.txt"
 
 		# Create temporary file
 		touch $message_tmp_file
@@ -277,7 +277,7 @@ prepare_upgrade_config() {
 upgrade_init_backup() {
 	# Ensure that backup directories are created
 	# Hestia Control Panel configuration files
-	mkdir -p $HESTIA_BACKUP/conf/hestia/
+	mkdir -p $HESTIA_BACKUP/conf/devcp/
 
 	# OpenSSL configuration files
 	mkdir -p $HESTIA_BACKUP/conf/openssl/
@@ -340,7 +340,7 @@ upgrade_init_backup() {
 
 upgrade_init_logging() {
 	# Set log file path
-	LOG="$HESTIA_BACKUP/hst-upgrade-$(date +%d%m%Y%H%M).log"
+	LOG="$HESTIA_BACKUP/dst-upgrade-$(date +%d%m%Y%H%M).log"
 
 	# Create log file
 	touch $LOG
@@ -376,9 +376,9 @@ upgrade_start_backup() {
 
 	# Hestia Control Panel configuration files
 	if [ "$DEBUG_MODE" = "true" ]; then
-		echo "      ---- hestia"
+		echo "      ---- devcp"
 	fi
-	cp -fr $HESTIA/conf/* $HESTIA_BACKUP/conf/hestia/
+	cp -fr $HESTIA/conf/* $HESTIA_BACKUP/conf/devcp/
 
 	# OpenSSL configuration files
 	if [ "$DEBUG_MODE" = "true" ]; then
@@ -492,7 +492,7 @@ upgrade_start_backup() {
 }
 
 upgrade_refresh_config() {
-	source_conf "/usr/local/hestia/conf/hestia.conf"
+	source_conf "/usr/local/devcp/conf/devcp.conf"
 }
 
 upgrade_start_routine() {
@@ -506,7 +506,7 @@ upgrade_start_routine() {
 	upgrade_steps=$(ls -v $HESTIA/install/upgrade/versions/*.sh)
 	for script in $upgrade_steps; do
 		declare -a available_versions
-		available_versions+=($(echo $script | sed "s|/usr/local/hestia/install/upgrade/versions/||g" | sed "s|.sh||g"))
+		available_versions+=($(echo $script | sed "s|/usr/local/devcp/install/upgrade/versions/||g" | sed "s|.sh||g"))
 	done
 
 	# Define variables for accessing supported versions
@@ -672,7 +672,7 @@ upgrade_phpmyadmin() {
 }
 
 upgrade_filemanager() {
-	FILE_MANAGER_CHECK=$(cat $HESTIA/conf/hestia.conf | grep "FILE_MANAGER='false'")
+	FILE_MANAGER_CHECK=$(cat $HESTIA/conf/devcp.conf | grep "FILE_MANAGER='false'")
 	if [ -z "$FILE_MANAGER_CHECK" ]; then
 		if [ -f "$HESTIA/web/fm/version" ]; then
 			fm_version=$(cat $HESTIA/web/fm/version)
@@ -712,7 +712,7 @@ upgrade_roundcube() {
 	if [ -n "$(echo "$WEBMAIL_SYSTEM" | grep -w 'roundcube')" ]; then
 		if [ -d "/usr/share/roundcube" ]; then
 			echo "[ ! ] Roundcube: Updates are currently managed using the apt package manager"
-			echo "      To upgrade to the latest version of Roundcube directly from upstream, from please run the command migrate_roundcube.sh located in: /usr/local/hestia/install/upgrade/manual/"
+			echo "      To upgrade to the latest version of Roundcube directly from upstream, from please run the command migrate_roundcube.sh located in: /usr/local/devcp/install/upgrade/manual/"
 		else
 			rc_version=$(cat /var/lib/roundcube/index.php | grep -o -E '[0-9].[0-9].[0-9]+' | head -1)
 			if ! version_ge "$rc_version" "$rc_v"; then
@@ -881,9 +881,9 @@ upgrade_restart_services() {
 		fi
 		if [ "$WEB_TERMINAL" = "true" ]; then
 			if [ "$DEBUG_MODE" = "true" ]; then
-				echo "      - hestia-web-terminal"
+				echo "      - devcp-web-terminal"
 			fi
-			$BIN/v-restart-service "hestia-web-terminal"
+			$BIN/v-restart-service "devcp-web-terminal"
 		fi
 		# Restart SSH daemon service
 		if [ "$DEBUG_MODE" = "true" ]; then
@@ -894,7 +894,7 @@ upgrade_restart_services() {
 
 	# Always restart the Hestia Control Panel service
 	if [ "$DEBUG_MODE" = "true" ]; then
-		echo "      - hestia"
+		echo "      - devcp"
 	fi
-	$BIN/v-restart-service hestia
+	$BIN/v-restart-service devcp
 }

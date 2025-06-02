@@ -34,18 +34,18 @@ ip_name="$6"
 nat_ip="$7"
 
 # Includes
-# shellcheck source=/etc/hestiacp/hestia.conf
-source /etc/hestiacp/hestia.conf
-# shellcheck source=/usr/local/hestia/func/main.sh
+# shellcheck source=/etc/hestiacp/devcp.conf
+source /etc/hestiacp/devcp.conf
+# shellcheck source=/usr/local/devcp/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/func/ip.sh
+# shellcheck source=/usr/local/devcp/func/ip.sh
 source $HESTIA/func/ip.sh
-# shellcheck source=/usr/local/hestia/func/domain.sh
+# shellcheck source=/usr/local/devcp/func/domain.sh
 source $HESTIA/func/domain.sh
-# shellcheck source=/usr/local/hestia/func/syshealth.sh
+# shellcheck source=/usr/local/devcp/func/syshealth.sh
 source "$HESTIA/func/syshealth.sh"
 # load config file
-source_conf "$HESTIA/conf/hestia.conf"
+source_conf "$HESTIA/conf/devcp.conf"
 
 if [ -z "$4" ]; then
 	user="$ROOT_USER"
@@ -93,7 +93,7 @@ if [ -z "$sys_ip_check" ]; then
 	fi
 
 	if [ "$netplan" = "true" ]; then
-		if [ -f "/etc/netplan/60-hestia.yaml" ]; then
+		if [ -f "/etc/netplan/60-devcp.yaml" ]; then
 			sys_ip="        - $ip/$cidr"
 		else
 			sys_ip="# Added by Hestia, please do not edit the file manually!"
@@ -106,7 +106,7 @@ if [ -z "$sys_ip_check" ]; then
 			sys_ip="$sys_ip\n        - $ip/$cidr"
 		fi
 		IFS='%'
-		echo -e "$sys_ip" >> /etc/netplan/60-hestia.yaml
+		echo -e "$sys_ip" >> /etc/netplan/60-devcp.yaml
 		unset IFS
 	else
 		sys_ip="\n# Added by Hestia Control Panel"
@@ -237,9 +237,9 @@ if [ -n "$FIREWALL_SYSTEM" ]; then
 	$BIN/v-update-firewall
 fi
 
-# Restarting hestia service if nginx backend config was changed
-if [ "$NGINX_BCONF_CHANGED" = "yes" -a -f "/etc/init.d/hestia" ]; then
-	systemctl restart hestia > /dev/null 2>&1
+# Restarting devcp service if nginx backend config was changed
+if [ "$NGINX_BCONF_CHANGED" = "yes" -a -f "/etc/init.d/devcp" ]; then
+	systemctl restart devcp > /dev/null 2>&1
 	check_result $? "Hestia backend restart failed" > /dev/null
 fi
 

@@ -22,10 +22,10 @@ This seems to occur specifically when the line `Subsystem sftp /usr/lib/openssh/
 
 Short answer: add `Subsystem sftp internal-sftp` to `/etc/ssh/sshd_config`.
 
-Long answer: Refer to the install script `./install/hst-install-{distro}.sh` for all the changes made to `/etc/ssh/sshd_config`. For Debian, the changes can be summarised as follows:
+Long answer: Refer to the install script `./install/dst-install-{distro}.sh` for all the changes made to `/etc/ssh/sshd_config`. For Debian, the changes can be summarised as follows:
 
 ```bash
-# HestiaCP Changes to the default /etc/ssh/sshd_config in Debian 10 Buster
+# DevCP Changes to the default /etc/ssh/sshd_config in Debian 10 Buster
 
 # Forced default yes
 PasswordAuthentication yes
@@ -45,7 +45,7 @@ Changing all of the other parameters to their defaults and also changing to `Pas
 For more information regarding debugging, inspect the Hestia Nginx log:
 
 ```bash
-tail -f -s0.1 /var/log/hestia/nginx-error.log
+tail -f -s0.1 /var/log/devcp/nginx-error.log
 ```
 
 ## I changed SSH port and I cannot use the file manager anymore

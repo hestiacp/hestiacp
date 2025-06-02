@@ -10,12 +10,12 @@
 #----------------------------------------------------------#
 
 # Includes
-# shellcheck source=/etc/hestiacp/hestia.conf
-source /etc/hestiacp/hestia.conf
-# shellcheck source=/usr/local/hestia/func/main.sh
+# shellcheck source=/etc/hestiacp/devcp.conf
+source /etc/hestiacp/devcp.conf
+# shellcheck source=/usr/local/devcp/func/main.sh
 source $HESTIA/func/main.sh
 # load config file
-source_conf "$HESTIA/conf/hestia.conf"
+source_conf "$HESTIA/conf/devcp.conf"
 # load config file
 source_conf "$HESTIA/install/upgrade/upgrade.conf"
 
@@ -37,9 +37,9 @@ if [ "x$(id -u)" != 'x0' ]; then
 	exit 10
 fi
 
-# Ensure that $HESTIA (/usr/local/hestia/) and other variables are valid.
+# Ensure that $HESTIA (/usr/local/devcp/) and other variables are valid.
 if [ -z "$HESTIA" ]; then
-	HESTIA="/usr/local/hestia"
+	HESTIA="/usr/local/devcp"
 fi
 
 if [ -z "$HOMEDIR" ] || [ -z "$HESTIA_INSTALL_DIR" ]; then
@@ -63,7 +63,7 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
-openssl_installed=$(/usr/local/hestia/php/bin/php -m | grep openssl)
+openssl_installed=$(/usr/local/devcp/php/bin/php -m | grep openssl)
 
 rm --recursive --force "$FM_INSTALL_DIR"
 mkdir -p "$FM_INSTALL_DIR"
@@ -83,7 +83,7 @@ chown $user: -R "${FM_INSTALL_DIR}"
 if [ -z "$openssl_installed" ]; then
 	COMPOSER_HOME="$HOMEDIR/$user/.config/composer" user_exec /usr/bin/php $COMPOSER_BIN --quiet --no-dev install
 else
-	COMPOSER_HOME="$HOMEDIR/$user/.config/composer" user_exec /usr/local/hestia/php/bin/php $COMPOSER_BIN --quiet --no-dev install
+	COMPOSER_HOME="$HOMEDIR/$user/.config/composer" user_exec /usr/local/devcp/php/bin/php $COMPOSER_BIN --quiet --no-dev install
 fi
 
 # Check if installation was successful, if not abort script and throw error message notification and clean-up

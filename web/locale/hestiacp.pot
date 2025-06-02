@@ -1162,7 +1162,7 @@ msgstr ""
 msgid "Cron job email reporting has been successfully enabled."
 msgstr ""
 
-#: ../../web/update/hestia/index.php:20
+#: ../../web/update/devcp/index.php:20
 #, php-format
 msgid "Error: %s update failed."
 msgstr ""
@@ -5030,15 +5030,15 @@ msgstr ""
 msgid "NGINX cache has been purged successfully."
 msgstr ""
 
-#: ../../bin/v-list-sys-hestia-updates:110
+#: ../../bin/v-list-sys-devcp-updates:110
 msgid "Hestia core package"
 msgstr ""
 
-#: ../../bin/v-list-sys-hestia-updates:125
+#: ../../bin/v-list-sys-devcp-updates:125
 msgid "Hestia internal php interpreter"
 msgstr ""
 
-#: ../../bin/v-list-sys-hestia-updates:141
+#: ../../bin/v-list-sys-devcp-updates:141
 msgid "Hestia internal web server"
 msgstr ""
 

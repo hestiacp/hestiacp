@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ ! -e "/usr/local/hestia/data/users/" ]; then
+if [ ! -e "/usr/local/devcp/data/users/" ]; then
 	exit
 fi
 
@@ -8,20 +8,20 @@ fi
 #                Initialize functions/variables               #
 ###############################################################
 
-source /etc/hestiacp/hestia.conf
+source /etc/hestiacp/devcp.conf
 
 # Load upgrade functions and variables
-# shellcheck source=/usr/local/hestia/func/main.sh
+# shellcheck source=/usr/local/devcp/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/func/upgrade.sh
+# shellcheck source=/usr/local/devcp/func/upgrade.sh
 source $HESTIA/func/upgrade.sh
-source_conf "$HESTIA/conf/hestia.conf"
+source_conf "$HESTIA/conf/devcp.conf"
 
 ###############################################################
 #             Set new version numbers for packages            #
 ###############################################################
 # Hestia Control Panel
-new_version=$(dpkg -l | awk '$2=="hestia" { print $3 }')
+new_version=$(dpkg -l | awk '$2=="devcp" { print $3 }')
 
 ###############################################################
 #               Begin standard upgrade routines               #
@@ -101,7 +101,7 @@ upgrade_b2_tool | tee -a $LOG
 # update whitelabel logo's
 update_whitelabel_logo | tee -a $LOG
 
-# Set new version number in hestia.conf
+# Set new version number in devcp.conf
 upgrade_set_version $new_version
 upgrade_set_branch $new_version
 
@@ -114,7 +114,7 @@ upgrade_restart_services | tee -a $LOG
 upgrade_complete_message_log >> $LOG
 upgrade_complete_message
 
-# If setting variables are set to true in hestia.conf, send notifications and email output.
+# If setting variables are set to true in devcp.conf, send notifications and email output.
 upgrade_send_notification_to_panel
 upgrade_send_notification_to_email
 upgrade_send_log_to_email

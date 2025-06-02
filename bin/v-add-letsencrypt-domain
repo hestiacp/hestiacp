@@ -18,14 +18,14 @@ aliases=$3
 mail=${4// /}
 
 # Includes
-# shellcheck source=/etc/hestiacp/hestia.conf
-source /etc/hestiacp/hestia.conf
-# shellcheck source=/usr/local/hestia/func/main.sh
+# shellcheck source=/etc/hestiacp/devcp.conf
+source /etc/hestiacp/devcp.conf
+# shellcheck source=/usr/local/devcp/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/func/domain.sh
+# shellcheck source=/usr/local/devcp/func/domain.sh
 source $HESTIA/func/domain.sh
 # load config file
-source_conf "$HESTIA/conf/hestia.conf"
+source_conf "$HESTIA/conf/devcp.conf"
 
 # LE API
 LE_API='https://acme-v02.api.letsencrypt.org'
@@ -64,7 +64,7 @@ query_le_v2() {
 	# Save http response to file passed as "$4" arg or print to stdout if not provided
 	# http response headers are always sent to stdout
 	local save_to_file=${4:-"/dev/stdout"}
-	curl --location --user-agent "HestiaCP" --insecure --retry 5 --retry-connrefused --silent --dump-header /dev/stdout --data "$post_data" "$1" --header "$content" --output "$save_to_file"
+	curl --location --user-agent "DevCP" --insecure --retry 5 --retry-connrefused --silent --dump-header /dev/stdout --data "$post_data" "$1" --header "$content" --output "$save_to_file"
 	debug_log "API call" "exit status: $?"
 }
 
@@ -142,7 +142,7 @@ else
 	fi
 fi
 
-log_file="/var/log/hestia/LE-${user}-${domain}.log"
+log_file="/var/log/devcp/LE-${user}-${domain}.log"
 touch "$log_file"
 chmod 600 "$log_file"
 
@@ -213,7 +213,7 @@ if [ -n "$DNS_SYSTEM" ]; then
 fi
 
 # Requesting nonce / STEP 1
-answer=$(curl --user-agent "HestiaCP" -s -I "$LE_API/directory")
+answer=$(curl --user-agent "DevCP" -s -I "$LE_API/directory")
 nonce=$(echo "$answer" | grep -i nonce | cut -f2 -d \  | tr -d '\r\n')
 status=$(echo "$answer" | grep HTTP/ | tail -n1 | cut -f 2 -d ' ')
 
@@ -517,7 +517,7 @@ done
 
 # Fallback on depreciated download method for certs (unauthenticated GET)
 if [[ $status != 200 ]]; then
-	answer=$(curl --insecure --user-agent "HestiaCP" --retry 5 --retry-connrefused --silent --dump-header /dev/stdout "$certificate" --output "$ssl_dir/$domain.pem")
+	answer=$(curl --insecure --user-agent "DevCP" --retry 5 --retry-connrefused --silent --dump-header /dev/stdout "$certificate" --output "$ssl_dir/$domain.pem")
 	status=$(echo "$answer" | grep HTTP/ | tail -n1 | cut -f 2 -d ' ')
 
 	debug_log "Step 8 - Fallback" "- status: ${status}\n- answer: ${answer}"

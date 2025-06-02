@@ -28,7 +28,7 @@ if [ "$IMAP_SYSTEM" = "dovecot" ]; then
 	cp -f $HESTIA/install/deb/dovecot/conf.d/10-ssl.conf /etc/dovecot/conf.d/
 fi
 
-# Update DNS resolvers in hestia-nginx's configuration
+# Update DNS resolvers in devcp-nginx's configuration
 echo "[ * ] Updating DNS resolvers for Hestia Internal Web Server..."
 dns_resolver=$(cat /etc/resolv.conf | grep -i '^nameserver' | cut -d ' ' -f2 | tr '\r\n' ' ' | xargs)
 for ip in $dns_resolver; do
@@ -37,24 +37,24 @@ for ip in $dns_resolver; do
 	fi
 done
 if [ ! -z "$resolver" ]; then
-	sed -i "s/1.0.0.1 1.1.1.1/$resolver/g" /usr/local/hestia/nginx/conf/nginx.conf
+	sed -i "s/1.0.0.1 1.1.1.1/$resolver/g" /usr/local/devcp/nginx/conf/nginx.conf
 fi
 
 # Remove Webalizer and set AWStats as default
-WEBALIZER_CHECK=$(cat $HESTIA/conf/hestia.conf | grep webalizer)
+WEBALIZER_CHECK=$(cat $HESTIA/conf/devcp.conf | grep webalizer)
 if [ ! -z "$WEBALIZER_CHECK" ]; then
 	echo "[ * ] Set awstats as default web statistics backend..."
 	$HESTIA/bin/v-change-sys-config-value 'STATS_SYSTEM' 'awstats'
 fi
 
-# Remove old hestia.conf files from Apache & NGINX if they exist
-if [ -f "/etc/apache2/conf.d/hestia.conf" ]; then
+# Remove old devcp.conf files from Apache & NGINX if they exist
+if [ -f "/etc/apache2/conf.d/devcp.conf" ]; then
 	echo "[ * ] Removing old Apache configuration file from previous version of Hestia Control Panel..."
-	rm -f /etc/apache2/conf.d/hestia.conf
+	rm -f /etc/apache2/conf.d/devcp.conf
 fi
-if [ -f "/etc/nginx/conf.d/hestia.conf" ]; then
+if [ -f "/etc/nginx/conf.d/devcp.conf" ]; then
 	echo "[ * ] Removing old NGINX configuration file from previous version of Hestia Control Panel..."
-	rm -f /etc/nginx/conf.d/hestia.conf
+	rm -f /etc/nginx/conf.d/devcp.conf
 fi
 
 # Update webmail templates to enable OCSP/SSL stapling

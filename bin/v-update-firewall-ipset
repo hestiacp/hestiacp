@@ -13,13 +13,13 @@
 refresh=${1:-no}
 
 # Includes
-source /etc/profile.d/hestia.sh
-# shellcheck source=/etc/hestiacp/hestia.conf
-source /etc/hestiacp/hestia.conf
-# shellcheck source=/usr/local/hestia/func/main.sh
+source /etc/profile.d/devcp.sh
+# shellcheck source=/etc/hestiacp/devcp.conf
+source /etc/hestiacp/devcp.conf
+# shellcheck source=/usr/local/devcp/func/main.sh
 source $HESTIA/func/main.sh
 # load config file
-source_conf "$HESTIA/conf/hestia.conf"
+source_conf "$HESTIA/conf/devcp.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -41,7 +41,7 @@ for ipset_name in $(search_objects "$ipset_hstobject" 'SUSPENDED' 'no' 'LISTNAME
 
 	if [ "$ipset_au" = 'no' ] || [ "$refresh" = 'load' ]; then
 		# Load existing ip list files in the kernel but don't auto update them
-		# The "load" refresh option is only used by hestia-iptables systemd service
+		# The "load" refresh option is only used by devcp-iptables systemd service
 		$BIN/v-add-firewall-ipset "$ipset_name"
 		continue
 	fi

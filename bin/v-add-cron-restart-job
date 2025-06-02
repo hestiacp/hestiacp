@@ -9,12 +9,12 @@
 #----------------------------------------------------------#
 
 # Includes
-# shellcheck source=/etc/hestiacp/hestia.conf
-source /etc/hestiacp/hestia.conf
-# shellcheck source=/usr/local/hestia/func/main.sh
+# shellcheck source=/etc/hestiacp/devcp.conf
+source /etc/hestiacp/devcp.conf
+# shellcheck source=/usr/local/devcp/func/main.sh
 source $HESTIA/func/main.sh
 # load config file
-source_conf "$HESTIA/conf/hestia.conf"
+source_conf "$HESTIA/conf/devcp.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -33,7 +33,7 @@ check_hestia_demo_mode
 cmd="v-update-sys-queue restart"
 check_cron=$(grep "$cmd" "/var/spool/cron/crontabs/hestiaweb" 2> /dev/null)
 if [ -z "$check_cron" ] && [ -n "$CRON_SYSTEM" ]; then
-	sed -i -e "\$a*/2 * * * * sudo /usr/local/hestia/bin/v-update-sys-queue restart" "/var/spool/cron/crontabs/hestiaweb"
+	sed -i -e "\$a*/2 * * * * sudo /usr/local/devcp/bin/v-update-sys-queue restart" "/var/spool/cron/crontabs/hestiaweb"
 fi
 
 #----------------------------------------------------------#

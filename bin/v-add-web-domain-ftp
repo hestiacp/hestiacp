@@ -20,14 +20,14 @@ HIDE=4
 ftp_path=$5
 
 # Includes
-# shellcheck source=/etc/hestiacp/hestia.conf
-source /etc/hestiacp/hestia.conf
-# shellcheck source=/usr/local/hestia/func/main.sh
+# shellcheck source=/etc/hestiacp/devcp.conf
+source /etc/hestiacp/devcp.conf
+# shellcheck source=/usr/local/devcp/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/func/domain.sh
+# shellcheck source=/usr/local/devcp/func/domain.sh
 source $HESTIA/func/domain.sh
 # load config file
-source_conf "$HESTIA/conf/hestia.conf"
+source_conf "$HESTIA/conf/devcp.conf"
 
 # Additional argument formatting
 format_domain
@@ -94,7 +94,7 @@ fi
 	-s $shell \
 	-o -u $(id -u $user) \
 	-g $(id -g $user) \
-	-G hestia-users \
+	-G devcp-users \
 	-M -d "$ftp_path_a" > /dev/null 2>&1
 
 # Set ftp user password

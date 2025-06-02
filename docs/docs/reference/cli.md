@@ -61,15 +61,15 @@ v-add-backup-host b2 bucketName keyID applicationKey
 
 Add a new remote backup location. Currently SFTP, FTP and Backblaze are supported
 
-## v-add-cron-hestia-autoupdate
+## v-add-cron-devcp-autoupdate
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-cron-hestia-autoupdate)
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-cron-devcp-autoupdate)
 
-add cron job for hestia automatic updates
+add cron job for devcp automatic updates
 
 **Options**: `MODE`
 
-This function adds a cronjob for hestia automatic updates
+This function adds a cronjob for devcp automatic updates
 that can be downloaded from apt or git.
 
 ## v-add-cron-job
@@ -83,7 +83,7 @@ add cron job
 **Examples**:
 
 ```bash
-v-add-cron-job admin * * * * * sudo /usr/local/hestia/bin/v-backup-users
+v-add-cron-job admin * * * * * sudo /usr/local/devcp/bin/v-backup-users
 ```
 
 This function adds a job to cron daemon. When executing commands, any output
@@ -1814,21 +1814,21 @@ and prevent modification of objects in the control panel.
 It will also disable virtual hosts for Apache and NGINX
 for domains which have been created.
 
-## v-change-sys-hestia-ssl
+## v-change-sys-devcp-ssl
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-sys-hestia-ssl)
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-sys-devcp-ssl)
 
-change hestia ssl certificate
+change devcp ssl certificate
 
 **Options**: `SSL_DIR` `[RESTART]`
 
 **Examples**:
 
 ```bash
-v-change-sys-hestia-ssl /home/new/dir/path yes
+v-change-sys-devcp-ssl /home/new/dir/path yes
 ```
 
-This function changes hestia SSL certificate and the key.
+This function changes devcp SSL certificate and the key.
 
 ## v-change-sys-hostname
 
@@ -2684,15 +2684,15 @@ v-delete-backup-host sftp
 
 This function deletes ftp backup host
 
-## v-delete-cron-hestia-autoupdate
+## v-delete-cron-devcp-autoupdate
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-cron-hestia-autoupdate)
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-cron-devcp-autoupdate)
 
-delete hestia autoupdate cron job
+delete devcp autoupdate cron job
 
 **Options**: –
 
-This function deletes hestia autoupdate cron job.
+This function deletes devcp autoupdate cron job.
 
 ## v-delete-cron-job
 
@@ -2768,7 +2768,7 @@ delete database server
 v-delete-database-host pgsql localhost
 ```
 
-This function for deleting the database host from hestia configuration. It will
+This function for deleting the database host from devcp configuration. It will
 be deleted if there are no databases created on it only.
 
 ## v-delete-database-temp-user
@@ -2963,7 +2963,7 @@ delete firewall ipset
 v-delete-firewall-ipset country-nl
 ```
 
-This function removes ipset from system and from hestia
+This function removes ipset from system and from devcp
 
 ## v-delete-firewall-rule
 
@@ -3311,7 +3311,7 @@ delete remote dns host
 v-delete-remote-dns-host example.org
 ```
 
-This function for deleting the remote dns host from hestia configuration.
+This function for deleting the remote dns host from devcp configuration.
 
 ## v-delete-remote-dns-record
 
@@ -4871,35 +4871,35 @@ list dovecot config parameters
 
 This function for obtaining the list of dovecot config parameters.
 
-## v-list-sys-hestia-autoupdate
+## v-list-sys-devcp-autoupdate
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-hestia-autoupdate)
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-devcp-autoupdate)
 
-list hestia autoupdate settings
+list devcp autoupdate settings
 
 **Options**: `[FORMAT]`
 
 This function for obtaining autoupdate settings.
 
-## v-list-sys-hestia-ssl
+## v-list-sys-devcp-ssl
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-hestia-ssl)
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-devcp-ssl)
 
-list hestia ssl certificate
+list devcp ssl certificate
 
 **Options**: `[FORMAT]`
 
-This function of obtaining hestia ssl files.
+This function of obtaining devcp ssl files.
 
-## v-list-sys-hestia-updates
+## v-list-sys-devcp-updates
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-hestia-updates)
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-devcp-updates)
 
 list system updates
 
 **Options**: `[FORMAT]`
 
-This function checks available updates for hestia packages.
+This function checks available updates for devcp packages.
 
 ## v-list-sys-info
 
@@ -4909,7 +4909,7 @@ list system os
 
 **Options**: `[FORMAT]`
 
-This function checks available updates for hestia packages.
+This function checks available updates for devcp packages.
 
 ## v-list-sys-interfaces
 
@@ -4961,7 +4961,7 @@ list system languages
 v-list-sys-languages json
 ```
 
-This function for obtaining the available languages for HestiaCP
+This function for obtaining the available languages for DevCP
 Output is always in the ISO language code
 
 ## v-list-sys-mail-status
@@ -5649,7 +5649,7 @@ Install Quick Install Web App via CLI
 **Examples**:
 
 ```php
-v-quick-install-app install admin domain.com WordPress email="info@hestiacp" password="123456" username="admin" site_name="HestiaCP Demo" install_directory="/" language="nl_NL" php_version="8.2" database_create="true"
+v-quick-install-app install admin domain.com WordPress email="info@hestiacp" password="123456" username="admin" site_name="DevCP Demo" install_directory="/" language="nl_NL" php_version="8.2" database_create="true"
  example: v-quick-install-app app
  example: v-quick-install-app options admin domain.com WordPress
 ```
@@ -6243,7 +6243,7 @@ run cli command
 v-run-cli-cmd user composer require package
 ```
 
-This function runs a limited list of cli commands with dropped privileges as the specific hestia user
+This function runs a limited list of cli commands with dropped privileges as the specific devcp user
 
 ## v-schedule-letsencrypt-domain
 
@@ -7114,7 +7114,7 @@ This function creates ipset lists and updates the lists if they are expired or o
 
 [Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-host-certificate)
 
-update host certificate for hestia
+update host certificate for devcp
 
 **Options**: `USER` `HOSTNAME`
 
@@ -7214,36 +7214,36 @@ example: v-update-sys-defaults user
 
 This function updates the known key/value pair database
 
-## v-update-sys-hestia
+## v-update-sys-devcp
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-sys-hestia)
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-sys-devcp)
 
-update hestia package/configs
+update devcp package/configs
 
 **Options**: `PACKAGE`
 
 **Examples**:
 
 ```bash
-v-update-sys-hestia hestia-php
+v-update-sys-devcp devcp-php
 ```
 
-This function runs as apt update trigger. It pulls shell script from hestia
-server and runs it. (hestia, hestia-nginx and hestia-php are valid options)
+This function runs as apt update trigger. It pulls shell script from devcp
+server and runs it. (devcp, devcp-nginx and devcp-php are valid options)
 
-## v-update-sys-hestia-all
+## v-update-sys-devcp-all
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-sys-hestia-all)
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-sys-devcp-all)
 
-update all hestia packages
+update all devcp packages
 
 **Options**: –
 
-This function of updating all hestia packages
+This function of updating all devcp packages
 
-## v-update-sys-hestia-git
+## v-update-sys-devcp-git
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-sys-hestia-git)
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-sys-devcp-git)
 
 Install update from Git repository
 
@@ -7252,7 +7252,7 @@ Install update from Git repository
 **Examples**:
 
 ```bash
-v-update-sys-hestia-git hestiacp staging/beta install
+v-update-sys-devcp-git hestiacp staging/beta install
 # Will download from the hestiacp repository
 # Pulls code from staging/beta branch
 # install: installs package immediately

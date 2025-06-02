@@ -205,12 +205,12 @@ function syshealth_update_system_config_format() {
 }
 
 # Restore System Configuration
-# Replaces $HESTIA/conf/hestia.conf with "known good defaults" file ($HESTIA/conf/defaults/hestia.conf)
+# Replaces $HESTIA/conf/devcp.conf with "known good defaults" file ($HESTIA/conf/defaults/devcp.conf)
 function syshealth_restore_system_config() {
-	if [ -f "$HESTIA/conf/defaults/hestia.conf" ]; then
-		mv $HESTIA/conf/hestia.conf $HESTIA/conf/hestia.conf.old
-		cp $HESTIA/conf/defaults/hestia.conf $HESTIA/conf/hestia.conf
-		rm -f $HESTIA/conf/hestia.conf.old
+	if [ -f "$HESTIA/conf/defaults/devcp.conf" ]; then
+		mv $HESTIA/conf/devcp.conf $HESTIA/conf/devcp.conf.old
+		cp $HESTIA/conf/defaults/devcp.conf $HESTIA/conf/devcp.conf
+		rm -f $HESTIA/conf/devcp.conf.old
 	else
 		echo "ERROR: System default configuration file not found, aborting."
 		exit 1
@@ -218,21 +218,21 @@ function syshealth_restore_system_config() {
 }
 
 function check_key_exists() {
-	grep -e "^$1=" $HESTIA/conf/hestia.conf
+	grep -e "^$1=" $HESTIA/conf/devcp.conf
 }
 
 # Repair System Configuration
-# Adds missing variables to $HESTIA/conf/hestia.conf with safe default values
+# Adds missing variables to $HESTIA/conf/devcp.conf with safe default values
 function syshealth_repair_system_config() {
 	# Release branch
 	if [[ -z $(check_key_exists 'RELEASE_BRANCH') ]]; then
-		echo "[ ! ] Adding missing variable to hestia.conf: RELEASE_BRANCH ('release')"
+		echo "[ ! ] Adding missing variable to devcp.conf: RELEASE_BRANCH ('release')"
 		$BIN/v-change-sys-config-value 'RELEASE_BRANCH' 'release'
 	fi
 	# Webmail alias
 	if [ -n "$IMAP_SYSTEM" ]; then
 		if [[ -z $(check_key_exists 'WEBMAIL_ALIAS') ]]; then
-			echo "[ ! ] Adding missing variable to hestia.conf: WEBMAIL_ALIAS ('webmail')"
+			echo "[ ! ] Adding missing variable to devcp.conf: WEBMAIL_ALIAS ('webmail')"
 			$BIN/v-change-sys-config-value 'WEBMAIL_ALIAS' 'webmail'
 		fi
 	fi
@@ -241,13 +241,13 @@ function syshealth_repair_system_config() {
 	if [ -n "$DB_SYSTEM" ]; then
 		if [ "$DB_SYSTEM" = "mysql" ]; then
 			if [[ -z $(check_key_exists 'DB_PMA_ALIAS') ]]; then
-				echo "[ ! ] Adding missing variable to hestia.conf: DB_PMA_ALIAS ('phpmyadmin)"
+				echo "[ ! ] Adding missing variable to devcp.conf: DB_PMA_ALIAS ('phpmyadmin)"
 				$BIN/v-change-sys-config-value 'DB_PMA_ALIAS' 'phpmyadmin'
 			fi
 		fi
 		if [ "$DB_SYSTEM" = "pgsql" ]; then
 			if [[ -z $(check_key_exists 'DB_PGA_ALIAS') ]]; then
-				echo "[ ! ] Adding missing variable to hestia.conf: DB_PGA_ALIAS ('phppgadmin')"
+				echo "[ ! ] Adding missing variable to devcp.conf: DB_PGA_ALIAS ('phppgadmin')"
 				$BIN/v-change-sys-config-value 'DB_PGA_ALIAS' 'phppgadmin'
 			fi
 		fi
@@ -255,56 +255,56 @@ function syshealth_repair_system_config() {
 
 	# Backup compression level
 	if [[ -z $(check_key_exists 'BACKUP_GZIP') ]]; then
-		echo "[ ! ] Adding missing variable to hestia.conf: BACKUP_GZIP ('4')"
+		echo "[ ! ] Adding missing variable to devcp.conf: BACKUP_GZIP ('4')"
 		$BIN/v-change-sys-config-value 'BACKUP_GZIP' '4'
 	fi
 
 	# Theme
 	if [[ -z $(check_key_exists 'THEME') ]]; then
-		echo "[ ! ] Adding missing variable to hestia.conf: THEME ('dark')"
+		echo "[ ! ] Adding missing variable to devcp.conf: THEME ('dark')"
 		$BIN/v-change-sys-config-value 'THEME' 'dark'
 	fi
 
 	# Default language
 	if [[ -z $(check_key_exists 'LANGUAGE') ]]; then
-		echo "[ ! ] Adding missing variable to hestia.conf: LANGUAGE ('en')"
+		echo "[ ! ] Adding missing variable to devcp.conf: LANGUAGE ('en')"
 		$BIN/v-change-sys-language 'LANGUAGE' 'en'
 	fi
 
 	# Disk Quota
 	if [[ -z $(check_key_exists 'DISK_QUOTA') ]]; then
-		echo "[ ! ] Adding missing variable to hestia.conf: DISK_QUOTA ('no')"
+		echo "[ ! ] Adding missing variable to devcp.conf: DISK_QUOTA ('no')"
 		$BIN/v-change-sys-config-value 'DISK_QUOTA' 'no'
 	fi
 
 	# CRON daemon
 	if [[ -z $(check_key_exists 'CRON_SYSTEM') ]]; then
-		echo "[ ! ] Adding missing variable to hestia.conf: CRON_SYSTEM ('cron')"
+		echo "[ ! ] Adding missing variable to devcp.conf: CRON_SYSTEM ('cron')"
 		$BIN/v-change-sys-config-value 'CRON_SYSTEM' 'cron'
 	fi
 
 	# Backend port
 	if [[ -z $(check_key_exists 'BACKEND_PORT') ]]; then
 		ORIGINAL_PORT=$(sed -ne "/listen/{s/.*listen[^0-9]*\([0-9][0-9]*\)[ \t]*ssl\;/\1/p;q}" "$HESTIA/nginx/conf/nginx.conf")
-		echo "[ ! ] Adding missing variable to hestia.conf: BACKEND_PORT ('$ORIGINAL_PORT')"
+		echo "[ ! ] Adding missing variable to devcp.conf: BACKEND_PORT ('$ORIGINAL_PORT')"
 		$BIN/v-change-sys-config-value 'BACKEND_PORT' $ORIGINAL_PORT
 	fi
 
 	# Upgrade: Send email notification
 	if [[ -z $(check_key_exists 'UPGRADE_SEND_EMAIL') ]]; then
-		echo "[ ! ] Adding missing variable to hestia.conf: UPGRADE_SEND_EMAIL ('true')"
+		echo "[ ! ] Adding missing variable to devcp.conf: UPGRADE_SEND_EMAIL ('true')"
 		$BIN/v-change-sys-config-value 'UPGRADE_SEND_EMAIL' 'true'
 	fi
 
 	# Upgrade: Send email notification
 	if [[ -z $(check_key_exists 'UPGRADE_SEND_EMAIL_LOG') ]]; then
-		echo "[ ! ] Adding missing variable to hestia.conf: UPGRADE_SEND_EMAIL_LOG ('false')"
+		echo "[ ! ] Adding missing variable to devcp.conf: UPGRADE_SEND_EMAIL_LOG ('false')"
 		$BIN/v-change-sys-config-value 'UPGRADE_SEND_EMAIL_LOG' 'false'
 	fi
 
 	# File Manager
 	if [[ -z $(check_key_exists 'FILE_MANAGER') ]]; then
-		echo "[ ! ] Adding missing variable to hestia.conf: FILE_MANAGER ('true')"
+		echo "[ ! ] Adding missing variable to devcp.conf: FILE_MANAGER ('true')"
 		$BIN/v-add-sys-filemanager quiet
 	fi
 
@@ -316,50 +316,50 @@ function syshealth_repair_system_config() {
 
 	# Login style switcher
 	if [[ -z $(check_key_exists 'LOGIN_STYLE') ]]; then
-		echo "[ ! ] Adding missing variable to hestia.conf: LOGIN_STYLE ('default')"
+		echo "[ ! ] Adding missing variable to devcp.conf: LOGIN_STYLE ('default')"
 		$BIN/v-change-sys-config-value "LOGIN_STYLE" "default"
 	fi
 
 	# Webmail clients
 	if [[ -z $(check_key_exists 'WEBMAIL_SYSTEM') ]]; then
 		if [ -d "/var/lib/roundcube" ]; then
-			echo "[ ! ] Adding missing variable to hestia.conf: WEBMAIL_SYSTEM ('roundcube')"
+			echo "[ ! ] Adding missing variable to devcp.conf: WEBMAIL_SYSTEM ('roundcube')"
 			$BIN/v-change-sys-config-value "WEBMAIL_SYSTEM" "roundcube"
 		else
-			echo "[ ! ] Adding missing variable to hestia.conf: WEBMAIL_SYSTEM ('')"
+			echo "[ ! ] Adding missing variable to devcp.conf: WEBMAIL_SYSTEM ('')"
 			$BIN/v-change-sys-config-value "WEBMAIL_SYSTEM" ""
 		fi
 	fi
 
 	# Inactive session timeout
 	if [[ -z $(check_key_exists 'INACTIVE_SESSION_TIMEOUT') ]]; then
-		echo "[ ! ] Adding missing variable to hestia.conf: INACTIVE_SESSION_TIMEOUT ('60')"
+		echo "[ ! ] Adding missing variable to devcp.conf: INACTIVE_SESSION_TIMEOUT ('60')"
 		$BIN/v-change-sys-config-value "INACTIVE_SESSION_TIMEOUT" "60"
 	fi
 
 	# Enforce subdomain ownership
 	if [[ -z $(check_key_exists 'ENFORCE_SUBDOMAIN_OWNERSHIP') ]]; then
-		echo "[ ! ] Adding missing variable to hestia.conf: ENFORCE_SUBDOMAIN_OWNERSHIP ('yes')"
+		echo "[ ! ] Adding missing variable to devcp.conf: ENFORCE_SUBDOMAIN_OWNERSHIP ('yes')"
 		$BIN/v-change-sys-config-value "ENFORCE_SUBDOMAIN_OWNERSHIP" "yes"
 	fi
 
 	if [[ -z $(check_key_exists 'API') ]]; then
-		echo "[ ! ] Adding missing variable to hestia.conf: API ('no')"
+		echo "[ ! ] Adding missing variable to devcp.conf: API ('no')"
 		$BIN/v-change-sys-config-value "API" "no"
 	fi
 
 	# Enable API V2
 	if [[ -z $(check_key_exists 'API_SYSTEM') ]]; then
-		echo "[ ! ] Adding missing variable to hestia.conf: API_SYSTEM ('0')"
+		echo "[ ! ] Adding missing variable to devcp.conf: API_SYSTEM ('0')"
 		$BIN/v-change-sys-config-value "API_SYSTEM" "0"
 	fi
 
 	# API access allowed IP's
 	if [ "$API" = "yes" ]; then
-		check_api_key=$(grep "API_ALLOWED_IP" $HESTIA/conf/hestia.conf)
+		check_api_key=$(grep "API_ALLOWED_IP" $HESTIA/conf/devcp.conf)
 		if [ -z "$check_api_key" ]; then
 			if [[ -z $(check_key_exists 'API_ALLOWED_IP') ]]; then
-				echo "[ ! ] Adding missing variable to hestia.conf: API_ALLOWED_IP ('allow-all')"
+				echo "[ ! ] Adding missing variable to devcp.conf: API_ALLOWED_IP ('allow-all')"
 				$BIN/v-change-sys-config-value "API_ALLOWED_IP" "allow-all"
 			fi
 		fi
@@ -367,188 +367,188 @@ function syshealth_repair_system_config() {
 
 	# Debug mode
 	if [[ -z $(check_key_exists 'DEBUG_MODE') ]]; then
-		echo "[ ! ] Adding missing variable to hestia.conf: DEBUG_MODE ('false')"
+		echo "[ ! ] Adding missing variable to devcp.conf: DEBUG_MODE ('false')"
 		$BIN/v-change-sys-config-value "DEBUG_MODE" "false"
 	fi
 	# Quick install plugin
 	if [[ -z $(check_key_exists 'PLUGIN_APP_INSTALLER') ]]; then
-		echo "[ ! ] Adding missing variable to hestia.conf: PLUGIN_APP_INSTALLER ('true')"
+		echo "[ ! ] Adding missing variable to devcp.conf: PLUGIN_APP_INSTALLER ('true')"
 		$BIN/v-change-sys-config-value "PLUGIN_APP_INSTALLER" "true"
 	fi
 	# Web Terminal
 	if [[ -z $(check_key_exists 'WEB_TERMINAL') ]]; then
-		echo "[ ! ] Adding missing variable to hestia.conf: WEB_TERMINAL ('false')"
+		echo "[ ! ] Adding missing variable to devcp.conf: WEB_TERMINAL ('false')"
 		$BIN/v-change-sys-config-value "WEB_TERMINAL" "false"
 	fi
 	if [[ -z $(check_key_exists 'WEB_TERMINAL_PORT') ]]; then
-		echo "[ ! ] Adding missing variable to hestia.conf: WEB_TERMINAL_PORT ('8085')"
+		echo "[ ! ] Adding missing variable to devcp.conf: WEB_TERMINAL_PORT ('8085')"
 		$BIN/v-change-sys-config-value "WEB_TERMINAL_PORT" "8085"
 	fi
 	# Enable preview mode
 	if [[ -z $(check_key_exists 'POLICY_SYSTEM_ENABLE_BACON') ]]; then
-		echo "[ ! ] Adding missing variable to hestia.conf: POLICY_SYSTEM_ENABLE_BACON ('false')"
+		echo "[ ! ] Adding missing variable to devcp.conf: POLICY_SYSTEM_ENABLE_BACON ('false')"
 		$BIN/v-change-sys-config-value "POLICY_SYSTEM_ENABLE_BACON" "false"
 	fi
 	# Hide system services
 	if [[ -z $(check_key_exists 'POLICY_SYSTEM_HIDE_SERVICES') ]]; then
-		echo "[ ! ] Adding missing variable to hestia.conf: POLICY_SYSTEM_HIDE_SERVICES ('no')"
+		echo "[ ! ] Adding missing variable to devcp.conf: POLICY_SYSTEM_HIDE_SERVICES ('no')"
 		$BIN/v-change-sys-config-value "POLICY_SYSTEM_HIDE_SERVICES" "no"
 	fi
 	# Password reset
 	if [[ -z $(check_key_exists 'POLICY_SYSTEM_PASSWORD_RESET') ]]; then
-		echo "[ ! ] Adding missing variable to hestia.conf: POLICY_SYSTEM_PASSWORD_RESET ('no')"
+		echo "[ ! ] Adding missing variable to devcp.conf: POLICY_SYSTEM_PASSWORD_RESET ('no')"
 		$BIN/v-change-sys-config-value "POLICY_SYSTEM_PASSWORD_RESET" "no"
 	fi
 
 	# Theme editor
 	if [[ -z $(check_key_exists 'POLICY_USER_CHANGE_THEME') ]]; then
-		echo "[ ! ] Adding missing variable to hestia.conf: POLICY_USER_CHANGE_THEME ('yes')"
+		echo "[ ! ] Adding missing variable to devcp.conf: POLICY_USER_CHANGE_THEME ('yes')"
 		$BIN/v-change-sys-config-value "POLICY_USER_CHANGE_THEME" "yes"
 	fi
 	# Protect admin user
 	if [[ -z $(check_key_exists 'POLICY_SYSTEM_PROTECTED_ADMIN') ]]; then
-		echo "[ ! ] Adding missing variable to hestia.conf: POLICY_SYSTEM_PROTECTED_ADMIN ('no')"
+		echo "[ ! ] Adding missing variable to devcp.conf: POLICY_SYSTEM_PROTECTED_ADMIN ('no')"
 		$BIN/v-change-sys-config-value "POLICY_SYSTEM_PROTECTED_ADMIN" "no"
 	fi
 	# Allow user delete logs
 	if [[ -z $(check_key_exists 'POLICY_USER_DELETE_LOGS') ]]; then
-		echo "[ ! ] Adding missing variable to hestia.conf: POLICY_USER_DELETE_LOGS ('yes')"
+		echo "[ ! ] Adding missing variable to devcp.conf: POLICY_USER_DELETE_LOGS ('yes')"
 		$BIN/v-change-sys-config-value "POLICY_USER_DELETE_LOGS" "yes"
 	fi
 	# Allow users to delete details
 	if [[ -z $(check_key_exists 'POLICY_USER_EDIT_DETAILS') ]]; then
-		echo "[ ! ] Adding missing variable to hestia.conf: POLICY_USER_EDIT_DETAILS ('yes')"
+		echo "[ ! ] Adding missing variable to devcp.conf: POLICY_USER_EDIT_DETAILS ('yes')"
 		$BIN/v-change-sys-config-value "POLICY_USER_EDIT_DETAILS" "yes"
 	fi
 	# Allow users to edit DNS templates
 	if [[ -z $(check_key_exists 'POLICY_USER_EDIT_DNS_TEMPLATES') ]]; then
-		echo "[ ! ] Adding missing variable to hestia.conf: POLICY_USER_EDIT_DNS_TEMPLATES ('yes')"
+		echo "[ ! ] Adding missing variable to devcp.conf: POLICY_USER_EDIT_DNS_TEMPLATES ('yes')"
 		$BIN/v-change-sys-config-value "POLICY_USER_EDIT_DNS_TEMPLATES" "yes"
 	fi
 	# Allow users to edit web templates
 	if [[ -z $(check_key_exists 'POLICY_USER_EDIT_WEB_TEMPLATES') ]]; then
-		echo "[ ! ] Adding missing variable to hestia.conf: POLICY_USER_EDIT_WEB_TEMPLATES ('yes')"
+		echo "[ ! ] Adding missing variable to devcp.conf: POLICY_USER_EDIT_WEB_TEMPLATES ('yes')"
 		$BIN/v-change-sys-config-value "POLICY_USER_EDIT_WEB_TEMPLATES" "yes"
 	fi
 	# View user logs
 	if [[ -z $(check_key_exists 'POLICY_USER_VIEW_LOGS') ]]; then
-		echo "[ ! ] Adding missing variable to hestia.conf: POLICY_USER_VIEW_LOGS ('yes')"
+		echo "[ ! ] Adding missing variable to devcp.conf: POLICY_USER_VIEW_LOGS ('yes')"
 		$BIN/v-change-sys-config-value "POLICY_USER_VIEW_LOGS" "yes"
 	fi
 	# Allow users to login (read only) when suspended
 	if [[ -z $(check_key_exists 'POLICY_USER_VIEW_SUSPENDED') ]]; then
-		echo "[ ! ] Adding missing variable to hestia.conf: POLICY_USER_VIEW_SUSPENDED ('no')"
+		echo "[ ! ] Adding missing variable to devcp.conf: POLICY_USER_VIEW_SUSPENDED ('no')"
 		$BIN/v-change-sys-config-value "POLICY_USER_VIEW_SUSPENDED" "no"
 	fi
 	# PHPMyadmin SSO key
 	if [[ -z $(check_key_exists 'PHPMYADMIN_KEY') ]]; then
-		echo "[ ! ] Adding missing variable to hestia.conf: PHPMYADMIN_KEY ('')"
+		echo "[ ! ] Adding missing variable to devcp.conf: PHPMYADMIN_KEY ('')"
 		$BIN/v-change-sys-config-value "PHPMYADMIN_KEY" ""
 	fi
-	# Use SMTP server for hestia internal mail
+	# Use SMTP server for devcp internal mail
 	if [[ -z $(check_key_exists 'USE_SERVER_SMTP') ]]; then
-		echo "[ ! ] Adding missing variable to hestia.conf: USE_SERVER_SMTP ('')"
+		echo "[ ! ] Adding missing variable to devcp.conf: USE_SERVER_SMTP ('')"
 		$BIN/v-change-sys-config-value "USE_SERVER_SMTP" "false"
 	fi
 
 	if [[ -z $(check_key_exists 'SERVER_SMTP_PORT') ]]; then
-		echo "[ ! ] Adding missing variable to hestia.conf: SERVER_SMTP_PORT ('')"
+		echo "[ ! ] Adding missing variable to devcp.conf: SERVER_SMTP_PORT ('')"
 		$BIN/v-change-sys-config-value "SERVER_SMTP_PORT" ""
 	fi
 
 	if [[ -z $(check_key_exists 'SERVER_SMTP_HOST') ]]; then
-		echo "[ ! ] Adding missing variable to hestia.conf: SERVER_SMTP_HOST ('')"
+		echo "[ ! ] Adding missing variable to devcp.conf: SERVER_SMTP_HOST ('')"
 		$BIN/v-change-sys-config-value "SERVER_SMTP_HOST" ""
 	fi
 
 	if [[ -z $(check_key_exists 'SERVER_SMTP_SECURITY') ]]; then
-		echo "[ ! ] Adding missing variable to hestia.conf: SERVER_SMTP_SECURITY ('')"
+		echo "[ ! ] Adding missing variable to devcp.conf: SERVER_SMTP_SECURITY ('')"
 		$BIN/v-change-sys-config-value "SERVER_SMTP_SECURITY" ""
 	fi
 
 	if [[ -z $(check_key_exists 'SERVER_SMTP_USER') ]]; then
-		echo "[ ! ] Adding missing variable to hestia.conf: SERVER_SMTP_USER ('')"
+		echo "[ ! ] Adding missing variable to devcp.conf: SERVER_SMTP_USER ('')"
 		$BIN/v-change-sys-config-value "SERVER_SMTP_USER" ""
 	fi
 
 	if [[ -z $(check_key_exists 'SERVER_SMTP_PASSWD') ]]; then
-		echo "[ ! ] Adding missing variable to hestia.conf: SERVER_SMTP_PASSWD ('')"
+		echo "[ ! ] Adding missing variable to devcp.conf: SERVER_SMTP_PASSWD ('')"
 		$BIN/v-change-sys-config-value "SERVER_SMTP_PASSWD" ""
 	fi
 
 	if [[ -z $(check_key_exists 'SERVER_SMTP_ADDR') ]]; then
-		echo "[ ! ] Adding missing variable to hestia.conf: SERVER_SMTP_ADDR ('')"
+		echo "[ ! ] Adding missing variable to devcp.conf: SERVER_SMTP_ADDR ('')"
 		$BIN/v-change-sys-config-value "SERVER_SMTP_ADDR" ""
 	fi
 	if [[ -z $(check_key_exists 'POLICY_CSRF_STRICTNESS') ]]; then
-		echo "[ ! ] Adding missing variable to hestia.conf: POLICY_CSRF_STRICTNESS ('')"
+		echo "[ ! ] Adding missing variable to devcp.conf: POLICY_CSRF_STRICTNESS ('')"
 		$BIN/v-change-sys-config-value "POLICY_CSRF_STRICTNESS" "1"
 	fi
 	if [[ -z $(check_key_exists 'DNS_CLUSTER_SYSTEM') ]]; then
-		echo "[ ! ] Adding missing variable to hestia.conf: DNS_CLUSTER_SYSTEM ('hestia')"
-		$BIN/v-change-sys-config-value "DNS_CLUSTER_SYSTEM" "hestia"
+		echo "[ ! ] Adding missing variable to devcp.conf: DNS_CLUSTER_SYSTEM ('devcp')"
+		$BIN/v-change-sys-config-value "DNS_CLUSTER_SYSTEM" "devcp"
 	fi
 	if [[ -z $(check_key_exists 'DISABLE_IP_CHECK') ]]; then
-		echo "[ ! ] Adding missing variable to hestia.conf: DISABLE_IP_CHECK ('no')"
+		echo "[ ! ] Adding missing variable to devcp.conf: DISABLE_IP_CHECK ('no')"
 		$BIN/v-change-sys-config-value "DISABLE_IP_CHECK" "no"
 	fi
 	if [[ -z $(check_key_exists 'APP_NAME') ]]; then
-		echo "[ ! ] Adding missing variable to hestia.conf: APP_NAME ('Hestia Control Panel')"
+		echo "[ ! ] Adding missing variable to devcp.conf: APP_NAME ('Hestia Control Panel')"
 		$BIN/v-change-sys-config-value "APP_NAME" "Hestia Control Panel"
 	fi
 	if [[ -z $(check_key_exists 'FROM_NAME') ]]; then
 		# Default is always APP_NAME
-		echo "[ ! ] Adding missing variable to hestia.conf: FROM_NAME ('')"
+		echo "[ ! ] Adding missing variable to devcp.conf: FROM_NAME ('')"
 		$BIN/v-change-sys-config-value "FROM_NAME" ""
 	fi
 	if [[ -z $(check_key_exists 'FROM_EMAIL') ]]; then
 		# Default is always noreply@hostname.com
-		echo "[ ! ] Adding missing variable to hestia.conf: FROM_EMAIL ('')"
+		echo "[ ! ] Adding missing variable to devcp.conf: FROM_EMAIL ('')"
 		$BIN/v-change-sys-config-value "FROM_EMAIL" ""
 	fi
 	if [[ -z $(check_key_exists 'SUBJECT_EMAIL') ]]; then
-		echo "[ ! ] Adding missing variable to hestia.conf: SUBJECT_EMAIL ('{{subject}}')"
+		echo "[ ! ] Adding missing variable to devcp.conf: SUBJECT_EMAIL ('{{subject}}')"
 		$BIN/v-change-sys-config-value "SUBJECT_EMAIL" "{{subject}}"
 	fi
 
 	if [[ -z $(check_key_exists 'BACKUP_INCREMENTAL') ]]; then
-		echo "[ ! ] Adding missing variable to hestia.conf: BACKUP_INCREMENTAL ('no')"
+		echo "[ ! ] Adding missing variable to devcp.conf: BACKUP_INCREMENTAL ('no')"
 		$BIN/v-change-sys-config-value "BACKUP_INCREMENTAL" "no"
 	fi
 
 	if [[ -z $(check_key_exists 'TITLE') ]]; then
-		echo "[ ! ] Adding missing variable to hestia.conf: TITLE ('{{page}} - {{hostname}} - {{appname}}')"
+		echo "[ ! ] Adding missing variable to devcp.conf: TITLE ('{{page}} - {{hostname}} - {{appname}}')"
 		$BIN/v-change-sys-config-value "TITLE" "{{page}} - {{hostname}} - {{appname}}"
 	fi
 
 	if [[ -z $(check_key_exists 'HIDE_DOCS') ]]; then
-		echo "[ ! ] Adding missing variable to hestia.conf: HIDE_DOCS ('no')"
+		echo "[ ! ] Adding missing variable to devcp.conf: HIDE_DOCS ('no')"
 		$BIN/v-change-sys-config-value "HIDE_DOCS" "no"
 	fi
 
 	if [[ -z $(check_key_exists 'POLICY_SYNC_ERROR_DOCUMENTS') ]]; then
-		echo "[ ! ] Adding missing variable to hestia.conf: POLICY_SYNC_ERROR_DOCUMENTS ('yes')"
+		echo "[ ! ] Adding missing variable to devcp.conf: POLICY_SYNC_ERROR_DOCUMENTS ('yes')"
 		$BIN/v-change-sys-config-value "POLICY_SYNC_ERROR_DOCUMENTS" "yes"
 	fi
 
 	if [[ -z $(check_key_exists 'POLICY_SYNC_SKELETON') ]]; then
-		echo "[ ! ] Adding missing variable to hestia.conf: POLICY_SYNC_SKELETON ('yes')"
+		echo "[ ! ] Adding missing variable to devcp.conf: POLICY_SYNC_SKELETON ('yes')"
 		$BIN/v-change-sys-config-value "POLICY_SYNC_SKELETON" "yes"
 	fi
 	if [[ -z $(check_key_exists 'POLICY_BACKUP_SUSPENDED_USERS') ]]; then
-		echo "[ ! ] Adding missing variable to hestia.conf: POLICY_BACKUP_SUSPENDED_USERS ('no')"
+		echo "[ ! ] Adding missing variable to devcp.conf: POLICY_BACKUP_SUSPENDED_USERS ('no')"
 		$BIN/v-change-sys-config-value "POLICY_BACKUP_SUSPENDED_USERS" "no"
 	fi
 	if [[ -z $(check_key_exists 'ROOT_USER') ]]; then
-		echo "[ ! ] Adding missing variable to hestia.conf: ROOT_USER ('admin')"
+		echo "[ ! ] Adding missing variable to devcp.conf: ROOT_USER ('admin')"
 		$BIN/v-change-sys-config-value "ROOT_USER" "admin"
 	fi
 	if [[ -z $(check_key_exists 'DOMAINDIR_WRITABLE') ]]; then
-		echo "[ ! ] Adding missing variable to hestia.conf: DOMAINDIR_WRITABLE ('no')"
+		echo "[ ! ] Adding missing variable to devcp.conf: DOMAINDIR_WRITABLE ('no')"
 		$BIN/v-change-sys-config-value "DOMAINDIR_WRITABLE" "no"
 	fi
 
-	touch $HESTIA/conf/hestia.conf.new
+	touch $HESTIA/conf/devcp.conf.new
 	while IFS='= ' read -r lhs rhs; do
 		if [[ ! $lhs =~ ^\ *# && -n $lhs ]]; then
 			rhs="${rhs%%^\#*}" # Del in line right comments
@@ -557,23 +557,23 @@ function syshealth_repair_system_config() {
 			rhs="${rhs#\'*}"   # Del closing string quotes
 
 		fi
-		check_ckey=$(grep "^$lhs='" "$HESTIA/conf/hestia.conf.new")
+		check_ckey=$(grep "^$lhs='" "$HESTIA/conf/devcp.conf.new")
 		if [ -z "$check_ckey" ]; then
-			echo "$lhs='$rhs'" >> "$HESTIA/conf/hestia.conf.new"
+			echo "$lhs='$rhs'" >> "$HESTIA/conf/devcp.conf.new"
 		else
-			sed -i "s|^$lhs=.*|$lhs='$rhs'|g" "$HESTIA/conf/hestia.conf.new"
+			sed -i "s|^$lhs=.*|$lhs='$rhs'|g" "$HESTIA/conf/devcp.conf.new"
 		fi
-	done < $HESTIA/conf/hestia.conf
+	done < $HESTIA/conf/devcp.conf
 
-	cmp --silent $HESTIA/conf/hestia.conf $HESTIA/conf/hestia.conf.new
+	cmp --silent $HESTIA/conf/devcp.conf $HESTIA/conf/devcp.conf.new
 	if [ $? -ne 0 ]; then
 		echo "[ ! ] Duplicated keys found repair config"
-		rm $HESTIA/conf/hestia.conf
-		cp $HESTIA/conf/hestia.conf.new $HESTIA/conf/hestia.conf
-		rm $HESTIA/conf/hestia.conf.new
+		rm $HESTIA/conf/devcp.conf
+		cp $HESTIA/conf/devcp.conf.new $HESTIA/conf/devcp.conf
+		rm $HESTIA/conf/devcp.conf.new
 	fi
 
-	source_conf "$HESTIA/conf/hestia.conf"
+	source_conf "$HESTIA/conf/devcp.conf"
 }
 
 # Repair System Cron Jobs
@@ -583,17 +583,17 @@ function syshealth_repair_system_cronjobs() {
 	hour=$(gen_pass '1234567' '1')
 	echo "MAILTO=$email" > /var/spool/cron/crontabs/hestiaweb
 	echo "CONTENT_TYPE=\"text/plain; charset=utf-8\"" >> /var/spool/cron/crontabs/hestiaweb
-	echo "*/2 * * * * sudo /usr/local/hestia/bin/v-update-sys-queue restart" >> /var/spool/cron/crontabs/hestiaweb
-	echo "10 00 * * * sudo /usr/local/hestia/bin/v-update-sys-queue daily" >> /var/spool/cron/crontabs/hestiaweb
-	echo "15 02 * * * sudo /usr/local/hestia/bin/v-update-sys-queue disk" >> /var/spool/cron/crontabs/hestiaweb
-	echo "10 00 * * * sudo /usr/local/hestia/bin/v-update-sys-queue traffic" >> /var/spool/cron/crontabs/hestiaweb
-	echo "30 03 * * * sudo /usr/local/hestia/bin/v-update-sys-queue webstats" >> /var/spool/cron/crontabs/hestiaweb
-	echo "*/5 * * * * sudo /usr/local/hestia/bin/v-update-sys-queue backup" >> /var/spool/cron/crontabs/hestiaweb
-	echo "10 05 * * * sudo /usr/local/hestia/bin/v-backup-users" >> /var/spool/cron/crontabs/hestiaweb
-	echo "20 00 * * * sudo /usr/local/hestia/bin/v-update-user-stats" >> /var/spool/cron/crontabs/hestiaweb
-	echo "*/5 * * * * sudo /usr/local/hestia/bin/v-update-sys-rrd" >> /var/spool/cron/crontabs/hestiaweb
-	echo "$min $hour * * * sudo /usr/local/hestia/bin/v-update-letsencrypt-ssl" >> /var/spool/cron/crontabs/hestiaweb
-	echo "41 4 * * * sudo /usr/local/hestia/bin/v-update-sys-hestia-all" >> /var/spool/cron/crontabs/hestiaweb
+	echo "*/2 * * * * sudo /usr/local/devcp/bin/v-update-sys-queue restart" >> /var/spool/cron/crontabs/hestiaweb
+	echo "10 00 * * * sudo /usr/local/devcp/bin/v-update-sys-queue daily" >> /var/spool/cron/crontabs/hestiaweb
+	echo "15 02 * * * sudo /usr/local/devcp/bin/v-update-sys-queue disk" >> /var/spool/cron/crontabs/hestiaweb
+	echo "10 00 * * * sudo /usr/local/devcp/bin/v-update-sys-queue traffic" >> /var/spool/cron/crontabs/hestiaweb
+	echo "30 03 * * * sudo /usr/local/devcp/bin/v-update-sys-queue webstats" >> /var/spool/cron/crontabs/hestiaweb
+	echo "*/5 * * * * sudo /usr/local/devcp/bin/v-update-sys-queue backup" >> /var/spool/cron/crontabs/hestiaweb
+	echo "10 05 * * * sudo /usr/local/devcp/bin/v-backup-users" >> /var/spool/cron/crontabs/hestiaweb
+	echo "20 00 * * * sudo /usr/local/devcp/bin/v-update-user-stats" >> /var/spool/cron/crontabs/hestiaweb
+	echo "*/5 * * * * sudo /usr/local/devcp/bin/v-update-sys-rrd" >> /var/spool/cron/crontabs/hestiaweb
+	echo "$min $hour * * * sudo /usr/local/devcp/bin/v-update-letsencrypt-ssl" >> /var/spool/cron/crontabs/hestiaweb
+	echo "41 4 * * * sudo /usr/local/devcp/bin/v-update-sys-devcp-all" >> /var/spool/cron/crontabs/hestiaweb
 }
 
 # Adapt Port Listing in HESTIA NGINX Backend
@@ -614,7 +614,7 @@ function syshealth_adapt_hestia_nginx_listen_ports() {
 	done
 
 	# Adapt port listing in nginx.conf depended on availability of IPV4 and IPV6 network interface
-	NGINX_CONF="/usr/local/hestia/nginx/conf/nginx.conf"
+	NGINX_CONF="/usr/local/devcp/nginx/conf/nginx.conf"
 	if [ -z "$ipv4_scope_global" ]; then
 		sed -i 's/^\([ \t]*listen[ \t]*[0-9]\{1,5\}.*\)/#\1/' "$NGINX_CONF"
 	else
@@ -628,7 +628,7 @@ function syshealth_adapt_hestia_nginx_listen_ports() {
 }
 
 syshealth_adapt_nginx_resolver() {
-	NGINX_CONF="/usr/local/hestia/nginx/conf/nginx.conf"
+	NGINX_CONF="/usr/local/devcp/nginx/conf/nginx.conf"
 	if grep -qw "1.0.0.1 8.8.4.4 1.1.1.1 8.8.8.8" "$NGINX_CONF"; then
 		for nameserver in $(grep -is '^nameserver' /etc/resolv.conf | cut -d' ' -f2 | tr '\r\n' ' ' | xargs); do
 			if echo "$nameserver" | grep -Pq "^(\d{1,3}\.){3}\d{1,3}$"; then

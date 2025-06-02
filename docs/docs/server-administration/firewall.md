@@ -29,7 +29,7 @@ IPSet are large lists of IP addresses or subnets. They can be used for blacklist
 5. Name your IP list.
 6. Select the data source by entering one of the following:
    - URL: `http://ipverse.net/ipblocks/data/countries/nl.zone`
-   - Script (with `chmod 755`): `/usr/local/hestia/install/deb/firewall/ipset/blacklist.sh`
+   - Script (with `chmod 755`): `/usr/local/devcp/install/deb/firewall/ipset/blacklist.sh`
    - File: `file:/location/of/file`
    - You can also use one of Hestia’s included sources.
 7. Selected the desired IP version (v4 or v6).
@@ -44,10 +44,10 @@ This is dangerously advanced feature, please make sure you understand what you a
 
 Hestia supports setting custom rules, chains or flags, etc. using script.
 
-Script must be here: `/usr/local/hestia/data/firewall/custom.sh`
+Script must be here: `/usr/local/devcp/data/firewall/custom.sh`
 
-1. Create custom.sh: `touch /usr/local/hestia/data/firewall/custom.sh`
-2. Make it executable: `chmod +x /usr/local/hestia/data/firewall/custom.sh`
+1. Create custom.sh: `touch /usr/local/devcp/data/firewall/custom.sh`
+2. Make it executable: `chmod +x /usr/local/devcp/data/firewall/custom.sh`
 3. Edit it with your favorite editor.
 4. Test and make sure it works.
 5. To make custom rules persistent, run: `v-update-firewall`

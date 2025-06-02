@@ -25,14 +25,14 @@ port=$6
 arch=$(arch)
 
 # Includes
-# shellcheck source=/etc/hestiacp/hestia.conf
-source /etc/hestiacp/hestia.conf
-# shellcheck source=/usr/local/hestia/func/main.sh
+# shellcheck source=/etc/hestiacp/devcp.conf
+source /etc/hestiacp/devcp.conf
+# shellcheck source=/usr/local/devcp/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/func/backup.sh
+# shellcheck source=/usr/local/devcp/func/backup.sh
 source $HESTIA/func/backup.sh
 # load config file
-source_conf "$HESTIA/conf/hestia.conf"
+source_conf "$HESTIA/conf/devcp.conf"
 # Fetch current verison B2 CLI tool
 source_conf "$HESTIA/install/upgrade/upgrade.conf"
 
@@ -186,14 +186,14 @@ if [ "$type" = 'rclone' ]; then
 	curl -s https://rclone.org/install.sh | bash /dev/null > /dev/null 2>&1
 	# Verify account exists
 	if [ ! -z "$(cat /root/.config/rclone/rclone.conf | grep "\[$host\]")" ]; then
-		echo "test" > /tmp/hestia-backup.txt
+		echo "test" > /tmp/devcp-backup.txt
 		# Try to upload a single file
 		if [ -z "$path" ]; then
-			rclone copy /tmp/hestia-backup.txt $host:/hestia-backup.txt
-			rclone delete $host:/hestia-backup.txt
+			rclone copy /tmp/devcp-backup.txt $host:/devcp-backup.txt
+			rclone delete $host:/devcp-backup.txt
 		else
-			rclone copy /tmp/hestia-backup.txt $host:$path/hestia-backup.txt
-			rclone delete $host:$path/hestia-backup.txt
+			rclone copy /tmp/devcp-backup.txt $host:$path/devcp-backup.txt
+			rclone delete $host:$path/devcp-backup.txt
 		fi
 	else
 		check_result "$E_CONNECT" "Rclone config does not exist"
@@ -224,16 +224,16 @@ fi
 #                       Hestia                             #
 #----------------------------------------------------------#
 
-# Update hestia.conf
-if [ -z "$(grep BACKUP_SYSTEM $HESTIA/conf/hestia.conf)" ]; then
-	echo "BACKUP_SYSTEM='$type'" >> $HESTIA/conf/hestia.conf
+# Update devcp.conf
+if [ -z "$(grep BACKUP_SYSTEM $HESTIA/conf/devcp.conf)" ]; then
+	echo "BACKUP_SYSTEM='$type'" >> $HESTIA/conf/devcp.conf
 else
 	bckp=$(echo "$BACKUP_SYSTEM,$type" \
 		| sed "s/,/\n/g" \
 		| sort -r -u \
 		| sed "/^$/d" \
 		| sed ':a;N;$!ba;s/\n/,/g')
-	sed -i "s/BACKUP_SYSTEM=.*/BACKUP_SYSTEM='$bckp'/g" $HESTIA/conf/hestia.conf
+	sed -i "s/BACKUP_SYSTEM=.*/BACKUP_SYSTEM='$bckp'/g" $HESTIA/conf/devcp.conf
 fi
 
 # Logging

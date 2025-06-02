@@ -35,7 +35,7 @@ class HestiaZipArchiver extends ZipArchiver implements Service, ArchiverInterfac
 		}
 
 		exec(
-			"sudo /usr/local/hestia/bin/v-extract-fs-archive " .
+			"sudo /usr/local/devcp/bin/v-extract-fs-archive " .
 				quoteshellarg($v_user) .
 				" " .
 				quoteshellarg($source) .

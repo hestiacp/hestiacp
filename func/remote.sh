@@ -50,7 +50,7 @@ send_api_cmd() {
 
 	if [ "$DEBUG_MODE" = "yes" ]; then
 		# log out going request if wanted for debugging
-		echo "$1 $2 $3 $4 $5 $6 $7 $8 $9" >> /var/log/hestia/api_out.log
+		echo "$1 $2 $3 $4 $5 $6 $7 $8 $9" >> /var/log/devcp/api_out.log
 	fi
 	return $answer
 }

@@ -14,12 +14,12 @@
 user=$1
 
 # Includes
-# shellcheck source=/etc/hestiacp/hestia.conf
-source /etc/hestiacp/hestia.conf
-# shellcheck source=/usr/local/hestia/func/main.sh
+# shellcheck source=/etc/hestiacp/devcp.conf
+source /etc/hestiacp/devcp.conf
+# shellcheck source=/usr/local/devcp/func/main.sh
 source $HESTIA/func/main.sh
 # load config file
-source_conf "$HESTIA/conf/hestia.conf"
+source_conf "$HESTIA/conf/devcp.conf"
 
 # LE API
 LE_API='https://acme-v02.api.letsencrypt.org'
@@ -50,7 +50,7 @@ query_le_v2() {
 	post_data=$post_data'"payload":"'"$payload_"'",'
 	post_data=$post_data'"signature":"'"$signature_"'"}'
 
-	curl --user-agent "HestiaCP" -s -i -d "$post_data" "$1" -H "$content"
+	curl --user-agent "DevCP" -s -i -d "$post_data" "$1" -H "$content"
 }
 
 #----------------------------------------------------------#

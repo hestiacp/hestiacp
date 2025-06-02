@@ -13,12 +13,12 @@
 MODE=$1
 
 # Includes
-# shellcheck source=/etc/hestiacp/hestia.conf
-source /etc/hestiacp/hestia.conf
-# shellcheck source=/usr/local/hestia/func/main.sh
+# shellcheck source=/etc/hestiacp/devcp.conf
+source /etc/hestiacp/devcp.conf
+# shellcheck source=/usr/local/devcp/func/main.sh
 source $HESTIA/func/main.sh
 # load config file
-source_conf "$HESTIA/conf/hestia.conf"
+source_conf "$HESTIA/conf/devcp.conf"
 
 PMA_INSTALL="/usr/share/phpmyadmin"
 PMA_CONFIG="/etc/phpmyadmin"
@@ -41,8 +41,8 @@ if [ -n "$PHPMYADMIN_KEY" ] && [ "$PHPMYADMIN_KEY" != "" ]; then
 	exit 1
 fi
 
-if [ -f "/usr/share/phpmyadmin/hestia-sso.php" ]; then
-	echo "Error: hestia-sso.php is already installed"
+if [ -f "/usr/share/phpmyadmin/devcp-sso.php" ]; then
+	echo "Error: devcp-sso.php is already installed"
 	exit 2
 fi
 
@@ -65,35 +65,35 @@ phpmyadminkey=$(generate_password)
 apikey=$($BIN/v-add-access-key "$ROOT_USER" 'phpmyadmin-sso' 'phpMyAdmin' 'plain')
 
 # copy config dir to /usr/share/phpmyadmin/
-cp -f $HESTIA_INSTALL_DIR/phpmyadmin/hestia-sso.php $PMA_INSTALL/hestia-sso.php
-chmod 640 $PMA_INSTALL/hestia-sso.php
-chown root:hestiamail $PMA_INSTALL/hestia-sso.php
+cp -f $HESTIA_INSTALL_DIR/phpmyadmin/devcp-sso.php $PMA_INSTALL/devcp-sso.php
+chmod 640 $PMA_INSTALL/devcp-sso.php
+chown root:hestiamail $PMA_INSTALL/devcp-sso.php
 
-sed -i "s/%PHPMYADMIN_KEY%/$phpmyadminkey/g" $PMA_INSTALL/hestia-sso.php
-sed -i "s/%API_KEY%/$apikey/g" $PMA_INSTALL/hestia-sso.php
-sed -i "s/%API_HOST_NAME%/$(hostname)/g" $PMA_INSTALL/hestia-sso.php
-sed -i "s/%API_HESTIA_PORT%/$BACKEND_PORT/g" $PMA_INSTALL/hestia-sso.php
+sed -i "s/%PHPMYADMIN_KEY%/$phpmyadminkey/g" $PMA_INSTALL/devcp-sso.php
+sed -i "s/%API_KEY%/$apikey/g" $PMA_INSTALL/devcp-sso.php
+sed -i "s/%API_HOST_NAME%/$(hostname)/g" $PMA_INSTALL/devcp-sso.php
+sed -i "s/%API_HESTIA_PORT%/$BACKEND_PORT/g" $PMA_INSTALL/devcp-sso.php
 
 # Check if config already contains the keys
-touch $PMA_CONFIG/hestia-sso.inc.php
-chmod 640 $PMA_CONFIG/hestia-sso.inc.php
-chown root:hestiamail $PMA_CONFIG/hestia-sso.inc.php
+touch $PMA_CONFIG/devcp-sso.inc.php
+chmod 640 $PMA_CONFIG/devcp-sso.inc.php
+chown root:hestiamail $PMA_CONFIG/devcp-sso.inc.php
 
 echo "<?php
 if(isset(\$_GET['hestia_token']) || isset(\$_COOKIE['SignonSession'])){
 \$cfg['Servers'][\$i]['auth_type'] = 'signon';
 \$cfg['Servers'][\$i]['SignonSession'] = 'SignonSession';
-\$cfg['Servers'][\$i]['SignonURL'] = 'hestia-sso.php';
-\$cfg['Servers'][\$i]['LogoutURL'] = 'hestia-sso.php?logout=1';
+\$cfg['Servers'][\$i]['SignonURL'] = 'devcp-sso.php';
+\$cfg['Servers'][\$i]['LogoutURL'] = 'devcp-sso.php?logout=1';
 }
-?>" >> $PMA_CONFIG/hestia-sso.inc.php
+?>" >> $PMA_CONFIG/devcp-sso.inc.php
 
 file=$(cat $PMA_CONFIG/config.inc.php)
-if ! [[ "$file" =~ hestia-sso.inc.php ]]; then
+if ! [[ "$file" =~ devcp-sso.inc.php ]]; then
 	if [[ $file =~ "//Add Hestia SSO code here" ]]; then
-		sed -i "s|//Add Hestia SSO code here|//Add Hestia SSO code here\n     include ('$PMA_CONFIG/hestia-sso.inc.php');|g" $PMA_CONFIG/config.inc.php
+		sed -i "s|//Add Hestia SSO code here|//Add Hestia SSO code here\n     include ('$PMA_CONFIG/devcp-sso.inc.php');|g" $PMA_CONFIG/config.inc.php
 	else
-		echo "include ('$PMA_CONFIG/hestia-sso.inc.php');" >> $PMA_CONFIG/config.inc.php
+		echo "include ('$PMA_CONFIG/devcp-sso.inc.php');" >> $PMA_CONFIG/config.inc.php
 	fi
 fi
 

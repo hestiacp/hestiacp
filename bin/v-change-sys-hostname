@@ -14,12 +14,12 @@
 domain=$1
 
 # Includes
-# shellcheck source=/etc/hestiacp/hestia.conf
-source /etc/hestiacp/hestia.conf
-# shellcheck source=/usr/local/hestia/func/main.sh
+# shellcheck source=/etc/hestiacp/devcp.conf
+source /etc/hestiacp/devcp.conf
+# shellcheck source=/usr/local/devcp/func/main.sh
 source $HESTIA/func/main.sh
 # load config file
-source_conf "$HESTIA/conf/hestia.conf"
+source_conf "$HESTIA/conf/devcp.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -53,7 +53,7 @@ if [ -d /etc/roundcube/ ]; then
 	sed -i "/password_hestia_host/c\$rcmail_config['password_hestia_host'] = '$domain';" /etc/roundcube/plugins/password/config.inc.php
 fi
 if [ -d /etc/rainloop/ ]; then
-	sed -i "/hestia_host/c\hestia_host = \"$domain\"" /etc/rainloop/data/_data_/_default_/configs/plugin-hestia-change-password.ini
+	sed -i "/hestia_host/c\hestia_host = \"$domain\"" /etc/rainloop/data/_data_/_default_/configs/plugin-devcp-change-password.ini
 fi
 if [ -d /etc/snappymail/ ]; then
 	sed -i "/\"hestia_host\":/c\\\"hestia_host\": \"$domain\"," /etc/snappymail/data/_data_/_default_/configs/plugin-change-password.json

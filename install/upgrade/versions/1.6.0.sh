@@ -109,12 +109,12 @@ if [ "$release" = "22.04" ]; then
 fi
 
 # Mute output v-add-sys-sftp-jail out put then enabling sftp on boot
-if [ -f "/etc/cron.d/hestia-sftp" ]; then
-	rm /etc/cron.d/hestia-sftp
-	echo "@reboot root sleep 60 && /usr/local/hestia/bin/v-add-sys-sftp-jail > /dev/null" > /etc/cron.d/hestia-sftp
+if [ -f "/etc/cron.d/devcp-sftp" ]; then
+	rm /etc/cron.d/devcp-sftp
+	echo "@reboot root sleep 60 && /usr/local/devcp/bin/v-add-sys-sftp-jail > /dev/null" > /etc/cron.d/devcp-sftp
 fi
 
-ips=$(ls /usr/local/hestia/data/ips/ | wc -l)
+ips=$(ls /usr/local/devcp/data/ips/ | wc -l)
 release=$(lsb_release -s -i)
 if [ $release = 'Ubuntu' ]; then
 	if [ $ips -gt 1 ]; then

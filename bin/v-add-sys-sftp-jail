@@ -11,12 +11,12 @@
 #----------------------------------------------------------#
 
 # Includes
-# shellcheck source=/etc/hestiacp/hestia.conf
-source /etc/hestiacp/hestia.conf
-# shellcheck source=/usr/local/hestia/func/main.sh
+# shellcheck source=/etc/hestiacp/devcp.conf
+source /etc/hestiacp/devcp.conf
+# shellcheck source=/usr/local/devcp/func/main.sh
 source $HESTIA/func/main.sh
 # load config file
-source_conf "$HESTIA/conf/hestia.conf"
+source_conf "$HESTIA/conf/devcp.conf"
 
 restart=$1
 
@@ -87,8 +87,8 @@ else
 fi
 
 # Add v-add-sys-sftp-jail to startup
-if [ ! -e "/etc/cron.d/hestia-sftp" ]; then
-	echo "@reboot root sleep 60 && /usr/local/hestia/bin/v-add-sys-sftp-jail > /dev/null" > /etc/cron.d/hestia-sftp
+if [ ! -e "/etc/cron.d/devcp-sftp" ]; then
+	echo "@reboot root sleep 60 && /usr/local/devcp/bin/v-add-sys-sftp-jail > /dev/null" > /etc/cron.d/devcp-sftp
 fi
 
 #----------------------------------------------------------#

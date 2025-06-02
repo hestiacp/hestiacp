@@ -11,10 +11,10 @@ if ($_SESSION["userContext"] != "admin") {
 }
 
 // Data
-exec(HESTIA_CMD . "v-list-sys-hestia-updates json", $output, $return_var);
+exec(HESTIA_CMD . "v-list-sys-devcp-updates json", $output, $return_var);
 $data = json_decode(implode("", $output), true);
 unset($output);
-exec(HESTIA_CMD . "v-list-sys-hestia-autoupdate plain", $output, $return_var);
+exec(HESTIA_CMD . "v-list-sys-devcp-autoupdate plain", $output, $return_var);
 $autoupdate = $output["0"];
 unset($output);
 

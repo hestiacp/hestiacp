@@ -7,7 +7,7 @@ if [ "$1" != "configure" ]; then
 fi
 
 # Run triggers below only on updates
-if [ ! -e "/usr/local/hestia/data/users/admin" ]; then
+if [ ! -e "/usr/local/devcp/data/users/admin" ]; then
 	exit
 fi
 
@@ -16,21 +16,21 @@ fi
 ###############################################################
 
 if [ -z "$HESTIA" ]; then
-	export HESTIA='/usr/local/hestia'
-	PATH=$PATH:/usr/local/hestia/bin
+	export HESTIA='/usr/local/devcp'
+	PATH=$PATH:/usr/local/devcp/bin
 	export PATH
 fi
 
 # Load upgrade functions and variables
-source /usr/local/hestia/func/main.sh
-source /usr/local/hestia/func/upgrade.sh
-source /usr/local/hestia/conf/hestia.conf
-source /usr/local/hestia/install/upgrade/upgrade.conf
+source /usr/local/devcp/func/main.sh
+source /usr/local/devcp/func/upgrade.sh
+source /usr/local/devcp/conf/devcp.conf
+source /usr/local/devcp/install/upgrade/upgrade.conf
 
-# Restart hestia-web-terminal service if enabled
-if [ -f "/etc/systemd/system/hestia-web-terminal.service" ]; then
+# Restart devcp-web-terminal service if enabled
+if [ -f "/etc/systemd/system/devcp-web-terminal.service" ]; then
 	systemctl daemon-reload > /dev/null 2>&1
-	if systemctl is-enabled hestia-web-terminal > /dev/null 2>&1; then
-		systemctl restart hestia-web-terminal
+	if systemctl is-enabled devcp-web-terminal > /dev/null 2>&1; then
+		systemctl restart devcp-web-terminal
 	fi
 fi

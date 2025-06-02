@@ -22,7 +22,7 @@ if (!empty($_POST["user"]) && empty($_POST["code"])) {
 	$v_user = quoteshellarg($_POST["user"]);
 	$user = $_POST["user"];
 	$email = $_POST["email"];
-	$cmd = "/usr/bin/sudo /usr/local/hestia/bin/v-list-user";
+	$cmd = "/usr/bin/sudo /usr/local/devcp/bin/v-list-user";
 	exec($cmd . " " . $v_user . " json", $output, $return_var);
 	if ($return_var == 0) {
 		$data = json_decode(implode("", $output), true);

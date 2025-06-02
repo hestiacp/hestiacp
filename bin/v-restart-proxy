@@ -11,12 +11,12 @@
 #----------------------------------------------------------#
 
 # Includes
-# shellcheck source=/etc/hestiacp/hestia.conf
-source /etc/hestiacp/hestia.conf
-# shellcheck source=/usr/local/hestia/func/main.sh
+# shellcheck source=/etc/hestiacp/devcp.conf
+source /etc/hestiacp/devcp.conf
+# shellcheck source=/usr/local/devcp/func/main.sh
 source $HESTIA/func/main.sh
 # load config file
-source_conf "$HESTIA/conf/hestia.conf"
+source_conf "$HESTIA/conf/devcp.conf"
 
 date=$(date +"%Y-%m-%d %H:%M:%S")
 
@@ -32,8 +32,8 @@ send_email_report() {
 	fi
 	cat "$tmpfile" | $SENDMAIL -s "$subj" "$email"
 	if [ "$DEBUG_MODE" = "true" ]; then
-		echo "[ $date | $PROXY_SYSTEM | PROXY ]" >> /var/log/hestia/debug.log 2>&1
-		cat "$tmpfile" >> /var/log/hestia/debug.log 2>&1
+		echo "[ $date | $PROXY_SYSTEM | PROXY ]" >> /var/log/devcp/debug.log 2>&1
+		cat "$tmpfile" >> /var/log/devcp/debug.log 2>&1
 	fi
 	rm -f $tmpfile
 }
@@ -71,7 +71,7 @@ if [ "$1" = "updatessl" ]; then
 fi
 
 if [ -f "$HESTIA/web/inc/nginx_proxy" ]; then
-	# if hestia is behind default nginx, restart in background with 15 sec delay
+	# if devcp is behind default nginx, restart in background with 15 sec delay
 	# background restart
 	if [ "$1" = 'background' ]; then
 		# Restart system
@@ -79,8 +79,8 @@ if [ -f "$HESTIA/web/inc/nginx_proxy" ]; then
 
 		# Preform a check if Nginx is valid as reload doesn't throw an error / exit
 		if [ "$DEBUG_MODE" = "true" ]; then
-			echo "[ $date | $PROXY_SYSTEM ]" >> /var/log/hestia/debug.log 2>&1
-			service $PROXY_SYSTEM configtest >> /var/log/hestia/debug.log 2>&1
+			echo "[ $date | $PROXY_SYSTEM ]" >> /var/log/devcp/debug.log 2>&1
+			service $PROXY_SYSTEM configtest >> /var/log/devcp/debug.log 2>&1
 		else
 			service $PROXY_SYSTEM configtest > /dev/null 2>&1
 		fi
@@ -105,8 +105,8 @@ else
 
 	# Preform a check if Nginx is valid as reload doesn't throw an error / exit
 	if [ "$DEBUG_MODE" = "true" ]; then
-		echo "[ $date | $PROXY_SYSTEM ]" >> /var/log/hestia/debug.log 2>&1
-		service $PROXY_SYSTEM configtest >> /var/log/hestia/debug.log 2>&1
+		echo "[ $date | $PROXY_SYSTEM ]" >> /var/log/devcp/debug.log 2>&1
+		service $PROXY_SYSTEM configtest >> /var/log/devcp/debug.log 2>&1
 	else
 		service $PROXY_SYSTEM configtest > /dev/null 2>&1
 	fi

@@ -73,18 +73,18 @@ rebuild_user_conf() {
 		-m -d "$HOMEDIR/$user" > /dev/null 2>&1
 
 	# Add a general group for normal users created by Hestia
-	if [ -z "$(grep "^hestia-users:" /etc/group)" ]; then
-		groupadd --system "hestia-users"
+	if [ -z "$(grep "^devcp-users:" /etc/group)" ]; then
+		groupadd --system "devcp-users"
 	fi
 
-	# Add membership to hestia-users group to non-admin users
+	# Add membership to devcp-users group to non-admin users
 	if [ "$user" = "$ROOT_USER" ]; then
 		setfacl -m "g:$ROOT_USER:r-x" "$HOMEDIR/$user"
 	else
-		usermod -a -G "hestia-users" "$user"
+		usermod -a -G "devcp-users" "$user"
 		setfacl -m "u:$user:r-x" "$HOMEDIR/$user"
 	fi
-	setfacl -m "g:hestia-users:---" "$HOMEDIR/$user"
+	setfacl -m "g:devcp-users:---" "$HOMEDIR/$user"
 
 	# Update user shell
 	/usr/bin/chsh -s "$shell" "$user" &> /dev/null
@@ -461,7 +461,7 @@ rebuild_web_domain_conf() {
 		chgrp $user $htpasswd $htaccess
 	done
 
-	# domain folder permissions: DOMAINDIR_WRITABLE: default-val:no source:hestia.conf
+	# domain folder permissions: DOMAINDIR_WRITABLE: default-val:no source:devcp.conf
 	DOMAINDIR_MODE=551
 	if [ "$DOMAINDIR_WRITABLE" = 'yes' ]; then DOMAINDIR_MODE=751; fi
 

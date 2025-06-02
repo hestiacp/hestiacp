@@ -20,20 +20,20 @@ notify=${4-no}
 new_user=${5-no}
 
 # Includes
-# shellcheck source=/etc/hestiacp/hestia.conf
-source /etc/hestiacp/hestia.conf
-# shellcheck source=/usr/local/hestia/func/main.sh
+# shellcheck source=/etc/hestiacp/devcp.conf
+source /etc/hestiacp/devcp.conf
+# shellcheck source=/usr/local/devcp/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/func/domain.sh
+# shellcheck source=/usr/local/devcp/func/domain.sh
 source $HESTIA/func/domain.sh
-# shellcheck source=/usr/local/hestia/func/ip.sh
+# shellcheck source=/usr/local/devcp/func/ip.sh
 source $HESTIA/func/ip.sh
-# shellcheck source=/usr/local/hestia/func/rebuild.sh
+# shellcheck source=/usr/local/devcp/func/rebuild.sh
 source $HESTIA/func/rebuild.sh
-# shellcheck source=/usr/local/hestia/func/syshealth.sh
+# shellcheck source=/usr/local/devcp/func/syshealth.sh
 source $HESTIA/func/syshealth.sh
 # load config file
-source_conf "$HESTIA/conf/hestia.conf"
+source_conf "$HESTIA/conf/devcp.conf"
 
 source_conf $HESTIA/conf/restic.conf
 
@@ -91,7 +91,7 @@ for domain in $domains; do
 
 		# Restoring web.conf
 		if [ -z "$check_config" ]; then
-			parse_object_kv_list $(cat $tmpdir/home/$user/backup/web/$domain/hestia/web.conf)
+			parse_object_kv_list $(cat $tmpdir/home/$user/backup/web/$domain/devcp/web.conf)
 
 			# Deleting conflicting aliases
 			for dom_alias in ${ALIAS//,/ }; do
@@ -147,16 +147,16 @@ for domain in $domains; do
 			# Copying SSL certificates
 			if [ "$SSL" = 'yes' ]; then
 
-				if [ -f "$tmpdir/home/$user/backup/web/$domain/hestia/$domain.crt" ]; then
-					cp -f "$tmpdir/home/$user/backup/web/$domain/hestia/$domain.crt" "$USER_DATA/ssl/"
-					if [ -f "$tmpdir/home/$user/backup/web/$domain/hestia/$domain.ca" ]; then
-						cp -f "$tmpdir/home/$user/backup/web/$domain/hestia/$domain.ca" "$USER_DATA/ssl/"
+				if [ -f "$tmpdir/home/$user/backup/web/$domain/devcp/$domain.crt" ]; then
+					cp -f "$tmpdir/home/$user/backup/web/$domain/devcp/$domain.crt" "$USER_DATA/ssl/"
+					if [ -f "$tmpdir/home/$user/backup/web/$domain/devcp/$domain.ca" ]; then
+						cp -f "$tmpdir/home/$user/backup/web/$domain/devcp/$domain.ca" "$USER_DATA/ssl/"
 					fi
-					if [ -f "$tmpdir/home/$user/backup/web/$domain/hestia/$domain.pem" ]; then
-						cp -f "$tmpdir/home/$user/backup/web/$domain/hestia/$domain.pem" "$USER_DATA/ssl/"
+					if [ -f "$tmpdir/home/$user/backup/web/$domain/devcp/$domain.pem" ]; then
+						cp -f "$tmpdir/home/$user/backup/web/$domain/devcp/$domain.pem" "$USER_DATA/ssl/"
 					fi
-					if [ -f "$tmpdir/home/$user/backup/web/$domain/hestia/$domain.key" ]; then
-						cp -f "$tmpdir/home/$user/backup/web/$domain/hestia/$domain.key" "$USER_DATA/ssl/"
+					if [ -f "$tmpdir/home/$user/backup/web/$domain/devcp/$domain.key" ]; then
+						cp -f "$tmpdir/home/$user/backup/web/$domain/devcp/$domain.key" "$USER_DATA/ssl/"
 					fi
 				fi
 			fi

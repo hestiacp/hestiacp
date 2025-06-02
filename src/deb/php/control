@@ -1,15 +1,15 @@
-Source: hestia-php
-Package: hestia-php
+Source: devcp-php
+Package: devcp-php
 Priority: optional
 Version: 8.3.17
 Section: admin
 Maintainer: HestaCP <info@hestiacp.com>
 Homepage: https://www.hestiacp.com
 Architecture: amd64
-Depends: hestia, libzip4, unzip, libonig5 | libonig4 | libonig2
+Depends: devcp, libzip4, unzip, libonig5 | libonig4 | libonig2
 Conflct: libzip5
-Description: hestia php-fpm
- hestia is an open source hosting control panel.
- hestia has a clean and focused interface without the clutter.
- hestia has the latest of very innovative technologies.
- hestia is a fork from VestaCP, special thanks to vestacp.com and Serghey Rodin
+Description: devcp php-fpm
+ devcp is an open source hosting control panel.
+ devcp has a clean and focused interface without the clutter.
+ devcp has the latest of very innovative technologies.
+ devcp is a fork from VestaCP, special thanks to vestacp.com and Serghey Rodin

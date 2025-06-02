@@ -28,24 +28,24 @@ if [ -z "$BACKUP" ]; then
 fi
 
 # Includes
-# shellcheck source=/etc/hestiacp/hestia.conf
-source /etc/hestiacp/hestia.conf
-# shellcheck source=/usr/local/hestia/func/main.sh
+# shellcheck source=/etc/hestiacp/devcp.conf
+source /etc/hestiacp/devcp.conf
+# shellcheck source=/usr/local/devcp/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/func/backup.sh
+# shellcheck source=/usr/local/devcp/func/backup.sh
 source $HESTIA/func/backup.sh
-# shellcheck source=/usr/local/hestia/func/domain.sh
+# shellcheck source=/usr/local/devcp/func/domain.sh
 source $HESTIA/func/domain.sh
-# shellcheck source=/usr/local/hestia/func/ip.sh
+# shellcheck source=/usr/local/devcp/func/ip.sh
 source $HESTIA/func/ip.sh
-# shellcheck source=/usr/local/hestia/func/db.sh
+# shellcheck source=/usr/local/devcp/func/db.sh
 source $HESTIA/func/db.sh
-# shellcheck source=/usr/local/hestia/func/rebuild.sh
+# shellcheck source=/usr/local/devcp/func/rebuild.sh
 source $HESTIA/func/rebuild.sh
-# shellcheck source=/usr/local/hestia/func/syshealth.sh
+# shellcheck source=/usr/local/devcp/func/syshealth.sh
 source $HESTIA/func/syshealth.sh
 # load config file
-source_conf "$HESTIA/conf/hestia.conf"
+source_conf "$HESTIA/conf/devcp.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -142,7 +142,7 @@ if [ "$?" -ne 0 ]; then
 fi
 
 # Set default backup source system
-backup_system="hestia"
+backup_system="devcp"
 backup_mode="gzip"
 
 # Check if it is a Vesta backup
@@ -633,24 +633,24 @@ if [ "$mail" != 'no' ] && [ -n "$MAIL_SYSTEM" ]; then
 			echo "  ssl_key = <$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.key" >> /etc/dovecot/conf.d/domains/$domain.conf
 			echo "}" >> /etc/dovecot/conf.d/domains/$domain.conf
 
-			if [ ! -d /usr/local/hestia/ssl/mail ]; then
-				mkdir /usr/local/hestia/ssl/mail
+			if [ ! -d /usr/local/devcp/ssl/mail ]; then
+				mkdir /usr/local/devcp/ssl/mail
 			fi
 
 			# Add domain SSL configuration to exim4
 			# Cleanup broken symlinks
-			find /usr/local/hestia/ssl/mail -xtype l -delete
+			find /usr/local/devcp/ssl/mail -xtype l -delete
 
-			ln -s -f $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem /usr/local/hestia/ssl/mail/mail.$domain.crt
-			ln -s -f $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.key /usr/local/hestia/ssl/mail/mail.$domain.key
+			ln -s -f $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem /usr/local/devcp/ssl/mail/mail.$domain.crt
+			ln -s -f $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.key /usr/local/devcp/ssl/mail/mail.$domain.key
 
 			# Set correct permissions on certificates
 			chmod 750 $HOMEDIR/$user/conf/mail/$domain/ssl
 			chown -R $MAIL_USER:mail $HOMEDIR/$user/conf/mail/$domain/ssl
 			chmod 0644 $HOMEDIR/$user/conf/mail/$domain/ssl/*
 			chown -h $user:mail $HOMEDIR/$user/conf/mail/$domain/ssl/*
-			chmod -R 0644 /usr/local/hestia/ssl/mail/*
-			chown -h $user:mail /usr/local/hestia/ssl/mail/*
+			chmod -R 0644 /usr/local/devcp/ssl/mail/*
+			chown -h $user:mail /usr/local/devcp/ssl/mail/*
 		fi
 
 		# Restoring email accounts
@@ -820,9 +820,9 @@ if [ "$cron" != 'no' ] && [ -n "$CRON_SYSTEM" ]; then
 		echo -e "$(date "+%F %T") $jobs cron jobs" | tee -a $tmpdir/restore.log
 	fi
 
-	# Replace paths from vesta to hestia
+	# Replace paths from vesta to devcp
 	if [ "$backup_system" == 'vesta' ] && [ "$user" == "$ROOT_USER" ]; then
-		sed -i 's/vesta/hestia/g' $tmpdir/cron/cron.conf
+		sed -i 's/vesta/devcp/g' $tmpdir/cron/cron.conf
 	fi
 
 	# Restoring cron jobs
@@ -909,7 +909,7 @@ chmod 700 $HOMEDIR/$user/tmp
 chown -R $user:$user $HOMEDIR/$user/tmp
 
 # Delete Hestia File manager key
-rm -f $HOMEDIR/$user/.ssh/hst-filemanager-key
+rm -f $HOMEDIR/$user/.ssh/dst-filemanager-key
 
 # Sending mail notification
 subj="$user → restore has been completed"

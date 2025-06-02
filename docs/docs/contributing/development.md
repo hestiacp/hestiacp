@@ -27,19 +27,19 @@ These instructions use [Multipass](https://multipass.run/) to create an Ubuntu V
    _(if running VM on ARM architecture e.g. Apple M1, use at least 12GB of memory)_
 
    ```bash
-   multipass launch --name hestia-dev --memory 4G --disk 15G --cpus 4
+   multipass launch --name devcp-dev --memory 4G --disk 15G --cpus 4
    ```
 
 1. Mount your cloned repository to the VM's home directory
 
    ```bash
-   multipass mount ~/projects/hestiacp hestia-dev:/home/ubuntu/hestiacp
+   multipass mount ~/projects/hestiacp devcp-dev:/home/ubuntu/hestiacp
    ```
 
 1. SSH into the VM as root then install some required packages
 
    ```bash
-   multipass exec hestia-dev -- sudo bash
+   multipass exec devcp-dev -- sudo bash
    sudo apt update && sudo apt install -y jq libjq1
    ```
 
@@ -47,7 +47,7 @@ These instructions use [Multipass](https://multipass.run/) to create an Ubuntu V
 
    ```bash
    cd src
-   ./hst_autocompile.sh --all --noinstall --keepbuild '~localsrc'
+   ./dst_autocompile.sh --all --noinstall --keepbuild '~localsrc'
    ```
 
 1. Navigate to `/install` in the VM then install Hestia with these flags
@@ -56,7 +56,7 @@ These instructions use [Multipass](https://multipass.run/) to create an Ubuntu V
 
    ```bash
    cd ../install
-   bash hst-install-ubuntu.sh --hostname demo.hestiacp.com --email admin@example.com --username admin --password Password123 --with-debs /tmp/hestiacp-src/deb/ --interactive no --force
+   bash dst-install-ubuntu.sh --hostname demo.hestiacp.com --email admin@example.com --username admin --password Password123 --with-debs /tmp/hestiacp-src/deb/ --interactive no --force
    ```
 
 1. Reboot the VM (and exit SSH session)
@@ -85,8 +85,8 @@ Hestia is now running in a virtual machine. If you'd like to make changes to the
 Sometimes (with Multipass) the mapping between the source code directory on your local machine to the directory in the VM can be lost with a "failed to obtain exit status for remote process" error. If this happens simply unmount and remount e.g.
 
 ```bash
-multipass unmount hestia-dev
-multipass mount ~/projects/hestiacp hestia-dev:/home/ubuntu/hestiacp
+multipass unmount devcp-dev
+multipass mount ~/projects/hestiacp devcp-dev:/home/ubuntu/hestiacp
 ```
 
 :::
@@ -104,14 +104,14 @@ Below are some instructions for making a change to Hestia's UI, running the buil
 1. SSH into the VM as root and navigate to `/src`
 
    ```bash
-   multipass exec hestia-dev -- sudo bash
+   multipass exec devcp-dev -- sudo bash
    cd src
    ```
 
 1. Run the Hestia build script
 
    ```bash
-   ./hst_autocompile.sh --hestia --install '~localsrc'
+   ./dst_autocompile.sh --devcp --install '~localsrc'
    ```
 
 1. Reload the page in your browser to see the change
@@ -120,7 +120,7 @@ Please refer to the [contributing guidelines](https://github.com/hestiacp/hestia
 
 ::: info
 A backup is created each time the Hestia build script is run. If you run this often it can fill up your VM's disk space.
-You can delete the backups by running `rm -rf /root/hst_backups` as root user on the VM.
+You can delete the backups by running `rm -rf /root/dst_backups` as root user on the VM.
 :::
 
 ## Running automated tests

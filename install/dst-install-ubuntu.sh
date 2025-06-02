@@ -36,12 +36,12 @@ echo -e "${NC}"
 #----------------------------------------------------------#
 export PATH=$PATH:/sbin
 export DEBIAN_FRONTEND=noninteractive
-RHOST='apt.hestiacp.com'
+RHOST='apt.devcpcp.com'
 VERSION='ubuntu'
-HESTIA='/usr/local/hestia'
-LOG="/root/hst_install_backups/hst_install-$(date +%d%m%Y%H%M).log"
+HESTIA='/usr/local/devcp'
+LOG="/root/dst_install_backups/dst_install-$(date +%d%m%Y%H%M).log"
 memory=$(grep 'MemTotal' /proc/meminfo | tr ' ' '\n' | grep [0-9])
-hst_backups="/root/hst_install_backups/$(date +%d%m%Y%H%M)"
+dst_backups="/root/dst_install_backups/$(date +%d%m%Y%H%M)"
 spinner="/-\|"
 os='ubuntu'
 release="$(lsb_release -s -r)"
@@ -67,7 +67,7 @@ node_v="20"
 # Defining software pack for all distros
 software="acl apache2 apache2.2-common apache2-suexec-custom apache2-utils apparmor-utils at awstats bc bind9 bsdmainutils bsdutils
   clamav-daemon cron curl dnsutils dovecot-imapd dovecot-managesieved dovecot-pop3d dovecot-sieve e2fslibs e2fsprogs
-  exim4 exim4-daemon-heavy expect fail2ban flex ftp git hestia=${HESTIA_INSTALL_VER} hestia-nginx hestia-php hestia-web-terminal
+  exim4 exim4-daemon-heavy expect fail2ban flex ftp git devcp=${HESTIA_INSTALL_VER} devcp-nginx devcp-php devcp-web-terminal
   idn2 imagemagick ipset jq libapache2-mod-fcgid libapache2-mod-php$fpm_v libapache2-mod-rpaf libonig5 libzip4 lsb-release
   lsof mariadb-client mariadb-common mariadb-server mc mysql-client mysql-common mysql-server nginx nodejs openssh-server
   php$fpm_v php$fpm_v-apcu php$fpm_v-bz2 php$fpm_v-cgi php$fpm_v-cli php$fpm_v-common php$fpm_v-curl php$fpm_v-gd
@@ -112,7 +112,7 @@ help() {
   -f, --force             Force installation
   -h, --help              Print this help
 
-  Example: bash $0 -e demo@hestiacp.com -p p4ssw0rd --multiphp yes"
+  Example: bash $0 -e demo@devcpcp.com -p p4ssw0rd --multiphp yes"
 	exit 1
 }
 
@@ -184,25 +184,25 @@ set_default_port() {
 	fi
 }
 
-# Write configuration KEY/VALUE pair to $HESTIA/conf/hestia.conf
+# Write configuration KEY/VALUE pair to $HESTIA/conf/devcp.conf
 write_config_value() {
 	local key="$1"
 	local value="$2"
-	echo "$key='$value'" >> $HESTIA/conf/hestia.conf
+	echo "$key='$value'" >> $HESTIA/conf/devcp.conf
 }
 
 # Sort configuration file values
-# Write final copy to $HESTIA/conf/hestia.conf for active usage
-# Duplicate file to $HESTIA/conf/defaults/hestia.conf to restore known good installation values
+# Write final copy to $HESTIA/conf/devcp.conf for active usage
+# Duplicate file to $HESTIA/conf/defaults/devcp.conf to restore known good installation values
 sort_config_file() {
-	sort $HESTIA/conf/hestia.conf -o /tmp/updconf
-	mv $HESTIA/conf/hestia.conf $HESTIA/conf/hestia.conf.bak
-	mv /tmp/updconf $HESTIA/conf/hestia.conf
-	rm -f $HESTIA/conf/hestia.conf.bak
+	sort $HESTIA/conf/devcp.conf -o /tmp/updconf
+	mv $HESTIA/conf/devcp.conf $HESTIA/conf/devcp.conf.bak
+	mv /tmp/updconf $HESTIA/conf/devcp.conf
+	rm -f $HESTIA/conf/devcp.conf.bak
 	if [ ! -d "$HESTIA/conf/defaults/" ]; then
 		mkdir -p "$HESTIA/conf/defaults/"
 	fi
-	cp $HESTIA/conf/hestia.conf $HESTIA/conf/defaults/hestia.conf
+	cp $HESTIA/conf/devcp.conf $HESTIA/conf/defaults/devcp.conf
 }
 
 # todo add check for usernames that are blocked
@@ -439,13 +439,13 @@ if [ "x$(id -u)" != 'x0' ]; then
 	check_result 1 "Script can be run executed only by root"
 fi
 
-if [ -d "/usr/local/hestia" ]; then
+if [ -d "/usr/local/devcp" ]; then
 	check_result 1 "Hestia install detected. Unable to continue"
 fi
 
 type=$(grep "^ID=" /etc/os-release | cut -f 2 -d '=')
 if [ "$type" = "debian" ]; then
-	check_result 1 "You are running the wrong installer for Debian. Please run hst-install.sh or hst-install-debian.sh instead."
+	check_result 1 "You are running the wrong installer for Debian. Please run dst-install.sh or dst-install-debian.sh instead."
 elif [ "$type" != "ubuntu" ]; then
 	check_result 1 "You are running an unsupported OS."
 fi
@@ -468,7 +468,7 @@ echo
 apt-get -qq update
 
 # Creating backup directory
-mkdir -p "$hst_backups"
+mkdir -p "$dst_backups"
 
 # Pre-install packages
 echo "[ * ] Installing dependencies..."
@@ -482,7 +482,7 @@ check_result $? "Unable to connect to the Hestia APT repository"
 # Check installed packages
 tmpfile=$(mktemp -p /tmp)
 dpkg --get-selections > $tmpfile
-conflicts_pkg="exim4 mariadb-server apache2 nginx hestia postfix ufw"
+conflicts_pkg="exim4 mariadb-server apache2 nginx devcp postfix ufw"
 
 # Drop postfix from the list if exim should not be installed
 if [ "$exim" = 'no' ]; then
@@ -544,7 +544,7 @@ fi
 
 # Validate whether installation script matches release version before continuing with install
 if [ -z "$withdebs" ] || [ ! -d "$withdebs" ]; then
-	release_branch_ver=$(curl -s https://raw.githubusercontent.com/hestiacp/hestiacp/release/src/deb/hestia/control | grep "Version:" | awk '{print $2}')
+	release_branch_ver=$(curl -s https://raw.githubusercontent.com/devcpcp/devcpcp/release/src/deb/devcp/control | grep "Version:" | awk '{print $2}')
 	if [ "$HESTIA_INSTALL_VER" != "$release_branch_ver" ]; then
 		echo
 		echo -e "\e[91mInstallation aborted\e[0m"
@@ -552,11 +552,11 @@ if [ -z "$withdebs" ] || [ ! -d "$withdebs" ]; then
 		echo -e "\e[33mERROR: Install script version does not match package version!\e[0m"
 		echo -e "\e[33mPlease download the installer from the release branch in order to continue:\e[0m"
 		echo ""
-		echo -e "\e[33mhttps://raw.githubusercontent.com/hestiacp/hestiacp/release/install/hst-install.sh\e[0m"
+		echo -e "\e[33mhttps://raw.githubusercontent.com/devcpcp/devcpcp/release/install/dst-install.sh\e[0m"
 		echo ""
 		echo -e "\e[33mTo test pre-release versions, build the .deb packages and re-run the installer:\e[0m"
-		echo -e "  \e[33m./hst_autocompile.sh \e[1m--hestia branchname no\e[21m\e[0m"
-		echo -e "  \e[33m./hst-install.sh .. \e[1m--with-debs /tmp/hestiacp-src/debs\e[21m\e[0m"
+		echo -e "  \e[33m./dst_autocompile.sh \e[1m--devcp branchname no\e[21m\e[0m"
+		echo -e "  \e[33m./dst-install.sh .. \e[1m--with-debs /tmp/devcpcp-src/debs\e[21m\e[0m"
 		echo ""
 		check_result 1 "Installation aborted"
 	fi
@@ -576,7 +576,7 @@ case $architecture in
 		echo -e "\e[33mERROR: $architecture is currently not supported!\e[0m"
 		echo -e "\e[33mPlease verify the achitecture used is currenlty supported\e[0m"
 		echo ""
-		echo -e "\e[33mhttps://github.com/hestiacp/hestiacp/blob/main/README.md\e[0m"
+		echo -e "\e[33mhttps://github.com/devcpcp/devcpcp/blob/main/README.md\e[0m"
 		echo ""
 		check_result 1 "Installation aborted"
 		;;
@@ -605,7 +605,7 @@ install_welcome_message() {
 		echo "                          USE AT YOUR OWN RISK                      "
 	fi
 	echo "                                  ${DISPLAY_VER}                        "
-	echo "                            www.hestiacp.com                            "
+	echo "                            www.devcpcp.com                            "
 	echo
 	echo "========================================================================"
 	echo
@@ -797,7 +797,7 @@ if [[ -z "$email" ]]; then
 fi
 
 # Defining backup directory
-echo -e "Installation backup directory: $hst_backups"
+echo -e "Installation backup directory: $dst_backups"
 
 # Print Log File Path
 echo "Installation log file: $LOG"
@@ -859,10 +859,10 @@ if [ "$mysql" = 'yes' ]; then
 	curl -s https://mariadb.org/mariadb_release_signing_key.asc | gpg --dearmor | tee /usr/share/keyrings/mariadb-keyring.gpg > /dev/null 2>&1
 fi
 
-# Installing HestiaCP repo
+# Installing DevCP repo
 echo "[ * ] Hestia Control Panel"
-echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/hestia-keyring.gpg] https://$RHOST/ $codename main" > $apt/hestia.list
-gpg --no-default-keyring --keyring /usr/share/keyrings/hestia-keyring.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys A189E93654F0B0E5 > /dev/null 2>&1
+echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/devcp-keyring.gpg] https://$RHOST/ $codename main" > $apt/devcp.list
+gpg --no-default-keyring --keyring /usr/share/keyrings/devcp-keyring.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys A189E93654F0B0E5 > /dev/null 2>&1
 
 # Installing Node.js repo
 if [ "$webterminal" = 'yes' ]; then
@@ -907,67 +907,67 @@ check_result $? 'apt-get upgrade failed'
 #----------------------------------------------------------#
 
 # Creating backup directory tree
-mkdir -p $hst_backups
-cd $hst_backups
+mkdir -p $dst_backups
+cd $dst_backups
 mkdir nginx apache2 php vsftpd proftpd bind exim4 dovecot clamd
-mkdir spamassassin mysql postgresql openssl hestia
+mkdir spamassassin mysql postgresql openssl devcp
 
 # Backup OpenSSL configuration
-cp /etc/ssl/openssl.cnf $hst_backups/openssl > /dev/null 2>&1
+cp /etc/ssl/openssl.cnf $dst_backups/openssl > /dev/null 2>&1
 
 # Backup nginx configuration
 systemctl stop nginx > /dev/null 2>&1
-cp -r /etc/nginx/* $hst_backups/nginx > /dev/null 2>&1
+cp -r /etc/nginx/* $dst_backups/nginx > /dev/null 2>&1
 
 # Backup Apache configuration
 systemctl stop apache2 > /dev/null 2>&1
-cp -r /etc/apache2/* $hst_backups/apache2 > /dev/null 2>&1
+cp -r /etc/apache2/* $dst_backups/apache2 > /dev/null 2>&1
 rm -f /etc/apache2/conf.d/* > /dev/null 2>&1
 
 # Backup PHP-FPM configuration
 systemctl stop php*-fpm > /dev/null 2>&1
-cp -r /etc/php/* $hst_backups/php > /dev/null 2>&1
+cp -r /etc/php/* $dst_backups/php > /dev/null 2>&1
 
 # Backup Bind configuration
 systemctl stop bind9 > /dev/null 2>&1
-cp -r /etc/bind/* $hst_backups/bind > /dev/null 2>&1
+cp -r /etc/bind/* $dst_backups/bind > /dev/null 2>&1
 
 # Backup Vsftpd configuration
 systemctl stop vsftpd > /dev/null 2>&1
-cp /etc/vsftpd.conf $hst_backups/vsftpd > /dev/null 2>&1
+cp /etc/vsftpd.conf $dst_backups/vsftpd > /dev/null 2>&1
 
 # Backup ProFTPD configuration
 systemctl stop proftpd > /dev/null 2>&1
-cp /etc/proftpd/* $hst_backups/proftpd > /dev/null 2>&1
+cp /etc/proftpd/* $dst_backups/proftpd > /dev/null 2>&1
 
 # Backup Exim configuration
 systemctl stop exim4 > /dev/null 2>&1
-cp -r /etc/exim4/* $hst_backups/exim4 > /dev/null 2>&1
+cp -r /etc/exim4/* $dst_backups/exim4 > /dev/null 2>&1
 
 # Backup ClamAV configuration
 systemctl stop clamav-daemon > /dev/null 2>&1
-cp -r /etc/clamav/* $hst_backups/clamav > /dev/null 2>&1
+cp -r /etc/clamav/* $dst_backups/clamav > /dev/null 2>&1
 
 # Backup SpamAssassin configuration
 systemctl stop spamassassin > /dev/null 2>&1
-cp -r /etc/spamassassin/* $hst_backups/spamassassin > /dev/null 2>&1
+cp -r /etc/spamassassin/* $dst_backups/spamassassin > /dev/null 2>&1
 
 # Backup Dovecot configuration
 systemctl stop dovecot > /dev/null 2>&1
-cp /etc/dovecot.conf $hst_backups/dovecot > /dev/null 2>&1
-cp -r /etc/dovecot/* $hst_backups/dovecot > /dev/null 2>&1
+cp /etc/dovecot.conf $dst_backups/dovecot > /dev/null 2>&1
+cp -r /etc/dovecot/* $dst_backups/dovecot > /dev/null 2>&1
 
 # Backup MySQL/MariaDB configuration and data
 systemctl stop mysql > /dev/null 2>&1
 killall -9 mysqld > /dev/null 2>&1
-mv /var/lib/mysql $hst_backups/mysql/mysql_datadir > /dev/null 2>&1
-cp -r /etc/mysql/* $hst_backups/mysql > /dev/null 2>&1
-mv -f /root/.my.cnf $hst_backups/mysql > /dev/null 2>&1
+mv /var/lib/mysql $dst_backups/mysql/mysql_datadir > /dev/null 2>&1
+cp -r /etc/mysql/* $dst_backups/mysql > /dev/null 2>&1
+mv -f /root/.my.cnf $dst_backups/mysql > /dev/null 2>&1
 
 # Backup Hestia
-systemctl stop hestia > /dev/null 2>&1
-cp -r $HESTIA/* $hst_backups/hestia > /dev/null 2>&1
-apt-get -y purge hestia hestia-nginx hestia-php > /dev/null 2>&1
+systemctl stop devcp > /dev/null 2>&1
+cp -r $HESTIA/* $dst_backups/devcp > /dev/null 2>&1
+apt-get -y purge devcp devcp-nginx devcp-php > /dev/null 2>&1
 rm -rf $HESTIA > /dev/null 2>&1
 
 #----------------------------------------------------------#
@@ -1068,7 +1068,7 @@ if [ "$iptables" = 'no' ]; then
 fi
 if [ "$webterminal" = 'no' ]; then
 	software=$(echo "$software" | sed -e "s/nodejs//")
-	software=$(echo "$software" | sed -e "s/hestia-web-terminal//")
+	software=$(echo "$software" | sed -e "s/devcp-web-terminal//")
 fi
 if [ "$phpfpm" = 'yes' ]; then
 	software=$(echo "$software" | sed -e "s/php$fpm_v-cgi//")
@@ -1076,10 +1076,10 @@ if [ "$phpfpm" = 'yes' ]; then
 	software=$(echo "$software" | sed -e "s/libapache2-mod-php$fpm_v//")
 fi
 if [ -d "$withdebs" ]; then
-	software=$(echo "$software" | sed -e "s/hestia-nginx//")
-	software=$(echo "$software" | sed -e "s/hestia-php//")
-	software=$(echo "$software" | sed -e "s/hestia-web-terminal//")
-	software=$(echo "$software" | sed -e "s/hestia=${HESTIA_INSTALL_VER}//")
+	software=$(echo "$software" | sed -e "s/devcp-nginx//")
+	software=$(echo "$software" | sed -e "s/devcp-php//")
+	software=$(echo "$software" | sed -e "s/devcp-web-terminal//")
+	software=$(echo "$software" | sed -e "s/devcp=${HESTIA_INSTALL_VER}//")
 fi
 if [ "$release" = '20.04' ]; then
 	software=$(echo "$software" | sed -e "s/libzip4/libzip5/")
@@ -1144,32 +1144,32 @@ echo
 # Install Hestia packages from local folder
 if [ -n "$withdebs" ] && [ -d "$withdebs" ]; then
 	echo "[ * ] Installing local package files..."
-	echo "    - hestia core package"
-	dpkg -i $withdebs/hestia_*.deb > /dev/null 2>&1
+	echo "    - devcp core package"
+	dpkg -i $withdebs/devcp_*.deb > /dev/null 2>&1
 
-	if [ -z $(ls $withdebs/hestia-php_*.deb 2> /dev/null) ]; then
-		echo "    - hestia-php backend package (from apt)"
-		apt-get -y install hestia-php > /dev/null 2>&1
+	if [ -z $(ls $withdebs/devcp-php_*.deb 2> /dev/null) ]; then
+		echo "    - devcp-php backend package (from apt)"
+		apt-get -y install devcp-php > /dev/null 2>&1
 	else
-		echo "    - hestia-php backend package"
-		dpkg -i $withdebs/hestia-php_*.deb > /dev/null 2>&1
+		echo "    - devcp-php backend package"
+		dpkg -i $withdebs/devcp-php_*.deb > /dev/null 2>&1
 	fi
 
-	if [ -z $(ls $withdebs/hestia-nginx_*.deb 2> /dev/null) ]; then
-		echo "    - hestia-nginx backend package (from apt)"
-		apt-get -y install hestia-nginx > /dev/null 2>&1
+	if [ -z $(ls $withdebs/devcp-nginx_*.deb 2> /dev/null) ]; then
+		echo "    - devcp-nginx backend package (from apt)"
+		apt-get -y install devcp-nginx > /dev/null 2>&1
 	else
-		echo "    - hestia-nginx backend package"
-		dpkg -i $withdebs/hestia-nginx_*.deb > /dev/null 2>&1
+		echo "    - devcp-nginx backend package"
+		dpkg -i $withdebs/devcp-nginx_*.deb > /dev/null 2>&1
 	fi
 
 	if [ "$webterminal" = "yes" ]; then
-		if [ -z $(ls $withdebs/hestia-web-terminal_*.deb 2> /dev/null) ]; then
-			echo "    - hestia-web-terminal package (from apt)"
-			apt-get -y install hestia-web-terminal > /dev/null 2>&1
+		if [ -z $(ls $withdebs/devcp-web-terminal_*.deb 2> /dev/null) ]; then
+			echo "    - devcp-web-terminal package (from apt)"
+			apt-get -y install devcp-web-terminal > /dev/null 2>&1
 		else
-			echo "    - hestia-web-terminal"
-			dpkg -i $withdebs/hestia-web-terminal_*.deb > /dev/null 2>&1
+			echo "    - devcp-web-terminal"
+			dpkg -i $withdebs/devcp-web-terminal_*.deb > /dev/null 2>&1
 		fi
 	fi
 fi
@@ -1185,20 +1185,20 @@ echo "[ * ] Configuring system settings..."
 
 # Generate a random password
 random_password=$(gen_pass '32')
-# Create the new hestiaweb user
-/usr/sbin/useradd "hestiaweb" -c "$email" --no-create-home
-# do not allow login into hestiaweb user
-echo hestiaweb:$random_password | sudo chpasswd -e
+# Create the new devcpweb user
+/usr/sbin/useradd "devcpweb" -c "$email" --no-create-home
+# do not allow login into devcpweb user
+echo devcpweb:$random_password | sudo chpasswd -e
 
 # Add a general group for normal users created by Hestia
-if [ -z "$(grep ^hestia-users: /etc/group)" ]; then
-	groupadd --system "hestia-users"
+if [ -z "$(grep ^devcp-users: /etc/group)" ]; then
+	groupadd --system "devcp-users"
 fi
 
 # Create user for php-fpm configs
-/usr/sbin/useradd "hestiamail" -c "$email" --no-create-home
+/usr/sbin/useradd "devcpmail" -c "$email" --no-create-home
 # Ensures proper permissions for Hestia service interactions.
-/usr/sbin/adduser hestiamail hestia-users
+/usr/sbin/adduser devcpmail devcp-users
 
 # Enable SFTP subsystem for SSH
 sftp_subsys_enabled=$(grep -iE "^#?.*subsystem.+(sftp )?sftp-server" /etc/ssh/sshd_config)
@@ -1288,7 +1288,7 @@ mount -o remount,defaults,hidepid=2 /proc > /dev/null 2>&1
 if [ $? -ne 0 ]; then
 	echo "Info: Cannot remount /proc (LXC containers require additional perm added to host apparmor profile)"
 else
-	echo "@reboot root sleep 5 && mount -o remount,defaults,hidepid=2 /proc" > /etc/cron.d/hestia-proc
+	echo "@reboot root sleep 5 && mount -o remount,defaults,hidepid=2 /proc" > /etc/cron.d/devcp-proc
 fi
 
 #----------------------------------------------------------#
@@ -1298,29 +1298,29 @@ fi
 echo "[ * ] Configuring Hestia Control Panel..."
 # Installing sudo configuration
 mkdir -p /etc/sudoers.d
-cp -f $HESTIA_COMMON_DIR/sudo/hestiaweb /etc/sudoers.d/
-chmod 440 /etc/sudoers.d/hestiaweb
+cp -f $HESTIA_COMMON_DIR/sudo/devcpweb /etc/sudoers.d/
+chmod 440 /etc/sudoers.d/devcpweb
 
 # Add Hestia global config
-if [[ ! -e /etc/hestiacp/hestia.conf ]]; then
-	mkdir -p /etc/hestiacp
-	echo -e "# Do not edit this file, will get overwritten on next upgrade, use /etc/hestiacp/local.conf instead\n\nexport HESTIA='/usr/local/hestia'\n\n[[ -f /etc/hestiacp/local.conf ]] && source /etc/hestiacp/local.conf" > /etc/hestiacp/hestia.conf
+if [[ ! -e /etc/devcpcp/devcp.conf ]]; then
+	mkdir -p /etc/devcpcp
+	echo -e "# Do not edit this file, will get overwritten on next upgrade, use /etc/devcpcp/local.conf instead\n\nexport HESTIA='/usr/local/devcp'\n\n[[ -f /etc/devcpcp/local.conf ]] && source /etc/devcpcp/local.conf" > /etc/devcpcp/devcp.conf
 fi
 
 # Configuring system env
-echo "export HESTIA='$HESTIA'" > /etc/profile.d/hestia.sh
-echo 'PATH=$PATH:'$HESTIA'/bin' >> /etc/profile.d/hestia.sh
-echo 'export PATH' >> /etc/profile.d/hestia.sh
-chmod 755 /etc/profile.d/hestia.sh
-source /etc/profile.d/hestia.sh
+echo "export HESTIA='$HESTIA'" > /etc/profile.d/devcp.sh
+echo 'PATH=$PATH:'$HESTIA'/bin' >> /etc/profile.d/devcp.sh
+echo 'export PATH' >> /etc/profile.d/devcp.sh
+chmod 755 /etc/profile.d/devcp.sh
+source /etc/profile.d/devcp.sh
 
 # Configuring logrotate for Hestia logs
-cp -f $HESTIA_INSTALL_DIR/logrotate/hestia /etc/logrotate.d/hestia
+cp -f $HESTIA_INSTALL_DIR/logrotate/devcp /etc/logrotate.d/devcp
 
 # Create log path and symbolic link
-rm -f /var/log/hestia
-mkdir -p /var/log/hestia
-ln -s /var/log/hestia $HESTIA/log
+rm -f /var/log/devcp
+mkdir -p /var/log/devcp
+ln -s /var/log/devcp $HESTIA/log
 
 # Building directory tree and creating some blank files for Hestia
 mkdir -p $HESTIA/conf $HESTIA/ssl $HESTIA/data/ips \
@@ -1332,15 +1332,15 @@ touch $HESTIA/data/queue/backup.pipe $HESTIA/data/queue/disk.pipe \
 	$HESTIA/log/nginx-error.log $HESTIA/log/auth.log $HESTIA/log/backup.log
 chmod 750 $HESTIA/conf $HESTIA/data/users $HESTIA/data/ips $HESTIA/log
 chmod -R 750 $HESTIA/data/queue
-chmod 660 /var/log/hestia/*
+chmod 660 /var/log/devcp/*
 chmod 770 $HESTIA/data/sessions
 
 # Generating Hestia configuration
-rm -f $HESTIA/conf/hestia.conf > /dev/null 2>&1
-touch $HESTIA/conf/hestia.conf
-chmod 660 $HESTIA/conf/hestia.conf
+rm -f $HESTIA/conf/devcp.conf > /dev/null 2>&1
+touch $HESTIA/conf/devcp.conf
+chmod 660 $HESTIA/conf/devcp.conf
 
-# Write default port value to hestia.conf
+# Write default port value to devcp.conf
 # If a custom port is specified it will be set at the end of the installation process
 write_config_value "BACKEND_PORT" "8083"
 
@@ -1527,20 +1527,20 @@ if [ "$release" = "20.04" ]; then
 		sed -i '/^oid_section		= new_oids$/a \\n# System default\nopenssl_conf = default_conf' /etc/ssl/openssl.cnf
 	fi
 	if ! grep -qw "^[default_conf]$" /etc/ssl/openssl.cnf 2> /dev/null; then
-		sed -i '$a [default_conf]\nssl_conf = ssl_sect\n\n[ssl_sect]\nsystem_default = hestia_openssl_sect\n\n[hestia_openssl_sect]\nCiphersuites = '"$tls13_ciphers"'\nOptions = PrioritizeChaCha' /etc/ssl/openssl.cnf
+		sed -i '$a [default_conf]\nssl_conf = ssl_sect\n\n[ssl_sect]\nsystem_default = devcp_openssl_sect\n\n[devcp_openssl_sect]\nCiphersuites = '"$tls13_ciphers"'\nOptions = PrioritizeChaCha' /etc/ssl/openssl.cnf
 	elif grep -qw "^system_default = system_default_sect$" /etc/ssl/openssl.cnf 2> /dev/null; then
-		sed -i '/^system_default = system_default_sect$/a system_default = hestia_openssl_sect\n\n[hestia_openssl_sect]\nCiphersuites = '"$tls13_ciphers"'\nOptions = PrioritizeChaCha' /etc/ssl/openssl.cnf
+		sed -i '/^system_default = system_default_sect$/a system_default = devcp_openssl_sect\n\n[devcp_openssl_sect]\nCiphersuites = '"$tls13_ciphers"'\nOptions = PrioritizeChaCha' /etc/ssl/openssl.cnf
 	fi
 elif [ "$release" = "22.04" ]; then
-	sed -i '/^system_default = system_default_sect$/a system_default = hestia_openssl_sect\n\n[hestia_openssl_sect]\nCiphersuites = '"$tls13_ciphers"'\nOptions = PrioritizeChaCha' /etc/ssl/openssl.cnf
+	sed -i '/^system_default = system_default_sect$/a system_default = devcp_openssl_sect\n\n[devcp_openssl_sect]\nCiphersuites = '"$tls13_ciphers"'\nOptions = PrioritizeChaCha' /etc/ssl/openssl.cnf
 elif [ "$release" = "24.04" ]; then
 	if ! grep -qw "^ssl_conf = ssl_sect$" /etc/ssl/openssl.cnf 2> /dev/null; then
 		sed -i '/providers = provider_sect$/a ssl_conf = ssl_sect' /etc/ssl/openssl.cnf
 	fi
 	if ! grep -qw "^[ssl_sect]$" /etc/ssl/openssl.cnf 2> /dev/null; then
-		sed -i '$a \\n[ssl_sect]\nsystem_default = hestia_openssl_sect\n\n[hestia_openssl_sect]\nCiphersuites = '"$tls13_ciphers"'\nOptions = PrioritizeChaCha' /etc/ssl/openssl.cnf
+		sed -i '$a \\n[ssl_sect]\nsystem_default = devcp_openssl_sect\n\n[devcp_openssl_sect]\nCiphersuites = '"$tls13_ciphers"'\nOptions = PrioritizeChaCha' /etc/ssl/openssl.cnf
 	elif grep -qw "^system_default = system_default_sect$" /etc/ssl/openssl.cnf 2> /dev/null; then
-		sed -i '/^system_default = system_default_sect$/a system_default = hestia_openssl_sect\n\n[hestia_openssl_sect]\nCiphersuites = '"$tls13_ciphers"'\nOptions = PrioritizeChaCha' /etc/ssl/openssl.cnf
+		sed -i '/^system_default = system_default_sect$/a system_default = devcp_openssl_sect\n\n[devcp_openssl_sect]\nCiphersuites = '"$tls13_ciphers"'\nOptions = PrioritizeChaCha' /etc/ssl/openssl.cnf
 	fi
 fi
 
@@ -1662,8 +1662,8 @@ if [ "$apache" = 'yes' ]; then
 
 	# Copy configuration files
 	cp -f $HESTIA_INSTALL_DIR/apache2/apache2.conf /etc/apache2/
-	cp -f $HESTIA_INSTALL_DIR/apache2/status.conf /etc/apache2/mods-available/hestia-status.conf
-	cp -f /etc/apache2/mods-available/status.load /etc/apache2/mods-available/hestia-status.load
+	cp -f $HESTIA_INSTALL_DIR/apache2/status.conf /etc/apache2/mods-available/devcp-status.conf
+	cp -f /etc/apache2/mods-available/status.load /etc/apache2/mods-available/devcp-status.load
 	cp -f $HESTIA_INSTALL_DIR/logrotate/apache2 /etc/logrotate.d/
 
 	# Enable needed modules
@@ -1673,7 +1673,7 @@ if [ "$apache" = 'yes' ]; then
 	a2enmod actions > /dev/null 2>&1
 	a2enmod headers > /dev/null 2>&1
 	a2dismod --quiet status > /dev/null 2>&1
-	a2enmod --quiet hestia-status > /dev/null 2>&1
+	a2enmod --quiet devcp-status > /dev/null 2>&1
 
 	# Enable mod_ruid/mpm_itk or mpm_event
 	if [ "$phpfpm" = 'yes' ]; then
@@ -1681,14 +1681,14 @@ if [ "$apache" = 'yes' ]; then
 		a2dismod php$fpm_v > /dev/null 2>&1
 		a2dismod mpm_prefork > /dev/null 2>&1
 		a2enmod mpm_event > /dev/null 2>&1
-		cp -f $HESTIA_INSTALL_DIR/apache2/hestia-event.conf /etc/apache2/conf.d/
+		cp -f $HESTIA_INSTALL_DIR/apache2/devcp-event.conf /etc/apache2/conf.d/
 	else
 		a2enmod ruid2 > /dev/null 2>&1
 	fi
 
-	echo "# Powered by hestia" > /etc/apache2/sites-available/default
-	echo "# Powered by hestia" > /etc/apache2/sites-available/default-ssl
-	echo "# Powered by hestia" > /etc/apache2/ports.conf
+	echo "# Powered by devcp" > /etc/apache2/sites-available/default
+	echo "# Powered by devcp" > /etc/apache2/sites-available/default-ssl
+	echo "# Powered by devcp" > /etc/apache2/ports.conf
 	echo -e "/home\npublic_html/cgi-bin" > /etc/apache2/suexec/www-data
 	touch /var/log/apache2/access.log /var/log/apache2/error.log
 	mkdir -p /var/log/apache2/domains
@@ -1697,7 +1697,7 @@ if [ "$apache" = 'yes' ]; then
 	chmod 751 /var/log/apache2/domains
 
 	# Prevent remote access to server-status page
-	sed -i '/Allow from all/d' /etc/apache2/mods-available/hestia-status.conf
+	sed -i '/Allow from all/d' /etc/apache2/mods-available/devcp-status.conf
 
 	update-rc.d apache2 defaults > /dev/null 2>&1
 	systemctl start apache2 >> $LOG
@@ -1880,7 +1880,7 @@ fi
 #----------------------------------------------------------#
 
 # Source upgrade.conf with phpmyadmin versions
-# shellcheck source=/usr/local/hestia/install/upgrade/upgrade.conf
+# shellcheck source=/usr/local/devcp/install/upgrade/upgrade.conf
 source $HESTIA/install/upgrade/upgrade.conf
 
 if [ "$mysql" = 'yes' ] || [ "$mysql8" = 'yes' ]; then
@@ -1916,7 +1916,7 @@ if [ "$mysql" = 'yes' ] || [ "$mysql8" = 'yes' ]; then
 	# Create temporary folder and change permission
 	mkdir -p /var/lib/phpmyadmin/tmp
 	chmod 770 /var/lib/phpmyadmin/tmp
-	chown -R hestiamail:www-data /usr/share/phpmyadmin/tmp/
+	chown -R devcpmail:www-data /usr/share/phpmyadmin/tmp/
 
 	# Generate blow fish
 	blowfish=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 32)
@@ -1931,11 +1931,11 @@ if [ "$mysql" = 'yes' ] || [ "$mysql8" = 'yes' ]; then
 
 	# Special thanks to Pavel Galkin (https://skurudo.ru)
 	# https://github.com/skurudo/phpmyadmin-fixer
-	# shellcheck source=/usr/local/hestia/install/deb/phpmyadmin/pma.sh
+	# shellcheck source=/usr/local/devcp/install/deb/phpmyadmin/pma.sh
 	source $HESTIA_INSTALL_DIR/phpmyadmin/pma.sh > /dev/null 2>&1
 
 	# Limit access to /etc/phpmyadmin/
-	chown -R root:hestiamail /etc/phpmyadmin/
+	chown -R root:devcpmail /etc/phpmyadmin/
 	chmod 640 /etc/phpmyadmin/config.inc.php
 	chmod 750 /etc/phpmyadmin/conf.d/
 fi
@@ -1954,7 +1954,7 @@ if [ "$postgresql" = 'yes' ]; then
 	mkdir -p /etc/phppgadmin/
 	mkdir -p /usr/share/phppgadmin/
 
-	wget --retry-connrefused --quiet https://github.com/hestiacp/phppgadmin/releases/download/v$pga_v/phppgadmin-v$pga_v.tar.gz
+	wget --retry-connrefused --quiet https://github.com/devcpcp/phppgadmin/releases/download/v$pga_v/phppgadmin-v$pga_v.tar.gz
 	tar xzf phppgadmin-v$pga_v.tar.gz -C /usr/share/phppgadmin/
 
 	cp -f $HESTIA_INSTALL_DIR/pga/config.inc.php /etc/phppgadmin/
@@ -1971,7 +1971,7 @@ if [ "$postgresql" = 'yes' ]; then
 	$HESTIA/bin/v-change-sys-db-alias 'pga' "phppgadmin"
 
 	# Limit access to /etc/phppgadmin/
-	chown -R root:hestiamail /etc/phppgadmin/
+	chown -R root:devcpmail /etc/phppgadmin/
 	chmod 640 /etc/phppgadmin/config.inc.php
 fi
 
@@ -2233,7 +2233,7 @@ if [ "$sieve" = 'yes' ]; then
 		mkdir -p $RC_CONFIG_DIR/plugins/managesieve
 		cp -f $HESTIA_COMMON_DIR/roundcube/plugins/config_managesieve.inc.php $RC_CONFIG_DIR/plugins/managesieve/config.inc.php
 		ln -s $RC_CONFIG_DIR/plugins/managesieve/config.inc.php $RC_INSTALL_DIR/plugins/managesieve/config.inc.php
-		chown -R hestiamail:www-data $RC_CONFIG_DIR/
+		chown -R devcpmail:www-data $RC_CONFIG_DIR/
 		chmod 751 -R $RC_CONFIG_DIR
 		chmod 644 $RC_CONFIG_DIR/*.php
 		chmod 644 $RC_CONFIG_DIR/plugins/managesieve/config.inc.php
@@ -2277,8 +2277,8 @@ $HESTIA/bin/v-add-sys-filemanager quiet
 if [ "$webterminal" = 'yes' ]; then
 	write_config_value "WEB_TERMINAL" "true"
 	systemctl daemon-reload > /dev/null 2>&1
-	systemctl enable hestia-web-terminal > /dev/null 2>&1
-	systemctl restart hestia-web-terminal > /dev/null 2>&1
+	systemctl enable devcp-web-terminal > /dev/null 2>&1
+	systemctl restart devcp-web-terminal > /dev/null 2>&1
 else
 	write_config_value "WEB_TERMINAL" "false"
 fi
@@ -2317,7 +2317,7 @@ if [ "$iptables" = 'yes' ]; then
 fi
 
 # Get public IP
-pub_ipv4="$(curl -fsLm5 --retry 2 --ipv4 https://ip.hestiacp.com/)"
+pub_ipv4="$(curl -fsLm5 --retry 2 --ipv4 https://ip.devcpcp.com/)"
 if [ -n "$pub_ipv4" ] && [ "$pub_ipv4" != "$ip" ]; then
 	if [ -e /etc/rc.local ]; then
 		sed -i '/exit 0/d' /etc/rc.local
@@ -2373,25 +2373,25 @@ export SCHEDULED_RESTART="yes"
 
 min=$(gen_pass '012345' '2')
 hour=$(gen_pass '1234567' '1')
-echo "MAILTO=\"\"" > /var/spool/cron/crontabs/hestiaweb
-echo "CONTENT_TYPE=\"text/plain; charset=utf-8\"" >> /var/spool/cron/crontabs/hestiaweb
-echo "*/2 * * * * sudo /usr/local/hestia/bin/v-update-sys-queue restart" >> /var/spool/cron/crontabs/hestiaweb
-echo "10 00 * * * sudo /usr/local/hestia/bin/v-update-sys-queue daily" >> /var/spool/cron/crontabs/hestiaweb
-echo "15 02 * * * sudo /usr/local/hestia/bin/v-update-sys-queue disk" >> /var/spool/cron/crontabs/hestiaweb
-echo "10 00 * * * sudo /usr/local/hestia/bin/v-update-sys-queue traffic" >> /var/spool/cron/crontabs/hestiaweb
-echo "30 03 * * * sudo /usr/local/hestia/bin/v-update-sys-queue webstats" >> /var/spool/cron/crontabs/hestiaweb
-echo "*/5 * * * * sudo /usr/local/hestia/bin/v-update-sys-queue backup" >> /var/spool/cron/crontabs/hestiaweb
-echo "10 05 * * * sudo /usr/local/hestia/bin/v-backup-users" >> /var/spool/cron/crontabs/hestiaweb
-echo "20 00 * * * sudo /usr/local/hestia/bin/v-update-user-stats" >> /var/spool/cron/crontabs/hestiaweb
-echo "*/5 * * * * sudo /usr/local/hestia/bin/v-update-sys-rrd" >> /var/spool/cron/crontabs/hestiaweb
-echo "$min $hour * * * sudo /usr/local/hestia/bin/v-update-letsencrypt-ssl" >> /var/spool/cron/crontabs/hestiaweb
-echo "41 4 * * * sudo /usr/local/hestia/bin/v-update-sys-hestia-all" >> /var/spool/cron/crontabs/hestiaweb
+echo "MAILTO=\"\"" > /var/spool/cron/crontabs/devcpweb
+echo "CONTENT_TYPE=\"text/plain; charset=utf-8\"" >> /var/spool/cron/crontabs/devcpweb
+echo "*/2 * * * * sudo /usr/local/devcp/bin/v-update-sys-queue restart" >> /var/spool/cron/crontabs/devcpweb
+echo "10 00 * * * sudo /usr/local/devcp/bin/v-update-sys-queue daily" >> /var/spool/cron/crontabs/devcpweb
+echo "15 02 * * * sudo /usr/local/devcp/bin/v-update-sys-queue disk" >> /var/spool/cron/crontabs/devcpweb
+echo "10 00 * * * sudo /usr/local/devcp/bin/v-update-sys-queue traffic" >> /var/spool/cron/crontabs/devcpweb
+echo "30 03 * * * sudo /usr/local/devcp/bin/v-update-sys-queue webstats" >> /var/spool/cron/crontabs/devcpweb
+echo "*/5 * * * * sudo /usr/local/devcp/bin/v-update-sys-queue backup" >> /var/spool/cron/crontabs/devcpweb
+echo "10 05 * * * sudo /usr/local/devcp/bin/v-backup-users" >> /var/spool/cron/crontabs/devcpweb
+echo "20 00 * * * sudo /usr/local/devcp/bin/v-update-user-stats" >> /var/spool/cron/crontabs/devcpweb
+echo "*/5 * * * * sudo /usr/local/devcp/bin/v-update-sys-rrd" >> /var/spool/cron/crontabs/devcpweb
+echo "$min $hour * * * sudo /usr/local/devcp/bin/v-update-letsencrypt-ssl" >> /var/spool/cron/crontabs/devcpweb
+echo "41 4 * * * sudo /usr/local/devcp/bin/v-update-sys-devcp-all" >> /var/spool/cron/crontabs/devcpweb
 
-chmod 600 /var/spool/cron/crontabs/hestiaweb
-chown hestiaweb:hestiaweb /var/spool/cron/crontabs/hestiaweb
+chmod 600 /var/spool/cron/crontabs/devcpweb
+chown devcpweb:devcpweb /var/spool/cron/crontabs/devcpweb
 
 # Enable automatic updates
-$HESTIA/bin/v-add-cron-hestia-autoupdate apt
+$HESTIA/bin/v-add-cron-devcp-autoupdate apt
 
 # Building initial rrd images
 $HESTIA/bin/v-update-sys-rrd
@@ -2415,20 +2415,20 @@ BACK_PID=$!
 echo
 
 # Starting Hestia service
-update-rc.d hestia defaults
-systemctl start hestia
-check_result $? "hestia start failed"
-chown hestiaweb:hestiaweb $HESTIA/data/sessions
+update-rc.d devcp defaults
+systemctl start devcp
+check_result $? "devcp start failed"
+chown devcpweb:devcpweb $HESTIA/data/sessions
 
 # Create backup folder and set correct permission
 mkdir -p /backup/
 chmod 755 /backup/
 
 # Create cronjob to generate ssl
-echo "@reboot root sleep 10 && rm /etc/cron.d/hestia-ssl && PATH='/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:' && /usr/local/hestia/bin/v-add-letsencrypt-host" > /etc/cron.d/hestia-ssl
+echo "@reboot root sleep 10 && rm /etc/cron.d/devcp-ssl && PATH='/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:' && /usr/local/devcp/bin/v-add-letsencrypt-host" > /etc/cron.d/devcp-ssl
 
 #----------------------------------------------------------#
-#              Set hestia.conf default values              #
+#              Set devcp.conf default values              #
 #----------------------------------------------------------#
 
 echo "[ * ] Updating configuration files..."
@@ -2436,9 +2436,9 @@ BIN="$HESTIA/bin"
 source $HESTIA/func/syshealth.sh
 syshealth_repair_system_config
 
-# Add /usr/local/hestia/bin/ to path variable
-echo 'if [ "${PATH#*/usr/local/hestia/bin*}" = "$PATH" ]; then
-    . /etc/profile.d/hestia.sh
+# Add /usr/local/devcp/bin/ to path variable
+echo 'if [ "${PATH#*/usr/local/devcp/bin*}" = "$PATH" ]; then
+    . /etc/profile.d/devcp.sh
 fi' >> /root/.bashrc
 
 #----------------------------------------------------------#
@@ -2475,15 +2475,15 @@ we hope that you enjoy using it as much as we do!
 Please feel free to contact us at any time if you have any questions,
 or if you encounter any bugs or problems:
 
-Documentation:  https://docs.hestiacp.com/
-Forum:          https://forum.hestiacp.com/
-GitHub:         https://www.github.com/hestiacp/hestiacp
+Documentation:  https://docs.devcpcp.com/
+Forum:          https://forum.devcpcp.com/
+GitHub:         https://www.github.com/devcpcp/devcpcp
 
 Note: Automatic updates are enabled by default. If you would like to disable them,
 please log in and navigate to Server > Updates to turn them off.
 
 Help support the Hestia Control Panel project by donating via PayPal:
-https://www.hestiacp.com/donate
+https://www.devcpcp.com/donate
 
 --
 Sincerely yours,
@@ -2501,7 +2501,7 @@ cat $tmpfile
 rm -f $tmpfile
 
 # Add welcome message to notification panel
-$HESTIA/bin/v-add-user-notification "$username" 'Welcome to Hestia Control Panel!' '<p>You are now ready to begin adding <a href="/add/user/">user accounts</a> and <a href="/add/web/">domains</a>. For help and assistance, <a href="https://hestiacp.com/docs/" target="_blank">view the documentation</a> or <a href="https://forum.hestiacp.com/" target="_blank">visit our forum</a>.</p><p>Please <a href="https://github.com/hestiacp/hestiacp/issues" target="_blank">report any issues via GitHub</a>.</p><p class="u-text-bold">Have a wonderful day!</p><p><i class="fas fa-heart icon-red"></i> The Hestia Control Panel development team</p>'
+$HESTIA/bin/v-add-user-notification "$username" 'Welcome to Hestia Control Panel!' '<p>You are now ready to begin adding <a href="/add/user/">user accounts</a> and <a href="/add/web/">domains</a>. For help and assistance, <a href="https://devcpcp.com/docs/" target="_blank">view the documentation</a> or <a href="https://forum.devcpcp.com/" target="_blank">visit our forum</a>.</p><p>Please <a href="https://github.com/devcpcp/devcpcp/issues" target="_blank">report any issues via GitHub</a>.</p><p class="u-text-bold">Have a wonderful day!</p><p><i class="fas fa-heart icon-red"></i> The Hestia Control Panel development team</p>'
 
 # Clean-up
 # Sort final configuration file

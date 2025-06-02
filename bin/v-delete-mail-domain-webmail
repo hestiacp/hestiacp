@@ -18,14 +18,14 @@ restart="$3"
 quiet=$4
 
 # Includes
-# shellcheck source=/etc/hestiacp/hestia.conf
-source /etc/hestiacp/hestia.conf
-# shellcheck source=/usr/local/hestia/func/main.sh
+# shellcheck source=/etc/hestiacp/devcp.conf
+source /etc/hestiacp/devcp.conf
+# shellcheck source=/usr/local/devcp/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/func/domain.sh
+# shellcheck source=/usr/local/devcp/func/domain.sh
 source $HESTIA/func/domain.sh
 # load config file
-source_conf "$HESTIA/conf/hestia.conf"
+source_conf "$HESTIA/conf/devcp.conf"
 
 # Additional argument formatting
 format_domain
@@ -73,7 +73,7 @@ if [ -n "$WEBMAIL_ALIAS" ]; then
 		fi
 	fi
 else
-	echo "Error: WEBMAIL_ALIAS is not defined in hestia.conf."
+	echo "Error: WEBMAIL_ALIAS is not defined in devcp.conf."
 fi
 
 # Set SSL as enabled in configuration

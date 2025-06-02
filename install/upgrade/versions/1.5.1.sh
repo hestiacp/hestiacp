@@ -39,8 +39,8 @@ esac
 
 chmod +x $HESTIA/install/deb/
 
-echo "[ * ] Updating hestia apt configuration..."
-sed -i "s|deb https://$RHOST/ $codename main|deb [arch=$ARCH] https://$RHOST/ $codename main|g" /etc/apt/sources.list.d/hestia.list
+echo "[ * ] Updating devcp apt configuration..."
+sed -i "s|deb https://$RHOST/ $codename main|deb [arch=$ARCH] https://$RHOST/ $codename main|g" /etc/apt/sources.list.d/devcp.list
 
 if [ -n "$IMAP_SYSTEM" ]; then
 	echo "[ * ] Updating dovecot configuration..."

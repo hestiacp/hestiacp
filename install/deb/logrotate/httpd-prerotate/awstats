@@ -1,4 +1,4 @@
 #!/bin/sh
 
-# Changes made by HestiaCP due to https://github.com/hestiacp/hestiacp/issues/3289
-/usr/local/hestia/bin/v-update-sys-queue webstats
+# Changes made by DevCP due to https://github.com/hestiacp/hestiacp/issues/3289
+/usr/local/devcp/bin/v-update-sys-queue webstats

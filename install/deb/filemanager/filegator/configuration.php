@@ -146,7 +146,7 @@ $dist_config["services"]["Filegator\Services\Storage\Filesystem"]["config"][
 			$v_user = quoteshellarg($_SESSION["user"]);
 			$v_session_id = quoteshellarg($_SESSION["token"]);
 			exec(
-				"/usr/local/hestia/bin/v-log-user-logout " . $v_user . " " . $v_session_id,
+				"/usr/local/devcp/bin/v-log-user-logout " . $v_user . " " . $v_session_id,
 				$output,
 				$return_var,
 			);
@@ -178,9 +178,9 @@ $dist_config["services"]["Filegator\Services\Storage\Filesystem"]["config"][
 		}
 	}
 	# Create filemanager sftp key if missing and trash it after 30 min
-	if (!file_exists("/home/" . basename($v_user) . "/.ssh/hst-filemanager-key")) {
+	if (!file_exists("/home/" . basename($v_user) . "/.ssh/dst-filemanager-key")) {
 		exec(
-			"sudo /usr/local/hestia/bin/v-add-user-sftp-key " .
+			"sudo /usr/local/devcp/bin/v-add-user-sftp-key " .
 				quoteshellarg(basename($v_user)) .
 				" 30",
 			$output,
@@ -192,7 +192,7 @@ $dist_config["services"]["Filegator\Services\Storage\Filesystem"]["config"][
 	}
 
 	if (!isset($_SESSION["SFTP_PORT"])) {
-		exec("sudo /usr/local/hestia/bin/v-list-sys-sshd-port json", $output, $result);
+		exec("sudo /usr/local/devcp/bin/v-list-sys-sshd-port json", $output, $result);
 		$port = json_decode(implode("", $output));
 		if (is_numeric($port[0]) && $port[0] > 0) {
 			$_SESSION["SFTP_PORT"] = $port[0];
@@ -211,7 +211,7 @@ $dist_config["services"]["Filegator\Services\Storage\Filesystem"]["config"][
 		"host" => "127.0.0.1",
 		"port" => intval($_SESSION["SFTP_PORT"]),
 		"username" => basename($v_user),
-		"privateKey" => "/home/" . basename($v_user) . "/.ssh/hst-filemanager-key",
+		"privateKey" => "/home/" . basename($v_user) . "/.ssh/dst-filemanager-key",
 		"root" => $root,
 		"timeout" => 10,
 		"directoryPerm" => 0755,
@@ -233,7 +233,7 @@ $dist_config["services"]["Filegator\Services\Auth\AuthInterface"] = [
 
 $dist_config["services"]["Filegator\Services\View\ViewInterface"]["config"] = [
 	"add_to_head" => '
-	<link rel="stylesheet" href="/fm/css/hst-custom.css">
+	<link rel="stylesheet" href="/fm/css/dst-custom.css">
     <style>
         .logo {
             width: 46px;

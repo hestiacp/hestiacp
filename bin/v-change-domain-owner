@@ -15,14 +15,14 @@ domain=$1
 user=$2
 
 # Includes
-# shellcheck source=/etc/hestiacp/hestia.conf
-source /etc/hestiacp/hestia.conf
-# shellcheck source=/usr/local/hestia/func/main.sh
+# shellcheck source=/etc/hestiacp/devcp.conf
+source /etc/hestiacp/devcp.conf
+# shellcheck source=/usr/local/devcp/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/func/ip.sh
+# shellcheck source=/usr/local/devcp/func/ip.sh
 source $HESTIA/func/ip.sh
 # load config file
-source_conf "$HESTIA/conf/hestia.conf"
+source_conf "$HESTIA/conf/devcp.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -239,18 +239,18 @@ if [ -n "$mail_data" ]; then
 
 		# Add domain SSL configuration to exim4
 		# Cleanup symlinks
-		find /usr/local/hestia/ssl/mail -xtype l -delete
+		find /usr/local/devcp/ssl/mail -xtype l -delete
 
-		ln -s -f $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem /usr/local/hestia/ssl/mail/mail.$domain.crt
-		ln -s -f $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.key /usr/local/hestia/ssl/mail/mail.$domain.key
+		ln -s -f $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem /usr/local/devcp/ssl/mail/mail.$domain.crt
+		ln -s -f $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.key /usr/local/devcp/ssl/mail/mail.$domain.key
 
 		# Set correct permissions on certificates
 		chmod 750 $HOMEDIR/$user/conf/mail/$domain/ssl
 		chown -R $MAIL_USER:mail $HOMEDIR/$user/conf/mail/$domain/ssl
 		chmod 0644 $HOMEDIR/$user/conf/mail/$domain/ssl/*
 		chown -h $user:mail $HOMEDIR/$user/conf/mail/$domain/ssl/*
-		chmod -R 0644 /usr/local/hestia/ssl/mail/*
-		chown -h $user:mail /usr/local/hestia/ssl/mail/*
+		chmod -R 0644 /usr/local/devcp/ssl/mail/*
+		chown -h $user:mail /usr/local/devcp/ssl/mail/*
 	fi
 
 	# Move data

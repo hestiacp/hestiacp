@@ -12,7 +12,7 @@ if [ "$FIREWALL_SYSTEM" = "iptables" ]; then
 	# Just in case, delete the legacy version loading script again to prevent any residue
 	rm -f /usr/lib/networkd-dispatcher/routable.d/50-ifup-hooks /etc/network/if-pre-up.d/iptables
 	# The firewall rules are loading by Systemd, the old loading script is no longer needed
-	rm -f /usr/lib/networkd-dispatcher/routable.d/10-hestia-iptables /etc/network/if-pre-up.d/hestia-iptables
+	rm -f /usr/lib/networkd-dispatcher/routable.d/10-devcp-iptables /etc/network/if-pre-up.d/devcp-iptables
 	$BIN/v-update-firewall
 fi
 

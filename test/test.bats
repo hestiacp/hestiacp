@@ -1,7 +1,7 @@
 #!/usr/bin/env bats
 
-if [ "${PATH#*/usr/local/hestia/bin*}" = "$PATH" ]; then
-    . /etc/profile.d/hestia.sh
+if [ "${PATH#*/usr/local/devcp/bin*}" = "$PATH" ]; then
+    . /etc/profile.d/devcp.sh
 fi
 
 load 'test_helper/bats-support/load'
@@ -16,26 +16,26 @@ function random() {
 function setup() {
     # echo "# Setup_file" > &3
     if [ $BATS_TEST_NUMBER = 1 ]; then
-        echo 'user=test-5285' > /tmp/hestia-test-env.sh
-        echo 'user2=test-5286' >> /tmp/hestia-test-env.sh
-        echo 'userbk=testbk-5285' >> /tmp/hestia-test-env.sh
-        echo 'userpass1=test-5285' >> /tmp/hestia-test-env.sh
-        echo 'userpass2=t3st-p4ssw0rd' >> /tmp/hestia-test-env.sh
-        echo 'HESTIA=/usr/local/hestia' >> /tmp/hestia-test-env.sh
-        echo 'domain=test-5285.hestiacp.com' >> /tmp/hestia-test-env.sh
-        echo 'domainuk=test-5285.hestiacp.com.uk' >> /tmp/hestia-test-env.sh
-        echo 'rootdomain=testhestiacp.com' >> /tmp/hestia-test-env.sh
-        echo 'subdomain=cdn.testhestiacp.com' >> /tmp/hestia-test-env.sh
-        echo 'database=test-5285_database' >> /tmp/hestia-test-env.sh
-        echo 'dbuser=test-5285_dbuser' >> /tmp/hestia-test-env.sh
-        echo 'pguser=test5290' >> /tmp/hestia-test-env.sh
-        echo 'pgdatabase=test5290_database' >> /tmp/hestia-test-env.sh
-        echo 'pgdbuser=test5290_dbuser' >> /tmp/hestia-test-env.sh
+        echo 'user=test-5285' > /tmp/devcp-test-env.sh
+        echo 'user2=test-5286' >> /tmp/devcp-test-env.sh
+        echo 'userbk=testbk-5285' >> /tmp/devcp-test-env.sh
+        echo 'userpass1=test-5285' >> /tmp/devcp-test-env.sh
+        echo 'userpass2=t3st-p4ssw0rd' >> /tmp/devcp-test-env.sh
+        echo 'HESTIA=/usr/local/devcp' >> /tmp/devcp-test-env.sh
+        echo 'domain=test-5285.hestiacp.com' >> /tmp/devcp-test-env.sh
+        echo 'domainuk=test-5285.hestiacp.com.uk' >> /tmp/devcp-test-env.sh
+        echo 'rootdomain=testhestiacp.com' >> /tmp/devcp-test-env.sh
+        echo 'subdomain=cdn.testhestiacp.com' >> /tmp/devcp-test-env.sh
+        echo 'database=test-5285_database' >> /tmp/devcp-test-env.sh
+        echo 'dbuser=test-5285_dbuser' >> /tmp/devcp-test-env.sh
+        echo 'pguser=test5290' >> /tmp/devcp-test-env.sh
+        echo 'pgdatabase=test5290_database' >> /tmp/devcp-test-env.sh
+        echo 'pgdbuser=test5290_dbuser' >> /tmp/devcp-test-env.sh
     fi
 
-    source /tmp/hestia-test-env.sh
+    source /tmp/devcp-test-env.sh
     source $HESTIA/func/main.sh
-    source $HESTIA/conf/hestia.conf
+    source $HESTIA/conf/devcp.conf
     source $HESTIA/func/ip.sh
 }
 
@@ -641,9 +641,9 @@ function check_ip_not_banned(){
     local a2_remoteip="/etc/$WEB_SYSTEM/mods-enabled/remoteip.conf"
 
     # Save initial state
-    echo "interface=${interface}" >> /tmp/hestia-test-env.sh
-    [ -f "$a2_rpaf" ]     && file_hash1=$(cat $a2_rpaf     |md5sum |cut -d" " -f1) && echo "a2_rpaf_hash='${file_hash1}'"     >> /tmp/hestia-test-env.sh
-    [ -f "$a2_remoteip" ] && file_hash2=$(cat $a2_remoteip |md5sum |cut -d" " -f1) && echo "a2_remoteip_hash='${file_hash2}'" >> /tmp/hestia-test-env.sh
+    echo "interface=${interface}" >> /tmp/devcp-test-env.sh
+    [ -f "$a2_rpaf" ]     && file_hash1=$(cat $a2_rpaf     |md5sum |cut -d" " -f1) && echo "a2_rpaf_hash='${file_hash1}'"     >> /tmp/devcp-test-env.sh
+    [ -f "$a2_remoteip" ] && file_hash2=$(cat $a2_remoteip |md5sum |cut -d" " -f1) && echo "a2_remoteip_hash='${file_hash2}'" >> /tmp/devcp-test-env.sh
 
 
     local ip="198.18.0.12"
@@ -672,10 +672,10 @@ function check_ip_not_banned(){
 
    # Test will fail if systemd (For example Proxmox) is used for setting ip addresses. How ever there is no "decent" way to check if Netplan is used except via the method used in v-add-sys-ip and there for breaking the reason to test this. How ever if the test used in v-add-sys-ip fails it still should check if it exists!
 
-   assert_file_exist /etc/netplan/60-hestia.yaml
+   assert_file_exist /etc/netplan/60-devcp.yaml
 
    # also check if file contains the newly added ip
-   assert_file_contains /etc/netplan/60-hestia.yaml "$ip"
+   assert_file_contains /etc/netplan/60-devcp.yaml "$ip"
 }
 
 @test "Ip: [Debian] Netplan file updated" {
@@ -731,8 +731,8 @@ function check_ip_not_banned(){
 	 fi
 
 	 ip="198.18.0.121"
-	 assert_file_exist /etc/netplan/60-hestia.yaml
-	 assert_file_contains /etc/netplan/60-hestia.yaml "$ip"
+	 assert_file_exist /etc/netplan/60-devcp.yaml
+	 assert_file_contains /etc/netplan/60-devcp.yaml "$ip"
 }
 
 @test "Ip: Delete ip 198.18.0.121" {
@@ -898,7 +898,7 @@ function check_ip_not_banned(){
 
 
 @test "WEB: Generate Self signed certificate" {
-    ssl=$(v-generate-ssl-cert "$domain" "info@$domain" US CA "Orange County" HestiaCP IT "mail.$domain" | tail -n1 | awk '{print $2}')
+    ssl=$(v-generate-ssl-cert "$domain" "info@$domain" US CA "Orange County" DevCP IT "mail.$domain" | tail -n1 | awk '{print $2}')
     echo $ssl;
     mv $ssl/$domain.crt /tmp/$domain.crt
     mv $ssl/$domain.key /tmp/$domain.key
@@ -942,7 +942,7 @@ function check_ip_not_banned(){
 
 
 @test "WEB: Generate Self signed certificate ASCII idn-tést.eu" {
-    run v-generate-ssl-cert "xn--idn-tst-fya.eu" "info@xn--idn-tst-fya.eu" US CA "Orange County" HestiaCP IT "mail.xn--idn-tst-fya.eu"
+    run v-generate-ssl-cert "xn--idn-tst-fya.eu" "info@xn--idn-tst-fya.eu" US CA "Orange County" DevCP IT "mail.xn--idn-tst-fya.eu"
     assert_success
 }
 
@@ -960,7 +960,7 @@ function check_ip_not_banned(){
 }
 
 @test "WEB: Generate Self signed certificate ASCII bløst.рф" {
-    run v-generate-ssl-cert "xn--blst-hra.xn--p1ai" "info@xn--blst-hra.xn--p1ai" US CA "Orange County" HestiaCP IT "mail.xn--blst-hra.xn--p1ai"
+    run v-generate-ssl-cert "xn--blst-hra.xn--p1ai" "info@xn--blst-hra.xn--p1ai" US CA "Orange County" DevCP IT "mail.xn--blst-hra.xn--p1ai"
     assert_success
 }
 
@@ -1007,8 +1007,8 @@ function check_ip_not_banned(){
     num_fpm_config_files="$(find -L /etc/php/ -name "${multi_domain}.conf" | wc -l)"
     assert_equal "$num_fpm_config_files" '1'
 
-    echo -e "<?php\necho 'hestia-multiphptest:'.PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;" > "$HOMEDIR/$user/web/$multi_domain/public_html/php-test.php"
-    validate_web_domain $user $multi_domain "hestia-multiphptest:$test_phpver" 'php-test.php'
+    echo -e "<?php\necho 'devcp-multiphptest:'.PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;" > "$HOMEDIR/$user/web/$multi_domain/public_html/php-test.php"
+    validate_web_domain $user $multi_domain "devcp-multiphptest:$test_phpver" 'php-test.php'
     rm "$HOMEDIR/$user/web/$multi_domain/public_html/php-test.php"
 }
 
@@ -1031,8 +1031,8 @@ function check_ip_not_banned(){
     num_fpm_config_files="$(find -L /etc/php/ -name "${multi_domain}.conf" | wc -l)"
     assert_equal "$num_fpm_config_files" '1'
 
-    echo -e "<?php\necho 'hestia-multiphptest:'.PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;" > "$HOMEDIR/$user/web/$multi_domain/public_html/php-test.php"
-    validate_web_domain $user $multi_domain "hestia-multiphptest:$test_phpver" 'php-test.php'
+    echo -e "<?php\necho 'devcp-multiphptest:'.PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;" > "$HOMEDIR/$user/web/$multi_domain/public_html/php-test.php"
+    validate_web_domain $user $multi_domain "devcp-multiphptest:$test_phpver" 'php-test.php'
     rm "$HOMEDIR/$user/web/$multi_domain/public_html/php-test.php"
 }
 
@@ -1055,8 +1055,8 @@ function check_ip_not_banned(){
     num_fpm_config_files="$(find -L /etc/php/ -name "${multi_domain}.conf" | wc -l)"
     assert_equal "$num_fpm_config_files" '1'
 
-    echo -e "<?php\necho 'hestia-multiphptest:'.PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;" > "$HOMEDIR/$user/web/$multi_domain/public_html/php-test.php"
-    validate_web_domain $user $multi_domain "hestia-multiphptest:$test_phpver" 'php-test.php'
+    echo -e "<?php\necho 'devcp-multiphptest:'.PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;" > "$HOMEDIR/$user/web/$multi_domain/public_html/php-test.php"
+    validate_web_domain $user $multi_domain "devcp-multiphptest:$test_phpver" 'php-test.php'
     rm "$HOMEDIR/$user/web/$multi_domain/public_html/php-test.php"
 }
 
@@ -1079,8 +1079,8 @@ function check_ip_not_banned(){
     num_fpm_config_files="$(find -L /etc/php/ -name "${multi_domain}.conf" | wc -l)"
     assert_equal "$num_fpm_config_files" '1'
 
-    echo -e "<?php\necho 'hestia-multiphptest:'.PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;" > "$HOMEDIR/$user/web/$multi_domain/public_html/php-test.php"
-    validate_web_domain $user $multi_domain "hestia-multiphptest:$test_phpver" 'php-test.php'
+    echo -e "<?php\necho 'devcp-multiphptest:'.PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;" > "$HOMEDIR/$user/web/$multi_domain/public_html/php-test.php"
+    validate_web_domain $user $multi_domain "devcp-multiphptest:$test_phpver" 'php-test.php'
     rm "$HOMEDIR/$user/web/$multi_domain/public_html/php-test.php"
 }
 
@@ -1103,8 +1103,8 @@ function check_ip_not_banned(){
     num_fpm_config_files="$(find -L /etc/php/ -name "${multi_domain}.conf" | wc -l)"
     assert_equal "$num_fpm_config_files" '1'
 
-    echo -e "<?php\necho 'hestia-multiphptest:'.PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;" > "$HOMEDIR/$user/web/$multi_domain/public_html/php-test.php"
-    validate_web_domain $user $multi_domain "hestia-multiphptest:$test_phpver" 'php-test.php'
+    echo -e "<?php\necho 'devcp-multiphptest:'.PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;" > "$HOMEDIR/$user/web/$multi_domain/public_html/php-test.php"
+    validate_web_domain $user $multi_domain "devcp-multiphptest:$test_phpver" 'php-test.php'
     rm "$HOMEDIR/$user/web/$multi_domain/public_html/php-test.php"
 }
 
@@ -1127,8 +1127,8 @@ function check_ip_not_banned(){
     num_fpm_config_files="$(find -L /etc/php/ -name "${multi_domain}.conf" | wc -l)"
     assert_equal "$num_fpm_config_files" '1'
 
-    echo -e "<?php\necho 'hestia-multiphptest:'.PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;" > "$HOMEDIR/$user/web/$multi_domain/public_html/php-test.php"
-    validate_web_domain $user $multi_domain "hestia-multiphptest:$test_phpver" 'php-test.php'
+    echo -e "<?php\necho 'devcp-multiphptest:'.PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;" > "$HOMEDIR/$user/web/$multi_domain/public_html/php-test.php"
+    validate_web_domain $user $multi_domain "devcp-multiphptest:$test_phpver" 'php-test.php'
     rm "$HOMEDIR/$user/web/$multi_domain/public_html/php-test.php"
 }
 
@@ -1151,8 +1151,8 @@ function check_ip_not_banned(){
     num_fpm_config_files="$(find -L /etc/php/ -name "${multi_domain}.conf" | wc -l)"
     assert_equal "$num_fpm_config_files" '1'
 
-    echo -e "<?php\necho 'hestia-multiphptest:'.PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;" > "$HOMEDIR/$user/web/$multi_domain/public_html/php-test.php"
-    validate_web_domain $user $multi_domain "hestia-multiphptest:$test_phpver" 'php-test.php'
+    echo -e "<?php\necho 'devcp-multiphptest:'.PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;" > "$HOMEDIR/$user/web/$multi_domain/public_html/php-test.php"
+    validate_web_domain $user $multi_domain "devcp-multiphptest:$test_phpver" 'php-test.php'
     rm $HOMEDIR/$user/web/$multi_domain/public_html/php-test.php
 }
 
@@ -1175,8 +1175,8 @@ function check_ip_not_banned(){
     num_fpm_config_files="$(find -L /etc/php/ -name "${multi_domain}.conf" | wc -l)"
     assert_equal "$num_fpm_config_files" '1'
 
-    echo -e "<?php\necho 'hestia-multiphptest:'.PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;" > "$HOMEDIR/$user/web/$multi_domain/public_html/php-test.php"
-    validate_web_domain $user $multi_domain "hestia-multiphptest:$test_phpver" 'php-test.php'
+    echo -e "<?php\necho 'devcp-multiphptest:'.PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;" > "$HOMEDIR/$user/web/$multi_domain/public_html/php-test.php"
+    validate_web_domain $user $multi_domain "devcp-multiphptest:$test_phpver" 'php-test.php'
     rm $HOMEDIR/$user/web/$multi_domain/public_html/php-test.php
 }
 
@@ -1199,8 +1199,8 @@ function check_ip_not_banned(){
 	num_fpm_config_files="$(find -L /etc/php/ -name "${multi_domain}.conf" | wc -l)"
 	assert_equal "$num_fpm_config_files" '1'
 
-	echo -e "<?php\necho 'hestia-multiphptest:'.PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;" > "$HOMEDIR/$user/web/$multi_domain/public_html/php-test.php"
-	validate_web_domain $user $multi_domain "hestia-multiphptest:$test_phpver" 'php-test.php'
+	echo -e "<?php\necho 'devcp-multiphptest:'.PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;" > "$HOMEDIR/$user/web/$multi_domain/public_html/php-test.php"
+	validate_web_domain $user $multi_domain "devcp-multiphptest:$test_phpver" 'php-test.php'
 	rm $HOMEDIR/$user/web/$multi_domain/public_html/php-test.php
 }
 
@@ -1380,11 +1380,11 @@ function check_ip_not_banned(){
 
     assert_file_contains "$HOMEDIR/$user/conf/dns/${domain}.db" "mx.hestiacp.com."
 
-    run v-change-dns-record $user $domain 50 '@' MX mx.hestia.com
+    run v-change-dns-record $user $domain 50 '@' MX mx.devcp.com
     assert_success
     refute_output
 
-    assert_file_contains "$HOMEDIR/$user/conf/dns/${domain}.db" "mx.hestia.com."
+    assert_file_contains "$HOMEDIR/$user/conf/dns/${domain}.db" "mx.devcp.com."
 
     run v-delete-dns-record $user $domain 50
     assert_success
@@ -1399,11 +1399,11 @@ function check_ip_not_banned(){
 
     assert_file_contains "$HOMEDIR/$user/conf/dns/${domain}.db" "mx.hestiacp.com."
 
-    run v-change-dns-record $user $domain 50 '@' NS mx.hestia.com
+    run v-change-dns-record $user $domain 50 '@' NS mx.devcp.com
     assert_success
     refute_output
 
-    assert_file_contains "$HOMEDIR/$user/conf/dns/${domain}.db" "mx.hestia.com."
+    assert_file_contains "$HOMEDIR/$user/conf/dns/${domain}.db" "mx.devcp.com."
 
     run v-delete-dns-record $user $domain 50
     assert_success
@@ -1418,11 +1418,11 @@ function check_ip_not_banned(){
 
     assert_file_contains "$HOMEDIR/$user/conf/dns/${domain}.db" "mx.hestiacp.com."
 
-    run v-change-dns-record $user $domain 50 '_test.domain' SRV mx.hestia.com
+    run v-change-dns-record $user $domain 50 '_test.domain' SRV mx.devcp.com
     assert_success
     refute_output
 
-    assert_file_contains "$HOMEDIR/$user/conf/dns/${domain}.db" "mx.hestia.com."
+    assert_file_contains "$HOMEDIR/$user/conf/dns/${domain}.db" "mx.devcp.com."
 
     run v-delete-dns-record $user $domain 50
     assert_success
@@ -1437,11 +1437,11 @@ function check_ip_not_banned(){
 
     assert_file_contains "$HOMEDIR/$user/conf/dns/${domain}.db" "mx.hestiacp.com."
 
-    run v-change-dns-record $user $domain 50 'mail' CNAME mx.hestia.com
+    run v-change-dns-record $user $domain 50 'mail' CNAME mx.devcp.com
     assert_success
     refute_output
 
-    assert_file_contains "$HOMEDIR/$user/conf/dns/${domain}.db" "mx.hestia.com."
+    assert_file_contains "$HOMEDIR/$user/conf/dns/${domain}.db" "mx.devcp.com."
 
     run v-delete-dns-record $user $domain 50
     assert_success
@@ -1636,9 +1636,9 @@ function check_ip_not_banned(){
 }
 
 @test "MAIL: Add account 3" {
-	run v-add-mail-account $user $domain hestia "$userpass2"
+	run v-add-mail-account $user $domain devcp "$userpass2"
 	assert_success
-	assert_file_contains /etc/exim4/domains/$domain/limits "hestia@$domain"
+	assert_file_contains /etc/exim4/domains/$domain/limits "devcp@$domain"
 	refute_output
 }
 
@@ -1680,7 +1680,7 @@ function check_ip_not_banned(){
 	assert_success
 }
 @test "MAIL: Add account alias Invalid 2" {
-	run v-add-mail-account-alias $user $domain test 'hestia@test'
+	run v-add-mail-account-alias $user $domain test 'devcp@test'
 	assert_failure $E_INVALID
 }
 

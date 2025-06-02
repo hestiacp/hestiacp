@@ -26,25 +26,25 @@ upgrade_config_set_value 'UPGRADE_UPDATE_FILEMANAGER_CONFIG' 'false'
 # Modify existing POLICY_USER directives (POLICY_USER_CHANGE_THEME, POLICY_USER_EDIT_WEB_TEMPLATES
 # and POLICY_USER_VIEW_LOGS) that are using value 'true' instead of the correct value 'yes'
 
-hestia_conf="$HESTIA/conf/hestia.conf"
-hestia_defaults_conf="$HESTIA/conf/defaults/hestia.conf"
+hestia_conf="$HESTIA/conf/devcp.conf"
+hestia_defaults_conf="$HESTIA/conf/defaults/devcp.conf"
 
 for i in POLICY_USER_CHANGE_THEME POLICY_USER_EDIT_WEB_TEMPLATES POLICY_USER_VIEW_LOGS; do
 	if [[ -f "$hestia_conf" ]]; then
 		if grep "$i" "$hestia_conf" | grep -q 'true'; then
 			if "$BIN/v-change-sys-config-value" "$i" 'yes'; then
-				echo "[ * ] Success: ${i} value changed from true to yes in hestia.conf"
+				echo "[ * ] Success: ${i} value changed from true to yes in devcp.conf"
 			else
-				echo "[ ! ] Error: Couldn't change ${i} value from true to yes in hestia.conf"
+				echo "[ ! ] Error: Couldn't change ${i} value from true to yes in devcp.conf"
 			fi
 		fi
 	fi
 	if [[ -f "$hestia_defaults_conf" ]]; then
 		if grep "$i" "$hestia_defaults_conf" | grep -q 'true'; then
 			if sed -i "s/${i}='true'/${i}='yes'/" "$hestia_defaults_conf"; then
-				echo "[ * ] Success: ${i} value changed from true to yes in defaults/hestia.conf"
+				echo "[ * ] Success: ${i} value changed from true to yes in defaults/devcp.conf"
 			else
-				echo "[ ! ] Error: Couldn't change ${i} value from true to yes in defaults/hestia.conf"
+				echo "[ ! ] Error: Couldn't change ${i} value from true to yes in defaults/devcp.conf"
 			fi
 		fi
 	fi

@@ -15,16 +15,16 @@
 ip="$1"
 
 # Includes
-# shellcheck source=/etc/hestiacp/hestia.conf
-source /etc/hestiacp/hestia.conf
-# shellcheck source=/usr/local/hestia/func/main.sh
+# shellcheck source=/etc/hestiacp/devcp.conf
+source /etc/hestiacp/devcp.conf
+# shellcheck source=/usr/local/devcp/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/func/ip.sh
+# shellcheck source=/usr/local/devcp/func/ip.sh
 source $HESTIA/func/ip.sh
-# shellcheck source=/usr/local/hestia/func/domain.sh
+# shellcheck source=/usr/local/devcp/func/domain.sh
 source $HESTIA/func/domain.sh
 # load config file
-source_conf "$HESTIA/conf/hestia.conf"
+source_conf "$HESTIA/conf/devcp.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -70,10 +70,10 @@ if [ -n "$interface" ]; then
 fi
 
 # Deleting startup conf on Debian/Ubuntu
-if [ -f "/etc/netplan/60-hestia.yaml" ]; then
-	sed -i "/$ip\//d" /etc/netplan/60-hestia.yaml
-	if ! grep -q '-' /etc/netplan/60-hestia.yaml; then
-		rm /etc/netplan/60-hestia.yaml
+if [ -f "/etc/netplan/60-devcp.yaml" ]; then
+	sed -i "/$ip\//d" /etc/netplan/60-devcp.yaml
+	if ! grep -q '-' /etc/netplan/60-devcp.yaml; then
+		rm /etc/netplan/60-devcp.yaml
 	fi
 elif [ -e "/etc/network/interfaces" ]; then
 	ip_str="$(grep -n "$ip$" /etc/network/interfaces | cut -f1 -d:)"

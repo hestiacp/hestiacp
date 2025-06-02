@@ -59,7 +59,7 @@ for osdef in "${oslist[@]}"; do
 
 	for osver in $osversions; do
 
-		containername="hst-${osname}-${osver/\./}"
+		containername="dst-${osname}-${osver/\./}"
 		container_ip=""
 		echo "Container $containername"
 

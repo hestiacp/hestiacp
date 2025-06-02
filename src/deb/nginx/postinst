@@ -7,21 +7,21 @@ if [ "$1" != "configure" ]; then
 fi
 
 # Run triggers only on updates
-if [ ! -e "/usr/local/hestia/data/users/" ]; then
+if [ ! -e "/usr/local/devcp/data/users/" ]; then
 	exit
 fi
 
-# Prevent running and causes issues with outdated hestia version
+# Prevent running and causes issues with outdated devcp version
 if ! id "hestiaweb" &> /dev/null; then
 	exit
 fi
 
 # Touch and set permisions on default log files on installation
-update-rc.d hestia defaults > /dev/null
-invoke-rc.d hestia start || true
+update-rc.d devcp defaults > /dev/null
+invoke-rc.d devcp start || true
 
 # Adapt Port Listing in HESTIA NGINX Backend
-source /usr/local/hestia/func/syshealth.sh # Load syshealth functions
+source /usr/local/devcp/func/syshealth.sh # Load syshealth functions
 
 # Check if the function syshealth_adapt_hestia_nginx_listen_ports exists
 if ! declare -f syshealth_adapt_hestia_nginx_listen_ports > /dev/null; then
@@ -35,8 +35,8 @@ syshealth_adapt_nginx_resolver
 ###############################################################
 
 if [ -z "$HESTIA" ]; then
-	export HESTIA='/usr/local/hestia'
-	PATH=$PATH:/usr/local/hestia/bin
+	export HESTIA='/usr/local/devcp'
+	PATH=$PATH:/usr/local/devcp/bin
 	export PATH
 fi
 
@@ -46,21 +46,21 @@ if [ -e "/etc/hestiacp/hooks/nginx/pre_install.sh" ]; then
 fi
 
 # Load upgrade functions and variables
-source /usr/local/hestia/func/main.sh
-source /usr/local/hestia/func/upgrade.sh
-source /usr/local/hestia/conf/hestia.conf
-source /usr/local/hestia/install/upgrade/upgrade.conf
+source /usr/local/devcp/func/main.sh
+source /usr/local/devcp/func/upgrade.sh
+source /usr/local/devcp/conf/devcp.conf
+source /usr/local/devcp/install/upgrade/upgrade.conf
 
 # Reset backend port
 if [ -n "$BACKEND_PORT" ]; then
-	/usr/local/hestia/bin/v-change-sys-port $BACKEND_PORT
+	/usr/local/devcp/bin/v-change-sys-port $BACKEND_PORT
 fi
 
 if [ -e "/etc/hestiacp/hooks/nginx/post_install.sh" ]; then
 	/etc/hestiacp/hooks/nginx/post_install.sh
 fi
 
-# Restart hestia service
-if [ -f "/etc/init.d/hestia" ]; then
-	systemctl restart hestia > /dev/null 2>&1
+# Restart devcp service
+if [ -f "/etc/init.d/devcp" ]; then
+	systemctl restart devcp > /dev/null 2>&1
 fi

@@ -4,7 +4,7 @@
 #
 # example: v-delete-firewall-ipset country-nl
 #
-# This function removes ipset from system and from hestia
+# This function removes ipset from system and from devcp
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #
@@ -13,12 +13,12 @@
 ip_name=${1}
 
 # Includes
-# shellcheck source=/etc/hestiacp/hestia.conf
-source /etc/hestiacp/hestia.conf
-# shellcheck source=/usr/local/hestia/func/main.sh
+# shellcheck source=/etc/hestiacp/devcp.conf
+source /etc/hestiacp/devcp.conf
+# shellcheck source=/usr/local/devcp/func/main.sh
 source $HESTIA/func/main.sh
 # load config file
-source_conf "$HESTIA/conf/hestia.conf"
+source_conf "$HESTIA/conf/devcp.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #

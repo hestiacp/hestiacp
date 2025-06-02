@@ -25,7 +25,7 @@ if [ -f "/etc/fail2ban/jail.local" ]; then
 	sed -i "s|/var/log/mysql.log|/var/log/mysql/error.log|g" /etc/fail2ban/jail.local
 fi
 
-# Fixed firewall loading failed after reboot, applying update to hestia-iptables Systemd unit.
+# Fixed firewall loading failed after reboot, applying update to devcp-iptables Systemd unit.
 if [ "$FIREWALL_SYSTEM" = "iptables" ]; then
 	echo "[ * ] Update loading firewall rules service..."
 	$BIN/v-delete-sys-firewall

@@ -5,7 +5,7 @@ error=false
 current=$1
 
 if [ -z "$current" ]; then
-	current="/usr/local/hestia/web/"
+	current="/usr/local/devcp/web/"
 fi
 
 if [ ! -d $current ] && [ ! -f $current ]; then

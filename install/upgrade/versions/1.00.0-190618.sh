@@ -97,23 +97,23 @@ fi
 
 # Add a general group for normal users created by Hestia
 echo "[ * ] Verifying ACLs and hardening user permissions..."
-if [ -z "$(grep ^hestia-users: /etc/group)" ]; then
-	groupadd --system "hestia-users"
+if [ -z "$(grep ^devcp-users: /etc/group)" ]; then
+	groupadd --system "devcp-users"
 fi
 
 # Make sure non-admin users belong to correct Hestia group
 for user in $($BIN/v-list-users plain | cut -f1); do
 	if [ "$user" != "admin" ]; then
-		usermod -a -G "hestia-users" "$user"
+		usermod -a -G "devcp-users" "$user"
 		setfacl -m "u:$user:r-x" "$HOMEDIR/$user"
 
 		# Update FTP users groups membership
 		uid=$(id -u $user)
 		for ftp_user in $(cat /etc/passwd | grep -v "^$user:" | grep "^$user.*:$uid:$uid:" | cut -d ":" -f1); do
-			usermod -a -G "hestia-users" "$ftp_user"
+			usermod -a -G "devcp-users" "$ftp_user"
 		done
 	fi
-	setfacl -m "g:hestia-users:---" "$HOMEDIR/$user"
+	setfacl -m "g:devcp-users:---" "$HOMEDIR/$user"
 done
 
 # Add unassigned hosts configuration to Nginx and Apache
@@ -191,11 +191,11 @@ fi
 
 # Remove old OS-specific installation files if they exist to free up space
 if [ -d $HESTIA/install/ubuntu ]; then
-	echo "[ * ] Removing old HestiaCP installation files for Ubuntu..."
+	echo "[ * ] Removing old DevCP installation files for Ubuntu..."
 	rm -rf $HESTIA/install/ubuntu
 fi
 if [ -d $HESTIA/install/debian ]; then
-	echo "[ * ] Removing old HestiaCP installation files for Debian..."
+	echo "[ * ] Removing old DevCP installation files for Debian..."
 	rm -rf $HESTIA/install/debian
 fi
 
@@ -230,8 +230,8 @@ fi
 # Add IMAP system variable to configuration if Dovecot is installed
 if [ -z "$IMAP_SYSTEM" ]; then
 	if [ -f /usr/bin/dovecot ]; then
-		echo "[ * ] Adding missing IMAP_SYSTEM variable to hestia.conf..."
-		echo "IMAP_SYSTEM = 'dovecot'" >> $HESTIA/conf/hestia.conf
+		echo "[ * ] Adding missing IMAP_SYSTEM variable to devcp.conf..."
+		echo "IMAP_SYSTEM = 'dovecot'" >> $HESTIA/conf/devcp.conf
 	fi
 fi
 

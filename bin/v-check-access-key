@@ -15,17 +15,17 @@
 
 access_key_id="$(basename "$1")"
 secret_access_key=$2
-hst_command=$3
+dst_command=$3
 ip46=${4-127.0.0.1}
 format=${5-shell}
 
 # Includes
-# shellcheck source=/etc/hestiacp/hestia.conf
-source /etc/hestiacp/hestia.conf
-# shellcheck source=/usr/local/hestia/func/main.sh
+# shellcheck source=/etc/hestiacp/devcp.conf
+source /etc/hestiacp/devcp.conf
+# shellcheck source=/usr/local/devcp/func/main.sh
 source $HESTIA/func/main.sh
 # load config file
-source_conf "$HESTIA/conf/hestia.conf"
+source_conf "$HESTIA/conf/devcp.conf"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
@@ -82,7 +82,7 @@ is_format_valid 'access_key_id' 'ip46' 'command'
 is_object_valid 'key' 'KEY' "$access_key_id"
 is_format_valid 'secret_access_key'
 check_access_key_secret "$access_key_id" "$secret_access_key" user
-check_access_key_cmd "$access_key_id" "$hst_command" user_arg_pos
+check_access_key_cmd "$access_key_id" "$dst_command" user_arg_pos
 
 # Check if key owner is active
 is_format_valid 'user'
@@ -108,7 +108,7 @@ esac
 #----------------------------------------------------------#
 
 # Logging
-log_history "[$ip46] Access key $access_key_id successfully launched with command $hst_command" "Info" "$user" "API"
-echo "$date $time $access_key_id $ip46 $hst_command successfully launched" >> $HESTIA/log/auth.log
+log_history "[$ip46] Access key $access_key_id successfully launched with command $dst_command" "Info" "$user" "API"
+echo "$date $time $access_key_id $ip46 $dst_command successfully launched" >> $HESTIA/log/auth.log
 
 exit

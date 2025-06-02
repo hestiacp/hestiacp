@@ -25,12 +25,12 @@ fi
 FROM_V_ADD_USER=true
 
 # Includes
-# shellcheck source=/etc/hestiacp/hestia.conf
-source /etc/hestiacp/hestia.conf
-# shellcheck source=/usr/local/hestia/func/main.sh
+# shellcheck source=/etc/hestiacp/devcp.conf
+source /etc/hestiacp/devcp.conf
+# shellcheck source=/usr/local/devcp/func/main.sh
 source $HESTIA/func/main.sh
 # load config file
-source_conf "$HESTIA/conf/hestia.conf"
+source_conf "$HESTIA/conf/devcp.conf"
 
 is_user_free() {
 	# these names may cause issues with MariaDB/MySQL database names and should be reserved:
@@ -94,18 +94,18 @@ if [ $? -ne 0 ]; then
 fi
 
 # Add a general group for normal users created by Hestia
-if [ -z "$(grep ^hestia-users: /etc/group)" ]; then
-	groupadd --system "hestia-users"
+if [ -z "$(grep ^devcp-users: /etc/group)" ]; then
+	groupadd --system "devcp-users"
 fi
 
-# Add membership to hestia-users group to non-admin users
+# Add membership to devcp-users group to non-admin users
 if [ "$user" = "$ROOT_USER" ]; then
 	setfacl -m "g:$ROOT_USER:r-x" "$HOMEDIR/$user"
 else
-	usermod -a -G "hestia-users" "$user"
+	usermod -a -G "devcp-users" "$user"
 	setfacl -m "u:$user:r-x" "$HOMEDIR/$user"
 fi
-setfacl -m "g:hestia-users:---" "$HOMEDIR/$user"
+setfacl -m "g:devcp-users:---" "$HOMEDIR/$user"
 
 # Building directory tree
 mkdir $HOMEDIR/$user/conf

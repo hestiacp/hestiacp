@@ -63,7 +63,7 @@ v-add-access-key 'admin' '*' test json
 
 ### Creating own API key profiles
 
-Create a new file in `/usr/local/hestia/data/api/` with the following contents
+Create a new file in `/usr/local/devcp/data/api/` with the following contents
 
 ```bash
 ROLE='admin'

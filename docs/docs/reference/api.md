@@ -15,10 +15,10 @@ Replace the following code:
 ```php
 // Prepare POST query
 $postvars = [
-	"user" => $hst_username,
-	"password" => $hst_password,
-	"returncode" => $hst_returncode,
-	"cmd" => $hst_command,
+	"user" => $dst_username,
+	"password" => $dst_password,
+	"returncode" => $dst_returncode,
+	"cmd" => $dst_command,
 	"arg1" => $username,
 ];
 ```
@@ -29,8 +29,8 @@ With the following:
 // Prepare POST query
 $postvars = [
 	"hash" => "access_code:secret_code",
-	"returncode" => $hst_returncode,
-	"cmd" => $hst_command,
+	"returncode" => $dst_returncode,
+	"cmd" => $dst_command,
 	"arg1" => $username,
 ];
 ```

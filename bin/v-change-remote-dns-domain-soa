@@ -15,14 +15,14 @@ user=$1
 domain=$2
 
 # Includes
-# shellcheck source=/etc/hestiacp/hestia.conf
-source /etc/hestiacp/hestia.conf
-# shellcheck source=/usr/local/hestia/func/main.sh
+# shellcheck source=/etc/hestiacp/devcp.conf
+source /etc/hestiacp/devcp.conf
+# shellcheck source=/usr/local/devcp/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/func/remote.sh
+# shellcheck source=/usr/local/devcp/func/remote.sh
 source $HESTIA/func/remote.sh
 # load config file
-source_conf "$HESTIA/conf/hestia.conf"
+source_conf "$HESTIA/conf/devcp.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -52,7 +52,7 @@ for cluster in $(grep "SUSPENDED='no'" $HESTIA/conf/dns-cluster.conf); do
 	# Parsing remote host parameters
 	parse_object_kv_list "$cluster"
 
-	if [ "$DNS_CLUSTER_SYSTEM" = "hestia-zone" ]; then
+	if [ "$DNS_CLUSTER_SYSTEM" = "devcp-zone" ]; then
 		str=$(echo "$str" | sed "s/SLAVE='no'/SLAVE='yes'/g")
 		ip=$($BIN/v-list-sys-ips plain | cut -f1)
 		str=$(echo "$str" | sed "s/MASTER='*'/MASTER='$ip'/g")

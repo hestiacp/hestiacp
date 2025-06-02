@@ -51,7 +51,7 @@ class HestiaAuth implements Service, AuthInterface {
 	}
 
 	public function user(): ?User {
-		$cmd = "/usr/bin/sudo /usr/local/hestia/bin/v-list-user";
+		$cmd = "/usr/bin/sudo /usr/local/devcp/bin/v-list-user";
 		exec($cmd . " " . quoteshellarg($this->hestia_user) . " json", $output, $return_var);
 
 		if ($return_var == 0) {

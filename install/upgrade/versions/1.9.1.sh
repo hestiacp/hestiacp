@@ -23,8 +23,8 @@ upgrade_config_set_value 'UPGRADE_UPDATE_MAIL_TEMPLATES' 'false'
 upgrade_config_set_value 'UPGRADE_REBUILD_USERS' 'no'
 upgrade_config_set_value 'UPGRADE_UPDATE_FILEMANAGER_CONFIG' 'false'
 
-# Update hestia-event.conf
-if [ -f "/etc/apache2/conf.d/hestia-event.conf" ]; then
-	rm -f /etc/apache2/conf.d/hestia-event.conf
-	cp -f $HESTIA_INSTALL_DIR/apache2/hestia-event.conf /etc/apache2/conf.d/
+# Update devcp-event.conf
+if [ -f "/etc/apache2/conf.d/devcp-event.conf" ]; then
+	rm -f /etc/apache2/conf.d/devcp-event.conf
+	cp -f $HESTIA_INSTALL_DIR/apache2/devcp-event.conf /etc/apache2/conf.d/
 fi

@@ -5,8 +5,8 @@
 Add to /root/.bashrc the following code:
 
 ```bash
-if [ "${PATH#*/usr/local/hestia/bin*}" = "$PATH" ]; then
-	. /etc/profile.d/hestia.sh
+if [ "${PATH#*/usr/local/devcp/bin*}" = "$PATH" ]; then
+	. /etc/profile.d/devcp.sh
 fi
 ```
 
@@ -27,7 +27,7 @@ v-change-user-config-value admin LOGIN_ALLOW_IPS ''
 
 ## Can I update my cronjobs via `crontab -e`?
 
-No, you cannot. When you update HestiaCP, the crontab will simply get overwritten. The changes will not get saved in backups either.
+No, you cannot. When you update DevCP, the crontab will simply get overwritten. The changes will not get saved in backups either.
 
 ## After update Apache2 I am not able to restart Apache2 or Nginx
 
@@ -50,11 +50,11 @@ Configuration file '/etc/apache2/apache2.conf'
 
 If you see this message **ALWAYS** press "N" or **ENTER** to select the default value!
 
-How ever if you entered Y or I. Then replace the config that can be found in /root/hst_backups/xxxxx/conf/apache2/ folder and copy over apache2.conf and ports.conf to /etc/apache2/ folder
+How ever if you entered Y or I. Then replace the config that can be found in /root/dst_backups/xxxxx/conf/apache2/ folder and copy over apache2.conf and ports.conf to /etc/apache2/ folder
 
-xxxxxx is the date/time the backup is made during the last update of HestiaCP
+xxxxxx is the date/time the backup is made during the last update of DevCP
 
-If you don't have have a backup made you can also copy the config in /usr/local/hestia/install/deb/apache2/apache2.conf to /etc/apache2.conf and also empty /etc/apache2/ports.conf
+If you don't have have a backup made you can also copy the config in /usr/local/devcp/install/deb/apache2/apache2.conf to /etc/apache2.conf and also empty /etc/apache2/ports.conf
 
 ## Unable to bind adress
 

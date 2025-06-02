@@ -4,7 +4,7 @@
 
 - **Beta testing**:
   - Download and install builds from the `beta` branch. If you encounter an issue with a beta build, file an issue report on [GitHub](https://www.github.com/hestiacp/hestiacp/issues).<br>
-    `v-update-sys-hestia-git hestiacp beta install` will install the latest beta build from our GitHub repository.
+    `v-update-sys-devcp-git hestiacp beta install` will install the latest beta build from our GitHub repository.
 - **Code review and bug fixes**:
   - Read over the code and if you notice errors (even spelling mistakes), submit a pull request with your changes.
 - **New features**:

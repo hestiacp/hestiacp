@@ -1,7 +1,7 @@
 #!/usr/bin/env bats
 
-if [ "${PATH#*/usr/local/hestia/bin*}" = "$PATH" ]; then
-    . /etc/profile.d/hestia.sh
+if [ "${PATH#*/usr/local/devcp/bin*}" = "$PATH" ]; then
+    . /etc/profile.d/devcp.sh
 fi
 
 load 'test_helper/bats-support/load'
@@ -15,23 +15,23 @@ head /dev/urandom | tr -dc 0-9 | head -c$1
 function setup() {
     # echo "# Setup_file" > &3
     if [ $BATS_TEST_NUMBER = 1 ]; then
-        echo 'user=test-5285' > /tmp/hestia-test-env.sh
-        echo 'user2=test-5286' >> /tmp/hestia-test-env.sh
-        echo 'userbk=testbk-5285' >> /tmp/hestia-test-env.sh
-        echo 'userpass1=test-5285' >> /tmp/hestia-test-env.sh
-        echo 'userpass2=t3st-p4ssw0rd' >> /tmp/hestia-test-env.sh
-        echo 'HESTIA=/usr/local/hestia' >> /tmp/hestia-test-env.sh
-        echo 'domain=test-5285.hestiacp.com' >> /tmp/hestia-test-env.sh
-        echo 'domainuk=test-5285.hestiacp.com.uk' >> /tmp/hestia-test-env.sh
-        echo 'rootdomain=testhestiacp.com' >> /tmp/hestia-test-env.sh
-        echo 'subdomain=cdn.testhestiacp.com' >> /tmp/hestia-test-env.sh
-        echo 'database=test-5285_database' >> /tmp/hestia-test-env.sh
-        echo 'dbuser=test-5285_dbuser' >> /tmp/hestia-test-env.sh
+        echo 'user=test-5285' > /tmp/devcp-test-env.sh
+        echo 'user2=test-5286' >> /tmp/devcp-test-env.sh
+        echo 'userbk=testbk-5285' >> /tmp/devcp-test-env.sh
+        echo 'userpass1=test-5285' >> /tmp/devcp-test-env.sh
+        echo 'userpass2=t3st-p4ssw0rd' >> /tmp/devcp-test-env.sh
+        echo 'HESTIA=/usr/local/devcp' >> /tmp/devcp-test-env.sh
+        echo 'domain=test-5285.hestiacp.com' >> /tmp/devcp-test-env.sh
+        echo 'domainuk=test-5285.hestiacp.com.uk' >> /tmp/devcp-test-env.sh
+        echo 'rootdomain=testhestiacp.com' >> /tmp/devcp-test-env.sh
+        echo 'subdomain=cdn.testhestiacp.com' >> /tmp/devcp-test-env.sh
+        echo 'database=test-5285_database' >> /tmp/devcp-test-env.sh
+        echo 'dbuser=test-5285_dbuser' >> /tmp/devcp-test-env.sh
     fi
 
-    source /tmp/hestia-test-env.sh
+    source /tmp/devcp-test-env.sh
     source $HESTIA/func/main.sh
-    source $HESTIA/conf/hestia.conf
+    source $HESTIA/conf/devcp.conf
     source $HESTIA/func/ip.sh
 }
 
@@ -44,7 +44,7 @@ function setup() {
     assert_success
     refute_output
 
-    ssl=$(v-generate-ssl-cert "testhestiacp.com" "info@testhestiacp.com" US CA "Orange County" HestiaCP IT "mail.$domain" | tail -n1 | awk '{print $2}')
+    ssl=$(v-generate-ssl-cert "testhestiacp.com" "info@testhestiacp.com" US CA "Orange County" DevCP IT "mail.$domain" | tail -n1 | awk '{print $2}')
     mv $ssl/testhestiacp.com.crt /tmp/testhestiacp.com.crt
     mv $ssl/testhestiacp.com.key /tmp/testhestiacp.com.key
 

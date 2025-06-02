@@ -130,7 +130,7 @@ function get_real_user_ip() {
  * @param string $user A username for save in the user history ou 'system' to save in Hestia history.
  * @return int The script result code.
  */
-function hst_add_history_log($message, $category = "System", $level = "Info", $user = "system") {
+function dst_add_history_log($message, $category = "System", $level = "Info", $user = "system") {
 	//$message = ucfirst($message);
 	//$message = str_replace("'", "`", $message);
 	$category = ucfirst(strtolower($category));

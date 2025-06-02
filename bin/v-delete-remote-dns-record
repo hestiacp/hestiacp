@@ -16,14 +16,14 @@ domain=$2
 id=$3
 
 # Includes
-# shellcheck source=/etc/hestiacp/hestia.conf
-source /etc/hestiacp/hestia.conf
-# shellcheck source=/usr/local/hestia/func/main.sh
+# shellcheck source=/etc/hestiacp/devcp.conf
+source /etc/hestiacp/devcp.conf
+# shellcheck source=/usr/local/devcp/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/func/remote.sh
+# shellcheck source=/usr/local/devcp/func/remote.sh
 source $HESTIA/func/remote.sh
 # load config file
-source_conf "$HESTIA/conf/hestia.conf"
+source_conf "$HESTIA/conf/devcp.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -42,7 +42,7 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
-if [ "$DNS_CLUSTER_SYSTEM" != "hestia-zone" ]; then
+if [ "$DNS_CLUSTER_SYSTEM" != "devcp-zone" ]; then
 	# Starting cluster loop
 	IFS=$'\n'
 	for cluster in $(cat $HESTIA/conf/dns-cluster.conf); do

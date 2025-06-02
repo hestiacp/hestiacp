@@ -23,12 +23,12 @@ yearly=$6
 arch=$(arch)
 
 # Includes
-# shellcheck source=/etc/hestiacp/hestia.conf
-source /etc/hestiacp/hestia.conf
-# shellcheck source=/usr/local/hestia/func/main.sh
+# shellcheck source=/etc/hestiacp/devcp.conf
+source /etc/hestiacp/devcp.conf
+# shellcheck source=/usr/local/devcp/func/main.sh
 source $HESTIA/func/main.sh
 # load config file
-source_conf "$HESTIA/conf/hestia.conf"
+source_conf "$HESTIA/conf/devcp.conf"
 # Fetch current verison B2 CLI tool
 source_conf "$HESTIA/install/upgrade/upgrade.conf"
 
@@ -82,12 +82,12 @@ if [[ $repo == "rclone:"* ]]; then
 	fi
 fi
 
-echo "REPO='$repo'" > /usr/local/hestia/conf/restic.conf
-echo "SNAPSHOTS='$snapshots'" >> /usr/local/hestia/conf/restic.conf
-echo "KEEP_DAILY='$daily'" >> /usr/local/hestia/conf/restic.conf
-echo "KEEP_WEEKLY='$weekly'" >> /usr/local/hestia/conf/restic.conf
-echo "KEEP_MONTHLY='$monthly'" >> /usr/local/hestia/conf/restic.conf
-echo "KEEP_YEARLY='$yearly'" >> /usr/local/hestia/conf/restic.conf
+echo "REPO='$repo'" > /usr/local/devcp/conf/restic.conf
+echo "SNAPSHOTS='$snapshots'" >> /usr/local/devcp/conf/restic.conf
+echo "KEEP_DAILY='$daily'" >> /usr/local/devcp/conf/restic.conf
+echo "KEEP_WEEKLY='$weekly'" >> /usr/local/devcp/conf/restic.conf
+echo "KEEP_MONTHLY='$monthly'" >> /usr/local/devcp/conf/restic.conf
+echo "KEEP_YEARLY='$yearly'" >> /usr/local/devcp/conf/restic.conf
 
 $BIN/v-change-sys-config-value 'BACKUP_INCREMENTAL' 'yes'
 

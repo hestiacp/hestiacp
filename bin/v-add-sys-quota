@@ -12,10 +12,10 @@
 #----------------------------------------------------------#
 
 # Includes
-# shellcheck source=/usr/local/hestia/func/main.sh
+# shellcheck source=/usr/local/devcp/func/main.sh
 source $HESTIA/func/main.sh
 # load config file
-source_conf "$HESTIA/conf/hestia.conf"
+source_conf "$HESTIA/conf/devcp.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -77,7 +77,7 @@ if [ -n "$(quotaon -pa | grep " $mnt " | grep 'user\|group' | grep 'is off')" ];
 	check_result $? "quota can't be enabled in $mnt" "$E_DISK"
 fi
 
-# Updating hestia.conf value
+# Updating devcp.conf value
 $BIN/v-change-sys-config-value "DISK_QUOTA" "yes"
 
 # Rebuilding user quota

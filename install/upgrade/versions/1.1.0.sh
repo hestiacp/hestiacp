@@ -22,7 +22,7 @@ fi
 # Implement recidive jail for fail2ban
 if [ ! -z "$FIREWALL_EXTENSION" ]; then
 	if ! cat /etc/fail2ban/jail.local | grep -q "\[recidive\]"; then
-		echo -e "\n\n[recidive]\nenabled  = true\nfilter   = recidive\naction   = hestia[name=HESTIA]\nlogpath  = /var/log/fail2ban.log\nmaxretry = 3\nfindtime = 86400\nbantime  = 864000" >> /etc/fail2ban/jail.local
+		echo -e "\n\n[recidive]\nenabled  = true\nfilter   = recidive\naction   = devcp[name=HESTIA]\nlogpath  = /var/log/fail2ban.log\nmaxretry = 3\nfindtime = 86400\nbantime  = 864000" >> /etc/fail2ban/jail.local
 	fi
 fi
 
@@ -78,9 +78,9 @@ if [ -d /home/admin ]; then
 fi
 
 # Fix sftp jail cronjob
-if [ -e "/etc/cron.d/hestia-sftp" ]; then
-	if ! cat /etc/cron.d/hestia-sftp | grep -q 'root'; then
-		echo "@reboot root /usr/local/hestia/bin/v-add-sys-sftp-jail" > /etc/cron.d/hestia-sftp
+if [ -e "/etc/cron.d/devcp-sftp" ]; then
+	if ! cat /etc/cron.d/devcp-sftp | grep -q 'root'; then
+		echo "@reboot root /usr/local/devcp/bin/v-add-sys-sftp-jail" > /etc/cron.d/devcp-sftp
 	fi
 fi
 
@@ -118,7 +118,7 @@ if [ -e "$HESTIA/data/templates/dns/office365.tpl" ]; then
 fi
 
 # Ensure that backup compression level is correctly set
-GZIP_LVL_CHECK=$(cat $HESTIA/conf/hestia.conf | grep BACKUP_GZIP)
+GZIP_LVL_CHECK=$(cat $HESTIA/conf/devcp.conf | grep BACKUP_GZIP)
 if [ -z "$GZIP_LVL_CHECK" ]; then
 	echo "[ * ] Updating backup compression level variable..."
 	$BIN/v-change-sys-config-value "BACKUP_GZIP" '9'

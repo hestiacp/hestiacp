@@ -97,12 +97,12 @@ fi
 check_wget_curl() {
 	# Check wget
 	if [ -e '/usr/bin/wget' ]; then
-		wget -q https://raw.githubusercontent.com/hestiacp/hestiacp/release/install/hst-install-$type.sh -O hst-install-$type.sh
+		wget -q https://raw.githubusercontent.com/hestiacp/hestiacp/release/install/dst-install-$type.sh -O dst-install-$type.sh
 		if [ "$?" -eq '0' ]; then
-			bash hst-install-$type.sh $*
+			bash dst-install-$type.sh $*
 			exit
 		else
-			echo "Error: hst-install-$type.sh download failed."
+			echo "Error: dst-install-$type.sh download failed."
 			exit 1
 		fi
 		# fi
@@ -110,12 +110,12 @@ check_wget_curl() {
 
 	# Check curl
 	if [ -e '/usr/bin/curl' ]; then
-		curl -s -O https://raw.githubusercontent.com/hestiacp/hestiacp/release/install/hst-install-$type.sh
+		curl -s -O https://raw.githubusercontent.com/hestiacp/hestiacp/release/install/dst-install-$type.sh
 		if [ "$?" -eq '0' ]; then
-			bash hst-install-$type.sh $*
+			bash dst-install-$type.sh $*
 			exit
 		else
-			echo "Error: hst-install-$type.sh download failed."
+			echo "Error: dst-install-$type.sh download failed."
 			exit 1
 		fi
 		# fi

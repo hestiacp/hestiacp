@@ -25,14 +25,14 @@ upgrade_config_set_value 'UPGRADE_UPDATE_FILEMANAGER_CONFIG' 'false'
 
 # Delete all ssh keys for the filemanager make sure hestiaweb can read them.
 for user in $($BIN/v-list-sys-users plain); do
-	if [ -f /home/$user/.ssh/hst-filemanager-key ]; then
+	if [ -f /home/$user/.ssh/dst-filemanager-key ]; then
 		# Remove old filemanager key
-		rm -f /home/$user/.ssh/hst-filemanager-key
+		rm -f /home/$user/.ssh/dst-filemanager-key
 	fi
 done
 
-# Update permissiosn /usr/local/hestia/data/sessions
-chown -R hestiaweb:hestiaweb /usr/local/hestia/data/sessions
+# Update permissiosn /usr/local/devcp/data/sessions
+chown -R hestiaweb:hestiaweb /usr/local/devcp/data/sessions
 
 if [ -n "$DB_PGA_ALIAS" ]; then
 	if [ -n "$DB_PMA_ALIAS" ]; then
@@ -46,5 +46,5 @@ fi
 chown -R hestiaweb /backup/*.tar
 
 # Fix typo in www.conf
-find /etc/php/ /usr/local/hestia/install/deb/php-fpm -type f -name 'www.conf' -print0 | xargs -0 -I {} sed -i 's/\[wwww\]/\[www\]/' {}
-find /etc/php/ /usr/local/hestia/install/deb/php-fpm -type f -name 'dummy.conf' -print0 | xargs -0 -I {} sed -i 's/\[wwww\]/\[www\]/' {}
+find /etc/php/ /usr/local/devcp/install/deb/php-fpm -type f -name 'www.conf' -print0 | xargs -0 -I {} sed -i 's/\[wwww\]/\[www\]/' {}
+find /etc/php/ /usr/local/devcp/install/deb/php-fpm -type f -name 'dummy.conf' -print0 | xargs -0 -I {} sed -i 's/\[wwww\]/\[www\]/' {}

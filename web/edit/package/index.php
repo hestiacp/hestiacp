@@ -333,7 +333,7 @@ if (!empty($_POST["save"])) {
 	$pkg .= "TIME=" . $v_time . "\n";
 	$pkg .= "DATE=" . $v_date . "\n";
 
-	$tmpfile = tempnam("/tmp/", "hst_");
+	$tmpfile = tempnam("/tmp/", "dst_");
 	$fp = fopen($tmpfile, "w");
 	fwrite($fp, $pkg);
 	exec(

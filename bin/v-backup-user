@@ -15,18 +15,18 @@ user=$1
 notify=${2-no}
 
 # Includes
-# shellcheck source=/etc/hestiacp/hestia.conf
-source /etc/hestiacp/hestia.conf
-# shellcheck source=/usr/local/hestia/func/main.sh
+# shellcheck source=/etc/hestiacp/devcp.conf
+source /etc/hestiacp/devcp.conf
+# shellcheck source=/usr/local/devcp/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/func/domain.sh
+# shellcheck source=/usr/local/devcp/func/domain.sh
 source $HESTIA/func/domain.sh
-# shellcheck source=/usr/local/hestia/func/db.sh
+# shellcheck source=/usr/local/devcp/func/db.sh
 source $HESTIA/func/db.sh
-# shellcheck source=/usr/local/hestia/func/backup.sh
+# shellcheck source=/usr/local/devcp/func/backup.sh
 source $HESTIA/func/backup.sh
 # load config file
-source_conf "$HESTIA/conf/hestia.conf"
+source_conf "$HESTIA/conf/devcp.conf"
 
 # Return Disk Usage
 get_user_disk_usage() {
@@ -205,25 +205,25 @@ fi
 
 # Backup sys configs
 echo "-- SYSTEM --" | tee $BACKUP/$user.log
-mkdir $tmpdir/hestia
+mkdir $tmpdir/devcp
 
 echo -e "$(date "+%F %T") $user.conf" | tee -a $BACKUP/$user.log
-cp -r $USER_DATA/user.conf $tmpdir/hestia/
-cp -r $USER_DATA/ssl $tmpdir/hestia/
+cp -r $USER_DATA/user.conf $tmpdir/devcp/
+cp -r $USER_DATA/ssl $tmpdir/devcp/
 
 if [ -e "$USER_DATA/stats.log" ]; then
 	echo -e "$(date "+%F %T") stats.log" | tee -a $BACKUP/$user.log
-	cp -r $USER_DATA/stats.log $tmpdir/hestia/
+	cp -r $USER_DATA/stats.log $tmpdir/devcp/
 fi
 
 if [ -e "$USER_DATA/history.log" ]; then
 	echo -e "$(date "+%F %T") history.log" | tee -a $BACKUP/$user.log
-	cp -r $USER_DATA/history.log $tmpdir/hestia/
+	cp -r $USER_DATA/history.log $tmpdir/devcp/
 fi
 
 if [ -e "$USER_DATA/backup-excludes.conf" ]; then
 	echo -e "$(date "+%F %T") backup-excludes.conf" | tee -a $BACKUP/$user.log
-	cp -r $USER_DATA/backup-excludes.conf $tmpdir/hestia/
+	cp -r $USER_DATA/backup-excludes.conf $tmpdir/devcp/
 fi
 
 # Backup PAM
@@ -263,7 +263,7 @@ if [ -n "$WEB_SYSTEM" ] && [ "$WEB" != '*' ]; then
 		((i++))
 		echo -e "$(date "+%F %T") $domain" | tee -a $BACKUP/$user.log
 		mkdir -p $tmpdir/web/$domain/conf
-		mkdir -p $tmpdir/web/$domain/hestia
+		mkdir -p $tmpdir/web/$domain/devcp
 
 		# Get domain variables
 		domain_idn=$domain
@@ -273,7 +273,7 @@ if [ -n "$WEB_SYSTEM" ] && [ "$WEB" != '*' ]; then
 		# Backup web.conf
 		cd $tmpdir/web/$domain/
 		conf="$USER_DATA/web.conf"
-		grep "DOMAIN='$domain'" $conf > hestia/web.conf
+		grep "DOMAIN='$domain'" $conf > devcp/web.conf
 
 		# Backup vhost config
 		if [ -e "$HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.conf" ]; then
@@ -356,7 +356,7 @@ if [ -n "$WEB_SYSTEM" ] && [ "$WEB" != '*' ]; then
 		# Backup ssl certificates
 		if [ "$SSL" = 'yes' ]; then
 			cp $HOMEDIR/$user/conf/web/$domain/ssl/$domain.* conf/
-			cp $USER_DATA/ssl/$domain.* hestia/
+			cp $USER_DATA/ssl/$domain.* devcp/
 		fi
 
 		# Changin dir to documentroot
@@ -429,15 +429,15 @@ if [ -n "$DNS_SYSTEM" ] && [ "$DNS" != '*' ]; then
 		# Building directory tree
 		mkdir -p $tmpdir/dns/$domain/conf
 		mkdir -p $tmpdir/dns/$domain/conf/keys
-		mkdir -p $tmpdir/dns/$domain/hestia
+		mkdir -p $tmpdir/dns/$domain/devcp
 
 		# Backup dns.conf
 		cd $tmpdir/dns/$domain/
 		conf="$USER_DATA/dns.conf"
-		grep "DOMAIN='$domain'" $conf > hestia/dns.conf
+		grep "DOMAIN='$domain'" $conf > devcp/dns.conf
 
 		# Backup dns recods
-		cp $USER_DATA/dns/$domain.conf hestia/$domain.conf
+		cp $USER_DATA/dns/$domain.conf devcp/$domain.conf
 		if [ "$DNS_SYSTEM" != 'remote' ]; then
 			cp $HOMEDIR/$user/conf/dns/$domain.db conf/$domain.db
 		fi
@@ -480,7 +480,7 @@ if [ -n "$MAIL_SYSTEM" ] && [ "$MAIL" != '*' ]; then
 		((i++))
 		echo -e "$(date "+%F %T") $domain" | tee -a $BACKUP/$user.log
 		mkdir -p $tmpdir/mail/$domain/conf
-		mkdir -p $tmpdir/mail/$domain/hestia
+		mkdir -p $tmpdir/mail/$domain/devcp
 		domain_idn=$domain
 		format_domain_idn
 
@@ -492,10 +492,10 @@ if [ -n "$MAIL_SYSTEM" ] && [ "$MAIL" != '*' ]; then
 
 		# Backup mail.conf
 		conf="$USER_DATA/mail.conf"
-		grep "DOMAIN='$domain'" $conf > hestia/mail.conf
-		cp $USER_DATA/mail/$domain.* hestia/
+		grep "DOMAIN='$domain'" $conf > devcp/mail.conf
+		cp $USER_DATA/mail/$domain.* devcp/
 		if [ -n "$(ls $USER_DATA/mail/ | grep *@$domain)" ]; then
-			cp $USER_DATA/mail/*@$domain.* hestia/
+			cp $USER_DATA/mail/*@$domain.* devcp/
 		fi
 
 		# Backup emails
@@ -557,10 +557,10 @@ if [ -n "$DB_SYSTEM" ] && [ "$DB" != '*' ]; then
 
 		echo -e "$(date "+%F %T") $database ($TYPE)" | tee -a $BACKUP/$user.log
 		mkdir -p $tmpdir/db/$database/conf
-		mkdir -p $tmpdir/db/$database/hestia
+		mkdir -p $tmpdir/db/$database/devcp
 
 		cd $tmpdir/db/$database/
-		grep "DB='$database'" $conf > hestia/db.conf
+		grep "DB='$database'" $conf > devcp/db.conf
 
 		dump="$tmpdir/db/$database/$database.$TYPE.sql"
 		if [ "$BACKUP_MODE" = 'zstd' ]; then

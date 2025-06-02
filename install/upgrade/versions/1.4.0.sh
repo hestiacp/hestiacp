@@ -136,13 +136,13 @@ if [ "$API" = "no" ]; then
 	fi
 fi
 
-# Back up users existing configuration data to $HESTIA/conf/defaults/hestia.conf
-if [ ! -f "$HESTIA/conf/defaults/hestia.conf" ]; then
+# Back up users existing configuration data to $HESTIA/conf/defaults/devcp.conf
+if [ ! -f "$HESTIA/conf/defaults/devcp.conf" ]; then
 	echo "[ * ] Creating known good configuration data for system recovery..."
 	if [ ! -d "$HESTIA/conf/defaults/" ]; then
 		mkdir -p "$HESTIA/conf/defaults/"
 	fi
-	cp -f $HESTIA/conf/hestia.conf $HESTIA/conf/defaults/hestia.conf
+	cp -f $HESTIA/conf/devcp.conf $HESTIA/conf/defaults/devcp.conf
 fi
 
 if [ -f "/usr/lib/networkd-dispatcher/routable.d/50-ifup-hooks" ]; then
@@ -184,7 +184,7 @@ fi
 # Update ClamAV configuration file
 if [ -f "/etc/clamav/clamd.conf" ]; then
 	cp -f $HESTIA_INSTALL_DIR/clamav/clamd.conf /etc/clamav/
-	$HESTIA/bin/v-add-user-notification admin 'ClamAV config has been overwritten' 'Warning: If you have manualy changed /etc/clamav/clamd.conf and any changes you made will be lost an backup has been created in the /root/hst_backups folder with the original config. If you have not changed the config file you can ignore this message'
+	$HESTIA/bin/v-add-user-notification admin 'ClamAV config has been overwritten' 'Warning: If you have manualy changed /etc/clamav/clamd.conf and any changes you made will be lost an backup has been created in the /root/dst_backups folder with the original config. If you have not changed the config file you can ignore this message'
 fi
 
 ##### COMMANDS FOR V1.5.X

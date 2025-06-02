@@ -9,7 +9,7 @@
 				</p>
 				<CopyToClipboardInput
 					class="u-mb10"
-					value="wget https://raw.githubusercontent.com/hestiacp/hestiacp/release/install/hst-install.sh"
+					value="wget https://raw.githubusercontent.com/hestiacp/hestiacp/release/install/dst-install.sh"
 				/>
 				<p class="u-mb10">
 					Check you are running as the <code>root</code> user, configure the options you want below,
@@ -104,9 +104,9 @@ const toggleOption = (option) => {
 };
 
 // Build the install command
-const installCommand = ref("bash hst-install.sh");
+const installCommand = ref("bash dst-install.sh");
 watchEffect(() => {
-	let cmd = "bash hst-install.sh";
+	let cmd = "bash dst-install.sh";
 	const quoteshellarg = (str) => {
 		if (!str) return "''";
 		return `'${str.replace(/'/g, "'\\''")}'`;

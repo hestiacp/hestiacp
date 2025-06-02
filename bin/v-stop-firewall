@@ -14,14 +14,14 @@
 iptables="/sbin/iptables"
 
 # Includes
-# shellcheck source=/etc/hestiacp/hestia.conf
-source /etc/hestiacp/hestia.conf
-# shellcheck source=/usr/local/hestia/func/main.sh
+# shellcheck source=/etc/hestiacp/devcp.conf
+source /etc/hestiacp/devcp.conf
+# shellcheck source=/usr/local/devcp/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/func/firewall.sh
+# shellcheck source=/usr/local/devcp/func/firewall.sh
 source $HESTIA/func/firewall.sh
 # load config file
-source_conf "$HESTIA/conf/hestia.conf"
+source_conf "$HESTIA/conf/devcp.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -44,8 +44,8 @@ tmp="$(mktemp)"
 echo "$iptables -P INPUT ACCEPT" >> $tmp
 echo "$iptables -F INPUT" >> $tmp
 
-# Deleting hestia chain
-echo "$iptables -X hestia" >> $tmp
+# Deleting devcp chain
+echo "$iptables -X devcp" >> $tmp
 
 # Deleting custom chains
 IFS=$'\n'
@@ -67,7 +67,7 @@ if [ -d "/etc/sysconfig" ]; then
 else
 	/sbin/iptables-save | sed -e 's/[[0-9]\+:[0-9]\+]/[0:0]/g' -e '/^-A fail2ban-[A-Z]\+ -s .\+$/d' > /etc/iptables.rules
 	iptablesversion="$(iptables --version | head -1 | awk '{print $2}' | cut -f -2 -d .)"
-	sd_unit="/lib/systemd/system/hestia-iptables.service"
+	sd_unit="/lib/systemd/system/devcp-iptables.service"
 	if [ ! -e "$sd_unit" ]; then
 		echo "[Unit]" >> $sd_unit
 		echo "Description=Loading Hestia firewall rules" >> $sd_unit
@@ -90,7 +90,7 @@ else
 		echo "WantedBy=multi-user.target" >> $sd_unit
 		systemctl -q daemon-reload
 	fi
-	systemctl -q is-enabled hestia-iptables 2> /dev/null && systemctl -q disable hestia-iptables
+	systemctl -q is-enabled devcp-iptables 2> /dev/null && systemctl -q disable devcp-iptables
 	if [ -z "$FIREWALL_SYSTEM" ]; then
 		rm -f $sd_unit
 		systemctl -q daemon-reload

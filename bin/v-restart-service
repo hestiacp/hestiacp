@@ -15,11 +15,11 @@ service=$1
 restart=$2
 
 # Includes
-# shellcheck source=/etc/hestiacp/hestia.conf
-source /etc/hestiacp/hestia.conf
-# shellcheck source=/usr/local/hestia/func/main.sh
+# shellcheck source=/etc/hestiacp/devcp.conf
+source /etc/hestiacp/devcp.conf
+# shellcheck source=/usr/local/devcp/func/main.sh
 source $HESTIA/func/main.sh
-source_conf "$HESTIA/conf/hestia.conf"
+source_conf "$HESTIA/conf/devcp.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -35,7 +35,7 @@ is_format_valid 'service' 'restart'
 log="/dev/null"
 if [ "$DEBUG_MODE" = "true" ]; then
 
-	log="/var/log/hestia/debug.log"
+	log="/var/log/devcp/debug.log"
 fi
 
 # Multi-instance service restart request handling

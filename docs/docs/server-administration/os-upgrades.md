@@ -24,7 +24,7 @@ Follow system instructions to upgrade your OS. When done, make sure to check tha
 
 ```bash
 rm -f /etc/exim4/exim4.conf.template
-cp -f /usr/local/hestia/install/deb/exim/exim4.conf.4.95.template /etc/exim4/exim4.conf.template
+cp -f /usr/local/devcp/install/deb/exim/exim4.conf.4.95.template /etc/exim4/exim4.conf.template
 ```
 
 ## Debian 10 Buster to Debian 11 Bullseye
@@ -39,7 +39,7 @@ sed -i "s/obscure yescrypt/obscure sha512/g" /etc/pam.d/common-password
 
 ```bash
 rm -f /etc/exim4/exim4.conf.template
-cp -f /usr/local/hestia/install/deb/exim/exim4.conf.4.94.template /etc/exim4/exim4.conf.template
+cp -f /usr/local/devcp/install/deb/exim/exim4.conf.4.94.template /etc/exim4/exim4.conf.template
 ```
 
 ### ProFTPD
@@ -60,7 +60,7 @@ Verify that MariaDB is running at least version 11.4. If not, first upgrade to t
 
 ```bash
 rm -f /etc/exim4/exim4.conf.template
-cp -f /usr/local/hestia/install/deb/exim/exim4.conf.4.95.template /etc/exim4/exim4.conf.template
+cp -f /usr/local/devcp/install/deb/exim/exim4.conf.4.95.template /etc/exim4/exim4.conf.template
 ```
 
 ## Ubuntu 20.04 Focal to Ubuntu 22.04 Jammy
@@ -79,7 +79,7 @@ sed -i "s/obscure yescrypt/obscure sha512/g" /etc/pam.d/common-password
 
 ```bash
 rm -f /etc/exim4/exim4.conf.template
-cp -f /usr/local/hestia/install/deb/exim/exim4.conf.4.94.template /etc/exim4/exim4.conf.template
+cp -f /usr/local/devcp/install/deb/exim/exim4.conf.4.94.template /etc/exim4/exim4.conf.template
 ```
 
 ### ProFTPD

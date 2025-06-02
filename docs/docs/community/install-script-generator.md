@@ -6,7 +6,7 @@ These are some install script generators created by the community:
 
   Tiny online app aimed to generate the necessary command for an unattended Hestia Control Panel installation.
 
-- [HestiaCP-Command-Creator](https://github.com/turbopixel/HestiaCP-Command-Creator)
+- [DevCP-Command-Creator](https://github.com/turbopixel/DevCP-Command-Creator)
 
   Vue.js based web app to generate the command line for an unattended Hestia Control Panel installation.
 

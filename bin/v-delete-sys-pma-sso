@@ -13,12 +13,12 @@
 MODE=$1
 
 # Includes
-# shellcheck source=/etc/hestiacp/hestia.conf
-source /etc/hestiacp/hestia.conf
-# shellcheck source=/usr/local/hestia/func/main.sh
+# shellcheck source=/etc/hestiacp/devcp.conf
+source /etc/hestiacp/devcp.conf
+# shellcheck source=/usr/local/devcp/func/main.sh
 source $HESTIA/func/main.sh
 # load config file
-source_conf "$HESTIA/conf/hestia.conf"
+source_conf "$HESTIA/conf/devcp.conf"
 
 PMA_INSTALL="/usr/share/phpmyadmin"
 PMA_CONFIG="/etc/phpmyadmin"
@@ -35,7 +35,7 @@ if [ "x$(id -u)" != 'x0' ]; then
 	exit 10
 fi
 
-if [ ! -e "$PMA_INSTALL/hestia-sso.php" ]; then
+if [ ! -e "$PMA_INSTALL/devcp-sso.php" ]; then
 	echo 'Error:  PMA Single Sign On already disabled'
 	exit 1
 fi
@@ -44,21 +44,21 @@ fi
 #                       Action                             #
 #----------------------------------------------------------#
 
-apikey=$(grep -Po "'API_KEY', '(.*)'" /usr/share/phpmyadmin/hestia-sso.php | cut "-d'" -f4)
+apikey=$(grep -Po "'API_KEY', '(.*)'" /usr/share/phpmyadmin/devcp-sso.php | cut "-d'" -f4)
 
 if [ -z $(echo $apikey | grep ":") ]; then
 	$BIN/v-revoke-api-key "$apikey"
 else
-	apikey=$(grep -Po "'API_KEY', '(.*)'" /usr/share/phpmyadmin/hestia-sso.php | cut "-d'" -f4 | cut -d ":" -f1)
+	apikey=$(grep -Po "'API_KEY', '(.*)'" /usr/share/phpmyadmin/devcp-sso.php | cut "-d'" -f4 | cut -d ":" -f1)
 	$BIN/v-delete-access-key "$apikey"
 fi
 
 #remove new files
-rm /usr/share/phpmyadmin/hestia-sso.php
-rm /etc/phpmyadmin/hestia-sso.inc.php
+rm /usr/share/phpmyadmin/devcp-sso.php
+rm /etc/phpmyadmin/devcp-sso.inc.php
 
 #revert config
-sed -i "/hestia-sso.inc.php/d" $PMA_CONFIG/config.inc.php
+sed -i "/devcp-sso.inc.php/d" $PMA_CONFIG/config.inc.php
 
 # disable key
 $BIN/v-change-sys-config-value 'PHPMYADMIN_KEY' ""

@@ -1,7 +1,7 @@
 #!/usr/bin/env bats
 
-if [ "${PATH#*/usr/local/hestia/bin*}" = "$PATH" ]; then
-    . /etc/profile.d/hestia.sh
+if [ "${PATH#*/usr/local/devcp/bin*}" = "$PATH" ]; then
+    . /etc/profile.d/devcp.sh
 fi
 
 load 'test_helper/bats-support/load'
@@ -14,9 +14,9 @@ function random() {
 }
 
 function setup() {
-    source /tmp/hestia-api-env.sh
+    source /tmp/devcp-api-env.sh
     source $HESTIA/func/main.sh
-    source $HESTIA/conf/hestia.conf
+    source $HESTIA/conf/devcp.conf
     source $HESTIA/func/ip.sh
 }
 

@@ -13,7 +13,7 @@ verify_csrf($_GET);
 $reset_token_dir = "/var/tmp/";
 if (isset($_GET["system_reset_token"]) && is_numeric($_GET["system_reset_token"])) {
 	clearstatcache();
-	$reset_token_file = $reset_token_dir . "hst_reset_" . $_GET["system_reset_token"];
+	$reset_token_file = $reset_token_dir . "dst_reset_" . $_GET["system_reset_token"];
 	if (file_exists($reset_token_file)) {
 		unlink($reset_token_file);
 		sleep(5);

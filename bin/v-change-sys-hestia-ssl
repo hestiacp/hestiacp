@@ -1,10 +1,10 @@
 #!/bin/bash
-# info: change hestia ssl certificate
+# info: change devcp ssl certificate
 # options: SSL_DIR [RESTART]
 #
-# example: v-change-sys-hestia-ssl /home/new/dir/path yes
+# example: v-change-sys-devcp-ssl /home/new/dir/path yes
 #
-# This function changes hestia SSL certificate and the key.
+# This function changes devcp SSL certificate and the key.
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #
@@ -16,14 +16,14 @@ ssl_dir=$1
 restart=$2
 
 # Includes
-# shellcheck source=/etc/hestiacp/hestia.conf
-source /etc/hestiacp/hestia.conf
-# shellcheck source=/usr/local/hestia/func/main.sh
+# shellcheck source=/etc/hestiacp/devcp.conf
+source /etc/hestiacp/devcp.conf
+# shellcheck source=/usr/local/devcp/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/func/domain.sh
+# shellcheck source=/usr/local/devcp/func/domain.sh
 source $HESTIA/func/domain.sh
 # load config file
-source_conf "$HESTIA/conf/hestia.conf"
+source_conf "$HESTIA/conf/devcp.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -66,7 +66,7 @@ cp -f $ssl_dir/certificate.key $HESTIA/ssl/certificate.key
 
 # Restarting web server
 if [ "$restart" != 'no' ]; then
-	kill -HUP $(cat /run/hestia-nginx.pid)
+	kill -HUP $(cat /run/devcp-nginx.pid)
 	$BIN/v-restart-mail "$restart"
 fi
 

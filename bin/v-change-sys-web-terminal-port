@@ -15,12 +15,12 @@ PORT=$1
 NGINX_CONFIG="$HESTIA/nginx/conf/nginx.conf"
 
 # Includes
-# shellcheck source=/etc/hestiacp/hestia.conf
-source /etc/hestiacp/hestia.conf
-# shellcheck source=/usr/local/hestia/func/main.sh
+# shellcheck source=/etc/hestiacp/devcp.conf
+source /etc/hestiacp/devcp.conf
+# shellcheck source=/usr/local/devcp/func/main.sh
 source $HESTIA/func/main.sh
 # load config file
-source_conf "$HESTIA/conf/hestia.conf"
+source_conf "$HESTIA/conf/devcp.conf"
 
 # Functions
 is_port_valid() {
@@ -68,13 +68,13 @@ else
 	sed -i "s/\(proxy_pass http:\/\/localhost:\)[0-9][0-9]*\([^0-9]*\;$\)/\1$PORT\2/" ${NGINX_CONFIG}
 
 	# Check if the web terminal backend is running
-	if [[ $(ps -eaf | grep -i hestia/web-terminal | sed '/^$/d' | wc -l) -gt 1 ]]; then
-		$BIN/v-restart-service hestia-web-terminal
+	if [[ $(ps -eaf | grep -i devcp/web-terminal | sed '/^$/d' | wc -l) -gt 1 ]]; then
+		$BIN/v-restart-service devcp-web-terminal
 	fi
 
 	# Check if Hestia is running
-	if [[ $(ps -eaf | grep -i hestia | sed '/^$/d' | wc -l) -gt 1 ]]; then
-		$BIN/v-restart-service hestia
+	if [[ $(ps -eaf | grep -i devcp | sed '/^$/d' | wc -l) -gt 1 ]]; then
+		$BIN/v-restart-service devcp
 	fi
 fi
 

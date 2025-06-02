@@ -43,7 +43,7 @@ Interactive installer that will install the default Hestia software configuratio
 Download the installation script for the latest release:
 
 ```bash
-wget https://raw.githubusercontent.com/hestiacp/hestiacp/release/install/hst-install.sh
+wget https://raw.githubusercontent.com/hestiacp/hestiacp/release/install/dst-install.sh
 ```
 
 If the download fails due to an SSL validation error, please be sure you've installed the ca-certificate package on your system - you can do this with the following command:
@@ -57,7 +57,7 @@ apt-get update && apt-get install ca-certificates
 To begin the installation process, simply run the script and follow the on-screen prompts:
 
 ```bash
-bash hst-install.sh
+bash dst-install.sh
 ```
 
 You will receive a welcome email at the address specified during installation (if applicable) and on-screen instructions after the installation is completed to log in and access your server.
@@ -69,7 +69,7 @@ If you want to customise which software gets installed, or want to run an unatte
 To view a list of available options, run
 
 ```bash
-bash hst-install.sh -h
+bash dst-install.sh -h
 ```
 
 ### List of installation options
@@ -119,7 +119,7 @@ Option --multiphp (Multi PHP) also accepts a comma seperated list of PHP version
 #### Example
 
 ```bash
-bash hst-install.sh \
+bash dst-install.sh \
 	--interactive no \
 	--hostname host.domain.tld \
 	--email email@domain.tld \

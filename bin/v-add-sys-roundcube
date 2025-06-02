@@ -9,13 +9,13 @@
 #----------------------------------------------------------#
 
 # Includes
-# shellcheck source=/etc/hestiacp/hestia.conf
-source /etc/hestiacp/hestia.conf
-# shellcheck source=/usr/local/hestia/func/main.sh
+# shellcheck source=/etc/hestiacp/devcp.conf
+source /etc/hestiacp/devcp.conf
+# shellcheck source=/usr/local/devcp/func/main.sh
 source $HESTIA/func/main.sh
 source $HESTIA/func/db.sh
 # load config file
-source_conf "$HESTIA/conf/hestia.conf"
+source_conf "$HESTIA/conf/devcp.conf"
 # upgrade config file
 source "$HESTIA/install/upgrade/upgrade.conf"
 
@@ -42,9 +42,9 @@ if [ "x$(id -u)" != 'x0' ]; then
 	exit 10
 fi
 
-# Ensure that $HESTIA (/usr/local/hestia/) and other variables are valid.
+# Ensure that $HESTIA (/usr/local/devcp/) and other variables are valid.
 if [ -z "$HESTIA" ]; then
-	HESTIA="/usr/local/hestia"
+	HESTIA="/usr/local/devcp"
 fi
 
 if [ -z "$HOMEDIR" ] || [ -z "$HESTIA_COMMON_DIR" ]; then
@@ -102,7 +102,7 @@ if [ "$UPDATE" == "no" ]; then
 	cp -f $HESTIA_COMMON_DIR/roundcube/mimetypes.php $RC_CONFIG_DIR/mimetypes.php
 	chmod 644 $RC_CONFIG_DIR/*.php
 
-	cp -f $HESTIA_COMMON_DIR/roundcube/hestia.php $RC_INSTALL_DIR/plugins/password/drivers/
+	cp -f $HESTIA_COMMON_DIR/roundcube/devcp.php $RC_INSTALL_DIR/plugins/password/drivers/
 	mkdir -p $RC_CONFIG_DIR/plugins/password
 	mkdir -p $RC_CONFIG_DIR/plugins/newmail_notifier
 	mkdir -p $RC_CONFIG_DIR/plugins/zipdownload
@@ -165,8 +165,8 @@ if [ "$UPDATE" == "no" ]; then
 	rm -f -r $RC_INSTALL_DIR/$RC_FILE
 	rm -f -r $RC_INSTALL_DIR/$RC_EXTRACT
 
-	# Updating hestia.conf
-	if [ -z "$(grep WEBMAIL_SYSTEM $HESTIA/conf/hestia.conf)" ]; then
+	# Updating devcp.conf
+	if [ -z "$(grep WEBMAIL_SYSTEM $HESTIA/conf/devcp.conf)" ]; then
 		$BIN/v-change-sys-config-value 'WEBMAIL_SYSTEM' 'roundcube'
 	else
 		if [ -z "$(echo "$WEBMAIL_SYSTEM" | grep -w 'roundcube')" ]; then

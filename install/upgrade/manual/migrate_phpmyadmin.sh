@@ -9,13 +9,13 @@
 source $HESTIA/func/main.sh
 # get current phpmyadmin version
 source $HESTIA/install/upgrade/upgrade.conf
-source $HESTIA/conf/hestia.conf
+source $HESTIA/conf/devcp.conf
 
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-echo "To remove phpMyAdmin you will need use the root password. Password can be found in /usr/local/hestia/conf/mysql.conf"
+echo "To remove phpMyAdmin you will need use the root password. Password can be found in /usr/local/devcp/conf/mysql.conf"
 read -p 'Would you like to continue? [y/n]'
 
 #----------------------------------------------------------#
@@ -33,11 +33,11 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
 
 	# Create an backup of current config
 	echo "[ * ] Backing up old configuration files..."
-	mkdir -p /root/hst_backup_man/phmyadmin
-	cp -r /etc/phpmyadmin/* /root/hst_backup_man/phmyadmin
+	mkdir -p /root/dst_backup_man/phmyadmin
+	cp -r /etc/phpmyadmin/* /root/dst_backup_man/phmyadmin
 
-	mkdir -p /root/hst_backup_man/var_phmyadmin
-	cp -r /var/lib/phpmyadmin/* /root/hst_backup_man/var_phmyadmin
+	mkdir -p /root/dst_backup_man/var_phmyadmin
+	cp -r /var/lib/phpmyadmin/* /root/dst_backup_man/var_phmyadmin
 
 	echo '[ * ] Marking phpmyadmin as held in apt...'
 	apt-mark hold phpmyadmin
@@ -93,7 +93,7 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
 	rm -f phpMyAdmin-$pma_v-all-languages.tar.gz
 
 	if [ -z "$DB_PMA_ALIAS" ]; then
-		echo "DB_PMA_ALIAS='phpmyadmin'" >> $HESTIA/conf/hestia.conf
+		echo "DB_PMA_ALIAS='phpmyadmin'" >> $HESTIA/conf/devcp.conf
 	fi
 	$BIN/v-change-sys-db-alias 'pma' "phpmyadmin"
 

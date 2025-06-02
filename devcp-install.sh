@@ -45,8 +45,8 @@ log_info "Mise à jour du système (apt update && apt upgrade -y)..."
 apt update -y && apt upgrade -y
 
 # Download the official installer script
-INSTALLER_URL="https://raw.githubusercontent.com/Ghost-Dev9/DevCP/main/install/hst-install.sh"
-INSTALLER_FILE="hst-install.sh"
+INSTALLER_URL="https://raw.githubusercontent.com/Ghost-Dev9/DevCP/main/install/dst-install.sh"
+INSTALLER_FILE="dst-install.sh"
 
 log_info "Téléchargement du script d’installation DevCP..."
 if ! wget -q -O "$INSTALLER_FILE" "$INSTALLER_URL"; then

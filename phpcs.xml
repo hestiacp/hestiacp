@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<ruleset name="HestiaCP">
+<ruleset name="DevCP">
 	<file>./web/src/app</file>
 
 	<exclude-pattern>*.js</exclude-pattern>

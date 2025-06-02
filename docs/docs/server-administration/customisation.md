@@ -6,7 +6,7 @@ We currently only support changing the layout via CSS. You can customise HTML fi
 
 ## Adding a new theme
 
-Create a new theme in `/usr/local/hestia/web/css/themes/custom/my_theme.css`
+Create a new theme in `/usr/local/devcp/web/css/themes/custom/my_theme.css`
 
 ```css
 .page-login,
@@ -20,7 +20,7 @@ Create a new theme in `/usr/local/hestia/web/css/themes/custom/my_theme.css`
 
 ## Customising a default theme
 
-Changes to default themes are always overwritten during updates. Custom CSS files can be uploaded to `/usr/local/hestia/web/css/custom` in `.css` or `.min.css` format.
+Changes to default themes are always overwritten during updates. Custom CSS files can be uploaded to `/usr/local/devcp/web/css/custom` in `.css` or `.min.css` format.
 
 Please note that `default.css` base theme is always loaded. Other default and custom themes override the rules in this file.
 
@@ -34,7 +34,7 @@ nano /var/www/html/index.html
 
 ## Customising the default domain skeleton structure
 
-The default structure that will be added to a domain when it gets created is located in `/usr/local/hestia/data/templates/web/skel/public_html`.
+The default structure that will be added to a domain when it gets created is located in `/usr/local/devcp/data/templates/web/skel/public_html`.
 
 ## Running commands before and after updates
 
@@ -56,7 +56,7 @@ For example, to disable demo mode on pre-install:
 
 ```bash /etc/hestiacp/hooks/pre_install.sh
 #!/bin/bash
-sed -i "s|^DEMO_MODE=.*'|DEMO_MODE='no'|g" $HESTIA/conf/hestia.conf
+sed -i "s|^DEMO_MODE=.*'|DEMO_MODE='no'|g" $HESTIA/conf/devcp.conf
 ```
 
 ::: warning

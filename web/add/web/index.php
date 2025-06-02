@@ -39,7 +39,7 @@ if (!empty($_POST["ok"])) {
 	$v_ip = quoteshellarg($_POST["v_ip"]);
 
 	// Using public IP instead of internal IP when creating DNS
-	// Gets public IP from 'v-list-user-ips' command (that reads /hestia/data/ips/ip), precisely from 'NAT' field
+	// Gets public IP from 'v-list-user-ips' command (that reads /devcp/data/ips/ip), precisely from 'NAT' field
 	$v_public_ip = $v_ip;
 	$v_clean_ip = $_POST["v_ip"]; // clean_ip = IP without quotas
 	exec(HESTIA_CMD . "v-list-user-ips " . $user . " json", $output, $return_var);

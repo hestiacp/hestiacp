@@ -36,7 +36,7 @@ This could mean multiple things:
 3. IPv6 is setup. Disable IPv6 in DNS.
 4. There is an issue with a template.
 
-In the future we hope to improve debugging, but currently the easiest way to debug this issue is to navigate to `/var/log/hestia/` and inspect the desired log file (`LE-{user}-{domain}.log`), which should appear after requesting a certificate.
+In the future we hope to improve debugging, but currently the easiest way to debug this issue is to navigate to `/var/log/devcp/` and inspect the desired log file (`LE-{user}-{domain}.log`), which should appear after requesting a certificate.
 
 Find **Step 5**, where you will see something similar to the following:
 

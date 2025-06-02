@@ -16,14 +16,14 @@ domain=$2
 flush=$3
 
 # Includes
-# shellcheck source=/etc/hestiacp/hestia.conf
-source /etc/hestiacp/hestia.conf
-# shellcheck source=/usr/local/hestia/func/main.sh
+# shellcheck source=/etc/hestiacp/devcp.conf
+source /etc/hestiacp/devcp.conf
+# shellcheck source=/usr/local/devcp/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/func/remote.sh
+# shellcheck source=/usr/local/devcp/func/remote.sh
 source $HESTIA/func/remote.sh
 # load config file
-source_conf "$HESTIA/conf/hestia.conf"
+source_conf "$HESTIA/conf/devcp.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -55,7 +55,7 @@ if [ -z "$str" ]; then
 	fi
 	exit
 fi
-if [ "$DNS_CLUSTER_SYSTEM" = "hestia-zone" ]; then
+if [ "$DNS_CLUSTER_SYSTEM" = "devcp-zone" ]; then
 	str=$(echo "$str" | sed "s/SLAVE='no'/SLAVE='yes'/g")
 	str=$(echo "$str" | sed "s/SLAVE=''/SLAVE='yes'/g")
 	ip=$(ip addr | grep 'inet ' | grep global | head -n1 | awk '{print $2}' | cut -f1 -d/)
@@ -78,7 +78,7 @@ for cluster in $(grep "SUSPENDED='no'" $HESTIA/conf/dns-cluster.conf); do
 	# Parsing domain parameters
 	parse_object_kv_list "$str"
 
-	if [ "$DNS_CLUSTER_SYSTEM" = "hestia-zone" ]; then
+	if [ "$DNS_CLUSTER_SYSTEM" = "devcp-zone" ]; then
 		# Syncing domain data
 		cluster_cmd v-insert-dns-domain $DNS_USER "$str" $HOSTNAME $flush 'no'
 		check_result $? "$HOST connection failed" "$E_CONNECT"
@@ -106,7 +106,7 @@ for cluster in $(grep "SUSPENDED='no'" $HESTIA/conf/dns-cluster.conf); do
 	fi
 done
 
-if [ "$DNS_CLUSTER_SYSTEM" = "hestia-zone" ]; then
+if [ "$DNS_CLUSTER_SYSTEM" = "devcp-zone" ]; then
 	rndc notify $domain > /dev/null 2>&1
 fi
 #----------------------------------------------------------#

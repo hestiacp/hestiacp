@@ -15,18 +15,18 @@ domain_idn=$2
 status=$3
 
 # Includes
-# shellcheck source=/etc/hestiacp/hestia.conf
-source /etc/hestiacp/hestia.conf
-# shellcheck source=/usr/local/hestia/func/main.sh
+# shellcheck source=/etc/hestiacp/devcp.conf
+source /etc/hestiacp/devcp.conf
+# shellcheck source=/usr/local/devcp/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/func/rebuild.sh
+# shellcheck source=/usr/local/devcp/func/rebuild.sh
 source $HESTIA/func/rebuild.sh
-# shellcheck source=/usr/local/hestia/func/syshealth.sh
+# shellcheck source=/usr/local/devcp/func/syshealth.sh
 source $HESTIA/func/syshealth.sh
-# shellcheck source=/usr/local/hestia/func/domain.sh
+# shellcheck source=/usr/local/devcp/func/domain.sh
 source $HESTIA/func/domain.sh
 # load config file
-source_conf "$HESTIA/conf/hestia.conf"
+source_conf "$HESTIA/conf/devcp.conf"
 
 # Additional argument formatting
 format_domain
@@ -51,8 +51,8 @@ fi
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
-if [ "$DNS_CLUSTER_SYSTEM" != 'hestia-zone' ]; then
-	check_result "$E_DISABLED" "DNSSEC is not supported when DNS_CLUSTER_SYSTEM is not set to hestia-zone"
+if [ "$DNS_CLUSTER_SYSTEM" != 'devcp-zone' ]; then
+	check_result "$E_DISABLED" "DNSSEC is not supported when DNS_CLUSTER_SYSTEM is not set to devcp-zone"
 fi
 
 version=$(named -v | awk 'NR==1{print $2}')

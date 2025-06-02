@@ -32,14 +32,14 @@ dns_user=${6-dns-cluster}
 DNS_USER=$dns_user
 
 # Includes
-# shellcheck source=/etc/hestiacp/hestia.conf
-source /etc/hestiacp/hestia.conf
-# shellcheck source=/usr/local/hestia/func/main.sh
+# shellcheck source=/etc/hestiacp/devcp.conf
+source /etc/hestiacp/devcp.conf
+# shellcheck source=/usr/local/devcp/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/func/remote.sh
+# shellcheck source=/usr/local/devcp/func/remote.sh
 source $HESTIA/func/remote.sh
 # load config file
-source_conf "$HESTIA/conf/hestia.conf"
+source_conf "$HESTIA/conf/devcp.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -93,10 +93,10 @@ echo "$str" >> $HESTIA/conf/dns-cluster.conf
 chmod 660 $HESTIA/conf/dns-cluster.conf
 
 # Enabling DNS_CLUSTER
-if [ -z "$(grep DNS_CLUSTER= $HESTIA/conf/hestia.conf)" ]; then
-	sed -i "s/^STATS_/DNS_CLUSTER='yes'\nSTATS_/g" $HESTIA/conf/hestia.conf
+if [ -z "$(grep DNS_CLUSTER= $HESTIA/conf/devcp.conf)" ]; then
+	sed -i "s/^STATS_/DNS_CLUSTER='yes'\nSTATS_/g" $HESTIA/conf/devcp.conf
 else
-	sed -i "s/DNS_CLUSTER=.*/DNS_CLUSTER='yes'/g" $HESTIA/conf/hestia.conf
+	sed -i "s/DNS_CLUSTER=.*/DNS_CLUSTER='yes'/g" $HESTIA/conf/devcp.conf
 fi
 
 # Enabling remote dns-cluster queue
@@ -127,7 +127,7 @@ if [ -z "$check_cron" ] && [ ! -z "$CRON_SYSTEM" ]; then
 	day='*'
 	month='*'
 	wday='*'
-	sed -i -e "\$a$min $hour * * * sudo /usr/local/hestia/bin/$cmd" "/var/spool/cron/crontabs/hestiaweb"
+	sed -i -e "\$a$min $hour * * * sudo /usr/local/devcp/bin/$cmd" "/var/spool/cron/crontabs/hestiaweb"
 fi
 
 # Logging

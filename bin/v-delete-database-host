@@ -4,7 +4,7 @@
 #
 # example: v-delete-database-host pgsql localhost
 #
-# This function for deleting the database host from hestia configuration. It will
+# This function for deleting the database host from devcp configuration. It will
 # be deleted if there are no databases created on it only.
 
 #----------------------------------------------------------#
@@ -16,14 +16,14 @@ type=$1
 host=$2
 
 # Includes
-# shellcheck source=/etc/hestiacp/hestia.conf
-source /etc/hestiacp/hestia.conf
-# shellcheck source=/usr/local/hestia/func/main.sh
+# shellcheck source=/etc/hestiacp/devcp.conf
+source /etc/hestiacp/devcp.conf
+# shellcheck source=/usr/local/devcp/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/func/db.sh
+# shellcheck source=/usr/local/devcp/func/db.sh
 source $HESTIA/func/db.sh
 # load config file
-source_conf "$HESTIA/conf/hestia.conf"
+source_conf "$HESTIA/conf/devcp.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #

@@ -185,7 +185,7 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
 								<li class="units-table-row-action shortcut-enter" data-key-action="href">
 									<a
 										class="units-table-row-action-link"
-										href="<?= $db_myadmin_link?>hestia-sso.php?database=<?= $key ?>&user=<?= $user_plain?>&exp=<?= $time?>&hestia_token=<?=password_hash($key.$user_plain.$_SESSION['user_combined_ip'].$time.$_SESSION['PHPMYADMIN_KEY'], PASSWORD_DEFAULT) ?>"
+										href="<?= $db_myadmin_link?>devcp-sso.php?database=<?= $key ?>&user=<?= $user_plain?>&exp=<?= $time?>&hestia_token=<?=password_hash($key.$user_plain.$_SESSION['user_combined_ip'].$time.$_SESSION['PHPMYADMIN_KEY'], PASSWORD_DEFAULT) ?>"
 										title="phpMyAdmin" target="_blank"
 									>
 										<i class="fas fa-right-to-bracket icon-orange"></i>

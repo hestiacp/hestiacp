@@ -9,10 +9,10 @@
 #----------------------------------------------------------#
 
 # Includes
-# shellcheck source=/usr/local/hestia/func/main.sh
+# shellcheck source=/usr/local/devcp/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# shellcheck source=/usr/local/devcp/conf/devcp.conf
+source $HESTIA/conf/devcp.conf
 
 #----------------------------------------------------------#
 #                    Verifications                         #

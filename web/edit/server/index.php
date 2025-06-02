@@ -277,7 +277,7 @@ if ($_SESSION["BACKUP_INCREMENTAL"] == "yes") {
 }
 
 // List ssl certificate info
-exec(HESTIA_CMD . "v-list-sys-hestia-ssl json", $output, $return_var);
+exec(HESTIA_CMD . "v-list-sys-devcp-ssl json", $output, $return_var);
 $ssl_str = json_decode(implode("", $output), true);
 unset($output);
 $v_ssl_crt = $ssl_str["HESTIA"]["CRT"];
@@ -1865,12 +1865,12 @@ if (!empty($_POST["save"])) {
 				fclose($fp);
 			}
 
-			exec(HESTIA_CMD . "v-change-sys-hestia-ssl " . $tmpdir, $output, $return_var);
+			exec(HESTIA_CMD . "v-change-sys-devcp-ssl " . $tmpdir, $output, $return_var);
 			check_return_code($return_var, $output);
 			unset($output);
 
 			// List ssl certificate info
-			exec(HESTIA_CMD . "v-list-sys-hestia-ssl json", $output, $return_var);
+			exec(HESTIA_CMD . "v-list-sys-devcp-ssl json", $output, $return_var);
 			$ssl_str = json_decode(implode("", $output), true);
 			unset($output);
 			$v_ssl_crt = $ssl_str["HESTIA"]["CRT"];

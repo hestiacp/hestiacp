@@ -30,7 +30,7 @@ fi
 
 # Reset PMA SSO
 if [ "$PHPMYADMIN_KEY" != "" ]; then
-	echo "[ * ] Updating hestia-sso for phpMyAdmin..."
+	echo "[ * ] Updating devcp-sso for phpMyAdmin..."
 	$BIN/v-delete-sys-pma-sso
 	$BIN/v-add-sys-pma-sso
 fi

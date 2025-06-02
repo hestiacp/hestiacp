@@ -143,10 +143,10 @@ function sidebarDocs() {
 			text: 'Community',
 			collapsed: false,
 			items: [
-				{ text: 'Hestia Nginx Cache', link: '/docs/community/hestia-nginx-cache' },
+				{ text: 'Hestia Nginx Cache', link: '/docs/community/devcp-nginx-cache' },
 				{
 					text: 'Ioncube installer for Hestia',
-					link: '/docs/community/ioncube-hestia-installer',
+					link: '/docs/community/ioncube-devcp-installer',
 				},
 				{ text: 'Install script generator', link: '/docs/community/install-script-generator' },
 			],

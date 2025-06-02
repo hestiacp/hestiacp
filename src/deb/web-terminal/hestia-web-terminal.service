@@ -1,14 +1,14 @@
 [Unit]
-Description=HestiaCP Web Terminal
+Description=DevCP Web Terminal
 Documentation=https://hestiacp.com/docs/
 After=network.target
 
 [Service]
 User=root
-Group=hestia-users
+Group=devcp-users
 Environment=NODE_ENV=production
-Environment=HESTIA=/usr/local/hestia
-ExecStart=/usr/local/hestia/web-terminal/server.js
+Environment=HESTIA=/usr/local/devcp
+ExecStart=/usr/local/devcp/web-terminal/server.js
 ExecStop=/bin/kill -s TERM $MAINPID
 Restart=on-failure
 

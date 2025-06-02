@@ -8,12 +8,12 @@
 #----------------------------------------------------------#
 
 # Includes
-# shellcheck source=/etc/hestiacp/hestia.conf
-source /etc/hestiacp/hestia.conf
-# shellcheck source=/usr/local/hestia/func/main.sh
+# shellcheck source=/etc/hestiacp/devcp.conf
+source /etc/hestiacp/devcp.conf
+# shellcheck source=/usr/local/devcp/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# shellcheck source=/usr/local/devcp/conf/devcp.conf
+source $HESTIA/conf/devcp.conf
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -34,31 +34,31 @@ fi
 #----------------------------------------------------------#
 
 # Remove apache2 from config
-sed -i "/^WEB_PORT/d" $HESTIA/conf/hestia.conf $HESTIA/conf/defaults/hestia.conf
-sed -i "/^WEB_SSL/d" $HESTIA/conf/hestia.conf $HESTIA/conf/defaults/hestia.conf
-sed -i "/^WEB_SSL_PORT/d" $HESTIA/conf/hestia.conf $HESTIA/conf/defaults/hestia.conf
-sed -i "/^WEB_RGROUPS/d" $HESTIA/conf/hestia.conf $HESTIA/conf/defaults/hestia.conf
-sed -i "/^WEB_SYSTEM/d" $HESTIA/conf/hestia.conf $HESTIA/conf/defaults/hestia.conf
+sed -i "/^WEB_PORT/d" $HESTIA/conf/devcp.conf $HESTIA/conf/defaults/devcp.conf
+sed -i "/^WEB_SSL/d" $HESTIA/conf/devcp.conf $HESTIA/conf/defaults/devcp.conf
+sed -i "/^WEB_SSL_PORT/d" $HESTIA/conf/devcp.conf $HESTIA/conf/defaults/devcp.conf
+sed -i "/^WEB_RGROUPS/d" $HESTIA/conf/devcp.conf $HESTIA/conf/defaults/devcp.conf
+sed -i "/^WEB_SYSTEM/d" $HESTIA/conf/devcp.conf $HESTIA/conf/defaults/devcp.conf
 
 # Remove nginx (proxy) from config
-sed -i "/^PROXY_PORT/d" $HESTIA/conf/hestia.conf $HESTIA/conf/defaults/hestia.conf
-sed -i "/^PROXY_SSL_PORT/d" $HESTIA/conf/hestia.conf $HESTIA/conf/defaults/hestia.conf
-sed -i "/^PROXY_SYSTEM/d" $HESTIA/conf/hestia.conf $HESTIA/conf/defaults/hestia.conf
+sed -i "/^PROXY_PORT/d" $HESTIA/conf/devcp.conf $HESTIA/conf/defaults/devcp.conf
+sed -i "/^PROXY_SSL_PORT/d" $HESTIA/conf/devcp.conf $HESTIA/conf/defaults/devcp.conf
+sed -i "/^PROXY_SYSTEM/d" $HESTIA/conf/devcp.conf $HESTIA/conf/defaults/devcp.conf
 
 # Add Nginx settings to config
-echo "WEB_PORT='80'" >> $HESTIA/conf/hestia.conf
-echo "WEB_SSL='openssl'" >> $HESTIA/conf/hestia.conf
-echo "WEB_SSL_PORT='443'" >> $HESTIA/conf/hestia.conf
-echo "WEB_SYSTEM='nginx'" >> $HESTIA/conf/hestia.conf
+echo "WEB_PORT='80'" >> $HESTIA/conf/devcp.conf
+echo "WEB_SSL='openssl'" >> $HESTIA/conf/devcp.conf
+echo "WEB_SSL_PORT='443'" >> $HESTIA/conf/devcp.conf
+echo "WEB_SYSTEM='nginx'" >> $HESTIA/conf/devcp.conf
 
 # Add Nginx settings to config
-echo "WEB_PORT='80'" >> $HESTIA/conf/defaults/hestia.conf
-echo "WEB_SSL='openssl'" >> $HESTIA/conf/defaults/hestia.conf
-echo "WEB_SSL_PORT='443'" >> $HESTIA/conf/defaults/hestia.conf
-echo "WEB_SYSTEM='nginx'" >> $HESTIA/conf/defaults/hestia.conf
+echo "WEB_PORT='80'" >> $HESTIA/conf/defaults/devcp.conf
+echo "WEB_SSL='openssl'" >> $HESTIA/conf/defaults/devcp.conf
+echo "WEB_SSL_PORT='443'" >> $HESTIA/conf/defaults/devcp.conf
+echo "WEB_SYSTEM='nginx'" >> $HESTIA/conf/defaults/devcp.conf
 
-rm $HESTIA/conf/defaults/hestia.conf
-cp $HESTIA/conf/hestia.conf $HESTIA/conf/defaults/hestia.conf
+rm $HESTIA/conf/defaults/devcp.conf
+cp $HESTIA/conf/devcp.conf $HESTIA/conf/defaults/devcp.conf
 
 # Rebuild web config
 

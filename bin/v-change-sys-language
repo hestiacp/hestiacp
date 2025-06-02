@@ -15,12 +15,12 @@ language=$1
 update_users=$2
 
 # Includes
-# shellcheck source=/etc/hestiacp/hestia.conf
-source /etc/hestiacp/hestia.conf
-# shellcheck source=/usr/local/hestia/func/main.sh
+# shellcheck source=/etc/hestiacp/devcp.conf
+source /etc/hestiacp/devcp.conf
+# shellcheck source=/usr/local/devcp/func/main.sh
 source $HESTIA/func/main.sh
 # load config file
-source_conf "$HESTIA/conf/hestia.conf"
+source_conf "$HESTIA/conf/devcp.conf"
 
 is_language_valid() {
 	# English is always allowed
@@ -54,10 +54,10 @@ check_hestia_demo_mode
 #----------------------------------------------------------#
 
 # Change language
-if [ -z "$(grep LANGUAGE $HESTIA/conf/hestia.conf)" ]; then
-	echo "LANGUAGE='$language'" >> $HESTIA/conf/hestia.conf
+if [ -z "$(grep LANGUAGE $HESTIA/conf/devcp.conf)" ]; then
+	echo "LANGUAGE='$language'" >> $HESTIA/conf/devcp.conf
 else
-	sed -i "s/LANGUAGE=.*/LANGUAGE='$language'/g" $HESTIA/conf/hestia.conf
+	sed -i "s/LANGUAGE=.*/LANGUAGE='$language'/g" $HESTIA/conf/devcp.conf
 fi
 
 # Update language for all existing users if specified

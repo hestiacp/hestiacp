@@ -9,7 +9,7 @@
 # - container name will be generated depending on enabled features (os,proxy,webserver and php)
 # - 'SHARED_HOST_FOLDER' will be mounted in the (guest lxc) container at '/home/ubuntu/source/' and hestiacp src folder is expected to be there
 # - wildcard dns *.hst.domain.tld can be used to point to vm host
-# - watch install log ex:(host) tail -n 100 -f /tmp/hst_installer_hst-ub1604-a2-mphp
+# - watch install log ex:(host) tail -n 100 -f /tmp/dst_installer_dst-ub1604-a2-mphp
 #
 # CONFIG HOST STEPS:
 #   export SHARED_HOST_FOLDER="/home/myuser/projectfiles"
@@ -18,10 +18,10 @@
 #
 
 /*
-# Nginx reverse proxy config: /etc/nginx/conf.d/lxc-hestia.conf
+# Nginx reverse proxy config: /etc/nginx/conf.d/lxc-devcp.conf
 server {
     listen 80;
-    server_name ~(?<lxcname>hst-.+)\.hst\.domain\.tld$;
+    server_name ~(?<lxcname>dst-.+)\.hst\.domain\.tld$;
     location / {
         set $backend_upstream "http://$lxcname:80";
         proxy_pass $backend_upstream;
@@ -31,7 +31,7 @@ server {
 }
 server {
     listen 8083;
-    server_name ~^(?<lxcname>hst-.+)\.hst\.domain\.tld$;
+    server_name ~^(?<lxcname>dst-.+)\.hst\.domain\.tld$;
     location / {
         set $backend_upstream "https://$lxcname:8083";
         proxy_pass $backend_upstream;
@@ -39,7 +39,7 @@ server {
 }
 
 # use lxc resolver /etc/nginx/nginx.conf
-# test resolver ip ex: dig +short @10.240.232.1 hst-ub1804-ngx-a2-mphp
+# test resolver ip ex: dig +short @10.240.232.1 dst-ub1804-ngx-a2-mphp
 http {
 ...
     resolver 10.240.232.1 ipv6=off valid=5s;
@@ -68,7 +68,7 @@ if (
 }
 
 $containers = [
-	//    ['description'=>'hst-d9-ngx-a2-mphp',       'os'=>'debian9',     'nginx'=>true,  'apache2'=>true,    'php'=>'multiphp',  'dns'=>'auto', 'exim'=>'auto'],
+	//    ['description'=>'dst-d9-ngx-a2-mphp',       'os'=>'debian9',     'nginx'=>true,  'apache2'=>true,    'php'=>'multiphp',  'dns'=>'auto', 'exim'=>'auto'],
 	[
 		"description" => "ub1804 ngx mphp",
 		"os" => "ubuntu18.04",
@@ -152,10 +152,10 @@ $containers = [
 ];
 
 array_walk($containers, function (&$element) {
-	$lxc_name = "hst-"; // hostname and lxc name prefix. Update nginx reverse proxy config after altering this value
-	$hst_args = HST_ARGS;
+	$lxc_name = "dst-"; // hostname and lxc name prefix. Update nginx reverse proxy config after altering this value
+	$dst_args = HST_ARGS;
 
-	$element["hst_installer"] = "hst-install-ubuntu.sh";
+	$element["dst_installer"] = "dst-install-ubuntu.sh";
 	$element["lxc_image"] = "ubuntu:18.04";
 
 	if ($element["os"] == "ubuntu16.04") {
@@ -163,11 +163,11 @@ array_walk($containers, function (&$element) {
 		$lxc_name .= "ub1604";
 	} elseif ($element["os"] == "debian8") {
 		$element["lxc_image"] = "images:debian/8";
-		$element["hst_installer"] = "hst-install-debian.sh";
+		$element["dst_installer"] = "dst-install-debian.sh";
 		$lxc_name .= "d8";
 	} elseif ($element["os"] == "debian9") {
 		$element["lxc_image"] = "images:debian/9";
-		$element["hst_installer"] = "hst-install-debian.sh";
+		$element["dst_installer"] = "dst-install-debian.sh";
 		$lxc_name .= "d9";
 	} else {
 		$lxc_name .= "ub1804";
@@ -176,57 +176,57 @@ array_walk($containers, function (&$element) {
 
 	if ($element["nginx"] === true) {
 		$lxc_name .= "-ngx";
-		$hst_args .= " --nginx yes";
+		$dst_args .= " --nginx yes";
 	} else {
-		$hst_args .= " --nginx no";
+		$dst_args .= " --nginx no";
 	}
 
 	if ($element["apache2"] === true) {
 		$lxc_name .= "-a2";
-		$hst_args .= " --apache yes";
+		$dst_args .= " --apache yes";
 	} else {
-		$hst_args .= " --apache no";
+		$dst_args .= " --apache no";
 	}
 
 	if ($element["php"] == "fpm") {
 		$lxc_name .= "-fpm";
-		$hst_args .= " --phpfpm yes";
+		$dst_args .= " --phpfpm yes";
 	} elseif ($element["php"] == "multiphp") {
 		$lxc_name .= "-mphp";
-		$hst_args .= " --multiphp yes";
+		$dst_args .= " --multiphp yes";
 	}
 
 	if (isset($element["dns"])) {
 		if ($element["dns"] === true || $element["dns"] == "auto") {
-			$hst_args .= " --named yes";
+			$dst_args .= " --named yes";
 		} else {
-			$hst_args .= " --named no";
+			$dst_args .= " --named no";
 		}
 	}
 
 	if (isset($element["exim"])) {
 		if ($element["exim"] === true || $element["exim"] == "auto") {
-			$hst_args .= " --exim yes";
+			$dst_args .= " --exim yes";
 		} else {
-			$hst_args .= " --exim no";
+			$dst_args .= " --exim no";
 		}
 	}
 
 	if (isset($element["webmail"])) {
 		if ($element["webmail"] === true || $element["webmail"] == "auto") {
-			$hst_args .= " --dovecot yes";
+			$dst_args .= " --dovecot yes";
 		} else {
-			$hst_args .= " --dovecot no";
+			$dst_args .= " --dovecot no";
 		}
 	}
 
 	$element["lxc_name"] = $lxc_name;
 	$element["hostname"] = $lxc_name . "." . DOMAIN;
 
-	// $hst_args .= ' --with-debs /home/ubuntu/source/hestiacp/src/pkgs/develop/' . $element['os'];
-	$hst_args .= " --with-debs /tmp/hestiacp-src/debs";
-	$hst_args .= " --hostname " . $element["hostname"];
-	$element["hst_args"] = $hst_args;
+	// $dst_args .= ' --with-debs /home/ubuntu/source/hestiacp/src/pkgs/develop/' . $element['os'];
+	$dst_args .= " --with-debs /tmp/hestiacp-src/debs";
+	$dst_args .= " --hostname " . $element["hostname"];
+	$element["dst_args"] = $dst_args;
 });
 
 function lxc_run($args, &$rc) {
@@ -256,10 +256,10 @@ function lxc_run($args, &$rc) {
 function getHestiaVersion($branch) {
 	$control_file = "";
 	if ($branch === "~localsrc") {
-		$control_file = file_get_contents(SHARED_HOST_FOLDER . "/hestiacp/src/deb/hestia/control");
+		$control_file = file_get_contents(SHARED_HOST_FOLDER . "/hestiacp/src/deb/devcp/control");
 	} else {
 		$control_file = file_get_contents(
-			"https://raw.githubusercontent.com/hestiacp/hestiacp/${branch}/src/deb/hestia/control",
+			"https://raw.githubusercontent.com/hestiacp/hestiacp/${branch}/src/deb/devcp/control",
 		);
 	}
 
@@ -345,7 +345,7 @@ function check_lxc_container($container) {
 	exit(0);
 }
 
-function hst_installer_worker($container) {
+function dst_installer_worker($container) {
 	$pid = pcntl_fork();
 	if ($pid > 0) {
 		return $pid;
@@ -354,23 +354,23 @@ function hst_installer_worker($container) {
 	system(
 		"lxc exec " .
 			$container["lxc_name"] .
-			' -- bash -c "/home/ubuntu/source/hestiacp/src/hst_autocompile.sh --hestia \"' .
+			' -- bash -c "/home/ubuntu/source/hestiacp/src/dst_autocompile.sh --devcp \"' .
 			HST_BRANCH .
 			'\" no"',
 	);
 
 	$hver = getHestiaVersion(HST_BRANCH);
 	echo "Install Hestia ${hver} on " . $container["lxc_name"] . PHP_EOL;
-	echo "Args: " . $container["hst_args"] . PHP_EOL;
+	echo "Args: " . $container["dst_args"] . PHP_EOL;
 
 	system(
 		"lxc exec " .
 			$container["lxc_name"] .
 			' -- bash -c "cd \"/home/ubuntu/source/hestiacp\"; install/' .
-			$container["hst_installer"] .
+			$container["dst_installer"] .
 			" " .
-			$container["hst_args"] .
-			'" 2>&1 > /tmp/hst_installer_' .
+			$container["dst_args"] .
+			'" 2>&1 > /tmp/dst_installer_' .
 			$container["lxc_name"],
 	);
 
@@ -400,13 +400,13 @@ while (count($worker_pool)) {
 // Install Hestia
 $worker_pool = [];
 foreach ($containers as $container) {
-	# Is hestia installed?
+	# Is devcp installed?
 	lxc_run("exec " . $container["lxc_name"] . ' -- sudo --login "v-list-sys-config"', $rc);
 	if (isset($rc) && $rc === 0) {
 		continue;
 	}
 
-	$worker_pid = hst_installer_worker($container);
+	$worker_pid = dst_installer_worker($container);
 	if ($worker_pid > 0) {
 		$worker_pool[] = $worker_pid;
 	}
@@ -431,7 +431,7 @@ foreach ($containers as $container) {
 	system(
 		"lxc exec " .
 			$container["lxc_name"] .
-			' -- bash -c "sed -i \'s/session.cookie_secure] = on\$/session.cookie_secure] = off/\' /usr/local/hestia/php/etc/php-fpm.conf"',
+			' -- bash -c "sed -i \'s/session.cookie_secure] = on\$/session.cookie_secure] = off/\' /usr/local/devcp/php/etc/php-fpm.conf"',
 	);
 
 	# get rid off "mesg: ttyname failed: No such device" error
@@ -445,15 +445,15 @@ foreach ($containers as $container) {
 	system(
 		"lxc exec " .
 			$container["lxc_name"] .
-			' -- bash -c "sed -i \'/LE_STAGING/d\' /usr/local/hestia/conf/hestia.conf"',
+			' -- bash -c "sed -i \'/LE_STAGING/d\' /usr/local/devcp/conf/devcp.conf"',
 	);
 	system(
 		"lxc exec " .
 			$container["lxc_name"] .
-			' -- bash -c "echo \'LE_STAGING=\"yes\"\' >> /usr/local/hestia/conf/hestia.conf"',
+			' -- bash -c "echo \'LE_STAGING=\"yes\"\' >> /usr/local/devcp/conf/devcp.conf"',
 	);
 
-	system("lxc exec " . $container["lxc_name"] . ' -- bash -c "service hestia restart"');
+	system("lxc exec " . $container["lxc_name"] . ' -- bash -c "service devcp restart"');
 }
 
 echo "Hestia containers configured" . PHP_EOL;

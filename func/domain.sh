@@ -396,7 +396,7 @@ del_web_config() {
 		rm -f $legacyconf
 
 		# Remove old global includes file
-		rm -f /etc/$1/conf.d/hestia.conf
+		rm -f /etc/$1/conf.d/devcp.conf
 	fi
 
 	# Remove domain configuration files and clean up symbolic links

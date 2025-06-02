@@ -1,21 +1,21 @@
-<h1 align="center"><a href="https://www.hestiacp.com/">Hestia Control Panel</a></h1>
+<h1 align="center"><a href="https://www.DevCP.com/">Dev-IT Control Panel</a></h1>
 
-![HestiaCP Web Interface screenshot](https://storage.hestiacp.com/hestiascreen.png)
+![DevCP Web Interface screenshot](https://storage.DevCP.com/hestiascreen.png)
 
 <h2 align="center">Lightweight and powerful control panel for the modern web</h2>
 
-<p align="center"><strong>Latest stable release:</strong> Version 1.9.3 | <a href="https://github.com/hestiacp/hestiacp/blob/release/CHANGELOG.md">View Changelog</a></p>
+<p align="center"><strong>Latest stable release:</strong> Version 1.9.3 | <a href="https://github.com/DevCP/DevCP/blob/release/CHANGELOG.md">View Changelog</a></p>
 
 <p align="center">
-	<a href="https://www.hestiacp.com/">HestiaCP.com</a> |
-	<a href="https://docs.hestiacp.com/">Documentation</a> |
-	<a href="https://forum.hestiacp.com/">Forum</a>
+	<a href="https://www.DevCP.com/">DevCP.com</a> |
+	<a href="https://docs.DevCP.com/">Documentation</a> |
+	<a href="https://forum.DevCP.com/">Forum</a>
 	<br/><br/>
-	<a href="https://drone.hestiacp.com/hestiacp/hestiacp">
-		<img src="https://drone.hestiacp.com/api/badges/hestiacp/hestiacp/status.svg?ref=refs/heads/main" alt="Drone Status"/>
+	<a href="https://drone.DevCP.com/DevCP/DevCP">
+		<img src="https://drone.DevCP.com/api/badges/DevCP/DevCP/status.svg?ref=refs/heads/main" alt="Drone Status"/>
 	</a>
-	<a href="https://github.com/hestiacp/hestiacp/actions/workflows/lint.yml">
-		<img src="https://github.com/hestiacp/hestiacp/actions/workflows/lint.yml/badge.svg" alt="Lint Status"/>
+	<a href="https://github.com/DevCP/DevCP/actions/workflows/lint.yml">
+		<img src="https://github.com/DevCP/DevCP/actions/workflows/lint.yml/badge.svg" alt="Lint Status"/>
 	</a>
 	<a href="https://gurubase.io/g/hestia">
 		<img src="https://img.shields.io/badge/Gurubase-Ask%20Hestia%20Guru-006BFF" alt="Gurubase"/>
@@ -101,7 +101,7 @@ You may specify a number of various flags during installation to only install th
 bash hst-install.sh -h
 ```
 
-Alternatively, You can use <https://hestiacp.com/install.html> which allows you to easily generate the installation command via GUI.
+Alternatively, You can use <https://DevCP.com/install.html> which allows you to easily generate the installation command via GUI.
 
 ## How to upgrade an existing installation
 
@@ -114,29 +114,29 @@ apt-get upgrade
 
 ## Issues & Support Requests
 
-- If you encounter a general problem while using Hestia Control Panel and need help, please [visit our forum](https://forum.hestiacp.com/) to search for potential solutions or post a new thread where community members can assist.
-- Bugs and other reproducible issues should be filed via GitHub by [creating a new issue report](https://github.com/hestiacp/hestiacp/issues) so that our developers can investigate further. Please note that requests for support will be redirected to our forum.
+- If you encounter a general problem while using Hestia Control Panel and need help, please [visit our forum](https://forum.DevCP.com/) to search for potential solutions or post a new thread where community members can assist.
+- Bugs and other reproducible issues should be filed via GitHub by [creating a new issue report](https://github.com/DevCP/DevCP/issues) so that our developers can investigate further. Please note that requests for support will be redirected to our forum.
 
 **IMPORTANT: We _cannot_ provide support for requests that do not describe the troubleshooting steps that have already been performed, or for third-party applications not related to Hestia Control Panel (such as WordPress). Please make sure that you include as much information as possible in your forum posts or issue reports!**
 
 ## Contributions
 
-If you would like to contribute to the project, please [read our Contribution Guidelines](https://github.com/hestiacp/hestiacp/blob/release/CONTRIBUTING.md) for a brief overview of our development process and standards.
+If you would like to contribute to the project, please [read our Contribution Guidelines](https://github.com/DevCP/DevCP/blob/release/CONTRIBUTING.md) for a brief overview of our development process and standards.
 
 ## Copyright
 
-"Hestia Control Panel", "HestiaCP", and the Hestia logo are original copyright of hestiacp.com and the following restrictions apply:
+"Hestia Control Panel", "DevCP", and the Hestia logo are original copyright of DevCP.com and the following restrictions apply:
 
 **You are allowed to:**
 
-- use the names "Hestia Control Panel", "HestiaCP", or the Hestia logo in any context directly related to the application or the project. This includes the application itself, local communities and news or blog posts.
+- use the names "Hestia Control Panel", "DevCP", or the Hestia logo in any context directly related to the application or the project. This includes the application itself, local communities and news or blog posts.
 
 **You are not allowed to:**
 
-- sell or redistribute the application under the name "Hestia Control Panel", "HestiaCP", or similar derivatives, including the use of the Hestia logo in any brand or marketing materials related to revenue generating activities,
-- use the names "Hestia Control Panel", "HestiaCP", or the Hestia logo in any context that is not related to the project,
-- alter the name "Hestia Control Panel", "HestiaCP", or the Hestia logo in any way.
+- sell or redistribute the application under the name "Hestia Control Panel", "DevCP", or similar derivatives, including the use of the Hestia logo in any brand or marketing materials related to revenue generating activities,
+- use the names "Hestia Control Panel", "DevCP", or the Hestia logo in any context that is not related to the project,
+- alter the name "Hestia Control Panel", "DevCP", or the Hestia logo in any way.
 
 ## License
 
-Hestia Control Panel is licensed under [GPL v3](https://github.com/hestiacp/hestiacp/blob/release/LICENSE) license, and is based on the [VestaCP](https://vestacp.com/) project.<br>
+Hestia Control Panel is licensed under [GPL v3](https://github.com/DevCP/DevCP/blob/release/LICENSE) license, and is based on the [VestaCP](https://vestacp.com/) project.<br>

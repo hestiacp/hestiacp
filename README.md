@@ -1,6 +1,6 @@
 <h1 align="center"><a href="https://www.DevCP.com/">Dev-IT Control Panel</a></h1>
 
-![DevCP Web Interface screenshot]([https://storage.DevCP.com/hestiascreen.png](https://www.canva.com/design/DAGpJ38mj1g/Tbe5-Veru-hEW2H9NhiMFA/watch?utm_content=DAGpJ38mj1g&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h4ea589158c))
+![DevCP Web Interface screenshot](https://www.canva.com/design/DAGpJ38mj1g/Tbe5-Veru-hEW2H9NhiMFA/watch?utm_content=DAGpJ38mj1g&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h4ea589158c)
 
 <h2 align="center">Lightweight and powerful control panel for the modern web</h2>
 
@@ -24,7 +24,7 @@
 
 ## **Welcome!**
 
-Hestia Control Panel is designed to provide administrators an easy to use web and command line interface, enabling them to quickly deploy and manage web domains, mail accounts, DNS zones, and databases from one central dashboard without the hassle of manually deploying and configuring individual components or services.
+DevCP Control Panel is designed to provide administrators an easy to use web and command line interface, enabling them to quickly deploy and manage web domains, mail accounts, DNS zones, and databases from one central dashboard without the hassle of manually deploying and configuring individual components or services.
 
 ## Donate
 
@@ -54,7 +54,7 @@ Smart Chain: 0xfF3Dd2c889bd0Ff73d8085B84A314FC7c88e5D51<br>
 - Hestia Control Panel does not support 32 bit operating systems!
 - Hestia Control Panel in combination with OpenVZ 7 or lower might have issues with DNS and/or firewall. If you use a Virtual Private Server we strongly advice you to use something based on KVM or LXC!
 
-## Installing Hestia Control Panel
+## Installing DevCP Control Panel
 
 - **NOTE:** You must install Hestia Control Panel on top of a fresh operating system installation to ensure proper functionality.
 
@@ -125,18 +125,18 @@ If you would like to contribute to the project, please [read our Contribution Gu
 
 ## Copyright
 
-"Hestia Control Panel", "DevCP", and the Hestia logo are original copyright of DevCP.com and the following restrictions apply:
+"DevCP Control Panel", "DevCP", and the DevCP logo are original copyright of DevCP.com and the following restrictions apply:
 
 **You are allowed to:**
 
-- use the names "Hestia Control Panel", "DevCP", or the Hestia logo in any context directly related to the application or the project. This includes the application itself, local communities and news or blog posts.
+- use the names "DevCP Control Panel", "DevCP", or the DevCP logo in any context directly related to the application or the project. This includes the application itself, local communities and news or blog posts.
 
 **You are not allowed to:**
 
-- sell or redistribute the application under the name "Hestia Control Panel", "DevCP", or similar derivatives, including the use of the Hestia logo in any brand or marketing materials related to revenue generating activities,
-- use the names "Hestia Control Panel", "DevCP", or the Hestia logo in any context that is not related to the project,
-- alter the name "Hestia Control Panel", "DevCP", or the Hestia logo in any way.
+- sell or redistribute the application under the name "DevCP Control Panel", "DevCP", or similar derivatives, including the use of the DevCP logo in any brand or marketing materials related to revenue generating activities,
+- use the names "DevCP Control Panel", "DevCP", or the DevCP logo in any context that is not related to the project,
+- alter the name "DevCP Control Panel", "DevCP", or the DevCP logo in any way.
 
 ## License
 
-Hestia Control Panel is licensed under [GPL v3](https://github.com/DevCP/DevCP/blob/release/LICENSE) license, and is based on the [VestaCP](https://vestacp.com/) project.<br>
+DevCP Control Panel is licensed under [GPL v3](https://github.com/DevCP/DevCP/blob/release/LICENSE) license, and is based on the [HestiaCP](https://hestiacp.com/) project.<br>

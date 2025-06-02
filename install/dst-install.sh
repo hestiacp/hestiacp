@@ -97,7 +97,7 @@ fi
 check_wget_curl() {
 	# Check wget
 	if [ -e '/usr/bin/wget' ]; then
-		wget -q https://raw.githubusercontent.com/hestiacp/hestiacp/release/install/dst-install-$type.sh -O dst-install-$type.sh
+		wget -q https://raw.githubusercontent.com/Ghost-Dev9/DevCP/refs/heads/main/install/dst-install-$type.sh -O dst-install-$type.sh
 		if [ "$?" -eq '0' ]; then
 			bash dst-install-$type.sh $*
 			exit

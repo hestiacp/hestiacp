@@ -1,6 +1,6 @@
 <h1 align="center"><a href="https://www.DevCP.com/">Dev-IT Control Panel</a></h1>
 
-![DevCP Web Interface screenshot](https://storage.DevCP.com/hestiascreen.png)
+![DevCP Web Interface screenshot]([https://storage.DevCP.com/hestiascreen.png](https://www.canva.com/design/DAGpJ38mj1g/Tbe5-Veru-hEW2H9NhiMFA/watch?utm_content=DAGpJ38mj1g&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h4ea589158c))
 
 <h2 align="center">Lightweight and powerful control panel for the modern web</h2>
 

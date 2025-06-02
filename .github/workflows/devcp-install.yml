@@ -1,0 +1,27 @@
+name: 🧪 Test DevCP Installer
+
+on:
+  push:
+    paths:
+      - 'install/**'
+  pull_request:
+    paths:
+      - 'install/**'
+  workflow_dispatch:
+
+jobs:
+  devcp-install-test:
+    name: Run DevCP Installer
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: ⬇️ Checkout repository
+        uses: actions/checkout@v3
+
+      - name: ⚙️ Set script permissions
+        run: |
+          chmod +x install/install.sh
+          chmod +x install/steps/*.sh
+
+      - name: 🚀 Run DevCP Installer
+        run: sudo bash install/install.sh

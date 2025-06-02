@@ -64,7 +64,7 @@ ssh root@your.server
 Download the installation script for the latest release:
 
 ```bash
-wget https://raw.githubusercontent.com/Ghost-Dev9/DevCP/main/install/dst-install.sh
+wget https://raw.githubusercontent.com/Ghost-Dev9/DevCP/refs/heads/main/install/dst-install-debian.sh
 
 ```
 

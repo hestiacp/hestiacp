@@ -1,6 +1,6 @@
 <h1 align="center"><a href="https://www.DevCP.com/">Dev-IT Control Panel</a></h1>
 
-![DevCP Web Interface screenshot](https://images.app.goo.gl/GtGdZZP81mjieffw7)
+
 
 <h2 align="center">Lightweight and powerful control panel for the modern web</h2>
 
@@ -11,10 +11,6 @@
 	<a href="https://docs.DevCP.com/">Documentation</a> |
 	<a href="https://forum.DevCP.com/">Forum</a>
 	<br/><br/>
-	
-	<a href="https://gurubase.io/g/hestia">
-		<img src="https://img.shields.io/badge/Gurubase-Ask%20Hestia%20Guru-006BFF" alt="Gurubase"/>
-	</a>
 </p>
 
 ## **Welcome!**

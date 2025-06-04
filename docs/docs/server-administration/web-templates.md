@@ -10,19 +10,19 @@ Every time you rebuild the user or domain, the config files of the domain are ov
 
 This happens when:
 
-- HestiaCP is updated.
+- DevITCP is updated.
 - The admin initiates it.
 - The user modifies settings.
 
-The templates can be found in `/usr/local/hestia/data/templates/web/`.
+The templates can be found in `/usr/local/DevIT/data/templates/web/`.
 
 | Service                 | Location                                              |
 | ----------------------- | ----------------------------------------------------- |
-| Nginx (Proxy)           | /usr/local/hestia/data/templates/web/nginx/           |
-| Nginx - PHP FPM         | /usr/local/hestia/data/templates/web/nginx/php-fpm/   |
-| Apache2 (Legacy/modphp) | /usr/local/hestia/data/templates/web/apache2/         |
-| Apache2 - PHP FPM       | /usr/local/hestia/data/templates/web/apache2/php-fpm/ |
-| PHP-FPM                 | /usr/local/hestia/data/templates/web/php-fpm/         |
+| Nginx (Proxy)           | /usr/local/DevIT/data/templates/web/nginx/           |
+| Nginx - PHP FPM         | /usr/local/DevIT/data/templates/web/nginx/php-fpm/   |
+| Apache2 (Legacy/modphp) | /usr/local/DevIT/data/templates/web/apache2/         |
+| Apache2 - PHP FPM       | /usr/local/DevIT/data/templates/web/apache2/php-fpm/ |
+| PHP-FPM                 | /usr/local/DevIT/data/templates/web/php-fpm/         |
 
 ::: warning
 Avoid modifying default templates as they are overwritten by updates. To prevent that, copy them instead:
@@ -53,8 +53,8 @@ After modifying an existing template, you need to rebuild the user configuration
 | `%alias_idn%`        | Alias Domain (Internationalised)                      | `alias.domain.tld`                         |
 | `%docroot%`          | Document root of domain                               | `/home/username/web/public_html/`          |
 | `%sdocroot%`         | Private root of domain                                | `/home/username/web/public_shtml/`         |
-| `%ssl_pem%`          | Location of SSL Certificate                           | `/usr/local/hestia/data/user/username/ssl` |
-| `%ssl_key%`          | Location of SSL Key                                   | `/usr/local/hestia/data/user/username/ssl` |
+| `%ssl_pem%`          | Location of SSL Certificate                           | `/usr/local/DevIT/data/user/username/ssl` |
+| `%ssl_key%`          | Location of SSL Key                                   | `/usr/local/DevIT/data/user/username/ssl` |
 | `%web_system%`       | Software used as web server                           | `Nginx`                                    |
 | `%home%`             | Default home directory                                | `/home`                                    |
 | `%user%`             | Username of current user                              | `username`                                 |
@@ -72,7 +72,7 @@ With the switch to PHP-FPM there are currently 2 different ways:
 1. Using `.user.ini` in the home directory `/home/user/web/domain.tld/public_html`.
 2. Via the PHP-FPM pool config.
 
-Config templates for the PHP pool can be found in `/usr/local/hestia/data/templates/web/php-fpm/`.
+Config templates for the PHP pool can be found in `/usr/local/DevIT/data/templates/web/php-fpm/`.
 
 ::: warning
 Due to the fact we use multi PHP we need to recognise the PHP version to be used. Therefore we use the following naming scheme: `YOURNAME-PHP-X_Y.tpl`, where X_Y is your PHP version.
@@ -104,7 +104,7 @@ FastCGI cache works best for sites get a lot of request and where the pages don�
 
 ### Why does software package x and y not work with FastCGI cache
 
-As we have over 20 different templates and we don’t use them all, we have decided to stop releasing new ones the future and hope the community helps improving the templates by [submitting a Pull Request](https://github.com/hestiacp/hestiacp/pulls).
+As we have over 20 different templates and we don’t use them all, we have decided to stop releasing new ones the future and hope the community helps improving the templates by [submitting a Pull Request](https://github.com/DevITcp/DevITcp/pulls).
 
 If you want to add support to a certain template, follow the instructions below.
 
@@ -148,9 +148,9 @@ To write custom caching templates, use the following naming scheme:
 
 `caching-yourname.tpl`, `caching-yourname.stpl` and `caching-yourname.sh`
 
-### Does Hestia support Web socket support
+### Does DevIT support Web socket support
 
-Yes, Hestia works fine with Web sockets how ever our default templates include on default:
+Yes, DevIT works fine with Web sockets how ever our default templates include on default:
 
 ```bash
 proxy_hide_header Upgrade

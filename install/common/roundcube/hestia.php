@@ -1,23 +1,23 @@
 <?php
 
 /**
- * Hestia Control Panel Password Driver
+ * DevIT Control Panel Password Driver
  *
  * @version 1.0
- * @author HestiaCP <info@hestiacp.com>
+ * @author DevITCP <info@DevITcp.com>
  */
-class rcube_hestia_password {
+class rcube_DevIT_password {
 	public function save($curpass, $passwd) {
 		$rcmail = rcmail::get_instance();
-		$hestia_host = $rcmail->config->get("password_hestia_host");
+		$DevIT_host = $rcmail->config->get("password_DevIT_host");
 
-		if (empty($hestia_host)) {
-			$hestia_host = "localhost";
+		if (empty($DevIT_host)) {
+			$DevIT_host = "localhost";
 		}
 
-		$hestia_port = $rcmail->config->get("password_hestia_port");
-		if (empty($hestia_port)) {
-			$hestia_port = "8083";
+		$DevIT_port = $rcmail->config->get("password_DevIT_port");
+		if (empty($DevIT_port)) {
+			$DevIT_port = "8083";
 		}
 
 		$postvars = [
@@ -25,7 +25,7 @@ class rcube_hestia_password {
 			"password" => $curpass,
 			"new" => $passwd,
 		];
-		$url = "https://{$hestia_host}:{$hestia_port}/reset/mail/";
+		$url = "https://{$DevIT_host}:{$DevIT_port}/reset/mail/";
 		$ch = curl_init();
 		if (
 			false ===
@@ -35,7 +35,7 @@ class rcube_hestia_password {
 				CURLOPT_HEADER => true,
 				CURLOPT_POST => true,
 				CURLOPT_POSTFIELDS => http_build_query($postvars),
-				CURLOPT_USERAGENT => "Hestia Control Panel Password Driver",
+				CURLOPT_USERAGENT => "DevIT Control Panel Password Driver",
 				CURLOPT_SSL_VERIFYPEER => false,
 				CURLOPT_SSL_VERIFYHOST => false,
 			])

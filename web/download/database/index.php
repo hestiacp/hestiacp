@@ -1,5 +1,5 @@
 <?php
-use function Hestiacp\quoteshellarg\quoteshellarg;
+use function DevITcp\quoteshellarg\quoteshellarg;
 
 ob_start();
 include $_SERVER["DOCUMENT_ROOT"] . "/inc/main.php";
@@ -10,7 +10,7 @@ verify_csrf($_GET);
 $database = quoteshellarg($_GET["database"]);
 
 exec(
-	HESTIA_CMD . "v-dump-database " . $user . " " . $database . " file gzip",
+	DevIT_CMD . "v-dump-database " . $user . " " . $database . " file gzip",
 	$output,
 	$return_var,
 );

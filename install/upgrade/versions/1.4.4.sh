@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Hestia Control Panel upgrade script for target version 1.4.4
+# DevIT Control Panel upgrade script for target version 1.4.4
 
 #######################################################################################
 #######                      Place additional commands below.                   #######
@@ -8,7 +8,7 @@
 
 if [ -d "/etc/nginx/conf.d/" ]; then
 	#Add nginx user_agent separation to desktop/mobile
-	cp -f $HESTIA_INSTALL_DIR/nginx/agents.conf /etc/nginx/conf.d/
+	cp -f $DevIT_INSTALL_DIR/nginx/agents.conf /etc/nginx/conf.d/
 fi
 
 if [ -d "/etc/phpmyadmin/" ]; then
@@ -31,7 +31,7 @@ fi
 
 # Reset PMA SSO to fix bug with Nginx + Apache2
 if [ "$PHPMYADMIN_KEY" != "" ]; then
-	echo "[ * ] Refressh hestia-sso for PMA..."
+	echo "[ * ] Refressh DevIT-sso for PMA..."
 	$BIN/v-delete-sys-pma-sso quiet
 	$BIN/v-add-sys-pma-sso quiet
 fi

@@ -5,8 +5,8 @@
 putenv("LANGUAGE=" . detect_user_language());
 setlocale(LC_ALL, "en_US.UTF-8");
 
-$domain = "hestiacp";
-$localedir = "/usr/local/hestia/web/locale";
+$domain = "DevITcp";
+$localedir = "/usr/local/DevIT/web/locale";
 bindtextdomain($domain, $localedir);
 textdomain($domain);
 
@@ -54,15 +54,15 @@ function htmlify_trans($string, $closingTag) {
 function get_email_template($file, $language) {
 	if (
 		file_exists(
-			$_SERVER["HESTIA"] . "/data/templates/email/" . $language . "/" . $file . ".html",
+			$_SERVER["DevIT"] . "/data/templates/email/" . $language . "/" . $file . ".html",
 		)
 	) {
 		return file_get_contents(
-			$_SERVER["HESTIA"] . "/data/templates/email/" . $language . "/" . $file . ".html",
+			$_SERVER["DevIT"] . "/data/templates/email/" . $language . "/" . $file . ".html",
 		);
 	}
-	if (file_exists($_SERVER["HESTIA"] . "/data/templates/email/" . $file . ".html")) {
-		return file_get_contents($_SERVER["HESTIA"] . "/data/templates/email/" . $file . ".html");
+	if (file_exists($_SERVER["DevIT"] . "/data/templates/email/" . $file . ".html")) {
+		return file_get_contents($_SERVER["DevIT"] . "/data/templates/email/" . $file . ".html");
 	}
 	return false;
 }

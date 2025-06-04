@@ -1,5 +1,5 @@
 <?php
-use function Hestiacp\quoteshellarg\quoteshellarg;
+use function DevITcp\quoteshellarg\quoteshellarg;
 $TAB = "USER";
 
 // Main include
@@ -9,7 +9,7 @@ if ($_SESSION["userContext"] === "admin" && !empty($_GET["user"])) {
 	$user = quoteshellarg($_GET["user"]);
 }
 
-exec(HESTIA_CMD . "v-list-user-ssh-key " . $user . " json", $output, $return_var);
+exec(DevIT_CMD . "v-list-user-ssh-key " . $user . " json", $output, $return_var);
 if ($return_var > 0) {
 	check_return_code_redirect($return_var, $output, "/");
 }

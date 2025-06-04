@@ -1,11 +1,11 @@
 #!/bin/bash
 
 # Includes
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# shellcheck source=/usr/local/DevIT/conf/DevIT.conf
+source $DevIT/conf/DevIT.conf
 
 # Variables and arguments
-HESTIA="/usr/local/hestia"
+DevIT="/usr/local/DevIT"
 script=$1
 log=$2
 scroll=$3

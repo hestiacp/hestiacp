@@ -1,30 +1,30 @@
-<h1 align="center"><a href="https://www.hestiacp.com/">Hestia Control Panel</a></h1>
+<h1 align="center"><a href="https://www.DevITcp.com/">DevIT Control Panel</a></h1>
 
-![HestiaCP Web Interface screenshot](https://storage.hestiacp.com/hestiascreen.png)
+![DevITCP Web Interface screenshot](https://storage.DevITcp.com/DevITscreen.png)
 
 <h2 align="center">Lightweight and powerful control panel for the modern web</h2>
 
-<p align="center"><strong>Latest stable release:</strong> Version 1.9.3 | <a href="https://github.com/hestiacp/hestiacp/blob/release/CHANGELOG.md">View Changelog</a></p>
+<p align="center"><strong>Latest stable release:</strong> Version 1.9.3 | <a href="https://github.com/DevITcp/DevITcp/blob/release/CHANGELOG.md">View Changelog</a></p>
 
 <p align="center">
-	<a href="https://www.hestiacp.com/">HestiaCP.com</a> |
-	<a href="https://docs.hestiacp.com/">Documentation</a> |
-	<a href="https://forum.hestiacp.com/">Forum</a>
+	<a href="https://www.DevITcp.com/">DevITCP.com</a> |
+	<a href="https://docs.DevITcp.com/">Documentation</a> |
+	<a href="https://forum.DevITcp.com/">Forum</a>
 	<br/><br/>
-	<a href="https://drone.hestiacp.com/hestiacp/hestiacp">
-		<img src="https://drone.hestiacp.com/api/badges/hestiacp/hestiacp/status.svg?ref=refs/heads/main" alt="Drone Status"/>
+	<a href="https://drone.DevITcp.com/DevITcp/DevITcp">
+		<img src="https://drone.DevITcp.com/api/badges/DevITcp/DevITcp/status.svg?ref=refs/heads/main" alt="Drone Status"/>
 	</a>
-	<a href="https://github.com/hestiacp/hestiacp/actions/workflows/lint.yml">
-		<img src="https://github.com/hestiacp/hestiacp/actions/workflows/lint.yml/badge.svg" alt="Lint Status"/>
+	<a href="https://github.com/DevITcp/DevITcp/actions/workflows/lint.yml">
+		<img src="https://github.com/DevITcp/DevITcp/actions/workflows/lint.yml/badge.svg" alt="Lint Status"/>
 	</a>
-	<a href="https://gurubase.io/g/hestia">
-		<img src="https://img.shields.io/badge/Gurubase-Ask%20Hestia%20Guru-006BFF" alt="Gurubase"/>
+	<a href="https://gurubase.io/g/DevIT">
+		<img src="https://img.shields.io/badge/Gurubase-Ask%20DevIT%20Guru-006BFF" alt="Gurubase"/>
 	</a>
 </p>
 
 ## **Welcome!**
 
-Hestia Control Panel is designed to provide administrators an easy to use web and command line interface, enabling them to quickly deploy and manage web domains, mail accounts, DNS zones, and databases from one central dashboard without the hassle of manually deploying and configuring individual components or services.
+DevIT Control Panel is designed to provide administrators an easy to use web and command line interface, enabling them to quickly deploy and manage web domains, mail accounts, DNS zones, and databases from one central dashboard without the hassle of manually deploying and configuring individual components or services.
 
 ## Donate
 
@@ -51,12 +51,12 @@ Smart Chain: 0xfF3Dd2c889bd0Ff73d8085B84A314FC7c88e5D51<br>
 
 **NOTES:**
 
-- Hestia Control Panel does not support 32 bit operating systems!
-- Hestia Control Panel in combination with OpenVZ 7 or lower might have issues with DNS and/or firewall. If you use a Virtual Private Server we strongly advice you to use something based on KVM or LXC!
+- DevIT Control Panel does not support 32 bit operating systems!
+- DevIT Control Panel in combination with OpenVZ 7 or lower might have issues with DNS and/or firewall. If you use a Virtual Private Server we strongly advice you to use something based on KVM or LXC!
 
-## Installing Hestia Control Panel
+## Installing DevIT Control Panel
 
-- **NOTE:** You must install Hestia Control Panel on top of a fresh operating system installation to ensure proper functionality.
+- **NOTE:** You must install DevIT Control Panel on top of a fresh operating system installation to ensure proper functionality.
 
 While we have taken every effort to make the installation process and the control panel interface as friendly as possible (even for new users), it is assumed that you will have some prior knowledge and understanding in the basics how to set up a Linux server before continuing.
 
@@ -73,7 +73,7 @@ ssh root@your.server
 Download the installation script for the latest release:
 
 ```bash
-wget https://raw.githubusercontent.com/hestiacp/hestiacp/release/install/hst-install.sh
+wget https://raw.githubusercontent.com/DevITcp/DevITcp/release/install/hst-install.sh
 ```
 
 If the download fails due to an SSL validation error, please be sure you've installed the ca-certificate package on your system - you can do this with the following command:
@@ -100,11 +100,11 @@ You may specify a number of various flags during installation to only install th
 bash hst-install.sh -h
 ```
 
-Alternatively, You can use <https://hestiacp.com/install.html> which allows you to easily generate the installation command via GUI.
+Alternatively, You can use <https://DevITcp.com/install.html> which allows you to easily generate the installation command via GUI.
 
 ## How to upgrade an existing installation
 
-Automatic Updates are enabled by default on new installations of Hestia Control Panel and can be managed from **Server Settings > Updates**. To manually check for and install available updates, use the apt package manager:
+Automatic Updates are enabled by default on new installations of DevIT Control Panel and can be managed from **Server Settings > Updates**. To manually check for and install available updates, use the apt package manager:
 
 ```bash
 apt-get update
@@ -113,29 +113,29 @@ apt-get upgrade
 
 ## Issues & Support Requests
 
-- If you encounter a general problem while using Hestia Control Panel and need help, please [visit our forum](https://forum.hestiacp.com/) to search for potential solutions or post a new thread where community members can assist.
-- Bugs and other reproducible issues should be filed via GitHub by [creating a new issue report](https://github.com/hestiacp/hestiacp/issues) so that our developers can investigate further. Please note that requests for support will be redirected to our forum.
+- If you encounter a general problem while using DevIT Control Panel and need help, please [visit our forum](https://forum.DevITcp.com/) to search for potential solutions or post a new thread where community members can assist.
+- Bugs and other reproducible issues should be filed via GitHub by [creating a new issue report](https://github.com/DevITcp/DevITcp/issues) so that our developers can investigate further. Please note that requests for support will be redirected to our forum.
 
-**IMPORTANT: We _cannot_ provide support for requests that do not describe the troubleshooting steps that have already been performed, or for third-party applications not related to Hestia Control Panel (such as WordPress). Please make sure that you include as much information as possible in your forum posts or issue reports!**
+**IMPORTANT: We _cannot_ provide support for requests that do not describe the troubleshooting steps that have already been performed, or for third-party applications not related to DevIT Control Panel (such as WordPress). Please make sure that you include as much information as possible in your forum posts or issue reports!**
 
 ## Contributions
 
-If you would like to contribute to the project, please [read our Contribution Guidelines](https://github.com/hestiacp/hestiacp/blob/release/CONTRIBUTING.md) for a brief overview of our development process and standards.
+If you would like to contribute to the project, please [read our Contribution Guidelines](https://github.com/DevITcp/DevITcp/blob/release/CONTRIBUTING.md) for a brief overview of our development process and standards.
 
 ## Copyright
 
-"Hestia Control Panel", "HestiaCP", and the Hestia logo are original copyright of hestiacp.com and the following restrictions apply:
+"DevIT Control Panel", "DevITCP", and the DevIT logo are original copyright of DevITcp.com and the following restrictions apply:
 
 **You are allowed to:**
 
-- use the names "Hestia Control Panel", "HestiaCP", or the Hestia logo in any context directly related to the application or the project. This includes the application itself, local communities and news or blog posts.
+- use the names "DevIT Control Panel", "DevITCP", or the DevIT logo in any context directly related to the application or the project. This includes the application itself, local communities and news or blog posts.
 
 **You are not allowed to:**
 
-- sell or redistribute the application under the name "Hestia Control Panel", "HestiaCP", or similar derivatives, including the use of the Hestia logo in any brand or marketing materials related to revenue generating activities,
-- use the names "Hestia Control Panel", "HestiaCP", or the Hestia logo in any context that is not related to the project,
-- alter the name "Hestia Control Panel", "HestiaCP", or the Hestia logo in any way.
+- sell or redistribute the application under the name "DevIT Control Panel", "DevITCP", or similar derivatives, including the use of the DevIT logo in any brand or marketing materials related to revenue generating activities,
+- use the names "DevIT Control Panel", "DevITCP", or the DevIT logo in any context that is not related to the project,
+- alter the name "DevIT Control Panel", "DevITCP", or the DevIT logo in any way.
 
 ## License
 
-Hestia Control Panel is licensed under [GPL v3](https://github.com/hestiacp/hestiacp/blob/release/LICENSE) license, and is based on the [VestaCP](https://vestacp.com/) project.<br>
+DevIT Control Panel is licensed under [GPL v3](https://github.com/DevITcp/DevITcp/blob/release/LICENSE) license, and is based on the [VestaCP](https://vestacp.com/) project.<br>

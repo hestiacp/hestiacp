@@ -1,5 +1,5 @@
 <?php
-use function Hestiacp\quoteshellarg\quoteshellarg;
+use function DevITcp\quoteshellarg\quoteshellarg;
 
 ob_start();
 
@@ -23,7 +23,7 @@ $action = $_POST["action"];
 if ($_SESSION["userContext"] === "admin") {
 	switch ($action) {
 		case "reread IP":
-			exec(HESTIA_CMD . "v-update-sys-ip", $output, $return_var);
+			exec(DevIT_CMD . "v-update-sys-ip", $output, $return_var);
 			header("Location: /list/ip/");
 			exit();
 			break;
@@ -41,7 +41,7 @@ if ($_SESSION["userContext"] === "admin") {
 
 foreach ($ip as $value) {
 	$value = quoteshellarg($value);
-	exec(HESTIA_CMD . $cmd . " " . $value, $output, $return_var);
+	exec(DevIT_CMD . $cmd . " " . $value, $output, $return_var);
 }
 
 header("Location: /list/ip/");

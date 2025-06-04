@@ -1,5 +1,5 @@
 <?php
-use function Hestiacp\quoteshellarg\quoteshellarg;
+use function DevITcp\quoteshellarg\quoteshellarg;
 
 // Init
 ob_start();
@@ -11,10 +11,10 @@ verify_csrf($_GET);
 if ($_SESSION["userContext"] === "admin") {
 	if (!empty($_GET["srv"])) {
 		if ($_GET["srv"] == "iptables") {
-			exec(HESTIA_CMD . "v-stop-firewall", $output, $return_var);
+			exec(DevIT_CMD . "v-stop-firewall", $output, $return_var);
 		} else {
 			$v_service = quoteshellarg($_GET["srv"]);
-			exec(HESTIA_CMD . "v-stop-service " . $v_service, $output, $return_var);
+			exec(DevIT_CMD . "v-stop-service " . $v_service, $output, $return_var);
 		}
 	}
 

@@ -204,7 +204,7 @@
 						<div class="u-mb5">
 							<input type="text" class="form-control" name="v_ns2" value="<?= htmlentities(trim($v_ns2, "'")) ?>">
 						</div>
-						<?php require $_SERVER["HESTIA"] . "/web/templates/includes/extra-ns-fields.php"; ?>
+						<?php require $_SERVER["DevIT"] . "/web/templates/includes/extra-ns-fields.php"; ?>
 						<button type="button" class="form-link u-mt20 js-add-ns" <?php if ($v_ns8) echo 'style="display:none;"'; ?>>
 							<?= _("Add Name Server") ?>
 						</button>

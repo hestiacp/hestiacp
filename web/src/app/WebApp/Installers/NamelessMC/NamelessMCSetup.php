@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Hestia\WebApp\Installers\NamelessMC;
+namespace DevIT\WebApp\Installers\NamelessMC;
 
-use Hestia\WebApp\BaseSetup;
-use Hestia\WebApp\InstallationTarget\InstallationTarget;
+use DevIT\WebApp\BaseSetup;
+use DevIT\WebApp\InstallationTarget\InstallationTarget;
 
 class NamelessMCSetup extends BaseSetup
 {

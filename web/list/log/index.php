@@ -1,5 +1,5 @@
 <?php
-use function Hestiacp\quoteshellarg\quoteshellarg;
+use function DevITcp\quoteshellarg\quoteshellarg;
 
 // Main include
 include $_SERVER["DOCUMENT_ROOT"] . "/inc/main.php";
@@ -26,7 +26,7 @@ if ($_SESSION["userContext"] === "admin" && !empty($_GET["user"])) {
 	$user = quoteshellarg($_GET["user"]);
 }
 
-exec(HESTIA_CMD . "v-list-user-log $user json", $output, $return_var);
+exec(DevIT_CMD . "v-list-user-log $user json", $output, $return_var);
 check_error($return_var);
 $data = json_decode(implode("", $output), true);
 if (is_array($data)) {

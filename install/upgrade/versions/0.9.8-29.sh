@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Hestia Control Panel upgrade script for target version 0.9.8-28
+# DevIT Control Panel upgrade script for target version 0.9.8-28
 
 #######################################################################################
 #######                      Place additional commands below.                   #######
@@ -20,11 +20,11 @@ if [ "$DNS_SYSTEM" = 'bind9' ] && [ ! -f /etc/apparmor.d/local/usr.sbin.named ];
 fi
 
 # Remove obsolete ports.conf if exists.
-if [ -f /usr/local/hestia/data/firewall/ports.conf ]; then
-	rm -f /usr/local/hestia/data/firewall/ports.conf
+if [ -f /usr/local/DevIT/data/firewall/ports.conf ]; then
+	rm -f /usr/local/DevIT/data/firewall/ports.conf
 fi
 
 # Move clamav to proper location - https://goo.gl/zNuM11
-if [ ! -d /usr/local/hestia/web/edit/server/clamav-daemon ]; then
-	mv /usr/local/hestia/web/edit/server/clamd /usr/local/web/edit/server/clamav-daemon
+if [ ! -d /usr/local/DevIT/web/edit/server/clamav-daemon ]; then
+	mv /usr/local/DevIT/web/edit/server/clamd /usr/local/web/edit/server/clamav-daemon
 fi

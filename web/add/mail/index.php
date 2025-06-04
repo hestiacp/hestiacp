@@ -1,5 +1,5 @@
 <?php
-use function Hestiacp\quoteshellarg\quoteshellarg;
+use function DevITcp\quoteshellarg\quoteshellarg;
 
 ob_start();
 $TAB = "MAIL";
@@ -7,7 +7,7 @@ $TAB = "MAIL";
 // Main include
 include $_SERVER["DOCUMENT_ROOT"] . "/inc/main.php";
 
-exec(HESTIA_CMD . "v-list-sys-webmail json", $output, $return_var);
+exec(DevIT_CMD . "v-list-sys-webmail json", $output, $return_var);
 $webmail_clients = json_decode(implode("", $output), true);
 unset($output);
 
@@ -17,7 +17,7 @@ if (!empty($_GET["domain"])) {
 if (!empty($v_domain)) {
 	// Set webmail alias
 	exec(
-		HESTIA_CMD . "v-list-mail-domain " . $user . " " . quoteshellarg($v_domain) . " json",
+		DevIT_CMD . "v-list-mail-domain " . $user . " " . quoteshellarg($v_domain) . " json",
 		$output,
 		$return_var,
 	);
@@ -78,7 +78,7 @@ if (!empty($_POST["ok"])) {
 	// Add mail domain
 	if (empty($_SESSION["error_msg"])) {
 		exec(
-			HESTIA_CMD .
+			DevIT_CMD .
 				"v-add-mail-domain " .
 				$user .
 				" " .
@@ -98,7 +98,7 @@ if (!empty($_POST["ok"])) {
 
 	if (!empty($_POST["v_reject"]) && $v_antispam == "yes") {
 		exec(
-			HESTIA_CMD . "v-add-mail-domain-reject " . $user . " " . $v_domain . " yes",
+			DevIT_CMD . "v-add-mail-domain-reject " . $user . " " . $v_domain . " yes",
 			$output,
 			$return_var,
 		);
@@ -111,7 +111,7 @@ if (!empty($_POST["ok"])) {
 			if (!empty($_POST["v_webmail"])) {
 				$v_webmail = quoteshellarg($_POST["v_webmail"]);
 				exec(
-					HESTIA_CMD .
+					DevIT_CMD .
 						"v-add-mail-domain-webmail " .
 						$user .
 						" " .
@@ -132,7 +132,7 @@ if (!empty($_POST["ok"])) {
 		if (empty($_POST["v_webmail"])) {
 			if (empty($_SESSION["error_msg"])) {
 				exec(
-					HESTIA_CMD . "v-delete-mail-domain-webmail " . $user . " " . $v_domain . " yes",
+					DevIT_CMD . "v-delete-mail-domain-webmail " . $user . " " . $v_domain . " yes",
 					$output,
 					$return_var,
 				);
@@ -160,7 +160,7 @@ if (!empty($_POST["ok"])) {
 					$v_smtp_relay_port = "587";
 				}
 				exec(
-					HESTIA_CMD .
+					DevIT_CMD .
 						"v-add-mail-domain-smtp-relay " .
 						$user .
 						" " .
@@ -269,7 +269,7 @@ if (!empty($_POST["ok_acc"])) {
 		fwrite($fp, $_POST["v_password"] . "\n");
 		fclose($fp);
 		exec(
-			HESTIA_CMD .
+			DevIT_CMD .
 				"v-add-mail-account " .
 				$user .
 				" " .
@@ -300,7 +300,7 @@ if (!empty($_POST["ok_acc"])) {
 			$alias = quoteshellarg($alias);
 			if (empty($_SESSION["error_msg"])) {
 				exec(
-					HESTIA_CMD .
+					DevIT_CMD .
 						"v-add-mail-account-alias " .
 						$user .
 						" " .
@@ -320,7 +320,7 @@ if (!empty($_POST["ok_acc"])) {
 
 	if (!empty($_POST["v_blackhole"]) && empty($_SESSION["error_msg"])) {
 		exec(
-			HESTIA_CMD .
+			DevIT_CMD .
 				"v-add-mail-account-forward " .
 				$user .
 				" " .
@@ -347,7 +347,7 @@ if (!empty($_POST["ok_acc"])) {
 			$forward = quoteshellarg($forward);
 			if (empty($_SESSION["error_msg"])) {
 				exec(
-					HESTIA_CMD .
+					DevIT_CMD .
 						"v-add-mail-account-forward " .
 						$user .
 						" " .
@@ -368,7 +368,7 @@ if (!empty($_POST["ok_acc"])) {
 	// Add fwd_only flag
 	if (!empty($_POST["v_fwd_only"]) && empty($_SESSION["error_msg"])) {
 		exec(
-			HESTIA_CMD .
+			DevIT_CMD .
 				"v-add-mail-account-fwd-only " .
 				$user .
 				" " .
@@ -390,7 +390,7 @@ if (!empty($_POST["ok_acc"])) {
 	) {
 		$v_rate = quoteshellarg($_POST["v_rate"]);
 		exec(
-			HESTIA_CMD .
+			DevIT_CMD .
 				"v-change-mail-account-rate-limit " .
 				$user .
 				" " .

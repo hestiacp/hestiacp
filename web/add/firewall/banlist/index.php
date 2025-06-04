@@ -1,5 +1,5 @@
 <?php
-use function Hestiacp\quoteshellarg\quoteshellarg;
+use function DevITcp\quoteshellarg\quoteshellarg;
 
 ob_start();
 $TAB = "FIREWALL";
@@ -42,7 +42,7 @@ if (!empty($_POST["ok"])) {
 
 	// Add firewall rule
 	if (empty($_SESSION["error_msg"])) {
-		exec(HESTIA_CMD . "v-add-firewall-ban " . $v_ip . " " . $v_chain, $output, $return_var);
+		exec(DevIT_CMD . "v-add-firewall-ban " . $v_ip . " " . $v_chain, $output, $return_var);
 		check_return_code($return_var, $output);
 		unset($output);
 	}

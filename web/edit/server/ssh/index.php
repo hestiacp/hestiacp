@@ -30,7 +30,7 @@ if (!empty($_POST["save"])) {
 		fwrite($fp, str_replace("\r\n", "\n", $_POST["v_config"]));
 		fclose($fp);
 		exec(
-			HESTIA_CMD . "v-change-sys-service-config " . $new_conf . " ssh " . $v_restart,
+			DevIT_CMD . "v-change-sys-service-config " . $new_conf . " ssh " . $v_restart,
 			$output,
 			$return_var,
 		);
@@ -49,7 +49,7 @@ $v_config_path = "/etc/ssh/sshd_config";
 $v_service_name = strtoupper("ssh");
 
 // Read config
-$v_config = shell_exec(HESTIA_CMD . "v-open-fs-config " . $v_config_path);
+$v_config = shell_exec(DevIT_CMD . "v-open-fs-config " . $v_config_path);
 
 // Render page
 render_page($user, $TAB, "edit_server_service");

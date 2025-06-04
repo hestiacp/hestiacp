@@ -1,7 +1,7 @@
 # Firewall
 
 ::: warning
-After every edit or update the firewall, Hestia will clear the current iptables unless the rules are added via Hestia and [custom script](#how-can-i-customize-iptables-rules).
+After every edit or update the firewall, DevIT will clear the current iptables unless the rules are added via DevIT and [custom script](#how-can-i-customize-iptables-rules).
 :::
 
 ## How can I open or block a port or IP?
@@ -29,9 +29,9 @@ IPSet are large lists of IP addresses or subnets. They can be used for blacklist
 5. Name your IP list.
 6. Select the data source by entering one of the following:
    - URL: `http://ipverse.net/ipblocks/data/countries/nl.zone`
-   - Script (with `chmod 755`): `/usr/local/hestia/install/deb/firewall/ipset/blacklist.sh`
+   - Script (with `chmod 755`): `/usr/local/DevIT/install/deb/firewall/ipset/blacklist.sh`
    - File: `file:/location/of/file`
-   - You can also use one of Hestia’s included sources.
+   - You can also use one of DevIT’s included sources.
 7. Selected the desired IP version (v4 or v6).
 8. Choose whether to auto-update the list or not.
 9. Click the **<i class="fas fa-fw fa-save"></i> Save** button in the top right.
@@ -42,12 +42,12 @@ IPSet are large lists of IP addresses or subnets. They can be used for blacklist
 This is dangerously advanced feature, please make sure you understand what you are doing.
 :::
 
-Hestia supports setting custom rules, chains or flags, etc. using script.
+DevIT supports setting custom rules, chains or flags, etc. using script.
 
-Script must be here: `/usr/local/hestia/data/firewall/custom.sh`
+Script must be here: `/usr/local/DevIT/data/firewall/custom.sh`
 
-1. Create custom.sh: `touch /usr/local/hestia/data/firewall/custom.sh`
-2. Make it executable: `chmod +x /usr/local/hestia/data/firewall/custom.sh`
+1. Create custom.sh: `touch /usr/local/DevIT/data/firewall/custom.sh`
+2. Make it executable: `chmod +x /usr/local/DevIT/data/firewall/custom.sh`
 3. Edit it with your favorite editor.
 4. Test and make sure it works.
 5. To make custom rules persistent, run: `v-update-firewall`

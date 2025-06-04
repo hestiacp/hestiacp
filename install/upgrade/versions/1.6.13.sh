@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Hestia Control Panel upgrade script for target version 1.6.13
+# DevIT Control Panel upgrade script for target version 1.6.13
 
 #######################################################################################
 #######                      Place additional commands below.                   #######

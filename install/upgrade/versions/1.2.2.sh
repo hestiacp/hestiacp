@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Hestia Control Panel upgrade script for target version 1.2.2
+# DevIT Control Panel upgrade script for target version 1.2.2
 
 #######################################################################################
 #######                      Place additional commands below.                   #######
@@ -12,7 +12,7 @@ if [ "$FTP_SYSTEM" = "vsftpd" ]; then
 	if [ -e /etc/vsftpd.conf ]; then
 		rm -f /etc/vsftpd.conf
 	fi
-	cp -f $HESTIA_INSTALL_DIR/vsftpd/vsftpd.conf /etc/
+	cp -f $DevIT_INSTALL_DIR/vsftpd/vsftpd.conf /etc/
 	chmod 644 /etc/vsftpd.conf
 fi
 

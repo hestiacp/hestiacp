@@ -1,5 +1,5 @@
 <?php
-use function Hestiacp\quoteshellarg\quoteshellarg;
+use function DevITcp\quoteshellarg\quoteshellarg;
 
 ob_start();
 include $_SERVER["DOCUMENT_ROOT"] . "/inc/main.php";
@@ -14,7 +14,7 @@ if ($_SESSION["userContext"] === "admin" && !empty($_GET["user"])) {
 
 if (!empty($_GET["domain"])) {
 	$v_domain = quoteshellarg($_GET["domain"]);
-	exec(HESTIA_CMD . "v-purge-nginx-cache " . $user . " " . $v_domain, $output, $return_var);
+	exec(DevIT_CMD . "v-purge-nginx-cache " . $user . " " . $v_domain, $output, $return_var);
 	check_return_code($return_var, $output);
 }
 $_SESSION["ok_msg"] = _("NGINX cache has been purged successfully.");

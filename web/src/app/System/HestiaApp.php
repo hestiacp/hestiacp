@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Hestia\System;
+namespace DevIT\System;
 
 use Exception;
 use RuntimeException;
@@ -25,7 +25,7 @@ use function unlink;
 use function var_dump;
 use const DIRECTORY_SEPARATOR;
 
-class HestiaApp
+class DevITApp
 {
     public function addDirectory(string $path): void
     {
@@ -349,7 +349,7 @@ class HestiaApp
         }
     }
 
-    public function runComposer(string $phpVersion, array $arguments): HestiaCommandResult
+    public function runComposer(string $phpVersion, array $arguments): DevITCommandResult
     {
         $this->runUser('v-add-user-composer', ['2', 'yes']);
 
@@ -358,7 +358,7 @@ class HestiaApp
         return $this->runPHP($phpVersion, $composerBin, $arguments);
     }
 
-    public function runWp(string $phpVersion, array $arguments): HestiaCommandResult
+    public function runWp(string $phpVersion, array $arguments): DevITCommandResult
     {
         $this->runUser('v-add-user-wp-cli', ['yes']);
 
@@ -371,7 +371,7 @@ class HestiaApp
         string $phpVersion,
         string $command,
         array $arguments,
-    ): HestiaCommandResult {
+    ): DevITCommandResult {
         $phpCommand = ['/usr/bin/php' . $phpVersion, $command, ...$arguments];
 
         try {
@@ -386,14 +386,14 @@ class HestiaApp
         }
     }
 
-    private function runUser(string $cmd, array $arguments): HestiaCommandResult
+    private function runUser(string $cmd, array $arguments): DevITCommandResult
     {
         return $this->run($cmd, [$this->user(), ...$arguments]);
     }
 
-    private function run(string $cmd, array $arguments): HestiaCommandResult
+    private function run(string $cmd, array $arguments): DevITCommandResult
     {
-        $cli_script = realpath(HESTIA_DIR_BIN . $cmd);
+        $cli_script = realpath(DevIT_DIR_BIN . $cmd);
 
         $command = ['/usr/bin/sudo', $cli_script, ...$arguments];
 
@@ -410,7 +410,7 @@ class HestiaApp
             throw new ProcessFailedException($process);
         }
 
-        return new HestiaCommandResult(
+        return new DevITCommandResult(
             $process->getCommandLine(),
             $process->getExitCode(),
             $process->getOutput(),

@@ -3,7 +3,7 @@
 ## How to setup a remote database server
 
 1. It is assumed you already have your second server up and running.
-2. On your Hestia server run the following command (`mysql` may be replaced by `postgresql`):
+2. On your DevIT server run the following command (`mysql` may be replaced by `postgresql`):
 
 ```bash
 v-add-database-host mysql new-server.com root password
@@ -90,7 +90,7 @@ NOTE: PhpMyAdmin Single Sign On enabled only for individual databases. Primary "
 
 ### Unable to activate phpMyAdmin Single Sign on
 
-Make sure the API is enabled and working properly. Hestia’s PhpMyAdmin Single Sign On function connects over the Hestia API.
+Make sure the API is enabled and working properly. DevIT’s PhpMyAdmin Single Sign On function connects over the DevIT API.
 
 ### When clicking the phpMyAdmin Single Sign On button, I am forwarded to the login page of phpMyAdmin
 
@@ -118,7 +118,7 @@ v-add-database-host TYPE HOST DBUSER DBPASS [MAX_DB] [CHARSETS] [TPL] [PORT]
 For example:
 
 ```bash
-v-add-database-host mysql db.hestiacp.com root mypassword 500
+v-add-database-host mysql db.DevITcp.com root mypassword 500
 ```
 
 If you want you can setup phpMyAdmin on the host server to allow to connect to the database. Create a copy of `01-localhost` file in `/etc/phpmyadmin/conf.d` and change:
@@ -134,4 +134,4 @@ $cfg["Servers"][$i]["bookmarktable"] = "pma__bookmark";
 
 Please make sure to create aswell the phpmyadmin user and database.
 
-See `/usr/local/hestia/install/deb/phpmyadmin/pma.sh`
+See `/usr/local/DevIT/install/deb/phpmyadmin/pma.sh`

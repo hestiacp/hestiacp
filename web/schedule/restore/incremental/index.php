@@ -1,5 +1,5 @@
 <?php
-use function Hestiacp\quoteshellarg\quoteshellarg;
+use function DevITcp\quoteshellarg\quoteshellarg;
 
 ob_start();
 include $_SERVER["DOCUMENT_ROOT"] . "/inc/main.php";
@@ -15,7 +15,7 @@ if (empty($_GET["object"])) {
 
 if (empty($_GET["type"])) {
 	exec(
-		HESTIA_CMD . "v-schedule-user-restore-restic " . $user . " " . $snapshot,
+		DevIT_CMD . "v-schedule-user-restore-restic " . $user . " " . $snapshot,
 		$output,
 		$return_var,
 	);
@@ -26,7 +26,7 @@ if (empty($_GET["type"])) {
 	} else {
 		$_SESSION["error_msg"] = implode("<br>", $output);
 		if (empty($_SESSION["error_msg"])) {
-			$_SESSION["error_msg"] = _("Error: Hestia did not return any output.");
+			$_SESSION["error_msg"] = _("Error: DevIT did not return any output.");
 		}
 		if ($return_var == 4) {
 			$_SESSION["error_msg"] = _(
@@ -36,7 +36,7 @@ if (empty($_GET["type"])) {
 	}
 } else {
 	exec(
-		HESTIA_CMD .
+		DevIT_CMD .
 			"v-schedule-user-restore-restic " .
 			$user .
 			" " .

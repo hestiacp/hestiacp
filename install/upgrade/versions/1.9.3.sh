@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Hestia Control Panel upgrade script for target version 1.9.3
+# DevIT Control Panel upgrade script for target version 1.9.3
 
 #######################################################################################
 #######                      Place additional commands below.                   #######
@@ -29,22 +29,22 @@ if [ ! -f /etc/apparmor.d/abi/4.0 ]; then
 fi
 
 if [ -x /usr/sbin/jailbash ]; then
-	$HESTIA/bin/v-delete-sys-ssh-jail
-	$HESTIA/bin/v-add-sys-ssh-jail
+	$DevIT/bin/v-delete-sys-ssh-jail
+	$DevIT/bin/v-add-sys-ssh-jail
 fi
 
 # Fix sftp not starting in /home/[user]
 sed -i -E "s/ForceCommand internal-sftp -d \/home$/ForceCommand internal-sftp -d \/home\/%u/g" /etc/ssh/sshd_config
 
 # Check if file exists
-if [ -f "/etc/cron.d/hestiaweb" ]; then
+if [ -f "/etc/cron.d/DevITweb" ]; then
 	# Just remove it
-	rm -f /etc/cron.d/hestiaweb
+	rm -f /etc/cron.d/DevITweb
 	# Check if not duplicate
-	if [ -z "$(grep $BIN/v-update-letsencrypt "/var/spool/cron/crontabs/hestiaweb")" ]; then
+	if [ -z "$(grep $BIN/v-update-letsencrypt "/var/spool/cron/crontabs/DevITweb")" ]; then
 		min=$(generate_password '012345' '2')
 		hour=$(generate_password '1234567' '1')
-		sed -i -e "\$a*/5 * * * * sudo $BIN/v-update-letsencrypt" "/var/spool/cron/crontabs/hestiaweb"
+		sed -i -e "\$a*/5 * * * * sudo $BIN/v-update-letsencrypt" "/var/spool/cron/crontabs/DevITweb"
 	fi
 fi
 

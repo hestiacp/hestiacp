@@ -1,5 +1,5 @@
 <?php
-use function Hestiacp\quoteshellarg\quoteshellarg;
+use function DevITcp\quoteshellarg\quoteshellarg;
 
 try {
 	require_once "../inc/vendor/autoload.php";
@@ -13,8 +13,8 @@ try {
 }
 
 //die("Error: Disabled");
-define("HESTIA_DIR_BIN", "/usr/local/hestia/bin/");
-define("HESTIA_CMD", "/usr/bin/sudo /usr/local/hestia/bin/");
+define("DevIT_DIR_BIN", "/usr/local/DevIT/bin/");
+define("DevIT_CMD", "/usr/bin/sudo /usr/local/DevIT/bin/");
 
 include $_SERVER["DOCUMENT_ROOT"] . "/inc/helpers.php";
 
@@ -38,7 +38,7 @@ function api_error($exit_code, $message, $hst_return, bool $add_log = false, $us
 
 	// Print the message with http_code and exit_code
 	$http_code = $exit_code >= 100 ? $exit_code : exit_code_to_http_code($exit_code);
-	header("Hestia-Exit-Code: $exit_code");
+	header("DevIT-Exit-Code: $exit_code");
 	http_response_code($http_code);
 	if ($hst_return == "code") {
 		echo $exit_code;
@@ -57,7 +57,7 @@ function api_error($exit_code, $message, $hst_return, bool $add_log = false, $us
  */
 function api_legacy(array $request_data) {
 	$hst_return = ($request_data["returncode"] ?? "no") === "yes" ? "code" : "data";
-	exec(HESTIA_CMD . "v-list-sys-config json", $output, $return_var);
+	exec(DevIT_CMD . "v-list-sys-config json", $output, $return_var);
 	$settings = json_decode(implode("", $output), true);
 	unset($output);
 
@@ -77,7 +77,7 @@ function api_legacy(array $request_data) {
 	//This exists, so native JSON can be used without the repeating the code twice, so future code changes are easier and don't need to be replicated twice
 	// Authentication
 	if (empty($request_data["hash"])) {
-		exec(HESTIA_CMD . "v-list-sys-config json", $output, $return_var);
+		exec(DevIT_CMD . "v-list-sys-config json", $output, $return_var);
 		$data = json_decode(implode("", $output), true);
 		$root_user = $data["config"]["ROOT_USER"];
 
@@ -91,7 +91,7 @@ function api_legacy(array $request_data) {
 		$v_ip = quoteshellarg(get_real_user_ip());
 		$user = quoteshellarg($root_user);
 		unset($output);
-		exec(HESTIA_CMD . "v-get-user-salt " . $user . " " . $v_ip . " json", $output, $return_var);
+		exec(DevIT_CMD . "v-get-user-salt " . $user . " " . $v_ip . " json", $output, $return_var);
 		$pam = json_decode(implode("", $output), true);
 		$salt = $pam[$root_user]["SALT"];
 		$method = $pam[$root_user]["METHOD"];
@@ -109,7 +109,7 @@ function api_legacy(array $request_data) {
 			fwrite($fp, $password . "\n");
 			unset($output);
 			exec(
-				HESTIA_CMD .
+				DevIT_CMD .
 					"v-check-user-password " .
 					quoteshellarg($root_user) .
 					" " .
@@ -136,7 +136,7 @@ function api_legacy(array $request_data) {
 
 		// Check user hash
 		exec(
-			HESTIA_CMD . "v-check-user-hash " . $user . " " . $v_hash . " " . $v_ip,
+			DevIT_CMD . "v-check-user-hash " . $user . " " . $v_hash . " " . $v_ip,
 			$output,
 			$return_var,
 		);
@@ -150,10 +150,10 @@ function api_legacy(array $request_data) {
 			api_error(E_PASSWORD, "Error: authentication failed", $hst_return);
 		}
 	} else {
-		$key = "/usr/local/hestia/data/keys/" . basename($request_data["hash"]);
+		$key = "/usr/local/DevIT/data/keys/" . basename($request_data["hash"]);
 		$v_ip = quoteshellarg(get_real_user_ip());
 		exec(
-			HESTIA_CMD . "v-check-api-key " . quoteshellarg($key) . " " . $v_ip,
+			DevIT_CMD . "v-check-api-key " . quoteshellarg($key) . " " . $v_ip,
 			$output,
 			$return_var,
 		);
@@ -187,7 +187,7 @@ function api_legacy(array $request_data) {
 		$return_var = 0;
 	} else {
 		// Prepare command
-		$cmdquery = HESTIA_CMD . escapeshellcmd($hst_cmd);
+		$cmdquery = DevIT_CMD . escapeshellcmd($hst_cmd);
 
 		// Prepare arguments
 		foreach ($hst_cmd_args as $cmd_arg) {
@@ -221,7 +221,7 @@ function api_connection(array $request_data) {
 	$hst_return = ($request_data["returncode"] ?? "no") === "yes" ? "code" : "data";
 	$v_real_user_ip = get_real_user_ip();
 
-	exec(HESTIA_CMD . "v-list-sys-config json", $output, $return_var);
+	exec(DevIT_CMD . "v-list-sys-config json", $output, $return_var);
 	$settings = json_decode(implode("", $output), true);
 	unset($output, $return_var);
 	$root_user = $settings["config"]["ROOT_USER"];
@@ -267,7 +267,7 @@ function api_connection(array $request_data) {
 
 	// Authenticates the key and checks permission to run the script
 	exec(
-		HESTIA_CMD .
+		DevIT_CMD .
 			"v-check-access-key " .
 			quoteshellarg($hst_access_key_id) .
 			" " .
@@ -312,7 +312,7 @@ function api_connection(array $request_data) {
 	}
 
 	// Prepare command
-	$cmdquery = HESTIA_CMD . escapeshellcmd($hst_cmd);
+	$cmdquery = DevIT_CMD . escapeshellcmd($hst_cmd);
 
 	// Prepare arguments
 	foreach ($hst_cmd_args as $cmd_arg) {
@@ -332,7 +332,7 @@ function api_connection(array $request_data) {
 		unset($output);
 	}
 
-	header("Hestia-Exit-Code: $cmd_exit_code");
+	header("DevIT-Exit-Code: $cmd_exit_code");
 
 	if ($hst_return == "code") {
 		echo $cmd_exit_code;
@@ -361,7 +361,7 @@ if (isset($_POST["access_key"]) || isset($_POST["user"]) || isset($_POST["hash"]
 } else {
 	api_error(
 		405,
-		"Error: data received is null or invalid, check https://hestiacp.com/docs/server-administration/rest-api.html",
+		"Error: data received is null or invalid, check https://DevITcp.com/docs/server-administration/rest-api.html",
 		"",
 	);
 }
@@ -388,7 +388,7 @@ if (isset($request_data["access_key"]) && isset($request_data["secret_key"])) {
 } else {
 	api_error(
 		405,
-		"Error: data received is null or invalid, check https://hestiacp.com/docs/server-administration/rest-api.html",
+		"Error: data received is null or invalid, check https://DevITcp.com/docs/server-administration/rest-api.html",
 		"",
 	);
 }

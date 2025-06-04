@@ -39,7 +39,7 @@
 					<option value="DNS" <?php if ((!empty($v_chain)) && ( $v_chain == "'DNS'" )) echo 'selected'?>><?= _("DNS") ?></option>
 					<option value="MAIL" <?php if ((!empty($v_chain)) && ( $v_chain == "'MAIL'" )) echo 'selected'?>><?= _("MAIL") ?></option>
 					<option value="DB" <?php if ((!empty($v_chain)) && ( $v_chain == "'DB'" )) echo 'selected'?>><?= _("DB") ?></option>
-					<option value="HESTIA" <?php if ((!empty($v_chain)) && ( $v_chain == "'HESTIA'" )) echo 'selected'?>><?= _("HESTIA") ?></option>
+					<option value="DevIT" <?php if ((!empty($v_chain)) && ( $v_chain == "'DevIT'" )) echo 'selected'?>><?= _("DevIT") ?></option>
 				</select>
 			</div>
 		</div>

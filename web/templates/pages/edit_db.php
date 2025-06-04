@@ -51,7 +51,7 @@
 					</div>
 				</div>
 			</div>
-			<?php require $_SERVER["HESTIA"] . "/web/templates/includes/password-requirements.php"; ?>
+			<?php require $_SERVER["DevIT"] . "/web/templates/includes/password-requirements.php"; ?>
 			<div class="u-mb10">
 				<label for="v_type" class="form-label"><?= _("Type") ?></label>
 				<input type="text" class="form-control" name="v_type" id="v_type" value="<?= htmlentities(trim($v_type, "'")) ?>" disabled>

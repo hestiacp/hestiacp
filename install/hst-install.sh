@@ -2,9 +2,9 @@
 
 # ======================================================== #
 #
-# Hestia Control Panel Installation Routine
+# DevIT Control Panel Installation Routine
 # Automatic OS detection wrapper
-# https://www.hestiacp.com/
+# https://www.DevITcp.com/
 #
 # Currently Supported Operating Systems:
 #
@@ -65,7 +65,7 @@ fi
 no_support_message() {
 	echo "****************************************************"
 	echo "Your operating system (OS) is not supported by"
-	echo "Hestia Control Panel. Officially supported releases:"
+	echo "DevIT Control Panel. Officially supported releases:"
 	echo "****************************************************"
 	echo "  Debian 11, 12"
 	echo "  Ubuntu 20.04, 22.04, 24.04 LTS"
@@ -80,7 +80,7 @@ fi
 check_wget_curl() {
 	# Check wget
 	if [ -e '/usr/bin/wget' ]; then
-		wget -q https://raw.githubusercontent.com/hestiacp/hestiacp/release/install/hst-install-$type.sh -O hst-install-$type.sh
+		wget -q https://raw.githubusercontent.com/DevITcp/DevITcp/release/install/hst-install-$type.sh -O hst-install-$type.sh
 		if [ "$?" -eq '0' ]; then
 			bash hst-install-$type.sh $*
 			exit
@@ -93,7 +93,7 @@ check_wget_curl() {
 
 	# Check curl
 	if [ -e '/usr/bin/curl' ]; then
-		curl -s -O https://raw.githubusercontent.com/hestiacp/hestiacp/release/install/hst-install-$type.sh
+		curl -s -O https://raw.githubusercontent.com/DevITcp/DevITcp/release/install/hst-install-$type.sh
 		if [ "$?" -eq '0' ]; then
 			bash hst-install-$type.sh $*
 			exit

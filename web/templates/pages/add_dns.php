@@ -90,7 +90,7 @@
 					</button>
 				</div>
 				<div x-cloak x-show="showAdvanced" id="advtable">
-					<?php if ($_SESSION["DNS_CLUSTER_SYSTEM"] == "hestia-zone" && $_SESSION["SUPPORT_DNSSEC"] == "yes") { ?>
+					<?php if ($_SESSION["DNS_CLUSTER_SYSTEM"] == "DevIT-zone" && $_SESSION["SUPPORT_DNSSEC"] == "yes") { ?>
 						<div class="form-check u-mb10">
 							<input class="form-check-input" type="checkbox" name="v_dnssec" id="v_dnssec" value="yes" <?php if ($v_dnssec === 'yes'){ echo ' checked'; } ?>>
 							<label for="v_dnssec">
@@ -115,7 +115,7 @@
 					<div class="u-mb5">
 						<input type="text" class="form-control" name="v_ns2" value="<?= htmlentities(trim($v_ns2, "'")) ?>">
 					</div>
-					<?php require $_SERVER["HESTIA"] . "/web/templates/includes/extra-ns-fields.php"; ?>
+					<?php require $_SERVER["DevIT"] . "/web/templates/includes/extra-ns-fields.php"; ?>
 					<button type="button" class="form-link u-mt20 js-add-ns" <?php if ($v_ns8) echo 'style="display:none;"'; ?>>
 						<?= _("Add Name Server") ?>
 					</button>

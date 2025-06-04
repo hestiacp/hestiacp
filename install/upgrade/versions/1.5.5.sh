@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Hestia Control Panel upgrade script for target version 1.5.5
+# DevIT Control Panel upgrade script for target version 1.5.5
 
 #######################################################################################
 #######                      Place additional commands below.                   #######
@@ -23,7 +23,7 @@ upgrade_config_set_value 'UPGRADE_UPDATE_FILEMANAGER_CONFIG' 'false'
 
 # Update php-fpm.conf
 for version in $($BIN/v-list-sys-php plain); do
-	cp -f $HESTIA_INSTALL_DIR/php-fpm/php-fpm.conf /etc/php/$version/fpm/
+	cp -f $DevIT_INSTALL_DIR/php-fpm/php-fpm.conf /etc/php/$version/fpm/
 	sed -i "s/fpm_v/$version/g" /etc/php/$version/fpm/php-fpm.conf
 done
 
@@ -51,7 +51,7 @@ if [ ! -f "/usr/share/keyrings/nginx-keyring.gpg" ]; then
 	codename="$(lsb_release -s -c)"
 	release="$(lsb_release -s -r)"
 	mariadb_v=$(mysql -V | awk 'NR==1{print $5}' | head -c 4)
-	RHOST='apt.hestiacp.com'
+	RHOST='apt.DevITcp.com'
 
 	apt="/etc/apt/sources.list.d"
 
@@ -81,11 +81,11 @@ if [ ! -f "/usr/share/keyrings/nginx-keyring.gpg" ]; then
 		echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/mariadb-keyring.gpg] https://mirror.mva-n.net/mariadb/repo/$mariadb_v/$os $codename main" > $apt/mariadb.list
 		curl -s https://mariadb.org/mariadb_release_signing_key.asc | gpg --dearmor | tee /usr/share/keyrings/mariadb-keyring.gpg > /dev/null 2>&1
 	fi
-	if [ -f "$apt/hestia.list" ]; then
-		rm $apt/hestia.list
-		echo "   [ * ] Hestia"
-		echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/hestia-keyring.gpg] https://$RHOST/ $codename main" > $apt/hestia.list
-		gpg --no-default-keyring --keyring /usr/share/keyrings/hestia-keyring.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys A189E93654F0B0E5 > /dev/null 2>&1
+	if [ -f "$apt/DevIT.list" ]; then
+		rm $apt/DevIT.list
+		echo "   [ * ] DevIT"
+		echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/DevIT-keyring.gpg] https://$RHOST/ $codename main" > $apt/DevIT.list
+		gpg --no-default-keyring --keyring /usr/share/keyrings/DevIT-keyring.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys A189E93654F0B0E5 > /dev/null 2>&1
 		apt-key del A189E93654F0B0E5 > /dev/null 2>&1
 	fi
 	if [ -f "$apt/postgresql.list" ]; then
@@ -97,7 +97,7 @@ if [ ! -f "/usr/share/keyrings/nginx-keyring.gpg" ]; then
 
 fi
 
-if [ ! -f "$HESTIA/data/packages/system.pkg" ]; then
+if [ ! -f "$DevIT/data/packages/system.pkg" ]; then
 	echo "[ * ] Install default system package."
-	cp -f $HESTIA/install/deb/packages/system.pkg $HESTIA/data/packages/system.pkg
+	cp -f $DevIT/install/deb/packages/system.pkg $DevIT/data/packages/system.pkg
 fi

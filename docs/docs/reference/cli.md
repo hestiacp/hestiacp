@@ -2,7 +2,7 @@
 
 ## v-acknowledge-user-notification
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-acknowledge-user-notification)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-acknowledge-user-notification)
 
 update user notification
 
@@ -12,7 +12,7 @@ This function updates user notification.
 
 ## v-add-access-key
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-access-key)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-add-access-key)
 
 generate access key
 
@@ -25,11 +25,11 @@ v-add-access-key admin v-purge-nginx-cache,v-list-mail-accounts comment json
 ```
 
 The "PERMISSIONS" argument is optional for the admin user only.
-This function creates a key file in $HESTIA/data/access-keys/
+This function creates a key file in $DevIT/data/access-keys/
 
 ## v-add-backup-host
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-backup-host)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-add-backup-host)
 
 add backup host
 
@@ -46,7 +46,7 @@ Add a new remote backup location. Currently SFTP, FTP and Backblaze are supporte
 
 ## v-add-backup-host-restic
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-backup-host-restic)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-add-backup-host-restic)
 
 add backup host
 
@@ -61,20 +61,20 @@ v-add-backup-host b2 bucketName keyID applicationKey
 
 Add a new remote backup location. Currently SFTP, FTP and Backblaze are supported
 
-## v-add-cron-hestia-autoupdate
+## v-add-cron-DevIT-autoupdate
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-cron-hestia-autoupdate)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-add-cron-DevIT-autoupdate)
 
-add cron job for hestia automatic updates
+add cron job for DevIT automatic updates
 
 **Options**: `MODE`
 
-This function adds a cronjob for hestia automatic updates
+This function adds a cronjob for DevIT automatic updates
 that can be downloaded from apt or git.
 
 ## v-add-cron-job
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-cron-job)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-add-cron-job)
 
 add cron job
 
@@ -83,7 +83,7 @@ add cron job
 **Examples**:
 
 ```bash
-v-add-cron-job admin * * * * * sudo /usr/local/hestia/bin/v-backup-users
+v-add-cron-job admin * * * * * sudo /usr/local/DevIT/bin/v-backup-users
 ```
 
 This function adds a job to cron daemon. When executing commands, any output
@@ -91,7 +91,7 @@ is mailed to user's email if parameter REPORTS is set to 'yes'.
 
 ## v-add-cron-letsencrypt-job
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-cron-letsencrypt-job)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-add-cron-letsencrypt-job)
 
 add cron job for Let's Encrypt certificates
 
@@ -101,7 +101,7 @@ This function adds a new cron job for Let's Encrypt.
 
 ## v-add-cron-reports
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-cron-reports)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-add-cron-reports)
 
 add cron reports
 
@@ -118,7 +118,7 @@ notifications.
 
 ## v-add-cron-restart-job
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-cron-restart-job)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-add-cron-restart-job)
 
 add cron reports
 
@@ -128,7 +128,7 @@ This function for enabling restart cron tasks
 
 ## v-add-database
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-database)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-add-database)
 
 add database
 
@@ -150,7 +150,7 @@ types of supported databases is designated in the main configuration file.
 
 ## v-add-database-host
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-database-host)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-add-database-host)
 
 add new database server
 
@@ -170,7 +170,7 @@ more about templates in official PostgreSQL documentation.
 
 ## v-add-database-temp-user
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-database-temp-user)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-add-database-temp-user)
 
 add temp database user
 
@@ -188,7 +188,7 @@ Returns json to be read SSO Script
 
 ## v-add-dns-domain
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-dns-domain)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-add-dns-domain)
 
 add dns domain
 
@@ -208,7 +208,7 @@ its records with a default value of 14400 seconds.
 
 ## v-add-dns-on-web-alias
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-dns-on-web-alias)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-add-dns-on-web-alias)
 
 add dns domain or dns record after web domain alias
 
@@ -224,7 +224,7 @@ This function adds dns domain or dns record based on web domain alias.
 
 ## v-add-dns-record
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-dns-record)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-add-dns-record)
 
 add dns record
 
@@ -243,7 +243,7 @@ regulation of records.
 
 ## v-add-domain
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-domain)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-add-domain)
 
 add web/dns/mail domain
 
@@ -259,7 +259,7 @@ This function adds web/dns/mail domain to a server.
 
 ## v-add-fastcgi-cache
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-fastcgi-cache)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-add-fastcgi-cache)
 
 Enable FastCGI cache for nginx
 
@@ -277,7 +277,7 @@ Add "yes" as last parameter to restart nginx
 
 ## v-add-firewall-ban
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-firewall-ban)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-add-firewall-ban)
 
 add firewall blocking rule
 
@@ -293,7 +293,7 @@ This function adds new blocking rule to system firewall
 
 ## v-add-firewall-chain
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-firewall-chain)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-add-firewall-chain)
 
 add firewall chain
 
@@ -309,7 +309,7 @@ This function adds new rule to system firewall
 
 ## v-add-firewall-ipset
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-firewall-ipset)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-add-firewall-ipset)
 
 add firewall ipset
 
@@ -325,7 +325,7 @@ This function adds new ipset to system firewall
 
 ## v-add-firewall-rule
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-firewall-rule)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-add-firewall-rule)
 
 add firewall rule
 
@@ -341,7 +341,7 @@ This function adds new rule to system firewall
 
 ## v-add-fs-archive
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-fs-archive)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-add-fs-archive)
 
 archive directory
 
@@ -357,7 +357,7 @@ This function creates tar archive
 
 ## v-add-fs-directory
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-fs-directory)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-add-fs-directory)
 
 add directory
 
@@ -373,7 +373,7 @@ This function creates new directory on the file system
 
 ## v-add-fs-file
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-fs-file)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-add-fs-file)
 
 add file
 
@@ -389,7 +389,7 @@ This function creates new files on file system
 
 ## v-add-letsencrypt-domain
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-letsencrypt-domain)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-add-letsencrypt-domain)
 
 check letsencrypt domain
 
@@ -406,7 +406,7 @@ This function check and validates domain with Let's Encrypt
 
 ## v-add-letsencrypt-host
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-letsencrypt-host)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-add-letsencrypt-host)
 
 add letsencrypt for host and backend
 
@@ -417,7 +417,7 @@ a new let's encrypt certificate.
 
 ## v-add-letsencrypt-user
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-letsencrypt-user)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-add-letsencrypt-user)
 
 register letsencrypt user account
 
@@ -433,7 +433,7 @@ This function creates and register LetsEncrypt account
 
 ## v-add-mail-account
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-mail-account)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-add-mail-account)
 
 add mail domain account
 
@@ -449,7 +449,7 @@ This function add new email account.
 
 ## v-add-mail-account-alias
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-mail-account-alias)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-add-mail-account-alias)
 
 add mail account alias aka nickname
 
@@ -465,7 +465,7 @@ This function add new email alias.
 
 ## v-add-mail-account-autoreply
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-mail-account-autoreply)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-add-mail-account-autoreply)
 
 add mail account autoreply message
 
@@ -481,7 +481,7 @@ This function add new email account.
 
 ## v-add-mail-account-forward
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-mail-account-forward)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-add-mail-account-forward)
 
 add mail account forward address
 
@@ -497,7 +497,7 @@ This function add new email account.
 
 ## v-add-mail-account-fwd-only
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-mail-account-fwd-only)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-add-mail-account-fwd-only)
 
 add mail account forward-only flag
 
@@ -513,7 +513,7 @@ This function adds fwd-only flag
 
 ## v-add-mail-domain
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-mail-domain)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-add-mail-domain)
 
 add mail domain
 
@@ -529,7 +529,7 @@ This function adds MAIL domain.
 
 ## v-add-mail-domain-antispam
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-mail-domain-antispam)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-add-mail-domain-antispam)
 
 add mail domain antispam support
 
@@ -545,7 +545,7 @@ This function enables spamassasin for incoming emails.
 
 ## v-add-mail-domain-antivirus
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-mail-domain-antivirus)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-add-mail-domain-antivirus)
 
 add mail domain antivirus support
 
@@ -561,7 +561,7 @@ This function enables clamav scan for incoming emails.
 
 ## v-add-mail-domain-catchall
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-mail-domain-catchall)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-add-mail-domain-catchall)
 
 add mail domain catchall account
 
@@ -577,7 +577,7 @@ This function enables catchall account for incoming emails.
 
 ## v-add-mail-domain-dkim
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-mail-domain-dkim)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-add-mail-domain-dkim)
 
 add mail domain dkim support
 
@@ -593,7 +593,7 @@ This function adds DKIM signature to outgoing domain emails.
 
 ## v-add-mail-domain-reject
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-mail-domain-reject)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-add-mail-domain-reject)
 
 add mail domain reject spam support
 
@@ -609,7 +609,7 @@ The function enables spam rejection for incoming emails.
 
 ## v-add-mail-domain-smtp-relay
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-mail-domain-smtp-relay)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-add-mail-domain-smtp-relay)
 
 Add mail domain smtp relay support
 
@@ -625,7 +625,7 @@ This function adds mail domain smtp relay support.
 
 ## v-add-mail-domain-ssl
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-mail-domain-ssl)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-add-mail-domain-ssl)
 
 add mail SSL for $domain
 
@@ -638,7 +638,7 @@ authority mail.domain.tld.ca file is optional.
 
 ## v-add-mail-domain-webmail
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-mail-domain-webmail)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-add-mail-domain-webmail)
 
 add webmail support for a domain
 
@@ -656,7 +656,7 @@ This function enables webmail client for a mail domain.
 
 ## v-add-remote-dns-domain
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-remote-dns-domain)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-add-remote-dns-domain)
 
 add remote dns domain
 
@@ -672,7 +672,7 @@ This function synchronise dns domain with the remote server.
 
 ## v-add-remote-dns-host
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-remote-dns-host)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-add-remote-dns-host)
 
 add new remote dns host
 
@@ -691,7 +691,7 @@ See v-generate-api-key can be used to connect the remote dns server
 
 ## v-add-remote-dns-record
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-remote-dns-record)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-add-remote-dns-record)
 
 add remote dns domain record
 
@@ -707,7 +707,7 @@ This function synchronise dns domain with the remote server.
 
 ## v-add-sys-api-ip
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-sys-api-ip)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-add-sys-api-ip)
 
 add IP address to API allow list
 
@@ -721,7 +721,7 @@ v-add-sys-api-ip 1.1.1.1
 
 ## v-add-sys-cgroups
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-sys-cgroups)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-add-sys-cgroups)
 
 Enable cgroup support for user
 
@@ -735,18 +735,18 @@ v-add-sys-cgroup
 
 ## v-add-sys-dependencies
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-sys-dependencies)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-add-sys-dependencies)
 
 **Options**:
 
-Add php dependencies to Hestia
+Add php dependencies to DevIT
 options: [MODE]
 
 ## v-add-sys-filemanager
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-sys-filemanager)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-add-sys-filemanager)
 
-add file manager functionality to Hestia Control Panel
+add file manager functionality to DevIT Control Panel
 
 **Options**: `[MODE]`
 
@@ -755,7 +755,7 @@ for access through the Web interface.
 
 ## v-add-sys-firewall
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-sys-firewall)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-add-sys-firewall)
 
 add system firewall
 
@@ -765,7 +765,7 @@ This function enables the system firewall.
 
 ## v-add-sys-ip
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-sys-ip)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-add-sys-ip)
 
 add system IP address
 
@@ -786,7 +786,7 @@ is very handy when customer wants to test domain before dns migration.
 
 ## v-add-sys-pma-sso
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-sys-pma-sso)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-add-sys-pma-sso)
 
 enables support for single sign on phpMyAdmin
 
@@ -796,7 +796,7 @@ This function enables support for SSO to phpMyAdmin
 
 ## v-add-sys-quota
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-sys-quota)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-add-sys-quota)
 
 add system quota
 
@@ -807,7 +807,7 @@ Some kernels do require additional packages to be installed first
 
 ## v-add-sys-roundcube
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-sys-roundcube)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-add-sys-roundcube)
 
 Install Roundcube webmail client
 
@@ -817,7 +817,7 @@ This function installs the Roundcube webmail client.
 
 ## v-add-sys-sftp-jail
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-sys-sftp-jail)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-add-sys-sftp-jail)
 
 add system sftp jail
 
@@ -833,7 +833,7 @@ This function enables sftp jailed environment.
 
 ## v-add-sys-smtp
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-sys-smtp)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-add-sys-smtp)
 
 Add SMTP Account for logging, notification and internal mail
 
@@ -850,7 +850,7 @@ for logging, notification and warn emails etc.
 
 ## v-add-sys-smtp-relay
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-sys-smtp-relay)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-add-sys-smtp-relay)
 
 add system wide smtp relay support
 
@@ -866,7 +866,7 @@ This function adds system wide smtp relay support.
 
 ## v-add-sys-snappymail
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-sys-snappymail)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-add-sys-snappymail)
 
 Install SnappyMail webmail client
 
@@ -876,7 +876,7 @@ This function installs the SnappyMail webmail client.
 
 ## v-add-sys-ssh-jail
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-sys-ssh-jail)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-add-sys-ssh-jail)
 
 add system ssh jail
 
@@ -886,7 +886,7 @@ This function enables ssh jailed environment.
 
 ## v-add-sys-web-terminal
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-sys-web-terminal)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-add-sys-web-terminal)
 
 add system web terminal
 
@@ -896,7 +896,7 @@ This function enables the web terminal.
 
 ## v-add-user
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-user)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-add-user)
 
 add system user
 
@@ -912,7 +912,7 @@ This function creates new user account.
 
 ## v-add-user-2fa
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-user-2fa)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-add-user-2fa)
 
 add 2fa to existing user
 
@@ -928,7 +928,7 @@ This function creates a new 2fa token for user.
 
 ## v-add-user-composer
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-user-composer)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-add-user-composer)
 
 add composer (php dependency manager) for a user
 
@@ -945,7 +945,7 @@ Homepage: <https://getcomposer.org/>
 
 ## v-add-user-notification
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-user-notification)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-add-user-notification)
 
 add user notification
 
@@ -955,7 +955,7 @@ This function adds a new user notification to the panel.
 
 ## v-add-user-package
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-user-package)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-add-user-package)
 
 adding user package
 
@@ -965,7 +965,7 @@ This function adds new user package to the system.
 
 ## v-add-user-sftp-jail
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-user-sftp-jail)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-add-user-sftp-jail)
 
 add user sftp jail
 
@@ -981,7 +981,7 @@ This function enables sftp jailed environment
 
 ## v-add-user-sftp-key
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-user-sftp-key)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-add-user-sftp-key)
 
 add user sftp key
 
@@ -991,7 +991,7 @@ This function creates and updates SSH keys for used with the File Manager.
 
 ## v-add-user-ssh-key
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-user-ssh-key)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-add-user-ssh-key)
 
 add ssh key
 
@@ -1008,7 +1008,7 @@ After that it append the new key(s)
 
 ## v-add-user-wp-cli
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-user-wp-cli)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-add-user-wp-cli)
 
 add wp-cli for a user
 
@@ -1024,7 +1024,7 @@ This function adds support for wp-cli to the user account
 
 ## v-add-web-domain
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-web-domain)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-add-web-domain)
 
 add web domain
 
@@ -1045,7 +1045,7 @@ name is useful during the site testing while dns isn't moved to server yet.
 
 ## v-add-web-domain-alias
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-web-domain-alias)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-add-web-domain-alias)
 
 add web domain alias
 
@@ -1062,7 +1062,7 @@ This function adds one or more aliases to a domain (it is also called
 
 ## v-add-web-domain-allow-users
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-web-domain-allow-users)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-add-web-domain-allow-users)
 
 Allow other users create subdomains
 
@@ -1081,7 +1081,7 @@ user can create user.admin.com
 
 ## v-add-web-domain-backend
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-web-domain-backend)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-add-web-domain-backend)
 
 add web domain backend
 
@@ -1097,7 +1097,7 @@ This function is used to add the web backend configuration.
 
 ## v-add-web-domain-ftp
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-web-domain-ftp)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-add-web-domain-ftp)
 
 add ftp account for web domain.
 
@@ -1113,7 +1113,7 @@ This function creates additional ftp account for web domain.
 
 ## v-add-web-domain-httpauth
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-web-domain-httpauth)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-add-web-domain-httpauth)
 
 add password protection for web domain
 
@@ -1129,7 +1129,7 @@ This function is used for securing web domain with http auth
 
 ## v-add-web-domain-proxy
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-web-domain-proxy)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-add-web-domain-proxy)
 
 add webdomain proxy support
 
@@ -1146,7 +1146,7 @@ improve website speed.
 
 ## v-add-web-domain-redirect
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-web-domain-redirect)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-add-web-domain-redirect)
 
 Adding force redirect to domain
 
@@ -1167,7 +1167,7 @@ Function creates a forced redirect to a domain
 
 ## v-add-web-domain-ssl
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-web-domain-ssl)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-add-web-domain-ssl)
 
 adding ssl for domain
 
@@ -1188,7 +1188,7 @@ documentroot directory.
 
 ## v-add-web-domain-ssl-force
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-web-domain-ssl-force)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-add-web-domain-ssl-force)
 
 Adding force SSL for a domain
 
@@ -1204,7 +1204,7 @@ This function forces SSL for the requested domain.
 
 ## v-add-web-domain-ssl-hsts
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-web-domain-ssl-hsts)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-add-web-domain-ssl-hsts)
 
 Adding hsts to a domain
 
@@ -1214,7 +1214,7 @@ This function enables HSTS for the requested domain.
 
 ## v-add-web-domain-ssl-preset
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-web-domain-ssl-preset)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-add-web-domain-ssl-preset)
 
 Adding force SSL for a domain
 
@@ -1225,7 +1225,7 @@ When LE has been activated it will set the actions
 
 ## v-add-web-domain-stats
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-web-domain-stats)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-add-web-domain-stats)
 
 add log analyser to generate domain statistics
 
@@ -1244,7 +1244,7 @@ should use v-add-web-domain_stat_auth script.
 
 ## v-add-web-domain-stats-user
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-web-domain-stats-user)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-add-web-domain-stats-user)
 
 add password protection to web domain statistics
 
@@ -1260,7 +1260,7 @@ This function is used for securing the web statistics page.
 
 ## v-add-web-php
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-web-php)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-add-web-php)
 
 add php fpm version
 
@@ -1276,7 +1276,7 @@ Install php-fpm for provided version.
 
 ## v-backup-user
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-backup-user)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-backup-user)
 
 backup system user with all its objects
 
@@ -1292,7 +1292,7 @@ This function is used for backing up user with all its domains and databases.
 
 ## v-backup-user-config
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-backup-user-config)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-backup-user-config)
 
 backup system user config only
 
@@ -1308,7 +1308,7 @@ This function is used for backing up user with all its domains and databases.
 
 ## v-backup-user-restic
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-backup-user-restic)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-backup-user-restic)
 
 backup system user with all its objects to restic backup
 
@@ -1324,7 +1324,7 @@ This function is used for backing up user with all its domains and databases.
 
 ## v-backup-users
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-backup-users)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-backup-users)
 
 backup all users
 
@@ -1334,7 +1334,7 @@ This function backups all system users.
 
 ## v-backup-users-restic
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-backup-users-restic)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-backup-users-restic)
 
 backup all users
 
@@ -1350,7 +1350,7 @@ This function backups all system users.
 
 ## v-change-cron-job
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-cron-job)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-change-cron-job)
 
 change cron job
 
@@ -1367,7 +1367,7 @@ parameters with new one but with same id.
 
 ## v-change-database-host-password
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-database-host-password)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-change-database-host-password)
 
 change database server password
 
@@ -1383,7 +1383,7 @@ This function changes database server password.
 
 ## v-change-database-owner
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-database-owner)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-change-database-owner)
 
 change database owner
 
@@ -1399,7 +1399,7 @@ This function for changing database owner.
 
 ## v-change-database-password
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-database-password)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-change-database-password)
 
 change database password
 
@@ -1416,7 +1416,7 @@ full name of database as argument.
 
 ## v-change-database-user
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-database-user)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-change-database-user)
 
 change database username
 
@@ -1432,7 +1432,7 @@ This function for changing database user. It uses the
 
 ## v-change-dns-domain-dnssec
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-dns-domain-dnssec)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-change-dns-domain-dnssec)
 
 change dns domain dnssec status
 
@@ -1446,7 +1446,7 @@ v-change-dns-domain-dnssec admin domain.pp.ua yes
 
 ## v-change-dns-domain-exp
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-dns-domain-exp)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-change-dns-domain-exp)
 
 change dns domain expiration date
 
@@ -1463,7 +1463,7 @@ serial number will be refreshed automatically during update.
 
 ## v-change-dns-domain-ip
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-dns-domain-ip)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-change-dns-domain-ip)
 
 change dns domain ip address
 
@@ -1479,7 +1479,7 @@ This function for changing the main ip of DNS zone.
 
 ## v-change-dns-domain-soa
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-dns-domain-soa)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-change-dns-domain-soa)
 
 change dns domain soa record
 
@@ -1496,7 +1496,7 @@ modified by v-change-dns-record call.
 
 ## v-change-dns-domain-tpl
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-dns-domain-tpl)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-change-dns-domain-tpl)
 
 change dns domain template
 
@@ -1514,7 +1514,7 @@ parameters of new template.
 
 ## v-change-dns-domain-ttl
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-dns-domain-ttl)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-change-dns-domain-ttl)
 
 change dns domain ttl
 
@@ -1530,7 +1530,7 @@ This function for changing the time to live TTL parameter for all records.
 
 ## v-change-dns-record
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-dns-record)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-change-dns-record)
 
 change dns domain record
 
@@ -1546,7 +1546,7 @@ This function for changing DNS record.
 
 ## v-change-dns-record-id
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-dns-record-id)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-change-dns-record-id)
 
 change dns domain record id
 
@@ -1562,7 +1562,7 @@ This function for changing internal record id.
 
 ## v-change-domain-owner
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-domain-owner)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-change-domain-owner)
 
 change domain owner
 
@@ -1578,7 +1578,7 @@ This function of changing domain ownership.
 
 ## v-change-firewall-rule
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-firewall-rule)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-change-firewall-rule)
 
 change firewall rule
 
@@ -1595,7 +1595,7 @@ It fully replace rule with new one but keeps same id.
 
 ## v-change-fs-file-permission
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-fs-file-permission)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-change-fs-file-permission)
 
 change file permission
 
@@ -1611,7 +1611,7 @@ This function changes file access permissions on the file system
 
 ## v-change-mail-account-password
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-mail-account-password)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-change-mail-account-password)
 
 change mail account password
 
@@ -1627,7 +1627,7 @@ This function changes email account password.
 
 ## v-change-mail-account-quota
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-mail-account-quota)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-change-mail-account-quota)
 
 change mail account quota
 
@@ -1643,7 +1643,7 @@ This function changes email account disk quota.
 
 ## v-change-mail-account-rate-limit
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-mail-account-rate-limit)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-change-mail-account-rate-limit)
 
 change mail account rate limit
 
@@ -1659,7 +1659,7 @@ This function changes email account rate limit. Use system to use domain or "ser
 
 ## v-change-mail-domain-catchall
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-mail-domain-catchall)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-change-mail-domain-catchall)
 
 change mail domain catchall email
 
@@ -1675,7 +1675,7 @@ This function changes mail domain catchall.
 
 ## v-change-mail-domain-rate-limit
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-mail-domain-rate-limit)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-change-mail-domain-rate-limit)
 
 change mail domain rate limit
 
@@ -1691,7 +1691,7 @@ This function changes email account rate limit for the domain. Account specific 
 
 ## v-change-mail-domain-sslcert
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-mail-domain-sslcert)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-change-mail-domain-sslcert)
 
 change domain ssl certificate
 
@@ -1702,7 +1702,7 @@ it will be replaced as well.
 
 ## v-change-remote-dns-domain-exp
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-remote-dns-domain-exp)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-change-remote-dns-domain-exp)
 
 change remote dns domain expiration date
 
@@ -1712,7 +1712,7 @@ This function synchronise dns domain with the remote server.
 
 ## v-change-remote-dns-domain-soa
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-remote-dns-domain-soa)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-change-remote-dns-domain-soa)
 
 change remote dns domain SOA
 
@@ -1728,7 +1728,7 @@ This function synchronise dns domain with the remote server.
 
 ## v-change-remote-dns-domain-ttl
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-remote-dns-domain-ttl)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-change-remote-dns-domain-ttl)
 
 change remote dns domain TTL
 
@@ -1744,7 +1744,7 @@ This function synchronise dns domain with the remote server.
 
 ## v-change-sys-api
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-sys-api)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-change-sys-api)
 
 Enable / Disable API access
 
@@ -1765,7 +1765,7 @@ Enabled / Disable API
 
 ## v-change-sys-config-value
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-sys-config-value)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-change-sys-config-value)
 
 change sysconfig value
 
@@ -1782,7 +1782,7 @@ COMPANY_EMAIL and so on.
 
 ## v-change-sys-db-alias
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-sys-db-alias)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-change-sys-db-alias)
 
 change phpmyadmin/phppgadmin alias url
 
@@ -1802,7 +1802,7 @@ apache2 or nginx configuration.
 
 ## v-change-sys-demo-mode
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-sys-demo-mode)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-change-sys-demo-mode)
 
 enable or disable demo mode
 
@@ -1814,25 +1814,25 @@ and prevent modification of objects in the control panel.
 It will also disable virtual hosts for Apache and NGINX
 for domains which have been created.
 
-## v-change-sys-hestia-ssl
+## v-change-sys-DevIT-ssl
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-sys-hestia-ssl)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-change-sys-DevIT-ssl)
 
-change hestia ssl certificate
+change DevIT ssl certificate
 
 **Options**: `SSL_DIR` `[RESTART]`
 
 **Examples**:
 
 ```bash
-v-change-sys-hestia-ssl /home/new/dir/path yes
+v-change-sys-DevIT-ssl /home/new/dir/path yes
 ```
 
-This function changes hestia SSL certificate and the key.
+This function changes DevIT SSL certificate and the key.
 
 ## v-change-sys-hostname
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-sys-hostname)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-change-sys-hostname)
 
 change hostname
 
@@ -1848,7 +1848,7 @@ This function for changing system hostname.
 
 ## v-change-sys-ip-name
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-sys-ip-name)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-change-sys-ip-name)
 
 change IP name
 
@@ -1864,7 +1864,7 @@ This function for changing dns domain associated with IP.
 
 ## v-change-sys-ip-nat
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-sys-ip-nat)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-change-sys-ip-nat)
 
 change NAT IP address
 
@@ -1880,7 +1880,7 @@ This function for changing NAT IP associated with IP.
 
 ## v-change-sys-ip-owner
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-sys-ip-owner)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-change-sys-ip-owner)
 
 change IP owner
 
@@ -1896,7 +1896,7 @@ This function of changing IP address ownership.
 
 ## v-change-sys-ip-status
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-sys-ip-status)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-change-sys-ip-status)
 
 change IP status
 
@@ -1912,7 +1912,7 @@ This function of changing an IP address's status.
 
 ## v-change-sys-language
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-sys-language)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-change-sys-language)
 
 change sys language
 
@@ -1928,7 +1928,7 @@ This function for changing system language.
 
 ## v-change-sys-php
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-sys-php)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-change-sys-php)
 
 Change default php version server wide
 
@@ -1942,7 +1942,7 @@ v-change-sys-php 8.0
 
 ## v-change-sys-port
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-sys-port)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-change-sys-port)
 
 change system backend port
 
@@ -1958,21 +1958,21 @@ This function for changing the system backend port in NGINX configuration.
 
 ## v-change-sys-release
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-sys-release)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-change-sys-release)
 
 update web templates
 
 **Options**: `[RESTART]`
 
 This function for changing the release branch for the
-Hestia Control Panel. This allows the user to switch between
+DevIT Control Panel. This allows the user to switch between
 stable and pre-release builds which will automaticlly update
 based on the appropriate release schedule if auto-update is
 turned on.
 
 ## v-change-sys-service-config
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-sys-service-config)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-change-sys-service-config)
 
 change service config
 
@@ -1988,7 +1988,7 @@ This function for changing service confguration.
 
 ## v-change-sys-timezone
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-sys-timezone)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-change-sys-timezone)
 
 change system timezone
 
@@ -2004,7 +2004,7 @@ This function for changing system timezone.
 
 ## v-change-sys-web-terminal-port
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-sys-web-terminal-port)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-change-sys-web-terminal-port)
 
 change system web terminal backend port
 
@@ -2020,7 +2020,7 @@ This function for changing the system's web terminal backend port in NGINX confi
 
 ## v-change-sys-webmail
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-sys-webmail)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-change-sys-webmail)
 
 change webmail alias url
 
@@ -2036,7 +2036,7 @@ This function changes the webmail url in apache2 or nginx configuration.
 
 ## v-change-user-config-value
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-user-config-value)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-change-user-config-value)
 
 changes user configuration value
 
@@ -2052,7 +2052,7 @@ Changes key/value for specified user.
 
 ## v-change-user-contact
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-user-contact)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-change-user-contact)
 
 change user contact email
 
@@ -2068,7 +2068,7 @@ This function for changing of e-mail associated with a certain user.
 
 ## v-change-user-language
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-user-language)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-change-user-language)
 
 change user language
 
@@ -2084,7 +2084,7 @@ This function for changing language.
 
 ## v-change-user-name
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-user-name)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-change-user-name)
 
 change user full name
 
@@ -2100,7 +2100,7 @@ This function allow to change user's full name.
 
 ## v-change-user-ns
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-user-ns)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-change-user-ns)
 
 change user name servers
 
@@ -2116,7 +2116,7 @@ This function for changing default name servers for specific user.
 
 ## v-change-user-package
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-user-package)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-change-user-package)
 
 change user package
 
@@ -2132,7 +2132,7 @@ This function changes user's hosting package.
 
 ## v-change-user-password
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-user-password)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-change-user-password)
 
 change user password
 
@@ -2148,7 +2148,7 @@ This function changes user's password and updates RKEY value.
 
 ## v-change-user-php-cli
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-user-php-cli)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-change-user-php-cli)
 
 add php version alias to .bash_aliases
 
@@ -2165,7 +2165,7 @@ version when multi-php is enabled.
 
 ## v-change-user-rkey
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-user-rkey)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-change-user-rkey)
 
 change user random key
 
@@ -2175,7 +2175,7 @@ This function changes user's RKEY value thats has been used for security value t
 
 ## v-change-user-role
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-user-role)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-change-user-role)
 
 updates user role
 
@@ -2191,7 +2191,7 @@ Give/revoke user administrator rights to manage all accounts as admin
 
 ## v-change-user-shell
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-user-shell)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-change-user-shell)
 
 change user shell
 
@@ -2207,7 +2207,7 @@ This function changes system shell of a user. Shell gives ability to use ssh.
 
 ## v-change-user-sort-order
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-user-sort-order)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-change-user-sort-order)
 
 updates user role
 
@@ -2223,7 +2223,7 @@ Changes web UI display sort order for specified user.
 
 ## v-change-user-template
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-user-template)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-change-user-template)
 
 change user default template
 
@@ -2239,7 +2239,7 @@ This function changes default user web template.
 
 ## v-change-user-theme
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-user-theme)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-change-user-theme)
 
 updates user theme
 
@@ -2256,7 +2256,7 @@ Changes web UI display theme for specified user.
 
 ## v-change-web-domain-backend-tpl
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-web-domain-backend-tpl)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-change-web-domain-backend-tpl)
 
 change web domain backend template
 
@@ -2272,7 +2272,7 @@ This function changes backend template
 
 ## v-change-web-domain-dirlist
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-web-domain-dirlist)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-change-web-domain-dirlist)
 
 enable/disable directory listing
 
@@ -2288,7 +2288,7 @@ This function is used for changing the directory list mode.
 
 ## v-change-web-domain-docroot
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-web-domain-docroot)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-change-web-domain-docroot)
 
 Changes the document root for an existing web domain
 
@@ -2310,7 +2310,7 @@ to another available domain under the user context.
 
 ## v-change-web-domain-ftp-password
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-web-domain-ftp-password)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-change-web-domain-ftp-password)
 
 change ftp user password.
 
@@ -2326,7 +2326,7 @@ This function changes ftp user password.
 
 ## v-change-web-domain-ftp-path
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-web-domain-ftp-path)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-change-web-domain-ftp-path)
 
 change path for ftp user.
 
@@ -2342,7 +2342,7 @@ This function changes ftp user path.
 
 ## v-change-web-domain-httpauth
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-web-domain-httpauth)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-change-web-domain-httpauth)
 
 change password for http auth user
 
@@ -2358,7 +2358,7 @@ This function is used for changing http auth user password
 
 ## v-change-web-domain-ip
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-web-domain-ip)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-change-web-domain-ip)
 
 change web domain ip
 
@@ -2374,7 +2374,7 @@ This function is used for changing domain ip
 
 ## v-change-web-domain-name
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-web-domain-name)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-change-web-domain-name)
 
 change web domain name
 
@@ -2390,7 +2390,7 @@ This function is used for changing the domain name.
 
 ## v-change-web-domain-proxy-tpl
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-web-domain-proxy-tpl)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-change-web-domain-proxy-tpl)
 
 change web domain proxy template
 
@@ -2406,7 +2406,7 @@ This function changes proxy template
 
 ## v-change-web-domain-sslcert
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-web-domain-sslcert)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-change-web-domain-sslcert)
 
 change domain ssl certificate
 
@@ -2423,7 +2423,7 @@ it will be replaced as well.
 
 ## v-change-web-domain-sslhome
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-web-domain-sslhome)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-change-web-domain-sslhome)
 
 changing domain ssl home
 
@@ -2440,7 +2440,7 @@ This function changes SSL home directory. Single will separate the both public_h
 
 ## v-change-web-domain-stats
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-web-domain-stats)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-change-web-domain-stats)
 
 change web domain statistics
 
@@ -2457,7 +2457,7 @@ automatically chooses from client's configuration file.
 
 ## v-change-web-domain-tpl
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-web-domain-tpl)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-change-web-domain-tpl)
 
 change web domain template
 
@@ -2474,7 +2474,7 @@ of webdomain directories remains untouched.
 
 ## v-check-access-key
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-check-access-key)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-check-access-key)
 
 check access key
 
@@ -2493,7 +2493,7 @@ v-check-access-key key_id secret v-purge-nginx-cache 127.0.0.1 json
 
 ## v-check-api-key
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-check-api-key)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-check-api-key)
 
 check api key
 
@@ -2505,11 +2505,11 @@ check api key
 v-check-api-key random_key 127.0.0.1
 ```
 
-This function checks a key file in $HESTIA/data/keys/
+This function checks a key file in $DevIT/data/keys/
 
 ## v-check-fs-permission
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-check-fs-permission)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-check-fs-permission)
 
 open file
 
@@ -2525,7 +2525,7 @@ This function opens/reads files on the file system
 
 ## v-check-mail-account-hash
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-check-mail-account-hash)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-check-mail-account-hash)
 
 check user password
 
@@ -2541,7 +2541,7 @@ This function verifies email account password hash
 
 ## v-check-user-2fa
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-check-user-2fa)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-check-user-2fa)
 
 check user token
 
@@ -2557,7 +2557,7 @@ This function verifies user 2fa token.
 
 ## v-check-user-hash
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-check-user-hash)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-check-user-hash)
 
 check user hash
 
@@ -2573,7 +2573,7 @@ This function verifies user hash
 
 ## v-check-user-password
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-check-user-password)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-check-user-password)
 
 check user password
 
@@ -2589,7 +2589,7 @@ This function verifies user password from file
 
 ## v-copy-fs-directory
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-copy-fs-directory)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-copy-fs-directory)
 
 copy directory
 
@@ -2605,7 +2605,7 @@ This function copies directory on the file system
 
 ## v-copy-fs-file
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-copy-fs-file)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-copy-fs-file)
 
 copy file
 
@@ -2621,7 +2621,7 @@ This function copies file on the file system
 
 ## v-copy-user-package
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-copy-user-package)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-copy-user-package)
 
 duplicate existing package
 
@@ -2638,7 +2638,7 @@ package file to facilitate easier configuration.
 
 ## v-delete-access-key
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-access-key)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-delete-access-key)
 
 delete access key
 
@@ -2650,11 +2650,11 @@ delete access key
 v-delete-access-key mykey
 ```
 
-This function removes a key from in $HESTIA/data/access-keys/
+This function removes a key from in $DevIT/data/access-keys/
 
 ## v-delete-backup-host
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-backup-host)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-delete-backup-host)
 
 delete backup ftp server
 
@@ -2670,7 +2670,7 @@ This function deletes ftp backup host
 
 ## v-delete-backup-host-restic
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-backup-host-restic)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-delete-backup-host-restic)
 
 delete backup ftp server
 
@@ -2684,19 +2684,19 @@ v-delete-backup-host sftp
 
 This function deletes ftp backup host
 
-## v-delete-cron-hestia-autoupdate
+## v-delete-cron-DevIT-autoupdate
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-cron-hestia-autoupdate)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-delete-cron-DevIT-autoupdate)
 
-delete hestia autoupdate cron job
+delete DevIT autoupdate cron job
 
 **Options**: –
 
-This function deletes hestia autoupdate cron job.
+This function deletes DevIT autoupdate cron job.
 
 ## v-delete-cron-job
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-cron-job)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-delete-cron-job)
 
 delete cron job
 
@@ -2712,7 +2712,7 @@ This function deletes cron job.
 
 ## v-delete-cron-reports
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-cron-reports)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-delete-cron-reports)
 
 delete cron reports
 
@@ -2729,7 +2729,7 @@ notifications.
 
 ## v-delete-cron-restart-job
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-cron-restart-job)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-delete-cron-restart-job)
 
 delete restart job
 
@@ -2739,7 +2739,7 @@ This function for disabling restart cron tasks
 
 ## v-delete-database
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-database)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-delete-database)
 
 delete database
 
@@ -2756,7 +2756,7 @@ another database, he will not be deleted.
 
 ## v-delete-database-host
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-database-host)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-delete-database-host)
 
 delete database server
 
@@ -2768,12 +2768,12 @@ delete database server
 v-delete-database-host pgsql localhost
 ```
 
-This function for deleting the database host from hestia configuration. It will
+This function for deleting the database host from DevIT configuration. It will
 be deleted if there are no databases created on it only.
 
 ## v-delete-database-temp-user
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-database-temp-user)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-delete-database-temp-user)
 
 deletes temp database user
 
@@ -2782,7 +2782,7 @@ deletes temp database user
 **Examples**:
 
 ```bash
-v-delete-database-temp-user wordpress hestia_sso_user mysql
+v-delete-database-temp-user wordpress DevIT_sso_user mysql
 ```
 
 Revokes "temp user" access to a database and removes the user
@@ -2790,7 +2790,7 @@ To be used in combination with v-add-database-temp-user
 
 ## v-delete-databases
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-databases)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-delete-databases)
 
 delete user databases
 
@@ -2806,7 +2806,7 @@ This function deletes all user databases.
 
 ## v-delete-dns-domain
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-dns-domain)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-delete-dns-domain)
 
 delete dns domain
 
@@ -2823,7 +2823,7 @@ deleted.
 
 ## v-delete-dns-domains
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-dns-domains)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-delete-dns-domains)
 
 delete dns domains
 
@@ -2839,7 +2839,7 @@ This function for deleting all users DNS domains.
 
 ## v-delete-dns-domains-src
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-dns-domains-src)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-delete-dns-domains-src)
 
 delete dns domains based on SRC field
 
@@ -2855,7 +2855,7 @@ This function for deleting DNS domains related to a certain host.
 
 ## v-delete-dns-on-web-alias
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-dns-on-web-alias)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-delete-dns-on-web-alias)
 
 delete dns domain or dns record based on web domain alias
 
@@ -2871,7 +2871,7 @@ This function deletes dns domain or dns record based on web domain alias.
 
 ## v-delete-dns-record
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-dns-record)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-delete-dns-record)
 
 delete dns record
 
@@ -2887,7 +2887,7 @@ This function for deleting a certain record of DNS zone.
 
 ## v-delete-domain
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-domain)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-delete-domain)
 
 delete web/dns/mail domain
 
@@ -2903,7 +2903,7 @@ This function deletes web/dns/mail domain.
 
 ## v-delete-fastcgi-cache
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-fastcgi-cache)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-delete-fastcgi-cache)
 
 Disable FastCGI cache for nginx
 
@@ -2919,7 +2919,7 @@ This function disables FastCGI cache for nginx
 
 ## v-delete-firewall-ban
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-firewall-ban)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-delete-firewall-ban)
 
 delete firewall blocking rule
 
@@ -2935,7 +2935,7 @@ This function deletes blocking rule from system firewall
 
 ## v-delete-firewall-chain
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-firewall-chain)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-delete-firewall-chain)
 
 delete firewall chain
 
@@ -2951,7 +2951,7 @@ This function adds new rule to system firewall
 
 ## v-delete-firewall-ipset
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-firewall-ipset)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-delete-firewall-ipset)
 
 delete firewall ipset
 
@@ -2963,11 +2963,11 @@ delete firewall ipset
 v-delete-firewall-ipset country-nl
 ```
 
-This function removes ipset from system and from hestia
+This function removes ipset from system and from DevIT
 
 ## v-delete-firewall-rule
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-firewall-rule)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-delete-firewall-rule)
 
 delete firewall rule
 
@@ -2983,7 +2983,7 @@ This function deletes firewall rule.
 
 ## v-delete-fs-directory
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-fs-directory)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-delete-fs-directory)
 
 delete directory
 
@@ -2999,7 +2999,7 @@ This function deletes directory on the file system
 
 ## v-delete-fs-file
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-fs-file)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-delete-fs-file)
 
 delete file
 
@@ -3015,7 +3015,7 @@ This function deletes file on the file system
 
 ## v-delete-letsencrypt-domain
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-letsencrypt-domain)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-delete-letsencrypt-domain)
 
 deleting letsencrypt ssl cetificate for domain
 
@@ -3031,7 +3031,7 @@ This function turns off letsencrypt SSL support for a domain.
 
 ## v-delete-mail-account
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-mail-account)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-delete-mail-account)
 
 delete mail account
 
@@ -3047,7 +3047,7 @@ This function deletes email account.
 
 ## v-delete-mail-account-alias
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-mail-account-alias)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-delete-mail-account-alias)
 
 delete mail account alias aka nickname
 
@@ -3063,7 +3063,7 @@ This function deletes email account alias.
 
 ## v-delete-mail-account-autoreply
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-mail-account-autoreply)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-delete-mail-account-autoreply)
 
 delete mail account autoreply message
 
@@ -3079,7 +3079,7 @@ This function deletes an email accounts autoreply.
 
 ## v-delete-mail-account-forward
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-mail-account-forward)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-delete-mail-account-forward)
 
 delete mail account forward
 
@@ -3095,7 +3095,7 @@ This function deletes an email accounts forwarding address.
 
 ## v-delete-mail-account-fwd-only
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-mail-account-fwd-only)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-delete-mail-account-fwd-only)
 
 delete mail account forward-only flag
 
@@ -3111,7 +3111,7 @@ This function deletes fwd-only flag
 
 ## v-delete-mail-domain
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-mail-domain)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-delete-mail-domain)
 
 delete mail domain
 
@@ -3128,7 +3128,7 @@ also be deleted.
 
 ## v-delete-mail-domain-antispam
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-mail-domain-antispam)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-delete-mail-domain-antispam)
 
 delete mail domain antispam support
 
@@ -3144,7 +3144,7 @@ This function disable spamassasin for incoming emails.
 
 ## v-delete-mail-domain-antivirus
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-mail-domain-antivirus)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-delete-mail-domain-antivirus)
 
 delete mail domain antivirus support
 
@@ -3160,7 +3160,7 @@ This function disables clamav scan for incoming emails.
 
 ## v-delete-mail-domain-catchall
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-mail-domain-catchall)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-delete-mail-domain-catchall)
 
 delete mail domain catchall email
 
@@ -3176,7 +3176,7 @@ This function disables mail domain cathcall.
 
 ## v-delete-mail-domain-dkim
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-mail-domain-dkim)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-delete-mail-domain-dkim)
 
 delete mail domain dkim support
 
@@ -3192,7 +3192,7 @@ This function delete DKIM domain pem.
 
 ## v-delete-mail-domain-reject
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-mail-domain-reject)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-delete-mail-domain-reject)
 
 delete mail domain reject spam support
 
@@ -3208,7 +3208,7 @@ The function disables spam rejection for incoming emails.
 
 ## v-delete-mail-domain-smtp-relay
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-mail-domain-smtp-relay)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-delete-mail-domain-smtp-relay)
 
 Remove mail domain smtp relay support
 
@@ -3224,7 +3224,7 @@ This function removes mail domain smtp relay support.
 
 ## v-delete-mail-domain-ssl
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-mail-domain-ssl)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-delete-mail-domain-ssl)
 
 delete mail domain ssl support
 
@@ -3240,7 +3240,7 @@ This function delete ssl certificates.
 
 ## v-delete-mail-domain-webmail
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-mail-domain-webmail)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-delete-mail-domain-webmail)
 
 delete webmail support for a domain
 
@@ -3257,7 +3257,7 @@ a specified mail domain.
 
 ## v-delete-mail-domains
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-mail-domains)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-delete-mail-domains)
 
 delete mail domains
 
@@ -3273,7 +3273,7 @@ This function for deleting all users mail domains.
 
 ## v-delete-remote-dns-domain
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-remote-dns-domain)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-delete-remote-dns-domain)
 
 delete remote dns domain
 
@@ -3289,7 +3289,7 @@ This function synchronise dns with the remote server.
 
 ## v-delete-remote-dns-domains
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-remote-dns-domains)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-delete-remote-dns-domains)
 
 delete remote dns domains
 
@@ -3299,7 +3299,7 @@ This function deletes remote dns domains.
 
 ## v-delete-remote-dns-host
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-remote-dns-host)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-delete-remote-dns-host)
 
 delete remote dns host
 
@@ -3311,11 +3311,11 @@ delete remote dns host
 v-delete-remote-dns-host example.org
 ```
 
-This function for deleting the remote dns host from hestia configuration.
+This function for deleting the remote dns host from DevIT configuration.
 
 ## v-delete-remote-dns-record
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-remote-dns-record)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-delete-remote-dns-record)
 
 delete remote dns domain record
 
@@ -3331,7 +3331,7 @@ This function synchronise dns with the remote server.
 
 ## v-delete-sys-api-ip
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-sys-api-ip)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-delete-sys-api-ip)
 
 delete ip adresss from allowed ip list api
 
@@ -3345,7 +3345,7 @@ v-delete-sys-api-ip 1.1.1.1
 
 ## v-delete-sys-cgroups
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-sys-cgroups)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-delete-sys-cgroups)
 
 delete all cgroups
 
@@ -3355,9 +3355,9 @@ This function disables cgroups
 
 ## v-delete-sys-filemanager
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-sys-filemanager)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-delete-sys-filemanager)
 
-remove file manager functionality from Hestia Control Panel
+remove file manager functionality from DevIT Control Panel
 
 **Options**: `[MODE]`
 
@@ -3365,7 +3365,7 @@ This function removes the File Manager and its entry points
 
 ## v-delete-sys-firewall
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-sys-firewall)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-delete-sys-firewall)
 
 delete system firewall
 
@@ -3375,7 +3375,7 @@ This function disables firewall support
 
 ## v-delete-sys-ip
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-sys-ip)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-delete-sys-ip)
 
 delete system IP
 
@@ -3392,7 +3392,7 @@ on interface and do not allow to delete IP which is used by a web domain.
 
 ## v-delete-sys-mail-queue
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-sys-mail-queue)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-delete-sys-mail-queue)
 
 delete exim mail queue
 
@@ -3403,7 +3403,7 @@ and prompts the user to clear the queue if desired.
 
 ## v-delete-sys-pma-sso
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-sys-pma-sso)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-delete-sys-pma-sso)
 
 disables support for single sign on PHPMYADMIN
 
@@ -3413,7 +3413,7 @@ Disables support for SSO to phpMyAdmin
 
 ## v-delete-sys-quota
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-sys-quota)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-delete-sys-quota)
 
 delete system quota
 
@@ -3423,7 +3423,7 @@ This function disables filesystem quota on /home partition
 
 ## v-delete-sys-sftp-jail
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-sys-sftp-jail)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-delete-sys-sftp-jail)
 
 delete system sftp jail
 
@@ -3433,7 +3433,7 @@ This function disables sftp jailed environment
 
 ## v-delete-sys-smtp
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-sys-smtp)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-delete-sys-smtp)
 
 Remove SMTP Account for logging, notification and internal mail
 
@@ -3444,7 +3444,7 @@ for logging, notification and warn emails etc.
 
 ## v-delete-sys-smtp-relay
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-sys-smtp-relay)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-delete-sys-smtp-relay)
 
 disable system wide smtp relay support
 
@@ -3454,7 +3454,7 @@ options:
 
 ## v-delete-sys-snappymail
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-sys-snappymail)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-delete-sys-snappymail)
 
 Delete SnappyMail webmail client
 
@@ -3464,7 +3464,7 @@ This function removes the SnappyMail webmail client.
 
 ## v-delete-sys-ssh-jail
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-sys-ssh-jail)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-delete-sys-ssh-jail)
 
 delete system ssh jail
 
@@ -3474,7 +3474,7 @@ This function disables ssh jailed environment
 
 ## v-delete-sys-web-terminal
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-sys-web-terminal)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-delete-sys-web-terminal)
 
 delete web terminal
 
@@ -3484,7 +3484,7 @@ This function disables the web terminal.
 
 ## v-delete-user
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-user)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-delete-user)
 
 delete user
 
@@ -3501,7 +3501,7 @@ databases, cron jobs, etc.
 
 ## v-delete-user-2fa
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-user-2fa)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-delete-user-2fa)
 
 delete 2fa of existing user
 
@@ -3517,7 +3517,7 @@ This function deletes 2fa token of a user.
 
 ## v-delete-user-auth-log
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-user-auth-log)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-delete-user-auth-log)
 
 Delete auth log file for user
 
@@ -3527,7 +3527,7 @@ This function for deleting a users auth log file
 
 ## v-delete-user-backup
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-user-backup)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-delete-user-backup)
 
 delete user backup
 
@@ -3543,7 +3543,7 @@ This function deletes user backup.
 
 ## v-delete-user-backup-exclusions
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-user-backup-exclusions)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-delete-user-backup-exclusions)
 
 delete backup exclusion
 
@@ -3559,7 +3559,7 @@ This function for deleting backup exclusion
 
 ## v-delete-user-ips
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-user-ips)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-delete-user-ips)
 
 delete user ips
 
@@ -3575,7 +3575,7 @@ This function deletes all user's ip addresses.
 
 ## v-delete-user-log
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-user-log)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-delete-user-log)
 
 Delete log file for user
 
@@ -3591,7 +3591,7 @@ This function for deleting a users log file
 
 ## v-delete-user-notification
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-user-notification)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-delete-user-notification)
 
 delete user notification
 
@@ -3607,7 +3607,7 @@ This function deletes user notification.
 
 ## v-delete-user-package
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-user-package)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-delete-user-package)
 
 delete user package
 
@@ -3623,7 +3623,7 @@ This function for deleting user package.
 
 ## v-delete-user-sftp-jail
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-user-sftp-jail)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-delete-user-sftp-jail)
 
 delete user sftp jail
 
@@ -3639,7 +3639,7 @@ This function disables sftp jailed environment for USER
 
 ## v-delete-user-ssh-key
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-user-ssh-key)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-delete-user-ssh-key)
 
 add ssh key
 
@@ -3655,7 +3655,7 @@ Delete user ssh key from authorized_keys
 
 ## v-delete-user-stats
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-user-stats)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-delete-user-stats)
 
 delete user usage statistics
 
@@ -3672,7 +3672,7 @@ This function deletes user statistics data.
 
 ## v-delete-web-domain
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-web-domain)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-delete-web-domain)
 
 delete web domain
 
@@ -3691,7 +3691,7 @@ only with a help of reserve copy.
 
 ## v-delete-web-domain-alias
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-web-domain-alias)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-delete-web-domain-alias)
 
 delete web domain alias
 
@@ -3708,7 +3708,7 @@ default www aliase can be removed as well.
 
 ## v-delete-web-domain-allow-users
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-web-domain-allow-users)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-delete-web-domain-allow-users)
 
 disables other users create subdomains
 
@@ -3727,7 +3727,7 @@ user can create user.admin.com
 
 ## v-delete-web-domain-backend
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-web-domain-backend)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-delete-web-domain-backend)
 
 deleting web domain backend configuration
 
@@ -3743,7 +3743,7 @@ This function of deleting the virtualhost backend configuration.
 
 ## v-delete-web-domain-ftp
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-web-domain-ftp)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-delete-web-domain-ftp)
 
 delete webdomain ftp account
 
@@ -3759,7 +3759,7 @@ This function deletes additional ftp account.
 
 ## v-delete-web-domain-httpauth
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-web-domain-httpauth)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-delete-web-domain-httpauth)
 
 delete http auth user
 
@@ -3775,7 +3775,7 @@ This function is used for deleting http auth user
 
 ## v-delete-web-domain-proxy
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-web-domain-proxy)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-delete-web-domain-proxy)
 
 deleting web domain proxy configuration
 
@@ -3791,7 +3791,7 @@ This function of deleting the virtualhost proxy configuration.
 
 ## v-delete-web-domain-redirect
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-web-domain-redirect)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-delete-web-domain-redirect)
 
 Delete force redirect to domain
 
@@ -3807,7 +3807,7 @@ Function delete a forced redirect to a domain
 
 ## v-delete-web-domain-ssl
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-web-domain-ssl)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-delete-web-domain-ssl)
 
 delete web domain SSL support
 
@@ -3823,7 +3823,7 @@ This function disable https support and deletes SSL certificates.
 
 ## v-delete-web-domain-ssl-force
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-web-domain-ssl-force)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-delete-web-domain-ssl-force)
 
 remove ssl force from domain
 
@@ -3839,7 +3839,7 @@ This function removes force SSL configurations.
 
 ## v-delete-web-domain-ssl-hsts
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-web-domain-ssl-hsts)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-delete-web-domain-ssl-hsts)
 
 remove ssl force from domain
 
@@ -3855,7 +3855,7 @@ This function removes force SSL configurations.
 
 ## v-delete-web-domain-stats
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-web-domain-stats)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-delete-web-domain-stats)
 
 delete web domain statistics
 
@@ -3872,7 +3872,7 @@ automatically chooses from client's configuration file.
 
 ## v-delete-web-domain-stats-user
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-web-domain-stats-user)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-delete-web-domain-stats-user)
 
 disable web domain stats authentication support
 
@@ -3891,7 +3891,7 @@ authentication.
 
 ## v-delete-web-domains
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-web-domains)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-delete-web-domains)
 
 delete web domains
 
@@ -3907,7 +3907,7 @@ This function deletes all user's webdomains.
 
 ## v-delete-web-php
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-web-php)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-delete-web-php)
 
 delete php fpm version
 
@@ -3923,7 +3923,7 @@ This function checks and delete a fpm php version if not used by any domain.
 
 ## v-download-backup
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-download-backup)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-download-backup)
 
 Download backup
 
@@ -3939,7 +3939,7 @@ This function download back-up from remote server
 
 ## v-dump-database
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-dump-database)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-dump-database)
 
 Dumps database contents in STDIN or file optional file can be compressed
 
@@ -3958,7 +3958,7 @@ For compression gzip or zstd is supported by default plain sql is used
 
 ## v-dump-site
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-dump-site)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-dump-site)
 
 Dumps the files of a site into a zip archive
 
@@ -3975,7 +3975,7 @@ Dumps site files in /backup/user.domain.timestamp.zip
 
 ## v-export-rrd
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-export-rrd)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-export-rrd)
 
 export rrd charts as json
 
@@ -3989,7 +3989,7 @@ v-export-rrd chart format
 
 ## v-extract-fs-archive
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-extract-fs-archive)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-extract-fs-archive)
 
 archive to directory
 
@@ -4005,17 +4005,17 @@ This function extracts archive into directory on the file system
 
 ## v-generate-api-key
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-generate-api-key)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-generate-api-key)
 
 generate api key
 
 **Options**: –
 
-This function creates a key file in $HESTIA/data/keys/
+This function creates a key file in $DevIT/data/keys/
 
 ## v-generate-password-hash
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-generate-password-hash)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-generate-password-hash)
 
 generate password hash
 
@@ -4031,7 +4031,7 @@ This function generates password hash
 
 ## v-generate-ssl-cert
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-generate-ssl-cert)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-generate-ssl-cert)
 
 generate self signed certificate and CSR request
 
@@ -4047,7 +4047,7 @@ This function generates self signed SSL certificate and CSR request
 
 ## v-get-dns-domain-value
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-get-dns-domain-value)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-get-dns-domain-value)
 
 get dns domain value
 
@@ -4063,7 +4063,7 @@ This function for getting a certain DNS domain parameter.
 
 ## v-get-fs-file-type
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-get-fs-file-type)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-get-fs-file-type)
 
 get file type
 
@@ -4079,7 +4079,7 @@ This function shows file type
 
 ## v-get-mail-account-value
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-get-mail-account-value)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-get-mail-account-value)
 
 get mail account value
 
@@ -4095,7 +4095,7 @@ This function for getting a certain mail account parameter.
 
 ## v-get-mail-domain-value
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-get-mail-domain-value)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-get-mail-domain-value)
 
 get mail domain value
 
@@ -4111,7 +4111,7 @@ This function for getting a certain mail domain parameter.
 
 ## v-get-sys-timezone
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-get-sys-timezone)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-get-sys-timezone)
 
 get system timezone
 
@@ -4121,7 +4121,7 @@ This function to get system timezone
 
 ## v-get-sys-timezones
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-get-sys-timezones)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-get-sys-timezones)
 
 list system timezone
 
@@ -4137,7 +4137,7 @@ This function checks system timezone settings
 
 ## v-get-user-salt
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-get-user-salt)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-get-user-salt)
 
 get user salt
 
@@ -4153,7 +4153,7 @@ This function provides users salt
 
 ## v-get-user-value
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-get-user-value)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-get-user-value)
 
 get user value
 
@@ -4169,7 +4169,7 @@ This function for obtaining certain user's parameters.
 
 ## v-import-cpanel
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-import-cpanel)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-import-cpanel)
 
 Import Cpanel backup to a new user
 
@@ -4187,7 +4187,7 @@ Thanks to <https://github.com/Skamasle/sk-import-cpanel-backup-to-vestacp/graphs
 
 ## v-import-database
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-import-database)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-import-database)
 
 import database
 
@@ -4203,7 +4203,7 @@ This function for importing database.
 
 ## v-import-directadmin
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-import-directadmin)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-import-directadmin)
 
 Import DirectAdmin backup to a new user
 
@@ -4221,7 +4221,7 @@ Thanks to <https://github.com/Skamasle/sk_da_importer/graphs/contributors>
 
 ## v-insert-dns-domain
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-insert-dns-domain)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-insert-dns-domain)
 
 insert dns domain
 
@@ -4231,7 +4231,7 @@ This function inserts raw record to the dns.conf
 
 ## v-insert-dns-record
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-insert-dns-record)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-insert-dns-record)
 
 insert dns record
 
@@ -4241,7 +4241,7 @@ This function inserts raw dns record to the domain conf
 
 ## v-insert-dns-records
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-insert-dns-records)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-insert-dns-records)
 
 inserts dns records
 
@@ -4251,7 +4251,7 @@ This function copy dns record to the domain conf
 
 ## v-list-access-key
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-access-key)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-access-key)
 
 list all API access keys
 
@@ -4265,7 +4265,7 @@ v-list-access-key 1234567890ABCDefghij json
 
 ## v-list-access-keys
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-access-keys)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-access-keys)
 
 list all API access keys
 
@@ -4279,7 +4279,7 @@ v-list-access-keys json
 
 ## v-list-api
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-api)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-api)
 
 list api
 
@@ -4293,7 +4293,7 @@ v-list-api mail-accounts json
 
 ## v-list-apis
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-apis)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-apis)
 
 list available APIs
 
@@ -4307,7 +4307,7 @@ v-list-apis json
 
 ## v-list-backup-host
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-backup-host)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-backup-host)
 
 list backup host
 
@@ -4323,7 +4323,7 @@ This function for obtaining the list of backup host parameters.
 
 ## v-list-backup-host-restic
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-backup-host-restic)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-backup-host-restic)
 
 list backup host
 
@@ -4339,7 +4339,7 @@ This function for obtaining the list of backup host parameters.
 
 ## v-list-cron-job
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-cron-job)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-cron-job)
 
 list cron job
 
@@ -4355,7 +4355,7 @@ This function of obtaining cron job parameters.
 
 ## v-list-cron-jobs
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-cron-jobs)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-cron-jobs)
 
 list user cron jobs
 
@@ -4371,7 +4371,7 @@ This function for obtaining the list of all users cron jobs.
 
 ## v-list-database
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-database)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-database)
 
 list database
 
@@ -4387,7 +4387,7 @@ This function for obtaining of all database's parameters.
 
 ## v-list-database-host
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-database-host)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-database-host)
 
 list database host
 
@@ -4403,7 +4403,7 @@ This function for obtaining database host parameters.
 
 ## v-list-database-hosts
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-database-hosts)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-database-hosts)
 
 list database hosts
 
@@ -4419,7 +4419,7 @@ This function for obtaining the list of all configured database hosts.
 
 ## v-list-database-types
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-database-types)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-database-types)
 
 list supported database types
 
@@ -4435,7 +4435,7 @@ This function for obtaining the list of database types.
 
 ## v-list-databases
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-databases)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-databases)
 
 listing databases
 
@@ -4451,7 +4451,7 @@ This function for obtaining the list of all user's databases.
 
 ## v-list-default-php
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-default-php)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-default-php)
 
 list default PHP version used by default.tpl
 
@@ -4461,7 +4461,7 @@ List the default version used by the default template
 
 ## v-list-dns-domain
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-dns-domain)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-dns-domain)
 
 list dns domain
 
@@ -4477,7 +4477,7 @@ This function of obtaining the list of dns domain parameters.
 
 ## v-list-dns-domains
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-dns-domains)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-dns-domains)
 
 list dns domains
 
@@ -4493,7 +4493,7 @@ This function for obtaining all DNS domains of a user.
 
 ## v-list-dns-records
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-dns-records)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-dns-records)
 
 list dns domain records
 
@@ -4509,7 +4509,7 @@ This function for getting all DNS domain records.
 
 ## v-list-dns-template
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-dns-template)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-dns-template)
 
 list dns template
 
@@ -4525,7 +4525,7 @@ This function for obtaining the DNS template parameters.
 
 ## v-list-dns-templates
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-dns-templates)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-dns-templates)
 
 list dns templates
 
@@ -4541,7 +4541,7 @@ This function for obtaining the list of all DNS templates available.
 
 ## v-list-dnssec-public-key
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-dnssec-public-key)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-dnssec-public-key)
 
 list public dnssec key
 
@@ -4557,7 +4557,7 @@ This function list the public key to be used with DNSSEC and needs to be added t
 
 ## v-list-firewall
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-firewall)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-firewall)
 
 list iptables rules
 
@@ -4573,7 +4573,7 @@ This function of obtaining the list of all iptables rules.
 
 ## v-list-firewall-ban
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-firewall-ban)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-firewall-ban)
 
 list firewall block list
 
@@ -4589,7 +4589,7 @@ This function of obtaining the list of currently blocked ips.
 
 ## v-list-firewall-ipset
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-firewall-ipset)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-firewall-ipset)
 
 List firewall ipset
 
@@ -4605,7 +4605,7 @@ This function prints defined ipset lists
 
 ## v-list-firewall-rule
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-firewall-rule)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-firewall-rule)
 
 list firewall rule
 
@@ -4621,7 +4621,7 @@ This function of obtaining firewall rule parameters.
 
 ## v-list-fs-directory
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-fs-directory)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-fs-directory)
 
 list directory
 
@@ -4637,7 +4637,7 @@ This function lists directory on the file system
 
 ## v-list-letsencrypt-user
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-letsencrypt-user)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-letsencrypt-user)
 
 list letsencrypt key
 
@@ -4653,7 +4653,7 @@ This function for obtaining the letsencrypt key thumbprint
 
 ## v-list-mail-account
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-mail-account)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-mail-account)
 
 list mail domain account
 
@@ -4669,7 +4669,7 @@ This function of obtaining the list of account parameters.
 
 ## v-list-mail-account-autoreply
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-mail-account-autoreply)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-mail-account-autoreply)
 
 list mail account autoreply
 
@@ -4685,7 +4685,7 @@ This function of obtaining mail account autoreply message.
 
 ## v-list-mail-accounts
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-mail-accounts)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-mail-accounts)
 
 list mail domain accounts
 
@@ -4701,7 +4701,7 @@ This function of obtaining the list of all user domains.
 
 ## v-list-mail-domain
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-mail-domain)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-mail-domain)
 
 list mail domain
 
@@ -4717,7 +4717,7 @@ This function of obtaining the list of domain parameters.
 
 ## v-list-mail-domain-dkim
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-mail-domain-dkim)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-mail-domain-dkim)
 
 list mail domain dkim
 
@@ -4733,7 +4733,7 @@ This function of obtaining domain dkim files.
 
 ## v-list-mail-domain-dkim-dns
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-mail-domain-dkim-dns)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-mail-domain-dkim-dns)
 
 list mail domain dkim dns records
 
@@ -4749,7 +4749,7 @@ This function of obtaining domain dkim dns records for proper setup.
 
 ## v-list-mail-domain-ssl
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-mail-domain-ssl)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-mail-domain-ssl)
 
 list mail domain ssl certificate
 
@@ -4765,7 +4765,7 @@ This function of obtaining domain ssl files.
 
 ## v-list-mail-domains
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-mail-domains)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-mail-domains)
 
 list mail domains
 
@@ -4781,7 +4781,7 @@ This function of obtaining the list of all user domains.
 
 ## v-list-remote-dns-hosts
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-remote-dns-hosts)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-remote-dns-hosts)
 
 list remote dns host
 
@@ -4797,7 +4797,7 @@ This function for obtaining the list of remote dns host.
 
 ## v-list-sys-clamd-config
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-clamd-config)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-sys-clamd-config)
 
 list clamd config parameters
 
@@ -4807,7 +4807,7 @@ This function for obtaining the list of clamd config parameters.
 
 ## v-list-sys-config
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-config)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-sys-config)
 
 list system configuration
 
@@ -4823,7 +4823,7 @@ This function for obtaining the list of system parameters.
 
 ## v-list-sys-cpu-status
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-cpu-status)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-sys-cpu-status)
 
 list system cpu info
 
@@ -4833,7 +4833,7 @@ options:
 
 ## v-list-sys-db-status
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-db-status)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-sys-db-status)
 
 list db status
 
@@ -4843,7 +4843,7 @@ options:
 
 ## v-list-sys-disk-status
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-disk-status)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-sys-disk-status)
 
 list disk information
 
@@ -4853,7 +4853,7 @@ options:
 
 ## v-list-sys-dns-status
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-dns-status)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-sys-dns-status)
 
 list dns status
 
@@ -4863,7 +4863,7 @@ options:
 
 ## v-list-sys-dovecot-config
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-dovecot-config)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-sys-dovecot-config)
 
 list dovecot config parameters
 
@@ -4871,49 +4871,49 @@ list dovecot config parameters
 
 This function for obtaining the list of dovecot config parameters.
 
-## v-list-sys-hestia-autoupdate
+## v-list-sys-DevIT-autoupdate
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-hestia-autoupdate)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-sys-DevIT-autoupdate)
 
-list hestia autoupdate settings
+list DevIT autoupdate settings
 
 **Options**: `[FORMAT]`
 
 This function for obtaining autoupdate settings.
 
-## v-list-sys-hestia-ssl
+## v-list-sys-DevIT-ssl
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-hestia-ssl)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-sys-DevIT-ssl)
 
-list hestia ssl certificate
+list DevIT ssl certificate
 
 **Options**: `[FORMAT]`
 
-This function of obtaining hestia ssl files.
+This function of obtaining DevIT ssl files.
 
-## v-list-sys-hestia-updates
+## v-list-sys-DevIT-updates
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-hestia-updates)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-sys-DevIT-updates)
 
 list system updates
 
 **Options**: `[FORMAT]`
 
-This function checks available updates for hestia packages.
+This function checks available updates for DevIT packages.
 
 ## v-list-sys-info
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-info)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-sys-info)
 
 list system os
 
 **Options**: `[FORMAT]`
 
-This function checks available updates for hestia packages.
+This function checks available updates for DevIT packages.
 
 ## v-list-sys-interfaces
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-interfaces)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-sys-interfaces)
 
 list system interfaces
 
@@ -4923,7 +4923,7 @@ This function for obtaining the list of network interfaces.
 
 ## v-list-sys-ip
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-ip)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-sys-ip)
 
 list system IP
 
@@ -4939,7 +4939,7 @@ This function for getting the list of system IP parameters.
 
 ## v-list-sys-ips
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-ips)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-sys-ips)
 
 list system IPs
 
@@ -4949,7 +4949,7 @@ This function for obtaining the list of system IP addresses.
 
 ## v-list-sys-languages
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-languages)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-sys-languages)
 
 list system languages
 
@@ -4961,12 +4961,12 @@ list system languages
 v-list-sys-languages json
 ```
 
-This function for obtaining the available languages for HestiaCP
+This function for obtaining the available languages for DevITCP
 Output is always in the ISO language code
 
 ## v-list-sys-mail-status
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-mail-status)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-sys-mail-status)
 
 list mail status
 
@@ -4976,7 +4976,7 @@ options:
 
 ## v-list-sys-memory-status
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-memory-status)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-sys-memory-status)
 
 list virtual memory info
 
@@ -4986,7 +4986,7 @@ options:
 
 ## v-list-sys-mysql-config
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-mysql-config)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-sys-mysql-config)
 
 list mysql config parameters
 
@@ -4996,7 +4996,7 @@ This function for obtaining the list of mysql config parameters.
 
 ## v-list-sys-network-status
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-network-status)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-sys-network-status)
 
 list system network status
 
@@ -5006,7 +5006,7 @@ options:
 
 ## v-list-sys-nginx-config
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-nginx-config)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-sys-nginx-config)
 
 list nginx config parameters
 
@@ -5016,7 +5016,7 @@ This function for obtaining the list of nginx config parameters.
 
 ## v-list-sys-pgsql-config
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-pgsql-config)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-sys-pgsql-config)
 
 list postgresql config parameters
 
@@ -5026,7 +5026,7 @@ This function for obtaining the list of postgresql config parameters.
 
 ## v-list-sys-php
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-php)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-sys-php)
 
 listing available PHP versions installed
 
@@ -5036,7 +5036,7 @@ List /etc/php/\* version check if folder fpm is available
 
 ## v-list-sys-php-config
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-php-config)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-sys-php-config)
 
 list php config parameters
 
@@ -5046,7 +5046,7 @@ This function for obtaining the list of php config parameters.
 
 ## v-list-sys-proftpd-config
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-proftpd-config)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-sys-proftpd-config)
 
 list proftpd config parameters
 
@@ -5056,7 +5056,7 @@ This function for obtaining the list of proftpd config parameters.
 
 ## v-list-sys-rrd
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-rrd)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-sys-rrd)
 
 list system rrd charts
 
@@ -5066,7 +5066,7 @@ List available rrd graphics, its titles and paths.
 
 ## v-list-sys-services
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-services)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-sys-services)
 
 list system services
 
@@ -5082,7 +5082,7 @@ This function for obtaining the list of configured system services.
 
 ## v-list-sys-shells
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-shells)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-sys-shells)
 
 list system shells
 
@@ -5092,7 +5092,7 @@ This function for obtaining the list of system shells.
 
 ## v-list-sys-spamd-config
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-spamd-config)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-sys-spamd-config)
 
 list spamassassin config parameters
 
@@ -5102,7 +5102,7 @@ This function for obtaining the list of spamassassin config parameters.
 
 ## v-list-sys-sshd-port
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-sshd-port)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-sys-sshd-port)
 
 list sshd port
 
@@ -5112,7 +5112,7 @@ This function for obtainings the port of sshd listens to
 
 ## v-list-sys-themes
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-themes)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-sys-themes)
 
 list system themes
 
@@ -5123,7 +5123,7 @@ library and displaying them in the backend or user interface.
 
 ## v-list-sys-users
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-users)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-sys-users)
 
 list system users
 
@@ -5134,7 +5134,7 @@ detailed information.
 
 ## v-list-sys-vsftpd-config
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-vsftpd-config)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-sys-vsftpd-config)
 
 list vsftpd config parameters
 
@@ -5144,7 +5144,7 @@ This function for obtaining the list of vsftpd config parameters.
 
 ## v-list-sys-web-status
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-web-status)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-sys-web-status)
 
 list web status
 
@@ -5154,7 +5154,7 @@ options:
 
 ## v-list-sys-webmail
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-webmail)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-sys-webmail)
 
 listing available webmail clients
 
@@ -5164,7 +5164,7 @@ List available webmail clients
 
 ## v-list-user
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-user)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-user)
 
 list user parameters
 
@@ -5180,7 +5180,7 @@ This function to obtain user parameters.
 
 ## v-list-user-auth-log
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-user-auth-log)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-user-auth-log)
 
 list user log
 
@@ -5190,7 +5190,7 @@ This function of obtaining the list of 10 last users commands.
 
 ## v-list-user-backup
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-user-backup)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-user-backup)
 
 list user backup
 
@@ -5207,7 +5207,7 @@ all v*list*\* calls, supports 3 formats - json, shell and plain.
 
 ## v-list-user-backup-exclusions
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-user-backup-exclusions)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-user-backup-exclusions)
 
 list backup exclusions
 
@@ -5223,7 +5223,7 @@ This function for obtaining the backup exclusion list
 
 ## v-list-user-backup-restic
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-user-backup-restic)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-user-backup-restic)
 
 backup system user with all its objects
 
@@ -5239,7 +5239,7 @@ This function is used for backing up user with all its domains and databases.
 
 ## v-list-user-backups
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-user-backups)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-user-backups)
 
 list user backups
 
@@ -5255,7 +5255,7 @@ This function for obtaining the list of available user backups.
 
 ## v-list-user-backups-restic
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-user-backups-restic)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-user-backups-restic)
 
 backup system user with all its objects
 
@@ -5271,7 +5271,7 @@ This function is used for backing up user with all its domains and databases.
 
 ## v-list-user-files-restic
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-user-files-restic)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-user-files-restic)
 
 backup system user with all its objects
 
@@ -5287,7 +5287,7 @@ This function is used for backing up user with all its domains and databases.
 
 ## v-list-user-ips
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-user-ips)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-user-ips)
 
 list user IPs
 
@@ -5303,7 +5303,7 @@ This function for obtaining the list of available IP addresses.
 
 ## v-list-user-log
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-user-log)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-user-log)
 
 list user log
 
@@ -5313,7 +5313,7 @@ This function of obtaining the list of 100 last users commands.
 
 ## v-list-user-notifications
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-user-notifications)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-user-notifications)
 
 list user notifications
 
@@ -5329,7 +5329,7 @@ This function for getting the notifications list
 
 ## v-list-user-ns
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-user-ns)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-user-ns)
 
 list user nameservers
 
@@ -5345,7 +5345,7 @@ Function for obtaining the list of user's DNS servers.
 
 ## v-list-user-package
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-user-package)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-user-package)
 
 list user package
 
@@ -5355,7 +5355,7 @@ This function for getting the list of system ip parameters.
 
 ## v-list-user-packages
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-user-packages)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-user-packages)
 
 list user packages
 
@@ -5365,7 +5365,7 @@ This function for obtaining the list of available hosting packages.
 
 ## v-list-user-ssh-key
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-user-ssh-key)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-user-ssh-key)
 
 add ssh key
 
@@ -5375,7 +5375,7 @@ Lists $user/.ssh/authorized_keys
 
 ## v-list-user-stats
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-user-stats)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-user-stats)
 
 list user stats
 
@@ -5391,7 +5391,7 @@ This function for listing user statistics
 
 ## v-list-users
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-users)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-users)
 
 list users
 
@@ -5401,7 +5401,7 @@ This function to obtain the list of all system users.
 
 ## v-list-users-stats
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-users-stats)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-users-stats)
 
 list overall user stats
 
@@ -5411,7 +5411,7 @@ This function for listing overall user statistics
 
 ## v-list-web-domain
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-web-domain)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-web-domain)
 
 list web domain parameters
 
@@ -5427,7 +5427,7 @@ This function to obtain web domain parameters.
 
 ## v-list-web-domain-accesslog
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-web-domain-accesslog)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-web-domain-accesslog)
 
 list web domain access log
 
@@ -5443,7 +5443,7 @@ This function of obtaining raw access web domain logs.
 
 ## v-list-web-domain-errorlog
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-web-domain-errorlog)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-web-domain-errorlog)
 
 list web domain error log
 
@@ -5459,7 +5459,7 @@ This function of obtaining raw error web domain logs.
 
 ## v-list-web-domain-ssl
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-web-domain-ssl)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-web-domain-ssl)
 
 list web domain ssl certificate
 
@@ -5475,7 +5475,7 @@ This function of obtaining domain ssl files.
 
 ## v-list-web-domains
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-web-domains)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-web-domains)
 
 list web domains
 
@@ -5491,7 +5491,7 @@ This function to obtain the list of all user web domains.
 
 ## v-list-web-stats
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-web-stats)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-web-stats)
 
 list web statistics
 
@@ -5501,7 +5501,7 @@ This function for obtaining the list of web statistics analyzer.
 
 ## v-list-web-templates
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-web-templates)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-web-templates)
 
 list web templates
 
@@ -5511,7 +5511,7 @@ This function for obtaining the list of web templates available to a user.
 
 ## v-list-web-templates-backend
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-web-templates-backend)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-web-templates-backend)
 
 listing backend templates
 
@@ -5521,7 +5521,7 @@ This function for obtaining the list of available backend templates.
 
 ## v-list-web-templates-proxy
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-web-templates-proxy)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-list-web-templates-proxy)
 
 listing proxy templates
 
@@ -5531,7 +5531,7 @@ This function for obtaining the list of proxy templates available to a user.
 
 ## v-log-action
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-log-action)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-log-action)
 
 adds action event to user or system log
 
@@ -5542,7 +5542,7 @@ info, warning, error
 
 ## v-log-user-login
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-log-user-login)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-log-user-login)
 
 add user login
 
@@ -5550,7 +5550,7 @@ add user login
 
 ## v-log-user-logout
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-log-user-logout)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-log-user-logout)
 
 Log User logout event
 
@@ -5558,7 +5558,7 @@ Log User logout event
 
 ## v-move-fs-directory
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-move-fs-directory)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-move-fs-directory)
 
 move file
 
@@ -5575,7 +5575,7 @@ can also be used to rename files just like normal mv command.
 
 ## v-move-fs-file
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-move-fs-file)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-move-fs-file)
 
 move file
 
@@ -5592,7 +5592,7 @@ can also be used to rename files just like normal mv command.
 
 ## v-open-fs-config
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-open-fs-config)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-open-fs-config)
 
 open config
 
@@ -5608,7 +5608,7 @@ This function opens/reads config files on the file system
 
 ## v-open-fs-file
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-open-fs-file)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-open-fs-file)
 
 open file
 
@@ -5624,7 +5624,7 @@ This function opens/reads files on the file system
 
 ## v-purge-nginx-cache
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-purge-nginx-cache)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-purge-nginx-cache)
 
 Purge nginx cache
 
@@ -5640,7 +5640,7 @@ This function purges nginx cache.
 
 ## v-quick-install-app
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-quick-install-app)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-quick-install-app)
 
 Install Quick Install Web App via CLI
 
@@ -5649,18 +5649,18 @@ Install Quick Install Web App via CLI
 **Examples**:
 
 ```php
-v-quick-install-app install admin domain.com WordPress email="info@hestiacp" password="123456" username="admin" site_name="HestiaCP Demo" install_directory="/" language="nl_NL" php_version="8.2" database_create="true"
+v-quick-install-app install admin domain.com WordPress email="info@DevITcp" password="123456" username="admin" site_name="DevITCP Demo" install_directory="/" language="nl_NL" php_version="8.2" database_create="true"
  example: v-quick-install-app app
  example: v-quick-install-app options admin domain.com WordPress
 ```
 
-- The v-quick-install-app install command is used to automate the installation of web applications on a server managed by Hestia Control Panel.
-- The v-quick-install-app app command is used to retrieve a list of web applications that can be quickly installed through the v-quick-install-app install command in the Hestia Control Panel. This command provides a convenient overview of supported applications and their versions, allowing users to choose which application they would like to deploy on their server. The names of the applications are case sensitive.
+- The v-quick-install-app install command is used to automate the installation of web applications on a server managed by DevIT Control Panel.
+- The v-quick-install-app app command is used to retrieve a list of web applications that can be quickly installed through the v-quick-install-app install command in the DevIT Control Panel. This command provides a convenient overview of supported applications and their versions, allowing users to choose which application they would like to deploy on their server. The names of the applications are case sensitive.
 - v-quick-install-app options admin domain.com WordPress list all the options available for the specified web application. This command provides a list of all the required and optional fields that need to be filled in when installing the application. The command also provides the default values for each field, if available.
 
 ## v-rebuild-all
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-rebuild-all)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-rebuild-all)
 
 rebuild all assets for a specified user
 
@@ -5670,7 +5670,7 @@ This function rebuilds all assets for a user account:
 
 ## v-rebuild-cron-jobs
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-rebuild-cron-jobs)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-rebuild-cron-jobs)
 
 rebuild cron jobs
 
@@ -5686,7 +5686,7 @@ This function rebuilds system cron config file for specified user.
 
 ## v-rebuild-database
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-rebuild-database)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-rebuild-database)
 
 rebuild databases
 
@@ -5702,7 +5702,7 @@ This function for rebuilding a single database for a user
 
 ## v-rebuild-databases
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-rebuild-databases)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-rebuild-databases)
 
 rebuild databases
 
@@ -5718,7 +5718,7 @@ This function for rebuilding of all databases of a single user.
 
 ## v-rebuild-dns-domain
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-rebuild-dns-domain)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-rebuild-dns-domain)
 
 rebuild dns domain
 
@@ -5734,7 +5734,7 @@ This function rebuilds DNS configuration files.
 
 ## v-rebuild-dns-domains
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-rebuild-dns-domains)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-rebuild-dns-domains)
 
 rebuild dns domains
 
@@ -5750,7 +5750,7 @@ This function rebuilds DNS configuration files.
 
 ## v-rebuild-mail-domain
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-rebuild-mail-domain)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-rebuild-mail-domain)
 
 rebuild mail domain
 
@@ -5766,7 +5766,7 @@ This function rebuilds configuration files for a single domain.
 
 ## v-rebuild-mail-domains
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-rebuild-mail-domains)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-rebuild-mail-domains)
 
 rebuild mail domains
 
@@ -5782,7 +5782,7 @@ This function rebuilds EXIM configuration files for all mail domains.
 
 ## v-rebuild-user
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-rebuild-user)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-rebuild-user)
 
 rebuild system user
 
@@ -5798,7 +5798,7 @@ This function rebuilds system user account.
 
 ## v-rebuild-users
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-rebuild-users)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-rebuild-users)
 
 rebuild system users
 
@@ -5808,7 +5808,7 @@ This function rebuilds user configuration for all users.
 
 ## v-rebuild-web-domain
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-rebuild-web-domain)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-rebuild-web-domain)
 
 rebuild web domain
 
@@ -5824,7 +5824,7 @@ This function rebuilds web configuration files.
 
 ## v-rebuild-web-domains
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-rebuild-web-domains)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-rebuild-web-domains)
 
 rebuild web domains
 
@@ -5834,7 +5834,7 @@ This function rebuilds web configuration files.
 
 ## v-refresh-sys-theme
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-refresh-sys-theme)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-refresh-sys-theme)
 
 change active system theme
 
@@ -5844,7 +5844,7 @@ This function for changing the currently active system theme.
 
 ## v-rename-user-package
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-rename-user-package)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-rename-user-package)
 
 change package name
 
@@ -5860,7 +5860,7 @@ This function changes the name of an existing package.
 
 ## v-repair-sys-config
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-repair-sys-config)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-repair-sys-config)
 
 Restore system configuration
 
@@ -5870,7 +5870,7 @@ This function repairs or restores the system configuration file.
 
 ## v-restart-cron
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-restart-cron)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-restart-cron)
 
 restart cron service
 
@@ -5880,7 +5880,7 @@ This function tells crond service to reread its configuration files.
 
 ## v-restart-dns
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-restart-dns)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-restart-dns)
 
 restart dns service
 
@@ -5890,7 +5890,7 @@ This function tells BIND service to reload dns zone files.
 
 ## v-restart-ftp
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-restart-ftp)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-restart-ftp)
 
 restart ftp service
 
@@ -5900,7 +5900,7 @@ This function tells ftp server to reread its configuration.
 
 ## v-restart-mail
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-restart-mail)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-restart-mail)
 
 restart mail service
 
@@ -5910,7 +5910,7 @@ This function tells exim or dovecot services to reload configuration files.
 
 ## v-restart-proxy
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-restart-proxy)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-restart-proxy)
 
 restart proxy server
 
@@ -5926,7 +5926,7 @@ This function reloads proxy server configuration.
 
 ## v-restart-service
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-restart-service)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-restart-service)
 
 restart service
 
@@ -5942,7 +5942,7 @@ This function restarts system service.
 
 ## v-restart-system
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-restart-system)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-restart-system)
 
 restart operating system
 
@@ -5958,7 +5958,7 @@ This function restarts operating system.
 
 ## v-restart-web
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-restart-web)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-restart-web)
 
 restart web server
 
@@ -5968,7 +5968,7 @@ This function reloads web server configuration.
 
 ## v-restart-web-backend
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-restart-web-backend)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-restart-web-backend)
 
 restart php interpreter
 
@@ -5978,7 +5978,7 @@ This function reloads php interpreter configuration.
 
 ## v-restore-cron-job
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-restore-cron-job)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-restore-cron-job)
 
 restore single cron job
 
@@ -5995,7 +5995,7 @@ from a backup archive.
 
 ## v-restore-cron-job-restic
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-restore-cron-job-restic)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-restore-cron-job-restic)
 
 restore single cron job
 
@@ -6012,7 +6012,7 @@ from a snapshot.
 
 ## v-restore-database
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-restore-database)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-restore-database)
 
 restore single database
 
@@ -6029,7 +6029,7 @@ from a backup archive.
 
 ## v-restore-database-restic
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-restore-database-restic)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-restore-database-restic)
 
 restore Database
 
@@ -6047,7 +6047,7 @@ This function for restoring database from restic snapshot.
 
 ## v-restore-dns-domain
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-restore-dns-domain)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-restore-dns-domain)
 
 restore single dns domain
 
@@ -6064,7 +6064,7 @@ from a backup archive.
 
 ## v-restore-dns-domain-restic
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-restore-dns-domain-restic)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-restore-dns-domain-restic)
 
 restore DNS domain
 
@@ -6080,7 +6080,7 @@ This function for restoring database from restic snapshot.
 
 ## v-restore-file-restic
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-restore-file-restic)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-restore-file-restic)
 
 restore file or folder
 
@@ -6096,7 +6096,7 @@ This function for restoring database from restic snapshot.
 
 ## v-restore-mail-domain
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-restore-mail-domain)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-restore-mail-domain)
 
 restore single mail domain
 
@@ -6113,7 +6113,7 @@ from a backup archive.
 
 ## v-restore-mail-domain-restic
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-restore-mail-domain-restic)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-restore-mail-domain-restic)
 
 restore WEB domain
 
@@ -6131,7 +6131,7 @@ This function for restoring database from restic snapshot.
 
 ## v-restore-user
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-restore-user)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-restore-user)
 
 restore user
 
@@ -6148,7 +6148,7 @@ the archive needs to be placed in /backup.
 
 ## v-restore-user-full-restic
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-restore-user-full-restic)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-restore-user-full-restic)
 
 restore user via Restic
 
@@ -6164,7 +6164,7 @@ Full user restore from a non existing user
 
 ## v-restore-user-restic
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-restore-user-restic)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-restore-user-restic)
 
 restore user via Restic
 
@@ -6180,7 +6180,7 @@ This function for restoring database from restic snapshot.
 
 ## v-restore-web-domain
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-restore-web-domain)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-restore-web-domain)
 
 restore single web domain
 
@@ -6197,7 +6197,7 @@ from a backup archive.
 
 ## v-restore-web-domain-restic
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-restore-web-domain-restic)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-restore-web-domain-restic)
 
 restore WEB domain
 
@@ -6215,7 +6215,7 @@ This function for restoring database from restic snapshot.
 
 ## v-revoke-api-key
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-revoke-api-key)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-revoke-api-key)
 
 revokes api key
 
@@ -6227,11 +6227,11 @@ revokes api key
 v-revoke-api-key mykey
 ```
 
-This function removes a key from in $HESTIA/data/keys/
+This function removes a key from in $DevIT/data/keys/
 
 ## v-run-cli-cmd
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-run-cli-cmd)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-run-cli-cmd)
 
 run cli command
 
@@ -6243,11 +6243,11 @@ run cli command
 v-run-cli-cmd user composer require package
 ```
 
-This function runs a limited list of cli commands with dropped privileges as the specific hestia user
+This function runs a limited list of cli commands with dropped privileges as the specific DevIT user
 
 ## v-schedule-letsencrypt-domain
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-schedule-letsencrypt-domain)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-schedule-letsencrypt-domain)
 
 adding cronjob for letsencrypt cetificate installation
 
@@ -6263,7 +6263,7 @@ This function adds cronjob for letsencrypt ssl certificate installation
 
 ## v-schedule-user-backup
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-schedule-user-backup)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-schedule-user-backup)
 
 schedule user backup creation
 
@@ -6279,7 +6279,7 @@ This function for scheduling user backup creation.
 
 ## v-schedule-user-backup-download
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-schedule-user-backup-download)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-schedule-user-backup-download)
 
 Schedule a backup
 
@@ -6295,7 +6295,7 @@ This function for scheduling user backup creation.
 
 ## v-schedule-user-backup-restic
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-schedule-user-backup-restic)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-schedule-user-backup-restic)
 
 schedule user backup creation
 
@@ -6311,7 +6311,7 @@ This function for scheduling user backup creation.
 
 ## v-schedule-user-restore
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-schedule-user-restore)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-schedule-user-restore)
 
 schedule user backup restoration
 
@@ -6327,7 +6327,7 @@ This function for scheduling user backup restoration.
 
 ## v-schedule-user-restore-restic
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-schedule-user-restore-restic)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-schedule-user-restore-restic)
 
 schedule user backup restoration
 
@@ -6343,7 +6343,7 @@ This function for scheduling user backup restoration.
 
 ## v-search-command
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-search-command)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-search-command)
 
 search for available commands
 
@@ -6355,14 +6355,14 @@ search for available commands
 v-search-command web
 ```
 
-This function searches for available Hestia Control Panel commands
+This function searches for available DevIT Control Panel commands
 and returns results based on the specified criteria.
 Originally developed for VestaCP by Federico Krum
 <https://github.com/FastDigitalOceanDroplets/VestaCP/blob/master/files/v-search-command>
 
 ## v-search-domain-owner
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-search-domain-owner)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-search-domain-owner)
 
 search domain owner
 
@@ -6378,7 +6378,7 @@ This function that allows to find user objects.
 
 ## v-search-fs-object
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-search-fs-object)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-search-fs-object)
 
 search file or directory
 
@@ -6394,7 +6394,7 @@ This function search files and directories on the file system
 
 ## v-search-object
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-search-object)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-search-object)
 
 search objects
 
@@ -6410,7 +6410,7 @@ This function that allows to find system objects.
 
 ## v-search-user-object
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-search-user-object)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-search-user-object)
 
 search objects
 
@@ -6426,7 +6426,7 @@ This function that allows to find user objects.
 
 ## v-start-service
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-start-service)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-start-service)
 
 start service
 
@@ -6442,7 +6442,7 @@ This function starts system service.
 
 ## v-stop-firewall
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-stop-firewall)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-stop-firewall)
 
 stop system firewall
 
@@ -6452,7 +6452,7 @@ This function stops iptables
 
 ## v-stop-service
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-stop-service)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-stop-service)
 
 stop service
 
@@ -6468,7 +6468,7 @@ This function stops system service.
 
 ## v-suspend-cron-job
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-suspend-cron-job)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-suspend-cron-job)
 
 suspend cron job
 
@@ -6484,7 +6484,7 @@ This function suspends a certain job of the cron scheduler.
 
 ## v-suspend-cron-jobs
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-suspend-cron-jobs)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-suspend-cron-jobs)
 
 Suspending sys cron jobs
 
@@ -6500,7 +6500,7 @@ This function suspends all user cron jobs.
 
 ## v-suspend-database
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-suspend-database)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-suspend-database)
 
 suspend database
 
@@ -6516,7 +6516,7 @@ This function for suspending a certain user database.
 
 ## v-suspend-database-host
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-suspend-database-host)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-suspend-database-host)
 
 suspend database server
 
@@ -6532,7 +6532,7 @@ This function for suspending a database server.
 
 ## v-suspend-databases
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-suspend-databases)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-suspend-databases)
 
 suspend databases
 
@@ -6548,7 +6548,7 @@ This function for suspending of all databases of a single user.
 
 ## v-suspend-dns-domain
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-suspend-dns-domain)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-suspend-dns-domain)
 
 suspend dns domain
 
@@ -6564,7 +6564,7 @@ This function suspends a certain user's domain.
 
 ## v-suspend-dns-domains
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-suspend-dns-domains)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-suspend-dns-domains)
 
 suspend dns domains
 
@@ -6580,7 +6580,7 @@ This function suspends all user's DNS domains.
 
 ## v-suspend-dns-record
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-suspend-dns-record)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-suspend-dns-record)
 
 suspend dns domain record
 
@@ -6596,7 +6596,7 @@ This function suspends a certain domain record.
 
 ## v-suspend-domain
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-suspend-domain)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-suspend-domain)
 
 suspend web/dns/mail domain
 
@@ -6612,7 +6612,7 @@ This function suspends web/dns/mail domain.
 
 ## v-suspend-firewall-rule
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-suspend-firewall-rule)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-suspend-firewall-rule)
 
 suspend firewall rule
 
@@ -6628,7 +6628,7 @@ This function suspends a certain firewall rule.
 
 ## v-suspend-mail-account
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-suspend-mail-account)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-suspend-mail-account)
 
 suspend mail account
 
@@ -6644,7 +6644,7 @@ This function suspends mail account.
 
 ## v-suspend-mail-accounts
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-suspend-mail-accounts)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-suspend-mail-accounts)
 
 suspend all mail domain accounts
 
@@ -6660,7 +6660,7 @@ This function suspends all mail domain accounts.
 
 ## v-suspend-mail-domain
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-suspend-mail-domain)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-suspend-mail-domain)
 
 suspend mail domain
 
@@ -6676,7 +6676,7 @@ This function suspends mail domain.
 
 ## v-suspend-mail-domains
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-suspend-mail-domains)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-suspend-mail-domains)
 
 suspend mail domains
 
@@ -6692,7 +6692,7 @@ This function suspends all user's MAIL domains.
 
 ## v-suspend-remote-dns-host
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-suspend-remote-dns-host)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-suspend-remote-dns-host)
 
 suspend remote dns server
 
@@ -6708,7 +6708,7 @@ This function for suspending remote dns server.
 
 ## v-suspend-user
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-suspend-user)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-suspend-user)
 
 suspend user
 
@@ -6724,7 +6724,7 @@ This function suspends a certain user and all his objects.
 
 ## v-suspend-web-domain
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-suspend-web-domain)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-suspend-web-domain)
 
 suspend web domain
 
@@ -6742,7 +6742,7 @@ By blocking the site the content of all its directories remains untouched.
 
 ## v-suspend-web-domains
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-suspend-web-domains)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-suspend-web-domains)
 
 suspend web domains
 
@@ -6758,7 +6758,7 @@ This function of suspending all user's sites.
 
 ## v-sync-dns-cluster
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-sync-dns-cluster)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-sync-dns-cluster)
 
 synchronize dns domains
 
@@ -6768,7 +6768,7 @@ This function synchronise all dns domains.
 
 ## v-unsuspend-cron-job
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-unsuspend-cron-job)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-unsuspend-cron-job)
 
 unsuspend cron job
 
@@ -6784,7 +6784,7 @@ This function unsuspend certain cron job.
 
 ## v-unsuspend-cron-jobs
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-unsuspend-cron-jobs)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-unsuspend-cron-jobs)
 
 unsuspend sys cron
 
@@ -6800,7 +6800,7 @@ This function unsuspends all suspended cron jobs.
 
 ## v-unsuspend-database
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-unsuspend-database)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-unsuspend-database)
 
 unsuspend database
 
@@ -6816,7 +6816,7 @@ This function for unsuspending database.
 
 ## v-unsuspend-database-host
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-unsuspend-database-host)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-unsuspend-database-host)
 
 unsuspend database server
 
@@ -6832,7 +6832,7 @@ This function for unsuspending a database server.
 
 ## v-unsuspend-databases
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-unsuspend-databases)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-unsuspend-databases)
 
 unsuspend databases
 
@@ -6842,7 +6842,7 @@ This function for unsuspending all user's databases.
 
 ## v-unsuspend-dns-domain
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-unsuspend-dns-domain)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-unsuspend-dns-domain)
 
 unsuspend dns domain
 
@@ -6858,7 +6858,7 @@ This function unsuspends a certain user's domain.
 
 ## v-unsuspend-dns-domains
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-unsuspend-dns-domains)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-unsuspend-dns-domains)
 
 unsuspend dns domains
 
@@ -6874,7 +6874,7 @@ This function unsuspends all user's DNS domains.
 
 ## v-unsuspend-dns-record
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-unsuspend-dns-record)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-unsuspend-dns-record)
 
 unsuspend dns domain record
 
@@ -6890,7 +6890,7 @@ This function unsuspends a certain domain record.
 
 ## v-unsuspend-domain
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-unsuspend-domain)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-unsuspend-domain)
 
 unsuspend web/dns/mail domain
 
@@ -6906,7 +6906,7 @@ This function unsuspends web/dns/mail domain.
 
 ## v-unsuspend-firewall-rule
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-unsuspend-firewall-rule)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-unsuspend-firewall-rule)
 
 unsuspend firewall rule
 
@@ -6922,7 +6922,7 @@ This function unsuspends a certain firewall rule.
 
 ## v-unsuspend-mail-account
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-unsuspend-mail-account)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-unsuspend-mail-account)
 
 unsuspend mail account
 
@@ -6938,7 +6938,7 @@ This function unsuspends mail account.
 
 ## v-unsuspend-mail-accounts
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-unsuspend-mail-accounts)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-unsuspend-mail-accounts)
 
 unsuspend all mail domain accounts
 
@@ -6954,7 +6954,7 @@ This function unsuspends all mail domain accounts.
 
 ## v-unsuspend-mail-domain
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-unsuspend-mail-domain)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-unsuspend-mail-domain)
 
 unsuspend mail domain
 
@@ -6970,7 +6970,7 @@ This function unsuspends mail domain.
 
 ## v-unsuspend-mail-domains
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-unsuspend-mail-domains)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-unsuspend-mail-domains)
 
 unsuspend mail domains
 
@@ -6986,7 +6986,7 @@ This function unsuspends all user's MAIL domains.
 
 ## v-unsuspend-remote-dns-host
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-unsuspend-remote-dns-host)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-unsuspend-remote-dns-host)
 
 unsuspend remote dns server
 
@@ -7002,7 +7002,7 @@ This function for unsuspending remote dns server.
 
 ## v-unsuspend-user
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-unsuspend-user)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-unsuspend-user)
 
 unsuspend user
 
@@ -7018,7 +7018,7 @@ This function unsuspends user and all his objects.
 
 ## v-unsuspend-web-domain
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-unsuspend-web-domain)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-unsuspend-web-domain)
 
 unsuspend web domain
 
@@ -7034,7 +7034,7 @@ This function of unsuspending the domain.
 
 ## v-unsuspend-web-domains
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-unsuspend-web-domains)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-unsuspend-web-domains)
 
 unsuspend web domains
 
@@ -7050,7 +7050,7 @@ This function of unsuspending all user's sites.
 
 ## v-update-database-disk
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-database-disk)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-update-database-disk)
 
 update database disk usage
 
@@ -7066,7 +7066,7 @@ This function recalculates disk usage for specific database.
 
 ## v-update-databases-disk
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-databases-disk)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-update-databases-disk)
 
 update databases disk usage
 
@@ -7082,17 +7082,17 @@ This function recalculates disk usage for all user databases.
 
 ## v-update-dns-templates
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-dns-templates)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-update-dns-templates)
 
 update dns templates
 
 **Options**: `[RESTART]`
 
-This function for obtaining updated dns templates from Hestia package.
+This function for obtaining updated dns templates from DevIT package.
 
 ## v-update-firewall
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-firewall)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-update-firewall)
 
 update system firewall rules
 
@@ -7102,7 +7102,7 @@ This function updates iptables rules
 
 ## v-update-firewall-ipset
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-firewall-ipset)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-update-firewall-ipset)
 
 update firewall ipset
 
@@ -7112,9 +7112,9 @@ This function creates ipset lists and updates the lists if they are expired or o
 
 ## v-update-host-certificate
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-host-certificate)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-update-host-certificate)
 
-update host certificate for hestia
+update host certificate for DevIT
 
 **Options**: `USER` `HOSTNAME`
 
@@ -7124,11 +7124,11 @@ update host certificate for hestia
 v-update-host-certificate admin example.com
 ```
 
-This function updates the SSL certificate used for Hestia Control Panel.
+This function updates the SSL certificate used for DevIT Control Panel.
 
 ## v-update-letsencrypt-ssl
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-letsencrypt-ssl)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-update-letsencrypt-ssl)
 
 update letsencrypt ssl certificates
 
@@ -7138,7 +7138,7 @@ This function for renew letsencrypt expired ssl certificate for all users
 
 ## v-update-mail-domain-disk
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-mail-domain-disk)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-update-mail-domain-disk)
 
 update mail domain disk usage
 
@@ -7154,7 +7154,7 @@ This function updates domain disk usage.
 
 ## v-update-mail-domain-ssl
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-mail-domain-ssl)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-update-mail-domain-ssl)
 
 updating ssl certificate for domain
 
@@ -7173,7 +7173,7 @@ authority domain.tld.ca file is optional.
 
 ## v-update-mail-domains-disk
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-mail-domains-disk)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-update-mail-domains-disk)
 
 calculate disk usage for all mail domains
 
@@ -7189,17 +7189,17 @@ This function calculates disk usage for all mail domains.
 
 ## v-update-mail-templates
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-mail-templates)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-update-mail-templates)
 
 update mail templates
 
 **Options**: `[RESTART]` `[SKIP]`
 
-This function for obtaining updated webmail templates from Hestia package.
+This function for obtaining updated webmail templates from DevIT package.
 
 ## v-update-sys-defaults
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-sys-defaults)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-update-sys-defaults)
 
 update default key database
 
@@ -7214,36 +7214,36 @@ example: v-update-sys-defaults user
 
 This function updates the known key/value pair database
 
-## v-update-sys-hestia
+## v-update-sys-DevIT
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-sys-hestia)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-update-sys-DevIT)
 
-update hestia package/configs
+update DevIT package/configs
 
 **Options**: `PACKAGE`
 
 **Examples**:
 
 ```bash
-v-update-sys-hestia hestia-php
+v-update-sys-DevIT DevIT-php
 ```
 
-This function runs as apt update trigger. It pulls shell script from hestia
-server and runs it. (hestia, hestia-nginx and hestia-php are valid options)
+This function runs as apt update trigger. It pulls shell script from DevIT
+server and runs it. (DevIT, DevIT-nginx and DevIT-php are valid options)
 
-## v-update-sys-hestia-all
+## v-update-sys-DevIT-all
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-sys-hestia-all)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-update-sys-DevIT-all)
 
-update all hestia packages
+update all DevIT packages
 
 **Options**: –
 
-This function of updating all hestia packages
+This function of updating all DevIT packages
 
-## v-update-sys-hestia-git
+## v-update-sys-DevIT-git
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-sys-hestia-git)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-update-sys-DevIT-git)
 
 Install update from Git repository
 
@@ -7252,8 +7252,8 @@ Install update from Git repository
 **Examples**:
 
 ```bash
-v-update-sys-hestia-git hestiacp staging/beta install
-# Will download from the hestiacp repository
+v-update-sys-DevIT-git DevITcp staging/beta install
+# Will download from the DevITcp repository
 # Pulls code from staging/beta branch
 # install: installs package immediately
 # install-auto: installs package and schedules automatic updates from Git
@@ -7263,7 +7263,7 @@ Downloads and compiles/installs packages from GitHub repositories
 
 ## v-update-sys-ip
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-sys-ip)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-update-sys-ip)
 
 update system IP
 
@@ -7276,13 +7276,13 @@ v-update-sys-ip
 # Intended for internal usage
 ```
 
-This function scans configured IP in the system and register them with Hestia
+This function scans configured IP in the system and register them with DevIT
 internal database. This call is intended for use on vps servers, where IP is
 set by hypervisor.
 
 ## v-update-sys-ip-counters
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-sys-ip-counters)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-update-sys-ip-counters)
 
 update IP usage counters
 
@@ -7292,7 +7292,7 @@ Function updates usage U_WEB_ADOMAINS and U_SYS_USERS counters.
 
 ## v-update-sys-queue
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-sys-queue)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-update-sys-queue)
 
 update system queue
 
@@ -7306,7 +7306,7 @@ added or deleted.
 
 ## v-update-sys-rrd
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-sys-rrd)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-update-sys-rrd)
 
 update system rrd charts
 
@@ -7317,7 +7317,7 @@ v-update-sys-rrd\_\* at once.
 
 ## v-update-sys-rrd-apache2
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-sys-rrd-apache2)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-update-sys-rrd-apache2)
 
 update apache2 rrd
 
@@ -7327,7 +7327,7 @@ This function is for updating apache rrd database and graphic.
 
 ## v-update-sys-rrd-ftp
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-sys-rrd-ftp)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-update-sys-rrd-ftp)
 
 update ftp rrd
 
@@ -7337,7 +7337,7 @@ This function is for updating ftpd rrd database and graphic.
 
 ## v-update-sys-rrd-httpd
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-sys-rrd-httpd)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-update-sys-rrd-httpd)
 
 update httpd rrd
 
@@ -7347,7 +7347,7 @@ This function is for updating apache rrd database and graphic.
 
 ## v-update-sys-rrd-la
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-sys-rrd-la)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-update-sys-rrd-la)
 
 update load average rrd
 
@@ -7357,7 +7357,7 @@ This function is for updating load average rrd database and graphic.
 
 ## v-update-sys-rrd-mail
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-sys-rrd-mail)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-update-sys-rrd-mail)
 
 update mail rrd
 
@@ -7367,7 +7367,7 @@ This function is for updating mail rrd database and graphic.
 
 ## v-update-sys-rrd-mem
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-sys-rrd-mem)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-update-sys-rrd-mem)
 
 update memory rrd
 
@@ -7377,7 +7377,7 @@ This function is for updating memory rrd database and graphic.
 
 ## v-update-sys-rrd-mysql
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-sys-rrd-mysql)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-update-sys-rrd-mysql)
 
 update MySQL rrd
 
@@ -7387,7 +7387,7 @@ This function is for updating mysql rrd database and graphic.
 
 ## v-update-sys-rrd-net
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-sys-rrd-net)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-update-sys-rrd-net)
 
 update network rrd
 
@@ -7397,7 +7397,7 @@ This function is for updating network usage rrd database and graphic.
 
 ## v-update-sys-rrd-nginx
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-sys-rrd-nginx)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-update-sys-rrd-nginx)
 
 update nginx rrd
 
@@ -7407,7 +7407,7 @@ This function is for updating nginx rrd database and graphic.
 
 ## v-update-sys-rrd-pgsql
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-sys-rrd-pgsql)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-update-sys-rrd-pgsql)
 
 update PostgreSQL rrd
 
@@ -7417,7 +7417,7 @@ This function is for updating postgresql rrd database and graphic.
 
 ## v-update-sys-rrd-ssh
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-sys-rrd-ssh)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-update-sys-rrd-ssh)
 
 update ssh rrd
 
@@ -7427,7 +7427,7 @@ This function is for updating ssh rrd database and graphic.
 
 ## v-update-user-backup-exclusions
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-user-backup-exclusions)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-update-user-backup-exclusions)
 
 update backup exclusion list
 
@@ -7443,7 +7443,7 @@ This function for updating backup exclusion list
 
 ## v-update-user-cgroup
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-user-cgroup)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-update-user-cgroup)
 
 update user disk quota
 
@@ -7459,7 +7459,7 @@ The functions upates cgroup, cpu, ram ,... for specific user
 
 ## v-update-user-counters
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-user-counters)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-update-user-counters)
 
 update user usage counters
 
@@ -7475,7 +7475,7 @@ Function updates usage counters like U_WEB_DOMAINS, U_MAIL_ACCOUNTS, etc.
 
 ## v-update-user-disk
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-user-disk)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-update-user-disk)
 
 update user disk usage
 
@@ -7491,7 +7491,7 @@ The functions recalculates disk usage and updates database.
 
 ## v-update-user-package
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-user-package)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-update-user-package)
 
 update user package
 
@@ -7507,7 +7507,7 @@ This function propagates package to connected users.
 
 ## v-update-user-quota
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-user-quota)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-update-user-quota)
 
 update user disk quota
 
@@ -7523,7 +7523,7 @@ The functions upates disk quota for specific user
 
 ## v-update-user-stats
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-user-stats)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-update-user-stats)
 
 update user statistics
 
@@ -7539,7 +7539,7 @@ Function logs user parameters into statistics database.
 
 ## v-update-web-domain-disk
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-web-domain-disk)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-update-web-domain-disk)
 
 update disk usage for domain
 
@@ -7555,7 +7555,7 @@ This function recalculates disk usage for specific webdomain.
 
 ## v-update-web-domain-ssl
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-web-domain-ssl)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-update-web-domain-ssl)
 
 updating ssl certificate for domain
 
@@ -7574,7 +7574,7 @@ authority domain.tld.ca file is optional.
 
 ## v-update-web-domain-stat
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-web-domain-stat)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-update-web-domain-stat)
 
 update domain statistics
 
@@ -7590,7 +7590,7 @@ This function runs log analyser for specific webdomain.
 
 ## v-update-web-domain-traff
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-web-domain-traff)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-update-web-domain-traff)
 
 update domain bandwidth usage
 
@@ -7606,7 +7606,7 @@ This function recalculates bandwidth usage for specific domain.
 
 ## v-update-web-domains-disk
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-web-domains-disk)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-update-web-domains-disk)
 
 update domains disk usage
 
@@ -7622,7 +7622,7 @@ This function recalculates disk usage for all user webdomains.
 
 ## v-update-web-domains-stat
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-web-domains-stat)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-update-web-domains-stat)
 
 update domains statistics
 
@@ -7638,7 +7638,7 @@ This function runs log analyser usage for all user webdomains.
 
 ## v-update-web-domains-traff
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-web-domains-traff)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-update-web-domains-traff)
 
 update domains bandwidth usage
 
@@ -7654,20 +7654,20 @@ This function recalculates bandwidth usage for all user webdomains.
 
 ## v-update-web-templates
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-web-templates)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-update-web-templates)
 
 update web templates
 
 **Options**: `[RESTART]` `[SKIP]`
 
-This function for obtaining updated web (Nginx/Apache2/PHP) templates from the Hestia package.
+This function for obtaining updated web (Nginx/Apache2/PHP) templates from the DevIT package.
 
 ## v-update-white-label-logo
 
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-white-label-logo)
+[Source](https://github.com/DevITcp/DevITcp/blob/release/bin/v-update-white-label-logo)
 
 update white label logo's
 
 **Options**: `[DOWNLOAD]`
 
-Replace Hestia logos with User created logo's
+Replace DevIT logos with User created logo's

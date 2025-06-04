@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Hestia\WebApp\Installers\Nextcloud;
+namespace DevIT\WebApp\Installers\Nextcloud;
 
-use Hestia\WebApp\BaseSetup;
-use Hestia\WebApp\InstallationTarget\InstallationTarget;
+use DevIT\WebApp\BaseSetup;
+use DevIT\WebApp\InstallationTarget\InstallationTarget;
 
 class NextcloudSetup extends BaseSetup
 {

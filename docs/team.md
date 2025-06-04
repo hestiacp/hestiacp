@@ -13,7 +13,7 @@ title: The Team
   <VPTeamPageTitle>
     <template #title>The Team</template>
     <template #lead>
-      The development of Hestia is guided by an international team, some of whom have chosen to be featured below.
+      The development of DevIT is guided by an international team, some of whom have chosen to be featured below.
     </template>
   </VPTeamPageTitle>
   <VPTeamPageSection>

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Hestia\WebApp;
+namespace DevIT\WebApp;
 
-use Hestia\WebApp\InstallationTarget\InstallationTarget;
+use DevIT\WebApp\InstallationTarget\InstallationTarget;
 
 interface InstallerInterface
 {

@@ -1,5 +1,5 @@
 <?php
-use function Hestiacp\quoteshellarg\quoteshellarg;
+use function DevITcp\quoteshellarg\quoteshellarg;
 
 ob_start();
 
@@ -76,7 +76,7 @@ if ($_SESSION["userContext"] === "admin") {
 
 foreach ($user as $value) {
 	$value = quoteshellarg($value);
-	exec(HESTIA_CMD . $cmd . " " . $value . " " . $restart, $output, $return_var);
+	exec(DevIT_CMD . $cmd . " " . $value . " " . $restart, $output, $return_var);
 	$changes = "yes";
 }
 

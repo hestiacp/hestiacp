@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Hestia Control Panel upgrade script for target version 1.4.17
+# DevIT Control Panel upgrade script for target version 1.4.17
 
 #######################################################################################
 #######                      Place additional commands below.                   #######
@@ -16,5 +16,5 @@
 #######################################################################################
 
 if [ -n "$DB_PMA_ALIAS" ]; then
-	$HESTIA/bin/v-change-sys-db-alias 'pma' "$DB_PMA_ALIAS"
+	$DevIT/bin/v-change-sys-db-alias 'pma' "$DB_PMA_ALIAS"
 fi

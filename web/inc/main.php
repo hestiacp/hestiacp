@@ -4,7 +4,7 @@ session_start();
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
-use function Hestiacp\quoteshellarg\quoteshellarg;
+use function DevITcp\quoteshellarg\quoteshellarg;
 
 try {
 	require_once "vendor/autoload.php";
@@ -17,12 +17,12 @@ try {
 	exit(1);
 }
 
-define("HESTIA_DIR_BIN", "/usr/local/hestia/bin/");
-define("HESTIA_CMD", "/usr/bin/sudo /usr/local/hestia/bin/");
+define("DevIT_DIR_BIN", "/usr/local/DevIT/bin/");
+define("DevIT_CMD", "/usr/bin/sudo /usr/local/DevIT/bin/");
 define("DEFAULT_PHP_VERSION", "php-" . exec('php -r "echo substr(phpversion(),0,3);"'));
 
-// Load Hestia Config directly
-load_hestia_config();
+// Load DevIT Config directly
+load_DevIT_config();
 require_once dirname(__FILE__) . "/prevent_csrf.php";
 require_once dirname(__FILE__) . "/helpers.php";
 $root_directory = dirname(__FILE__) . "/../../";
@@ -74,7 +74,7 @@ if (
 ) {
 	$v_user = quoteshellarg($_SESSION["user"]);
 	$v_session_id = quoteshellarg($_SESSION["token"]);
-	exec(HESTIA_CMD . "v-log-user-logout " . $v_user . " " . $v_session_id, $output, $return_var);
+	exec(DevIT_CMD . "v-log-user-logout " . $v_user . " " . $v_session_id, $output, $return_var);
 	destroy_sessions();
 	header("Location: /login/");
 	exit();
@@ -105,7 +105,7 @@ if (isset($_SESSION["user"])) {
 		$username = $_SESSION["look"];
 	}
 
-	exec(HESTIA_CMD . "v-list-user " . quoteshellarg($username) . " json", $output, $return_var);
+	exec(DevIT_CMD . "v-list-user " . quoteshellarg($username) . " json", $output, $return_var);
 	$data = json_decode(implode("", $output), true);
 	unset($output, $return_var);
 	$_SESSION["login_shell"] = $data[$username]["SHELL"];
@@ -127,7 +127,7 @@ if (!defined("NO_AUTH_REQUIRED")) {
 		$v_user = quoteshellarg($_SESSION["user"]);
 		$v_session_id = quoteshellarg($_SESSION["token"]);
 		exec(
-			HESTIA_CMD . "v-log-user-logout " . $v_user . " " . $v_session_id,
+			DevIT_CMD . "v-log-user-logout " . $v_user . " " . $v_session_id,
 			$output,
 			$return_var,
 		);
@@ -266,7 +266,7 @@ function show_alert_message($data) {
 }
 
 function top_panel($user, $TAB) {
-	$command = HESTIA_CMD . "v-list-user " . $user . " 'json'";
+	$command = DevIT_CMD . "v-list-user " . $user . " 'json'";
 	exec($command, $output, $return_var);
 	if ($return_var > 0) {
 		destroy_sessions();
@@ -532,7 +532,7 @@ function list_timezones() {
  * @return string
  */
 function is_it_mysql_or_mariadb() {
-	exec(HESTIA_CMD . "v-list-sys-services json", $output, $return_var);
+	exec(DevIT_CMD . "v-list-sys-services json", $output, $return_var);
 	$data = json_decode(implode("", $output), true);
 	unset($output);
 	$mysqltype = "mysql";
@@ -542,9 +542,9 @@ function is_it_mysql_or_mariadb() {
 	return $mysqltype;
 }
 
-function load_hestia_config() {
+function load_DevIT_config() {
 	// Check system configuration
-	exec(HESTIA_CMD . "v-list-sys-config json", $output, $return_var);
+	exec(DevIT_CMD . "v-list-sys-config json", $output, $return_var);
 	$data = json_decode(implode("", $output), true);
 	$sys_arr = $data["config"];
 	foreach ($sys_arr as $key => $value) {
@@ -558,14 +558,14 @@ function load_hestia_config() {
  * @return array
  */
 function backendtpl_with_webdomains() {
-	exec(HESTIA_CMD . "v-list-users json", $output, $return_var);
+	exec(DevIT_CMD . "v-list-users json", $output, $return_var);
 	$users = json_decode(implode("", $output), true);
 	unset($output);
 
 	$backend_list = [];
 	foreach ($users as $user => $user_details) {
 		exec(
-			HESTIA_CMD . "v-list-web-domains " . quoteshellarg($user) . " json",
+			DevIT_CMD . "v-list-web-domains " . quoteshellarg($user) . " json",
 			$output,
 			$return_var,
 		);

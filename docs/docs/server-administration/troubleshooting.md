@@ -5,8 +5,8 @@
 Add to /root/.bashrc the following code:
 
 ```bash
-if [ "${PATH#*/usr/local/hestia/bin*}" = "$PATH" ]; then
-	. /etc/profile.d/hestia.sh
+if [ "${PATH#*/usr/local/DevIT/bin*}" = "$PATH" ]; then
+	. /etc/profile.d/DevIT.sh
 fi
 ```
 
@@ -16,7 +16,7 @@ After that you are able to run any v-command you want.
 
 ## Disabling “Use IP address allow list for login attempts” via command line
 
-With the introduction of Hestia v1.4.0 we have added certain security features, including the possibility to limit login to certain IP addresses. If your IP address changes, you will not able to login anymore. To disable this feature, run the following commands:
+With the introduction of DevIT v1.4.0 we have added certain security features, including the possibility to limit login to certain IP addresses. If your IP address changes, you will not able to login anymore. To disable this feature, run the following commands:
 
 ```bash
 # Disable the feature
@@ -27,7 +27,7 @@ v-change-user-config-value admin LOGIN_ALLOW_IPS ''
 
 ## Can I update my cronjobs via `crontab -e`?
 
-No, you cannot. When you update HestiaCP, the crontab will simply get overwritten. The changes will not get saved in backups either.
+No, you cannot. When you update DevITCP, the crontab will simply get overwritten. The changes will not get saved in backups either.
 
 ## After update Apache2 I am not able to restart Apache2 or Nginx
 
@@ -52,9 +52,9 @@ If you see this message **ALWAYS** press "N" or **ENTER** to select the default 
 
 How ever if you entered Y or I. Then replace the config that can be found in /root/hst_backups/xxxxx/conf/apache2/ folder and copy over apache2.conf and ports.conf to /etc/apache2/ folder
 
-xxxxxx is the date/time the backup is made during the last update of HestiaCP
+xxxxxx is the date/time the backup is made during the last update of DevITCP
 
-If you don't have have a backup made you can also copy the config in /usr/local/hestia/install/deb/apache2/apache2.conf to /etc/apache2.conf and also empty /etc/apache2/ports.conf
+If you don't have have a backup made you can also copy the config in /usr/local/DevIT/install/deb/apache2/apache2.conf to /etc/apache2.conf and also empty /etc/apache2/ports.conf
 
 ## Unable to bind adress
 

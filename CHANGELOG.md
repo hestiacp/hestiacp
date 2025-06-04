@@ -41,7 +41,7 @@ All notable changes to this project will be documented in this file.
 
 ## [1.9.2] - Service release
 
-- Backups change owner files to hestiaweb (#4779)
+- Backups change owner files to DevITweb (#4779)
 - PHP-FPM Include missing info (#4766)
 - Fix bug where PHPMyadmin / PHPPGadmin where named phpmyadmin in 1.9.0 if this is the case it will reset to phppgadmin (#4767)
 - Fix warning caused by some old jailed code left (#4751)
@@ -57,8 +57,8 @@ All notable changes to this project will be documented in this file.
 ### Notes
 
 - To improve security, we now allow users to rename the default `admin` user.
-- Hestia now runs under a new `hestia-web` user.
-- In initial versions of HestiaCP, we used Jailkit to enabled Jailed SSH. It had major disadvantages, so we have decided it to replace it with [bubblewrap](https://github.com/containers/bubblewrap). Users running Jailed SSH in the past are advised to run the migration script! It can be found in `/usr/local/hestia/install/upgrade/manual/migrate_jailkit_to_bubblewrap.sh`. See [#4698](https://github.com/hestiacp/hestiacp/pull/4698)
+- DevIT now runs under a new `DevIT-web` user.
+- In initial versions of DevITCP, we used Jailkit to enabled Jailed SSH. It had major disadvantages, so we have decided it to replace it with [bubblewrap](https://github.com/containers/bubblewrap). Users running Jailed SSH in the past are advised to run the migration script! It can be found in `/usr/local/DevIT/install/upgrade/manual/migrate_jailkit_to_bubblewrap.sh`. See [#4698](https://github.com/DevITcp/DevITcp/pull/4698)
 - We are aware that cgroups are currently not working as they should be. They work fine if you login with SSH as the user, but they don't work for PHP-FPM yet.
 - Dropped support for Debian 10 due to EOL.
 
@@ -125,7 +125,7 @@ All notable changes to this project will be documented in this file.
 - Fix issues with IDN domains and Apache2 and PHP (#4583)
 - Improve OwnCloud templates (#4572)
 - Improve security for Quick Install Apps (#457 #4569 #4568 #4567 #4566 #4565 #4564 #4563)
-- Add `hestia-mail` to `hestia-users` group and create `hestia-users` group on new install #4540 #4531
+- Add `DevIT-mail` to `DevIT-users` group and create `DevIT-users` group on new install #4540 #4531
 - Fix translations MariaDB / PHPMyadmin (#4725)
 - Remove some left overs from the old admin user (#4721)
 - Disallow `` ` `` character in cronjobs to avoid errors in cron list #4708
@@ -139,8 +139,8 @@ All notable changes to this project will be documented in this file.
 
 ### Dependencies
 
-- Update hestia-nginx to 1.27.3
-- Update hestia-php to 8.3.16
+- Update DevIT-nginx to 1.27.3
+- Update DevIT-php to 8.3.16
 - Update Roundcube, FileGator and SnappyMail to the latest version
 - Update Quick Installer apps to latest version (#4594)
 
@@ -148,7 +148,7 @@ All notable changes to this project will be documented in this file.
 
 ### Security
 
-- Restrict hestiamail file permissions (todo should probably have a link here)
+- Restrict DevITmail file permissions (todo should probably have a link here)
 - Fix roundcube permissions ( GH-4387 )
 
 ## [1.8.11] - Service release
@@ -165,8 +165,8 @@ All notable changes to this project will be documented in this file.
 - Confirm before restoring part of backup (#4147)
 - Multiple Bugfixes v-import-cpanel (#4150, #4149 #4144 #4139, #4120, #4121 thanks @vipxr)
 - Fix an issue with small screens in logs header (#4126)
-- Fixed a few bugs due to the permissions changes with hestiamail user
-- Updated v-list-sys-users to fix issues with new hestiamail user
+- Fixed a few bugs due to the permissions changes with DevITmail user
+- Updated v-list-sys-users to fix issues with new DevITmail user
 - Use -f instead --force=yes (#4097)
 - Delay submit in Desktop Safari (#4137)
 - Fixed an bug in v-add-backup-host to report inability to connect via sftp (#4119)
@@ -177,7 +177,7 @@ All notable changes to this project will be documented in this file.
 ### Bug fixes
 
 - Include missed changes
-- Include <https://github.com/hestiacp/hestiacp/blob/main/install/upgrade/manual/secure_php.sh>
+- Include <https://github.com/DevITcp/DevITcp/blob/main/install/upgrade/manual/secure_php.sh>
 
 ## [1.8.9] - Service release
 
@@ -295,7 +295,7 @@ All notable changes to this project will be documented in this file.
 - Updated dependency esbuild to v0.18.16 (#3826)
 - Updated dependency stylelint to v15.10.2 (#3829)
 - Updated dependency chart.js to v4.3.2 (#3866)
-- Updated dependency hestiacp/phpquoteshellarg to v1.0.1 (#3827)
+- Updated dependency DevITcp/phpquoteshellarg to v1.0.1 (#3827)
 - Pinned dependency @fortawesome/fontawesome-free to 6.4.0 (#3862)
 - Updated renovate config (#3840)
 - Updated all non-major dependencies (#3880)
@@ -317,7 +317,7 @@ All notable changes to this project will be documented in this file.
 - Added more files to default proxy extensions (#3768)
 - Increased width of menu bar dropdowns on mobile (#3765)
 - Increased HSTS max-age to 31536000 (#3762)
-- Add prompt to `v-update-sys-hestia-git` to install NodeJS if not present (#3779)
+- Add prompt to `v-update-sys-DevIT-git` to install NodeJS if not present (#3779)
 - Fixed an issue where `v-update-sys-ip` was not run on boot on Debian systems
 - Fixed an issue where the system hostname would lose its FQDN format on reboot when using Proxmox VE containers
 - Fixed an issue ith `v-generate-ssl-cert` (#3783)
@@ -336,7 +336,7 @@ All notable changes to this project will be documented in this file.
 
 - Fixed Debian 10 not working with IP addresses check
 - Fixed Exim4 update config via patch was unreliable added few safety checks and add notice if failed.
-- Fixed hestia-nginx not loading with custom port
+- Fixed DevIT-nginx not loading with custom port
 
 ## [1.8.0] - Feature / Major release
 
@@ -368,7 +368,7 @@ All notable changes to this project will be documented in this file.
 
 - Fix: DNS cluster expected return code instead of string (#3706)
 - Resolve #3684 Process "http2" directive for NGINX (#3704 @myrevery)
-- Upload hestiacp.pot file directly to Crowdin (#3702)
+- Upload DevITcp.pot file directly to Crowdin (#3702)
 - Refactor add ns buttons (#3701)
 - Remove \r chars from VestaCP cron.conf (#3708 @maunklana)
 - Unable to edit password domain smtp relay (#3690)
@@ -417,8 +417,8 @@ All notable changes to this project will be documented in this file.
 
 ### Dependencies
 
-- Update hestia-php to 8.2.7
-- Update hestia-nginx to 1.25.1
+- Update DevIT-php to 8.2.7
+- Update DevIT-nginx to 1.25.1
 - Update Quick install apps versions
 
 ## [1.7.8] - Service releae
@@ -500,8 +500,8 @@ All notable changes to this project will be documented in this file.
 
 ### Dependencies
 
-- Update hestia-php to 8.2.5
-- Update hestia-nginx to 1.23.4
+- Update DevIT-php to 8.2.5
+- Update DevIT-nginx to 1.23.4
 
 ### Bugfixes
 
@@ -525,7 +525,7 @@ All notable changes to this project will be documented in this file.
 
 ### Note
 
-- HestiaCP 1.7.2 fixes an issue with downloading certificates from Let's Encrypt due to the implementation of asynchronous requests which will go live on 10th April 2023. Please update your server before this date to ensure compatibility with Let's Encrypt.
+- DevITCP 1.7.2 fixes an issue with downloading certificates from Let's Encrypt due to the implementation of asynchronous requests which will go live on 10th April 2023. Please update your server before this date to ensure compatibility with Let's Encrypt.
 
 ### Bugfixes
 
@@ -551,7 +551,7 @@ All notable changes to this project will be documented in this file.
 - Fixed an issue with wildcard overruling webmail.domain.com config in Apache2 (#3400 #1631)
 - Removed delete button edit user page (#3997)
 - Fixed an issue with serial not increasing (#3396)
-- Fixed an issue with new hestia-zone sync and servers behind NAT or with multiple IPs (#3388 #3396)
+- Fixed an issue with new DevIT-zone sync and servers behind NAT or with multiple IPs (#3388 #3396)
 - Remove option to enable DNSSEC when DNSSEC is not supported (#3372 #3396)
 - Fix toolbar items on locales with long words (#3380 #3395)
 - Only count \*.tar files in rotate routine (#3393 #3385)
@@ -583,7 +583,7 @@ All notable changes to this project will be documented in this file.
 - Added support for folder wildcards in backup exclusions (#2338 @youradds)
 - Added Nginx template for Mautic (#3192 3188 @youradds)
 - Added alias for composer (#3070)
-- Updated PhpPgAdmin and with support for PostgreSQL 15 (<https://github.com/hestiacp/phppgadmin>)
+- Updated PhpPgAdmin and with support for PostgreSQL 15 (<https://github.com/DevITcp/phppgadmin>)
 - Upgrade MariaDB to 10.11 (#3305)
 - Add Quick installer for Flarum (#3342 and #3298 @Steveorevo)
 - Enable UTF8MB4 on default for Mysql (#3337 #1882)
@@ -603,7 +603,7 @@ All notable changes to this project will be documented in this file.
 - Improve upgrade behaviour for Roundcube and Filegator (#3237 #3236)
 - Allow <ClientName@domain.com> for login via Dovecot/Email (#3024)
 - Return a proper error code when unable to connect via API (#3235 #3169)
-- Synchronise $BIN and $HESTIA/BIN (#2185 @Steveorevo)
+- Synchronise $BIN and $DevIT/BIN (#2185 @Steveorevo)
 - Block usage of unlimited backups (#3181)
 - Update paths /var/run/ to /run (#3159)
 - Update PHP versions on various Quick Install apps (#3167 #3149 @dadangnh)
@@ -621,7 +621,7 @@ All notable changes to this project will be documented in this file.
 - Added Google Public DNS as a secondary resolver to nginx configuration
 - Fixed an issue with Proftpd and passive mode external IP (#3266)
 - Improve IPv6 handling in v-change-sys-port (#3276 @asmcc)
-- Set the correct conflicts for hestia-php on Ubuntu 22.04
+- Set the correct conflicts for DevIT-php on Ubuntu 22.04
 - Fixed an issue with erroneous deleting $domain.\* instead of $domain.pem (#3221)
 - Fixed an issue with domain redirect and idn2 domains (#3323 #3325)
 - Fixed an issue in Dokuwiki due to changing repository owner (#3327)
@@ -634,13 +634,13 @@ All notable changes to this project will be documented in this file.
 
 ### Dependencies
 
-- Updated hestia-nginx to 1.23.3
-- Updated hestia-php to 8.2.4
+- Updated DevIT-nginx to 1.23.3
+- Updated DevIT-php to 8.2.4
 - Update OpenSSL to 3.1.0
 - Updated Roundcube to 1.6.1
 - Updated Filegator to 7.9.2
 - Updated phpMyAdmin to 5.2.21
-- Updated phpPgAdmin to 7.3.14-hestiacp
+- Updated phpPgAdmin to 7.3.14-DevITcp
 - Update MediaWiki to 1.39.2
 - Update Prestashop to 8.0.1
 - Update TwoFactorAuth to 2.0.0
@@ -697,7 +697,7 @@ All notable changes to this project will be documented in this file.
 
 ### Important
 
-A bug in v-update-sys-hestia caused auto update to be not working. Please run: `apt update && apt upgrade`
+A bug in v-update-sys-DevIT caused auto update to be not working. Please run: `apt update && apt upgrade`
 
 ### Security
 
@@ -705,7 +705,7 @@ A bug in v-update-sys-hestia caused auto update to be not working. Please run: `
 
 ### Bugfixes
 
-- Fixed an issue in auto update script for HestiaCP (#2967)
+- Fixed an issue in auto update script for DevITCP (#2967)
 - Fixed an issue in download ssl certificate in Firefox (#2979)
 - Resolve issue with idn domains and redirect (#2988)
 - Update Ipverse url for United Kingdom (#2962)
@@ -716,8 +716,8 @@ A bug in v-update-sys-hestia caused auto update to be not working. Please run: `
 
 - Update Rainloop to 1.17.0 (#2957)
 - Update Zlib to 1.2.13
-- Update hestia-nginx to 1.23.2
-- Update hestia-php to 8.1.12
+- Update DevIT-nginx to 1.23.2
+- Update DevIT-php to 8.1.12
 - Update OpenSSL to 3.0.7
 - Update Filegator to 7.8.7
 
@@ -752,7 +752,7 @@ A bug in v-update-sys-hestia caused auto update to be not working. Please run: `
 - Update Opencart to 4.0.1.11
 - Update Prestashop to 1.7.8.7
 - Update Jquery on login pages to 3.6.1 (#2932 @4183r)
-- Update hestia-php to 8.1.11
+- Update DevIT-php to 8.1.11
 
 ## [1.6.8] - Service release
 
@@ -762,13 +762,13 @@ A bug in v-update-sys-hestia caused auto update to be not working. Please run: `
 
 ### Security
 
-- Fix issue in is_hestia_package (#2889)
+- Fix issue in is_DevIT_package (#2889)
 
 ### Bugfixes
 
 - Force update composer to v2 instead of v1 when no version is provided (#2839 #2777)
 - Fixed an issue with v-change-web-domain-owner and mail only domains (#2840, #2841)
-- Grey out phpmyadmin buttons + add link to docs.hestiacp.com for support (#2843)
+- Grey out phpmyadmin buttons + add link to docs.DevITcp.com for support (#2843)
 - Block the use of CNAME records on @ or root records DNS domain (#2838, #2842)
 - Code clean up and remove unused tests and templates (#2829 and #2831)
 - Fixed an issue where no password was send when a user create a new mail account (#2819 #2815)
@@ -800,8 +800,8 @@ A bug in v-update-sys-hestia caused auto update to be not working. Please run: `
 
 ### Dependencies
 
-- Update hestia-nginx to 1.23.1
-- Update hestia-php to 8.1.9
+- Update DevIT-nginx to 1.23.1
+- Update DevIT-php to 8.1.9
 - Update animate.js to 3.0.2 (#2879)
 - Update normalize.css to 3.0.3 (#2875)
 - Update jQuery to 3.6.1 (#2885)
@@ -815,7 +815,7 @@ A bug in v-update-sys-hestia caused auto update to be not working. Please run: `
 
 - Fixed an issue with upgrade script Roundcube that caused issues with upgrade of new installs
 - Fixed an bug with DNS templates #2827
-- Update v-update-sys-hestia-git
+- Update v-update-sys-DevIT-git
 
 ## [1.6.6] - Service release
 
@@ -850,7 +850,7 @@ A bug in v-update-sys-hestia caused auto update to be not working. Please run: `
 - Don't allow /inc/2fa/secret.php called from the web browser directly (#2784 @mayappear)
 - Improve CSRF Origin Check Bypass (#2785 @mayappear)
 - Fix vulnerability in Dokuwiki Quick Install App @redstarp2 (CVE-2022-2550)
-- Fixed an issue where custom ports where not saved on restart fail2ban service making Hestia login screen vulnerable for brute force
+- Fixed an issue where custom ports where not saved on restart fail2ban service making DevIT login screen vulnerable for brute force
 
 ### Dependencies
 
@@ -897,8 +897,8 @@ A bug in v-update-sys-hestia caused auto update to be not working. Please run: `
 
 ### Dependencies
 
-- Update hestia-php to 8.1.8
-  - Update disable_functions list php.ini for hestia-php (#2746, #2741)
+- Update DevIT-php to 8.1.8
+  - Update disable_functions list php.ini for DevIT-php (#2746, #2741)
 
 ## [1.6.2] - Service release
 
@@ -926,7 +926,7 @@ A bug in v-update-sys-hestia caused auto update to be not working. Please run: `
 
 ### Dependencies
 
-- Update hestia-nginx to 1.23.0
+- Update DevIT-nginx to 1.23.0
 - Update PHPmailer to 6.6.3
 - Update Roundcube to 1.5.3
 
@@ -956,7 +956,7 @@ A bug in v-update-sys-hestia caused auto update to be not working. Please run: `
 - Upgrade backend to PHP8.1 due to compatibility issues Jammy (#2515)
 - Introduce new api allowing users to use certain commands over API (#2535 and #1333)
 - Allow "Purge" cache button visible on templates with the name cacheing-your-template-name (#2526 #2530)
-- Add hooks to hestia-nginx and hestia-php (#2440)
+- Add hooks to DevIT-nginx and DevIT-php (#2440)
 - Update DNS cluster to support new API system (#2587)
 
 ### Bugfixes
@@ -974,7 +974,7 @@ A bug in v-update-sys-hestia caused auto update to be not working. Please run: `
 - Add missing translation conversions in backup list (#2501)
 - Update example in v-add-web-domain-backend (#2500 gingerbeardman)
 - Update example in v-add-letsencrypt-domain (#2442)
-- Fixed an issue in configure-server-smtp.sh by loading /etc/hestiacp/hestia.conf (#2488)
+- Fixed an issue in configure-server-smtp.sh by loading /etc/DevITcp/DevIT.conf (#2488)
 - Update Cloudflare ips in nginx.conf (#2542 @clarkchentw)
 - Remove duplicate code in Ubuntu installer (#2542 @clarkchentw)
 - Fixed an issue in Nginx + Apache2 mail "disabled" template. Causing users unable to request an valid ssl certificate (#2550 #2549)
@@ -1004,11 +1004,11 @@ A bug in v-update-sys-hestia caused auto update to be not working. Please run: `
 
 ### Dependencies
 
-- Update hestia-nginx to 1.22.0
+- Update DevIT-nginx to 1.22.0
   - Update OpenSSL to 3.0.3
   - Update zlib to 1.2.12
   - Update PCRE to 10.40
-- Update hestia-php to 8.1.7
+- Update DevIT-php to 8.1.7
 - Updated phpMyAdmin to 5.2.0 (<https://www.phpmyadmin.net/files/5.2.0/>)
 - Update Filegator to 7.8.1
 - Update PHPmailer to 6.6.2
@@ -1048,7 +1048,7 @@ A bug in v-update-sys-hestia caused auto update to be not working. Please run: `
 
 ### Bugfixes
 
-- Fixed an issue where Hestia port change did not update chain for fail2ban (#2465)
+- Fixed an issue where DevIT port change did not update chain for fail2ban (#2465)
 - Fixed permission issues with /var/log/roundcube (#2466)
 - Fixed multiple issues in UI (#2464)
 - Allow v-change-user-template update backend templates (#2475)
@@ -1063,7 +1063,7 @@ A bug in v-update-sys-hestia caused auto update to be not working. Please run: `
 - Fixed an issue where webmail client options were not displayed in the Web UI (#2445)
 - Fixed an issue where users where not able to create an backup. (#2448 / #2449)
 - Fixed an issue where saving server settings could fail due to an incorrect PHP version check on mod-php servers (#2451)
-- Fixed an issue where MariaDB installations were broken when performing a clean install of HestiaCP v1.5.9 (#2452 | 2446)
+- Fixed an issue where MariaDB installations were broken when performing a clean install of DevITCP v1.5.9 (#2452 | 2446)
 - Fixed recently discovered XSS vulnerabilities (#2453) [CVE-2022-0838](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2022-0838)
 
 ## [1.5.9] - Service release
@@ -1117,9 +1117,9 @@ The following signatures couldn't be verified because the public key is not avai
 Follow the following instructions
 
 ```bash
-rm /usr/share/keyrings/hestia-keyring.gpg
+rm /usr/share/keyrings/DevIT-keyring.gpg
 mkdir /root/.gnupg/
-gpg --no-default-keyring --keyring /usr/share/keyrings/hestia-keyring.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys A189E93654F0B0E5
+gpg --no-default-keyring --keyring /usr/share/keyrings/DevIT-keyring.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys A189E93654F0B0E5
 ```
 
 After that run apt update && apt upgrade
@@ -1129,7 +1129,7 @@ After that run apt update && apt upgrade
 ### Bugfixes
 
 - Fixed an issue with the installer. system.pkg didn't allow for a Web alias #2381
-- Fixed an issue with upgrade script causing command to to be executed (<https://forum.hestiacp.com/t/upgrading-to-1-5-5-error-line/5449/3>)
+- Fixed an issue with upgrade script causing command to to be executed (<https://forum.DevITcp.com/t/upgrading-to-1-5-5-error-line/5449/3>)
 
 ## [1.5.5] - Service release
 
@@ -1137,7 +1137,7 @@ After that run apt update && apt upgrade
 
 - Improve default php-fpm.conf files. (#2318, #2343)
 - Notify user when a suspended user tries to login (#2310, #2345)
-- Allow setting default web install templates for Quick install (#2344) (<https://github.com/hestiacp/hestia-quick-install>)
+- Allow setting default web install templates for Quick install (#2344) (<https://github.com/DevITcp/DevIT-quick-install>)
 - Improve security how apt keys are downloaded #2299 (<https://blog.cloudflare.com/dont-use-apt-key/>)
 - Allow users to set system php version in Web GUI (#2357)
 - Added a link to the firewall in list services (#2371) @fra81
@@ -1156,7 +1156,7 @@ After that run apt update && apt upgrade
 - Fixed an issue where databases where not able to backup if it required custom settings
 - Allow users to edit default.pkg again. On new installs the default admin user will get assigned a new system.pkg (#2365)
 - Disable enabling PMA SSO when Api was disabled + Added link to FAQ for frequently asked questions. (#2365)
-- Remove error_reporting(null) and allow all errors to be logged in /var/log/hestia/nginx-error.log (#2365)
+- Remove error_reporting(null) and allow all errors to be logged in /var/log/DevIT/nginx-error.log (#2365)
 - Fixed an issue where value "Allow suspended wasn't saved" (#2356, #2355)
 - Fixed and issue where AUTH_USER and AUTH_HASH was not present and there for during rebuild caused issues with Nginx (#2350, #2355)
 
@@ -1189,12 +1189,12 @@ After that run apt update && apt upgrade
 - Fixed an issue when a users was unable edit them self when 2FA was enabled (#2314 #2316)
 - Fixed an issue in v-add-user-sftp as ftp users where not recognised as valid sftp jail set ups (#2308 #2319)
 - Fixed an issue when "Preview" features got disabled it kept the preview features enabled (#2322 #2323)
-- Limit access openbase dir hestia-php
+- Limit access openbase dir DevIT-php
 - Fixed an issue where an email was send after install nginx command not found (#2328)
 
 ### Dependencies
 
-- Update PCRE 8.84 to PCRE2 10.39 for hestia-nginx package
+- Update PCRE 8.84 to PCRE2 10.39 for DevIT-nginx package
 - Update Roundcube to 1.5.2 ([Release notes](https://github.com/roundcube/roundcubemail/releases/tag/1.5.2))
 - Update PHPMailer to 6.5.3 ([Release message](https://github.com/PHPMailer/PHPMailer/releases/tag/v6.5.3))
 
@@ -1220,8 +1220,8 @@ After that run apt update && apt upgrade
 - Fixed an issue where passwords may not be correctly set on Debian 11 (#2270)
 - Fixed an issue with command path v-change-firewall-rule (#2249)
 - Fixed an issue in `v-backup-user` where you may encounter an error "invalid parameters for check_result" (#2284)
-- Fixed an issue which impacted the performance of Nextcloud/Owncloud ([forum post](https://forum.hestiacp.com/t/tip-create-a-nginx-template-for-nextcloud-to-let-synchronize-files-bigger-than-10mb/5123))
-- Fixed an issue where the access port for HestiaCP was not properly set on install (#2288 / #2291)
+- Fixed an issue which impacted the performance of Nextcloud/Owncloud ([forum post](https://forum.DevITcp.com/t/tip-create-a-nginx-template-for-nextcloud-to-let-synchronize-files-bigger-than-10mb/5123))
+- Fixed an issue where the access port for DevITCP was not properly set on install (#2288 / #2291)
 - Fixed an issue where admins could not log in as a suspended user in the panel (#2286 / #2289)
 - Fixed an issue where the "Delete" button in the Edit User interface did not work as expected (#2282 / #2289)
 - Fixed an issue where editing an existing firewall rule with ipset would fail (#2292)
@@ -1233,7 +1233,7 @@ After that run apt update && apt upgrade
 - Fixed an issue where grep would throw an error when adding ipset rules for the first time (#2307)
 - Fixed incorrect variable spelling ($v_interace > $v_interface) (#2307)
 - Updated mail domain templates
-- Updated command line examples for docs.hestiacp.com
+- Updated command line examples for docs.DevITcp.com
 - Fixed an issue where Lets encrypt was not able to obtain an valid ssl certificate when force ssl and / or redirect was enabled (#2176 / #2304 / #2304)
 - Fixed a issue in v-list-sys-dns-status
 
@@ -1245,12 +1245,12 @@ After that run apt update && apt upgrade
 
 - Add B2 delete file support to BlackBlaze
 - Open phpmyadmin in new tab or window #2250 @manuelserol
-- Fix issue with ipset not working properly [Forum](https://forum.hestiacp.com/t/error-ipset-object-not-found/5015)
+- Fix issue with ipset not working properly [Forum](https://forum.DevITcp.com/t/error-ipset-object-not-found/5015)
 - Improve port detection on multiple servers for SSH #2242 and #2255
 - Fixed an issue with # in config files
 - Fixed multiple bugs in installer
 - Set correct permission /install/deb/ folder
-- Adjust /etc/apt/sources.list.d/hestia.list to include architecture to resolve issue with I386 missing in apt.hestiacp.com
+- Adjust /etc/apt/sources.list.d/DevIT.list to include architecture to resolve issue with I386 missing in apt.DevITcp.com
 - Fallback to hostname without retrying ptr lookup in exim (#2259)
 - Enable quota with in dovecot when sieve is enabled @madito
 - Unable to edit php8.1 service #2261
@@ -1264,12 +1264,12 @@ After that run apt update && apt upgrade
 ### Breaking changes
 
 - **NOTE:** Changes have been made on how phpmyadmin/phppgadmin config are included in apache2 config. To restore to the old behaviour add `IncludeOptional conf.d/*.inc` below `IncludeOptional conf.d/*.conf` in /etc/apache2/apache2.conf and restart your server.
-- **NOTE:** Hestia packages for arm64 has been added to atp.hestiacp.com please use the normal install instructions instead! For current ARM installs to enable auto update remove the `#` in /etc/apt/sources.list.d/hestia.list `# deb https://apt.hestiacp.com/ focal main` becomes `deb https://apt.hestiacp.com/ focal main` and then run `apt update && apt upgrade -y`
+- **NOTE:** DevIT packages for arm64 has been added to atp.DevITcp.com please use the normal install instructions instead! For current ARM installs to enable auto update remove the `#` in /etc/apt/sources.list.d/DevIT.list `# deb https://apt.DevITcp.com/ focal main` becomes `deb https://apt.DevITcp.com/ focal main` and then run `apt update && apt upgrade -y`
 - **NOTE:** Make sure your server / VPS has a valid PTR record or otherwise you will not be able to send any mail!
 
 ### Features
 
-- Add support for Dovecote Sieve #2163 (@gejobj) => [How to enable Managesieve](https://hestiacp.com/docs/server-administration/email.html#how-can-i-enable-managesieve)
+- Add support for Dovecote Sieve #2163 (@gejobj) => [How to enable Managesieve](https://DevITcp.com/docs/server-administration/email.html#how-can-i-enable-managesieve)
 - Improve HELO based system and use RDNS lookup instead our old system
 - Add support for PHP 8.1 #2233
 - Set default php version for new installs to PHP 8.0
@@ -1285,7 +1285,7 @@ After that run apt update && apt upgrade
 - Run shellcheck to improve code quality
 - Improve ssh port detection for filemanager. Allowing users to create /etc/ssh/sshd.conf.d/custom.conf with custom port
 - Fix an bug in v-add-letsencrypt-host due to changes of Lets Encrypt causing issues with rate limiting
-- Improve Update process Hestia and allow versions to decide a a rebuild is required
+- Improve Update process DevIT and allow versions to decide a a rebuild is required
 - Add Download SSL certificate function for self generated ssl certificates #2181
 - Block access to .user.ini for Nginx + Apache2 #2179
 - Add support for download B2 backup to local server to allow for restore #2199
@@ -1357,7 +1357,7 @@ After that run apt update && apt upgrade
 - Improve the hostname check to prevent invalid hostnames or the use of an ip address (RFC1178).
 - Prevent CSRF from other domains / websites
 - Fix #2096 Hostname SSL got overwritten by mail.hostname.com certificate
-- Add small wait for /usr/bin/iptables-restore [Forum](https://forum.hestiacp.com/t/clean-install-arm64-does-not-start-after-reboot-v-start-service-iptables/4395/7) + Fixed v-add-firewall / v-delete-firewall function (#2112) @myrevery
+- Add small wait for /usr/bin/iptables-restore [Forum](https://forum.DevITcp.com/t/clean-install-arm64-does-not-start-after-reboot-v-start-service-iptables/4395/7) + Fixed v-add-firewall / v-delete-firewall function (#2112) @myrevery
 - Fix bug in v-change-sys-api. When using v-change-sys-api remove and then v-change-sys-api enable + custom release branch the resetting of api failed + no "error" output was producted
 - Improve error reporting PMA Single sign on function function
 - Fixed an issue in v-change-web-domain-name where webserserver where not able to start because old config files where not properly deleted #2104
@@ -1383,8 +1383,8 @@ After that run apt update && apt upgrade
 ### Features
 
 - Added support for Debian 11 (Bullseye) #1661
-- Added support for openssl in hestia-php
-- Use hestia-php for installing dependencies to solve issue user configurations (hestia-php 7.4.22 required)
+- Added support for openssl in DevIT-php
+- Use DevIT-php for installing dependencies to solve issue user configurations (DevIT-php 7.4.22 required)
 - Replace old firewall system with systemd service / startup script #2064 @myrevery
 - Add Quick installers for GravCMS, Docuwiki and Mediawiki (#2002) @PsychotherapistSam
 
@@ -1395,7 +1395,7 @@ After that run apt update && apt upgrade
 - Allow the use of multiple CAA records for domain. #2073
 - Add missing group (www-data) to migrate_phpmyadmin script #2077 @bet0x
 - Fix an issue where <news@domain.com> get forwarded to /var/spool/news
-- Synced up translations with HestiaCP (IT, PL, RU, SK and ZN-CN updated)
+- Synced up translations with DevITCP (IT, PL, RU, SK and ZN-CN updated)
 
 ## [1.4.10] - Service release
 
@@ -1406,7 +1406,7 @@ After that run apt update && apt upgrade
 
 ### Bugfixes
 
-- Fixed UI issues after upgrade jQuery + jQuery UI to last version (#2021 and #2032) + [forum](https://forum.hestiacp.com/t/confusion-about-send-welcome-email-checkbox/4259/11)
+- Fixed UI issues after upgrade jQuery + jQuery UI to last version (#2021 and #2032) + [forum](https://forum.DevITcp.com/t/confusion-about-send-welcome-email-checkbox/4259/11)
 - Fixed security issues in caching templates of Nginx when used as Reverse Proxy
 - Fixed an issue with deleting multiple mail accounts (#2047)
 - Fixed an issue with phpmailer + non latin characters (#2050) thanks @Faymir
@@ -1427,17 +1427,17 @@ After that run apt update && apt upgrade
 
 ### Features
 
-- Add support for automated testing for HestiaCP code with @drone
+- Add support for automated testing for DevITCP code with @drone
 - Add support for SMTP server for internal email #1988 @Myself5 / #1165
 
 ### Bugfixes
 
 - Updated jQuery and jQuery UI to the latest version due to a vulnerability in jQuery. @dependabot
-- Resolve issue with double ENFORCE_SUBDOMAIN_OWNERSHIP keys in hestia.conf
+- Resolve issue with double ENFORCE_SUBDOMAIN_OWNERSHIP keys in DevIT.conf
 - Resolve issue with create new user during install in some cases #2000
 - Fixed an issue with Quick Install apps named Test123 (@PsychotherapistSam)
 - Fix an issue with dovecot 2.3 ssl config (#1432)
-- Load $HESTIA path during upgrade script (#1698)
+- Load $DevIT path during upgrade script (#1698)
 - Remove TLS 1.1 from Proftpd config (#950)
 - Don't remove postfix when Exim is not installed (#1995)
 - Fix a bug in no-php Nginx FPM template (##2007)
@@ -1515,19 +1515,19 @@ After that run apt update && apt upgrade
 - Fixed an issue where the "Saved confirmation" was not set due to a redirect #1879
 - Increased minimal memory requirements for ClamD / ClamAV. #1840
 - Restore of backup did not rebuild the "Forced SSL" and "HSTS" config on new account #1862
-- Keep changes made by /install/upgrade/manual/install_awstats_geopip.sh on update HestiaCP (via Discord)
+- Keep changes made by /install/upgrade/manual/install_awstats_geopip.sh on update DevITCP (via Discord)
 - Refactor/improve PHP and HTML code @s0t (#1860)
 - Fixed XSS vulnerability in login page and a few other locations @briansemrau / @numanturle
 - Delete old session after session_regenerate_id() @briansemrau
 - Improve error message when domain all ready exists on different account.
 - Fixed an issue where phpmyadmin did not update when Postgresql was available.
 - Webmail clients set to rainloop where not able to create a SSL certificate via LE #1913
-- Fixed an issue where plugin-hestia-change-pasword did not change the port on v-change-sys-port (Rainloop) #1895
+- Fixed an issue where plugin-DevIT-change-pasword did not change the port on v-change-sys-port (Rainloop) #1895
 - Fixed an issue where HELO message was not set / error was created on NAT IP
 
 ## [1.4.2] - Service release
 
-- **NOTE:** During the 1.4.1 / 1.4.0 release we have introduced a bug for Ubuntu 20.04 and 18.04 users with multiple network ports on the server. This release will solve the problems caused by this bug! If you are unable to download the Hestia packages via apt. Run the following command via CLI or SSH as root
+- **NOTE:** During the 1.4.1 / 1.4.0 release we have introduced a bug for Ubuntu 20.04 and 18.04 users with multiple network ports on the server. This release will solve the problems caused by this bug! If you are unable to download the DevIT packages via apt. Run the following command via CLI or SSH as root
 
 ```bash
 iptables -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
@@ -1562,8 +1562,8 @@ apt update && apt upgrade
 
 - **NOTE:** Ubuntu 16.04 (Xenial) is no longer supported as it has reached EOL (end-of-life) status.
 - **NOTE:** Apache in "standalone" mode is no longer actively supported and has been removed from installer options. Nginx (Proxy) + Apache2 will remain supported.
-- **NOTE:** Custom "quick installer apps" will not work anymore due to changes in how we handle quick installer apps. Minimal changes to the Quick installer apps are required! Please check <https://github.com/hestiacp/hestia-quick-install> for how to migrate!
-- **NOTE:** Manual upgrade scripts are available to update Roundcube, Rainloop and PHPmyadmin to the last version they can be found in /usr/local/hestia/install/upgrade/manual/
+- **NOTE:** Custom "quick installer apps" will not work anymore due to changes in how we handle quick installer apps. Minimal changes to the Quick installer apps are required! Please check <https://github.com/DevITcp/DevIT-quick-install> for how to migrate!
+- **NOTE:** Manual upgrade scripts are available to update Roundcube, Rainloop and PHPmyadmin to the last version they can be found in /usr/local/DevIT/install/upgrade/manual/
 
 ### Features
 
@@ -1579,7 +1579,7 @@ apt update && apt upgrade
 - Added Drupal and Nextcloud quick installer support (Removed placeholder Joomla)
 - Added a new optional theme "Vestia"
 - Added a switch to disable the API and also limit the api by default to 127.0.0.1 only. For current installs added the option "allow-all" on default
-- After first reboot of Hestia will try do 1 attempt to request / generate a valid Lets encrypt certificate
+- After first reboot of DevIT will try do 1 attempt to request / generate a valid Lets encrypt certificate
 - Introduced multiple new security policies via WebUI.
   - Allow users to edit Web / Proxy / DNS / Backend templates
   - Allow users to edit account details
@@ -1626,10 +1626,10 @@ apt update && apt upgrade
 - Disabled changing backup folder via Web UI because it used symbolic link instead of mount causing issues with restore mail / user files.
 - Fixed XSS vulnerability in `v-add-sys-ip` and user history log (thanks **@numanturle**).
 - Fixed remote code execution vulnerability which could occur when deleting SSH keys (thanks **@numanturle**).
-- Fixed vulnerability in v-update-sys-hestia (thanks **@numanturle**)
+- Fixed vulnerability in v-update-sys-DevIT (thanks **@numanturle**)
 - Disabled the Update via WebUI due to timeout issues. Please update via `apt update && apt upgrade` in command line instead.
 - Improve how Quick install of web apps are handled and allow users added apps to be maintained in list view.
-- Fixed an issue where the api was enabled after an update of HestiaCP
+- Fixed an issue where the api was enabled after an update of DevITCP
 - Fixed an issue when the default php version got deleted webmail didn't work any more. #1477
 - Limit access when "demo" mode is enabled.
 - Fixed an issue where limitations on aliases didn't work properly
@@ -1662,7 +1662,7 @@ apt update && apt upgrade
 
 ### Bugfixes
 
-- Updated APT repository key for PHP from packages.sury.org (<https://forum.hestiacp.com/t/apt-upgrade-failed-gpg-error-packages-sury-org>)
+- Updated APT repository key for PHP from packages.sury.org (<https://forum.DevITcp.com/t/apt-upgrade-failed-gpg-error-packages-sury-org>)
 - Updated phpMyAdmin to v5.1.0.
 
 ## [1.3.4] - Service Release
@@ -1705,7 +1705,7 @@ apt update && apt upgrade
 
 ### Bugfixes
 
-- Fixed an issue where updates for `hestia-php` were incorrectly being marked as out-of-date in the UI due to a change in our servicing and package versioning scheme.
+- Fixed an issue where updates for `DevIT-php` were incorrectly being marked as out-of-date in the UI due to a change in our servicing and package versioning scheme.
 - Fixed an issue that occurred on the Updates page where the table row color of available updates would be difficult to read.
 - Fixed an issue where an administrator would get stuck in a loop trying to navigate back after adding a SSH key.
 - Fixed an issue where long table entries which exceeded the table length would overlap other UI elements.
@@ -1738,7 +1738,7 @@ apt update && apt upgrade
 
 - Users can now choose to point a domain to a different document root location (similar to domain parking).
 - The software update process will now perform a system health check before proceeding with installation.
-- Administrators now have control over software update notifications through the following settings in `$HESTIA/conf/hestia.conf` and through the Control Panel web interface:
+- Administrators now have control over software update notifications through the following settings in `$DevIT/conf/DevIT.conf` and through the Control Panel web interface:
   - `UPGRADE_SEND_EMAIL` = Sends an email notification to primary admin account's email address
   - `UPGRADE_SEND_EMAIL_LOG` = Sends installation log output to the primary admin account's email address
 - The upgrade process will now save installation logs to the `/root/hst_backups` directory by default for post-install troubleshooting.
@@ -1747,14 +1747,14 @@ apt update && apt upgrade
 - We've introduced a more robust translation system which will allow us to provide higher quality translations in future releases.
   - **Note:** Some country codes have been updated, as a result your language setting may default back to English after upgrading.
 - For new installations, MariaDB 10.5 is now the default version.
-  - For existing installations, we've provided a manual post-install upgrade script. Please run `$HESTIA/install/upgrade/manual/upgrade_mariadb.sh` to migrate to MariaDB 10.5).
+  - For existing installations, we've provided a manual post-install upgrade script. Please run `$DevIT/install/upgrade/manual/upgrade_mariadb.sh` to migrate to MariaDB 10.5).
 - The user interface theme has been set to "Dark" by default. This can be changed from **Server Settings > Configure > Basic Options > Appearance**.
   - **Note:** The name of the default theme has not been adjusted, and the change to the "dark" theme only applies to new installations at this time. This behavior may be changed in a future release.
 
 ### Bugfixes
 
 - Fixed a security issue where user password reset keys could potentially be gleaned from system process list - thanks **RACK911 LABS**
-- Fixed an issue with passwords containing "`'`" - [Forum](https://forum.hestiacp.com/t/two-factor-authentication-issue-with-standard-user/1652/)
+- Fixed an issue with passwords containing "`'`" - [Forum](https://forum.DevITcp.com/t/two-factor-authentication-issue-with-standard-user/1652/)
 - Fixed an issue with database backups when the port was not specified (#1068)
 - Fixed an issue where websites without SSL enabled would display the content of the first valid SSL enabled website (#1103)
 - Fixed an issue that would occur when using the `--with-debs` flag with the installer due to an incorrect version check routine (#1110)
@@ -1772,7 +1772,7 @@ apt update && apt upgrade
 - Improved spam filtering by adding additional known-dangerous file extensions in exim's blacklist (#1138) - thanks **@kpapad904**
 - Updated Apache2 configuration to use Include with IncludeOptional (#1072)
 - Removed the ability to log in as "root" (whic logged to the admin account, deemed no longer necessary)
-- Add ca-certificates, software-properties-common to the dependencies (#1073 + [Forum](https://forum.hestiacp.com/t/hestiscp-fails-on-new-debian-9-vps/1623/8)) - thanks **@daniel-eder**
+- Add ca-certificates, software-properties-common to the dependencies (#1073 + [Forum](https://forum.DevITcp.com/t/hestiscp-fails-on-new-debian-9-vps/1623/8)) - thanks **@daniel-eder**
 - Create .npm directory by default when creating new user accounts (#1113) - thanks **@hahagu**
 - Improved accuracy of several UI translations (NL, DE, UK, RU, ES, IT, ZH-CN) - thanks **@myrevery** and other contributors for your work!
 - Added `$restart` flag to `v-add-web-domain-backend` command (#1094) (#797) - thanks **@bright-soft**
@@ -1869,13 +1869,13 @@ apt update && apt upgrade
 - Enabled Roundcube plugins newmail_notifier and zipdownload by default.
 - Added HELO support for multiple domains and IPs.
 - Added the ability to manage SSH keys from CLI and web interface.
-- Added a manual migration script for apache2 mpm_event for existing installations/upgrades (`$HESTIA/install/upgrade/manual/migrate_mpm_event.sh`).
+- Added a manual migration script for apache2 mpm_event for existing installations/upgrades (`$DevIT/install/upgrade/manual/migrate_mpm_event.sh`).
 - Added BATS system for testing the functionality of Bash scripts (WIP).
 - Added **v-change-sys-db-alias** to change phpMyAdmin and phpPgAdmin access points (`v-change-sys-db-alias pma/pga myCustomURL`).
 
 ### Bugfixes
 
-- Prevent ability to change the password of a non-Hestia user account. Thanks to **Alexandre Zanni**!
+- Prevent ability to change the password of a non-DevIT user account. Thanks to **Alexandre Zanni**!
 - Adjust Let's Encrypt validation check for IDN domains, thanks to **@zanami**!
 - Set backup download location on FTP/SFTP restore, thanks to **@Daniyal-Javani**!
 - Stop trying to renew Let's Encrypt certificates after multiple consecutive failed attempts. Thanks to **@dpeca**!
@@ -1903,7 +1903,7 @@ apt update && apt upgrade
 - Don't calculate /home folder size in v-list-sys-info.
 - Adjust v-list-sys-services to honor the changed fail2ban service name.
 - Rework busy port validation in v-change-sys-port.
-- Implement a validation function to verify the correct version in hestia.conf prior to installation.
+- Implement a validation function to verify the correct version in DevIT.conf prior to installation.
 - Introduced a delay when an incorrect username, password, or 2FA code has been entered repeatedly.
 - Improved "Forgot password" function prevent brute force attacks.
 - Fixed an issue where the backup update counter was not updated properly when v-delete-user-backup was executed.
@@ -1921,7 +1921,7 @@ apt update && apt upgrade
 - Fixed an issue where mail SSL certificates were not restored properly from a backup archive.
 - Fixed an issue where mail domain configuration files were not removed when the domain was deleted.
 - Improved the functionality of `v-change-domain-owner` to correctly move mail domains and provide status output and logging/notifications.
-- Improved the functionality of `v-update-sys-hestia-git` to allow user to specify GitHub repository and whether to build only core package or core and dependencies.
+- Improved the functionality of `v-update-sys-DevIT-git` to allow user to specify GitHub repository and whether to build only core package or core and dependencies.
 - Corrected the behavior of phpMyAdmin and phpPgAdmin so that alias dialogs accept custom word only and not full URL, aligns with webmail alias behavior.
 - Corrected the behavior of the installer so that APT repositories are not added if installation is aborted due to version mismatch.
 - Fixed an issue where upgrade procedures were not executed correctly when skipping between versions (e.g. 1.0.6 > 1.2.0).
@@ -1947,7 +1947,7 @@ apt update && apt upgrade
 - Rework of Let's Encrypt routine to use progressive delay between validation retries.
 - Fixed syntax issue in v-list-sys-db-status which prevented main functions from loading.
 - Removed /home size reporting when running v-list-sys-info due to performance issues.
-- Updated installer to use Ubuntu key server for Hestia APT repository.
+- Updated installer to use Ubuntu key server for DevIT APT repository.
 - Fixed duplicate demo mode check in v-change-user-password.
 
 ## [1.1.0] - 2020-03-11 - Major Release (Feature / Quality Update)
@@ -1956,7 +1956,7 @@ apt update && apt upgrade
 
 - Added support for custom user interface themes.
 - Introduced official Dark and Flat themes.
-- Added read-only/demo mode - DEMO_MODE must be set to yes in hestia.conf to enable.
+- Added read-only/demo mode - DEMO_MODE must be set to yes in DevIT.conf to enable.
 - Added php-imagick module to installer and upgrade scripts.
 - Added recidive filter function to fail2ban.
 - Improved and refactored Multi-PHP functionality.
@@ -1970,7 +1970,7 @@ apt update && apt upgrade
 ### Bugfixes
 
 - Added a detection of web root for add .well-known ACME challenge.
-- Reworked Let's Encrypt ACME staging to use Hestia code standards.
+- Reworked Let's Encrypt ACME staging to use DevIT code standards.
 - Fixed issues with incorrect font rendering on Windows and Linux.
 - Fixed issues with Let's Encrypt - use Nginx for Let's Encrypt ACME request if present.
 - Reworked v-add-sys-ip, removed deprecated CentOS/Red Hat code and reworked conditions.
@@ -2000,7 +2000,7 @@ apt update && apt upgrade
 - Disabled alerts for successful cronjob backups.
 - Fixed an issue with suspending resources when logged in as a normal (non admin) user.
 - Fixed an issue with unsuspending a user, PHP-FPM website pool configuration was being deleted.
-- Fixed potential upgrade issue when using v-update-sys-hestia-git.
+- Fixed potential upgrade issue when using v-update-sys-DevIT-git.
 - Fixed corruption of global user stats when rebuilding a mail domain.
 - Fixed formatting of backup exclusions textbox.
 - Fixed MultiPHP upgrade script to update all web templates.
@@ -2035,7 +2035,7 @@ apt update && apt upgrade
 ### Bugfixes
 
 - Fixed several security issues, thanks to Andrea Cardaci (<https://cardaci.xyz/>)
-- Rework Let's Encrypt ACME staging to use hestia conform standard.
+- Rework Let's Encrypt ACME staging to use DevIT conform standard.
 - Fixed if condition, use nginx for Let's Encrypt ACME request if present.
 
 ## [1.0.4] - 2019-07-09 - Hotfix
@@ -2060,10 +2060,10 @@ apt update && apt upgrade
 - Consolidated template structure, removing over 50% duplicate code.
 - Re-organised file system structure for domain configuration files.
 - Added the ability to change release branches through the user interface and the command line.
-- v-sys-update-hestia-git: Added the ability to update using Git from the command line.
+- v-sys-update-DevIT-git: Added the ability to update using Git from the command line.
 - Implemented support for SFTP chroot jails.
 - A newly redesigned user interface which features:
-  - A softer color palette which better matches the Hestia Control Panel logo colors.
+  - A softer color palette which better matches the DevIT Control Panel logo colors.
   - A consolidated overview of domains and other information.
   - Improved navigation paths to make things easier to find.
   - Improved compatibility when viewing the Control Panel interface from a mobile device.
@@ -2097,8 +2097,8 @@ apt update && apt upgrade
 
 -
 
-[1.0.4]: https://github.com/hestiacp/hestiacp/releases/tag/1.0.4
-[1.0.3]: https://github.com/hestiacp/hestiacp/releases/tag/1.0.3
-[1.0.1]: https://github.com/hestiacp/hestiacp/releases/tag/1.0.1
-[1.0.0-190618]: https://github.com/hestiacp/hestiacp/releases/tag/1.0.0-190618
-[0.9.8-28]: https://github.com/hestiacp/hestiacp/releases/tag/0.9.8-28
+[1.0.4]: https://github.com/DevITcp/DevITcp/releases/tag/1.0.4
+[1.0.3]: https://github.com/DevITcp/DevITcp/releases/tag/1.0.3
+[1.0.1]: https://github.com/DevITcp/DevITcp/releases/tag/1.0.1
+[1.0.0-190618]: https://github.com/DevITcp/DevITcp/releases/tag/1.0.0-190618
+[0.9.8-28]: https://github.com/DevITcp/DevITcp/releases/tag/0.9.8-28

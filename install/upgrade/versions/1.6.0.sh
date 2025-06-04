@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Hestia Control Panel upgrade script for target version 1.6.0
+# DevIT Control Panel upgrade script for target version 1.6.0
 
 #######################################################################################
 #######                      Place additional commands below.                   #######
@@ -30,8 +30,8 @@ if [ "$MAIL_SYSTEM" = "exim4" ]; then
 	sed -i '115,250 s/ratelimit             = 200 \/ 1h \/ $authenticated_id/          set acl_c_msg_limit = \${if exists{\/etc\/exim4\/domains\/\${lookup{\$sender_address_domain}dsearch{\/etc\/exim4\/domains\/}}\/limits} {\${extract{1}{:}{\${lookup{\$sender_address_local_part@\$sender_address_domain}lsearch{\/etc\/exim4\/domains\/\${lookup{\$sender_address_domain}dsearch{\/etc\/exim4\/domains\/}}\/limits}}}}} {\${readfile{\/etc\/exim4\/limit.conf}}} }\n ratelimit     = \$acl_c_msg_limit \/ 1h \/ strict\/ \$authenticated_id/g' /etc/exim4/exim4.conf.template
 	sed -i '115,250 s/warn    ratelimit     = 100 \/ 1h \/ strict \/ $authenticated_id/warn    ratelimit     = ${eval:$acl_c_msg_limit \/ 2} \/ 1h \/ strict \/ $authenticated_id/g' /etc/exim4/exim4.conf.template
 	# Add missing limit.conf file
-	cp $HESTIA_INSTALL_DIR/exim/limit.conf /etc/exim4/limit.conf
-	cp $HESTIA_INSTALL_DIR/exim/system.filter /etc/exim4/system.filter
+	cp $DevIT_INSTALL_DIR/exim/limit.conf /etc/exim4/limit.conf
+	cp $DevIT_INSTALL_DIR/exim/system.filter /etc/exim4/system.filter
 
 	acl=$(cat /etc/exim4/exim4.conf.template | grep "set acl_m3")
 	if [ -z "$acl" ]; then
@@ -64,7 +64,7 @@ if [ -f "/etc/default/spamassassin" ]; then
 fi
 
 # Adding LE autorenew cronjob if there are none
-if [ -z "$(grep v-update-lets $HESTIA/data/users/admin/cron.conf)" ]; then
+if [ -z "$(grep v-update-lets $DevIT/data/users/admin/cron.conf)" ]; then
 	min=$(generate_password '012345' '2')
 	hour=$(generate_password '1234567' '1')
 	command="sudo $BIN/v-update-letsencrypt-ssl"
@@ -73,7 +73,7 @@ fi
 
 # Add apis if they don't exist
 # Changes have been made make sure to overwrite them to prevent issues in the future
-cp -rf $HESTIA_INSTALL_DIR/api $HESTIA/data/
+cp -rf $DevIT_INSTALL_DIR/api $DevIT/data/
 
 # Update Cloudflare address
 if [ -f /etc/nginx/nginx.conf ] && [ "$(grep 'set_real_ip_from 2405:8100::/32' /etc/nginx/nginx.conf)" = "" ]; then
@@ -97,7 +97,7 @@ release=$(lsb_release -sr)
 if [ "$release" = "22.04" ]; then
 	if [ -d "/etc/exim4/" ]; then
 		rm -fr /etc/exim4/exim.conf.template
-		cp -f $HESTIA_INSTALL_DIR/exim/exim4.conf.4.94.template /etc/exim4/exim4.conf.template
+		cp -f $DevIT_INSTALL_DIR/exim/exim4.conf.4.94.template /etc/exim4/exim4.conf.template
 		if [ "$ANTIVIRUS_SYSTEM" = 'clamav-daemon' ]; then
 			sed -i "s/#SPAM/SPAM/g" /etc/exim4/exim4.conf.template
 		fi
@@ -109,17 +109,17 @@ if [ "$release" = "22.04" ]; then
 fi
 
 # Mute output v-add-sys-sftp-jail out put then enabling sftp on boot
-if [ -f "/etc/cron.d/hestia-sftp" ]; then
-	rm /etc/cron.d/hestia-sftp
-	echo "@reboot root sleep 60 && /usr/local/hestia/bin/v-add-sys-sftp-jail > /dev/null" > /etc/cron.d/hestia-sftp
+if [ -f "/etc/cron.d/DevIT-sftp" ]; then
+	rm /etc/cron.d/DevIT-sftp
+	echo "@reboot root sleep 60 && /usr/local/DevIT/bin/v-add-sys-sftp-jail > /dev/null" > /etc/cron.d/DevIT-sftp
 fi
 
-ips=$(ls /usr/local/hestia/data/ips/ | wc -l)
+ips=$(ls /usr/local/DevIT/data/ips/ | wc -l)
 release=$(lsb_release -s -i)
 if [ $release = 'Ubuntu' ]; then
 	if [ $ips -gt 1 ]; then
-		add_upgrade_message "Warning: Please check your network configuration!\n\n A bug has been discovered that might affect your setup and can lead to issues after a system reboot. Please review your network configuration. See https://github.com/hestiacp/hestiacp/pull/2612#issuecomment-1135571835 for more info regarding this issue!"
-		$HESTIA/bin/v-add-user-notification admin "Warning: Please check your network configuration!\n\n A bug has been discovered that might affect your setup and can lead to issues after a system reboot. Please review your network configuration. <a href='https://github.com/hestiacp/hestiacp/pull/2612#issuecomment-1135571835'>More info</a>"
+		add_upgrade_message "Warning: Please check your network configuration!\n\n A bug has been discovered that might affect your setup and can lead to issues after a system reboot. Please review your network configuration. See https://github.com/DevITcp/DevITcp/pull/2612#issuecomment-1135571835 for more info regarding this issue!"
+		$DevIT/bin/v-add-user-notification admin "Warning: Please check your network configuration!\n\n A bug has been discovered that might affect your setup and can lead to issues after a system reboot. Please review your network configuration. <a href='https://github.com/DevITcp/DevITcp/pull/2612#issuecomment-1135571835'>More info</a>"
 	fi
 fi
 

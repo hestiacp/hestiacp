@@ -1,5 +1,5 @@
 <?php
-use function Hestiacp\quoteshellarg\quoteshellarg;
+use function DevITcp\quoteshellarg\quoteshellarg;
 
 define("NO_AUTH_REQUIRED", true);
 $TAB = "RESET PASSWORD";
@@ -19,16 +19,16 @@ if (!empty($_POST["user"]) && !empty($_POST["twofa"])) {
 	$v_user = quoteshellarg($_POST["user"]);
 	$user = $_POST["user"];
 	$twofa = $_POST["twofa"];
-	exec(HESTIA_CMD . "v-list-user " . $v_user . " json", $output, $return_var);
+	exec(DevIT_CMD . "v-list-user " . $v_user . " json", $output, $return_var);
 	if ($return_var == 0) {
 		$data = json_decode(implode("", $output), true);
 		if ($data[$user]["TWOFA"] == $twofa) {
 			$success = true;
-			exec(HESTIA_CMD . "v-delete-user-2fa " . $v_user, $output, $return_var);
+			exec(DevIT_CMD . "v-delete-user-2fa " . $v_user, $output, $return_var);
 			session_destroy();
 		} else {
 			exec(
-				HESTIA_CMD .
+				DevIT_CMD .
 					"v-log-user-login " .
 					$v_user .
 					" " .
@@ -45,7 +45,7 @@ if (!empty($_POST["user"]) && !empty($_POST["twofa"])) {
 		}
 	} else {
 		exec(
-			HESTIA_CMD .
+			DevIT_CMD .
 				"v-log-user-login " .
 				$v_user .
 				" " .

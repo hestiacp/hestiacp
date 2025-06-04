@@ -33,7 +33,7 @@ The **system** package can’t be deleted.
 
 ## Importing existing packages from a different server
 
-Packages are stored in `/usr/local/hestia/data/packages` as `package-name.pkg`. Simply copy these package files to other servers.
+Packages are stored in `/usr/local/DevIT/data/packages` as `package-name.pkg`. Simply copy these package files to other servers.
 
 ## Package configuration
 

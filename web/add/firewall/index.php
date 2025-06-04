@@ -1,5 +1,5 @@
 <?php
-use function Hestiacp\quoteshellarg\quoteshellarg;
+use function DevITcp\quoteshellarg\quoteshellarg;
 
 ob_start();
 $TAB = "FIREWALL";
@@ -14,7 +14,7 @@ if ($_SESSION["userContext"] != "admin") {
 }
 
 // Get ipset lists
-exec(HESTIA_CMD . "v-list-firewall-ipset 'json'", $output, $return_var);
+exec(DevIT_CMD . "v-list-firewall-ipset 'json'", $output, $return_var);
 check_return_code($return_var, $output);
 $data = json_decode(implode("", $output), true);
 unset($output);
@@ -74,7 +74,7 @@ if (!empty($_POST["ok"])) {
 	// Add firewall rule
 	if (empty($_SESSION["error_msg"])) {
 		exec(
-			HESTIA_CMD .
+			DevIT_CMD .
 				"v-add-firewall-rule " .
 				$v_action .
 				" " .

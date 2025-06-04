@@ -8,12 +8,12 @@
 #----------------------------------------------------------#
 
 # Includes
-# shellcheck source=/etc/hestiacp/hestia.conf
-source /etc/hestiacp/hestia.conf
-# shellcheck source=/usr/local/hestia/func/main.sh
-source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# shellcheck source=/etc/DevITcp/DevIT.conf
+source /etc/DevITcp/DevIT.conf
+# shellcheck source=/usr/local/DevIT/func/main.sh
+source $DevIT/func/main.sh
+# shellcheck source=/usr/local/DevIT/conf/DevIT.conf
+source $DevIT/conf/DevIT.conf
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -34,31 +34,31 @@ fi
 #----------------------------------------------------------#
 
 # Remove apache2 from config
-sed -i "/^WEB_PORT/d" $HESTIA/conf/hestia.conf $HESTIA/conf/defaults/hestia.conf
-sed -i "/^WEB_SSL/d" $HESTIA/conf/hestia.conf $HESTIA/conf/defaults/hestia.conf
-sed -i "/^WEB_SSL_PORT/d" $HESTIA/conf/hestia.conf $HESTIA/conf/defaults/hestia.conf
-sed -i "/^WEB_RGROUPS/d" $HESTIA/conf/hestia.conf $HESTIA/conf/defaults/hestia.conf
-sed -i "/^WEB_SYSTEM/d" $HESTIA/conf/hestia.conf $HESTIA/conf/defaults/hestia.conf
+sed -i "/^WEB_PORT/d" $DevIT/conf/DevIT.conf $DevIT/conf/defaults/DevIT.conf
+sed -i "/^WEB_SSL/d" $DevIT/conf/DevIT.conf $DevIT/conf/defaults/DevIT.conf
+sed -i "/^WEB_SSL_PORT/d" $DevIT/conf/DevIT.conf $DevIT/conf/defaults/DevIT.conf
+sed -i "/^WEB_RGROUPS/d" $DevIT/conf/DevIT.conf $DevIT/conf/defaults/DevIT.conf
+sed -i "/^WEB_SYSTEM/d" $DevIT/conf/DevIT.conf $DevIT/conf/defaults/DevIT.conf
 
 # Remove nginx (proxy) from config
-sed -i "/^PROXY_PORT/d" $HESTIA/conf/hestia.conf $HESTIA/conf/defaults/hestia.conf
-sed -i "/^PROXY_SSL_PORT/d" $HESTIA/conf/hestia.conf $HESTIA/conf/defaults/hestia.conf
-sed -i "/^PROXY_SYSTEM/d" $HESTIA/conf/hestia.conf $HESTIA/conf/defaults/hestia.conf
+sed -i "/^PROXY_PORT/d" $DevIT/conf/DevIT.conf $DevIT/conf/defaults/DevIT.conf
+sed -i "/^PROXY_SSL_PORT/d" $DevIT/conf/DevIT.conf $DevIT/conf/defaults/DevIT.conf
+sed -i "/^PROXY_SYSTEM/d" $DevIT/conf/DevIT.conf $DevIT/conf/defaults/DevIT.conf
 
 # Add Nginx settings to config
-echo "WEB_PORT='80'" >> $HESTIA/conf/hestia.conf
-echo "WEB_SSL='openssl'" >> $HESTIA/conf/hestia.conf
-echo "WEB_SSL_PORT='443'" >> $HESTIA/conf/hestia.conf
-echo "WEB_SYSTEM='nginx'" >> $HESTIA/conf/hestia.conf
+echo "WEB_PORT='80'" >> $DevIT/conf/DevIT.conf
+echo "WEB_SSL='openssl'" >> $DevIT/conf/DevIT.conf
+echo "WEB_SSL_PORT='443'" >> $DevIT/conf/DevIT.conf
+echo "WEB_SYSTEM='nginx'" >> $DevIT/conf/DevIT.conf
 
 # Add Nginx settings to config
-echo "WEB_PORT='80'" >> $HESTIA/conf/defaults/hestia.conf
-echo "WEB_SSL='openssl'" >> $HESTIA/conf/defaults/hestia.conf
-echo "WEB_SSL_PORT='443'" >> $HESTIA/conf/defaults/hestia.conf
-echo "WEB_SYSTEM='nginx'" >> $HESTIA/conf/defaults/hestia.conf
+echo "WEB_PORT='80'" >> $DevIT/conf/defaults/DevIT.conf
+echo "WEB_SSL='openssl'" >> $DevIT/conf/defaults/DevIT.conf
+echo "WEB_SSL_PORT='443'" >> $DevIT/conf/defaults/DevIT.conf
+echo "WEB_SYSTEM='nginx'" >> $DevIT/conf/defaults/DevIT.conf
 
-rm $HESTIA/conf/defaults/hestia.conf
-cp $HESTIA/conf/hestia.conf $HESTIA/conf/defaults/hestia.conf
+rm $DevIT/conf/defaults/DevIT.conf
+cp $DevIT/conf/DevIT.conf $DevIT/conf/defaults/DevIT.conf
 
 # Rebuild web config
 

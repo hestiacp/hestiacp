@@ -1,6 +1,6 @@
 # Getting Started
 
-This section will help you get Hestia installed on your server. If you already have Hestia installed and are just looking for options, you can skip this page.
+This section will help you get DevIT installed on your server. If you already have DevIT installed and are just looking for options, you can skip this page.
 
 ::: warning
 The installer needs to be run as **root**, either directly from the terminal or remotely, using SSH. If you do not do this, the installer will not proceed.
@@ -9,7 +9,7 @@ The installer needs to be run as **root**, either directly from the terminal or 
 ## Requirements
 
 ::: warning
-Hestia must be installed on top of a fresh operating system installation to ensure proper functionality.
+DevIT must be installed on top of a fresh operating system installation to ensure proper functionality.
 See custom installation below for further details.
 :::
 
@@ -21,7 +21,7 @@ See custom installation below for further details.
 | **Operating System** | Debian 11 or 12<br>Ubuntu 22.04, 24.04 LTS | Latest Debian <br> Latest Ubuntu LTS |
 
 ::: warning
-Hestia only runs on AMD64 / x86_64 and ARM64 / aarch64 processors. It also requires a 64bit operating system!
+DevIT only runs on AMD64 / x86_64 and ARM64 / aarch64 processors. It also requires a 64bit operating system!
 We currently do not support i386 or ARM7-based processors.
 :::
 
@@ -31,19 +31,19 @@ We currently do not support i386 or ARM7-based processors.
 - Ubuntu 22.04 or 24.04
 
 ::: warning
-Hestia does not support non-LTS Operating systems. If you install it on, for example, Ubuntu 23.10, you will not receive support from us.
+DevIT does not support non-LTS Operating systems. If you install it on, for example, Ubuntu 23.10, you will not receive support from us.
 :::
 
 ## Regular installation
 
-Interactive installer that will install the default Hestia software configuration.
+Interactive installer that will install the default DevIT software configuration.
 
 ### Step 1: Download
 
 Download the installation script for the latest release:
 
 ```bash
-wget https://raw.githubusercontent.com/hestiacp/hestiacp/release/install/hst-install.sh
+wget https://raw.githubusercontent.com/DevITcp/DevITcp/release/install/hst-install.sh
 ```
 
 If the download fails due to an SSL validation error, please be sure you've installed the ca-certificate package on your system - you can do this with the following command:
@@ -107,7 +107,7 @@ To choose what software gets installed, you can provide flags to the installatio
 -e, --email Set admin email
 -u, --username Set admin user
 -p, --password Set admin password
--D, --with-debs Path to Hestia debs
+-D, --with-debs Path to DevIT debs
 -f, --force Force installation
 -h, --help Print this help
 ```
@@ -132,7 +132,7 @@ bash hst-install.sh \
 	--multiphp '8.2,8.3,8.4'
 ```
 
-This command will install Hestia in French with the following software:
+This command will install DevIT in French with the following software:
 
 - Nginx Web Server
 - PHP-FPM Application Server (PHP version 8.2, 8.3 and 8.4)
@@ -144,6 +144,6 @@ This command will install Hestia in French with the following software:
 
 ## What’s next?
 
-By now, you should have a Hestia installation on your server. You are ready to add new users, so that you (or they) can add new websites on your server.
+By now, you should have a DevIT installation on your server. You are ready to add new users, so that you (or they) can add new websites on your server.
 
 To access your control panel, navigate to `https://host.domain.tld:8083` or `http://your.public.ip.address:8083`

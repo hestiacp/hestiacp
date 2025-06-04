@@ -232,7 +232,7 @@
 							?>
 								<!-- Help / Documentation -->
 								<li class="top-bar-menu-item">
-									<a title="<?= _("Help") ?>" class="top-bar-menu-link" href="https://hestiacp.com/docs/" target="_blank" rel="noopener">
+									<a title="<?= _("Help") ?>" class="top-bar-menu-link" href="https://DevITcp.com/docs/" target="_blank" rel="noopener">
 										<i class="fas fa-circle-question"></i>
 										<span class="top-bar-menu-link-label u-hide-desktop"><?= _("Help") ?></span>
 									</a>

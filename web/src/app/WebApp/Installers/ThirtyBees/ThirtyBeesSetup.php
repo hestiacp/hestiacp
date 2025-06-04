@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Hestia\WebApp\Installers\ThirtyBees;
+namespace DevIT\WebApp\Installers\ThirtyBees;
 
-use Hestia\WebApp\BaseSetup;
-use Hestia\WebApp\InstallationTarget\InstallationTarget;
+use DevIT\WebApp\BaseSetup;
+use DevIT\WebApp\InstallationTarget\InstallationTarget;
 
 class ThirtyBeesSetup extends BaseSetup
 {

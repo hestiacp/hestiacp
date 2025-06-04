@@ -56,14 +56,14 @@
 			<h1 class="server-summary-title"><?= $sys["sysinfo"]["HOSTNAME"] ?></h1>
 			<ul class="server-summary-list">
 				<li class="server-summary-item">
-					<span class="server-summary-list-label">Hestia Control Panel</span>
+					<span class="server-summary-list-label">DevIT Control Panel</span>
 					<span class="server-summary-list-value">
 						<?php if ($sys["sysinfo"]["RELEASE"] == "release") { ?>
 							<i class="fas fa-cube" title="<?= _("Production Release") ?>"></i>
 						<?php } else { ?>
 							<i class="fas fa-flask icon-red" title="<?= $sys["sysinfo"]["RELEASE"] ?>"></i>
 						<?php } ?>
-						v<?= $sys["sysinfo"]["HESTIA"] ?>
+						v<?= $sys["sysinfo"]["DevIT"] ?>
 					</span>
 				</li>
 				<li class="server-summary-item">

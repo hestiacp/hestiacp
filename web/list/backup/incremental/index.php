@@ -1,5 +1,5 @@
 <?php
-use function Hestiacp\quoteshellarg\quoteshellarg;
+use function DevITcp\quoteshellarg\quoteshellarg;
 $TAB = "BACKUP";
 
 // Main include
@@ -23,7 +23,7 @@ function getTransByType($type) {
 
 // Data & Render page
 if (empty($_GET["snapshot"])) {
-	exec(HESTIA_CMD . "v-list-user-backups-restic $user json", $output, $return_var);
+	exec(DevIT_CMD . "v-list-user-backups-restic $user json", $output, $return_var);
 	$data = json_decode(implode("", $output), true);
 	if (is_array($data)) {
 		$data = array_reverse($data);
@@ -35,7 +35,7 @@ if (empty($_GET["snapshot"])) {
 } else {
 	if (empty($_GET["browse"])) {
 		$snapshot = quoteshellarg($_GET["snapshot"]);
-		exec(HESTIA_CMD . "v-list-user-backup-restic $user $snapshot json", $output, $return_var);
+		exec(DevIT_CMD . "v-list-user-backup-restic $user $snapshot json", $output, $return_var);
 		$data = json_decode(implode("", $output), true);
 		render_page($user, $TAB, "list_backup_detail_incremental");
 	} else {
@@ -44,7 +44,7 @@ if (empty($_GET["snapshot"])) {
 		}
 		$folder = quoteshellarg($_GET["folder"]);
 		$snapshot = quoteshellarg($_GET["snapshot"]);
-		exec(HESTIA_CMD . "v-list-user-files-restic $user $snapshot $folder", $output, $return_var);
+		exec(DevIT_CMD . "v-list-user-files-restic $user $snapshot $folder", $output, $return_var);
 		$info = json_decode($output[0], true);
 		unset($output[0]);
 		$files = [];

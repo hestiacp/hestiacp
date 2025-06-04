@@ -3,9 +3,9 @@
 
 <head>
 	<!-- Load necessary CSS and JavaScript from source -->
-	<?php require $_SERVER["HESTIA"] . "/web/templates/includes/title.php"; ?>
-	<?php require $_SERVER["HESTIA"] . "/web/templates/includes/css.php"; ?>
-	<?php require $_SERVER["HESTIA"] . "/web/templates/includes/js.php"; ?>
+	<?php require $_SERVER["DevIT"] . "/web/templates/includes/title.php"; ?>
+	<?php require $_SERVER["DevIT"] . "/web/templates/includes/css.php"; ?>
+	<?php require $_SERVER["DevIT"] . "/web/templates/includes/js.php"; ?>
 </head>
 
 <body class="page-server-info">
@@ -16,8 +16,8 @@
 			<div class="top-bar">
 				<div class="container top-bar-inner">
 					<div class="top-bar-left">
-						<a href="/" class="top-bar-logo" title="<?= _("Hestia Control Panel") ?>">
-							<img src="/images/logo-header.svg" alt="<?= _("Hestia Control Panel") ?>" width="54" height="29">
+						<a href="/" class="top-bar-logo" title="<?= _("DevIT Control Panel") ?>">
+							<img src="/images/logo-header.svg" alt="<?= _("DevIT Control Panel") ?>" width="54" height="29">
 						</a>
 					</div>
 					<div class="top-bar-right">

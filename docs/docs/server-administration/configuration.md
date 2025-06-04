@@ -3,9 +3,9 @@
 ## I am not able to login
 
 For installing dependencies we use Composer. As are currently not able
-to run it under hestia-php version. We install it via /usr/bin/php. Make
+to run it under DevIT-php version. We install it via /usr/bin/php. Make
 sure proc_open is allowed in the main php version. In the future we look
-in methods to allow install via composer via hestia-php.
+in methods to allow install via composer via DevIT-php.
 
 ## Where can I find more information about the config files?
 
@@ -15,11 +15,11 @@ A good starting point for every software is to check the official docs:
 - For Apache2: [Apache Docs](http://httpd.apache.org/docs/2.4/)
 - For PHP-FPM: [PHP Docs](https://www.php.net/manual/en/install.fpm.configuration.php)
 
-You could also try [our Forum](https://forum.hestiacp.com)
+You could also try [our Forum](https://forum.DevITcp.com)
 
-## Can I use HestiaCP behind Cloudflare CDN?
+## Can I use DevITCP behind Cloudflare CDN?
 
-By default the [Cloudflare Proxy](https://developers.cloudflare.com/fundamentals/get-started/reference/network-ports/) supports only a limited number of ports. This means that Cloudflare will not forward port 8083, which is the default port for Hestia. To change the Hestia port to one that Cloudflare will forward, run this command:
+By default the [Cloudflare Proxy](https://developers.cloudflare.com/fundamentals/get-started/reference/network-ports/) supports only a limited number of ports. This means that Cloudflare will not forward port 8083, which is the default port for DevIT. To change the DevIT port to one that Cloudflare will forward, run this command:
 
 ```bash
 v-change-sys-port 2083
@@ -30,7 +30,7 @@ You can also disable Cloudflare proxy feature.
 ## How to remove unused ethernet ports from RRD?
 
 ```bash
-nano /usr/local/hestia/conf/hestia.conf
+nano /usr/local/DevIT/conf/DevIT.conf
 ```
 
 Add the following line:
@@ -42,13 +42,13 @@ RRD_IFACE_EXCLUDE='lo'
 Add network ports as comma separated list
 
 ```bash
-rm /usr/local/hestia/web/rrd/net/*
-systemctl restart hestia
+rm /usr/local/DevIT/web/rrd/net/*
+systemctl restart DevIT
 ```
 
 ## What does the “Enforce subdomain ownership” policy mean?
 
-In Hestia <=1.3.5 and Vesta, it was possible for users to create subdomains from domains that were owned by other users. For example, user Bob could create `bob.alice.com`, even if `alice.com` is owned by Alice. This could cause security issues and therefor we have decided to add a policy to control this behaviour. By default, the policy is enabled.
+In DevIT <=1.3.5 and Vesta, it was possible for users to create subdomains from domains that were owned by other users. For example, user Bob could create `bob.alice.com`, even if `alice.com` is owned by Alice. This could cause security issues and therefor we have decided to add a policy to control this behaviour. By default, the policy is enabled.
 
 You can tweak the policy for a specific domain and user, for example for a domain that has been used for testing:
 
@@ -61,7 +61,7 @@ v-delete-web-domain-allow-users user domain.tld
 
 ## Can I restrict access to the `admin` account?
 
-In Hestia 1.3, we have made it possible to give another user Administrator access. In 1.4, we have given system administrators the option to limit access to the main **System Administrator** account to improve security.
+In DevIT 1.3, we have made it possible to give another user Administrator access. In 1.4, we have given system administrators the option to limit access to the main **System Administrator** account to improve security.
 
 ## My server IP has changed, what do I need to do?
 

@@ -22,5 +22,5 @@ if [ ! -f /etc/php/$version/fpm/pool.d/dummy.conf ]; then
 fi
 
 rm -f /etc/php/*/fpm/pool.d/www.conf
-cp -f $HESTIA/install/deb/php-fpm/www.conf /etc/php/$version/fpm/pool.d/www.conf
-$HESTIA/bin/v-restart-web-backend
+cp -f $DevIT/install/deb/php-fpm/www.conf /etc/php/$version/fpm/pool.d/www.conf
+$DevIT/bin/v-restart-web-backend

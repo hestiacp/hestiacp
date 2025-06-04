@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Hestia Control Panel upgrade script for target version 1.6.9
+# DevIT Control Panel upgrade script for target version 1.6.9
 
 #######################################################################################
 #######                      Place additional commands below.                   #######
@@ -21,5 +21,5 @@ upgrade_config_set_value 'UPGRADE_UPDATE_MAIL_TEMPLATES' 'no'
 upgrade_config_set_value 'UPGRADE_REBUILD_USERS' 'no'
 upgrade_config_set_value 'UPGRADE_UPDATE_FILEMANAGER_CONFIG' 'false'
 
-# Delete all tmp files create by hestia that are left in place
+# Delete all tmp files create by DevIT that are left in place
 rm -fr /tmp/vst*

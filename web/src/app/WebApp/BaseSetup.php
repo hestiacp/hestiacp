@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Hestia\WebApp;
+namespace DevIT\WebApp;
 
-use Hestia\System\HestiaApp;
-use Hestia\WebApp\InstallationTarget\InstallationTarget;
-use Hestia\WebApp\InstallationTarget\TargetDatabase;
+use DevIT\System\DevITApp;
+use DevIT\WebApp\InstallationTarget\InstallationTarget;
+use DevIT\WebApp\InstallationTarget\TargetDatabase;
 use RuntimeException;
 
 use function basename;
@@ -21,7 +21,7 @@ abstract class BaseSetup implements InstallerInterface
     protected array $info;
     protected array $config;
 
-    public function __construct(protected HestiaApp $appcontext)
+    public function __construct(protected DevITApp $appcontext)
     {
     }
 

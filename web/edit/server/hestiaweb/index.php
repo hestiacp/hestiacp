@@ -24,7 +24,7 @@ if (!empty($_POST["save"])) {
 		fwrite($fp, $config);
 		fclose($fp);
 		exec(
-			HESTIA_CMD . "v-change-sys-service-config " . $new_conf . " hestiaweb yes",
+			DevIT_CMD . "v-change-sys-service-config " . $new_conf . " DevITweb yes",
 			$output,
 			$return_var,
 		);
@@ -34,11 +34,11 @@ if (!empty($_POST["save"])) {
 	}
 }
 
-$v_config_path = "/var/spool/cron/crontabs/hestiaweb";
+$v_config_path = "/var/spool/cron/crontabs/DevITweb";
 $v_service_name = _("Panel Cronjobs");
 
 // Read config
-$v_config = shell_exec(HESTIA_CMD . "v-open-fs-config " . $v_config_path);
+$v_config = shell_exec(DevIT_CMD . "v-open-fs-config " . $v_config_path);
 
 // Render page
 render_page($user, $TAB, "edit_server_service");

@@ -1,5 +1,5 @@
 <?php
-use function Hestiacp\quoteshellarg\quoteshellarg;
+use function DevITcp\quoteshellarg\quoteshellarg;
 
 ob_start();
 include $_SERVER["DOCUMENT_ROOT"] . "/inc/main.php";
@@ -16,7 +16,7 @@ verify_csrf($_GET);
 if (!empty($_GET["domain"]) && empty($_GET["account"])) {
 	$v_username = quoteshellarg($user);
 	$v_domain = quoteshellarg($_GET["domain"]);
-	exec(HESTIA_CMD . "v-delete-mail-domain " . $user . " " . $v_domain, $output, $return_var);
+	exec(DevIT_CMD . "v-delete-mail-domain " . $user . " " . $v_domain, $output, $return_var);
 	check_return_code($return_var, $output);
 	unset($output);
 	$back = $_SESSION["back"];
@@ -36,7 +36,7 @@ if (!empty($_GET["domain"]) && !empty($_GET["account"])) {
 	$v_domain = quoteshellarg($_GET["domain"]);
 	$v_account = quoteshellarg($_GET["account"]);
 	exec(
-		HESTIA_CMD . "v-delete-mail-account " . $user . " " . $v_domain . " " . $v_account,
+		DevIT_CMD . "v-delete-mail-account " . $user . " " . $v_domain . " " . $v_account,
 		$output,
 		$return_var,
 	);

@@ -2,7 +2,7 @@ export const options = [
 	{
 		flag: 'port',
 		label: 'Port',
-		description: 'Change the port Hestia uses',
+		description: 'Change the port DevIT uses',
 		type: 'text',
 		default: '8083',
 	},
@@ -173,7 +173,7 @@ export const options = [
 	{
 		flag: 'iptables',
 		label: 'iptables',
-		description: 'Allows firewall rule management within Hestia',
+		description: 'Allows firewall rule management within DevIT',
 		default: 'yes',
 	},
 	{
@@ -196,8 +196,8 @@ export const options = [
 	},
 	{
 		flag: 'api',
-		label: 'Hestia API',
-		description: "Enable Hestia's internal API.",
+		label: 'DevIT API',
+		description: "Enable DevIT's internal API.",
 		default: 'yes',
 	},
 	{

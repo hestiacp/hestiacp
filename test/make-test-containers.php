@@ -7,18 +7,18 @@
 #   echo "root:1000:1" | sudo tee -a /etc/subgid
 #
 # - container name will be generated depending on enabled features (os,proxy,webserver and php)
-# - 'SHARED_HOST_FOLDER' will be mounted in the (guest lxc) container at '/home/ubuntu/source/' and hestiacp src folder is expected to be there
+# - 'SHARED_HOST_FOLDER' will be mounted in the (guest lxc) container at '/home/ubuntu/source/' and DevITcp src folder is expected to be there
 # - wildcard dns *.hst.domain.tld can be used to point to vm host
 # - watch install log ex:(host) tail -n 100 -f /tmp/hst_installer_hst-ub1604-a2-mphp
 #
 # CONFIG HOST STEPS:
 #   export SHARED_HOST_FOLDER="/home/myuser/projectfiles"
 #   mkdir -p $SHARED_HOST_FOLDER
-#   cd $SHARED_HOST_FOLDER && git clone https://github.com/hestiacp/hestiacp.git && cd hestiacp && git checkout ..branch..
+#   cd $SHARED_HOST_FOLDER && git clone https://github.com/DevITcp/DevITcp.git && cd DevITcp && git checkout ..branch..
 #
 
 /*
-# Nginx reverse proxy config: /etc/nginx/conf.d/lxc-hestia.conf
+# Nginx reverse proxy config: /etc/nginx/conf.d/lxc-DevIT.conf
 server {
     listen 80;
     server_name ~(?<lxcname>hst-.+)\.hst\.domain\.tld$;
@@ -223,8 +223,8 @@ array_walk($containers, function (&$element) {
 	$element["lxc_name"] = $lxc_name;
 	$element["hostname"] = $lxc_name . "." . DOMAIN;
 
-	// $hst_args .= ' --with-debs /home/ubuntu/source/hestiacp/src/pkgs/develop/' . $element['os'];
-	$hst_args .= " --with-debs /tmp/hestiacp-src/debs";
+	// $hst_args .= ' --with-debs /home/ubuntu/source/DevITcp/src/pkgs/develop/' . $element['os'];
+	$hst_args .= " --with-debs /tmp/DevITcp-src/debs";
 	$hst_args .= " --hostname " . $element["hostname"];
 	$element["hst_args"] = $hst_args;
 });
@@ -253,13 +253,13 @@ function lxc_run($args, &$rc) {
 	return json_decode(implode(PHP_EOL, $cmdout), true);
 }
 
-function getHestiaVersion($branch) {
+function getDevITVersion($branch) {
 	$control_file = "";
 	if ($branch === "~localsrc") {
-		$control_file = file_get_contents(SHARED_HOST_FOLDER . "/hestiacp/src/deb/hestia/control");
+		$control_file = file_get_contents(SHARED_HOST_FOLDER . "/DevITcp/src/deb/DevIT/control");
 	} else {
 		$control_file = file_get_contents(
-			"https://raw.githubusercontent.com/hestiacp/hestiacp/${branch}/src/deb/hestia/control",
+			"https://raw.githubusercontent.com/DevITcp/DevITcp/${branch}/src/deb/DevIT/control",
 		);
 	}
 
@@ -274,7 +274,7 @@ function getHestiaVersion($branch) {
 		}
 	}
 
-	throw new Exception("Error reading Hestia version for branch: [${branch}]", 1);
+	throw new Exception("Error reading DevIT version for branch: [${branch}]", 1);
 }
 
 function get_lxc_ip($name) {
@@ -321,7 +321,7 @@ function check_lxc_container($container) {
 	exec(
 		"lxc config device add " .
 			escapeshellarg($container["lxc_name"]) .
-			" hestiasrc disk path=/home/ubuntu/source source=" .
+			" DevITsrc disk path=/home/ubuntu/source source=" .
 			SHARED_HOST_FOLDER .
 			" 2>/dev/null",
 		$devnull,
@@ -354,19 +354,19 @@ function hst_installer_worker($container) {
 	system(
 		"lxc exec " .
 			$container["lxc_name"] .
-			' -- bash -c "/home/ubuntu/source/hestiacp/src/hst_autocompile.sh --hestia \"' .
+			' -- bash -c "/home/ubuntu/source/DevITcp/src/hst_autocompile.sh --DevIT \"' .
 			HST_BRANCH .
 			'\" no"',
 	);
 
-	$hver = getHestiaVersion(HST_BRANCH);
-	echo "Install Hestia ${hver} on " . $container["lxc_name"] . PHP_EOL;
+	$hver = getDevITVersion(HST_BRANCH);
+	echo "Install DevIT ${hver} on " . $container["lxc_name"] . PHP_EOL;
 	echo "Args: " . $container["hst_args"] . PHP_EOL;
 
 	system(
 		"lxc exec " .
 			$container["lxc_name"] .
-			' -- bash -c "cd \"/home/ubuntu/source/hestiacp\"; install/' .
+			' -- bash -c "cd \"/home/ubuntu/source/DevITcp\"; install/' .
 			$container["hst_installer"] .
 			" " .
 			$container["hst_args"] .
@@ -397,10 +397,10 @@ while (count($worker_pool)) {
 	}
 }
 
-// Install Hestia
+// Install DevIT
 $worker_pool = [];
 foreach ($containers as $container) {
-	# Is hestia installed?
+	# Is DevIT installed?
 	lxc_run("exec " . $container["lxc_name"] . ' -- sudo --login "v-list-sys-config"', $rc);
 	if (isset($rc) && $rc === 0) {
 		continue;
@@ -427,11 +427,11 @@ while (count($worker_pool)) {
 foreach ($containers as $container) {
 	echo "Apply custom config on: " . $container["lxc_name"] . PHP_EOL;
 
-	# Allow running a reverse proxy in front of Hestia
+	# Allow running a reverse proxy in front of DevIT
 	system(
 		"lxc exec " .
 			$container["lxc_name"] .
-			' -- bash -c "sed -i \'s/session.cookie_secure] = on\$/session.cookie_secure] = off/\' /usr/local/hestia/php/etc/php-fpm.conf"',
+			' -- bash -c "sed -i \'s/session.cookie_secure] = on\$/session.cookie_secure] = off/\' /usr/local/DevIT/php/etc/php-fpm.conf"',
 	);
 
 	# get rid off "mesg: ttyname failed: No such device" error
@@ -445,16 +445,16 @@ foreach ($containers as $container) {
 	system(
 		"lxc exec " .
 			$container["lxc_name"] .
-			' -- bash -c "sed -i \'/LE_STAGING/d\' /usr/local/hestia/conf/hestia.conf"',
+			' -- bash -c "sed -i \'/LE_STAGING/d\' /usr/local/DevIT/conf/DevIT.conf"',
 	);
 	system(
 		"lxc exec " .
 			$container["lxc_name"] .
-			' -- bash -c "echo \'LE_STAGING=\"yes\"\' >> /usr/local/hestia/conf/hestia.conf"',
+			' -- bash -c "echo \'LE_STAGING=\"yes\"\' >> /usr/local/DevIT/conf/DevIT.conf"',
 	);
 
-	system("lxc exec " . $container["lxc_name"] . ' -- bash -c "service hestia restart"');
+	system("lxc exec " . $container["lxc_name"] . ' -- bash -c "service DevIT restart"');
 }
 
-echo "Hestia containers configured" . PHP_EOL;
+echo "DevIT containers configured" . PHP_EOL;
 

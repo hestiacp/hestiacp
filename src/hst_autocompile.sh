@@ -1,12 +1,12 @@
 #!/bin/bash
 
 # set -e
-# Autocompile Script for HestiaCP package Files.
+# Autocompile Script for DevITCP package Files.
 # For building from local source folder use "~localsrc" keyword as hesia branch name,
 #   and the script will not try to download the arhive from github, since '~' char is
 #   not accepted in branch name.
-# Compile but dont install -> ./hst_autocompile.sh --hestia --noinstall --keepbuild '~localsrc'
-# Compile and install -> ./hst_autocompile.sh --hestia --install '~localsrc'
+# Compile but dont install -> ./hst_autocompile.sh --DevIT --noinstall --keepbuild '~localsrc'
+# Compile and install -> ./hst_autocompile.sh --DevIT --install '~localsrc'
 
 # Clear previous screen output
 clear
@@ -17,7 +17,7 @@ download_file() {
 	local destination=$2
 	local force=$3
 
-	[ "$HESTIA_DEBUG" ] && echo >&2 DEBUG: Downloading file "$url" to "$destination"
+	[ "$DevIT_DEBUG" ] && echo >&2 DEBUG: Downloading file "$url" to "$destination"
 
 	# Default destination is the current working directory
 	local dstopt=""
@@ -48,7 +48,7 @@ download_file() {
 	fi
 
 	if [ ! -f "$ARCHIVE_DIR/$filename" ]; then
-		[ "$HESTIA_DEBUG" ] && echo >&2 DEBUG: wget $url -q $dstopt --show-progress --progress=bar:force --limit-rate=3m
+		[ "$DevIT_DEBUG" ] && echo >&2 DEBUG: wget $url -q $dstopt --show-progress --progress=bar:force --limit-rate=3m
 		wget $url -q $dstopt --show-progress --progress=bar:force --limit-rate=3m
 		if [ $? -ne 0 ]; then
 			echo >&2 "[!] Archive $ARCHIVE_DIR/$filename is corrupted and exit script"
@@ -69,13 +69,13 @@ download_file() {
 get_branch_file() {
 	local filename=$1
 	local destination=$2
-	[ "$HESTIA_DEBUG" ] && echo >&2 DEBUG: Get branch file "$filename" to "$destination"
+	[ "$DevIT_DEBUG" ] && echo >&2 DEBUG: Get branch file "$filename" to "$destination"
 	if [ "$use_src_folder" == 'true' ]; then
 		if [ -z "$destination" ]; then
-			[ "$HESTIA_DEBUG" ] && echo >&2 DEBUG: cp -f "$SRC_DIR/$filename" ./
+			[ "$DevIT_DEBUG" ] && echo >&2 DEBUG: cp -f "$SRC_DIR/$filename" ./
 			cp -f "$SRC_DIR/$filename" ./
 		else
-			[ "$HESTIA_DEBUG" ] && echo >&2 DEBUG: cp -f "$SRC_DIR/$filename" "$destination"
+			[ "$DevIT_DEBUG" ] && echo >&2 DEBUG: cp -f "$SRC_DIR/$filename" "$destination"
 			cp -f "$SRC_DIR/$filename" "$destination"
 		fi
 	else
@@ -85,32 +85,32 @@ get_branch_file() {
 
 usage() {
 	echo "Usage:"
-	echo "    $0 (--all|--hestia|--nginx|--php|--web-terminal) [options] [branch] [Y]"
+	echo "    $0 (--all|--DevIT|--nginx|--php|--web-terminal) [options] [branch] [Y]"
 	echo ""
-	echo "    --all           Build all hestia packages."
-	echo "    --hestia        Build only the Control Panel package."
+	echo "    --all           Build all DevIT packages."
+	echo "    --DevIT        Build only the Control Panel package."
 	echo "    --nginx         Build only the backend nginx engine package."
 	echo "    --php           Build only the backend php engine package"
 	echo "    --web-terminal  Build only the backend web terminal websocket package"
 	echo "  Options:"
 	echo "    --install       Install generated packages"
 	echo "    --keepbuild     Don't delete downloaded source and build folders"
-	echo "    --cross         Compile hestia package for both AMD64 and ARM64"
+	echo "    --cross         Compile DevIT package for both AMD64 and ARM64"
 	echo "    --debug         Debug mode"
 	echo ""
 	echo "For automated builds and installations, you may specify the branch"
 	echo "after one of the above flags. To install the packages, specify 'Y'"
 	echo "following the branch name."
 	echo ""
-	echo "Example: bash hst_autocompile.sh --hestia develop Y"
-	echo "This would install a Hestia Control Panel package compiled with the"
+	echo "Example: bash hst_autocompile.sh --DevIT develop Y"
+	echo "This would install a DevIT Control Panel package compiled with the"
 	echo "develop branch code."
 }
 
 # Set compiling directory
-REPO='hestiacp/hestiacp'
-BUILD_DIR='/tmp/hestiacp-src'
-INSTALL_DIR='/usr/local/hestia'
+REPO='DevITcp/DevITcp'
+BUILD_DIR='/tmp/DevITcp-src'
+INSTALL_DIR='/usr/local/DevIT'
 SRC_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 ARCHIVE_DIR="$SRC_DIR/src/archive/"
 architecture="$(arch)"
@@ -128,7 +128,7 @@ for i in $*; do
 			NGINX_B='true'
 			PHP_B='true'
 			WEB_TERMINAL_B='true'
-			HESTIA_B='true'
+			DevIT_B='true'
 			;;
 		--nginx)
 			NGINX_B='true'
@@ -139,11 +139,11 @@ for i in $*; do
 		--web-terminal)
 			WEB_TERMINAL_B='true'
 			;;
-		--hestia)
-			HESTIA_B='true'
+		--DevIT)
+			DevIT_B='true'
 			;;
 		--debug)
-			HESTIA_DEBUG='true'
+			DevIT_DEBUG='true'
 			;;
 		--install | Y)
 			install='true'
@@ -197,13 +197,13 @@ if [ -z $install ]; then
 fi
 
 # Set Version for compiling
-if [ -f "$SRC_DIR/src/deb/hestia/control" ] && [ "$use_src_folder" == 'true' ]; then
-	BUILD_VER=$(cat $SRC_DIR/src/deb/hestia/control | grep "Version:" | cut -d' ' -f2)
+if [ -f "$SRC_DIR/src/deb/DevIT/control" ] && [ "$use_src_folder" == 'true' ]; then
+	BUILD_VER=$(cat $SRC_DIR/src/deb/DevIT/control | grep "Version:" | cut -d' ' -f2)
 	NGINX_V=$(cat $SRC_DIR/src/deb/nginx/control | grep "Version:" | cut -d' ' -f2)
 	PHP_V=$(cat $SRC_DIR/src/deb/php/control | grep "Version:" | cut -d' ' -f2)
 	WEB_TERMINAL_V=$(cat $SRC_DIR/src/deb/web-terminal/control | grep "Version:" | cut -d' ' -f2)
 else
-	BUILD_VER=$(curl -s https://raw.githubusercontent.com/$REPO/$branch/src/deb/hestia/control | grep "Version:" | cut -d' ' -f2)
+	BUILD_VER=$(curl -s https://raw.githubusercontent.com/$REPO/$branch/src/deb/DevIT/control | grep "Version:" | cut -d' ' -f2)
 	NGINX_V=$(curl -s https://raw.githubusercontent.com/$REPO/$branch/src/deb/nginx/control | grep "Version:" | cut -d' ' -f2)
 	PHP_V=$(curl -s https://raw.githubusercontent.com/$REPO/$branch/src/deb/php/control | grep "Version:" | cut -d' ' -f2)
 	WEB_TERMINAL_V=$(curl -s https://raw.githubusercontent.com/$REPO/$branch/src/deb/web-terminal/control | grep "Version:" | cut -d' ' -f2)
@@ -216,7 +216,7 @@ fi
 
 echo "Build version $BUILD_VER, with Nginx version $NGINX_V, PHP version $PHP_V and Web Terminal version $WEB_TERMINAL_V"
 
-HESTIA_V="${BUILD_VER}_${BUILD_ARCH}"
+DevIT_V="${BUILD_VER}_${BUILD_ARCH}"
 OPENSSL_V='3.4.0'
 PCRE_V='10.44'
 ZLIB_V='1.3.1'
@@ -274,21 +274,21 @@ fi
 # Get system cpu cores
 NUM_CPUS=$(grep "^cpu cores" /proc/cpuinfo | uniq | awk '{print $4}')
 
-if [ "$HESTIA_DEBUG" ]; then
+if [ "$DevIT_DEBUG" ]; then
 	echo "OS type          : Debian / Ubuntu"
 	echo "Branch           : $branch"
 	echo "Install          : $install"
-	echo "Hestia version   : $BUILD_VER"
+	echo "DevIT version   : $BUILD_VER"
 	echo "Nginx version    : $NGINX_V"
 	echo "PHP version      : $PHP_V"
 	echo "Web Term version : $WEB_TERMINAL_V"
 	echo "Architecture     : $BUILD_ARCH"
-	echo "Debug mode       : $HESTIA_DEBUG"
+	echo "Debug mode       : $DevIT_DEBUG"
 	echo "Source directory : $SRC_DIR"
 fi
 
 # Generate Links for sourcecode
-HESTIA_ARCHIVE_LINK='https://github.com/hestiacp/hestiacp/archive/'$branch'.tar.gz'
+DevIT_ARCHIVE_LINK='https://github.com/DevITcp/DevITcp/archive/'$branch'.tar.gz'
 if [[ $NGINX_V =~ - ]]; then
 	NGINX='https://nginx.org/download/nginx-'$(echo $NGINX_V | cut -d"-" -f1)'.tar.gz'
 else
@@ -310,36 +310,36 @@ branch_dash=$(echo "$branch" | sed 's/\//-/g')
 
 #################################################################################
 #
-# Building hestia-nginx
+# Building DevIT-nginx
 #
 #################################################################################
 
 if [ "$NGINX_B" = true ]; then
-	echo "Building hestia-nginx package..."
+	echo "Building DevIT-nginx package..."
 	if [ "$CROSS" = "true" ]; then
-		echo "Cross compile not supported for hestia-nginx, hestia-php or hestia-web-terminal"
+		echo "Cross compile not supported for DevIT-nginx, DevIT-php or DevIT-web-terminal"
 		exit 1
 	fi
 
 	# Change to build directory
 	cd $BUILD_DIR
 
-	BUILD_DIR_HESTIANGINX=$BUILD_DIR/hestia-nginx_$NGINX_V
+	BUILD_DIR_DevITNGINX=$BUILD_DIR/DevIT-nginx_$NGINX_V
 	if [[ $NGINX_V =~ - ]]; then
 		BUILD_DIR_NGINX=$BUILD_DIR/nginx-$(echo $NGINX_V | cut -d"-" -f1)
 	else
 		BUILD_DIR_NGINX=$BUILD_DIR/nginx-$(echo $NGINX_V | cut -d"~" -f1)
 	fi
 
-	if [ "$KEEPBUILD" != 'true' ] || [ ! -d "$BUILD_DIR_HESTIANGINX" ]; then
+	if [ "$KEEPBUILD" != 'true' ] || [ ! -d "$BUILD_DIR_DevITNGINX" ]; then
 		# Check if target directory exist
-		if [ -d "$BUILD_DIR_HESTIANGINX" ]; then
-			#mv $BUILD_DIR/hestia-nginx_$NGINX_V $BUILD_DIR/hestia-nginx_$NGINX_V-$(timestamp)
-			rm -r "$BUILD_DIR_HESTIANGINX"
+		if [ -d "$BUILD_DIR_DevITNGINX" ]; then
+			#mv $BUILD_DIR/DevIT-nginx_$NGINX_V $BUILD_DIR/DevIT-nginx_$NGINX_V-$(timestamp)
+			rm -r "$BUILD_DIR_DevITNGINX"
 		fi
 
 		# Create directory
-		mkdir -p $BUILD_DIR_HESTIANGINX
+		mkdir -p $BUILD_DIR_DevITNGINX
 
 		# Download and unpack source files
 		download_file $NGINX '-' | tar xz
@@ -351,7 +351,7 @@ if [ "$NGINX_B" = true ]; then
 		cd $BUILD_DIR_NGINX
 
 		# configure nginx
-		./configure --prefix=/usr/local/hestia/nginx \
+		./configure --prefix=/usr/local/DevIT/nginx \
 			--with-http_v2_module \
 			--with-http_ssl_module \
 			--with-openssl=../openssl-$OPENSSL_V \
@@ -372,9 +372,9 @@ if [ "$NGINX_B" = true ]; then
 		rm -r "$BUILD_DIR$INSTALL_DIR"
 	fi
 
-	# Copy local hestia source files
+	# Copy local DevIT source files
 	if [ "$use_src_folder" == 'true' ] && [ -d $SRC_DIR ]; then
-		cp -rf "$SRC_DIR/" $BUILD_DIR/hestiacp-$branch_dash
+		cp -rf "$SRC_DIR/" $BUILD_DIR/DevITcp-$branch_dash
 	fi
 
 	# Create the files and install them
@@ -384,73 +384,73 @@ if [ "$NGINX_B" = true ]; then
 	if [ "$KEEPBUILD" != 'true' ]; then
 		rm -r $BUILD_DIR_NGINX $BUILD_DIR/openssl-$OPENSSL_V $BUILD_DIR/pcre2-$PCRE_V $BUILD_DIR/zlib-$ZLIB_V
 	fi
-	cd $BUILD_DIR_HESTIANGINX
+	cd $BUILD_DIR_DevITNGINX
 
 	# Move nginx directory
-	mkdir -p $BUILD_DIR_HESTIANGINX/usr/local/hestia
-	rm -rf $BUILD_DIR_HESTIANGINX/usr/local/hestia/nginx
-	mv $BUILD_DIR/usr/local/hestia/nginx $BUILD_DIR_HESTIANGINX/usr/local/hestia/
+	mkdir -p $BUILD_DIR_DevITNGINX/usr/local/DevIT
+	rm -rf $BUILD_DIR_DevITNGINX/usr/local/DevIT/nginx
+	mv $BUILD_DIR/usr/local/DevIT/nginx $BUILD_DIR_DevITNGINX/usr/local/DevIT/
 
 	# Remove original nginx.conf (will use custom)
-	rm -f $BUILD_DIR_HESTIANGINX/usr/local/hestia/nginx/conf/nginx.conf
+	rm -f $BUILD_DIR_DevITNGINX/usr/local/DevIT/nginx/conf/nginx.conf
 
 	# copy binary
-	mv $BUILD_DIR_HESTIANGINX/usr/local/hestia/nginx/sbin/nginx $BUILD_DIR_HESTIANGINX/usr/local/hestia/nginx/sbin/hestia-nginx
+	mv $BUILD_DIR_DevITNGINX/usr/local/DevIT/nginx/sbin/nginx $BUILD_DIR_DevITNGINX/usr/local/DevIT/nginx/sbin/DevIT-nginx
 
 	# change permission and build the package
 	cd $BUILD_DIR
-	chown -R root:root $BUILD_DIR_HESTIANGINX
+	chown -R root:root $BUILD_DIR_DevITNGINX
 	# Get Debian package files
-	mkdir -p $BUILD_DIR_HESTIANGINX/DEBIAN
-	get_branch_file 'src/deb/nginx/control' "$BUILD_DIR_HESTIANGINX/DEBIAN/control"
+	mkdir -p $BUILD_DIR_DevITNGINX/DEBIAN
+	get_branch_file 'src/deb/nginx/control' "$BUILD_DIR_DevITNGINX/DEBIAN/control"
 	if [ "$BUILD_ARCH" != "amd64" ]; then
-		sed -i "s/amd64/${BUILD_ARCH}/g" "$BUILD_DIR_HESTIANGINX/DEBIAN/control"
+		sed -i "s/amd64/${BUILD_ARCH}/g" "$BUILD_DIR_DevITNGINX/DEBIAN/control"
 	fi
-	get_branch_file 'src/deb/nginx/copyright' "$BUILD_DIR_HESTIANGINX/DEBIAN/copyright"
-	get_branch_file 'src/deb/nginx/postinst' "$BUILD_DIR_HESTIANGINX/DEBIAN/postinst"
-	get_branch_file 'src/deb/nginx/postrm' "$BUILD_DIR_HESTIANGINX/DEBIAN/portrm"
-	chmod +x "$BUILD_DIR_HESTIANGINX/DEBIAN/postinst"
-	chmod +x "$BUILD_DIR_HESTIANGINX/DEBIAN/portrm"
+	get_branch_file 'src/deb/nginx/copyright' "$BUILD_DIR_DevITNGINX/DEBIAN/copyright"
+	get_branch_file 'src/deb/nginx/postinst' "$BUILD_DIR_DevITNGINX/DEBIAN/postinst"
+	get_branch_file 'src/deb/nginx/postrm' "$BUILD_DIR_DevITNGINX/DEBIAN/portrm"
+	chmod +x "$BUILD_DIR_DevITNGINX/DEBIAN/postinst"
+	chmod +x "$BUILD_DIR_DevITNGINX/DEBIAN/portrm"
 
 	# Init file
-	mkdir -p $BUILD_DIR_HESTIANGINX/etc/init.d
-	get_branch_file 'src/deb/nginx/hestia' "$BUILD_DIR_HESTIANGINX/etc/init.d/hestia"
-	chmod +x "$BUILD_DIR_HESTIANGINX/etc/init.d/hestia"
+	mkdir -p $BUILD_DIR_DevITNGINX/etc/init.d
+	get_branch_file 'src/deb/nginx/DevIT' "$BUILD_DIR_DevITNGINX/etc/init.d/DevIT"
+	chmod +x "$BUILD_DIR_DevITNGINX/etc/init.d/DevIT"
 
 	# Custom config
-	get_branch_file 'src/deb/nginx/nginx.conf' "${BUILD_DIR_HESTIANGINX}/usr/local/hestia/nginx/conf/nginx.conf"
+	get_branch_file 'src/deb/nginx/nginx.conf' "${BUILD_DIR_DevITNGINX}/usr/local/DevIT/nginx/conf/nginx.conf"
 
 	# Build the package
 	echo Building Nginx DEB
-	dpkg-deb -Zxz --build $BUILD_DIR_HESTIANGINX $DEB_DIR
+	dpkg-deb -Zxz --build $BUILD_DIR_DevITNGINX $DEB_DIR
 
 	rm -r $BUILD_DIR/usr
 
 	if [ "$KEEPBUILD" != 'true' ]; then
 		# Clean up the source folder
-		rm -r hestia- nginx_$NGINX_V
+		rm -r DevIT- nginx_$NGINX_V
 		rm -rf $BUILD_DIR/rpmbuild
-		if [ "$use_src_folder" == 'true' ] && [ -d $BUILD_DIR/hestiacp-$branch_dash ]; then
-			rm -r $BUILD_DIR/hestiacp-$branch_dash
+		if [ "$use_src_folder" == 'true' ] && [ -d $BUILD_DIR/DevITcp-$branch_dash ]; then
+			rm -r $BUILD_DIR/DevITcp-$branch_dash
 		fi
 	fi
 fi
 
 #################################################################################
 #
-# Building hestia-php
+# Building DevIT-php
 #
 #################################################################################
 
 if [ "$PHP_B" = true ]; then
 	if [ "$CROSS" = "true" ]; then
-		echo "Cross compile not supported for hestia-nginx, hestia-php or hestia-web-terminal"
+		echo "Cross compile not supported for DevIT-nginx, DevIT-php or DevIT-web-terminal"
 		exit 1
 	fi
 
-	echo "Building hestia-php package..."
+	echo "Building DevIT-php package..."
 
-	BUILD_DIR_HESTIAPHP=$BUILD_DIR/hestia-php_$PHP_V
+	BUILD_DIR_DevITPHP=$BUILD_DIR/DevIT-php_$PHP_V
 
 	BUILD_DIR_PHP=$BUILD_DIR/php-$(echo $PHP_V | cut -d"~" -f1)
 
@@ -460,14 +460,14 @@ if [ "$PHP_B" = true ]; then
 		BUILD_DIR_PHP=$BUILD_DIR/php-$(echo $PHP_V | cut -d"~" -f1)
 	fi
 
-	if [ "$KEEPBUILD" != 'true' ] || [ ! -d "$BUILD_DIR_HESTIAPHP" ]; then
+	if [ "$KEEPBUILD" != 'true' ] || [ ! -d "$BUILD_DIR_DevITPHP" ]; then
 		# Check if target directory exist
-		if [ -d $BUILD_DIR_HESTIAPHP ]; then
-			rm -r $BUILD_DIR_HESTIAPHP
+		if [ -d $BUILD_DIR_DevITPHP ]; then
+			rm -r $BUILD_DIR_DevITPHP
 		fi
 
 		# Create directory
-		mkdir -p $BUILD_DIR_HESTIAPHP
+		mkdir -p $BUILD_DIR_DevITPHP
 
 		# Download and unpack source files
 		cd $BUILD_DIR
@@ -477,7 +477,7 @@ if [ "$PHP_B" = true ]; then
 		cd $BUILD_DIR_PHP
 
 		# Configure PHP
-		./configure --prefix=/usr/local/hestia/php \
+		./configure --prefix=/usr/local/DevIT/php \
 			--with-libdir=lib/$(arch)-linux-gnu \
 			--enable-fpm --with-fpm-user=admin --with-fpm-group=admin \
 			--with-openssl \
@@ -494,218 +494,218 @@ if [ "$PHP_B" = true ]; then
 	# Create the files and install them
 	make -j $NUM_CPUS && make INSTALL_ROOT=$BUILD_DIR install
 
-	# Copy local hestia source files
+	# Copy local DevIT source files
 	if [ "$use_src_folder" == 'true' ] && [ -d $SRC_DIR ]; then
-		[ "$HESTIA_DEBUG" ] && echo DEBUG: cp -rf "$SRC_DIR/" $BUILD_DIR/hestiacp-$branch_dash
-		cp -rf "$SRC_DIR/" $BUILD_DIR/hestiacp-$branch_dash
+		[ "$DevIT_DEBUG" ] && echo DEBUG: cp -rf "$SRC_DIR/" $BUILD_DIR/DevITcp-$branch_dash
+		cp -rf "$SRC_DIR/" $BUILD_DIR/DevITcp-$branch_dash
 	fi
 	# Move php directory
-	[ "$HESTIA_DEBUG" ] && echo DEBUG: mkdir -p $BUILD_DIR_HESTIAPHP/usr/local/hestia
-	mkdir -p $BUILD_DIR_HESTIAPHP/usr/local/hestia
+	[ "$DevIT_DEBUG" ] && echo DEBUG: mkdir -p $BUILD_DIR_DevITPHP/usr/local/DevIT
+	mkdir -p $BUILD_DIR_DevITPHP/usr/local/DevIT
 
-	[ "$HESTIA_DEBUG" ] && echo DEBUG: rm -r $BUILD_DIR_HESTIAPHP/usr/local/hestia/php
-	if [ -d $BUILD_DIR_HESTIAPHP/usr/local/hestia/php ]; then
-		rm -r $BUILD_DIR_HESTIAPHP/usr/local/hestia/php
+	[ "$DevIT_DEBUG" ] && echo DEBUG: rm -r $BUILD_DIR_DevITPHP/usr/local/DevIT/php
+	if [ -d $BUILD_DIR_DevITPHP/usr/local/DevIT/php ]; then
+		rm -r $BUILD_DIR_DevITPHP/usr/local/DevIT/php
 	fi
 
-	[ "$HESTIA_DEBUG" ] && echo DEBUG: mv ${BUILD_DIR}/usr/local/hestia/php ${BUILD_DIR_HESTIAPHP}/usr/local/hestia/
-	mv ${BUILD_DIR}/usr/local/hestia/php ${BUILD_DIR_HESTIAPHP}/usr/local/hestia/
+	[ "$DevIT_DEBUG" ] && echo DEBUG: mv ${BUILD_DIR}/usr/local/DevIT/php ${BUILD_DIR_DevITPHP}/usr/local/DevIT/
+	mv ${BUILD_DIR}/usr/local/DevIT/php ${BUILD_DIR_DevITPHP}/usr/local/DevIT/
 
 	# copy binary
-	[ "$HESTIA_DEBUG" ] && echo DEBUG: cp $BUILD_DIR_HESTIAPHP/usr/local/hestia/php/sbin/php-fpm $BUILD_DIR_HESTIAPHP/usr/local/hestia/php/sbin/hestia-php
-	cp $BUILD_DIR_HESTIAPHP/usr/local/hestia/php/sbin/php-fpm $BUILD_DIR_HESTIAPHP/usr/local/hestia/php/sbin/hestia-php
+	[ "$DevIT_DEBUG" ] && echo DEBUG: cp $BUILD_DIR_DevITPHP/usr/local/DevIT/php/sbin/php-fpm $BUILD_DIR_DevITPHP/usr/local/DevIT/php/sbin/DevIT-php
+	cp $BUILD_DIR_DevITPHP/usr/local/DevIT/php/sbin/php-fpm $BUILD_DIR_DevITPHP/usr/local/DevIT/php/sbin/DevIT-php
 
 	# Change permissions and build the package
-	chown -R root:root $BUILD_DIR_HESTIAPHP
+	chown -R root:root $BUILD_DIR_DevITPHP
 	# Get Debian package files
-	[ "$HESTIA_DEBUG" ] && echo DEBUG: mkdir -p $BUILD_DIR_HESTIAPHP/DEBIAN
-	mkdir -p $BUILD_DIR_HESTIAPHP/DEBIAN
-	get_branch_file 'src/deb/php/control' "$BUILD_DIR_HESTIAPHP/DEBIAN/control"
+	[ "$DevIT_DEBUG" ] && echo DEBUG: mkdir -p $BUILD_DIR_DevITPHP/DEBIAN
+	mkdir -p $BUILD_DIR_DevITPHP/DEBIAN
+	get_branch_file 'src/deb/php/control' "$BUILD_DIR_DevITPHP/DEBIAN/control"
 	if [ "$BUILD_ARCH" != "amd64" ]; then
-		sed -i "s/amd64/${BUILD_ARCH}/g" "$BUILD_DIR_HESTIAPHP/DEBIAN/control"
+		sed -i "s/amd64/${BUILD_ARCH}/g" "$BUILD_DIR_DevITPHP/DEBIAN/control"
 	fi
 
 	os=$(lsb_release -is)
 	release=$(lsb_release -rs)
 	if [[ "$os" = "Ubuntu" ]] && [[ "$release" = "20.04" ]]; then
-		sed -i "/Conflicts: libzip5/d" "$BUILD_DIR_HESTIAPHP/DEBIAN/control"
-		sed -i "s/libzip4/libzip5/g" "$BUILD_DIR_HESTIAPHP/DEBIAN/control"
+		sed -i "/Conflicts: libzip5/d" "$BUILD_DIR_DevITPHP/DEBIAN/control"
+		sed -i "s/libzip4/libzip5/g" "$BUILD_DIR_DevITPHP/DEBIAN/control"
 	fi
 	if [[ "$os" = "Ubuntu" ]] && [[ "$release" = "24.04" ]]; then
-		sed -i "/Conflicts: libzip5/d" "$BUILD_DIR_HESTIAPHP/DEBIAN/control"
-		sed -i "s/libzip4/libzip4t64/g" "$BUILD_DIR_HESTIAPHP/DEBIAN/control"
+		sed -i "/Conflicts: libzip5/d" "$BUILD_DIR_DevITPHP/DEBIAN/control"
+		sed -i "s/libzip4/libzip4t64/g" "$BUILD_DIR_DevITPHP/DEBIAN/control"
 	fi
 
-	get_branch_file 'src/deb/php/copyright' "$BUILD_DIR_HESTIAPHP/DEBIAN/copyright"
-	get_branch_file 'src/deb/php/postinst' "$BUILD_DIR_HESTIAPHP/DEBIAN/postinst"
-	chmod +x $BUILD_DIR_HESTIAPHP/DEBIAN/postinst
+	get_branch_file 'src/deb/php/copyright' "$BUILD_DIR_DevITPHP/DEBIAN/copyright"
+	get_branch_file 'src/deb/php/postinst' "$BUILD_DIR_DevITPHP/DEBIAN/postinst"
+	chmod +x $BUILD_DIR_DevITPHP/DEBIAN/postinst
 	# Get custom config
-	get_branch_file 'src/deb/php/php-fpm.conf' "${BUILD_DIR_HESTIAPHP}/usr/local/hestia/php/etc/php-fpm.conf"
-	get_branch_file 'src/deb/php/php.ini' "${BUILD_DIR_HESTIAPHP}/usr/local/hestia/php/lib/php.ini"
+	get_branch_file 'src/deb/php/php-fpm.conf' "${BUILD_DIR_DevITPHP}/usr/local/DevIT/php/etc/php-fpm.conf"
+	get_branch_file 'src/deb/php/php.ini' "${BUILD_DIR_DevITPHP}/usr/local/DevIT/php/lib/php.ini"
 
 	# Build the package
 	echo Building PHP DEB
-	[ "$HESTIA_DEBUG" ] && echo DEBUG: dpkg-deb -Zxz --build $BUILD_DIR_HESTIAPHP $DEB_DIR
-	dpkg-deb -Zxz --build $BUILD_DIR_HESTIAPHP $DEB_DIR
+	[ "$DevIT_DEBUG" ] && echo DEBUG: dpkg-deb -Zxz --build $BUILD_DIR_DevITPHP $DEB_DIR
+	dpkg-deb -Zxz --build $BUILD_DIR_DevITPHP $DEB_DIR
 
 	rm -r $BUILD_DIR/usr
 
 	# clear up the source folder
 	if [ "$KEEPBUILD" != 'true' ]; then
 		rm -r $BUILD_DIR/php-$(echo $PHP_V | cut -d"~" -f1)
-		rm -r $BUILD_DIR_HESTIAPHP
-		if [ "$use_src_folder" == 'true' ] && [ -d $BUILD_DIR/hestiacp-$branch_dash ]; then
-			rm -r $BUILD_DIR/hestiacp-$branch_dash
+		rm -r $BUILD_DIR_DevITPHP
+		if [ "$use_src_folder" == 'true' ] && [ -d $BUILD_DIR/DevITcp-$branch_dash ]; then
+			rm -r $BUILD_DIR/DevITcp-$branch_dash
 		fi
 	fi
 fi
 
 #################################################################################
 #
-# Building hestia-web-terminal
+# Building DevIT-web-terminal
 #
 #################################################################################
 
 if [ "$WEB_TERMINAL_B" = true ]; then
 	if [ "$CROSS" = "true" ]; then
-		echo "Cross compile not supported for hestia-nginx, hestia-php or hestia-web-terminal"
+		echo "Cross compile not supported for DevIT-nginx, DevIT-php or DevIT-web-terminal"
 		exit 1
 	fi
 
-	echo "Building hestia-web-terminal package..."
+	echo "Building DevIT-web-terminal package..."
 
-	BUILD_DIR_HESTIA_TERMINAL=$BUILD_DIR/hestia-web-terminal_$WEB_TERMINAL_V
+	BUILD_DIR_DevIT_TERMINAL=$BUILD_DIR/DevIT-web-terminal_$WEB_TERMINAL_V
 
 	# Check if target directory exist
-	if [ -d $BUILD_DIR_HESTIA_TERMINAL ]; then
-		rm -r $BUILD_DIR_HESTIA_TERMINAL
+	if [ -d $BUILD_DIR_DevIT_TERMINAL ]; then
+		rm -r $BUILD_DIR_DevIT_TERMINAL
 	fi
 
 	# Create directory
-	mkdir -p $BUILD_DIR_HESTIA_TERMINAL
-	chown -R root:root $BUILD_DIR_HESTIA_TERMINAL
+	mkdir -p $BUILD_DIR_DevIT_TERMINAL
+	chown -R root:root $BUILD_DIR_DevIT_TERMINAL
 
 	# Get Debian package files
-	[ "$HESTIA_DEBUG" ] && echo DEBUG: mkdir -p $BUILD_DIR_HESTIA_TERMINAL/DEBIAN
-	mkdir -p $BUILD_DIR_HESTIA_TERMINAL/DEBIAN
-	get_branch_file 'src/deb/web-terminal/control' "$BUILD_DIR_HESTIA_TERMINAL/DEBIAN/control"
+	[ "$DevIT_DEBUG" ] && echo DEBUG: mkdir -p $BUILD_DIR_DevIT_TERMINAL/DEBIAN
+	mkdir -p $BUILD_DIR_DevIT_TERMINAL/DEBIAN
+	get_branch_file 'src/deb/web-terminal/control' "$BUILD_DIR_DevIT_TERMINAL/DEBIAN/control"
 	if [ "$BUILD_ARCH" != "amd64" ]; then
-		sed -i "s/amd64/${BUILD_ARCH}/g" "$BUILD_DIR_HESTIA_TERMINAL/DEBIAN/control"
+		sed -i "s/amd64/${BUILD_ARCH}/g" "$BUILD_DIR_DevIT_TERMINAL/DEBIAN/control"
 	fi
 
-	get_branch_file 'src/deb/web-terminal/copyright' "$BUILD_DIR_HESTIA_TERMINAL/DEBIAN/copyright"
-	get_branch_file 'src/deb/web-terminal/postinst' "$BUILD_DIR_HESTIA_TERMINAL/DEBIAN/postinst"
-	chmod +x $BUILD_DIR_HESTIA_TERMINAL/DEBIAN/postinst
+	get_branch_file 'src/deb/web-terminal/copyright' "$BUILD_DIR_DevIT_TERMINAL/DEBIAN/copyright"
+	get_branch_file 'src/deb/web-terminal/postinst' "$BUILD_DIR_DevIT_TERMINAL/DEBIAN/postinst"
+	chmod +x $BUILD_DIR_DevIT_TERMINAL/DEBIAN/postinst
 
 	# Get server files
-	[ "$HESTIA_DEBUG" ] && echo DEBUG: mkdir -p "${BUILD_DIR_HESTIA_TERMINAL}/usr/local/hestia/web-terminal"
-	mkdir -p "${BUILD_DIR_HESTIA_TERMINAL}/usr/local/hestia/web-terminal"
-	get_branch_file 'src/deb/web-terminal/package.json' "${BUILD_DIR_HESTIA_TERMINAL}/usr/local/hestia/web-terminal/package.json"
-	get_branch_file 'src/deb/web-terminal/package-lock.json' "${BUILD_DIR_HESTIA_TERMINAL}/usr/local/hestia/web-terminal/package-lock.json"
-	get_branch_file 'src/deb/web-terminal/server.js' "${BUILD_DIR_HESTIA_TERMINAL}/usr/local/hestia/web-terminal/server.js"
-	chmod +x "${BUILD_DIR_HESTIA_TERMINAL}/usr/local/hestia/web-terminal/server.js"
+	[ "$DevIT_DEBUG" ] && echo DEBUG: mkdir -p "${BUILD_DIR_DevIT_TERMINAL}/usr/local/DevIT/web-terminal"
+	mkdir -p "${BUILD_DIR_DevIT_TERMINAL}/usr/local/DevIT/web-terminal"
+	get_branch_file 'src/deb/web-terminal/package.json' "${BUILD_DIR_DevIT_TERMINAL}/usr/local/DevIT/web-terminal/package.json"
+	get_branch_file 'src/deb/web-terminal/package-lock.json' "${BUILD_DIR_DevIT_TERMINAL}/usr/local/DevIT/web-terminal/package-lock.json"
+	get_branch_file 'src/deb/web-terminal/server.js' "${BUILD_DIR_DevIT_TERMINAL}/usr/local/DevIT/web-terminal/server.js"
+	chmod +x "${BUILD_DIR_DevIT_TERMINAL}/usr/local/DevIT/web-terminal/server.js"
 
-	cd $BUILD_DIR_HESTIA_TERMINAL/usr/local/hestia/web-terminal
+	cd $BUILD_DIR_DevIT_TERMINAL/usr/local/DevIT/web-terminal
 	npm ci --omit=dev
 
 	# Systemd service
-	[ "$HESTIA_DEBUG" ] && echo DEBUG: mkdir -p $BUILD_DIR_HESTIA_TERMINAL/etc/systemd/system
-	mkdir -p $BUILD_DIR_HESTIA_TERMINAL/etc/systemd/system
-	get_branch_file 'src/deb/web-terminal/hestia-web-terminal.service' "$BUILD_DIR_HESTIA_TERMINAL/etc/systemd/system/hestia-web-terminal.service"
+	[ "$DevIT_DEBUG" ] && echo DEBUG: mkdir -p $BUILD_DIR_DevIT_TERMINAL/etc/systemd/system
+	mkdir -p $BUILD_DIR_DevIT_TERMINAL/etc/systemd/system
+	get_branch_file 'src/deb/web-terminal/DevIT-web-terminal.service' "$BUILD_DIR_DevIT_TERMINAL/etc/systemd/system/DevIT-web-terminal.service"
 
 	# Build the package
 	echo Building Web Terminal DEB
-	[ "$HESTIA_DEBUG" ] && echo DEBUG: dpkg-deb -Zxz --build $BUILD_DIR_HESTIA_TERMINAL $DEB_DIR
-	dpkg-deb -Zxz --build $BUILD_DIR_HESTIA_TERMINAL $DEB_DIR
+	[ "$DevIT_DEBUG" ] && echo DEBUG: dpkg-deb -Zxz --build $BUILD_DIR_DevIT_TERMINAL $DEB_DIR
+	dpkg-deb -Zxz --build $BUILD_DIR_DevIT_TERMINAL $DEB_DIR
 
 	# clear up the source folder
 	if [ "$KEEPBUILD" != 'true' ]; then
-		rm -r $BUILD_DIR_HESTIA_TERMINAL
-		if [ "$use_src_folder" == 'true' ] && [ -d $BUILD_DIR/hestiacp-$branch_dash ]; then
-			rm -r $BUILD_DIR/hestiacp-$branch_dash
+		rm -r $BUILD_DIR_DevIT_TERMINAL
+		if [ "$use_src_folder" == 'true' ] && [ -d $BUILD_DIR/DevITcp-$branch_dash ]; then
+			rm -r $BUILD_DIR/DevITcp-$branch_dash
 		fi
 	fi
 fi
 
 #################################################################################
 #
-# Building hestia
+# Building DevIT
 #
 #################################################################################
 
 arch="$BUILD_ARCH"
 
-if [ "$HESTIA_B" = true ]; then
+if [ "$DevIT_B" = true ]; then
 	if [ "$CROSS" = "true" ]; then
 		arch="amd64 arm64"
 	fi
 	for BUILD_ARCH in $arch; do
-		echo "Building Hestia Control Panel package..."
+		echo "Building DevIT Control Panel package..."
 
-		BUILD_DIR_HESTIA=$BUILD_DIR/hestia_$HESTIA_V
+		BUILD_DIR_DevIT=$BUILD_DIR/DevIT_$DevIT_V
 
 		# Change to build directory
 		cd $BUILD_DIR
 
-		if [ "$KEEPBUILD" != 'true' ] || [ ! -d "$BUILD_DIR_HESTIA" ]; then
+		if [ "$KEEPBUILD" != 'true' ] || [ ! -d "$BUILD_DIR_DevIT" ]; then
 			# Check if target directory exist
-			if [ -d $BUILD_DIR_HESTIA ]; then
-				rm -r $BUILD_DIR_HESTIA
+			if [ -d $BUILD_DIR_DevIT ]; then
+				rm -r $BUILD_DIR_DevIT
 			fi
 
 			# Create directory
-			mkdir -p $BUILD_DIR_HESTIA
+			mkdir -p $BUILD_DIR_DevIT
 		fi
 
 		cd $BUILD_DIR
-		rm -rf $BUILD_DIR/hestiacp-$branch_dash
+		rm -rf $BUILD_DIR/DevITcp-$branch_dash
 		# Download and unpack source files
 		if [ "$use_src_folder" == 'true' ]; then
-			[ "$HESTIA_DEBUG" ] && echo DEBUG: cp -rf "$SRC_DIR/" $BUILD_DIR/hestiacp-$branch_dash
-			cp -rf "$SRC_DIR/" $BUILD_DIR/hestiacp-$branch_dash
+			[ "$DevIT_DEBUG" ] && echo DEBUG: cp -rf "$SRC_DIR/" $BUILD_DIR/DevITcp-$branch_dash
+			cp -rf "$SRC_DIR/" $BUILD_DIR/DevITcp-$branch_dash
 		elif [ -d $SRC_DIR ]; then
-			download_file $HESTIA_ARCHIVE_LINK '-' 'fresh' | tar xz
+			download_file $DevIT_ARCHIVE_LINK '-' 'fresh' | tar xz
 		fi
 
-		mkdir -p $BUILD_DIR_HESTIA/usr/local/hestia
+		mkdir -p $BUILD_DIR_DevIT/usr/local/DevIT
 
 		# Build web and move needed directories
-		cd $BUILD_DIR/hestiacp-$branch_dash
+		cd $BUILD_DIR/DevITcp-$branch_dash
 		npm ci --ignore-scripts
 		npm run build
-		cp -rf bin func install web $BUILD_DIR_HESTIA/usr/local/hestia/
+		cp -rf bin func install web $BUILD_DIR_DevIT/usr/local/DevIT/
 
 		# Set permissions
-		find $BUILD_DIR_HESTIA/usr/local/hestia/ -type f -exec chmod -x {} \;
+		find $BUILD_DIR_DevIT/usr/local/DevIT/ -type f -exec chmod -x {} \;
 
-		# Allow send email via /usr/local/hestia/web/inc/mail-wrapper.php via cli
-		chmod +x $BUILD_DIR_HESTIA/usr/local/hestia/web/inc/mail-wrapper.php
+		# Allow send email via /usr/local/DevIT/web/inc/mail-wrapper.php via cli
+		chmod +x $BUILD_DIR_DevIT/usr/local/DevIT/web/inc/mail-wrapper.php
 		# Allow the executable to be executed
-		chmod +x $BUILD_DIR_HESTIA/usr/local/hestia/bin/*
-		find $BUILD_DIR_HESTIA/usr/local/hestia/install/ \( -name '*.sh' \) -exec chmod +x {} \;
-		chmod -x $BUILD_DIR_HESTIA/usr/local/hestia/install/*.sh
-		chown -R root:root $BUILD_DIR_HESTIA
+		chmod +x $BUILD_DIR_DevIT/usr/local/DevIT/bin/*
+		find $BUILD_DIR_DevIT/usr/local/DevIT/install/ \( -name '*.sh' \) -exec chmod +x {} \;
+		chmod -x $BUILD_DIR_DevIT/usr/local/DevIT/install/*.sh
+		chown -R root:root $BUILD_DIR_DevIT
 		# Get Debian package files
-		mkdir -p $BUILD_DIR_HESTIA/DEBIAN
-		get_branch_file 'src/deb/hestia/control' "$BUILD_DIR_HESTIA/DEBIAN/control"
+		mkdir -p $BUILD_DIR_DevIT/DEBIAN
+		get_branch_file 'src/deb/DevIT/control' "$BUILD_DIR_DevIT/DEBIAN/control"
 		if [ "$BUILD_ARCH" != "amd64" ]; then
-			sed -i "s/amd64/${BUILD_ARCH}/g" "$BUILD_DIR_HESTIA/DEBIAN/control"
+			sed -i "s/amd64/${BUILD_ARCH}/g" "$BUILD_DIR_DevIT/DEBIAN/control"
 		fi
-		get_branch_file 'src/deb/hestia/copyright' "$BUILD_DIR_HESTIA/DEBIAN/copyright"
-		get_branch_file 'src/deb/hestia/preinst' "$BUILD_DIR_HESTIA/DEBIAN/preinst"
-		get_branch_file 'src/deb/hestia/postinst' "$BUILD_DIR_HESTIA/DEBIAN/postinst"
-		chmod +x $BUILD_DIR_HESTIA/DEBIAN/postinst
-		chmod +x $BUILD_DIR_HESTIA/DEBIAN/preinst
+		get_branch_file 'src/deb/DevIT/copyright' "$BUILD_DIR_DevIT/DEBIAN/copyright"
+		get_branch_file 'src/deb/DevIT/preinst' "$BUILD_DIR_DevIT/DEBIAN/preinst"
+		get_branch_file 'src/deb/DevIT/postinst' "$BUILD_DIR_DevIT/DEBIAN/postinst"
+		chmod +x $BUILD_DIR_DevIT/DEBIAN/postinst
+		chmod +x $BUILD_DIR_DevIT/DEBIAN/preinst
 
-		echo Building Hestia DEB
-		dpkg-deb -Zxz --build $BUILD_DIR_HESTIA $DEB_DIR
+		echo Building DevIT DEB
+		dpkg-deb -Zxz --build $BUILD_DIR_DevIT $DEB_DIR
 
 		# clear up the source folder
 		if [ "$KEEPBUILD" != 'true' ]; then
-			rm -r $BUILD_DIR_HESTIA
-			rm -rf hestiacp-$branch_dash
+			rm -r $BUILD_DIR_DevIT
+			rm -rf DevITcp-$branch_dash
 		fi
-		cd $BUILD_DIR/hestiacp-$branch_dash
+		cd $BUILD_DIR/DevITcp-$branch_dash
 	done
 fi
 

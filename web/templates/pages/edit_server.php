@@ -11,7 +11,7 @@
 			<a href="/edit/server/whitelabel/" class="button button-secondary">
 				<i class="fas fa-paint-brush icon-blue"></i><?= _("White Label") ?>
 			</a>
-			<a href="/edit/server/hestiaweb/" class="button button-secondary">
+			<a href="/edit/server/DevITweb/" class="button button-secondary">
 				<i class="fas fa-clock icon-blue"></i><?= _("Panel Cronjobs") ?>
 			</a>
 		</div>
@@ -521,7 +521,7 @@
 									<?= _("phpMyAdmin Single Sign On") ?>
 									<span class="hint">
 										<a
-											href="https://hestiacp.com/docs/server-administration/databases.html"
+											href="https://DevITcp.com/docs/server-administration/databases.html"
 											target="_blank"
 										>
 											(<?= _("More info") ?>)
@@ -673,7 +673,7 @@
 						<label for="v_backup_mode" class="form-label">
 							<?= _("Compression") ?>
 							<a
-								href="https://hestiacp.com/docs/server-administration/backup-restore.html#what-is-the-difference-between-zstd-and-gzip"
+								href="https://DevITcp.com/docs/server-administration/backup-restore.html#what-is-the-difference-between-zstd-and-gzip"
 								target="_blank"
 								class="u-ml5"
 							>
@@ -693,7 +693,7 @@
 						<label for="v_backup_gzip" class="form-label">
 							<?= _("Compression Level") ?>
 							<a
-								href="https://hestiacp.com/docs/server-administration/backup-restore.html#what-is-the-optimal-compression-ratio"
+								href="https://DevITcp.com/docs/server-administration/backup-restore.html#what-is-the-optimal-compression-ratio"
 								target="_blank"
 								class="u-ml5"
 							>
@@ -716,7 +716,7 @@
 						<label for="v_backup_dir" class="form-label">
 							<?= _("Directory") ?>
 							<a
-								href="https://hestiacp.com/docs/server-administration/backup-restore.html#how-to-change-default-backup-folder"
+								href="https://DevITcp.com/docs/server-administration/backup-restore.html#how-to-change-default-backup-folder"
 								target="_blank"
 								class="u-ml5"
 							>
@@ -749,7 +749,7 @@
 							<label for="backup_type" class="form-label">
 								<?= _("Protocol") ?>
 								<a
-									href="https://hestiacp.com/docs/server-administration/backup-restore.html#what-kind-of-protocols-are-currently-supported"
+									href="https://DevITcp.com/docs/server-administration/backup-restore.html#what-kind-of-protocols-are-currently-supported"
 									target="_blank"
 									class="u-ml5"
 								>

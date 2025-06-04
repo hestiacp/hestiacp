@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Hestia Control Panel upgrade script for target version 1.00.0-190618
+# DevIT Control Panel upgrade script for target version 1.00.0-190618
 
 #######################################################################################
 #######                      Place additional commands below.                   #######
@@ -9,29 +9,29 @@
 # Add webmail alias variable to system configuration if non-existent
 if [ -z "$WEBMAIL_ALIAS" ]; then
 	echo "[ * ] Updating webmail alias configuration..."
-	$HESTIA/bin/v-change-sys-config-value 'WEBMAIL_ALIAS' "webmail"
+	$DevIT/bin/v-change-sys-config-value 'WEBMAIL_ALIAS' "webmail"
 fi
 
 # Update Apache and Nginx configuration to support new file structure
 if [ -f /etc/apache2/apache.conf ]; then
 	echo "[ * ] Updating Apache configuration..."
-	mv /etc/apache2/apache.conf $HESTIA_BACKUP/conf/
-	cp -f $HESTIA_INSTALL_DIR/apache2/apache.conf /etc/apache2/apache.conf
+	mv /etc/apache2/apache.conf $DevIT_BACKUP/conf/
+	cp -f $DevIT_INSTALL_DIR/apache2/apache.conf /etc/apache2/apache.conf
 fi
 if [ -f /etc/nginx/nginx.conf ]; then
 	echo "[ * ] Updating NGINX configuration..."
-	mv /etc/nginx/nginx.conf $HESTIA_BACKUP/conf/
-	cp -f $HESTIA_INSTALL_DIR/nginx/nginx.conf /etc/nginx/nginx.conf
+	mv /etc/nginx/nginx.conf $DevIT_BACKUP/conf/
+	cp -f $DevIT_INSTALL_DIR/nginx/nginx.conf /etc/nginx/nginx.conf
 fi
 
 # Generate dhparam
 if [ ! -e /etc/ssl/dhparam.pem ]; then
 	echo "[ * ] Enabling HTTPS Strict Transport Security (HSTS) support..."
-	mv /etc/nginx/nginx.conf $HESTIA_BACKUP/conf/
-	cp -f $HESTIA_INSTALL_DIR/nginx/nginx.conf /etc/nginx/
+	mv /etc/nginx/nginx.conf $DevIT_BACKUP/conf/
+	cp -f $DevIT_INSTALL_DIR/nginx/nginx.conf /etc/nginx/
 
 	# Copy dhparam
-	cp -f $HESTIA_INSTALL_DIR/ssl/dhparam.pem /etc/ssl/
+	cp -f $DevIT_INSTALL_DIR/ssl/dhparam.pem /etc/ssl/
 
 	# Update DNS servers in nginx.conf
 	dns_resolver=$(cat /etc/resolv.conf | grep -i '^nameserver' | cut -d ' ' -f2 | tr '\r\n' ' ' | xargs)
@@ -39,19 +39,19 @@ if [ ! -e /etc/ssl/dhparam.pem ]; then
 fi
 
 # Back up default package and install latest version
-if [ -d $HESTIA/data/packages/ ]; then
+if [ -d $DevIT/data/packages/ ]; then
 	echo "[ * ] Replacing default packages..."
-	cp -f $HESTIA/data/packages/default.pkg $HESTIA_BACKUP/packages/
+	cp -f $DevIT/data/packages/default.pkg $DevIT_BACKUP/packages/
 fi
 
 # Remove old Office 365 template as there is a newer version with an updated name
-if [ -f $HESTIA/data/templates/dns/o365.tpl ]; then
-	rm -f $HESTIA/data/templates/dns/o365.tpl
+if [ -f $DevIT/data/templates/dns/o365.tpl ]; then
+	rm -f $DevIT/data/templates/dns/o365.tpl
 fi
 
 # Back up and remove default index.html if it exists
 if [ -f /var/www/html/index.html ]; then
-	mv /var/www/html/index.html $HESTIA_BACKUP/templates/
+	mv /var/www/html/index.html $DevIT_BACKUP/templates/
 fi
 
 # Configure default success page and set permissions on CSS, JavaScript, and Font dependencies for unassigned hosts
@@ -63,13 +63,13 @@ if [ ! -d /var/www/document_errors/ ]; then
 	mkdir -p /var/www/document_errors/
 fi
 
-cp -rf $HESTIA_INSTALL_DIR/templates/web/unassigned/* /var/www/html/
-cp -rf $HESTIA_INSTALL_DIR/templates/web/skel/document_errors/* /var/www/document_errors/
+cp -rf $DevIT_INSTALL_DIR/templates/web/unassigned/* /var/www/html/
+cp -rf $DevIT_INSTALL_DIR/templates/web/skel/document_errors/* /var/www/document_errors/
 chmod 644 /var/www/html/*
 chmod 644 /var/www/document_errors/*
 
 for user in $($BIN/v-list-users plain | cut -f1); do
-	USER_DATA=$HESTIA/data/users/$user
+	USER_DATA=$DevIT/data/users/$user
 	for domain in $($BIN/v-list-web-domains $user plain | cut -f 1); do
 		WEBFOLDER="/home/$user/web/$domain/public_html"
 		folderchecksum=$(find "$WEBFOLDER/css" "$WEBFOLDER/js" "$WEBFOLDER/webfonts" -type f -print0 2> /dev/null | sort -z | xargs -r0 cat | md5sum | cut -d" " -f1)
@@ -95,25 +95,25 @@ if [ -d "/etc/roundcube" ]; then
 	chown root:www-data /etc/roundcube/debian-db*
 fi
 
-# Add a general group for normal users created by Hestia
+# Add a general group for normal users created by DevIT
 echo "[ * ] Verifying ACLs and hardening user permissions..."
-if [ -z "$(grep ^hestia-users: /etc/group)" ]; then
-	groupadd --system "hestia-users"
+if [ -z "$(grep ^DevIT-users: /etc/group)" ]; then
+	groupadd --system "DevIT-users"
 fi
 
-# Make sure non-admin users belong to correct Hestia group
+# Make sure non-admin users belong to correct DevIT group
 for user in $($BIN/v-list-users plain | cut -f1); do
 	if [ "$user" != "admin" ]; then
-		usermod -a -G "hestia-users" "$user"
+		usermod -a -G "DevIT-users" "$user"
 		setfacl -m "u:$user:r-x" "$HOMEDIR/$user"
 
 		# Update FTP users groups membership
 		uid=$(id -u $user)
 		for ftp_user in $(cat /etc/passwd | grep -v "^$user:" | grep "^$user.*:$uid:$uid:" | cut -d ":" -f1); do
-			usermod -a -G "hestia-users" "$ftp_user"
+			usermod -a -G "DevIT-users" "$ftp_user"
 		done
 	fi
-	setfacl -m "g:hestia-users:---" "$HOMEDIR/$user"
+	setfacl -m "g:DevIT-users:---" "$HOMEDIR/$user"
 done
 
 # Add unassigned hosts configuration to Nginx and Apache
@@ -128,7 +128,7 @@ for ipaddr in $($BIN/v-list-sys-ips plain | cut -f1); do
 			echo "NameVirtualHost $ipaddr:$WEB_PORT" > $web_conf
 		fi
 		echo "Listen $ipaddr:$WEB_PORT" >> $web_conf
-		cat $HESTIA_INSTALL_DIR/apache2/unassigned.conf >> $web_conf
+		cat $DevIT_INSTALL_DIR/apache2/unassigned.conf >> $web_conf
 		sed -i 's/directIP/'$ipaddr'/g' $web_conf
 		sed -i 's/directPORT/'$WEB_PORT'/g' $web_conf
 
@@ -141,7 +141,7 @@ for ipaddr in $($BIN/v-list-sys-ips plain | cut -f1); do
 		fi
 
 	elif [ "$WEB_SYSTEM" = "nginx" ]; then
-		cp -f $HESTIA_INSTALL_DIR/nginx/unassigned.inc $web_conf
+		cp -f $DevIT_INSTALL_DIR/nginx/unassigned.inc $web_conf
 		sed -i 's/directIP/'$ipaddr'/g' $web_conf
 	fi
 
@@ -159,7 +159,7 @@ done
 if [ ! -f /etc/cron.daily/php-session-cleanup ]; then
 	echo '#!/bin/sh' > /etc/cron.daily/php-session-cleanup
 	echo "find -O3 /home/*/tmp/ -ignore_readdir_race -depth -mindepth 1 -name 'sess_*' -type f -cmin '+10080' -delete > /dev/null 2>&1" >> /etc/cron.daily/php-session-cleanup
-	echo "find -O3 $HESTIA/data/sessions/ -ignore_readdir_race -depth -mindepth 1 -name 'sess_*' -type f -cmin '+10080' -delete > /dev/null 2>&1" >> /etc/cron.daily/php-session-cleanup
+	echo "find -O3 $DevIT/data/sessions/ -ignore_readdir_race -depth -mindepth 1 -name 'sess_*' -type f -cmin '+10080' -delete > /dev/null 2>&1" >> /etc/cron.daily/php-session-cleanup
 fi
 chmod 755 /etc/cron.daily/php-session-cleanup
 
@@ -171,7 +171,7 @@ if [ "$php_versions" -gt 1 ]; then
 		if [ ! -d "/etc/php/$v/fpm/pool.d/" ]; then
 			continue
 		fi
-		cp -f $HESTIA_INSTALL_DIR/php-fpm/dummy.conf /etc/php/$v/fpm/pool.d/
+		cp -f $DevIT_INSTALL_DIR/php-fpm/dummy.conf /etc/php/$v/fpm/pool.d/
 		v1=$(echo "$v" | sed -e 's/[.]//')
 		sed -i "s/9999/99$v1/g" /etc/php/$v/fpm/pool.d/dummy.conf
 	done
@@ -190,24 +190,24 @@ if [ -f /etc/roundcube/main.inc.php ]; then
 fi
 
 # Remove old OS-specific installation files if they exist to free up space
-if [ -d $HESTIA/install/ubuntu ]; then
-	echo "[ * ] Removing old HestiaCP installation files for Ubuntu..."
-	rm -rf $HESTIA/install/ubuntu
+if [ -d $DevIT/install/ubuntu ]; then
+	echo "[ * ] Removing old DevITCP installation files for Ubuntu..."
+	rm -rf $DevIT/install/ubuntu
 fi
-if [ -d $HESTIA/install/debian ]; then
-	echo "[ * ] Removing old HestiaCP installation files for Debian..."
-	rm -rf $HESTIA/install/debian
+if [ -d $DevIT/install/debian ]; then
+	echo "[ * ] Removing old DevITCP installation files for Debian..."
+	rm -rf $DevIT/install/debian
 fi
 
 # Fix Dovecot configuration
 echo "[ * ] Updating Dovecot IMAP/POP server configuration..."
 if [ -f /etc/dovecot/conf.d/15-mailboxes.conf ]; then
-	mv /etc/dovecot/conf.d/15-mailboxes.conf $HESTIA_BACKUP/conf/
+	mv /etc/dovecot/conf.d/15-mailboxes.conf $DevIT_BACKUP/conf/
 fi
 if [ -f /etc/dovecot/dovecot.conf ]; then
 	# Update Dovecot configuration and restart Dovecot service
-	mv /etc/dovecot/dovecot.conf $HESTIA_BACKUP/conf/
-	cp -f $HESTIA_COMMON_DIR/dovecot/dovecot.conf /etc/dovecot/dovecot.conf
+	mv /etc/dovecot/dovecot.conf $DevIT_BACKUP/conf/
+	cp -f $DevIT_COMMON_DIR/dovecot/dovecot.conf /etc/dovecot/dovecot.conf
 	systemctl restart dovecot
 	sleep 0.5
 fi
@@ -215,8 +215,8 @@ fi
 # Fix Exim configuration
 if [ -f /etc/exim4/exim4.conf.template ]; then
 	echo "[ * ] Updating Exim SMTP server configuration..."
-	mv /etc/exim4/exim4.conf.template $HESTIA_BACKUP/conf/
-	cp -f $HESTIA_INSTALL_DIR/exim/exim4.conf.template /etc/exim4/exim4.conf.template
+	mv /etc/exim4/exim4.conf.template $DevIT_BACKUP/conf/
+	cp -f $DevIT_INSTALL_DIR/exim/exim4.conf.template /etc/exim4/exim4.conf.template
 	# Reconfigure spam filter and virus scanning
 	if [ ! -z "$ANTISPAM_SYSTEM" ]; then
 		sed -i "s/#SPAM/SPAM/g" /etc/exim4/exim4.conf.template
@@ -230,13 +230,13 @@ fi
 # Add IMAP system variable to configuration if Dovecot is installed
 if [ -z "$IMAP_SYSTEM" ]; then
 	if [ -f /usr/bin/dovecot ]; then
-		echo "[ * ] Adding missing IMAP_SYSTEM variable to hestia.conf..."
-		echo "IMAP_SYSTEM = 'dovecot'" >> $HESTIA/conf/hestia.conf
+		echo "[ * ] Adding missing IMAP_SYSTEM variable to DevIT.conf..."
+		echo "IMAP_SYSTEM = 'dovecot'" >> $DevIT/conf/DevIT.conf
 	fi
 fi
 
 # Run sftp jail once
-$HESTIA/bin/v-add-sys-sftp-jail
+$DevIT/bin/v-add-sys-sftp-jail
 
 # Enable SFTP subsystem for SSH
 sftp_subsys_enabled=$(grep -iE "^#?.*subsystem.+(sftp )?sftp-server" /etc/ssh/sshd_config)
@@ -248,7 +248,7 @@ fi
 
 # Remove and migrate obsolete object keys
 for user in $($BIN/v-list-users plain | cut -f1); do
-	USER_DATA=$HESTIA/data/users/$user
+	USER_DATA=$DevIT/data/users/$user
 
 	# Web keys
 	for domain in $($BIN/v-list-web-domains $user plain | cut -f 1); do

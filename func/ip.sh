@@ -2,7 +2,7 @@
 
 #===========================================================================#
 #                                                                           #
-# Hestia Control Panel - IP/Network Function Library                        #
+# DevIT Control Panel - IP/Network Function Library                        #
 #                                                                           #
 #===========================================================================#
 
@@ -11,7 +11,7 @@ REGEX_IPV4="^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.|$)){4}$"
 
 # Check ip ownership
 is_ip_owner() {
-	owner=$(grep 'OWNER=' $HESTIA/data/ips/$ip | cut -f 2 -d \')
+	owner=$(grep 'OWNER=' $DevIT/data/ips/$ip | cut -f 2 -d \')
 	if [ "$owner" != "$user" ]; then
 		check_result "$E_FORBIDEN" "$ip is not owned by $user"
 	fi
@@ -19,7 +19,7 @@ is_ip_owner() {
 
 # Check if ip address is free
 is_ip_free() {
-	if [ -e "$HESTIA/data/ips/$ip" ]; then
+	if [ -e "$DevIT/data/ips/$ip" ]; then
 		check_result "$E_EXISTS" "$ip is already exists"
 	fi
 }
@@ -27,7 +27,7 @@ is_ip_free() {
 # Check ip address specific value
 is_ip_key_empty() {
 	key="$1"
-	string=$(cat $HESTIA/data/ips/$ip)
+	string=$(cat $DevIT/data/ips/$ip)
 	eval $string
 	eval value="$key"
 	if [ -n "$value" ] && [ "$value" != '0' ]; then
@@ -58,7 +58,7 @@ is_ip_rdns_valid() {
 update_ip_value() {
 	key="$1"
 	value="$2"
-	conf="$HESTIA/data/ips/$ip"
+	conf="$DevIT/data/ips/$ip"
 	str=$(cat $conf)
 	eval $str
 	c_key=$(echo "${key//$/}")
@@ -73,7 +73,7 @@ update_ip_value() {
 update_ip_value_new() {
 	key="$1"
 	value="$2"
-	conf="$HESTIA/data/ips/$ip"
+	conf="$DevIT/data/ips/$ip"
 	check_ckey=$(grep "^$key='" $conf)
 	if [ -z "$check_ckey" ]; then
 		echo "$key='$value'" >> $conf
@@ -84,7 +84,7 @@ update_ip_value_new() {
 
 # Get ip name
 get_ip_alias() {
-	ip_name=$(grep "NAME=" $HESTIA/data/ips/$local_ip | cut -f 2 -d \')
+	ip_name=$(grep "NAME=" $DevIT/data/ips/$local_ip | cut -f 2 -d \')
 	if [ -n "$ip_name" ]; then
 		echo "${1//./-}.$ip_name"
 	fi
@@ -96,8 +96,8 @@ increase_ip_value() {
 	USER=${2-$user}
 	web_key='U_WEB_DOMAINS'
 	usr_key='U_SYS_USERS'
-	current_web=$(grep "$web_key=" $HESTIA/data/ips/$sip | cut -f 2 -d \')
-	current_usr=$(grep "$usr_key=" $HESTIA/data/ips/$sip | cut -f 2 -d \')
+	current_web=$(grep "$web_key=" $DevIT/data/ips/$sip | cut -f 2 -d \')
+	current_usr=$(grep "$usr_key=" $DevIT/data/ips/$sip | cut -f 2 -d \')
 	if [ -z "$current_web" ]; then
 		echo "Error: Parsing error"
 		log_event "$E_PARSING" "$ARGUMENTS"
@@ -122,9 +122,9 @@ increase_ip_value() {
 		| sed ':a;N;$!ba;s/\n/,/g')
 
 	sed -i "s/$web_key='$current_web'/$web_key='$new_web'/g" \
-		$HESTIA/data/ips/$sip
+		$DevIT/data/ips/$sip
 	sed -i "s/$usr_key='$current_usr'/$usr_key='$new_usr'/g" \
-		$HESTIA/data/ips/$sip
+		$DevIT/data/ips/$sip
 }
 
 # Decrease ip value
@@ -134,8 +134,8 @@ decrease_ip_value() {
 	web_key='U_WEB_DOMAINS'
 	usr_key='U_SYS_USERS'
 
-	current_web=$(grep "$web_key=" $HESTIA/data/ips/$sip | cut -f 2 -d \')
-	current_usr=$(grep "$usr_key=" $HESTIA/data/ips/$sip | cut -f 2 -d \')
+	current_web=$(grep "$web_key=" $DevIT/data/ips/$sip | cut -f 2 -d \')
+	current_usr=$(grep "$usr_key=" $DevIT/data/ips/$sip | cut -f 2 -d \')
 
 	if [ -z "$current_web" ]; then
 		check_result $E_PARSING "Parsing error"
@@ -155,15 +155,15 @@ decrease_ip_value() {
 	fi
 
 	sed -i "s/$web_key='$current_web'/$web_key='$new_web'/g" \
-		$HESTIA/data/ips/$sip
+		$DevIT/data/ips/$sip
 	sed -i "s/$usr_key='$current_usr'/$usr_key='$new_usr'/g" \
-		$HESTIA/data/ips/$sip
+		$DevIT/data/ips/$sip
 }
 
 # Get ip address value
 get_ip_value() {
 	key="$1"
-	string=$(cat $HESTIA/data/ips/$ip)
+	string=$(cat $DevIT/data/ips/$ip)
 	eval $string
 	eval value="$key"
 	echo "$value"
@@ -171,10 +171,10 @@ get_ip_value() {
 
 # Get real ip address
 get_real_ip() {
-	if [ -e "$HESTIA/data/ips/$1" ]; then
+	if [ -e "$DevIT/data/ips/$1" ]; then
 		echo "$1"
 	else
-		nat=$(grep -H "^NAT='$1'" $HESTIA/data/ips/* | head -n1)
+		nat=$(grep -H "^NAT='$1'" $DevIT/data/ips/* | head -n1)
 		if [ -n "$nat" ]; then
 			echo "$nat" | cut -f 1 -d : | cut -f 7 -d /
 		fi
@@ -226,9 +226,9 @@ get_broadcast() {
 
 # Get user ips
 get_user_ips() {
-	dedicated=$(grep -H "OWNER='$user'" $HESTIA/data/ips/*)
+	dedicated=$(grep -H "OWNER='$user'" $DevIT/data/ips/*)
 	dedicated=$(echo "$dedicated" | cut -f 1 -d : | sed 's=.*/==' | grep -E ${REGEX_IPV4})
-	shared=$(grep -H -A1 "OWNER='$ROOT_USER'" $HESTIA/data/ips/* | grep shared)
+	shared=$(grep -H -A1 "OWNER='$ROOT_USER'" $DevIT/data/ips/* | grep shared)
 	shared=$(echo "$shared" | cut -f 1 -d : | sed 's=.*/==' | cut -f 1 -d \- | grep -E ${REGEX_IPV4})
 	for dedicated_ip in $dedicated; do
 		shared=$(echo "$shared" | grep -v $dedicated_ip)
@@ -243,7 +243,7 @@ get_user_ip() {
 		check_result $E_NOTEXIST "no IP is available"
 	fi
 	local_ip=$ip
-	nat=$(grep "^NAT" $HESTIA/data/ips/$ip | cut -f 2 -d \')
+	nat=$(grep "^NAT" $DevIT/data/ips/$ip | cut -f 2 -d \')
 	if [ -n "$nat" ]; then
 		ip=$nat
 	fi
@@ -252,8 +252,8 @@ get_user_ip() {
 # Validate ip address
 is_ip_valid() {
 	local_ip="$1"
-	if [ ! -e "$HESTIA/data/ips/$1" ]; then
-		nat=$(grep -H "^NAT='$1'" $HESTIA/data/ips/*)
+	if [ ! -e "$DevIT/data/ips/$1" ]; then
+		nat=$(grep -H "^NAT='$1'" $DevIT/data/ips/*)
 		if [ -z "$nat" ]; then
 			check_result "$E_NOTEXIST" "IP $1 doesn't exist"
 		else
@@ -263,9 +263,9 @@ is_ip_valid() {
 	fi
 	if [ -n "$2" ]; then
 		if [ -z "$nat" ]; then
-			ip_data=$(cat $HESTIA/data/ips/$1)
+			ip_data=$(cat $DevIT/data/ips/$1)
 		else
-			ip_data=$(cat $HESTIA/data/ips/$nat)
+			ip_data=$(cat $DevIT/data/ips/$nat)
 		fi
 		ip_owner=$(echo "$ip_data" | grep OWNER= | cut -f2 -d \')
 		ip_status=$(echo "$ip_data" | grep STATUS= | cut -f2 -d \')

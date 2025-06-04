@@ -1,5 +1,5 @@
 <?php
-use function Hestiacp\quoteshellarg\quoteshellarg;
+use function DevITcp\quoteshellarg\quoteshellarg;
 
 ob_start();
 $TAB = "IP";
@@ -21,7 +21,7 @@ if (empty($_GET["ip"])) {
 
 // List ip
 $v_ip = quoteshellarg($_GET["ip"]);
-exec(HESTIA_CMD . "v-list-sys-ip " . $v_ip . " 'json'", $output, $return_var);
+exec(DevIT_CMD . "v-list-sys-ip " . $v_ip . " 'json'", $output, $return_var);
 check_return_code_redirect($return_var, $output, "/list/ip");
 $data = json_decode(implode("", $output), true);
 unset($output);
@@ -42,7 +42,7 @@ $v_date = $data[$v_ip]["DATE"];
 $v_time = $data[$v_ip]["TIME"];
 
 // List users
-exec(HESTIA_CMD . "v-list-sys-users 'json'", $output, $return_var);
+exec(DevIT_CMD . "v-list-sys-users 'json'", $output, $return_var);
 $users = json_decode(implode("", $output), true);
 unset($output);
 
@@ -55,13 +55,13 @@ if (!empty($_POST["save"])) {
 
 	// Change Status
 	if ($v_ipstatus == "shared" && empty($_POST["v_shared"]) && empty($_SESSION["error_msg"])) {
-		exec(HESTIA_CMD . "v-change-sys-ip-status " . $v_ip . " 'dedicated'", $output, $return_var);
+		exec(DevIT_CMD . "v-change-sys-ip-status " . $v_ip . " 'dedicated'", $output, $return_var);
 		check_return_code($return_var, $output);
 		unset($output);
 		$v_dedicated = "yes";
 	}
 	if ($v_ipstatus == "dedicated" && !empty($_POST["v_shared"]) && empty($_SESSION["error_msg"])) {
-		exec(HESTIA_CMD . "v-change-sys-ip-status " . $v_ip . " 'shared'", $output, $return_var);
+		exec(DevIT_CMD . "v-change-sys-ip-status " . $v_ip . " 'shared'", $output, $return_var);
 		check_return_code($return_var, $output);
 		unset($output);
 		unset($v_dedicated);
@@ -70,7 +70,7 @@ if (!empty($_POST["save"])) {
 	// Change owner
 	if ($v_owner != $_POST["v_owner"] && empty($_SESSION["error_msg"])) {
 		$v_owner = quoteshellarg($_POST["v_owner"]);
-		exec(HESTIA_CMD . "v-change-sys-ip-owner " . $v_ip . " " . $v_owner, $output, $return_var);
+		exec(DevIT_CMD . "v-change-sys-ip-owner " . $v_ip . " " . $v_owner, $output, $return_var);
 		check_return_code($return_var, $output);
 		$v_owner = $_POST["v_owner"];
 		unset($output);
@@ -79,7 +79,7 @@ if (!empty($_POST["save"])) {
 	// Change associated domain
 	if ($v_name != $_POST["v_name"] && empty($_SESSION["error_msg"])) {
 		$v_name = quoteshellarg($_POST["v_name"]);
-		exec(HESTIA_CMD . "v-change-sys-ip-name " . $v_ip . " " . $v_name, $output, $return_var);
+		exec(DevIT_CMD . "v-change-sys-ip-name " . $v_ip . " " . $v_name, $output, $return_var);
 		check_return_code($return_var, $output);
 		unset($output);
 	}
@@ -87,7 +87,7 @@ if (!empty($_POST["save"])) {
 	// Change NAT address
 	if ($v_nat != $_POST["v_nat"] && empty($_SESSION["error_msg"])) {
 		$v_nat = quoteshellarg($_POST["v_nat"]);
-		exec(HESTIA_CMD . "v-change-sys-ip-nat " . $v_ip . " " . $v_nat, $output, $return_var);
+		exec(DevIT_CMD . "v-change-sys-ip-nat " . $v_ip . " " . $v_nat, $output, $return_var);
 		check_return_code($return_var, $output);
 		unset($output);
 	}

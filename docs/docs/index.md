@@ -47,8 +47,8 @@
 
 ## Community
 
-- [Hestia Nginx Cache](/docs/community/hestia-nginx-cache)
-- [Ioncube installer for Hestia](/docs/community/ioncube-hestia-installer)
+- [DevIT Nginx Cache](/docs/community/DevIT-nginx-cache)
+- [Ioncube installer for DevIT](/docs/community/ioncube-DevIT-installer)
 - [Install script generator](/docs/community/install-script-generator)
 
 ## Reference

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Hestia\System;
+namespace DevIT\System;
 
 class WebDomain
 {

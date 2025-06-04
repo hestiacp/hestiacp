@@ -94,7 +94,7 @@
 				</div>
 			</div>
 			<div id="password-details" class="u-mb20">
-				<?php require $_SERVER["HESTIA"] . "/web/templates/includes/password-requirements.php"; ?>
+				<?php require $_SERVER["DevIT"] . "/web/templates/includes/password-requirements.php"; ?>
 				<?php if ($_SESSION["userContext"] === "admin") { ?>
 					<div class="form-check">
 						<input x-model="loginDisabled" class="form-check-input" type="checkbox" name="v_login_disabled" id="v_login_disabled">
@@ -248,7 +248,7 @@
 						<div class="u-mb5">
 							<input type="text" class="form-control" name="v_ns2" value="<?= htmlentities(trim($v_ns2, "'")) ?>">
 						</div>
-						<?php require $_SERVER["HESTIA"] . "/web/templates/includes/extra-ns-fields.php"; ?>
+						<?php require $_SERVER["DevIT"] . "/web/templates/includes/extra-ns-fields.php"; ?>
 						<button type="button" class="form-link u-mt20 js-add-ns" <?php if ($v_ns8) echo 'style="display:none;"'; ?>>
 							<?= _("Add Name Server") ?>
 						</button>

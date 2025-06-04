@@ -1,4 +1,4 @@
-# Contributing to Hestia’s documentation
+# Contributing to DevIT’s documentation
 
 The documentation is built using [VitePress](https://vitepress.vuejs.org). There are a couple of requirements to contribute to it.
 

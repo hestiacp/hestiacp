@@ -1,15 +1,15 @@
 <?php
 
-/* Hestia way to enable support for SSO to PHPmyAdmin */
+/* DevIT way to enable support for SSO to PHPmyAdmin */
 /* To install please run v-add-sys-pma-sso */
 
 /* Following keys will get replaced when calling v-add-sys-pma-sso */
 define("PHPMYADMIN_KEY", "%PHPMYADMIN_KEY%");
 define("API_HOST_NAME", "%API_HOST_NAME%");
-define("API_HESTIA_PORT", "%API_HESTIA_PORT%");
+define("API_DevIT_PORT", "%API_DevIT_PORT%");
 define("API_KEY", "%API_KEY%");
 
-class Hestia_API {
+class DevIT_API {
 	/** @var string */
 	public $hostname;
 	/** @var string */
@@ -19,7 +19,7 @@ class Hestia_API {
 	/** @var string */
 	private $api_url;
 	public function __construct() {
-		$this->hostname = "https://" . API_HOST_NAME . ":" . API_HESTIA_PORT . "/api/";
+		$this->hostname = "https://" . API_HOST_NAME . ":" . API_DevIT_PORT . "/api/";
 		$this->key = API_KEY;
 		$this->pma_key = PHPMYADMIN_KEY;
 	}
@@ -150,23 +150,23 @@ function session_invalid() {
 	die();
 }
 
-$api = new Hestia_API();
+$api = new DevIT_API();
 if (!empty($_GET)) {
 	if (isset($_GET["logout"])) {
 		$api->delete_temp_user(
-			$_SESSION["HESTIA_sso_database"],
-			$_SESSION["HESTIA_sso_user"],
+			$_SESSION["DevIT_sso_database"],
+			$_SESSION["DevIT_sso_user"],
 			$_SESSION["PMA_single_signon_user"],
-			$_SESSION["HESTIA_sso_host"],
+			$_SESSION["DevIT_sso_host"],
 		);
 		//remove session
 		session_invalid();
 	} else {
-		if (isset($_GET["user"]) && isset($_GET["hestia_token"])) {
+		if (isset($_GET["user"]) && isset($_GET["DevIT_token"])) {
 			$database = $_GET["database"];
 			$user = $_GET["user"];
 			$host = "localhost";
-			$token = $_GET["hestia_token"];
+			$token = $_GET["DevIT_token"];
 			if (is_numeric($_GET["exp"])) {
 				$time = $_GET["exp"];
 			} else {
@@ -185,9 +185,9 @@ if (!empty($_GET)) {
 					$_SESSION["PMA_single_signon_password"] = $data->login->password;
 					$_SESSION["PMA_single_signon_host"] = $host;
 					//save database / username to be used for sending logout notification.
-					$_SESSION["HESTIA_sso_user"] = $user;
-					$_SESSION["HESTIA_sso_database"] = $database;
-					$_SESSION["HESTIA_sso_host"] = $host;
+					$_SESSION["DevIT_sso_user"] = $user;
+					$_SESSION["DevIT_sso_database"] = $database;
+					$_SESSION["DevIT_sso_host"] = $host;
 
 					@session_write_close();
 					setcookie($session_name, $id, 0, "/");

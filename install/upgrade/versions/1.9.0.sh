@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Hestia Control Panel upgrade script for target version 1.9.0
+# DevIT Control Panel upgrade script for target version 1.9.0
 
 #######################################################################################
 #######                      Place additional commands below.                   #######
@@ -27,52 +27,52 @@ upgrade_config_set_value 'UPGRADE_UPDATE_FILEMANAGER_CONFIG' 'true'
 $BIN/v-delete-sys-sftp-jail
 $BIN/v-add-sys-sftp-jail
 
-# Check if hestiaweb exists
-if [ -z "$(grep ^hestiaweb: /etc/passwd)" ]; then
+# Check if DevITweb exists
+if [ -z "$(grep ^DevITweb: /etc/passwd)" ]; then
 	# Generate a random password
 	random_password=$(generate_password '32')
-	# Create the new hestiaweb user
-	/usr/sbin/useradd "hestiaweb" -c "$email" --no-create-home
-	# do not allow login into hestiaweb user
-	echo hestiaweb:$random_password | sudo chpasswd -e
-	cp $HESTIA_COMMON_DIR/sudo/hestiaweb /etc/sudoers.d/
+	# Create the new DevITweb user
+	/usr/sbin/useradd "DevITweb" -c "$email" --no-create-home
+	# do not allow login into DevITweb user
+	echo DevITweb:$random_password | sudo chpasswd -e
+	cp $DevIT_COMMON_DIR/sudo/DevITweb /etc/sudoers.d/
 	# Keep enabled for now
 	# Remove sudo permissions admin user
 	# rm /etc/sudoers.d/admin/
 fi
 
 # Check if cronjobs have been migrated
-if [ ! -f "/var/spool/cron/crontabs/hestiaweb" ]; then
-	echo "MAILTO=\"\"" > /var/spool/cron/crontabs/hestiaweb
-	echo "CONTENT_TYPE=\"text/plain; charset=utf-8\"" >> /var/spool/cron/crontabs/hestiaweb
+if [ ! -f "/var/spool/cron/crontabs/DevITweb" ]; then
+	echo "MAILTO=\"\"" > /var/spool/cron/crontabs/DevITweb
+	echo "CONTENT_TYPE=\"text/plain; charset=utf-8\"" >> /var/spool/cron/crontabs/DevITweb
 	while read line; do
 		parse_object_kv_list "$line"
 		if [ -n "$(echo "$CMD" | grep ^sudo)" ]; then
 			echo "$MIN $HOUR $DAY $MONTH $WDAY $CMD" \
 				| sed -e "s/%quote%/'/g" -e "s/%dots%/:/g" \
-					>> /var/spool/cron/crontabs/hestiaweb
+					>> /var/spool/cron/crontabs/DevITweb
 			$BIN/v-delete-cron-job admin "$JOB"
 		fi
-	done < $HESTIA/data/users/admin/cron.conf
+	done < $DevIT/data/users/admin/cron.conf
 	# Update permissions
-	chmod 600 /var/spool/cron/crontabs/hestiaweb
-	chown hestiaweb:hestiaweb /var/spool/cron/crontabs/hestiaweb
+	chmod 600 /var/spool/cron/crontabs/DevITweb
+	chown DevITweb:DevITweb /var/spool/cron/crontabs/DevITweb
 
 fi
 
-chown hestiaweb:hestiaweb /usr/local/hestia/data/sessions
+chown DevITweb:DevITweb /usr/local/DevIT/data/sessions
 
-packages=$(ls --sort=time $HESTIA/data/packages | grep .pkg)
-# Update Hestia Packages
+packages=$(ls --sort=time $DevIT/data/packages | grep .pkg)
+# Update DevIT Packages
 for package in $packages; do
-	if [ -z "$(grep -e 'BACKUPS_INCREMENTAL' $HESTIA/data/packages/$package)" ]; then
-		echo "BACKUPS_INCREMENTAL='no'" >> $HESTIA/data/packages/$package
+	if [ -z "$(grep -e 'BACKUPS_INCREMENTAL' $DevIT/data/packages/$package)" ]; then
+		echo "BACKUPS_INCREMENTAL='no'" >> $DevIT/data/packages/$package
 	fi
 
 	# Add additional key-value pairs if they don't exist
 	for key in DISK_QUOTA CPU_QUOTA CPU_QUOTA_PERIOD MEMORY_LIMIT SWAP_LIMIT; do
-		if [ -z "$(grep -e "$key" $HESTIA/data/packages/$package)" ]; then
-			echo "$key='unlimited'" >> $HESTIA/data/packages/$package
+		if [ -z "$(grep -e "$key" $DevIT/data/packages/$package)" ]; then
+			echo "$key='unlimited'" >> $DevIT/data/packages/$package
 		fi
 	done
 done
@@ -97,7 +97,7 @@ php_versions=$($BIN/v-list-sys-php plain)
 # Substitute php-fpm service name formats
 for version in $php_versions; do
 	if [ -f "/etc/php/$version/fpm/pool.d/www.conf" ]; then
-		cp -f $HESTIA_INSTALL_DIR/php-fpm/www.conf "/etc/php/$version/fpm/pool.d/www.conf"
+		cp -f $DevIT_INSTALL_DIR/php-fpm/www.conf "/etc/php/$version/fpm/pool.d/www.conf"
 	fi
 done
 
@@ -118,7 +118,7 @@ if [ -x /usr/bin/mariadb ]; then
 	sed -i 's|/usr/share/mysql|/usr/share/mariadb|g' /etc/mysql/my.cnf
 fi
 
-$BIN/v-add-user-notification 'admin' 'Hestia security has been upgraded' ' A new user "hestiaweb" has been created and is used for login. Make sure other Hestia packages are updated as well otherwise the system may not work as expected.'
-add_upgrade_message 'Security has been upgraded, A new user "hestiaweb" has been created and is used for login. Make sure other Hestia packages are updated as well otherwise the system may not work as expected.'
-# Ensures proper permissions for Hestia service interactions.
-/usr/sbin/adduser hestiamail hestia-users
+$BIN/v-add-user-notification 'admin' 'DevIT security has been upgraded' ' A new user "DevITweb" has been created and is used for login. Make sure other DevIT packages are updated as well otherwise the system may not work as expected.'
+add_upgrade_message 'Security has been upgraded, A new user "DevITweb" has been created and is used for login. Make sure other DevIT packages are updated as well otherwise the system may not work as expected.'
+# Ensures proper permissions for DevIT service interactions.
+/usr/sbin/adduser DevITmail DevIT-users

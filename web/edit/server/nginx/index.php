@@ -30,7 +30,7 @@ if (!empty($_POST["save"])) {
 		fwrite($fp, str_replace("\r\n", "\n", $_POST["v_config"]));
 		fclose($fp);
 		exec(
-			HESTIA_CMD . "v-change-sys-service-config " . $new_conf . " nginx " . $v_restart,
+			DevIT_CMD . "v-change-sys-service-config " . $new_conf . " nginx " . $v_restart,
 			$output,
 			$return_var,
 		);
@@ -46,7 +46,7 @@ if (!empty($_POST["save"])) {
 }
 
 // List config
-exec(HESTIA_CMD . "v-list-sys-nginx-config json", $output, $return_var);
+exec(DevIT_CMD . "v-list-sys-nginx-config json", $output, $return_var);
 $data = json_decode(implode("", $output), true);
 unset($output);
 $v_worker_processes = $data["CONFIG"]["worker_processes"];
@@ -63,7 +63,7 @@ $v_config_path = $data["CONFIG"]["config_path"];
 $v_service_name = strtoupper("nginx");
 
 // Read config
-$v_config = shell_exec(HESTIA_CMD . "v-open-fs-config " . $v_config_path);
+$v_config = shell_exec(DevIT_CMD . "v-open-fs-config " . $v_config_path);
 
 // Render page
 render_page($user, $TAB, "edit_server_nginx");

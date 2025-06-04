@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Hestia\WebApp\Installers\Symfony;
+namespace DevIT\WebApp\Installers\Symfony;
 
-use Hestia\WebApp\BaseSetup;
-use Hestia\WebApp\InstallationTarget\InstallationTarget;
+use DevIT\WebApp\BaseSetup;
+use DevIT\WebApp\InstallationTarget\InstallationTarget;
 use function file_get_contents;
 
 class SymfonySetup extends BaseSetup

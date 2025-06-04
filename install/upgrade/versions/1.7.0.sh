@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Hestia Control Panel upgrade script for target version 1.7.0
+# DevIT Control Panel upgrade script for target version 1.7.0
 
 #######################################################################################
 #######                      Place additional commands below.                   #######
@@ -20,14 +20,14 @@
 # load config because we need to know if proftpd is installed
 
 # Includes
-# shellcheck source=/etc/hestiacp/hestia.conf
-source /etc/hestiacp/hestia.conf
-# shellcheck source=/usr/local/hestia/func/main.sh
-source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/func/ip.sh
-source $HESTIA/func/ip.sh
+# shellcheck source=/etc/DevITcp/DevIT.conf
+source /etc/DevITcp/DevIT.conf
+# shellcheck source=/usr/local/DevIT/func/main.sh
+source $DevIT/func/main.sh
+# shellcheck source=/usr/local/DevIT/func/ip.sh
+source $DevIT/func/ip.sh
 # load config file
-source_conf "$HESTIA/conf/hestia.conf"
+source_conf "$DevIT/conf/DevIT.conf"
 
 upgrade_config_set_value 'UPGRADE_UPDATE_WEB_TEMPLATES' 'true'
 upgrade_config_set_value 'UPGRADE_UPDATE_DNS_TEMPLATES' 'true'
@@ -38,15 +38,15 @@ upgrade_config_set_value 'UPGRADE_UPDATE_FILEMANAGER_CONFIG' 'false'
 # Make sure to sync install quoteshell arg
 if [ "$FILE_MANAGER" = "true" ]; then
 	echo "[ * ] Force update filemanager..."
-	$HESTIA/bin/v-delete-sys-filemanager quiet
-	$HESTIA/bin/v-add-sys-filemanager quiet
+	$DevIT/bin/v-delete-sys-filemanager quiet
+	$DevIT/bin/v-add-sys-filemanager quiet
 fi
 
-packages=$(ls --sort=time $HESTIA/data/packages | grep .pkg)
+packages=$(ls --sort=time $DevIT/data/packages | grep .pkg)
 echo "[ * ] Update existing packages to support rate limit mail accounts..."
 for package in $packages; do
-	if [ -z "$(grep -e 'RATE_LIMIT' $HESTIA/data/packages/$package)" ]; then
-		echo "RATE_LIMIT='200'" >> $HESTIA/data/packages/$package
+	if [ -z "$(grep -e 'RATE_LIMIT' $DevIT/data/packages/$package)" ]; then
+		echo "RATE_LIMIT='200'" >> $DevIT/data/packages/$package
 	fi
 done
 
@@ -74,7 +74,7 @@ for file in /etc/dovecot/dovecot.conf /etc/clamav/clamd.conf /etc/exim/exim.conf
 	fi
 done
 # Update any custom php templates
-for file in $HESTIA/data/templates/web/php-fpm/*; do
+for file in $DevIT/data/templates/web/php-fpm/*; do
 	echo "[ * ] Update $file legacy /var/run/ to /run/..."
 	sed -i 's|/var/run/|/run/|g' $file
 done
@@ -101,13 +101,13 @@ if echo "$BACKUP_SYSTEM" | grep "google" > /dev/null; then
 fi
 
 if [ -f /etc/logrotate.d/httpd-prerotate/awstats ]; then
-	echo "[ * ] Update Awstats prerotate to Hestia update method..."
+	echo "[ * ] Update Awstats prerotate to DevIT update method..."
 	# Replace awstatst function
-	cp -f $HESTIA_INSTALL_DIR/logrotate/httpd-prerotate/awstats /etc/logrotate.d/httpd-prerotate/
+	cp -f $DevIT_INSTALL_DIR/logrotate/httpd-prerotate/awstats /etc/logrotate.d/httpd-prerotate/
 fi
 
 if [ "$PHPMYADMIN_KEY" != "" ]; then
-	echo "[ * ] Refresh hestia-sso for PMA..."
+	echo "[ * ] Refresh DevIT-sso for PMA..."
 	$BIN/v-delete-sys-pma-sso quiet
 	$BIN/v-add-sys-pma-sso quiet
 fi

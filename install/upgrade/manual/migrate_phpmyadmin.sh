@@ -6,16 +6,16 @@
 #----------------------------------------------------------#
 
 # Includes
-source $HESTIA/func/main.sh
+source $DevIT/func/main.sh
 # get current phpmyadmin version
-source $HESTIA/install/upgrade/upgrade.conf
-source $HESTIA/conf/hestia.conf
+source $DevIT/install/upgrade/upgrade.conf
+source $DevIT/conf/DevIT.conf
 
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-echo "To remove phpMyAdmin you will need use the root password. Password can be found in /usr/local/hestia/conf/mysql.conf"
+echo "To remove phpMyAdmin you will need use the root password. Password can be found in /usr/local/DevIT/conf/mysql.conf"
 read -p 'Would you like to continue? [y/n]'
 
 #----------------------------------------------------------#
@@ -60,7 +60,7 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
 
 	# Configuring Apache2 for PHPMYADMIN
 	if [ "$WEB_SYSTEM" == "apache2" ]; then
-		cp -f $HESTIA_INSTALL_DIR/pma/apache.conf /etc/phpmyadmin/
+		cp -f $DevIT_INSTALL_DIR/pma/apache.conf /etc/phpmyadmin/
 		rm /etc/apache2/conf.d/phpmyadmin.conf
 		ln -s /etc/phpmyadmin/apache.conf /etc/apache2/conf.d/phpmyadmin.conf
 	fi
@@ -77,7 +77,7 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
 	cp -rf phpMyAdmin-$pma_v-all-languages/* /usr/share/phpmyadmin
 
 	# Create copy of config file
-	cp -f $HESTIA_INSTALL_DIR/phpmyadmin/config.inc.php /etc/phpmyadmin/
+	cp -f $DevIT_INSTALL_DIR/phpmyadmin/config.inc.php /etc/phpmyadmin/
 	mkdir -p /var/lib/phpmyadmin/tmp
 	chmod 770 -R /var/lib/phpmyadmin/tmp
 
@@ -93,7 +93,7 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
 	rm -f phpMyAdmin-$pma_v-all-languages.tar.gz
 
 	if [ -z "$DB_PMA_ALIAS" ]; then
-		echo "DB_PMA_ALIAS='phpmyadmin'" >> $HESTIA/conf/hestia.conf
+		echo "DB_PMA_ALIAS='phpmyadmin'" >> $DevIT/conf/DevIT.conf
 	fi
 	$BIN/v-change-sys-db-alias 'pma' "phpmyadmin"
 
@@ -190,7 +190,7 @@ MYSQL_PMA1
 	fi
 
 	#MYSQL DB and TABLES ADDITION
-	mysql -uroot < $HESTIA_INSTALL_DIR/phpmyadmin/create_tables.sql
+	mysql -uroot < $DevIT_INSTALL_DIR/phpmyadmin/create_tables.sql
 
 	if [ "$sso" == "yes" ]; then
 		$BIN/v-add-sys-pma-sso

@@ -1,5 +1,5 @@
 <?php
-use function Hestiacp\quoteshellarg\quoteshellarg;
+use function DevITcp\quoteshellarg\quoteshellarg;
 
 // Init
 ob_start();
@@ -16,7 +16,7 @@ if ($_SESSION["userContext"] != "admin") {
 
 if (!empty($_GET["rule"])) {
 	$v_rule = quoteshellarg($_GET["rule"]);
-	exec(HESTIA_CMD . "v-unsuspend-firewall-rule " . $v_rule, $output, $return_var);
+	exec(DevIT_CMD . "v-unsuspend-firewall-rule " . $v_rule, $output, $return_var);
 }
 check_return_code($return_var, $output);
 unset($output);

@@ -12,7 +12,7 @@ if ($_SESSION["userContext"] != "admin") {
 }
 
 // Data
-exec(HESTIA_CMD . "v-list-sys-rrd json", $output, $return_var);
+exec(DevIT_CMD . "v-list-sys-rrd json", $output, $return_var);
 $data = json_decode(implode("", $output), true);
 unset($output);
 

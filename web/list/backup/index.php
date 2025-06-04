@@ -1,5 +1,5 @@
 <?php
-use function Hestiacp\quoteshellarg\quoteshellarg;
+use function DevITcp\quoteshellarg\quoteshellarg;
 $TAB = "BACKUP";
 
 // Main include
@@ -7,7 +7,7 @@ include $_SERVER["DOCUMENT_ROOT"] . "/inc/main.php";
 
 // Data & Render page
 if (empty($_GET["backup"])) {
-	exec(HESTIA_CMD . "v-list-user-backups $user json", $output, $return_var);
+	exec(DevIT_CMD . "v-list-user-backups $user json", $output, $return_var);
 	$data = json_decode(implode("", $output), true);
 	if ($_SESSION["userSortOrder"] == "name") {
 		ksort($data);
@@ -18,7 +18,7 @@ if (empty($_GET["backup"])) {
 	render_page($user, $TAB, "list_backup");
 } else {
 	exec(
-		HESTIA_CMD . "v-list-user-backup $user " . quoteshellarg($_GET["backup"]) . " json",
+		DevIT_CMD . "v-list-user-backup $user " . quoteshellarg($_GET["backup"]) . " json",
 		$output,
 		$return_var,
 	);

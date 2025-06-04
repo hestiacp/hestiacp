@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Hestia\WebApp;
+namespace DevIT\WebApp;
 
-use Hestia\System\HestiaApp;
-use Hestia\WebApp\InstallationTarget\InstallationTarget;
-use Hestia\WebApp\InstallationTarget\TargetDatabase;
-use Hestia\WebApp\InstallationTarget\TargetDomain;
+use DevIT\System\DevITApp;
+use DevIT\WebApp\InstallationTarget\InstallationTarget;
+use DevIT\WebApp\InstallationTarget\TargetDatabase;
+use DevIT\WebApp\InstallationTarget\TargetDomain;
 use RuntimeException;
 
 use function array_filter;
@@ -23,7 +23,7 @@ class AppWizard
     public function __construct(
         private readonly InstallerInterface $installer,
         private readonly string $domain,
-        private readonly HestiaApp $appcontext,
+        private readonly DevITApp $appcontext,
     ) {
         if (!$appcontext->userOwnsDomain($domain)) {
             throw new RuntimeException('User does not have access to domain [$domain]');

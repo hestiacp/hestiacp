@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Hestia Control Panel upgrade script for target version 1.8.11
+# DevIT Control Panel upgrade script for target version 1.8.11
 
 #######################################################################################
 #######                      Place additional commands below.                   #######
@@ -29,8 +29,8 @@ SM_CONFIG_DIR="/etc/snappymail"
 SM_LOG="/var/log/snappymail"
 
 if [ -d "/var/lib/snappymail" ]; then
-	chown hestiamail:hestiamail /var/lib/snappymail
-	chown hestiamail:hestiamail /etc/snappymail
+	chown DevITmail:DevITmail /var/lib/snappymail
+	chown DevITmail:DevITmail /etc/snappymail
 fi
 
 #Roundube folder paths
@@ -39,19 +39,19 @@ RC_CONFIG_DIR="/etc/roundcube"
 RC_LOG="/var/log/roundcube"
 
 if [ -d "$RC_INSTALL_DIR" ]; then
-	chown -R hestiamail:www-data "$RC_INSTALL_DIR"
+	chown -R DevITmail:www-data "$RC_INSTALL_DIR"
 fi
 if [ -d "$RC_CONFIG_DIR" ]; then
-	chown -R hestiamail:www-data "$RC_CONFIG_DIR"
+	chown -R DevITmail:www-data "$RC_CONFIG_DIR"
 fi
 if [ -f "$RC_CONFIG_DIR/config.inc.php" ]; then
 	chmod 640 "$RC_CONFIG_DIR/config.inc.php"
 fi
 if [ -d "$RC_LOG" ]; then
-	chown -R hestiamail:www-data "$RC_LOG"
+	chown -R DevITmail:www-data "$RC_LOG"
 fi
 
 sed -i "s/disable_functions =.*/disable_functions = pcntl_alarm,pcntl_fork,pcntl_waitpid,pcntl_wait,pcntl_wifexited,pcntl_wifstopped,pcntl_wifsignaled,pcntl_wifcontinued,pcntl_wexitstatus,pcntl_wtermsig,pcntl_wstopsig,pcntl_signal,pcntl_signal_dispatch,pcntl_get_last_error,pcntl_strerror,pcntl_sigprocmask,pcntl_sigwaitinfo,pcntl_sigtimedwait,pcntl_exec,pcntl_getpriority,pcntl_setpriority/g" /etc/php/*/cli/php.ini
 
-# Ensures proper permissions for Hestia service interactions.
-/usr/sbin/adduser hestiamail hestia-users
+# Ensures proper permissions for DevIT service interactions.
+/usr/sbin/adduser DevITmail DevIT-users

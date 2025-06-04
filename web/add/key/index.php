@@ -1,5 +1,5 @@
 <?php
-use function Hestiacp\quoteshellarg\quoteshellarg;
+use function DevITcp\quoteshellarg\quoteshellarg;
 
 ob_start();
 $TAB = "USER";
@@ -34,7 +34,7 @@ if (!empty($_POST["ok"])) {
 	if (empty($_SESSION["error_msg"])) {
 		if ($_POST) {
 			//key if key already exists
-			exec(HESTIA_CMD . "v-list-user-ssh-key " . $user . " json", $output, $return_var);
+			exec(DevIT_CMD . "v-list-user-ssh-key " . $user . " json", $output, $return_var);
 			$data = json_decode(implode("", $output), true);
 			unset($output);
 			$keylist = [];
@@ -64,7 +64,7 @@ if (!empty($_POST["ok"])) {
 	}
 
 	if (empty($_SESSION["error_msg"])) {
-		exec(HESTIA_CMD . "v-add-user-ssh-key " . $user . " " . $v_key, $output, $return_var);
+		exec(DevIT_CMD . "v-add-user-ssh-key " . $user . " " . $v_key, $output, $return_var);
 		check_return_code($return_var, $output);
 	}
 	unset($output);

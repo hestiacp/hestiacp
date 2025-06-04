@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Hestia\WebApp\InstallationTarget;
+namespace DevIT\WebApp\InstallationTarget;
 
-use Hestia\System\Util;
+use DevIT\System\Util;
 
 class TargetDomain
 {

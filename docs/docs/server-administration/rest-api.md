@@ -1,14 +1,14 @@
 # REST API
 
-The Hestia REST API is available to perform core functions of the Control Panel. For example, we use it internally to synchronise DNS clusters and to integrate the WHMCS billing system. The API can also be used to create new user accounts, domains, databases or even to build an alternative web interface.
+The DevIT REST API is available to perform core functions of the Control Panel. For example, we use it internally to synchronise DNS clusters and to integrate the WHMCS billing system. The API can also be used to create new user accounts, domains, databases or even to build an alternative web interface.
 
 The [API reference](../reference/api) provides PHP code samples demonstrating how you can integrate the API into your application or script. However, you also can use any other language to communicate with the API.
 
-With the release of Hestia v1.6.0, we have introduced a more advanced API system and it will allow non-admin users to use specific commands.
+With the release of DevIT v1.6.0, we have introduced a more advanced API system and it will allow non-admin users to use specific commands.
 
 ## I’m unable to connect to the API
 
-With the release of Hestia v1.4.0, we have decided the security needed to be tightened. If you want to connect to the API from a remote server, you will first need to whitelist its IP address. To add multiple addresses, separate them with a new line. To bypass the ip filtering, remove any existing ips and write : `allow-all`
+With the release of DevIT v1.4.0, we have decided the security needed to be tightened. If you want to connect to the API from a remote server, you will first need to whitelist its IP address. To add multiple addresses, separate them with a new line. To bypass the ip filtering, remove any existing ips and write : `allow-all`
 
 ## Can I disable the API?
 
@@ -63,7 +63,7 @@ v-add-access-key 'admin' '*' test json
 
 ### Creating own API key profiles
 
-Create a new file in `/usr/local/hestia/data/api/` with the following contents
+Create a new file in `/usr/local/DevIT/data/api/` with the following contents
 
 ```bash
 ROLE='admin'

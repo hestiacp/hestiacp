@@ -116,7 +116,7 @@
 					</div>
 				</div>
 				<div class="sidebar-right-grid-sidebar">
-					<?php require $_SERVER["HESTIA"] . "/web/templates/includes/email-settings-panel.php"; ?>
+					<?php require $_SERVER["DevIT"] . "/web/templates/includes/email-settings-panel.php"; ?>
 				</div>
 			</div>
 		</div>

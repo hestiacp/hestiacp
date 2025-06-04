@@ -1,5 +1,5 @@
 <?php
-use function Hestiacp\quoteshellarg\quoteshellarg;
+use function DevITcp\quoteshellarg\quoteshellarg;
 ob_start();
 $TAB = "Access Key";
 
@@ -17,7 +17,7 @@ if ($api_status < 1 || ($user_plain != $_SESSION["ROOT_USER"] && $api_status < 2
 }
 
 // APIs available
-exec(HESTIA_CMD . "v-list-apis json", $output, $return_var);
+exec(DevIT_CMD . "v-list-apis json", $output, $return_var);
 $apis = json_decode(implode("", $output), true);
 $apis = array_filter($apis, function ($api) use ($user_plain) {
 	return $user_plain == $_SESSION["ROOT_USER"] || $api["ROLE"] == "user";
@@ -63,7 +63,7 @@ if (!empty($_POST["ok"])) {
 	// Add access key
 	if (empty($_SESSION["error_msg"])) {
 		exec(
-			HESTIA_CMD . "v-add-access-key " . $user . " " . $v_apis . " " . $v_comment . " json",
+			DevIT_CMD . "v-add-access-key " . $user . " " . $v_apis . " " . $v_comment . " json",
 			$output,
 			$return_var,
 		);

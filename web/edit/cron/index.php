@@ -1,5 +1,5 @@
 <?php
-use function Hestiacp\quoteshellarg\quoteshellarg;
+use function DevITcp\quoteshellarg\quoteshellarg;
 
 ob_start();
 $TAB = "CRON";
@@ -19,7 +19,7 @@ if (empty($_GET["job"])) {
 
 // List cron job
 $v_job = quoteshellarg($_GET["job"]);
-exec(HESTIA_CMD . "v-list-cron-job " . $user . " " . $v_job . " 'json'", $output, $return_var);
+exec(DevIT_CMD . "v-list-cron-job " . $user . " " . $v_job . " 'json'", $output, $return_var);
 check_return_code_redirect($return_var, $output, "/list/cron/");
 
 $data = json_decode(implode("", $output), true);
@@ -59,7 +59,7 @@ if (!empty($_POST["save"])) {
 
 	// Save changes
 	exec(
-		HESTIA_CMD .
+		DevIT_CMD .
 			"v-change-cron-job " .
 			$user .
 			" " .
@@ -91,7 +91,7 @@ if (!empty($_POST["save"])) {
 }
 
 // Get current system time
-exec(HESTIA_CMD . "v-get-sys-timezone", $output, $return_var);
+exec(DevIT_CMD . "v-get-sys-timezone", $output, $return_var);
 date_default_timezone_set($output[0]);
 $current_timestamp = time();
 

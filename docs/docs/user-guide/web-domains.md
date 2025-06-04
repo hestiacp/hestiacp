@@ -6,7 +6,7 @@ To manage your web domains, navigate to the **Web <i class="fas fa-fw fa-globe-a
 
 1. Click the **<i class="fas fa-fw fa-plus-circle"></i> Add Web Domain** button.
 2. Enter the domain name in the **Domain** field.
-   - If you wish to manage this domain’s DNS in Hestia, check the box labeled **Create DNS zone**
+   - If you wish to manage this domain’s DNS in DevIT, check the box labeled **Create DNS zone**
    - If you wish to enable mail for this domain, check the box labeled **Enable mail for this domain**.
 3. Click the **<i class="fas fa-fw fa-save"></i> Save** button in the top right.
 
@@ -113,7 +113,7 @@ Depending on the server setup, this option may not be available.
 Any custom templates will also show up here.
 
 ::: tip
-Any custom templates starting with `caching-` will allow the use of the **<i class="fas fa-fw fa-trash"></i> Purge Nginx Cache** button. Make sure a `.sh` file exists for `caching-my-template` with at least [this content](https://github.com/hestiacp/hestiacp/blob/main/install/deb/templates/web/nginx/caching.sh)
+Any custom templates starting with `caching-` will allow the use of the **<i class="fas fa-fw fa-trash"></i> Purge Nginx Cache** button. Make sure a `.sh` file exists for `caching-my-template` with at least [this content](https://github.com/DevITcp/DevITcp/blob/main/install/deb/templates/web/nginx/caching.sh)
 :::
 
 ### Web templates

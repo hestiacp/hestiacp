@@ -1,5 +1,5 @@
 <?php
-use function Hestiacp\quoteshellarg\quoteshellarg;
+use function DevITcp\quoteshellarg\quoteshellarg;
 
 ob_start();
 
@@ -40,7 +40,7 @@ foreach ($ipchain as $value) {
 	[$ip, $chain] = explode(":", $value);
 	$v_ip = quoteshellarg($ip);
 	$v_chain = quoteshellarg($chain);
-	exec(HESTIA_CMD . $cmd . " " . $v_ip . " " . $v_chain, $output, $return_var);
+	exec(DevIT_CMD . $cmd . " " . $v_ip . " " . $v_chain, $output, $return_var);
 }
 
 header("Location: /list/firewall/banlist");

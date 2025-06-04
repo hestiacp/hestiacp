@@ -282,7 +282,7 @@
 							<input x-model="nginxCacheEnabled" class="form-check-input" type="checkbox" name="v_nginx_cache_check" id="v_nginx_cache_check">
 							<label for="v_nginx_cache_check">
 								<?= _("Enable FastCGI cache") ?>
-								<a href="https://hestiacp.com/docs/server-administration/web-templates.html#nginx-fastcgi-cache" target="_blank" class="u-ml5">
+								<a href="https://DevITcp.com/docs/server-administration/web-templates.html#nginx-fastcgi-cache" target="_blank" class="u-ml5">
 									<i class="fas fa-circle-question"></i>
 								</a>
 							</label>

@@ -38,7 +38,7 @@ If you do not have an authenticator app, here are a couple of recommendations.
 
 ### Login restrictions
 
-Hestia has the following options to help you secure your account:
+DevIT has the following options to help you secure your account:
 
 - Disable login into the account.
 - Whitelist your IP address to login into your account.

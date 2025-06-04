@@ -1,5 +1,5 @@
 <?php
-use function Hestiacp\quoteshellarg\quoteshellarg;
+use function DevITcp\quoteshellarg\quoteshellarg;
 
 ob_start();
 
@@ -38,7 +38,7 @@ if ($_SESSION["userContext"] === "admin") {
 
 	if (!empty($_POST["system"]) && $action == "restart") {
 		$_SESSION["error_srv"] = _("The system is going down for reboot NOW!");
-		exec(HESTIA_CMD . "v-restart-system yes", $output, $return_var);
+		exec(DevIT_CMD . "v-restart-system yes", $output, $return_var);
 		unset($output);
 		header("Location: /list/server/");
 		exit();
@@ -46,7 +46,7 @@ if ($_SESSION["userContext"] === "admin") {
 
 	foreach ($service as $value) {
 		$value = quoteshellarg($value);
-		exec(HESTIA_CMD . $cmd . " " . $value, $output, $return_var);
+		exec(DevIT_CMD . $cmd . " " . $value, $output, $return_var);
 	}
 }
 

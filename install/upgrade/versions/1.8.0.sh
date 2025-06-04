@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Hestia Control Panel upgrade script for target version 1.8.0
+# DevIT Control Panel upgrade script for target version 1.8.0
 
 #######################################################################################
 #######                      Place additional commands below.                   #######
@@ -40,7 +40,7 @@ fi
 if [ -f /etc/fail2ban/jail.local ]; then
 	# Add phpmyadmin rule
 	if ! grep -qw "phpmyadmin-auth" /etc/fail2ban/jail.local 2> /dev/null; then
-		sed -i '/\[recidive\]/i [phpmyadmin-auth]\nenabled  = true\nfilter   = phpmyadmin-syslog\naction   = hestia[name=WEB]\nlogpath  = /var/log/auth.log\nmaxretry = 5\n' /etc/fail2ban/jail.local
+		sed -i '/\[recidive\]/i [phpmyadmin-auth]\nenabled  = true\nfilter   = phpmyadmin-syslog\naction   = DevIT[name=WEB]\nlogpath  = /var/log/auth.log\nmaxretry = 5\n' /etc/fail2ban/jail.local
 	fi
 fi
 
@@ -60,18 +60,18 @@ echo '[ * ] Enable the "Enhanced and Optimized TLS" feature...'
 # Configuring global OpenSSL options
 tls13_ciphers="TLS_AES_128_GCM_SHA256:TLS_CHACHA20_POLY1305_SHA256:TLS_AES_256_GCM_SHA384"
 
-if ! grep -qw "^[hestia_openssl_sect]$" /etc/ssl/openssl.cnf 2> /dev/null; then
+if ! grep -qw "^[DevIT_openssl_sect]$" /etc/ssl/openssl.cnf 2> /dev/null; then
 	if [ "$os_release" = "debian-10" ] || [ "$os_release" = "debian-11" ]; then
-		sed -i '/^system_default = system_default_sect$/a system_default = hestia_openssl_sect\n\n[hestia_openssl_sect]\nCiphersuites = '"$tls13_ciphers"'\nOptions = PrioritizeChaCha' /etc/ssl/openssl.cnf
+		sed -i '/^system_default = system_default_sect$/a system_default = DevIT_openssl_sect\n\n[DevIT_openssl_sect]\nCiphersuites = '"$tls13_ciphers"'\nOptions = PrioritizeChaCha' /etc/ssl/openssl.cnf
 	elif [ "$os_release" = "debian-12" ]; then
 		if ! grep -qw "^ssl_conf = ssl_sect$" /etc/ssl/openssl.cnf 2> /dev/null; then
 			sed -i '/providers = provider_sect$/a ssl_conf = ssl_sect' /etc/ssl/openssl.cnf
 		fi
 
 		if ! grep -qw "^[ssl_sect]$" /etc/ssl/openssl.cnf 2> /dev/null; then
-			sed -i '$a \\n[ssl_sect]\nsystem_default = hestia_openssl_sect\n\n[hestia_openssl_sect]\nCiphersuites = '"$tls13_ciphers"'\nOptions = PrioritizeChaCha' /etc/ssl/openssl.cnf
+			sed -i '$a \\n[ssl_sect]\nsystem_default = DevIT_openssl_sect\n\n[DevIT_openssl_sect]\nCiphersuites = '"$tls13_ciphers"'\nOptions = PrioritizeChaCha' /etc/ssl/openssl.cnf
 		elif grep -qw "^system_default = system_default_sect$" /etc/ssl/openssl.cnf 2> /dev/null; then
-			sed -i '/^system_default = system_default_sect$/a system_default = hestia_openssl_sect\n\n[hestia_openssl_sect]\nCiphersuites = '"$tls13_ciphers"'\nOptions = PrioritizeChaCha' /etc/ssl/openssl.cnf
+			sed -i '/^system_default = system_default_sect$/a system_default = DevIT_openssl_sect\n\n[DevIT_openssl_sect]\nCiphersuites = '"$tls13_ciphers"'\nOptions = PrioritizeChaCha' /etc/ssl/openssl.cnf
 		fi
 	elif [ "$os_release" = "ubuntu-20.04" ]; then
 		if ! grep -qw "^openssl_conf = default_conf$" /etc/ssl/openssl.cnf 2> /dev/null; then
@@ -79,12 +79,12 @@ if ! grep -qw "^[hestia_openssl_sect]$" /etc/ssl/openssl.cnf 2> /dev/null; then
 		fi
 
 		if ! grep -qw "^[default_conf]$" /etc/ssl/openssl.cnf 2> /dev/null; then
-			sed -i '$a [default_conf]\nssl_conf = ssl_sect\n\n[ssl_sect]\nsystem_default = hestia_openssl_sect\n\n[hestia_openssl_sect]\nCiphersuites = '"$tls13_ciphers"'\nOptions = PrioritizeChaCha' /etc/ssl/openssl.cnf
+			sed -i '$a [default_conf]\nssl_conf = ssl_sect\n\n[ssl_sect]\nsystem_default = DevIT_openssl_sect\n\n[DevIT_openssl_sect]\nCiphersuites = '"$tls13_ciphers"'\nOptions = PrioritizeChaCha' /etc/ssl/openssl.cnf
 		elif grep -qw "^system_default = system_default_sect$" /etc/ssl/openssl.cnf 2> /dev/null; then
-			sed -i '/^system_default = system_default_sect$/a system_default = hestia_openssl_sect\n\n[hestia_openssl_sect]\nCiphersuites = '"$tls13_ciphers"'\nOptions = PrioritizeChaCha' /etc/ssl/openssl.cnf
+			sed -i '/^system_default = system_default_sect$/a system_default = DevIT_openssl_sect\n\n[DevIT_openssl_sect]\nCiphersuites = '"$tls13_ciphers"'\nOptions = PrioritizeChaCha' /etc/ssl/openssl.cnf
 		fi
 	elif [ "$os_release" = "ubuntu-22.04" ]; then
-		sed -i '/^system_default = system_default_sect$/a system_default = hestia_openssl_sect\n\n[hestia_openssl_sect]\nCiphersuites = '"$tls13_ciphers"'\nOptions = PrioritizeChaCha' /etc/ssl/openssl.cnf
+		sed -i '/^system_default = system_default_sect$/a system_default = DevIT_openssl_sect\n\n[DevIT_openssl_sect]\nCiphersuites = '"$tls13_ciphers"'\nOptions = PrioritizeChaCha' /etc/ssl/openssl.cnf
 	fi
 fi
 
@@ -131,33 +131,33 @@ if [ "$WEB_SYSTEM" = "nginx" ] || [ "$PROXY_SYSTEM" = "nginx" ]; then
 		sed 's|https://www.cloudflare.com/||;/^[ \t]\+resolver .\+;$/d;/^[ \t]\+# Cache settings$/d;/^[ \t]\+# Proxy cache$/d' /etc/nginx/nginx.conf | sed ':l;N;$!bl;s/[ \n\t]*//g' > "$nginx_conf_local"
 
 		# For installations before v1.6.8 (from commit 9b544be to commit b2ad154)
-		curl -fsLm5 --retry 2 https://raw.githubusercontent.com/hestiacp/hestiacp/b2ad1549a21655837056e4b7883970d51a4b324f/install/deb/nginx/nginx.conf \
+		curl -fsLm5 --retry 2 https://raw.githubusercontent.com/DevITcp/DevITcp/b2ad1549a21655837056e4b7883970d51a4b324f/install/deb/nginx/nginx.conf \
 			| sed 's/fastcgi_buffers                 4 256k;/fastcgi_buffers                 8 256k;/g;s|/var/run/|/run/|g;/set_real_ip_from/d;/real_ip_header/d;s|# Cloudflare https://www.cloudflare.com/ips|# Cloudflare https://www.cloudflare.com/ips\n    include /etc/nginx/conf.d/cloudflare.inc;|g' \
 			| sed 's|https://www.cloudflare.com/||;/^[ \t]\+resolver .\+;$/d;/^[ \t]\+# Cache settings$/d;/^[ \t]\+# Proxy cache$/d' | sed ':l;N;$!bl;s/[ \n\t]*//g' > "$nginx_conf_commit"-b2ad154
 
 		# For installations after v1.6.8 but before v1.7.0 (from commit b2ad154 to commit 015b20a)
-		curl -fsLm5 --retry 2 https://raw.githubusercontent.com/hestiacp/hestiacp/015b20ae1ffb82faaf58b41a5dc9ad1b078b785f/install/deb/nginx/nginx.conf \
+		curl -fsLm5 --retry 2 https://raw.githubusercontent.com/DevITcp/DevITcp/015b20ae1ffb82faaf58b41a5dc9ad1b078b785f/install/deb/nginx/nginx.conf \
 			| sed 's|/var/run/|/run/|g;/set_real_ip_from/d;/real_ip_header/d;s|# Cloudflare https://www.cloudflare.com/ips|# Cloudflare https://www.cloudflare.com/ips\n    include /etc/nginx/conf.d/cloudflare.inc;|g' \
 			| sed 's|https://www.cloudflare.com/||;/^[ \t]\+resolver .\+;$/d;/^[ \t]\+# Cache settings$/d;/^[ \t]\+# Proxy cache$/d' | sed ':l;N;$!bl;s/[ \n\t]*//g' > "$nginx_conf_commit"-015b20a
 
 		# For installations after v1.7.0 (commit 555f892)
-		curl -fsLm5 --retry 2 https://raw.githubusercontent.com/hestiacp/hestiacp/555f89243e54e02458586ae4f7999458cc9d33e9/install/deb/nginx/nginx.conf \
+		curl -fsLm5 --retry 2 https://raw.githubusercontent.com/DevITcp/DevITcp/555f89243e54e02458586ae4f7999458cc9d33e9/install/deb/nginx/nginx.conf \
 			| sed 's|https://www.cloudflare.com/||;/^[ \t]\+resolver .\+;$/d;/^[ \t]\+# Cache settings$/d;/^[ \t]\+# Proxy cache$/d' | sed ':l;N;$!bl;s/[ \n\t]*//g' > "$nginx_conf_commit"-555f892
 
 		for commit in b2ad154 015b20a 555f892; do
 			if cmp -s "$nginx_conf_local" "$nginx_conf_commit"-"$commit" 2> /dev/null; then
 				nginx_conf_compare="same"
-				cp -f "$HESTIA_INSTALL_DIR"/nginx/nginx.conf /etc/nginx
+				cp -f "$DevIT_INSTALL_DIR"/nginx/nginx.conf /etc/nginx
 				break
 			fi
 		done
 
 		if [ "$nginx_conf_compare" != "same" ]; then
-			echo -e "[ ! ] Manual action required, please view:\n[ - ] $HESTIA_BACKUP/message.log"
-			add_upgrade_message "Manual Action Required [IMPORTANT]\n\nTo enable the \"Enhanced and Optimized TLS\" feature, we must update the NGINX configuration file (/etc/nginx/nginx.conf).\n\nBut for unknown reason or you edited it, may not be fully apply all the changes in this upgrade.\n\nPlease follow the default configuration file to sync it:\n$HESTIA_INSTALL_DIR/nginx/nginx.conf\n\nBacked up configuration file:\n$HESTIA_BACKUP/conf/nginx/nginx.conf\n\nLearn more:\nhttps://github.com/hestiacp/hestiacp/pull/3555\n\n"
-			"$BIN"/v-add-user-notification admin "IMPORTANT: Manual Action Required" '<p>To enable the "Enhanced and Optimized TLS" feature, we must update the NGINX configuration file at <code>/etc/nginx/nginx.conf</code>.</p><p>But for unknown reason or you edited it, may not be fully apply all the changes in this upgrade.</p><p>Please follow the default configuration file to sync it:<br><code>'"$HESTIA_INSTALL_DIR"'/nginx/nginx.conf</code></p><p>Backed up configuration file:<br><code>'"$HESTIA_BACKUP"'/conf/nginx/nginx.conf</code></p><p>Visit PR <a href="https://github.com/hestiacp/hestiacp/pull/3555" target="_blank">#3555</a> on GitHub to learn more.</p>'
+			echo -e "[ ! ] Manual action required, please view:\n[ - ] $DevIT_BACKUP/message.log"
+			add_upgrade_message "Manual Action Required [IMPORTANT]\n\nTo enable the \"Enhanced and Optimized TLS\" feature, we must update the NGINX configuration file (/etc/nginx/nginx.conf).\n\nBut for unknown reason or you edited it, may not be fully apply all the changes in this upgrade.\n\nPlease follow the default configuration file to sync it:\n$DevIT_INSTALL_DIR/nginx/nginx.conf\n\nBacked up configuration file:\n$DevIT_BACKUP/conf/nginx/nginx.conf\n\nLearn more:\nhttps://github.com/DevITcp/DevITcp/pull/3555\n\n"
+			"$BIN"/v-add-user-notification admin "IMPORTANT: Manual Action Required" '<p>To enable the "Enhanced and Optimized TLS" feature, we must update the NGINX configuration file at <code>/etc/nginx/nginx.conf</code>.</p><p>But for unknown reason or you edited it, may not be fully apply all the changes in this upgrade.</p><p>Please follow the default configuration file to sync it:<br><code>'"$DevIT_INSTALL_DIR"'/nginx/nginx.conf</code></p><p>Backed up configuration file:<br><code>'"$DevIT_BACKUP"'/conf/nginx/nginx.conf</code></p><p>Visit PR <a href="https://github.com/DevITcp/DevITcp/pull/3555" target="_blank">#3555</a> on GitHub to learn more.</p>'
 
-			sed -i "s/""$(grep -m 1 "IMPORTANT: Manual Action Required" "$HESTIA"/data/users/admin/notifications.conf | awk '{print $1}')""/NID='1'/" "$HESTIA"/data/users/admin/notifications.conf
+			sed -i "s/""$(grep -m 1 "IMPORTANT: Manual Action Required" "$DevIT"/data/users/admin/notifications.conf | awk '{print $1}')""/NID='1'/" "$DevIT"/data/users/admin/notifications.conf
 
 			cp -f /etc/nginx/nginx.conf /etc/nginx/nginx.conf-staging
 
@@ -185,17 +185,17 @@ if [ "$WEB_SYSTEM" = "nginx" ] || [ "$PROXY_SYSTEM" = "nginx" ]; then
 		fi
 
 		# Implement TLS 1.3 0-RTT anti-replay
-		echo -e "[ * ] TLS 1.3 0-RTT anti-replay for NGINX, please view:\n[ - ] $HESTIA_BACKUP/message.log"
-		add_upgrade_message "About TLS 1.3 0-RTT anti-replay for NGINX\n\nIf you use custom templates, please update them (*.stpl) to apply this protection.\n\nFollow the usage or other default templates:\n/etc/nginx/conf.d/0rtt-anti-replay.conf\n\nLearn more:\nhttps://github.com/hestiacp/hestiacp/pull/3692"
-		"$BIN"/v-add-user-notification admin "About TLS 1.3 0-RTT anti-replay for NGINX" '<p>If you use custom templates, please update them (*.stpl) to apply this protection.</p><p>Follow the usage or other default templates:<br><code>/etc/nginx/conf.d/0rtt-anti-replay.conf</code></p><p>Visit PR <a href="https://github.com/hestiacp/hestiacp/pull/3692" target="_blank">#3692</a> on GitHub to learn more.</p>'
+		echo -e "[ * ] TLS 1.3 0-RTT anti-replay for NGINX, please view:\n[ - ] $DevIT_BACKUP/message.log"
+		add_upgrade_message "About TLS 1.3 0-RTT anti-replay for NGINX\n\nIf you use custom templates, please update them (*.stpl) to apply this protection.\n\nFollow the usage or other default templates:\n/etc/nginx/conf.d/0rtt-anti-replay.conf\n\nLearn more:\nhttps://github.com/DevITcp/DevITcp/pull/3692"
+		"$BIN"/v-add-user-notification admin "About TLS 1.3 0-RTT anti-replay for NGINX" '<p>If you use custom templates, please update them (*.stpl) to apply this protection.</p><p>Follow the usage or other default templates:<br><code>/etc/nginx/conf.d/0rtt-anti-replay.conf</code></p><p>Visit PR <a href="https://github.com/DevITcp/DevITcp/pull/3692" target="_blank">#3692</a> on GitHub to learn more.</p>'
 
-		if grep -qw "IMPORTANT: Manual Action Required" "$HESTIA"/data/users/admin/notifications.conf 2> /dev/null; then
-			sed -i "s/""$(grep -m 1 "About TLS 1.3 0-RTT anti-replay for NGINX" "$HESTIA"/data/users/admin/notifications.conf | awk '{print $1}')""/NID='2'/" "$HESTIA"/data/users/admin/notifications.conf
+		if grep -qw "IMPORTANT: Manual Action Required" "$DevIT"/data/users/admin/notifications.conf 2> /dev/null; then
+			sed -i "s/""$(grep -m 1 "About TLS 1.3 0-RTT anti-replay for NGINX" "$DevIT"/data/users/admin/notifications.conf | awk '{print $1}')""/NID='2'/" "$DevIT"/data/users/admin/notifications.conf
 		else
-			sed -i "s/""$(grep -m 1 "About TLS 1.3 0-RTT anti-replay for NGINX" "$HESTIA"/data/users/admin/notifications.conf | awk '{print $1}')""/NID='1'/" "$HESTIA"/data/users/admin/notifications.conf
+			sed -i "s/""$(grep -m 1 "About TLS 1.3 0-RTT anti-replay for NGINX" "$DevIT"/data/users/admin/notifications.conf | awk '{print $1}')""/NID='1'/" "$DevIT"/data/users/admin/notifications.conf
 		fi
 
-		cp -f "$HESTIA_INSTALL_DIR"/nginx/0rtt-anti-replay.conf /etc/nginx/conf.d
+		cp -f "$DevIT_INSTALL_DIR"/nginx/0rtt-anti-replay.conf /etc/nginx/conf.d
 
 		# Update resolver for NGINX
 		for nameserver in $(grep -is '^nameserver' /etc/resolv.conf | cut -d' ' -f2 | tr '\r\n' ' ' | xargs); do
@@ -213,7 +213,7 @@ if [ "$WEB_SYSTEM" = "nginx" ] || [ "$PROXY_SYSTEM" = "nginx" ]; then
 		fi
 
 		# Update some configuration files
-		cp -f "$HESTIA_INSTALL_DIR"/nginx/phpmyadmin.inc "$HESTIA_INSTALL_DIR"/nginx/phppgadmin.inc "$HESTIA_INSTALL_DIR"/nginx/status.conf /etc/nginx/conf.d
+		cp -f "$DevIT_INSTALL_DIR"/nginx/phpmyadmin.inc "$DevIT_INSTALL_DIR"/nginx/phppgadmin.inc "$DevIT_INSTALL_DIR"/nginx/status.conf /etc/nginx/conf.d
 		[ -n "$DB_PMA_ALIAS" ] && sed -i "s|%pma_alias%|$DB_PMA_ALIAS|g" /etc/nginx/conf.d/phpmyadmin.inc
 		[ -n "$DB_PGA_ALIAS" ] && sed -i "s|%pga_alias%|$DB_PGA_ALIAS|g" /etc/nginx/conf.d/phppgadmin.inc
 
@@ -226,16 +226,16 @@ unset commit nameserver nginx_conf_commit nginx_conf_compare nginx_conf_local os
 # Finish configuring the "Enhanced and Optimized TLS" feature
 
 # Update IPs configuration file
-# shellcheck source=/usr/local/hestia/func/domain.sh
-source $HESTIA/func/domain.sh
+# shellcheck source=/usr/local/DevIT/func/domain.sh
+source $DevIT/func/domain.sh
 
 if [ "$WEB_SYSTEM" = "nginx" ]; then
 	while IFS= read -r IP; do
 		ip_conf="/etc/nginx/conf.d/$IP.conf"
-		cp -f "$HESTIA_INSTALL_DIR"/nginx/unassigned.inc "$ip_conf"
+		cp -f "$DevIT_INSTALL_DIR"/nginx/unassigned.inc "$ip_conf"
 		sed -i "s/directIP/$IP/g" "$ip_conf"
 		process_http2_directive "$ip_conf"
-	done < <(ls "$HESTIA"/data/ips/ 2> /dev/null)
+	done < <(ls "$DevIT"/data/ips/ 2> /dev/null)
 elif [ "$PROXY_SYSTEM" = "nginx" ]; then
 	while IFS= read -r IP; do
 		cat "$WEBTPL"/nginx/proxy_ip.tpl \
@@ -245,7 +245,7 @@ elif [ "$PROXY_SYSTEM" = "nginx" ]; then
 				-e "s/%proxy_ssl_port%/$PROXY_SSL_PORT/g" \
 				> "/etc/nginx/conf.d/$IP.conf"
 		process_http2_directive "/etc/nginx/conf.d/$IP.conf"
-	done < <(ls "$HESTIA"/data/ips/ 2> /dev/null)
+	done < <(ls "$DevIT"/data/ips/ 2> /dev/null)
 fi
 
 if [ "$MAIL_SYSTEM" = "exim4" ]; then
@@ -258,15 +258,15 @@ if [ "$MAIL_SYSTEM" = "exim4" ]; then
 			chmod 640 /etc/exim4/srs.conf
 			chown root:Debian-exim /etc/exim4/srs.conf
 			cp /etc/exim4/exim4.conf.template /etc/exim4/exim4.conf.template.staging
-			patch /etc/exim4/exim4.conf.template.staging $HESTIA/install/upgrade/patch/3661-exim-srs-support.patch 2>&1
+			patch /etc/exim4/exim4.conf.template.staging $DevIT/install/upgrade/patch/3661-exim-srs-support.patch 2>&1
 			exim -C /etc/exim4/exim4.conf.template.staging 2>&1
 			if [ "$?" -ne 0 ]; then
-				add_upgrade_message "Unable to successfully aply the SRS update patch for Exim.\n If you use SMTP relay with the SRS feature use the exim config found in /usr/local/hestia/install/deb/exim/exim4.conf.4.95.template"
-				"$BIN"/v-add-user-notification admin "Unable to apply patch to Exim config" 'Unable to successfully apply the SRS update patch for Exim.<br /> If you use SMTP relay with the SRS feature use the exim config found in /usr/local/hestia/install/deb/exim/exim4.conf.4.95.template'
-				if grep -qw "IMPORTANT: Manual Action Required" "$HESTIA"/data/users/admin/notifications.conf 2> /dev/null; then
-					sed -i "s/""$(grep -m 1 "Unable to apply patch to Exim config" "$HESTIA"/data/users/admin/notifications.conf | awk '{print $1}')""/NID='3'/" "$HESTIA"/data/users/admin/notifications.conf
+				add_upgrade_message "Unable to successfully aply the SRS update patch for Exim.\n If you use SMTP relay with the SRS feature use the exim config found in /usr/local/DevIT/install/deb/exim/exim4.conf.4.95.template"
+				"$BIN"/v-add-user-notification admin "Unable to apply patch to Exim config" 'Unable to successfully apply the SRS update patch for Exim.<br /> If you use SMTP relay with the SRS feature use the exim config found in /usr/local/DevIT/install/deb/exim/exim4.conf.4.95.template'
+				if grep -qw "IMPORTANT: Manual Action Required" "$DevIT"/data/users/admin/notifications.conf 2> /dev/null; then
+					sed -i "s/""$(grep -m 1 "Unable to apply patch to Exim config" "$DevIT"/data/users/admin/notifications.conf | awk '{print $1}')""/NID='3'/" "$DevIT"/data/users/admin/notifications.conf
 				else
-					sed -i "s/""$(grep -m 1 "Unable to apply patch to Exim config" "$HESTIA"/data/users/admin/notifications.conf | awk '{print $1}')""/NID='2'/" "$HESTIA"/data/users/admin/notifications.conf
+					sed -i "s/""$(grep -m 1 "Unable to apply patch to Exim config" "$DevIT"/data/users/admin/notifications.conf | awk '{print $1}')""/NID='2'/" "$DevIT"/data/users/admin/notifications.conf
 				fi
 				echo "[ ! ] Unable to apply SRS update patch for SMTP relay"
 			else

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Hestia Control Panel upgrade script for target version 1.5.11
+# DevIT Control Panel upgrade script for target version 1.5.11
 
 #######################################################################################
 #######                      Place additional commands below.                   #######
@@ -21,19 +21,19 @@ upgrade_config_set_value 'UPGRADE_UPDATE_MAIL_TEMPLATES' 'false'
 upgrade_config_set_value 'UPGRADE_REBUILD_USERS' 'false'
 upgrade_config_set_value 'UPGRADE_UPDATE_FILEMANAGER_CONFIG' 'false'
 
-PORT=$(cat $HESTIA/nginx/conf/nginx.conf | grep "listen" | sed 's/[^0-9]*//g')
+PORT=$(cat $DevIT/nginx/conf/nginx.conf | grep "listen" | sed 's/[^0-9]*//g')
 
 if [ "$PORT" != "8083" ]; then
 	# Update F2B chains config
-	if [ -f "$HESTIA/data/firewall/chains.conf" ]; then
+	if [ -f "$DevIT/data/firewall/chains.conf" ]; then
 		# Update value in chains.conf
-		sed -i "s/PORT='8083'/PORT='$PORT'/g" $HESTIA/data/firewall/chains.conf
+		sed -i "s/PORT='8083'/PORT='$PORT'/g" $DevIT/data/firewall/chains.conf
 	fi
 
 	# Restart services
 	if [ -n "$FIREWALL_SYSTEM" ] && [ "$FIREWALL_SYSTEM" != no ]; then
-		$HESTIA/bin/v-stop-firewall
-		$HESTIA/bin/v-update-firewall
+		$DevIT/bin/v-stop-firewall
+		$DevIT/bin/v-update-firewall
 
 	fi
 fi

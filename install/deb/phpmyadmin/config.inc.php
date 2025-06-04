@@ -1,5 +1,5 @@
 <?php
-/* PHPmyadmin config for Hestia 1.3.3 > */
+/* PHPmyadmin config for DevIT 1.3.3 > */
 /* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
  * All directives are explained in documentation in the doc/ folder
@@ -31,6 +31,6 @@ $i = 1;
 foreach (glob("/etc/phpmyadmin/conf.d/*.php") as $filename) {
 	include $filename;
 	/*Don't remove / alter code here below this will add SSO support for all servers*/
-	//Add Hestia SSO code here
+	//Add DevIT SSO code here
 	$i++;
 }

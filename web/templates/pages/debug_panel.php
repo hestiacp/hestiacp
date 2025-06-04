@@ -1,5 +1,5 @@
 <?php
-if( !defined("HESTIA_DIR_BIN") ){
+if( !defined("DevIT_DIR_BIN") ){
 	die("Direct access disabled");
 }
 ?>

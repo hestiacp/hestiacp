@@ -2,7 +2,7 @@
 
 #===========================================================================#
 #                                                                           #
-# Hestia Control Panel - Backup Function Library                            #
+# DevIT Control Panel - Backup Function Library                            #
 #                                                                           #
 #===========================================================================#
 
@@ -32,7 +32,7 @@ local_backup() {
 	if [ "$disk_usage" -ge "$BACKUP_DISK_LIMIT" ]; then
 		rm -rf $tmpdir
 		rm -f $BACKUP/$user.log
-		sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
+		sed -i "/ $user /d" $DevIT/data/queue/backup.pipe
 		echo "Not enough disk space" | $SENDMAIL -s "$subj" "$email" "yes"
 		check_result "$E_DISK" "Not enough dsk space"
 	fi
@@ -41,7 +41,7 @@ local_backup() {
 	cd $tmpdir
 	tar -cf $BACKUP/$user.$backup_new_date.tar .
 	chmod 640 $BACKUP/$user.$backup_new_date.tar
-	chown "hestiaweb":"$user" $BACKUP/$user.$backup_new_date.tar
+	chown "DevITweb":"$user" $BACKUP/$user.$backup_new_date.tar
 	localbackup='yes'
 	echo -e "$(date "+%F %T") Local: $BACKUP/$user.$backup_new_date.tar" \
 		| tee -a $BACKUP/$user.log
@@ -64,20 +64,20 @@ EOF
 # Defining ftp storage function
 ftp_backup() {
 	# Checking config
-	if [ ! -e "$HESTIA/conf/ftp.backup.conf" ]; then
+	if [ ! -e "$DevIT/conf/ftp.backup.conf" ]; then
 		error="ftp.backup.conf doesn't exist"
 		echo "$error" | $SENDMAIL -s "$subj" $email "yes"
-		sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
+		sed -i "/ $user /d" $DevIT/data/queue/backup.pipe
 		echo "$error"
 		errorcode="$E_NOTEXIST"
 		return "$E_NOTEXIST"
 	fi
 
 	# Parse config
-	source_conf "$HESTIA/conf/ftp.backup.conf"
+	source_conf "$DevIT/conf/ftp.backup.conf"
 
 	# Set default port
-	if [ -z "$(grep 'PORT=' $HESTIA/conf/ftp.backup.conf)" ]; then
+	if [ -z "$(grep 'PORT=' $DevIT/conf/ftp.backup.conf)" ]; then
 		PORT='21'
 	fi
 
@@ -85,7 +85,7 @@ ftp_backup() {
 	if [ -z "$HOST" ] || [ -z "$USERNAME" ] || [ -z "$PASSWORD" ]; then
 		error="Can't parse ftp backup configuration"
 		echo "$error" | $SENDMAIL -s "$subj" $email "yes"
-		sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
+		sed -i "/ $user /d" $DevIT/data/queue/backup.pipe
 		echo "$error"
 		errorcode="$E_PARSING"
 		return "$E_PARSING"
@@ -100,7 +100,7 @@ ftp_backup() {
 	if [ -n "$ferror" ]; then
 		error="Error: can't login to ftp ftp://$USERNAME@$HOST"
 		echo "$error" | $SENDMAIL -s "$subj" $email $notify
-		sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
+		sed -i "/ $user /d" $DevIT/data/queue/backup.pipe
 		echo "$error"
 		errorcode="$E_CONNECT"
 		return "$E_CONNECT"
@@ -118,7 +118,7 @@ ftp_backup() {
 	if [ -n "$ftp_result" ]; then
 		error="Can't create ftp backup folder ftp://$HOST$BPATH"
 		echo "$error" | $SENDMAIL -s "$subj" $email $notify
-		sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
+		sed -i "/ $user /d" $DevIT/data/queue/backup.pipe
 		echo "$error"
 		errorcode="$E_FTP"
 		return "$E_FTP"
@@ -168,7 +168,7 @@ ftp_backup() {
 
 # FTP backup download function
 ftp_download() {
-	source_conf "$HESTIA/conf/ftp.backup.conf"
+	source_conf "$DevIT/conf/ftp.backup.conf"
 	if [ -z "$PORT" ]; then
 		PORT='21'
 	fi
@@ -182,7 +182,7 @@ ftp_download() {
 
 #FTP Delete function
 ftp_delete() {
-	source_conf "$HESTIA/conf/ftp.backup.conf"
+	source_conf "$DevIT/conf/ftp.backup.conf"
 	if [ -z "$PORT" ]; then
 		PORT='21'
 	fi
@@ -318,7 +318,7 @@ EOF
 
 # SFTP backup download function
 sftp_download() {
-	source_conf "$HESTIA/conf/sftp.backup.conf"
+	source_conf "$DevIT/conf/sftp.backup.conf"
 	if [ -z "$PORT" ]; then
 		PORT='22'
 	fi
@@ -332,7 +332,7 @@ sftp_download() {
 
 sftp_delete() {
 	echo "$1"
-	source_conf "$HESTIA/conf/sftp.backup.conf"
+	source_conf "$DevIT/conf/sftp.backup.conf"
 	if [ -z "$PORT" ]; then
 		PORT='22'
 	fi
@@ -347,20 +347,20 @@ sftp_delete() {
 
 sftp_backup() {
 	# Checking config
-	if [ ! -e "$HESTIA/conf/sftp.backup.conf" ]; then
+	if [ ! -e "$DevIT/conf/sftp.backup.conf" ]; then
 		error="Can't open sftp.backup.conf"
 		echo "$error" | $SENDMAIL -s "$subj" $email "yes"
-		sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
+		sed -i "/ $user /d" $DevIT/data/queue/backup.pipe
 		echo "$error"
 		errorcode="$E_NOTEXIST"
 		return "$E_NOTEXIST"
 	fi
 
 	# Parse config
-	source_conf "$HESTIA/conf/sftp.backup.conf"
+	source_conf "$DevIT/conf/sftp.backup.conf"
 
 	# Set default port
-	if [ -z "$(grep 'PORT=' $HESTIA/conf/sftp.backup.conf)" ]; then
+	if [ -z "$(grep 'PORT=' $DevIT/conf/sftp.backup.conf)" ]; then
 		PORT='22'
 	fi
 
@@ -368,7 +368,7 @@ sftp_backup() {
 	if [ -z "$HOST" ] || [ -z "$USERNAME" ] || [ -z "$PASSWORD" ]; then
 		error="Can't parse sftp backup configuration"
 		echo "$error" | $SENDMAIL -s "$subj" $email "yes"
-		sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
+		sed -i "/ $user /d" $DevIT/data/queue/backup.pipe
 		echo "$error"
 		errorcode="$E_PARSING"
 		return "$E_PARSING"
@@ -393,7 +393,7 @@ sftp_backup() {
 			$E_FTP) error="Can't create temp folder on sftp $HOST" ;;
 		esac
 		echo "$error" | $SENDMAIL -s "$subj" $email "yes"
-		sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
+		sed -i "/ $user /d" $DevIT/data/queue/backup.pipe
 		echo "$error"
 		errorcode="$rc"
 		return "$rc"
@@ -445,7 +445,7 @@ sftp_backup() {
 # BackBlaze B2 backup function
 b2_backup() {
 	# Defining backblaze b2 settings
-	source_conf "$HESTIA/conf/b2.backup.conf"
+	source_conf "$DevIT/conf/b2.backup.conf"
 
 	# Recreate backblaze auth file ~/.b2_account_info (for situation when key was changed in b2.backup.conf)
 	b2 clear-account > /dev/null 2>&1
@@ -484,7 +484,7 @@ b2_backup() {
 
 b2_download() {
 	# Defining backblaze b2 settings
-	source_conf "$HESTIA/conf/b2.backup.conf"
+	source_conf "$DevIT/conf/b2.backup.conf"
 
 	# Recreate backblaze auth file ~/.b2_account_info (for situation when key was changed in b2.backup.conf)
 	b2 clear-account > /dev/null 2>&1
@@ -498,7 +498,7 @@ b2_download() {
 
 b2_delete() {
 	# Defining backblaze b2 settings
-	source_conf "$HESTIA/conf/b2.backup.conf"
+	source_conf "$DevIT/conf/b2.backup.conf"
 
 	# Recreate backblaze auth file ~/.b2_account_info (for situation when key was changed in b2.backup.conf)
 	b2 clear-account > /dev/null 2>&1
@@ -509,7 +509,7 @@ b2_delete() {
 
 rclone_backup() {
 	# Define rclone config
-	source_conf "$HESTIA/conf/rclone.backup.conf"
+	source_conf "$DevIT/conf/rclone.backup.conf"
 	echo -e "$(date "+%F %T") Upload With Rclone to $HOST: $user.$backup_new_date.tar"
 	if [ "$localbackup" != 'yes' ]; then
 		cd $tmpdir
@@ -558,7 +558,7 @@ rclone_backup() {
 
 rclone_delete() {
 	# Defining rclone settings
-	source_conf "$HESTIA/conf/rclone.backup.conf"
+	source_conf "$DevIT/conf/rclone.backup.conf"
 	if [ -z "$BPATH" ]; then
 		rclone deletefile $HOST:/$1
 	else
@@ -569,7 +569,7 @@ rclone_delete() {
 rclone_download() {
 
 	# Defining rclone b2 settings
-	source_conf "$HESTIA/conf/rclone.backup.conf"
+	source_conf "$DevIT/conf/rclone.backup.conf"
 	cd $BACKUP
 	if [ -z "$BPATH" ]; then
 		rclone copy -v $HOST:/$1 ./

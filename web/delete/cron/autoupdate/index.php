@@ -10,7 +10,7 @@ if (
 	($_SESSION["userContext"] === "admin" && $_SESSION["POLICY_SYSTEM_HIDE_SERVICES"] == "no") ||
 	$_SESSION["user"] == $_SESSION["ROOT_USER"]
 ) {
-	exec(HESTIA_CMD . "v-delete-cron-hestia-autoupdate", $output, $return_var);
+	exec(DevIT_CMD . "v-delete-cron-DevIT-autoupdate", $output, $return_var);
 	unset($output);
 }
 

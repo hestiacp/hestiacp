@@ -18,9 +18,9 @@ if (!empty($_SESSION["look"])) {
 
 // Data
 if ($_SESSION["userContext"] === "admin") {
-	exec(HESTIA_CMD . "v-list-users json", $output, $return_var);
+	exec(DevIT_CMD . "v-list-users json", $output, $return_var);
 } else {
-	exec(HESTIA_CMD . "v-list-user " . $user . " json", $output, $return_var);
+	exec(DevIT_CMD . "v-list-user " . $user . " json", $output, $return_var);
 }
 $data = json_decode(implode("", $output), true);
 if ($_SESSION["userSortOrder"] == "name") {

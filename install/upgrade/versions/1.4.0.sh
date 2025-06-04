@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Hestia Control Panel upgrade script for target version 1.4.0
+# DevIT Control Panel upgrade script for target version 1.4.0
 
 #######################################################################################
 #######                      Place additional commands below.                   #######
@@ -27,7 +27,7 @@ if [ "$MAIL_SYSTEM" == "exim4" ]; then
 	# Check if we've already done this upgrade before proceeding
 	if ! grep -q ^smtp_active_hostname /etc/exim4/exim4.conf.template; then
 
-		source $HESTIA/func/ip.sh
+		source $DevIT/func/ip.sh
 
 		echo "[ * ] Populating HELO/SMTP Banner value for existing IP addresses..."
 		> /etc/exim4/mailhelo.conf
@@ -64,9 +64,9 @@ if [ "$MAIL_SYSTEM" == "exim4" ]; then
 			echo 'we were unable to safely modify your existing exim config file.'
 			echo 'If you would like to use the new SMTP Relay features,'
 			echo 'you will have to replace or modify your config with the one found'
-			echo 'on GitHub at https://github.com/hestiacp/hestiacp/blob/release/install/deb/exim/exim4.conf.template.'
+			echo 'on GitHub at https://github.com/DevITcp/DevITcp/blob/release/install/deb/exim/exim4.conf.template.'
 			echo 'Your exim config file will be found here: /etc/exim4/exim4.conf.template'
-			$HESTIA/bin/v-add-user-notification admin 'SMTP Relay upgrade failed' 'Because of the complexity of the SMTP Relay upgrade, we were unable to safely modify your existing exim config file.<br><br>If you would like to use the new SMTP Relay features, you will have to replace or modify your config with the one <a href="https://github.com/hestiacp/hestiacp/blob/release/install/deb/exim/exim4.conf.template" target="_blank">found on GitHub</a>.<br><br>Your exim config file will be found here:<br><br><code>/etc/exim4/exim4.conf.template</code>'
+			$DevIT/bin/v-add-user-notification admin 'SMTP Relay upgrade failed' 'Because of the complexity of the SMTP Relay upgrade, we were unable to safely modify your existing exim config file.<br><br>If you would like to use the new SMTP Relay features, you will have to replace or modify your config with the one <a href="https://github.com/DevITcp/DevITcp/blob/release/install/deb/exim/exim4.conf.template" target="_blank">found on GitHub</a>.<br><br>Your exim config file will be found here:<br><br><code>/etc/exim4/exim4.conf.template</code>'
 		else
 			disable_smtp_relay=false
 		fi
@@ -130,19 +130,19 @@ fi
 
 # Remove API file if API is set to "no"
 if [ "$API" = "no" ]; then
-	if [ -f "$HESTIA/web/api/index.php" ]; then
+	if [ -f "$DevIT/web/api/index.php" ]; then
 		echo "[ * ] Disabling API access..."
-		$HESTIA/bin/v-change-sys-api remove
+		$DevIT/bin/v-change-sys-api remove
 	fi
 fi
 
-# Back up users existing configuration data to $HESTIA/conf/defaults/hestia.conf
-if [ ! -f "$HESTIA/conf/defaults/hestia.conf" ]; then
+# Back up users existing configuration data to $DevIT/conf/defaults/DevIT.conf
+if [ ! -f "$DevIT/conf/defaults/DevIT.conf" ]; then
 	echo "[ * ] Creating known good configuration data for system recovery..."
-	if [ ! -d "$HESTIA/conf/defaults/" ]; then
-		mkdir -p "$HESTIA/conf/defaults/"
+	if [ ! -d "$DevIT/conf/defaults/" ]; then
+		mkdir -p "$DevIT/conf/defaults/"
 	fi
-	cp -f $HESTIA/conf/hestia.conf $HESTIA/conf/defaults/hestia.conf
+	cp -f $DevIT/conf/DevIT.conf $DevIT/conf/defaults/DevIT.conf
 fi
 
 if [ -f "/usr/lib/networkd-dispatcher/routable.d/50-ifup-hooks" ]; then
@@ -154,45 +154,45 @@ fi
 # Consolidate nginx (standalone) templates used by active websites
 if [ "$WEB_SYSTEM" = "nginx" ]; then
 	echo "[ * ] Consolidating nginx templates for Drupal & CodeIgniter..."
-	sed -i "s|TPL='drupal6'|TPL='drupal'|g" $HESTIA/data/users/*/web.conf
-	sed -i "s|TPL='drupal7'|TPL='drupal'|g" $HESTIA/data/users/*/web.conf
-	sed -i "s|TPL='drupal8'|TPL='drupal'|g" $HESTIA/data/users/*/web.conf
-	sed -i "s|TPL='codeigniter2'|TPL='codeigniter'|g" $HESTIA/data/users/*/web.conf
-	sed -i "s|TPL='codeigniter3'|TPL='codeigniter'|g" $HESTIA/data/users/*/web.conf
+	sed -i "s|TPL='drupal6'|TPL='drupal'|g" $DevIT/data/users/*/web.conf
+	sed -i "s|TPL='drupal7'|TPL='drupal'|g" $DevIT/data/users/*/web.conf
+	sed -i "s|TPL='drupal8'|TPL='drupal'|g" $DevIT/data/users/*/web.conf
+	sed -i "s|TPL='codeigniter2'|TPL='codeigniter'|g" $DevIT/data/users/*/web.conf
+	sed -i "s|TPL='codeigniter3'|TPL='codeigniter'|g" $DevIT/data/users/*/web.conf
 fi
 
 # Remove outdated nginx templates
 echo "[ * ] Removing outdated nginx templates..."
-rm -rf $HESTIA/data/templates/web/nginx/php-fpm/drupal6.*tpl
-rm -rf $HESTIA/data/templates/web/nginx/php-fpm/drupal7.*tpl
-rm -rf $HESTIA/data/templates/web/nginx/php-fpm/drupal8.*tpl
-rm -rf $HESTIA/data/templates/web/nginx/php-fpm/codeigniter2.*tpl
-rm -rf $HESTIA/data/templates/web/nginx/php-fpm/codeigniter3.*tpl
+rm -rf $DevIT/data/templates/web/nginx/php-fpm/drupal6.*tpl
+rm -rf $DevIT/data/templates/web/nginx/php-fpm/drupal7.*tpl
+rm -rf $DevIT/data/templates/web/nginx/php-fpm/drupal8.*tpl
+rm -rf $DevIT/data/templates/web/nginx/php-fpm/codeigniter2.*tpl
+rm -rf $DevIT/data/templates/web/nginx/php-fpm/codeigniter3.*tpl
 
-# Clean up old Hestia controlled webapps
-if [ -d "$HESTIA/web/images/webapps/" ]; then
+# Clean up old DevIT controlled webapps
+if [ -d "$DevIT/web/images/webapps/" ]; then
 	echo "[ * ] Clean up old web apps code..."
-	rm -rf $HESTIA/web/images/webapps/
-	rm -rf $HESTIA/web/src/app/WebApp/Installers/LaravelSetup.php
-	rm -rf $HESTIA/web/src/app/WebApp/Installers/OpencartSetup.php
-	rm -rf $HESTIA/web/src/app/WebApp/Installers/PrestashopSetup.php
-	rm -rf $HESTIA/web/src/app/WebApp/Installers/SymfonySetup.php
-	rm -rf $HESTIA/web/src/app/WebApp/Installers/WordpressSetup.php
-	rm -rf $HESTIA/web/src/app/WebApp/Installers/Joomla
+	rm -rf $DevIT/web/images/webapps/
+	rm -rf $DevIT/web/src/app/WebApp/Installers/LaravelSetup.php
+	rm -rf $DevIT/web/src/app/WebApp/Installers/OpencartSetup.php
+	rm -rf $DevIT/web/src/app/WebApp/Installers/PrestashopSetup.php
+	rm -rf $DevIT/web/src/app/WebApp/Installers/SymfonySetup.php
+	rm -rf $DevIT/web/src/app/WebApp/Installers/WordpressSetup.php
+	rm -rf $DevIT/web/src/app/WebApp/Installers/Joomla
 fi
 
 # Update ClamAV configuration file
 if [ -f "/etc/clamav/clamd.conf" ]; then
-	cp -f $HESTIA_INSTALL_DIR/clamav/clamd.conf /etc/clamav/
-	$HESTIA/bin/v-add-user-notification admin 'ClamAV config has been overwritten' 'Warning: If you have manualy changed /etc/clamav/clamd.conf and any changes you made will be lost an backup has been created in the /root/hst_backups folder with the original config. If you have not changed the config file you can ignore this message'
+	cp -f $DevIT_INSTALL_DIR/clamav/clamd.conf /etc/clamav/
+	$DevIT/bin/v-add-user-notification admin 'ClamAV config has been overwritten' 'Warning: If you have manualy changed /etc/clamav/clamd.conf and any changes you made will be lost an backup has been created in the /root/hst_backups folder with the original config. If you have not changed the config file you can ignore this message'
 fi
 
 ##### COMMANDS FOR V1.5.X
 
 # Back up default package and install latest version
-if [ -d $HESTIA/data/packages/ ]; then
+if [ -d $DevIT/data/packages/ ]; then
 	echo "[ * ] Migrating legacy default package for all users..."
-	$HESTIA/bin/v-rename-user-package default custom > /dev/null 2>&1
+	$DevIT/bin/v-rename-user-package default custom > /dev/null 2>&1
 	echo "[ * ] Replacing default package..."
-	cp -f $HESTIA_INSTALL_DIR/packages/default.pkg $HESTIA/data/packages/
+	cp -f $DevIT_INSTALL_DIR/packages/default.pkg $DevIT/data/packages/
 fi

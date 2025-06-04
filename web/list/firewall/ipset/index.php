@@ -11,7 +11,7 @@ if ($_SESSION["userContext"] != "admin") {
 }
 
 // Data
-exec(HESTIA_CMD . "v-list-firewall-ipset json", $output, $return_var);
+exec(DevIT_CMD . "v-list-firewall-ipset json", $output, $return_var);
 $data = json_decode(implode("", $output), true);
 ksort($data);
 

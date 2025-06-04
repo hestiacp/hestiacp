@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Hestia Control Panel upgrade script for target version 1.5.6
+# DevIT Control Panel upgrade script for target version 1.5.6
 
 #######################################################################################
 #######                      Place additional commands below.                   #######
@@ -23,5 +23,5 @@ upgrade_config_set_value 'UPGRADE_UPDATE_FILEMANAGER_CONFIG' 'false'
 
 echo "[ * ] Refresh Hostname SSL..."
 hostname=$(hostname)
-user=$($HESTIA/bin/v-search-domain-owner "$hostname")
-$HESTIA/bin/v-update-host-certificate "$user" "$hostname"
+user=$($DevIT/bin/v-search-domain-owner "$hostname")
+$DevIT/bin/v-update-host-certificate "$user" "$hostname"

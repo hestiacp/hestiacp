@@ -1,5 +1,5 @@
 <?php
-use function Hestiacp\quoteshellarg\quoteshellarg;
+use function DevITcp\quoteshellarg\quoteshellarg;
 
 ob_start();
 include $_SERVER["DOCUMENT_ROOT"] . "/inc/main.php";
@@ -23,7 +23,7 @@ if ($_SESSION["userContext"] === "admin") {
 	if (!empty($_GET["package"])) {
 		$v_package = quoteshellarg($_GET["package"]);
 		exec(
-			HESTIA_CMD . "v-copy-user-package " . $v_package . " " . $v_package . "-copy",
+			DevIT_CMD . "v-copy-user-package " . $v_package . " " . $v_package . "-copy",
 			$output,
 			$return_var,
 		);

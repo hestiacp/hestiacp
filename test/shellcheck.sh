@@ -14,7 +14,7 @@
 # SC2153: Possible misspelling: DOMAIN may not be assigned, but domain is. - Issues with SOURCE importing vars that are not defined in the script it self but config files
 # SC2016: Expressions don't expand in single quotes, use double quotes for that. - History reasons
 # SC2196: egrep is non-standard and deprecated. Use grep -E instead. Todo be removed in the future
-# SC1090; Can't follow non-constant source. Use a directive to specify location. - Hestia loves $HESTIA/data/ips/$ip
+# SC1090; Can't follow non-constant source. Use a directive to specify location. - DevIT loves $DevIT/data/ips/$ip
 # SC2031: var was modified in a subshell. That change might be lost.
 # SC2010
 # SC2143

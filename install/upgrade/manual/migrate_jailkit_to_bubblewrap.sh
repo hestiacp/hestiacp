@@ -9,10 +9,10 @@
 #----------------------------------------------------------#
 
 # Includes
-# shellcheck source=/usr/local/hestia/func/main.sh
-source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# shellcheck source=/usr/local/DevIT/func/main.sh
+source $DevIT/func/main.sh
+# shellcheck source=/usr/local/DevIT/conf/DevIT.conf
+source $DevIT/conf/DevIT.conf
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -32,7 +32,7 @@ $BIN/v-add-sys-ssh-jail
 
 ## Migrate user jails to bubblewrap jails
 for user in $("$BIN/v-list-users" list); do
-	check_jail_enabled=$(grep "SHELL_JAIL_ENABLED='yes'" $HESTIA/data/users/$user/user.conf)
+	check_jail_enabled=$(grep "SHELL_JAIL_ENABLED='yes'" $DevIT/data/users/$user/user.conf)
 
 	# If jail enabled remove the jailkit jail first then bubblewrap the jail
 	if [ -n "$check_jail_enabled" ]; then
@@ -56,24 +56,24 @@ for user in $("$BIN/v-list-users" list); do
 		$BIN/v-change-user-shell $user jailbash
 
 		# Remove config line from user.conf
-		sed -i "/SHELL_JAIL_ENABLED='yes'/d" $HESTIA/data/users/$user/user.conf
+		sed -i "/SHELL_JAIL_ENABLED='yes'/d" $DevIT/data/users/$user/user.conf
 	fi
 
 	# Remove config line from user.conf
-	sed -i "/SHELL_JAIL_ENABLED='no'/d" $HESTIA/data/users/$user/user.conf
+	sed -i "/SHELL_JAIL_ENABLED='no'/d" $DevIT/data/users/$user/user.conf
 done
 
-packages=$(ls --sort=time $HESTIA/data/packages | grep .pkg)
+packages=$(ls --sort=time $DevIT/data/packages | grep .pkg)
 
 for package in $packages; do
 	# Remove config line from package.conf
-	sed -i "/SHELL_JAIL_ENABLED='yes'/d" $HESTIA/data/packages/$package
-	sed -i "/SHELL_JAIL_ENABLED='no'/d" $HESTIA/data/packages/$package
+	sed -i "/SHELL_JAIL_ENABLED='yes'/d" $DevIT/data/packages/$package
+	sed -i "/SHELL_JAIL_ENABLED='no'/d" $DevIT/data/packages/$package
 done
 
 # Checking sshd directives
 config='/etc/ssh/sshd_config'
-ssh_i=$(grep -n "^# Hestia SSH Chroot" $config)
+ssh_i=$(grep -n "^# DevIT SSH Chroot" $config)
 
 # Backing up config
 cp $config $config.bak
@@ -98,13 +98,13 @@ fi
 groupdel ssh-jailed 2> /dev/null
 
 # Remove cronjob
-rm -f /etc/cron.d/hestia-ssh-jail
+rm -f /etc/cron.d/DevIT-ssh-jail
 
 # Remove jailkit
 apt remove -qq jailkit -y > /dev/null 2>&1
 
 #----------------------------------------------------------#
-#                       Hestia                             #
+#                       DevIT                             #
 #----------------------------------------------------------#
 
 # Logging

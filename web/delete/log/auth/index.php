@@ -1,5 +1,5 @@
 <?php
-use function Hestiacp\quoteshellarg\quoteshellarg;
+use function DevITcp\quoteshellarg\quoteshellarg;
 
 include $_SERVER["DOCUMENT_ROOT"] . "/inc/main.php";
 
@@ -13,7 +13,7 @@ if ($_SESSION["userContext"] === "admin" && isset($_GET["user"])) {
 }
 
 // Clear log
-exec(HESTIA_CMD . "v-delete-user-auth-log " . $user, $output, $return_var);
+exec(DevIT_CMD . "v-delete-user-auth-log " . $user, $output, $return_var);
 check_return_code($return_var, $output);
 unset($output);
 
@@ -32,7 +32,7 @@ $v_session_id = quoteshellarg($_SESSION["token"]);
 // Add current user session back to log unless impersonating another user
 if (!isset($_SESSION["look"])) {
 	exec(
-		HESTIA_CMD .
+		DevIT_CMD .
 			"v-log-user-login " .
 			$user .
 			" " .

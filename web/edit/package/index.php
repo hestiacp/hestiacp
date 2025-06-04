@@ -1,5 +1,5 @@
 <?php
-use function Hestiacp\quoteshellarg\quoteshellarg;
+use function DevITcp\quoteshellarg\quoteshellarg;
 
 ob_start();
 $TAB = "PACKAGE";
@@ -27,7 +27,7 @@ if ($_GET["package"] === "system") {
 
 // List package
 $v_package = quoteshellarg($_GET["package"]);
-exec(HESTIA_CMD . "v-list-user-package " . $v_package . " 'json'", $output, $return_var);
+exec(DevIT_CMD . "v-list-user-package " . $v_package . " 'json'", $output, $return_var);
 check_return_code_redirect($return_var, $output, "/list/package/");
 $data = json_decode(implode("", $output), true);
 unset($output);
@@ -104,31 +104,31 @@ $v_time = $data[$v_package]["TIME"];
 $v_status = "active";
 
 // List web templates
-exec(HESTIA_CMD . "v-list-web-templates json", $output, $return_var);
+exec(DevIT_CMD . "v-list-web-templates json", $output, $return_var);
 $web_templates = json_decode(implode("", $output), true);
 unset($output);
 
 // List backend templates
 if (!empty($_SESSION["WEB_BACKEND"])) {
-	exec(HESTIA_CMD . "v-list-web-templates-backend json", $output, $return_var);
+	exec(DevIT_CMD . "v-list-web-templates-backend json", $output, $return_var);
 	$backend_templates = json_decode(implode("", $output), true);
 	unset($output);
 }
 
 // List proxy templates
 if (!empty($_SESSION["PROXY_SYSTEM"])) {
-	exec(HESTIA_CMD . "v-list-web-templates-proxy json", $output, $return_var);
+	exec(DevIT_CMD . "v-list-web-templates-proxy json", $output, $return_var);
 	$proxy_templates = json_decode(implode("", $output), true);
 	unset($output);
 }
 
 // List dns templates
-exec(HESTIA_CMD . "v-list-dns-templates json", $output, $return_var);
+exec(DevIT_CMD . "v-list-dns-templates json", $output, $return_var);
 $dns_templates = json_decode(implode("", $output), true);
 unset($output);
 
 // List shels
-exec(HESTIA_CMD . "v-list-sys-shells json", $output, $return_var);
+exec(DevIT_CMD . "v-list-sys-shells json", $output, $return_var);
 $shells = json_decode(implode("", $output), true);
 unset($output);
 
@@ -337,7 +337,7 @@ if (!empty($_POST["save"])) {
 	$fp = fopen($tmpfile, "w");
 	fwrite($fp, $pkg);
 	exec(
-		HESTIA_CMD . "v-add-user-package " . $tmpfile . " " . $v_package . " yes",
+		DevIT_CMD . "v-add-user-package " . $tmpfile . " " . $v_package . " yes",
 		$output,
 		$return_var,
 	);
@@ -348,13 +348,13 @@ if (!empty($_POST["save"])) {
 	unlink($tmpfile);
 
 	// Propagate new package
-	exec(HESTIA_CMD . "v-update-user-package " . $v_package . " 'json'", $output, $return_var);
+	exec(DevIT_CMD . "v-update-user-package " . $v_package . " 'json'", $output, $return_var);
 	check_return_code($return_var, $output);
 	unset($output);
 
 	if ($v_package_new != $v_package) {
 		exec(
-			HESTIA_CMD . "v-rename-user-package " . $v_package . " " . $v_package_new,
+			DevIT_CMD . "v-rename-user-package " . $v_package . " " . $v_package_new,
 			$output,
 			$return_var,
 		);

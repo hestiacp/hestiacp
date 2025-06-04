@@ -1,5 +1,5 @@
 <?php
-use function Hestiacp\quoteshellarg\quoteshellarg;
+use function DevITcp\quoteshellarg\quoteshellarg;
 
 ob_start();
 $TAB = "WEB";
@@ -22,7 +22,7 @@ if ($_SESSION["user"] == "admin" && !empty($_GET["user"])) {
 // Check if domain belongs to the user
 $v_domain = $_GET["domain"];
 exec(
-	HESTIA_CMD . "v-list-web-domain " . $user . " " . quoteshellarg($v_domain) . " json",
+	DevIT_CMD . "v-list-web-domain " . $user . " " . quoteshellarg($v_domain) . " json",
 	$output,
 	$return_var,
 );
@@ -30,7 +30,7 @@ if ($return_var > 0) {
 	check_return_code_redirect($return_var, $output, "/list/web/");
 }
 unset($output);
-exec(HESTIA_CMD . "v-list-sys-php json", $output, $return_var);
+exec(DevIT_CMD . "v-list-sys-php json", $output, $return_var);
 $php_versions = json_decode(implode("", $output), true);
 unset($output);
 
@@ -38,11 +38,11 @@ unset($output);
 if (!empty($_GET["app"])) {
 	$app = basename($_GET["app"]);
 
-	$hestia = new \Hestia\System\HestiaApp();
-	$app_installer_class = "\Hestia\WebApp\Installers\\" . $app . "\\" . $app . "Setup";
+	$DevIT = new \DevIT\System\DevITApp();
+	$app_installer_class = "\DevIT\WebApp\Installers\\" . $app . "\\" . $app . "Setup";
 	if (class_exists($app_installer_class)) {
 		try {
-			$app_installer = new $app_installer_class($hestia);
+			$app_installer = new $app_installer_class($DevIT);
 			$info = $app_installer->getInfo();
 
 			if (!$info->isInstallable()) {
@@ -51,7 +51,7 @@ if (!empty($_GET["app"])) {
 					$app,
 				);
 			} else {
-				$installer = new \Hestia\WebApp\AppWizard($app_installer, $v_domain, $hestia);
+				$installer = new \DevIT\WebApp\AppWizard($app_installer, $v_domain, $DevIT);
 				$GLOBALS["WebappInstaller"] = $installer;
 			}
 		} catch (Exception $e) {
@@ -88,18 +88,18 @@ if (!empty($_POST["ok"]) && !empty($app)) {
 if (!empty($installer)) {
 	render_page($user, $TAB, "setup_webapp");
 } else {
-	$hestia = new \Hestia\System\HestiaApp();
+	$DevIT = new \DevIT\System\DevITApp();
 	$appInstallers = glob(__DIR__ . "/../../src/app/WebApp/Installers/*/*.php");
 
 	$v_web_apps = [];
 	foreach ($appInstallers as $app) {
 		$pattern = "/Installers\/([a-zA-Z][a-zA-Z0,9].*)\/([a-zA-Z][a-zA-Z0,9].*)Setup\.php/";
-		$class = "\Hestia\WebApp\Installers\%s\%sSetup";
+		$class = "\DevIT\WebApp\Installers\%s\%sSetup";
 
 		if (preg_match($pattern, $app, $matches)) {
 			$app_installer_class = sprintf($class, $matches[1], $matches[1]);
 
-			$v_web_apps[] = (new $app_installer_class($hestia))->getInfo();
+			$v_web_apps[] = (new $app_installer_class($DevIT))->getInfo();
 		}
 	}
 

@@ -1,5 +1,5 @@
 <?php
-use function Hestiacp\quoteshellarg\quoteshellarg;
+use function DevITcp\quoteshellarg\quoteshellarg;
 // Main include
 include $_SERVER["DOCUMENT_ROOT"] . "/inc/main.php";
 
@@ -27,7 +27,7 @@ if (!empty($requestPayload["service"])) {
 
 // Data
 exec(
-	HESTIA_CMD . "v-export-rrd " . quoteshellarg($service) . " " . quoteshellarg($period),
+	DevIT_CMD . "v-export-rrd " . quoteshellarg($service) . " " . quoteshellarg($period),
 	$output,
 	$return_var,
 );

@@ -57,7 +57,7 @@
 					</div>
 				</div>
 			</div>
-			<?php require $_SERVER["HESTIA"] . "/web/templates/includes/password-requirements.php"; ?>
+			<?php require $_SERVER["DevIT"] . "/web/templates/includes/password-requirements.php"; ?>
 			<div class="form-check">
 				<input x-model="loginDisabled" class="form-check-input" type="checkbox" name="v_login_disabled" id="v_login_disabled">
 				<label for="v_login_disabled">

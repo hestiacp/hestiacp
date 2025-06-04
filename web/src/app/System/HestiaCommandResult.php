@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Hestia\System;
+namespace DevIT\System;
 
 use function json_decode;
 
-class HestiaCommandResult
+class DevITCommandResult
 {
     public function __construct(
         public readonly string $command,

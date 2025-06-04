@@ -1,5 +1,5 @@
 <?php
-use function Hestiacp\quoteshellarg\quoteshellarg;
+use function DevITcp\quoteshellarg\quoteshellarg;
 
 ob_start();
 $TAB = "USER";
@@ -72,7 +72,7 @@ if (!empty($_POST["ok"])) {
 		fwrite($fp, $_POST["v_password"] . "\n");
 		fclose($fp);
 		exec(
-			HESTIA_CMD .
+			DevIT_CMD .
 				"v-add-user " .
 				$v_username .
 				" " .
@@ -95,7 +95,7 @@ if (!empty($_POST["ok"])) {
 	// Set language
 	if (empty($_SESSION["error_msg"])) {
 		exec(
-			HESTIA_CMD . "v-change-user-language " . $v_username . " " . $v_language,
+			DevIT_CMD . "v-change-user-language " . $v_username . " " . $v_language,
 			$output,
 			$return_var,
 		);
@@ -107,7 +107,7 @@ if (!empty($_POST["ok"])) {
 	if (empty($_SESSION["error_msg"])) {
 		$v_role = quoteshellarg($_POST["v_role"]);
 		exec(
-			HESTIA_CMD . "v-change-user-role " . $v_username . " " . $v_role,
+			DevIT_CMD . "v-change-user-role " . $v_username . " " . $v_role,
 			$output,
 			$return_var,
 		);
@@ -120,7 +120,7 @@ if (!empty($_POST["ok"])) {
 		if (!empty($_POST["v_login_disabled"])) {
 			$_POST["v_login_disabled"] = "yes";
 			exec(
-				HESTIA_CMD .
+				DevIT_CMD .
 					"v-change-user-config-value " .
 					$v_username .
 					" LOGIN_DISABLED " .
@@ -243,13 +243,13 @@ if (!empty($_POST["ok"])) {
 }
 
 // List hosting packages
-exec(HESTIA_CMD . "v-list-user-packages json", $output, $return_var);
+exec(DevIT_CMD . "v-list-user-packages json", $output, $return_var);
 check_error($return_var);
 $data = json_decode(implode("", $output), true);
 unset($output);
 
 // List languages
-exec(HESTIA_CMD . "v-list-sys-languages json", $output, $return_var);
+exec(DevIT_CMD . "v-list-sys-languages json", $output, $return_var);
 $language = json_decode(implode("", $output), true);
 foreach ($language as $lang) {
 	$languages[$lang] = translate_json($lang);

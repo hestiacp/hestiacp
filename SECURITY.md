@@ -1,10 +1,10 @@
-# Hestia CP Security policy
+# DevIT CP Security policy
 
-Welcome and thanks for taking interest in Hestia CP!
+Welcome and thanks for taking interest in DevIT CP!
 
-We are mostly interested in reports by actual Hestia CP users but all high quality contributions are welcome.
+We are mostly interested in reports by actual DevIT CP users but all high quality contributions are welcome.
 
-If you believe that you have have discovered a vulnerability in Hestia Control Panel, please let our development team know by sending an email to <info@hestiacp.com>
+If you believe that you have have discovered a vulnerability in DevIT Control Panel, please let our development team know by sending an email to <info@DevITcp.com>
 
 We ask you to include a detailed description of the vulnerability, a list of services involved (e.g. exim, dovecot) and the versions which you've tested, full steps to reproduce the vulnerability, and include your findings and expected results.
 

@@ -30,7 +30,7 @@ if (!empty($_POST["save"])) {
 		fwrite($fp, str_replace("\r\n", "\n", $_POST["v_config"]));
 		fclose($fp);
 		exec(
-			HESTIA_CMD . "v-change-sys-service-config " . $new_conf . " exim4 " . $v_restart,
+			DevIT_CMD . "v-change-sys-service-config " . $new_conf . " exim4 " . $v_restart,
 			$output,
 			$return_var,
 		);
@@ -49,7 +49,7 @@ $v_config_path = "/etc/exim4/exim4.conf.template";
 $v_service_name = strtoupper("exim");
 
 // Read config
-$v_config = shell_exec(HESTIA_CMD . "v-open-fs-config " . $v_config_path);
+$v_config = shell_exec(DevIT_CMD . "v-open-fs-config " . $v_config_path);
 
 // Render page
 render_page($user, $TAB, "edit_server_service");

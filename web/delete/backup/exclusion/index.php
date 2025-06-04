@@ -1,5 +1,5 @@
 <?php
-use function Hestiacp\quoteshellarg\quoteshellarg;
+use function DevITcp\quoteshellarg\quoteshellarg;
 
 ob_start();
 include $_SERVER["DOCUMENT_ROOT"] . "/inc/main.php";
@@ -14,7 +14,7 @@ verify_csrf($_GET);
 if (!empty($_GET["system"])) {
 	$v_system = quoteshellarg($_GET["system"]);
 	exec(
-		HESTIA_CMD . "v-delete-user-backup-exclusions " . $user . " " . $v_system,
+		DevIT_CMD . "v-delete-user-backup-exclusions " . $user . " " . $v_system,
 		$output,
 		$return_var,
 	);

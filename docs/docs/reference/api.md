@@ -6,7 +6,7 @@ This page is work in progress. A lot of information will be missing.
 
 ## Examples
 
-Examples can be found in a separate [repo](https://github.com/hestiacp/hestiacp-api-examples).
+Examples can be found in a separate [repo](https://github.com/DevITcp/DevITcp-api-examples).
 
 ## Upgrading from username/password authentication to access/secret keys
 

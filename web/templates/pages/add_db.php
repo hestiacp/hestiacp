@@ -88,7 +88,7 @@
 						</div>
 					</div>
 				</div>
-				<?php require $_SERVER["HESTIA"] . "/web/templates/includes/password-requirements.php"; ?>
+				<?php require $_SERVER["DevIT"] . "/web/templates/includes/password-requirements.php"; ?>
 				<div class="u-mb20">
 					<label for="v_db_email" class="form-label">
 						<?= _("Email login credentials to:") ?>

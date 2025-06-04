@@ -11,7 +11,7 @@ function formatNotificationTimestamps(&$note) {
 
 if ($_REQUEST["ajax"] == 1 && $_REQUEST["token"] == $_SESSION["token"]) {
 	// Data
-	exec(HESTIA_CMD . "v-list-user-notifications $user json", $output, $return_var);
+	exec(DevIT_CMD . "v-list-user-notifications $user json", $output, $return_var);
 	$data = json_decode(implode("", $output), true);
 
 	foreach ($data as $key => &$note) {
@@ -36,7 +36,7 @@ if ($_REQUEST["ajax"] == 1 && $_REQUEST["token"] == $_SESSION["token"]) {
 $TAB = "NOTIFICATIONS";
 
 // Data
-exec(HESTIA_CMD . "v-list-user-notifications $user json", $output, $return_var);
+exec(DevIT_CMD . "v-list-user-notifications $user json", $output, $return_var);
 $data = json_decode(implode("", $output), true);
 $data = array_reverse($data, true);
 

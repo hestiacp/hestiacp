@@ -8,10 +8,10 @@
 #----------------------------------------------------------#
 
 # Includes
-# shellcheck source=/usr/local/hestia/func/main.sh
-source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# shellcheck source=/usr/local/DevIT/func/main.sh
+source $DevIT/func/main.sh
+# shellcheck source=/usr/local/DevIT/conf/DevIT.conf
+source $DevIT/conf/DevIT.conf
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -33,22 +33,22 @@ php_v="$(multiphp_default_version)"
 
 $BIN/v-add-web-php "$php_v"
 
-cp -f "${HESTIA_INSTALL_DIR}/php-fpm/www.conf" "/etc/php/${php_v}/fpm/pool.d/www.conf"
+cp -f "${DevIT_INSTALL_DIR}/php-fpm/www.conf" "/etc/php/${php_v}/fpm/pool.d/www.conf"
 systemctl start php${php_v}-fpm
 check_result $? "php${php_v}-fpm start failed"
 update-alternatives --set php /usr/bin/php${php_v}
 
 if [ ! -z "$WEB_SYSTEM" ]; then
-	cp -rf "${HESTIA_INSTALL_DIR}/templates/web/$WEB_SYSTEM" "${WEBTPL}/"
+	cp -rf "${DevIT_INSTALL_DIR}/templates/web/$WEB_SYSTEM" "${WEBTPL}/"
 fi
 
-sed -i "/^WEB_BACKEND=/d" $HESTIA/conf/hestia.conf $HESTIA/conf/defaults/hestia.conf
-echo "WEB_BACKEND='php-fpm'" >> $HESTIA/conf/hestia.conf
-echo "WEB_BACKEND='php-fpm'" >> $HESTIA/conf/defaults/hestia.conf
+sed -i "/^WEB_BACKEND=/d" $DevIT/conf/DevIT.conf $DevIT/conf/defaults/DevIT.conf
+echo "WEB_BACKEND='php-fpm'" >> $DevIT/conf/DevIT.conf
+echo "WEB_BACKEND='php-fpm'" >> $DevIT/conf/defaults/DevIT.conf
 
 for user in $($BIN/v-list-sys-users plain); do
 	# Define user data and get suspended status
-	USER_DATA=$HESTIA/data/users/$user
+	USER_DATA=$DevIT/data/users/$user
 	SUSPENDED=$(get_user_value '$SUSPENDED')
 
 	# Check if user is suspended
@@ -90,7 +90,7 @@ $BIN/v-restart-web-backend "yes"
 check_result $? "Backend restart" > /dev/null 2>&1
 
 #----------------------------------------------------------#
-#                       Hestia                             #
+#                       DevIT                             #
 #----------------------------------------------------------#
 
 # Logging

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Hestia Control Panel upgrade script for target version unreleased
+# DevIT Control Panel upgrade script for target version unreleased
 
 #######################################################################################
 #######                      Place additional commands below.                   #######
@@ -31,7 +31,7 @@ if [ -f "/etc/roundcube/config.inc.php" ]; then
 	sed -i "s/?>//" /etc/roundcube/mimetypes.php
 fi
 
-for version in $($HESTIA/bin/v-list-sys-php plain); do
+for version in $($DevIT/bin/v-list-sys-php plain); do
 	# Increase max upload and max post size
 	sed -i "s/upload_max_filesize = 2M/upload_max_filesize = 100M/g" /etc/php/$version/fpm/php.ini
 	sed -i "s/post_max_size = 8M/post_max_size = 100M/g" /etc/php/$version/fpm/php.ini
@@ -41,6 +41,6 @@ done
 if [ -d /etc/roundcube ]; then
 	if [ ! -f /etc/logrotate.d/roundcube ]; then
 		echo "[ * ] Create config roundcube logrotate file"
-		cp -f $HESTIA_INSTALL_DIR/logrotate/roundcube /etc/logrotate.d/
+		cp -f $DevIT_INSTALL_DIR/logrotate/roundcube /etc/logrotate.d/
 	fi
 fi

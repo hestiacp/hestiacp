@@ -125,7 +125,7 @@
 						</label>
 					</div>
 					<div class="u-mb10">
-						<p class="u-mb10"><?= sprintf(_("Upload the files to %s"), "/usr/local/hestia/web/images/custom/") ?></p>
+						<p class="u-mb10"><?= sprintf(_("Upload the files to %s"), "/usr/local/DevIT/web/images/custom/") ?></p>
 						<ul>
 							<li><code>logo.svg</code> <small>(100px x 120px)</small></li>
 							<li><code>logo.png</code> <small>(100px x 120px)</small></li>

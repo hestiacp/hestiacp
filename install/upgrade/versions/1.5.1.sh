@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Hestia Control Panel upgrade script for target version 1.5.1
+# DevIT Control Panel upgrade script for target version 1.5.1
 
 #######################################################################################
 #######                      Place additional commands below.                   #######
@@ -21,7 +21,7 @@ upgrade_config_set_value 'UPGRADE_UPDATE_MAIL_TEMPLATES' 'false'
 upgrade_config_set_value 'UPGRADE_REBUILD_USERS' 'false'
 upgrade_config_set_value 'UPGRADE_UPDATE_FILEMANAGER_CONFIG' 'true'
 
-RHOST='apt.hestiacp.com'
+RHOST='apt.DevITcp.com'
 codename="$(lsb_release -s -c)"
 if [ -z "$codename" ]; then
 	codename="$(cat /etc/os-release | grep VERSION= | cut -f 2 -d \( | cut -f 1 -d \))"
@@ -37,10 +37,10 @@ case $architecture in
 	*) ;;
 esac
 
-chmod +x $HESTIA/install/deb/
+chmod +x $DevIT/install/deb/
 
-echo "[ * ] Updating hestia apt configuration..."
-sed -i "s|deb https://$RHOST/ $codename main|deb [arch=$ARCH] https://$RHOST/ $codename main|g" /etc/apt/sources.list.d/hestia.list
+echo "[ * ] Updating DevIT apt configuration..."
+sed -i "s|deb https://$RHOST/ $codename main|deb [arch=$ARCH] https://$RHOST/ $codename main|g" /etc/apt/sources.list.d/DevIT.list
 
 if [ -n "$IMAP_SYSTEM" ]; then
 	echo "[ * ] Updating dovecot configuration..."

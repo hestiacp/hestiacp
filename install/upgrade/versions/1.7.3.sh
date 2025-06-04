@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Hestia Control Panel upgrade script for target version 1.7.3
+# DevIT Control Panel upgrade script for target version 1.7.3
 
 #######################################################################################
 #######                      Place additional commands below.                   #######
@@ -25,5 +25,5 @@ upgrade_config_set_value 'UPGRADE_UPDATE_FILEMANAGER_CONFIG' 'false'
 
 if grep -q 'drop    message       = Helo name contains an IP address (HELO was $sender_helo_name) and not is valid' /etc/exim4/exim4.conf.template; then
 	echo "[ * ] Update exim4.conf.template ..."
-	patch /etc/exim4/exim4.conf.template $HESTIA/install/upgrade/patch/3462-exim-helo-autenticted-users.patch
+	patch /etc/exim4/exim4.conf.template $DevIT/install/upgrade/patch/3462-exim-helo-autenticted-users.patch
 fi

@@ -1,5 +1,5 @@
 		</main>
-		<?php require $_SERVER["HESTIA"] . "/web/templates/includes/app-footer.php"; ?>
+		<?php require $_SERVER["DevIT"] . "/web/templates/includes/app-footer.php"; ?>
 	</div> <?php // Closes `<div class="app">` in header.php ?>
 <?php if (
 	$_SESSION["userContext"] === "admin" &&
@@ -65,10 +65,10 @@
 		</button>
 	</div>
 
-	<?php require $_SERVER["HESTIA"] . "/web/templates/includes/jump-to-top-link.php"; ?>
+	<?php require $_SERVER["DevIT"] . "/web/templates/includes/jump-to-top-link.php"; ?>
 
 	<?php if ($_SESSION["DEBUG_MODE"] == "true") {
-		require $_SERVER["HESTIA"] . "/web/templates/pages/debug_panel.php";
+		require $_SERVER["DevIT"] . "/web/templates/pages/debug_panel.php";
 	} ?>
 
 </body>

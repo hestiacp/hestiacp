@@ -4,11 +4,11 @@
 With the release of version 1.7.0, we have implemented support for DNSSEC. DNSSEC requires a Master -> Slave setup. IF the existing implementation is a Master <-> Master setup, it is not supported. DNSSEC also requires at least Ubuntu 22.04 or Debian 11!
 :::
 
-## Host DNS for your domain on Hestia
+## Host DNS for your domain on DevIT
 
 Pre-requisites
 
-These steps require that you configure the DNS servers of your domain to use your Hestia servers.
+These steps require that you configure the DNS servers of your domain to use your DevIT servers.
 
 - Note that most domain providers require two or more DNS servers to be configured.
 - The name servers will most likely be required to be registered as 'Glue records'
@@ -16,8 +16,8 @@ These steps require that you configure the DNS servers of your domain to use you
 
 Preparing the domain and DNS
 
-1. On your Hestia master, [create a DNS Zone](../user-guide/dns#adding-a-dns-zone) with the **child-ns** template
-2. On your domain registrar panel, set the name servers of the domain to the Hestia servers
+1. On your DevIT master, [create a DNS Zone](../user-guide/dns#adding-a-dns-zone) with the **child-ns** template
+2. On your domain registrar panel, set the name servers of the domain to the DevIT servers
 
 If you are looking at options to minimise DNS-related downtime or for a way to automatically synchronise DNS zones across all your servers, you might consider setting up a DNS cluster.
 
@@ -29,7 +29,7 @@ If you have just set up your slave, check that the host name resolves and that y
 
 ## DNS Cluster setup
 
-A Master server is where DNS zones are created, and a Slave server recieves the zone via the API. Hestia can be configured as Master <-> Master or Master -> Slave. With a Master <-> Master configuration, each Master is also a Slave, so it could be considered as Master/Slave <-> Master/Slave.
+A Master server is where DNS zones are created, and a Slave server recieves the zone via the API. DevIT can be configured as Master <-> Master or Master -> Slave. With a Master <-> Master configuration, each Master is also a Slave, so it could be considered as Master/Slave <-> Master/Slave.
 
 On each Slave server, a unique user is required who will be assigned the zones, and must be assigned the "Sync DNS User" or "dns-cluster" role.
 
@@ -39,13 +39,13 @@ With the release of 1.6.0, we have implemented a new API Access Key authenticati
 If you still want to use the legacy API to authenticate with **admin** username and the password make sure **Enable legacy API** access is set to **yes**.
 :::
 
-### Master <-> Master DNS cluster (Default setup) with the Hestia API
+### Master <-> Master DNS cluster (Default setup) with the DevIT API
 
 ::: warning
 This method does not support DNSSEC!
 :::
 
-1. Create a new user on each Hestia server that will act as a “Slave”. Make sure it uses the username of "dns-cluster" or has the role `dns-cluster`
+1. Create a new user on each DevIT server that will act as a “Slave”. Make sure it uses the username of "dns-cluster" or has the role `dns-cluster`
 2. Run the following command to enable the DNS server.
 
 ```bash
@@ -62,10 +62,10 @@ This way you can set up Master -> Slave or Master <-> Master <-> Master cluster.
 
 There is no limitation on how to chain DNS servers.
 
-### Master -> Slave DNS cluster with the Hestia API
+### Master -> Slave DNS cluster with the DevIT API
 
 ::: info
-It doesn't work if you try to sync via local network! See [Issue](https://github.com/hestiacp/hestiacp/issues/4295) Make sure to use the public ip addresses
+It doesn't work if you try to sync via local network! See [Issue](https://github.com/DevITcp/DevITcp/issues/4295) Make sure to use the public ip addresses
 :::
 
 Preparing your **Slave** server(s):
@@ -78,7 +78,7 @@ Preparing your **Slave** server(s):
    - Has the role `dns-cluster`
    - You may want to set 'Do not allow user to log in to Control Panel' if they are not a regular user
    - If you have more than one slave, the slave user must be unique
-5. Edit `/usr/local/hestia/conf/hestia.conf`, change `DNS_CLUSTER_SYSTEM='hestia'` to `DNS_CLUSTER_SYSTEM='hestia-zone'`.
+5. Edit `/usr/local/DevIT/conf/DevIT.conf`, change `DNS_CLUSTER_SYSTEM='DevIT'` to `DNS_CLUSTER_SYSTEM='DevIT-zone'`.
 6. Edit `/etc/bind/named.conf.options`, do the following changes, then restart bind9 with `systemctl restart bind9`:
 
    ```bash
@@ -92,7 +92,7 @@ Preparing your **Slave** server(s):
 
 Preparing your **Master** server:
 
-1. On the **Master** server, open `/usr/local/hestia/conf/hestia.conf`, change `DNS_CLUSTER_SYSTEM='hestia'` to `DNS_CLUSTER_SYSTEM='hestia-zone'`.
+1. On the **Master** server, open `/usr/local/DevIT/conf/DevIT.conf`, change `DNS_CLUSTER_SYSTEM='DevIT'` to `DNS_CLUSTER_SYSTEM='DevIT-zone'`.
 2. Edit `/etc/bind/named.conf.options`, do the following changes, then restart bind9 with `systemctl restart bind9`.
 
    ```bash
@@ -122,7 +122,7 @@ Preparing your **Master** server:
 
 ### Converting an existing DNS cluster to Master -> Slave
 
-1. On **Master** and **Slave** servers, open `/usr/local/hestia/conf/hestia.conf`, change `DNS_CLUSTER_SYSTEM='hestia'` to `DNS_CLUSTER_SYSTEM='hestia-zone'`.
+1. On **Master** and **Slave** servers, open `/usr/local/DevIT/conf/DevIT.conf`, change `DNS_CLUSTER_SYSTEM='DevIT'` to `DNS_CLUSTER_SYSTEM='DevIT-zone'`.
 2. On the **Master** server, open `/etc/bind/named.conf.options`, do the following changes, then restart bind9 with `systemctl restart bind9`.
 
    ```bash
@@ -152,7 +152,7 @@ Preparing your **Master** server:
 ## Enabling DNSSEC
 
 ::: warning
-DNSSEC can’t be used when Hestia Cluster is active as Master <-> Master
+DNSSEC can’t be used when DevIT Cluster is active as Master <-> Master
 :::
 
 To enable DNSSEC, check the checkbox in-front of DNSSEC and save.
@@ -162,7 +162,7 @@ To view the public key. Got to the list DNS domains and click the <i class="fas 
 Depending on your registrar, you will either be able to create a new record based on the DNSKEY or based on DS key. After the DNSSEC public key has been added to the registrar, DNSSEC is enabled and live.
 
 ::: danger
-Removing or disabling the private key in Hestia will make the domain inaccessble.
+Removing or disabling the private key in DevIT will make the domain inaccessble.
 :::
 
 ## FAQ & troubleshooting
@@ -192,7 +192,7 @@ By default the user `dns-cluster` or user with the role `dns-cluster` are exempt
 When trying to add a DNS server for a cluster I get the following error:
 
 ```bash
-/usr/local/hestia/func/remote.sh: line 43: return: Error:: numeric argument required
+/usr/local/DevIT/func/remote.sh: line 43: return: Error:: numeric argument required
 Error: api connection to slave.domain.tld failed
 ```
 

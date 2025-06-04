@@ -2,7 +2,7 @@
 
 #===========================================================================#
 #                                                                           #
-# Hestia Control Panel - Firewall Function Library                          #
+# DevIT Control Panel - Firewall Function Library                          #
 #                                                                           #
 #===========================================================================#
 

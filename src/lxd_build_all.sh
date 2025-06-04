@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #
-# Script for preparing lxd environment and building Hestia packages for all supported distros
+# Script for preparing lxd environment and building DevIT packages for all supported distros
 # - Run with sudo, not directly as root!
 #
 # Arguments:
@@ -28,7 +28,7 @@ function setup_container() {
 	chown $user: "${__DIR__}/build/${containername}"
 
 	lxc config set ${containername} raw.idmap "both $user_id $user_gid"
-	lxc config device add ${containername} debdir disk path=/opt/hestiacp source=${__DIR__}/build/${containername}
+	lxc config device add ${containername} debdir disk path=/opt/DevITcp source=${__DIR__}/build/${containername}
 }
 
 cmd=$1
@@ -87,9 +87,9 @@ for osdef in "${oslist[@]}"; do
 
 		if [ "$cmd" = '--background' ]; then
 			# Run build script in background
-			lxc exec $containername -- /opt/hestiacp/lxd_compile.sh $branch > /dev/null 2>&1 &
+			lxc exec $containername -- /opt/DevITcp/lxd_compile.sh $branch > /dev/null 2>&1 &
 		else
-			lxc exec $containername -- /opt/hestiacp/lxd_compile.sh $branch
+			lxc exec $containername -- /opt/DevITcp/lxd_compile.sh $branch
 		fi
 
 	done

@@ -7,7 +7,7 @@
 # Original Version by Pavel Galkin (https://skurudo.ru)
 # https://github.com/skurudo/phpmyadmin-fixer
 #
-# Changed some lines to fit to Hestia Configuration.
+# Changed some lines to fit to DevIT Configuration.
 #
 
 PASS=$(gen_pass)
@@ -100,4 +100,4 @@ else
 fi
 
 #MYSQL DB and TABLES ADDITION
-$mysql_server -uroot < "$HESTIA_INSTALL_DIR/phpmyadmin/create_tables.sql"
+$mysql_server -uroot < "$DevIT_INSTALL_DIR/phpmyadmin/create_tables.sql"

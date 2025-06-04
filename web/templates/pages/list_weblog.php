@@ -3,9 +3,9 @@
 
 <head>
 	<!-- Load necessary CSS and JavaScript from source -->
-	<?php require $_SERVER["HESTIA"] . "/web/templates/includes/title.php"; ?>
-	<?php require $_SERVER["HESTIA"] . "/web/templates/includes/css.php"; ?>
-	<?php require $_SERVER["HESTIA"] . "/web/templates/includes/js.php"; ?>
+	<?php require $_SERVER["DevIT"] . "/web/templates/includes/title.php"; ?>
+	<?php require $_SERVER["DevIT"] . "/web/templates/includes/css.php"; ?>
+	<?php require $_SERVER["DevIT"] . "/web/templates/includes/js.php"; ?>
 </head>
 
 <body class="page-weblog">

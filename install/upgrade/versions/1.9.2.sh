@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Hestia Control Panel upgrade script for target version 1.9.0
+# DevIT Control Panel upgrade script for target version 1.9.0
 
 #######################################################################################
 #######                      Place additional commands below.                   #######
@@ -23,7 +23,7 @@ upgrade_config_set_value 'UPGRADE_UPDATE_MAIL_TEMPLATES' 'false'
 upgrade_config_set_value 'UPGRADE_REBUILD_USERS' 'no'
 upgrade_config_set_value 'UPGRADE_UPDATE_FILEMANAGER_CONFIG' 'false'
 
-# Delete all ssh keys for the filemanager make sure hestiaweb can read them.
+# Delete all ssh keys for the filemanager make sure DevITweb can read them.
 for user in $($BIN/v-list-sys-users plain); do
 	if [ -f /home/$user/.ssh/hst-filemanager-key ]; then
 		# Remove old filemanager key
@@ -31,8 +31,8 @@ for user in $($BIN/v-list-sys-users plain); do
 	fi
 done
 
-# Update permissiosn /usr/local/hestia/data/sessions
-chown -R hestiaweb:hestiaweb /usr/local/hestia/data/sessions
+# Update permissiosn /usr/local/DevIT/data/sessions
+chown -R DevITweb:DevITweb /usr/local/DevIT/data/sessions
 
 if [ -n "$DB_PGA_ALIAS" ]; then
 	if [ -n "$DB_PMA_ALIAS" ]; then
@@ -43,8 +43,8 @@ if [ -n "$DB_PGA_ALIAS" ]; then
 fi
 
 # Change owner of backups
-chown -R hestiaweb /backup/*.tar
+chown -R DevITweb /backup/*.tar
 
 # Fix typo in www.conf
-find /etc/php/ /usr/local/hestia/install/deb/php-fpm -type f -name 'www.conf' -print0 | xargs -0 -I {} sed -i 's/\[wwww\]/\[www\]/' {}
-find /etc/php/ /usr/local/hestia/install/deb/php-fpm -type f -name 'dummy.conf' -print0 | xargs -0 -I {} sed -i 's/\[wwww\]/\[www\]/' {}
+find /etc/php/ /usr/local/DevIT/install/deb/php-fpm -type f -name 'www.conf' -print0 | xargs -0 -I {} sed -i 's/\[wwww\]/\[www\]/' {}
+find /etc/php/ /usr/local/DevIT/install/deb/php-fpm -type f -name 'dummy.conf' -print0 | xargs -0 -I {} sed -i 's/\[wwww\]/\[www\]/' {}

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Hestia Control Panel upgrade script for target version 1.5.0
+# DevIT Control Panel upgrade script for target version 1.5.0
 
 #######################################################################################
 #######                      Place additional commands below.                   #######
@@ -26,7 +26,7 @@ if [ -n "$DB_PMA_ALIAS" ]; then
 		rm /etc/apache2/conf.d/phpmyadmin.conf
 		touch /etc/apache2/conf.d/phpmyadmin.inc
 	fi
-	$HESTIA/bin/v-change-sys-db-alias 'pma' "$DB_PMA_ALIAS"
+	$DevIT/bin/v-change-sys-db-alias 'pma' "$DB_PMA_ALIAS"
 fi
 
 if [ -n "$DB_PGA_ALIAS" ]; then
@@ -34,7 +34,7 @@ if [ -n "$DB_PGA_ALIAS" ]; then
 		rm /etc/apache2/conf.d/phppgadmin.conf
 		touch /etc/apache2/conf.d/phppgadmin.inc
 	fi
-	$HESTIA/bin/v-change-sys-db-alias 'pga' "$DB_PGA_ALIAS"
+	$DevIT/bin/v-change-sys-db-alias 'pga' "$DB_PGA_ALIAS"
 
 fi
 
@@ -56,18 +56,18 @@ if [ -n "$MAIL_SYSTEM" ]; then
 
 	# Clean up legacy ip variable
 	for ip in $($BIN/v-list-sys-ips plain | cut -f1); do
-		sed '/^HELO/d' $HESTIA/data/ips/$ip > /dev/null
+		sed '/^HELO/d' $DevIT/data/ips/$ip > /dev/null
 	done
 fi
 
-if [ -L "/var/log/hestia" ]; then
-	echo "[ ! ] Updating log file location: /usr/local/hestia/log/* to /var/log/hestia/..."
-	rm /var/log/hestia
-	mkdir -p /var/log/hestia
-	cp /usr/local/hestia/log/* /var/log/hestia/
-	rm -rf /usr/local/hestia/log
-	ln -s /var/log/hestia /usr/local/hestia/log
-	touch /var/log/hestia/auth.log /var/log/hestia/error.log /var/log/hestia/system.log /var/log/hestia/nginx-error.log /var/log/hestia/nginx-access.log
+if [ -L "/var/log/DevIT" ]; then
+	echo "[ ! ] Updating log file location: /usr/local/DevIT/log/* to /var/log/DevIT/..."
+	rm /var/log/DevIT
+	mkdir -p /var/log/DevIT
+	cp /usr/local/DevIT/log/* /var/log/DevIT/
+	rm -rf /usr/local/DevIT/log
+	ln -s /var/log/DevIT /usr/local/DevIT/log
+	touch /var/log/DevIT/auth.log /var/log/DevIT/error.log /var/log/DevIT/system.log /var/log/DevIT/nginx-error.log /var/log/DevIT/nginx-access.log
 fi
 
 if [ -d "/var/log/roundcube" ]; then

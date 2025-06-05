@@ -1,7 +1,7 @@
 {
     "require": {
         "phpmailer/phpmailer": "6.10.0",
-        "hestiacp/phpquoteshellarg": "1.1.0",
+        "devitcp/phpquoteshellarg": "1.1.0",
         "robthree/twofactorauth": "3.0.2"
     }
 }

@@ -1,7 +1,7 @@
 {
     "autoload": {
         "psr-4": {
-            "Hestia\\": "app/"
+            "DevIT\\": "app/"
         }
     },
     "require": {

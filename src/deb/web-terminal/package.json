@@ -1,5 +1,5 @@
 {
-	"name": "@hestiacp/web-terminal-ws",
+	"name": "@devitcp/web-terminal-ws",
 	"private": true,
 	"version": "1.0.2",
 	"type": "module",

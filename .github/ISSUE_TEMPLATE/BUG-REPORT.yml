@@ -1,12 +1,12 @@
 name: Bug Report
-description: File a bug report and help us to improve Hestia Control Panel
+description: File a bug report and help us to improve DevIT Control Panel
 title: "[Bug] "
 labels: [bug]
 body:
   - type: markdown
     attributes:
       value: |
-        If you have encountered a bug or problem in Hestia Control Panel, use this form to let us know.
+        If you have encountered a bug or problem in DevIT Control Panel, use this form to let us know.
         **Important: DO NOT include any private/sensitive information such as email addresses, passwords, IP addresses, or hostnames.**
   - type: textarea
     id: describe
@@ -51,7 +51,7 @@ body:
   - type: input
     id: version
     attributes:
-      label: Hestia Control Panel Version
+      label: DevIT Control Panel Version
       placeholder: 1.x.x
     validations:
       required: true

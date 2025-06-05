@@ -13,10 +13,10 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        if: github.repository == 'hestiacp/hestiacp'
+        if: github.repository == 'devitcp/devitcp'
       - name: crowdin action
         uses: crowdin/github-action@v2
-        if: github.repository == 'hestiacp/hestiacp'
+        if: github.repository == 'devitcp/devitcp'
         with:
           upload_sources: true
           upload_translations: false

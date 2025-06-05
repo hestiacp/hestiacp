@@ -1,9 +1,9 @@
 {
-	"name": "hestia",
+	"name": "devit",
 	"private": true,
 	"version": "1.10.0~alpha",
 	"description": "An open-source Linux web server control panel.",
-	"repository": "https://github.com/hestiacp/hestiacp",
+	"repository": "https://github.com/devitcp/devitcp",
 	"license": "GPL-3.0-or-later",
 	"type": "module",
 	"scripts": {

@@ -6,8 +6,8 @@ body:
   - type: markdown
     attributes:
       value: |
-        Is there a feature or change that you think would make Hestia Control Panel work better for you? Send us your ideas and our development team will take them into consideration.
-        Before submitting a new idea, look at the **[current feature requests list](https://github.com/hestiacp/hestiacp/labels/feature)** to see if it has already been requested.
+        Is there a feature or change that you think would make DevIT Control Panel work better for you? Send us your ideas and our development team will take them into consideration.
+        Before submitting a new idea, look at the **[current feature requests list](https://github.com/devitcp/devitcp/labels/feature)** to see if it has already been requested.
   - type: textarea
     id: request
     attributes:

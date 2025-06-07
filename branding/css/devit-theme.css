@@ -1,0 +1,9 @@
+/* /branding/css/devit-theme.css */
+:root {
+    --color-primary: #032c72; /* Bleu foncé pour DevIT */
+    --color-secondary: #267bdb; /* Bleu plus clair pour les liens et accents */
+    --color-text-link: #4a90e2;
+    --color-text-link-hover: #357abd;
+    --color-header-bg: #1a2c4a;
+    --color-header-icon: #ffffff;
+}

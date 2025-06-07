@@ -2,14 +2,21 @@
 
 # ======================================================== #
 #
-# Hestia Control Panel Installer for Ubuntu
-# https://www.hestiacp.com/
+# DevIT Control Panel Installer for Ubuntu
+# https://www.dev-it.com/
 #
 # Currently Supported Versions:
 # Ubuntu 20.04, 22.04, 24.04 LTS
 #
 # ======================================================== #
-
+echo
+echo '  ____             _ _ _______ '
+echo ' |  _ \  ___  ___ (_) |_   _  |'
+echo ' | | | |/ _ \/ _ \| | | | | | |'
+echo ' | |_| |  __/ (_) | | | | |_| |'
+echo ' |____/ \___|\___/|_|_| |_____|'
+echo '     DevIT Control Panel 💻    '
+echo
 #----------------------------------------------------------#
 #                  Variables&Functions                     #
 #----------------------------------------------------------#
@@ -419,7 +426,7 @@ if [ "x$(id -u)" != 'x0' ]; then
 fi
 
 if [ -d "/usr/local/hestia" ]; then
-	check_result 1 "Hestia install detected. Unable to continue"
+	check_result 1 "DevIT install detected. Unable to continue"
 fi
 
 type=$(grep "^ID=" /etc/os-release | cut -f 2 -d '=')
@@ -490,7 +497,7 @@ if [ -n "$conflicts" ] && [ -z "$force" ]; then
 		check_result $? 'apt-get remove failed'
 		unset $answer
 	else
-		check_result 1 "Hestia Control Panel should be installed on a clean server."
+		check_result 1 "DevIT Control Panel should be installed on a clean server."
 	fi
 fi
 
@@ -568,13 +575,13 @@ esac
 install_welcome_message() {
 	DISPLAY_VER=$(echo $HESTIA_INSTALL_VER | sed "s|~alpha||g" | sed "s|~beta||g")
 	echo
-	echo '                _   _           _   _        ____ ____                  '
-	echo '               | | | | ___  ___| |_(_) __ _ / ___|  _ \                 '
-	echo '               | |_| |/ _ \/ __| __| |/ _` | |   | |_) |                '
-	echo '               |  _  |  __/\__ \ |_| | (_| | |___|  __/                 '
-	echo '               |_| |_|\___||___/\__|_|\__,_|\____|_|                    '
-	echo "                                                                        "
-	echo "                          Hestia Control Panel                          "
+echo '  ____             _ _ _______ '
+echo ' |  _ \  ___  ___ (_) |_   _  |'
+echo ' | | | |/ _ \/ _ \| | | | | | |'
+echo ' | |_| |  __/ (_) | | | | |_| |'
+echo ' |____/ \___|\___/|_|_| |_____|'
+echo '     DevIT Control Panel 💻    '
+echo                        "
 	if [[ "$HESTIA_INSTALL_VER" =~ "beta" ]]; then
 		echo "                              BETA RELEASE                          "
 	fi
@@ -584,11 +591,11 @@ install_welcome_message() {
 		echo "                          USE AT YOUR OWN RISK                      "
 	fi
 	echo "                                  ${DISPLAY_VER}                        "
-	echo "                            www.hestiacp.com                            "
+	echo "                            www.Dev-IT.com                            "
 	echo
 	echo "========================================================================"
 	echo
-	echo "Thank you for downloading Hestia Control Panel! In a few moments,"
+	echo "Thank you for downloading DevIT Control Panel! In a few moments,"
 	echo "we will begin installing the following components on your server:"
 	echo
 }
@@ -839,7 +846,7 @@ if [ "$mysql" = 'yes' ]; then
 fi
 
 # Installing HestiaCP repo
-echo "[ * ] Hestia Control Panel"
+echo "[ * ] DevIT Control Panel"
 echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/hestia-keyring.gpg] https://$RHOST/ $codename main" > $apt/hestia.list
 gpg --no-default-keyring --keyring /usr/share/keyrings/hestia-keyring.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys A189E93654F0B0E5 > /dev/null 2>&1
 
@@ -2437,7 +2444,7 @@ echo -e "\n"
 # Sending notification to admin email
 echo -e "Congratulations!
 
-You have successfully installed Hestia Control Panel on your server.
+You have successfully installed DevIT Control Panel on your server.
 
 Ready to get started? Log in using the following credentials:
 
@@ -2447,14 +2454,21 @@ if [ "$host_ip" != "$ip" ]; then
 fi
 echo -e -n " 	Username:   $username
 	Password:   $displaypass
-
-Thank you for choosing Hestia Control Panel to power your full stack web server,
+echo
+echo '  ____             _ _ _______ '
+echo ' |  _ \  ___  ___ (_) |_   _  |'
+echo ' | | | |/ _ \/ _ \| | | | | | |'
+echo ' | |_| |  __/ (_) | | | | |_| |'
+echo ' |____/ \___|\___/|_|_| |_____|'
+echo '     DevIT Control Panel 💻    '
+echo
+Thank you for choosing DevIT Control Panel to power your full stack web server,
 we hope that you enjoy using it as much as we do!
 
 Please feel free to contact us at any time if you have any questions,
 or if you encounter any bugs or problems:
 
-Documentation:  https://docs.hestiacp.com/
+Documentation:  https://docs.dev-it.com/
 Forum:          https://forum.hestiacp.com/
 GitHub:         https://www.github.com/hestiacp/hestiacp
 
@@ -2462,17 +2476,17 @@ Note: Automatic updates are enabled by default. If you would like to disable the
 please log in and navigate to Server > Updates to turn them off.
 
 Help support the Hestia Control Panel project by donating via PayPal:
-https://www.hestiacp.com/donate
+https://www.dev-it.com/donate
 
 --
 Sincerely yours,
-The Hestia Control Panel development team
+The DevIT Control Panel development team
 
 Made with love & pride by the open-source community around the world.
 " >> $tmpfile
 
 send_mail="$HESTIA/web/inc/mail-wrapper.php"
-cat $tmpfile | $send_mail -s "Hestia Control Panel" $email
+cat $tmpfile | $send_mail -s "DevIT Control Panel" $email
 
 # Congrats
 echo
@@ -2480,7 +2494,7 @@ cat $tmpfile
 rm -f $tmpfile
 
 # Add welcome message to notification panel
-$HESTIA/bin/v-add-user-notification "$username" 'Welcome to Hestia Control Panel!' '<p>You are now ready to begin adding <a href="/add/user/">user accounts</a> and <a href="/add/web/">domains</a>. For help and assistance, <a href="https://hestiacp.com/docs/" target="_blank">view the documentation</a> or <a href="https://forum.hestiacp.com/" target="_blank">visit our forum</a>.</p><p>Please <a href="https://github.com/hestiacp/hestiacp/issues" target="_blank">report any issues via GitHub</a>.</p><p class="u-text-bold">Have a wonderful day!</p><p><i class="fas fa-heart icon-red"></i> The Hestia Control Panel development team</p>'
+$HESTIA/bin/v-add-user-notification "$username" 'Welcome to DevIT Control Panel!' '<p>You are now ready to begin adding <a href="/add/user/">user accounts</a> and <a href="/add/web/">domains</a>. For help and assistance, <a href="https://hestiacp.com/docs/" target="_blank">view the documentation</a> or <a href="https://forum.hestiacp.com/" target="_blank">visit our forum</a>.</p><p>Please <a href="https://github.com/hestiacp/hestiacp/issues" target="_blank">report any issues via GitHub</a>.</p><p class="u-text-bold">Have a wonderful day!</p><p><i class="fas fa-heart icon-red"></i> The Hestia Control Panel development team</p>'
 
 # Clean-up
 # Sort final configuration file

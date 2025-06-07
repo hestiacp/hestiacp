@@ -29,6 +29,46 @@ architecture="$(arch)"
 HESTIA_INSTALL_DIR="$HESTIA/install/deb"
 HESTIA_COMMON_DIR="$HESTIA/install/common"
 VERBOSE='no'
+# Exemple de modification à ajouter dans hst-install-debian.sh
+# Dans hst-install-debian.sh, à la suite des commandes pour les logos
+# Dans hst-install-debian.sh
+
+echo "[*] Renaming Hestia to DevIT Panel..."
+
+# Chemins vers les fichiers de langue
+LANG_FILES="/usr/local/hestia/web/inc/i18n/*.php"
+
+# Remplacer "Hestia Control Panel" par "DevIT Panel"
+sed -i "s/'Hestia Control Panel'/'DevIT Panel'/g" $LANG_FILES
+sed -i 's/"Hestia Control Panel"/"DevIT Panel"/g' $LANG_FILES
+
+# Remplacer "Hestia" seul (avec précaution pour ne pas remplacer des parties de mots)
+sed -i "s/'Hestia'/'DevIT'/g" $LANG_FILES
+
+# Créer le répertoire de thèmes custom
+mkdir -p /usr/local/hestia/web/css/themes/custom/
+
+# Copier le fichier CSS du thème DevIT
+cp $HESTIA_INSTALL_DIR/branding/css/devit-theme.css /usr/local/hestia/web/css/themes/custom/
+
+# ... (après l'installation des paquets de base de Hestia)
+
+echo "[*] Applying DevIT Panel branding..."
+
+# Créer le répertoire custom s'il n'existe pas
+mkdir -p /usr/local/hestia/web/images/custom/
+
+# Copier les logos depuis le répertoire d'installation vers le système
+cp $HESTIA_INSTALL_DIR/branding/images/logo.svg /usr/local/hestia/web/images/custom/
+cp $HESTIA_INSTALL_DIR/branding/images/logo-header.svg /usr/local/hestia/web/images/custom/
+cp $HESTIA_INSTALL_DIR/branding/images/favicon.ico /usr/local/hestia/web/images/custom/
+
+# Lancer la commande Hestia pour appliquer le logo
+/usr/local/bin/v-update-white-label-logo
+
+echo "[*] DevIT Panel branding applied."
+
+# ... (suite du script d'installation)
 
 # Define software versions
 HESTIA_INSTALL_VER='1.10.0~alpha'
@@ -442,7 +482,7 @@ if [ ! -f /etc/apt/apt.conf.d/80-retries ]; then
 fi
 
 # Welcome message
-echo "Welcome to the Hestia Control Panel installer!"
+echo "Welcome to the DevIT Control Panel installer!"
 echo
 echo "Please wait, the installer is now checking for missing dependencies..."
 echo
@@ -579,13 +619,13 @@ esac
 install_welcome_message() {
 	DISPLAY_VER=$(echo $HESTIA_INSTALL_VER | sed "s|~alpha||g" | sed "s|~beta||g")
 	echo
-	echo '                _   _           _   _        ____ ____                  '
-	echo '               | | | | ___  ___| |_(_) __ _ / ___|  _ \                 '
-	echo '               | |_| |/ _ \/ __| __| |/ _` | |   | |_) |                '
-	echo '               |  _  |  __/\__ \ |_| | (_| | |___|  __/                 '
-	echo '               |_| |_|\___||___/\__|_|\__,_|\____|_|                    '
-	echo "                                                                        "
-	echo "                          Hestia Control Panel                          "
+echo '  ____             _ _ _______ '
+echo ' |  _ \  ___  ___ (_) |_   _  |'
+echo ' | | | |/ _ \/ _ \| | | | | | |'
+echo ' | |_| |  __/ (_) | | | | |_| |'
+echo ' |____/ \___|\___/|_|_| |_____|'
+echo '     DevIT Control Panel 💻    '
+echo                     "
 	if [[ "$HESTIA_INSTALL_VER" =~ "beta" ]]; then
 		echo "                              BETA RELEASE                          "
 	fi
@@ -595,11 +635,11 @@ install_welcome_message() {
 		echo "                          USE AT YOUR OWN RISK                      "
 	fi
 	echo "                                  ${DISPLAY_VER}                        "
-	echo "                            www.hestiacp.com                            "
+	echo "                            www.dev-it.com                            "
 	echo
 	echo "========================================================================"
 	echo
-	echo "Thank you for downloading Hestia Control Panel! In a few moments,"
+	echo "Thank you for downloading DevIT Control Panel! In a few moments,"
 	echo "we will begin installing the following components on your server:"
 	echo
 }
@@ -2397,7 +2437,7 @@ chmod 755 /backup/
 echo "@reboot root sleep 10 && rm /etc/cron.d/hestia-ssl && PATH='/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:' && /usr/local/hestia/bin/v-add-letsencrypt-host" > /etc/cron.d/hestia-ssl
 
 #----------------------------------------------------------#
-#              Set hestia.conf default values              #
+#              Set DevIT.conf default values              #
 #----------------------------------------------------------#
 
 echo "[ * ] Updating configuration files..."
@@ -2412,7 +2452,7 @@ echo 'if [ "${PATH#*/usr/local/hestia/bin*}" = "$PATH" ]; then
 fi' >> /root/.bashrc
 
 #----------------------------------------------------------#
-#                   Hestia Access Info                     #
+#                   DevIT Access Info                     #
 #----------------------------------------------------------#
 
 # Comparing hostname and IP
@@ -2428,7 +2468,7 @@ echo -e "\n"
 # Sending notification to admin email
 echo -e "Congratulations!
 
-You have successfully installed Hestia Control Panel on your server.
+You have successfully installed DevIT Control Panel on your server.
 
 Ready to get started? Log in using the following credentials:
 
@@ -2439,31 +2479,31 @@ fi
 echo -e -n " 	Username:   $username
 	Password:   $displaypass
 
-Thank you for choosing Hestia Control Panel to power your full stack web server,
+Thank you for choosing DevIT Control Panel to power your full stack web server,
 we hope that you enjoy using it as much as we do!
 
 Please feel free to contact us at any time if you have any questions,
 or if you encounter any bugs or problems:
 
-Documentation:  https://docs.hestiacp.com/
+Documentation:  https://docs.dev-it.com/
 Forum:          https://forum.hestiacp.com/
-GitHub:         https://www.github.com/hestiacp/hestiacp
+GitHub:         https://github.com/Ghost-Dev9/DevIT
 
 Note: Automatic updates are enabled by default. If you would like to disable them,
 please log in and navigate to Server > Updates to turn them off.
 
-Help support the Hestia Control Panel project by donating via PayPal:
+Help support the DevIT Control Panel project by donating via PayPal:
 https://www.hestiacp.com/donate
 
 --
 Sincerely yours,
-The Hestia Control Panel development team
+The Dev-it Control Panel development team
 
 Made with love & pride by the open-source community around the world.
 " >> $tmpfile
 
 send_mail="$HESTIA/web/inc/mail-wrapper.php"
-cat $tmpfile | $send_mail -s "Hestia Control Panel" $email
+cat $tmpfile | $send_mail -s "DevIT Control Panel" $email
 
 # Congrats
 echo
@@ -2471,7 +2511,7 @@ cat $tmpfile
 rm -f $tmpfile
 
 # Add welcome message to notification panel
-$HESTIA/bin/v-add-user-notification "$username" 'Welcome to Hestia Control Panel!' '<p>You are now ready to begin adding <a href="/add/user/">user accounts</a> and <a href="/add/web/">domains</a>. For help and assistance, <a href="https://hestiacp.com/docs/" target="_blank">view the documentation</a> or <a href="https://forum.hestiacp.com/" target="_blank">visit our forum</a>.</p><p>Please <a href="https://github.com/hestiacp/hestiacp/issues" target="_blank">report any issues via GitHub</a>.</p><p class="u-text-bold">Have a wonderful day!</p><p><i class="fas fa-heart icon-red"></i> The Hestia Control Panel development team</p>'
+$HESTIA/bin/v-add-user-notification "$username" 'Welcome to DevIT Control Panel!' '<p>You are now ready to begin adding <a href="/add/user/">user accounts</a> and <a href="/add/web/">domains</a>. For help and assistance, <a href="https://hestiacp.com/docs/" target="_blank">view the documentation</a> or <a href="https://forum.hestiacp.com/" target="_blank">visit our forum</a>.</p><p>Please <a href="https://github.com/hestiacp/hestiacp/issues" target="_blank">report any issues via GitHub</a>.</p><p class="u-text-bold">Have a wonderful day!</p><p><i class="fas fa-heart icon-red"></i> The Hestia Control Panel development team</p>'
 
 # Clean-up
 # Sort final configuration file

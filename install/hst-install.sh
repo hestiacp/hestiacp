@@ -2,9 +2,9 @@
 
 # ======================================================== #
 #
-# Hestia Control Panel Installation Routine
+# DevIT Control Panel Installation Routine
 # Automatic OS detection wrapper
-# https://www.hestiacp.com/
+# https://www.dev-it.com/
 #
 # Currently Supported Operating Systems:
 #
@@ -12,7 +12,14 @@
 # Ubuntu 20.04, 22.04, 24.04 LTS
 #
 # ======================================================== #
-
+echo
+echo '  ____             _ _ _______ '
+echo ' |  _ \  ___  ___ (_) |_   _  |'
+echo ' | | | |/ _ \/ _ \| | | | | | |'
+echo ' | |_| |  __/ (_) | | | | |_| |'
+echo ' |____/ \___|\___/|_|_| |_____|'
+echo '     DevIT Control Panel 💻    '
+echo
 # Am I root?
 if [ "x$(id -u)" != 'x0' ]; then
 	echo 'Error: this script can only be executed by root'
@@ -65,7 +72,7 @@ fi
 no_support_message() {
 	echo "****************************************************"
 	echo "Your operating system (OS) is not supported by"
-	echo "Hestia Control Panel. Officially supported releases:"
+	echo "Dev-it Control Panel. Officially supported releases:"
 	echo "****************************************************"
 	echo "  Debian 11, 12"
 	echo "  Ubuntu 20.04, 22.04, 24.04 LTS"

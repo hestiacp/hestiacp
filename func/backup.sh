@@ -126,9 +126,9 @@ ftp_backup() {
 
 	# Checking retention (Only include .tar files)
 	if [ -z $BPATH ]; then
-		backup_list=$(ftpc "ls" | awk '{print $9}' | grep "^$user\." | grep ".tar")
+		backup_list=$(ftpc "ls" | awk '{print $9}' | grep "^$user\." | grep ".tar" | sort)
 	else
-		backup_list=$(ftpc "cd $BPATH" "ls" | awk '{print $9}' | grep "^$user\." | grep ".tar")
+		backup_list=$(ftpc "cd $BPATH" "ls" | awk '{print $9}' | grep "^$user\." | grep ".tar" | sort)
 	fi
 	backups_count=$(echo "$backup_list" | wc -l)
 	if [ "$backups_count" -ge "$BACKUPS" ]; then

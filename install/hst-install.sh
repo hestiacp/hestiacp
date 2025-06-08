@@ -2,9 +2,9 @@
 
 # ======================================================== #
 #
-# DevIT Control Panel Installation Routine
+# Hestia Control Panel Installation Routine
 # Automatic OS detection wrapper
-# https://www.dev-it.com/
+# https://www.hestiacp.com/
 #
 # Currently Supported Operating Systems:
 #
@@ -12,14 +12,7 @@
 # Ubuntu 20.04, 22.04, 24.04 LTS
 #
 # ======================================================== #
-echo
-echo '  ____             _ _ _______ '
-echo ' |  _ \  ___  ___ (_) |_   _  |'
-echo ' | | | |/ _ \/ _ \| | | | | | |'
-echo ' | |_| |  __/ (_) | | | | |_| |'
-echo ' |____/ \___|\___/|_|_| |_____|'
-echo '     DevIT Control Panel 💻    '
-echo
+
 # Am I root?
 if [ "x$(id -u)" != 'x0' ]; then
 	echo 'Error: this script can only be executed by root'
@@ -72,7 +65,7 @@ fi
 no_support_message() {
 	echo "****************************************************"
 	echo "Your operating system (OS) is not supported by"
-	echo "Dev-it Control Panel. Officially supported releases:"
+	echo "Hestia Control Panel. Officially supported releases:"
 	echo "****************************************************"
 	echo "  Debian 11, 12"
 	echo "  Ubuntu 20.04, 22.04, 24.04 LTS"
@@ -87,7 +80,7 @@ fi
 check_wget_curl() {
 	# Check wget
 	if [ -e '/usr/bin/wget' ]; then
-		wget -q https://raw.githubusercontent.com/Ghost-Dev9/DevIT/refs/heads/main/install/hst-install.sh -O hst-install-$type.sh
+		wget -q https://raw.githubusercontent.com/hestiacp/hestiacp/release/install/hst-install-$type.sh -O hst-install-$type.sh
 		if [ "$?" -eq '0' ]; then
 			bash hst-install-$type.sh $*
 			exit
@@ -100,7 +93,7 @@ check_wget_curl() {
 
 	# Check curl
 	if [ -e '/usr/bin/curl' ]; then
-		curl -s -O https://raw.githubusercontent.com/Ghost-Dev9/DevIT/refs/heads/main/install/hst-install.sh
+		curl -s -O https://raw.githubusercontent.com/hestiacp/hestiacp/release/install/hst-install-$type.sh
 		if [ "$?" -eq '0' ]; then
 			bash hst-install-$type.sh $*
 			exit

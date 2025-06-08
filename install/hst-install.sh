@@ -2,9 +2,9 @@
 
 # ======================================================== #
 #
-# Hestia Control Panel Installation Routine
+# DevIT Control Panel Installation Routine
 # Automatic OS detection wrapper
-# https://www.hestiacp.com/
+# https://www.DevIT.com/
 #
 # Currently Supported Operating Systems:
 #

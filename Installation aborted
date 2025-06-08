@@ -1,0 +1,11 @@
+Installation aborted
+====================================================================
+ERROR: Install script version does not match package version!
+Please download the installer from the release branch in order to continue:
+
+https://raw.githubusercontent.com/hestiacp/hestiacp/release/install/hst-install.sh
+
+To test pre-release versions, build the .deb packages and re-run the installer:
+  ./hst_autocompile.sh --hestia branchname no
+  ./hst-install.sh .. --with-debs /tmp/hestiacp-src/debs
+

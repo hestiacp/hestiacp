@@ -35,7 +35,7 @@ Log in as **root** or a user with super-user privileges:
 ssh root@your.server
 ### Step 2: Download
 Download the installation script for the latest release:
-wget https://raw.githubusercontent.com/Ghost-Dev9/DevIT/refs/heads/main/install/hst-install.sh
+wget https://raw.githubusercontent.com/Ghost-Dev9/DevIT/release/install/devit-install.sh
 
 text
 If you encounter SSL errors, ensure `ca-certificates` is installed:
@@ -44,7 +44,7 @@ apt-get update && apt-get install ca-certificates
 text
 ### Step 3: Run
 Start the installation and follow the prompts:
-bash hst-install.sh
+bash devit-install.sh
 
 text
 After installation, follow the on-screen instructions to log in and access your server.

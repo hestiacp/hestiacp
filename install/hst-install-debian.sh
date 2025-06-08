@@ -29,44 +29,6 @@ architecture="$(arch)"
 HESTIA_INSTALL_DIR="$HESTIA/install/deb"
 HESTIA_COMMON_DIR="$HESTIA/install/common"
 VERBOSE='no'
-# Exemple de modification à ajouter dans hst-install-debian.sh
-# Dans hst-install-debian.sh, à la suite des commandes pour les logos
-# Dans hst-install-debian.sh
-
-echo "[*] Renaming Hestia to DevIT Panel..."
-
-# Chemins vers les fichiers de langue
-LANG_FILES="/usr/local/hestia/web/inc/i18n/*.php"
-
-# Remplacer "Hestia Control Panel" par "DevIT Panel"
-sed -i "s/'Hestia Control Panel'/'DevIT Panel'/g" $LANG_FILES
-sed -i 's/"Hestia Control Panel"/"DevIT Panel"/g' $LANG_FILES
-
-# Remplacer "Hestia" seul (avec précaution pour ne pas remplacer des parties de mots)
-sed -i "s/'Hestia'/'DevIT'/g" $LANG_FILES
-
-# Créer le répertoire de thèmes custom
-mkdir -p /usr/local/hestia/web/css/themes/custom/
-
-# Copier le fichier CSS du thème DevIT
-cp $HESTIA_INSTALL_DIR/branding/css/devit-theme.css /usr/local/hestia/web/css/themes/custom/
-
-# ... (après l'installation des paquets de base de Hestia)
-
-echo "[*] Applying DevIT Panel branding..."
-
-# Créer le répertoire custom s'il n'existe pas
-mkdir -p /usr/local/hestia/web/images/custom/
-
-# Copier les logos depuis le répertoire d'installation vers le système
-cp $HESTIA_INSTALL_DIR/branding/images/logo.svg /usr/local/hestia/web/images/custom/
-cp $HESTIA_INSTALL_DIR/branding/images/logo-header.svg /usr/local/hestia/web/images/custom/
-cp $HESTIA_INSTALL_DIR/branding/images/favicon.ico /usr/local/hestia/web/images/custom/
-
-# Lancer la commande Hestia pour appliquer le logo
-/usr/local/bin/v-update-white-label-logo
-
-echo "[*] DevIT Panel branding applied."
 
 # ... (suite du script d'installation)
 

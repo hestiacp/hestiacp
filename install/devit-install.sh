@@ -80,7 +80,7 @@ fi
 check_wget_curl() {
 	# Check wget
 	if [ -e '/usr/bin/wget' ]; then
-		wget -q https://raw.githubusercontent.com/Ghost-Dev9/DevIT/refs/heads/main/install/devit-install.sh
+		wget -q https://raw.githubusercontent.com/Ghost-Dev9/DevIT/release/install/devit-install.sh
 		if [ "$?" -eq '0' ]; then
 			bash hst-install-$type.sh $*
 			exit
@@ -93,7 +93,7 @@ check_wget_curl() {
 
 	# Check curl
 	if [ -e '/usr/bin/curl' ]; then
-		curl -s -O https://raw.githubusercontent.com/Ghost-Dev9/DevIT/refs/heads/main/install/devit-install.sh
+		curl -s -O https://raw.githubusercontent.com/Ghost-Dev9/DevIT/release/install/devit-install.sh
 		if [ "$?" -eq '0' ]; then
 			bash hst-install-$type.sh $*
 			exit

@@ -3,20 +3,13 @@
 # ======================================================== #
 #
 # DevIT Control Panel Installer for Ubuntu
-# https://www.dev-it.com/
+# https://www.hestiacp.com/
 #
 # Currently Supported Versions:
 # Ubuntu 20.04, 22.04, 24.04 LTS
 #
 # ======================================================== #
-echo
-echo '  ____             _ _ _______ '
-echo ' |  _ \  ___  ___ (_) |_   _  |'
-echo ' | | | |/ _ \/ _ \| | | | | | |'
-echo ' | |_| |  __/ (_) | | | | |_| |'
-echo ' |____/ \___|\___/|_|_| |_____|'
-echo '     DevIT Control Panel 💻    '
-echo
+
 #----------------------------------------------------------#
 #                  Variables&Functions                     #
 #----------------------------------------------------------#
@@ -426,7 +419,7 @@ if [ "x$(id -u)" != 'x0' ]; then
 fi
 
 if [ -d "/usr/local/hestia" ]; then
-	check_result 1 "DevIT install detected. Unable to continue"
+	check_result 1 "Hestia install detected. Unable to continue"
 fi
 
 type=$(grep "^ID=" /etc/os-release | cut -f 2 -d '=')
@@ -497,7 +490,7 @@ if [ -n "$conflicts" ] && [ -z "$force" ]; then
 		check_result $? 'apt-get remove failed'
 		unset $answer
 	else
-		check_result 1 "DevIT Control Panel should be installed on a clean server."
+		check_result 1 "Hestia Control Panel should be installed on a clean server."
 	fi
 fi
 
@@ -574,14 +567,8 @@ esac
 
 install_welcome_message() {
 	DISPLAY_VER=$(echo $HESTIA_INSTALL_VER | sed "s|~alpha||g" | sed "s|~beta||g")
-	echo
-echo '  ____             _ _ _______ '
-echo ' |  _ \  ___  ___ (_) |_   _  |'
-echo ' | | | |/ _ \/ _ \| | | | | | |'
-echo ' | |_| |  __/ (_) | | | | |_| |'
-echo ' |____/ \___|\___/|_|_| |_____|'
-echo '     DevIT Control Panel 💻    '
-echo                        "
+	                                                                "
+	echo "                          DevIT Control Panel                          "
 	if [[ "$HESTIA_INSTALL_VER" =~ "beta" ]]; then
 		echo "                              BETA RELEASE                          "
 	fi
@@ -591,7 +578,7 @@ echo                        "
 		echo "                          USE AT YOUR OWN RISK                      "
 	fi
 	echo "                                  ${DISPLAY_VER}                        "
-	echo "                            www.Dev-IT.com                            "
+	echo "                            www.DevIT.com                            "
 	echo
 	echo "========================================================================"
 	echo
@@ -846,7 +833,7 @@ if [ "$mysql" = 'yes' ]; then
 fi
 
 # Installing HestiaCP repo
-echo "[ * ] DevIT Control Panel"
+echo "[ * ] Hestia Control Panel"
 echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/hestia-keyring.gpg] https://$RHOST/ $codename main" > $apt/hestia.list
 gpg --no-default-keyring --keyring /usr/share/keyrings/hestia-keyring.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys A189E93654F0B0E5 > /dev/null 2>&1
 
@@ -2454,39 +2441,32 @@ if [ "$host_ip" != "$ip" ]; then
 fi
 echo -e -n " 	Username:   $username
 	Password:   $displaypass
-echo
-echo '  ____             _ _ _______ '
-echo ' |  _ \  ___  ___ (_) |_   _  |'
-echo ' | | | |/ _ \/ _ \| | | | | | |'
-echo ' | |_| |  __/ (_) | | | | |_| |'
-echo ' |____/ \___|\___/|_|_| |_____|'
-echo '     DevIT Control Panel 💻    '
-echo
+
 Thank you for choosing DevIT Control Panel to power your full stack web server,
 we hope that you enjoy using it as much as we do!
 
 Please feel free to contact us at any time if you have any questions,
 or if you encounter any bugs or problems:
 
-Documentation:  https://docs.dev-it.com/
-Forum:          https://forum.hestiacp.com/
-GitHub:         https://www.github.com/hestiacp/hestiacp
+Documentation:  https://docs.DevIT.com/
+Forum:          https://forum.DevIT.com/
+GitHub:         https://github.com/Ghost-Dev9/DevIT
 
 Note: Automatic updates are enabled by default. If you would like to disable them,
 please log in and navigate to Server > Updates to turn them off.
 
-Help support the Hestia Control Panel project by donating via PayPal:
-https://www.dev-it.com/donate
+Help support the DevIT Control Panel project by donating via PayPal:
+https://www.DevIT.com/donate
 
 --
 Sincerely yours,
-The DevIT Control Panel development team
+The Hestia Control Panel development team
 
 Made with love & pride by the open-source community around the world.
 " >> $tmpfile
 
 send_mail="$HESTIA/web/inc/mail-wrapper.php"
-cat $tmpfile | $send_mail -s "DevIT Control Panel" $email
+cat $tmpfile | $send_mail -s "Hestia Control Panel" $email
 
 # Congrats
 echo

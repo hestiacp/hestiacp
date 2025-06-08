@@ -2,7 +2,7 @@
 
 # ======================================================== #
 #
-# Hestia Control Panel Installer for Debian
+# DevIT Control Panel Installer for Debian
 # https://www.hestiacp.com/
 #
 # Currently Supported Versions:
@@ -29,6 +29,44 @@ architecture="$(arch)"
 HESTIA_INSTALL_DIR="$HESTIA/install/deb"
 HESTIA_COMMON_DIR="$HESTIA/install/common"
 VERBOSE='no'
+# Exemple de modification à ajouter dans hst-install-debian.sh
+# Dans hst-install-debian.sh, à la suite des commandes pour les logos
+# Dans hst-install-debian.sh
+
+echo "[*] Renaming Hestia to DevIT Panel..."
+
+# Chemins vers les fichiers de langue
+LANG_FILES="/usr/local/hestia/web/inc/i18n/*.php"
+
+# Remplacer "Hestia Control Panel" par "DevIT Panel"
+sed -i "s/'Hestia Control Panel'/'DevIT Panel'/g" $LANG_FILES
+sed -i 's/"Hestia Control Panel"/"DevIT Panel"/g' $LANG_FILES
+
+# Remplacer "Hestia" seul (avec précaution pour ne pas remplacer des parties de mots)
+sed -i "s/'Hestia'/'DevIT'/g" $LANG_FILES
+
+# Créer le répertoire de thèmes custom
+mkdir -p /usr/local/hestia/web/css/themes/custom/
+
+# Copier le fichier CSS du thème DevIT
+cp $HESTIA_INSTALL_DIR/branding/css/devit-theme.css /usr/local/hestia/web/css/themes/custom/
+
+# ... (après l'installation des paquets de base de Hestia)
+
+echo "[*] Applying DevIT Panel branding..."
+
+# Créer le répertoire custom s'il n'existe pas
+mkdir -p /usr/local/hestia/web/images/custom/
+
+# Copier les logos depuis le répertoire d'installation vers le système
+cp $HESTIA_INSTALL_DIR/branding/images/logo.svg /usr/local/hestia/web/images/custom/
+cp $HESTIA_INSTALL_DIR/branding/images/logo-header.svg /usr/local/hestia/web/images/custom/
+cp $HESTIA_INSTALL_DIR/branding/images/favicon.ico /usr/local/hestia/web/images/custom/
+
+# Lancer la commande Hestia pour appliquer le logo
+/usr/local/bin/v-update-white-label-logo
+
+echo "[*] DevIT Panel branding applied."
 
 # ... (suite du script d'installation)
 
@@ -568,7 +606,7 @@ case $architecture in
 		echo -e "\e[33mERROR: $architecture is currently not supported!\e[0m"
 		echo -e "\e[33mPlease verify the achitecture used is currenlty supported\e[0m"
 		echo ""
-		echo -e "\e[33mhttps://github.com/hestiacp/hestiacp/blob/main/README.md\e[0m"
+		echo -e "\e[33mhttps://github.com/hestiacp/DevIT/blob/main/README.md\e[0m"
 		echo ""
 		check_result 1 "Installation aborted"
 		;;
@@ -580,14 +618,9 @@ esac
 
 install_welcome_message() {
 	DISPLAY_VER=$(echo $HESTIA_INSTALL_VER | sed "s|~alpha||g" | sed "s|~beta||g")
-	echo
-echo '  ____             _ _ _______ '
-echo ' |  _ \  ___  ___ (_) |_   _  |'
-echo ' | | | |/ _ \/ _ \| | | | | | |'
-echo ' | |_| |  __/ (_) | | | | |_| |'
-echo ' |____/ \___|\___/|_|_| |_____|'
-echo '     DevIT Control Panel 💻    '
-echo                     "
+
+	                                                                       "
+	echo "                          DevIT Control Panel                          "
 	if [[ "$HESTIA_INSTALL_VER" =~ "beta" ]]; then
 		echo "                              BETA RELEASE                          "
 	fi
@@ -597,7 +630,7 @@ echo                     "
 		echo "                          USE AT YOUR OWN RISK                      "
 	fi
 	echo "                                  ${DISPLAY_VER}                        "
-	echo "                            www.dev-it.com                            "
+	echo "                            www.DevIT.com                            "
 	echo
 	echo "========================================================================"
 	echo
@@ -2399,7 +2432,7 @@ chmod 755 /backup/
 echo "@reboot root sleep 10 && rm /etc/cron.d/hestia-ssl && PATH='/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:' && /usr/local/hestia/bin/v-add-letsencrypt-host" > /etc/cron.d/hestia-ssl
 
 #----------------------------------------------------------#
-#              Set DevIT.conf default values              #
+#              Set hestia.conf default values              #
 #----------------------------------------------------------#
 
 echo "[ * ] Updating configuration files..."
@@ -2414,7 +2447,7 @@ echo 'if [ "${PATH#*/usr/local/hestia/bin*}" = "$PATH" ]; then
 fi' >> /root/.bashrc
 
 #----------------------------------------------------------#
-#                   DevIT Access Info                     #
+#                   Hestia Access Info                     #
 #----------------------------------------------------------#
 
 # Comparing hostname and IP
@@ -2447,25 +2480,25 @@ we hope that you enjoy using it as much as we do!
 Please feel free to contact us at any time if you have any questions,
 or if you encounter any bugs or problems:
 
-Documentation:  https://docs.dev-it.com/
-Forum:          https://forum.hestiacp.com/
-GitHub:         https://github.com/Ghost-Dev9/DevIT
+Documentation:  https://docs.DevIT.com/
+Forum:          https://forum.DevIT.com/
+GitHub:         https://www.github.com/Ghost-Dev9/DevIT
 
 Note: Automatic updates are enabled by default. If you would like to disable them,
 please log in and navigate to Server > Updates to turn them off.
 
 Help support the DevIT Control Panel project by donating via PayPal:
-https://www.hestiacp.com/donate
+https://www.DevIT.com/donate
 
 --
 Sincerely yours,
-The Dev-it Control Panel development team
+The DevIT Control Panel development team
 
 Made with love & pride by the open-source community around the world.
 " >> $tmpfile
 
 send_mail="$HESTIA/web/inc/mail-wrapper.php"
-cat $tmpfile | $send_mail -s "DevIT Control Panel" $email
+cat $tmpfile | $send_mail -s "Hestia Control Panel" $email
 
 # Congrats
 echo

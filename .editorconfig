@@ -29,3 +29,12 @@ max_line_length = 200
 [web/src/**/*.php]
 indent_size = 4
 indent_style = space
+
+# Modern PHP uses spaces for indentation
+[web2/**/*]
+indent_size = 4
+indent_style = space
+
+[web2/**/*.{yml,yaml}]
+indent_size = 2
+indent_style = space

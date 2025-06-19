@@ -504,7 +504,7 @@ update_domain_zone() {
 @    IN    SOA    $SOA.    root.$domain_idn. (
                                             $SERIAL
                                             7200
-                                            3600
+                                            1800
                                             1209600
                                             180 )
 " > $zn_conf

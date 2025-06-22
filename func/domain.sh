@@ -489,7 +489,18 @@ is_dns_domain_new() {
 update_domain_zone() {
 	domain_param=$(grep "DOMAIN='$domain'" $USER_DATA/dns.conf)
 	parse_object_kv_list "$domain_param"
-	local zone_ttl="$TTL"
+
+	# Dynamic TTL based on TLD
+	domain_tld="${domain##*.}"
+	case "$domain_tld" in
+		de|cz|pl|pt)
+			zone_ttl="1800"
+			;;
+		*)
+			zone_ttl="3600"
+			;;
+	esac
+
 	SOA=$(idn2 --quiet "$SOA")
 	if [ -z "$SERIAL" ]; then
 		SERIAL=$(date +'%Y%m%d01')
@@ -500,7 +511,7 @@ update_domain_zone() {
 		domain_idn=$domain
 	fi
 	zn_conf="$HOMEDIR/$user/conf/dns/$domain.db"
-	echo "\$TTL $TTL
+	echo "\$TTL $zone_ttl
 @    IN    SOA    $SOA.    root.$domain_idn. (
                                             $SERIAL
                                             7200
@@ -508,6 +519,7 @@ update_domain_zone() {
                                             1209600
                                             180 )
 " > $zn_conf
+
 	fields='$RECORD\t$TTL\tIN\t$TYPE\t$PRIORITY\t$VALUE'
 	while read line; do
 		unset TTL

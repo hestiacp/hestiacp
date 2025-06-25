@@ -169,7 +169,7 @@ server {
 	}
 
 	# PHP entry point for main application
-	location ~ (index|get|static|report|404|503)\.php$ {
+	location ~ (index|get|static|report|404|503|health_check)\.php$ {
 		try_files $uri =404;
 
 		include /etc/nginx/fastcgi_params;

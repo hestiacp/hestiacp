@@ -65,12 +65,13 @@ get_domain_values 'web'
 sed -i "s/DOMAIN='$domain'/DOMAIN='$new_domain'/" $USER_DATA/web.conf
 new_alias=$(echo "$ALIAS,$domain" \
 	| sed -e "s/,/\n/g" \
+	| sed -e "s/$domain/$new_domain/" \
 	| sed -e "s/^$new_domain$//g" \
 	| sed -e "/^$/d" \
 	| sed -e ':a;N;$!ba;s/\n/,/g')
 
 # Updating domain alias
-if [ "$ALIAS" != "$new_alias" ]; then
+if [ -n "$ALIAS" ] && [ "$ALIAS" != "$new_alias" ]; then
 	sed -i "s/ALIAS='$ALIAS'/ALIAS='$new_alias'/" $USER_DATA/web.conf
 fi
 

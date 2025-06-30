@@ -35,7 +35,7 @@
 		"@biomejs/biome": "1.9.4",
 		"@prettier/plugin-php": "^0.22.4",
 		"@testing-library/vue": "^8.1.0",
-		"@vitejs/plugin-vue": "^5.2.4",
+		"@vitejs/plugin-vue": "^6.0.0",
 		"browserslist": "^4.24.5",
 		"esbuild": "^0.25.4",
 		"husky": "^9.1.7",

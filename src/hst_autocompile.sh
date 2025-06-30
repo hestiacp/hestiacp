@@ -486,7 +486,8 @@ if [ "$PHP_B" = true ]; then
 			--with-curl \
 			--with-zip \
 			--with-gmp \
-			--enable-mbstring
+			--enable-mbstring \
+			--enable-intl
 	fi
 
 	cd $BUILD_DIR_PHP
@@ -673,7 +674,7 @@ if [ "$HESTIA_B" = true ]; then
 		cd $BUILD_DIR/hestiacp-$branch_dash
 		npm ci --ignore-scripts
 		npm run build
-		cp -rf bin func install web $BUILD_DIR_HESTIA/usr/local/hestia/
+		cp -rf bin func install web web2 $BUILD_DIR_HESTIA/usr/local/hestia/
 
 		# Set permissions
 		find $BUILD_DIR_HESTIA/usr/local/hestia/ -type f -exec chmod -x {} \;

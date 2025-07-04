@@ -816,7 +816,7 @@ is_ip46_format_valid() {
 
 is_ipv4_cidr_format_valid() {
 	object_name=${2-ip}
-	valid=$($HESTIA_PHP -r '$cidr="$argv[1]"; list($ip, $netmask) = [...explode("/", $cidr), 32]; echo ((filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) && $netmask <= 32) ? 0 : 1);' $1)
+	valid=$($HESTIA_PHP -r '[$ip, $net] = [...explode("/", $argv[1]), "32"]; echo (preg_match("/^(\d{1,3}\.){3}\d{1,3}$/", $ip) && filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) && is_numeric($net) && $net >= 0 && $net <= 32) ? 0 : 1;' "$1")
 	if [ "$valid" -ne 0 ]; then
 		check_result "$E_INVALID" "invalid $object_name :: $1"
 	fi

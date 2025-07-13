@@ -88,7 +88,7 @@ detect_os() {
 			fi
 		elif [ "$get_os_type" = "debian" ]; then
 			OS_TYPE='Debian'
-			OS_VERSION=$(cat /etc/debian_version | grep -o "[0-9]\{1,2\}" | head -n1)
+			OS_VERSION=$(grep -o "[0-9]\{1,2\}"  /etc/debian_version | head -n1)
 		fi
 	else
 		OS_TYPE="Unsupported OS"
@@ -403,8 +403,8 @@ parse_object_kv_list() {
 
 # Check if object is supended
 is_object_suspended() {
-	if [ $2 = 'USER' ]; then
-		spnd=$(cat $USER_DATA/$1.conf | grep "SUSPENDED='yes'")
+	if [ "$2" = 'USER' ]; then
+		spnd=$(grep "SUSPENDED='yes'" | $USER_DATA/$1.conf )
 	else
 		spnd=$(grep "$2='$3'" $USER_DATA/$1.conf | grep "SUSPENDED='yes'")
 	fi
@@ -416,7 +416,7 @@ is_object_suspended() {
 # Check if object is unsupended
 is_object_unsuspended() {
 	if [ $2 = 'USER' ]; then
-		spnd=$(cat $USER_DATA/$1.conf | grep "SUSPENDED='yes'")
+		spnd=$(grep "SUSPENDED='yes'" "$USER_DATA/$1.conf")
 	else
 		spnd=$(grep "$2='$3'" $USER_DATA/$1.conf | grep "SUSPENDED='yes'")
 	fi
@@ -671,7 +671,7 @@ get_next_cronjob() {
 
 # Sort cron jobs by id
 sort_cron_jobs() {
-	cat $USER_DATA/cron.conf | sort -n -k 2 -t \' > $USER_DATA/cron.tmp
+	sort -n -k 2 -t \' $USER_DATA/cron.conf > $USER_DATA/cron.tmp
 	mv -f $USER_DATA/cron.tmp $USER_DATA/cron.conf
 }
 
@@ -1479,12 +1479,12 @@ is_restart_format_valid() {
 
 check_backup_conditions() {
 	# Checking load average
-	la=$(cat /proc/loadavg | cut -f 1 -d ' ' | cut -f 1 -d '.')
+	la=$(awk -F'[. ]' '{print $1}' /proc/loadavg)
 	# i=0
 	while [ "$la" -ge "$BACKUP_LA_LIMIT" ]; do
 		echo -e "$(date "+%F %T") Load Average $la"
 		sleep 60
-		la=$(cat /proc/loadavg | cut -f 1 -d ' ' | cut -f 1 -d '.')
+		la=$(awk -F'[. ]' '{print $1}' /proc/loadavg)
 	done
 }
 

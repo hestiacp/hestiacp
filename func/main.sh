@@ -88,7 +88,7 @@ detect_os() {
 			fi
 		elif [ "$get_os_type" = "debian" ]; then
 			OS_TYPE='Debian'
-			OS_VERSION=$(grep -o "[0-9]\{1,2\}"  /etc/debian_version | head -n1)
+			OS_VERSION=$(grep -o "[0-9]\{1,2\}" /etc/debian_version | head -n1)
 		fi
 	else
 		OS_TYPE="Unsupported OS"
@@ -404,7 +404,7 @@ parse_object_kv_list() {
 # Check if object is supended
 is_object_suspended() {
 	if [ "$2" = 'USER' ]; then
-		spnd=$(grep "SUSPENDED='yes'" | $USER_DATA/$1.conf )
+		spnd=$(grep "SUSPENDED='yes'" | $USER_DATA/$1.conf)
 	else
 		spnd=$(grep "$2='$3'" $USER_DATA/$1.conf | grep "SUSPENDED='yes'")
 	fi

@@ -16,14 +16,17 @@ if ($_SESSION["userContext"] !== "admin" && $user_plain === "$ROOT_USER") {
 if (!empty($_POST["save"])) {
 	if (!empty($_POST["v_config"])) {
 		$fp = tmpfile();
-		$new_conf = stream_get_meta_data($fp)['uri'];
+		$new_conf = stream_get_meta_data($fp)["uri"];
 		$config = str_replace("\r\n", "\n", $_POST["v_config"]);
 		if (!str_ends_with($config, "\n")) {
 			$config .= "\n";
 		}
 		fwrite($fp, $config);
 		exec(
-			HESTIA_CMD . "v-change-sys-service-config " . quoteshellarg($new_conf) . " hestiaweb yes",
+			HESTIA_CMD .
+				"v-change-sys-service-config " .
+				quoteshellarg($new_conf) .
+				" hestiaweb yes",
 			$output,
 			$return_var,
 		);

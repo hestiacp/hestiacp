@@ -28,7 +28,7 @@ json_list() {
 	echo '{'
 	echo -e "\t\"$domain\": {"
 	echo "        \"PEM\": \"$pem\","
-	echo "        \"PUB\": \"$pub\","
+	echo "        \"PUB\": \"$pub\""
 	echo -e "\t}\n}"
 }
 

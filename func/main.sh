@@ -403,8 +403,8 @@ parse_object_kv_list() {
 
 # Check if object is supended
 is_object_suspended() {
-	if [ $2 = 'USER' ]; then
-		spnd=$(cat $USER_DATA/$1.conf | grep "SUSPENDED='yes'")
+	if [ "$2" = 'USER' ]; then
+		spnd=$(grep "SUSPENDED='yes'" $USER_DATA/$1.conf)
 	else
 		spnd=$(grep "$2='$3'" $USER_DATA/$1.conf | grep "SUSPENDED='yes'")
 	fi

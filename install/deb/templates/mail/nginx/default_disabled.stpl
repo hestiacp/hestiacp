@@ -21,6 +21,8 @@ server {
 	}
 
 	location / {
+		proxy_ssl_server_name on;
+		proxy_ssl_name $host;
 		proxy_pass http://%ip%:%web_port%;
 	}
 

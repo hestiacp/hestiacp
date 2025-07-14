@@ -495,19 +495,32 @@ update_domain_zone() {
 		SERIAL=$(date +'%Y%m%d01')
 	fi
 	if [[ "$domain" = *[![:ascii:]]* ]]; then
-		domain_idn=$(idn2 --quiet $domain)
+		domain_idn=$(idn2 --quiet "$domain")
 	else
 		domain_idn=$domain
 	fi
+
+	# Set SOA refresh value based on TLD
+	tld="${domain_idn##*.}"
+	case "$tld" in
+		de | cz | pl | pt)
+			refresh=1800
+			;;
+		*)
+			refresh=3600
+			;;
+	esac
+
 	zn_conf="$HOMEDIR/$user/conf/dns/$domain.db"
-	echo "\$TTL $TTL
+	echo "\$TTL $zone_ttl
 @    IN    SOA    $SOA.    root.$domain_idn. (
                                             $SERIAL
                                             7200
-                                            3600
+                                            $refresh
                                             1209600
                                             180 )
 " > $zn_conf
+
 	fields='$RECORD\t$TTL\tIN\t$TYPE\t$PRIORITY\t$VALUE'
 	while read line; do
 		unset TTL

@@ -30,6 +30,8 @@ server {
 
 		try_files $uri $uri/ =404;
 
+		proxy_ssl_server_name on;
+		proxy_ssl_name $host;
 		proxy_pass https://%ip%:%web_ssl_port%;
 
 		location ~* ^.+\.(ogg|ogv|svg|svgz|swf|eot|otf|woff|woff2|mov|mp3|mp4|webm|flv|ttf|rss|atom|jpg|jpeg|gif|png|webp|ico|bmp|mid|midi|wav|rtf|css|js|jar)$ {
@@ -39,6 +41,8 @@ server {
 	}
 
 	location @fallback {
+		proxy_ssl_server_name on;
+		proxy_ssl_name $host;
 		proxy_pass https://%ip%:%web_ssl_port%;
 	}
 

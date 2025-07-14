@@ -1201,7 +1201,7 @@
 						</div>
 					</details>
 
-					<?php if ($_SESSION["userContext"] === "admin" && $_SESSION["user"] === "admin") { ?>
+					<?php if ($_SESSION["userContext"] === "admin" && $_SESSION["user"] === $_SESSION["ROOT_USER"]) { ?>
 						<details class="collapse">
 							<summary class="collapse-header">
 								<?= _("System Protection") ?>

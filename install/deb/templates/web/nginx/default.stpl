@@ -27,6 +27,8 @@ server {
 	}
 
 	location / {
+		proxy_ssl_server_name on;
+		proxy_ssl_name $host;
 		proxy_pass https://%ip%:%web_ssl_port%;
 
 		location ~* ^.+\.(%proxy_extensions%)$ {
@@ -41,6 +43,8 @@ server {
 	}
 
 	location @fallback {
+		proxy_ssl_server_name on;
+		proxy_ssl_name $host;
 		proxy_pass https://%ip%:%web_ssl_port%;
 	}
 

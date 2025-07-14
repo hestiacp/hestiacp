@@ -1,7 +1,7 @@
 ---
 kind: pipeline
 type: docker
-name: Push to beta atp server
+name: Run test build
 
 platform:
   os: linux

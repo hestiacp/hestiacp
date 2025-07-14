@@ -1,114 +1,28 @@
 ---
 kind: pipeline
-type: ssh
-name: Ubuntu | Nginx + Apache2
-
-concurrency:
-  limit: 1
-
-server:
-  host:
-    from_secret: server_address
-  user:
-    from_secret: username
-  ssh_key:
-    from_secret: ssh_key
+type: docker
+name: Push to beta atp server
 
 platform:
   os: linux
   arch: amd64
 
 steps:
-  - name: Download submodules
-    image: alpine/git
+  - name: Build JS/CSS
+    image: node:current-slim
     commands:
-      - git submodule update --init --recursive
-  - name: Build Hestia package and install
+      - npm ci --ignore-scripts
+      - npm run build
+  - name: Build
+    image: debian:bookworm
     commands:
-      - ./src/hst_autocompile.sh --hestia --install '~localsrc'
-  - name: Reset Web templates
-    commands:
-      - rm /usr/local/hestia/data/templates/web/nginx/php-fpm/*.*
-      - rm /usr/local/hestia/data/templates/web/nginx/*.*
-      - rm /usr/local/hestia/data/templates/web/apache2/php-fpm/*.*
-      - rm /usr/local/hestia/data/templates/web/apache2/*.*
-      - rm /usr/local/hestia/data/templates/web/php-fpm/*.*
-      - /usr/local/hestia/bin/v-update-web-templates
-  - name: Run system / user tests
-    commands:
-      - bats ./test/test.bats
-  - name: Run restore tests
-    commands:
-      - bats ./test/restore.bats
-  - name: Run config tests
-    commands:
-      - bats ./test/config-tests.bats
+      - ln -snf /etc/localtime && echo CET > /etc/timezone
+      - ./src/hst_autocompile.sh --dontinstalldeps --hestia --debug --cross --noinstall --keepbuild '~localsrc'
+      - mkdir -p ./hestia/
+      - mv /tmp/hestiacp-src/deb/*.deb ./hestia/
 
 trigger:
-  event: [pull_request, push]
-  ref:
-    - refs/heads/release
-    - refs/heads/prerelease
-    - refs/heads/servicing
-    - refs/heads/tests/*
-    - refs/heads/main
-    - refs/pull/*/head
-
----
-kind: pipeline
-type: ssh
-name: Debian | Nginx
-
-concurrency:
-  limit: 1
-
-server:
-  host:
-    from_secret: server_address2
-  user:
-    from_secret: username
-  ssh_key:
-    from_secret: ssh_key
-
-platform:
-  os: linux
-  arch: amd64
-
-steps:
-  - name: Download submodules
-    image: alpine/git
-    commands:
-      - git submodule update --init --recursive
-  - name: Build Hestia package install
-    commands:
-      - ./src/hst_autocompile.sh --hestia --install '~localsrc'
-  - name: Reset Web templates
-    commands:
-      - rm /usr/local/hestia/data/templates/web/nginx/php-fpm/*.*
-      - rm /usr/local/hestia/data/templates/web/nginx/*.*
-      - rm /usr/local/hestia/data/templates/web/apache2/php-fpm/*.*
-      - rm /usr/local/hestia/data/templates/web/apache2/*.*
-      - rm /usr/local/hestia/data/templates/web/php-fpm/*.*
-      - /usr/local/hestia/bin/v-update-web-templates
-  - name: Run system / user tests
-    commands:
-      - bats ./test/test.bats
-  - name: Run restore tests
-    commands:
-      - bats ./test/restore.bats
-  - name: Run config tests
-    commands:
-      - bats ./test/config-tests.bats
-
-trigger:
-  event: [pull_request, push]
-  ref:
-    - refs/heads/release
-    - refs/heads/prerelease
-    - refs/heads/servicing
-    - refs/heads/tests/*
-    - refs/heads/main
-    - refs/pull/*/head
+  event: [push]
 
 ---
 kind: pipeline

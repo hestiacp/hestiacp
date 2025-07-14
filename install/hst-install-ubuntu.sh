@@ -1914,9 +1914,9 @@ if [ "$mysql" = 'yes' ] || [ "$mysql8" = 'yes' ]; then
 	source $HESTIA_INSTALL_DIR/phpmyadmin/pma.sh > /dev/null 2>&1
 
 	# Limit access to /etc/phpmyadmin/
-	chown -R root:hestiamail /etc/phpmyadmin/
-	chmod 640 /etc/phpmyadmin/config.inc.php
-	chmod 750 /etc/phpmyadmin/conf.d/
+	chown -R root:www-data /etc/phpmyadmin/
+	chmod 644 /etc/phpmyadmin/config.inc.php
+	chmod -R 755 /etc/phpmyadmin/conf.d/
 fi
 
 #----------------------------------------------------------#

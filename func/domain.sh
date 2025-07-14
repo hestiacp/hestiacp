@@ -503,7 +503,7 @@ update_domain_zone() {
 	# Set SOA refresh value based on TLD
 	tld="${domain_idn##*.}"
 	case "$tld" in
-		de|cz|pl|pt)
+		de | cz | pl | pt)
 			refresh=1800
 			;;
 		*)
@@ -559,7 +559,6 @@ update_domain_zone() {
 		fi
 	done < $USER_DATA/dns/$domain.conf
 }
-
 
 # Update zone serial
 update_domain_serial() {

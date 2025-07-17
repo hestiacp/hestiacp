@@ -32,7 +32,7 @@
 		"xterm-addon-webgl": "^0.16.0"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "1.9.4",
+		"@biomejs/biome": "2.1.2",
 		"@prettier/plugin-php": "^0.23.0",
 		"@testing-library/vue": "^8.1.0",
 		"@vitejs/plugin-vue": "^6.0.0",

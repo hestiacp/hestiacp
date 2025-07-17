@@ -6,7 +6,7 @@
 # https://www.hestiacp.com/
 #
 # Currently Supported Versions:
-# Ubuntu 20.04, 22.04, 24.04 LTS
+# Ubuntu 22.04, 24.04 LTS
 #
 # ======================================================== #
 
@@ -1060,9 +1060,7 @@ if [ -d "$withdebs" ]; then
 	software=$(echo "$software" | sed -e "s/hestia-web-terminal//")
 	software=$(echo "$software" | sed -e "s/hestia=${HESTIA_INSTALL_VER}//")
 fi
-if [ "$release" = '20.04' ]; then
-	software=$(echo "$software" | sed -e "s/libzip4/libzip5/")
-fi
+
 if [ "$release" = '24.04' ]; then
 	software=$(echo "$software" | sed -e "s/libzip4/libzip4t64/")
 fi
@@ -1501,16 +1499,7 @@ $HESTIA/bin/v-change-sys-hostname $servername > /dev/null 2>&1
 # Configuring global OpenSSL options
 echo "[ * ] Configuring OpenSSL to improve TLS performance..."
 tls13_ciphers="TLS_AES_128_GCM_SHA256:TLS_CHACHA20_POLY1305_SHA256:TLS_AES_256_GCM_SHA384"
-if [ "$release" = "20.04" ]; then
-	if ! grep -qw "^openssl_conf = default_conf$" /etc/ssl/openssl.cnf 2> /dev/null; then
-		sed -i '/^oid_section		= new_oids$/a \\n# System default\nopenssl_conf = default_conf' /etc/ssl/openssl.cnf
-	fi
-	if ! grep -qw "^[default_conf]$" /etc/ssl/openssl.cnf 2> /dev/null; then
-		sed -i '$a [default_conf]\nssl_conf = ssl_sect\n\n[ssl_sect]\nsystem_default = hestia_openssl_sect\n\n[hestia_openssl_sect]\nCiphersuites = '"$tls13_ciphers"'\nOptions = PrioritizeChaCha' /etc/ssl/openssl.cnf
-	elif grep -qw "^system_default = system_default_sect$" /etc/ssl/openssl.cnf 2> /dev/null; then
-		sed -i '/^system_default = system_default_sect$/a system_default = hestia_openssl_sect\n\n[hestia_openssl_sect]\nCiphersuites = '"$tls13_ciphers"'\nOptions = PrioritizeChaCha' /etc/ssl/openssl.cnf
-	fi
-elif [ "$release" = "22.04" ]; then
+if [ "$release" = "22.04" ]; then
 	sed -i '/^system_default = system_default_sect$/a system_default = hestia_openssl_sect\n\n[hestia_openssl_sect]\nCiphersuites = '"$tls13_ciphers"'\nOptions = PrioritizeChaCha' /etc/ssl/openssl.cnf
 elif [ "$release" = "24.04" ]; then
 	if ! grep -qw "^ssl_conf = ssl_sect$" /etc/ssl/openssl.cnf 2> /dev/null; then
@@ -1530,13 +1519,8 @@ $HESTIA/bin/v-generate-ssl-cert $(hostname) '' 'US' 'California' \
 
 # Parsing certificate file
 crt_end=$(grep -n "END CERTIFICATE-" /tmp/hst.pem | cut -f 1 -d:)
-if [ "$release" != "20.04" ]; then
-	key_start=$(grep -n "BEGIN PRIVATE KEY" /tmp/hst.pem | cut -f 1 -d:)
-	key_end=$(grep -n "END PRIVATE KEY" /tmp/hst.pem | cut -f 1 -d:)
-else
-	key_start=$(grep -n "BEGIN RSA" /tmp/hst.pem | cut -f 1 -d:)
-	key_end=$(grep -n "END RSA" /tmp/hst.pem | cut -f 1 -d:)
-fi
+key_start=$(grep -n "BEGIN RSA" /tmp/hst.pem | cut -f 1 -d:)
+key_end=$(grep -n "END RSA" /tmp/hst.pem | cut -f 1 -d:)
 
 # Adding SSL certificate
 echo "[ * ] Adding SSL certificate to Hestia Control Panel..."
@@ -1762,20 +1746,13 @@ if [ "$proftpd" = 'yes' ]; then
 	cp -f $HESTIA_INSTALL_DIR/proftpd/proftpd.conf /etc/proftpd/
 	cp -f $HESTIA_INSTALL_DIR/proftpd/tls.conf /etc/proftpd/
 
-	# Disable TLS 1.3 support for ProFTPD versions older than v1.3.7a
-	if [ "$release" = '20.04' ]; then
-		sed -i 's/TLSProtocol                             TLSv1.2 TLSv1.3/TLSProtocol                             TLSv1.2/' /etc/proftpd/tls.conf
-	fi
-
 	update-rc.d proftpd defaults > /dev/null 2>&1
 	systemctl start proftpd >> $LOG
 	check_result $? "proftpd start failed"
 
-	if [ "$release" != '20.04' ]; then
-		unit_files="$(systemctl list-unit-files | grep proftpd)"
-		if [[ "$unit_files" =~ "disabled" ]]; then
-			systemctl enable proftpd
-		fi
+	unit_files="$(systemctl list-unit-files | grep proftpd)"
+	if [[ "$unit_files" =~ "disabled" ]]; then
+		systemctl enable proftpd
 	fi
 fi
 

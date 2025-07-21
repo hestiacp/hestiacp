@@ -17,10 +17,14 @@ if (!empty($_POST["save"])) {
 		exec("mktemp", $mktemp_output, $return_var);
 		$new_conf = $mktemp_output[0];
 		$fp = fopen($new_conf, "w");
-		fwrite($fp, str_replace("\r\n", "\n", $_POST["v_config"]));
+		$config = str_replace("\r\n", "\n", $_POST["v_config"]);
+		if (!str_ends_with($config, "\n")) {
+			$config .= "\n";
+		}
+		fwrite($fp, $config);
 		fclose($fp);
 		exec(
-			HESTIA_CMD . "v-change-sys-service-config " . $new_conf . " hestiaweb no",
+			HESTIA_CMD . "v-change-sys-service-config " . $new_conf . " hestiaweb yes",
 			$output,
 			$return_var,
 		);

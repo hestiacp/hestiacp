@@ -1,16 +1,12 @@
 #!/bin/bash
 # info: list all API access keys
-# options: [FORMAT]
+# options: [USER] [FORMAT]
 #
 # example: v-list-access-keys json
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #
 #----------------------------------------------------------#
-
-# Argument definition
-user="$1"
-format="${2:-shell}"
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -19,6 +15,10 @@ source /etc/hestiacp/hestia.conf
 source $HESTIA/func/main.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
+
+# Argument definition
+user="$1"
+format="${2:-shell}"
 
 # JSON list function
 json_list() {

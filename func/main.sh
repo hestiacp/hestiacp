@@ -403,8 +403,8 @@ parse_object_kv_list() {
 
 # Check if object is supended
 is_object_suspended() {
-	if [ $2 = 'USER' ]; then
-		spnd=$(cat $USER_DATA/$1.conf | grep "SUSPENDED='yes'")
+	if [ "$2" = 'USER' ]; then
+		spnd=$(grep "SUSPENDED='yes'" $USER_DATA/$1.conf)
 	else
 		spnd=$(grep "$2='$3'" $USER_DATA/$1.conf | grep "SUSPENDED='yes'")
 	fi
@@ -816,7 +816,7 @@ is_ip46_format_valid() {
 
 is_ipv4_cidr_format_valid() {
 	object_name=${2-ip}
-	valid=$($HESTIA_PHP -r '$cidr="$argv[1]"; list($ip, $netmask) = [...explode("/", $cidr), 32]; echo ((filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) && $netmask <= 32) ? 0 : 1);' $1)
+	valid=$($HESTIA_PHP -r '[$ip, $net] = [...explode("/", $argv[1]), "32"]; echo (preg_match("/^(\d{1,3}\.){3}\d{1,3}$/", $ip) && filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) && is_numeric($net) && $net >= 0 && $net <= 32) ? 0 : 1;' "$1")
 	if [ "$valid" -ne 0 ]; then
 		check_result "$E_INVALID" "invalid $object_name :: $1"
 	fi
@@ -1621,7 +1621,8 @@ format_no_quotes() {
 }
 
 is_username_format_valid() {
-	if [[ ! "$1" =~ ^[A-Za-z0-9._%+-]+@[[:alnum:].-]+\.[A-Za-z]{2,63}$ ]]; then
+	if [[ ! "$1" =~ ^[A-Za-z0-9._%+-]+@[[:alnum:].-]+\.[A-Za-z]{2,63}$ ]] \
+		&& [[ ! "$1" =~ ^[A-Za-z0-9._%+-]+(/|\\)[A-Za-z0-9._%+-]+$ ]]; then
 		is_string_format_valid "$1" "$2"
 	fi
 }

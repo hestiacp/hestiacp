@@ -99,10 +99,10 @@ else
 	# Ensure DNS record exists if Hestia is hosting DNS zones
 	if [ -n "$DNS_SYSTEM" ]; then
 		dns_domain=$($BIN/v-list-dns-domains $user | grep $domain | cut -d' ' -f1)
-		webmail_record=$($BIN/v-list-dns-records $user $domain | grep -i " $WEBMAIL_ALIAS " | cut -d' ' -f1)
 		if [ "$dns_domain" = "$domain" ]; then
 			if [ "$WEBMAIL_ALIAS" != "mail" ]; then
-				#Prevent mail.domain.com to be cycled
+				# Handle non-mail webmail alias (e.g., "webmail")
+				webmail_record=$($BIN/v-list-dns-records $user $domain | awk '{if ($2 == "'"$WEBMAIL_ALIAS"'") print $1}')
 				if [ -z "$webmail_record" ]; then
 					if [ "$quiet" = "yes" ]; then
 						$BIN/v-add-dns-record "$user" "$domain" "$WEBMAIL_ALIAS" A "$ip" '' '' "$restart" '' 'yes'
@@ -116,6 +116,27 @@ else
 					else
 						$BIN/v-delete-dns-record "$user" "$domain" "$webmail_record" "$restart" 'yes'
 						$BIN/v-add-dns-record "$user" "$domain" "$WEBMAIL_ALIAS" A "$ip" '' '' "$restart" '' 'yes'
+					fi
+				fi
+			else
+				# WEBMAIL_ALIAS is "mail" - ensure webmail CNAME points to mail.domain.com
+				webmail_cname_record=$($BIN/v-list-dns-records $user $domain | awk '$2 == "webmail" && $3 == "CNAME" {print $1}')
+				mail_target="mail.$domain."
+				if [ -z "$webmail_cname_record" ]; then
+					# Add webmail CNAME record
+					if [ "$quiet" = "yes" ]; then
+						$BIN/v-add-dns-record "$user" "$domain" "webmail" CNAME "$mail_target" '' '' "$restart" '' 'yes'
+					else
+						$BIN/v-add-dns-record "$user" "$domain" "webmail" CNAME "$mail_target" '' '' "$restart" '' 'yes'
+					fi
+				else
+					# Update existing webmail CNAME record
+					if [ "$quiet" = "yes" ]; then
+						$BIN/v-delete-dns-record "$user" "$domain" "$webmail_cname_record" "$restart" 'yes'
+						$BIN/v-add-dns-record "$user" "$domain" "webmail" CNAME "$mail_target" '' '' "$restart" '' 'yes'
+					else
+						$BIN/v-delete-dns-record "$user" "$domain" "$webmail_cname_record" "$restart" 'yes'
+						$BIN/v-add-dns-record "$user" "$domain" "webmail" CNAME "$mail_target" '' '' "$restart" '' 'yes'
 					fi
 				fi
 			fi

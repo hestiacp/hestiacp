@@ -7,53 +7,55 @@
 	},
 	"files": {
 		"ignoreUnknown": false,
-		"ignore": [
-			"**/*.bats",
-			"./test/test_helper/*",
-			"**/*.min.css",
-			"**/*.min.js",
-			"**/vendor/**",
-			"**/node_modules/**",
-			"**/.vitepress/dist/",
-			"**/.vitepress/cache/",
-			"./docs/.vitepress/dist/",
-			"./docs/.vitepress/cache/"
+		"includes": [
+			"**",
+			"!**/dist/**",
+			"!**/*.bats",
+			"!**/*.min.css",
+			"!**/*.min.js",
+			"!**/vendor/**",
+			"!**/node_modules/**",
+			"!**/test-results/**",
+			"!**/.vitepress/cache/**",
+			"!**/test/test_helper/**"
 		]
 	},
 	"formatter": {
 		"enabled": false,
 		"useEditorconfig": true
 	},
-	"organizeImports": {
-		"enabled": true
-	},
 	"linter": {
 		"enabled": true,
 		"rules": {
 			"recommended": true,
-			"a11y": {
-				"useGenericFontNames": "off"
-			},
 			"style": {
-				"noParameterAssign": "off"
-			},
-			"complexity": {
-				"noForEach": "off"
+				"noDescendingSpecificity": "off"
 			},
 			"correctness": {
-				"noUnknownMediaFeatureName": "off"
+				"noUnknownMediaFeatureName": "off",
+				"noUnusedVariables": "off",
+				"noUnusedImports": "off"
 			},
 			"suspicious": {
 				"noEmptyBlock": "off",
 				"noShorthandPropertyOverrides": "off",
+				"noDuplicateProperties": "off",
 				"noDoubleEquals": "off"
 			}
 		}
 	},
 	"javascript": {
 		"formatter": {
-			"quoteStyle": "single"
-		},
-		"globals": ["Alpine"]
+			"quoteStyle": "single",
+			"semicolons": "asNeeded"
+		}
+	},
+	"assist": {
+		"enabled": true,
+		"actions": {
+			"source": {
+				"organizeImports": "on"
+			}
+		}
 	}
 }

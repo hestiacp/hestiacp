@@ -14,7 +14,7 @@ mariadb_v='11.8'
 #----------------------------------------------------------#
 
 # Detect installed MariaDB version
-mysql_v="$(mysqld -V 2>/dev/null | awk '{print $3}' | cut -d: -f1)"
+mysql_v="$(mysqld -V 2> /dev/null | awk '{print $3}' | cut -d: -f1)"
 
 if [ "${mysql_v%.*}" = "$mariadb_v" ]; then
 	echo "[ ! ] MariaDB version ($mariadb_v) is already up to date."
@@ -74,7 +74,7 @@ sudo apt update -qq
 
 # Stop and uninstall old MariaDB version
 echo "[ * ] Stopping and removing old MariaDB Server (${mysql_v%.*})..."
-sudo systemctl -q stop mariadb mysql 2>/dev/null || true
+sudo systemctl -q stop mariadb mysql 2> /dev/null || true
 sudo apt remove -qq mariadb-server -y > /dev/null 2>&1
 
 # Install new version

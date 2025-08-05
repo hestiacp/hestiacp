@@ -30,15 +30,15 @@ source $HESTIA/func/main.sh
 source_conf "$HESTIA/conf/hestia.conf"
 
 get_rule_id() {
-    local old_rule_no=$1
-    local direction=$2
-    local new_rule_no
-    if [[ "$direction" == "UP" ]]; then
-        new_rule_no=$((old_rule_no - 1))
-    else
-        new_rule_no=$((old_rule_no + 1))
-    fi
-    echo "$new_rule_no"
+	local old_rule_no=$1
+	local direction=$2
+	local new_rule_no
+	if [[ "$direction" == "UP" ]]; then
+		new_rule_no=$((old_rule_no - 1))
+	else
+		new_rule_no=$((old_rule_no + 1))
+	fi
+	echo "$new_rule_no"
 }
 
 # Sort function

@@ -67,6 +67,8 @@
 			<div class="units-table-cell">
 				<input type="checkbox" class="js-toggle-all-checkbox" title="<?= _("Select all") ?>">
 			</div>
+			<div class="units-table-cell"><?= _("Pos") ?></div>
+			<div class="units-table-cell"></div>
 			<div class="units-table-cell"><?= _("Action") ?></div>
 			<div class="units-table-cell"></div>
 			<div class="units-table-cell"><?= _("Comment") ?></div>
@@ -79,6 +81,15 @@
 		<?php
 			foreach ($data as $key => $value) {
 				++$i;
+				if ($i === 1) {
+					$move_up_enabled = false;
+				} elseif ($i == count($data)) {
+					$move_up_enabled = true;
+					$move_down_enabled = false;
+				} else {
+					$move_up_enabled = true;
+					$move_down_enabled = true;
+				}
 				if ($data[$key]['SUSPENDED'] == 'yes') {
 					$status = 'suspended';
 					$spnd_action = 'unsuspend';
@@ -106,6 +117,43 @@
 						<input id="check<?= $i ?>" class="js-unit-checkbox" type="checkbox" title="<?= _("Select") ?>" name="rule[]" value="<?= $key ?>">
 						<label for="check<?= $i ?>" class="u-hide-desktop"><?= _("Select") ?></label>
 					</div>
+				</div>
+				<div class="units-table-cell units-table-heading-cell u-text-bold">
+					<span class="u-hide-desktop"><?= _("Position") ?>:</span>
+					<a href="/edit/firewall/?rule=<?= $key ?>&token=<?= $_SESSION["token"] ?>" title="<?= _("Edit Firewall Rule") ?>">
+						<?php
+							$rule = $key;
+						?>
+						<?= $rule ?>
+					</a>
+				</div>
+				<div class="units-table-cell" style="padding-left: 0;padding-right: 0;">
+					<ul class="units-table-row-actions">
+						<li class="units-table-row-action shortcut-up" data-key-action="js">
+							<a
+								class="units-table-row-action-link data-controls js-confirm-action"
+								style="<?= $move_up_enabled ? "display:block!important" : "display:none!important" ?>"
+								href="/move/firewall/?rule=<?= $key ?>&direction=up&token=<?= $_SESSION["token"] ?>"
+								title="<?= _("Move Firewall Rule Up") ?>"
+								data-confirm-title="<?= _("Move Up") ?>"
+								data-confirm-message="<?= sprintf(_("Are you sure you want to move rule #%s up?"), $key) ?>">
+								<i class="fas fa-arrow-up icon-blue"></i>
+								<span class="u-hide-desktop"><?= _("Move Firewall Rule Up") ?></span>
+							</a>
+						</li>
+						<li class="units-table-row-action shortcut-down" data-key-action="js">
+							<a
+								class="units-table-row-action-link data-controls js-confirm-action"
+								style="<?= $move_down_enabled ? "" : "display:block!important" ?>"
+								href="/move/firewall/?rule=<?= $key ?>&direction=down&token=<?= $_SESSION["token"] ?>"
+								title="<?= _("Move Firewall Rule Down") ?>"
+								data-confirm-title="<?= _("Move Down") ?>"
+								data-confirm-message="<?= sprintf(_("Are you sure you want to move rule #%s down?"), $key) ?>">
+								<i class="fas fa-arrow-down icon-blue"></i>
+								<span class="u-hide-desktop"><?= _("Move Firewall Rule Down") ?></span>
+							</a>
+						</li>
+					</ul>
 				</div>
 				<div class="units-table-cell units-table-heading-cell u-text-bold">
 					<span class="u-hide-desktop"><?= _("Action") ?>:</span>

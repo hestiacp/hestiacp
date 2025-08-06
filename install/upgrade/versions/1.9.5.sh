@@ -32,7 +32,7 @@ for user in $(v-list-users plain | cut -f1); do
 		while IFS= read -r line; do
 			parse_object_kv_list "$line"
 			# Attempt to decode the command from base64
-			decoded_command=$(echo "$CMD" | base64 -d 2> /dev/null)
+			decoded_command=$(echo "$CMD" | sed -e "s/%quote%/'/g" -e "s/%dots%/:/g" | base64 -d 2> /dev/null)
 			if [ $? -eq 0 ]; then # Successfully decoded, meaning it was already base64
 				# Check if decoded command matches the original to determine if it was actually base64 encoded
 				if ! echo "$decoded_command" | base64 | grep -q "$CMD"; then

@@ -190,7 +190,12 @@
 
 	<div class="units-table-footer">
 		<p>
-			<?php printf(ngettext("%d cron job", "%d cron jobs", $i), $i); ?>
+			<!-- If cronjobs could not be retrieved, display an error message --> 
+			<?php if ($retrieve_error) { ?>
+				<?php show_alert_message($_SESSION); ?>
+			<?php } else { ?>
+				<?php printf(ngettext("%d cron job", "%d cron jobs", $i), $i); ?>
+			<?php } ?>
 		</p>
 	</div>
 

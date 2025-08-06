@@ -678,37 +678,52 @@ sort_cron_jobs() {
 # Sync cronjobs with system cron
 sync_cron_jobs() {
 	source_conf "$USER_DATA/user.conf"
-	if [ -e "/var/spool/cron/crontabs" ]; then
+
+	# Determine system crontab path
+	if [ -d "/var/spool/cron/crontabs" ]; then
 		crontab="/var/spool/cron/crontabs/$user"
 	else
 		crontab="/var/spool/cron/$user"
 	fi
 
-	# remove file if exists
+	# Remove old file, create new one
 	if [ -e "$crontab" ]; then
-		rm -f $crontab
+		rm -f -- "$crontab"
 	fi
+	touch "$crontab"
 
-	# touch new crontab file
-	touch $crontab
-
+	# Header: MAILTO / charset
 	if [ "$CRON_REPORTS" = 'yes' ]; then
-		echo "MAILTO=$CONTACT" > $crontab
-		echo 'CONTENT_TYPE="text/plain; charset=utf-8"' >> $crontab
+		printf 'MAILTO=%s\n' "$CONTACT" > "$crontab"
+		printf 'CONTENT_TYPE="text/plain; charset=utf-8"\n' >> "$crontab"
 	else
-		echo 'MAILTO=""' > $crontab
+		printf 'MAILTO=""\n' > "$crontab"
 	fi
 
-	while read line; do
+	# Append each cron line directly
+	while IFS= read -r line; do
 		parse_object_kv_list "$line"
+
 		if [ "$SUSPENDED" = 'no' ]; then
-			echo "$MIN $HOUR $DAY $MONTH $WDAY $CMD" \
-				| sed -e "s/%quote%/'/g" -e "s/%dots%/:/g" \
-					>> $crontab
+			# Decode base64 safely
+			CMD=$(printf '%s' "$CMD" | base64 -d)
+
+			# Reject any embedded newline, carriage-return, or null-byte
+			if printf '%s' "$CMD" | grep -qP '[\x00\r\n]'; then
+				echo "Skipping invalid cron entry: contains control characters" >&2
+				continue
+			fi
+
+			# Safely append: minute hour day month weekday command
+			printf '%s %s %s %s %s %s\n' \
+				"$MIN" "$HOUR" "$DAY" "$MONTH" "$WDAY" "$CMD" \
+				>> "$crontab"
 		fi
-	done < $USER_DATA/cron.conf
-	chown $user:$user $crontab
-	chmod 600 $crontab
+	done < "$USER_DATA/cron.conf"
+
+	# Final perms
+	chown "$user:$user" "$crontab"
+	chmod 600 "$crontab"
 }
 
 # Validates Local part email and mail alias
@@ -925,11 +940,7 @@ is_string_format_valid() {
 	fi
 	is_no_new_line_format "$1"
 }
-is_cron_command_valid_format() {
-	if [[ ! "$1" =~ ^[^\`]*?$ ]]; then
-		check_result "$E_INVALID" "Invalid cron command format"
-	fi
-}
+
 # Database format validator
 is_database_format_valid() {
 	exclude="[!|@|#|$|^|&|*|(|)|+|=|{|}|:|,|<|>|?|/|\|\"|'|;|%|\`| ]"
@@ -1167,9 +1178,7 @@ is_password_format_valid() {
 		check_result "$E_INVALID" "invalid password format :: $1"
 	fi
 }
-# Missing function -
-# Before: validate_format_shell
-# After: is_format_valid_shell
+# Validate if shell is available on the system
 is_format_valid_shell() {
 	if [ -z "$(grep -w $1 /etc/shells)" ]; then
 		echo "Error: shell $1 is not valid"
@@ -1211,7 +1220,6 @@ is_format_valid() {
 				charsets) is_common_format_valid "$arg" 'charsets' ;;
 				chain) is_object_format_valid "$arg" 'chain' ;;
 				comment) is_comment_format_valid "$arg" 'comment' ;;
-				cron_command) is_cron_command_valid_format "$arg" ;;
 				database) is_database_format_valid "$arg" 'database' ;;
 				day) is_cron_format_valid "$arg" $arg_name ;;
 				dbpass) is_password_format_valid "$arg" ;;

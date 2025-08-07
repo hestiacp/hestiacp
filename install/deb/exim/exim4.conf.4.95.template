@@ -227,8 +227,8 @@ acl_check_data:
 
   # Deny spam at high score if spam score > SPAM_REJECT_SCORE and delete_spam is enabled
   deny   message        = This message scored $spam_score spam points
-         spam           = debian-spamd:true
          condition      = ${if eq{$acl_m3}{yes}{yes}{no}}
+         spam           = debian-spamd:true
          condition      = ${if >{$spam_score_int}{SPAM_REJECT_SCORE}{1}{0}}
 .endif
 

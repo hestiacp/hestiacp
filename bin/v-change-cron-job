@@ -19,7 +19,7 @@ hour=$4
 day=$5
 month=$6
 wday=$7
-cron_command=$8
+cron_command=$(echo -n "$8" | base64 -w 0)
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -54,7 +54,6 @@ time=$(echo "$time_n_date" | cut -f 1 -d \ )
 date=$(echo "$time_n_date" | cut -f 2 -d \ )
 
 # Concatenating cron string
-cron_command=$(echo "$cron_command" | sed -e "s/'/%quote%/g")
 str="JOB='$job' MIN='$min' HOUR='$hour' DAY='$day' MONTH='$month' WDAY='$wday'"
 str="$str CMD='$cron_command' SUSPENDED='no' TIME='$time' DATE='$date'"
 

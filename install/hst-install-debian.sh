@@ -39,7 +39,7 @@ multiphp_required=("7.3" "7.4" "8.0" "8.1" "8.2" "8.3")
 # Default PHP version if none supplied
 fpm_v="8.3"
 # MariaDB version
-mariadb_v="11.4"
+mariadb_v="11.8"
 # Node.js version
 node_v="20"
 
@@ -237,6 +237,19 @@ version_ge() { test "$(printf '%s\n' "$@" | sort -V | head -n 1)" != "$1" -o -n 
 
 # Creating temporary file
 tmpfile=$(mktemp -p /tmp)
+
+# Check for globally scoped IPv6 address and force APT to use IPv4 if found
+if ip -6 addr show scope global | grep -q "inet6"; then
+	echo "[ * ] IPv6 detected — forcing IPv4 for APT"
+
+	# Ensure the config isn't already present to avoid duplicate writes
+	if ! grep -Fxq 'Acquire::ForceIPv4 "true";' /etc/apt/apt.conf.d/99force-ipv4 2> /dev/null; then
+		echo 'Acquire::ForceIPv4 "true";' | sudo tee /etc/apt/apt.conf.d/99force-ipv4 > /dev/null
+		echo "[ ✔ ] Added APT IPv4 enforcement config"
+	else
+		echo "[ ✔ ] APT IPv4 enforcement already configured"
+	fi
+fi
 
 # Translating argument to --gnu-long-options
 for arg; do

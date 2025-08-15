@@ -6,7 +6,7 @@
 # https://www.hestiacp.com/
 #
 # Currently Supported Versions:
-# Debian 11 12
+# Debian 11 12 13
 #
 # ======================================================== #
 
@@ -1478,7 +1478,7 @@ echo "[ * ] Configuring OpenSSL to improve TLS performance..."
 tls13_ciphers="TLS_AES_128_GCM_SHA256:TLS_CHACHA20_POLY1305_SHA256:TLS_AES_256_GCM_SHA384"
 if [ "$release" = "11" ]; then
 	sed -i '/^system_default = system_default_sect$/a system_default = hestia_openssl_sect\n\n[hestia_openssl_sect]\nCiphersuites = '"$tls13_ciphers"'\nOptions = PrioritizeChaCha' /etc/ssl/openssl.cnf
-elif [ "$release" = "12" ]; then
+else
 	if ! grep -qw "^ssl_conf = ssl_sect$" /etc/ssl/openssl.cnf 2> /dev/null; then
 		sed -i '/providers = provider_sect$/a ssl_conf = ssl_sect' /etc/ssl/openssl.cnf
 	fi
@@ -1495,12 +1495,12 @@ $HESTIA/bin/v-generate-ssl-cert $(hostname) '' 'US' 'California' \
 	'San Francisco' 'Hestia Control Panel' 'IT' > /tmp/hst.pem
 
 crt_end=$(grep -n "END CERTIFICATE-" /tmp/hst.pem | cut -f 1 -d:)
-if [ "$release" = "12" ]; then
-	key_start=$(grep -n "BEGIN PRIVATE KEY" /tmp/hst.pem | cut -f 1 -d:)
-	key_end=$(grep -n "END PRIVATE KEY" /tmp/hst.pem | cut -f 1 -d:)
-else
+if [ "$release" = "11" ]; then
 	key_start=$(grep -n "BEGIN RSA" /tmp/hst.pem | cut -f 1 -d:)
 	key_end=$(grep -n "END RSA" /tmp/hst.pem | cut -f 1 -d:)
+else
+	key_start=$(grep -n "BEGIN PRIVATE KEY" /tmp/hst.pem | cut -f 1 -d:)
+	key_end=$(grep -n "END PRIVATE KEY" /tmp/hst.pem | cut -f 1 -d:)
 fi
 
 # Adding SSL certificate
@@ -1738,7 +1738,7 @@ if [ "$proftpd" = 'yes' ]; then
 		fi
 	fi
 
-	if [ "$release" -eq 12 ]; then
+	if [ "$release" -eq 12 ] || [ "$release" -eq 13 ]; then
 		systemctl disable --now proftpd.socket
 		systemctl enable --now proftpd.service
 	fi

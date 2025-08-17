@@ -1944,6 +1944,10 @@ if [ "$named" = 'yes' ]; then
 			systemctl restart apparmor >> $LOG
 		fi
 	fi
+	# Debian 13 removed the named.conf.default-zones file if doesn't exsists remove it from the config file
+	if [ ! -f /etc/bind/named.conf.default-zones ]; then
+		sed -i "/^include.*named.conf.default-zones/d" /etc/bind/named.conf
+	fi
 	update-rc.d bind9 defaults > /dev/null 2>&1
 	systemctl start bind9
 	check_result $? "bind9 start failed"

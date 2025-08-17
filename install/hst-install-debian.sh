@@ -889,22 +889,25 @@ echo
 # Updating system
 echo -ne "Updating currently installed packages, please wait... "
 apt-get -qq update
-apt-get -y upgrade >> $LOG &
-BACK_PID=$!
+apt-get -y upgrade
+
+# For now don't hide the out put
+#>> $LOG &
+#BACK_PID=$!
 
 # Check if package installation is done, print a spinner
-spin_i=1
-while kill -0 $BACK_PID > /dev/null 2>&1; do
-	printf "\b${spinner:spin_i++%${#spinner}:1}"
-	sleep 0.5
-done
+#spin_i=1
+#while kill -0 $BACK_PID > /dev/null 2>&1; do
+#	printf "\b${spinner:spin_i++%${#spinner}:1}"
+#	sleep 0.5
+#done
 
 # Do a blank echo to get the \n back
 echo
 
 # Check Installation result
-wait $BACK_PID
-check_result $? 'apt-get upgrade failed'
+#wait $BACK_PID
+#check_result $? 'apt-get upgrade failed'
 
 #----------------------------------------------------------#
 #                         Backup                           #

@@ -903,7 +903,7 @@ apt-get -y upgrade
 #done
 
 # Do a blank echo to get the \n back
-echo
+echo "Jaap"
 
 # Check Installation result
 #wait $BACK_PID

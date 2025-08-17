@@ -1104,22 +1104,23 @@ chmod a+x /usr/sbin/policy-rc.d
 echo "The installer is now downloading and installing all required packages."
 echo -ne "NOTE: This process may take 10 to 15 minutes to complete, please wait... "
 echo
-apt-get -y install $software > $LOG
-BACK_PID=$!
+apt-get -y install $software
+#> $LOG
+#BACK_PID=$!
 
 # Check if package installation is done, print a spinner
-spin_i=1
-while kill -0 $BACK_PID > /dev/null 2>&1; do
-	printf "\b${spinner:spin_i++%${#spinner}:1}"
-	sleep 0.5
-done
+#spin_i=1
+#while kill -0 $BACK_PID > /dev/null 2>&1; do
+#	printf "\b${spinner:spin_i++%${#spinner}:1}"
+#	sleep 0.5
+#done
 
 # Do a blank echo to get the \n back
 echo
 
 # Check Installation result
-wait $BACK_PID
-check_result $? "apt-get install failed"
+#wait $BACK_PID
+#check_result $? "apt-get install failed"
 
 echo
 echo "========================================================================"

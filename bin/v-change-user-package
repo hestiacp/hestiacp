@@ -174,7 +174,7 @@ check_hestia_demo_mode
 change_user_package
 
 # Update user shell
-shell_conf=$(cat "$HESTIA/data/packages/$package.pkg" | grep -m1 'SHELL' | cut -f 2 -d \')
+shell_conf=$(awk -F"'" '/SHELL/ {print $2}' "$HESTIA/data/packages/$package.pkg")
 $BIN/v-change-user-shell "$user" "$shell_conf"
 
 # Run template trigger

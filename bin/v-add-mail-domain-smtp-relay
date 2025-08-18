@@ -54,7 +54,7 @@ port:$port
 user:$username
 pass:$password
 EOL
-rm $HOMEDIR/$user/conf/mail/$domain/ip
+rm -f $HOMEDIR/$user/conf/mail/$domain/ip
 
 #----------------------------------------------------------#
 #                       Hestia                             #

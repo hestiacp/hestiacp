@@ -2172,7 +2172,10 @@ if [ "$sieve" = 'yes' ]; then
 	echo "[ * ] Installing Sieve Mail Filter..."
 
 	# dovecot.conf install
-	sed -i "s/namespace/service stats \{\n  unix_listener stats-writer \{\n    group = mail\n    mode = 0660\n    user = dovecot\n  \}\n\}\n\nnamespace/g" /etc/dovecot/dovecot.conf
+ 	# Avoid duplicate lines in the configuration file 
+ 	if ! grep -q "service stats {" /etc/dovecot/dovecot.conf; then
+		sed -i "s/namespace/service stats \{\n  unix_listener stats-writer \{\n    group = mail\n    mode = 0660\n    user = dovecot\n  \}\n\}\n\nnamespace/g" /etc/dovecot/dovecot.conf
+	fi
 
 	# Dovecot conf files
 	#  10-master.conf

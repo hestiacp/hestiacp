@@ -32,12 +32,12 @@
 		"xterm-addon-webgl": "^0.16.0"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "2.1.4",
+		"@biomejs/biome": "2.2.2",
 		"@prettier/plugin-php": "^0.24.0",
 		"@testing-library/vue": "^8.1.0",
 		"@vitejs/plugin-vue": "^6.0.1",
-		"browserslist": "^4.25.2",
-		"esbuild": "^0.25.8",
+		"browserslist": "^4.25.3",
+		"esbuild": "^0.25.9",
 		"husky": "^9.1.7",
 		"jsdom": "^26.1.0",
 		"lightningcss": "^1.30.1",
@@ -51,7 +51,7 @@
 		"stylelint-config-standard": "^38.0.0",
 		"vitepress": "^1.6.4",
 		"vitest": "^3.2.4",
-		"vue": "^3.5.18"
+		"vue": "^3.5.20"
 	},
 	"browserslist": [
 		"defaults"

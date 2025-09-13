@@ -2017,7 +2017,12 @@ fi
 if [ "$dovecot" = 'yes' ]; then
 	echo "[ * ] Configuring Dovecot POP/IMAP mail server..."
 	gpasswd -a dovecot mail > /dev/null 2>&1
-	cp -rf $HESTIA_COMMON_DIR/dovecot /etc/
+	if [ $release = "13" ]; then
+		# Debian Trixie uses 2.4.1
+		cp -rf $HESTIA_COMMON_DIR/dovecot/2.4.1 /etc/dovecot/
+	else
+		cp -rf $HESTIA_COMMON_DIR/dovecot/2.3 /etc/dovecot/
+	fi
 	cp -f $HESTIA_INSTALL_DIR/logrotate/dovecot /etc/logrotate.d/
 	rm -f /etc/dovecot/conf.d/15-mailboxes.conf
 	chown -R root:root /etc/dovecot*
@@ -2025,7 +2030,6 @@ if [ "$dovecot" = 'yes' ]; then
 	chown -R dovecot:mail /var/log/dovecot.log
 	chmod 660 /var/log/dovecot.log
 	# Alter config for 2.2
-	version=$(dovecot --version | cut -f -2 -d .)
 	if [ "$version" = "2.2" ]; then
 		echo "[ * ] Downgrade dovecot config to sync with 2.2 settings"
 		sed -i 's|#ssl_dh_parameters_length = 4096|ssl_dh_parameters_length = 4096|g' /etc/dovecot/conf.d/10-ssl.conf

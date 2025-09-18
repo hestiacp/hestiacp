@@ -141,6 +141,15 @@ if (!empty($_SESSION["SMTP_RELAY_USER"])) {
 	$v_smtp_relay_user = "";
 }
 $v_smtp_relay_pass = "";
+$v_cf_origin_enabled = $_SESSION["CF_ORIGIN_ENABLED"] ?? "no";
+$v_cf_origin_auth_type = $_SESSION["CF_ORIGIN_AUTH_TYPE"] ?? "token";
+$v_cf_origin_request_type = $_SESSION["CF_ORIGIN_REQUEST_TYPE"] ?? "origin-rsa";
+$v_cf_origin_rsa_bits = $_SESSION["CF_ORIGIN_RSA_BITS"] ?? "2048";
+$v_cf_origin_ecc_curve = $_SESSION["CF_ORIGIN_ECC_CURVE"] ?? "prime256v1";
+$v_cf_origin_validity = $_SESSION["CF_ORIGIN_VALIDITY"] ?? "5475";
+$v_cf_origin_ssl_mode = $_SESSION["CF_ORIGIN_SSL_MODE"] ?? "off";
+$cf_origin_token_present = !empty($_SESSION["CF_ORIGIN_API_TOKEN"]);
+$cf_origin_service_key_present = !empty($_SESSION["CF_ORIGIN_SERVICE_KEY"]);
 if (empty($_POST["v_experimental_features"])) {
 	$_POST["v_experimental_features"] = "false";
 }
@@ -658,21 +667,187 @@ if (!empty($_POST["save"])) {
 		}
 	}
 
-	// Update mysql pasword
-	if (empty($_SESSION["error_msg"])) {
-		if (!empty($_POST["v_mysql_password"])) {
-			exec(
-				HESTIA_CMD .
-					"v-change-database-host-password mysql localhost root " .
+        // Update mysql pasword
+        if (empty($_SESSION["error_msg"])) {
+                if (!empty($_POST["v_mysql_password"])) {
+                        exec(
+                                HESTIA_CMD .
+                                        "v-change-database-host-password mysql localhost root " .
 					quoteshellarg($_POST["v_mysql_password"]),
 				$output,
 				$return_var,
 			);
 			check_return_code($return_var, $output);
 			unset($output);
-			$v_db_adv = "yes";
-		}
-	}
+                        $v_db_adv = "yes";
+                }
+        }
+
+        // Update Cloudflare Origin CA settings
+        if (empty($_SESSION["error_msg"])) {
+                $posted_cf_enabled = !empty($_POST["v_cf_origin_enabled"]) ? "yes" : "no";
+                if ($posted_cf_enabled !== $v_cf_origin_enabled) {
+                        exec(
+                                HESTIA_CMD . "v-change-sys-config-value CF_ORIGIN_ENABLED " . quoteshellarg($posted_cf_enabled),
+                                $output,
+                                $return_var,
+                        );
+                        check_return_code($return_var, $output);
+                        unset($output);
+                        $v_cf_origin_enabled = $posted_cf_enabled;
+                        $_SESSION["CF_ORIGIN_ENABLED"] = $v_cf_origin_enabled;
+                }
+
+                $posted_cf_auth_type = $_POST["v_cf_origin_auth_type"] ?? $v_cf_origin_auth_type;
+                if (!in_array($posted_cf_auth_type, ["token", "service_key"], true)) {
+                        $_SESSION["error_msg"] = _("Invalid Cloudflare authentication method.");
+                } elseif ($posted_cf_auth_type !== $v_cf_origin_auth_type) {
+                        exec(
+                                HESTIA_CMD . "v-change-sys-config-value CF_ORIGIN_AUTH_TYPE " . quoteshellarg($posted_cf_auth_type),
+                                $output,
+                                $return_var,
+                        );
+                        check_return_code($return_var, $output);
+                        unset($output);
+                        $v_cf_origin_auth_type = $posted_cf_auth_type;
+                        $_SESSION["CF_ORIGIN_AUTH_TYPE"] = $v_cf_origin_auth_type;
+                }
+        }
+        if (empty($_SESSION["error_msg"])) {
+                if (!empty($_POST["v_cf_origin_api_token"])) {
+                        exec(
+                                HESTIA_CMD . "v-change-sys-config-value CF_ORIGIN_API_TOKEN " . quoteshellarg(trim($_POST["v_cf_origin_api_token"])),
+                                $output,
+                                $return_var,
+                        );
+                        check_return_code($return_var, $output);
+                        unset($output);
+                        $cf_origin_token_present = true;
+                        $_SESSION["CF_ORIGIN_API_TOKEN"] = trim($_POST["v_cf_origin_api_token"]);
+                }
+                if (!empty($_POST["v_cf_origin_service_key"])) {
+                        exec(
+                                HESTIA_CMD . "v-change-sys-config-value CF_ORIGIN_SERVICE_KEY " . quoteshellarg(trim($_POST["v_cf_origin_service_key"])),
+                                $output,
+                                $return_var,
+                        );
+                        check_return_code($return_var, $output);
+                        unset($output);
+                        $cf_origin_service_key_present = true;
+                        $_SESSION["CF_ORIGIN_SERVICE_KEY"] = trim($_POST["v_cf_origin_service_key"]);
+                }
+                $auth_email = trim($_POST["v_cf_origin_auth_email"] ?? "");
+                if ($auth_email !== ($_SESSION["CF_ORIGIN_AUTH_EMAIL"] ?? "")) {
+                        exec(
+                                HESTIA_CMD . "v-change-sys-config-value CF_ORIGIN_AUTH_EMAIL " . quoteshellarg($auth_email),
+                                $output,
+                                $return_var,
+                        );
+                        check_return_code($return_var, $output);
+                        unset($output);
+                        $_SESSION["CF_ORIGIN_AUTH_EMAIL"] = $auth_email;
+                }
+
+                $allowed_request_types = ["origin-rsa", "origin-ecc"];
+                if (in_array($_POST["v_cf_origin_request_type"] ?? "", $allowed_request_types, true)) {
+                        $requested_type = $_POST["v_cf_origin_request_type"];
+                        if ($requested_type !== $v_cf_origin_request_type) {
+                                exec(
+                                        HESTIA_CMD . "v-change-sys-config-value CF_ORIGIN_REQUEST_TYPE " . quoteshellarg($requested_type),
+                                        $output,
+                                        $return_var,
+                                );
+                                check_return_code($return_var, $output);
+                                unset($output);
+                                $v_cf_origin_request_type = $requested_type;
+                                $_SESSION["CF_ORIGIN_REQUEST_TYPE"] = $requested_type;
+                        }
+                } else {
+                        $_SESSION["error_msg"] = _("Invalid Cloudflare certificate type.");
+                }
+
+                if (empty($_SESSION["error_msg"])) {
+                        $allowed_rsa_bits = ["2048", "3072", "4096"];
+                        $posted_bits = $_POST["v_cf_origin_rsa_bits"] ?? $v_cf_origin_rsa_bits;
+                        if (in_array($posted_bits, $allowed_rsa_bits, true) && $posted_bits !== $v_cf_origin_rsa_bits) {
+                                exec(
+                                        HESTIA_CMD . "v-change-sys-config-value CF_ORIGIN_RSA_BITS " . quoteshellarg($posted_bits),
+                                        $output,
+                                        $return_var,
+                                );
+                                check_return_code($return_var, $output);
+                                unset($output);
+                                $v_cf_origin_rsa_bits = $posted_bits;
+                                $_SESSION["CF_ORIGIN_RSA_BITS"] = $posted_bits;
+                        }
+
+                        $allowed_curves = ["prime256v1", "secp384r1"];
+                        $posted_curve = $_POST["v_cf_origin_ecc_curve"] ?? $v_cf_origin_ecc_curve;
+                        if (in_array($posted_curve, $allowed_curves, true) && $posted_curve !== $v_cf_origin_ecc_curve) {
+                                exec(
+                                        HESTIA_CMD . "v-change-sys-config-value CF_ORIGIN_ECC_CURVE " . quoteshellarg($posted_curve),
+                                        $output,
+                                        $return_var,
+                                );
+                                check_return_code($return_var, $output);
+                                unset($output);
+                                $v_cf_origin_ecc_curve = $posted_curve;
+                                $_SESSION["CF_ORIGIN_ECC_CURVE"] = $posted_curve;
+                        }
+
+                        $posted_validity = preg_replace("/[^0-9]/", "", $_POST["v_cf_origin_validity"] ?? $v_cf_origin_validity);
+                        if ($posted_validity === "") {
+                                $posted_validity = $v_cf_origin_validity;
+                        }
+                        $validity_int = (int) $posted_validity;
+                        if ($validity_int < 7 || $validity_int > 5475) {
+                                $_SESSION["error_msg"] = _("Cloudflare Origin certificate validity must be between 7 and 5475 days.");
+                        } elseif ((string) $validity_int !== $v_cf_origin_validity) {
+                                exec(
+                                        HESTIA_CMD . "v-change-sys-config-value CF_ORIGIN_VALIDITY " . quoteshellarg((string) $validity_int),
+                                        $output,
+                                        $return_var,
+                                );
+                                check_return_code($return_var, $output);
+                                unset($output);
+                                $v_cf_origin_validity = (string) $validity_int;
+                                $_SESSION["CF_ORIGIN_VALIDITY"] = (string) $validity_int;
+                        }
+                }
+
+                if (empty($_SESSION["error_msg"])) {
+                        $allowed_ssl_modes = ["off", "strict"];
+                        $posted_ssl_mode = $_POST["v_cf_origin_ssl_mode"] ?? $v_cf_origin_ssl_mode;
+                        if (in_array($posted_ssl_mode, $allowed_ssl_modes, true) && $posted_ssl_mode !== $v_cf_origin_ssl_mode) {
+                                exec(
+                                        HESTIA_CMD . "v-change-sys-config-value CF_ORIGIN_SSL_MODE " . quoteshellarg($posted_ssl_mode),
+                                        $output,
+                                        $return_var,
+                                );
+                                check_return_code($return_var, $output);
+                                unset($output);
+                                $v_cf_origin_ssl_mode = $posted_ssl_mode;
+                                $_SESSION["CF_ORIGIN_SSL_MODE"] = $posted_ssl_mode;
+                        }
+                }
+
+                if (empty($_SESSION["error_msg"])) {
+                        if (
+                                $v_cf_origin_enabled === "yes" &&
+                                $v_cf_origin_auth_type === "token" &&
+                                !$cf_origin_token_present
+                        ) {
+                                $_SESSION["error_msg"] = _("Cloudflare API token is required when token authentication is selected.");
+                        }
+                        if (
+                                $v_cf_origin_enabled === "yes" &&
+                                $v_cf_origin_auth_type === "service_key" &&
+                                !$cf_origin_service_key_present
+                        ) {
+                                $_SESSION["error_msg"] = _("Cloudflare user service key is required when service-key authentication is selected.");
+                        }
+                }
+        }
 	if (!empty($_SESSION["MAIL_SYSTEM"])) {
 		// Update webmail url
 		if (empty($_SESSION["error_msg"])) {

@@ -1,0 +1,269 @@
+#!/bin/bash
+# info: request Cloudflare Origin CA certificate for a web domain
+# options: USER DOMAIN [ALIASES]
+#
+# example: v-add-cloudflare-origin-cert admin example.com www.example.com,blog.example.com
+
+user=$1
+domain=$2
+aliases=${3// /}
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
+source $HESTIA/func/domain.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+check_args '2' "$#" 'USER DOMAIN [ALIASES]'
+is_format_valid 'user' 'domain' 'aliases'
+is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
+is_system_enabled "$WEB_SSL" 'SSL_SUPPORT'
+is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
+is_object_valid 'web' 'DOMAIN' "$domain"
+is_object_unsuspended 'web' 'DOMAIN' "$domain"
+
+check_hestia_demo_mode
+
+if [ "$CF_ORIGIN_ENABLED" != "yes" ]; then
+        check_result "$E_DISABLED" "Cloudflare Origin CA integration disabled"
+fi
+
+cf_auth_type=${CF_ORIGIN_AUTH_TYPE:-token}
+cf_api_base=${CF_ORIGIN_API_BASE:-https://api.cloudflare.com/client/v4}
+
+declare -a CF_HEADERS
+CF_HEADERS+=("-H" "Content-Type: application/json")
+
+case "$cf_auth_type" in
+        token)
+                if [ -z "$CF_ORIGIN_API_TOKEN" ]; then
+                        check_result "$E_INVALID" "Cloudflare API token is not configured"
+                fi
+                CF_HEADERS+=("-H" "Authorization: Bearer $CF_ORIGIN_API_TOKEN")
+                ;;
+        service_key)
+                if [ -z "$CF_ORIGIN_SERVICE_KEY" ]; then
+                        check_result "$E_INVALID" "Cloudflare service key is not configured"
+                fi
+                CF_HEADERS+=("-H" "X-Auth-User-Service-Key: $CF_ORIGIN_SERVICE_KEY")
+                if [ -n "$CF_ORIGIN_AUTH_EMAIL" ]; then
+                        CF_HEADERS+=("-H" "X-Auth-Email: $CF_ORIGIN_AUTH_EMAIL")
+                fi
+                ;;
+        *)
+                check_result "$E_INVALID" "Unsupported Cloudflare authentication type: $cf_auth_type"
+                ;;
+esac
+
+get_domain_values 'web'
+
+if [ -z "$aliases" ]; then
+        aliases="$ALIAS"
+fi
+
+tmpdir=$(mktemp -d)
+trap 'rm -rf "$tmpdir"' EXIT
+
+log_file="/var/log/hestia/CF-${user}-${domain}.log"
+touch "$log_file"
+chmod 600 "$log_file"
+
+log_debug() {
+        echo -e "\n==[$1]==\n$2" >> "$log_file"
+}
+
+log_debug "Start" "Issuing Cloudflare Origin CA certificate for $domain (user: $user)"
+
+domain_idn="$domain"
+if [[ "$domain" = *[![:ascii:]]* ]]; then
+        domain_idn=$(idn2 --quiet "$domain")
+fi
+
+declare -a hostnames
+hostnames+=("$domain")
+
+if [ -n "$aliases" ]; then
+        IFS=',' read -ra alias_array <<< "$aliases"
+        for alias in "${alias_array[@]}"; do
+                alias=$(echo "$alias" | xargs)
+                [ -z "$alias" ] && continue
+                hostnames+=("$alias")
+        done
+fi
+
+unique_hosts=$(printf "%s\n" "${hostnames[@]}" | sed '/^$/d' | sort -u)
+if [ -z "$unique_hosts" ]; then
+        check_result "$E_INVALID" "No hostnames found for certificate request"
+fi
+
+dns_alt=""
+declare -a hostnames_payload
+while read -r hostname; do
+        hostname_ascii="$hostname"
+        if [[ "$hostname_ascii" = *[![:ascii:]]* ]]; then
+                hostname_ascii=$(idn2 --quiet "$hostname_ascii")
+        fi
+        [ -z "$hostname_ascii" ] && continue
+        hostnames_payload+=("$hostname_ascii")
+        if [ -z "$dns_alt" ]; then
+                dns_alt="DNS:$hostname_ascii"
+        else
+                dns_alt="$dns_alt,DNS:$hostname_ascii"
+        fi
+done <<< "$unique_hosts"
+
+if [ -z "$dns_alt" ]; then
+        check_result "$E_INVALID" "Unable to build subjectAltName list"
+fi
+
+if [ -e "/etc/ssl/openssl.cnf" ]; then
+        ssl_conf="/etc/ssl/openssl.cnf"
+else
+        ssl_conf="/etc/pki/tls/openssl.cnf"
+fi
+
+cf_request_type=${CF_ORIGIN_REQUEST_TYPE:-origin-rsa}
+rsa_bits=${CF_ORIGIN_RSA_BITS:-2048}
+ecc_curve=${CF_ORIGIN_ECC_CURVE:-prime256v1}
+
+case "$cf_request_type" in
+        origin-ecc)
+                log_debug "Key" "Generating ECC key ($ecc_curve)"
+                openssl ecparam -name "$ecc_curve" -genkey -noout -out "$tmpdir/$domain_idn.key" >/dev/null 2>&1
+                check_result $? "Failed to generate ECC key"
+                ;;
+        *)
+                cf_request_type="origin-rsa"
+                log_debug "Key" "Generating RSA key (${rsa_bits} bits)"
+                openssl genrsa "$rsa_bits" > "$tmpdir/$domain_idn.key" 2>/dev/null
+                check_result $? "Failed to generate RSA key"
+                ;;
+esac
+
+log_debug "CSR" "Building CSR with SAN=$dns_alt"
+
+openssl req -new -sha256 \
+        -batch \
+        -subj "/CN=$domain_idn" \
+        -key "$tmpdir/$domain_idn.key" \
+        -reqexts SAN \
+        -config <(cat "$ssl_conf" <(printf "[SAN]\nsubjectAltName=%s\n" "$dns_alt")) \
+        -out "$tmpdir/$domain_idn.csr" >/dev/null 2>&1
+check_result $? "Failed to generate CSR"
+
+csr_payload=$(cat "$tmpdir/$domain_idn.csr")
+hostnames_json=$(printf "%s\n" "${hostnames_payload[@]}" | jq -R . | jq -s .)
+requested_validity=${CF_ORIGIN_VALIDITY:-5475}
+requested_validity=${requested_validity//[^0-9]/}
+if [ -z "$requested_validity" ]; then
+        requested_validity=5475
+fi
+
+payload=$(jq -n \
+        --arg csr "$csr_payload" \
+        --arg requested_type "$cf_request_type" \
+        --argjson requested_validity "$requested_validity" \
+        --argjson hostnames "$hostnames_json" \
+        '{csr:$csr, requested_type:$requested_type, requested_validity:$requested_validity, hostnames:$hostnames}')
+
+cloudflare_api() {
+        local method=$1
+        local endpoint=$2
+        local data=$3
+        local raw
+        if [ -n "$data" ]; then
+                raw=$(curl --silent --show-error --request "$method" "$cf_api_base$endpoint" "${CF_HEADERS[@]}" --data "$data" --write-out '\n%{http_code}')
+        else
+                raw=$(curl --silent --show-error --request "$method" "$cf_api_base$endpoint" "${CF_HEADERS[@]}" --write-out '\n%{http_code}')
+        fi
+        local exit_code=$?
+        if [ $exit_code -ne 0 ]; then
+                return $exit_code
+        fi
+        cf_http_code=$(echo "$raw" | tail -n1)
+        echo "$raw" | sed '$d'
+        return 0
+}
+
+log_debug "API Request" "$payload"
+
+response=$(cloudflare_api POST "/certificates" "$payload")
+api_status=$?
+if [ $api_status -ne 0 ]; then
+        check_result "$E_CONNECT" "Cloudflare API request failed"
+fi
+
+log_debug "API Response" "$response (HTTP $cf_http_code)"
+
+if [ "${cf_http_code:-0}" -ge 400 ]; then
+        errors=$(echo "$response" | jq -c '.errors // empty')
+        check_result "$E_CONNECT" "Cloudflare API error ($cf_http_code) $errors"
+fi
+
+success=$(echo "$response" | jq -r '.success')
+if [ "$success" != "true" ]; then
+        errors=$(echo "$response" | jq -c '.errors // empty')
+        check_result "$E_CONNECT" "Cloudflare API returned error: $errors"
+fi
+
+certificate=$(echo "$response" | jq -r '.result.certificate // empty')
+certificate_id=$(echo "$response" | jq -r '.result.id // empty')
+if [ -z "$certificate" ] || [ -z "$certificate_id" ]; then
+        check_result "$E_CONNECT" "Cloudflare API response missing certificate data"
+fi
+
+printf "%s\n" "$certificate" > "$tmpdir/$domain_idn.crt"
+
+log_debug "Certificate" "$certificate_id"
+
+$BIN/v-add-web-domain-ssl "$user" "$domain" "$tmpdir" "$SSL_HOME" 'no'
+check_result $? "Failed to install Cloudflare certificate"
+
+update_object_value 'web' 'DOMAIN' "$domain" '$CF_ORIGIN_CERT' 'yes'
+update_object_value 'web' 'DOMAIN' "$domain" '$CF_ORIGIN_CERT_ID' "$certificate_id"
+update_object_value 'web' 'DOMAIN' "$domain" '$LETSENCRYPT' 'no'
+
+if [ "${CF_ORIGIN_SSL_MODE,,}" = "strict" ]; then
+        lookup_zone_id() {
+                local candidate="$1"
+                while [ -n "$candidate" ]; do
+                        local ascii="$candidate"
+                        if [[ "$ascii" = *[![:ascii:]]* ]]; then
+                                ascii=$(idn2 --quiet "$ascii")
+                        fi
+                        local zone_resp
+                        zone_resp=$(cloudflare_api GET "/zones?name=$ascii")
+                        if [ $? -eq 0 ] && [ "${cf_http_code:-0}" -lt 400 ]; then
+                                local zone_success
+                                zone_success=$(echo "$zone_resp" | jq -r '.success')
+                                if [ "$zone_success" = "true" ]; then
+                                        local zone_id
+                                        zone_id=$(echo "$zone_resp" | jq -r '.result[0].id // empty')
+                                        if [ -n "$zone_id" ]; then
+                                                echo "$zone_id"
+                                                return 0
+                                        fi
+                                fi
+                        fi
+                        [[ "$candidate" != *.* ]] && break
+                        candidate="${candidate#*.}"
+                done
+                return 1
+        }
+        if zone_id=$(lookup_zone_id "$domain"); then
+                mode_payload='{"value":"strict"}'
+                mode_resp=$(cloudflare_api PATCH "/zones/$zone_id/settings/ssl" "$mode_payload")
+                log_debug "Set SSL mode" "$mode_resp"
+        else
+                log_debug "Set SSL mode" "Unable to determine zone id for $domain"
+        fi
+fi
+
+$BIN/v-log-action "$user" "Info" "Web" "Cloudflare Origin certificate issued (Domain: $domain)."
+log_event "$OK" "$ARGUMENTS"
+exit

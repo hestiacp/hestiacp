@@ -26,12 +26,13 @@
 <div class="container">
 
 	<form
-		x-data="{
-			statsAuthEnabled: <?= !empty($v_stats_user) ? "true" : "false" ?>,
-			redirectEnabled: <?= !empty($v_redirect) ? "true" : "false" ?>,
-			sslEnabled: <?= $v_ssl == "yes" ? "true" : "false" ?>,
-			letsEncryptEnabled: <?= $v_letsencrypt == "yes" || $v_letsencrypt == "on" ? "true" : "false" ?>,
-			showCertificates: <?= $v_letsencrypt == "yes" || $v_letsencrypt == "on" ? "false" : "true" ?>,
+                x-data="{
+                        statsAuthEnabled: <?= !empty($v_stats_user) ? "true" : "false" ?>,
+                        redirectEnabled: <?= !empty($v_redirect) ? "true" : "false" ?>,
+                        sslEnabled: <?= $v_ssl == "yes" ? "true" : "false" ?>,
+                        letsEncryptEnabled: <?= $v_letsencrypt == "yes" || $v_letsencrypt == "on" ? "true" : "false" ?>,
+                        cfOriginEnabled: <?= $v_cf_origin == "yes" ? "true" : "false" ?>,
+                        showCertificates: <?= ($v_letsencrypt == "yes" || $v_letsencrypt == "on" || $v_cf_origin == "yes") ? "false" : "true" ?>,
 			showAdvanced: false,
 			nginxCacheEnabled: <?= $v_nginx_cache == "yes" ? "true" : "false" ?>,
 			proxySupportEnabled: <?= !empty($v_proxy) ? "true" : "false" ?>,
@@ -168,17 +169,43 @@
 				</label>
 			</div>
 			<div x-cloak x-show="sslEnabled" class="u-pl30">
-				<div class="form-check u-mb10">
-					<input x-model="letsEncryptEnabled" class="form-check-input js-toggle-lets-encrypt" type="checkbox" name="v_letsencrypt" id="v_letsencrypt">
-					<label for="v_letsencrypt">
-						<?= _("Use Let's Encrypt to obtain SSL certificate") ?>
-					</label>
-				</div>
-				<div class="form-check u-mb10">
-					<input class="form-check-input" type="checkbox" name="v_ssl_forcessl" id="v_ssl_forcessl" <?php if ($v_ssl_forcessl == 'yes') echo 'checked' ?>>
-					<label for="v_ssl_forcessl">
-						<?= _("Enable automatic HTTPS redirection") ?>
-					</label>
+                                <div class="form-check u-mb10">
+                                        <input
+                                                x-model="letsEncryptEnabled"
+                                                class="form-check-input js-toggle-lets-encrypt"
+                                                type="checkbox"
+                                                name="v_letsencrypt"
+                                                id="v_letsencrypt"
+                                                x-on:change="if (letsEncryptEnabled) { cfOriginEnabled = false; showCertificates = false; } else if (!cfOriginEnabled) { showCertificates = true; }"
+                                        >
+                                        <label for="v_letsencrypt">
+                                                <?= _("Use Let's Encrypt to obtain SSL certificate") ?>
+                                        </label>
+                                </div>
+                                <?php if ($cf_origin_option_visible) { ?>
+                                <div class="form-check u-mb10">
+                                        <input
+                                                x-model="cfOriginEnabled"
+                                                class="form-check-input js-toggle-cloudflare-origin"
+                                                type="checkbox"
+                                                name="v_cf_origin"
+                                                id="v_cf_origin"
+                                                x-on:change="if (cfOriginEnabled) { letsEncryptEnabled = false; showCertificates = false; } else if (!letsEncryptEnabled) { showCertificates = true; }"
+                                                <?= $v_cf_origin == "yes" ? "checked" : "" ?>
+                                        >
+                                        <label for="v_cf_origin">
+                                                <?= _("Use Cloudflare to obtain SSL origin certificate") ?>
+                                        </label>
+                                        <?php if (!$cf_origin_issue_allowed) { ?>
+                                                <p class="hint"><?= _("Cloudflare credentials are required before requesting new certificates.") ?></p>
+                                        <?php } ?>
+                                </div>
+                                <?php } ?>
+                                <div class="form-check u-mb10">
+                                        <input class="form-check-input" type="checkbox" name="v_ssl_forcessl" id="v_ssl_forcessl" <?php if ($v_ssl_forcessl == 'yes') echo 'checked' ?>>
+                                        <label for="v_ssl_forcessl">
+                                                <?= _("Enable automatic HTTPS redirection") ?>
+                                        </label>
 				</div>
 				<div class="form-check u-mb20">
 					<input class="form-check-input" type="checkbox" name="v_ssl_hsts" id="ssl_hsts" <?php if ($v_ssl_hsts == 'yes') echo 'checked' ?>>
@@ -189,7 +216,7 @@
 						</a>
 					</label>
 				</div>
-				<div x-cloak x-show="showCertificates" class="js-ssl-details">
+                                <div x-cloak x-show="showCertificates" class="js-ssl-details">
 					<div class="u-mb10">
 						<label for="ssl_crt" class="form-label">
 							<?= _("SSL Certificate") ?>
@@ -241,12 +268,12 @@
 							<span class="values-list-label"><?= _("Issued By") ?></span>
 							<span class="values-list-value"><?= $v_ssl_issuer ?></span>
 						</li>
-						<p x-cloak x-show="letsEncryptEnabled" id="letsinfo">
-							<button
-								type="button"
-								class="form-link"
-								x-on:click="showCertificates = !showCertificates"
-								x-text="showCertificates ? '<?= _("Hide Certificate") ?>' : '<?= _("Show Certificate") ?>'">
+                                                <p x-cloak x-show="letsEncryptEnabled || cfOriginEnabled" id="letsinfo">
+                                                        <button
+                                                                type="button"
+                                                                class="form-link"
+                                                                x-on:click="showCertificates = !showCertificates"
+                                                                x-text="showCertificates ? '<?= _("Hide Certificate") ?>' : '<?= _("Show Certificate") ?>'">
 								<?= _("Show Certificate") ?>
 							</button>
 						</p>

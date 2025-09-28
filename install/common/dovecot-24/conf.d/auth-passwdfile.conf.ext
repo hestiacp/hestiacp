@@ -1,0 +1,46 @@
+########################################
+# Dovecot conf file modified by Hestia #
+########################################
+
+passdb passwd-file {
+  driver = passwd-file
+  default_password_scheme = BLF-CRYPT
+  auth_username_format = %{ user | username }
+  passwd_file_path = /etc/exim4/domains/%{ user | domain }/passwd
+}
+
+userdb passwd-file {
+  driver = passwd-file
+  auth_username_format = %{ user | username }
+  passwd_file_path = /etc/exim4/domains/%{ user | domain }/passwd
+}
+
+##############################################
+# Original distribution files are located in #
+# /usr/share/dovecot/                        #
+#                                            #
+# Below is a copy of the original file.      #
+# All lines starting with #-# were already   #
+# uncommented in the original version        #
+##############################################
+
+# Authentication for passwd-file users. Included from auth.conf.
+#
+# passwd-like file with specified location.
+# <https://doc.dovecot.org/latest/core/config/auth/databases/passwd_file.html>
+
+#passdb passwd-file {
+#  default_password_scheme = crypt
+#  auth_username_format = %{user}
+#  passwd_file_path = /etc/dovecot/users
+#}
+
+#userdb passwd-file {
+#  auth_username_format=%{user}
+#  passwd_file_path = /etc/dovecot/users
+
+#  fields {
+#    quota_rule:default=*:storage=1G
+#    home=/home/virtual/%{user}
+#  }
+#}

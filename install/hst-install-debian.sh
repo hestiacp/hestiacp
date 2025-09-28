@@ -31,7 +31,7 @@ HESTIA_COMMON_DIR="$HESTIA/install/common"
 VERBOSE='no'
 
 # Define software versions
-HESTIA_INSTALL_VER='1.9.4'
+HESTIA_INSTALL_VER='1.10.0~alpha'
 # Supported PHP versions
 multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0" "8.1" "8.2" "8.3" "8.4")
 # One of the following PHP versions is required for Roundcube / phpmyadmin
@@ -39,9 +39,9 @@ multiphp_required=("7.3" "7.4" "8.0" "8.1" "8.2" "8.3")
 # Default PHP version if none supplied
 fpm_v="8.3"
 # MariaDB version
-mariadb_v="11.4"
+mariadb_v="11.8"
 # Node.js version
-node_v="20"
+node_v="24"
 
 # Defining software pack for all distros
 software="acl apache2 apache2-suexec-custom apache2-utils at awstats bc bind9 bsdmainutils bsdutils
@@ -1478,7 +1478,7 @@ echo "[ * ] Configuring OpenSSL to improve TLS performance..."
 tls13_ciphers="TLS_AES_128_GCM_SHA256:TLS_CHACHA20_POLY1305_SHA256:TLS_AES_256_GCM_SHA384"
 if [ "$release" = "11" ]; then
 	sed -i '/^system_default = system_default_sect$/a system_default = hestia_openssl_sect\n\n[hestia_openssl_sect]\nCiphersuites = '"$tls13_ciphers"'\nOptions = PrioritizeChaCha' /etc/ssl/openssl.cnf
-elif [ "$release" = "12" ] || [ "$release" = "13" ]; then
+else
 	if ! grep -qw "^ssl_conf = ssl_sect$" /etc/ssl/openssl.cnf 2> /dev/null; then
 		sed -i '/providers = provider_sect$/a ssl_conf = ssl_sect' /etc/ssl/openssl.cnf
 	fi
@@ -1495,12 +1495,12 @@ $HESTIA/bin/v-generate-ssl-cert $(hostname) '' 'US' 'California' \
 	'San Francisco' 'Hestia Control Panel' 'IT' > /tmp/hst.pem
 
 crt_end=$(grep -n "END CERTIFICATE-" /tmp/hst.pem | cut -f 1 -d:)
-if [ "$release" = "12" ] || [ "$release" = "13" ]; then
-	key_start=$(grep -n "BEGIN PRIVATE KEY" /tmp/hst.pem | cut -f 1 -d:)
-	key_end=$(grep -n "END PRIVATE KEY" /tmp/hst.pem | cut -f 1 -d:)
-else
+if [ "$release" = "11" ]; then
 	key_start=$(grep -n "BEGIN RSA" /tmp/hst.pem | cut -f 1 -d:)
 	key_end=$(grep -n "END RSA" /tmp/hst.pem | cut -f 1 -d:)
+else
+	key_start=$(grep -n "BEGIN PRIVATE KEY" /tmp/hst.pem | cut -f 1 -d:)
+	key_end=$(grep -n "END PRIVATE KEY" /tmp/hst.pem | cut -f 1 -d:)
 fi
 
 # Adding SSL certificate
@@ -1738,7 +1738,7 @@ if [ "$proftpd" = 'yes' ]; then
 		fi
 	fi
 
-	if [ "$release" -eq 12 ]; then
+	if [ "$release" -eq 12 ] || [ "$release" -eq 13 ]; then
 		systemctl disable --now proftpd.socket
 		systemctl enable --now proftpd.service
 	fi
@@ -1939,6 +1939,10 @@ if [ "$named" = 'yes' ]; then
 		if [ $? -ne 0 ]; then
 			systemctl restart apparmor >> $LOG
 		fi
+	fi
+	# Debian 13 removed the named.conf.default-zones file if doesn't exsists remove it from the config file
+	if [ ! -f /etc/bind/named.conf.default-zones ]; then
+		sed -i "/^include.*named.conf.default-zones/d" /etc/bind/named.conf
 	fi
 	update-rc.d bind9 defaults > /dev/null 2>&1
 	systemctl start bind9

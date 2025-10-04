@@ -118,24 +118,29 @@ if (!empty($_POST["save"]) && !empty($_GET["domain"]) && empty($_GET["record_id"
 		unset($output);
 	}
 
-	// Change domain template
-	if ($v_template != $_POST["v_template"] && empty($_SESSION["error_msg"])) {
-		$v_template = quoteshellarg($_POST["v_template"]);
-		exec(
-			HESTIA_CMD .
-				"v-change-dns-domain-tpl " .
-				$user .
-				" " .
-				$v_domain .
-				" " .
-				$v_template .
-				" 'no'",
-			$output,
-			$return_var,
-		);
-		check_return_code($return_var, $output);
-		unset($output);
-		$restart_dns = "yes";
+	if (
+		$_SESSION["POLICY_USER_EDIT_DNS_TEMPLATES"] == "yes" ||
+		$_SESSION["userContext"] === "admin"
+	) {
+		// Change domain template
+		if ($v_template != $_POST["v_template"] && empty($_SESSION["error_msg"])) {
+			$v_template = quoteshellarg($_POST["v_template"]);
+			exec(
+				HESTIA_CMD .
+					"v-change-dns-domain-tpl " .
+					$user .
+					" " .
+					$v_domain .
+					" " .
+					$v_template .
+					" 'no'",
+				$output,
+				$return_var,
+			);
+			check_return_code($return_var, $output);
+			unset($output);
+			$restart_dns = "yes";
+		}
 	}
 
 	// Change SOA record

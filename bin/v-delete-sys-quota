@@ -31,14 +31,30 @@ check_hestia_demo_mode
 
 # Deleting group and user quota on /home partition
 mnt=$(df -P /home | awk '{print $6}' | tail -n1)
+fs_type=$(df -T "$mnt" | awk '{print $2}' | tail -n1)
 lnr=$(cat -n /etc/fstab | grep -v "#" | awk '{print $1,$3}' | grep "$mnt$" | cut -f 1 -d ' ')
-opt=$(sed -n ${lnr}p /etc/fstab | awk '{print $4}')
-fnd='usrquota\|grpquota\|usrjquota=\|grpjquota=\|jqfmt='
-if [ -n "$(echo $opt | grep $fnd)" ]; then
-	rep=$(echo $(echo $opt | tr ',' '\n' | grep -v $fnd) | tr ' ' ',')
-	sed -i "$lnr s/$opt/$rep/" /etc/fstab
-	systemctl daemon-reload
-	mount -o remount "$mnt"
+opt=""
+if [ -n "$lnr" ]; then
+	opt=$(sed -n ${lnr}p /etc/fstab | awk '{print $4}')
+fi
+
+if [ -n "$opt" ]; then
+	if [[ "$fs_type" == "xfs" ]]; then
+		quota_pattern='^(uquota|gquota|pquota|prjquota|usrquota|grpquota|usrjquota=.*|grpjquota=.*|jqfmt=.*)$'
+	else
+		quota_pattern='^(usrquota|grpquota|usrjquota=.*|grpjquota=.*|jqfmt=.*)$'
+	fi
+
+	if echo "$opt" | tr ',' '\n' | grep -Eq "$quota_pattern"; then
+		log_history "$fs_type filesystem on $mnt. Removing quota options from /etc/fstab."
+		preserved=$(echo "$opt" | tr ',' '\n' | grep -vE "$quota_pattern" | paste -sd ',' -)
+		if [ -z "$preserved" ]; then
+			preserved="defaults"
+		fi
+		sed -i "$lnr s|$opt|$preserved|" /etc/fstab
+		systemctl daemon-reload
+		mount -o remount "$mnt"
+	fi
 fi
 
 # Disabling group and user quota

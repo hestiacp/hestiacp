@@ -738,13 +738,9 @@ is_localpart_format_valid() {
 
 # Username / ftp username format validator
 is_user_format_valid() {
-	# Reject purely numeric names like "123"
-	if [[ "$1" =~ ^[0-9]+$ ]]; then
-		check_result "$E_INVALID" "invalid $2 format :: $1"
-	fi
-
 	if [ ${#1} -eq 1 ]; then
-		if ! [[ "$1" =~ ^^[[:alnum:]]$ ]]; then
+		# Reject purely numeric names like "123"
+		if ! [[ "$1" =~ ^[[:alnum:]]$ ]]; then
 			check_result "$E_INVALID" "invalid $2 format :: $1"
 		fi
 	else

@@ -40,7 +40,7 @@ if [[ "$ID" == "debian" && "$VERSION_ID" == "13" && "$dovecot_version" = "2.4" ]
 		upgrade_config_set_value 'UPGRADE_REBUILD_USERS' 'true'
 		# if sieve is installed, replace dovecot conf files
 		HAS_DOVECOT_SIEVE_INSTALLED=$(dpkg --get-selections dovecot-managesieved | grep -c dovecot-managesieved)
-		if [ "$HAS_DOVECOT_SIEVE_INSTALLED" = "0" ]; then
+		if [ "$HAS_DOVECOT_SIEVE_INSTALLED" = "1" ]; then
 			# dovecot.conf install
 			sed -i -E 's/protocols = imap/protocols = sieve imap/' /etc/dovecot/dovecot.conf
 			#  10-master.conf

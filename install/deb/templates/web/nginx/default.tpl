@@ -17,6 +17,7 @@ server {
 	}
 
 	location / {
+		proxy_set_header Authorization $http_authorization;
 		proxy_pass http://%ip%:%web_port%;
 
 		location ~* ^.+\.(%proxy_extensions%)$ {
@@ -31,6 +32,7 @@ server {
 	}
 
 	location @fallback {
+		proxy_set_header Authorization $http_authorization;
 		proxy_pass http://%ip%:%web_port%;
 	}
 

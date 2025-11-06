@@ -80,16 +80,7 @@ class WordPressSetup extends BaseSetup
             '--path=' . $target->getDocRoot(),
         ]);
 
-        $wpPasswordBcryptContents = file_get_contents(
-            'https://raw.githubusercontent.com/roots/wp-password-bcrypt/master/wp-password-bcrypt.php',
-        );
 
-        $this->appcontext->addDirectory($target->getDocRoot('wp-content/mu-plugins/'));
-
-        $this->appcontext->createFile(
-            $target->getDocRoot('wp-content/mu-plugins/wp-password-bcrypt.php'),
-            $wpPasswordBcryptContents,
-        );
 
         // WordPress CLI seems to have a bug that when site name has a space it will be seen as an
         // extra argument. Even when properly escaped. For now just install with install.php

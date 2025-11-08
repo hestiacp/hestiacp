@@ -748,26 +748,43 @@ add_mail_ssl_config() {
 	# Check if using custom / wildcard mail certificate
 	wildcard_domain="\\*.$(echo "$domain" | cut -f 1 -d . --complement)"
 	mail_cert_match=$($BIN/v-list-mail-domain-ssl $user $domain | awk '/SUBJECT|ALIASES/' | grep -wE " $domain| $wildcard_domain")
+	dovecot_version="$(dovecot --version | cut -f -2 -d .)"
 
 	if [ -n "$mail_cert_match" ]; then
-		# Add domain SSL configuration to dovecot
-		echo "" >> /etc/dovecot/conf.d/domains/$domain.conf
-		echo "local_name $domain {" >> /etc/dovecot/conf.d/domains/$domain.conf
-		echo "  ssl_cert = <$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem" >> /etc/dovecot/conf.d/domains/$domain.conf
-		echo "  ssl_key = <$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.key" >> /etc/dovecot/conf.d/domains/$domain.conf
-		echo "}" >> /etc/dovecot/conf.d/domains/$domain.conf
-
+		if [[ "$dovecot_version" = "2.4" ]]; then
+			# Add domain SSL configuration to dovecot
+			echo "" >> /etc/dovecot/conf.d/domains/$domain.conf
+			echo "local_name $domain {" >> /etc/dovecot/conf.d/domains/$domain.conf
+			echo "  ssl_server_cert_file = $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem" >> /etc/dovecot/conf.d/domains/$domain.conf
+			echo "  ssl_server_key_file = $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.key" >> /etc/dovecot/conf.d/domains/$domain.conf
+			echo "}" >> /etc/dovecot/conf.d/domains/$domain.conf
+		else
+			echo "" >> /etc/dovecot/conf.d/domains/$domain.conf
+			echo "local_name $domain {" >> /etc/dovecot/conf.d/domains/$domain.conf
+			echo "  ssl_cert = <$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem" >> /etc/dovecot/conf.d/domains/$domain.conf
+			echo "  ssl_key = <$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.key" >> /etc/dovecot/conf.d/domains/$domain.conf
+			echo "}" >> /etc/dovecot/conf.d/domains/$domain.conf
+		fi
 		# Add domain SSL configuration to exim4
 		ln -s $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem $HESTIA/ssl/mail/$domain.crt
 		ln -s $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.key $HESTIA/ssl/mail/$domain.key
 	fi
 
 	# Add domain SSL configuration to dovecot
-	echo "" >> /etc/dovecot/conf.d/domains/$domain.conf
-	echo "local_name mail.$domain {" >> /etc/dovecot/conf.d/domains/$domain.conf
-	echo "  ssl_cert = <$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem" >> /etc/dovecot/conf.d/domains/$domain.conf
-	echo "  ssl_key = <$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.key" >> /etc/dovecot/conf.d/domains/$domain.conf
-	echo "}" >> /etc/dovecot/conf.d/domains/$domain.conf
+	if [[ "$dovecot_version" = "2.4" ]]; then
+		# Add domain SSL configuration to dovecot
+		echo "" >> /etc/dovecot/conf.d/domains/$domain.conf
+		echo "local_name mail.$domain {" >> /etc/dovecot/conf.d/domains/$domain.conf
+		echo "  ssl_server_cert_file = $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem" >> /etc/dovecot/conf.d/domains/$domain.conf
+		echo "  ssl_server_key_file = $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.key" >> /etc/dovecot/conf.d/domains/$domain.conf
+		echo "}" >> /etc/dovecot/conf.d/domains/$domain.conf
+	else
+		echo "" >> /etc/dovecot/conf.d/domains/$domain.conf
+		echo "local_name mail.$domain {" >> /etc/dovecot/conf.d/domains/$domain.conf
+		echo "  ssl_cert = <$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem" >> /etc/dovecot/conf.d/domains/$domain.conf
+		echo "  ssl_key = <$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.key" >> /etc/dovecot/conf.d/domains/$domain.conf
+		echo "}" >> /etc/dovecot/conf.d/domains/$domain.conf
+	fi
 
 	# Add domain SSL configuration to exim4
 	ln -s $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem $HESTIA/ssl/mail/mail.$domain.crt

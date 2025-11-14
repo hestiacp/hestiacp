@@ -530,7 +530,7 @@ get_user_value() {
 # Update user value in user.conf
 update_user_value() {
 	key="${2//$/}"
-	lnr=$(grep -n "^$key='" $HESTIA/data/users/$1/user.conf | cut -f 1 -d ':')
+	lnr=$(grep -m 1 -n "^$key='" $HESTIA/data/users/$1/user.conf | cut -f 1 -d ':')
 	if [ -n "$lnr" ]; then
 		sed -i "$lnr d" $HESTIA/data/users/$1/user.conf
 		sed -i "$lnr i\\$key='${3}'" $HESTIA/data/users/$1/user.conf
@@ -642,7 +642,7 @@ recalc_user_disk_usage() {
 		sed -i "s/U_DISK_DB='$d'/U_DISK_DB='$usage'/g" $USER_DATA/user.conf
 		u_usage=$((u_usage + usage))
 	fi
-	usage=$(grep 'U_DISK_DIRS=' $USER_DATA/user.conf | cut -f 2 -d "'")
+	usage=$(grep -m 1 'U_DISK_DIRS=' $USER_DATA/user.conf | cut -f 2 -d "'")
 	u_usage=$((u_usage + usage))
 	old=$(grep "U_DISK='" $USER_DATA/user.conf | cut -f 2 -d \')
 	sed -i "s/U_DISK='$old'/U_DISK='$u_usage'/g" $USER_DATA/user.conf

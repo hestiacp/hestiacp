@@ -29,3 +29,10 @@ if [ "$MAIL_SYSTEM" = "exim4" ]; then
 	#shellcheck disable=SC2016
 	sed -i -E '/^\s*spam\s*=\s*debian-spamd:true$/{N;/\n\s*condition\s*=\s*\$\{if eq\{\$acl_m3\}\{yes\}\{yes\}\{no\}\}$/{s/(.*)\n(.*)/\2\n\1/}}' /etc/exim4/exim4.conf.template
 fi
+
+#Add ESMTP to smtp_banner directive in Exim
+if [ "$MAIL_SYSTEM" = "exim4" ]; then
+	echo "[ * ] Adding ESMTP to Exim smtp banner"
+	#shellcheck disable=SC2016
+	sed -i 's/^smtp_banner = $smtp_active_hostname.*/smtp_banner = $smtp_active_hostname ESMTP/' /etc/exim4/exim4.conf.template
+fi

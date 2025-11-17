@@ -9,7 +9,7 @@
 #SPAM_REJECT_SCORE = 100
 #CLAMD = yes
 
-smtp_banner = $smtp_active_hostname
+smtp_banner = $smtp_active_hostname ESMTP
 smtp_active_hostname = ${lookup dnsdb{>: defer_never,ptr=$interface_address}{${listextract{1}{$value}}}{$primary_hostname}}
 add_environment = <; PATH=/bin:/usr/bin
 keep_environment =

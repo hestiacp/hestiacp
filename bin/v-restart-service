@@ -76,6 +76,7 @@ for service in $service_list; do
 		"$service" = "php8.2-fpm" -o \
 		"$service" = "php8.3-fpm" -o \
 		"$service" = "php8.4-fpm" -o \
+		"$service" = "php8.5-fpm" -o \
 		"$service" = "proftpd" -o \
 		"$service" = "ssh" -o \
 		"$service" = "fail2ban" ]; then

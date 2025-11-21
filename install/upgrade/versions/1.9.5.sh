@@ -36,3 +36,10 @@ if [ "$MAIL_SYSTEM" = "exim4" ]; then
 	#shellcheck disable=SC2016
 	sed -i 's/^smtp_banner = $smtp_active_hostname.*/smtp_banner = $smtp_active_hostname ESMTP/' /etc/exim4/exim4.conf.template
 fi
+
+# Ensure netplan configs with hestia in the name have restrictive permissions
+for netplan_file in /etc/netplan/*hestia*; do
+	[ -e "$netplan_file" ] || break
+	echo "[ * ] Setting permissions on '$netplan_file' to 600"
+	chmod 600 "$netplan_file"
+done

@@ -1,0 +1,91 @@
+#!/bin/bash
+# info: revoke Cloudflare Origin CA certificate for a web domain
+# options: USER DOMAIN [RESTART]
+#
+# example: v-delete-cloudflare-origin-cert admin example.com yes
+
+user=$1
+domain=$2
+restart=$3
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
+source $HESTIA/func/domain.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+check_args '2' "$#" 'USER DOMAIN [RESTART]'
+is_format_valid 'user' 'domain' 'restart'
+is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
+is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
+is_object_valid 'web' 'DOMAIN' "$domain"
+is_object_unsuspended 'web' 'DOMAIN' "$domain"
+
+check_hestia_demo_mode
+
+get_domain_values 'web'
+certificate_id="$CF_ORIGIN_CERT_ID"
+restart_flag=${restart:-no}
+
+cf_auth_type=${CF_ORIGIN_AUTH_TYPE:-token}
+cf_api_base=${CF_ORIGIN_API_BASE:-https://api.cloudflare.com/client/v4}
+
+declare -a CF_HEADERS
+CF_HEADERS+=("-H" "Content-Type: application/json")
+cf_api_available="no"
+
+case "$cf_auth_type" in
+        token)
+                if [ -n "$CF_ORIGIN_API_TOKEN" ]; then
+                        CF_HEADERS+=("-H" "Authorization: Bearer $CF_ORIGIN_API_TOKEN")
+                        cf_api_available="yes"
+                fi
+                ;;
+        service_key)
+                if [ -n "$CF_ORIGIN_SERVICE_KEY" ]; then
+                        CF_HEADERS+=("-H" "X-Auth-User-Service-Key: $CF_ORIGIN_SERVICE_KEY")
+                        if [ -n "$CF_ORIGIN_AUTH_EMAIL" ]; then
+                                CF_HEADERS+=("-H" "X-Auth-Email: $CF_ORIGIN_AUTH_EMAIL")
+                        fi
+                        cf_api_available="yes"
+                fi
+                ;;
+esac
+
+cloudflare_api() {
+        local method=$1
+        local endpoint=$2
+        local raw
+        raw=$(curl --silent --show-error --request "$method" "$cf_api_base$endpoint" "${CF_HEADERS[@]}" --write-out '\n%{http_code}')
+        local exit_code=$?
+        if [ $exit_code -ne 0 ]; then
+                return $exit_code
+        fi
+        cf_http_code=$(echo "$raw" | tail -n1)
+        echo "$raw" | sed '$d'
+        return 0
+}
+
+if [ -n "$certificate_id" ] && [ "$cf_api_available" = "yes" ]; then
+        response=$(cloudflare_api DELETE "/certificates/$certificate_id")
+        if [ $? -eq 0 ]; then
+                log_event "$OK" "$ARGUMENTS"
+        else
+                log_event "$E_CONNECT" "Failed to revoke Cloudflare certificate $certificate_id ($domain)"
+        fi
+fi
+
+$BIN/v-delete-web-domain-ssl "$user" "$domain" "$restart_flag" >/dev/null 2>&1
+check_result $? "Failed to delete SSL for $domain"
+
+update_object_value 'web' 'DOMAIN' "$domain" '$CF_ORIGIN_CERT' 'no'
+update_object_value 'web' 'DOMAIN' "$domain" '$CF_ORIGIN_CERT_ID' ''
+
+$BIN/v-log-action "$user" "Warning" "Web" "Cloudflare Origin certificate removed (Domain: $domain)."
+log_event "$OK" "$ARGUMENTS"
+exit

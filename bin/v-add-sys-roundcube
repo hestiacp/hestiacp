@@ -63,13 +63,23 @@ if [ -d "/usr/share/roundcube" ]; then
 fi
 
 # Get current version
-if [ -f "/var/lib/roundcube/index.php" ]; then
-	version=$(cat $RC_INSTALL_DIR/index.php | grep -o -E '[0-9].[0-9].[0-9]+' | head -1)
+if [ -f "$RC_INSTALL_DIR/program/include/iniset.php" ]; then
+	version="$(grep RCMAIL_VERSION "$RC_INSTALL_DIR/program/include/iniset.php" | cut -d "'" -f 4)"
 	if [ "$version" == "$rc_v" ]; then
 		echo "Error: Installed version ($version) is equal to the available version ($rc_v)"
 		exit 2
 	else
 		UPDATE="yes"
+	fi
+fi
+
+# Roundcube 1.7 requires PHP 8.1 or greater
+if grep -q '^1\.7' <<< "$rc_v" &> /dev/null; then
+	php_min="8.1"
+	php_ver="$("$HESTIA/bin/v-list-default-php" plain)"
+	if dpkg --compare-versions "$php_ver" "lt" "$php_min"; then
+		echo "Error: PHP $php_ver < $php_min (Roundcube $rc_v requires PHP >= $php_min)"
+		exit 2
 	fi
 fi
 

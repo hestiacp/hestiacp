@@ -46,8 +46,13 @@ done
 
 # Fix: Hestia can't restart SpamAssassin from the Web UI because it tries to restart
 # the 'spamassassin' service, but in Ubuntu 24.04 the service name is 'spamd'
-release="$(lsb_release -s -r)"
-distid="$(lsb_release -s -i)"
-if [[ "$release" = "24.04" ]] && [[ "$distid" = "Ubuntu" ]] && [[ -n "$ANTISPAM_SYSTEM" ]]; then
-	"$HESTIA"/bin/v-change-sys-config-value "ANTISPAM_SYSTEM" "spamd"
+if [[ -n "$ANTISPAM_SYSTEM" ]]; then
+	spam_service="$(systemctl list-unit-files --type=service | grep -E '(^spamd|^spamassassin)\.service')"
+	if grep -q '^spamd\.service' <<< "$spam_service"; then
+		antispam_detected="spamd"
+		"$HESTIA"/bin/v-change-sys-config-value ANTISPAM_SYSTEM "$antispam_detected"
+	elif grep -q '^spamassassin\.service' <<< "$spam_service"; then
+		antispam_detected="spamassassin"
+		"$HESTIA"/bin/v-change-sys-config-value ANTISPAM_SYSTEM "$antispam_detected"
+	fi
 fi

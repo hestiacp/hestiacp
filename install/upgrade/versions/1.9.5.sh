@@ -55,33 +55,32 @@ if [[ -n "$ANTISPAM_SYSTEM" ]]; then
 	fi
 fi
 
-# Ensure Node.js >=20.x
+# Ensure Node.js >=20.x (only if Node.js is already installed)
 min_node_major_version=20
-installed_node_major_version=0
 
 if command -v node > /dev/null 2>&1; then
 	installed_node_major_version=$(node -v | sed 's/^v//' | cut -d'.' -f1)
-fi
-if [ "$installed_node_major_version" -lt "$min_node_major_version" ]; then
-	echo "[ * ] Installing Node.js 20.x"
-	add_upgrade_message "Upgrading Node.js to version 20.x - detected version: $installed_node_major_version.x"
+	if [ "$installed_node_major_version" -lt "$min_node_major_version" ]; then
+		echo "[ * ] Installing Node.js 20.x"
+		add_upgrade_message "Upgrading Node.js to version 20.x - detected version: $installed_node_major_version.x"
 
-	apt_sources_dir="/etc/apt/sources.list.d"
-	mkdir -p "$apt_sources_dir"
-	mkdir -p /usr/share/keyrings
+		apt_sources_dir="/etc/apt/sources.list.d"
+		mkdir -p "$apt_sources_dir"
+		mkdir -p /usr/share/keyrings
 
-	ARCH=$(dpkg --print-architecture 2> /dev/null)
-	if [ -z "$ARCH" ]; then
-		case "$(uname -m)" in
-			x86_64) ARCH="amd64" ;;
-			aarch64 | arm64) ARCH="arm64" ;;
-			*) ARCH="amd64" ;;
-		esac
+		ARCH=$(dpkg --print-architecture 2> /dev/null)
+		if [ -z "$ARCH" ]; then
+			case "$(uname -m)" in
+				x86_64) ARCH="amd64" ;;
+				aarch64 | arm64) ARCH="arm64" ;;
+				*) ARCH="amd64" ;;
+			esac
+		fi
+
+		echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/nodejs.gpg] https://deb.nodesource.com/node_${min_node_major_version}.x nodistro main" > "$apt_sources_dir/nodejs.list"
+		curl -s https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor | tee /usr/share/keyrings/nodejs.gpg > /dev/null 2>&1
+		apt-get -qq update
+		apt-get -y install nodejs
+		add_upgrade_message "Node.js was upgraded to 20.x to support the latest frontend tooling requirements."
 	fi
-
-	echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/nodejs.gpg] https://deb.nodesource.com/node_${min_node_major_version}.x nodistro main" > "$apt_sources_dir/nodejs.list"
-	curl -s https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor | tee /usr/share/keyrings/nodejs.gpg > /dev/null 2>&1
-	apt-get -qq update
-	apt-get -y install nodejs
-	add_upgrade_message "Node.js was upgraded to 20.x to support the latest frontend tooling requirements."
 fi

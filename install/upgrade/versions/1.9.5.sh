@@ -61,8 +61,9 @@ min_node_major_version=20
 if command -v node > /dev/null 2>&1; then
 	installed_node_major_version=$(node -v | sed 's/^v//' | cut -d'.' -f1)
 	if [ "$installed_node_major_version" -lt "$min_node_major_version" ]; then
-		echo "[ * ] Installing Node.js 20.x"
-		add_upgrade_message "Upgrading Node.js to version 20.x - detected version: $installed_node_major_version.x"
+		MESSAGE="Detected Node.js version is $installed_node_major_version.x, minimum required version is $min_node_major_version.x. Upgrading Node.js to version $min_node_major_version.x."
+		echo "[ * ] $MESSAGE"
+		add_upgrade_message "$MESSAGE"
 
 		apt_sources_dir="/etc/apt/sources.list.d"
 		mkdir -p "$apt_sources_dir"
@@ -81,6 +82,6 @@ if command -v node > /dev/null 2>&1; then
 		curl -s https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor | tee /usr/share/keyrings/nodejs.gpg > /dev/null 2>&1
 		apt-get -qq update
 		apt-get -y install nodejs
-		add_upgrade_message "Node.js was upgraded to 20.x to support the latest frontend tooling requirements."
+		add_upgrade_message "Node.js was upgraded to 20.x"
 	fi
 fi

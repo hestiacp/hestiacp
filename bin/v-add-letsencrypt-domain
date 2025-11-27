@@ -305,7 +305,7 @@ for auth in $authz; do
 			if [ "$WEB_SYSTEM" = 'nginx' ] || [ "$PROXY_SYSTEM" = 'nginx' ]; then
 				conf="$HOMEDIR/$user/conf/web/$domain/nginx.conf_letsencrypt"
 				sconf="$HOMEDIR/$user/conf/web/$domain/nginx.ssl.conf_letsencrypt"
-				echo 'location ~ "^/\.well-known/acme-challenge/([-_A-Za-z0-9]+)$" {' \
+				echo 'location ~ "^/\.well-known/acme-challenge/(.*)$" {' \
 					> $conf
 				echo '    default_type text/plain;' >> $conf
 				echo '    return 200 "$1.'$THUMB'";' >> $conf
@@ -338,7 +338,7 @@ for auth in $authz; do
 			if [ "$WEB_SYSTEM" = 'nginx' ] || [ "$PROXY_SYSTEM" = 'nginx' ]; then
 				conf="$HOMEDIR/$user/conf/mail/$root_domain/nginx.conf_letsencrypt"
 				sconf="$HOMEDIR/$user/conf/mail/$root_domain/nginx.ssl.conf_letsencrypt"
-				echo 'location ~ "^/\.well-known/acme-challenge/([-_A-Za-z0-9]+)$" {' \
+				echo 'location ~ "^/\.well-known/acme-challenge/(.*)$" {' \
 					> $conf
 				echo '    default_type text/plain;' >> $conf
 				echo '    return 200 "$1.'$THUMB'";' >> $conf

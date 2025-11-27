@@ -14,8 +14,9 @@
 ipv4_cidr=$1
 chain=$(echo $2 | tr '[:lower:]' '[:upper:]')
 
-# Defining absolute path for iptables and modprobe
+# Defining absolute path for iptables and fail2ban-client
 iptables="/sbin/iptables"
+f2bcli="/usr/bin/fail2ban-client"
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -59,6 +60,11 @@ if [ "$chain" == "ALL" ]; then
 		sed -i "/IP='$sip' CHAIN='$CHAIN'/d" $conf
 		b=$($iptables -L fail2ban-$CHAIN --line-number -n | grep -w $ipv4_cidr | awk '{print $1}')
 		$iptables -D fail2ban-$CHAIN $b 2> /dev/null
+		for f2bjail in $("$f2bcli" status | grep -i 'Jail list:' | cut -d':' -f2- | sed -E 's/\s*//g' | tr ',' ' '); do
+			if "$f2bcli" get "$f2bjail" actions | grep -Eq "^hestia-$CHAIN" 2> /dev/null; then
+				"$f2bcli" set "$f2bjail" unbanip "$sip" &> /dev/null
+			fi
+		done
 	done
 else
 	# Checking ip in banlist
@@ -72,6 +78,12 @@ else
 	sed -i "/IP='$sip' CHAIN='$chain'/d" $conf
 	b=$($iptables -L fail2ban-$chain --line-number -n | grep -w $ipv4_cidr | awk '{print $1}')
 	$iptables -D fail2ban-$chain $b 2> /dev/null
+	for f2bjail in $("$f2bcli" status | grep -i 'Jail list:' | cut -d':' -f2- | sed -E 's/\s*//g' | tr ',' ' '); do
+		if "$f2bcli" get "$f2bjail" actions | grep -Eq "^hestia-$chain" 2> /dev/null; then
+			"$f2bcli" set "$f2bjail" unbanip "$sip" &> /dev/null
+		fi
+	done
+
 fi
 
 # Changing permissions

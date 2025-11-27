@@ -43,3 +43,14 @@ for netplan_file in /etc/netplan/*hestia*; do
 	echo "[ * ] Setting permissions on '$netplan_file' to 600"
 	chmod 600 "$netplan_file"
 done
+
+# Fix: Hestia can't restart SpamAssassin from the Web UI because it tries to restart
+# the 'spamassassin' service, but in Ubuntu 24.04 the service name is 'spamd'
+if [[ -n "$ANTISPAM_SYSTEM" ]]; then
+	installed_services="$(systemctl list-units --type=service 2>&1)"
+	if [[ $installed_services == *spamassassin.service* ]]; then
+		write_config_value "ANTISPAM_SYSTEM" "spamassassin"
+	elif [[ $installed_services == *spamd.service* ]]; then
+		write_config_value "ANTISPAM_SYSTEM" "spamd"
+	fi
+fi

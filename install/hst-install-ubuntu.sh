@@ -1380,7 +1380,12 @@ if [ "$exim" = 'yes' ]; then
 		write_config_value "ANTIVIRUS_SYSTEM" "clamav-daemon"
 	fi
 	if [ "$spamd" = 'yes' ]; then
-		write_config_value "ANTISPAM_SYSTEM" "spamassassin"
+		release_short="$(cut -d '.' -f1 <<< "$release")"
+		if [[ -n "$release_short" ]] && [[ $release_short -lt 24 ]]; then
+			write_config_value "ANTISPAM_SYSTEM" "spamassassin"
+		else
+			write_config_value "ANTISPAM_SYSTEM" "spamd"
+		fi
 	fi
 	if [ "$dovecot" = 'yes' ]; then
 		write_config_value "IMAP_SYSTEM" "dovecot"

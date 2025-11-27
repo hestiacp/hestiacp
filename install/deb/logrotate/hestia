@@ -6,6 +6,6 @@
     create 0600 root root
     sharedscripts
     postrotate
-        systemctl reload hestia.service >/dev/null 2>&1 || true
+        systemctl restart hestia.service >/dev/null 2>&1 || true
     endscript
 }

@@ -61,7 +61,9 @@ function moveFocusLeftRight(direction) {
 		index = menuItems.indexOf(currentActive);
 	}
 
-	menuItems.forEach((item) => item.classList.remove('focus'));
+	menuItems.forEach((item) => {
+		item.classList.remove('focus');
+	});
 
 	if (direction === 'left') {
 		if (index > 0) {

@@ -61,15 +61,17 @@ export default function handleListSorting() {
 				const bAttr = b.getAttribute(`data-${state.sort_par}`);
 
 				if (state.sort_as_int) {
-					const aInt = Number.parseInt(aAttr);
-					const bInt = Number.parseInt(bAttr);
+					const aInt = Number.parseInt(aAttr, 10);
+					const bInt = Number.parseInt(bAttr, 10);
 					return aInt >= bInt ? state.sort_direction : state.sort_direction * -1;
 				}
 
 				return aAttr <= bAttr ? state.sort_direction : state.sort_direction * -1;
 			});
 
-			units.forEach((unit) => unitsContainer.appendChild(unit));
+			units.forEach((unit) => {
+				unitsContainer.appendChild(unit);
+			});
 		});
 	});
 }

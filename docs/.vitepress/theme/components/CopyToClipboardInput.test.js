@@ -1,3 +1,4 @@
+// biome-ignore assist/source/organizeImports: Disable organize imports check in Biome
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, fireEvent, screen, cleanup, waitFor } from '@testing-library/vue';
 import CopyToClipboardInput from './CopyToClipboardInput.vue';

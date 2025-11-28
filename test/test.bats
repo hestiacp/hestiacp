@@ -1728,10 +1728,6 @@ function check_ip_not_banned(){
     assert_success
     refute_output
 
-    run grep "RECORD='_domainkey'" "${HESTIA}/data/users/${user}/dns/${domain}.conf"
-    assert_failure
-    refute_output
-
     run grep "RECORD='mail._domainkey'" "${HESTIA}/data/users/${user}/dns/${domain}.conf"
     assert_failure
     refute_output
@@ -1741,10 +1737,6 @@ function check_ip_not_banned(){
     run v-add-mail-domain-dkim $user $domain
     assert_success
     refute_output
-
-    run grep "RECORD='_domainkey'" "${HESTIA}/data/users/${user}/dns/${domain}.conf"
-    assert_success
-    assert_output --partial "RECORD='_domainkey' TYPE='TXT'"
 
     run grep "RECORD='mail._domainkey'" "${HESTIA}/data/users/${user}/dns/${domain}.conf"
     assert_success

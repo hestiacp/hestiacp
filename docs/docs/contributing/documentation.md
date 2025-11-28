@@ -4,7 +4,7 @@ The documentation is built using [VitePress](https://vitepress.vuejs.org). There
 
 ## Requirements
 
-- Node.js 20 or higher
+- Node.js 16 or higher
 - A code editor with Vue and Markdown support. We suggest [Visual Studio Code](https://code.visualstudio.com).
 
 ## Viewing your changes locally

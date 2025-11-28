@@ -77,6 +77,31 @@ if [ "$type" = "NoSupport" ]; then
 	no_support_message
 fi
 
+ensure_utf8_locale() {
+	local locale_file="/etc/default/locale"
+
+	if locale 2> /dev/null | grep -qi 'utf-8'; then
+		return
+	fi
+
+	echo "[ * ] Enabling UTF-8 locale support via C.UTF-8"
+	if ! locale-gen C.UTF-8 > /dev/null 2>&1; then
+		echo "[ ! ] Failed to generate C.UTF-8 locale. Continuing."
+	fi
+
+	if [ ! -f "$locale_file" ]; then
+		touch "$locale_file"
+	fi
+
+	if ! update-locale LANG=C.UTF-8 > /dev/null 2>&1; then
+		echo "[ ! ] Failed to update LANG in $locale_file"
+	fi
+
+	export LANG=C.UTF-8
+}
+
+ensure_utf8_locale
+
 check_wget_curl() {
 	# Check wget
 	if [ -e '/usr/bin/wget' ]; then

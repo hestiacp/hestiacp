@@ -32,15 +32,13 @@ ensure_utf8_locale() {
 
 	echo "[ * ] Enabling UTF-8 locale support via C.UTF-8"
 	if ! locale-gen C.UTF-8 > /dev/null 2>&1; then
-		echo "[ ! ] Failed to generate C.UTF-8 locale. Continuing."
-	fi
-
-	if [ ! -f "$locale_file" ]; then
-		touch "$locale_file"
+		echo "[ ! ] Failed to generate C.UTF-8 locale. Leaving existing locale untouched."
+		return
 	fi
 
 	if ! update-locale LANG=C.UTF-8 > /dev/null 2>&1; then
-		echo "[ ! ] Failed to update LANG in $locale_file"
+		echo "[ ! ] Failed to update LANG in $locale_file. Leaving existing locale untouched."
+		return
 	fi
 
 	export LANG=C.UTF-8

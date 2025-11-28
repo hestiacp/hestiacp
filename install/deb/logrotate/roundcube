@@ -3,5 +3,5 @@
     monthly
     missingok
     notifempty
-    create 644 www-data www-data
+    create 0640 hestiamail www-data
 }

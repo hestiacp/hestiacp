@@ -11,7 +11,7 @@
 
 .u-hidden-visually {
 	border: 0 !important;
-	clip: rect(1px, 1px, 1px, 1px) !important;
+	clip-path: inset(1px) !important;
 	height: 1px !important;
 	overflow: hidden !important;
 	padding: 0 !important;
@@ -58,7 +58,7 @@
 }
 
 .u-text-break {
-	word-break: break-word !important;
+	overflow-wrap: break-word !important;
 }
 
 .u-text-no-wrap {

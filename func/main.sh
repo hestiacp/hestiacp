@@ -1057,6 +1057,23 @@ is_comment_format_valid() {
 	fi
 }
 
+# Backend address validator (for reverse proxy configuration)
+# Accepts: IP:port, hostname:port, http://IP:port, https://hostname:port
+is_backend_address_format_valid() {
+	if [ -z "$1" ]; then
+		return 0  # Empty is valid (optional field)
+	fi
+	local addr="$1"
+	# Normalize: add http:// if no protocol specified
+	if [[ ! "$addr" =~ ^https?:// ]]; then
+		addr="http://$addr"
+	fi
+	# Validate URL format with optional port
+	if ! [[ "$addr" =~ ^https?://[a-zA-Z0-9.-]+(:[0-9]+)?(/.*)?$ ]]; then
+		check_result "$E_INVALID" "invalid backend address format :: $1"
+	fi
+}
+
 # Cron validator
 is_cron_format_valid() {
 	limit=59

@@ -1,6 +1,6 @@
 #=========================================================================#
-# Default Web Domain Template                                             #
-# DO NOT MODIFY THIS FILE! CHANGES WILL BE LOST WHEN REBUILDING DOMAINS   #
+# Reverse Proxy Web Domain Template                                       #
+# Designed for proxying to backend applications (Node.js, Python, etc.)   #
 # https://hestiacp.com/docs/server-administration/web-templates.html      #
 #=========================================================================#
 
@@ -17,31 +17,19 @@ server {
 	}
 
 	location / {
-		proxy_set_header Authorization $http_authorization;
+		proxy_pass %backend_address%;
+		proxy_http_version 1.1;
+		proxy_set_header Upgrade $http_upgrade;
+		proxy_set_header Connection "upgrade";
 		proxy_set_header Host $host;
 		proxy_set_header X-Real-IP $remote_addr;
 		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
 		proxy_set_header X-Forwarded-Proto $scheme;
-		proxy_pass %backend_address%;
-
-		location ~* ^.+\.(%proxy_extensions%)$ {
-			try_files  $uri @fallback;
-
-			root       %docroot%;
-			access_log /var/log/%web_system%/domains/%domain%.log combined;
-			access_log /var/log/%web_system%/domains/%domain%.bytes bytes;
-
-			expires    max;
-		}
-	}
-
-	location @fallback {
-		proxy_set_header Authorization $http_authorization;
-		proxy_set_header Host $host;
-		proxy_set_header X-Real-IP $remote_addr;
-		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-		proxy_set_header X-Forwarded-Proto $scheme;
-		proxy_pass %backend_address%;
+		proxy_set_header X-Forwarded-Host $host;
+		proxy_set_header X-Forwarded-Port $server_port;
+		proxy_cache_bypass $http_upgrade;
+		proxy_read_timeout 86400s;
+		proxy_send_timeout 86400s;
 	}
 
 	location /error/ {
@@ -50,3 +38,4 @@ server {
 
 	include %home%/%user%/conf/web/%domain%/nginx.conf_*;
 }
+

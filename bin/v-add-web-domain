@@ -1,8 +1,9 @@
 #!/bin/bash
 # info: add web domain
-# options: USER DOMAIN [IP] [RESTART] [ALIASES] [PROXY_EXTENSIONS]
+# options: USER DOMAIN [IP] [RESTART] [ALIASES] [PROXY_EXTENSIONS] [BACKEND_ADDRESS]
 #
 # example: v-add-web-domain admin wonderland.com 192.18.22.43 yes www.wonderland.com
+# example: v-add-web-domain admin app.example.com 192.18.22.43 yes '' '' 'http://127.0.0.1:3000'
 #
 # This function adds virtual host to a server. In cases when ip is
 # undefined in the script, "default" template will be used. The alias of
@@ -10,6 +11,8 @@
 # "none" is transmited as argument. If ip have associated dns name, this
 # domain will also get the alias domain-tpl.$ipname. An alias with the ip
 # name is useful during the site testing while dns isn't moved to server yet.
+# Optionally, a backend address can be specified for reverse proxy configuration
+# (e.g., http://127.0.0.1:3000) which will be used in Nginx templates.
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #
@@ -23,6 +26,7 @@ ip=$3
 restart=$4 # will be moved to the end soon
 aliases=$5
 proxy_ext=$6
+backend_address=$7
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -49,8 +53,15 @@ domain_utf=$(idn2 --quiet -d "$domain_idn")
 #----------------------------------------------------------#
 
 is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
-check_args '2' "$#" 'USER DOMAIN [IP] [RESTART] [ALIASES] [PROXY_EXTENSIONS]'
+check_args '2' "$#" 'USER DOMAIN [IP] [RESTART] [ALIASES] [PROXY_EXTENSIONS] [BACKEND_ADDRESS]'
 is_format_valid 'user' 'domain' 'aliases' 'ip' 'proxy_ext' 'restart'
+
+# Normalize backend address (add http:// if only IP:port or hostname:port provided)
+if [ -n "$backend_address" ]; then
+	if [[ ! "$backend_address" =~ ^https?:// ]]; then
+		backend_address="http://$backend_address"
+	fi
+fi
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 is_package_full 'WEB_DOMAINS'
@@ -180,6 +191,9 @@ else
 	fi
 fi
 
+# Set backend address for template processing
+BACKEND_ADDRESS="$backend_address"
+
 # Preparing domain variables
 prepare_web_domain_values
 
@@ -241,7 +255,7 @@ date=$(echo "$time_n_date" | cut -f 2 -d \ )
 echo "DOMAIN='$domain' IP='$ip' IP6='' CUSTOM_DOCROOT='' ALIAS='$ALIAS' TPL='$WEB_TEMPLATE'\
  SSL='no' SSL_FORCE='no' SSL_HOME='same' LETSENCRYPT='no' FTP_USER='' FTP_MD5=''\
  BACKEND='$BACKEND_TEMPLATE' PROXY='$PROXY_TEMPLATE' PROXY_EXT='$PROXY_EXT'\
- STATS='' STATS_USER='' STATS_CRYPT='' U_DISK='0' U_BANDWIDTH='0'\
+ BACKEND_ADDRESS='$backend_address' STATS='' STATS_USER='' STATS_CRYPT='' U_DISK='0' U_BANDWIDTH='0'\
  SUSPENDED='no' TIME='$time' DATE='$date'" >> $USER_DATA/web.conf
 
 syshealth_repair_web_config

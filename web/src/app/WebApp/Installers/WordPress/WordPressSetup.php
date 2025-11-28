@@ -8,8 +8,6 @@ use Hestia\System\Util;
 use Hestia\WebApp\BaseSetup;
 use Hestia\WebApp\InstallationTarget\InstallationTarget;
 
-use function file_get_contents;
-
 class WordPressSetup extends BaseSetup
 {
     protected array $info = [

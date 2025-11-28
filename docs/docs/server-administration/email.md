@@ -121,7 +121,7 @@ No, Cloudflare’s Proxy does not work with email. If you use email hosted on yo
 - A record with name **webmail** pointing to your server IP.
 - MX record with name **@** with pointing to `mail.domain.tld`.
 - TXT record with name **@** containing `v=spf1 a mx ip4:your ip; \~all`
-- TXT record with name **mail.\_domainkey** containing `t=y; o=~DKIM key;`
+- TXT record with name **mail.\_domainkey** containing `v=DKIM1; k=rsa; p=<DKIM key>;`
 - TXT record with name **\_dmarc** containing `v=DMARC1; p=quarantine; sp=quarantine; adkim=s; aspf=s;`
 
 The DKIM key and SPF record can be found in the **Mail Domains** list ([documentation](../user-guide/mail-domains#get-dns-records)).

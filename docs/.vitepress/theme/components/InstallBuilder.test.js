@@ -1,7 +1,6 @@
-// biome-ignore assist/source/organizeImports: Disable organize imports check in Biome
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { render, fireEvent, screen, cleanup, waitFor } from '@testing-library/vue';
+import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/vue';
 import FloatingVue from 'floating-vue';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import InstallBuilder from './InstallBuilder.vue';
 
 describe('InstallBuilder', () => {

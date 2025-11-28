@@ -1,11 +1,9 @@
-// biome-ignore assist/source/organizeImports: Disable organize imports check in Biome
-import alpineInit from './alpineInit';
-import focusFirstInput from './focusFirstInput';
 import handleAddIpLists from './addIpLists';
+import alpineInit from './alpineInit';
 import handleAutoTrimInputs from './autoTrimInputs';
+import handleClipboardCopy from './clipboardCopy';
 import handleConfirmAction from './confirmAction';
 import handleCopyCreds from './copyCreds';
-import handleClipboardCopy from './clipboardCopy';
 import handleCronGenerator from './cronGenerator';
 import handleDatabaseHints from './databaseHints';
 import handleDiscardAllMail from './discardAllMail';
@@ -13,6 +11,7 @@ import handleDnsRecordHint from './dnsRecordHint';
 import handleDocRootHint from './docRootHint';
 import handleEditWebListeners from './editWebListeners';
 import handleErrorMessage from './errorHandler';
+import focusFirstInput from './focusFirstInput';
 import handleFormSubmit from './formSubmit';
 import handleFtpAccountHints from './ftpAccountHints';
 import handleFtpAccounts from './ftpAccounts';
@@ -21,13 +20,13 @@ import handleListSorting from './listSorting';
 import handleListUnitSelect from './listUnitSelect';
 import handleNameServerInput from './nameServerInput';
 import handlePasswordInput from './passwordInput';
+import initRrdCharts from './rrdCharts';
 import handleShortcuts from './shortcuts';
 import handleStickyToolbar from './stickyToolbar';
 import handleSyncEmailValues from './syncEmailValues';
 import handleTabPanels from './tabPanels';
 import handleToggleAdvanced from './toggleAdvanced';
 import handleUnlimitedInput from './unlimitedInput';
-import initRrdCharts from './rrdCharts';
 import initWebTerminal from './webTerminal';
 
 initListeners();

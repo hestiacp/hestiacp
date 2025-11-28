@@ -23,6 +23,29 @@ upgrade_config_set_value 'UPGRADE_UPDATE_MAIL_TEMPLATES' 'false'
 upgrade_config_set_value 'UPGRADE_REBUILD_USERS' 'no'
 upgrade_config_set_value 'UPGRADE_UPDATE_FILEMANAGER_CONFIG' 'false'
 
+ensure_utf8_locale() {
+	local locale_file="/etc/default/locale"
+
+	if locale | grep -qi 'utf-8'; then
+		return
+	fi
+
+	echo "[ * ] Enabling UTF-8 locale support via C.UTF-8"
+	if ! locale-gen C.UTF-8; then
+		echo "[ ! ] Failed to generate C.UTF-8 locale. Leaving existing locale untouched."
+		return
+	fi
+
+	if ! update-locale LANG=C.UTF-8; then
+		echo "[ ! ] Failed to update LANG in $locale_file. Leaving existing locale untouched."
+		return
+	fi
+
+	export LANG=C.UTF-8
+}
+
+ensure_utf8_locale
+
 #Fix: avoid spamd execution in Exim when reject_spam is off for current installations
 if [ "$MAIL_SYSTEM" = "exim4" ]; then
 	echo "[ * ] Fixing spamd execution in Exim when reject_spam is off"

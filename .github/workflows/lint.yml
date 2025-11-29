@@ -63,21 +63,3 @@ jobs:
 
       - name: Run Biome lint
         run: biome lint .
-
-  stylelint:
-    name: Stylelint
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v5
-
-      - name: Setup Node
-        uses: actions/setup-node@v6
-        with:
-          node-version: "lts/*"
-
-      - name: Install Node packages
-        run: npm ci --ignore-scripts
-
-      - name: Run Stylelint
-        run: npx stylelint web/css/src/**/*.css

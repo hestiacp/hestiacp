@@ -1,7 +1,7 @@
 server {
 	listen      %ip%:%web_port%;
 	server_name %domain_idn% %alias_idn%;
-	root        /var/lib/roundcube;
+	root        /var/lib/roundcube/public_html;
 	index       index.php index.html index.htm;
 	access_log  /var/log/nginx/domains/%domain%.log combined;
 	error_log   /var/log/nginx/domains/%domain%.error.log error;
@@ -21,17 +21,12 @@ server {
 	location / {
 		try_files $uri $uri/ =404;
 
-		location ~* ^.+\.(ogg|ogv|svg|svgz|swf|eot|otf|woff|woff2|mov|mp3|mp4|webm|flv|ttf|rss|atom|jpg|jpeg|gif|png|webp|ico|bmp|mid|midi|wav|rtf|css|js|jar)$ {
-			expires 7d;
-			fastcgi_hide_header "Set-Cookie";
-		}
-
-		location ~ ^/(.*\.php)$ {
+		location ~ ^(.+\.php)(.*)$ {
 			include /etc/nginx/fastcgi_params;
-
-			fastcgi_index index.php;
+			fastcgi_split_path_info       ^(.+\.php)(.*)$;
 			fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-
+    			fastcgi_param PATH_INFO       $fastcgi_path_info;
+			fastcgi_index index.php;
 			fastcgi_pass unix:/run/php/www.sock;
 		}
 	}

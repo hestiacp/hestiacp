@@ -739,7 +739,7 @@ is_localpart_format_valid() {
 # Username / ftp username format validator
 is_user_format_valid() {
 	if [ ${#1} -eq 1 ]; then
-		if ! [[ "$1" =~ ^^[[:alnum:]]$ ]]; then
+		if ! [[ "$1" =~ ^[[:alnum:]]$ ]]; then
 			check_result "$E_INVALID" "invalid $2 format :: $1"
 		fi
 	else
@@ -1776,7 +1776,7 @@ Description=Mount $user's home directory to the jail chroot
 Before=local-fs.target
 
 [Mount]
-What=$(getent passwd $user | cut -d : -f 6)
+What=$(getent passwd | awk -F: -v u="$user" '$1 == u {print $6}')
 Where=/srv/jail/$user/home/$user
 Type=none
 Options=bind

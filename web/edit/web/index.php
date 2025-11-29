@@ -83,6 +83,7 @@ if (empty($v_nginx_cache_duration)) {
 $v_proxy = $data[$v_domain]["PROXY"];
 $v_proxy_template = $data[$v_domain]["PROXY"];
 $v_proxy_ext = str_replace(",", ", ", $data[$v_domain]["PROXY_EXT"]);
+$v_backend_address = $data[$v_domain]["BACKEND_ADDRESS"] ?? "";
 $v_stats = $data[$v_domain]["STATS"];
 $v_stats_user = $data[$v_domain]["STATS_USER"];
 $v_stats_password = "";
@@ -339,6 +340,41 @@ if (!empty($_POST["save"])) {
 			);
 			check_return_code($return_var, $output);
 			unset($output);
+		}
+
+		// Change backend address
+		$new_backend_address = isset($_POST["v_backend_address"]) ? trim($_POST["v_backend_address"]) : "";
+		if ($v_backend_address != $new_backend_address && empty($_SESSION["error_msg"])) {
+			// Validate backend address format if provided
+			if (!empty($new_backend_address)) {
+				// Normalize: add http:// if no protocol specified
+				if (!preg_match('/^https?:\/\//', $new_backend_address)) {
+					$new_backend_address = "http://" . $new_backend_address;
+				}
+				// Validate format
+				if (!preg_match('/^https?:\/\/[a-zA-Z0-9.-]+(:[0-9]+)?(\/.*)?$/', $new_backend_address)) {
+					$_SESSION["error_msg"] = _("Invalid backend address format. Use format: http://127.0.0.1:3000 or 127.0.0.1:3000");
+				}
+			}
+			if (empty($_SESSION["error_msg"])) {
+				exec(
+					HESTIA_CMD .
+						"v-change-web-domain-backend-address " .
+						$user .
+						" " .
+						quoteshellarg($v_domain) .
+						" " .
+						quoteshellarg($new_backend_address) .
+						" 'no'",
+					$output,
+					$return_var,
+				);
+				check_return_code($return_var, $output);
+				unset($output);
+				$v_backend_address = $new_backend_address;
+				$restart_web = "yes";
+				$restart_proxy = "yes";
+			}
 		}
 
 		// Enable/Disable nginx cache

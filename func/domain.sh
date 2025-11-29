@@ -197,6 +197,21 @@ prepare_web_domain_values() {
 		ssl_ca_str='#'
 	fi
 
+	# Set backend address for reverse proxy
+	# If BACKEND_ADDRESS is set, use it; otherwise use default proxy destination
+	if [ -n "$BACKEND_ADDRESS" ]; then
+		# Normalize: ensure http:// prefix if only IP:port provided
+		if [[ ! "$BACKEND_ADDRESS" =~ ^https?:// ]]; then
+			BACKEND_ADDRESS="http://$BACKEND_ADDRESS"
+		fi
+		backend_address="$BACKEND_ADDRESS"
+		backend_address_ssl="$BACKEND_ADDRESS"
+	else
+		# Default: proxy to local web server
+		backend_address="http://$local_ip:$WEB_PORT"
+		backend_address_ssl="https://$local_ip:$WEB_SSL_PORT"
+	fi
+
 	# Set correct document root
 	if [ -n "$CUSTOM_DOCROOT" ]; then
 		# Custom document root has been set by the user, import from configuration
@@ -277,6 +292,8 @@ add_web_config() {
 			-e "s|%proxy_ssl_port%|$PROXY_SSL_PORT|g" \
 			-e "s/%proxy_extentions%/${PROXY_EXT//,/|}/g" \
 			-e "s/%proxy_extensions%/${PROXY_EXT//,/|}/g" \
+			-e "s|%backend_address%|$backend_address|g" \
+			-e "s|%backend_address_ssl%|$backend_address_ssl|g" \
 			-e "s|%user%|$user|g" \
 			-e "s|%group%|$user|g" \
 			-e "s|%home%|$HOMEDIR|g" \

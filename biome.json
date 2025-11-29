@@ -9,15 +9,17 @@
 		"ignoreUnknown": false,
 		"includes": [
 			"**",
-			"!**/dist/**",
+			"!**/dist/",
 			"!**/*.bats",
 			"!**/*.min.css",
 			"!**/*.min.js",
-			"!**/vendor/**",
-			"!**/node_modules/**",
-			"!**/test-results/**",
-			"!**/.vitepress/cache/**",
-			"!**/test/test_helper/**"
+			"!**/vendor/",
+			"!**/node_modules/",
+			"!**/test-results/",
+			"!**/.vitepress/cache/",
+			"!**/test/test_helper/",
+			"!web/css/src/media_queries.css",
+			"!install/deb/filemanager/filegator/dist/css/hst-custom.css"
 		]
 	},
 	"formatter": {

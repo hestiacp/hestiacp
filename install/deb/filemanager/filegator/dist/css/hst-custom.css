@@ -151,9 +151,7 @@ html {
 
 .file-row.type-dir a.name:not([data-v])::before,
 .file-row.type-file a.name:not([data-v])::before {
-	/* stylelint-disable */
 	font-family: "Font Awesome 5 Free" !important;
-	/* stylelint-enable */
 }
 
 .file-row.type-dir a.name:not([data-v])::before {
@@ -297,9 +295,7 @@ a:not([data-v])::before {
 
 .tree-list a:not([data-v])::before {
 	content: "\f07b" !important;
-	/* stylelint-disable */
 	font-family: "Font Awesome 5 Free" !important;
-	/* stylelint-enable */
 	color: #f9b30f !important;
 }
 

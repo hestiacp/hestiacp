@@ -77,3 +77,14 @@ if [[ -n "$ANTISPAM_SYSTEM" ]]; then
 		write_config_value "ANTISPAM_SYSTEM" "spamd"
 	fi
 fi
+
+# Fix: update quotas and cgroup for existing users
+for user in $("$HESTIA"/bin/v-list-users list); do
+	if [[ "$RESOURCES_LIMIT" == "yes" ]]; then
+		"$HESTIA"/bin/v-update-user-cgroup "$user"
+	fi
+
+	if [[ "$DISK_QUOTA" == "yes" ]]; then
+		"$HESTIA"/bin/v-update-user-quota "$user"
+	fi
+done

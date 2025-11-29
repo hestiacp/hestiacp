@@ -6,6 +6,7 @@
 	"repository": "https://github.com/hestiacp/hestiacp",
 	"license": "GPL-3.0-or-later",
 	"type": "module",
+	"packageManager": "npm@11.6.4",
 	"scripts": {
 		"docs:dev": "vitepress dev docs",
 		"docs:build": "vitepress build docs",

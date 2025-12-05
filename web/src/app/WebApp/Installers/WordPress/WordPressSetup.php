@@ -78,6 +78,8 @@ class WordPressSetup extends BaseSetup
             '--path=' . $target->getDocRoot(),
         ]);
 
+
+
         // WordPress CLI seems to have a bug that when site name has a space it will be seen as an
         // extra argument. Even when properly escaped. For now just install with install.php
         $this->appcontext->sendPostRequest(

@@ -98,7 +98,7 @@ $BIN/v-update-firewall
 #----------------------------------------------------------#
 
 # Fix missing port value in log if zero
-if [ -z "$port" ]; then
+if [ -z "$port_ext" ]; then
 	port_ext="0"
 fi
 

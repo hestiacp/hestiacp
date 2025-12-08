@@ -185,6 +185,8 @@
 						$title_webstats = _('Enabled');
 					}
 				}
+				$has_ssl = filter_var($data[$key]['SSL'], FILTER_VALIDATE_BOOL);
+				$vstats_scheme = $has_ssl ? 'https' : 'http';
 			?>
 			<div class="units-table-row <?php if ($data[$key]['SUSPENDED'] == 'yes') echo 'disabled'; ?> js-unit"
 				data-sort-ip="<?= str_replace(".", "", $data[$key]["IP"]) ?>"
@@ -228,7 +230,7 @@
 							<li class="units-table-row-action shortcut-w" data-key-action="href">
 								<a
 									class="units-table-row-action-link"
-									href="http://<?= $key ?>/vstats/"
+									href="<?= $vstats_scheme ?>://<?= $key ?>/vstats/"
 									target="_blank"
 									rel="noopener"
 									title="<?= _("Statistics") ?>"

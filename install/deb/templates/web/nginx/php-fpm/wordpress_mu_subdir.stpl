@@ -69,6 +69,7 @@ server {
 			fastcgi_index index.php;
 			fastcgi_param HTTP_EARLY_DATA $rfc_early_data if_not_empty;
 			fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+			fastcgi_param HTTP_HOST $host;
 
 			fastcgi_pass %backend_lsnr%;
 
@@ -92,8 +93,6 @@ server {
 		alias   %home%/%user%/web/%domain%/stats/;
 		include %home%/%user%/web/%domain%/stats/auth.conf*;
 	}
-
-	proxy_hide_header Upgrade;
 
 	include /etc/nginx/conf.d/phpmyadmin.inc*;
 	include /etc/nginx/conf.d/phppgadmin.inc*;

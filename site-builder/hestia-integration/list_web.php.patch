@@ -1,0 +1,89 @@
+================================================================================
+PATCH POUR list_web.php - Site Builder HestiaCP
+================================================================================
+
+Ce fichier montre exactement les modifications à apporter à :
+/usr/local/hestia/web/templates/pages/list_web.php
+
+================================================================================
+MODIFICATION 1 : Ajouter l'include au début du fichier
+================================================================================
+
+AVANT (ligne 1) :
+-----------------
+<!-- Begin toolbar -->
+
+APRÈS :
+-------
+<?php require_once('/usr/local/hestia/web/inc/sitebuilder.php'); ?>
+<!-- Begin toolbar -->
+
+
+================================================================================
+MODIFICATION 2 : Ajouter le bouton Site Builder
+================================================================================
+
+Chercher ce bloc (autour de la ligne 267-277) :
+
+<li class="units-table-row-action" data-key-action="href">
+    <a
+        class="units-table-row-action-link"
+        href="/download/site/?site=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
+        title="<?= _("Download Site") ?>"
+    >
+        <i class="fas fa-download icon-orange"></i>
+        <span class="u-hide-desktop"><?= _("Download Site") ?></span>
+    </a>
+</li>
+
+AJOUTER JUSTE APRÈS (copier ces lignes) :
+-----------------------------------------
+
+<?php if (sitebuilder_enabled($user, $key)) { ?>
+<li class="units-table-row-action" data-key-action="href">
+    <a
+        class="units-table-row-action-link"
+        href="<?= sitebuilder_url($user, $key) ?>"
+        target="_blank"
+        rel="noopener"
+        title="Site Builder"
+    >
+        <i class="fas fa-palette icon-green"></i>
+        <span class="u-hide-desktop">Site Builder</span>
+    </a>
+</li>
+<?php } ?>
+
+
+================================================================================
+RÉSULTAT FINAL (lignes 267-292 environ)
+================================================================================
+
+                            <li class="units-table-row-action" data-key-action="href">
+                                <a
+                                    class="units-table-row-action-link"
+                                    href="/download/site/?site=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
+                                    title="<?= _("Download Site") ?>"
+                                >
+                                    <i class="fas fa-download icon-orange"></i>
+                                    <span class="u-hide-desktop"><?= _("Download Site") ?></span>
+                                </a>
+                            </li>
+                            <?php if (sitebuilder_enabled($user, $key)) { ?>
+                            <li class="units-table-row-action" data-key-action="href">
+                                <a
+                                    class="units-table-row-action-link"
+                                    href="<?= sitebuilder_url($user, $key) ?>"
+                                    target="_blank"
+                                    rel="noopener"
+                                    title="Site Builder"
+                                >
+                                    <i class="fas fa-palette icon-green"></i>
+                                    <span class="u-hide-desktop">Site Builder</span>
+                                </a>
+                            </li>
+                            <?php } ?>
+                        <?php } ?>
+
+
+================================================================================

@@ -1,0 +1,91 @@
+# ===========================================
+# Docker Compose - HestiaCP Site Builder
+# ===========================================
+# 
+# Configuration pour le développement local
+# Usage: docker-compose up -d
+#
+# Services:
+# - db: PostgreSQL 15
+# - backend: API Node.js
+# - frontend: React + Vite (dev server)
+
+version: '3.8'
+
+services:
+  # ===========================================
+  # Base de données PostgreSQL
+  # ===========================================
+  db:
+    image: postgres:15-alpine
+    container_name: sitebuilder-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: site_builder
+      POSTGRES_USER: site_builder_user
+      POSTGRES_PASSWORD: dev_password_change_in_prod
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U site_builder_user -d site_builder"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ===========================================
+  # Backend Node.js
+  # ===========================================
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: sitebuilder-backend
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      NODE_ENV: development
+      PORT: 3001
+      FRONTEND_URL: http://localhost:5173
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: site_builder
+      DB_USER: site_builder_user
+      DB_PASSWORD: dev_password_change_in_prod
+      JWT_SECRET: dev_jwt_secret_change_this_in_production_very_long_key
+      HESTIA_SSO_SECRET: dev_sso_secret_change_in_prod
+      PUBLISH_BASE_PATH: /var/www/sites/{USERNAME}/{DOMAIN}
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+      - sites_data:/var/www/sites
+    ports:
+      - "3001:3001"
+
+  # ===========================================
+  # Frontend React (dev server)
+  # ===========================================
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    container_name: sitebuilder-frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    environment:
+      VITE_API_URL: http://localhost:3001/api
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    ports:
+      - "5173:5173"
+
+volumes:
+  postgres_data:
+    driver: local
+  sites_data:
+    driver: local

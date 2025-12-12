@@ -21,7 +21,7 @@ import 'grapesjs/dist/css/grapes.min.css';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <BrowserRouter>
+    <BrowserRouter basename="/builder">
       <App />
     </BrowserRouter>
   </React.StrictMode>

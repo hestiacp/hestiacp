@@ -34,6 +34,8 @@ const sequelize = new Sequelize(
 const User = require('./User')(sequelize);
 const Project = require('./Project')(sequelize);
 const Page = require('./Page')(sequelize);
+const Asset = require('./Asset')(sequelize);
+const FormSubmission = require('./FormSubmission')(sequelize);
 
 // ===========================================
 // ASSOCIATIONS ENTRE LES MODÈLES
@@ -63,11 +65,49 @@ Page.belongsTo(Project, {
   as: 'project'
 });
 
+// Un projet a plusieurs assets
+Project.hasMany(Asset, {
+  foreignKey: 'project_id',
+  as: 'assets',
+  onDelete: 'CASCADE'
+});
+
+Asset.belongsTo(Project, {
+  foreignKey: 'project_id',
+  as: 'project'
+});
+
+// Un projet a plusieurs soumissions de formulaire
+Project.hasMany(FormSubmission, {
+  foreignKey: 'project_id',
+  as: 'formSubmissions',
+  onDelete: 'CASCADE'
+});
+
+FormSubmission.belongsTo(Project, {
+  foreignKey: 'project_id',
+  as: 'project'
+});
+
+// Une page peut avoir plusieurs soumissions
+Page.hasMany(FormSubmission, {
+  foreignKey: 'page_id',
+  as: 'formSubmissions',
+  onDelete: 'SET NULL'
+});
+
+FormSubmission.belongsTo(Page, {
+  foreignKey: 'page_id',
+  as: 'page'
+});
+
 // Export de tous les modèles et de Sequelize
 module.exports = {
   sequelize,
   Sequelize,
   User,
   Project,
-  Page
+  Page,
+  Asset,
+  FormSubmission
 };

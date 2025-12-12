@@ -1,10 +1,13 @@
 /**
  * ===========================================
- * Composant GrapesJS Editor
+ * Composant GrapesJS Editor - Version améliorée
  * ===========================================
  * 
- * Initialise et configure l'éditeur GrapesJS.
- * Gère le chargement des données et la configuration des plugins.
+ * Intègre GrapesJS avec :
+ * - Asset Manager connecté au backend
+ * - Blocs personnalisés
+ * - Configuration responsive
+ * - Design system
  */
 
 import { useEffect, useRef } from 'react';
@@ -19,120 +22,143 @@ import gjsStyleBg from 'grapesjs-style-bg';
 // Blocs personnalisés
 import { registerCustomBlocks } from '../blocks';
 
-function GrapesEditor({ currentPage, projectSettings, onEditorReady }) {
+// API
+import { assetApi } from '../../services/api';
+
+function GrapesEditor({ currentPage, projectSettings, projectId, onEditorReady }) {
   const editorRef = useRef(null);
   const editorInstance = useRef(null);
 
-  /**
-   * Initialise GrapesJS au montage du composant
-   */
   useEffect(() => {
     if (editorInstance.current) {
-      // Éditeur déjà initialisé
       return;
     }
 
     // Configuration de l'éditeur
     const editor = grapesjs.init({
       container: '#gjs',
-      
-      // Dimensions du canvas
       height: '100%',
       width: 'auto',
-      
-      // Désactiver le stockage local (on utilise notre API)
       storageManager: false,
       
-      // Configuration du canvas
+      // Canvas
       canvas: {
         styles: [
-          'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap'
+          'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap',
+          'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css'
         ]
       },
       
-      // Configuration des devices
+      // Devices pour responsive
       deviceManager: {
         devices: [
-          {
-            name: 'Desktop',
-            width: ''
-          },
-          {
-            name: 'Tablet',
-            width: '768px',
-            widthMedia: '992px'
-          },
-          {
-            name: 'Mobile portrait',
-            width: '320px',
-            widthMedia: '480px'
-          }
+          { name: 'Desktop', width: '' },
+          { name: 'Tablet', width: '768px', widthMedia: '992px' },
+          { name: 'Mobile landscape', width: '568px', widthMedia: '768px' },
+          { name: 'Mobile portrait', width: '320px', widthMedia: '480px' }
         ]
       },
 
-      // Configuration des panneaux
-      panels: {
-        defaults: []
-      },
+      // Panneaux
+      panels: { defaults: [] },
 
-      // Configuration du Style Manager
+      // Style Manager
       styleManager: {
         appendTo: '#styles-container',
         sectors: [
           {
             name: 'Général',
             open: true,
-            buildProps: ['float', 'display', 'position', 'top', 'right', 'left', 'bottom']
+            buildProps: ['float', 'display', 'position', 'top', 'right', 'left', 'bottom', 'z-index']
+          },
+          {
+            name: 'Flex',
+            open: false,
+            buildProps: ['flex-direction', 'flex-wrap', 'justify-content', 'align-items', 'align-content', 'gap', 'order', 'flex-basis', 'flex-grow', 'flex-shrink', 'align-self']
           },
           {
             name: 'Dimensions',
             open: false,
-            buildProps: ['width', 'height', 'max-width', 'min-height', 'margin', 'padding']
+            buildProps: ['width', 'height', 'max-width', 'min-width', 'max-height', 'min-height', 'margin', 'padding']
           },
           {
             name: 'Typographie',
             open: false,
-            buildProps: [
-              'font-family', 'font-size', 'font-weight', 'letter-spacing',
-              'color', 'line-height', 'text-align', 'text-decoration', 'text-shadow'
-            ]
+            buildProps: ['font-family', 'font-size', 'font-weight', 'letter-spacing', 'color', 'line-height', 'text-align', 'text-decoration', 'text-shadow', 'text-transform']
           },
           {
             name: 'Arrière-plan',
             open: false,
-            buildProps: ['background-color', 'background']
+            buildProps: ['background-color', 'background-image', 'background-repeat', 'background-position', 'background-attachment', 'background-size']
           },
           {
             name: 'Bordures',
             open: false,
-            buildProps: ['border-radius', 'border', 'box-shadow']
+            buildProps: ['border-radius', 'border', 'border-width', 'border-style', 'border-color', 'box-shadow']
           },
           {
             name: 'Extra',
             open: false,
-            buildProps: ['opacity', 'transition', 'transform']
+            buildProps: ['opacity', 'transition', 'transform', 'cursor', 'overflow']
           }
         ]
       },
 
-      // Configuration du Block Manager
+      // Block Manager
       blockManager: {
         appendTo: '#blocks-container'
       },
 
-      // Configuration du Layer Manager
+      // Layer Manager
       layerManager: {
         appendTo: '#layers-container'
       },
 
-      // Configuration du Trait Manager
+      // Trait Manager
       traitManager: {
         appendTo: '#traits-container'
       },
 
-      // Configuration du Selector Manager
+      // Selector Manager
       selectorManager: {
-        appendTo: '#selectors-container'
+        appendTo: '#selectors-container',
+        componentFirst: true
+      },
+
+      // Asset Manager avec upload
+      assetManager: {
+        appendTo: '#assets-container',
+        upload: projectId ? `/builder/api/projects/${projectId}/assets` : false,
+        uploadName: 'files',
+        multiUpload: true,
+        autoAdd: true,
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('sitebuilder_token')}`
+        },
+        credentials: 'include',
+        // Charger les assets existants
+        assets: [],
+        // Upload callback
+        uploadFile: async (e) => {
+          const files = e.dataTransfer ? e.dataTransfer.files : e.target.files;
+          const formData = new FormData();
+          
+          for (let i = 0; i < files.length; i++) {
+            formData.append('files', files[i]);
+          }
+          
+          try {
+            const response = await assetApi.upload(projectId, formData);
+            if (response.data.success) {
+              const assets = response.data.data.assets;
+              assets.forEach(asset => {
+                editor.AssetManager.add(asset);
+              });
+            }
+          } catch (error) {
+            console.error('Erreur upload:', error);
+          }
+        }
       },
 
       // Plugins
@@ -143,7 +169,6 @@ function GrapesEditor({ currentPage, projectSettings, onEditorReady }) {
         gjsStyleBg
       ],
 
-      // Options des plugins
       pluginsOpts: {
         [gjsBlocksBasic]: {
           flexGrid: true,
@@ -155,68 +180,50 @@ function GrapesEditor({ currentPage, projectSettings, onEditorReady }) {
         [gjsPresetWebpage]: {
           modalImportTitle: 'Importer du code',
           modalImportLabel: '<div style="margin-bottom: 10px;">Collez votre HTML/CSS ici</div>',
-          modalImportContent: '',
           importViewerRecovery: true,
           countdownRecovery: 5,
-          showStylesOnChange: true,
-          customStyleManager: []
+          showStylesOnChange: true
         }
       }
     });
 
-    // Stocker l'instance globalement pour l'accès depuis le header
+    // Stocker l'instance
     window.grapesEditor = editor;
     editorInstance.current = editor;
 
     // Enregistrer les blocs personnalisés
     registerCustomBlocks(editor);
 
-    // Ajouter des styles CSS par défaut dans le canvas
+    // Styles CSS par défaut
     const defaultStyles = `
-      * {
-        box-sizing: border-box;
-      }
-      body {
-        font-family: 'Inter', sans-serif;
-        margin: 0;
-        padding: 0;
-      }
-      .container {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 0 20px;
-      }
-      section {
-        padding: 60px 20px;
-      }
-      h1, h2, h3, h4, h5, h6 {
-        margin: 0 0 16px 0;
-        font-weight: 600;
-      }
-      p {
-        margin: 0 0 16px 0;
-        line-height: 1.6;
-      }
-      img {
-        max-width: 100%;
-        height: auto;
-      }
-      a {
-        color: #3b82f6;
-        text-decoration: none;
-      }
-      a:hover {
-        text-decoration: underline;
-      }
+      * { box-sizing: border-box; }
+      body { font-family: 'Inter', sans-serif; margin: 0; padding: 0; }
+      .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+      section { padding: 60px 20px; }
+      h1, h2, h3, h4, h5, h6 { margin: 0 0 16px 0; font-weight: 600; }
+      p { margin: 0 0 16px 0; line-height: 1.6; }
+      img { max-width: 100%; height: auto; }
+      a { color: #3b82f6; text-decoration: none; }
+      a:hover { text-decoration: underline; }
     `;
 
-    editor.on('load', () => {
-      // Ajouter les styles par défaut
+    editor.on('load', async () => {
       editor.addStyle(defaultStyles);
 
-      // Configurer les raccourcis clavier
+      // Charger les assets existants du projet
+      if (projectId) {
+        try {
+          const response = await assetApi.list(projectId);
+          if (response.data.success && response.data.data.assets) {
+            editor.AssetManager.add(response.data.data.assets);
+          }
+        } catch (error) {
+          console.error('Erreur chargement assets:', error);
+        }
+      }
+
+      // Raccourcis clavier
       document.addEventListener('keydown', (e) => {
-        // Ctrl+S pour sauvegarder
         if (e.ctrlKey && e.key === 's') {
           e.preventDefault();
           editor.trigger('storage:save');
@@ -224,12 +231,18 @@ function GrapesEditor({ currentPage, projectSettings, onEditorReady }) {
       });
     });
 
-    // Callback quand l'éditeur est prêt
+    // Ajouter des commandes personnalisées
+    editor.Commands.add('show-assets', {
+      run(editor) {
+        editor.AssetManager.open();
+      }
+    });
+
+    // Callback
     if (onEditorReady) {
       onEditorReady(editor);
     }
 
-    // Cleanup au démontage
     return () => {
       if (editorInstance.current) {
         editorInstance.current.destroy();
@@ -237,46 +250,34 @@ function GrapesEditor({ currentPage, projectSettings, onEditorReady }) {
         window.grapesEditor = null;
       }
     };
-  }, [onEditorReady]);
+  }, [onEditorReady, projectId]);
 
-  /**
-   * Met à jour le contenu quand la page change
-   */
+  // Mise à jour du contenu quand la page change
   useEffect(() => {
     if (!editorInstance.current || !currentPage) return;
 
     const editor = editorInstance.current;
-
-    // Charger les composants de la page
     const components = currentPage.grapesjs_data?.components || [];
     const styles = currentPage.grapesjs_data?.styles || [];
 
-    // Mettre à jour l'éditeur
     editor.setComponents(components);
-    
-    // Ajouter les styles (en préservant les styles par défaut)
     if (styles.length > 0) {
       editor.addStyle(styles);
     }
 
-    // Charger les assets si disponibles
     const assets = currentPage.grapesjs_data?.assets || [];
     if (assets.length > 0) {
       editor.AssetManager.add(assets);
     }
-
   }, [currentPage]);
 
-  /**
-   * Met à jour les variables CSS selon les settings du projet
-   */
+  // Injection des variables CSS du projet
   useEffect(() => {
     if (!editorInstance.current || !projectSettings) return;
 
     const editor = editorInstance.current;
-    const { colors = {}, fonts = {} } = projectSettings;
+    const { colors = {}, fonts = {}, spacing = {} } = projectSettings;
 
-    // Créer les variables CSS
     const cssVars = `
       :root {
         --color-primary: ${colors.primary || '#3b82f6'};
@@ -284,12 +285,20 @@ function GrapesEditor({ currentPage, projectSettings, onEditorReady }) {
         --color-accent: ${colors.accent || '#f59e0b'};
         --color-background: ${colors.background || '#ffffff'};
         --color-text: ${colors.text || '#1f2937'};
-        --font-heading: ${fonts.heading || 'Inter, sans-serif'};
-        --font-body: ${fonts.body || 'Inter, sans-serif'};
+        --color-text-light: ${colors.textLight || '#6b7280'};
+        --color-border: ${colors.border || '#e5e7eb'};
+        --font-heading: ${fonts.heading || "'Inter', sans-serif"};
+        --font-body: ${fonts.body || "'Inter', sans-serif"};
+        --spacing-sm: ${spacing.sm || '8px'};
+        --spacing-md: ${spacing.md || '16px'};
+        --spacing-lg: ${spacing.lg || '32px'};
+        --spacing-xl: ${spacing.xl || '64px'};
+        --radius-sm: ${spacing.radiusSm || '4px'};
+        --radius-md: ${spacing.radiusMd || '8px'};
+        --radius-lg: ${spacing.radiusLg || '16px'};
       }
     `;
 
-    // Injecter dans le canvas
     const frame = editor.Canvas.getFrameEl();
     if (frame) {
       const doc = frame.contentDocument;
@@ -306,11 +315,7 @@ function GrapesEditor({ currentPage, projectSettings, onEditorReady }) {
   }, [projectSettings]);
 
   return (
-    <div 
-      id="gjs" 
-      ref={editorRef}
-      className="h-full"
-    />
+    <div id="gjs" ref={editorRef} className="h-full" />
   );
 }
 

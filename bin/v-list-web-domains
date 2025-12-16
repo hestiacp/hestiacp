@@ -55,6 +55,7 @@ json_list() {
         "BACKEND": "'$BACKEND'",
         "PROXY": "'$PROXY'",
         "PROXY_EXT": "'$PROXY_EXT'",
+        "BACKEND_ADDRESS": "'$BACKEND_ADDRESS'",
         "SUSPENDED": "'$SUSPENDED'",
         "TIME": "'$TIME'",
         "DATE": "'$DATE'"
@@ -94,7 +95,7 @@ plain_list() {
 		echo -ne "$DOMAIN\t$IP\t$IP6\t$DOCROOT\t$U_DISK\t$U_BANDWIDTH\t$TPL\t"
 		echo -ne "$ALIAS\t$STATS\t$STATS_USER\t$SSL\t$SSL_HOME\t$LETSENCRYPT\t"
 		echo -ne "$FTP_USER\t$FTP_PATH\t$AUTH_USER\t$BACKEND\t$PROXY\t"
-		echo -e "$PROXY_EXT\t$SUSPENDED\t$TIME\t$DATE"
+		echo -e "$PROXY_EXT\t$BACKEND_ADDRESS\t$SUSPENDED\t$TIME\t$DATE"
 	done < <(cat $USER_DATA/web.conf)
 }
 
@@ -103,7 +104,7 @@ csv_list() {
 	IFS=$'\n'
 	echo -n "DOMAIN,IP,IP6,DOCROOT,U_DISK,U_BANDWIDTH,TPL,ALIAS,STATS,STATS_USER,"
 	echo -n "SSL,SSL_HOME,LETSENCRYPT,FTP_USER,FTP_PATH,AUTH_USER,BACKEND,PROXY,"
-	echo "PROXY_EXT,SUSPENDED,TIME,DATE"
+	echo "PROXY_EXT,BACKEND_ADDRESS,SUSPENDED,TIME,DATE"
 	while read str; do
 		parse_object_kv_list "$str"
 		# Set correct document root path
@@ -115,7 +116,7 @@ csv_list() {
 		echo -n "$DOMAIN,$IP,$IP6,$DOCROOT,$U_DISK,$U_BANDWIDTH,$TPL,"
 		echo -n "\"$ALIAS\",$STATS,\"$STATS_USER\",$SSL,$SSL_HOME,$LETSENCRYPT,"
 		echo -n "\"$FTP_USER\",\"$FTP_PATH\",\"$AUTH_USER\",$BACKEND,$PROXY,"
-		echo "\"$PROXY_EXT\",$SUSPENDED,$TIME,$DATE"
+		echo "\"$PROXY_EXT\",\"$BACKEND_ADDRESS\",$SUSPENDED,$TIME,$DATE"
 	done < <(cat $USER_DATA/web.conf)
 }
 

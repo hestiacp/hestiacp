@@ -1,5 +1,5 @@
 <?php
-	if(!function_exists("tohtml")){
+	if (!function_exists("tohtml")){
 		function tohtml(string $str): string{
 			if ($str === '') {
 				return '';

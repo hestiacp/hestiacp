@@ -495,7 +495,7 @@ parse_dns_record_line() {
 <?php
 $line = $argv[1];
 $allowed_keys = array('ID','RECORD','TYPE','PRIORITY','VALUE','SUSPENDED','TIME','DATE','TTL');
-$pattern = "/([A-Za-z][A-Za-z0-9_]{0,64}[A-Za-z])='([^']*)'/";
+$pattern = "/([A-Za-z](?:[A-Za-z0-9_]{0,64}[A-Za-z])?)='([^']*)'/";
 
 $matches = [];
 if (!preg_match_all($pattern, $line, $matches, PREG_SET_ORDER)) {

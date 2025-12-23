@@ -21,7 +21,6 @@
 	},
 	"dependencies": {
 		"@alpinejs/collapse": "^3.15.2",
-		"@fortawesome/fontawesome-free": "^7.1.0",
 		"alpinejs": "^3.15.2",
 		"chart.js": "^4.5.1",
 		"check-password-strength": "^3.0.0",

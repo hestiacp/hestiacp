@@ -15,6 +15,20 @@ export default defineConfig({
 		['link', { rel: 'apple-touch-icon', sizes: '180x180', href: '/apple-touch-icon.png' }],
 		['link', { rel: 'manifest', href: '/site.webmanifest' }],
 		['meta', { name: 'theme-color', content: '#b7236a' }],
+		[
+			'link',
+			{
+				rel: 'stylesheet',
+				href: 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/fontawesome.min.css',
+			},
+		],
+		[
+			'link',
+			{
+				rel: 'stylesheet',
+				href: 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/solid.min.css',
+			},
+		],
 	],
 
 	themeConfig: {

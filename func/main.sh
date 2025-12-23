@@ -976,7 +976,7 @@ EOPHP
 
 # DNS record validator
 is_dns_record_format_valid() {
-	$json_from_php=$(
+	json_from_php=$(
 		$HESTIA_PHP -- "$1" "$rtype" "$priority" << 'EOPHP'
 	<?php
 	$record = $argv[1];

@@ -167,14 +167,43 @@ r' "key"
 }
 
 @test "is_dns_record_format_valid" {
-    rtype='MX'
-    priority=1;
-    run is_dns_record_format_valid 'mx.hestiacp.com.'
-    assert_success
+	rtype='MX'
+	priority=1;
+	run is_dns_record_format_valid 'mx.hestiacp.com.'
+	assert_success
+}
+
+@test "is_dns_record_format_valid SRV 4-field" {
+	rtype='SRV'
+	priority=''
+	run is_dns_record_format_valid '10 20 5060 srv.hestiacp.com.'
+	assert_success
+}
+
+@test "is_dns_record_format_valid SRV invalid priority" {
+	rtype='SRV'
+	priority=''
+	run is_dns_record_format_valid 'abc 20 5060 srv.hestiacp.com.'
+	assert_failure $E_INVALID
+}
+
+@test "is_dns_record_format_valid TXT newline" {
+	rtype='TXT'
+	priority=''
+	run is_dns_record_format_valid 'foo
+bar'
+	assert_failure $E_INVALID
+}
+
+@test "is_dns_record_format_valid TXT single quote" {
+	rtype='TXT'
+	priority=''
+	run is_dns_record_format_valid "foo'bar"
+	assert_success
 }
 
 @test "is_dns_record_format_valid test" {
-    rtype='MX'
+	rtype='MX'
 priority=1;
      run is_dns_record_format_valid 'c
 1eshutdown

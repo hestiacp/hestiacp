@@ -792,7 +792,7 @@ is_alias_format_valid() {
 # IP format validator
 is_ip_format_valid() {
 	object_name=${2-ip}
-	valid=$($HESTIA_PHP -r '$ip="$argv[1]"; echo (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) ? 0 : 1);' $1)
+	valid=$($HESTIA_PHP -r '$ip=$argv[1]; echo (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) ? 0 : 1);' "$1")
 	if [ "$valid" -ne 0 ]; then
 		check_result "$E_INVALID" "invalid $object_name :: $1"
 	fi
@@ -801,14 +801,14 @@ is_ip_format_valid() {
 # IPv6 format validator
 is_ipv6_format_valid() {
 	object_name=${2-ipv6}
-	valid=$($HESTIA_PHP -r '$ip="$argv[1]"; echo (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) ? 0 : 1);' $1)
+	valid=$($HESTIA_PHP -r '$ip="$argv[1]"; echo (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) ? 0 : 1);' "$1")
 	if [ "$valid" -ne 0 ]; then
 		check_result "$E_INVALID" "invalid $object_name :: $1"
 	fi
 }
 
 is_ip46_format_valid() {
-	valid=$($HESTIA_PHP -r '$ip="$argv[1]"; echo (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_IPV6) ? 0 : 1);' $1)
+	valid=$($HESTIA_PHP -r '$ip="$argv[1]"; echo (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_IPV6) ? 0 : 1);' "$1")
 	if [ "$valid" -ne 0 ]; then
 		check_result "$E_INVALID" "invalid IP format :: $1"
 	fi
@@ -824,7 +824,7 @@ is_ipv4_cidr_format_valid() {
 
 is_ipv6_cidr_format_valid() {
 	object_name=${2-ipv6}
-	valid=$($HESTIA_PHP -r '$cidr="$argv[1]"; list($ip, $netmask) = [...explode("/", $cidr), 128]; echo ((filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) && $netmask <= 128) ? 0 : 1);' $1)
+	valid=$($HESTIA_PHP -r '$cidr="$argv[1]"; list($ip, $netmask) = [...explode("/", $cidr), 128]; echo ((filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) && $netmask <= 128) ? 0 : 1);' "$1")
 	if [ "$valid" -ne 0 ]; then
 		check_result "$E_INVALID" "invalid $object_name :: $1"
 	fi
@@ -832,7 +832,7 @@ is_ipv6_cidr_format_valid() {
 
 is_netmask_format_valid() {
 	object_name=${2-netmask}
-	valid=$($HESTIA_PHP -r '$netmask="$argv[1]"; echo (preg_match("/^(128|192|224|240|248|252|254|255)\.(0|128|192|224|240|248|252|254|255)\.(0|128|192|224|240|248|252|254|255)\.(0|128|192|224|240|248|252|254|255)/", $netmask) ? 0 : 1);' $1)
+	valid=$($HESTIA_PHP -r '$netmask="$argv[1]"; echo (preg_match("/^(128|192|224|240|248|252|254|255)\.(0|128|192|224|240|248|252|254|255)\.(0|128|192|224|240|248|252|254|255)\.(0|128|192|224|240|248|252|254|255)/", $netmask) ? 0 : 1);' "$1")
 	if [ "$valid" -ne 0 ]; then
 		check_result "$E_INVALID" "invalid $object_name :: $1"
 	fi
@@ -960,28 +960,146 @@ is_dbuser_format_valid() {
 
 # DNS record type validator
 is_dns_type_format_valid() {
-	known_dnstype='A,AAAA,NS,CNAME,MX,TXT,SRV,DNSKEY,KEY,IPSECKEY,PTR,SPF,TLSA,CAA,DS'
-	if [ -z "$(echo $known_dnstype | grep -w $1)" ]; then
+	is_valid=$(
+		$HESTIA_PHP -- "$1" << 'EOPHP'
+	<?php
+	$type = $argv[1];
+	$known_types = array("A","AAAA","NS","CNAME","MX","TXT","SRV","DNSKEY",
+	"KEY","IPSECKEY","PTR","SPF","TLSA","CAA","DS");
+	echo in_array($type, $known_types, true) ? "0" : "1";
+EOPHP
+	)
+	if [ "$is_valid" -ne 0 ]; then
 		check_result "$E_INVALID" "invalid dns record type format :: $1"
 	fi
 }
 
 # DNS record validator
 is_dns_record_format_valid() {
-	if [ "$rtype" = 'A' ]; then
-		is_ip_format_valid "$1"
-	fi
-	if [ "$rtype" = 'NS' ]; then
-		is_domain_format_valid "${1::-1}" 'ns_record'
-	fi
-	if [ "$rtype" = 'MX' ]; then
-		is_domain_format_valid "${1::-1}" 'mx_record'
-		is_int_format_valid "$priority" 'priority_record'
-	fi
-	if [ "$rtype" = 'SRV' ]; then
-		format_no_quotes "$priority" 'priority_record'
-	fi
+	$json_from_php=$(
+		$HESTIA_PHP -- "$1" "$rtype" "$priority" << 'EOPHP'
+	<?php
+	$record = $argv[1];
+	$rtype = $argv[2];
+	$priority = $argv[3];
+	$known_types = array("A", "AAAA", "NS", "CNAME", "MX", "TXT", "SRV", "DNSKEY",
+		"KEY", "IPSECKEY", "PTR", "SPF", "TLSA", "CAA", "DS");
+	$valid = true;
+	$error_message = null;
+	$cleaned_record = null;
+	$new_priority = null;
 
+	$validateInt = static function ($value, $min, $max) {
+		return filter_var($value, FILTER_VALIDATE_INT, array("options" => array("min_range" => $min, "max_range" => $max)));
+	};
+	$validateDomain = static function ($value) {
+		return filter_var(rtrim($value, '.'), FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME);
+	};
+
+	if (!in_array($rtype, $known_types, true)) {
+		$valid = false;
+		$error_message = "unknown record type for validation: $rtype";
+	} elseif ($rtype === 'A') {
+		$valid = filter_var($record, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4);
+		if (!$valid) {
+			$error_message = "invalid A record format";
+		}
+	} elseif ($rtype === 'AAAA') {
+		$valid = filter_var($record, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6);
+		if (!$valid) {
+			$error_message = "invalid AAAA record format";
+		}
+	} elseif ($rtype === 'NS' || $rtype === 'CNAME' || $rtype === 'PTR') {
+		$valid = $validateDomain($record);
+		if (!$valid) {
+			$error_message = "invalid $rtype record format";
+		}
+	} elseif ($rtype === 'MX') {
+		$valid = $validateDomain($record);
+		if (!$valid) {
+			$error_message = "invalid MX record format";
+		} else {
+			$valid = $validateInt($priority, 0, 65535);
+			if ($valid === false) {
+				$error_message = "invalid MX record priority format (must be between 0 and 65535)";
+			}
+		}
+	} elseif ($rtype === 'SRV') {
+		$parts = preg_split('/\s+/', trim($record));
+		$parts_count = count($parts);
+		$target = null;
+		$port = null;
+		$weight = null;
+		$priority_to_use = $priority;
+
+		if ($parts_count === 4) {
+			[$priority_from_value, $weight, $port, $target] = $parts;
+			$priority_to_use = $priority_from_value;
+		} elseif ($parts_count === 3) {
+			if ($validateDomain($parts[0])) {
+				[$target, $port, $weight] = $parts;
+			} elseif ($validateDomain($parts[2])) {
+				[$weight, $port, $target] = $parts;
+			} else {
+				$valid = false;
+				$error_message = "invalid SRV record format (expected target with port and weight)";
+			}
+		} else {
+			$valid = false;
+			$error_message = "invalid SRV record format (must contain priority weight port target or target port weight)";
+		}
+
+		if ($valid !== false) {
+			$priority_validated = $validateInt($priority_to_use, 0, 65535);
+			$weight_validated = $validateInt($weight, 0, 65535);
+			$port_validated = $validateInt($port, 0, 65535);
+			$target_validated = $validateDomain($target ?? '');
+
+			if ($priority_validated === false) {
+				$valid = false;
+				$error_message = "invalid SRV record priority format (must be between 0 and 65535)";
+			} elseif ($weight_validated === false) {
+				$valid = false;
+				$error_message = "invalid SRV record weight format (must be between 0 and 65535)";
+			} elseif ($port_validated === false) {
+				$valid = false;
+				$error_message = "invalid SRV record port format (must be between 0 and 65535)";
+			} elseif (!$target_validated) {
+				$valid = false;
+				$error_message = "invalid SRV record target format";
+			} else {
+				$new_priority = $priority_validated;
+				$cleaned_record = $weight_validated . ' ' . $port_validated . ' ' . $target;
+			}
+		}
+	}
+
+	$json = array("valid" => $valid !== false);
+	if ($error_message !== null) {
+		$json["error_message"] = $error_message;
+	}
+	if ($cleaned_record !== null) {
+		$json["cleaned_record"] = $cleaned_record;
+	}
+	if ($new_priority !== null) {
+		$json["new_priority"] = $new_priority;
+	}
+	echo json_encode($json, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
+EOPHP
+	)
+	is_valid=$(jq -r '.valid' <<< "$json_from_php")
+	if [ "$is_valid" != 'true' ]; then
+		error_message=$(jq -r '.error_message' <<< "$json_from_php")
+		check_result "$E_INVALID" "$error_message :: $1"
+	fi
+	cleaned_record=$(jq -r '.cleaned_record // empty' <<< "$json_from_php")
+	if [ -n "$cleaned_record" ]; then
+		dvalue="$cleaned_record"
+	fi
+	updated_priority=$(jq -r '.new_priority // empty' <<< "$json_from_php")
+	if [ -n "$updated_priority" ]; then
+		priority="$updated_priority"
+	fi
 	is_no_new_line_format "$1"
 }
 

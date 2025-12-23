@@ -485,11 +485,61 @@ is_dns_domain_new() {
 	fi
 }
 
+# Safely parse KEY='value' pairs from dns.conf lines without using eval
+parse_dns_record_line() {
+	local line="$1"
+	local json
+
+	json=$(
+		$HESTIA_PHP -- "$line" << 'EOPHP'
+<?php
+$line = $argv[1];
+$allowed_keys = array('ID','RECORD','TYPE','PRIORITY','VALUE','SUSPENDED','TIME','DATE','TTL');
+$pattern = "/([A-Za-z][A-Za-z0-9_]{0,64}[A-Za-z])='([^']*)'/";
+
+$matches = [];
+if (!preg_match_all($pattern, $line, $matches, PREG_SET_ORDER)) {
+	fwrite(STDERR, "no key/value pairs");
+	exit(1);
+}
+
+$remainder = trim(preg_replace($pattern, '', $line));
+if ($remainder !== '') {
+	fwrite(STDERR, "leftover content");
+	exit(1);
+}
+
+$result = [];
+foreach ($matches as $match) {
+	[, $key, $value] = $match;
+	if (!in_array($key, $allowed_keys, true)) {
+		fwrite(STDERR, "invalid key $key");
+		exit(1);
+	}
+	$result[$key] = $value;
+}
+
+echo json_encode($result, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+EOPHP
+	)
+	check_result $? "invalid dns record format in $USER_DATA/dns/$domain.conf line: $line" $E_INVALID
+
+	RECORD=$(jq -r '.RECORD // empty' <<< "$json")
+	TYPE=$(jq -r '.TYPE // empty' <<< "$json")
+	PRIORITY=$(jq -r '.PRIORITY // empty' <<< "$json")
+	VALUE=$(jq -r '.VALUE // empty' <<< "$json")
+	SUSPENDED=$(jq -r '.SUSPENDED // empty' <<< "$json")
+	TIME=$(jq -r '.TIME // empty' <<< "$json")
+	DATE=$(jq -r '.DATE // empty' <<< "$json")
+	TTL=$(jq -r '.TTL // empty' <<< "$json")
+}
+
 # Update domain zone
 update_domain_zone() {
 	domain_param=$(grep "DOMAIN='$domain'" $USER_DATA/dns.conf)
 	parse_object_kv_list "$domain_param"
 	local zone_ttl="$TTL"
+	local value_for_zone
 	SOA=$(idn2 --quiet "$SOA")
 	if [ -z "$SERIAL" ]; then
 		SERIAL=$(date +'%Y%m%d01')
@@ -521,13 +571,10 @@ update_domain_zone() {
                                             180 )
 " > $zn_conf
 
-	fields='$RECORD\t$TTL\tIN\t$TYPE\t$PRIORITY\t$VALUE'
 	while read line; do
-		unset TTL
+		unset TTL RECORD TYPE PRIORITY VALUE SUSPENDED TIME DATE
 		IFS=$'\n'
-		for key in $(echo $line | sed "s/' /'\n/g"); do
-			eval ${key%%=*}="${key#*=}"
-		done
+		parse_dns_record_line "$line"
 
 		# inherit zone TTL if record lacks explicit TTL value
 		[ -z "$TTL" ] && TTL="$zone_ttl"
@@ -555,7 +602,8 @@ update_domain_zone() {
 		fi
 
 		if [ "$SUSPENDED" != 'yes' ]; then
-			eval echo -e "\"$fields\"" | sed "s/%quote%/'/g" >> $zn_conf
+			value_for_zone=$(echo "$VALUE" | sed "s/%quote%/'/g")
+			printf "%s\t%s\tIN\t%s\t%s\t%s\n" "$RECORD" "$TTL" "$TYPE" "$PRIORITY" "$value_for_zone" >> "$zn_conf"
 		fi
 	done < $USER_DATA/dns/$domain.conf
 }

@@ -119,6 +119,8 @@ time_n_date=$(date +'%T %F')
 time=$(echo "$time_n_date" | cut -f 1 -d \ )
 date=$(echo "$time_n_date" | cut -f 2 -d \ )
 
+dvalue=$(echo "$dvalue" | sed "s/'/%quote%/g")
+
 # Adding record
 zone="$USER_DATA/dns/$domain.conf"
 dns_rec="ID='$id' RECORD='$record' TYPE='$rtype' PRIORITY='$priority'"

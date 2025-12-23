@@ -77,6 +77,7 @@
 
 <script setup>
 import { ref, watchEffect } from "vue";
+// biome-ignore lint/correctness/noUnusedImports: used in template
 import CopyToClipboardInput from "./CopyToClipboardInput.vue";
 
 const { options } = defineProps({
@@ -96,6 +97,7 @@ options.forEach((option) => {
 });
 
 // Handle clicking the entire option "card"
+// biome-ignore lint/correctness/noUnusedVariables: used in template
 const toggleOption = (option) => {
 	// Only toggle if option is a standard checkbox, or the option is unchecked
 	if (!option.type || !selectedOptions.value[option.flag].enabled) {

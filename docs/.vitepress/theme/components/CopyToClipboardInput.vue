@@ -26,12 +26,14 @@ defineProps({
 	},
 });
 
+// biome-ignore lint/correctness/noUnusedVariables: used in template
 const selectText = (event) => {
 	const inputElement = event.target;
 	inputElement.select();
 	inputElement.removeEventListener("focus", selectText);
 };
 
+// biome-ignore lint/correctness/noUnusedVariables: used in template
 const copyToClipboard = (event) => {
 	const inputValue = event.target.previousSibling.value;
 	navigator.clipboard.writeText(inputValue).then(

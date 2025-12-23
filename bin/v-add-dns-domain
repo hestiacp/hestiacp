@@ -129,7 +129,7 @@ if [ -z $ns2 ]; then
 	i=1
 	ns=$(get_user_value '$NS')
 	for nameserver in ${ns//,/ }; do
-		eval ns$i=$nameserver
+		declare ns$i="$nameserver"
 		((++i))
 	done
 fi

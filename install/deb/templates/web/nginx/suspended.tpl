@@ -22,6 +22,11 @@ server {
 	location / {
 		try_files $uri /index.html;
 
+		add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';" always;
+		add_header X-Frame-Options "SAMEORIGIN" always;
+		add_header X-Content-Type-Options "nosniff" always;
+		add_header X-XSS-Protection "1; mode=block" always;
+
 		location ~* ^.+\.(jpeg|jpg|png|webp|gif|bmp|ico|svg|css|js)$ {
 			expires max;
 			fastcgi_hide_header "Set-Cookie";

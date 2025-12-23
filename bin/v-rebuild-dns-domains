@@ -61,7 +61,7 @@ export conf="$USER_DATA/dns.conf"
 ns=$(get_user_value '$NS')
 i=1
 for nameserver in ${ns//,/ }; do
-	eval ns$i="$nameserver"
+	declare ns$i="$nameserver"
 	i=$((i + 1))
 done
 

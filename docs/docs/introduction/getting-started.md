@@ -34,6 +34,14 @@ We currently do not support i386 or ARM7-based processors.
 Hestia does not support non-LTS Operating systems. If you install it on, for example, Ubuntu 23.10, you will not receive support from us.
 :::
 
+### Supported PHP versions
+
+Hestia supports multiple PHP versions for flexibility. The installer can install PHP 8.1, 8.2, 8.3, and 8.4. By default, PHP 8.1 is installed, but you can specify additional versions using the --multiphp option.
+
+::: tip
+Use the --multiphp option to install multiple PHP versions, e.g., --multiphp '8.2,8.3,8.4' for PHP 8.2, 8.3, and 8.4.
+:::
+
 ## Regular installation
 
 Interactive installer that will install the default Hestia software configuration.

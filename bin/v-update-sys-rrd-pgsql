@@ -89,7 +89,7 @@ for host in $hosts; do
 		# Defining host credentials
 		host_str=$(grep "HOST='$host'" $conf)
 		for key in $host_str; do
-			eval ${key%%=*}=${key#*=}
+			declare "${key%%=*}=\"${key#*=}\""
 		done
 
 		export PGPASSWORD="$PASSWORD"

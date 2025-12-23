@@ -137,7 +137,7 @@ if [ -n "$UPDATE_HOSTNAME_SSL" ] && [ "$UPDATE_HOSTNAME_SSL" = "yes" ]; then
 fi
 
 if [ -n "$UPDATE_SSL_SCRIPT" ]; then
-	eval "$UPDATE_SSL_SCRIPT $user $domain"
+	$UPDATE_SSL_SCRIPT "$user" "$domain"
 fi
 
 # Logging

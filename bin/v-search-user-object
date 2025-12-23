@@ -31,14 +31,14 @@ json_list_search() {
 	echo '{'
 	fileds_count=$(echo $fields | wc -w)
 	while read line; do
-		eval "$line"
+		declare "$line"
 		if [ -n "$list_data" ]; then
 			echo -e '        },'
 		fi
 		i=1
 		IFS=' '
 		for field in $fields; do
-			eval value=\"$field\"
+			value="${!field}"
 			value=$(echo "$value" | sed -e 's/"/\\"/g' -e "s/%quote%/'/g")
 			if [ $i -eq 1 ]; then
 				((++i))
@@ -70,7 +70,7 @@ shell_list_search() {
 		echo
 	fi
 	while read line; do
-		eval $line
+		declare "$line"
 		eval echo "$fields" | sed "s/%quote%/'/g"
 	done < $conf
 }
@@ -116,7 +116,7 @@ for row in $search; do
 	# Parsing result
 	type=$(echo $row | cut -f 1 -d : | cut -f 8 -d /)
 	data=$(echo $row | cut -f 2,3,4,5 -d :)
-	eval "$data"
+	declare $data
 
 	# Check WEB domain
 	if [ "$type" = 'web.conf' ]; then

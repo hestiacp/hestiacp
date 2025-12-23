@@ -29,11 +29,11 @@
 		"nanoid": "^5.1.6",
 		"normalize.css": "^8.0.1",
 		"xterm": "^5.3.0",
-		"xterm-addon-canvas": "^0.5.0",
-		"xterm-addon-webgl": "^0.16.0"
+		"@xterm/addon-canvas": "^0.7.0",
+		"@xterm/addon-webgl": "^0.19.0"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "2.3.8",
+		"@biomejs/biome": "2.3.10",
 		"@prettier/plugin-php": "^0.24.0",
 		"@testing-library/vue": "^8.1.0",
 		"@vitejs/plugin-vue": "^6.0.2",
@@ -51,6 +51,9 @@
 		"vitepress": "^1.6.4",
 		"vitest": "^4.0.15",
 		"vue": "^3.5.25"
+	},
+	"overrides": {
+		"string-width": "5.1.0"
 	},
 	"browserslist": [
 		"defaults"

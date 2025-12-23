@@ -13,6 +13,12 @@ steps:
     commands:
       - npm ci --ignore-scripts
       - npm run build
+  - name: Lint and Test
+    image: node:current-slim
+    commands:
+      - npm ci --ignore-scripts
+      - npm run lint
+      - npm run docs:test
   - name: Build
     image: debian:bookworm
     commands:

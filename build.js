@@ -11,8 +11,8 @@ const externalPackages = [
 	'alpinejs/dist/cdn.min.js',
 	'@alpinejs/collapse/dist/cdn.min.js',
 	'xterm',
-	'xterm-addon-webgl',
-	'xterm-addon-canvas',
+	'@xterm/addon-webgl',
+	'@xterm/addon-canvas',
 ];
 
 // Build main bundle

@@ -7,6 +7,8 @@
 		"group:allNonMajor",
 		"group:linters",
 		":automergeLinters",
+		":automergeMinor",
+		":automergePatch",
 		":disableDependencyDashboard",
 		"customManagers:biomeVersions"
 	],

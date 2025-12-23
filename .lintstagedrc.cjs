@@ -1,6 +1,14 @@
 module.exports = {
 	// Ignore certain directories to prevent crashes
-	ignores: ['bin/**', 'install/**', 'src/**', 'web/**', 'func/**', 'test/**', 'docs/.vitepress/cache/**'],
+	ignores: [
+		'bin/**',
+		'install/**',
+		'src/**',
+		'web/**',
+		'func/**',
+		'test/**',
+		'docs/.vitepress/cache/**',
+	],
 	// Run markdownlint on MD files
 	'*.md': 'markdownlint-cli2 --fix',
 	// Run Biome on certain file types

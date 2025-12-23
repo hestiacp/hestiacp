@@ -146,6 +146,78 @@
 					</div>
 				</div>
 				<div class="units-table-cell units-table-heading-cell">
+					<div class="u-hide-desktop card-header">
+						<div class="card-title">
+							<?php if ($key == $user_plain) { ?>
+								<span class="u-text-bold">
+									<?= $key ?>
+								</span>
+								(<?= $data[$key]["NAME"] ?>)
+							<?php } else { ?>
+								<span class="u-text-bold">
+									<?= $key ?>
+								</span>
+								(<?= $data[$key]["NAME"] ?>)
+							<?php } ?>
+							<?php if ($status == 'suspended') { ?>
+								<i class="fas fa-ban icon-red" title="<?= _("Suspended") ?>"></i>
+							<?php } ?>
+						</div>
+						<div class="card-actions">
+							<ul class="units-table-row-actions">
+								<?php if ($key == $user_plain) { ?>
+									<li class="units-table-row-action">
+										<i class="fas fa-user-check" title="<?= $key ?> (<?= $data[$key]["NAME"] ?>)"></i>
+									</li>
+								<?php } else { ?>
+									<li class="units-table-row-action shortcut-enter" data-key-action="href">
+										<a
+											class="units-table-row-action-link"
+											href="/login/?loginas=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
+											title="<?= _("Log in as") ?> <?= $key ?>"
+										>
+											<i class="fas fa-right-to-bracket icon-green"></i>
+										</a>
+									</li>
+								<?php } ?>
+								<?php if (!($_SESSION["userContext"] === "admin" && $key == $_SESSION['ROOT_USER'] && $_SESSION["user"] != $_SESSION['ROOT_USER'])) { ?>
+									<li class="units-table-row-action shortcut-enter" data-key-action="href">
+										<a
+											class="units-table-row-action-link"
+											href="/edit/user/?user=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
+											title="<?= _("Edit User") ?>"
+										>
+											<i class="fas fa-pencil icon-orange"></i>
+										</a>
+									</li>
+								<?php } ?>
+								<?php if (!($key == $_SESSION['ROOT_USER'] || $key == $user_plain)) { ?>
+									<li class="units-table-row-action shortcut-s" data-key-action="js">
+										<a
+											class="units-table-row-action-link data-controls js-confirm-action"
+											href="/<?= $spnd_action ?>/user/?user=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
+											title="<?= $spnd_action_title ?>"
+											data-confirm-title="<?= $spnd_action_title ?>"
+											data-confirm-message="<?= sprintf($spnd_confirmation, $key) ?>"
+										>
+											<i class="fas <?= $spnd_icon ?> <?= $spnd_icon_class ?>"></i>
+										</a>
+									</li>
+									<li class="units-table-row-action shortcut-delete" data-key-action="js">
+										<a
+											class="units-table-row-action-link data-controls js-confirm-action"
+											href="/delete/user/?user=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
+											title="<?= _("Delete") ?>"
+											data-confirm-title="<?= _("Delete") ?>"
+											data-confirm-message="<?= sprintf(_("Are you sure you want to delete user %s?"), $key) ?>"
+										>
+											<i class="fas fa-trash icon-red"></i>
+										</a>
+									</li>
+								<?php } ?>
+							</ul>
+						</div>
+					</div>
 					<span class="u-hide-desktop u-text-bold"><?= _("Name") ?>:</span>
 					<?php if ($key == $user_plain) { ?>
 						<a href="/edit/user/?user=<?= $key ?>&token=<?= $_SESSION["token"] ?>" title="<?= _("Edit User") ?>">
@@ -166,9 +238,25 @@
 						<span class="u-hide-desktop u-text-bold"><?= _("Email") ?>:</span>
 						<span title="<?= $data[$key]["CONTACT"] ?>"><?= $data[$key]["CONTACT"] ?></span>
 					</p>
+					<?php
+					$disk_percent = $data[$key]["DISK_QUOTA"] > 0 ? round(($data[$key]["U_DISK"] / $data[$key]["DISK_QUOTA"]) * 100) : 0;
+					$disk_class = $disk_percent >= 90 ? 'progress-high' : ($disk_percent >= 70 ? 'progress-medium' : 'progress-low');
+					$bandwidth_percent = $data[$key]["BANDWIDTH"] > 0 ? round(($data[$key]["U_BANDWIDTH"] / $data[$key]["BANDWIDTH"]) * 100) : 0;
+					$bandwidth_class = $bandwidth_percent >= 90 ? 'progress-high' : ($bandwidth_percent >= 70 ? 'progress-medium' : 'progress-low');
+					?>
+					<div class="u-hide-tablet">
+						<div class="progress-label"><?= _("Disk Usage") ?> (<?= $disk_percent ?>%)</div>
+						<div class="progress">
+							<div class="progress-bar <?= $disk_class ?>" style="width: <?= $disk_percent ?>%"></div>
+						</div>
+						<div class="progress-label"><?= _("Bandwidth Usage") ?> (<?= $bandwidth_percent ?>%)</div>
+						<div class="progress">
+							<div class="progress-bar <?= $bandwidth_class ?>" style="width: <?= $bandwidth_percent ?>%"></div>
+						</div>
+					</div>
 				</div>
 				<div class="units-table-cell">
-					<ul class="units-table-row-actions">
+					<ul class="units-table-row-actions u-hide-desktop">
 						<?php if ($key == $user_plain) { ?>
 							<li class="units-table-row-action">
 								<i class="fas fa-user-check" title="<?= $key ?> (<?= $data[$key]["NAME"] ?>)"></i>

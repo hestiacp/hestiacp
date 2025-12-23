@@ -1233,6 +1233,60 @@
 	font-weight: 600;
 }
 
+.card-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 10px;
+	background-color: #f9f9f9;
+	border-bottom: 1px solid #ddd;
+
+	& .card-title {
+		flex-grow: 1;
+	}
+
+	& .card-actions {
+		display: flex;
+		gap: 5px;
+	}
+}
+
+/* Progress bars
+   ========================================================================== */
+
+.progress {
+	height: 8px;
+	background-color: #e9e9e9;
+	border-radius: 4px;
+	overflow: hidden;
+	margin: 5px 0;
+}
+
+.progress-bar {
+	height: 100%;
+	border-radius: 4px;
+	transition: width 0.3s ease;
+
+	&.progress-low {
+		background-color: var(--icon-color-red);
+	}
+
+	&.progress-medium {
+		background-color: var(--icon-color-orange);
+	}
+
+	&.progress-high {
+		background-color: var(--icon-color-green);
+	}
+}
+
+.progress-label {
+	font-size: 0.75rem;
+	color: #666;
+	margin-bottom: 2px;
+	font-weight: 500;
+}
+
 /* Statistics
    ========================================================================== */
 

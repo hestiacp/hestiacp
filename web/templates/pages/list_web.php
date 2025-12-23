@@ -194,6 +194,99 @@
 				data-sort-name="<?= $key ?>"
 				data-sort-bandwidth="<?= $data[$key]["U_BANDWIDTH"] ?>"
 				data-sort-disk="<?= $data[$key]["U_DISK"] ?>">
+				<div class="card-header u-hide-tablet">
+					<div class="card-title">
+						<?php if ($read_only === "true") { ?>
+							<?= $key ?>
+						<?php } else {
+							$aliases = explode(',', $data[$key]['ALIAS']);
+							$alias_new = array();
+							foreach($aliases as $alias){
+								if ($alias != 'www.'.$key) {
+									$alias_new[] = trim($alias);
+								}
+							}
+							?>
+							<a href="/edit/web/?domain=<?= $key ?>&token=<?= $_SESSION['token'] ?>" title="<?= _("Edit Domain") ?>: <?= $key ?>">
+								<?= $key ?>
+								<?php
+									if (!empty($alias_new) && !empty($data[$key]['ALIAS'])) {
+										$aliases = implode(', ', $alias_new);
+										echo "<p class='hint u-max-width300 u-text-truncate'>($aliases)</p>";
+									}
+								?>
+							</a>
+						<?php } ?>
+					</div>
+					<div class="card-actions">
+						<?php if (!empty($data[$key]["STATS"])) { ?>
+							<a
+								href="<?= $vstats_scheme ?>://<?= $key ?>/vstats/"
+								target="_blank"
+								rel="noopener"
+								title="<?= _("Statistics") ?>"
+							>
+								<i class="fas fa-chart-bar icon-maroon"></i>
+							</a>
+						<?php } ?>
+						<a
+							href="http://<?= $key ?>/"
+							target="_blank"
+							rel="noopener"
+							title="<?= _("Visit") ?>"
+						>
+							<i class="fas fa-square-up-right icon-lightblue"></i>
+						</a>
+						<?php if ($read_only !== "true") { ?>
+							<?php if ($data[$key]["SUSPENDED"] == "no") { ?>
+								<a
+									href="/edit/web/?domain=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
+									title="<?= _("Edit Domain") ?>"
+								>
+									<i class="fas fa-pencil icon-orange"></i>
+								</a>
+								<a
+									href="/download/site/?site=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
+									title="<?= _("Download Site") ?>"
+								>
+									<i class="fas fa-download icon-orange"></i>
+								</a>
+							<?php } ?>
+							<a
+								href="/list/web-log/?domain=<?= $key ?>&type=access#"
+								title="<?= _("View Logs") ?>"
+							>
+								<i class="fas fa-binoculars icon-purple"></i>
+							</a>
+							<a
+								class="data-controls js-confirm-action"
+								href="/<?= $spnd_action ?>/web/?domain=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
+								title="<?= $spnd_action_title ?>"
+								data-confirm-title="<?= $spnd_action_title ?>"
+								data-confirm-message="<?= sprintf($spnd_confirmation, $key) ?>"
+							>
+								<i class="fas <?= $spnd_icon ?> <?= $spnd_icon_class ?>"></i>
+							</a>
+							<a
+								class="data-controls js-confirm-action"
+								href="/delete/web/?domain=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
+								title="<?= _("Delete") ?>"
+								data-confirm-title="<?= _("Delete") ?>"
+								data-confirm-message="<?= sprintf(_("Are you sure you want to delete domain %s?"), $key) ?>"
+							>
+								<i class="fas fa-trash icon-red"></i>
+							</a>
+						<?php } ?>
+					</div>
+				</div>
+				<div class="u-hide-tablet">
+					<div class="progress-label">
+						<i class="fas fa-hard-drive"></i> <?= _("Disk") ?>: <?= humanize_usage_size($data[$key]["U_DISK"]) ?> <?= humanize_usage_measure($data[$key]["U_DISK"]) ?>
+					</div>
+					<div class="progress-label">
+						<i class="fas fa-right-left"></i> <?= _("Bandwidth") ?>: <?= humanize_usage_size($data[$key]["U_BANDWIDTH"]) ?> <?= humanize_usage_measure($data[$key]["U_BANDWIDTH"]) ?>
+					</div>
+				</div>
 				<div class="units-table-cell">
 					<div>
 						<input id="check<?= $i ?>" class="js-unit-checkbox" type="checkbox" title="<?= _("Select") ?>" name="domain[]" value="<?= $key ?>" <?= $display_mode ?>>

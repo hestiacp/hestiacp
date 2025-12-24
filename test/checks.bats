@@ -316,7 +316,7 @@ bar'
 
 @test "is_dns_record_format_valid test" {
 	rtype='MX'
-priority=1;
+    priority=1;
      run is_dns_record_format_valid 'c
 1eshutdown
 r'

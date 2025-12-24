@@ -187,6 +187,13 @@ r' "key"
 	assert_failure $E_INVALID
 }
 
+@test "is_dns_record_format_valid SRV null target" {
+	rtype='SRV'
+	priority=''
+	run is_dns_record_format_valid '0 5 0 .'
+	assert_success
+}
+
 @test "is_dns_record_format_valid TXT newline" {
 	rtype='TXT'
 	priority=''

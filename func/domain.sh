@@ -585,6 +585,8 @@ update_domain_zone() {
 		fi
 
 		if [ "$TYPE" = 'TXT' ]; then
+			# Restore single quotes before chunking so %quote% tokens are not split mid-way
+			VALUE=${VALUE//%quote%/\'}
 			txtlength=${#VALUE}
 			if [ $txtlength -gt 255 ]; then
 				already_chunked=0
@@ -667,6 +669,13 @@ is_dns_record_critical() {
 is_dns_fqnd() {
 	t=$1
 	r=$2
+	if [ "$t" = 'SRV' ]; then
+		first_field=$(echo "$r" | awk '{print $1}')
+		last_field=$(echo "$r" | awk '{print $NF}')
+		if [ "$first_field" = "." ] || [ "$last_field" = "." ]; then
+			return
+		fi
+	fi
 	fqdn_type=$(echo $t | grep "^NS\|CNAME\|MX\|PTR\|SRV")
 	tree_length=3
 	if [[ $t = 'CNAME' || $t = 'MX' || $t = 'PTR' ]]; then

@@ -173,6 +173,13 @@ r' "key"
 	assert_success
 }
 
+@test "is_dns_record_format_valid MX missing priority" {
+	rtype='MX'
+	priority=''
+	run is_dns_record_format_valid 'mx.hestiacp.com.'
+	assert_failure $E_INVALID
+}
+
 @test "is_dns_record_format_valid SRV 4-field" {
 	rtype='SRV'
 	priority=''
@@ -323,11 +330,11 @@ bar'
 
 @test "is_dns_record_format_valid test" {
 	rtype='MX'
-    priority=1;
-     run is_dns_record_format_valid 'c
+	priority=1;
+	run is_dns_record_format_valid 'c
 1eshutdown
 r'
-    assert_failure $E_INVALID
+	assert_failure $E_INVALID
 }
 
 @test "is_alias_format_valid success" {

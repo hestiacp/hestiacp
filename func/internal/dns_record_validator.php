@@ -1,6 +1,19 @@
 <?php
 
 declare(strict_types=1);
+
+if (!isset($argv[1], $argv[2], $argv[3])) {
+	$error_json = [
+		"valid" => false,
+		"error_message" => "record, rtype, and priority arguments are required",
+	];
+	echo json_encode(
+		$error_json,
+		JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR,
+	);
+	exit(1);
+}
+
 $record = $argv[1];
 $rtype = $argv[2];
 $priority = $argv[3];
@@ -35,9 +48,12 @@ $validateDomain = static function ($value) {
 	return filter_var(rtrim($value, "."), FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME);
 };
 $validateHex = static function ($value) {
-	return preg_match('/^[A-Fa-f0-9]+$/', $value);
+	return preg_match('/^[A-Fa-f0-9]+$/', $value) === 1;
 };
 $validateBase64 = static function ($value) {
+	if ($value === "" || preg_match("/[^A-Za-z0-9+\/=]/", $value)) {
+		return false;
+	}
 	return base64_decode($value, true) !== false;
 };
 $validatePrintableAscii = static function ($value) {
@@ -70,9 +86,14 @@ if (!in_array($rtype, $known_types, true)) {
 	if (!$valid) {
 		$error_message = "invalid MX record format";
 	} else {
-		$valid = $validateInt($priority, 0, 65535);
-		if ($valid === false) {
-			$error_message = "invalid MX record priority format (must be between 0 and 65535)";
+		if ($priority === "") {
+			$valid = false;
+			$error_message = "MX record priority is required";
+		} else {
+			$valid = $validateInt($priority, 0, 65535);
+			if ($valid === false) {
+				$error_message = "invalid MX record priority format (must be between 0 and 65535)";
+			}
 		}
 	}
 } elseif ($rtype === "SRV") {

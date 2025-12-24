@@ -977,7 +977,7 @@ EOPHP
 # DNS record validator
 is_dns_record_format_valid() {
 	json_from_php=$(
-		$HESTIA_PHP "$HESTIA/func/dns_record_validator.php" "$1" "$rtype" "$priority"
+		$HESTIA_PHP "$HESTIA/func/internal/dns_record_validator.php" "$1" "$rtype" "$priority"
 	)
 	is_valid=$(jq -r '.valid' <<< "$json_from_php")
 	if [ "$is_valid" != 'true' ]; then

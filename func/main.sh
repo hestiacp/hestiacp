@@ -995,6 +995,15 @@ is_dns_record_format_valid() {
 	$validateDomain = static function ($value) {
 		return filter_var(rtrim($value, '.'), FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME);
 	};
+	$validateHex = static function ($value) {
+		return preg_match('/^[A-Fa-f0-9]+$/', $value);
+	};
+	$validateBase64 = static function ($value) {
+		return base64_decode($value, true) !== false;
+	};
+	$validatePrintableAscii = static function ($value) {
+		return !preg_match('/[^\x20-\x7E]/', $value);
+	};
 
 	if (!in_array($rtype, $known_types, true)) {
 		$valid = false;
@@ -1072,6 +1081,163 @@ is_dns_record_format_valid() {
 				$cleaned_record = $weight_validated . ' ' . $port_validated . ' ' . $target;
 			}
 		}
+		} elseif ($rtype === 'TXT' || $rtype === 'SPF') {
+			if ($record === '') {
+				$valid = false;
+				$error_message = "$rtype record cannot be empty";
+			} elseif (strlen($record) > 65535) {
+				$valid = false;
+				$error_message = "$rtype record exceeds maximum length";
+			} elseif (!$validatePrintableAscii($record)) {
+				$valid = false;
+				$error_message = "$rtype record contains non-ASCII characters";
+			}
+		} elseif ($rtype === 'DNSKEY' || $rtype === 'KEY') {
+			$parts = preg_split('/\s+/', trim($record));
+			if (count($parts) < 3) {
+				$valid = false;
+				$error_message = "invalid $rtype record format (expected flags protocol algorithm [public-key])";
+			} else {
+				[$flags, $protocol, $algorithm] = array_slice($parts, 0, 3);
+				$public_key = implode(' ', array_slice($parts, 3));
+				$flags_valid = $validateInt($flags, 0, 65535);
+				$protocol_valid = $validateInt($protocol, 0, 255);
+				$algorithm_valid = $validateInt($algorithm, 0, 255);
+				if ($rtype === 'DNSKEY' && $protocol !== '3') {
+					$protocol_valid = false;
+				}
+				if ($flags_valid === false || $protocol_valid === false || $algorithm_valid === false) {
+					$valid = false;
+					$error_message = "invalid $rtype numeric fields";
+				} elseif ($rtype === 'KEY' && $algorithm === '0') {
+					if ($public_key !== '') {
+						$valid = false;
+						$error_message = "invalid KEY public key for algorithm 0 (must be empty)";
+					}
+				} elseif ($public_key === '' || !$validateBase64($public_key)) {
+					$valid = false;
+					$error_message = "invalid $rtype public key (must be base64)";
+				}
+			}
+		} elseif ($rtype === 'IPSECKEY') {
+			$parts = preg_split('/\s+/', trim($record));
+			if (count($parts) < 4) {
+				$valid = false;
+				$error_message = "invalid IPSECKEY record format (expected precedence gateway-type algorithm gateway [public-key])";
+			} else {
+				[$precedence, $gateway_type, $algorithm, $gateway] = array_slice($parts, 0, 4);
+				$public_key = implode(' ', array_slice($parts, 4));
+				$precedence_valid = $validateInt($precedence, 0, 255);
+				$gateway_type_valid = $validateInt($gateway_type, 0, 3);
+				$algorithm_valid = $validateInt($algorithm, 0, 255);
+				if ($precedence_valid === false || $gateway_type_valid === false || $algorithm_valid === false) {
+					$valid = false;
+					$error_message = "invalid IPSECKEY numeric fields";
+				} else {
+				if ($gateway_type === '0') {
+					if ($gateway !== '.' && $gateway !== '') {
+						$valid = false;
+						$error_message = "invalid IPSECKEY gateway for type 0";
+					}
+				} elseif ($gateway_type === '1') {
+					if (!filter_var($gateway, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
+						$valid = false;
+						$error_message = "invalid IPSECKEY IPv4 gateway";
+					}
+				} elseif ($gateway_type === '2') {
+					if (!filter_var($gateway, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
+						$valid = false;
+						$error_message = "invalid IPSECKEY IPv6 gateway";
+					}
+					} else {
+						if (!$validateDomain($gateway)) {
+							$valid = false;
+							$error_message = "invalid IPSECKEY domain gateway";
+						}
+					}
+					if ($valid !== false) {
+						if ($algorithm === '0') {
+							if ($public_key !== '') {
+								$valid = false;
+								$error_message = "invalid IPSECKEY public key for algorithm 0 (must be empty)";
+							}
+						} elseif ($public_key === '' || !$validateBase64($public_key)) {
+							$valid = false;
+							$error_message = "invalid IPSECKEY public key (must be base64)";
+						}
+					}
+				}
+			}
+		} elseif ($rtype === 'TLSA') {
+			$parts = preg_split('/\s+/', trim($record));
+			if (count($parts) < 4) {
+				$valid = false;
+				$error_message = "invalid TLSA record format (expected usage selector matching-type data)";
+			} else {
+				[$usage, $selector, $matching_type] = array_slice($parts, 0, 3);
+				$data = implode(' ', array_slice($parts, 3));
+				$usage_valid = $validateInt($usage, 0, 3);
+				$selector_valid = $validateInt($selector, 0, 1);
+				$matching_valid = $validateInt($matching_type, 0, 2);
+				$data_length = strlen($data);
+				if ($usage_valid === false || $selector_valid === false || $matching_valid === false) {
+					$valid = false;
+					$error_message = "invalid TLSA numeric fields";
+				} elseif ($data === '' || !$validateHex($data) || ($data_length % 2 !== 0)) {
+					$valid = false;
+					$error_message = "invalid TLSA data";
+				} elseif ($matching_type === '1' && $data_length !== 64) {
+					$valid = false;
+					$error_message = "invalid TLSA data length for matching type 1";
+				} elseif ($matching_type === '2' && $data_length !== 128) {
+					$valid = false;
+					$error_message = "invalid TLSA data length for matching type 2";
+				}
+			}
+		} elseif ($rtype === 'CAA') {
+			$parts = preg_split('/\s+/', trim($record), 3);
+			if (count($parts) < 3) {
+			$valid = false;
+			$error_message = "invalid CAA record format (expected flag tag value)";
+		} else {
+			[$flag, $tag, $value] = $parts;
+			$flag_valid = $validateInt($flag, 0, 255);
+			$tag_valid = preg_match('/^[A-Za-z0-9-]{1,63}$/', $tag);
+			if ($flag_valid === false || $tag_valid === 0) {
+				$valid = false;
+				$error_message = "invalid CAA flag or tag";
+			} elseif ($value === '') {
+				$valid = false;
+				$error_message = "invalid CAA value";
+			}
+		}
+		} elseif ($rtype === 'DS') {
+			$parts = preg_split('/\s+/', trim($record));
+			if (count($parts) < 4) {
+				$valid = false;
+				$error_message = "invalid DS record format (expected keytag algorithm digest-type digest)";
+		} else {
+			[$key_tag, $algorithm, $digest_type] = array_slice($parts, 0, 3);
+				$digest = implode(' ', array_slice($parts, 3));
+				$key_tag_valid = $validateInt($key_tag, 0, 65535);
+				$algorithm_valid = $validateInt($algorithm, 0, 255);
+				$digest_type_valid = $validateInt($digest_type, 0, 255);
+				$digest_lengths = array(1 => 40, 2 => 64, 3 => 64, 4 => 96);
+				$digest_length = strlen($digest);
+				if ($key_tag_valid === false || $algorithm_valid === false || $digest_type_valid === false) {
+					$valid = false;
+					$error_message = "invalid DS numeric fields";
+				} elseif ($digest === '' || !$validateHex($digest) || ($digest_length % 2 !== 0)) {
+					$valid = false;
+					$error_message = "invalid DS digest";
+				} elseif (array_key_exists((int) $digest_type, $digest_lengths) && $digest_length !== $digest_lengths[(int) $digest_type]) {
+					$valid = false;
+					$error_message = "invalid DS digest length for type $digest_type";
+				}
+			}
+		} else {
+			$valid = false;
+			$error_message = "validation not implemented for record type: $rtype";
 	}
 
 	$json = array("valid" => $valid !== false);

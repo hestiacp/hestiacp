@@ -101,20 +101,25 @@ fi
 if [ "$rtype" != "CAA" ]; then
 	dvalue=${dvalue//\"/}
 
-	if [ "$rtype" != 'SRV' ] && [[ "$dvalue" =~ [\;[:space:]] ]]; then
-		dvalue='"'"$dvalue"'"'
-	fi
+	case "$rtype" in
+		SRV | DNSKEY | DS | TLSA | KEY | IPSECKEY) ;;
+		*)
+			if [[ "$dvalue" =~ [\;[:space:]] ]]; then
+				dvalue='"'"$dvalue"'"'
+			fi
+			;;
+	esac
 fi
 
 #RTYPE wasn't checked make sure to do it now correctly
 is_format_valid 'user' 'domain' 'id' 'record' 'rtype' 'dvalue'
 
 # Additional verifications
-is_dns_fqnd "$TYPE" "$dvalue"
-is_dns_nameserver_valid "$domain" "$TYPE" "$dvalue"
+is_dns_fqnd "$rtype" "$dvalue"
+is_dns_nameserver_valid "$domain" "$rtype" "$dvalue"
 
-current_value_canon=$(echo "$VALUE" | sed "s/'/%quote%/g")
-new_value_canon=$(echo "$dvalue" | sed "s/'/%quote%/g")
+current_value_canon=${VALUE//\'/%quote%}
+new_value_canon=${dvalue//\'/%quote%}
 
 if [[ "$RECORD" == "$record" ]] && [[ "$TYPE" == "$rtype" ]] && [[ "$PRIORITY" -eq "$priority" ]] \
 	&& [[ "$current_value_canon" == "$new_value_canon" ]] && [[ "$SUSPENDED" == 'no' ]] && [[ "$TTL" -eq "$ttl" ]]; then

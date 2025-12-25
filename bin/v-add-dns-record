@@ -70,12 +70,14 @@ fi
 
 if [ "$rtype" != "CAA" ]; then
 	dvalue=${dvalue//\"/}
-	# Add support for DS key
-	if [ "$rtype" != "DNSKEY" ] && [ "$rtype" != "DS" ] && [ "$rtype" != "TLSA" ]; then
-		if [ "$rtype" != 'SRV' ] && [[ "$dvalue" =~ [\;[:space:]] ]]; then
-			dvalue='"'"$dvalue"'"'
-		fi
-	fi
+	case "$rtype" in
+		SRV | DNSKEY | DS | TLSA | KEY | IPSECKEY) ;;
+		*)
+			if [[ "$dvalue" =~ [\;[:space:]] ]]; then
+				dvalue='"'"$dvalue"'"'
+			fi
+			;;
+	esac
 fi
 
 if [ "$record" = "@" ] && [ "$rtype" = "CNAME" ]; then
@@ -119,7 +121,7 @@ time_n_date=$(date +'%T %F')
 time=$(echo "$time_n_date" | cut -f 1 -d \ )
 date=$(echo "$time_n_date" | cut -f 2 -d \ )
 
-dvalue=$(echo "$dvalue" | sed "s/'/%quote%/g")
+dvalue=${dvalue//\'/%quote%}
 
 # Adding record
 zone="$USER_DATA/dns/$domain.conf"

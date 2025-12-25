@@ -569,11 +569,10 @@ update_domain_zone() {
                                             $refresh
                                             1209600
                                             180 )
-" > $zn_conf
+" > "$zn_conf"
 
-	while read line; do
+	while IFS= read -r line; do
 		unset TTL RECORD TYPE PRIORITY VALUE SUSPENDED TIME DATE
-		IFS=$'\n'
 		parse_dns_record_line "$line"
 
 		# inherit zone TTL if record lacks explicit TTL value
@@ -604,10 +603,10 @@ update_domain_zone() {
 		fi
 
 		if [ "$SUSPENDED" != 'yes' ]; then
-			value_for_zone=$(echo "$VALUE" | sed "s/%quote%/'/g")
+			value_for_zone=${VALUE//%quote%/\'}
 			printf "%s\t%s\tIN\t%s\t%s\t%s\n" "$RECORD" "$TTL" "$TYPE" "$PRIORITY" "$value_for_zone" >> "$zn_conf"
 		fi
-	done < $USER_DATA/dns/$domain.conf
+	done < "$USER_DATA/dns/$domain.conf"
 }
 
 # Update zone serial

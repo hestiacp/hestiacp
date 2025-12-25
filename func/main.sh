@@ -976,12 +976,19 @@ EOPHP
 
 # DNS record validator
 is_dns_record_format_valid() {
+	is_no_new_line_format "$1"
+
 	json_from_php=$(
 		$HESTIA_PHP "$HESTIA/func/internal/dns_record_validator.php" "$1" "$rtype" "$priority"
 	)
-	is_valid=$(jq -r '.valid' <<< "$json_from_php")
+	check_result $? "dns record validation failed :: $1" "$E_INVALID"
+
+	is_valid=$(jq -er '.valid' <<< "$json_from_php")
+	if [ $? -ne 0 ]; then
+		check_result "$E_INVALID" "dns record validation failed :: $1"
+	fi
 	if [ "$is_valid" != 'true' ]; then
-		error_message=$(jq -r '.error_message' <<< "$json_from_php")
+		error_message=$(jq -r '.error_message // "invalid dns record format"' <<< "$json_from_php")
 		check_result "$E_INVALID" "$error_message :: $1"
 	fi
 	cleaned_record=$(jq -r '.cleaned_record // empty' <<< "$json_from_php")
@@ -992,7 +999,6 @@ is_dns_record_format_valid() {
 	if [ -n "$updated_priority" ]; then
 		priority="$updated_priority"
 	fi
-	is_no_new_line_format "$1"
 }
 
 # Email format validator

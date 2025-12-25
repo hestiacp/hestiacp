@@ -293,6 +293,13 @@ bar'
 	assert_failure $E_INVALID
 }
 
+@test "is_dns_record_format_valid TLSA matching_type plus sign wrong length" {
+	rtype='TLSA'
+	priority=''
+	run is_dns_record_format_valid '3 1 +1 0123'
+	assert_failure $E_INVALID
+}
+
 @test "is_dns_record_format_valid DS type1 wrong length" {
 	rtype='DS'
 	priority=''

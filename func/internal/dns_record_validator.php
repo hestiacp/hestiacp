@@ -256,10 +256,10 @@ if (!in_array($rtype, $known_types, true)) {
 		} elseif ($data === "" || !$validateHex($data) || $data_length % 2 !== 0) {
 			$valid = false;
 			$error_message = "invalid TLSA data";
-		} elseif ($matching_type === "1" && $data_length !== 64) {
+		} elseif ($matching_valid === 1 && $data_length !== 64) {
 			$valid = false;
 			$error_message = "invalid TLSA data length for matching type 1";
-		} elseif ($matching_type === "2" && $data_length !== 128) {
+		} elseif ($matching_valid === 2 && $data_length !== 128) {
 			$valid = false;
 			$error_message = "invalid TLSA data length for matching type 2";
 		}

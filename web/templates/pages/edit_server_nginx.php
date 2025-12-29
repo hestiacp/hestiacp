@@ -43,7 +43,14 @@
             <div class="js-basic-options">
                 <div class="u-mb10">
                     <label for="v_worker_processes" class="form-label">worker_processes</label>
-                    <input type="text" class="form-control" data-regexp="worker_processes" data-prev-value="<?= htmlentities($v_worker_processes) ?>" name="v_worker_processes" id="v_worker_processes" value="<?= htmlentities($v_worker_processes) ?>">
+                    <input
+                        type="text"
+                        class="form-control"
+                        data-regexp="worker_processes"
+                        data-prev-value="<?= $worker_processes_val ?>"
+                        name="v_worker_processes"
+                        id="v_worker_processes"
+                        value="<?= $worker_processes_val ?>">
                 </div>
                 <div class="u-mb10">
                     <label for="v_worker_connections" class="form-label">worker_connections</label>
@@ -159,7 +166,10 @@
                 </div>
                 <div class="u-mb20">
                     <label for="v_config" class="form-label"><?= $v_config_path ?></label>
-                    <textarea class="form-control u-min-height600 u-allow-resize u-console js-advanced-textarea" name="v_config" id="v_config"><?= $v_config ?></textarea>
+                    <textarea
+                        class="form-control u-min-height600 u-allow-resize u-console js-advanced-textarea"
+                        name="v_config"
+                        id="v_config"><?= $v_config ?></textarea>
                 </div>
                 <div class="form-check">
                     <input class="form-check-input" type="checkbox" name="v_restart" id="v_restart" checked>

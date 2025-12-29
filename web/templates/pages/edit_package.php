@@ -21,8 +21,7 @@
         id="main-form"
         name="v_edit_package"
         method="post"
-        class="<?= $v_status ?>"
-    >
+        class="<?= $v_status ?>">
         <input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
         <input type="hidden" name="save" value="save">
 
@@ -31,7 +30,12 @@
             <?php show_alert_message($_SESSION); ?>
             <div class="u-mb10">
                 <label for="v_package_new" class="form-label"><?= _("Package Name") ?></label>
-                <input type="text" class="form-control" name="v_package_new" id="v_package_new" value="<?= htmlentities(trim($v_package_new, "'")) ?>" required>
+                <input type="text"
+                    class="form-control"
+                    name="v_package_new"
+                    id="v_package_new"
+                    value="<?= htmlentities(trim($v_package_new, "'")) ?>"
+                    required>
                 <input type="hidden" name="v_package" value="<?= htmlentities(trim($v_package, "'")) ?>">
             </div>
             <div class="u-mb10">
@@ -39,7 +43,11 @@
                     <?= _("Quota") ?> <span class="optional">(<?= _("in MB") ?>)</span>
                 </label>
                 <div class="u-pos-relative">
-                    <input type="text" class="form-control" name="v_disk_quota" id="v_disk_quota" value="<?= htmlentities(trim($v_disk_quota, "'")) ?>">
+                    <input type="text"
+                        class="form-control"
+                        name="v_disk_quota"
+                        id="v_disk_quota"
+                        value="<?= htmlentities(trim($v_disk_quota, "'")) ?>">
                     <button type="button" class="unlimited-toggle js-unlimited-toggle" title="<?= _("Unlimited") ?>">
                         <i class="fas fa-infinity"></i>
                     </button>
@@ -50,7 +58,11 @@
                     <?= _("Bandwidth") ?> <span class="optional">(<?= _("in MB") ?>)</span>
                 </label>
                 <div class="u-pos-relative">
-                    <input type="text" class="form-control" name="v_bandwidth" id="v_bandwidth" value="<?= htmlentities(trim($v_bandwidth, "'")) ?>">
+                    <input type="text"
+                        class="form-control"
+                        name="v_bandwidth"
+                        id="v_bandwidth"
+                        value="<?= htmlentities(trim($v_bandwidth, "'")) ?>">
                     <button type="button" class="unlimited-toggle js-unlimited-toggle" title="<?= _("Unlimited") ?>">
                         <i class="fas fa-infinity"></i>
                     </button>
@@ -58,15 +70,18 @@
             </div>
             <div class="u-mb10">
                 <label for="v_backups" class="form-label"><?= _("Backups") ?></label>
-                <input type="text" class="form-control" name="v_backups" id="v_backups" value="<?= htmlentities(trim($v_backups, "'")) ?>">
+                <input type="text"
+                    class="form-control"
+                    name="v_backups"
+                    id="v_backups"
+                    value="<?= htmlentities(trim($v_backups, "'")) ?>">
             </div>
             <div class="u-mb10">
                 <label for="v_backups_incremental" class="form-label"><?= _("Incremental Backups") ?></label>
+                <?php $backups_inc_selected = (!empty($v_backups_incremental) && 'yes' == trim($v_backups_incremental, "''")) ? ' selected' : ''; ?>
                 <select class="form-select" name="v_backups_incremental" id="v_backups_incremental">
-                    <option value="no"><?=_('Disabled')?></option>
-                    <option value="yes" <?php if (!empty($v_backups_incremental) && 'yes' == trim($v_backups_incremental, "''")) : ?>
-                        selected
-                                        <?php endif; ?>><?=_('Enabled')?></option>
+                    <option value="no"><?= _('Disabled') ?></option>
+                    <option value="yes" <?= $backups_inc_selected ?>><?= _('Enabled') ?></option>
                 </select>
             </div>
             <details class="collapse" id="web-options">
@@ -77,7 +92,11 @@
                     <div class="u-mb10">
                         <label for="v_web_domains" class="form-label"><?= _("Web Domains") ?></label>
                         <div class="u-pos-relative">
-                            <input type="text" class="form-control" name="v_web_domains" id="v_web_domains" value="<?= htmlentities(trim($v_web_domains, "'")) ?>">
+                            <input type="text"
+                                class="form-control"
+                                name="v_web_domains"
+                                id="v_web_domains"
+                                value="<?= htmlentities(trim($v_web_domains, "'")) ?>">
                             <button type="button" class="unlimited-toggle js-unlimited-toggle" title="<?= _("Unlimited") ?>">
                                 <i class="fas fa-infinity"></i>
                             </button>
@@ -88,26 +107,36 @@
                             <?= _("Web Aliases") ?> <span class="optional">(<?= _("per domain") ?>)</span>
                         </label>
                         <div class="u-pos-relative">
-                            <input type="text" class="form-control" name="v_web_aliases" id="v_web_aliases" value="<?= htmlentities(trim($v_web_aliases, "'")) ?>">
+                            <input type="text"
+                                class="form-control"
+                                name="v_web_aliases"
+                                id="v_web_aliases"
+                                value="<?= htmlentities(trim($v_web_aliases, "'")) ?>">
                             <button type="button" class="unlimited-toggle js-unlimited-toggle" title="<?= _("Unlimited") ?>">
                                 <i class="fas fa-infinity"></i>
                             </button>
                         </div>
                     </div>
                     <div class="u-mb10">
+                        <?php
+                        $web_template_label = sprintf(
+                            '%s <span class="optional"> %s</span>',
+                            _("Web Template"),
+                            strtoupper($_SESSION["WEB_SYSTEM"])
+                        );
+                        ?>
                         <label for="v_web_template" class="form-label">
-                            <?= _("Web Template") . " <span class='optional'> " . strtoupper($_SESSION["WEB_SYSTEM"]) . "</span>" ?>
+                            <?= $web_template_label ?>
                         </label>
                         <select class="form-select" name="v_web_template" id="v_web_template">
-                            <?php
-                            foreach ($web_templates as $key => $value) {
-                                echo "\t\t\t\t<option value=\"" . htmlentities($value) . "\"";
-                                if ((!empty($v_web_template)) && ($value == trim($v_web_template, "'"))) {
-                                    echo ' selected';
-                                }
-                                echo ">" . htmlentities($value) . "</option>\n";
-                            }
-                            ?>
+                            <?php foreach ($web_templates as $key => $value) {
+                                $sel = (!empty($v_web_template) && ($value == trim($v_web_template, "'"))) ? ' selected' : '';
+                                ?>
+                                <option value="<?= htmlentities($value) ?>"
+                                    <?= $sel ?>>
+                                    <?= htmlentities($value) ?>
+                                </option>
+                            <?php } ?>
                         </select>
                     </div>
                     <?php if (!empty($_SESSION['WEB_BACKEND'])) {
@@ -117,15 +146,14 @@
                                 <?= _("Backend Template") . "<span class='optional'>" . strtoupper($_SESSION["WEB_BACKEND"]) . "</span>" ?>
                             </label>
                             <select class="form-select" name="v_backend_template" id="v_backend_template">
-                                <?php
-                                foreach ($backend_templates as $key => $value) {
-                                    echo "\t\t\t\t<option value=\"" . $value . "\"";
-                                    if ((!empty($v_backend_template)) && ($value == trim($v_backend_template, "'"))) {
-                                        echo ' selected';
-                                    }
-                                    echo ">" . htmlentities($value) . "</option>\n";
-                                }
-                                ?>
+                                <?php foreach ($backend_templates as $key => $value) {
+                                    $sel = (!empty($v_backend_template) && ($value == trim($v_backend_template, "'"))) ? ' selected' : '';
+                                    ?>
+                                    <option value="<?= htmlentities($value) ?>"
+                                        <?= $sel ?>>
+                                        <?= htmlentities($value) ?>
+                                    </option>
+                                <?php } ?>
                             </select>
                         </div>
                         <?= "";
@@ -137,15 +165,14 @@
                                 <?= _("Proxy Template") . "<span class='optional'>" . strtoupper($_SESSION["PROXY_SYSTEM"]) . "</span>" ?>
                             </label>
                             <select class="form-select" name="v_proxy_template" id="v_proxy_template">
-                                <?php
-                                foreach ($proxy_templates as $key => $value) {
-                                    echo "\t\t\t\t<option value=\"" . htmlentities($value) . "\"";
-                                    if ((!empty($v_proxy_template)) && ($value == trim($v_proxy_template, "'"))) {
-                                        echo ' selected';
-                                    }
-                                    echo ">" . htmlentities($value) . "</option>\n";
-                                }
-                                ?>
+                                <?php foreach ($proxy_templates as $key => $value) {
+                                    $sel = (!empty($v_proxy_template) && ($value == trim($v_proxy_template, "'"))) ? ' selected' : '';
+                                    ?>
+                                    <option value="<?= htmlentities($value) ?>"
+                                        <?= $sel ?>>
+                                        <?= htmlentities($value) ?>
+                                    </option>
+                                <?php } ?>
                             </select>
                         </div>
                         <?= "";
@@ -159,27 +186,42 @@
                 <div class="collapse-content">
                     <div class="u-mb10">
                         <label for="v_dns_template" class="form-label">
-                            <?= _("DNS Template") . "<span class='optional'>" . strtoupper($_SESSION["DNS_SYSTEM"]) . "</span>" ?>
-                        </label>
-                        <select class="form-select" name="v_dns_template" id="v_dns_template">
-                            <?php
-                            foreach ($dns_templates as $key => $value) {
-                                echo "\t\t\t\t<option value=\"" . htmlentities($value) . "\"";
-                                if ((!empty($v_dns_template)) && ($value == $v_dns_template)) {
-                                    echo ' selected';
+                            <?= '' ?>
+                        </label> <?php
+                                    $dns_template_label = sprintf(
+                                        '%s <span class="optional"> %s</span>',
+                                        _("DNS Template"),
+                                        strtoupper($_SESSION["DNS_SYSTEM"])
+                                    );
+                                    ?>
+                        <label for="v_dns_template" class="form-label">
+                            <?= $dns_template_label ?>
+                        </label> <select class="form-select" name="v_dns_template" id="v_dns_template">
+                            <?php foreach ($dns_templates as $key => $value) {
+                                $sel = '';
+                                if (
+                                    !empty($v_dns_template) && (
+                                    $value == $v_dns_template
+                                    || $value == trim($v_dns_template, "'")
+                                    )
+                                ) {
+                                    $sel = ' selected';
                                 }
-                                if ((!empty($v_dns_template)) && ($value == trim($v_dns_template, "'"))) {
-                                    echo ' selected';
-                                }
-                                echo ">" . htmlentities($value) . "</option>\n";
-                            }
-                            ?>
+                                ?>
+                                <option value="<?= htmlentities($value) ?>" <?= $sel ?>>
+                                    <?= htmlentities($value) ?>
+                                </option>
+                            <?php } ?>
                         </select>
                     </div>
                     <div class="u-mb10">
                         <label for="v_dns_domains" class="form-label"><?= _("DNS Zones") ?></label>
                         <div class="u-pos-relative">
-                            <input type="text" class="form-control" name="v_dns_domains" id="v_dns_domains" value="<?= htmlentities(trim($v_dns_domains, "'")) ?>">
+                            <input type="text"
+                                class="form-control"
+                                name="v_dns_domains"
+                                id="v_dns_domains"
+                                value="<?= htmlentities(trim($v_dns_domains, "'")) ?>">
                             <button type="button" class="unlimited-toggle js-unlimited-toggle" title="<?= _("Unlimited") ?>">
                                 <i class="fas fa-infinity"></i>
                             </button>
@@ -190,7 +232,11 @@
                             <?= _("DNS Records") ?> <span class="optional">(<?= _("per domain") ?>)</span>
                         </label>
                         <div class="u-pos-relative">
-                            <input type="text" class="form-control" name="v_dns_records" id="v_dns_records" value="<?= htmlentities(trim($v_dns_records, "'")) ?>">
+                            <input type="text"
+                                class="form-control"
+                                name="v_dns_records"
+                                id="v_dns_records"
+                                value="<?= htmlentities(trim($v_dns_records, "'")) ?>">
                             <button type="button" class="unlimited-toggle js-unlimited-toggle" title="<?= _("Unlimited") ?>">
                                 <i class="fas fa-infinity"></i>
                             </button>
@@ -205,9 +251,8 @@
                             <input type="text" class="form-control" name="v_ns2" value="<?= htmlentities(trim($v_ns2, "'")) ?>">
                         </div>
                         <?php require $_SERVER["HESTIA"] . "/web/templates/includes/extra-ns-fields.php"; ?>
-                        <button type="button" class="form-link u-mt20 js-add-ns" <?php if ($v_ns8) {
-                            echo 'style="display:none;"';
-                                                                                 } ?>>
+                        <?php $ns8_style = $v_ns8 ? 'style="display:none;"' : ''; ?>
+                        <button type="button" class="form-link u-mt20 js-add-ns" <?= $ns8_style ?>>
                             <?= _("Add Name Server") ?>
                         </button>
                     <?php } ?>
@@ -221,7 +266,11 @@
                     <div class="u-mb10">
                         <label for="v_mail_domains" class="form-label"><?= _("Mail Domains") ?></label>
                         <div class="u-pos-relative">
-                            <input type="text" class="form-control" name="v_mail_domains" id="v_mail_domains" value="<?= htmlentities(trim($v_mail_domains, "'")) ?>">
+                            <input type="text"
+                                class="form-control"
+                                name="v_mail_domains"
+                                id="v_mail_domains"
+                                value="<?= htmlentities(trim($v_mail_domains, "'")) ?>">
                             <button type="button" class="unlimited-toggle js-unlimited-toggle" title="<?= _("Unlimited") ?>">
                                 <i class="fas fa-infinity"></i>
                             </button>
@@ -232,7 +281,11 @@
                             <?= _("Mail Accounts") ?> <span class="optional">(<?= _("per domain") ?>)</span>
                         </label>
                         <div class="u-pos-relative">
-                            <input type="text" class="form-control" name="v_mail_accounts" id="v_mail_accounts" value="<?= htmlentities(trim($v_mail_accounts, "'")) ?>">
+                            <input type="text"
+                                class="form-control"
+                                name="v_mail_accounts"
+                                id="v_mail_accounts"
+                                value="<?= htmlentities(trim($v_mail_accounts, "'")) ?>">
                             <button type="button" class="unlimited-toggle js-unlimited-toggle" title="<?= _("Unlimited") ?>">
                                 <i class="fas fa-infinity"></i>
                             </button>
@@ -242,7 +295,11 @@
                         <label for="v_ratelimit" class="form-label">
                             <?= _("Rate Limit") ?> <span class="optional">(<?= _("per account / hour") ?>)</span>
                         </label>
-                        <input type="text" class="form-control" name="v_ratelimit" id="v_ratelimit" value="<?= htmlentities(trim($v_ratelimit, "'")) ?>">
+                        <input type="text"
+                            class="form-control"
+                            name="v_ratelimit"
+                            id="v_ratelimit"
+                            value="<?= htmlentities(trim($v_ratelimit, "'")) ?>">
                     </div>
                 </div>
             </details>
@@ -254,7 +311,11 @@
                     <div class="u-mb10">
                         <label for="v_databases" class="form-label"><?= _("Databases") ?></label>
                         <div class="u-pos-relative">
-                            <input type="text" class="form-control" name="v_databases" id="v_databases" value="<?= htmlentities(trim($v_databases, "'")) ?>">
+                            <input type="text"
+                                class="form-control"
+                                name="v_databases"
+                                id="v_databases"
+                                value="<?= htmlentities(trim($v_databases, "'")) ?>">
                             <button type="button" class="unlimited-toggle js-unlimited-toggle" title="<?= _("Unlimited") ?>">
                                 <i class="fas fa-infinity"></i>
                             </button>
@@ -270,7 +331,11 @@
                     <div class="u-mb10">
                         <label for="v_cron_jobs" class="form-label"><?= _("Cron Jobs") ?></label>
                         <div class="u-pos-relative">
-                            <input type="text" class="form-control" name="v_cron_jobs" id="v_cron_jobs" value="<?= htmlentities(trim($v_cron_jobs, "'")) ?>">
+                            <input type="text"
+                                class="form-control"
+                                name="v_cron_jobs"
+                                id="v_cron_jobs"
+                                value="<?= htmlentities(trim($v_cron_jobs, "'")) ?>">
                             <button type="button" class="unlimited-toggle js-unlimited-toggle" title="<?= _("Unlimited") ?>">
                                 <i class="fas fa-infinity"></i>
                             </button>
@@ -282,9 +347,8 @@
                             <?php foreach ($shells as $key => $value) : ?>
                                 <option value="<?= htmlentities($value) ?>"
                                     <?php if (!empty($v_shell) && $value == trim($v_shell, "''")) : ?>
-                                        selected
-                                    <?php endif; ?>
-                                >
+                                    selected
+                                    <?php endif; ?>>
                                     <?= htmlentities($value) ?>
                                 </option>
                             <?php endforeach; ?>
@@ -304,12 +368,22 @@
                                 <?= _("CPU Quota (in %)") ?>
                             </label>
                             <div class="u-pos-relative">
-                                <input type="text" class="form-control" name="v_cpu_quota" id="v_cpu_quota" value="<?= htmlentities(trim($v_cpu_quota, "'")) ?>">
+                                <input type="text"
+                                    class="form-control"
+                                    name="v_cpu_quota"
+                                    id="v_cpu_quota"
+                                    value="<?= htmlentities(trim($v_cpu_quota, "'")) ?>">
                                 <button type="button" class="unlimited-toggle js-unlimited-toggle" title="<?= _("Unlimited") ?>">
                                     <i class="fas fa-infinity"></i>
                                 </button>
                             </div>
-                            <small class="form-text text-muted"><?= _("CPUQuota=20% ensures that the executed processes will never get more than 20% CPU time on one CPU.") ?></small>
+                            <?php
+                            $cpuquota_note = _(
+                                "CPUQuota=20% ensures that the executed processes will never get "
+                                    . "more than 20% CPU time on one CPU."
+                            );
+                            ?>
+                            <small class="form-text text-muted"><?= $cpuquota_note ?></small>
                         </div>
 
                         <div class="u-mb10">
@@ -317,12 +391,22 @@
                                 <?= _("CPU Quota Period (in ms for milliseconds or s for seconds.)") ?>
                             </label>
                             <div class="u-pos-relative">
-                                <input type="text" class="form-control" name="v_cpu_quota_period" id="v_cpu_quota_period" value="<?= htmlentities(trim($v_cpu_quota_period, "'")) ?>">
+                                <input type="text"
+                                    class="form-control"
+                                    name="v_cpu_quota_period"
+                                    id="v_cpu_quota_period"
+                                    value="<?= htmlentities(trim($v_cpu_quota_period, "'")) ?>">
                                 <button type="button" class="unlimited-toggle js-unlimited-toggle" title="<?= _("Unlimited") ?>">
                                     <i class="fas fa-infinity"></i>
                                 </button>
                             </div>
-                            <small class="form-text text-muted"><?= _("CPUQuotaPeriodSec=10ms to request that the CPU quota is measured in periods of 10ms.") ?></small>
+                            <?php
+                            $cpuquota_period_note = _(
+                                "CPUQuotaPeriodSec=10ms to request that the CPU quota is measured "
+                                    . "in periods of 10ms."
+                            );
+                            ?>
+                            <small class="form-text text-muted"><?= $cpuquota_period_note ?></small>
                         </div>
 
                         <div class="u-mb10">
@@ -330,12 +414,23 @@
                                 <?= _("Memory Limit (in bytes or with units like '2G')") ?>
                             </label>
                             <div class="u-pos-relative">
-                                <input type="text" class="form-control" name="v_memory_limit" id="v_memory_limit" value="<?= htmlentities(trim($v_memory_limit, "'")) ?>">
+                                <input type="text"
+                                    class="form-control"
+                                    name="v_memory_limit"
+                                    id="v_memory_limit"
+                                    value="<?= htmlentities(trim($v_memory_limit, "'")) ?>">
                                 <button type="button" class="unlimited-toggle js-unlimited-toggle" title="<?= _("Unlimited") ?>">
                                     <i class="fas fa-infinity"></i>
                                 </button>
                             </div>
-                            <small class="form-text text-muted"><?= _("Takes a memory size in bytes. If the value is suffixed with K, M, G or T, the specified memory size is parsed as Kilobytes, Megabytes, Gigabytes, or Terabytes (with the base 1024), respectively") ?></small>
+                            <?php
+                            $memory_note = _(
+                                "Takes a memory size in bytes. If the value is suffixed with K, M, G or T, "
+                                    . "the specified memory size is parsed as Kilobytes, Megabytes, Gigabytes, or "
+                                    . "Terabytes (with the base 1024), respectively"
+                            );
+                            ?>
+                            <small class="form-text text-muted"><?= $memory_note ?></small>
                         </div>
 
                         <div class="u-mb10">
@@ -343,12 +438,23 @@
                                 <?= _("Swap Limit (in bytes or with units like '2G')") ?>
                             </label>
                             <div class="u-pos-relative">
-                                <input type="text" class="form-control" name="v_swap_limit" id="v_swap_limit" value="<?= htmlentities(trim($v_swap_limit, "'")) ?>">
+                                <input type="text"
+                                    class="form-control"
+                                    name="v_swap_limit"
+                                    id="v_swap_limit"
+                                    value="<?= htmlentities(trim($v_swap_limit, "'")) ?>">
                                 <button type="button" class="unlimited-toggle js-unlimited-toggle" title="<?= _("Unlimited") ?>">
                                     <i class="fas fa-infinity"></i>
                                 </button>
                             </div>
-                            <small class="form-text text-muted"><?= _("Takes a swap size in bytes. If the value is suffixed with K, M, G or T, the specified swap size is parsed as Kilobytes, Megabytes, Gigabytes, or Terabytes (with the base 1024), respectively") ?></small>
+                            <?php
+                            $swap_note = _(
+                                "Takes a swap size in bytes. If the value is suffixed with K, M, G or T, "
+                                    . "the specified swap size is parsed as Kilobytes, Megabytes, Gigabytes, or "
+                                    . "Terabytes (with the base 1024), respectively"
+                            );
+                            ?>
+                            <small class="form-text text-muted"><?= $swap_note ?></small>
                         </div>
                     </div>
                 </details>

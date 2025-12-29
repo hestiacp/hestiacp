@@ -2,62 +2,79 @@
 <div class="toolbar">
     <div class="toolbar-inner">
         <div class="toolbar-buttons">
-            <?php if ($_SESSION["userContext"] === "admin" && $_SESSION["look"] === "admin") { ?>
-                <a href="/list/user/" class="button button-secondary button-back js-button-back">
-                    <i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
-                </a>
-            <?php } elseif ($_SESSION["userContext"] === "admin" && htmlentities($_GET["user"]) === "system") { ?>
-                <a href="/list/server/" class="button button-secondary button-back js-button-back">
-                    <i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
-                </a>
-            <?php } else { ?>
-                <?php if ($_SESSION["userContext"] === "admin" && $_SESSION['look'] !== '' && $_GET["user"] !== "admin") { ?>
-                    <a href="/edit/user/?user=<?= htmlentities($_SESSION["look"]) ?>&token=<?= $_SESSION["token"] ?>" class="button button-secondary button-back js-button-back">
-                        <i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
-                    </a>
-                <?php } else { ?>
-                    <a href="/edit/user/?user=<?= htmlentities($_SESSION["user"]) ?>&token=<?= $_SESSION["token"] ?>" class="button button-secondary button-back js-button-back">
-                        <i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
-                    </a>
-                <?php } ?>
-            <?php } ?>
-            <?php if ($_SESSION['DEMO_MODE'] != "yes") {
-                if (($_SESSION['userContext'] === 'admin') && (htmlentities($_GET['user']) !== 'admin')) { ?>
-                    <?php if (($_SESSION['userContext'] === 'admin') && ($_GET['user'] != '') && (htmlentities($_GET['user']) !== 'admin')) { ?>
-                        <?php if (htmlentities($_GET['user']) !== 'system') { ?>
-                        <a href="/list/log/auth/?user=<?= htmlentities($_GET['user']); ?>&token=<?= $_SESSION['token'] ?>" class="button button-secondary button-back js-button-back" title="<?= _("Login History") ?>">
-                            <i class="fas fa-binoculars icon-green"></i><?= _("Login History") ?>
-                        </a>
-                        <?php } ?>
-                    <?php } else { ?>
-                    <a href="/list/log/auth/" class="button button-secondary button-back js-button-back" title="<?= _("Login History") ?>">
-                        <i class="fas fa-binoculars icon-green"></i><?= _("Login History") ?>
-                    </a>
-                    <?php } ?>
-                <?php } ?>
-                <?php if ($_SESSION["userContext"] === "user") { ?>
-                <a href="/list/log/auth/" class="button button-secondary button-back js-button-back" title="<?= _("Login History") ?>">
+            <?php
+            $look = $_SESSION['look'] ?? '';
+            $userContext = $_SESSION['userContext'] ?? '';
+            $req_user = isset($_GET['user']) ? htmlentities($_GET['user']) : '';
+            if ($userContext === 'admin' && $look === 'admin') {
+                $back_href = '/list/user/';
+            } elseif ($userContext === 'admin' && $req_user === 'system') {
+                $back_href = '/list/server/';
+            } elseif ($userContext === 'admin' && $look !== '' && (isset($_GET['user']) ? $_GET['user'] : '') !== 'admin') {
+                $back_href = '/edit/user/?user=' . htmlentities($_SESSION['look']) . '&token=' . $_SESSION['token'];
+            } else {
+                $back_href = '/edit/user/?user=' . htmlentities($_SESSION['user']) . '&token=' . $_SESSION['token'];
+            }
+            ?>
+            <a href="<?= $back_href ?>" class="button button-secondary button-back js-button-back">
+                <i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
+            </a>
+            <?php
+            $show_login_history = false;
+            $login_history_href = '/list/log/auth/';
+            if ($_SESSION['DEMO_MODE'] != 'yes') {
+                if ($_SESSION['userContext'] === 'admin' && (isset($_GET['user']) && htmlentities($_GET['user']) !== 'admin')) {
+                    if (isset($_GET['user']) && $_GET['user'] != '' && htmlentities($_GET['user']) !== 'system') {
+                        $login_history_href = '/list/log/auth/?user=' . htmlentities($_GET['user']) . '&token=' . $_SESSION['token'];
+                    } else {
+                        $login_history_href = '/list/log/auth/';
+                    }
+                    $show_login_history = true;
+                } elseif ($_SESSION['userContext'] === 'user') {
+                    $show_login_history = true;
+                    $login_history_href = '/list/log/auth/';
+                }
+            }
+            ?>
+            <?php if ($show_login_history) { ?>
+                <a href="<?= $login_history_href ?>" class="button button-secondary button-back js-button-back" title="<?= _("Login History") ?>">
                     <i class="fas fa-binoculars icon-green"></i><?= _("Login History") ?>
                 </a>
-                <?php }
-            } ?>
+            <?php } ?>
         </div>
         <div class="toolbar-buttons">
-            <a href="javascript:location.reload();" class="button button-secondary"><i class="fas fa-arrow-rotate-right icon-green"></i><?= _("Refresh") ?></a>
-            <?php if ($_SESSION["userContext"] === "admin" && $_SESSION["look"] === "admin" && $_SESSION["POLICY_SYSTEM_PROTECTED_ADMIN"] === "yes") { ?>
+            <a
+                href="javascript:location.reload();"
+                class="button button-secondary">
+                <i class="fas fa-arrow-rotate-right icon-green"></i><?= _("Refresh") ?>
+            </a>
+            <?php $hide_delete_buttons = (
+                $_SESSION['userContext'] === 'admin'
+                && $_SESSION['look'] === 'admin'
+                && $_SESSION['POLICY_SYSTEM_PROTECTED_ADMIN'] === 'yes'
+            ); ?>
+            <?php if ($hide_delete_buttons) { ?>
                 <!-- Hide delete buttons-->
             <?php } else { ?>
-                <?php if ($_SESSION["userContext"] === "admin" || ($_SESSION["userContext"] === "user" && $_SESSION["POLICY_USER_DELETE_LOGS"] !== "no")) { ?>
+                <?php $can_delete_logs = (
+                    $_SESSION['userContext'] === 'admin'
+                    || (
+                        $_SESSION['userContext'] === 'user'
+                        && $_SESSION['POLICY_USER_DELETE_LOGS'] !== 'no'
+                    )
+                ); ?>
+                <?php if ($can_delete_logs) {
+                    if ($_SESSION['userContext'] === 'admin' && isset($_GET['user'])) {
+                        $delete_href = '/delete/log/?user=' . htmlentities($_GET['user']) . '&token=' . $_SESSION['token'];
+                    } else {
+                        $delete_href = '/delete/log/?token=' . $_SESSION['token'];
+                    }
+                    ?>
                     <a
                         class="button button-secondary button-danger data-controls js-confirm-action"
-                        <?php if ($_SESSION["userContext"] === "admin" && isset($_GET["user"])) { ?>
-                            href="/delete/log/?user=<?= htmlentities($_GET["user"]) ?>&token=<?= $_SESSION["token"] ?>"
-                        <?php } else { ?>
-                            href="/delete/log/?token=<?= $_SESSION["token"] ?>"
-                        <?php } ?>
+                        href="<?= $delete_href ?>"
                         data-confirm-title="<?= _("Delete") ?>"
-                        data-confirm-message="<?= _("Are you sure you want to delete the logs?") ?>"
-                    >
+                        data-confirm-message="<?= _("Are you sure you want to delete the logs?") ?>">
                         <i class="fas fa-circle-xmark icon-red"></i><?= _("Delete") ?>
                     </a>
                 <?php } ?>
@@ -105,24 +122,24 @@
                 <div class="units-table-cell units-table-heading-cell u-text-bold">
                     <span class="u-hide-desktop"><?= _("Date") ?>:</span>
                     <time datetime="<?= htmlspecialchars($data[$key]["DATE"]) ?>" class="u-text-no-wrap">
-                    <?= translate_date($data[$key]["DATE"]) ?>
+                        <?= translate_date($data[$key]["DATE"]) ?>
                     </time>
                 </div>
                 <div class="units-table-cell u-text-bold">
                     <span class="u-hide-desktop"><?= _("Time") ?>:</span>
                     <time datetime="<?= htmlspecialchars($data[$key]["TIME"]) ?>">
-                    <?= htmlspecialchars($data[$key]["TIME"]) ?>
+                        <?= htmlspecialchars($data[$key]["TIME"]) ?>
                     </time>
                 </div>
                 <div class="units-table-cell u-text-bold">
                     <span class="u-hide-desktop"><?= _("Category") ?>:</span>
                     <span class="u-text-no-wrap">
-                    <?= htmlspecialchars($data[$key]["CATEGORY"]) ?>
+                        <?= htmlspecialchars($data[$key]["CATEGORY"]) ?>
                     </span>
                 </div>
                 <div class="units-table-cell">
                     <span class="u-hide-desktop u-text-bold"><?= _("Message") ?>:</span>
-                <?= htmlspecialchars($data[$key]["MESSAGE"], ENT_QUOTES) ?>
+                    <?= htmlspecialchars($data[$key]["MESSAGE"], ENT_QUOTES) ?>
                 </div>
             </div>
         <?php } ?>

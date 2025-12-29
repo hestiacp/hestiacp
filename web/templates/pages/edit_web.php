@@ -41,17 +41,23 @@
                                 </a>
                             </span>
                         </label>
-                        <textarea class="form-control u-min-height100 u-console" name="v_ssl_crt" id="ssl_crt"><?= htmlentities(trim($v_ssl_crt, "'")) ?></textarea>
+                        <textarea class="form-control u-min-height100 u-console" name="v_ssl_crt" id="ssl_crt">
+                                    <?= htmlentities(trim($v_ssl_crt, "'")) ?>
+                                </textarea>
                     </div>
                     <div class="u-mb10">
                         <label for="v_ssl_key" class="form-label"><?= _("SSL Private Key") ?></label>
-                        <textarea class="form-control u-min-height100 u-console" name="v_ssl_key" id="v_ssl_key"><?= htmlentities(trim($v_ssl_key, "'")) ?></textarea>
+                        <textarea class="form-control u-min-height100 u-console" name="v_ssl_key" id="v_ssl_key">
+                                    <?= htmlentities(trim($v_ssl_key, "'")) ?>
+                                </textarea>
                     </div>
                     <div class="u-mb20">
                         <label for="v_ssl_ca" class="form-label">
                             <?= _("SSL Certificate Authority / Intermediate") ?> <span class="optional">(<?= _("Optional") ?>)</span>
                         </label>
-                        <textarea class="form-control u-min-height100 u-console" name="v_ssl_ca" id="v_ssl_ca"><?= htmlentities(trim($v_ssl_ca, "'")) ?></textarea>
+                        <textarea class="form-control u-min-height100 u-console" name="v_ssl_ca" id="v_ssl_ca">
+                                    <?= htmlentities(trim($v_ssl_ca, "'")) ?>
+                                </textarea>
                     </div>
                 </div>
                 <div class="u-mb10">

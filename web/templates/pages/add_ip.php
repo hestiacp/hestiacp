@@ -23,8 +23,7 @@
         }"
         id="main-form"
         name="v_add_ip"
-        method="post"
-    >
+        method="post">
         <input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
         <input type="hidden" name="ok" value="Add">
 
@@ -44,11 +43,8 @@
                 <select class="form-select" name="v_interface" id="v_interface">
                     <?php
                     foreach ($interfaces as $key => $value) {
-                        echo "\t\t\t\t<option value=\"" . htmlentities($value) . "\"";
-                        if ((!empty($v_interface)) && ( $value == $v_interface )) {
-                            echo ' selected';
-                        }
-                        echo ">" . htmlentities($value) . "</option>\n";
+                        $selected = ((!empty($v_interface)) && ($value == $v_interface)) ? ' selected' : '';
+                        printf("<option value=\"%s\"%s>%s</option>\n", htmlentities($value), $selected, htmlentities($value));
                     }
                     ?>
                 </select>
@@ -65,11 +61,8 @@
                     <select class="form-select" name="v_owner" id="v_owner">
                         <?php
                         foreach ($users as $key => $value) {
-                            echo "\t\t\t\t<option value=\"" . htmlentities($value) . "\"";
-                            if ((!empty($v_owner)) && ( $value == $v_owner )) {
-                                echo ' selected';
-                            }
-                            echo ">" . htmlentities($value) . "</option>\n";
+                            $selected = ((!empty($v_owner)) && ($value == $v_owner)) ? ' selected' : '';
+                            printf("<option value=\"%s\"%s>%s</option>\n", htmlentities($value), $selected, htmlentities($value));
                         }
                         ?>
                     </select>

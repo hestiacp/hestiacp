@@ -4,9 +4,11 @@
         <div class="toolbar-buttons">
             <?php if ($read_only !== "true") {
                 if (str_starts_with($files[0]['path'], '/home/' . $user_plain) && $files[0]['path'] != '/home/' . $user_plain) {
-                    $back_href = '/list/backup/incremental/?snapshot=' . htmlentities($_GET['snapshot'])
+                    $back_href = (
+                        '/list/backup/incremental/?snapshot=' . htmlentities($_GET['snapshot'])
                         . '&browse=yes&folder=' . htmlentities($files[0]['path'])
-                        . '/../&token=' . $_SESSION['token'];
+                        . '/../&token=' . $_SESSION['token']
+                    );
                 } else {
                     $back_href = '/list/backup/incremental/?token=' . $_SESSION['token'];
                 }
@@ -114,9 +116,11 @@
                                     } else {
                                         ?>
                                         <?php
-                                        $dir_href = '/list/backup/incremental/?snapshot=' . $snapshot
+                                        $dir_href = (
+                                            '/list/backup/incremental/?snapshot=' . $snapshot
                                             . '&browse=yes&folder=' . htmlentities($file['path'])
-                                            . '&token=' . $_SESSION['token'];
+                                            . '&token=' . $_SESSION['token']
+                                        );
                                         ?>
                                         <b><a href="<?= $dir_href ?>"><i class="fas fa-folder icon-dim u-mr5"></i><?= $file['name'] ?></a></b>
                                         <?php
@@ -130,9 +134,11 @@
                         </div>
                         <div class="units-table-cell">
                             <?php
-                            $restore_href = '/schedule/restore/incremental/?snapshot=' . $snapshot
+                            $restore_href = (
+                                '/schedule/restore/incremental/?snapshot=' . $snapshot
                                 . '&type=file&object=' . htmlentities($file['path'])
-                                . '&token=' . $_SESSION['token'];
+                                . '&token=' . $_SESSION['token']
+                            );
                             ?>
                             <a
                                 href="<?= $restore_href ?>"

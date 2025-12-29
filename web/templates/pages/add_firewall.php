@@ -26,13 +26,14 @@
             <?php show_alert_message($_SESSION); ?>
             <div class="u-mb10">
                 <label for="v_action" class="form-label"><?= _("Action") ?></label>
+                <?php
+                $v_action_trim = trim($v_action, "'");
+                $selected_drop = ($v_action_trim === 'DROP') ? ' selected' : '';
+                $selected_accept = ($v_action_trim === 'ACCEPT') ? ' selected' : '';
+                ?>
                 <select class="form-select" name="v_action" id="v_action">
-                    <option value="DROP" <?php if ((!empty($v_action)) && ($v_action == "'DROP'")) {
-                                                echo 'selected';
-                                         } ?>><?= _("DROP") ?></option>
-                    <option value="ACCEPT" <?php if ((!empty($v_action)) && ($v_action == "'ACCEPT'")) {
-                                                echo 'selected';
-                                           } ?>><?= _("ACCEPT") ?></option>
+                    <option value="DROP" <?= $selected_drop ?>><?= _("DROP") ?></option>
+                    <option value="ACCEPT" <?= $selected_accept ?>><?= _("ACCEPT") ?></option>
                 </select>
             </div>
             <div class="u-mb10">

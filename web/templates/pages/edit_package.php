@@ -399,7 +399,10 @@
                                     name="v_cpu_quota"
                                     id="v_cpu_quota"
                                     value="<?= htmlentities(trim($v_cpu_quota, "'")) ?>">
-                                <button type="button" class="unlimited-toggle js-unlimited-toggle" title="<?= $unlimited_title ?>">">">
+                                <button
+                                    type="button"
+                                    class="unlimited-toggle js-unlimited-toggle"
+                                    title="<?= $unlimited_title ?>">
                                     <i class="fas fa-infinity"></i>
                                 </button>
                             </div>
@@ -422,7 +425,10 @@
                                     name="v_cpu_quota_period"
                                     id="v_cpu_quota_period"
                                     value="<?= htmlentities(trim($v_cpu_quota_period, "'")) ?>">
-                                <button type="button" class="unlimited-toggle js-unlimited-toggle" title="<?= _("Unlimited") ?>">
+                                <button
+                                    type="button"
+                                    class="unlimited-toggle js-unlimited-toggle"
+                                    title="<?= $unlimited_title ?>">
                                     <i class="fas fa-infinity"></i>
                                 </button>
                             </div>
@@ -445,7 +451,10 @@
                                     name="v_memory_limit"
                                     id="v_memory_limit"
                                     value="<?= htmlentities(trim($v_memory_limit, "'")) ?>">
-                                <button type="button" class="unlimited-toggle js-unlimited-toggle" title="<?= _("Unlimited") ?>">
+                                <button
+                                    type="button"
+                                    class="unlimited-toggle js-unlimited-toggle"
+                                    title="<?= $unlimited_title ?>">
                                     <i class="fas fa-infinity"></i>
                                 </button>
                             </div>
@@ -469,7 +478,10 @@
                                     name="v_swap_limit"
                                     id="v_swap_limit"
                                     value="<?= htmlentities(trim($v_swap_limit, "'")) ?>">
-                                <button type="button" class="unlimited-toggle js-unlimited-toggle" title="<?= _("Unlimited") ?>">
+                                <button
+                                    type="button"
+                                    class="unlimited-toggle js-unlimited-toggle"
+                                    title="<?= $unlimited_title ?>">
                                     <i class="fas fa-infinity"></i>
                                 </button>
                             </div>

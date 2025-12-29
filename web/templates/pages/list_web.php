@@ -10,15 +10,11 @@
         </div>
         <div class="toolbar-right">
             <div class="toolbar-sorting">
-                <button class="toolbar-sorting-toggle js-toggle-sorting-menu" type="button" title="<?= _("Sort items") ?>">
-                    <?= _("Sort by") ?>:
+                <?php $user_sort_label = ($_SESSION['userSortOrder'] === 'name') ? _('Name') : _('Date'); ?>
+                <button class="toolbar-sorting-toggle js-toggle-sorting-menu" type="button" title="<?= _('Sort items') ?>">
+                    <?= _('Sort by') ?>:
                     <span class="u-text-bold">
-                        <?php if ($_SESSION['userSortOrder'] === 'name') {
-                            $label = ('Name');
-                        } else {
-                            $label = _('Date');
-                        } ?>
-                        <?= $label ?> <i class="fas fa-arrow-down-a-z"></i>
+                        <?= $user_sort_label ?> <i class="fas fa-arrow-down-a-z"></i>
                     </span>
                 </button>
                 <?php
@@ -129,6 +125,9 @@
             $spnd_confirmation_msg = sprintf($spnd_confirmation, $key);
             $delete_href = "/delete/web/?domain=" . $key . "&token=" . $_SESSION['token'];
             $delete_confirmation_msg = sprintf(_("Are you sure you want to delete domain %s?"), $key);
+            /* Precompute titles to shorten inline usage */
+            $edit_title_full = sprintf('%s: %s', _('Edit Domain'), $key);
+            $edit_title = _('Edit Domain');
             if (!empty($data[$key]['SSL_HOME'])) {
                 if ($data[$key]['SSL_HOME'] == 'same') {
                     $ssl_home = 'public_html';
@@ -231,7 +230,7 @@
                                 }
                             }
                             ?>
-                            <a href="/edit/web/?domain=<?= $key ?>&token=<?= $_SESSION['token'] ?>" title="<?= _("Edit Domain") ?>: <?= $key ?>">
+                            <a href="/edit/web/?domain=<?= $key ?>&token=<?= $_SESSION['token'] ?>" title="<?= $edit_title_full ?>">
                                 <?= $key ?>
                                 <?php
                                 if (!empty($alias_new) && !empty($data[$key]['ALIAS'])) {
@@ -377,7 +376,7 @@
                                     <a
                                         class="units-table-row-action-link"
                                         href="/edit/web/?domain=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
-                                        title="<?= _("Edit Domain") ?>">
+                                        title="<?= $edit_title ?>">
                                         <i class="fas fa-pencil icon-orange"></i>
                                         <span class="u-hide-desktop"><?= _("Edit Domain") ?></span>
                                     </a>
@@ -407,7 +406,7 @@
                                     href="/<?= $spnd_action ?>/web/?domain=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
                                     title="<?= $spnd_action_title ?>"
                                     data-confirm-title="<?= $spnd_action_title ?>"
-                                    data-confirm-message="<?= sprintf($spnd_confirmation, $key) ?>">
+                                    data-confirm-message="<?= $spnd_confirmation_msg ?>">
                                     <i class="fas <?= $spnd_icon ?> <?= $spnd_icon_class ?>"></i>
                                     <span class="u-hide-desktop"><?= $spnd_action_title ?></span>
                                 </a>
@@ -418,7 +417,7 @@
                                     href="/delete/web/?domain=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
                                     title="<?= _("Delete") ?>"
                                     data-confirm-title="<?= _("Delete") ?>"
-                                    data-confirm-message="<?= sprintf(_("Are you sure you want to delete domain %s?"), $key) ?>">
+                                    data-confirm-message="<?= $delete_confirmation_msg ?>">
                                     <i class="fas fa-trash icon-red"></i>
                                     <span class="u-hide-desktop"><?= _("Delete") ?></span>
                                 </a>

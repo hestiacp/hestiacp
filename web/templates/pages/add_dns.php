@@ -25,8 +25,7 @@
         }"
         id="main-form"
         name="v_add_dns"
-        method="post"
-    >
+        method="post">
         <input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
         <input type="hidden" name="ok" value="Add">
 
@@ -36,7 +35,16 @@
             <?php if ($_SESSION["role"] == "admin" && $accept !== "true") { ?>
                 <div class="alert alert-danger" role="alert">
                     <i class="fas fa-exclamation"></i>
-                    <p><?= htmlify_trans(sprintf(_("It is strongly advised to {create a standard user account} before adding %s to the server due to the increased privileges the admin account possesses and potential security risks."), _('a dns domain')), '</a>', '<a href="/add/user/">'); ?></p>
+                    <?php
+                    $user_link_open = '<a href="/add/user/">';
+                    $user_link_close = '</a>';
+                    $advise_template = _(
+                        "It is strongly advised to {create a standard user account} before adding %s to the server "
+                            . "due to the increased privileges the admin account possesses and potential security risks."
+                    );
+                    $advise_msg = sprintf($advise_template, _('a dns domain'));
+                    ?>
+                    <p><?= htmlify_trans($advise_msg, $user_link_close, $user_link_open) ?></p>
                 </div>
             <?php } ?>
             <?php if ($_SESSION["role"] == "admin" && empty($accept)) { ?>
@@ -65,20 +73,28 @@
                         <input type="text" class="form-control list-editor" name="v_ip" id="v_ip" value="<?= htmlentities(trim($v_ip, "'")) ?>">
                     </div>
                 </div>
-                <?php if ($_SESSION["userContext"] === "admin" || ($_SESSION["userContext"] === "user" && $_SESSION["POLICY_USER_EDIT_DNS_TEMPLATES"] === "yes")) { ?>
+                <?php
+                $can_edit_dns_templates = ($_SESSION['userContext'] === 'admin')
+                    || ($_SESSION['userContext'] === 'user' && $_SESSION['POLICY_USER_EDIT_DNS_TEMPLATES'] === 'yes');
+                ?>
+                <?php if ($can_edit_dns_templates) { ?>
                     <div class="u-mb10">
                         <label for="v_template" class="form-label">
-                            <?= _("Template") . "<span class='optional'>" . strtoupper($_SESSION["DNS_SYSTEM"]) . "</span>" ?>
+                            <?php $template_label = _("Template") . "<span class='optional'>" . strtoupper($_SESSION['DNS_SYSTEM']) . "</span>"; ?>
+                            <?= $template_label ?>
                         </label>
                         <select class="form-select" name="v_template" id="v_template">
                             <?php
                             foreach ($templates as $key => $value) {
-                                echo "\t\t\t\t<option value=\"" . htmlentities($value) . "\"";
+                                $opt_value = htmlentities($value);
                                 $svalue = "'" . $value . "'";
-                                if ((!empty($v_template)) && ( $value == $v_template ) || ($svalue == $v_template)) {
-                                    echo ' selected' ;
-                                }
-                                echo ">" . htmlentities($value) . "</option>\n";
+                                $opt_selected = ((!empty($v_template) && ($value == $v_template)) || ($svalue == $v_template)) ? ' selected' : '';
+                                printf(
+                                    "\t\t\t\t<option value=\"%s\"%s>%s</option>\n",
+                                    $opt_value,
+                                    $opt_selected,
+                                    $opt_value
+                                );
                             }
                             ?>
                         </select>
@@ -91,15 +107,15 @@
                 </div>
                 <div x-cloak x-show="showAdvanced" id="advtable">
                     <?php if ($_SESSION["DNS_CLUSTER_SYSTEM"] == "hestia-zone" && $_SESSION["SUPPORT_DNSSEC"] == "yes") { ?>
+                        <?php $dnssec_checked = ($v_dnssec === 'yes') ? ' checked' : ''; ?>
                         <div class="form-check u-mb10">
-                            <input class="form-check-input" type="checkbox" name="v_dnssec" id="v_dnssec" value="yes" <?php if ($v_dnssec === 'yes') {
-                                echo ' checked';
-                                                                                                                      } ?>>
+                            <input class="form-check-input" type="checkbox" name="v_dnssec" id="v_dnssec" value="yes" <?= $dnssec_checked ?>>
                             <label for="v_dnssec">
                                 <?= _("Enable DNSSEC") ?>
                             </label>
                         </div>
                     <?php } ?>
+
                     <div class="u-mb10">
                         <label for="v_exp" class="form-label">
                             <?= _("Expiration Date") ?> <span class="optional">(<?= _("YYYY-MM-DD") ?>)</span>
@@ -119,7 +135,7 @@
                     </div>
                     <?php require $_SERVER["HESTIA"] . "/web/templates/includes/extra-ns-fields.php"; ?>
                     <button type="button" class="form-link u-mt20 js-add-ns" <?php if ($v_ns8) {
-                        echo 'style="display:none;"';
+                                                                                    echo 'style="display:none;"';
                                                                              } ?>>
                         <?= _("Add Name Server") ?>
                     </button>

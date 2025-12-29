@@ -76,12 +76,17 @@
                                 $v_ftp_path_prev = ($v_ftp_path[0] != '/' ? '/' : '') . htmlentities(trim($v_ftp_path, "'"));
                             }
                             ?>
-                            <div class="js-ftp-account js-ftp-account-nrm" name="v_add_domain_ftp" style="<?= empty($v_ftp_user) ? 'display: none;' : '' ?>">
+                            <div class="js-ftp-account js-ftp-account-nrm"
+                                         name="v_add_domain_ftp"
+                                         style="<?= empty($v_ftp_user) ? 'display: none;' : '' ?>">
                                 <div class="u-mb10">
                                     <?= _("FTP") ?> #<span class="js-ftp-user-number"><?= $i + 1; ?></span>
                                     <button type="button" class="form-link form-link-danger u-ml5 js-delete-ftp-account"><?= _("Delete") ?></button>
                                     <input type="hidden" class="js-ftp-user-deleted" name="v_ftp_user[<?= $i ?>][delete]" value="0">
-                                    <input type="hidden" class="js-ftp-user-is-new" name="v_ftp_user[<?= $i ?>][is_new]" value="<?= htmlentities($ftp_user['is_new']) ?>">
+                                    <input type="hidden"
+                                           class="js-ftp-user-is-new"
+                                           name="v_ftp_user[<?= $i ?>][is_new]"
+                                           value="<?= htmlentities($ftp_user['is_new']) ?>">
                                 </div>
                                 <div class="u-pl30 u-mb10">
                                     <label for="v_ftp_user[<?= $i ?>][v_ftp_user]" class="form-label">
@@ -181,7 +186,10 @@
                     <i class="fas fa-arrows-rotate icon-green"></i>
                 </button>
             </label>
-            <input type="text" class="form-control js-ftp-user-psw" name="v_ftp_user[%INDEX%][v_ftp_password]" id="v_ftp_user[%INDEX%][v_ftp_password]">
+            <input type="text"
+           class="form-control js-ftp-user-psw"
+           name="v_ftp_user[%INDEX%][v_ftp_password]"
+           id="v_ftp_user[%INDEX%][v_ftp_password]">
         </div>
         <div class="u-pl30 u-mb10">
             <label for="v_ftp_user[%INDEX%][v_ftp_path]" class="form-label"><?= _("Path") ?></label>
@@ -191,7 +199,11 @@
         </div>
         <div class="u-pl30 u-mb10">
             <label for="v_ftp_user[%INDEX%][v_ftp_email]" class="form-label"><?= _("Send FTP credentials to email") ?></label>
-            <input type="email" class="form-control js-email-alert-on-psw" name="v_ftp_user[%INDEX%][v_ftp_email]" id="v_ftp_user[%INDEX%][v_ftp_email]" value="">
+            <input type="email"
+           class="form-control js-email-alert-on-psw"
+           name="v_ftp_user[%INDEX%][v_ftp_email]"
+           id="v_ftp_user[%INDEX%][v_ftp_email]"
+           value="">
         </div>
     </div>
 </div>

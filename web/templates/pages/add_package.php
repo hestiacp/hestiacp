@@ -125,14 +125,25 @@
                     <div class="u-mb10">
                         <?php
                         $web_system = strtoupper($_SESSION["WEB_SYSTEM"]);
-                        $web_template_label = _("Web Template") . " <span class='optional'> " . $web_system . "</span>";
+                        $web_template_label = _(
+                            "Web Template"
+                                . " <span class='optional'>"
+                                . $web_system
+                                . "</span>"
+                        );
                         ?>
                         <label for="v_web_template" class="form-label"><?= $web_template_label ?></label>
                         <select class="form-select" name="v_web_template" id="v_web_template">
                             <?php
                             foreach ($web_templates as $key => $value) {
                                 $selected = (!empty($v_web_template) && ($value == trim($v_web_template, "'"))) ? ' selected' : '';
-                                printf("<option value=\"%s\"%s>%s</option>\n", htmlentities($value), $selected, htmlentities($value));
+                                $opt = sprintf(
+                                    "<option value=\"%s\"%s>%s</option>\n",
+                                    htmlentities($value),
+                                    $selected,
+                                    htmlentities($value)
+                                );
+                                echo $opt;
                             }
                             ?>
                         </select>
@@ -142,14 +153,25 @@
                         <div class="u-mb10">
                             <?php
                             $backend_system = strtoupper($_SESSION["WEB_BACKEND"]);
-                            $backend_template_label = _("Backend Template") . " <span class='optional'>" . $backend_system . "</span>";
+                            $backend_template_label = _(
+                                "Backend Template"
+                                    . " <span class='optional'>"
+                                    . $backend_system
+                                    . "</span>"
+                            );
                             ?>
                             <label for="v_backend_template" class="form-label"><?= $backend_template_label ?></label>
                             <select class="form-select" name="v_backend_template" id="v_backend_template">
                                 <?php
                                 foreach ($backend_templates as $key => $value) {
                                     $selected = (!empty($v_backend_template) && ($value == trim($v_backend_template, "'"))) ? ' selected' : '';
-                                    printf("<option value=\"%s\"%s>%s</option>\n", htmlentities($value), $selected, htmlentities($value));
+                                    $opt = sprintf(
+                                        "<option value=\"%s\"%s>%s</option>\n",
+                                        htmlentities($value),
+                                        $selected,
+                                        htmlentities($value)
+                                    );
+                                    echo $opt;
                                 }
                                 ?>
                             </select>
@@ -161,14 +183,25 @@
                         <div class="u-mb10">
                             <?php
                             $proxy_system = strtoupper($_SESSION["PROXY_SYSTEM"]);
-                            $proxy_template_label = _("Proxy Template") . " <span class='optional'>" . $proxy_system . "</span>";
+                            $proxy_template_label = _(
+                                "Proxy Template"
+                                    . " <span class='optional'>"
+                                    . $proxy_system
+                                    . "</span>"
+                            );
                             ?>
                             <label for="v_proxy_template" class="form-label"><?= $proxy_template_label ?></label>
                             <select class="form-select" name="v_proxy_template" id="v_proxy_template">
                                 <?php
                                 foreach ($proxy_templates as $key => $value) {
                                     $selected = (!empty($v_proxy_template) && ($value == trim($v_proxy_template, "'"))) ? ' selected' : '';
-                                    printf("<option value=\"%s\"%s>%s</option>\n", htmlentities($value), $selected, htmlentities($value));
+                                    $opt = sprintf(
+                                        "<option value=\"%s\"%s>%s</option>\n",
+                                        htmlentities($value),
+                                        $selected,
+                                        htmlentities($value)
+                                    );
+                                    echo $opt;
                                 }
                                 ?>
                             </select>
@@ -185,14 +218,25 @@
                     <div class="u-mb10">
                         <?php
                         $dns_system = strtoupper($_SESSION["DNS_SYSTEM"]);
-                        $dns_template_label = _("DNS Template") . " <span class='optional'>" . $dns_system . "</span>";
+                        $dns_template_label = _(
+                            "DNS Template"
+                                . " <span class='optional'>"
+                                . $dns_system
+                                . "</span>"
+                        );
                         ?>
                         <label for="v_dns_template" class="form-label"><?= $dns_template_label ?></label>
                         <select class="form-select" name="v_dns_template" id="v_dns_template">
                             <?php
                             foreach ($dns_templates as $key => $value) {
                                 $selected = (!empty($v_dns_template) && ($value == trim($v_dns_template, "'"))) ? ' selected' : '';
-                                printf("<option value=\"%s\"%s>%s</option>\n", htmlentities($value), $selected, htmlentities($value));
+                                $opt = sprintf(
+                                    "<option value=\"%s\"%s>%s</option>\n",
+                                    htmlentities($value),
+                                    $selected,
+                                    htmlentities($value)
+                                );
+                                echo $opt;
                             }
                             ?>
                         </select>

@@ -2,15 +2,18 @@
 <div class="toolbar">
     <div class="toolbar-inner">
         <div class="toolbar-buttons">
-            <?php if ($_SESSION["userContext"] === "admin" && $_SESSION['look'] !== '' && $_GET["user"] !== $_SESSION['ROOT_USER']) { ?>
-                <a href="/edit/user/?user=<?= htmlentities($_SESSION["look"]) ?>&token=<?= $_SESSION["token"] ?>" class="button button-secondary button-back js-button-back">
-                    <i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
-                </a>
-            <?php } else { ?>
-                <a href="/edit/user/?user=<?= htmlentities($_SESSION["user"]) ?>&token=<?= $_SESSION["token"] ?>" class="button button-secondary button-back js-button-back">
-                    <i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
-                </a>
-            <?php } ?>
+            <?php
+            $back_token = $_SESSION['token'];
+            if ($_SESSION["userContext"] === "admin" && $_SESSION['look'] !== '' && $_GET["user"] !== $_SESSION['ROOT_USER']) {
+                $back_user = htmlentities($_SESSION["look"]);
+            } else {
+                $back_user = htmlentities($_SESSION["user"]);
+            }
+            $back_href = "/edit/user/?user={$back_user}&token={$back_token}";
+            ?>
+            <a href="<?= $back_href ?>" class="button button-secondary button-back js-button-back">
+                <i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
+            </a>
 
             <?php if ($_SESSION["userContext"] === "admin" && isset($_GET["user"]) && $_GET["user"] !== "admin") { ?>
                 <a href="/add/key/?user=<?= htmlentities($_GET["user"]) ?>" class="button button-secondary js-button-create">
@@ -39,17 +42,17 @@
 
         <!-- Begin SSH key list item loop -->
         <?php
-            $i = 0;
+        $i = 0;
         foreach ($data as $key => $value) {
             ++$i;
             ?>
             <div class="units-table-row js-unit" style="<?php if ($data[$key]['ID'] === 'filemanager.ssh.key') {
-                echo 'display: none;';
+                                                            echo 'display: none;';
                                                         } ?>">
                 <div class="units-table-cell units-table-heading-cell u-text-bold">
                     <span class="u-hide-desktop"><?= _("SSH ID") ?>:</span>
                     <span class="u-text-break">
-                <?= htmlspecialchars($data[$key]["ID"]) ?>
+                        <?= htmlspecialchars($data[$key]["ID"]) ?>
                     </span>
                 </div>
                 <div class="units-table-cell">
@@ -57,15 +60,14 @@
                         <li class="units-table-row-action shortcut-delete" data-key-action="js">
                             <a
                                 class="units-table-row-action-link data-controls js-confirm-action"
-                        <?php if ($_SESSION["userContext"] === "admin" && isset($_GET["user"]) && $_GET["user"] !== "admin") { ?>
-                                    href="/delete/key/?user=<?= htmlentities($_GET["user"]) ?>&key=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
-                        <?php } else { ?>
-                                    href="/delete/key/?key=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
-                        <?php } ?>
+                                <?php if ($_SESSION["userContext"] === "admin" && isset($_GET["user"]) && $_GET["user"] !== "admin") { ?>
+                                href="/delete/key/?user=<?= htmlentities($_GET["user"]) ?>&key=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
+                                <?php } else { ?>
+                                href="/delete/key/?key=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
+                                <?php } ?>
                                 title="<?= _("Delete") ?>"
                                 data-confirm-title="<?= _("Delete") ?>"
-                                data-confirm-message="<?= sprintf(_("Are you sure you want to delete SSH key %s?"), $key) ?>"
-                            >
+                                data-confirm-message="<?= sprintf(_("Are you sure you want to delete SSH key %s?"), $key) ?>">
                                 <i class="fas fa-trash icon-red"></i>
                                 <span class="u-hide-desktop"><?= _("Delete") ?></span>
                             </a>
@@ -75,7 +77,7 @@
                 <div class="units-table-cell u-text-bold">
                     <span class="u-hide-desktop"><?= _("SSH Key") ?>:</span>
                     <span class="u-text-break">
-                <?= htmlspecialchars($data[$key]["KEY"], ENT_QUOTES) ?>
+                        <?= htmlspecialchars($data[$key]["KEY"], ENT_QUOTES) ?>
                     </span>
                 </div>
             </div>

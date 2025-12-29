@@ -11,13 +11,18 @@
                class="button button-secondary js-clear-cache-button <?= $delete_cache_hidden ?>">
                 <i class="fas fa-trash icon-red"></i><?= _("Purge NGINX Cache") ?>
             </a>
-            <?= () ? 'checked' : '' ?>>
+                <div class="form-check u-mb10">
+                    <input class="form-check-input" type="checkbox" name="v_ssl_forcessl" id="v_ssl_forcessl" <?php if ($v_ssl_forcessl == 'yes')
+ {                                                                                                                                                                       echo 'checked';
+                                                                                                              } ?>>
                     <label for="v_ssl_forcessl">
                         <?= _("Enable automatic HTTPS redirection") ?>
                     </label>
                 </div>
                 <div class="form-check u-mb20">
-                    <input class="form-check-input" type="checkbox" name="v_ssl_hsts" id="ssl_hsts" <?= () ? 'checked' : '' ?>>
+                    <input class="form-check-input" type="checkbox" name="v_ssl_hsts" id="ssl_hsts" <?php if ($v_ssl_hsts == 'yes') {
+                        echo 'checked';
+                                                                                                    } ?>>
                     <label for="ssl_hsts">
                         <?= _("Enable HTTP Strict Transport Security (HSTS)") ?>
                         <a href="https://en.wikipedia.org/wiki/HTTP_Strict_Transport_Security" target="_blank">
@@ -44,11 +49,9 @@
                         <textarea class="form-control u-min-height100 u-console" name="v_ssl_ca" id="v_ssl_ca"><?= htmlentities(trim($v_ssl_ca, "'")) ?></textarea>
                     </div>
                 </div>
-                <?= () ? 'checked' : '' ?>>
-                        <label for="v_ftp">
-                            <?= _("Additional FTP account(s)") ?>
-                        </label>
-                    </div>
+                <div class="u-mb10">
+                    <label for="v_ftp" class="form-label"><?= _("Additional FTP account(s)") ?></label>
+                </div>
                     <div class="js-active-ftp-accounts">
                         <?php foreach ($v_ftp_users as $i => $ftp_user) : ?>
                             <?php
@@ -111,7 +114,7 @@
                                                                                              } ?>">
                         <?= _("Add FTP account") ?>
                     </button>
-                <?php } ?>
+                <!-- Removed stray closing PHP brace inserted by phpcbf -->
             </div>
         </div>
 

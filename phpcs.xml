@@ -3,6 +3,7 @@
 	<file>./web/src/app</file>
 
 	<exclude-pattern>*.js</exclude-pattern>
+	<exclude-pattern>install/deb/phpmyadmin/**</exclude-pattern>
 
 	<!-- This is the rule we inherit from. If you want to exlude some specific rules, see the docs on how to do that -->
 	<rule ref="PSR12"/>

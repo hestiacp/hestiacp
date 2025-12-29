@@ -17,22 +17,30 @@
                         <?= _("Date") ?> <i class="fas fa-arrow-down-a-z"></i>
                     </span>
                 </button>
+                <?php
+                $sort_date_active = ($_SESSION['userSortOrder'] === 'date') ? 'active' : '';
+                $sort_name_active = ($_SESSION['userSortOrder'] === 'name') ? 'active' : '';
+                ?>
                 <ul class="toolbar-sorting-menu js-sorting-menu u-hidden">
                     <li data-entity="sort-date" data-sort-as-int="1">
-                        <span class="name <?php if ($_SESSION['userSortOrder'] === 'date') {
-                            echo 'active';
-                                          } ?>"><?= _("Date") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
+                        <span class="name <?= $sort_date_active ?>"><?= _("Date") ?> <i class="fas fa-arrow-down-a-z"></i></span>
+                        <span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
                     </li>
                     <li data-entity="sort-name">
-                        <span class="name <?php if ($_SESSION['userSortOrder'] === 'name') {
-                            echo 'active';
-                                          } ?>"><?= _("Name") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
+                        <span class="name <?= $sort_name_active ?>"><?= _("Name") ?> <i class="fas fa-arrow-down-a-z"></i></span>
+                        <span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
                     </li>
                 </ul>
                 <div class="toolbar-search">
+                    <?php $search_value = isset($_GET['q']) ? htmlspecialchars($_GET['q']) : ''; ?>
                     <form action="/search/" method="get">
                         <input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
-                        <input type="search" class="form-control js-search-input" name="q" value="<?= isset($_GET['q']) ? htmlspecialchars($_GET['q']) : '' ?>" title="<?= _("Search") ?>">
+                        <input
+                            type="search"
+                            class="form-control js-search-input"
+                            name="q"
+                            value="<?= $search_value ?>"
+                            title="<?= _("Search") ?>">
                         <button type="submit" class="toolbar-input-submit" title="<?= _("Search") ?>">
                             <i class="fas fa-magnifying-glass"></i>
                         </button>
@@ -84,38 +92,38 @@
             $uniq_id .= sha1($value['RESULT']);
             ?>
             <div class="units-table-row <?php if ($status == 'suspended') {
-                echo 'disabled';
+                                            echo 'disabled';
                                         } ?> js-unit"
-                data-uniq-id="<?= $uniq_id?>"
+                data-uniq-id="<?= $uniq_id ?>"
                 data-sort-date="<?= strtotime($value['DATE'] . ' ' . $value['TIME']) ?>"
                 data-sort-name="<?= $value['RESULT'] ?>"
                 data-sort-type="<?= _($object) ?>"
                 data-sort-owner="<?= $value["USER"] ?>"
                 data-sort-status="<?= $status ?>"
                 style="<?php if (($_SESSION['POLICY_SYSTEM_HIDE_ADMIN'] === 'yes') && ($value['USER']) === 'admin') {
-                    echo 'display: none;';
+                            echo 'display: none;';
                        } ?>">
                 <div class="units-table-cell u-text-center-desktop">
-                <?php
-                if ($object === 'web domain') {
-                    $icon = 'fa-earth-americas';
-                }
-                if ($object === 'mail domain') {
-                    $icon = 'fa-envelopes-bulk';
-                }
-                if ($object === 'dns domain') {
-                    $icon = 'fa-book-atlas';
-                }
-                if ($object === 'dns record') {
-                    $icon = 'fa-book-atlas';
-                }
-                if ($object === 'database') {
-                    $icon = 'fa-database';
-                }
-                if ($object === 'cron job') {
-                    $icon = 'fa-clock';
-                }
-                ?>
+                    <?php
+                    if ($object === 'web domain') {
+                        $icon = 'fa-earth-americas';
+                    }
+                    if ($object === 'mail domain') {
+                        $icon = 'fa-envelopes-bulk';
+                    }
+                    if ($object === 'dns domain') {
+                        $icon = 'fa-book-atlas';
+                    }
+                    if ($object === 'dns record') {
+                        $icon = 'fa-book-atlas';
+                    }
+                    if ($object === 'database') {
+                        $icon = 'fa-database';
+                    }
+                    if ($object === 'cron job') {
+                        $icon = 'fa-clock';
+                    }
+                    ?>
                     <i class="fa <?= $icon ?> icon-dim"></i>
                 </div>
                 <div class="units-table-cell u-text-center-desktop">
@@ -131,47 +139,85 @@
                     <span class="u-hide-desktop"><?= _("Search Results") ?>:</span>
                     <?php
                     if ($value['KEY'] == 'RECORD') {
-                        $edit_lnk = '/edit/' . $value['TYPE'] . '/?domain=' . $value['PARENT'] . '&record_id=' . $value['LINK'] . '&user=' . $value['USER'];
+                        $edit_lnk = '/edit/' . $value['TYPE'] . '/?domain=' . $value['PARENT']
+                            . '&record_id=' . $value['LINK']
+                            . '&user=' . $value['USER'];
                     }
                     if ($value['KEY'] == 'ACCOUNT') {
-                        $edit_lnk = '/edit/' . $value['TYPE'] . '/?domain=' . $value['PARENT'] . '&account=' . $value['LINK'] . '&user=' . $value['USER'];
+                        $edit_lnk = '/edit/' . $value['TYPE'] . '/?domain=' . $value['PARENT']
+                            . '&account=' . $value['LINK']
+                            . '&user=' . $value['USER'];
                     }
                     if ($value['KEY'] == 'JOB') {
-                        $edit_lnk = '/edit/' . $value['TYPE'] . '/?job=' . $value['LINK'] . '&user=' . $value['USER'];
+                        $edit_lnk = '/edit/' . $value['TYPE'] . '/?job=' . $value['LINK']
+                            . '&user=' . $value['USER'];
                     }
                     if ($value['KEY'] == 'DATABASE') {
-                        $edit_lnk = '/edit/' . $value['TYPE'] . '/?database=' . $value['RESULT'] . '&user=' . $value['USER'];
+                        $edit_lnk = '/edit/' . $value['TYPE'] . '/?database=' . $value['RESULT']
+                            . '&user=' . $value['USER'];
                     }
                     if (($value['KEY'] != 'RECORD') && ($value['KEY'] != 'ACCOUNT') && ($value['KEY'] != 'JOB') && ($value['KEY'] != 'DATABASE')) {
-                        $edit_lnk = '/edit/' . $value['TYPE'] . '/?' . strtolower($value['KEY']) . '=' . $value['RESULT'] . '&user=' . $value['USER'];
+                        $edit_lnk = '/edit/' . $value['TYPE'] . '/?'
+                            . strtolower($value['KEY']) . '=' . $value['RESULT']
+                            . '&user=' . $value['USER'];
                     }
                     ?>
                     <?php
-                    if (($_SESSION['userContext'] === 'admin') && ($_SESSION['user'] !== 'admin') && ($value['USER'] === 'admin') && ($_SESSION['POLICY_SYSTEM_PROTECTED_ADMIN'] === 'yes')) {
+                    if (
+                        ($_SESSION['userContext'] === 'admin')
+                        && ($_SESSION['user'] !== 'admin')
+                        && ($value['USER'] === 'admin')
+                        && ($_SESSION['POLICY_SYSTEM_PROTECTED_ADMIN'] === 'yes')
+                    ) {
                         echo $value['RESULT'];
                     } else {
                         if ($value['USER'] == $_SESSION['user']) {
                             $href = $edit_lnk . '&token=' . $_SESSION['token'];
                         } else {
-                            $href = '/login/?loginas=' . $value['USER'] . '&token=' . $_SESSION['token'] . '&edit_link=' . urlencode($edit_lnk);
+                            $encoded_edit = urlencode($edit_lnk);
+                            $login_prefix = '/login/?loginas=' . $value['USER']
+                                . '&token=' . $_SESSION['token']
+                                . '&edit_link=';
+                            $href = $login_prefix . $encoded_edit;
                         }
-                        echo '<a href="' . $href . '">' . $value['RESULT'] . '</a>';
+                        ?>
+                        <a href="<?= $href ?>"><?= $value['RESULT'] ?></a>
+                        <?php
                     }
                     ?>
                 </div>
                 <div class="units-table-cell u-text-center-desktop">
                     <span class="u-hide-desktop u-text-bold"><?= _("Date") ?>:</span>
                     <time datetime="<?= htmlspecialchars($value["DATE"]) ?>">
-                    <?= translate_date($value["DATE"]) ?>
+                        <?= translate_date($value["DATE"]) ?>
                     </time>
                 </div>
                 <div class="units-table-cell u-text-bold u-text-center-desktop">
                     <span class="u-hide-desktop"><?= _("Owner") ?>:</span>
-                    <a href="/search/?q=<?= htmlentities($_GET["q"]) ?>&u=<?= $value["USER"] ?>&token=<?= $_SESSION["token"] ?>">
-                    <?= $value["USER"] ?>
+                    <?php
+                    $owner_q = urlencode($_GET['q'] ?? '');
+                    $owner_search_href = '/search/?q=' . $owner_q
+                        . '&u=' . $value['USER']
+                        . '&token=' . $_SESSION['token'];
+                    ?>
+                    <a href="<?= $owner_search_href ?>">
+                        <?= $value["USER"] ?>
                     </a>
-                    <?php if (!($_SESSION["POLICY_SYSTEM_HIDE_ADMIN"] === "yes" && $value["USER"] !== "admin") && $_SESSION["userContext"] === "admin") { ?>
-                        <a href="/login/?loginas=<?= $value["USER"] ?>&token=<?= $_SESSION["token"] ?>" title="<?= _("Log in as") ?> <?= $value["USER"] ?>" class="u-ml5">
+                    <?php
+                    if (
+                        !(
+                            $_SESSION["POLICY_SYSTEM_HIDE_ADMIN"] === "yes"
+                            && $value["USER"] !== "admin"
+                        )
+                        && $_SESSION["userContext"] === "admin"
+                    ) {
+                        ?>
+                        <?php $login_href = '/login/?loginas=' . $value['USER']
+                            . '&token=' . $_SESSION['token']; ?>
+                        <a
+                            href="<?= $login_href ?>"
+                            title="<?= _("Log in as") ?> <?= $value["USER"] ?>"
+                            class="u-ml5">
                             <i class="fas fa-right-to-bracket icon-green icon-dim"></i>
                             <span class="u-hidden-visually"><?= _("Log in as") ?> <?= $value["USER"] ?></span>
                         </a>

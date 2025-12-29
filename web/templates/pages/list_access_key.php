@@ -43,8 +43,10 @@ if (!empty($_POST["ok"])) { ?>
                 <?php if (!empty($key_data["ACCESS_KEY_ID"]) && !empty($key_data["SECRET_ACCESS_KEY"])) { ?>
                     <div class="u-mb20">
                         <label for="secret_key" class="form-label">
-                            <?= _("Secret Key") ?><br>
-                            <span class="inline-alert inline-alert-warning u-mb20"><?= _("Warning! Last chance to save secret key!") ?></span>
+                            <?= _("Secret Key") ?>
+                            <br>
+                            <?php $secret_warning = _("Warning! Last chance to save secret key!"); ?>
+                            <span class="inline-alert inline-alert-warning u-mb20"><?= $secret_warning ?></span>
                         </label>
                         <?php $secret_key_val = htmlentities(trim($key_data['SECRET_ACCESS_KEY'], "'")); ?>
                         <input

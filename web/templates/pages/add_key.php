@@ -2,8 +2,12 @@
 <div class="toolbar">
     <div class="toolbar-inner">
         <div class="toolbar-buttons">
-            <?php if ($_SESSION["userContext"] === "admin" && isset($_GET["user"]) && $_GET["user"] !== "admin") { ?>
-                <a class="button button-secondary button-back js-button-back" href="/list/key/?user=<?= htmlentities($_GET["user"]) ?>">
+            <?php if ($_SESSION["userContext"] === "admin" && isset($_GET["user"]) && $_GET["user"] !== "admin") {
+                $back_href = '/list/key/?user=' . htmlentities($_GET['user']);
+                ?>
+                <a
+                    class="button button-secondary button-back js-button-back"
+                    href="<?= $back_href ?>">
                     <i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
                 </a>
             <?php } else { ?>
@@ -32,7 +36,13 @@
             <?php show_alert_message($_SESSION); ?>
             <div>
                 <label for="v_key" class="form-label"><?= _("SSH Key") ?></label>
-                <textarea class="form-control u-min-height300" name="v_key" id="v_key" required><?= htmlentities(trim($v_key, "'")) ?></textarea>
+                <textarea
+                    class="form-control u-min-height300"
+                    name="v_key"
+                    id="v_key"
+                    required>
+                    <?= htmlentities(trim($v_key, "'")) ?>
+                </textarea>
             </div>
         </div>
 

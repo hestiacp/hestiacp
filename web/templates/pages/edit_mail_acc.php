@@ -71,36 +71,12 @@
                             <?= _("Quota") ?> <span class="optional">(<?= _("in MB") ?>)</span>
                         </label>
                         <div class="u-pos-relative">
-                            <input type="text" class="form-control" name="v_quota" id="v_quota" value="<?php if (!empty($v_quota)) {
-                                echo htmlentities(trim($v_quota, "'"));
-                                                                                                       } else {
-                                                                                                           echo "0";
-                                                                                                       } ?>">
-                            <button type="button" class="unlimited-toggle js-unlimited-toggle" title="<?= _("Unlimited") ?>">
-                                <i class="fas fa-infinity"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="u-mb10">
-                        <label for="v_aliases" class="form-label">
-                            <?= _("Aliases") ?> <span class="optional">(<?= _("Use local-part without domain name") ?>)</span>
-                        </label>
-                        <textarea class="form-control" name="v_aliases" id="v_aliases"><?= htmlentities(trim($v_aliases, "'")) ?></textarea>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input js-discard-all-mail" type="checkbox" name="v_blackhole" id="v_blackhole" <?php if ($v_blackhole == 'yes') {
-                            echo 'checked';
-                                                                                                                                } ?>>
+                            <input type="text" class="form-control" name="v_quota" id="v_quota" value="<?= () ? 'checked' : '' ?>>
                         <label for="v_blackhole">
                             <?= _("Discard all mail") ?>
                         </label>
                     </div>
-                    <div class="form-check <?php if ($v_blackhole == 'yes') {
-                        echo 'u-hidden';
-                                           } ?>">
-                        <input class="form-check-input js-do-not-store-checkbox" type="checkbox" name="v_fwd_only" id="v_fwd_for" <?php if ($v_fwd_only == 'yes') {
-                            echo 'checked';
-                                                                                                                                  } ?>>
+                    <div class="form-check <?= () ? 'checked' : '' ?>>
                         <label for="v_fwd_for">
                             <?= _("Do not store forwarded mail") ?>
                         </label>

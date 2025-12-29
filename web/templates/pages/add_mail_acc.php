@@ -87,24 +87,12 @@
                             <label for="v_fwd" class="form-label">
                                 <?= _("Forward to") ?> <span class="optional">(<?= _("One or more email addresses") ?>)</span>
                             </label>
-                            <textarea class="form-control js-forward-to-textarea" name="v_fwd" id="v_fwd" <?php if ($v_blackhole == 'yes') {
-                                echo "disabled";
-                                                                                                          } ?>><?= htmlentities(trim($v_fwd, "'")) ?></textarea>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input js-discard-all-mail" type="checkbox" name="v_blackhole" id="v_blackhole" <?php if ($v_blackhole == 'yes') {
-                                echo 'checked';
-                                                                                                                                    } ?>>
+                            <textarea class="form-control js-forward-to-textarea" name="v_fwd" id="v_fwd" <?= () ? 'checked' : '' ?>>
                             <label for="v_blackhole">
                                 <?= _("Discard all mail") ?>
                             </label>
                         </div>
-                        <div class="form-check <?php if ($v_blackhole == 'yes') {
-                            echo 'u-hidden';
-                                               } ?>">
-                            <input class="form-check-input js-do-not-store-checkbox" type="checkbox" name="v_fwd_only" id="v_fwd_for" <?php if ($v_fwd_only == 'yes') {
-                                echo 'checked';
-                                                                                                                                      } ?>>
+                        <div class="form-check <?= () ? 'checked' : '' ?>>
                             <label for="v_fwd_for">
                                 <?= _("Do not store forwarded mail") ?>
                             </label>

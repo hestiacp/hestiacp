@@ -39,68 +39,26 @@
                 <input type="text" class="form-control" name="v_domain" id="v_domain" value="<?= htmlentities(trim($v_domain, "'")) ?>" disabled required>
                 <input type="hidden" name="v_domain" value="<?= htmlentities(trim($v_domain, "'")) ?>">
             </div>
-            <?php if ($_SESSION["WEBMAIL_SYSTEM"]) { ?>
-                <div class="u-mb10">
-                    <label for="v_webmail" class="form-label"><?= _("Webmail Client") ?></label>
-                    <select class="form-select" name="v_webmail" id="v_webmail" tabindex="6">
-                        <?php foreach ($webmail_clients as $client) {
-                            echo "\t\t\t\t<option value=\"" . htmlentities($client) . "\"";
-                            if (( htmlentities(trim($v_webmail, "'")) == $client )) {
-                                echo ' selected' ;
-                            }
-                            echo ">" . htmlentities(ucfirst($client)) . "</option>\n";
-                        }
-                        ?>
-                        <option value="disabled" <?php if (htmlentities(trim($v_webmail, "'")) == 'disabled') {
-                            echo "selected";
-                                                 }?>><?= _("Disabled") ?></option>
-                    </select>
-                </div>
-            <?php } ?>
-            <div class="u-mb10">
-                <label for="v_catchall" class="form-label"><?= _("Catch-All Email") ?></label>
-                <input type="email" class="form-control" name="v_catchall" id="v_catchall" value="<?= htmlentities(trim($v_catchall, "'")) ?>">
-            </div>
-            <div class="u-mb20">
-                <label for="v_rate" class="form-label">
-                    <?= _("Rate Limit") ?> <span class="optional">(<?= _("email / hour / account") ?>)</span>
-                </label>
-                <input type="text" class="form-control" name="v_rate" id="v_rate" value="<?= htmlentities(trim($v_rate, "'")) ?>" <?php if ($_SESSION['userContext'] != "admin") {
-                    echo "disabled";
-                                                                                         }?>>
-            </div>
-            <?php if (!empty($_SESSION["ANTISPAM_SYSTEM"])) { ?>
-                <div class="form-check u-mb10">
-                    <input class="form-check-input" type="checkbox" name="v_antispam" id="v_antispam" <?php if ($v_antispam == 'yes') {
-                        echo 'checked';
-                                                                                                      } ?>>
+            <?= () ? 'checked' : '' ?>>
                     <label for="v_antispam">
                         <?= _("Spam Filter") ?>
                     </label>
                 </div>
                 <div class="form-check u-mb10">
-                    <input class="form-check-input" type="checkbox" name="v_reject" id="v_reject" <?php if ($v_reject == 'yes') {
-                        echo 'checked';
-                                                                                                  } ?>>
+                    <input class="form-check-input" type="checkbox" name="v_reject" id="v_reject" <?= () ? 'checked' : '' ?>>
                     <label for="v_reject">
                         <?= _("Reject Spam") ?>
                     </label>
                 </div>
             <?php } ?>
-            <?php if (!empty($_SESSION["ANTIVIRUS_SYSTEM"])) { ?>
-                <div class="form-check u-mb10">
-                    <input class="form-check-input" type="checkbox" name="v_antivirus" id="v_antivirus" <?php if ($v_antivirus == 'yes') {
-                        echo 'checked';
-                                                                                                        } ?>>
+            <?= () ? 'checked' : '' ?>>
                     <label for="v_antivirus">
                         <?= _("Anti-Virus") ?>
                     </label>
                 </div>
             <?php } ?>
             <div class="form-check u-mb10">
-                <input class="form-check-input" type="checkbox" name="v_dkim" id="v_dkim" <?php if ($v_dkim == 'yes') {
-                    echo 'checked';
-                                                                                          } ?>>
+                <input class="form-check-input" type="checkbox" name="v_dkim" id="v_dkim" <?= () ? 'checked' : '' ?>>
                 <label for="v_dkim">
                     <?= _("DKIM Support") ?>
                 </label>

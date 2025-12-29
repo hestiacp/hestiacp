@@ -7,7 +7,6 @@ use Filegator\Services\Archiver\ArchiverInterface;
 use Filegator\Services\Service;
 use Filegator\Services\Storage\Filesystem as Storage;
 use Filegator\Services\Tmpfs\TmpfsInterface;
-use function Hestiacp\quoteshellarg\quoteshellarg;
 
 class HestiaZipArchiver extends ZipArchiver implements Service, ArchiverInterface {
 	protected $container;
@@ -36,11 +35,11 @@ class HestiaZipArchiver extends ZipArchiver implements Service, ArchiverInterfac
 
 		exec(
 			"sudo /usr/local/hestia/bin/v-extract-fs-archive " .
-				quoteshellarg($v_user) .
+				escapeshellarg($v_user) .
 				" " .
-				quoteshellarg($source) .
+				escapeshellarg($source) .
 				" " .
-				quoteshellarg($destination),
+				escapeshellarg($destination),
 			$output,
 			$return_var,
 		);

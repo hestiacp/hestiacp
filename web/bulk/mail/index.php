@@ -1,7 +1,5 @@
 <?php
 
-use function Hestiacp\quoteshellarg\quoteshellarg;
-
 ob_start();
 
 include $_SERVER["DOCUMENT_ROOT"] . "/inc/main.php";
@@ -99,7 +97,7 @@ if (empty($_POST["account"])) {
 	if (is_array($domain)) {
 		foreach ($domain as $value) {
 			// Mail
-			$value = quoteshellarg($value);
+			$value = escapeshellarg($value);
 			exec(HESTIA_CMD . $cmd . " " . $user . " " . $value, $output, $return_var);
 			$restart = "yes";
 		}
@@ -110,8 +108,8 @@ if (empty($_POST["account"])) {
 } else {
 	foreach ($account as $value) {
 		// Mail Account
-		$value = quoteshellarg($value);
-		$dom = quoteshellarg($domain);
+		$value = escapeshellarg($value);
+		$dom = escapeshellarg($domain);
 		exec(HESTIA_CMD . $cmd . " " . $user . " " . $dom . " " . $value, $output, $return_var);
 		$restart = "yes";
 	}

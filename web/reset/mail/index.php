@@ -1,7 +1,5 @@
 <?php
 
-use function Hestiacp\quoteshellarg\quoteshellarg;
-
 // Init
 define("NO_AUTH_REQUIRED", true);
 define("NO_AUTH_REQUIRED2", true);
@@ -52,8 +50,8 @@ if (empty($_POST["new"])) {
 }
 
 [$v_account, $v_domain] = explode("@", $_POST["email"]);
-$v_domain = quoteshellarg($v_domain);
-$v_account = quoteshellarg($v_account);
+$v_domain = escapeshellarg($v_domain);
+$v_account = escapeshellarg($v_account);
 $v_password = $_POST["password"];
 
 // Get domain owner
@@ -69,7 +67,7 @@ unset($output);
 exec(
 	HESTIA_CMD .
 		"v-get-mail-account-value " .
-		quoteshellarg($v_user) .
+		escapeshellarg($v_user) .
 		" " .
 		$v_domain .
 		" " .
@@ -100,13 +98,13 @@ fwrite($fp, $_POST["new"] . "\n");
 exec(
 	HESTIA_CMD .
 		"v-change-mail-account-password " .
-		quoteshellarg($v_user) .
+		escapeshellarg($v_user) .
 		" " .
 		$v_domain .
 		" " .
 		$v_account .
 		" " .
-		quoteshellarg($new_password_file),
+		escapeshellarg($new_password_file),
 	$output,
 	$return_var,
 );

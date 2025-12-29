@@ -1,7 +1,5 @@
 <?php
 
-use function Hestiacp\quoteshellarg\quoteshellarg;
-
 ob_start();
 
 include $_SERVER["DOCUMENT_ROOT"] . "/inc/main.php";
@@ -88,7 +86,7 @@ if (empty($_POST["record"])) {
 	if (is_array($_POST["domain"])) {
 		foreach ($domain as $value) {
 			// DNS
-			$value = quoteshellarg($value);
+			$value = escapeshellarg($value);
 			exec(HESTIA_CMD . $cmd . " " . $user . " " . $value . " no", $output, $return_var);
 			$restart = "yes";
 		}
@@ -98,8 +96,8 @@ if (empty($_POST["record"])) {
 } else {
 	foreach ($record as $value) {
 		// DNS Record
-		$value = quoteshellarg($value);
-		$dom = quoteshellarg($domain);
+		$value = escapeshellarg($value);
+		$dom = escapeshellarg($domain);
 		exec(
 			HESTIA_CMD . $cmd . " " . $user . " " . $dom . " " . $value . " no",
 			$output,

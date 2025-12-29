@@ -1,7 +1,5 @@
 <?php
 
-use function Hestiacp\quoteshellarg\quoteshellarg;
-
 ob_start();
 include $_SERVER["DOCUMENT_ROOT"] . "/inc/main.php";
 
@@ -11,7 +9,7 @@ verify_csrf($_GET);
 $backup = $_GET["backup"];
 
 if (!file_exists("/backup/" . $backup)) {
-	$backup = quoteshellarg($_GET["backup"]);
+	$backup = escapeshellarg($_GET["backup"]);
 	exec(
 		HESTIA_CMD . "v-schedule-user-backup-download " . $user . " " . $backup,
 		$output,

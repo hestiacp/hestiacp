@@ -1,7 +1,5 @@
 <?php
 
-use function Hestiacp\quoteshellarg\quoteshellarg;
-
 ob_start();
 $TAB = "WEB";
 
@@ -37,7 +35,7 @@ if (!empty($_POST["ok"])) {
 	$v_domain = strtolower($v_domain);
 
 	// Define domain ip address
-	$v_ip = quoteshellarg($_POST["v_ip"]);
+	$v_ip = escapeshellarg($_POST["v_ip"]);
 
 	// Using public IP instead of internal IP when creating DNS
 	// Gets public IP from 'v-list-user-ips' command (that reads /hestia/data/ips/ip), precisely from 'NAT' field
@@ -52,7 +50,7 @@ if (!empty($_POST["ok"])) {
 		trim($ips[$v_clean_ip]["NAT"]) != ""
 	) {
 		$v_public_ip = trim($ips[$v_clean_ip]["NAT"]);
-		$v_public_ip = quoteshellarg($v_public_ip);
+		$v_public_ip = escapeshellarg($v_public_ip);
 	}
 
 	// Define domain aliases
@@ -76,7 +74,7 @@ if (!empty($_POST["ok"])) {
 				"v-add-web-domain " .
 				$user .
 				" " .
-				quoteshellarg($v_domain) .
+				escapeshellarg($v_domain) .
 				" " .
 				$v_ip .
 				" 'yes'",
@@ -101,7 +99,7 @@ if (!empty($_POST["ok"])) {
 				"v-add-dns-domain " .
 				$user .
 				" " .
-				quoteshellarg($v_domain) .
+				escapeshellarg($v_domain) .
 				" " .
 				$v_public_ip .
 				" '' '' '' '' '' '' '' '' 'no'",
@@ -115,7 +113,7 @@ if (!empty($_POST["ok"])) {
 	// Add mail domain
 	if ($_POST["v_mail"] == "on" && empty($_SESSION["error_msg"])) {
 		exec(
-			HESTIA_CMD . "v-add-mail-domain " . $user . " " . quoteshellarg($v_domain),
+			HESTIA_CMD . "v-add-mail-domain " . $user . " " . escapeshellarg($v_domain),
 			$output,
 			$return_var,
 		);

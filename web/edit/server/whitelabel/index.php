@@ -1,7 +1,5 @@
 <?php
 
-use function Hestiacp\quoteshellarg\quoteshellarg;
-
 $TAB = "SERVER";
 
 // Main include
@@ -18,14 +16,14 @@ if (!empty($_POST)) {
 		exec(
 			HESTIA_CMD .
 				"v-change-sys-config-value APP_NAME " .
-				quoteshellarg($_POST["v_app_name"]),
+				escapeshellarg($_POST["v_app_name"]),
 			$output,
 			$return_var,
 		);
 	}
 	if (!empty($_POST["v_title"]) && $_SESSION["TITLE"] != $_POST["v_title"]) {
 		exec(
-			HESTIA_CMD . "v-change-sys-config-value TITLE " . quoteshellarg($_POST["v_title"]),
+			HESTIA_CMD . "v-change-sys-config-value TITLE " . escapeshellarg($_POST["v_title"]),
 			$output,
 			$return_var,
 		);
@@ -37,7 +35,7 @@ if (!empty($_POST)) {
 		exec(
 			HESTIA_CMD .
 				"v-change-sys-config-value SUBJECT_EMAIL " .
-				quoteshellarg($_POST["v_subject_email"]),
+				escapeshellarg($_POST["v_subject_email"]),
 			$output,
 			$return_var,
 		);
@@ -46,7 +44,7 @@ if (!empty($_POST)) {
 		exec(
 			HESTIA_CMD .
 				"v-change-sys-config-value HIDE_DOCS " .
-				quoteshellarg($_POST["v_hide_docs"]),
+				escapeshellarg($_POST["v_hide_docs"]),
 			$output,
 			$return_var,
 		);
@@ -56,7 +54,7 @@ if (!empty($_POST)) {
 		exec(
 			HESTIA_CMD .
 				"v-change-sys-config-value FROM_NAME " .
-				quoteshellarg($_POST["v_from_name"]),
+				escapeshellarg($_POST["v_from_name"]),
 			$output,
 			$return_var,
 		);
@@ -65,7 +63,7 @@ if (!empty($_POST)) {
 		exec(
 			HESTIA_CMD .
 				"v-change-sys-config-value FROM_EMAIL " .
-				quoteshellarg($_POST["v_from_email"]),
+				escapeshellarg($_POST["v_from_email"]),
 			$output,
 			$return_var,
 		);
@@ -74,7 +72,7 @@ if (!empty($_POST)) {
 		exec(
 			HESTIA_CMD .
 				"v-change-sys-config-value HIDE_DOCS " .
-				quoteshellarg($_POST["v_hide_docs"]),
+				escapeshellarg($_POST["v_hide_docs"]),
 			$output,
 			$return_var,
 		);

@@ -1,7 +1,5 @@
 <?php
 
-use function Hestiacp\quoteshellarg\quoteshellarg;
-
 ob_start();
 $TAB = "DNS";
 
@@ -16,7 +14,7 @@ if (empty($_GET["domain"])) {
 
 // Edit as someone else?
 if ($_SESSION["userContext"] === "admin" && !empty($_GET["user"])) {
-	$user = quoteshellarg($_GET["user"]);
+	$user = escapeshellarg($_GET["user"]);
 	$user_plain = htmlentities($_GET["user"]);
 }
 
@@ -27,7 +25,7 @@ unset($output);
 
 // List dns domain
 if (!empty($_GET["domain"]) && empty($_GET["record_id"])) {
-	$v_domain = quoteshellarg($_GET["domain"]);
+	$v_domain = escapeshellarg($_GET["domain"]);
 	exec(
 		HESTIA_CMD . "v-list-dns-domain " . $user . " " . $v_domain . " json",
 		$output,
@@ -63,8 +61,8 @@ if (!empty($_GET["domain"]) && empty($_GET["record_id"])) {
 
 // List dns record
 if (!empty($_GET["domain"]) && !empty($_GET["record_id"])) {
-	$v_domain = quoteshellarg($_GET["domain"]);
-	$v_record_id = quoteshellarg($_GET["record_id"]);
+	$v_domain = escapeshellarg($_GET["domain"]);
+	$v_record_id = escapeshellarg($_GET["record_id"]);
 	exec(
 		HESTIA_CMD . "v-list-dns-records " . $user . " " . $v_domain . " 'json'",
 		$output,
@@ -94,14 +92,14 @@ if (!empty($_GET["domain"]) && !empty($_GET["record_id"])) {
 
 // Check POST request for dns domain
 if (!empty($_POST["save"]) && !empty($_GET["domain"]) && empty($_GET["record_id"])) {
-	$v_domain = quoteshellarg($_POST["v_domain"]);
+	$v_domain = escapeshellarg($_POST["v_domain"]);
 
 	// Check token
 	verify_csrf($_POST);
 
 	// Change domain IP
 	if ($v_ip != $_POST["v_ip"] && empty($_SESSION["error_msg"])) {
-		$v_ip = quoteshellarg($_POST["v_ip"]);
+		$v_ip = escapeshellarg($_POST["v_ip"]);
 		exec(
 			HESTIA_CMD .
 				"v-change-dns-domain-ip " .
@@ -125,7 +123,7 @@ if (!empty($_POST["save"]) && !empty($_GET["domain"]) && empty($_GET["record_id"
 	) {
 		// Change domain template
 		if ($v_template != $_POST["v_template"] && empty($_SESSION["error_msg"])) {
-			$v_template = quoteshellarg($_POST["v_template"]);
+			$v_template = escapeshellarg($_POST["v_template"]);
 			exec(
 				HESTIA_CMD .
 					"v-change-dns-domain-tpl " .
@@ -146,7 +144,7 @@ if (!empty($_POST["save"]) && !empty($_GET["domain"]) && empty($_GET["record_id"
 
 	// Change SOA record
 	if ($v_soa != $_POST["v_soa"] && empty($_SESSION["error_msg"])) {
-		$v_soa = quoteshellarg($_POST["v_soa"]);
+		$v_soa = escapeshellarg($_POST["v_soa"]);
 		exec(
 			HESTIA_CMD .
 				"v-change-dns-domain-soa " .
@@ -166,7 +164,7 @@ if (!empty($_POST["save"]) && !empty($_GET["domain"]) && empty($_GET["record_id"
 
 	// Change expiration date
 	if ($v_exp != $_POST["v_exp"] && empty($_SESSION["error_msg"])) {
-		$v_exp = quoteshellarg($_POST["v_exp"]);
+		$v_exp = escapeshellarg($_POST["v_exp"]);
 		exec(
 			HESTIA_CMD .
 				"v-change-dns-domain-exp " .
@@ -185,7 +183,7 @@ if (!empty($_POST["save"]) && !empty($_GET["domain"]) && empty($_GET["record_id"
 
 	// Change domain ttl
 	if ($v_ttl != $_POST["v_ttl"] && empty($_SESSION["error_msg"])) {
-		$v_ttl = quoteshellarg($_POST["v_ttl"]);
+		$v_ttl = escapeshellarg($_POST["v_ttl"]);
 		exec(
 			HESTIA_CMD .
 				"v-change-dns-domain-ttl " .
@@ -253,8 +251,8 @@ if (!empty($_POST["save"]) && !empty($_GET["domain"]) && !empty($_GET["record_id
 	verify_csrf($_POST);
 
 	// Protect input
-	$v_domain = quoteshellarg($_POST["v_domain"]);
-	$v_record_id = quoteshellarg($_POST["v_record_id"]);
+	$v_domain = escapeshellarg($_POST["v_domain"]);
+	$v_record_id = escapeshellarg($_POST["v_record_id"]);
 
 	// Change dns record
 	if (
@@ -264,11 +262,11 @@ if (!empty($_POST["save"]) && !empty($_GET["domain"]) && !empty($_GET["record_id
 		$v_priority != $_POST["v_priority"] ||
 		($v_ttl != $_POST["v_ttl"] && empty($_SESSION["error_msg"]))
 	) {
-		$v_rec = quoteshellarg($_POST["v_rec"]);
-		$v_type = quoteshellarg($_POST["v_type"]);
-		$v_val = quoteshellarg($_POST["v_val"]);
-		$v_priority = quoteshellarg($_POST["v_priority"]);
-		$v_ttl = quoteshellarg($_POST["v_ttl"]);
+		$v_rec = escapeshellarg($_POST["v_rec"]);
+		$v_type = escapeshellarg($_POST["v_type"]);
+		$v_val = escapeshellarg($_POST["v_val"]);
+		$v_priority = escapeshellarg($_POST["v_priority"]);
+		$v_ttl = escapeshellarg($_POST["v_ttl"]);
 		exec(
 			HESTIA_CMD .
 				"v-change-dns-record " .
@@ -300,7 +298,7 @@ if (!empty($_POST["save"]) && !empty($_GET["domain"]) && !empty($_GET["record_id
 
 	// Change dns record id
 	if ($_GET["record_id"] != $_POST["v_record_id"] && empty($_SESSION["error_msg"])) {
-		$v_old_record_id = quoteshellarg($_GET["record_id"]);
+		$v_old_record_id = escapeshellarg($_GET["record_id"]);
 		exec(
 			HESTIA_CMD .
 				"v-change-dns-record-id " .

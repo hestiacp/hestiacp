@@ -1,7 +1,5 @@
 <?php
 
-use function Hestiacp\quoteshellarg\quoteshellarg;
-
 ob_start();
 
 session_start();
@@ -17,8 +15,8 @@ if ($_SESSION["userContext"] != "admin") {
 }
 
 if (!empty($_GET["rule"])) {
-	$v_rule = quoteshellarg($_GET["rule"]);
-	$v_direction = quoteshellarg($_GET["direction"]);
+	$v_rule = escapeshellarg($_GET["rule"]);
+	$v_direction = escapeshellarg($_GET["direction"]);
 	exec(HESTIA_CMD . "v-move-firewall-rule " . $v_rule . " " . $v_direction, $output, $return_var);
 }
 check_return_code($return_var, $output);

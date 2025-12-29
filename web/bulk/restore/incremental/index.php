@@ -1,7 +1,5 @@
 <?php
 
-use function Hestiacp\quoteshellarg\quoteshellarg;
-
 ob_start();
 
 include $_SERVER["DOCUMENT_ROOT"] . "/inc/main.php";
@@ -10,7 +8,7 @@ include $_SERVER["DOCUMENT_ROOT"] . "/inc/main.php";
 verify_csrf($_POST);
 
 $action = $_POST["action"];
-$snapshot = quoteshellarg($_POST["snapshot"]);
+$snapshot = escapeshellarg($_POST["snapshot"]);
 
 $web = [];
 $dns = [];
@@ -20,22 +18,22 @@ $cron = [];
 $udir = [];
 
 if (!empty($_POST["web"])) {
-	$web = quoteshellarg(implode(",", $_POST["web"]));
+	$web = escapeshellarg(implode(",", $_POST["web"]));
 }
 if (!empty($_POST["dns"])) {
-	$dns = quoteshellarg(implode(",", $_POST["dns"]));
+	$dns = escapeshellarg(implode(",", $_POST["dns"]));
 }
 if (!empty($_POST["mail"])) {
-	$mail = quoteshellarg(implode(",", $_POST["mail"]));
+	$mail = escapeshellarg(implode(",", $_POST["mail"]));
 }
 if (!empty($_POST["db"])) {
-	$db = quoteshellarg(implode(",", $_POST["db"]));
+	$db = escapeshellarg(implode(",", $_POST["db"]));
 }
 if (!empty($_POST["cron"])) {
 	$cron = "yes";
 }
 if (!empty($_POST["file"])) {
-	$udir = quoteshellarg(implode(",", $_POST["file"]));
+	$udir = escapeshellarg(implode(",", $_POST["file"]));
 }
 
 if ($action == "restore") {

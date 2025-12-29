@@ -1,7 +1,5 @@
 <?php
 
-use function Hestiacp\quoteshellarg\quoteshellarg;
-
 $TAB = "MAIL";
 
 // Main include
@@ -21,7 +19,12 @@ if (empty($_GET["domain"])) {
 	render_page($user, $TAB, "list_mail");
 } elseif (!empty($_GET["dns"])) {
 	exec(
-		HESTIA_CMD . "v-list-mail-domain " . $user . " " . quoteshellarg($_GET["domain"]) . " json",
+		HESTIA_CMD .
+			"v-list-mail-domain " .
+			$user .
+			" " .
+			escapeshellarg($_GET["domain"]) .
+			" json",
 		$output,
 		$return_var,
 	);
@@ -37,7 +40,7 @@ if (empty($_GET["domain"])) {
 			"v-list-mail-domain-dkim-dns " .
 			$user .
 			" " .
-			quoteshellarg($_GET["domain"]) .
+			escapeshellarg($_GET["domain"]) .
 			" json",
 		$output,
 		$return_var,
@@ -53,7 +56,7 @@ if (empty($_GET["domain"])) {
 			"v-list-mail-accounts " .
 			$user .
 			" " .
-			quoteshellarg($_GET["domain"]) .
+			escapeshellarg($_GET["domain"]) .
 			" json",
 		$output,
 		$return_var,

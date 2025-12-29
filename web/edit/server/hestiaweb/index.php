@@ -1,7 +1,5 @@
 <?php
 
-use function Hestiacp\quoteshellarg\quoteshellarg;
-
 $TAB = "SERVER";
 
 // Main include
@@ -26,7 +24,7 @@ if (!empty($_POST["save"])) {
 		exec(
 			HESTIA_CMD .
 				"v-change-sys-service-config " .
-				quoteshellarg($new_conf) .
+				escapeshellarg($new_conf) .
 				" hestiaweb yes",
 			$output,
 			$return_var,

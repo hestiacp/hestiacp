@@ -4,7 +4,6 @@ session_start();
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
-use function Hestiacp\quoteshellarg\quoteshellarg;
 
 try {
 	require_once "vendor/autoload.php";
@@ -72,8 +71,8 @@ if (
 	isset($_SESSION["user"]) &&
 	$_SESSION["DISABLE_IP_CHECK"] != "yes"
 ) {
-	$v_user = quoteshellarg($_SESSION["user"]);
-	$v_session_id = quoteshellarg($_SESSION["token"]);
+	$v_user = escapeshellarg($_SESSION["user"]);
+	$v_session_id = escapeshellarg($_SESSION["token"]);
 	exec(HESTIA_CMD . "v-log-user-logout " . $v_user . " " . $v_session_id, $output, $return_var);
 	destroy_sessions();
 	header("Location: /login/");
@@ -105,7 +104,7 @@ if (isset($_SESSION["user"])) {
 		$username = $_SESSION["look"];
 	}
 
-	exec(HESTIA_CMD . "v-list-user " . quoteshellarg($username) . " json", $output, $return_var);
+	exec(HESTIA_CMD . "v-list-user " . escapeshellarg($username) . " json", $output, $return_var);
 	$data = json_decode(implode("", $output), true);
 	unset($output, $return_var);
 	$_SESSION["login_shell"] = $data[$username]["SHELL"];
@@ -124,8 +123,8 @@ if (!defined("NO_AUTH_REQUIRED")) {
 		destroy_sessions();
 		header("Location: /login/");
 	} elseif ($_SESSION["INACTIVE_SESSION_TIMEOUT"] * 60 + $_SESSION["LAST_ACTIVITY"] < time()) {
-		$v_user = quoteshellarg($_SESSION["user"]);
-		$v_session_id = quoteshellarg($_SESSION["token"]);
+		$v_user = escapeshellarg($_SESSION["user"]);
+		$v_session_id = escapeshellarg($_SESSION["token"]);
 		exec(
 			HESTIA_CMD . "v-log-user-logout " . $v_user . " " . $v_session_id,
 			$output,
@@ -149,12 +148,12 @@ function ipUsed() {
 }
 
 if (isset($_SESSION["user"])) {
-	$user = quoteshellarg($_SESSION["user"]);
+	$user = escapeshellarg($_SESSION["user"]);
 	$user_plain = htmlentities($_SESSION["user"]);
 }
 
 if (isset($_SESSION["look"]) && $_SESSION["look"] != "" && $_SESSION["userContext"] === "admin") {
-	$user = quoteshellarg($_SESSION["look"]);
+	$user = escapeshellarg($_SESSION["look"]);
 	$user_plain = htmlentities($_SESSION["look"]);
 }
 if (empty($user_plain)) {
@@ -565,7 +564,7 @@ function backendtpl_with_webdomains() {
 	$backend_list = [];
 	foreach ($users as $user => $user_details) {
 		exec(
-			HESTIA_CMD . "v-list-web-domains " . quoteshellarg($user) . " json",
+			HESTIA_CMD . "v-list-web-domains " . escapeshellarg($user) . " json",
 			$output,
 			$return_var,
 		);

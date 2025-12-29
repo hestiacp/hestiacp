@@ -1,7 +1,5 @@
 <?php
 
-use function Hestiacp\quoteshellarg\quoteshellarg;
-
 ob_start();
 $TAB = "FIREWALL";
 
@@ -54,13 +52,13 @@ if (!empty($_POST["ok"])) {
 		exec(
 			HESTIA_CMD .
 				"v-add-firewall-ipset " .
-				quoteshellarg($v_ipname) .
+				escapeshellarg($v_ipname) .
 				" " .
-				quoteshellarg($v_datasource) .
+				escapeshellarg($v_datasource) .
 				" " .
-				quoteshellarg($v_ipver) .
+				escapeshellarg($v_ipver) .
 				" " .
-				quoteshellarg($v_autoupdate),
+				escapeshellarg($v_autoupdate),
 			$output,
 			$return_var,
 		);

@@ -1,7 +1,5 @@
 <?php
 
-use function Hestiacp\quoteshellarg\quoteshellarg;
-
 ob_start();
 // Main include
 include $_SERVER["DOCUMENT_ROOT"] . "/inc/main.php";
@@ -16,7 +14,7 @@ if ($_SESSION["userContext"] != "admin") {
 verify_csrf($_GET);
 
 if (!empty($_GET["rule"])) {
-	$v_rule = quoteshellarg($_GET["rule"]);
+	$v_rule = escapeshellarg($_GET["rule"]);
 	exec(HESTIA_CMD . "v-delete-firewall-rule " . $v_rule, $output, $return_var);
 }
 check_return_code($return_var, $output);

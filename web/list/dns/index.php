@@ -1,7 +1,5 @@
 <?php
 
-use function Hestiacp\quoteshellarg\quoteshellarg;
-
 $TAB = "DNS";
 
 // Main include
@@ -26,7 +24,7 @@ if (empty($_GET["domain"])) {
 			"v-list-dnssec-public-key " .
 			$user .
 			" " .
-			quoteshellarg($_GET["domain"]) .
+			escapeshellarg($_GET["domain"]) .
 			" 'json'",
 		$output,
 		$return_var,
@@ -90,7 +88,7 @@ if (empty($_GET["domain"])) {
 			"v-list-dns-records " .
 			$user .
 			" " .
-			quoteshellarg($_GET["domain"]) .
+			escapeshellarg($_GET["domain"]) .
 			" 'json'",
 		$output,
 		$return_var,

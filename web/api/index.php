@@ -1,7 +1,5 @@
 <?php
 
-use function Hestiacp\quoteshellarg\quoteshellarg;
-
 try {
 	require_once "../inc/vendor/autoload.php";
 } catch (Throwable $ex) {
@@ -89,8 +87,8 @@ function api_legacy(array $request_data) {
 		if (!isset($password)) {
 			api_error(E_PASSWORD, "Error: authentication failed", $hst_return);
 		}
-		$v_ip = quoteshellarg(get_real_user_ip());
-		$user = quoteshellarg($root_user);
+		$v_ip = escapeshellarg(get_real_user_ip());
+		$user = escapeshellarg($root_user);
 		unset($output);
 		exec(HESTIA_CMD . "v-get-user-salt " . $user . " " . $v_ip . " json", $output, $return_var);
 		$pam = json_decode(implode("", $output), true);
@@ -112,9 +110,9 @@ function api_legacy(array $request_data) {
 			exec(
 				HESTIA_CMD .
 					"v-check-user-password " .
-					quoteshellarg($root_user) .
+					escapeshellarg($root_user) .
 					" " .
-					quoteshellarg($v_password) .
+					escapeshellarg($v_password) .
 					" " .
 					$v_ip .
 					" yes",
@@ -152,9 +150,9 @@ function api_legacy(array $request_data) {
 		}
 	} else {
 		$key = "/usr/local/hestia/data/keys/" . basename($request_data["hash"]);
-		$v_ip = quoteshellarg(get_real_user_ip());
+		$v_ip = escapeshellarg(get_real_user_ip());
 		exec(
-			HESTIA_CMD . "v-check-api-key " . quoteshellarg($key) . " " . $v_ip,
+			HESTIA_CMD . "v-check-api-key " . escapeshellarg($key) . " " . $v_ip,
 			$output,
 			$return_var,
 		);
@@ -192,7 +190,7 @@ function api_legacy(array $request_data) {
 
 		// Prepare arguments
 		foreach ($hst_cmd_args as $cmd_arg) {
-			$cmdquery .= " " . quoteshellarg($cmd_arg);
+			$cmdquery .= " " . escapeshellarg($cmd_arg);
 		}
 
 		// Run cmd query
@@ -270,13 +268,13 @@ function api_connection(array $request_data) {
 	exec(
 		HESTIA_CMD .
 			"v-check-access-key " .
-			quoteshellarg($hst_access_key_id) .
+			escapeshellarg($hst_access_key_id) .
 			" " .
-			quoteshellarg($hst_secret_access_key) .
+			escapeshellarg($hst_secret_access_key) .
 			" " .
-			quoteshellarg($hst_cmd) .
+			escapeshellarg($hst_cmd) .
 			" " .
-			quoteshellarg($v_real_user_ip) .
+			escapeshellarg($v_real_user_ip) .
 			" json",
 		$output,
 		$return_var,
@@ -317,7 +315,7 @@ function api_connection(array $request_data) {
 
 	// Prepare arguments
 	foreach ($hst_cmd_args as $cmd_arg) {
-		$cmdquery .= " " . quoteshellarg($cmd_arg);
+		$cmdquery .= " " . escapeshellarg($cmd_arg);
 	}
 
 	# v-make-temp files is manodory other wise some functions will break

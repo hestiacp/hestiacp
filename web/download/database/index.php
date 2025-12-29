@@ -1,14 +1,12 @@
 <?php
 
-use function Hestiacp\quoteshellarg\quoteshellarg;
-
 ob_start();
 include $_SERVER["DOCUMENT_ROOT"] . "/inc/main.php";
 
 // Check token
 verify_csrf($_GET);
 
-$database = quoteshellarg($_GET["database"]);
+$database = escapeshellarg($_GET["database"]);
 
 exec(
 	HESTIA_CMD . "v-dump-database " . $user . " " . $database . " file gzip",

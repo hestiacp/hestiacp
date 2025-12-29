@@ -1,7 +1,5 @@
 <?php
 
-use function Hestiacp\quoteshellarg\quoteshellarg;
-
 ob_start();
 $TAB = "WEB";
 
@@ -17,13 +15,13 @@ if (empty($_GET["domain"])) {
 
 // Edit as someone else?
 if ($_SESSION["user"] == "admin" && !empty($_GET["user"])) {
-	$user = quoteshellarg($_GET["user"]);
+	$user = escapeshellarg($_GET["user"]);
 }
 
 // Check if domain belongs to the user
 $v_domain = $_GET["domain"];
 exec(
-	HESTIA_CMD . "v-list-web-domain " . $user . " " . quoteshellarg($v_domain) . " json",
+	HESTIA_CMD . "v-list-web-domain " . $user . " " . escapeshellarg($v_domain) . " json",
 	$output,
 	$return_var,
 );

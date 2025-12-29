@@ -1,7 +1,5 @@
 <?php
 
-use function Hestiacp\quoteshellarg\quoteshellarg;
-
 $TAB = "SEARCH";
 
 $_SESSION["back"] = $_SERVER["REQUEST_URI"];
@@ -19,8 +17,8 @@ if (empty($_GET["q"])) {
 	$_GET["q"] = "";
 }
 // Data
-$q = quoteshellarg($_GET["q"]);
-$u = quoteshellarg($_GET["u"]);
+$q = escapeshellarg($_GET["q"]);
+$u = escapeshellarg($_GET["u"]);
 
 if ($_SESSION["userContext"] === "admin" && $_SESSION["look"] == "") {
 	if (!empty($_GET["u"])) {

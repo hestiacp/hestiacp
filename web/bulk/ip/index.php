@@ -1,7 +1,5 @@
 <?php
 
-use function Hestiacp\quoteshellarg\quoteshellarg;
-
 ob_start();
 
 include $_SERVER["DOCUMENT_ROOT"] . "/inc/main.php";
@@ -41,7 +39,7 @@ if ($_SESSION["userContext"] === "admin") {
 }
 
 foreach ($ip as $value) {
-	$value = quoteshellarg($value);
+	$value = escapeshellarg($value);
 	exec(HESTIA_CMD . $cmd . " " . $value, $output, $return_var);
 }
 

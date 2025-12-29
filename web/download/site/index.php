@@ -1,14 +1,12 @@
 <?php
 
-use function Hestiacp\quoteshellarg\quoteshellarg;
-
 ob_start();
 include $_SERVER["DOCUMENT_ROOT"] . "/inc/main.php";
 
 // Check token
 verify_csrf($_GET);
 
-$site = quoteshellarg($_GET["site"]);
+$site = escapeshellarg($_GET["site"]);
 
 exec(HESTIA_CMD . "v-dump-site " . $user . " " . $site . " full", $output, $return_var);
 

@@ -1,7 +1,5 @@
 <?php
 
-use function Hestiacp\quoteshellarg\quoteshellarg;
-
 ob_start();
 
 // Main include
@@ -37,7 +35,7 @@ switch ($action) {
 }
 
 foreach ($setname as $value) {
-	$v_name = quoteshellarg($value);
+	$v_name = escapeshellarg($value);
 	exec(HESTIA_CMD . $cmd . " " . $v_name, $output, $return_var);
 }
 

@@ -1,5 +1,5 @@
 <?php
-use function Hestiacp\quoteshellarg\quoteshellarg;
+
 $dist_config = require __DIR__ . "/configuration_sample.php";
 session_start();
 $dist_config["public_path"] = "/fm/";
@@ -143,8 +143,8 @@ $dist_config["services"]["Filegator\Services\Storage\Filesystem"]["config"][
 ] = function () {
 	if (!empty($_SESSION["INACTIVE_SESSION_TIMEOUT"])) {
 		if ($_SESSION["INACTIVE_SESSION_TIMEOUT"] * 60 + $_SESSION["LAST_ACTIVITY"] < time()) {
-			$v_user = quoteshellarg($_SESSION["user"]);
-			$v_session_id = quoteshellarg($_SESSION["token"]);
+			$v_user = escapeshellarg($_SESSION["user"]);
+			$v_session_id = escapeshellarg($_SESSION["token"]);
 			exec(
 				"/usr/local/hestia/bin/v-log-user-logout " . $v_user . " " . $v_session_id,
 				$output,
@@ -181,14 +181,14 @@ $dist_config["services"]["Filegator\Services\Storage\Filesystem"]["config"][
 	if (!file_exists("/home/" . basename($v_user) . "/.ssh/hst-filemanager-key")) {
 		exec(
 			"sudo /usr/local/hestia/bin/v-add-user-sftp-key " .
-				quoteshellarg(basename($v_user)) .
+				escapeshellarg(basename($v_user)) .
 				" 30",
 			$output,
 			$return_var,
 		);
 		// filemanager also requires .ssh chmod o+x ... hopefully we can improve it to g+x or u+x someday
 		// current minimum for filemanager: chmod 0701 .ssh
-		shell_exec("sudo chmod o+x " . quoteshellarg("/home/" . basename($v_user) . "/.ssh"));
+		shell_exec("sudo chmod o+x " . escapeshellarg("/home/" . basename($v_user) . "/.ssh"));
 	}
 
 	if (!isset($_SESSION["SFTP_PORT"])) {

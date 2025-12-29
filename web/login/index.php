@@ -1,7 +1,5 @@
 <?php
 
-use function Hestiacp\quoteshellarg\quoteshellarg;
-
 define("NO_AUTH_REQUIRED", true);
 // Main include
 
@@ -23,8 +21,8 @@ if (isset($_SESSION["user"])) {
 	if ($_SESSION["userContext"] === "admin" && !empty($_GET["loginas"])) {
 		// Ensure token is passed and matches before granting user impersonation access
 		if (verify_csrf($_GET)) {
-			$v_user = quoteshellarg($_GET["loginas"]);
-			$v_impersonator = quoteshellarg($_SESSION["user"]);
+			$v_user = escapeshellarg($_GET["loginas"]);
+			$v_impersonator = escapeshellarg($_SESSION["user"]);
 			exec(HESTIA_CMD . "v-list-user " . $v_user . " json", $output, $return_var);
 			if ($return_var == 0) {
 				$data = json_decode(implode("", $output), true);
@@ -72,7 +70,7 @@ if (isset($_SESSION["user"])) {
 		}
 
 		// Obtain account properties
-		$v_user = quoteshellarg(
+		$v_user = escapeshellarg(
 			$_SESSION[
 				$_SESSION["userContext"] === "admin" && $_SESSION["look"] !== "" ? "look" : "user"
 			],
@@ -113,7 +111,7 @@ if (isset($_SESSION["user"])) {
 function authenticate_user($user, $password, $twofa = "") {
 	unset($_SESSION["login"]);
 	if (verify_csrf($_POST, true)) {
-		$v_user = quoteshellarg($user);
+		$v_user = escapeshellarg($user);
 		$ip = $_SERVER["REMOTE_ADDR"];
 		$user_agent = $_SERVER["HTTP_USER_AGENT"];
 
@@ -133,8 +131,8 @@ function authenticate_user($user, $password, $twofa = "") {
 			$ip = substr($ip, strrpos($ip, ":") + 1); // Strip IPv4 Compatibility notation
 		}
 
-		$v_ip = quoteshellarg($ip);
-		$v_user_agent = quoteshellarg($user_agent);
+		$v_ip = escapeshellarg($ip);
+		$v_user_agent = escapeshellarg($user_agent);
 
 		// Get user's salt
 		$output = "";
@@ -175,7 +173,7 @@ function authenticate_user($user, $password, $twofa = "") {
 						"v-check-user-password " .
 						$v_user .
 						" " .
-						quoteshellarg($v_password) .
+						escapeshellarg($v_password) .
 						" " .
 						$v_ip .
 						" yes",
@@ -210,7 +208,7 @@ function authenticate_user($user, $password, $twofa = "") {
 			if ($return_var > 0) {
 				sleep(2);
 				$error = _("Invalid username or password");
-				$v_session_id = quoteshellarg($_POST["token"]);
+				$v_session_id = escapeshellarg($_POST["token"]);
 				exec(
 					HESTIA_CMD .
 						"v-log-user-login " .
@@ -233,7 +231,7 @@ function authenticate_user($user, $password, $twofa = "") {
 				if ($data[$user]["LOGIN_DISABLED"] === "yes") {
 					sleep(2);
 					$error = _("Invalid username or password");
-					$v_session_id = quoteshellarg($_POST["token"]);
+					$v_session_id = escapeshellarg($_POST["token"]);
 					exec(
 						HESTIA_CMD .
 							"v-log-user-login " .
@@ -257,7 +255,7 @@ function authenticate_user($user, $password, $twofa = "") {
 					if (!in_array($ip, $v_login_user_allowed_ips, true)) {
 						sleep(2);
 						$error = _("Invalid username or password");
-						$v_session_id = quoteshellarg($_POST["token"]);
+						$v_session_id = escapeshellarg($_POST["token"]);
 						exec(
 							HESTIA_CMD .
 								"v-log-user-login " .
@@ -282,7 +280,7 @@ function authenticate_user($user, $password, $twofa = "") {
 						$_SESSION["login"]["password"] = $password;
 						return false;
 					} else {
-						$v_twofa = quoteshellarg($twofa);
+						$v_twofa = escapeshellarg($twofa);
 						exec(
 							HESTIA_CMD . "v-check-user-2fa " . $v_user . " " . $v_twofa,
 							$output,
@@ -294,7 +292,7 @@ function authenticate_user($user, $password, $twofa = "") {
 							$error = _("Invalid or missing 2FA token");
 							$_SESSION["login"]["username"] = $user;
 							$_SESSION["login"]["password"] = $password;
-							$v_session_id = quoteshellarg($_POST["token"]);
+							$v_session_id = escapeshellarg($_POST["token"]);
 							if (isset($_SESSION["failed_twofa"])) {
 								//allow a few failed attemps before start of logging.
 								if ($_SESSION["failed_twofa"] > 2) {
@@ -327,7 +325,7 @@ function authenticate_user($user, $password, $twofa = "") {
 				$_SESSION["user"] = key($data);
 				$v_user = $_SESSION["user"];
 				//log successfull login attempt
-				$v_session_id = quoteshellarg($_POST["token"]);
+				$v_session_id = escapeshellarg($_POST["token"]);
 				exec(
 					HESTIA_CMD .
 						"v-log-user-login " .

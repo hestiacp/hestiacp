@@ -1,7 +1,5 @@
 <?php
 
-use function Hestiacp\quoteshellarg\quoteshellarg;
-
 include $_SERVER["DOCUMENT_ROOT"] . "/inc/main.php";
 
 // Check token
@@ -11,7 +9,7 @@ if ($_GET["delete"] == 1) {
 	if (empty($_GET["notification_id"])) {
 		exec(HESTIA_CMD . "v-delete-user-notification " . $user . " all", $output, $return_var);
 	} else {
-		$v_id = quoteshellarg((int) $_GET["notification_id"]);
+		$v_id = escapeshellarg((int) $_GET["notification_id"]);
 		exec(
 			HESTIA_CMD . "v-delete-user-notification " . $user . " " . $v_id,
 			$output,
@@ -28,7 +26,7 @@ if ($_GET["delete"] == 1) {
 			$return_var,
 		);
 	} else {
-		$v_id = quoteshellarg((int) $_GET["notification_id"]);
+		$v_id = escapeshellarg((int) $_GET["notification_id"]);
 		exec(
 			HESTIA_CMD . "v-acknowledge-user-notification " . $user . " " . $v_id,
 			$output,

@@ -1,7 +1,5 @@
 <?php
 
-use function Hestiacp\quoteshellarg\quoteshellarg;
-
 // Init
 ob_start();
 include $_SERVER["DOCUMENT_ROOT"] . "/inc/main.php";
@@ -11,7 +9,7 @@ verify_csrf($_GET);
 
 if ($_SESSION["userContext"] === "admin") {
 	if (!empty($_GET["pkg"])) {
-		$v_pkg = quoteshellarg($_GET["pkg"]);
+		$v_pkg = escapeshellarg($_GET["pkg"]);
 		exec(HESTIA_CMD . "v-update-sys-hestia " . $v_pkg, $output, $return_var);
 	}
 

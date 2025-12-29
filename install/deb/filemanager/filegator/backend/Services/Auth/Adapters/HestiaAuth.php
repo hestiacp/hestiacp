@@ -14,7 +14,6 @@ use Filegator\Services\Auth\AuthInterface;
 use Filegator\Services\Auth\User;
 use Filegator\Services\Auth\UsersCollection;
 use Filegator\Services\Service;
-use function Hestiacp\quoteshellarg\quoteshellarg;
 
 /**
  * @codeCoverageIgnore
@@ -52,7 +51,7 @@ class HestiaAuth implements Service, AuthInterface {
 
 	public function user(): ?User {
 		$cmd = "/usr/bin/sudo /usr/local/hestia/bin/v-list-user";
-		exec($cmd . " " . quoteshellarg($this->hestia_user) . " json", $output, $return_var);
+		exec($cmd . " " . escapeshellarg($this->hestia_user) . " json", $output, $return_var);
 
 		if ($return_var == 0) {
 			$data = json_decode(implode("", $output), true);

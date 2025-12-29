@@ -1,7 +1,5 @@
 <?php
 
-use function Hestiacp\quoteshellarg\quoteshellarg;
-
 ob_start();
 
 // Main include
@@ -39,8 +37,8 @@ switch ($action) {
 
 foreach ($ipchain as $value) {
 	[$ip, $chain] = explode(":", $value);
-	$v_ip = quoteshellarg($ip);
-	$v_chain = quoteshellarg($chain);
+	$v_ip = escapeshellarg($ip);
+	$v_chain = escapeshellarg($chain);
 	exec(HESTIA_CMD . $cmd . " " . $v_ip . " " . $v_chain, $output, $return_var);
 }
 

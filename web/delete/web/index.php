@@ -1,7 +1,5 @@
 <?php
 
-use function Hestiacp\quoteshellarg\quoteshellarg;
-
 ob_start();
 include $_SERVER["DOCUMENT_ROOT"] . "/inc/main.php";
 
@@ -10,11 +8,11 @@ verify_csrf($_GET);
 
 // Delete as someone else?
 if ($_SESSION["userContext"] === "admin" && !empty($_GET["user"])) {
-	$user = quoteshellarg($user);
+	$user = escapeshellarg($user);
 }
 
 if (!empty($_GET["domain"])) {
-	$v_domain = quoteshellarg($_GET["domain"]);
+	$v_domain = escapeshellarg($_GET["domain"]);
 	exec(
 		HESTIA_CMD . "v-delete-web-domain " . $user . " " . $v_domain . " 'yes'",
 		$output,

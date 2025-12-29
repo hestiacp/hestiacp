@@ -1,19 +1,17 @@
 <?php
 
-use function Hestiacp\quoteshellarg\quoteshellarg;
-
 ob_start();
 include $_SERVER["DOCUMENT_ROOT"] . "/inc/main.php";
 
 if ($_SESSION["userContext"] === "admin" && !empty($_GET["user"])) {
-	$user = quoteshellarg($_GET["user"]);
+	$user = escapeshellarg($_GET["user"]);
 }
 
 // Check token
 verify_csrf($_GET);
 
 if (!empty($_GET["system"])) {
-	$v_system = quoteshellarg($_GET["system"]);
+	$v_system = escapeshellarg($_GET["system"]);
 	exec(
 		HESTIA_CMD . "v-delete-user-backup-exclusions " . $user . " " . $v_system,
 		$output,

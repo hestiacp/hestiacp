@@ -1,7 +1,5 @@
 <?php
 
-use function Hestiacp\quoteshellarg\quoteshellarg;
-
 ob_start();
 $TAB = "IP";
 
@@ -44,12 +42,12 @@ if (!empty($_POST["ok"])) {
 	}
 
 	// Protect input
-	$v_ip = quoteshellarg($_POST["v_ip"]);
-	$v_netmask = quoteshellarg($_POST["v_netmask"]);
-	$v_name = quoteshellarg($_POST["v_name"]);
-	$v_nat = quoteshellarg($_POST["v_nat"]);
-	$v_interface = quoteshellarg($_POST["v_interface"]);
-	$v_owner = quoteshellarg($_POST["v_owner"]);
+	$v_ip = escapeshellarg($_POST["v_ip"]);
+	$v_netmask = escapeshellarg($_POST["v_netmask"]);
+	$v_name = escapeshellarg($_POST["v_name"]);
+	$v_nat = escapeshellarg($_POST["v_nat"]);
+	$v_interface = escapeshellarg($_POST["v_interface"]);
+	$v_owner = escapeshellarg($_POST["v_owner"]);
 	$v_shared = $_POST["v_shared"];
 
 	// Check shared checkmark
@@ -73,7 +71,7 @@ if (!empty($_POST["ok"])) {
 				" " .
 				$v_owner .
 				" " .
-				quoteshellarg($ip_status) .
+				escapeshellarg($ip_status) .
 				" " .
 				$v_name .
 				" " .

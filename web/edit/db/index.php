@@ -1,7 +1,5 @@
 <?php
 
-use function Hestiacp\quoteshellarg\quoteshellarg;
-
 ob_start();
 $TAB = "DB";
 
@@ -16,14 +14,14 @@ if (empty($_GET["database"])) {
 
 // Edit as someone else?
 if ($_SESSION["userContext"] === "admin" && !empty($_GET["user"])) {
-	$user = quoteshellarg($_GET["user"]);
+	$user = escapeshellarg($_GET["user"]);
 	$user_plain = htmlentities($_GET["user"]);
 }
 
 // List datbase
 $v_database = $_GET["database"];
 exec(
-	HESTIA_CMD . "v-list-database " . $user . " " . quoteshellarg($v_database) . " 'json'",
+	HESTIA_CMD . "v-list-database " . $user . " " . escapeshellarg($v_database) . " 'json'",
 	$output,
 	$return_var,
 );
@@ -60,8 +58,8 @@ if (!empty($_POST["save"])) {
 			HESTIA_CMD . "v-change-database-user",
 			// $user is already shell-quoted
 			$user,
-			quoteshellarg($v_database),
-			quoteshellarg($_POST["v_dbuser"]),
+			escapeshellarg($v_database),
+			escapeshellarg($_POST["v_dbuser"]),
 		]);
 		exec($cmd, $output, $return_var);
 
@@ -83,7 +81,7 @@ if (!empty($_POST["save"])) {
 					"v-change-database-password " .
 					$user .
 					" " .
-					quoteshellarg($v_database) .
+					escapeshellarg($v_database) .
 					" " .
 					$v_password,
 				$output,
@@ -92,7 +90,7 @@ if (!empty($_POST["save"])) {
 			check_return_code($return_var, $output);
 			unset($output);
 			unlink($v_password);
-			$v_password = quoteshellarg($_POST["v_password"]);
+			$v_password = escapeshellarg($_POST["v_password"]);
 		}
 	}
 

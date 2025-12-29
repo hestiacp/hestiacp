@@ -1,7 +1,7 @@
 {
 	"editor.defaultFormatter": "esbenp.prettier-vscode",
 	"[php]": {
-		"editor.defaultFormatter": "esbenp.prettier-vscode"
+		"editor.defaultFormatter": "bmewburn.vscode-intelephense-client"
 	},
 	// Optional nesting patterns, set explorer.fileNesting.enabled to true to enable
 	"explorer.fileNesting.patterns": {

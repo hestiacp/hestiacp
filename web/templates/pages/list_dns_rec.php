@@ -126,7 +126,10 @@
                         } ?>
                 <?php } else { ?>
                         <a href="/edit/dns/?domain=<?= htmlspecialchars($_GET['domain']) ?>&record_id=<?= $data[$key]['ID'] ?>&token=<?= $_SESSION['token'] ?>" title="<?= _("Edit DNS Record") . ': ' . htmlspecialchars($data[$key]['RECORD']) ?>">
-                            <?= substr($data[$key]['RECORD'], 0, 12); if (strlen($data[$key]['RECORD']) > 12 ) echo '...'; ?>
+                            <?= substr($data[$key]['RECORD'], 0, 12);
+                            if (strlen($data[$key]['RECORD']) > 12) {
+                                echo '...';
+                            } ?>
                         </a>
                 <?php } ?>
                 </div>

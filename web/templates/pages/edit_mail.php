@@ -35,8 +35,18 @@
             <?php show_alert_message($_SESSION); ?>
             <div class="u-mb20">
                 <label for="v_domain" class="form-label"><?= _("Domain") ?></label>
-                <input type="text" class="form-control" name="v_domain" id="v_domain" value="<?= htmlentities(trim($v_domain, "'")) ?>" disabled required>
-                <input type="hidden" name="v_domain" value="<?= htmlentities(trim($v_domain, "'")) ?>">
+                <input
+                    type="text"
+                    class="form-control"
+                    name="v_domain"
+                    id="v_domain"
+                    value="<?= htmlentities(trim($v_domain, "'")) ?>"
+                    disabled
+                    required>
+                <input
+                    type="hidden"
+                    name="v_domain"
+                    value="<?= htmlentities(trim($v_domain, "'")) ?>">
             </div>
             <?php if (!empty($_SESSION["ANTISPAM_SYSTEM"])) { ?>
                 <div class="form-check u-mb10">
@@ -54,7 +64,12 @@
             <?php } ?>
             <?php if (!empty($_SESSION["ANTIVIRUS_SYSTEM"])) { ?>
                 <div class="form-check u-mb10">
-                    <input class="form-check-input" type="checkbox" name="v_antivirus" id="v_antivirus" <?= ($v_antivirus == 'yes') ? 'checked' : '' ?>>
+                    <input
+                        class="form-check-input"
+                        type="checkbox"
+                        name="v_antivirus"
+                        id="v_antivirus"
+                        <?= ($v_antivirus == 'yes') ? 'checked' : '' ?>>
                     <label for="v_antivirus">
                         <?= _("Anti-Virus") ?>
                     </label>
@@ -83,26 +98,54 @@
                     <i class="fas fa-exclamation"></i>
                     <div>
                         <p><?php echo $v_webmail_alias; ?></p>
-                        <p><?= sprintf(_("To enable Let's Encrypt SSL, ensure that DNS records exist for mail.%s and %s!"), $v_domain, $v_webmail_alias) ?></p>
+                        <?php
+                        $lets_message = sprintf(
+                            _(
+                                "To enable Let's Encrypt SSL, ensure that DNS records exist for mail.%s and %s!"
+                            ),
+                            $v_domain,
+                            $v_webmail_alias
+                        );
+                        ?>
+                        <p><?= $lets_message ?></p>
                     </div>
                 </div>
                 <div x-cloak x-show="!letsEncryptEnabled">
                     <div class="u-mb10">
                         <label for="v_ssl_crt" class="form-label">
                             <?= _("SSL Certificate") ?>
-                            <span x-cloak x-show="!letsEncryptEnabled" id="generate-csr"> / <a class="form-link" target="_blank" href="/generate/ssl/?domain=<?= htmlentities($v_domain) ?>"><?= _("Generate Self-Signed SSL Certificate") ?></a></span>
+                            <span x-cloak x-show="!letsEncryptEnabled" id="generate-csr"> /
+                                <a
+                                    class="form-link"
+                                    target="_blank"
+                                    href="/generate/ssl/?domain=<?= htmlentities($v_domain) ?>">
+                                    <?= _("Generate Self-Signed SSL Certificate") ?>
+                                </a>
+                            </span>
                         </label>
-                        <textarea x-bind:disabled="letsEncryptEnabled" class="form-control u-min-height100 u-console" name="v_ssl_crt" id="v_ssl_crt"><?= htmlentities(trim($v_ssl_crt, "'")) ?></textarea>
+                        <textarea
+                            x-bind:disabled="letsEncryptEnabled"
+                            class="form-control u-min-height100 u-console"
+                            name="v_ssl_crt"
+                            id="v_ssl_crt"><?= htmlentities(trim($v_ssl_crt, "'")) ?></textarea>
                     </div>
                     <div class="u-mb10">
                         <label for="v_ssl_key" class="form-label"><?= _("SSL Private Key") ?></label>
-                        <textarea x-bind:disabled="letsEncryptEnabled" class="form-control u-min-height100 u-console" name="v_ssl_key" id="v_ssl_key"><?= htmlentities(trim($v_ssl_key, "'")) ?></textarea>
+                        <textarea
+                            x-bind:disabled="letsEncryptEnabled"
+                            class="form-control u-min-height100 u-console"
+                            name="v_ssl_key"
+                            id="v_ssl_key"><?= htmlentities(trim($v_ssl_key, "'")) ?></textarea>
                     </div>
                     <div class="u-mb20">
                         <label for="v_ssl_ca" class="form-label">
                             <?= _("SSL Certificate Authority / Intermediate") ?> <span class="optional">(<?= _("Optional") ?>)</span>
                         </label>
-                        <textarea x-bind:disabled="letsEncryptEnabled" class="form-control u-min-height100 u-console" name="v_ssl_ca" id="v_ssl_ca"><?= htmlentities(trim($v_ssl_ca, "'")) ?></textarea>
+                        <textarea
+                            x-bind:disabled="letsEncryptEnabled"
+                            class="form-control u-min-height100 u-console"
+                            name="v_ssl_ca"
+                            id="v_ssl_ca"><?= htmlentities(trim($v_ssl_ca, "'")) ?></textarea>
                     </div>
                 </div>
                 <?php if ($v_ssl != "no") { ?>
@@ -150,15 +193,30 @@
             <div x-cloak x-show="hasSmtpRelay" id="smtp_relay_table" class="u-pl30">
                 <div class="u-mb10">
                     <label for="v_smtp_relay_host" class="form-label"><?= _("Host") ?></label>
-                    <input type="text" class="form-control" name="v_smtp_relay_host" id="v_smtp_relay_host" value="<?= htmlentities(trim($v_smtp_relay_host, "'")) ?>">
+                    <input
+                        type="text"
+                        class="form-control"
+                        name="v_smtp_relay_host"
+                        id="v_smtp_relay_host"
+                        value="<?= htmlentities(trim($v_smtp_relay_host, "'")) ?>">
                 </div>
                 <div class="u-mb10">
                     <label for="v_smtp_relay_port" class="form-label"><?= _("Port") ?></label>
-                    <input type="text" class="form-control" name="v_smtp_relay_port" id="v_smtp_relay_port" value="<?= htmlentities(trim($v_smtp_relay_port, "'")) ?>">
+                    <input
+                        type="text"
+                        class="form-control"
+                        name="v_smtp_relay_port"
+                        id="v_smtp_relay_port"
+                        value="<?= htmlentities(trim($v_smtp_relay_port, "'")) ?>">
                 </div>
                 <div class="u-mb10">
                     <label for="v_smtp_relay_user" class="form-label"><?= _("Username") ?></label>
-                    <input type="text" class="form-control" name="v_smtp_relay_user" id="v_smtp_relay_user" value="<?= htmlentities(trim($v_smtp_relay_user, "'")) ?>">
+                    <input
+                        type="text"
+                        class="form-control"
+                        name="v_smtp_relay_user"
+                        id="v_smtp_relay_user"
+                        value="<?= htmlentities(trim($v_smtp_relay_user, "'")) ?>">
                 </div>
                 <div class="u-mb10">
                     <label for="v_smtp_relay_pass" class="form-label"><?= _("Password") ?></label>

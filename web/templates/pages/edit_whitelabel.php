@@ -23,8 +23,7 @@
         }"
         id="main-form"
         name="v_configure_server"
-        method="post"
-    >
+        method="post">
         <input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
         <input type="hidden" name="save" value="save">
 
@@ -50,56 +49,61 @@
                             class="form-control"
                             name="v_app_name"
                             id="v_app_name"
-                            value="<?= htmlentities(trim($v_app_name, "'")) ?>"
-                        >
+                            value="<?= htmlentities(trim($v_app_name, "'")) ?>">
                     </div>
                     <div class="u-mb10">
+                        <?php $title_optional = sprintf("(%s: {{appname}}, {{hostname}}, {{ip}} and {{page}} )", _("Supported variables")); ?>
                         <label for="v_title" class="form-label">
-                            <?= _("Title") ?><span class="optional">(<?= _("Supported variables") ?>: {{appname}}, {{hostname}}, {{ip}} and {{page}} )</span>
+                            <?= _("Title") ?><span class="optional"><?= $title_optional ?></span>
                         </label>
                         <input
                             type="text"
                             class="form-control"
                             name="v_title"
                             id="v_title"
-                            value="<?= htmlentities(trim($v_title, "'")) ?>"
-                        >
+                            value="<?= htmlentities(trim($v_title, "'")) ?>">
                     </div>
                     <div class="u-mb10">
+                        <?php $sender_default = sprintf("(%s: %s)", _("Default"), htmlentities(trim($v_app_name, "'"))); ?>
                         <label for="v_from_name" class="form-label">
-                            <?= _("Sender Name") ?><span class="optional">(<?= _("Default") ?>: <?= htmlentities(trim($v_app_name, "'")) ?>)</span>
+                            <?= _("Sender Name") ?><span class="optional"><?= $sender_default ?></span>
                         </label>
                         <input
                             type="text"
                             class="form-control"
                             name="v_from_name"
                             id="v_from_name"
-                            value="<?= htmlentities(trim($v_from_name, "'")) ?>"
-                        >
+                            value="<?= htmlentities(trim($v_from_name, "'")) ?>">
                     </div>
                     <div class="u-mb10">
+                        <?php
+                        $from_email_default = sprintf(
+                            '(%s: %s)',
+                            _("Default"),
+                            sprintf('noreply@%s', htmlentities(trim(get_hostname(), "'")))
+                        );
+                        ?>
                         <label for="v_from_email" class="form-label">
-                            <?= _("Sender Email Address") ?><span class="optional">(<?= _("Default") ?>: <?= sprintf("noreply@%s", htmlentities(trim(get_hostname(), "'"))) ?>)</span>
+                            <?= _("Sender Email Address") ?><span class="optional"><?= $from_email_default ?></span>
                         </label>
                         <input
                             type="email"
                             class="form-control"
                             name="v_from_email"
                             id="v_from_email"
-                            value="<?= htmlentities(trim($v_from_email, "'")) ?>"
-                        >
+                            value="<?= htmlentities(trim($v_from_email, "'")) ?>">
                     </div>
                     <div class="u-mb10">
+                        <?php $subject_optional = sprintf("(%s: {{appname}}, {{hostname}}, {{subject}} )", _("Supported variables")); ?>
                         <label for="v_subject_email" class="form-label">
-                            <?= _("Email Subject") ?><span class="optional">(<?= _("Supported variables") ?>: {{appname}}, {{hostname}}, {{subject}} )</span>
+                            <?= _("Email Subject") ?><span class="optional"><?= $subject_optional ?></span>
                         </label>
                         <input
                             type="text"
                             class="form-control"
                             name="v_subject_email"
                             id="v_subject_email"
-                            value="<?= htmlentities(trim($v_subject_email, "'")) ?>"
-                        >
+                            value="<?= htmlentities(trim($v_subject_email, "'")) ?>">
                     </div>
                     <div class="u-mb10">
                         <label for="v_hide_docs" class="form-label">

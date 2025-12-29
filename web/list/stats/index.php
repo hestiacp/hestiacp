@@ -1,5 +1,7 @@
 <?php
+
 use function Hestiacp\quoteshellarg\quoteshellarg;
+
 $TAB = "STATS";
 
 // Main include

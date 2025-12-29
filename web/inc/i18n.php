@@ -1,4 +1,5 @@
 <?php
+
 // Functions for internationalization
 // I18N support information here
 

@@ -6,6 +6,7 @@ namespace Hestia\WebApp\Installers\Laravel;
 
 use Hestia\WebApp\BaseSetup;
 use Hestia\WebApp\InstallationTarget\InstallationTarget;
+
 use function file_get_contents;
 
 class LaravelSetup extends BaseSetup

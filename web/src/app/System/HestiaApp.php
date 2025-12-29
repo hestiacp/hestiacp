@@ -21,8 +21,8 @@ use function sprintf;
 use function str_contains;
 use function trigger_error;
 use function unlink;
-
 use function var_dump;
+
 use const DIRECTORY_SEPARATOR;
 
 class HestiaApp

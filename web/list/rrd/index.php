@@ -18,11 +18,11 @@ unset($output);
 
 /*
 if (empty($_GET["period"])) {
-	$period = "day";
+    $period = "day";
 } elseif (!in_array($_GET["period"], ["day", "week", "month", "year"])) {
-	$period = "day";
+    $period = "day";
 } else {
-	$period = $_GET["period"];
+    $period = $_GET["period"];
 }
 */
 if (empty($_GET["period"])) {

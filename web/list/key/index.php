@@ -1,5 +1,7 @@
 <?php
+
 use function Hestiacp\quoteshellarg\quoteshellarg;
+
 $TAB = "USER";
 
 // Main include
@@ -20,4 +22,3 @@ render_page($user, $TAB, "list_key");
 
 // Back uri
 $_SESSION["back"] = $_SERVER["REQUEST_URI"];
-?>

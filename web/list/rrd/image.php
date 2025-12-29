@@ -1,4 +1,5 @@
 <?php
+
 session_start();
 if ($_SESSION["userContext"] != "admin") {
 	exit();
@@ -14,5 +15,3 @@ if ($dir_name != $_SERVER["DOCUMENT_ROOT"] . "/rrd") {
 }
 header("X-Accel-Redirect: " . $_SERVER["QUERY_STRING"]);
 header("Content-Type: image/png");
-
-?>

@@ -11,4 +11,4 @@ require $_SERVER["HESTIA"] . "/web/templates/includes/js.php";
 </head>
 
 <body class="page-<?= strtolower($TAB) ?> lang-<?= $_SESSION["language"] ?>">
-	<div class="app">
+    <div class="app">

@@ -6,6 +6,7 @@ namespace Hestia\WebApp\Installers\DokuWiki;
 
 use Hestia\WebApp\BaseSetup;
 use Hestia\WebApp\InstallationTarget\InstallationTarget;
+
 use function var_dump;
 
 class DokuWikiSetup extends BaseSetup

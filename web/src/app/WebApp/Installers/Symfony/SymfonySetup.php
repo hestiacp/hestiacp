@@ -6,6 +6,7 @@ namespace Hestia\WebApp\Installers\Symfony;
 
 use Hestia\WebApp\BaseSetup;
 use Hestia\WebApp\InstallationTarget\InstallationTarget;
+
 use function file_get_contents;
 
 class SymfonySetup extends BaseSetup

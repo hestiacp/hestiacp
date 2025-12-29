@@ -1,4 +1,5 @@
 <?php
+
 use function Hestiacp\quoteshellarg\quoteshellarg;
 
 # Return codes
@@ -42,9 +43,9 @@ function exit_code_to_http_code(int $exit_code, int $default = 400): int {
 		case E_INVALID:
 			return 422;
 		// case E_NOTEXIST:
-		// 	return 404;
+		//  return 404;
 		// case E_EXISTS:
-		// 	return 302;
+		//  return 302;
 		case E_PASSWORD:
 			return 401;
 		case E_SUSPENDED:

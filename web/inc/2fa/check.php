@@ -1,6 +1,8 @@
 <?php
+
 use RobThree\Auth\TwoFactorAuth;
 use RobThree\Auth\Providers\Qr\QRServerProvider;
+
 require_once __DIR__ . "/../vendor/autoload.php";
 
 if (isset($argv[1]) && isset($argv[2])) {

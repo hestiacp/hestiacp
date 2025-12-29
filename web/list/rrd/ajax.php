@@ -1,5 +1,7 @@
 <?php
+
 use function Hestiacp\quoteshellarg\quoteshellarg;
+
 // Main include
 include $_SERVER["DOCUMENT_ROOT"] . "/inc/main.php";
 

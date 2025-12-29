@@ -34,10 +34,12 @@
                         <span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
                     </li>
                     <li data-entity="sort-key">
-                        <span class="name"><?= _("Access Key") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
+                        <span class="name"><?= _("Access Key") ?> <i class="fas fa-arrow-down-a-z"></i></span>
+                        <span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
                     </li>
                     <li data-entity="sort-comment">
-                        <span class="name"><?= _("Comment") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
+                        <span class="name"><?= _("Comment") ?> <i class="fas fa-arrow-down-a-z"></i></span>
+                        <span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
                     </li>
                 </ul>
                 <form x-data x-bind="BulkEdit" action="/bulk/access-key/" method="post">
@@ -87,6 +89,7 @@
             $delete_href = "/delete/access-key/?key=" . $key . "&token=" . $_SESSION['token'];
             $delete_title = _("Delete");
             $delete_msg = sprintf(_("Are you sure you want to delete access key %s?"), $key);
+            $delete_class = 'units-table-row-action-link data-controls js-confirm-action';
             ?>
             <div class="units-table-row js-unit"
                 data-sort-key="<?= strtolower($key) ?>"
@@ -110,7 +113,7 @@
                     <ul class="units-table-row-actions">
                         <li class="units-table-row-action shortcut-delete" data-key-action="js">
                             <a
-                                class="units-table-row-action-link data-controls js-confirm-action"
+                                class="<?= $delete_class ?>"
                                 href="<?= $delete_href ?>"
                                 title="<?= $delete_title ?>"
                                 data-confirm-title="<?= $delete_title ?>"

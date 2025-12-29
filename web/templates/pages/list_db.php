@@ -15,20 +15,32 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
 <div class="toolbar">
     <div class="toolbar-inner">
         <div class="toolbar-buttons">
-            <?php if ($read_only !== "true") { ?>
+            <?php if ($read_only !== "true") {
+                $show_phpmyadmin = in_array($_SESSION["DB_SYSTEM"], ['mysql', 'mysql,pgsql', 'pgsql,mysql']);
+                $show_phppgadmin = in_array($_SESSION["DB_SYSTEM"], ['pgsql', 'mysql,pgsql', 'pgsql,mysql']);
+                ?>
                 <a href="/add/db/" class="button button-secondary js-button-create">
                     <i class="fas fa-circle-plus icon-green"></i><?= _("Add Database") ?>
                 </a>
-                <?php if ($_SESSION["DB_SYSTEM"] === "mysql" || $_SESSION["DB_SYSTEM"] === "mysql,pgsql" || $_SESSION["DB_SYSTEM"] === "pgsql,mysql") { ?>
-                    <a class="button button-secondary <?= ipUsed() ? "button-suspended" : "" ?>" href="<?= $db_myadmin_link ?>" target="_blank">
+                <?php if ($show_phpmyadmin) { ?>
+                    <a
+                        class="button button-secondary <?= ipUsed() ? 'button-suspended' : '' ?>"
+                        href="<?= $db_myadmin_link ?>"
+                        target="_blank"
+                    >
                         <i class="fas fa-database icon-orange"></i>phpMyAdmin
                     </a>
                 <?php } ?>
-                <?php if ($_SESSION["DB_SYSTEM"] === "pgsql" || $_SESSION["DB_SYSTEM"] === "mysql,pgsql" || $_SESSION["DB_SYSTEM"] === "pgsql,mysql") { ?>
-                    <a class="button button-secondary <?= ipUsed() ? "button-suspended" : "" ?>" href="<?= $db_pgadmin_link ?>" target="_blank">
+                <?php if ($show_phppgadmin) { ?>
+                    <a
+                        class="button button-secondary <?= ipUsed() ? 'button-suspended' : '' ?>"
+                        href="<?= $db_pgadmin_link ?>"
+                        target="_blank"
+                    >
                         <i class="fas fa-database icon-orange"></i>phpPgAdmin
                     </a>
                 <?php } ?>
+            <?php } ?>
                 <?php if (ipUsed()) { ?>
                     <a target="_blank" href="https://hestiacp.com/docs/server-administration/databases.html#why-i-can-t-use-http-ip-phpmyadmin">
                         <i class="fas fa-circle-question"></i>
@@ -49,28 +61,34 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
                         <?= $label ?> <i class="fas fa-arrow-down-a-z"></i>
                     </span>
                 </button>
+                <?php
+                $active_date_class = ($_SESSION['userSortOrder'] === 'date') ? 'active' : '';
+                $active_name_class = ($_SESSION['userSortOrder'] === 'name') ? 'active' : '';
+                ?>
                 <ul class="toolbar-sorting-menu js-sorting-menu u-hidden">
                     <li data-entity="sort-charset">
-                        <span class="name"><?= _("Charset") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
+                        <span class="name"><?= _("Charset") ?> <i class="fas fa-arrow-down-a-z"></i></span>
+                        <span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
                     </li>
                     <li data-entity="sort-date" data-sort-as-int="1">
-                        <span class="name <?php if ($_SESSION['userSortOrder'] === 'date') {
-                            echo 'active';
-                                          } ?>"><?= _("Date") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
+                        <span class="name <?= $active_date_class ?>"><?= _("Date") ?> <i class="fas fa-arrow-down-a-z"></i></span>
+                        <span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
                     </li>
                     <li data-entity="sort-disk" data-sort-as-int="1">
-                        <span class="name"><?= _("Disk") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
+                        <span class="name"><?= _("Disk") ?> <i class="fas fa-arrow-down-a-z"></i></span>
+                        <span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
                     </li>
                     <li data-entity="sort-name">
-                        <span class="name <?php if ($_SESSION['userSortOrder'] === 'name') {
-                            echo 'active';
-                                          } ?>"><?= _("Name") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
+                        <span class="name <?= $active_name_class ?>"><?= _("Name") ?> <i class="fas fa-arrow-down-a-z"></i></span>
+                        <span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
                     </li>
                     <li data-entity="sort-server">
-                        <span class="name"><?= _("Host") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
+                        <span class="name"><?= _("Host") ?> <i class="fas fa-arrow-down-a-z"></i></span>
+                        <span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
                     </li>
                     <li data-entity="sort-user">
-                        <span class="name"><?= _("Username") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
+                          <span class="name"><?= _("Username") ?> <i class="fas fa-arrow-down-a-z"></i></span>
+                          <span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
                     </li>
                 </ul>
                 <?php if ($read_only !== "true") { ?>
@@ -93,8 +111,15 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
             </div>
             <div class="toolbar-search">
                 <form action="/search/" method="get">
-                    <input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
-                    <input type="search" class="form-control js-search-input" name="q" value="<?= isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" title="<?= _("Search") ?>">
+                      <?php $search_value = isset($_POST['q']) ? htmlspecialchars($_POST['q']) : ''; ?>
+                      <input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
+                      <input
+                          type="search"
+                          class="form-control js-search-input"
+                          name="q"
+                          value="<?= $search_value ?>"
+                          title="<?= _("Search") ?>"
+                      >
                     <button type="submit" class="toolbar-input-submit" title="<?= _("Search") ?>">
                         <i class="fas fa-magnifying-glass"></i>
                     </button>
@@ -125,7 +150,7 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
 
         <!-- Begin database list item loop -->
         <?php
-            list($http_host, $port) = explode(':', $_SERVER["HTTP_HOST"] . ":");
+        list($http_host, $port) = explode(':', $_SERVER["HTTP_HOST"] . ":");
         foreach ($data as $key => $value) {
             ++$i;
             if ($data[$key]['SUSPENDED'] == 'yes') {
@@ -134,18 +159,21 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
                 $spnd_action_title = _('Unsuspend');
                 $spnd_icon = 'fa-play';
                 $spnd_icon_class = 'icon-green';
-                $spnd_confirmation = _('Are you sure you want to unsuspend database %s?') ;
+                $spnd_confirmation = _('Are you sure you want to unsuspend database %s?');
             } else {
                 $status = 'active';
                 $spnd_action = 'suspend';
                 $spnd_action_title = _('Suspend');
                 $spnd_icon = 'fa-pause';
                 $spnd_icon_class = 'icon-highlight';
-                $spnd_confirmation = _('Are you sure you want to suspend database %s?') ;
+                $spnd_confirmation = _('Are you sure you want to suspend database %s?');
             }
             if ($data[$key]['HOST'] != 'localhost') {
                 $http_host = $data[$key]['HOST'];
             }
+            $row_classes = ($data[$key]['SUSPENDED'] == 'yes') ? 'disabled' : '';
+            $spnd_confirm_message = sprintf($spnd_confirmation, $key);
+            $delete_confirm_message = sprintf(_("Are you sure you want to delete database %s?"), $key);
             if ($data[$key]['TYPE'] == 'mysql') {
                 $db_admin = "phpMyAdmin";
             }
@@ -165,9 +193,7 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
                 $db_admin_link = $_SESSION['DB_PGA_ALIAS'];
             }
             ?>
-            <div class="units-table-row <?php if ($data[$key]['SUSPENDED'] == 'yes') {
-                echo 'disabled';
-                                        } ?> js-unit"
+            <div class="units-table-row <?= $row_classes ?> js-unit"
                 data-sort-date="<?= strtotime($data[$key]['DATE'] . ' ' . $data[$key]['TIME']) ?>"
                 data-sort-name="<?= $key ?>"
                 data-sort-disk="<?= $data[$key]["U_DISK"] ?>"
@@ -176,54 +202,73 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
                 data-sort-charset="<?= $data[$key]["CHARSET"] ?>">
                 <div class="units-table-cell">
                     <div>
-                        <input id="check<?= $i ?>" class="js-unit-checkbox" type="checkbox" title="<?= _("Select") ?>" name="database[]" value="<?= $key ?>" <?= $display_mode ?>>
+                          <input
+                              id="check<?= $i ?>"
+                              class="js-unit-checkbox"
+                              type="checkbox"
+                              title="<?= _("Select") ?>"
+                              name="database[]"
+                              value="<?= $key ?>"
+                              <?= $display_mode ?>
+                          >
                         <label for="check<?= $i ?>" class="u-hide-desktop"><?= _("Select") ?></label>
                     </div>
                 </div>
                 <div class="units-table-cell units-table-heading-cell u-text-bold">
                     <span class="u-hide-desktop"><?= _("Name") ?>:</span>
-                <?php if ($read_only === "true" || $data[$key]["SUSPENDED"] == "yes") { ?>
+                    <?php if ($read_only === "true" || $data[$key]["SUSPENDED"] == "yes") { ?>
                         <?= $key ?>
-                <?php } else { ?>
+                    <?php } else { ?>
                         <a href="/edit/db/?database=<?= $key ?>&token=<?= $_SESSION["token"] ?>" title="<?= _("Edit Database") ?>: <?= $key ?>">
                             <?= $key ?>
                         </a>
-                <?php } ?>
+                    <?php } ?>
                 </div>
                 <div class="units-table-cell">
-                <?php if (!$read_only) { ?>
+                    <?php if (!$read_only) { ?>
                         <ul class="units-table-row-actions">
                             <?php if ($data[$key]["SUSPENDED"] == "no") { ?>
                                 <li class="units-table-row-action shortcut-enter" data-key-action="href">
                                     <a
                                         class="units-table-row-action-link"
                                         href="/edit/db/?database=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
-                                        title="<?= _("Edit Database") ?>"
-                                    >
+                                        title="<?= _("Edit Database") ?>">
                                         <i class="fas fa-pencil icon-orange"></i>
                                         <span class="u-hide-desktop"><?= _("Edit Database") ?></span>
                                     </a>
                                 </li>
                             <?php } ?>
-                            <?php if ($data[$key]['TYPE'] == 'mysql' && isset($_SESSION['PHPMYADMIN_KEY']) && $_SESSION['PHPMYADMIN_KEY'] != '' && !ipUsed()) {
-                                $time = time(); ?>
+                              <?php
+                                  $has_phpmyadmin_sso = (
+                                      $data[$key]['TYPE'] == 'mysql'
+                                      && isset($_SESSION['PHPMYADMIN_KEY'])
+                                      && $_SESSION['PHPMYADMIN_KEY'] != ''
+                                      && !ipUsed()
+                                  );
+                              if ($has_phpmyadmin_sso) {
+                                    $time = time();
+                                    $sso_input = $key . $user_plain . $_SESSION['user_combined_ip'] . $time . $_SESSION['PHPMYADMIN_KEY'];
+                                    $sso_hmac = password_hash($sso_input, PASSWORD_DEFAULT);
+                                    $sso_href = $db_myadmin_link . 'hestia-sso.php?database=' . urlencode($key)
+                                        . '&user=' . urlencode($user_plain)
+                                        . '&exp=' . $time
+                                        . '&hestia_token=' . $sso_hmac; ?>
                                 <li class="units-table-row-action shortcut-enter" data-key-action="href">
                                     <a
                                         class="units-table-row-action-link"
-                                        href="<?= $db_myadmin_link?>hestia-sso.php?database=<?= $key ?>&user=<?= $user_plain?>&exp=<?= $time?>&hestia_token=<?=password_hash($key . $user_plain . $_SESSION['user_combined_ip'] . $time . $_SESSION['PHPMYADMIN_KEY'], PASSWORD_DEFAULT) ?>"
-                                        title="phpMyAdmin" target="_blank"
-                                    >
+                                        href="<?= $sso_href ?>"
+                                        title="phpMyAdmin" target="_blank">
                                         <i class="fas fa-right-to-bracket icon-orange"></i>
                                         <span class="u-hide-desktop">phpMyAdmin</span>
                                     </a>
                                 </li>
-                            <?php } ?>
+                              <?php } ?>
+
                             <li class="units-table-row-action shortcut-enter" data-key-action="href">
                                 <a
                                     class="units-table-row-action-link"
                                     href="/download/database/?database=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
-                                    title="<?= _("Download Database") ?>"
-                                >
+                                    title="<?= _("Download Database") ?>">
                                     <i class="fas fa-download icon-orange"></i>
                                     <span class="u-hide-desktop"><?= _("Download Database") ?></span>
                                 </a>
@@ -234,8 +279,7 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
                                     href="/<?= $spnd_action ?>/db/?database=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
                                     title="<?= $spnd_action_title ?>"
                                     data-confirm-title="<?= $spnd_action_title ?>"
-                                    data-confirm-message="<?= sprintf($spnd_confirmation, $key) ?>"
-                                >
+                                    data-confirm-message="<?= $spnd_confirm_message ?>">
                                     <i class="fas <?= $spnd_icon ?> <?= $spnd_icon_class ?>"></i>
                                     <span class="u-hide-desktop"><?= $spnd_action_title ?></span>
                                 </a>
@@ -246,39 +290,38 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
                                     href="/delete/db/?database=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
                                     title="<?= _("Delete") ?>"
                                     data-confirm-title="<?= _("Delete") ?>"
-                                    data-confirm-message="<?= sprintf(_("Are you sure you want to delete database %s?"), $key) ?>"
-                                >
+                                    data-confirm-message="<?= $delete_confirm_message ?>">
                                     <i class="fas fa-trash icon-red"></i>
                                     <span class="u-hide-desktop"><?= _("Delete") ?></span>
                                 </a>
                             </li>
                         </ul>
-                <?php } ?>
+                    <?php } ?>
                 </div>
                 <div class="units-table-cell u-text-center-desktop">
                     <span class="u-hide-desktop u-text-bold"><?= _("Disk") ?>:</span>
                     <span class="u-text-bold">
-                    <?= humanize_usage_size($data[$key]["U_DISK"]) ?>
+                        <?= humanize_usage_size($data[$key]["U_DISK"]) ?>
                     </span>
                     <span class="u-text-small">
-                    <?= humanize_usage_measure($data[$key]["U_DISK"]) ?>
+                        <?= humanize_usage_measure($data[$key]["U_DISK"]) ?>
                     </span>
                 </div>
                 <div class="units-table-cell u-text-center-desktop">
                     <span class="u-hide-desktop u-text-bold"><?= _("Type") ?>:</span>
-                <?= $data[$key]["TYPE"] ?>
+                    <?= $data[$key]["TYPE"] ?>
                 </div>
                 <div class="units-table-cell u-text-bold u-text-center-desktop">
                     <span class="u-hide-desktop"><?= _("Username") ?>:</span>
-                <?= $data[$key]["DBUSER"] ?>
+                    <?= $data[$key]["DBUSER"] ?>
                 </div>
                 <div class="units-table-cell u-text-bold u-text-center-desktop">
                     <span class="u-hide-desktop"><?= _("Hostname") ?>:</span>
-                <?= $data[$key]["HOST"] ?>
+                    <?= $data[$key]["HOST"] ?>
                 </div>
                 <div class="units-table-cell u-text-center-desktop">
                     <span class="u-hide-desktop u-text-bold"><?= _("Charset") ?>:</span>
-                <?= $data[$key]["CHARSET"] ?>
+                    <?= $data[$key]["CHARSET"] ?>
                 </div>
             </div>
         <?php } ?>

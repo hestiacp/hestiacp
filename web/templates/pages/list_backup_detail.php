@@ -66,7 +66,7 @@
         foreach ($web as $key) {
             if (!empty($key)) {
                 ++$i;
-        ?>
+                ?>
                 <div class="units-table-row js-unit">
                     <div class="units-table-cell">
                         <div>
@@ -107,7 +107,7 @@
                         </ul>
                     </div>
                 </div>
-        <?php }
+            <?php }
         } ?>
 
         <!-- List mail domains -->
@@ -115,7 +115,7 @@
         $mail = explode(',', $data[$backup]['MAIL']);
         foreach ($mail as $key) {
             if (!empty($key)) {
-        ?>
+                ?>
                 <div class="units-table-row js-unit">
                     <div class="units-table-cell">
                         <div>
@@ -156,7 +156,7 @@
                         </ul>
                     </div>
                 </div>
-        <?php }
+            <?php }
         } ?>
 
         <!-- List DNS zones -->
@@ -164,7 +164,7 @@
         $dns = explode(',', $data[$backup]['DNS']);
         foreach ($dns as $key) {
             if (!empty($key)) {
-        ?>
+                ?>
                 <div class="units-table-row js-unit">
                     <div class="units-table-cell">
                         <div>
@@ -205,7 +205,7 @@
                         </ul>
                     </div>
                 </div>
-        <?php }
+            <?php }
         } ?>
 
         <!-- List Databases -->
@@ -213,7 +213,7 @@
         $db = explode(',', $data[$backup]['DB']);
         foreach ($db as $key) {
             if (!empty($key)) {
-        ?>
+                ?>
                 <div class="units-table-row js-unit">
                     <div class="units-table-cell">
                         <div>
@@ -254,7 +254,7 @@
                         </ul>
                     </div>
                 </div>
-        <?php }
+            <?php }
         } ?>
 
         <!-- List Cron Jobs -->
@@ -298,7 +298,7 @@
                         </ul>
                     </div>
                 </div>
-        <?php }
+            <?php }
         } ?>
 
         <!-- List user directories -->
@@ -306,7 +306,7 @@
         $udir = explode(',', $data[$backup]['UDIR']);
         foreach ($udir as $key) {
             if (!empty($key)) {
-        ?>
+                ?>
                 <div class="units-table-row js-unit">
                     <div class="units-table-cell">
                         <div>
@@ -347,7 +347,7 @@
                         </ul>
                     </div>
                 </div>
-        <?php }
+            <?php }
         } ?>
     </div>
 

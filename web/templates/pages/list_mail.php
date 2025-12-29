@@ -10,33 +10,31 @@
         </div>
         <div class="toolbar-right">
             <div class="toolbar-sorting">
+                <?php $sort_label = $_SESSION['userSortOrder'] === 'name' ? _('Name') : _('Date'); ?>
+                <?php $date_active = $_SESSION['userSortOrder'] === 'date' ? 'active' : '';
+                $name_active = $_SESSION['userSortOrder'] === 'name' ? 'active' : ''; ?>
                 <button class="toolbar-sorting-toggle js-toggle-sorting-menu" type="button" title="<?= _("Sort items") ?>">
                     <?= _("Sort by") ?>:
                     <span class="u-text-bold">
-                        <?php if ($_SESSION['userSortOrder'] === 'name') {
-                            $label = _('Name');
-                        } else {
-                            $label = _('Date');
-                        } ?>
-                        <?= $label ?> <i class="fas fa-arrow-down-a-z"></i>
+                        <?= $sort_label ?> <i class="fas fa-arrow-down-a-z"></i>
                     </span>
                 </button>
                 <ul class="toolbar-sorting-menu js-sorting-menu u-hidden">
                     <li data-entity="sort-accounts" data-sort-as-int="1">
-                        <span class="name"><?= _("Accounts") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
+                        <span class="name"><?= _("Accounts") ?> <i class="fas fa-arrow-down-a-z"></i></span>
+                        <span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
                     </li>
                     <li data-entity="sort-date" data-sort-as-int="1">
-                        <span class="name <?php if ($_SESSION['userSortOrder'] === 'date') {
-                            echo 'active';
-                                          } ?>"><?= _("Date") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
+                        <span class="name <?= $date_active ?>"><?= _("Date") ?> <i class="fas fa-arrow-down-a-z"></i></span>
+                        <span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
                     </li>
                     <li data-entity="sort-disk" data-sort-as-int="1">
-                        <span class="name"><?= _("Disk") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
+                        <span class="name"><?= _("Disk") ?> <i class="fas fa-arrow-down-a-z"></i></span>
+                        <span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
                     </li>
                     <li data-entity="sort-name">
-                        <span class="name <?php if ($_SESSION['userSortOrder'] === 'name') {
-                            echo 'active';
-                                          } ?>"><?= _("Name") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
+                        <span class="name <?= $name_active ?>"><?= _("Name") ?> <i class="fas fa-arrow-down-a-z"></i></span>
+                        <span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
                     </li>
                 </ul>
                 <?php if ($read_only !== "true") { ?>
@@ -60,7 +58,11 @@
             <div class="toolbar-search">
                 <form action="/search/" method="get">
                     <input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
-                    <input type="search" class="form-control js-search-input" name="q" value="<?= isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" title="<?= _("Search") ?>">
+                    <input type="search"
+                        class="form-control js-search-input"
+                        name="q"
+                        value="<?= isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>"
+                        title="<?= _("Search") ?>">
                     <button type="submit" class="toolbar-input-submit" title="<?= _("Search") ?>">
                         <i class="fas fa-magnifying-glass"></i>
                     </button>
@@ -92,8 +94,8 @@
 
         <!-- Begin mail domain list item loop -->
         <?php
-            list($http_host, $port) = explode(':', $_SERVER["HTTP_HOST"] . ":");
-            $webmail = "webmail";
+        list($http_host, $port) = explode(':', $_SERVER["HTTP_HOST"] . ":");
+        $webmail = "webmail";
         if (!empty($_SESSION['WEBMAIL_ALIAS'])) {
             $webmail = $_SESSION['WEBMAIL_ALIAS'];
         }
@@ -173,35 +175,40 @@
             if (empty($data[$key]['CATCHALL'])) {
                 $data[$key]['CATCHALL'] = '/dev/null';
             }
+            $row_classes = ($status == 'suspended') ? 'units-table-row disabled js-unit' : 'units-table-row js-unit';
             ?>
-            <div class="units-table-row <?php if ($status == 'suspended') {
-                echo 'disabled';
-                                        } ?> js-unit"
+            <div class="<?= $row_classes ?>"
                 data-sort-date="<?= strtotime($data[$key]['DATE'] . ' ' . $data[$key]['TIME']) ?>"
                 data-sort-name="<?= $key ?>"
                 data-sort-disk="<?= $data[$key]["U_DISK"] ?>"
                 data-sort-accounts="<?= $data[$key]["ACCOUNTS"] ?>">
                 <div class="units-table-cell">
                     <div>
-                        <input id="check<?= $i ?>" class="js-unit-checkbox" type="checkbox" title="<?= _("Select") ?>" name="domain[]" value="<?= $key ?>" <?= $display_mode ?>>
+                        <input
+                            id="check<?= $i ?>"
+                            class="js-unit-checkbox"
+                            type="checkbox"
+                            title="<?= _("Select") ?>"
+                            name="domain[]"
+                            value="<?= $key ?>"
+                            <?= $display_mode ?>>
                         <label for="check<?= $i ?>" class="u-hide-desktop"><?= _("Select") ?></label>
                     </div>
                 </div>
                 <div class="units-table-cell units-table-heading-cell u-text-bold">
                     <span class="u-hide-desktop"><?= _("Name") ?>:</span>
                     <a href="?domain=<?= $key ?>&token=<?= $_SESSION["token"] ?>" title="<?= _("Mail Accounts") ?>: <?= $key ?>">
-                    <?= $key ?>
+                        <?= $key ?>
                     </a>
                 </div>
                 <div class="units-table-cell">
                     <ul class="units-table-row-actions">
-                    <?php if ($read_only === "true") { ?>
+                        <?php if ($read_only === "true") { ?>
                             <li class="units-table-row-action shortcut-l" data-key-action="href">
                                 <a
                                     class="units-table-row-action-link"
                                     href="?domain=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
-                                    title="<?= _("Mail Accounts") ?>"
-                                >
+                                    title="<?= _("Mail Accounts") ?>">
                                     <i class="fas fa-users icon-blue"></i>
                                     <span class="u-hide-desktop"><?= _("Mail Accounts") ?></span>
                                 </a>
@@ -210,8 +217,7 @@
                                 <a
                                     class="units-table-row-action-link"
                                     href="?domain=<?= $key ?>&dns=1&token=<?= $_SESSION["token"] ?>"
-                                    title="<?= _("DNS Records") ?>"
-                                >
+                                    title="<?= _("DNS Records") ?>">
                                     <i class="fas fa-book-atlas icon-blue"></i>
                                     <span class="u-hide-desktop"><?= _("DNS Records") ?></span>
                                 </a>
@@ -222,21 +228,19 @@
                                         class="units-table-row-action-link"
                                         href="http://<?= $webmail ?>.<?= $key ?>/"
                                         target="_blank"
-                                        title="<?= _("Open Webmail") ?>"
-                                    >
+                                        title="<?= _("Open Webmail") ?>">
                                         <i class="fas fa-paper-plane icon-lightblue"></i>
                                         <span class="u-hide-desktop"><?= _("Open Webmail") ?></span>
                                     </a>
                                 </li>
                             <?php } ?>
-                    <?php } else { ?>
+                        <?php } else { ?>
                             <?php if ($data[$key]["SUSPENDED"] == "no") { ?>
                                 <li class="units-table-row-action shortcut-n" data-key-action="href">
                                     <a
                                         class="units-table-row-action-link"
                                         href="/add/mail/?domain=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
-                                        title="<?= _("Add Mail Account") ?>"
-                                    >
+                                        title="<?= _("Add Mail Account") ?>">
                                         <i class="fas fa-circle-plus icon-green"></i>
                                         <span class="u-hide-desktop"><?= _("Add Mail Account") ?></span>
                                     </a>
@@ -248,8 +252,7 @@
                                                 class="units-table-row-action-link"
                                                 href="http://<?= $webmail ?>.<?= $key ?>/"
                                                 target="_blank"
-                                                title="<?= _("Open Webmail") ?>"
-                                            >
+                                                title="<?= _("Open Webmail") ?>">
                                                 <i class="fas fa-paper-plane icon-lightblue"></i>
                                                 <span class="u-hide-desktop"><?= _("Open Webmail") ?></span>
                                             </a>
@@ -260,8 +263,7 @@
                                     <a
                                         class="units-table-row-action-link"
                                         href="/edit/mail/?domain=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
-                                        title="<?= _("Edit Mail Domain") ?>"
-                                    >
+                                        title="<?= _("Edit Mail Domain") ?>">
                                         <i class="fas fa-pencil icon-orange"></i>
                                         <span class="u-hide-desktop"><?= _("Edit Mail Domain") ?></span>
                                     </a>
@@ -271,8 +273,7 @@
                                 <a
                                     class="units-table-row-action-link"
                                     href="?domain=<?= $key ?>&dns=1&token=<?= $_SESSION["token"] ?>"
-                                    title="<?= _("DNS Records") ?>"
-                                >
+                                    title="<?= _("DNS Records") ?>">
                                     <i class="fas fa-book-atlas icon-blue"></i>
                                     <span class="u-hide-desktop"><?= _("DNS Records") ?></span>
                                 </a>
@@ -283,8 +284,7 @@
                                     href="/<?= $spnd_action ?>/mail/?domain=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
                                     title="<?= $spnd_action_title ?>"
                                     data-confirm-title="<?= $spnd_action_title ?>"
-                                    data-confirm-message="<?= sprintf($spnd_confirmation, $key) ?>"
-                                >
+                                    data-confirm-message="<?= sprintf($spnd_confirmation, $key) ?>">
                                     <i class="fas <?= $spnd_icon ?> <?= $spnd_icon_class ?>"></i>
                                     <span class="u-hide-desktop"><?= $spnd_action_title ?></span>
                                 </a>
@@ -295,33 +295,32 @@
                                     href="/delete/mail/?domain=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
                                     title="<?= _("Delete") ?>"
                                     data-confirm-title="<?= _("Delete") ?>"
-                                    data-confirm-message="<?= sprintf(_("Are you sure you want to delete domain %s?"), $key) ?>"
-                                >
+                                    data-confirm-message="<?= sprintf(_("Are you sure you want to delete domain %s?"), $key) ?>">
                                     <i class="fas fa-trash icon-red"></i>
                                     <span class="u-hide-desktop"><?= _("Delete") ?></span>
                                 </a>
                             </li>
-                    <?php } ?>
+                        <?php } ?>
                     </ul>
                 </div>
                 <div class="units-table-cell u-text-center-desktop">
                     <span class="u-hide-desktop u-text-bold"><?= _("Accounts") ?>:</span>
-                <?php
-                if ($data[$key]['ACCOUNTS']) {
-                    $mail_accounts = htmlentities($data[$key]['ACCOUNTS']);
-                } else {
-                    $mail_accounts = '0';
-                }
-                ?>
+                    <?php
+                    if ($data[$key]['ACCOUNTS']) {
+                        $mail_accounts = htmlentities($data[$key]['ACCOUNTS']);
+                    } else {
+                        $mail_accounts = '0';
+                    }
+                    ?>
                     <?= $mail_accounts ?>
                 </div>
                 <div class="units-table-cell u-text-center-desktop">
                     <span class="u-hide-desktop u-text-bold"><?= _("Disk") ?>:</span>
                     <span class="u-text-bold">
-                    <?= humanize_usage_size($data[$key]["U_DISK"]) ?>
+                        <?= humanize_usage_size($data[$key]["U_DISK"]) ?>
                     </span>
                     <span class="u-text-small">
-                    <?= humanize_usage_measure($data[$key]["U_DISK"]) ?>
+                        <?= humanize_usage_measure($data[$key]["U_DISK"]) ?>
                     </span>
                 </div>
                 <div class="units-table-cell u-text-center-desktop">

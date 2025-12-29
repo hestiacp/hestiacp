@@ -26,8 +26,7 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
                     <a
                         class="button button-secondary <?= ipUsed() ? 'button-suspended' : '' ?>"
                         href="<?= $db_myadmin_link ?>"
-                        target="_blank"
-                    >
+                        target="_blank">
                         <i class="fas fa-database icon-orange"></i>phpMyAdmin
                     </a>
                 <?php } ?>
@@ -35,12 +34,11 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
                     <a
                         class="button button-secondary <?= ipUsed() ? 'button-suspended' : '' ?>"
                         href="<?= $db_pgadmin_link ?>"
-                        target="_blank"
-                    >
+                        target="_blank">
                         <i class="fas fa-database icon-orange"></i>phpPgAdmin
                     </a>
                 <?php } ?>
-            <?php } ?>
+
                 <?php if (ipUsed()) { ?>
                     <a target="_blank" href="https://hestiacp.com/docs/server-administration/databases.html#why-i-can-t-use-http-ip-phpmyadmin">
                         <i class="fas fa-circle-question"></i>
@@ -87,8 +85,8 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
                         <span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
                     </li>
                     <li data-entity="sort-user">
-                          <span class="name"><?= _("Username") ?> <i class="fas fa-arrow-down-a-z"></i></span>
-                          <span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
+                        <span class="name"><?= _("Username") ?> <i class="fas fa-arrow-down-a-z"></i></span>
+                        <span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
                     </li>
                 </ul>
                 <?php if ($read_only !== "true") { ?>
@@ -111,15 +109,14 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
             </div>
             <div class="toolbar-search">
                 <form action="/search/" method="get">
-                      <?php $search_value = isset($_POST['q']) ? htmlspecialchars($_POST['q']) : ''; ?>
-                      <input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
-                      <input
-                          type="search"
-                          class="form-control js-search-input"
-                          name="q"
-                          value="<?= $search_value ?>"
-                          title="<?= _("Search") ?>"
-                      >
+                    <?php $search_value = isset($_POST['q']) ? htmlspecialchars($_POST['q']) : ''; ?>
+                    <input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
+                    <input
+                        type="search"
+                        class="form-control js-search-input"
+                        name="q"
+                        value="<?= $search_value ?>"
+                        title="<?= _("Search") ?>">
                     <button type="submit" class="toolbar-input-submit" title="<?= _("Search") ?>">
                         <i class="fas fa-magnifying-glass"></i>
                     </button>
@@ -202,15 +199,14 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
                 data-sort-charset="<?= $data[$key]["CHARSET"] ?>">
                 <div class="units-table-cell">
                     <div>
-                          <input
-                              id="check<?= $i ?>"
-                              class="js-unit-checkbox"
-                              type="checkbox"
-                              title="<?= _("Select") ?>"
-                              name="database[]"
-                              value="<?= $key ?>"
-                              <?= $display_mode ?>
-                          >
+                        <input
+                            id="check<?= $i ?>"
+                            class="js-unit-checkbox"
+                            type="checkbox"
+                            title="<?= _("Select") ?>"
+                            name="database[]"
+                            value="<?= $key ?>"
+                            <?= $display_mode ?>>
                         <label for="check<?= $i ?>" class="u-hide-desktop"><?= _("Select") ?></label>
                     </div>
                 </div>
@@ -238,21 +234,21 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
                                     </a>
                                 </li>
                             <?php } ?>
-                              <?php
-                                  $has_phpmyadmin_sso = (
-                                      $data[$key]['TYPE'] == 'mysql'
-                                      && isset($_SESSION['PHPMYADMIN_KEY'])
-                                      && $_SESSION['PHPMYADMIN_KEY'] != ''
-                                      && !ipUsed()
-                                  );
-                              if ($has_phpmyadmin_sso) {
-                                    $time = time();
-                                    $sso_input = $key . $user_plain . $_SESSION['user_combined_ip'] . $time . $_SESSION['PHPMYADMIN_KEY'];
-                                    $sso_hmac = password_hash($sso_input, PASSWORD_DEFAULT);
-                                    $sso_href = $db_myadmin_link . 'hestia-sso.php?database=' . urlencode($key)
-                                        . '&user=' . urlencode($user_plain)
-                                        . '&exp=' . $time
-                                        . '&hestia_token=' . $sso_hmac; ?>
+                            <?php
+                            $has_phpmyadmin_sso = (
+                                $data[$key]['TYPE'] == 'mysql'
+                                && isset($_SESSION['PHPMYADMIN_KEY'])
+                                && $_SESSION['PHPMYADMIN_KEY'] != ''
+                                && !ipUsed()
+                            );
+                            if ($has_phpmyadmin_sso) {
+                                $time = time();
+                                $sso_input = $key . $user_plain . $_SESSION['user_combined_ip'] . $time . $_SESSION['PHPMYADMIN_KEY'];
+                                $sso_hmac = password_hash($sso_input, PASSWORD_DEFAULT);
+                                $sso_href = $db_myadmin_link . 'hestia-sso.php?database=' . urlencode($key)
+                                    . '&user=' . urlencode($user_plain)
+                                    . '&exp=' . $time
+                                    . '&hestia_token=' . $sso_hmac; ?>
                                 <li class="units-table-row-action shortcut-enter" data-key-action="href">
                                     <a
                                         class="units-table-row-action-link"
@@ -262,7 +258,7 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
                                         <span class="u-hide-desktop">phpMyAdmin</span>
                                     </a>
                                 </li>
-                              <?php } ?>
+                            <?php } ?>
 
                             <li class="units-table-row-action shortcut-enter" data-key-action="href">
                                 <a

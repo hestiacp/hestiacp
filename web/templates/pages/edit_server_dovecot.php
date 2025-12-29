@@ -31,35 +31,59 @@
             <?php if (!empty($v_config_path1)) { ?>
                 <div class="u-mb20">
                     <label for="v_config1" class="form-label"><?= $v_config_path1 ?></label>
-                    <textarea class="form-control u-min-height300 u-allow-resize u-console" name="v_config1" id="v_config1"><?= $v_config1 ?></textarea>
+                    <textarea
+                        class="form-control u-min-height300 u-allow-resize u-console"
+                        name="v_config1"
+                        id="v_config1"><?= $v_config1 ?></textarea>
                 </div>
                 <div class="u-mb20">
                     <label for="v_config2" class="form-label"><?= $v_config_path2 ?></label>
-                    <textarea class="form-control u-min-height300 u-allow-resize u-console" name="v_config2" id="v_config2"><?= $v_config2 ?></textarea>
+                    <textarea
+                        class="form-control u-min-height300 u-allow-resize u-console"
+                        name="v_config2"
+                        id="v_config2"><?= $v_config2 ?></textarea>
                 </div>
                 <div class="u-mb20">
                     <label for="v_config3" class="form-label"><?= $v_config_path3 ?></label>
-                    <textarea class="form-control u-min-height300 u-allow-resize u-console" name="v_config3" id="v_config3"><?= $v_config3 ?></textarea>
+                    <textarea
+                        class="form-control u-min-height300 u-allow-resize u-console"
+                        name="v_config3"
+                        id="v_config3"><?= $v_config3 ?></textarea>
                 </div>
                 <div class="u-mb20">
                     <label for="v_config4" class="form-label"><?= $v_config_path4 ?></label>
-                    <textarea class="form-control u-min-height300 u-allow-resize u-console" name="v_config4" id="v_config4"><?= $v_config4 ?></textarea>
+                    <textarea
+                        class="form-control u-min-height300 u-allow-resize u-console"
+                        name="v_config4"
+                        id="v_config4"><?= $v_config4 ?></textarea>
                 </div>
                 <div class="u-mb20">
                     <label for="v_config5" class="form-label"><?= $v_config_path5 ?></label>
-                    <textarea class="form-control u-min-height300 u-allow-resize u-console" name="v_config5" id="v_config5"><?= $v_config5 ?></textarea>
+                    <textarea
+                        class="form-control u-min-height300 u-allow-resize u-console"
+                        name="v_config5"
+                        id="v_config5"><?= $v_config5 ?></textarea>
                 </div>
                 <div class="u-mb20">
                     <label for="v_config6" class="form-label"><?= $v_config_path6 ?></label>
-                    <textarea class="form-control u-min-height300 u-allow-resize u-console" name="v_config6" id="v_config6"><?= $v_config6 ?></textarea>
+                    <textarea
+                        class="form-control u-min-height300 u-allow-resize u-console"
+                        name="v_config6"
+                        id="v_config6"><?= $v_config6 ?></textarea>
                 </div>
                 <div class="u-mb20">
                     <label for="v_config7" class="form-label"><?= $v_config_path7 ?></label>
-                    <textarea class="form-control u-min-height300 u-allow-resize u-console" name="v_config7" id="v_config7"><?= $v_config7 ?></textarea>
+                    <textarea
+                        class="form-control u-min-height300 u-allow-resize u-console"
+                        name="v_config7"
+                        id="v_config7"><?= $v_config7 ?></textarea>
                 </div>
                 <div class="u-mb20">
                     <label for="v_config8" class="form-label"><?= $v_config_path8 ?></label>
-                    <textarea class="form-control u-min-height300 u-allow-resize u-console" name="v_config8" id="v_config8"><?= $v_config8 ?></textarea>
+                    <textarea
+                        class="form-control u-min-height300 u-allow-resize u-console"
+                        name="v_config8"
+                        id="v_config8"><?= $v_config8 ?></textarea>
                 </div>
             <?php } ?>
             <div class="form-check">

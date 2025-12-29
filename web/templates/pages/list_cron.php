@@ -6,12 +6,20 @@
                 <a href="/add/cron/" class="button button-secondary js-button-create">
                     <i class="fas fa-circle-plus icon-green"></i><?= _("Add Cron Job") ?>
                 </a>
-                <?php if ($panel[$user_plain]["CRON_REPORTS"] == "yes") { ?>
-                    <a class="button button-secondary" href="/delete/cron/reports/?token=<?= $_SESSION["token"] ?>">
+                <?php if ($panel[$user_plain]["CRON_REPORTS"] == "yes") {
+                    $disable_reports_href = '/delete/cron/reports/?token=' . $_SESSION['token'];
+                    ?>
+                    <a
+                        class="button button-secondary"
+                        href="<?= $disable_reports_href ?>">
                         <i class="fas fa-toggle-on icon-green"></i><?= _("Disable Notifications") ?>
                     </a>
-                <?php } else { ?>
-                    <a class="button button-secondary" href="/add/cron/reports/?token=<?= $_SESSION["token"] ?>">
+                <?php } else {
+                    $enable_reports_href = '/add/cron/reports/?token=' . $_SESSION['token'];
+                    ?>
+                    <a
+                        class="button button-secondary"
+                        href="<?= $enable_reports_href ?>">
                         <i class="fas fa-toggle-off"></i><?= _("Enable Notifications") ?>
                     </a>
                 <?php } ?>
@@ -24,7 +32,10 @@
                 $name_active = ($_SESSION['userSortOrder'] === 'name') ? 'active' : '';
                 $date_active = ($_SESSION['userSortOrder'] === 'date') ? 'active' : '';
                 ?>
-                <button class="toolbar-sorting-toggle js-toggle-sorting-menu" type="button" title="<?= _("Sort items") ?>">
+                <button
+                    class="toolbar-sorting-toggle js-toggle-sorting-menu"
+                    type="button"
+                    title="<?= _("Sort items") ?>">
                     <?= _("Sort by") ?>:
                     <span class="u-text-bold">
                         <?= $sort_label ?> <i class="fas fa-arrow-down-a-z"></i>
@@ -32,11 +43,15 @@
                 </button>
                 <ul class="toolbar-sorting-menu js-sorting-menu u-hidden">
                     <li data-entity="sort-name">
-                        <span class="name <?= $name_active ?>"><?= _("Command") ?> <i class="fas fa-arrow-down-a-z"></i></span>
+                        <span class="name <?= $name_active ?>">
+                            <?= _("Command") ?> <i class="fas fa-arrow-down-a-z"></i>
+                        </span>
                         <span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
                     </li>
                     <li data-entity="sort-date" data-sort-as-int="1">
-                        <span class="name <?= $date_active ?>"><?= _("Date") ?> <i class="fas fa-arrow-down-a-z"></i></span>
+                        <span class="name <?= $date_active ?>">
+                            <?= _("Date") ?> <i class="fas fa-arrow-down-a-z"></i>
+                        </span>
                         <span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
                     </li>
                 </ul>
@@ -64,7 +79,13 @@
             <div class="toolbar-search">
                 <form action="/search/" method="get">
                     <input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
-                    <input type="search" class="form-control js-search-input" name="q" value="<?= isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" title="<?= _("Search") ?>">
+                    <?php $search_value = isset($_POST['q']) ? htmlspecialchars($_POST['q']) : ''; ?>
+                    <input
+                        type="search"
+                        class="form-control js-search-input"
+                        name="q"
+                        value="<?= $search_value ?>"
+                        title="<?= _("Search") ?>">
                     <button type="submit" class="toolbar-input-submit" title="<?= _("Search") ?>">
                         <i class="fas fa-magnifying-glass"></i>
                     </button>
@@ -82,7 +103,12 @@
     <div class="units-table js-units-container">
         <div class="units-table-header">
             <div class="units-table-cell">
-                <input type="checkbox" class="js-toggle-all-checkbox" title="<?= _("Select all") ?>" <?= $display_mode ?>>
+                <?php $select_all_title = _("Select all"); ?>
+                <input
+                    type="checkbox"
+                    class="js-toggle-all-checkbox"
+                    title="<?= $select_all_title ?>"
+                    <?= $display_mode ?>>
             </div>
             <div class="units-table-cell"><?= _("Command") ?></div>
             <div class="units-table-cell"></div>

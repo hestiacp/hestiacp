@@ -52,7 +52,10 @@
     <div class="units-table js-units-container">
         <div class="units-table-header">
             <div class="units-table-cell">
-                <input type="checkbox" class="js-toggle-all-checkbox" title="<?= _("Select all") ?>" <?= $display_mode ?>>
+                <input type="checkbox"
+                    class="js-toggle-all-checkbox"
+                    title="<?= _("Select all") ?>"
+                    <?= $display_mode ?>>
             </div>
             <div class="units-table-cell"><?= _("Type") ?></div>
             <div class="units-table-cell"><?= _("Details") ?></div>
@@ -70,7 +73,11 @@
                 <div class="units-table-row js-unit">
                     <div class="units-table-cell">
                         <div>
-                            <input id="check<?= $i ?>" class="js-unit-checkbox" type="checkbox" name="web[]" value="<?= $key ?>">
+                            <input id="check<?= $i ?>"
+                                class="js-unit-checkbox"
+                                type="checkbox"
+                                name="web[]"
+                                value="<?= $key ?>">
                             <label for="check<?= $i ?>" class="u-hide-desktop"><?= _("Select") ?></label>
                         </div>
                     </div>
@@ -119,7 +126,11 @@
                 <div class="units-table-row js-unit">
                     <div class="units-table-cell">
                         <div>
-                            <input id="check2<?= $i ?>" class="js-unit-checkbox" type="checkbox" name="mail[]" value="<?= $key ?>">
+                            <input id="check2<?= $i ?>"
+                                class="js-unit-checkbox"
+                                type="checkbox"
+                                name="mail[]"
+                                value="<?= $key ?>">
                             <label for="check2<?= $i ?>" class="u-hide-desktop"><?= _("Select") ?></label>
                         </div>
                     </div>
@@ -168,7 +179,11 @@
                 <div class="units-table-row js-unit">
                     <div class="units-table-cell">
                         <div>
-                            <input id="check3<?= $i ?>" class="js-unit-checkbox" type="checkbox" name="dns[]" value="<?= $key ?>">
+                            <input id="check3<?= $i ?>"
+                                class="js-unit-checkbox"
+                                type="checkbox"
+                                name="dns[]"
+                                value="<?= $key ?>">
                             <label for="check3<?= $i ?>" class="u-hide-desktop"><?= _("Select") ?></label>
                         </div>
                     </div>
@@ -217,7 +232,11 @@
                 <div class="units-table-row js-unit">
                     <div class="units-table-cell">
                         <div>
-                            <input id="check4<?= $i ?>" class="js-unit-checkbox" type="checkbox" name="db[]" value="<?= $key ?>">
+                            <input id="check4<?= $i ?>"
+                                class="js-unit-checkbox"
+                                type="checkbox"
+                                name="db[]"
+                                value="<?= $key ?>">
                             <label for="check4<?= $i ?>" class="u-hide-desktop"><?= _("Select") ?></label>
                         </div>
                     </div>
@@ -263,7 +282,11 @@
                 <div class="units-table-row js-unit">
                     <div class="units-table-cell">
                         <div>
-                            <input id="check5<?= $i ?>" class="js-unit-checkbox" type="checkbox" name="check" value="<?= $key ?>">
+                            <input id="check5<?= $i ?>"
+                                class="js-unit-checkbox"
+                                type="checkbox"
+                                name="check"
+                                value="<?= $key ?>">
                             <label for="check5<?= $i ?>" class="u-hide-desktop"><?= _("Select") ?></label>
                         </div>
                     </div>
@@ -310,7 +333,11 @@
                 <div class="units-table-row js-unit">
                     <div class="units-table-cell">
                         <div>
-                            <input id="check6<?= $i ?>" class="js-unit-checkbox" type="checkbox" name="udir[]" value="<?= $key ?>">
+                            <input id="check6<?= $i ?>"
+                                class="js-unit-checkbox"
+                                type="checkbox"
+                                name="udir[]"
+                                value="<?= $key ?>">
                             <label for="check6<?= $i ?>" class="u-hide-desktop"><?= _("Select") ?></label>
                         </div>
                     </div>

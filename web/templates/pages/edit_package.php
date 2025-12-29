@@ -24,6 +24,7 @@
         class="<?= $v_status ?>">
         <input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
         <input type="hidden" name="save" value="save">
+        <?php $unlimited_title = _("Unlimited"); ?>
 
         <div class="form-container">
             <h1 class="u-mb20"><?= _("Edit Package") ?></h1>
@@ -48,7 +49,7 @@
                         name="v_disk_quota"
                         id="v_disk_quota"
                         value="<?= htmlentities(trim($v_disk_quota, "'")) ?>">
-                    <button type="button" class="unlimited-toggle js-unlimited-toggle" title="<?= _("Unlimited") ?>">
+                    <button type="button" class="unlimited-toggle js-unlimited-toggle" title="<?= $unlimited_title ?>">
                         <i class="fas fa-infinity"></i>
                     </button>
                 </div>
@@ -63,7 +64,7 @@
                         name="v_bandwidth"
                         id="v_bandwidth"
                         value="<?= htmlentities(trim($v_bandwidth, "'")) ?>">
-                    <button type="button" class="unlimited-toggle js-unlimited-toggle" title="<?= _("Unlimited") ?>">
+                    <button type="button" class="unlimited-toggle js-unlimited-toggle" title="<?= $unlimited_title ?>">
                         <i class="fas fa-infinity"></i>
                     </button>
                 </div>
@@ -78,7 +79,12 @@
             </div>
             <div class="u-mb10">
                 <label for="v_backups_incremental" class="form-label"><?= _("Incremental Backups") ?></label>
-                <?php $backups_inc_selected = (!empty($v_backups_incremental) && 'yes' == trim($v_backups_incremental, "''")) ? ' selected' : ''; ?>
+                <?php
+                $backups_inc_selected = '';
+                if (!empty($v_backups_incremental) && 'yes' == trim($v_backups_incremental, "''")) {
+                    $backups_inc_selected = ' selected';
+                }
+                ?>
                 <select class="form-select" name="v_backups_incremental" id="v_backups_incremental">
                     <option value="no"><?= _('Disabled') ?></option>
                     <option value="yes" <?= $backups_inc_selected ?>><?= _('Enabled') ?></option>
@@ -97,7 +103,7 @@
                                 name="v_web_domains"
                                 id="v_web_domains"
                                 value="<?= htmlentities(trim($v_web_domains, "'")) ?>">
-                            <button type="button" class="unlimited-toggle js-unlimited-toggle" title="<?= _("Unlimited") ?>">
+                            <button type="button" class="unlimited-toggle js-unlimited-toggle" title="<?= $unlimited_title ?>">
                                 <i class="fas fa-infinity"></i>
                             </button>
                         </div>
@@ -142,12 +148,22 @@
                     <?php if (!empty($_SESSION['WEB_BACKEND'])) {
                         echo ""; ?>
                         <div class="u-mb10">
+                            <?php
+                            $backend_template_label = sprintf(
+                                '%s <span class="optional"> %s</span>',
+                                _("Backend Template"),
+                                strtoupper($_SESSION["WEB_BACKEND"])
+                            );
+                            ?>
                             <label for="v_backend_template" class="form-label">
-                                <?= _("Backend Template") . "<span class='optional'>" . strtoupper($_SESSION["WEB_BACKEND"]) . "</span>" ?>
+                                <?= $backend_template_label ?>
                             </label>
                             <select class="form-select" name="v_backend_template" id="v_backend_template">
                                 <?php foreach ($backend_templates as $key => $value) {
-                                    $sel = (!empty($v_backend_template) && ($value == trim($v_backend_template, "'"))) ? ' selected' : '';
+                                    $sel = '';
+                                    if (!empty($v_backend_template) && ($value == trim($v_backend_template, "'"))) {
+                                        $sel = ' selected';
+                                    }
                                     ?>
                                     <option value="<?= htmlentities($value) ?>"
                                         <?= $sel ?>>
@@ -161,12 +177,22 @@
                     <?php if (!empty($_SESSION['PROXY_SYSTEM'])) {
                         echo ""; ?>
                         <div class="u-mb10">
+                            <?php
+                            $proxy_template_label = sprintf(
+                                '%s <span class="optional"> %s</span>',
+                                _("Proxy Template"),
+                                strtoupper($_SESSION["PROXY_SYSTEM"])
+                            );
+                            ?>
                             <label for="v_proxy_template" class="form-label">
-                                <?= _("Proxy Template") . "<span class='optional'>" . strtoupper($_SESSION["PROXY_SYSTEM"]) . "</span>" ?>
+                                <?= $proxy_template_label ?>
                             </label>
                             <select class="form-select" name="v_proxy_template" id="v_proxy_template">
                                 <?php foreach ($proxy_templates as $key => $value) {
-                                    $sel = (!empty($v_proxy_template) && ($value == trim($v_proxy_template, "'"))) ? ' selected' : '';
+                                    $sel = '';
+                                    if (!empty($v_proxy_template) && ($value == trim($v_proxy_template, "'"))) {
+                                        $sel = ' selected';
+                                    }
                                     ?>
                                     <option value="<?= htmlentities($value) ?>"
                                         <?= $sel ?>>
@@ -201,8 +227,8 @@
                                 $sel = '';
                                 if (
                                     !empty($v_dns_template) && (
-                                    $value == $v_dns_template
-                                    || $value == trim($v_dns_template, "'")
+                                        $value == $v_dns_template
+                                        || $value == trim($v_dns_template, "'")
                                     )
                                 ) {
                                     $sel = ' selected';
@@ -373,7 +399,7 @@
                                     name="v_cpu_quota"
                                     id="v_cpu_quota"
                                     value="<?= htmlentities(trim($v_cpu_quota, "'")) ?>">
-                                <button type="button" class="unlimited-toggle js-unlimited-toggle" title="<?= _("Unlimited") ?>">
+                                <button type="button" class="unlimited-toggle js-unlimited-toggle" title="<?= $unlimited_title ?>">">">
                                     <i class="fas fa-infinity"></i>
                                 </button>
                             </div>

@@ -7,7 +7,8 @@
             </a>
         </div>
         <div class="toolbar-buttons">
-            <?php if (($_SESSION["role"] == "admin" && $accept === "true") || $_SESSION["role"] !== "admin") { ?>
+            <?php $can_add_web = (($_SESSION['role'] == 'admin' && $accept === 'true') || $_SESSION['role'] !== 'admin'); ?>
+            <?php if ($can_add_web) { ?>
                 <button type="submit" class="button" form="main-form">
                     <i class="fas fa-floppy-disk icon-purple"></i><?= _("Save") ?>
                 </button>
@@ -29,7 +30,16 @@
             <?php if ($_SESSION["role"] == "admin" && $accept !== "true") { ?>
                 <div class="alert alert-danger" role="alert">
                     <i class="fas fa-exclamation"></i>
-                    <p><?= htmlify_trans(sprintf(_("It is strongly advised to {create a standard user account} before adding %s to the server due to the increased privileges the admin account possesses and potential security risks."), _('a web domain')), '</a>', '<a href="/add/user/">'); ?></p>
+                    <?php
+                    $user_link_open = '<a href="/add/user/">';
+                    $user_link_close = '</a>';
+                    $advise_template = _(
+                        "It is strongly advised to {create a standard user account} before adding %s to the server "
+                            . "due to the increased privileges the admin account possesses and potential security risks."
+                    );
+                    $advise_msg = sprintf($advise_template, _('a web domain'));
+                    ?>
+                    <p><?= htmlify_trans($advise_msg, $user_link_close, $user_link_open) ?></p>
                 </div>
             <?php } ?>
             <?php if ($_SESSION["role"] == "admin" && empty($accept)) { ?>
@@ -38,7 +48,7 @@
                     <a href="/add/web/?accept=true" class="button button-danger u-width-full u-ml10"><?= _("Continue") ?></a>
                 </div>
             <?php } ?>
-            <?php if (($_SESSION["role"] == "admin" && $accept === "true") || $_SESSION["role"] !== "admin") { ?>
+            <?php if ($can_add_web) { ?>
                 <div class="u-mb10">
                     <label for="v_domain" class="form-label"><?= _("Domain") ?></label>
                     <input type="text" class="form-control" name="v_domain" id="v_domain" value="<?= htmlentities(trim($v_domain, "'")) ?>" required>
@@ -50,29 +60,32 @@
                         foreach ($ips as $ip => $value) {
                             $display_ip = htmlentities(empty($value['NAT']) ? $ip : "{$value['NAT']}");
                             $ip_selected = (!empty($v_ip) && $ip == $_POST['v_ip']) ? 'selected' : '';
-                            echo "\t\t\t\t<option value=\"{$ip}\" {$ip_selected}>{$display_ip}</option>\n";
+                            printf(
+                                "\t\t\t\t<option value=\"%s\" %s>%s</option>\n",
+                                $ip,
+                                $ip_selected,
+                                $display_ip
+                            );
                         }
                         ?>
                     </select>
                 </div>
-                <?php if (isset($_SESSION["DNS_SYSTEM"]) && !empty($_SESSION["DNS_SYSTEM"])) { ?>
-                    <?php if ($panel[$user_plain]["DNS_DOMAINS"] != "0") { ?>
+                <?php if (isset($_SESSION['DNS_SYSTEM']) && !empty($_SESSION['DNS_SYSTEM'])) { ?>
+                    <?php if ($panel[$user_plain]['DNS_DOMAINS'] != '0') { ?>
+                        <?php $v_dns_attr = (empty($v_dns) && $panel[$user_plain]['DNS_DOMAINS'] != '0') ? '' : ''; ?>
                         <div class="form-check u-mb10">
-                            <input class="form-check-input" type="checkbox" name="v_dns" id="v_dns" <?php if (empty($v_dns) && $panel[$user_plain]["DNS_DOMAINS"] != "0") {
-                                ;
-                                                                                                    } ?>>
+                            <input class="form-check-input" type="checkbox" name="v_dns" id="v_dns" <?= $v_dns_attr ?>>
                             <label for="v_dns">
                                 <?= _("DNS Support") ?>
                             </label>
                         </div>
                     <?php } ?>
                 <?php } ?>
-                <?php if (isset($_SESSION["IMAP_SYSTEM"]) && !empty($_SESSION["IMAP_SYSTEM"])) { ?>
-                    <?php if ($panel[$user_plain]["MAIL_DOMAINS"] != "0") { ?>
+                <?php if (isset($_SESSION['IMAP_SYSTEM']) && !empty($_SESSION['IMAP_SYSTEM'])) { ?>
+                    <?php if ($panel[$user_plain]['MAIL_DOMAINS'] != '0') { ?>
+                        <?php $v_mail_attr = (empty($v_mail) && $panel[$user_plain]['MAIL_DOMAINS'] != '0') ? '' : ''; ?>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="v_mail" id="v_mail" <?php if (empty($v_mail) && $panel[$user_plain]["MAIL_DOMAINS"] != "0") {
-                                ;
-                                                                                                      } ?>>
+                            <input class="form-check-input" type="checkbox" name="v_mail" id="v_mail" <?= $v_mail_attr ?>>
                             <label for="v_mail">
                                 <?= _("Mail Support") ?>
                             </label>

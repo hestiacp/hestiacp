@@ -166,8 +166,12 @@
                             <?php if ($read_only !== "true") { ?>
                                 <?php if ($data[$key]["SUSPENDED"] == "no") { ?>
                                     <li class="units-table-row-action shortcut-enter" data-key-action="href">
-                                        <?php $action_edit_href = '/edit/dns/?domain=' . $domain_html . '&record_id=' . $data[$key]['ID'] . '&token=' . $session_token;
-                                        $action_edit_title = _("Edit DNS Record"); ?>
+                                        <?php
+                                            $action_edit_href = '/edit/dns/?domain=' . $domain_html
+                                                . '&record_id=' . $data[$key]['ID']
+                                                . '&token=' . $session_token;
+                                            $action_edit_title = _("Edit DNS Record");
+                                        ?>
                                         <a
                                             class="units-table-row-action-link"
                                             href="<?= $action_edit_href ?>"

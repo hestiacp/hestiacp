@@ -86,7 +86,9 @@
                                 <div class="u-pl30 u-mb10">
                                     <label for="v_ftp_user[<?= $i ?>][v_ftp_user]" class="form-label">
                                         <?= _("Username") ?><br>
-                                        <span style="color:#777;"><?= sprintf(_('Prefix %s will be added to username automatically'), $user_plain . "_");?></span>
+                                        <span style="color:#777;">
+                                            <?= sprintf(_('Prefix %s will be added to username automatically'), $user_plain . "_");?>
+                                        </span>
                                     </label>
                                     <input type="text"
                                            class="form-control js-ftp-user"
@@ -165,7 +167,9 @@
         <div class="u-pl30 u-mb10">
             <label for="v_ftp_user[%INDEX%][v_ftp_user]" class="form-label">
                 <?= _("Username") ?><br>
-                <span style="color:#777;"><?= sprintf(_("Prefix %s will be added to username automatically"), $user_plain . "_") ?></span>
+                <span style="color:#777;">
+                                            <?= sprintf(_('Prefix %s will be added to username automatically'), $user_plain . "_");?>
+                                        </span>
             </label>
             <input type="text" class="form-control js-ftp-user" name="v_ftp_user[%INDEX%][v_ftp_user]" id="v_ftp_user[%INDEX%][v_ftp_user]" value="">
             <small class="hint js-ftp-user-hint"></small>

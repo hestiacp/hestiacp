@@ -34,7 +34,12 @@
                     <div class="u-mb10">
                         <label for="ssl_crt" class="form-label">
                             <?= _("SSL Certificate") ?>
-                            <span id="generate-csr"> / <a class="form-link" target="_blank" href="/generate/ssl/?domain=<?= htmlentities($v_domain) ?>"><?= _("Generate Self-Signed SSL Certificate") ?></a></span>
+                            <span id="generate-csr"> /
+                                <a class="form-link" target="_blank"
+                                   href="/generate/ssl/?domain=<?= htmlentities($v_domain) ?>">
+                                    <?= _("Generate Self-Signed SSL Certificate") ?>
+                                </a>
+                            </span>
                         </label>
                         <textarea class="form-control u-min-height100 u-console" name="v_ssl_crt" id="ssl_crt"><?= htmlentities(trim($v_ssl_crt, "'")) ?></textarea>
                     </div>
@@ -86,18 +91,27 @@
                                         <i class="fas fa-arrows-rotate icon-green"></i>
                                     </button>
                                 </label>
-                                <input type="text" class="form-control js-ftp-user-psw" name="v_ftp_user[<?= $i ?>][v_ftp_password]" id="v_ftp_user[<?= $i ?>][v_ftp_password]" value="<?= htmlentities(trim($v_ftp_password, "'")) ?>">
+                                <input type="text"
+
+                                       class="form-control js-ftp-user-psw"
+
+                                       name="v_ftp_user[<?= $i ?>][v_ftp_password]"
+
+                                       id="v_ftp_user[<?= $i ?>][v_ftp_password]"
+
+                                       value="<?= htmlentities(trim($v_ftp_password, "'")) ?>">][v_ftp_password]" id="v_ftp_user[<?= $i ?>][v_ftp_password]" value="<?= htmlentities(trim($v_ftp_password, "'")) ?>">
                             </div>
                             <div class="u-pl30 u-mb10">
                                 <label for="v_ftp_user[<?= $i ?>][v_ftp_path]" class="form-label"><?= _("Path") ?></label>
                                 <input type="hidden" name="v_ftp_pre_path" value="<?=!empty($v_ftp_pre_path) ? htmlentities(trim($v_ftp_pre_path, "'")) : '/'; ?>">
-                                <input type="hidden" name="v_ftp_user[<?= $i ?>][v_ftp_path_prev]" value="<?php if (!empty($v_ftp_path)) {
-                                    echo ($v_ftp_path[0] != '/' ? '/' : '') . htmlentities(trim($v_ftp_path, "'"));
-                                                                      } ?>">
+                                  <input type="hidden"
+                                         name="v_ftp_user[<?= $i ?>][v_ftp_path_prev]"
+                                         value="<?php if (!empty($v_ftp_path)) { echo ($v_ftp_path[0] != '/' ? '/' : '') . htmlentities(trim($v_ftp_path, "'")); } ?>">
                                 <input type="text" class="form-control js-ftp-path" name="v_ftp_user[<?= $i ?>][v_ftp_path]" id="v_ftp_user[<?= $i ?>][v_ftp_path]" value="<?php if (!empty($v_ftp_path)) {
                                     echo ($v_ftp_path[0] != '/' ? '/' : '') . htmlentities(trim($v_ftp_path, "'"));
                                                                                                      } ?>">
-                                <span class="hint-prefix"><?= htmlentities(trim($v_ftp_pre_path, "'")) ?></span><span class="hint js-ftp-path-hint"></span>
+                                  <span class="hint-prefix"><?= htmlentities(trim($v_ftp_pre_path, "'")) ?></span>
+                                  <span class="hint js-ftp-path-hint"></span>
                             </div>
                             <?php if ($ftp_user['is_new'] == 1) : ?>
                                 <div class="u-pl30 u-mb10">

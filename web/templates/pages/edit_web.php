@@ -7,9 +7,8 @@
             </a>
         </div>
         <div class="toolbar-buttons">
-            <a href="/delete/web/cache/?domain=<?= htmlentities($v_domain);?>&token=<?= $_SESSION['token'];?>" class="button button-secondary js-clear-cache-button <?php if (!($v_nginx_cache == 'yes' || (($v_proxy_template == 'caching' || is_int(strpos($v_proxy_template, 'caching-'))) && $_SESSION['PROXY_SYSTEM'] == 'nginx'))) {
-                echo "u-hidden";
-                                               } ?>">
+            <a href="/delete/web/cache/?domain=<?= htmlentities($v_domain);?>&token=<?= $_SESSION['token'];?>"
+               class="button button-secondary js-clear-cache-button <?= $delete_cache_hidden ?>">
                 <i class="fas fa-trash icon-red"></i><?= _("Purge NGINX Cache") ?>
             </a>
             <?php if ($_SESSION["PLUGIN_APP_INSTALLER"] !== "false") { ?>
@@ -48,6 +47,9 @@
         <input type="hidden" name="save" value="save">
 
         <div class="form-container">
+            <?php
+            $delete_cache_hidden = (!($v_nginx_cache == 'yes' || (($v_proxy_template == 'caching' || is_int(strpos($v_proxy_template, 'caching-'))) && $_SESSION['PROXY_SYSTEM'] == 'nginx'))) ? 'u-hidden' : '';
+            ?>
             <h1 class="u-mb20"><?= _("Edit Web Domain") ?></h1>
             <?php show_alert_message($_SESSION); ?>
             <div class="u-mb10">
@@ -132,25 +134,34 @@
             </div>
             <div x-cloak x-show="redirectEnabled" id="v_redirect" class="u-pl30 u-mb10">
                 <div class="form-check">
-                    <input class="form-check-input js-redirect-custom-value" type="radio" name="v-redirect" id="v-redirect-radio-1" value="<?='www.' . htmlentities($v_domain);?>" <?php if ($v_redirect == "www." . $v_domain) {
-                        echo 'checked';
-                                                                                                                                           } ?>>
+                    <input class="form-check-input js-redirect-custom-value"
+                           type="radio"
+                           name="v-redirect"
+                           id="v-redirect-radio-1"
+                           value="<?= 'www.' . htmlentities($v_domain);?>"
+                           <?= ($v_redirect == "www." . $v_domain) ? 'checked' : '' ?>>
                     <label for="v-redirect-radio-1">
                         <?= sprintf(_("Redirect visitors to %s"), "www." . htmlentities($v_domain)) ?>
                     </label>
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input js-redirect-custom-value" type="radio" name="v-redirect" id="v-redirect-radio-2" value="<?= htmlentities($v_domain);?>" <?php if ($v_redirect == $v_domain) {
-                        echo 'checked';
-                                                                                                                                           } ?>>
+                    <input class="form-check-input js-redirect-custom-value"
+                           type="radio"
+                           name="v-redirect"
+                           id="v-redirect-radio-2"
+                           value="<?= htmlentities($v_domain);?>"
+                           <?= ($v_redirect == $v_domain) ? 'checked' : '' ?>>
                     <label for="v-redirect-radio-2">
                         <?= sprintf(_("Redirect visitors to %s"), htmlentities($v_domain)) ?>
                     </label>
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input js-redirect-custom-value" type="radio" name="v-redirect" id="v-redirect-radio-3" value="custom" <?php if (!empty($v_redirect_custom)) {
-                        echo 'checked';
-                                                                                                                                                   } ?>>
+                    <input class="form-check-input js-redirect-custom-value"
+                           type="radio"
+                           name="v-redirect"
+                           id="v-redirect-radio-3"
+                           value="custom"
+                           <?= (!empty($v_redirect_custom)) ? 'checked' : '' ?> >
                     <label for="v-redirect-radio-3">
                         <?= _("Redirect visitors to a custom domain or web address") ?>
                     </label>

@@ -11,7 +11,10 @@
         </div>
         <div class="toolbar-right">
             <div class="toolbar-sorting">
-                <button class="toolbar-sorting-toggle js-toggle-sorting-menu" type="button" title="<?= _("Sort items") ?>">
+                <button
+                    class="toolbar-sorting-toggle js-toggle-sorting-menu"
+                    type="button"
+                    title="<?= _("Sort items") ?>">
                     <?= _("Sort by") ?>:
                     <span class="u-text-bold">
                         <?php if ($_SESSION['userSortOrder'] === 'name') {
@@ -32,7 +35,9 @@
                         <span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
                     </li>
                     <li data-entity="sort-date" data-sort-as-int="1">
-                        <span class="name <?= $active_date_class ?>"><?= _("Date") ?> <i class="fas fa-arrow-down-a-z"></i></span>
+                        <span class="name <?= $active_date_class ?>">
+                            <?= _("Date") ?> <i class="fas fa-arrow-down-a-z"></i>
+                        </span>
                         <span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
                     </li>
                     <li data-entity="sort-disk" data-sort-as-int="1">
@@ -44,7 +49,9 @@
                         <span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
                     </li>
                     <li data-entity="sort-name">
-                        <span class="name <?= $active_name_class ?>"><?= _("Name") ?> <i class="fas fa-arrow-down-a-z"></i></span>
+                        <span class="name <?= $active_name_class ?>">
+                            <?= _("Name") ?> <i class="fas fa-arrow-down-a-z"></i>
+                        </span>
                         <span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
                     </li>
                 </ul>
@@ -158,7 +165,16 @@
                 && $key === 'admin'
             ) ? 'u-hidden' : '');
             $spnd_confirm_message = sprintf($spnd_confirmation, $key);
-            $delete_confirm_message = sprintf(_("Are you sure you want to delete user %s?"), $key);
+            $delete_confirm_message = sprintf("Are you sure you want to delete user %s?", $key);
+            $login_href = '/login/?loginas=' . $key . '&token=' . $_SESSION['token'];
+            $login_title = sprintf(_("Log in as %s"), $key);
+            $edit_href = '/edit/user/?user=' . $key . '&token=' . $_SESSION['token'];
+            $edit_title = _("Edit User");
+            $delete_href = '/delete/user/?user=' . $key . '&token=' . $_SESSION['token'];
+            $delete_title = _("Delete");
+            $spnd_href = '/' . $spnd_action . '/user/?user=' . $key . '&token=' . $_SESSION['token'];
+            $spnd_title = $spnd_action_title;
+            $user_label = $key . ' (' . $data[$key]["NAME"] . ')';
             ?>
             <div class="units-table-row <?= $row_classes ?> js-unit <?= $admin_hidden ?>"
                 data-sort-date="<?= strtotime($data[$key]['DATE'] . ' ' . $data[$key]['TIME']) ?>"
@@ -200,14 +216,14 @@
                             <ul class="units-table-row-actions">
                                 <?php if ($key == $user_plain) { ?>
                                     <li class="units-table-row-action">
-                                        <i class="fas fa-user-check" title="<?= $key ?> (<?= $data[$key]["NAME"] ?>)"></i>
+                                        <i class="fas fa-user-check" title="<?= $user_label ?>"></i>
                                     </li>
                                 <?php } else { ?>
                                     <li class="units-table-row-action shortcut-enter" data-key-action="href">
                                         <a
                                             class="units-table-row-action-link"
-                                            href="/login/?loginas=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
-                                            title="<?= _("Log in as") ?> <?= $key ?>">
+                                            href="<?= $login_href ?>"
+                                            title="<?= $login_title ?>">
                                             <i class="fas fa-right-to-bracket icon-green"></i>
                                         </a>
                                     </li>
@@ -221,8 +237,8 @@
                                     <li class="units-table-row-action shortcut-enter" data-key-action="href">
                                         <a
                                             class="units-table-row-action-link"
-                                            href="/edit/user/?user=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
-                                            title="<?= _("Edit User") ?>">
+                                            href="<?= $edit_href ?>"
+                                            title="<?= $edit_title ?>">
                                             <i class="fas fa-pencil icon-orange"></i>
                                         </a>
                                     </li>
@@ -231,19 +247,19 @@
                                     <li class="units-table-row-action shortcut-s" data-key-action="js">
                                         <a
                                             class="units-table-row-action-link data-controls js-confirm-action"
-                                            href="/<?= $spnd_action ?>/user/?user=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
-                                            title="<?= $spnd_action_title ?>"
-                                            data-confirm-title="<?= $spnd_action_title ?>"
-                                            data-confirm-message="<?= sprintf($spnd_confirmation, $key) ?>">
+                                            href="<?= $spnd_href ?>"
+                                            title="<?= $spnd_title ?>"
+                                            data-confirm-title="<?= $spnd_title ?>"
+                                            data-confirm-message="<?= $spnd_confirm_message ?>">
                                             <i class="fas <?= $spnd_icon ?> <?= $spnd_icon_class ?>"></i>
                                         </a>
                                     </li>
                                     <li class="units-table-row-action shortcut-delete" data-key-action="js">
                                         <a
                                             class="units-table-row-action-link data-controls js-confirm-action"
-                                            href="/delete/user/?user=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
-                                            title="<?= _("Delete") ?>"
-                                            data-confirm-title="<?= _("Delete") ?>"
+                                            href="<?= $delete_href ?>"
+                                            title="<?= $delete_title ?>"
+                                            data-confirm-title="<?= $delete_title ?>"
                                             data-confirm-message="<?= $delete_confirm_message ?>">
                                             <i class="fas fa-trash icon-red"></i>
                                         </a>
@@ -254,14 +270,14 @@
                     </div>
                     <span class="u-hide-desktop u-text-bold"><?= _("Name") ?>:</span>
                     <?php if ($key == $user_plain) { ?>
-                        <a href="/edit/user/?user=<?= $key ?>&token=<?= $_SESSION["token"] ?>" title="<?= _("Edit User") ?>">
+                        <a href="<?= $edit_href ?>" title="<?= $edit_title ?>">
                             <span class="u-text-bold">
                                 <?= $key ?>
                             </span>
                             (<?= $data[$key]["NAME"] ?>)
                         </a>
                     <?php } else { ?>
-                        <a href="/login/?loginas=<?= $key ?>&token=<?= $_SESSION["token"] ?>" title="<?= _("Log in as") ?> <?= $key ?>">
+                        <a href="<?= $login_href ?>" title="<?= $login_title ?>">
                             <span class="u-text-bold">
                                 <?= $key ?>
                             </span>
@@ -289,11 +305,17 @@
                     <div class="u-hide-tablet">
                         <div class="progress-label"><?= _("Disk Usage") ?> (<?= $disk_percent ?>%)</div>
                         <div class="progress">
-                            <div class="progress-bar <?= $disk_class ?>" style="width: <?= $disk_percent ?>%"></div>
+                            <div
+                                class="progress-bar <?= $disk_class ?>"
+                                style="width: <?= $disk_percent ?>%">
+                            </div>
                         </div>
                         <div class="progress-label"><?= _("Bandwidth Usage") ?> (<?= $bandwidth_percent ?>%)</div>
                         <div class="progress">
-                            <div class="progress-bar <?= $bandwidth_class ?>" style="width: <?= $bandwidth_percent ?>%"></div>
+                            <div
+                                class="progress-bar <?= $bandwidth_class ?>"
+                                style="width: <?= $bandwidth_percent ?>%">
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -308,10 +330,10 @@
                             <li class="units-table-row-action">
                                 <a
                                     class="units-table-row-action-link"
-                                    href="/login/?loginas=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
-                                    title="<?= _("Log in as") ?> <?= $key ?>">
+                                    href="<?= $login_href ?>"
+                                    title="<?= $login_title ?>">
                                     <i class="fas fa-right-to-bracket icon-green"></i>
-                                    <span class="u-hide-desktop"><?= _("Log in as") ?> <?= $key ?></span>
+                                    <span class="u-hide-desktop"><?= $login_title ?></span>
                                 </a>
                             </li>
                         <?php } ?>
@@ -319,10 +341,10 @@
                             <li class="units-table-row-action shortcut-enter" data-key-action="href">
                                 <a
                                     class="units-table-row-action-link"
-                                    href="/edit/user/?user=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
-                                    title="<?= _("Edit User") ?>">
+                                    href="<?= $edit_href ?>"
+                                    title="<?= $edit_title ?>">
                                     <i class="fas fa-pencil icon-orange"></i>
-                                    <span class="u-hide-desktop"><?= _("Edit User") ?></span>
+                                    <span class="u-hide-desktop"><?= $edit_title ?></span>
                                 </a>
                             </li>
                         <?php } ?>
@@ -330,23 +352,23 @@
                             <li class="units-table-row-action shortcut-s" data-key-action="js">
                                 <a
                                     class="units-table-row-action-link data-controls js-confirm-action"
-                                    href="/<?= $spnd_action ?>/user/?user=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
-                                    title="<?= $spnd_action_title ?>"
-                                    data-confirm-title="<?= $spnd_action_title ?>"
+                                    href="<?= $spnd_href ?>"
+                                    title="<?= $spnd_title ?>"
+                                    data-confirm-title="<?= $spnd_title ?>"
                                     data-confirm-message="<?= $spnd_confirm_message ?>">
                                     <i class="fas <?= $spnd_icon ?> <?= $spnd_icon_class ?>"></i>
-                                    <span class="u-hide-desktop"><?= $spnd_action_title ?></span>
+                                    <span class="u-hide-desktop"><?= $spnd_title ?></span>
                                 </a>
                             </li>
                             <li class="units-table-row-action shortcut-delete" data-key-action="js">
                                 <a
                                     class="units-table-row-action-link data-controls js-confirm-action"
-                                    href="/delete/user/?user=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
-                                    title="<?= _("Delete") ?>"
-                                    data-confirm-title="<?= _("Delete") ?>"
+                                    href="<?= $delete_href ?>"
+                                    title="<?= $delete_title ?>"
+                                    data-confirm-title="<?= $delete_title ?>"
                                     data-confirm-message="<?= $delete_confirm_message ?>">
                                     <i class="fas fa-trash icon-red"></i>
-                                    <span class="u-hide-desktop"><?= _("Delete") ?></span>
+                                    <span class="u-hide-desktop"><?= $delete_title ?></span>
                                 </a>
                             </li>
                         <?php } ?>
@@ -357,7 +379,10 @@
                     <?php if ($data[$key]["PACKAGE"] === "system") { ?>
                         <?= $data[$key]["PACKAGE"] ?>
                     <?php } else { ?>
-                        <?php $pkg_href = '/edit/package/?package=' . $data[$key]["PACKAGE"] . '&token=' . $_SESSION["token"]; ?>
+                        <?php
+                        $pkg_href = '/edit/package/?package=' . $data[$key]["PACKAGE"]
+                            . '&token=' . $_SESSION["token"];
+                        ?>
                         <a href="<?= $pkg_href ?>" title="<?= _("Edit Package") ?>">
                             <?= $data[$key]["PACKAGE"] ?>
                         </a>

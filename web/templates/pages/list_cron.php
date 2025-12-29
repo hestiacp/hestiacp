@@ -19,27 +19,25 @@
         </div>
         <div class="toolbar-right">
             <div class="toolbar-sorting">
+                <?php
+                $sort_label = ($_SESSION['userSortOrder'] === 'name') ? _('Command') : _('Date');
+                $name_active = ($_SESSION['userSortOrder'] === 'name') ? 'active' : '';
+                $date_active = ($_SESSION['userSortOrder'] === 'date') ? 'active' : '';
+                ?>
                 <button class="toolbar-sorting-toggle js-toggle-sorting-menu" type="button" title="<?= _("Sort items") ?>">
                     <?= _("Sort by") ?>:
                     <span class="u-text-bold">
-                        <?php if ($_SESSION['userSortOrder'] === 'name') {
-                            $label = _('Command');
-                        } else {
-                            $label = _('Date');
-                        } ?>
-                        <?= $label ?> <i class="fas fa-arrow-down-a-z"></i>
+                        <?= $sort_label ?> <i class="fas fa-arrow-down-a-z"></i>
                     </span>
                 </button>
                 <ul class="toolbar-sorting-menu js-sorting-menu u-hidden">
                     <li data-entity="sort-name">
-                        <span class="name <?php if ($_SESSION['userSortOrder'] === 'name') {
-                            echo 'active';
-                                          } ?>"><?= _("Command") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
+                        <span class="name <?= $name_active ?>"><?= _("Command") ?> <i class="fas fa-arrow-down-a-z"></i></span>
+                        <span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
                     </li>
                     <li data-entity="sort-date" data-sort-as-int="1">
-                        <span class="name <?php if ($_SESSION['userSortOrder'] === 'date') {
-                            echo 'active';
-                                          } ?>"><?= _("Date") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
+                        <span class="name <?= $date_active ?>"><?= _("Date") ?> <i class="fas fa-arrow-down-a-z"></i></span>
+                        <span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
                     </li>
                 </ul>
                 <?php if ($read_only !== "true") { ?>
@@ -105,24 +103,38 @@
                 $spnd_action_title = _('Unsuspend');
                 $spnd_icon = 'fa-play';
                 $spnd_icon_class = 'icon-green';
-                $spnd_confirmation = _('Are you sure you want to unsuspend this cron job?') ;
+                $spnd_confirmation = _('Are you sure you want to unsuspend this cron job?');
             } else {
                 $status = 'active';
                 $spnd_action = 'suspend';
                 $spnd_action_title = _('Suspend');
                 $spnd_icon = 'fa-pause';
                 $spnd_icon_class = 'icon-highlight';
-                $spnd_confirmation = _('Are you sure you want to suspend this cron job?') ;
+                $spnd_confirmation = _('Are you sure you want to suspend this cron job?');
             }
+
+            $row_disabled = ($status == 'suspended') ? 'disabled' : '';
+            $edit_href = "/edit/cron/?job=" . $data[$key]["JOB"] . "&token=" . $_SESSION["token"];
+            $edit_title = _('Edit Cron Job') . ": " . htmlspecialchars($data[$key]["CMD"], ENT_NOQUOTES);
+            $spnd_href = "/" . $spnd_action . "/cron/?job=" . $data[$key]["JOB"] . "&token=" . $_SESSION["token"];
+            $spnd_title = $spnd_action_title;
+            $spnd_msg = sprintf($spnd_confirmation, $key);
+            $delete_href = "/delete/cron/?job=" . $data[$key]["JOB"] . "&token=" . $_SESSION["token"];
+            $delete_msg = sprintf(_('Are you sure you want to delete this cron job?'), $key);
             ?>
-            <div class="units-table-row <?php if ($status == 'suspended') {
-                echo 'disabled';
-                                        } ?> js-unit"
+            <div class="units-table-row <?= $row_disabled ?> js-unit"
                 data-sort-date="<?= strtotime($data[$key]['DATE'] . ' ' . $data[$key]['TIME']) ?>"
                 data-sort-name="<?= htmlspecialchars($data[$key]['CMD'], ENT_NOQUOTES) ?>">
                 <div class="units-table-cell">
                     <div>
-                        <input id="check<?= $i ?>" class="js-unit-checkbox" type="checkbox" title="<?= _("Select") ?>" name="job[]" value="<?= $key ?>" <?= $display_mode ?>>
+                        <input
+                            id="check<?= $i ?>"
+                            class="js-unit-checkbox"
+                            type="checkbox"
+                            title="<?= _("Select") ?>"
+                            name="job[]"
+                            value="<?= $key ?>"
+                            <?= $display_mode ?>>
                         <label for="check<?= $i ?>" class="u-hide-desktop"><?= _("Select") ?></label>
                     </div>
                 </div>
@@ -131,7 +143,9 @@
                     <?php if ($read_only === "true" || $data[$key]["SUSPENDED"] == "yes") { ?>
                         <?= htmlspecialchars($data[$key]["CMD"], ENT_NOQUOTES) ?>
                     <?php } else { ?>
-                        <a href="/edit/cron/?job=<?= $data[$key]["JOB"] ?>&token=<?= $_SESSION["token"] ?>" title="<?= _("Edit Cron Job") ?>: <?= htmlspecialchars($data[$key]["CMD"], ENT_NOQUOTES) ?>">
+                        <a
+                            href="<?= $edit_href ?>"
+                            title="<?= $edit_title ?>">
                             <?= htmlspecialchars($data[$key]["CMD"], ENT_NOQUOTES) ?>
                         </a>
                     <?php } ?>
@@ -144,8 +158,7 @@
                                     <a
                                         class="units-table-row-action-link"
                                         href="/edit/cron/?job=<?= $data[$key]["JOB"] ?>&token=<?= $_SESSION["token"] ?>"
-                                        title="<?= _("Edit") ?>"
-                                    >
+                                        title="<?= _("Edit") ?>">
                                         <i class="fas fa-pencil icon-orange"></i>
                                         <span class="u-hide-desktop"><?= _("Edit") ?></span>
                                     </a>
@@ -154,11 +167,10 @@
                             <li class="units-table-row-action shortcut-s" data-key-action="js">
                                 <a
                                     class="units-table-row-action-link data-controls js-confirm-action"
-                                    href="/<?= $spnd_action ?>/cron/?job=<?= $data[$key]["JOB"] ?>&token=<?= $_SESSION["token"] ?>"
-                                    title="<?= $spnd_action_title ?>"
-                                    data-confirm-title="<?= $spnd_action_title ?>"
-                                    data-confirm-message="<?= sprintf($spnd_confirmation, $key) ?>"
-                                >
+                                    href="<?= $spnd_href ?>"
+                                    title="<?= $spnd_title ?>"
+                                    data-confirm-title="<?= $spnd_title ?>"
+                                    data-confirm-message="<?= $spnd_msg ?>">
                                     <i class="fas <?= $spnd_icon ?> <?= $spnd_icon_class ?>"></i>
                                     <span class="u-hide-desktop"><?= $spnd_action_title ?></span>
                                 </a>
@@ -166,11 +178,10 @@
                             <li class="units-table-row-action shortcut-delete" data-key-action="js">
                                 <a
                                     class="units-table-row-action-link data-controls js-confirm-action"
-                                    href="/delete/cron/?job=<?= $data[$key]["JOB"] ?>&token=<?= $_SESSION["token"] ?>"
+                                    href="<?= $delete_href ?>"
                                     title="<?= _("Delete") ?>"
                                     data-confirm-title="<?= _("Delete") ?>"
-                                    data-confirm-message="<?= sprintf(_("Are you sure you want to delete this cron job?"), $key) ?>"
-                                >
+                                    data-confirm-message="<?= $delete_msg ?>">
                                     <i class="fas fa-trash icon-red"></i>
                                     <span class="u-hide-desktop"><?= _("Delete") ?></span>
                                 </a>

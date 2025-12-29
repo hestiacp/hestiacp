@@ -22,25 +22,30 @@
                         <?= $label ?> <i class="fas fa-arrow-down-a-z"></i>
                     </span>
                 </button>
+                <?php
+                $active_date_class = ($_SESSION['userSortOrder'] === 'date') ? 'active' : '';
+                $active_name_class = ($_SESSION['userSortOrder'] === 'name') ? 'active' : '';
+                ?>
                 <ul class="toolbar-sorting-menu js-sorting-menu u-hidden">
                     <li data-entity="sort-bandwidth" data-sort-as-int="1">
-                        <span class="name"><?= _("Bandwidth") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
+                        <span class="name"><?= _("Bandwidth") ?> <i class="fas fa-arrow-down-a-z"></i></span>
+                        <span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
                     </li>
                     <li data-entity="sort-date" data-sort-as-int="1">
-                        <span class="name <?php if ($_SESSION['userSortOrder'] === 'date') {
-                            echo 'active';
-                                          } ?>"><?= _("Date") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
+                        <span class="name <?= $active_date_class ?>"><?= _("Date") ?> <i class="fas fa-arrow-down-a-z"></i></span>
+                        <span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
                     </li>
                     <li data-entity="sort-disk" data-sort-as-int="1">
-                        <span class="name"><?= _("Disk") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
+                        <span class="name"><?= _("Disk") ?> <i class="fas fa-arrow-down-a-z"></i></span>
+                        <span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
                     </li>
                     <li data-entity="sort-package">
-                        <span class="name"><?= _("Package") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
+                        <span class="name"><?= _("Package") ?> <i class="fas fa-arrow-down-a-z"></i></span>
+                        <span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
                     </li>
                     <li data-entity="sort-name">
-                        <span class="name <?php if ($_SESSION['userSortOrder'] === 'name') {
-                            echo 'active';
-                                          } ?>"><?= _("Name") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
+                        <span class="name <?= $active_name_class ?>"><?= _("Name") ?> <i class="fas fa-arrow-down-a-z"></i></span>
+                        <span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
                     </li>
                 </ul>
                 <form x-data x-bind="BulkEdit" action="/bulk/user/" method="post">
@@ -66,8 +71,14 @@
             </div>
             <div class="toolbar-search">
                 <form action="/search/" method="get">
+                    <?php $search_value = isset($_POST['q']) ? htmlspecialchars($_POST['q']) : ''; ?>
                     <input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
-                    <input type="search" class="form-control js-search-input" name="q" value="<?= isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" title="<?= _("Search") ?>">
+                    <input
+                        type="search"
+                        class="form-control js-search-input"
+                        name="q"
+                        value="<?= $search_value ?>"
+                        title="<?= _("Search") ?>">
                     <button type="submit" class="toolbar-input-submit" title="<?= _("Search") ?>">
                         <i class="fas fa-magnifying-glass"></i>
                     </button>
@@ -140,12 +151,16 @@
                 $spnd_icon_class = 'icon-highlight';
                 $spnd_confirmation = _('Are you sure you want to suspend user %s?');
             }
+            $row_classes = ($status == 'suspended') ? 'disabled' : '';
+            $admin_hidden = ((
+                $_SESSION['POLICY_SYSTEM_HIDE_ADMIN'] === 'yes'
+                && $_SESSION['user'] !== $_SESSION['ROOT_USER']
+                && $key === 'admin'
+            ) ? 'u-hidden' : '');
+            $spnd_confirm_message = sprintf($spnd_confirmation, $key);
+            $delete_confirm_message = sprintf(_("Are you sure you want to delete user %s?"), $key);
             ?>
-            <div class="units-table-row <?php if ($status == 'suspended') {
-                echo 'disabled';
-                                        } ?> js-unit <?php if (($_SESSION['POLICY_SYSTEM_HIDE_ADMIN'] === 'yes') && ($_SESSION['user'] !== $_SESSION['ROOT_USER']) && ($key === 'admin')) {
-                echo 'u-hidden';
-                                        } ?>"
+            <div class="units-table-row <?= $row_classes ?> js-unit <?= $admin_hidden ?>"
                 data-sort-date="<?= strtotime($data[$key]['DATE'] . ' ' . $data[$key]['TIME']) ?>"
                 data-sort-name="<?= strtolower($key) ?>"
                 data-sort-package="<?= strtolower($data[$key]['PACKAGE']) ?>"
@@ -153,65 +168,73 @@
                 data-sort-disk="<?= $data[$key]["U_DISK"] ?>">
                 <div class="units-table-cell">
                     <div>
-                        <input id="check<?= $i ?>" class="js-unit-checkbox" type="checkbox" title="<?= _("Select") ?>" name="user[]" value="<?= $key ?>">
+                        <input
+                            id="check<?= $i ?>"
+                            class="js-unit-checkbox"
+                            type="checkbox"
+                            title="<?= _("Select") ?>"
+                            name="user[]"
+                            value="<?= $key ?>">
                         <label for="check<?= $i ?>" class="u-hide-desktop"><?= _("Select") ?></label>
                     </div>
                 </div>
                 <div class="units-table-cell units-table-heading-cell">
                     <div class="u-hide-desktop card-header">
                         <div class="card-title">
-                        <?php if ($key == $user_plain) { ?>
+                            <?php if ($key == $user_plain) { ?>
                                 <span class="u-text-bold">
                                     <?= $key ?>
                                 </span>
                                 (<?= $data[$key]["NAME"] ?>)
-                        <?php } else { ?>
+                            <?php } else { ?>
                                 <span class="u-text-bold">
                                     <?= $key ?>
                                 </span>
                                 (<?= $data[$key]["NAME"] ?>)
-                        <?php } ?>
-                        <?php if ($status == 'suspended') { ?>
+                            <?php } ?>
+                            <?php if ($status == 'suspended') { ?>
                                 <i class="fas fa-ban icon-red" title="<?= _("Suspended") ?>"></i>
-                        <?php } ?>
+                            <?php } ?>
                         </div>
                         <div class="card-actions">
                             <ul class="units-table-row-actions">
-                            <?php if ($key == $user_plain) { ?>
+                                <?php if ($key == $user_plain) { ?>
                                     <li class="units-table-row-action">
                                         <i class="fas fa-user-check" title="<?= $key ?> (<?= $data[$key]["NAME"] ?>)"></i>
                                     </li>
-                            <?php } else { ?>
+                                <?php } else { ?>
                                     <li class="units-table-row-action shortcut-enter" data-key-action="href">
                                         <a
                                             class="units-table-row-action-link"
                                             href="/login/?loginas=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
-                                            title="<?= _("Log in as") ?> <?= $key ?>"
-                                        >
+                                            title="<?= _("Log in as") ?> <?= $key ?>">
                                             <i class="fas fa-right-to-bracket icon-green"></i>
                                         </a>
                                     </li>
-                            <?php } ?>
-                            <?php if (!($_SESSION["userContext"] === "admin" && $key == $_SESSION['ROOT_USER'] && $_SESSION["user"] != $_SESSION['ROOT_USER'])) { ?>
+                                <?php } ?>
+                                <?php $show_edit_action = !(
+                                    $_SESSION["userContext"] === "admin"
+                                    && $key == $_SESSION['ROOT_USER']
+                                    && $_SESSION["user"] != $_SESSION['ROOT_USER']
+                                );
+                                if ($show_edit_action) { ?>
                                     <li class="units-table-row-action shortcut-enter" data-key-action="href">
                                         <a
                                             class="units-table-row-action-link"
                                             href="/edit/user/?user=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
-                                            title="<?= _("Edit User") ?>"
-                                        >
+                                            title="<?= _("Edit User") ?>">
                                             <i class="fas fa-pencil icon-orange"></i>
                                         </a>
                                     </li>
-                            <?php } ?>
-                            <?php if (!($key == $_SESSION['ROOT_USER'] || $key == $user_plain)) { ?>
+                                <?php } ?>
+                                <?php if (!($key == $_SESSION['ROOT_USER'] || $key == $user_plain)) { ?>
                                     <li class="units-table-row-action shortcut-s" data-key-action="js">
                                         <a
                                             class="units-table-row-action-link data-controls js-confirm-action"
                                             href="/<?= $spnd_action ?>/user/?user=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
                                             title="<?= $spnd_action_title ?>"
                                             data-confirm-title="<?= $spnd_action_title ?>"
-                                            data-confirm-message="<?= sprintf($spnd_confirmation, $key) ?>"
-                                        >
+                                            data-confirm-message="<?= sprintf($spnd_confirmation, $key) ?>">
                                             <i class="fas <?= $spnd_icon ?> <?= $spnd_icon_class ?>"></i>
                                         </a>
                                     </li>
@@ -221,41 +244,48 @@
                                             href="/delete/user/?user=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
                                             title="<?= _("Delete") ?>"
                                             data-confirm-title="<?= _("Delete") ?>"
-                                            data-confirm-message="<?= sprintf(_("Are you sure you want to delete user %s?"), $key) ?>"
-                                        >
+                                            data-confirm-message="<?= $delete_confirm_message ?>">
                                             <i class="fas fa-trash icon-red"></i>
                                         </a>
                                     </li>
-                            <?php } ?>
+                                <?php } ?>
                             </ul>
                         </div>
                     </div>
                     <span class="u-hide-desktop u-text-bold"><?= _("Name") ?>:</span>
-                <?php if ($key == $user_plain) { ?>
+                    <?php if ($key == $user_plain) { ?>
                         <a href="/edit/user/?user=<?= $key ?>&token=<?= $_SESSION["token"] ?>" title="<?= _("Edit User") ?>">
                             <span class="u-text-bold">
                                 <?= $key ?>
                             </span>
                             (<?= $data[$key]["NAME"] ?>)
                         </a>
-                <?php } else { ?>
+                    <?php } else { ?>
                         <a href="/login/?loginas=<?= $key ?>&token=<?= $_SESSION["token"] ?>" title="<?= _("Log in as") ?> <?= $key ?>">
                             <span class="u-text-bold">
                                 <?= $key ?>
                             </span>
                             (<?= $data[$key]["NAME"] ?>)
                         </a>
-                <?php } ?>
+                    <?php } ?>
                     <p class="u-max-width200 u-text-truncate">
                         <span class="u-hide-desktop u-text-bold"><?= _("Email") ?>:</span>
                         <span title="<?= $data[$key]["CONTACT"] ?>"><?= $data[$key]["CONTACT"] ?></span>
                     </p>
-                <?php
-                $disk_percent = $data[$key]["DISK_QUOTA"] > 0 ? round(($data[$key]["U_DISK"] / $data[$key]["DISK_QUOTA"]) * 100) : 0;
-                $disk_class = $disk_percent >= 90 ? 'progress-high' : ($disk_percent >= 70 ? 'progress-medium' : 'progress-low');
-                $bandwidth_percent = $data[$key]["BANDWIDTH"] > 0 ? round(($data[$key]["U_BANDWIDTH"] / $data[$key]["BANDWIDTH"]) * 100) : 0;
-                $bandwidth_class = $bandwidth_percent >= 90 ? 'progress-high' : ($bandwidth_percent >= 70 ? 'progress-medium' : 'progress-low');
-                ?>
+                    <?php
+                    $disk_percent = $data[$key]["DISK_QUOTA"] > 0
+                        ? round(($data[$key]["U_DISK"] / $data[$key]["DISK_QUOTA"]) * 100)
+                        : 0;
+                    $disk_class = $disk_percent >= 90
+                        ? 'progress-high'
+                        : ($disk_percent >= 70 ? 'progress-medium' : 'progress-low');
+                    $bandwidth_percent = $data[$key]["BANDWIDTH"] > 0
+                        ? round(($data[$key]["U_BANDWIDTH"] / $data[$key]["BANDWIDTH"]) * 100)
+                        : 0;
+                    $bandwidth_class = $bandwidth_percent >= 90
+                        ? 'progress-high'
+                        : ($bandwidth_percent >= 70 ? 'progress-medium' : 'progress-low');
+                    ?>
                     <div class="u-hide-tablet">
                         <div class="progress-label"><?= _("Disk Usage") ?> (<?= $disk_percent ?>%)</div>
                         <div class="progress">
@@ -269,44 +299,41 @@
                 </div>
                 <div class="units-table-cell">
                     <ul class="units-table-row-actions u-hide-desktop">
-                    <?php if ($key == $user_plain) { ?>
+                        <?php if ($key == $user_plain) { ?>
                             <li class="units-table-row-action">
                                 <i class="fas fa-user-check" title="<?= $key ?> (<?= $data[$key]["NAME"] ?>)"></i>
                                 <span class="u-hide-desktop"><?= $key ?> (<?= $data[$key]["NAME"] ?>)</span>
                             </li>
-                    <?php } else { ?>
+                        <?php } else { ?>
                             <li class="units-table-row-action">
                                 <a
                                     class="units-table-row-action-link"
                                     href="/login/?loginas=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
-                                    title="<?= _("Log in as") ?> <?= $key ?>"
-                                >
+                                    title="<?= _("Log in as") ?> <?= $key ?>">
                                     <i class="fas fa-right-to-bracket icon-green"></i>
                                     <span class="u-hide-desktop"><?= _("Log in as") ?> <?= $key ?></span>
                                 </a>
                             </li>
-                    <?php } ?>
-                    <?php if (!($_SESSION["userContext"] === "admin" && $key == $_SESSION['ROOT_USER'] && $_SESSION["user"] != $_SESSION['ROOT_USER'])) { ?>
+                        <?php } ?>
+                        <?php if ($show_edit_action) { ?>
                             <li class="units-table-row-action shortcut-enter" data-key-action="href">
                                 <a
                                     class="units-table-row-action-link"
                                     href="/edit/user/?user=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
-                                    title="<?= _("Edit User") ?>"
-                                >
+                                    title="<?= _("Edit User") ?>">
                                     <i class="fas fa-pencil icon-orange"></i>
                                     <span class="u-hide-desktop"><?= _("Edit User") ?></span>
                                 </a>
                             </li>
-                    <?php } ?>
-                    <?php if (!($key == $_SESSION['ROOT_USER'] || $key == $user_plain)) { ?>
+                        <?php } ?>
+                        <?php if (!($key == $_SESSION['ROOT_USER'] || $key == $user_plain)) { ?>
                             <li class="units-table-row-action shortcut-s" data-key-action="js">
                                 <a
                                     class="units-table-row-action-link data-controls js-confirm-action"
                                     href="/<?= $spnd_action ?>/user/?user=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
                                     title="<?= $spnd_action_title ?>"
                                     data-confirm-title="<?= $spnd_action_title ?>"
-                                    data-confirm-message="<?= sprintf($spnd_confirmation, $key) ?>"
-                                >
+                                    data-confirm-message="<?= $spnd_confirm_message ?>">
                                     <i class="fas <?= $spnd_icon ?> <?= $spnd_icon_class ?>"></i>
                                     <span class="u-hide-desktop"><?= $spnd_action_title ?></span>
                                 </a>
@@ -317,13 +344,12 @@
                                     href="/delete/user/?user=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
                                     title="<?= _("Delete") ?>"
                                     data-confirm-title="<?= _("Delete") ?>"
-                                    data-confirm-message="<?= sprintf(_("Are you sure you want to delete user %s?"), $key) ?>"
-                                >
+                                    data-confirm-message="<?= $delete_confirm_message ?>">
                                     <i class="fas fa-trash icon-red"></i>
                                     <span class="u-hide-desktop"><?= _("Delete") ?></span>
                                 </a>
                             </li>
-                    <?php } ?>
+                        <?php } ?>
                     </ul>
                 </div>
                 <div class="units-table-cell u-text-bold u-text-center-desktop">
@@ -331,7 +357,8 @@
                     <?php if ($data[$key]["PACKAGE"] === "system") { ?>
                         <?= $data[$key]["PACKAGE"] ?>
                     <?php } else { ?>
-                        <a href="/edit/package/?package=<?= $data[$key]["PACKAGE"] ?>&token=<?= $_SESSION["token"] ?>" title="<?= _("Edit Package") ?>">
+                        <?php $pkg_href = '/edit/package/?package=' . $data[$key]["PACKAGE"] . '&token=' . $_SESSION["token"]; ?>
+                        <a href="<?= $pkg_href ?>" title="<?= _("Edit Package") ?>">
                             <?= $data[$key]["PACKAGE"] ?>
                         </a>
                     <?php } ?>
@@ -343,61 +370,61 @@
                 <div class="units-table-cell u-text-center-desktop u-text-no-wrap">
                     <span class="u-hide-desktop u-text-bold"><?= _("Disk") ?>:</span>
                     <span class="u-text-bold">
-                    <?= humanize_usage_size($data[$key]["U_DISK"], 1) ?>
+                        <?= humanize_usage_size($data[$key]["U_DISK"], 1) ?>
                     </span>
                     <span class="u-text-small">
-                    <?= humanize_usage_measure($data[$key]["U_DISK"]) ?>
+                        <?= humanize_usage_measure($data[$key]["U_DISK"]) ?>
                     </span> /
                     <span class="u-text-bold">
-                    <?= humanize_usage_size($data[$key]["DISK_QUOTA"], 1) ?>
+                        <?= humanize_usage_size($data[$key]["DISK_QUOTA"], 1) ?>
                     </span>
                     <span class="u-text-small">
-                    <?= humanize_usage_measure($data[$key]["DISK_QUOTA"]) ?>
+                        <?= humanize_usage_measure($data[$key]["DISK_QUOTA"]) ?>
                     </span>
                 </div>
                 <div class="units-table-cell u-text-center-desktop u-text-no-wrap">
                     <span class="u-hide-desktop u-text-bold"><?= _("Bandwidth") ?>:</span>
                     <span class="u-text-bold">
-                    <?= humanize_usage_size($data[$key]["U_BANDWIDTH"], 1) ?>
+                        <?= humanize_usage_size($data[$key]["U_BANDWIDTH"], 1) ?>
                     </span>
                     <span class="u-text-small">
-                    <?= humanize_usage_measure($data[$key]["U_BANDWIDTH"]) ?>
+                        <?= humanize_usage_measure($data[$key]["U_BANDWIDTH"]) ?>
                     </span> /
                     <span class="u-text-bold">
-                    <?= humanize_usage_size($data[$key]["BANDWIDTH"], 1) ?>
+                        <?= humanize_usage_size($data[$key]["BANDWIDTH"], 1) ?>
                     </span>
                     <span class="u-text-small">
-                    <?= humanize_usage_measure($data[$key]["BANDWIDTH"]) ?>
+                        <?= humanize_usage_measure($data[$key]["BANDWIDTH"]) ?>
                     </span>
                 </div>
                 <div class="units-table-cell compact u-text-center-desktop">
                     <span class="u-hide-desktop u-text-bold"><?= _("Web Domains") ?>:</span>
                     <span class="units-table-badge">
-                    <?= $data[$key]["U_WEB_DOMAINS"] ?>
+                        <?= $data[$key]["U_WEB_DOMAINS"] ?>
                     </span>
                 </div>
                 <div class="units-table-cell compact u-text-center-desktop">
                     <span class="u-hide-desktop u-text-bold"><?= _("DNS Zones") ?>:</span>
                     <span class="units-table-badge">
-                    <?= $data[$key]["U_DNS_DOMAINS"] ?>
+                        <?= $data[$key]["U_DNS_DOMAINS"] ?>
                     </span>
                 </div>
                 <div class="units-table-cell compact u-text-center-desktop">
                     <span class="u-hide-desktop u-text-bold"><?= _("Mail Domains") ?>:</span>
                     <span class="units-table-badge">
-                    <?= $data[$key]["U_MAIL_DOMAINS"] ?>
+                        <?= $data[$key]["U_MAIL_DOMAINS"] ?>
                     </span>
                 </div>
                 <div class="units-table-cell compact u-text-center-desktop">
                     <span class="u-hide-desktop u-text-bold"><?= _("Databases") ?>:</span>
                     <span class="units-table-badge">
-                    <?= $data[$key]["U_DATABASES"] ?>
+                        <?= $data[$key]["U_DATABASES"] ?>
                     </span>
                 </div>
                 <div class="units-table-cell compact u-text-center-desktop">
                     <span class="u-hide-desktop u-text-bold"><?= _("Backups") ?>:</span>
                     <span class="units-table-badge">
-                    <?= $data[$key]["U_BACKUPS"] ?>
+                        <?= $data[$key]["U_BACKUPS"] ?>
                     </span>
                 </div>
             </div>

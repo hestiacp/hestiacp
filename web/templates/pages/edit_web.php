@@ -59,16 +59,14 @@
                 </div>
                     <div class="js-active-ftp-accounts">
                         <?php foreach ($v_ftp_users as $i => $ftp_user) : ?>
-                            <?php
-                            $v_ftp_user     = $ftp_user['v_ftp_user'];
-                            $v_ftp_password = $ftp_user['v_ftp_password'];
-                            $v_ftp_path     = $ftp_user['v_ftp_path'];
-                            $v_ftp_email    = $ftp_user['v_ftp_email'];
-                            $v_ftp_pre_path = $ftp_user['v_ftp_pre_path'];
-                            ?>
-                        <div class="js-ftp-account js-ftp-account-nrm" name="v_add_domain_ftp" style="<?php if (empty($v_ftp_user)) {
-                            echo 'display: none;';
-                                                                                                      } ?>">
+                        <?php
+                        $v_ftp_user     = $ftp_user['v_ftp_user'];
+                        $v_ftp_password = $ftp_user['v_ftp_password'];
+                        $v_ftp_path     = $ftp_user['v_ftp_path'];
+                        $v_ftp_email    = $ftp_user['v_ftp_email'];
+                        $v_ftp_pre_path = $ftp_user['v_ftp_pre_path'];
+                        ?>
+                        <div class="js-ftp-account js-ftp-account-nrm" name="v_add_domain_ftp" style="<?php if (empty($v_ftp_user)) { echo 'display: none;'; } ?>">
                             <div class="u-mb10">
                                 <?= _("FTP") ?> #<span class="js-ftp-user-number"><?= $i + 1; ?></span>
                                 <button type="button" class="form-link form-link-danger u-ml5 js-delete-ftp-account"><?= _("Delete") ?></button>
@@ -80,8 +78,12 @@
                                     <?= _("Username") ?><br>
                                     <span style="color:#777;"><?= sprintf(_('Prefix %s will be added to username automatically'), $user_plain . "_");?></span>
                                 </label>
-                                <input type="text" class="form-control js-ftp-user" <?= $ftp_user['is_new'] != 1 ? 'disabled="disabled"' : '' ?>
-                                name="v_ftp_user[<?= $i ?>][v_ftp_user]" id="v_ftp_user[<?= $i ?>][v_ftp_user]" value="<?= htmlentities(trim($v_ftp_user, "'")) ?>">
+                                <input type="text"
+                                       class="form-control js-ftp-user"
+                                       <?= $ftp_user['is_new'] != 1 ? 'disabled="disabled"' : '' ?>
+                                       name="v_ftp_user[<?= $i ?>][v_ftp_user]"
+                                       id="v_ftp_user[<?= $i ?>][v_ftp_user]"
+                                       value="<?= htmlentities(trim($v_ftp_user, "'")) ?>">
                                 <small class="hint js-ftp-user-hint"></small>
                             </div>
                             <div class="u-pl30 u-mb10">
@@ -92,31 +94,37 @@
                                     </button>
                                 </label>
                                 <input type="text"
-
                                        class="form-control js-ftp-user-psw"
-
                                        name="v_ftp_user[<?= $i ?>][v_ftp_password]"
-
                                        id="v_ftp_user[<?= $i ?>][v_ftp_password]"
-
-                                       value="<?= htmlentities(trim($v_ftp_password, "'")) ?>">][v_ftp_password]" id="v_ftp_user[<?= $i ?>][v_ftp_password]" value="<?= htmlentities(trim($v_ftp_password, "'")) ?>">
+                                       value="<?= htmlentities(trim($v_ftp_password, "'")) ?>">
                             </div>
                             <div class="u-pl30 u-mb10">
                                 <label for="v_ftp_user[<?= $i ?>][v_ftp_path]" class="form-label"><?= _("Path") ?></label>
-                                <input type="hidden" name="v_ftp_pre_path" value="<?=!empty($v_ftp_pre_path) ? htmlentities(trim($v_ftp_pre_path, "'")) : '/'; ?>">
-                                  <input type="hidden"
-                                         name="v_ftp_user[<?= $i ?>][v_ftp_path_prev]"
-                                         value="<?php if (!empty($v_ftp_path)) { echo ($v_ftp_path[0] != '/' ? '/' : '') . htmlentities(trim($v_ftp_path, "'")); } ?>">
-                                <input type="text" class="form-control js-ftp-path" name="v_ftp_user[<?= $i ?>][v_ftp_path]" id="v_ftp_user[<?= $i ?>][v_ftp_path]" value="<?php if (!empty($v_ftp_path)) {
-                                    echo ($v_ftp_path[0] != '/' ? '/' : '') . htmlentities(trim($v_ftp_path, "'"));
-                                                                                                     } ?>">
-                                  <span class="hint-prefix"><?= htmlentities(trim($v_ftp_pre_path, "'")) ?></span>
-                                  <span class="hint js-ftp-path-hint"></span>
+                                <input type="hidden"
+                                       name="v_ftp_pre_path"
+                                       value="<?= !empty($v_ftp_pre_path) ? htmlentities(trim($v_ftp_pre_path, "'")) : '/' ?>">
+                                <input type="hidden"
+                                       name="v_ftp_user[<?= $i ?>][v_ftp_path_prev]"
+                                       value="<?php if (!empty($v_ftp_path)) { echo ($v_ftp_path[0] != '/' ? '/' : '') . htmlentities(trim($v_ftp_path, "'")); } ?>">
+                                <input type="text"
+                                       class="form-control js-ftp-path"
+                                       name="v_ftp_user[<?= $i ?>][v_ftp_path]"
+                                       id="v_ftp_user[<?= $i ?>][v_ftp_path]"
+                                       value="<?php if (!empty($v_ftp_path)) { echo ($v_ftp_path[0] != '/' ? '/' : '') . htmlentities(trim($v_ftp_path, "'")); } ?>">
+                                <span class="hint-prefix"><?= htmlentities(trim($v_ftp_pre_path, "'")) ?></span>
+                                <span class="hint js-ftp-path-hint"></span>
                             </div>
                             <?php if ($ftp_user['is_new'] == 1) : ?>
                                 <div class="u-pl30 u-mb10">
-                                    <label for="v_ftp_user[<?= $i ?>][v_ftp_email]" class="form-label"><?= _("Send FTP credentials to email") ?></label>
-                                    <input type="email" class="form-control js-email-alert-on-psw" name="v_ftp_user[<?= $i ?>][v_ftp_email]" id="v_ftp_user[<?= $i ?>][v_ftp_email]" value="<?= htmlentities(trim($v_ftp_email, "'")) ?>">
+                                    <label for="v_ftp_user[<?= $i ?>][v_ftp_email]" class="form-label">
+                                        <?= _("Send FTP credentials to email") ?>
+                                    </label>
+                                    <input type="email"
+                                           class="form-control js-email-alert-on-psw"
+                                           name="v_ftp_user[<?= $i ?>][v_ftp_email]"
+                                           id="v_ftp_user[<?= $i ?>][v_ftp_email]"
+                                           value="<?= htmlentities(trim($v_ftp_email, "'")) ?>">
                                 </div>
                             <?php endif; ?>
                         </div>

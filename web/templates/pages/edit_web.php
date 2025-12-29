@@ -12,8 +12,8 @@
                 <i class="fas fa-trash icon-red"></i><?= _("Purge NGINX Cache") ?>
             </a>
                 <div class="form-check u-mb10">
-                    <input class="form-check-input" type="checkbox" name="v_ssl_forcessl" id="v_ssl_forcessl" <?php if ($v_ssl_forcessl == 'yes')
- {                                                                                                                                                                       echo 'checked';
+                    <input class="form-check-input" type="checkbox" name="v_ssl_forcessl" id="v_ssl_forcessl" <?php if ($v_ssl_forcessl == 'yes') {
+                        echo 'checked';
                                                                                                               } ?>>
                     <label for="v_ssl_forcessl">
                         <?= _("Enable automatic HTTPS redirection") ?>

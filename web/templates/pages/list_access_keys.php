@@ -97,7 +97,13 @@
                 data-sort-date="<?= strtotime($data[$key]["DATE"] . " " . $data[$key]["TIME"]) ?>">
                 <div class="units-table-cell">
                     <div>
-                        <input id="check<?= $i ?>" class="js-unit-checkbox" type="checkbox" title="<?= _("Select") ?>" name="key[]" value="<?= $key ?>">
+                        <input
+                            id="check<?= $i ?>"
+                            class="js-unit-checkbox"
+                            type="checkbox"
+                            title="<?= _("Select") ?>"
+                            name="key[]"
+                            value="<?= $key ?>">
                         <label for="check<?= $i ?>" class="u-hide-desktop"><?= _("Select") ?></label>
                     </div>
                 </div>

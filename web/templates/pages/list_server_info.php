@@ -41,7 +41,7 @@
                                     </li>
                                     <li class="top-bar-menu-item">
                                         <a class="top-bar-menu-link <?php if (isset($_GET['cpu'])) {
-                                            echo 'active';
+                                                                        echo 'active';
                                                                     } ?>" href="/list/server/?cpu">
                                             <i class="fas fa-microchip"></i>
                                             <span class="top-bar-menu-link-label"><?= _("CPU") ?></span>
@@ -49,7 +49,7 @@
                                     </li>
                                     <li class="top-bar-menu-item">
                                         <a class="top-bar-menu-link <?php if (isset($_GET['mem'])) {
-                                            echo 'active';
+                                                                        echo 'active';
                                                                     } ?>" href="/list/server/?mem">
                                             <i class="fas fa-memory"></i>
                                             <span class="top-bar-menu-link-label"><?= _("RAM") ?></span>
@@ -57,7 +57,7 @@
                                     </li>
                                     <li class="top-bar-menu-item">
                                         <a class="top-bar-menu-link <?php if (isset($_GET['disk'])) {
-                                            echo 'active';
+                                                                        echo 'active';
                                                                     } ?>" href="/list/server/?disk">
                                             <i class="fas fa-hard-drive"></i>
                                             <span class="top-bar-menu-link-label"><?= _("Disk") ?></span>
@@ -65,7 +65,7 @@
                                     </li>
                                     <li class="top-bar-menu-item">
                                         <a class="top-bar-menu-link <?php if (isset($_GET['net'])) {
-                                            echo 'active';
+                                                                        echo 'active';
                                                                     } ?>" href="/list/server/?net">
                                             <i class="fas fa-hard-drive"></i>
                                             <span class="top-bar-menu-link-label"><?= _("Network") ?></span>
@@ -74,7 +74,7 @@
                                     <?php if ((isset($_SESSION['WEB_SYSTEM'])) && (!empty($_SESSION['WEB_SYSTEM']))) { ?>
                                         <li class="top-bar-menu-item">
                                             <a class="top-bar-menu-link <?php if (isset($_GET['web'])) {
-                                                echo 'active';
+                                                                            echo 'active';
                                                                         } ?>" href="/list/server/?web">
                                                 <i class="fas fa-earth-europe"></i>
                                                 <span class="top-bar-menu-link-label"><?= _("Web") ?></span>
@@ -84,7 +84,7 @@
                                     <?php if ((isset($_SESSION['DNS_SYSTEM'])) && (!empty($_SESSION['DNS_SYSTEM']))) { ?>
                                         <li class="top-bar-menu-item">
                                             <a class="top-bar-menu-link <?php if (isset($_GET['dns'])) {
-                                                echo 'active';
+                                                                            echo 'active';
                                                                         } ?>" href="/list/server/?dns">
                                                 <i class="fas fa-book-atlas"></i>
                                                 <span class="top-bar-menu-link-label"><?= _("DNS") ?></span>
@@ -94,7 +94,7 @@
                                     <?php if ((isset($_SESSION['MAIL_SYSTEM'])) && (!empty($_SESSION['MAIL_SYSTEM']))) { ?>
                                         <li class="top-bar-menu-item">
                                             <a class="top-bar-menu-link <?php if (isset($_GET['mail'])) {
-                                                echo 'active';
+                                                                            echo 'active';
                                                                         } ?>" href="/list/server/?mail">
                                                 <i class="fas fa-envelopes-bulk"></i>
                                                 <span class="top-bar-menu-link-label"><?= _("Mail") ?></span>
@@ -104,23 +104,26 @@
                                     <?php if ((isset($_SESSION['DB_SYSTEM'])) && (!empty($_SESSION['DB_SYSTEM']))) { ?>
                                         <li class="top-bar-menu-item">
                                             <a class="top-bar-menu-link <?php if (isset($_GET['db'])) {
-                                                echo 'active';
+                                                                            echo 'active';
                                                                         } ?>" href="/list/server/?db">
                                                 <i class="fas fa-database"></i>
                                                 <span class="top-bar-menu-link-label"><?= _("DB") ?></span>
                                             </a>
                                         </li>
                                     <?php } ?>
+                                    <?php $refresh_title = _("Refresh"); ?>
                                     <li class="top-bar-menu-item">
-                                        <a class="top-bar-menu-link" href="javascript:location.reload();" title="<?= _("Refresh") ?>">
+                                        <a class="top-bar-menu-link" href="javascript:location.reload();" title="<?= $refresh_title ?>">
                                             <i class="fas fa-arrow-rotate-right"></i>
-                                            <span class="u-hidden"><?= _("Refresh") ?></span>
+                                            <span class="u-hidden"><?= $refresh_title ?></span>
                                         </a>
                                     </li>
+                                    <?php $logout_href = "/logout/?token=" . $_SESSION['token'];
+                                    $logout_title = _("Log out"); ?>
                                     <li class="top-bar-menu-item">
-                                        <a class="top-bar-menu-link top-bar-menu-link-logout" href="/logout/?token=<?= $_SESSION["token"] ?>" title="<?= _("Log out") ?>">
+                                        <a class="top-bar-menu-link top-bar-menu-link-logout" href="<?= $logout_href ?>" title="<?= $logout_title ?>">
                                             <i class="fas fa-right-from-bracket"></i>
-                                            <span class="u-hidden"><?= _("Log out") ?></span>
+                                            <span class="u-hidden"><?= $logout_title ?></span>
                                         </a>
                                     </li>
                                 </ul>

@@ -51,24 +51,34 @@
             <div class="units-table-row js-unit">
                 <div class="units-table-cell">
                     <div>
-                        <input id="check<?= $i ?>" class="js-unit-checkbox" type="checkbox" title="<?= _("Select") ?>" name="setname[]" value="<?= $listname ?>">
+                        <input
+                            id="check<?= $i ?>"
+                            class="js-unit-checkbox"
+                            type="checkbox"
+                            title="<?= _("Select") ?>"
+                            name="setname[]"
+                            value="<?= $listname ?>">
                         <label for="check<?= $i ?>" class="u-hide-desktop"><?= _("Select") ?></label>
                     </div>
                 </div>
                 <div class="units-table-cell units-table-heading-cell u-text-bold">
                     <span class="u-hide-desktop"><?= _("IP List Name") ?>:</span>
-                <?= $listname ?>
+                    <?= $listname ?>
                 </div>
                 <div class="units-table-cell">
                     <ul class="units-table-row-actions">
+                        <?php
+                        $delete_href = "/delete/firewall/ipset/?listname=" . $listname . "&token=" . $_SESSION['token'];
+                        $delete_title = _("Delete");
+                        $delete_confirm = sprintf(_("Are you sure you want to delete IP list %s?"), $key);
+                        ?>
                         <li class="units-table-row-action shortcut-delete" data-key-action="js">
                             <a
                                 class="units-table-row-action-link data-controls js-confirm-action"
-                                href="/delete/firewall/ipset/?listname=<?= $listname ?>&token=<?= $_SESSION["token"] ?>"
-                                title="<?= _("Delete") ?>"
-                                data-confirm-title="<?= _("Delete") ?>"
-                                data-confirm-message="<?= sprintf(_("Are you sure you want to delete IP list %s?"), $key) ?>"
-                            >
+                                href="<?= $delete_href ?>"
+                                title="<?= $delete_title ?>"
+                                data-confirm-title="<?= $delete_title ?>"
+                                data-confirm-message="<?= $delete_confirm ?>">
                                 <i class="fas fa-trash icon-red"></i>
                                 <span class="u-hide-desktop"><?= _("Delete") ?></span>
                             </a>
@@ -77,15 +87,15 @@
                 </div>
                 <div class="units-table-cell u-text-bold u-text-center-desktop">
                     <span class="u-hide-desktop"><?= _("Auto Update") ?>:</span>
-                <?php if ($data[$key]["AUTOUPDATE"] == "no") { ?>
+                    <?php if ($data[$key]["AUTOUPDATE"] == "no") { ?>
                         <i class="fas fa-circle-xmark icon-red" title="<?= _("Disabled") ?>"></i>
-                <?php } else { ?>
+                    <?php } else { ?>
                         <i class="fas fa-circle-check icon-green" title="<?= _("Enabled") ?>"></i>
-                <?php } ?>
+                    <?php } ?>
                 </div>
                 <div class="units-table-cell u-text-center-desktop">
                     <span class="u-hide-desktop u-text-bold"><?= _("IP Version") ?>:</span>
-                <?= _($data[$key]["IP_VERSION"]) ?>
+                    <?= _($data[$key]["IP_VERSION"]) ?>
                 </div>
                 <div class="units-table-cell u-text-center-desktop">
                     <span class="u-hide-desktop u-text-bold"><?= _("Date") ?>:</span>
@@ -93,7 +103,7 @@
                 </div>
                 <div class="units-table-cell u-text-center-desktop">
                     <span class="u-hide-desktop u-text-bold"><?= _("Time") ?>:</span>
-                <?= $data[$key]["TIME"] ?>
+                    <?= $data[$key]["TIME"] ?>
                 </div>
             </div>
         <?php } ?>

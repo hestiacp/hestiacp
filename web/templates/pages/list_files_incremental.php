@@ -3,17 +3,21 @@
     <div class="toolbar-inner">
         <div class="toolbar-buttons">
             <?php if ($read_only !== "true") {
-                if (str_starts_with($files[0]['path'], '/home/' . $user_plain) && $files[0]['path'] != '/home/' . $user_plain) {
+                $files0_path = $files[0]['path'];
+                if (str_starts_with($files0_path, '/home/' . $user_plain) && $files0_path != '/home/' . $user_plain) {
                     $back_href = (
                         '/list/backup/incremental/?snapshot=' . htmlentities($_GET['snapshot'])
-                        . '&browse=yes&folder=' . htmlentities($files[0]['path'])
+                        . '&browse=yes&folder=' . htmlentities($files0_path)
                         . '/../&token=' . $_SESSION['token']
                     );
                 } else {
                     $back_href = '/list/backup/incremental/?token=' . $_SESSION['token'];
                 }
                 ?>
-                <a class="button button-secondary" id="btn-back" href="<?= $back_href ?>">
+                <a
+                    class="button button-secondary"
+                    id="btn-back"
+                    href="<?= $back_href ?>">
                     <i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
                 </a>
             <?php } ?>
@@ -58,7 +62,12 @@
     <div class="units-table js-units-container">
         <div class="units-table-header">
             <div class="units-table-cell">
-                <input type="checkbox" class="js-toggle-all-checkbox" title="<?= _("Select all") ?>" <?= $display_mode ?>>
+                <?php $select_all_title = _("Select all"); ?>
+                <input
+                    type="checkbox"
+                    class="js-toggle-all-checkbox"
+                    title="<?= $select_all_title ?>"
+                    <?= $display_mode ?>>
             </div>
             <div class="units-table-cell"><?= _("Name") ?></div>
             <div class="units-table-cell"></div>
@@ -122,7 +131,12 @@
                                             . '&token=' . $_SESSION['token']
                                         );
                                         ?>
-                                        <b><a href="<?= $dir_href ?>"><i class="fas fa-folder icon-dim u-mr5"></i><?= $file['name'] ?></a></b>
+                                        <b>
+                                            <a href="<?= $dir_href ?>">
+                                                <i class="fas fa-folder icon-dim u-mr5"></i>
+                                                <?= $file['name'] ?>
+                                            </a>
+                                        </b>
                                         <?php
                                     }
                                 } else {

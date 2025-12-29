@@ -3,7 +3,12 @@
     <div class="toolbar-inner">
         <div class="toolbar-buttons">
             <?php if ($_SESSION["userContext"] === "admin" && $_SESSION["look"] == '') { ?>
-                <a class="button button-secondary" href='/list/stats/'><i class="fas fa-binoculars icon-lightblue"></i><?= _("Overall Statistics") ?></a>
+                <?php $overall_stats_href = '/list/stats/'; ?>
+                <a
+                    class="button button-secondary"
+                    href="<?= $overall_stats_href ?>">
+                    <i class="fas fa-binoculars icon-lightblue"></i><?= _("Overall Statistics") ?>
+                </a>
             <?php } ?>
         </div>
         <div class="toolbar-right">
@@ -17,11 +22,13 @@
                             if (($_SESSION['POLICY_SYSTEM_HIDE_ADMIN'] === 'yes') && ($value === 'admin')) {
                                 // Hide admin user from statistics list
                             } else {
-                                echo "\t\t\t\t<option value=\"" . $value . "\"";
-                                if ((!empty($v_user)) && ( $value == $_GET['user'])) {
-                                    echo ' selected';
-                                }
-                                echo ">" . $value . "</option>\n";
+                                $option_selected = ((!empty($v_user)) && ($value == $_GET['user'])) ? ' selected' : '';
+                                printf(
+                                    "\t\t\t\t<option value=\"%s\"%s>%s</option>\n",
+                                    $value,
+                                    $option_selected,
+                                    $value
+                                );
                             }
                         }
                         ?>
@@ -34,7 +41,13 @@
             <div class="toolbar-search">
                 <form action="/search/" method="get">
                     <input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
-                    <input type="search" class="form-control js-search-input" name="q" value="<?= isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" title="<?= _("Search") ?>">
+                    <?php $search_q = isset($_POST['q']) ? htmlspecialchars($_POST['q']) : ''; ?>
+                    <input
+                        type="search"
+                        class="form-control js-search-input"
+                        name="q"
+                        value="<?= $search_q ?>"
+                        title="<?= _("Search") ?>">
                     <button type="submit" class="toolbar-input-submit" title="<?= _("Search") ?>">
                         <i class="fas fa-magnifying-glass"></i>
                     </button>
@@ -57,7 +70,7 @@
                     <i class="fas fa-chart-bar icon-dim stats-item-header-icon u-mr10"></i>
                     <h2 class="stats-item-header-title">
                         <?php $date = new DateTime($key);
-                        echo _($date -> format('M')) . ' ' . $date -> format('Y') ?>
+                        echo _($date->format('M')) . ' ' . $date->format('Y') ?>
                     </h2>
                 </div>
 
@@ -69,16 +82,29 @@
                                 <i class="fas fa-right-left icon-dim icon-large u-mr5" title="<?= _("Bandwidth") ?>"></i>
                                 <?= _("Bandwidth") ?>
                             </span>
+                            <?php
+                            $u_bw_size    = humanize_usage_size($data[$key]['U_BANDWIDTH']);
+                            $u_bw_meas    = humanize_usage_measure($data[$key]['U_BANDWIDTH']);
+                            $bw_size      = humanize_usage_size($data[$key]['BANDWIDTH']);
+                            $bw_meas      = humanize_usage_measure($data[$key]['BANDWIDTH']);
+                            ?>
                             <span class="u-mr10">
-                                <span class="u-text-bold"><?= humanize_usage_size($data[$key]["U_BANDWIDTH"]) ?></span>
-                                <?= humanize_usage_measure($data[$key]["U_BANDWIDTH"]) ?> / <span class="u-text-bold"><?= humanize_usage_size($data[$key]["BANDWIDTH"]) ?></span>
-                                    <?= humanize_usage_measure($data[$key]["BANDWIDTH"]) ?>
+                                <span class="u-text-bold"><?= $u_bw_size ?></span>
+                                <?= $u_bw_meas ?> / <span class="u-text-bold"><?= $bw_size ?></span>
+                                <?= $bw_meas ?>
                             </span>
                         </h3>
                         <ul class="stats-item-summary-list u-mb10">
                             <li class="stats-item-summary-list-item">
                                 <span>
-                                    <?php if ($_SESSION["userContext"] === "admin" || ($_SESSION["userContext"] === "user" && $data[$key]["IP_OWNED"] != "0")) { ?>
+                                    <?php
+                                    $show_ip_addresses = (
+                                        $_SESSION['userContext'] === 'admin'
+                                    ) || (
+                                        $_SESSION['userContext'] === 'user' && $data[$key]['IP_OWNED'] != '0'
+                                    );
+                                    ?>
+                                    <?php if ($show_ip_addresses) { ?>
                                         <?= _("IP Addresses") ?>:
                                     <?php } ?>
                                 </span>
@@ -93,11 +119,17 @@
                                 <i class="fas fa-hard-drive icon-dim icon-large u-mr5" title="Disk"></i>
                                 <?= _("Disk") ?>
                             </span>
+                            <?php
+                            $u_disk_size       = humanize_usage_size($data[$key]['U_DISK']);
+                            $u_disk_meas       = humanize_usage_measure($data[$key]['U_DISK']);
+                            $disk_quota_size   = humanize_usage_size($data[$key]['DISK_QUOTA']);
+                            $disk_quota_meas   = humanize_usage_measure($data[$key]['DISK_QUOTA']);
+                            ?>
                             <span class="u-mr10">
-                                <span class="u-text-bold"><?= humanize_usage_size($data[$key]["U_DISK"]) ?></span>
-                                <?= humanize_usage_measure($data[$key]["U_DISK"]) ?> / <span class="u-text-bold"><?= humanize_usage_size($data[$key]["DISK_QUOTA"]) ?></span>
-                                        <?= humanize_usage_measure($data[$key]["DISK_QUOTA"]) ?>
-                                </span>
+                                <span class="u-text-bold"><?= $u_disk_size ?></span>
+                                <?= $u_disk_meas ?> / <span class="u-text-bold"><?= $disk_quota_size ?></span>
+                                <?= $disk_quota_meas ?>
+                            </span>
                             </span>
                         </h3>
                         <ul class="stats-item-summary-list">

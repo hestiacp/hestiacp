@@ -230,7 +230,10 @@
                                 }
                             }
                             ?>
-                            <a href="/edit/web/?domain=<?= $key ?>&token=<?= $_SESSION['token'] ?>" title="<?= $edit_title_full ?>">
+                            <?php $edit_href = "/edit/web/?domain=" . $key . "&token=" . $_SESSION['token']; ?>
+                            <a
+                                href="<?= $edit_href ?>"
+                                title="<?= $edit_title_full ?>">
                                 <?= $key ?>
                                 <?php
                                 if (!empty($alias_new) && !empty($data[$key]['ALIAS'])) {
@@ -333,7 +336,10 @@
                             }
                         }
                         ?>
-                        <a href="/edit/web/?domain=<?= $key ?>&token=<?= $_SESSION['token'] ?>" title="<?= _("Edit Domain") ?>: <?= $key ?>">
+                        <?php $edit_href = "/edit/web/?domain=" . $key . "&token=" . $_SESSION['token']; ?>
+                        <a
+                            href="<?= $edit_href ?>"
+                            title="<?= $edit_title_full ?>">
                             <?= $key ?>
                             <?php
                             if (!empty($alias_new) && !empty($data[$key]['ALIAS'])) {

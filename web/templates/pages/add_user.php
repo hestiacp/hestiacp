@@ -17,14 +17,16 @@
 
 <div class="container">
 
+    <?php
+    $x_login_disabled = ($v_login_disabled == "yes") ? 'true' : 'false';
+    $pw_require_path = $_SERVER["HESTIA"] . "/web/templates/includes/password-requirements.php";
+    ?>
+
     <form
-        x-data="{
-            loginDisabled: <?= $v_login_disabled == "yes" ? "true" : "false" ?>
-        }"
+        x-data="{ loginDisabled: <?= $x_login_disabled ?> }"
         id="main-form"
         name="v_add_user"
-        method="post"
-    >
+        method="post">
         <input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
         <input type="hidden" name="ok" value="Add">
 
@@ -33,15 +35,36 @@
             <?php show_alert_message($_SESSION); ?>
             <div class="u-mb10">
                 <label for="v_username" class="form-label"><?= _("Username") ?></label>
-                <input type="text" class="form-control" name="v_username" id="v_username" value="<?= htmlentities(trim($v_username, "'")) ?>" tabindex="1" required>
+                <input
+                    type="text"
+                    class="form-control"
+                    name="v_username"
+                    id="v_username"
+                    value="<?= htmlentities(trim($v_username, "'")) ?>"
+                    tabindex="1"
+                    required>
             </div>
             <div class="u-mb10">
                 <label for="v_name" class="form-label"><?= _("Contact Name") ?></label>
-                <input type="text" class="form-control" name="v_name" id="v_name" value="<?= htmlentities(trim($v_name, "'")) ?>" tabindex="2" required>
+                <input
+                    type="text"
+                    class="form-control"
+                    name="v_name"
+                    id="v_name"
+                    value="<?= htmlentities(trim($v_name, "'")) ?>"
+                    tabindex="2"
+                    required>
             </div>
             <div class="u-mb10">
                 <label for="v_email" class="form-label"><?= _("Email") ?></label>
-                <input type="email" class="form-control js-sync-email-input" name="v_email" id="v_email" value="<?= htmlentities(trim($v_email, "'")) ?>" tabindex="3" required>
+                <input
+                    type="email"
+                    class="form-control js-sync-email-input"
+                    name="v_email"
+                    id="v_email"
+                    value="<?= htmlentities(trim($v_email, "'")) ?>"
+                    tabindex="3"
+                    required>
             </div>
             <div class="u-mb10">
                 <label for="v_password" class="form-label">
@@ -51,13 +74,20 @@
                     </button>
                 </label>
                 <div class="u-pos-relative u-mb10">
-                    <input type="text" class="form-control js-password-input" name="v_password" id="v_password" value="<?= htmlentities(trim($v_password, "'")) ?>" tabindex="4" required>
+                    <input
+                        type="text"
+                        class="form-control js-password-input"
+                        name="v_password"
+                        id="v_password"
+                        value="<?= htmlentities(trim($v_password, "'")) ?>"
+                        tabindex="4"
+                        required>
                     <div class="password-meter">
                         <meter max="4" class="password-meter-input js-password-meter"></meter>
                     </div>
                 </div>
             </div>
-            <?php require $_SERVER["HESTIA"] . "/web/templates/includes/password-requirements.php"; ?>
+            <?php require $pw_require_path; ?>
             <div class="form-check">
                 <input x-model="loginDisabled" class="form-check-input" type="checkbox" name="v_login_disabled" id="v_login_disabled">
                 <label for="v_login_disabled">
@@ -77,16 +107,14 @@
                 <select class="form-select" name="v_language" id="v_language" tabindex="6" required>
                     <?php
                     foreach ($languages as $key => $value) {
-                        echo "\n\t\t\t\t\t\t\t\t\t<option value=\"" . htmlentities($key) . "\"";
-                        if (( $key == $_SESSION['LANGUAGE'] ) && (empty($v_language))) {
-                            echo ' selected' ;
+                        $selected = '';
+                        if (($key == $_SESSION['LANGUAGE']) && (empty($v_language))) {
+                            $selected = ' selected';
                         }
-                        if (isset($v_language)) {
-                            if (htmlentities($key) == trim($v_language, "'")) {
-                                echo ' selected' ;
-                            }
+                        if (isset($v_language) && (htmlentities($key) == trim($v_language, "'"))) {
+                            $selected = ' selected';
                         }
-                        echo ">" . htmlentities($value) . "</option>\n";
+                        printf("<option value=\"%s\"%s>%s</option>\n", htmlentities($key), $selected, htmlentities($value));
                     }
                     ?>
                 </select>
@@ -94,9 +122,13 @@
             <div class="u-mb10">
                 <label for="v_role" class="form-label"><?= _("Role") ?></label>
                 <select class="form-select" name="v_role" id="v_role" required>
+                    <?php
+                    $sel_admin = $v_role == "admin" ? ' selected' : '';
+                    $sel_dns = $v_role == "dns-cluster" ? ' selected' : '';
+                    ?>
                     <option value="user"><?= _("User") ?></option>
-                    <option value="admin" <?= $v_role == "admin" ? "selected" : "" ?>><?= _("Administrator") ?></option>
-                    <option value="dns-cluster" <?= $v_role == "dns-cluster" ? "selected" : "" ?>><?= _("DNS Sync User") ?></option>
+                    <option value="admin" <?= $sel_admin ?>><?= _("Administrator") ?></option>
+                    <option value="dns-cluster" <?= $sel_dns ?>><?= _("DNS Sync User") ?></option>
                 </select>
             </div>
             <div class="u-mb10">
@@ -104,15 +136,15 @@
                 <select class="form-select" name="v_package" id="v_package" tabindex="8" required>
                     <?php
                     foreach ($data as $key => $value) {
-                        echo "\n\t\t\t\t\t\t\t\t\t\t\t\t\t<option value=\"" . htmlentities($key) . "\"";
-                        if ((!empty($v_package)) && ( $key == $_POST['v_package'])) {
-                            echo 'selected' ;
+                        $selected = '';
+                        if ((!empty($v_package)) && ($key == $_POST['v_package'])) {
+                            $selected = ' selected';
                         } else {
                             if ($key == 'default') {
-                                echo 'selected' ;
+                                $selected = ' selected';
                             }
                         }
-                        echo ">" . htmlentities($key) . "</option>\n";
+                        printf("<option value=\"%s\"%s>%s</option>\n", htmlentities($key), $selected, htmlentities($key));
                     }
                     ?>
                 </select>
@@ -121,7 +153,13 @@
                 <label for="v_notify" class="form-label">
                     <?= _("Email login credentials to:") ?>
                 </label>
-                <input type="email" class="form-control js-sync-email-output" name="v_notify" id="v_notify" value="<?= htmlentities(trim($v_notify, "'")) ?>" tabindex="8">
+                <input
+                    type="email"
+                    class="form-control js-sync-email-output"
+                    name="v_notify"
+                    id="v_notify"
+                    value="<?= htmlentities(trim($v_notify, "'")) ?>"
+                    tabindex="8">
             </div>
         </div>
 

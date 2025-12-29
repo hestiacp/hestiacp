@@ -2,9 +2,13 @@
 <div class="toolbar">
     <div class="toolbar-inner">
         <div class="toolbar-buttons">
+            <?php
+            $back_mail_href = '/list/mail/?domain=' . htmlentities(trim($v_domain, "'"))
+                . '&token=' . $_SESSION['token'];
+            ?>
             <a
                 class="button button-secondary button-back js-button-back"
-                href="/list/mail/?domain=<?= htmlentities(trim($v_domain, "'")) ?>&token=<?= $_SESSION["token"] ?>">
+                href="<?= $back_mail_href ?>">
                 <i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
             </a>
         </div>
@@ -61,24 +65,43 @@
                     <div class="u-mb10">
                         <label for="v_password" class="form-label">
                             <?= _("Password") ?>
-                            <button type="button" title="<?= _("Generate") ?>" class="u-unstyled-button u-ml5 js-generate-password">
+                            <button
+                                type="button"
+                                title="<?= _("Generate") ?>"
+                                class="u-unstyled-button u-ml5 js-generate-password">
                                 <i class="fas fa-arrows-rotate icon-green"></i>
                             </button>
                         </label>
                         <div class="u-pos-relative u-mb10">
-                            <input type="text" class="form-control js-password-input" name="v_password" id="v_password" required>
+                            <input
+                                type="text"
+                                class="form-control js-password-input"
+                                name="v_password"
+                                id="v_password"
+                                required>
                             <div class="password-meter">
                                 <meter max="4" class="password-meter-input js-password-meter"></meter>
                             </div>
                         </div>
                     </div>
-                    <p class="u-mb10"><?= _("Your password must have at least") ?>:</p>
+                    <p class="u-mb10">
+                        <?= _("Your password must have at least") ?>:
+                    </p>
                     <ul class="u-list-bulleted u-mb20">
-                        <li><?= _("8 characters long") ?></li>
-                        <li><?= _("1 uppercase & 1 lowercase character") ?></li>
-                        <li><?= _("1 number") ?></li>
+                        <li>
+                            <?= _("8 characters long") ?>
+                        </li>
+                        <li>
+                            <?= _("1 uppercase & 1 lowercase character") ?>
+                        </li>
+                        <li>
+                            <?= _("1 number") ?>
+                        </li>
                     </ul>
-                    <button x-on:click="showAdvanced = !showAdvanced" type="button" class="button button-secondary u-mb20">
+                    <button
+                        x-on:click="showAdvanced = !showAdvanced"
+                        type="button"
+                        class="button button-secondary u-mb20">
                         <?= _("Advanced Options") ?>
                     </button>
                     <div x-cloak x-show="showAdvanced" id="advtable">
@@ -87,57 +110,72 @@
                                 <?= _("Quota") ?> <span class="optional">(<?= _("in MB") ?>)</span>
                             </label>
                             <div class="u-pos-relative">
-                                <?php $quota_value = (!empty($v_quota)) ? htmlentities(trim($v_quota, "'")) : '0'; ?>
+                                <?php
+                                $quota_value = (!empty($v_quota))
+                                    ? htmlentities(trim($v_quota, "'"))
+                                    : '0';
+                                ?>
                                 <input
                                     type="text"
                                     class="form-control"
                                     name="v_quota"
                                     id="v_quota"
                                     value="<?= $quota_value ?>">
-                                <button type="button" class="unlimited-toggle js-unlimited-toggle" title="<?= _("Unlimited") ?>">
+                                <button
+                                    type="button"
+                                    class="unlimited-toggle js-unlimited-toggle"
+                                    title="<?= _("Unlimited") ?>">
                                     <i class="fas fa-infinity"></i>
                                 </button>
                             </div>
                         </div>
                         <div class="u-mb10">
                             <label for="v_aliases" class="form-label">
-                                <?= _("Aliases") ?> <span class="optional">(<?= _("Use local-part without domain name") ?>)</span>
+                                <?= _("Aliases") ?>
+                                <span class="optional">(<?= _("Use local-part without domain name") ?>)</span>
                             </label>
-                            <textarea class="form-control" name="v_aliases" id="v_aliases"><?= htmlentities(trim($v_aliases, "'")) ?></textarea>
+                            <textarea
+                                class="form-control"
+                                name="v_aliases"
+                                id="v_aliases">
+                                <?= htmlentities(trim($v_aliases, "'")) ?>
+                            </textarea>
                         </div>
                         <div class="u-mb10">
                             <label for="v_fwd" class="form-label">
-                                <?= _("Forward to") ?> <span class="optional">(<?= _("One or more email addresses") ?>)</span>
+                                <?= _("Forward to") ?>
+                                <span class="optional">(<?= _("One or more email addresses") ?>)</span>
                             </label>
                             <?php $fwd_disabled = ($v_blackhole == 'yes') ? 'disabled' : ''; ?>
                             <textarea
                                 class="form-control js-forward-to-textarea"
                                 name="v_fwd"
-                                id="v_fwd" <?= $fwd_disabled ?>><?= htmlentities(trim($v_fwd, "'")) ?></textarea>
+                                id="v_fwd"
+                                <?= $fwd_disabled ?>>
+                                <?= htmlentities(trim($v_fwd, "'")) ?>
+                            </textarea>
                         </div>
                         <div class="form-check">
+                            <?php $v_blackhole_checked = ($v_blackhole == 'yes') ? 'checked' : ''; ?>
                             <input
                                 class="form-check-input js-discard-all-mail"
                                 type="checkbox"
                                 name="v_blackhole"
                                 id="v_blackhole"
-                                <?php if ($v_blackhole == 'yes') {
-                                    echo 'checked';
-                                } ?>>
+                                <?= $v_blackhole_checked ?>>
                             <label for="v_blackhole">
                                 <?= _("Discard all mail") ?>
                             </label>
                         </div>
                         <?php $hidden_class = ($v_blackhole == 'yes') ? 'u-hidden' : ''; ?>
                         <div class="form-check <?= $hidden_class ?>">
+                            <?php $v_fwd_only_checked = ($v_fwd_only == 'yes') ? 'checked' : ''; ?>
                             <input
                                 class="form-check-input js-do-not-store-checkbox"
                                 type="checkbox"
                                 name="v_fwd_only"
                                 id="v_fwd_for"
-                                <?php if ($v_fwd_only == 'yes') {
-                                    echo 'checked';
-                                } ?>>
+                                <?= $v_fwd_only_checked ?>>
                             <label for="v_fwd_for">
                                 <?= _("Do not store forwarded mail") ?>
                             </label>

@@ -6,17 +6,25 @@
                 <i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
             </a>
             <?php if ($read_only !== "true") { ?>
-                <a href="/add/dns/?domain=<?= htmlentities($_GET["domain"]) ?>" class="button button-secondary js-button-create">
+                <?php $domain_html = htmlentities($_GET['domain']); ?>
+                <a
+                    href="/add/dns/?domain=<?= $domain_html ?>"
+                    class="button button-secondary js-button-create">
                     <i class="fas fa-circle-plus icon-green"></i><?= _("Add Record") ?>
                 </a>
-                <a href="/edit/dns/?domain=<?= htmlentities($_GET["domain"]) ?>" class="button button-secondary js-button-create">
+                <a
+                    href="/edit/dns/?domain=<?= $domain_html ?>"
+                    class="button button-secondary js-button-create">
                     <i class="fas fa-pencil icon-blue"></i><?= _("Edit DNS Domain") ?>
                 </a>
             <?php } ?>
         </div>
         <div class="toolbar-right">
             <div class="toolbar-sorting">
-                <button class="toolbar-sorting-toggle js-toggle-sorting-menu" type="button" title="<?= _("Sort items") ?>">
+                <button
+                    class="toolbar-sorting-toggle js-toggle-sorting-menu"
+                    type="button"
+                    title="<?= _("Sort items") ?>">
                     <?= _("Sort by") ?>:
                     <span class="u-text-bold">
                         <?php if ($_SESSION['userSortOrder'] === 'name') {
@@ -27,10 +35,17 @@
                         <?= $label ?> <i class="fas fa-arrow-down-a-z"></i>
                     </span>
                 </button>
-                <?php $sort_date_active = (isset($_SESSION['userSortOrder']) && $_SESSION['userSortOrder'] === 'date') ? 'active' : ''; ?>
+                <?php
+                $sort_date_active = (isset($_SESSION['userSortOrder'])
+                    && $_SESSION['userSortOrder'] === 'date')
+                    ? 'active'
+                    : '';
+                ?>
                 <ul class="toolbar-sorting-menu js-sorting-menu u-hidden">
                     <li data-entity="sort-date" data-sort-as-int="1">
-                        <span class="name <?= $sort_date_active ?>"><?= _("Date") ?> <i class="fas fa-arrow-down-a-z"></i></span>
+                        <span class="name <?= $sort_date_active ?>">
+                            <?= _("Date") ?> <i class="fas fa-arrow-down-a-z"></i>
+                        </span>
                         <span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
                     </li>
                     <li data-entity="sort-value">
@@ -95,7 +110,11 @@
     <div class="units-table js-units-container">
         <div class="units-table-header">
             <div class="units-table-cell">
-                <input type="checkbox" class="js-toggle-all-checkbox" title="<?= _("Select all") ?>" <?= $display_mode ?>>
+                <input
+                    type="checkbox"
+                    class="js-toggle-all-checkbox"
+                    title="<?= _("Select all") ?>"
+                    <?= $display_mode ?>>
             </div>
             <div class="units-table-cell"><?= _("Record") ?></div>
             <div class="units-table-cell"></div>
@@ -167,10 +186,10 @@
                                 <?php if ($data[$key]["SUSPENDED"] == "no") { ?>
                                     <li class="units-table-row-action shortcut-enter" data-key-action="href">
                                         <?php
-                                            $action_edit_href = '/edit/dns/?domain=' . $domain_html
-                                                . '&record_id=' . $data[$key]['ID']
-                                                . '&token=' . $session_token;
-                                            $action_edit_title = _("Edit DNS Record");
+                                        $action_edit_href = '/edit/dns/?domain=' . $domain_html
+                                            . '&record_id=' . $data[$key]['ID']
+                                            . '&token=' . $session_token;
+                                        $action_edit_title = _("Edit DNS Record");
                                         ?>
                                         <a
                                             class="units-table-row-action-link"
@@ -186,7 +205,10 @@
                                     $delete_href = '/delete/dns/?domain=' . $domain_html
                                         . '&record_id=' . $data[$key]['ID']
                                         . '&token=' . $session_token;
-                                    $delete_confirm_msg = sprintf(_("Are you sure you want to delete record %s?"), $key);
+                                    $delete_confirm_msg = sprintf(
+                                        _("Are you sure you want to delete record %s?"),
+                                        $key
+                                    );
                                     ?>
                                     <a
                                         class="units-table-row-action-link data-controls js-confirm-action"

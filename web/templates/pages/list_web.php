@@ -18,28 +18,33 @@
                         } else {
                             $label = _('Date');
                         } ?>
-                        <?= $label?> <i class="fas fa-arrow-down-a-z"></i>
+                        <?= $label ?> <i class="fas fa-arrow-down-a-z"></i>
                     </span>
                 </button>
+                <?php
+                $sort_date_active = ($_SESSION['userSortOrder'] === 'date') ? 'active' : '';
+                $sort_name_active = ($_SESSION['userSortOrder'] === 'name') ? 'active' : '';
+                ?>
                 <ul class="toolbar-sorting-menu js-sorting-menu u-hidden">
                     <li data-entity="sort-bandwidth" data-sort-as-int="1">
-                        <span class="name"><?= _("Bandwidth") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
+                        <span class="name"><?= _("Bandwidth") ?> <i class="fas fa-arrow-down-a-z"></i></span>
+                        <span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
                     </li>
                     <li data-entity="sort-date" data-sort-as-int="1">
-                        <span class="name <?php if ($_SESSION['userSortOrder'] === 'date') {
-                            echo 'active';
-                                          } ?>"><?= _("Date") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
+                        <span class="name <?= $sort_date_active ?>"><?= _("Date") ?> <i class="fas fa-arrow-down-a-z"></i></span>
+                        <span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
                     </li>
                     <li data-entity="sort-disk" data-sort-as-int="1">
-                        <span class="name"><?= _("Disk") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
+                        <span class="name"><?= _("Disk") ?> <i class="fas fa-arrow-down-a-z"></i></span>
+                        <span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
                     </li>
                     <li data-entity="sort-name">
-                        <span class="name <?php if ($_SESSION['userSortOrder'] === 'name') {
-                            echo 'active';
-                                          } ?>"><?= _("Name") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
+                        <span class="name <?= $sort_name_active ?>"><?= _("Name") ?> <i class="fas fa-arrow-down-a-z"></i></span>
+                        <span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
                     </li>
                     <li data-entity="sort-ip" data-sort-as-int="1">
-                        <span class="name"><?= _("IP Address") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
+                        <span class="name"><?= _("IP Address") ?> <i class="fas fa-arrow-down-a-z"></i></span>
+                        <span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
                     </li>
                 </ul>
                 <?php if ($read_only !== "true") { ?>
@@ -64,9 +69,15 @@
                 <?php } ?>
             </div>
             <div class="toolbar-search">
+                <?php $search_value = isset($_POST['q']) ? htmlspecialchars($_POST['q']) : ''; ?>
                 <form action="/search/" method="get">
                     <input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
-                    <input type="search" class="form-control js-search-input" name="q" value="<?= isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" title="<?= _("Search") ?>">
+                    <input
+                        type="search"
+                        class="form-control js-search-input"
+                        name="q"
+                        value="<?= $search_value ?>"
+                        title="<?= _("Search") ?>">
                     <button type="submit" class="toolbar-input-submit" title="<?= _("Search") ?>">
                         <i class="fas fa-magnifying-glass"></i>
                     </button>
@@ -114,6 +125,10 @@
                 $spnd_icon_class = 'icon-highlight';
                 $spnd_confirmation = _('Are you sure you want to suspend domain %s?');
             }
+            $spnd_href = "/" . $spnd_action . "/web/?domain=" . $key . "&token=" . $_SESSION['token'];
+            $spnd_confirmation_msg = sprintf($spnd_confirmation, $key);
+            $delete_href = "/delete/web/?domain=" . $key . "&token=" . $_SESSION['token'];
+            $delete_confirmation_msg = sprintf(_("Are you sure you want to delete domain %s?"), $key);
             if (!empty($data[$key]['SSL_HOME'])) {
                 if ($data[$key]['SSL_HOME'] == 'same') {
                     $ssl_home = 'public_html';
@@ -195,10 +210,9 @@
             }
             $has_ssl = filter_var($data[$key]['SSL'], FILTER_VALIDATE_BOOL);
             $vstats_scheme = $has_ssl ? 'https' : 'http';
+            $row_disabled_class = ($data[$key]['SUSPENDED'] == 'yes') ? 'disabled' : '';
             ?>
-            <div class="units-table-row <?php if ($data[$key]['SUSPENDED'] == 'yes') {
-                echo 'disabled';
-                                        } ?> js-unit"
+            <div class="units-table-row <?= $row_disabled_class ?> js-unit"
                 data-sort-ip="<?= str_replace(".", "", $data[$key]["IP"]) ?>"
                 data-sort-date="<?= strtotime($data[$key]["DATE"] . " " . $data[$key]["TIME"]) ?>"
                 data-sort-name="<?= $key ?>"
@@ -206,17 +220,17 @@
                 data-sort-disk="<?= $data[$key]["U_DISK"] ?>">
                 <div class="card-header u-hide-tablet">
                     <div class="card-title">
-                    <?php if ($read_only === "true") { ?>
+                        <?php if ($read_only === "true") { ?>
                             <?= $key ?>
-                    <?php } else {
+                        <?php } else {
                             $aliases = explode(',', $data[$key]['ALIAS']);
                             $alias_new = array();
-                        foreach ($aliases as $alias) {
-                            if ($alias != 'www.' . $key) {
-                                $alias_new[] = trim($alias);
+                            foreach ($aliases as $alias) {
+                                if ($alias != 'www.' . $key) {
+                                    $alias_new[] = trim($alias);
+                                }
                             }
-                        }
-                        ?>
+                            ?>
                             <a href="/edit/web/?domain=<?= $key ?>&token=<?= $_SESSION['token'] ?>" title="<?= _("Edit Domain") ?>: <?= $key ?>">
                                 <?= $key ?>
                                 <?php
@@ -226,7 +240,7 @@
                                 }
                                 ?>
                             </a>
-                    <?php } ?>
+                        <?php } ?>
                     </div>
                     <div class="card-actions">
                         <?php if (!empty($data[$key]["STATS"])) { ?>
@@ -234,8 +248,7 @@
                                 href="<?= $vstats_scheme ?>://<?= $key ?>/vstats/"
                                 target="_blank"
                                 rel="noopener"
-                                title="<?= _("Statistics") ?>"
-                            >
+                                title="<?= _("Statistics") ?>">
                                 <i class="fas fa-chart-bar icon-maroon"></i>
                             </a>
                         <?php } ?>
@@ -243,47 +256,41 @@
                             href="http://<?= $key ?>/"
                             target="_blank"
                             rel="noopener"
-                            title="<?= _("Visit") ?>"
-                        >
+                            title="<?= _("Visit") ?>">
                             <i class="fas fa-square-up-right icon-lightblue"></i>
                         </a>
                         <?php if ($read_only !== "true") { ?>
                             <?php if ($data[$key]["SUSPENDED"] == "no") { ?>
                                 <a
                                     href="/edit/web/?domain=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
-                                    title="<?= _("Edit Domain") ?>"
-                                >
+                                    title="<?= _("Edit Domain") ?>">
                                     <i class="fas fa-pencil icon-orange"></i>
                                 </a>
                                 <a
                                     href="/download/site/?site=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
-                                    title="<?= _("Download Site") ?>"
-                                >
+                                    title="<?= _("Download Site") ?>">
                                     <i class="fas fa-download icon-orange"></i>
                                 </a>
                             <?php } ?>
                             <a
                                 href="/list/web-log/?domain=<?= $key ?>&type=access#"
-                                title="<?= _("View Logs") ?>"
-                            >
+                                title="<?= _("View Logs") ?>">
                                 <i class="fas fa-binoculars icon-purple"></i>
                             </a>
                             <a
                                 class="data-controls js-confirm-action"
-                                href="/<?= $spnd_action ?>/web/?domain=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
+                                href="<?= $spnd_href ?>"
                                 title="<?= $spnd_action_title ?>"
                                 data-confirm-title="<?= $spnd_action_title ?>"
-                                data-confirm-message="<?= sprintf($spnd_confirmation, $key) ?>"
-                            >
+                                data-confirm-message="<?= $spnd_confirmation_msg ?>">
                                 <i class="fas <?= $spnd_icon ?> <?= $spnd_icon_class ?>"></i>
                             </a>
                             <a
                                 class="data-controls js-confirm-action"
-                                href="/delete/web/?domain=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
+                                href="<?= $delete_href ?>"
                                 title="<?= _("Delete") ?>"
                                 data-confirm-title="<?= _("Delete") ?>"
-                                data-confirm-message="<?= sprintf(_("Are you sure you want to delete domain %s?"), $key) ?>"
-                            >
+                                data-confirm-message="<?= $delete_confirmation_msg ?>">
                                 <i class="fas fa-trash icon-red"></i>
                             </a>
                         <?php } ?>
@@ -291,15 +298,26 @@
                 </div>
                 <div class="u-hide-tablet">
                     <div class="progress-label">
-                        <i class="fas fa-hard-drive"></i> <?= _("Disk") ?>: <?= humanize_usage_size($data[$key]["U_DISK"]) ?> <?= humanize_usage_measure($data[$key]["U_DISK"]) ?>
+                        <i class="fas fa-hard-drive"></i>
+                        <?= _("Disk") ?>:
+                        <?= humanize_usage_size($data[$key]["U_DISK"]) ?> <?= humanize_usage_measure($data[$key]["U_DISK"]) ?>
                     </div>
                     <div class="progress-label">
-                        <i class="fas fa-right-left"></i> <?= _("Bandwidth") ?>: <?= humanize_usage_size($data[$key]["U_BANDWIDTH"]) ?> <?= humanize_usage_measure($data[$key]["U_BANDWIDTH"]) ?>
+                        <i class="fas fa-right-left"></i>
+                        <?= _("Bandwidth") ?>:
+                        <?= humanize_usage_size($data[$key]["U_BANDWIDTH"]) ?> <?= humanize_usage_measure($data[$key]["U_BANDWIDTH"]) ?>
                     </div>
                 </div>
                 <div class="units-table-cell">
                     <div>
-                        <input id="check<?= $i ?>" class="js-unit-checkbox" type="checkbox" title="<?= _("Select") ?>" name="domain[]" value="<?= $key ?>" <?= $display_mode ?>>
+                        <input
+                            id="check<?= $i ?>"
+                            class="js-unit-checkbox"
+                            type="checkbox"
+                            title="<?= _("Select") ?>"
+                            name="domain[]"
+                            value="<?= $key ?>"
+                            <?= $display_mode ?>>
                         <label for="check<?= $i ?>" class="u-hide-desktop"><?= _("Select") ?></label>
                     </div>
                 </div>
@@ -336,8 +354,7 @@
                                     href="<?= $vstats_scheme ?>://<?= $key ?>/vstats/"
                                     target="_blank"
                                     rel="noopener"
-                                    title="<?= _("Statistics") ?>"
-                                >
+                                    title="<?= _("Statistics") ?>">
                                     <i class="fas fa-chart-bar icon-maroon"></i>
                                     <span class="u-hide-desktop"><?= _("Statistics") ?></span>
                                 </a>
@@ -349,8 +366,7 @@
                                 href="http://<?= $key ?>/"
                                 target="_blank"
                                 rel="noopener"
-                                title="<?= _("Visit") ?>"
-                            >
+                                title="<?= _("Visit") ?>">
                                 <i class="fas fa-square-up-right icon-lightblue"></i>
                                 <span class="u-hide-desktop"><?= _("Visit") ?></span>
                             </a>
@@ -361,8 +377,7 @@
                                     <a
                                         class="units-table-row-action-link"
                                         href="/edit/web/?domain=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
-                                        title="<?= _("Edit Domain") ?>"
-                                    >
+                                        title="<?= _("Edit Domain") ?>">
                                         <i class="fas fa-pencil icon-orange"></i>
                                         <span class="u-hide-desktop"><?= _("Edit Domain") ?></span>
                                     </a>
@@ -371,8 +386,7 @@
                                     <a
                                         class="units-table-row-action-link"
                                         href="/download/site/?site=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
-                                        title="<?= _("Download Site") ?>"
-                                    >
+                                        title="<?= _("Download Site") ?>">
                                         <i class="fas fa-download icon-orange"></i>
                                         <span class="u-hide-desktop"><?= _("Download Site") ?></span>
                                     </a>
@@ -382,8 +396,7 @@
                                 <a
                                     class="units-table-row-action-link"
                                     href="/list/web-log/?domain=<?= $key ?>&type=access#"
-                                    title="<?= _("View Logs") ?>"
-                                >
+                                    title="<?= _("View Logs") ?>">
                                     <i class="fas fa-binoculars icon-purple"></i>
                                     <span class="u-hide-desktop"><?= _("View Logs") ?></span>
                                 </a>
@@ -394,8 +407,7 @@
                                     href="/<?= $spnd_action ?>/web/?domain=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
                                     title="<?= $spnd_action_title ?>"
                                     data-confirm-title="<?= $spnd_action_title ?>"
-                                    data-confirm-message="<?= sprintf($spnd_confirmation, $key) ?>"
-                                >
+                                    data-confirm-message="<?= sprintf($spnd_confirmation, $key) ?>">
                                     <i class="fas <?= $spnd_icon ?> <?= $spnd_icon_class ?>"></i>
                                     <span class="u-hide-desktop"><?= $spnd_action_title ?></span>
                                 </a>
@@ -406,8 +418,7 @@
                                     href="/delete/web/?domain=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
                                     title="<?= _("Delete") ?>"
                                     data-confirm-title="<?= _("Delete") ?>"
-                                    data-confirm-message="<?= sprintf(_("Are you sure you want to delete domain %s?"), $key) ?>"
-                                >
+                                    data-confirm-message="<?= sprintf(_("Are you sure you want to delete domain %s?"), $key) ?>">
                                     <i class="fas fa-trash icon-red"></i>
                                     <span class="u-hide-desktop"><?= _("Delete") ?></span>
                                 </a>

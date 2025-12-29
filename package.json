@@ -21,15 +21,16 @@
 	},
 	"dependencies": {
 		"@alpinejs/collapse": "^3.15.2",
+		"@fortawesome/fontawesome-free": "6.4.0",
+		"@xterm/addon-canvas": "^0.7.0",
+		"@xterm/addon-webgl": "^0.19.0",
 		"alpinejs": "^3.15.2",
 		"chart.js": "^4.5.1",
 		"check-password-strength": "^3.0.0",
 		"floating-vue": "^5.2.2",
 		"nanoid": "^5.1.6",
 		"normalize.css": "^8.0.1",
-		"xterm": "^5.3.0",
-		"@xterm/addon-canvas": "^0.7.0",
-		"@xterm/addon-webgl": "^0.19.0"
+		"xterm": "^5.3.0"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "2.3.10",

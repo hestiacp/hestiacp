@@ -2,9 +2,20 @@
 <div class="toolbar">
     <div class="toolbar-inner">
         <div class="toolbar-buttons">
-            <a class="button button-secondary button-back js-button-back" href="/list/backup/incremental/"><i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?></a>
+            <a
+                class="button button-secondary button-back js-button-back"
+                href="/list/backup/incremental/">
+                <i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
+            </a>
             <?php if ($read_only !== "true") { ?>
-            <a href="/schedule/restore/incremental/?token=<?= $_SESSION["token"] ?>&snapshot=<?= htmlentities($_GET["snapshot"]) ?>" class="button button-secondary"><i class="fas fa-arrow-rotate-left icon-green"></i><?= _("Restore All") ?></a>
+                <?php
+                $restore_all_href = '/schedule/restore/incremental/?token='
+                    . $_SESSION['token']
+                    . '&snapshot=' . htmlentities($_GET['snapshot']);
+                ?>
+                <a href="<?= $restore_all_href ?>" class="button button-secondary">
+                    <i class="fas fa-arrow-rotate-left icon-green"></i><?= _("Restore All") ?>
+                </a>
             <?php } ?>
         </div>
         <div class="toolbar-right">
@@ -24,7 +35,13 @@
             <div class="toolbar-search">
                 <form action="/search/" method="get">
                     <input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
-                    <input type="search" class="form-control js-search-input" name="q" value="<?= isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" title="<?= _("Search") ?>">
+                    <?php $search_q = isset($_POST['q']) ? htmlspecialchars($_POST['q']) : ''; ?>
+                    <input
+                        type="search"
+                        class="form-control js-search-input"
+                        name="q"
+                        value="<?= $search_q ?>"
+                        title="<?= _("Search") ?>">
                     <button type="submit" class="toolbar-input-submit" title="<?= _("Search") ?>">
                         <i class="fas fa-magnifying-glass"></i>
                     </button>
@@ -37,51 +54,57 @@
 
 <div class="container">
 
-<h1 class="u-text-center u-hide-desktop u-mt20 u-pr30 u-mb20 u-pl30"><?= _("Backup Details") ?></h1>
+    <h1 class="u-text-center u-hide-desktop u-mt20 u-pr30 u-mb20 u-pl30"><?= _("Backup Details") ?></h1>
 
-<div class="units-table js-units-container">
-    <div class="units-table-header">
-        <div class="units-table-cell">
-            <input type="checkbox" class="js-toggle-all-checkbox" title="<?= _("Select all") ?>">
+    <div class="units-table js-units-container">
+        <div class="units-table-header">
+            <div class="units-table-cell">
+                <input type="checkbox" class="js-toggle-all-checkbox" title="<?= _("Select all") ?>">
+            </div>
+            <div class="units-table-cell"><?= _("Type") ?></div>
+            <div class="units-table-cell"><?= _("Details") ?></div>
+            <div class="units-table-cell"><?= _("Restore") ?></div>
         </div>
-        <div class="units-table-cell"><?= _("Type") ?></div>
-        <div class="units-table-cell"><?= _("Details") ?></div>
-        <div class="units-table-cell"><?= _("Restore") ?></div>
-    </div>
-    <?php
+        <?php
         $web = explode(',', $data['snapshot']['WEB']);
-    foreach ($web as $key) {
-        if (!empty($key)) {
-            ++$i;
-            ?>
-        <div class="units-table-row js-unit">
-            <div class="units-table-cell">
-                <div class="clearfix l-unit__stat-col--left super-compact">
-                    <input id="check<?= $i ?>" class="js-unit-checkbox" type="checkbox" name="web[]" value="<?= $key ?>">
-                    <label for="check<?= $i ?>" class="u-hide-desktop"><?= _("Select") ?></label>
+        foreach ($web as $key) {
+            if (!empty($key)) {
+                ++$i;
+                ?>
+                <div class="units-table-row js-unit">
+                    <div class="units-table-cell">
+                        <div class="clearfix l-unit__stat-col--left super-compact">
+                            <input id="check<?= $i ?>" class="js-unit-checkbox" type="checkbox" name="web[]" value="<?= $key ?>">
+                            <label for="check<?= $i ?>" class="u-hide-desktop"><?= _("Select") ?></label>
+                        </div>
+                    </div>
+                    <div class="units-table-cell units-table-heading-cell">
+                        <span class="u-hide-desktop u-text-bold"><?= _("Type") ?>:</span>
+                        <?= _("Web Domain") ?>
+                    </div>
+                    <div class="units-table-cell u-text-bold">
+                        <span class="u-hide-desktop"><?= _("Details") ?>:</span>
+                        <?= $key ?>
+                    </div>
+                    <div class="units-table-cell">
+                        <ul class="units-table-row-actions">
+                            <li class="units-table-row-action shortcut-enter" data-key-action="href">
+                                <?php
+                                $restore_href = '/schedule/restore/incremental/?snapshot='
+                                    . htmlentities($_GET['snapshot'])
+                                    . '&type=web&object=' . $key
+                                    . '&token=' . $_SESSION['token'];
+                                ?>
+                                <a href="<?= $restore_href ?>" title="<?= _("Restore") ?>">
+                                    <i class="fas fa-arrow-rotate-left icon-green"></i>
+                                    <span class="u-hide-desktop"><?= _("Restore") ?></span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
-            </div>
-            <div class="units-table-cell units-table-heading-cell">
-                <span class="u-hide-desktop u-text-bold"><?= _("Type") ?>:</span>
-            <?= _("Web Domain") ?>
-            </div>
-            <div class="units-table-cell u-text-bold">
-                <span class="u-hide-desktop"><?= _("Details") ?>:</span>
-            <?= $key ?>
-            </div>
-            <div class="units-table-cell">
-                <ul class="units-table-row-actions">
-                    <li class="units-table-row-action shortcut-enter" data-key-action="href">
-                        <a href="/schedule/restore/incremental/?snapshot=<?= htmlentities($_GET["snapshot"]) ?>&type=web&object=<?= $key ?>&token=<?= $_SESSION["token"] ?>" title="<?= _("Restore") ?>">
-                        <i class="fas fa-arrow-rotate-left icon-green"></i>
-                        <span class="u-hide-desktop"><?= _("Restore") ?></span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <?php }
-    } ?>
+            <?php }
+        } ?>
 
         <?php
         $mail = explode(',', $data['snapshot']['MAIL']);
@@ -89,32 +112,38 @@
             if (!empty($key)) {
                 ++$i;
                 ?>
-        <div class="units-table-row js-unit">
-            <div class="units-table-cell">
-                <div class="clearfix l-unit__stat-col--left super-compact">
-                    <input id="check<?= $i ?>" class="js-unit-checkbox" type="checkbox" name="mail[]" value="<?= $key ?>">
-                    <label for="check<?= $i ?>" class="u-hide-desktop"><?= _("Select") ?></label>
+                <div class="units-table-row js-unit">
+                    <div class="units-table-cell">
+                        <div class="clearfix l-unit__stat-col--left super-compact">
+                            <input id="check<?= $i ?>" class="js-unit-checkbox" type="checkbox" name="mail[]" value="<?= $key ?>">
+                            <label for="check<?= $i ?>" class="u-hide-desktop"><?= _("Select") ?></label>
+                        </div>
+                    </div>
+                    <div class="units-table-cell units-table-heading-cell">
+                        <span class="u-hide-desktop u-text-bold"><?= _("Type") ?>:</span>
+                        <?= _("Mail Domain") ?>
+                    </div>
+                    <div class="units-table-cell u-text-bold">
+                        <span class="u-hide-desktop"><?= _("Details") ?>:</span>
+                        <?= $key ?>
+                    </div>
+                    <div class="units-table-cell">
+                        <ul class="units-table-row-actions">
+                            <li class="units-table-row-action shortcut-enter" data-key-action="href">
+                                <?php
+                                $restore_href = '/schedule/restore/incremental/?snapshot='
+                                    . htmlentities($_GET['snapshot'])
+                                    . '&type=mail&object=' . $key
+                                    . '&token=' . $_SESSION['token'];
+                                ?>
+                                <a href="<?= $restore_href ?>" title="<?= _("Restore") ?>">
+                                    <i class="fas fa-arrow-rotate-left icon-green"></i>
+                                    <span class="u-hide-desktop"><?= _("Restore") ?></span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
-            </div>
-            <div class="units-table-cell units-table-heading-cell">
-                <span class="u-hide-desktop u-text-bold"><?= _("Type") ?>:</span>
-                <?= _("Mail Domain") ?>
-            </div>
-            <div class="units-table-cell u-text-bold">
-                <span class="u-hide-desktop"><?= _("Details") ?>:</span>
-                <?= $key ?>
-            </div>
-            <div class="units-table-cell">
-                <ul class="units-table-row-actions">
-                    <li class="units-table-row-action shortcut-enter" data-key-action="href">
-                        <a href="/schedule/restore/incremental/?snapshot=<?= htmlentities($_GET["snapshot"]) ?>&type=mail&object=<?= $key ?>&token=<?= $_SESSION["token"] ?>" title="<?= _("Restore") ?>">
-                        <i class="fas fa-arrow-rotate-left icon-green"></i>
-                        <span class="u-hide-desktop"><?= _("Restore") ?></span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
             <?php }
         } ?>
 
@@ -124,32 +153,38 @@
             if (!empty($key)) {
                 ++$i;
                 ?>
-        <div class="units-table-row js-unit">
-            <div class="units-table-cell">
-                <div class="clearfix l-unit__stat-col--left super-compact">
-                    <input id="check<?= $i ?>" class="js-unit-checkbox" type="checkbox" name="dns[]" value="<?= $key ?>">
-                    <label for="check<?= $i ?>" class="u-hide-desktop"><?= _("Select") ?></label>
+                <div class="units-table-row js-unit">
+                    <div class="units-table-cell">
+                        <div class="clearfix l-unit__stat-col--left super-compact">
+                            <input id="check<?= $i ?>" class="js-unit-checkbox" type="checkbox" name="dns[]" value="<?= $key ?>">
+                            <label for="check<?= $i ?>" class="u-hide-desktop"><?= _("Select") ?></label>
+                        </div>
+                    </div>
+                    <div class="units-table-cell units-table-heading-cell">
+                        <span class="u-hide-desktop u-text-bold"><?= _("Type") ?>:</span>
+                        <?= _("DNS Domain") ?>
+                    </div>
+                    <div class="units-table-cell u-text-bold">
+                        <span class="u-hide-desktop"><?= _("Details") ?>:</span>
+                        <?= $key ?>
+                    </div>
+                    <div class="units-table-cell">
+                        <ul class="units-table-row-actions">
+                            <li class="units-table-row-action shortcut-enter" data-key-action="href">
+                                <?php
+                                $restore_href = '/schedule/restore/incremental/?snapshot='
+                                    . htmlentities($_GET['snapshot'])
+                                    . '&type=dns&object=' . $key
+                                    . '&token=' . $_SESSION['token'];
+                                ?>
+                                <a href="<?= $restore_href ?>" title="<?= _("Restore") ?>">
+                                    <i class="fas fa-arrow-rotate-left icon-green"></i>
+                                    <span class="u-hide-desktop"><?= _("Restore") ?></span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
-            </div>
-            <div class="units-table-cell units-table-heading-cell">
-                <span class="u-hide-desktop u-text-bold"><?= _("Type") ?>:</span>
-                <?= _("DNS Domain") ?>
-            </div>
-            <div class="units-table-cell u-text-bold">
-                <span class="u-hide-desktop"><?= _("Details") ?>:</span>
-                <?= $key ?>
-            </div>
-            <div class="units-table-cell">
-                <ul class="units-table-row-actions">
-                    <li class="units-table-row-action shortcut-enter" data-key-action="href">
-                        <a href="/schedule/restore/incremental/?snapshot=<?= htmlentities($_GET["snapshot"]) ?>&type=dns&object=<?= $key ?>&token=<?= $_SESSION["token"] ?>" title="<?= _("Restore") ?>">
-                        <i class="fas fa-arrow-rotate-left icon-green"></i>
-                        <span class="u-hide-desktop"><?= _("Restore") ?></span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
             <?php }
         } ?>
 
@@ -159,75 +194,87 @@
             if (!empty($key)) {
                 ++$i;
                 ?>
-        <div class="units-table-row js-unit">
-            <div class="units-table-cell">
-                <div class="clearfix l-unit__stat-col--left super-compact">
-                    <input id="check<?= $i ?>" class="js-unit-checkbox" type="checkbox" name="db[]" value="<?= $key ?>">
-                    <label for="check<?= $i ?>" class="u-hide-desktop"><?= _("Select") ?></label>
+                <div class="units-table-row js-unit">
+                    <div class="units-table-cell">
+                        <div class="clearfix l-unit__stat-col--left super-compact">
+                            <input id="check<?= $i ?>" class="js-unit-checkbox" type="checkbox" name="db[]" value="<?= $key ?>">
+                            <label for="check<?= $i ?>" class="u-hide-desktop"><?= _("Select") ?></label>
+                        </div>
+                    </div>
+                    <div class="units-table-cell units-table-heading-cell">
+                        <span class="u-hide-desktop u-text-bold"><?= _("Type") ?>:</span>
+                        <?= _("Database") ?>
+                    </div>
+                    <div class="units-table-cell u-text-bold">
+                        <span class="u-hide-desktop"><?= _("Details") ?>:</span>
+                        <?= $key ?>
+                    </div>
+                    <div class="units-table-cell">
+                        <ul class="units-table-row-actions">
+                            <li class="units-table-row-action shortcut-enter" data-key-action="href">
+                                <?php
+                                $restore_href = '/schedule/restore/incremental/?snapshot='
+                                    . htmlentities($_GET['snapshot'])
+                                    . '&type=db&object=' . $key
+                                    . '&token=' . $_SESSION['token'];
+                                ?>
+                                <a href="<?= $restore_href ?>" title="<?= _("Restore") ?>">
+                                    <i class="fas fa-arrow-rotate-left icon-green"></i>
+                                    <span class="u-hide-desktop"><?= _("Restore") ?></span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
-            </div>
-            <div class="units-table-cell units-table-heading-cell">
-                <span class="u-hide-desktop u-text-bold"><?= _("Type") ?>:</span>
-                <?= _("Database") ?>
-            </div>
-            <div class="units-table-cell u-text-bold">
-                <span class="u-hide-desktop"><?= _("Details") ?>:</span>
-                <?= $key ?>
-            </div>
-            <div class="units-table-cell">
-                <ul class="units-table-row-actions">
-                    <li class="units-table-row-action shortcut-enter" data-key-action="href">
-                        <a href="/schedule/restore/incremental/?snapshot=<?= htmlentities($_GET["snapshot"]) ?>&type=db&object=<?= $key ?>&token=<?= $_SESSION["token"] ?>" title="<?= _("Restore") ?>">
-                        <i class="fas fa-arrow-rotate-left icon-green"></i>
-                        <span class="u-hide-desktop"><?= _("Restore") ?></span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
             <?php }
         } ?>
 
-    <?php
-    $cron = explode(',', $data['snapshot']['CRON']);
-    foreach ($cron as $key) {
-        if (!empty($key)) {
-            ++$i;
-            ?>
-    <div class="units-table-row js-unit">
-        <div class="units-table-cell">
-            <div class="clearfix l-unit__stat-col--left super-compact">
-                <input id="check<?= $i ?>" class="js-unit-checkbox" type="checkbox" name="cron[]" value="<?= $key ?>">
-                <label for="check<?= $i ?>" class="u-hide-desktop"><?= _("Select") ?></label>
-            </div>
-        </div>
-        <div class="units-table-cell units-table-heading-cell">
-            <span class="u-hide-desktop u-text-bold"><?= _("Type") ?>:</span>
-            <?= _("Cronjob") ?>
-        </div>
-        <div class="units-table-cell u-text-bold">
-            <span class="u-hide-desktop"><?= _("Details") ?>:</span>
-            <?= $key ?>
-        </div>
-        <div class="units-table-cell">
-            <ul class="units-table-row-actions">
-                <li class="units-table-row-action shortcut-enter" data-key-action="href">
-                    <a href="/schedule/restore/incremental/?snapshot=<?= htmlentities($_GET["snapshot"]) ?>&type=cron&object=<?= $key ?>&token=<?= $_SESSION["token"] ?>" title="<?= _("Restore") ?>">
-                    <i class="fas fa-arrow-rotate-left icon-green"></i>
-                    <span class="u-hide-desktop"><?= _("Restore") ?></span>
-                    </a>
-                </li>
-            </ul>
-        </div>
+        <?php
+        $cron = explode(',', $data['snapshot']['CRON']);
+        foreach ($cron as $key) {
+            if (!empty($key)) {
+                ++$i;
+                ?>
+                <div class="units-table-row js-unit">
+                    <div class="units-table-cell">
+                        <div class="clearfix l-unit__stat-col--left super-compact">
+                            <input id="check<?= $i ?>" class="js-unit-checkbox" type="checkbox" name="cron[]" value="<?= $key ?>">
+                            <label for="check<?= $i ?>" class="u-hide-desktop"><?= _("Select") ?></label>
+                        </div>
+                    </div>
+                    <div class="units-table-cell units-table-heading-cell">
+                        <span class="u-hide-desktop u-text-bold"><?= _("Type") ?>:</span>
+                        <?= _("Cronjob") ?>
+                    </div>
+                    <div class="units-table-cell u-text-bold">
+                        <span class="u-hide-desktop"><?= _("Details") ?>:</span>
+                        <?= $key ?>
+                    </div>
+                    <div class="units-table-cell">
+                        <ul class="units-table-row-actions">
+                            <li class="units-table-row-action shortcut-enter" data-key-action="href">
+                                <?php
+                                $restore_href = '/schedule/restore/incremental/?snapshot='
+                                    . htmlentities($_GET['snapshot'])
+                                    . '&type=cron&object=' . $key
+                                    . '&token=' . $_SESSION['token'];
+                                ?>
+                                <a href="<?= $restore_href ?>" title="<?= _("Restore") ?>">
+                                    <i class="fas fa-arrow-rotate-left icon-green"></i>
+                                    <span class="u-hide-desktop"><?= _("Restore") ?></span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            <?php }
+        } ?>
     </div>
-        <?php }
-    } ?>
-</div>
 
-<footer class="app-footer">
-    <div class="container app-footer-inner">
-        <p>
-            <?php printf(ngettext("%d item", "%d items", $i), $i); ?>
-        </p>
-    </div>
-</footer>
+    <footer class="app-footer">
+        <div class="container app-footer-inner">
+            <p>
+                <?php printf(ngettext("%d item", "%d items", $i), $i); ?>
+            </p>
+        </div>
+    </footer>

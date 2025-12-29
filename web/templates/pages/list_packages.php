@@ -25,13 +25,23 @@
                 <ul class="toolbar-sorting-menu js-sorting-menu u-hidden">
                     <li data-entity="sort-date" data-sort-as-int="1">
                         <span class="name <?php if ($_SESSION['userSortOrder'] === 'date') {
-                            echo 'active';
-                                          } ?>"><?= _("Date") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
+                                                echo 'active';
+                                          } ?>">
+                            <?= _("Date") ?> <i class="fas fa-arrow-down-a-z"></i>
+                        </span>
+                        <span class="up">
+                            <i class="fas fa-arrow-up-a-z"></i>
+                        </span>
                     </li>
                     <li data-entity="sort-name">
                         <span class="name <?php if ($_SESSION['userSortOrder'] === 'name') {
-                            echo 'active';
-                                          } ?>"><?= _("Name") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
+                                                echo 'active';
+                                          } ?>">
+                            <?= _("Name") ?> <i class="fas fa-arrow-down-a-z"></i>
+                        </span>
+                        <span class="up">
+                            <i class="fas fa-arrow-up-a-z"></i>
+                        </span>
                     </li>
                 </ul>
                 <form x-data x-bind="BulkEdit" action="/bulk/package/" method="post">
@@ -123,190 +133,208 @@
                 data-sort-disk="<?= $data[$key]["DISK_QUOTA"] ?>">
                 <div class="units-table-cell">
                     <div>
-                        <input id="check<?= $i ?>" class="js-unit-checkbox" type="checkbox" title="<?= _("Select") ?>" name="package[]" value="<?= $key ?>">
+                        <input
+                            id="check<?= $i ?>"
+                            class="js-unit-checkbox"
+                            type="checkbox"
+                            title="<?= _("Select") ?>"
+                            name="package[]"
+                            value="<?= $key ?>">
                         <label for="check<?= $i ?>" class="u-hide-desktop"><?= _("Select") ?></label>
                     </div>
                 </div>
                 <div class="units-table-cell units-table-heading-cell u-text-bold">
                     <span class="u-hide-desktop"><?= _("Package") ?>:</span>
-                <?php if ($key == "system") { ?>
+                    <?php if ($key == "system") { ?>
                         <?= $key ?>
-                <?php } else { ?>
-                        <a href="/edit/package/?package=<?= $key ?>&token=<?= $_SESSION["token"] ?>" title="<?= _("Edit Package") ?>: <?= $key ?>">
+                    <?php } else { ?>
+                        <a
+                            href="/edit/package/?package=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
+                            title="<?= sprintf(_("Edit Package: %s"), $key) ?>">
                             <?= $key ?>
                         </a>
-                <?php } ?>
+                    <?php } ?>
                 </div>
                 <div class="units-table-cell">
                     <ul class="units-table-row-actions">
-                    <?php if ($key != "system") { ?>
+                        <?php if ($key != "system") { ?>
                             <li class="units-table-row-action shortcut-enter" data-key-action="href">
                                 <a
                                     class="units-table-row-action-link"
                                     href="/edit/package/?package=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
-                                    title="<?= _("Edit Package") ?>"
-                                >
+                                    title="<?= _("Edit Package") ?>">
                                     <i class="fas fa-pencil icon-orange"></i>
                                     <span class="u-hide-desktop"><?= _("Edit Package") ?></span>
                                 </a>
                             </li>
-                    <?php } ?>
+                        <?php } ?>
                         <li class="units-table-row-action" data-key-action="href">
                             <a
                                 class="units-table-row-action-link"
                                 href="/copy/package/?package=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
-                                title="<?= _("Duplicate") ?>"
-                            >
+                                title="<?= _("Duplicate") ?>">
                                 <i class="fas fa-clone icon-teal"></i>
                                 <span class="u-hide-desktop"><?= _("Duplicate") ?></span>
                             </a>
                         </li>
-                    <?php if ($key != "system") { ?>
+                        <?php if ($key != "system") { ?>
                             <li class="units-table-row-action shortcut-delete" data-key-action="js">
                                 <a
                                     class="units-table-row-action-link data-controls js-confirm-action"
                                     href="/delete/package/?package=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
                                     title="<?= _("Delete") ?>"
                                     data-confirm-title="<?= _("Delete") ?>"
-                                    data-confirm-message="<?= sprintf(_("Are you sure you want to delete package %s?"), $key) ?>"
-                                >
+                                    data-confirm-message="<?= sprintf(_("Are you sure you want to delete package %s?"), $key) ?>">
                                     <i class="fas fa-trash icon-red"></i>
                                     <span class="u-hide-desktop"><?= _("Delete") ?></span>
                                 </a>
                             </li>
-                    <?php } ?>
+                        <?php } ?>
                     </ul>
                 </div>
                 <div class="units-table-cell u-text-center-desktop">
                     <span class="u-hide-desktop u-text-bold"><?= _("Shell") ?>:</span>
-                <?php if ($data[$key]["SHELL"] == "nologin") { ?>
-                        <i class="fas fa-circle-minus icon-large" title="<?= _("SSH Access") ?>: <?= $data[$key]["SHELL"] ?>"> </i>
-                <?php } else { ?>
+                    <?php
+                    $ssh_title = _("SSH Access") . ": " . $data[$key]["SHELL"];
+                    if ($data[$key]["SHELL"] == "nologin") { ?>
+                        <i class="fas fa-circle-minus icon-large" title="<?= $ssh_title ?>"> </i>
+                    <?php } else { ?>
                         <i class="fas fa-circle-check icon-green icon-large"></i>
-                <?php } ?>
+                    <?php } ?>
                 </div>
                 <div class="units-table-cell u-text-center-desktop">
                     <span class="u-hide-desktop u-text-bold"><?= _("Quota") ?>:</span>
-                    <span title="<?= _("Quota") ?>: <?= humanize_usage_size($data[$key]["DISK_QUOTA"]) ?> <?= humanize_usage_measure($data[$key]["DISK_QUOTA"]) ?>">
-                    <?php if (preg_match("/[a-z]/i", $data[$key]["DISK_QUOTA"])) : ?>
+                    <?php
+                    $quota_title = _("Quota") . ": " .
+                        humanize_usage_size($data[$key]["DISK_QUOTA"]) . " " .
+                        humanize_usage_measure($data[$key]["DISK_QUOTA"]);
+                    ?>
+                    <span title="<?= $quota_title ?>">
+                        <?php if (preg_match("/[a-z]/i", $data[$key]["DISK_QUOTA"])) : ?>
                             <span class="u-text-bold">
                                 &infin;
                             </span>
-                    <?php else : ?>
+                        <?php else : ?>
                             <span class="u-text-bold">
                                 <?= humanize_usage_size($data[$key]["DISK_QUOTA"]) ?>
                             </span>
                             <span class="u-text-small">
                                 <?= humanize_usage_measure($data[$key]["DISK_QUOTA"]) ?>
                             </span>
-                    <?php endif; ?>
+                        <?php endif; ?>
                     </span>
                 </div>
                 <div class="units-table-cell u-text-center-desktop">
                     <span class="u-hide-desktop u-text-bold"><?= _("Bandwidth") ?>:</span>
-                    <span title="<?= _("Bandwidth") ?>: <?= humanize_usage_size($data[$key]["BANDWIDTH"]) ?> <?= humanize_usage_measure($data[$key]["BANDWIDTH"]) ?>">
-                    <?php if ($data[$key]["BANDWIDTH"] == "unlimited") { ?>
+                    <?php
+                    $bandwidth_title = _("Bandwidth") . ": " .
+                        humanize_usage_size($data[$key]["BANDWIDTH"]) . " " .
+                        humanize_usage_measure($data[$key]["BANDWIDTH"]);
+                    ?>
+                    <span title="<?= $bandwidth_title ?>">
+                        <?php if ($data[$key]["BANDWIDTH"] == "unlimited") { ?>
                             <span class="u-text-bold">
                                 &infin;
                             </span>
-                    <?php } else { ?>
+                        <?php } else { ?>
                             <span class="u-text-bold">
                                 <?= humanize_usage_size($data[$key]["BANDWIDTH"]) ?>
                             </span>
                             <span class="u-text-small">
                                 <?= humanize_usage_measure($data[$key]["BANDWIDTH"]) ?>
                             </span>
-                    <?php } ?>
+                        <?php } ?>
                     </span>
                 </div>
                 <div class="units-table-cell compact u-text-bold u-text-center-desktop">
                     <span class="u-hide-desktop"><?= _("Web Domains") ?>:</span>
-                    <span class="units-table-badge" title="<?= _("Web Domains") ?>: <?= $data[$key]["WEB_DOMAINS"] ?>">
-                    <?php if ($data[$key]["WEB_DOMAINS"] == "unlimited") { ?>
+                    <?php $webdomains_title = _("Web Domains") . ": " . $data[$key]["WEB_DOMAINS"]; ?>
+                    <span class="units-table-badge" title="<?= $webdomains_title ?>">
+                        <?php if ($data[$key]["WEB_DOMAINS"] == "unlimited") { ?>
                             &infin;
-                    <?php } else { ?>
+                        <?php } else { ?>
                             <?= $data[$key]["WEB_DOMAINS"] ?>
-                    <?php } ?>
+                        <?php } ?>
                     </span>
                 </div>
                 <div class="units-table-cell compact u-text-bold u-text-center-desktop">
                     <span class="u-hide-desktop"><?= _("Web Aliases") ?>:</span>
                     <span class="units-table-badge" title="<?= _("Web Aliases") ?>: <?= $data[$key]["WEB_ALIASES"] ?>">
-                    <?php if ($data[$key]["WEB_ALIASES"] == "unlimited") { ?>
+                        <?php if ($data[$key]["WEB_ALIASES"] == "unlimited") { ?>
                             &infin;
-                    <?php } else { ?>
+                        <?php } else { ?>
                             <?= $data[$key]["WEB_ALIASES"] ?>
-                    <?php } ?>
+                        <?php } ?>
                     </span>
                 </div>
                 <div class="units-table-cell compact u-text-bold u-text-center-desktop">
                     <span class="u-hide-desktop"><?= _("DNS Zones") ?>:</span>
                     <span class="units-table-badge" title="<?= _("DNS Zones") ?>: <?= $data[$key]["DNS_DOMAINS"] ?>">
-                    <?php if ($data[$key]["DNS_DOMAINS"] == "unlimited") { ?>
+                        <?php if ($data[$key]["DNS_DOMAINS"] == "unlimited") { ?>
                             &infin;
-                    <?php } else { ?>
+                        <?php } else { ?>
                             <?= $data[$key]["DNS_DOMAINS"] ?>
-                    <?php } ?>
+                        <?php } ?>
                     </span>
                 </div>
                 <div class="units-table-cell compact u-text-bold u-text-center-desktop">
                     <span class="u-hide-desktop"><?= _("DNS Records") ?>:</span>
                     <span class="units-table-badge" title="<?= _("DNS Records") ?>: <?= $data[$key]["DNS_RECORDS"] ?>">
-                    <?php if ($data[$key]["DNS_RECORDS"] == "unlimited") { ?>
+                        <?php if ($data[$key]["DNS_RECORDS"] == "unlimited") { ?>
                             &infin;
-                    <?php } else { ?>
+                        <?php } else { ?>
                             <?= $data[$key]["DNS_RECORDS"] ?>
-                    <?php } ?>
+                        <?php } ?>
                     </span>
                 </div>
                 <div class="units-table-cell compact u-text-bold u-text-center-desktop">
                     <span class="u-hide-desktop"><?= _("Mail Domains") ?>:</span>
                     <span class="units-table-badge" title="<?= _("Mail Domains") ?>: <?= $data[$key]["MAIL_DOMAINS"] ?>">
-                    <?php if ($data[$key]["MAIL_DOMAINS"] == "unlimited") { ?>
+                        <?php if ($data[$key]["MAIL_DOMAINS"] == "unlimited") { ?>
                             &infin;
-                    <?php } else { ?>
+                        <?php } else { ?>
                             <?= $data[$key]["MAIL_DOMAINS"] ?>
-                    <?php } ?>
+                        <?php } ?>
                     </span>
                 </div>
                 <div class="units-table-cell compact u-text-bold u-text-center-desktop">
                     <span class="u-hide-desktop"><?= _("Mail Accounts") ?>:</span>
                     <span class="units-table-badge" title="<?= _("Mail Accounts") ?>: <?= $data[$key]["MAIL_ACCOUNTS"] ?>">
-                    <?php if ($data[$key]["MAIL_ACCOUNTS"] == "unlimited") { ?>
+                        <?php if ($data[$key]["MAIL_ACCOUNTS"] == "unlimited") { ?>
                             &infin;
-                    <?php } else { ?>
+                        <?php } else { ?>
                             <?= $data[$key]["MAIL_ACCOUNTS"] ?>
-                    <?php } ?>
+                        <?php } ?>
                     </span>
                 </div>
                 <div class="units-table-cell compact u-text-bold u-text-center-desktop">
                     <span class="u-hide-desktop"><?= _("Databases") ?>:</span>
                     <span class="units-table-badge" title="<?= _("Databases") ?>: <?= $data[$key]["DATABASES"] ?>">
-                    <?php if ($data[$key]["DATABASES"] == "unlimited") { ?>
+                        <?php if ($data[$key]["DATABASES"] == "unlimited") { ?>
                             &infin;
-                    <?php } else { ?>
+                        <?php } else { ?>
                             <?= $data[$key]["DATABASES"] ?>
-                    <?php } ?>
+                        <?php } ?>
                     </span>
                 </div>
                 <div class="units-table-cell compact u-text-bold u-text-center-desktop">
                     <span class="u-hide-desktop"><?= _("Cron Jobs") ?>:</span>
                     <span class="units-table-badge" title="<?= _("Cron Jobs") ?>: <?= $data[$key]["CRON_JOBS"] ?>">
-                    <?php if ($data[$key]["CRON_JOBS"] == "unlimited") { ?>
+                        <?php if ($data[$key]["CRON_JOBS"] == "unlimited") { ?>
                             &infin;
-                    <?php } else { ?>
+                        <?php } else { ?>
                             <?= $data[$key]["CRON_JOBS"] ?>
-                    <?php } ?>
+                        <?php } ?>
                     </span>
                 </div>
                 <div class="units-table-cell compact u-text-bold u-text-center-desktop">
                     <span class="u-hide-desktop"><?= _("Backups") ?>:</span>
                     <span class="units-table-badge" title="<?= _("Backups") ?>: <?= $data[$key]["BACKUPS"] ?>">
-                    <?php if ($data[$key]["BACKUPS"] == "unlimited") { ?>
+                        <?php if ($data[$key]["BACKUPS"] == "unlimited") { ?>
                             &infin;
-                    <?php } else { ?>
+                        <?php } else { ?>
                             <?= $data[$key]["BACKUPS"] ?>
-                    <?php } ?>
+                        <?php } ?>
                     </span>
                 </div>
             </div>

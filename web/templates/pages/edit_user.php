@@ -5,7 +5,7 @@
             <a class="button button-secondary button-back js-button-back" href="/list/user/">
                 <i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
             </a>
-            <?= () ? 'checked' : '' ?>>
+
                         <label for="v_twofa">
                             <?= _("Enable two-factor authentication") ?>
                         </label>

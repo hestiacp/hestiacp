@@ -26,8 +26,7 @@
         id="main-form"
         name="v_edit_mail"
         method="post"
-        class="<?= $v_status ?> js-enable-inputs-on-submit"
-    >
+        class="<?= $v_status ?> js-enable-inputs-on-submit">
         <input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
         <input type="hidden" name="save" value="save">
 
@@ -39,31 +38,30 @@
                 <input type="text" class="form-control" name="v_domain" id="v_domain" value="<?= htmlentities(trim($v_domain, "'")) ?>" disabled required>
                 <input type="hidden" name="v_domain" value="<?= htmlentities(trim($v_domain, "'")) ?>">
             </div>
-                        <?php if (!empty($_SESSION["ANTISPAM_SYSTEM"])) { ?>
-                                <div class="form-check u-mb10">
-                                        <input class="form-check-input" type="checkbox" name="v_antispam" id="v_antispam" <?= ($v_antispam == 'yes') ? 'checked' : '' ?>>
-                                        <label for="v_antispam">
-                                                <?= _("Spam Filter") ?>
-                                        </label>
-                                </div>
-                                <div class="form-check u-mb10">
-                                        <input class="form-check-input" type="checkbox" name="v_reject" id="v_reject" <?= ($v_reject == 'yes') ? 'checked' : '' ?>>
-                                        <label for="v_reject">
-                                                <?= _("Reject Spam") ?>
-                                        </label>
-                                </div>
-                        <?php } ?>
+            <?php if (!empty($_SESSION["ANTISPAM_SYSTEM"])) { ?>
+                <div class="form-check u-mb10">
+                    <input class="form-check-input" type="checkbox" name="v_antispam" id="v_antispam" <?= ($v_antispam == 'yes') ? 'checked' : '' ?>>
+                    <label for="v_antispam">
+                        <?= _("Spam Filter") ?>
+                    </label>
+                </div>
+                <div class="form-check u-mb10">
+                    <input class="form-check-input" type="checkbox" name="v_reject" id="v_reject" <?= ($v_reject == 'yes') ? 'checked' : '' ?>>
+                    <label for="v_reject">
+                        <?= _("Reject Spam") ?>
+                    </label>
+                </div>
             <?php } ?>
-                        <?php if (!empty($_SESSION["ANTIVIRUS_SYSTEM"])) { ?>
-                                <div class="form-check u-mb10">
-                                        <input class="form-check-input" type="checkbox" name="v_antivirus" id="v_antivirus" <?= ($v_antivirus == 'yes') ? 'checked' : '' ?>>
-                                        <label for="v_antivirus">
-                                                <?= _("Anti-Virus") ?>
-                                        </label>
-                                </div>
-                        <?php } ?>
+            <?php if (!empty($_SESSION["ANTIVIRUS_SYSTEM"])) { ?>
+                <div class="form-check u-mb10">
+                    <input class="form-check-input" type="checkbox" name="v_antivirus" id="v_antivirus" <?= ($v_antivirus == 'yes') ? 'checked' : '' ?>>
+                    <label for="v_antivirus">
+                        <?= _("Anti-Virus") ?>
+                    </label>
+                </div>
+            <?php } ?>
             <div class="form-check u-mb10">
-                <input class="form-check-input" type="checkbox" name="v_dkim" id="v_dkim" <?= () ? 'checked' : '' ?>>
+                <input class="form-check-input" type="checkbox" name="v_dkim" id="v_dkim" <?= ($v_dkim == 'yes') ? 'checked' : '' ?>>
                 <label for="v_dkim">
                     <?= _("DKIM Support") ?>
                 </label>
@@ -92,7 +90,7 @@
                     <div class="u-mb10">
                         <label for="v_ssl_crt" class="form-label">
                             <?= _("SSL Certificate") ?>
-                            <span x-cloak x-show="!letsEncryptEnabled" id="generate-csr" > / <a class="form-link" target="_blank" href="/generate/ssl/?domain=<?= htmlentities($v_domain) ?>"><?= _("Generate Self-Signed SSL Certificate") ?></a></span>
+                            <span x-cloak x-show="!letsEncryptEnabled" id="generate-csr"> / <a class="form-link" target="_blank" href="/generate/ssl/?domain=<?= htmlentities($v_domain) ?>"><?= _("Generate Self-Signed SSL Certificate") ?></a></span>
                         </label>
                         <textarea x-bind:disabled="letsEncryptEnabled" class="form-control u-min-height100 u-console" name="v_ssl_crt" id="v_ssl_crt"><?= htmlentities(trim($v_ssl_crt, "'")) ?></textarea>
                     </div>

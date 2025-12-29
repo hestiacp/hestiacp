@@ -7,26 +7,87 @@
             </a>
         </div>
         <div class="toolbar-buttons">
-            <?= () ? 'checked' : '' ?>>
+                <button type="submit" class="button" form="main-form">
+                    <i class="fas fa-floppy-disk icon-purple"></i><?= _("Save") ?>
+                </button>
+        </div>
+    </div>
+</div>
+<!-- End toolbar -->
+
+<div class="container">
+
+    <form
+        x-data="{
+            hasSmtpRelay: <?= $v_smtp_relay == "true" ? "true" : "false" ?>
+        }"
+        id="main-form"
+        name="v_add_mail"
+        method="post"
+    >
+        <input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
+        <input type="hidden" name="ok" value="Add">
+
+        <div class="form-container">
+            <h1 class="u-mb20"><?= _("Add Mail Domain") ?></h1>
+            <?php show_alert_message($_SESSION); ?>
+            <?php if ($_SESSION["role"] == "admin" && $accept !== "true") { ?>
+                <div class="alert alert-danger" role="alert">
+                    <i class="fas fa-exclamation"></i>
+                    <p><?= htmlify_trans(sprintf(_("It is strongly advised to {create a standard user account} before adding %s to the server due to the increased privileges the admin account possesses and potential security risks."), _('a mail domain')), '</a>', '<a href="/add/user/">'); ?></p>
+                </div>
+            <?php } ?>
+            <?php if ($_SESSION["role"] == "admin" && empty($accept)) { ?>
+                <div class="u-side-by-side u-mt20">
+                    <a href="/add/user/" class="button u-width-full u-mr10"><?= _("Add User") ?></a>
+                    <a href="/add/mail/?accept=true" class="button button-danger u-width-full u-ml10"><?= _("Continue") ?></a>
+                </div>
+            <?php } ?>
+            <?php if (($_SESSION["role"] == "admin" && $accept === "true") || $_SESSION["role"] !== "admin") { ?>
+                <div class="u-mb20">
+                    <label for="v_domain" class="form-label"><?= _("Domain") ?></label>
+                    <input type="text" class="form-control" name="v_domain" id="v_domain" value="<?= htmlentities(trim($v_domain, "'")) ?>" required>
+                </div>
+                <?php if ($_SESSION["WEBMAIL_SYSTEM"]) { ?>
+                    <div class="u-mb20">
+                        <label for="v_webmail" class="form-label"><?= _("Webmail Client") ?></label>
+                        <select class="form-select" name="v_webmail" id="v_webmail" tabindex="6">
+                            <?php foreach ($webmail_clients as $client) {
+                                echo "\t\t\t\t\t\t\t<option value=\"" . htmlentities($client) . "\"";
+                                if (( $v_webmail == $client )) {
+                                    echo ' selected' ;
+                                }
+                                echo ">" . htmlentities(ucfirst($client)) . "</option>\n";
+                            }
+                            ?>
+                            <option value="" <?php if (empty($v_webmail) || $v_webmail == 'disabled') { echo "selected"; }?>><?= _("Disabled") ?></option>
+                        </select>
+                    </div>
+                <?php } ?>
+                <?php if (!empty($_SESSION["ANTISPAM_SYSTEM"])) { ?>
+                    <div class="form-check u-mb10">
+                        <input class="form-check-input" type="checkbox" name="v_antispam" id="v_antispam" <?= (empty($v_antispam) || $v_antispam == 'yes') ? 'checked' : '' ?>>
                         <label for="v_antispam">
                             <?= _("Spam Filter") ?>
                         </label>
                     </div>
                     <div class="form-check u-mb10">
-                        <input class="form-check-input" type="checkbox" name="v_reject" id="v_reject" <?= () ? 'checked' : '' ?>>
+                        <input class="form-check-input" type="checkbox" name="v_reject" id="v_reject" <?= (empty($v_reject) || $v_reject == 'yes') ? 'checked' : '' ?>>
                         <label for="v_reject">
                             <?= _("Reject Spam") ?>
                         </label>
                     </div>
                 <?php } ?>
-                <?= () ? 'checked' : '' ?>>
+                <?php if (!empty($_SESSION['ANTIVIRUS_SYSTEM'])) { ?>
+                    <div class="form-check u-mb10">
+                        <input class="form-check-input" type="checkbox" name="v_antivirus" id="v_antivirus" <?= (empty($v_antivirus) || $v_antivirus == 'yes') ? 'checked' : '' ?>>
                         <label for="v_antivirus">
                             <?= _("Anti-Virus") ?>
                         </label>
                     </div>
                 <?php } ?>
                 <div class="form-check u-mb10">
-                    <input class="form-check-input" type="checkbox" name="v_dkim" id="v_dkim" <?= () ? 'checked' : '' ?>>
+                    <input class="form-check-input" type="checkbox" name="v_dkim" id="v_dkim" <?= (isset($v_dkim) && $v_dkim == 'yes') ? 'checked' : '' ?>>
                     <label for="v_dkim">
                         <?= _("DKIM Support") ?>
                     </label>

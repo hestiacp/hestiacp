@@ -98,19 +98,24 @@
                     <div class="u-mb10">
                         <label for="v_web_domains" class="form-label"><?= _("Web Domains") ?></label>
                         <div class="u-pos-relative">
-                            <input type="text"
+                            <input
+                                type="text"
                                 class="form-control"
                                 name="v_web_domains"
                                 id="v_web_domains"
                                 value="<?= htmlentities(trim($v_web_domains, "'")) ?>">
-                            <button type="button" class="unlimited-toggle js-unlimited-toggle" title="<?= $unlimited_title ?>">
+                            <button
+                                type="button"
+                                class="unlimited-toggle js-unlimited-toggle"
+                                title="<?= $unlimited_title ?>">
                                 <i class="fas fa-infinity"></i>
                             </button>
                         </div>
                     </div>
                     <div class="u-mb10">
                         <label for="v_web_aliases" class="form-label">
-                            <?= _("Web Aliases") ?> <span class="optional">(<?= _("per domain") ?>)</span>
+                            <?= _("Web Aliases") ?>
+                            <span class="optional">(<?= _("per domain") ?>)</span>
                         </label>
                         <div class="u-pos-relative">
                             <input type="text"
@@ -118,7 +123,10 @@
                                 name="v_web_aliases"
                                 id="v_web_aliases"
                                 value="<?= htmlentities(trim($v_web_aliases, "'")) ?>">
-                            <button type="button" class="unlimited-toggle js-unlimited-toggle" title="<?= _("Unlimited") ?>">
+                            <button
+                                type="button"
+                                class="unlimited-toggle js-unlimited-toggle"
+                                title="<?= _("Unlimited") ?>">
                                 <i class="fas fa-infinity"></i>
                             </button>
                         </div>
@@ -136,9 +144,13 @@
                         </label>
                         <select class="form-select" name="v_web_template" id="v_web_template">
                             <?php foreach ($web_templates as $key => $value) {
-                                $sel = (!empty($v_web_template) && ($value == trim($v_web_template, "'"))) ? ' selected' : '';
+                                $sel = (!empty($v_web_template)
+                                    && ($value == trim($v_web_template, "'")))
+                                    ? ' selected'
+                                    : '';
                                 ?>
-                                <option value="<?= htmlentities($value) ?>"
+                                <option
+                                    value="<?= htmlentities($value) ?>"
                                     <?= $sel ?>>
                                     <?= htmlentities($value) ?>
                                 </option>
@@ -161,7 +173,10 @@
                             <select class="form-select" name="v_backend_template" id="v_backend_template">
                                 <?php foreach ($backend_templates as $key => $value) {
                                     $sel = '';
-                                    if (!empty($v_backend_template) && ($value == trim($v_backend_template, "'"))) {
+                                    if (
+                                        !empty($v_backend_template)
+                                        && ($value == trim($v_backend_template, "'"))
+                                    ) {
                                         $sel = ' selected';
                                     }
                                     ?>
@@ -190,7 +205,10 @@
                             <select class="form-select" name="v_proxy_template" id="v_proxy_template">
                                 <?php foreach ($proxy_templates as $key => $value) {
                                     $sel = '';
-                                    if (!empty($v_proxy_template) && ($value == trim($v_proxy_template, "'"))) {
+                                    if (
+                                        !empty($v_proxy_template)
+                                        && ($value == trim($v_proxy_template, "'"))
+                                    ) {
                                         $sel = ' selected';
                                     }
                                     ?>
@@ -234,7 +252,9 @@
                                     $sel = ' selected';
                                 }
                                 ?>
-                                <option value="<?= htmlentities($value) ?>" <?= $sel ?>>
+                                <option
+                                    value="<?= htmlentities($value) ?>"
+                                    <?= $sel ?>>
                                     <?= htmlentities($value) ?>
                                 </option>
                             <?php } ?>
@@ -248,7 +268,10 @@
                                 name="v_dns_domains"
                                 id="v_dns_domains"
                                 value="<?= htmlentities(trim($v_dns_domains, "'")) ?>">
-                            <button type="button" class="unlimited-toggle js-unlimited-toggle" title="<?= _("Unlimited") ?>">
+                            <button
+                                type="button"
+                                class="unlimited-toggle js-unlimited-toggle"
+                                title="<?= _("Unlimited") ?>">
                                 <i class="fas fa-infinity"></i>
                             </button>
                         </div>
@@ -258,12 +281,16 @@
                             <?= _("DNS Records") ?> <span class="optional">(<?= _("per domain") ?>)</span>
                         </label>
                         <div class="u-pos-relative">
-                            <input type="text"
+                            <input
+                                type="text"
                                 class="form-control"
                                 name="v_dns_records"
                                 id="v_dns_records"
                                 value="<?= htmlentities(trim($v_dns_records, "'")) ?>">
-                            <button type="button" class="unlimited-toggle js-unlimited-toggle" title="<?= _("Unlimited") ?>">
+                            <button
+                                type="button"
+                                class="unlimited-toggle js-unlimited-toggle"
+                                title="<?= _("Unlimited") ?>">
                                 <i class="fas fa-infinity"></i>
                             </button>
                         </div>
@@ -271,14 +298,27 @@
                     <?php if (isset($_SESSION["DNS_SYSTEM"]) && !empty($_SESSION["DNS_SYSTEM"])) { ?>
                         <p class="form-label u-mb10"><?= _("Name Servers") ?></p>
                         <div class="u-mb5">
-                            <input type="text" class="form-control" name="v_ns1" value="<?= htmlentities(trim($v_ns1, "'")) ?>">
+                            <?php $v_ns1_value = htmlentities(trim($v_ns1, "'")); ?>
+                            <input
+                                type="text"
+                                class="form-control"
+                                name="v_ns1"
+                                value="<?= $v_ns1_value ?>">
                         </div>
                         <div class="u-mb5">
-                            <input type="text" class="form-control" name="v_ns2" value="<?= htmlentities(trim($v_ns2, "'")) ?>">
+                            <?php $v_ns2_value = htmlentities(trim($v_ns2, "'")); ?>
+                            <input
+                                type="text"
+                                class="form-control"
+                                name="v_ns2"
+                                value="<?= $v_ns2_value ?>">
                         </div>
                         <?php require $_SERVER["HESTIA"] . "/web/templates/includes/extra-ns-fields.php"; ?>
                         <?php $ns8_style = $v_ns8 ? 'style="display:none;"' : ''; ?>
-                        <button type="button" class="form-link u-mt20 js-add-ns" <?= $ns8_style ?>>
+                        <button
+                            type="button"
+                            class="form-link u-mt20 js-add-ns"
+                            <?= $ns8_style ?>>
                             <?= _("Add Name Server") ?>
                         </button>
                     <?php } ?>
@@ -297,7 +337,10 @@
                                 name="v_mail_domains"
                                 id="v_mail_domains"
                                 value="<?= htmlentities(trim($v_mail_domains, "'")) ?>">
-                            <button type="button" class="unlimited-toggle js-unlimited-toggle" title="<?= _("Unlimited") ?>">
+                            <button
+                                type="button"
+                                class="unlimited-toggle js-unlimited-toggle"
+                                title="<?= _("Unlimited") ?>">
                                 <i class="fas fa-infinity"></i>
                             </button>
                         </div>
@@ -312,7 +355,10 @@
                                 name="v_mail_accounts"
                                 id="v_mail_accounts"
                                 value="<?= htmlentities(trim($v_mail_accounts, "'")) ?>">
-                            <button type="button" class="unlimited-toggle js-unlimited-toggle" title="<?= _("Unlimited") ?>">
+                            <button
+                                type="button"
+                                class="unlimited-toggle js-unlimited-toggle"
+                                title="<?= _("Unlimited") ?>">
                                 <i class="fas fa-infinity"></i>
                             </button>
                         </div>
@@ -342,7 +388,13 @@
                                 name="v_databases"
                                 id="v_databases"
                                 value="<?= htmlentities(trim($v_databases, "'")) ?>">
-                            <button type="button" class="unlimited-toggle js-unlimited-toggle" title="<?= _("Unlimited") ?>">
+                            <button
+                                type="button"
+                                class="unlimited-toggle js-unlimited-toggle"
+                                title="<?= _("Unlimited") ?>">
+                                type="button"
+                                class="unlimited-toggle js-unlimited-toggle"
+                                title="<?= _("Unlimited") ?>">
                                 <i class="fas fa-infinity"></i>
                             </button>
                         </div>
@@ -362,7 +414,10 @@
                                 name="v_cron_jobs"
                                 id="v_cron_jobs"
                                 value="<?= htmlentities(trim($v_cron_jobs, "'")) ?>">
-                            <button type="button" class="unlimited-toggle js-unlimited-toggle" title="<?= _("Unlimited") ?>">
+                            <button
+                                type="button"
+                                class="unlimited-toggle js-unlimited-toggle"
+                                title="<?= _("Unlimited") ?>">
                                 <i class="fas fa-infinity"></i>
                             </button>
                         </div>

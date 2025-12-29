@@ -243,7 +243,7 @@
                             <span class="u-ml5">
                                 <?= $_SESSION["WEB_BACKEND"] ?>
                             </span>
-                            <a href="/edit/server/<? echo $_SESSION["WEB_BACKEND"] ?>/" class="u-ml5">
+                            <a href="/edit/server/<?= $_SESSION["WEB_BACKEND"] ?>/" class="u-ml5">
                                 <i class="fas fa-pencil icon-orange"></i>
                             </a>
                         </p>
@@ -327,7 +327,7 @@
                             <span class="u-ml5">
                                 <?= $_SESSION["DNS_SYSTEM"] ?>
                             </span>
-                            <a href="/edit/server/<? echo $_SESSION["DNS_SYSTEM"] ?>/" class="u-ml5">
+                            <a href="/edit/server/<?= $_SESSION["DNS_SYSTEM"] ?>/" class="u-ml5">
                                 <i class="fas fa-pencil icon-orange"></i>
                             </a>
                         </p>
@@ -373,7 +373,7 @@
                             <span class="u-ml5">
                                 <?= $_SESSION["MAIL_SYSTEM"] ?>
                             </span>
-                            <a href="/edit/server/<? echo $_SESSION["MAIL_SYSTEM"] ?>/" class="u-ml5">
+                            <a href="/edit/server/<?= $_SESSION["MAIL_SYSTEM"] ?>/" class="u-ml5">
                                 <i class="fas fa-pencil icon-orange"></i>
                             </a>
                         </p>
@@ -383,7 +383,7 @@
                                 <span class="u-ml5">
                                     <?= $_SESSION["ANTIVIRUS_SYSTEM"] ?>
                                 </span>
-                                <a href="/edit/server/<? echo $_SESSION["ANTIVIRUS_SYSTEM"] ?>/" class="u-ml5">
+                                <a href="/edit/server/<?= $_SESSION["ANTIVIRUS_SYSTEM"] ?>/" class="u-ml5">
                                     <i class="fas fa-pencil icon-orange"></i>
                                 </a>
                             </p>

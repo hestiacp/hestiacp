@@ -256,10 +256,16 @@
                             <div class="alert alert-info u-mb10" role="alert">
                                 <i class="fas fa-info"></i>
                                 <?php
-                                $save_changes_msg = _(
-                                    "It may take a few minutes to save your changes. Please wait until the process has completed"
-                                ) . " " . _("and do not refresh the page.");
+                                $save_changes_part1 = _(
+                                    'It may take a few minutes to save your changes.'
+                                ) . ' ' . _(
+                                    'Please wait until the process has completed'
+                                );
+                                $save_changes_part2 = _('and do not refresh the page.');
+                                $save_changes_msg = $save_changes_part1 . ' ' . $save_changes_part2;
                                 ?>
+
+
                                 <p><?= $save_changes_msg ?></p>
                             </div>
                         </div>
@@ -336,7 +342,7 @@
                             $i = 0;
                             foreach ($dns_cluster as $key => $value) {
                                 $i++;
-                                ?>
+                        ?>
                                 <div>
                                     <label for="v_dns_remote_host" class="form-label">
                                         <?= _("Host") . " #" . $i ?>
@@ -349,7 +355,7 @@
                                         value="<?= $key ?>"
                                         disabled>
                                 </div>
-                            <?php }
+                        <?php }
                         } ?>
                     </div>
                 </details>
@@ -531,7 +537,7 @@
                             $i = 0;
                             foreach ($v_mysql_hosts as $value) {
                                 $i++;
-                                ?>
+                            ?>
                                 <div class="u-pl30">
                                     <div class="u-mb10">
                                         <label for="v_mysql_host" class="form-label">
@@ -582,7 +588,7 @@
                                             disabled>
                                     </div>
                                 </div>
-                            <?php }
+                        <?php }
                         } ?>
                         <!-- PostgreSQL Options-->
                         <?php if ($v_pgsql == "yes") { ?>
@@ -617,10 +623,12 @@
                                 $pgsql_host_html = htmlentities($value["HOST"]);
                                 $psql_max_html = htmlentities($value["MAX_DB"]);
                                 $pgsql_max_html = htmlentities($value["U_DB_BASES"]);
-                                ?>
+                        ?>
                                 <div class="u-pl30">
                                     <div class="u-mb10">
-                                        <label for="v_pgsql_host" class="form-label"><?= _("Host") . " #" . $i ?></label>
+                                        <label for="v_pgsql_host" class="form-label">
+                                            <?= _("Host") ?> #<?= $i ?>
+                                        </label>
                                         <input
                                             type="text"
                                             class="form-control"
@@ -657,8 +665,8 @@
                             <?php } ?>
                     </div>
                 </details>
-                        <?php } ?>
             <?php } ?>
+        <?php } ?>
 
         <!-- Backups section -->
         <details class="box-collapse u-mb10">
@@ -705,11 +713,14 @@
                 <div class="u-mb10">
                     <label for="v_backup_gzip" class="form-label">
                         <?= _("Compression Level") ?>
+                        <?php
+                        $backup_optimal_compression_href = sprintf(
+                            '%s#%s',
+                            'https://hestiacp.com/docs/server-administration/backup-restore.html',
+                            'what-is-the-optimal-compression-ratio'
+                        );
+                        ?>
                         <a
-                            <?php
-                            $backup_optimal_compression_href = 'https://hestiacp.com/docs/server-administration/backup-restore.html'
-                                . '#what-is-the-optimal-compression-ratio';
-                            ?>
                             href="<?= $backup_optimal_compression_href ?>"
                             target="_blank"
                             class="u-ml5">
@@ -731,8 +742,11 @@
                     <label for="v_backup_dir" class="form-label">
                         <?= _("Directory") ?>
                         <?php
-                        $backup_change_folder_href = 'https://hestiacp.com/docs/server-administration/backup-restore.html'
-                            . '#how-to-change-default-backup-folder';
+                        $backup_change_folder_href = sprintf(
+                            '%s#%s',
+                            'https://hestiacp.com/docs/server-administration/backup-restore.html',
+                            'how-to-change-default-backup-folder'
+                        );
                         ?>
                         <a
                             href="<?= $backup_change_folder_href ?>"
@@ -765,8 +779,11 @@
                         <label for="backup_type" class="form-label">
                             <?= _("Protocol") ?>
                             <?php
-                            $backup_protocol_docs_url = 'https://hestiacp.com/docs/server-administration/backup-restore.html'
-                                . '#what-kind-of-protocols-are-currently-supported';
+                            $backup_protocol_docs_url = sprintf(
+                                '%s#%s',
+                                'https://hestiacp.com/docs/server-administration/backup-restore.html',
+                                'what-kind-of-protocols-are-currently-supported'
+                            );
                             ?>
                             <a
                                 href="<?= $backup_protocol_docs_url ?>"
@@ -1123,10 +1140,10 @@
                                     <span class="optional">1 IP address per line</span>
                                 </label>
                                 <textarea class="form-control" name="v_api_allowed_ip" id="v_api_allowed_ip"><?php
-                                foreach (explode(",", $_SESSION["API_ALLOWED_IP"]) as $ip) {
-                                    echo trim($ip) . "\n";
-                                }
-                                ?></textarea>
+                                                                                                                foreach (explode(",", $_SESSION["API_ALLOWED_IP"]) as $ip) {
+                                                                                                                    echo trim($ip) . "\n";
+                                                                                                                }
+                                                                                                                ?></textarea>
                             </div>
                         </div>
                         <h3 class="u-mt20 u-mb10">
@@ -1216,7 +1233,14 @@
                                     <option value="yes">
                                         <?= _("Yes") ?>
                                     </option>
-                                    <option value="no" <?= $_SESSION["POLICY_SYSTEM_PROTECTED_ADMIN"] !== "yes" ? "selected" : "" ?>>
+                                    <?php
+                                    $policy_system_protected_admin_selected_no = (
+                                        $_SESSION['POLICY_SYSTEM_PROTECTED_ADMIN'] ?? ''
+                                    ) !== 'yes'
+                                        ? 'selected'
+                                        : '';
+                                    ?>
+                                    <option value="no" <?= $policy_system_protected_admin_selected_no ?>>
                                         <?= _("No") ?>
                                     </option>
                                 </select>
@@ -1232,7 +1256,8 @@
                                     <option value="yes">
                                         <?= _("Yes") ?>
                                     </option>
-                                    <option value="no" <?= $_SESSION["POLICY_SYSTEM_HIDE_ADMIN"] !== "yes" ? "selected" : "" ?>>
+                                    <?php $policy_system_hide_admin_selected_no = $_SESSION["POLICY_SYSTEM_HIDE_ADMIN"] !== "yes" ? 'selected' : ''; ?>
+                                    <option value="no" <?= $policy_system_hide_admin_selected_no ?>>
                                         <?= _("No") ?>
                                     </option>
                                 </select>
@@ -1276,7 +1301,12 @@
                                 <option value="yes">
                                     <?= _("Yes") ?>
                                 </option>
-                                <option value="no" <?= $_SESSION["POLICY_USER_EDIT_DETAILS"] == "no" ? "selected" : "" ?>>
+                                <?php
+                                $policy_user_edit_details_selected_no = $_SESSION["POLICY_USER_EDIT_DETAILS"] == "no"
+                                    ? 'selected'
+                                    : '';
+                                ?>
+                                <option value="no" <?= $policy_user_edit_details_selected_no ?>>
                                     <?= _("No") ?>
                                 </option>
                             </select>
@@ -1285,7 +1315,10 @@
                             <label for="v_policy_user_edit_web_templates" class="form-label">
                                 <?= _("Allow users to change templates when editing web domains") ?>
                             </label>
-                            <select class="form-select" name="v_policy_user_edit_web_templates" id="v_policy_user_edit_web_templates">
+                            <select
+                                class="form-select"
+                                name="v_policy_user_edit_web_templates"
+                                id="v_policy_user_edit_web_templates">
                                 <option value="yes">
                                     <?= _("Yes") ?>
                                 </option>

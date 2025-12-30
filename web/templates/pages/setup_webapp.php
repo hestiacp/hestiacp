@@ -26,12 +26,17 @@
             <div class="form-container">
                 <h1 class="u-mb20"><?= sprintf(_("Install %s"), $WebappInstaller->applicationName()) ?></h1>
                 <?php show_alert_message($_SESSION); ?>
-                <?php if (!$WebappInstaller->isDomainRootClean()) { ?>
+                <?php if (!$WebappInstaller->isDomainRootClean()) {
+                    $data_loss_warning = _(
+                        "Your web folder already has files uploaded to it. "
+                            . "The installer will overwrite your files and/or the installation might fail."
+                    );
+                    ?>
                     <div class="alert alert-info u-mb10" role="alert">
                         <i class="fas fa-info"></i>
                         <div>
                             <p class="u-mb10"><?= _("Data Loss Warning!") ?></p>
-                            <p class="u-mb10"><?= _("Your web folder already has files uploaded to it. The installer will overwrite your files and/or the installation might fail.") ?></p>
+                            <p class="u-mb10"><?= $data_loss_warning ?></p>
                             <p><?php echo sprintf(_("Please make sure ~/web/%s/public_html is empty!"), $v_domain); ?></p>
                         </div>
                     </div>
@@ -42,8 +47,8 @@
                     $field_value = "";
                     $field_label =
                         isset($form_control["label"])
-                            ? htmlentities($form_control["label"])
-                            : ucwords(str_replace([".","_"], " ", $form_name));
+                        ? htmlentities($form_control["label"])
+                        : ucwords(str_replace([".", "_"], " ", $form_name));
                     $field_placeholder = "";
                     if (is_array($form_control)) {
                         $field_type = !empty($form_control["type"]) ? $form_control["type"] : "text";
@@ -86,8 +91,7 @@
                                     name="<?= $field_name ?>"
                                     id="<?= $field_name ?>"
                                     value="true"
-                                    <?= $checked ?>
-                                >
+                                    <?= $checked ?>>
                                 <label for="<?= $field_name ?>">
                                     <?= $field_label ?>
                                 </label>
@@ -100,8 +104,7 @@
                                         class="form-control js-password-input"
                                         name="<?= $field_name ?>"
                                         id="<?= $field_name ?>"
-                                        placeholder="<?= $field_placeholder ?>"
-                                    >
+                                        placeholder="<?= $field_placeholder ?>">
                                     <div class="password-meter">
                                         <meter max="4" class="password-meter-input js-password-meter"></meter>
                                     </div>
@@ -113,8 +116,7 @@
                                     name="<?= $field_name ?>"
                                     id="<?= $field_name ?>"
                                     placeholder="<?= $field_placeholder ?>"
-                                    value="<?= $field_value ?>"
-                                >
+                                    value="<?= $field_value ?>">
                             <?php endif; ?>
                         <?php endif; ?>
                     </div>

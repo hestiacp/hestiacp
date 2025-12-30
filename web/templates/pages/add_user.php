@@ -95,8 +95,15 @@
                 </label>
             </div>
             <div x-cloak x-show="!loginDisabled" id="send-welcome">
+                <?php $email_notice_attr = (!empty($v_email_notice) && $v_email_notice === 'yes') ? 'checked' : ''; ?>
                 <div class="form-check u-mb10">
-                    <input class="form-check-input js-sync-email-checkbox" type="checkbox" name="v_email_notice" id="v_email_notify" tabindex="5">
+                    <input
+                        class="form-check-input js-sync-email-checkbox"
+                        type="checkbox"
+                        name="v_email_notice"
+                        id="v_email_notify"
+                        tabindex="5"
+                        <?= $email_notice_attr ?>>
                     <label for="v_email_notify">
                         <?= _("Send welcome email") ?>
                     </label>

@@ -1,11 +1,17 @@
 <div class="login">
     <a href="/" class="u-block u-mb40">
-        <img src="/images/logo.svg" alt="<?= htmlentities($_SESSION["APP_NAME"]) ?>" width="100" height="120">
+        <img
+            src="/images/logo.svg"
+            alt="<?= htmlentities($_SESSION["APP_NAME"]) ?>"
+            width="100"
+            height="120">
     </a>
     <form id="login-form" method="post" action="/login/">
         <input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
+        <?php $login_username = htmlspecialchars($_SESSION["login"]["username"]); ?>
         <h1 class="login-title">
-            <?= _("Welcome") ?> <?= htmlspecialchars($_SESSION["login"]["username"]) ?>!
+            <?= _("Welcome") ?>
+            <?= $login_username ?>!
         </h1>
         <div class="u-mb20">
             <label for="password" class="form-label u-side-by-side">
@@ -16,7 +22,14 @@
                     </a>
                 <?php } ?>
             </label>
-            <input type="password" class="form-control" name="password" id="password" autocomplete="current-password" required autofocus>
+            <input
+                type="password"
+                class="form-control"
+                name="password"
+                id="password"
+                autocomplete="current-password"
+                required
+                autofocus>
         </div>
         <div class="u-side-by-side">
             <button type="submit" class="button">

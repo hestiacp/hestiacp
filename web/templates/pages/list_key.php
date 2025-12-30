@@ -4,26 +4,34 @@
         <div class="toolbar-buttons">
             <?php
             $back_token = $_SESSION['token'];
-            if ($_SESSION["userContext"] === "admin" && $_SESSION['look'] !== '' && $_GET["user"] !== $_SESSION['ROOT_USER']) {
+            if (
+                $_SESSION["userContext"] === "admin"
+                && $_SESSION['look'] !== ''
+                && $_GET["user"] !== $_SESSION['ROOT_USER']
+            ) {
                 $back_user = htmlentities($_SESSION["look"]);
             } else {
                 $back_user = htmlentities($_SESSION["user"]);
             }
-            $back_href = "/edit/user/?user={$back_user}&token={$back_token}";
+
+            $back_href = '/edit/user/?user=' . $back_user . '&token=' . $back_token;
             ?>
-            <a href="<?= $back_href ?>" class="button button-secondary button-back js-button-back">
+            <a
+                class="button button-secondary button-back js-button-back"
+                href="<?= $back_href ?>">
                 <i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
             </a>
 
             <?php if ($_SESSION["userContext"] === "admin" && isset($_GET["user"]) && $_GET["user"] !== "admin") { ?>
-                <a href="/add/key/?user=<?= htmlentities($_GET["user"]) ?>" class="button button-secondary js-button-create">
-                    <i class="fas fa-circle-plus icon-green"></i><?= _("Add SSH Key") ?>
-                </a>
+                <?php $add_key_href = '/add/key/?user=' . htmlentities($_GET["user"]); ?>
             <?php } else { ?>
-                <a href="/add/key/" class="button button-secondary js-button-create">
-                    <i class="fas fa-circle-plus icon-green"></i><?= _("Add SSH Key") ?>
-                </a>
+                <?php $add_key_href = '/add/key/'; ?>
             <?php } ?>
+            <a
+                class="button button-secondary js-button-create"
+                href="<?= $add_key_href ?>">
+                <i class="fas fa-circle-plus icon-green"></i><?= _("Add SSH Key") ?>
+            </a>
         </div>
     </div>
 </div>
@@ -49,6 +57,7 @@
             $delete_href = (($_SESSION["userContext"] === "admin") && isset($_GET["user"]) && $_GET["user"] !== "admin")
                 ? "/delete/key/?user=" . htmlentities($_GET["user"]) . "&key=" . $key . "&token=" . $_SESSION["token"]
                 : "/delete/key/?key=" . $key . "&token=" . $_SESSION["token"];
+            $delete_confirm_message = sprintf(_("Are you sure you want to delete SSH key %s?"), $key);
             ?>
             <div class="units-table-row js-unit" style="<?= $row_style ?>">
                 <div class="units-table-cell units-table-heading-cell u-text-bold">
@@ -65,7 +74,7 @@
                                 href="<?= $delete_href ?>"
                                 title="<?= _("Delete") ?>"
                                 data-confirm-title="<?= _("Delete") ?>"
-                                data-confirm-message="<?= sprintf(_("Are you sure you want to delete SSH key %s?"), $key) ?>">
+                                data-confirm-message="<?= $delete_confirm_message ?>">
                                 <i class="fas fa-trash icon-red"></i>
                                 <span class="u-hide-desktop"><?= _("Delete") ?></span>
                             </a>

@@ -6,10 +6,10 @@ include $_SERVER["DOCUMENT_ROOT"] . "/inc/main.php";
 verify_csrf($_GET);
 
 if ($_GET["type"] == "access") {
-	$type = "access";
+    $type = "access";
 }
 if ($_GET["type"] == "error") {
-	$type = "error";
+    $type = "error";
 }
 
 header("Cache-Control: public");
@@ -20,22 +20,22 @@ header("Content-Transfer-Encoding: binary");
 
 $v_domain = $_GET["domain"];
 if ($_GET["type"] == "access") {
-	$type = "access";
+    $type = "access";
 }
 if ($_GET["type"] == "error") {
-	$type = "error";
+    $type = "error";
 }
 $cmd = implode(" ", [
-	"/usr/bin/sudo " . escapeshellarg(HESTIA_DIR_BIN . "v-list-web-domain-" . $type . "log"),
-	// $user is already shell-escaped
-	$user,
-	escapeshellarg($v_domain),
-	"5000",
+    "/usr/bin/sudo " . escapeshellarg(HESTIA_DIR_BIN . "v-list-web-domain-" . $type . "log"),
+    // $user is already shell-escaped
+    $user,
+    escapeshellarg($v_domain),
+    "5000",
 ]);
 
 passthru($cmd, $return_var);
 if ($return_var != 0) {
-	$errstr = "Internal server error: command returned non-zero: {$return_var}: {$cmd}";
-	echo $errstr;
-	throw new Exception($errstr); // make sure it ends up in an errorlog somewhere
+    $errstr = "Internal server error: command returned non-zero: {$return_var}: {$cmd}";
+    echo $errstr;
+    throw new Exception($errstr); // make sure it ends up in an errorlog somewhere
 }

@@ -3,6 +3,10 @@ $v_webmail_alias = "webmail";
 if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
     $v_webmail_alias = $_SESSION["WEBMAIL_ALIAS"];
 }
+$domain_html = htmlspecialchars($_GET['domain']);
+$add_mail_href = '/add/mail/?domain=' . $domain_html;
+$edit_domain_href = '/edit/mail/?domain=' . $domain_html;
+$search_value = isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '';
 ?>
 <!-- Begin toolbar -->
 <div class="toolbar">
@@ -12,10 +16,14 @@ if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
                 <i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
             </a>
             <?php if ($read_only !== "true") { ?>
-                <a href="/add/mail/?domain=<?= htmlentities($_GET["domain"]) ?>" class="button button-secondary js-button-create">
+                <a
+                    href="<?= $add_mail_href ?>"
+                    class="button button-secondary js-button-create">
                     <i class="fas fa-circle-plus icon-green"></i><?= _("Add Mail Account") ?>
                 </a>
-                <a href="/edit/mail/?domain=<?= htmlentities($_GET["domain"]) ?>" class="button button-secondary js-button-create">
+                <a
+                    href="<?= $edit_domain_href ?>"
+                    class="button button-secondary js-button-create">
                     <i class="fas fa-pencil icon-blue"></i><?= _("Edit Mail Domain") ?>
                 </a>
             <?php } ?>
@@ -23,9 +31,14 @@ if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
         <div class="toolbar-right">
             <div class="toolbar-sorting">
                 <?php $sort_label = $_SESSION['userSortOrder'] === 'name' ? _('Name') : _('Date'); ?>
-                <?php $date_active = $_SESSION['userSortOrder'] === 'date' ? 'active' : '';
-                $name_active = $_SESSION['userSortOrder'] === 'name' ? 'active' : ''; ?>
-                <button class="toolbar-sorting-toggle js-toggle-sorting-menu" type="button" title="<?= _("Sort items") ?>">
+                <?php
+                $date_active = $_SESSION['userSortOrder'] === 'date' ? 'active' : '';
+                $name_active = $_SESSION['userSortOrder'] === 'name' ? 'active' : '';
+                ?>
+                <button
+                    class="toolbar-sorting-toggle js-toggle-sorting-menu"
+                    type="button"
+                    title="<?= _("Sort items") ?>">
                     <?= _("Sort by") ?>:
                     <span class="u-text-bold">
                         <?= $sort_label ?> <i class="fas fa-arrow-down-a-z"></i>
@@ -33,7 +46,10 @@ if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
                 </button>
                 <ul class="toolbar-sorting-menu js-sorting-menu u-hidden">
                     <li data-entity="sort-date" data-sort-as-int="1">
-                        <span class="name <?= $date_active ?>"><?= _("Date") ?> <i class="fas fa-arrow-down-a-z"></i></span>
+                        <span class="name <?= $date_active ?>">
+                            <?= _("Date") ?>
+                            <i class="fas fa-arrow-down-a-z"></i>
+                        </span>
                         <span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
                     </li>
                     <li data-entity="sort-disk" data-sort-as-int="1">
@@ -41,18 +57,24 @@ if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
                         <span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
                     </li>
                     <li data-entity="sort-name">
-                        <span class="name <?= $name_active ?>"><?= _("Name") ?> <i class="fas fa-arrow-down-a-z"></i></span>
+                        <span class="name <?= $name_active ?>">
+                            <?= _("Name") ?>
+                            <i class="fas fa-arrow-down-a-z"></i>
+                        </span>
                         <span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
                     </li>
                     <li data-entity="sort-quota" data-sort-as-int="1">
-                        <span class="name"><?= _("Quota") ?> <i class="fas fa-arrow-down-a-z"></i></span>
+                        <span class="name">
+                            <?= _("Quota") ?>
+                            <i class="fas fa-arrow-down-a-z"></i>
+                        </span>
                         <span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
                     </li>
                 </ul>
                 <?php if ($read_only !== "true") { ?>
                     <form x-data x-bind="BulkEdit" action="/bulk/mail/" method="post">
                         <input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
-                        <input type="hidden" value="<?= htmlspecialchars($_GET["domain"]) ?>" name="domain">
+                        <input type="hidden" value="<?= $domain_html ?>" name="domain">
                         <select class="form-select" name="action">
                             <option value=""><?= _("Apply to selected") ?></option>
                             <option value="suspend"><?= _("Suspend") ?></option>
@@ -71,7 +93,7 @@ if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
                     <input type="search"
                         class="form-control js-search-input"
                         name="q"
-                        value="<?= isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>"
+                        value="<?= $search_value ?>"
                         title="<?= _("Search") ?>">
                     <button type="submit" class="toolbar-input-submit" title="<?= _("Search") ?>">
                         <i class="fas fa-magnifying-glass"></i>
@@ -90,7 +112,11 @@ if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
     <div class="units-table js-units-container">
         <div class="units-table-header">
             <div class="units-table-cell">
-                <input type="checkbox" class="js-toggle-all-checkbox" title="<?= _("Select all") ?>" <?= $display_mode ?>>
+                <input
+                    type="checkbox"
+                    class="js-toggle-all-checkbox"
+                    title="<?= _("Select all") ?>"
+                    <?= $display_mode ?>>
             </div>
             <div class="units-table-cell"><?= _("Name") ?></div>
             <div class="units-table-cell"></div>
@@ -106,11 +132,16 @@ if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
         foreach ($data as $key => $value) {
             ++$i;
             $domain_html = htmlspecialchars($_GET['domain']);
-            $account_display = $key . '@' . htmlentities($_GET['domain']);
-            $webmail_href = "http://{$v_webmail_alias}." . $domain_html . "/?_user=" . $key . "@" . $domain_html;
-            $edit_href = "/edit/mail/?domain=" . $domain_html . "&account=" . $key . "&token=" . $_SESSION['token'];
+            $account_display = $key . '@' . $domain_html;
+            $webmail_href = 'http://' . $v_webmail_alias . '.' . $domain_html
+                . '/?_user=' . $key . '@' . $domain_html;
+            $edit_href = '/edit/mail/?domain=' . $domain_html
+                . '&account=' . $key
+                . '&token=' . $_SESSION['token'];
             $edit_title_full = _('Edit Mail Account') . ': ' . $account_display;
-            $delete_href = "/delete/mail/?domain=" . $domain_html . "&account=" . $key . "&token=" . $_SESSION['token'];
+            $delete_href = '/delete/mail/?domain=' . $domain_html
+                . '&account=' . $key
+                . '&token=' . $_SESSION['token'];
             $delete_confirm_message = sprintf(_('Are you sure you want to delete %s?'), $key);
             if ($data[$key]['SUSPENDED'] == 'yes') {
                 $status = 'suspended';
@@ -169,7 +200,9 @@ if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
                     $autoreply_title = _('Enabled');
                 }
             }
-            $spnd_action_href = "/{$spnd_action}/mail/?domain=" . $domain_html . "&account=" . $key . "&token=" . $_SESSION['token'];
+            $spnd_action_href = '/' . $spnd_action . '/mail/?domain=' . $domain_html
+                . '&account=' . $key
+                . '&token=' . $_SESSION['token'];
             $spnd_confirmation_full = sprintf($spnd_confirmation, $key);
             ?>
             <div class="<?= $row_classes ?>"
@@ -193,7 +226,7 @@ if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
                 <div class="units-table-cell units-table-heading-cell u-text-bold">
                     <span class="u-hide-desktop"><?= _("Name") ?>:</span>
                     <?php if ($read_only === "true" || $data[$key]["SUSPENDED"] == "yes") { ?>
-                        <?= $key . "@" . htmlentities($_GET["domain"]) ?>
+                        <?= $key . '@' . $domain_html ?>
                     <?php } else { ?>
                         <a href="<?= $edit_href ?>" title="<?= $edit_title_full ?>">
                             <?= $account_display; ?>
@@ -203,7 +236,8 @@ if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
                 <div class="units-table-cell">
                     <ul class="units-table-row-actions">
                         <?php if ($read_only === "true") { ?>
-                            <!-- Restrict the ability to edit, delete, or suspend domain items when impersonating 'admin' account -->
+                            <!-- Restrict the ability to edit, delete, or suspend domain items
+                                 when impersonating 'admin' account -->
                             <?php if ($data[$key]["SUSPENDED"] != "yes") { ?>
                                 <li class="units-table-row-action" data-key-action="href">
                                     <a

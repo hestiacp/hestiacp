@@ -16,15 +16,20 @@
                     <i class="fas fa-shield-halved icon-red"></i><?= _("Firewall") ?>
                 </a>
             <?php } ?>
+            <?php
+            $system_restart_href = "/restart/system/?hostname="
+                . $sys["sysinfo"]["HOSTNAME"]
+                . "&token=" . $_SESSION["token"]
+                . "&system_reset_token=" . time();
+            ?>
             <a href="/list/log/?user=system&token=<?= $_SESSION["token"] ?>" class="button button-secondary">
                 <i class="fas fa-binoculars icon-orange"></i><?= _("Logs") ?>
             </a>
             <a
                 class="button button-secondary button-danger data-controls js-confirm-action"
-                href="/restart/system/?hostname=<?= $sys["sysinfo"]["HOSTNAME"] ?>&token=<?= $_SESSION["token"] ?>&system_reset_token=<?= time() ?>"
+                href="<?= $system_restart_href ?>"
                 data-confirm-title="<?= _("Restart") ?>"
-                data-confirm-message="<?= _("Are you sure you want to restart the server?") ?>"
-            >
+                data-confirm-message="<?= _("Are you sure you want to restart the server?") ?>">
                 <i class="fas fa-arrow-rotate-left icon-red"></i><?= _("Restart") ?>
             </a>
         </div>
@@ -73,7 +78,10 @@
                     </span>
                 </li>
                 <li class="server-summary-item">
-                    <span class="server-summary-list-label"><?= _("Load Average") ?> <span class="hint">(1m / 5m / 15m)</span></span>
+                    <span class="server-summary-list-label">
+                        <?= _("Load Average") ?>
+                        <span class="hint">(1m / 5m / 15m)</span>
+                    </span>
                     <span class="server-summary-list-value">
                         <?= $sys["sysinfo"]["LOADAVERAGE"] ?>
                     </span>
@@ -133,9 +141,19 @@
             if ($cpu == '0.0') {
                 $cpu = 0;
             }
+            // Precompute per-row values to avoid very long inline attributes
+            $restart_confirm = sprintf(
+                _("Are you sure you want to restart the %s service?"),
+                $key
+            );
+            $action_confirm_message = ($action == 'stop')
+                ? sprintf(_('Are you sure you want to stop the %s service?'), $key)
+                : sprintf(_('Are you sure you want to start the %s service?'), $key);
+            $edit_title = _('Edit') . ': ' . $key;
             ?>
+
             <div class="units-table-row <?php if ($status == 'suspended') {
-                echo 'disabled';
+                                            echo 'disabled';
                                         } ?> js-unit"
                 data-sort-name="<?= strtolower($key) ?>"
                 data-sort-memory="<?= $data[$key]["MEM"] ?>"
@@ -143,15 +161,21 @@
                 data-sort-uptime="<?= $data[$key]["RTIME"] ?>">
                 <div class="units-table-cell">
                     <div>
-                        <input id="check<?= $i ?>" class="js-unit-checkbox" type="checkbox" title="<?= _("Select") ?>" name="service[]" value="<?= $key ?>">
+                        <input
+                            id="check<?= $i ?>"
+                            class="js-unit-checkbox"
+                            type="checkbox"
+                            title="<?= _("Select") ?>"
+                            name="service[]"
+                            value="<?= $key ?>">
                         <label for="check<?= $i ?>" class="u-hide-desktop"><?= _("Select") ?></label>
                     </div>
                 </div>
                 <div class="units-table-cell units-table-heading-cell u-text-bold">
                     <span class="u-hide-desktop"><?= _("Service") ?>:</span>
                     <i class="fas <?= $state_icon ?> u-mr5"></i>
-                    <a href="/edit/server/<?= $edit_url ?>/" title="<?= _("Edit") ?>: <?= $key ?>">
-                    <?= $key ?>
+                    <a href="/edit/server/<?= $edit_url ?>/" title="<?= $edit_title ?>">
+                        <?= $key ?>
                     </a>
                 </div>
                 <div class="units-table-cell">
@@ -160,8 +184,7 @@
                             <a
                                 class="units-table-row-action-link"
                                 href="/edit/server/<?= $edit_url ?>/"
-                                title="<?= _("Edit") ?>"
-                            >
+                                title="<?= _("Edit") ?>">
                                 <i class="fas fa-pencil icon-orange"></i>
                                 <span class="u-hide-desktop"><?= _("Edit") ?></span>
                             </a>
@@ -172,8 +195,7 @@
                                 href="/restart/service/?srv=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
                                 title="<?= _("Restart") ?>"
                                 data-confirm-title="<?= _("Restart") ?>"
-                                data-confirm-message="<?= sprintf(_("Are you sure you want to restart the %s service?"), $key) ?>"
-                            >
+                                data-confirm-message="<?= $restart_confirm ?>">
                                 <i class="fas fa-arrow-rotate-left icon-highlight"></i>
                                 <span class="u-hide-desktop"><?= _("Restart") ?></span>
                             </a>
@@ -184,12 +206,7 @@
                                 href="/<?= $action ?>/service/?srv=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
                                 title="<?= $action_text ?>"
                                 data-confirm-title="<?= $action_text ?>"
-                                data-confirm-message="<?php if ($action == 'stop') {
-                                    echo sprintf(_('Are you sure you want to stop the %s service?'), $key);
-                                                      } else {
-                                                          echo sprintf(_('Are you sure you want to start the %s service?'), $key);
-                                                      }?>"
-                            >
+                                data-confirm-message="<?= $action_confirm_message ?>">
                                 <i class="fas <?= $spnd_icon ?> <?= $spnd_icon_class ?>"></i>
                                 <span class="u-hide-desktop"><?= $action_text ?></span>
                             </a>
@@ -198,19 +215,19 @@
                 </div>
                 <div class="units-table-cell">
                     <span class="u-hide-desktop u-text-bold"><?= _("Description") ?>:</span>
-                <?= _($data[$key]["SYSTEM"]) ?>
+                    <?= _($data[$key]["SYSTEM"]) ?>
                 </div>
                 <div class="units-table-cell u-text-bold u-text-center-desktop">
                     <span class="u-hide-desktop"><?= _("Uptime") ?>:</span>
-                <?= humanize_time($data[$key]["RTIME"]) ?>
+                    <?= humanize_time($data[$key]["RTIME"]) ?>
                 </div>
                 <div class="units-table-cell u-text-bold u-text-center-desktop">
                     <span class="u-hide-desktop"><?= _("CPU") ?>:</span>
-                <?= $cpu ?>
+                    <?= $cpu ?>
                 </div>
                 <div class="units-table-cell u-text-bold u-text-center-desktop">
                     <span class="u-hide-desktop"><?= _("Memory") ?>:</span>
-                <?= $data[$key]["MEM"] ?> <?= _("MB") ?>
+                    <?= $data[$key]["MEM"] ?> <?= _("MB") ?>
                 </div>
             </div>
         <?php } ?>

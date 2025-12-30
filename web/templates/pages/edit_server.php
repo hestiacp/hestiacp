@@ -706,7 +706,8 @@
                     <label for="v_backup_gzip" class="form-label">
                         <?= _("Compression Level") ?>
                         <a
-                            href="https://hestiacp.com/docs/server-administration/backup-restore.html#what-is-the-optimal-compression-ratio"
+                            <?php $backup_optimal_compression_href = 'https://hestiacp.com/docs/server-administration/backup-restore.html#what-is-the-optimal-compression-ratio'; ?>
+                            href="<?= $backup_optimal_compression_href ?>"
                             target="_blank"
                             class="u-ml5">
                             <i class="fas fa-circle-question"></i>

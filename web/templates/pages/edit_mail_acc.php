@@ -111,7 +111,11 @@
                         <label for="v_aliases" class="form-label">
                             <?= _("Aliases") ?> <span class="optional">(<?= _("Use local-part without domain name") ?>)</span>
                         </label>
-                        <textarea class="form-control" name="v_aliases" id="v_aliases"><?= htmlentities(trim($v_aliases, "'")) ?></textarea>
+                        <?php $v_aliases_value = htmlentities(trim($v_aliases, "'")); ?>
+                        <textarea
+                            class="form-control"
+                            name="v_aliases"
+                            id="v_aliases"><?= $v_aliases_value ?></textarea>
                     </div>
                     <div class="u-mb10">
                         <label for="v_fwd" class="form-label">

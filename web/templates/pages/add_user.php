@@ -20,6 +20,7 @@
     <?php
     $x_login_disabled = ($v_login_disabled == "yes") ? 'true' : 'false';
     $pw_require_path = $_SERVER["HESTIA"] . "/web/templates/includes/password-requirements.php";
+    $no_login_msg = _("Do not allow user to log in to Control Panel");
     ?>
 
     <form
@@ -69,7 +70,10 @@
             <div class="u-mb10">
                 <label for="v_password" class="form-label">
                     <?= _("Password") ?>
-                    <button type="button" title="<?= _("Generate") ?>" class="u-unstyled-button u-ml5 js-generate-password">
+                    <button
+                        type="button"
+                        title="<?= _("Generate") ?>"
+                        class="u-unstyled-button u-ml5 js-generate-password">
                         <i class="fas fa-arrows-rotate icon-green"></i>
                     </button>
                 </label>
@@ -89,10 +93,13 @@
             </div>
             <?php require $pw_require_path; ?>
             <div class="form-check">
-                <input x-model="loginDisabled" class="form-check-input" type="checkbox" name="v_login_disabled" id="v_login_disabled">
-                <label for="v_login_disabled">
-                    <?= _("Do not allow user to log in to Control Panel") ?>
-                </label>
+                <input
+                    x-model="loginDisabled"
+                    class="form-check-input"
+                    type="checkbox"
+                    name="v_login_disabled"
+                    id="v_login_disabled">
+                <label for="v_login_disabled"><?= $no_login_msg ?></label>
             </div>
             <div x-cloak x-show="!loginDisabled" id="send-welcome">
                 <?php $email_notice_attr = (!empty($v_email_notice) && $v_email_notice === 'yes') ? 'checked' : ''; ?>
@@ -121,7 +128,12 @@
                         if (isset($v_language) && (htmlentities($key) == trim($v_language, "'"))) {
                             $selected = ' selected';
                         }
-                        printf("<option value=\"%s\"%s>%s</option>\n", htmlentities($key), $selected, htmlentities($value));
+                        printf(
+                            "<option value=\"%s\"%s>%s</option>\n",
+                            htmlentities($key),
+                            $selected,
+                            htmlentities($value)
+                        );
                     }
                     ?>
                 </select>
@@ -151,7 +163,12 @@
                                 $selected = ' selected';
                             }
                         }
-                        printf("<option value=\"%s\"%s>%s</option>\n", htmlentities($key), $selected, htmlentities($key));
+                        printf(
+                            "<option value=\"%s\"%s>%s</option>\n",
+                            htmlentities($key),
+                            $selected,
+                            htmlentities($key)
+                        );
                     }
                     ?>
                 </select>

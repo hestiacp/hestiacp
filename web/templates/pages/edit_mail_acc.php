@@ -57,7 +57,10 @@
                     <div class="u-mb10">
                         <label for="v_password" class="form-label">
                             <?= _("Password") ?>
-                            <button type="button" title="<?= _("Generate") ?>" class="u-unstyled-button u-ml5 js-generate-password">
+                            <button
+                                type="button"
+                                title="<?= _("Generate") ?>"
+                                class="u-unstyled-button u-ml5 js-generate-password">
                                 <i class="fas fa-arrows-rotate icon-green"></i>
                             </button>
                         </label>
@@ -102,14 +105,18 @@
                                 name="v_quota"
                                 id="v_quota"
                                 value="<?= $quota_value ?>">
-                            <button type="button" class="unlimited-toggle js-unlimited-toggle" title="<?= _("Unlimited") ?>">
+                            <button
+                                type="button"
+                                class="unlimited-toggle js-unlimited-toggle"
+                                title="<?= _("Unlimited") ?>">
                                 <i class="fas fa-infinity"></i>
                             </button>
                         </div>
                     </div>
                     <div class="u-mb10">
                         <label for="v_aliases" class="form-label">
-                            <?= _("Aliases") ?> <span class="optional">(<?= _("Use local-part without domain name") ?>)</span>
+                            <?= _("Aliases") ?>
+                            <span class="optional">(<?= _("Use local-part without domain name") ?>)</span>
                         </label>
                         <?php $v_aliases_value = htmlentities(trim($v_aliases, "'")); ?>
                         <textarea
@@ -119,7 +126,8 @@
                     </div>
                     <div class="u-mb10">
                         <label for="v_fwd" class="form-label">
-                            <?= _("Forward to") ?> <span class="optional">(<?= _("one or more email addresses") ?>)</span>
+                            <?= _("Forward to") ?>
+                            <span class="optional">(<?= _("one or more email addresses") ?>)</span>
                         </label>
                         <?php $fwd_disabled = ($v_blackhole == 'yes') ? 'disabled' : ''; ?>
                         <textarea
@@ -156,7 +164,8 @@
                     </div>
                     <div class="u-mb10">
                         <label for="v_fwd" class="form-label">
-                            <?= _("Forward to") ?> <span class="optional">(<?= _("one or more email addresses") ?>)</span>
+                            <?= _("Forward to") ?>
+                            <span class="optional">(<?= _("one or more email addresses") ?>)</span>
                         </label>
                         <?php $fwd_disabled = ($v_blackhole == 'yes') ? 'disabled' : ''; ?>
                         <textarea
@@ -165,7 +174,12 @@
                             id="v_fwd" <?= $fwd_disabled ?>><?= htmlentities(trim($v_fwd, "'")) ?></textarea>
                     </div>
                     <div class="form-check u-mb10">
-                        <input x-model="hasAutoReply" class="form-check-input" type="checkbox" name="v_autoreply" id="v_autoreply">
+                        <input
+                            x-model="hasAutoReply"
+                            class="form-check-input"
+                            type="checkbox"
+                            name="v_autoreply"
+                            id="v_autoreply">
                         <label for="v_autoreply">
                             <?= _("Auto Reply") ?>
                         </label>

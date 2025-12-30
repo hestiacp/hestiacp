@@ -50,7 +50,11 @@
     <div class="units-table js-units-container">
         <div class="units-table-header">
             <div class="units-table-cell">
-                <input type="checkbox" class="js-toggle-all-checkbox" title="<?= _("Select all") ?>" <?= $display_mode ?>>
+                <input
+                    type="checkbox"
+                    class="js-toggle-all-checkbox"
+                    title="<?= _("Select all") ?>"
+                    <?= $display_mode ?>>
             </div>
             <div class="units-table-cell"><?= _("Snapshot") ?></div>
             <div class="units-table-cell"></div>
@@ -89,8 +93,14 @@
                             <?= $value['short_id'] ?>
                         <?php } else { ?>
                             <span class="u-hide-desktop"><?= _("Snapshot") ?>:</span>
-                            <?php $short_id = $value['short_id'];
-                            $restore_href = "/list/backup/incremental/?snapshot=" . $short_id . "&token=" . $_SESSION["token"]; ?>
+                            <?php
+                            $short_id = $value['short_id'];
+                            $restore_href = sprintf(
+                                '/list/backup/incremental/?snapshot=%s&token=%s',
+                                $short_id,
+                                $_SESSION['token']
+                            );
+                            ?>
                             <a href="<?= $restore_href ?>" title="<?= _("Restore") ?>"><?= $short_id ?></a>
                         <?php } ?>
                     </b>

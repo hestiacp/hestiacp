@@ -23,8 +23,9 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
                     <i class="fas fa-circle-plus icon-green"></i><?= _("Add Database") ?>
                 </a>
                 <?php if ($show_phpmyadmin) { ?>
+                    <?php $db_myadmin_class = 'button button-secondary' . (ipUsed() ? ' button-suspended' : ''); ?>
                     <a
-                        class="button button-secondary <?= ipUsed() ? 'button-suspended' : '' ?>"
+                        class="<?= $db_myadmin_class ?>"
                         href="<?= $db_myadmin_link ?>"
                         target="_blank">
                         <i class="fas fa-database icon-orange"></i>phpMyAdmin
@@ -40,9 +41,11 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
                 <?php } ?>
 
                 <?php if (ipUsed()) { ?>
+                    <?php $why_ipmyadmin_href = 'https://hestiacp.com/docs/server-administration/'
+                        . 'databases.html#why-i-can-t-use-http-ip-phpmyadmin'; ?>
                     <a
                         target="_blank"
-                        href="https://hestiacp.com/docs/server-administration/databases.html#why-i-can-t-use-http-ip-phpmyadmin">
+                        href="<?= $why_ipmyadmin_href ?>">
                         <i class="fas fa-circle-question"></i>
                     </a>
                 <?php } ?>
@@ -50,15 +53,21 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
         </div>
         <div class="toolbar-right">
             <div class="toolbar-sorting">
-                <button class="toolbar-sorting-toggle js-toggle-sorting-menu" type="button" title="<?= _("Sort items") ?>">
+                <button
+                    class="toolbar-sorting-toggle js-toggle-sorting-menu"
+                    type="button"
+                    title="<?= _("Sort items") ?>">
                     <?= _("Sort by") ?>:
+                    <?php
+                    if ($_SESSION['userSortOrder'] === 'name') {
+                        $label = _('Name');
+                    } else {
+                        $label = _('Date');
+                    }
+                    ?>
                     <span class="u-text-bold">
-                        <?php if ($_SESSION['userSortOrder'] === 'name') {
-                            $label = _('Name');
-                        } else {
-                            $label = _('Date');
-                        } ?>
-                        <?= $label ?> <i class="fas fa-arrow-down-a-z"></i>
+                        <?= $label ?>
+                        <i class="fas fa-arrow-down-a-z"></i>
                     </span>
                 </button>
                 <?php
@@ -71,7 +80,10 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
                         <span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
                     </li>
                     <li data-entity="sort-date" data-sort-as-int="1">
-                        <span class="name <?= $active_date_class ?>"><?= _("Date") ?> <i class="fas fa-arrow-down-a-z"></i></span>
+                        <span class="name <?= $active_date_class ?>">
+                            <?= _("Date") ?>
+                            <i class="fas fa-arrow-down-a-z"></i>
+                        </span>
                         <span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
                     </li>
                     <li data-entity="sort-disk" data-sort-as-int="1">
@@ -79,7 +91,10 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
                         <span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
                     </li>
                     <li data-entity="sort-name">
-                        <span class="name <?= $active_name_class ?>"><?= _("Name") ?> <i class="fas fa-arrow-down-a-z"></i></span>
+                        <span class="name <?= $active_name_class ?>">
+                            <?= _("Name") ?>
+                            <i class="fas fa-arrow-down-a-z"></i>
+                        </span>
                         <span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
                     </li>
                     <li data-entity="sort-server">
@@ -136,7 +151,11 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
     <div class="units-table js-units-container">
         <div class="units-table-header">
             <div class="units-table-cell">
-                <input type="checkbox" class="js-toggle-all-checkbox" title="<?= _("Select all") ?>" <?= $display_mode ?>>
+                <input
+                    type="checkbox"
+                    class="js-toggle-all-checkbox"
+                    title="<?= _("Select all") ?>"
+                    <?= $display_mode ?>>
             </div>
             <div class="units-table-cell"><?= _("Name") ?></div>
             <div class="units-table-cell"></div>
@@ -248,7 +267,11 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
                             );
                             if ($has_phpmyadmin_sso) {
                                 $time = time();
-                                $sso_input = $key . $user_plain . $_SESSION['user_combined_ip'] . $time . $_SESSION['PHPMYADMIN_KEY'];
+                                $sso_input = $key
+                                    . $user_plain
+                                    . $_SESSION['user_combined_ip']
+                                    . $time
+                                    . $_SESSION['PHPMYADMIN_KEY'];
                                 $sso_hmac = password_hash($sso_input, PASSWORD_DEFAULT);
                                 $sso_href = $db_myadmin_link . 'hestia-sso.php?database=' . urlencode($key)
                                     . '&user=' . urlencode($user_plain)

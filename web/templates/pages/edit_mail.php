@@ -49,14 +49,28 @@
                     value="<?= htmlentities(trim($v_domain, "'")) ?>">
             </div>
             <?php if (!empty($_SESSION["ANTISPAM_SYSTEM"])) { ?>
+                <?php
+                $antispam_checked = ($v_antispam == 'yes') ? 'checked' : '';
+                $reject_checked = ($v_reject == 'yes') ? 'checked' : '';
+                ?>
                 <div class="form-check u-mb10">
-                    <input class="form-check-input" type="checkbox" name="v_antispam" id="v_antispam" <?= ($v_antispam == 'yes') ? 'checked' : '' ?>>
+                    <input
+                        class="form-check-input"
+                        type="checkbox"
+                        name="v_antispam"
+                        id="v_antispam"
+                        <?= $antispam_checked ?>>
                     <label for="v_antispam">
                         <?= _("Spam Filter") ?>
                     </label>
                 </div>
                 <div class="form-check u-mb10">
-                    <input class="form-check-input" type="checkbox" name="v_reject" id="v_reject" <?= ($v_reject == 'yes') ? 'checked' : '' ?>>
+                    <input
+                        class="form-check-input"
+                        type="checkbox"
+                        name="v_reject"
+                        id="v_reject"
+                        <?= $reject_checked ?>>
                     <label for="v_reject">
                         <?= _("Reject Spam") ?>
                     </label>

@@ -2,24 +2,33 @@
 <div class="toolbar">
     <div class="toolbar-inner">
         <div class="toolbar-buttons">
-            <a class="button button-secondary button-back js-button-back" href="/list/server/">
+            <a
+                class="button button-secondary button-back js-button-back"
+                href="/list/server/">
                 <i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
             </a>
             <a href="/add/firewall/" class="button button-secondary js-button-create">
                 <i class="fas fa-circle-plus icon-green"></i><?= _("Add Rule") ?>
             </a>
             <?php if (!empty($_SESSION["FIREWALL_EXTENSION"])) : ?>
-                <a class="button button-secondary" href="/list/firewall/banlist/">
+                <a
+                    class="button button-secondary"
+                    href="/list/firewall/banlist/">
                     <i class="fas fa-eye icon-red"></i><?= _("Banned IP Addresses") ?>
                 </a>
             <?php endif; ?>
-            <a class="button button-secondary" href="/list/firewall/ipset/">
+            <a
+                class="button button-secondary"
+                href="/list/firewall/ipset/">
                 <i class="fas fa-list icon-blue"></i><?= _("IPset IP Lists") ?>
             </a>
         </div>
         <div class="toolbar-right">
             <div class="toolbar-sorting">
-                <button class="toolbar-sorting-toggle js-toggle-sorting-menu" type="button" title="<?= _("Sort items") ?>">
+                <button
+                    class="toolbar-sorting-toggle js-toggle-sorting-menu"
+                    type="button"
+                    title="<?= _("Sort items") ?>">
                     <?= _("Sort by") ?>:
                     <span class="u-text-bold">
                         <?= _("Action") ?> <i class="fas fa-arrow-up-a-z"></i>
@@ -119,6 +128,10 @@
             $edit_href       = '/edit/firewall/?rule=' . $key . '&token=' . $_SESSION['token'];
             $spnd_href       = '/' . $spnd_action . '/firewall/?rule=' . $key . '&token=' . $_SESSION['token'];
             $delete_href     = '/delete/firewall/?rule=' . $key . '&token=' . $_SESSION['token'];
+            $move_up_confirm_message = sprintf(_("Are you sure you want to move rule #%s up?"), $key);
+            $move_down_confirm_message = sprintf(_("Are you sure you want to move rule #%s down?"), $key);
+            $delete_confirm_message = sprintf(_("Are you sure you want to delete rule #%s?"), $key);
+
             ?>
             <div class="units-table-row <?php if ($status == 'suspended') {
                                             echo 'disabled';
@@ -156,7 +169,7 @@
                                 href="<?= $move_up_href ?>"
                                 title="<?= _("Move Firewall Rule Up") ?>"
                                 data-confirm-title="<?= _("Move Up") ?>"
-                                data-confirm-message="<?= sprintf(_("Are you sure you want to move rule #%s up?"), $key) ?>">
+                                data-confirm-message="<?= $move_up_confirm_message ?>">
                                 <i class="fas fa-arrow-up icon-blue"></i>
                                 <span class="u-hide-desktop"><?= _("Move Firewall Rule Up") ?></span>
                             </a>
@@ -168,7 +181,7 @@
                                 href="<?= $move_down_href ?>"
                                 title="<?= _("Move Firewall Rule Down") ?>"
                                 data-confirm-title="<?= _("Move Down") ?>"
-                                data-confirm-message="<?= sprintf(_("Are you sure you want to move rule #%s down?"), $key) ?>">
+                                data-confirm-message="<?= $move_down_confirm_message ?>">
                                 <i class="fas fa-arrow-down icon-blue"></i>
                                 <span class="u-hide-desktop"><?= _("Move Firewall Rule Down") ?></span>
                             </a>
@@ -177,7 +190,9 @@
                 </div>
                 <div class="units-table-cell units-table-heading-cell u-text-bold">
                     <span class="u-hide-desktop"><?= _("Action") ?>:</span>
-                    <a href="/edit/firewall/?rule=<?= $key ?>&token=<?= $_SESSION["token"] ?>" title="<?= _("Edit Firewall Rule") ?>">
+                    <a
+                        href="<?= $edit_href ?>"
+                        title="<?= _("Edit Firewall Rule") ?>">
                         <?php
                         $suspended = $data[$key]["SUSPENDED"] == "no";
                         $action = $data[$key]["ACTION"];
@@ -215,7 +230,7 @@
                                 href="<?= $delete_href ?>"
                                 title="<?= _("Delete") ?>"
                                 data-confirm-title="<?= _("Delete") ?>"
-                                data-confirm-message="<?= sprintf(_("Are you sure you want to delete rule #%s?"), $key) ?>">
+                                data-confirm-message="<?= $delete_confirm_message ?>">
                                 <i class="fas fa-trash icon-red"></i>
                                 <span class="u-hide-desktop"><?= _("Delete") ?></span>
                             </a>

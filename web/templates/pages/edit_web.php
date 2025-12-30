@@ -12,17 +12,25 @@
                 <i class="fas fa-trash icon-red"></i><?= _("Purge NGINX Cache") ?>
             </a>
             <div class="form-check u-mb10">
-                <input class="form-check-input" type="checkbox" name="v_ssl_forcessl" id="v_ssl_forcessl" <?php if ($v_ssl_forcessl == 'yes') {
-                                                                                                                echo 'checked';
-                                                                                                          } ?>>
+                <?php $v_ssl_forcessl_checked = ($v_ssl_forcessl == 'yes') ? 'checked' : ''; ?>
+                <input
+                    class="form-check-input"
+                    type="checkbox"
+                    name="v_ssl_forcessl"
+                    id="v_ssl_forcessl"
+                    <?= $v_ssl_forcessl_checked ?>>
                 <label for="v_ssl_forcessl">
                     <?= _("Enable automatic HTTPS redirection") ?>
                 </label>
             </div>
             <div class="form-check u-mb20">
-                <input class="form-check-input" type="checkbox" name="v_ssl_hsts" id="ssl_hsts" <?php if ($v_ssl_hsts == 'yes') {
-                                                                                                    echo 'checked';
-                                                                                                } ?>>
+                <?php $v_ssl_hsts_checked = ($v_ssl_hsts == 'yes') ? 'checked' : ''; ?>
+                <input
+                    class="form-check-input"
+                    type="checkbox"
+                    name="v_ssl_hsts"
+                    id="ssl_hsts"
+                    <?= $v_ssl_hsts_checked ?>>
                 <label for="ssl_hsts">
                     <?= _("Enable HTTP Strict Transport Security (HSTS)") ?>
                     <a href="https://en.wikipedia.org/wiki/HTTP_Strict_Transport_Security" target="_blank">
@@ -53,7 +61,8 @@
                 </div>
                 <div class="u-mb20">
                     <label for="v_ssl_ca" class="form-label">
-                        <?= _("SSL Certificate Authority / Intermediate") ?> <span class="optional">(<?= _("Optional") ?>)</span>
+                        <?= _("SSL Certificate Authority / Intermediate") ?>
+                        <span class="optional">(<?= _("Optional") ?>)</span>
                     </label>
                     <textarea class="form-control u-min-height100 u-console" name="v_ssl_ca" id="v_ssl_ca">
                                     <?= htmlentities(trim($v_ssl_ca, "'")) ?>
@@ -81,8 +90,16 @@
                         style="<?= empty($v_ftp_user) ? 'display: none;' : '' ?>">
                         <div class="u-mb10">
                             <?= _("FTP") ?> #<span class="js-ftp-user-number"><?= $i + 1; ?></span>
-                            <button type="button" class="form-link form-link-danger u-ml5 js-delete-ftp-account"><?= _("Delete") ?></button>
-                            <input type="hidden" class="js-ftp-user-deleted" name="v_ftp_user[<?= $i ?>][delete]" value="0">
+                            <button
+                                type="button"
+                                class="form-link form-link-danger u-ml5 js-delete-ftp-account">
+                                <?= _("Delete") ?>
+                            </button>
+                            <input
+                                type="hidden"
+                                class="js-ftp-user-deleted"
+                                name="v_ftp_user[<?= $i ?>][delete]"
+                                value="0">
                             <input type="hidden"
                                 class="js-ftp-user-is-new"
                                 name="v_ftp_user[<?= $i ?>][is_new]"
@@ -92,7 +109,8 @@
                             <label for="v_ftp_user[<?= $i ?>][v_ftp_user]" class="form-label">
                                 <?= _("Username") ?><br>
                                 <span style="color:#777;">
-                                    <?= sprintf(_('Prefix %s will be added to username automatically'), $user_plain . "_"); ?>
+                                    <?php $prefix_msg = sprintf(_('Prefix %s will be added to username automatically'), $user_plain . "_"); ?>
+                                    <?= $prefix_msg ?>
                                 </span>
                             </label>
                             <input type="text"
@@ -106,7 +124,10 @@
                         <div class="u-pl30 u-mb10">
                             <label for="v_ftp_user[<?= $i ?>][v_ftp_password]" class="form-label">
                                 <?= _("Password") ?>
-                                <button type="button" title="<?= _("Generate") ?>" class="u-unstyled-button u-ml5 js-ftp-password-generate">
+                                <button
+                                    type="button"
+                                    title="<?= _("Generate") ?>"
+                                    class="u-unstyled-button u-ml5 js-ftp-password-generate">
                                     <i class="fas fa-arrows-rotate icon-green"></i>
                                 </button>
                             </label>
@@ -165,7 +186,11 @@
     <div class="js-ftp-account js-ftp-account-nrm" name="v_add_domain_ftp">
         <div class="u-mb10">
             <?= _("FTP") ?> #<span class="js-ftp-user-number"></span>
-            <button type="button" class="form-link form-link-danger u-ml5 js-delete-ftp-account"><?= _("Delete") ?></button>
+            <button
+                type="button"
+                class="form-link form-link-danger u-ml5 js-delete-ftp-account">
+                <?= _("Delete") ?>
+            </button>
             <input type="hidden" class="js-ftp-user-deleted" name="v_ftp_user[%INDEX%][delete]" value="0">
             <input type="hidden" class="js-ftp-user-is-new" name="v_ftp_user[%INDEX%][is_new]" value="1">
         </div>

@@ -8,16 +8,16 @@ include $_SERVER["DOCUMENT_ROOT"] . "/inc/main.php";
 verify_csrf($_GET);
 
 if (!empty($_GET["domain"])) {
-	$v_domain = escapeshellarg($_GET["domain"]);
-	exec(HESTIA_CMD . "v-unsuspend-domain " . $user . " " . $v_domain, $output, $return_var);
-	check_return_code($return_var, $output);
-	unset($output);
+    $v_domain = escapeshellarg($_GET["domain"]);
+    exec(HESTIA_CMD . "v-unsuspend-domain " . $user . " " . $v_domain, $output, $return_var);
+    check_return_code($return_var, $output);
+    unset($output);
 }
 
 $back = getenv("HTTP_REFERER");
 if (!empty($back)) {
-	header("Location: " . $back);
-	exit();
+    header("Location: " . $back);
+    exit();
 }
 
 header("Location: /list/web/");

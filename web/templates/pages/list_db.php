@@ -217,7 +217,10 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
                     <?php if ($read_only === "true" || $data[$key]["SUSPENDED"] == "yes") { ?>
                         <?= $key ?>
                     <?php } else { ?>
-                        <a href="/edit/db/?database=<?= $key ?>&token=<?= $_SESSION["token"] ?>" title="<?= _("Edit Database") ?>: <?= $key ?>">
+                        <?php $edit_db_title = sprintf("%s: %s", _("Edit Database"), $key); ?>
+                        <a
+                            href="/edit/db/?database=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
+                            title="<?= $edit_db_title ?>">
                             <?= $key ?>
                         </a>
                     <?php } ?>

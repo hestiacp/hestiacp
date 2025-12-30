@@ -342,7 +342,7 @@
                             $i = 0;
                             foreach ($dns_cluster as $key => $value) {
                                 $i++;
-                        ?>
+                                ?>
                                 <div>
                                     <label for="v_dns_remote_host" class="form-label">
                                         <?= _("Host") . " #" . $i ?>
@@ -355,7 +355,7 @@
                                         value="<?= $key ?>"
                                         disabled>
                                 </div>
-                        <?php }
+                            <?php }
                         } ?>
                     </div>
                 </details>
@@ -537,7 +537,7 @@
                             $i = 0;
                             foreach ($v_mysql_hosts as $value) {
                                 $i++;
-                            ?>
+                                ?>
                                 <div class="u-pl30">
                                     <div class="u-mb10">
                                         <label for="v_mysql_host" class="form-label">
@@ -588,7 +588,7 @@
                                             disabled>
                                     </div>
                                 </div>
-                        <?php }
+                            <?php }
                         } ?>
                         <!-- PostgreSQL Options-->
                         <?php if ($v_pgsql == "yes") { ?>
@@ -623,7 +623,7 @@
                                 $pgsql_host_html = htmlentities($value["HOST"]);
                                 $psql_max_html = htmlentities($value["MAX_DB"]);
                                 $pgsql_max_html = htmlentities($value["U_DB_BASES"]);
-                        ?>
+                                ?>
                                 <div class="u-pl30">
                                     <div class="u-mb10">
                                         <label for="v_pgsql_host" class="form-label">
@@ -665,8 +665,8 @@
                             <?php } ?>
                     </div>
                 </details>
+                        <?php } ?>
             <?php } ?>
-        <?php } ?>
 
         <!-- Backups section -->
         <details class="box-collapse u-mb10">
@@ -941,11 +941,16 @@
                     <label for="v_backup_incremental" class="form-label">
                         <?= _("Enable incremental backup") ?>
                     </label>
-                    <select class="form-select" name="v_backup_incremental" id="v_backup_incremental" x-model="incrementalBackups">
+                    <?php $v_backup_incremental_sel = ($v_backup_incremental == 'yes') ? ' selected' : ''; ?>
+                    <select
+                        class="form-select"
+                        name="v_backup_incremental"
+                        id="v_backup_incremental"
+                        x-model="incrementalBackups">
                         <option value="no">
                             <?= _("No") ?>
                         </option>
-                        <option value="yes" <?= $v_backup_incremental == "yes" ? "selected" : "" ?>>
+                        <option value="yes" <?= $v_backup_incremental_sel ?>>
                             <?= _("Yes") ?>
                         </option>
                     </select>
@@ -1140,10 +1145,10 @@
                                     <span class="optional">1 IP address per line</span>
                                 </label>
                                 <textarea class="form-control" name="v_api_allowed_ip" id="v_api_allowed_ip"><?php
-                                                                                                                foreach (explode(",", $_SESSION["API_ALLOWED_IP"]) as $ip) {
-                                                                                                                    echo trim($ip) . "\n";
-                                                                                                                }
-                                                                                                                ?></textarea>
+                                foreach (explode(",", $_SESSION["API_ALLOWED_IP"]) as $ip) {
+                                    echo trim($ip) . "\n";
+                                }
+                                ?></textarea>
                             </div>
                         </div>
                         <h3 class="u-mt20 u-mb10">
@@ -1237,8 +1242,7 @@
                                     $policy_system_protected_admin_selected_no = (
                                         $_SESSION['POLICY_SYSTEM_PROTECTED_ADMIN'] ?? ''
                                     ) !== 'yes'
-                                        ? 'selected'
-                                        : '';
+                                        ?  'selected' : '';
                                     ?>
                                     <option value="no" <?= $policy_system_protected_admin_selected_no ?>>
                                         <?= _("No") ?>
@@ -1256,7 +1260,10 @@
                                     <option value="yes">
                                         <?= _("Yes") ?>
                                     </option>
-                                    <?php $policy_system_hide_admin_selected_no = $_SESSION["POLICY_SYSTEM_HIDE_ADMIN"] !== "yes" ? 'selected' : ''; ?>
+                                    <?php
+                                    $policy_system_hide_admin_selected_no = (
+                                        (($_SESSION['POLICY_SYSTEM_HIDE_ADMIN'] ?? '') !== 'yes')
+                                    ) ? 'selected' : ''; ?>
                                     <option value="no" <?= $policy_system_hide_admin_selected_no ?>>
                                         <?= _("No") ?>
                                     </option>
@@ -1273,7 +1280,13 @@
                                     <option value="yes">
                                         <?= _("Yes") ?>
                                     </option>
-                                    <option value="no" <?= $_SESSION["POLICY_SYSTEM_HIDE_SERVICES"] !== "yes" ? "selected" : "" ?>>
+                                    <?php
+                                    $policy_system_hide_services_selected_no = (
+                                        $_SESSION['POLICY_SYSTEM_HIDE_SERVICES'] ?? ''
+                                    ) !== 'yes'
+                                        ?  'selected' : '';
+                                    ?>
+                                    <option value="no" <?= $policy_system_hide_services_selected_no ?>>
                                         <?= _("No") ?>
                                     </option>
                                 </select>
@@ -1303,8 +1316,7 @@
                                 </option>
                                 <?php
                                 $policy_user_edit_details_selected_no = $_SESSION["POLICY_USER_EDIT_DETAILS"] == "no"
-                                    ? 'selected'
-                                    : '';
+                                    ?  'selected' : '';
                                 ?>
                                 <option value="no" <?= $policy_user_edit_details_selected_no ?>>
                                     <?= _("No") ?>
@@ -1322,7 +1334,10 @@
                                 <option value="yes">
                                     <?= _("Yes") ?>
                                 </option>
-                                <option value="no" <?= $_SESSION["POLICY_USER_EDIT_WEB_TEMPLATES"] == "no" ? "selected" : "" ?>>
+                                <?php $policy_user_edit_web_templates_selected_no = (
+                                    $_SESSION['POLICY_USER_EDIT_WEB_TEMPLATES'] ?? ''
+                                ) == 'no' ? 'selected' : ''; ?>
+                                <option value="no" <?= $policy_user_edit_web_templates_selected_no ?>>
                                     <?= _("No") ?>
                                 </option>
                             </select>
@@ -1338,7 +1353,10 @@
                                 <option value="yes">
                                     <?= _("Yes") ?>
                                 </option>
-                                <option value="no" <?= $_SESSION["POLICY_USER_EDIT_DNS_TEMPLATES"] == "no" ? "selected" : "" ?>>
+                                <?php $policy_user_edit_dns_templates_selected_no = (
+                                    $_SESSION['POLICY_USER_EDIT_DNS_TEMPLATES'] ?? ''
+                                ) == 'no' ? 'selected' : ''; ?>
+                                <option value="no" <?= $policy_user_edit_dns_templates_selected_no ?>>
                                     <?= _("No") ?>
                                 </option>
                             </select>
@@ -1354,7 +1372,10 @@
                                 <option value="yes">
                                     <?= _("Yes") ?>
                                 </option>
-                                <option value="no" <?= $_SESSION["POLICY_USER_VIEW_LOGS"] == "no" ? "selected" : "" ?>>
+                                <?php $policy_user_view_logs_selected_no = (
+                                    $_SESSION['POLICY_USER_VIEW_LOGS'] ?? ''
+                                ) == 'no' ? 'selected' : ''; ?>
+                                <option value="no" <?= $policy_user_view_logs_selected_no ?>>
                                     <?= _("No") ?>
                                 </option>
                             </select>
@@ -1370,7 +1391,10 @@
                                 <option value="yes">
                                     <?= _("Yes") ?>
                                 </option>
-                                <option value="no" <?= $_SESSION["POLICY_USER_DELETE_LOGS"] == "no" ? "selected" : "" ?>>
+                                <?php $policy_user_delete_logs_selected_no = (
+                                    $_SESSION['POLICY_USER_DELETE_LOGS'] ?? ''
+                                ) == 'no' ? 'selected' : ''; ?>
+                                <option value="no" <?= $policy_user_delete_logs_selected_no ?>>
                                     <?= _("No") ?>
                                 </option>
                             </select>
@@ -1388,7 +1412,10 @@
                                     <option value="yes">
                                         <?= _("Yes") ?>
                                     </option>
-                                    <option value="no" <?= $_SESSION["POLICY_USER_VIEW_SUSPENDED"] == "no" ? "selected" : "" ?>>
+                                    <?php $policy_user_view_suspended_selected_no = (
+                                        $_SESSION['POLICY_USER_VIEW_SUSPENDED'] ?? ''
+                                    ) == 'no' ? 'selected' : ''; ?>
+                                    <option value="no" <?= $policy_user_view_suspended_selected_no ?>>
                                         <?= _("No") ?>
                                     </option>
                                 </select>
@@ -1398,6 +1425,10 @@
                             <label for="v_policy_backup_suspended_users" class="form-label">
                                 <?= _("Allow suspended users to create new backups") ?>
                             </label>
+                            <?php
+                            $policy_backup_suspended_users_selected_no = (
+                                (($_SESSION['POLICY_BACKUP_SUSPENDED_USERS'] ?? '') == 'no')
+                            ) ? 'selected' : ''; ?>
                             <select
                                 class="form-select"
                                 name="v_policy_backup_suspended_users"
@@ -1405,7 +1436,7 @@
                                 <option value="yes">
                                     <?= _("Yes") ?>
                                 </option>
-                                <option value="no" <?= $_SESSION["POLICY_BACKUP_SUSPENDED_USERS"] == "no" ? "selected" : "" ?>>
+                                <option value="no" <?= $policy_backup_suspended_users_selected_no ?>>
                                     <?= _("No") ?>
                                 </option>
                             </select>
@@ -1414,6 +1445,10 @@
                             <label for="v_policy_sync_error_documents" class="form-label">
                                 <?= _("Sync Error document templates on user rebuild") ?>
                             </label>
+                            <?php
+                            $policy_sync_error_documents_selected_no = (
+                                (($_SESSION['POLICY_SYNC_ERROR_DOCUMENTS'] ?? '') == 'no')
+                            ) ? 'selected' : ''; ?>
                             <select
                                 class="form-select"
                                 name="v_policy_sync_error_documents"
@@ -1421,7 +1456,7 @@
                                 <option value="yes">
                                     <?= _("Yes") ?>
                                 </option>
-                                <option value="no" <?= $_SESSION["POLICY_SYNC_ERROR_DOCUMENTS"] == "no" ? "selected" : "" ?>>
+                                <option value="no" <?= $policy_sync_error_documents_selected_no ?>>
                                     <?= _("No") ?>
                                 </option>
                             </select>
@@ -1456,7 +1491,11 @@
                                 <option value="yes">
                                     <?= _("Yes") ?>
                                 </option>
-                                <option value="no" <?= $_SESSION["ENFORCE_SUBDOMAIN_OWNERSHIP"] == "no" ? "selected" : "" ?>>
+                                <?php
+                                $enforce_subdomain_ownership_selected_no = (
+                                    (($_SESSION['ENFORCE_SUBDOMAIN_OWNERSHIP'] ?? '') == 'no')
+                                ) ? 'selected' : ''; ?>
+                                <option value="no" <?= $enforce_subdomain_ownership_selected_no ?>>
                                     <?= _("No") ?>
                                 </option>
                             </select>

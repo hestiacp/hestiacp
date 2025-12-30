@@ -79,7 +79,10 @@
                     <div class="stats-item-summary">
                         <h3 class="stats-item-summary-title">
                             <span class="u-text-bold">
-                                <i class="fas fa-right-left icon-dim icon-large u-mr5" title="<?= _("Bandwidth") ?>"></i>
+                                <i
+                                    class="fas fa-right-left icon-dim icon-large u-mr5"
+                                    title="<?= _("Bandwidth") ?>">
+                                </i>
                                 <?= _("Bandwidth") ?>
                             </span>
                             <?php
@@ -125,6 +128,16 @@
                             $disk_quota_size   = humanize_usage_size($data[$key]['DISK_QUOTA']);
                             $disk_quota_meas   = humanize_usage_measure($data[$key]['DISK_QUOTA']);
                             ?>
+                            <?php
+                            $u_disk_web_size = humanize_usage_size($data[$key]['U_DISK_WEB']);
+                            $u_disk_web_meas = humanize_usage_measure($data[$key]['U_DISK_WEB']);
+                            $u_disk_db_size = humanize_usage_size($data[$key]['U_DISK_DB']);
+                            $u_disk_db_meas = humanize_usage_measure($data[$key]['U_DISK_DB']);
+                            $u_disk_mail_size = humanize_usage_size($data[$key]['U_DISK_MAIL']);
+                            $u_disk_mail_meas = humanize_usage_measure($data[$key]['U_DISK_MAIL']);
+                            $u_disk_dirs_size = humanize_usage_size($data[$key]['U_DISK_DIRS']);
+                            $u_disk_dirs_meas = humanize_usage_measure($data[$key]['U_DISK_DIRS']);
+                            ?>
                             <span class="u-mr10">
                                 <span class="u-text-bold"><?= $u_disk_size ?></span>
                                 <?= $u_disk_meas ?> / <span class="u-text-bold"><?= $disk_quota_size ?></span>
@@ -138,8 +151,8 @@
                                     <?= _("Web") ?>:
                                 </span>
                                 <span>
-                                    <span class="u-text-bold"><?= humanize_usage_size($data[$key]["U_DISK_WEB"]) ?></span>
-                                    <?= humanize_usage_measure($data[$key]["U_DISK_WEB"]) ?>
+                                    <span class="u-text-bold"><?= $u_disk_web_size ?></span>
+                                    <?= $u_disk_web_meas ?>
                                 </span>
                             </li>
                             <li class="stats-item-summary-list-item u-mb5">
@@ -147,8 +160,8 @@
                                     <?= _("Databases") ?>:
                                 </span>
                                 <span>
-                                    <span class="u-text-bold"><?= humanize_usage_size($data[$key]["U_DISK_DB"]) ?></span>
-                                    <?= humanize_usage_measure($data[$key]["U_DISK_DB"]) ?>
+                                    <span class="u-text-bold"><?= $u_disk_db_size ?></span>
+                                    <?= $u_disk_db_meas ?>
                                 </span>
                             </li>
                             <li class="stats-item-summary-list-item">
@@ -156,8 +169,8 @@
                                     <?= _("Mail") ?>:
                                 </span>
                                 <span>
-                                    <span class="u-text-bold"><?= humanize_usage_size($data[$key]["U_DISK_MAIL"]) ?></span>
-                                    <?= humanize_usage_measure($data[$key]["U_DISK_MAIL"]) ?>
+                                    <span class="u-text-bold"><?= $u_disk_mail_size ?></span>
+                                    <?= $u_disk_mail_meas ?>
                                 </span>
                             </li>
                             <li class="stats-item-summary-list-item">
@@ -165,8 +178,8 @@
                                     <?= _("User Directory") ?>:
                                 </span>
                                 <span>
-                                    <span class="u-text-bold"><?= humanize_usage_size($data[$key]["U_DISK_DIRS"]) ?></span>
-                                    <?= humanize_usage_measure($data[$key]["U_DISK_DIRS"]) ?>
+                                    <span class="u-text-bold"><?= $u_disk_dirs_size ?></span>
+                                    <?= $u_disk_dirs_meas ?>
                                 </span>
                             </li>
                         </ul>

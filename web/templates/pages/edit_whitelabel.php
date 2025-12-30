@@ -52,7 +52,12 @@
                             value="<?= htmlentities(trim($v_app_name, "'")) ?>">
                     </div>
                     <div class="u-mb10">
-                        <?php $title_optional = sprintf("(%s: {{appname}}, {{hostname}}, {{ip}} and {{page}} )", _("Supported variables")); ?>
+                        <?php
+                        $title_optional = sprintf(
+                            "(%s: {{appname}}, {{hostname}}, {{ip}} and {{page}} )",
+                            _("Supported variables")
+                        );
+                        ?>
                         <label for="v_title" class="form-label">
                             <?= _("Title") ?><span class="optional"><?= $title_optional ?></span>
                         </label>
@@ -64,7 +69,13 @@
                             value="<?= htmlentities(trim($v_title, "'")) ?>">
                     </div>
                     <div class="u-mb10">
-                        <?php $sender_default = sprintf("(%s: %s)", _("Default"), htmlentities(trim($v_app_name, "'"))); ?>
+                        <?php
+                        $sender_default = sprintf(
+                            "(%s: %s)",
+                            _("Default"),
+                            htmlentities(trim($v_app_name, "'"))
+                        );
+                        ?>
                         <label for="v_from_name" class="form-label">
                             <?= _("Sender Name") ?><span class="optional"><?= $sender_default ?></span>
                         </label>
@@ -94,7 +105,12 @@
                             value="<?= htmlentities(trim($v_from_email, "'")) ?>">
                     </div>
                     <div class="u-mb10">
-                        <?php $subject_optional = sprintf("(%s: {{appname}}, {{hostname}}, {{subject}} )", _("Supported variables")); ?>
+                        <?php
+                        $subject_optional = sprintf(
+                            "(%s: {{appname}}, {{hostname}}, {{subject}} )",
+                            _("Supported variables")
+                        );
+                        ?>
                         <label for="v_subject_email" class="form-label">
                             <?= _("Email Subject") ?><span class="optional"><?= $subject_optional ?></span>
                         </label>
@@ -129,7 +145,12 @@
                         </label>
                     </div>
                     <div class="u-mb10">
-                        <p class="u-mb10"><?= sprintf(_("Upload the files to %s"), "/usr/local/hestia/web/images/custom/") ?></p>
+                        <p class="u-mb10">
+                            <?= sprintf(
+                                _("Upload the files to %s"),
+                                "/usr/local/hestia/web/images/custom/"
+                            ) ?>
+                        </p>
                         <ul>
                             <li><code>logo.svg</code> <small>(100px x 120px)</small></li>
                             <li><code>logo.png</code> <small>(100px x 120px)</small></li>

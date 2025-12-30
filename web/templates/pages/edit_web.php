@@ -219,7 +219,10 @@
         <div class="u-pl30 u-mb10">
             <label for="v_ftp_user[%INDEX%][v_ftp_password]" class="form-label">
                 <?= _("Password") ?>
-                <button type="button" title="<?= _("Generate") ?>" class="u-unstyled-button u-ml5 js-ftp-password-generate">
+                <button
+                    type="button"
+                    title="<?= _("Generate") ?>"
+                    class="u-unstyled-button u-ml5 js-ftp-password-generate">
                     <i class="fas fa-arrows-rotate icon-green"></i>
                 </button>
             </label>
@@ -243,7 +246,11 @@
             <span class="hint js-ftp-path-hint"></span>
         </div>
         <div class="u-pl30 u-mb10">
-            <label for="v_ftp_user[%INDEX%][v_ftp_email]" class="form-label"><?= _("Send FTP credentials to email") ?></label>
+            <label
+                for="v_ftp_user[%INDEX%][v_ftp_email]"
+                class="form-label">
+                <?= _("Send FTP credentials to email") ?>
+            </label>
             <input type="email"
                 class="form-control js-email-alert-on-psw"
                 name="v_ftp_user[%INDEX%][v_ftp_email]"

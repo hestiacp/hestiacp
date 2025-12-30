@@ -32,7 +32,15 @@
                     <div class="card-content">
                         <p class="card-title"><?= $webapp->name ?></p>
                         <p class="u-mb10"><?= _("Version") ?>: <?= $webapp->version ?></p>
-                        <?php $add_webapp_href = '/add/webapp/?app=' . urlencode($webapp->name) . '&domain=' . htmlentities($v_domain); ?>
+                        <?php
+                        $add_webapp_app = urlencode($webapp->name);
+                        $add_webapp_domain = htmlentities($v_domain);
+                        $add_webapp_href = sprintf(
+                            '/add/webapp/?app=%s&domain=%s',
+                            $add_webapp_app,
+                            $add_webapp_domain
+                        );
+                        ?>
                         <a
                             class="button"
                             href="<?= $add_webapp_href ?>">

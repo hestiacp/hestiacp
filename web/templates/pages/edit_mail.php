@@ -165,7 +165,8 @@
                     </div>
                     <div class="u-mb20">
                         <label for="v_ssl_ca" class="form-label">
-                            <?= _("SSL Certificate Authority / Intermediate") ?> <span class="optional">(<?= _("Optional") ?>)</span>
+                            <?= _("SSL Certificate Authority / Intermediate") ?>
+                            <span class="optional">(<?= _("Optional") ?>)</span>
                         </label>
                         <textarea
                             x-bind:disabled="letsEncryptEnabled"

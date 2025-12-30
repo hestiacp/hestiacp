@@ -2,7 +2,10 @@
 <div class="toolbar">
     <div class="toolbar-inner">
         <div class="toolbar-buttons">
-            <a class="button button-secondary button-back js-button-back" href="/add/webapp/?domain=<?= htmlentities($v_domain) ?>">
+            <?php $add_webapp_back_href = '/add/webapp/?domain=' . htmlentities($v_domain); ?>
+            <a
+                class="button button-secondary button-back js-button-back"
+                href="<?= $add_webapp_back_href ?>">
                 <i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
             </a>
         </div>
@@ -24,7 +27,8 @@
             <input type="hidden" name="ok" value="true">
 
             <div class="form-container">
-                <h1 class="u-mb20"><?= sprintf(_("Install %s"), $WebappInstaller->applicationName()) ?></h1>
+                <?php $install_title = sprintf(_("Install %s"), $WebappInstaller->applicationName()); ?>
+                <h1 class="u-mb20"><?= $install_title ?></h1>
                 <?php show_alert_message($_SESSION); ?>
                 <?php if (!$WebappInstaller->isDomainRootClean()) {
                     $data_loss_warning = _(
@@ -80,7 +84,11 @@
                             <select class="form-select" name="<?= $field_name ?>" id="<?= $field_name ?>">
                                 <?php foreach ($form_control["options"] as $key => $option) :
                                     $key = !is_numeric($key) ? $key : $option;
-                                    $selected = (!empty($form_control["value"]) && $key == $form_control["value"]) ? "selected" : ""; ?>
+                                    $selected = '';
+                                    if (!empty($form_control["value"]) && $key == $form_control["value"]) {
+                                        $selected = 'selected';
+                                    }
+                                    ?>
                                     <option value="<?= $key ?>" <?= $selected ?>>
                                         <?= htmlentities($option) ?>
                                     </option>

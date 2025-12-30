@@ -2,32 +2,56 @@
 <div class="toolbar">
     <div class="toolbar-inner">
         <div class="toolbar-buttons">
-            <?php if ($_SESSION["userContext"] === "admin" && isset($_GET["user"]) && htmlentities($_GET["user"]) !== "admin") { ?>
-                <a href="/list/log/?user=<?= htmlentities($_GET["user"]) ?>&token=<?= $_SESSION["token"] ?>" class="button button-secondary button-back js-button-back">
-                    <i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
-                </a>
-            <?php } else { ?>
-                <a href="/list/log/" class="button button-secondary button-back js-button-back">
-                    <i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
-                </a>
-            <?php } ?>
+            <?php
+            $user_param = isset($_GET['user']) ? htmlentities($_GET['user']) : '';
+            $is_admin_viewing_other = (
+                $_SESSION['userContext'] === 'admin'
+                && $user_param !== ''
+                && $user_param !== 'admin'
+            );
+            $back_href = $is_admin_viewing_other
+                ? ("/list/log/?user={$user_param}&token=" . $_SESSION['token'])
+                : '/list/log/';
+            ?>
+
+            <a href="<?= $back_href ?>" class="button button-secondary button-back js-button-back">
+                <i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
+            </a>
         </div>
         <div class="toolbar-buttons">
-            <a href="javascript:location.reload();" class="button button-secondary"><i class="fas fa-arrow-rotate-right icon-green"></i><?= _("Refresh") ?></a>
-            <?php if ($_SESSION["userContext"] === "admin" && $_SESSION["look"] === "admin" && $_SESSION["POLICY_SYSTEM_PROTECTED_ADMIN"] === "yes") { ?>
+            <a
+                href="javascript:location.reload();"
+                class="button button-secondary">
+                <i class="fas fa-arrow-rotate-right icon-green"></i><?= _("Refresh") ?>
+            </a>
+            <?php
+            $hide_delete_buttons = (
+                $_SESSION['userContext'] === 'admin'
+                && $_SESSION['look'] === 'admin'
+                && $_SESSION['POLICY_SYSTEM_PROTECTED_ADMIN'] === 'yes'
+            );
+            $can_delete = (
+                $_SESSION['userContext'] === 'admin'
+                || (
+                    $_SESSION['userContext'] === 'user'
+                    && $_SESSION['POLICY_USER_DELETE_LOGS'] !== 'no'
+                )
+            );
+            ?>
+            <?php if ($hide_delete_buttons) { ?>
                 <!-- Hide delete buttons-->
             <?php } else { ?>
-                <?php if ($_SESSION["userContext"] === "admin" || ($_SESSION["userContext"] === "user" && $_SESSION["POLICY_USER_DELETE_LOGS"] !== "no")) { ?>
+                <?php if ($can_delete) {
+                    $delete_href = "/delete/log/auth/?token=" . $_SESSION['token'];
+                    if ($user_param !== '') {
+                        $delete_href = "/delete/log/auth/?user={$user_param}&token=" . $_SESSION['token'];
+                    }
+                    ?>
                     <a
                         class="button button-secondary button-danger data-controls js-confirm-action"
-                        <?php if ($_SESSION["userContext"] === "admin" && isset($_GET["user"])) { ?>
-                            href="/delete/log/auth/?user=<?= htmlentities($_GET["user"]) ?>&token=<?= $_SESSION["token"] ?>"
-                        <?php } else { ?>
-                            href="/delete/log/auth/?token=<?= $_SESSION["token"] ?>"
-                        <?php } ?>
+                        href="<?= $delete_href ?>"
                         data-confirm-title="<?= _("Delete") ?>"
-                        data-confirm-message="<?= _("Are you sure you want to delete the logs?") ?>"
-                    >
+                        data-confirm-message="<?= _("Are you sure you want to delete the logs?") ?>">
                         <i class="fas fa-circle-xmark icon-red"></i><?= _("Delete") ?>
                     </a>
                 <?php } ?>
@@ -77,22 +101,22 @@
                 <div class="units-table-cell units-table-heading-cell u-text-bold">
                     <span class="u-hide-desktop"><?= _("Date") ?>:</span>
                     <time class="u-text-no-wrap" datetime="<?= htmlspecialchars($data[$key]["DATE"]) ?>">
-                    <?= translate_date($data[$key]["DATE"]) ?>
+                        <?= translate_date($data[$key]["DATE"]) ?>
                     </time>
                 </div>
                 <div class="units-table-cell u-text-bold">
                     <span class="u-hide-desktop"><?= _("Time") ?>:</span>
                     <time datetime="<?= htmlspecialchars($data[$key]["TIME"]) ?>">
-                    <?= htmlspecialchars($data[$key]["TIME"]) ?>
+                        <?= htmlspecialchars($data[$key]["TIME"]) ?>
                     </time>
                 </div>
                 <div class="units-table-cell">
                     <span class="u-hide-desktop u-text-bold"><?= _("IP Address") ?>:</span>
-                <?= htmlspecialchars($data[$key]["IP"]) ?>
+                    <?= htmlspecialchars($data[$key]["IP"]) ?>
                 </div>
                 <div class="units-table-cell">
                     <span class="u-hide-desktop u-text-bold"><?= _("Browser") ?>:</span>
-                <?= htmlspecialchars($data[$key]["USER_AGENT"]) ?>
+                    <?= htmlspecialchars($data[$key]["USER_AGENT"]) ?>
                 </div>
             </div>
         <?php } ?>

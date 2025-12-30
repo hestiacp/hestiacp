@@ -8,12 +8,14 @@ verify_csrf($_GET);
 if (!empty($_SESSION["look"])) {
 	$v_user = escapeshellarg($_SESSION["look"]);
 	$v_impersonator = escapeshellarg($_SESSION["user"]);
-	exec(
+	$cmd =
 		HESTIA_CMD .
-			"v-log-action system 'Warning' 'Security' 'User impersonation session ended (User: $v_user, Administrator: $v_impersonator)'",
-		$output,
-		$return_var,
-	);
+		"v-log-action system 'Warning' 'Security' 'User impersonation session ended (User: " .
+		$v_user .
+		", Administrator: " .
+		$v_impersonator .
+		")'";
+	exec($cmd, $output, $return_var);
 	unset($_SESSION["look"]);
 	# Remove current path for filemanager
 	unset($_SESSION["_sf2_attributes"]);

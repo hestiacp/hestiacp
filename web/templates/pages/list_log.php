@@ -36,9 +36,14 @@
                 }
             }
             ?>
-            <?php if ($show_login_history) { ?>
-                <a href="<?= $login_history_href ?>" class="button button-secondary button-back js-button-back" title="<?= _("Login History") ?>">
-                    <i class="fas fa-binoculars icon-green"></i><?= _("Login History") ?>
+            <?php if ($show_login_history) {
+                $login_history_title = _("Login History");
+                ?>
+                <a
+                    href="<?= $login_history_href ?>"
+                    class="button button-secondary button-back js-button-back"
+                    title="<?= $login_history_title ?>">
+                    <i class="fas fa-binoculars icon-green"></i><?= $login_history_title ?>
                 </a>
             <?php } ?>
         </div>

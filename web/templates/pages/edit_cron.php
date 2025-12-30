@@ -62,11 +62,47 @@
                 <div class="sidebar-left-grid-content">
                     <div class="tabs cron-tabs js-tabs">
                         <div class="tabs-items" role="tablist">
-                            <button type="button" class="tabs-item" id="tab-one" role="tab" tabindex="0" aria-selected="true"><?= _("Minutes") ?></button>
-                            <button type="button" class="tabs-item" id="tab-two" role="tab" tabindex="-1"><?= _("Hourly") ?></button>
-                            <button type="button" class="tabs-item" id="tab-three" role="tab" tabindex="-1"><?= _("Daily") ?></button>
-                            <button type="button" class="tabs-item" id="tab-four" role="tab" tabindex="-1"><?= _("Weekly") ?></button>
-                            <button type="button" class="tabs-item" id="tab-five" role="tab" tabindex="-1"><?= _("Monthly") ?></button>
+                            <button
+                                type="button"
+                                class="tabs-item"
+                                id="tab-one"
+                                role="tab"
+                                tabindex="0"
+                                aria-selected="true">
+                                <?= _("Minutes") ?>
+                            </button>
+                            <button
+                                type="button"
+                                class="tabs-item"
+                                id="tab-two"
+                                role="tab"
+                                tabindex="-1">
+                                <?= _("Hourly") ?>
+                            </button>
+                            <button
+                                type="button"
+                                class="tabs-item"
+                                id="tab-three"
+                                role="tab"
+                                tabindex="-1">
+                                <?= _("Daily") ?>
+                            </button>
+                            <button
+                                type="button"
+                                class="tabs-item"
+                                id="tab-four"
+                                role="tab"
+                                tabindex="-1">
+                                <?= _("Weekly") ?>
+                            </button>
+                            <button
+                                type="button"
+                                class="tabs-item"
+                                id="tab-five"
+                                role="tab"
+                                tabindex="-1">
+                                <?= _("Monthly") ?>
+                            </button>
                         </div>
                         <div class="tabs-panel" role="tabpanel" aria-labelledby="tab-one" tabindex="0">
                             <fieldset>

@@ -7,7 +7,12 @@
             </a>
         </div>
         <div class="toolbar-buttons">
-            <?php $can_add_web = (($_SESSION['role'] == 'admin' && $accept === 'true') || $_SESSION['role'] !== 'admin'); ?>
+            <?php
+            $can_add_web = (
+                ($_SESSION['role'] == 'admin' && $accept === 'true')
+                || $_SESSION['role'] !== 'admin'
+            );
+            ?>
             <?php if ($can_add_web) { ?>
                 <button type="submit" class="button" form="main-form">
                     <i class="fas fa-floppy-disk icon-purple"></i><?= _("Save") ?>
@@ -33,10 +38,18 @@
                     <?php
                     $user_link_open = '<a href="/add/user/">';
                     $user_link_close = '</a>';
-                    $advise_template = _(
-                        "It is strongly advised to {create a standard user account} before adding %s to the server "
-                            . "due to the increased privileges the admin account possesses and potential security risks."
+                    $advise_template = sprintf(
+                        _(
+                            "It is strongly advised to {create a standard user account} before "
+                                . "adding %s to the server"
+                        ) . ' ' . _(
+                            "Due to the increased privileges the admin account possesses and "
+                                . "potential security risks."
+                        ),
+                        _('a web domain')
                     );
+                    // keep $advise_msg for htmlify_trans compatibility
+                    $advise_msg = $advise_template;
                     $advise_msg = sprintf($advise_template, _('a web domain'));
                     ?>
                     <p><?= htmlify_trans($advise_msg, $user_link_close, $user_link_open) ?></p>
@@ -45,7 +58,11 @@
             <?php if ($_SESSION["role"] == "admin" && empty($accept)) { ?>
                 <div class="u-side-by-side u-mt20">
                     <a href="/add/user/" class="button u-width-full u-mr10"><?= _("Add User") ?></a>
-                    <a href="/add/web/?accept=true" class="button button-danger u-width-full u-ml10"><?= _("Continue") ?></a>
+                    <a
+                        href="/add/web/?accept=true"
+                        class="button button-danger u-width-full u-ml10">
+                        <?= _("Continue") ?>
+                    </a>
                 </div>
             <?php } ?>
             <?php if ($can_add_web) { ?>
@@ -90,9 +107,18 @@
                 <?php } ?>
                 <?php if (isset($_SESSION['IMAP_SYSTEM']) && !empty($_SESSION['IMAP_SYSTEM'])) { ?>
                     <?php if ($panel[$user_plain]['MAIL_DOMAINS'] != '0') { ?>
-                        <?php $v_mail_attr = (empty($v_mail) && $panel[$user_plain]['MAIL_DOMAINS'] != '0') ? '' : ''; ?>
+                        <?php
+                        $v_mail_attr = (
+                            empty($v_mail) && $panel[$user_plain]['MAIL_DOMAINS'] != '0'
+                        ) ? '' : '';
+                        ?>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="v_mail" id="v_mail" <?= $v_mail_attr ?>>
+                            <input
+                                class="form-check-input"
+                                type="checkbox"
+                                name="v_mail"
+                                id="v_mail"
+                                <?= $v_mail_attr ?>>
                             <label for="v_mail">
                                 <?= _("Mail Support") ?>
                             </label>

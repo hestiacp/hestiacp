@@ -10,10 +10,26 @@
                 $back_href = '/list/user/';
             } elseif ($userContext === 'admin' && $req_user === 'system') {
                 $back_href = '/list/server/';
-            } elseif ($userContext === 'admin' && $look !== '' && (isset($_GET['user']) ? $_GET['user'] : '') !== 'admin') {
-                $back_href = '/edit/user/?user=' . htmlentities($_SESSION['look']) . '&token=' . $_SESSION['token'];
             } else {
-                $back_href = '/edit/user/?user=' . htmlentities($_SESSION['user']) . '&token=' . $_SESSION['token'];
+                $is_admin_look_non_admin = (
+                    $userContext === 'admin'
+                    && $look !== ''
+                    && (isset($_GET['user']) ? $_GET['user'] : '') !== 'admin'
+                );
+
+                if ($is_admin_look_non_admin) {
+                    $back_href = sprintf(
+                        '/edit/user/?user=%s&token=%s',
+                        htmlentities($_SESSION['look']),
+                        $_SESSION['token']
+                    );
+                } else {
+                    $back_href = sprintf(
+                        '/edit/user/?user=%s&token=%s',
+                        htmlentities($_SESSION['user']),
+                        $_SESSION['token']
+                    );
+                }
             }
             ?>
             <a href="<?= $back_href ?>" class="button button-secondary button-back js-button-back">
@@ -23,9 +39,18 @@
             $show_login_history = false;
             $login_history_href = '/list/log/auth/';
             if ($_SESSION['DEMO_MODE'] != 'yes') {
-                if ($_SESSION['userContext'] === 'admin' && (isset($_GET['user']) && htmlentities($_GET['user']) !== 'admin')) {
+                $is_admin_user_for_history = (
+                    $_SESSION['userContext'] === 'admin'
+                    && (isset($_GET['user']) && htmlentities($_GET['user']) !== 'admin')
+                );
+
+                if ($is_admin_user_for_history) {
                     if (isset($_GET['user']) && $_GET['user'] != '' && htmlentities($_GET['user']) !== 'system') {
-                        $login_history_href = '/list/log/auth/?user=' . htmlentities($_GET['user']) . '&token=' . $_SESSION['token'];
+                        $login_history_href = sprintf(
+                            '/list/log/auth/?user=%s&token=%s',
+                            htmlentities($_GET['user']),
+                            $_SESSION['token']
+                        );
                     } else {
                         $login_history_href = '/list/log/auth/';
                     }
@@ -70,17 +95,26 @@
                 ); ?>
                 <?php if ($can_delete_logs) {
                     if ($_SESSION['userContext'] === 'admin' && isset($_GET['user'])) {
-                        $delete_href = '/delete/log/?user=' . htmlentities($_GET['user']) . '&token=' . $_SESSION['token'];
+                        $delete_href = sprintf(
+                            '/delete/log/?user=%s&token=%s',
+                            htmlentities($_GET['user']),
+                            $_SESSION['token']
+                        );
                     } else {
-                        $delete_href = '/delete/log/?token=' . $_SESSION['token'];
+                        $delete_href = sprintf(
+                            '/delete/log/?token=%s',
+                            $_SESSION['token']
+                        );
                     }
                     ?>
+                    <?php $delete_confirm = _("Are you sure you want to delete the logs?"); ?>
                     <a
                         class="button button-secondary button-danger data-controls js-confirm-action"
                         href="<?= $delete_href ?>"
                         data-confirm-title="<?= _("Delete") ?>"
-                        data-confirm-message="<?= _("Are you sure you want to delete the logs?") ?>">
-                        <i class="fas fa-circle-xmark icon-red"></i><?= _("Delete") ?>
+                        data-confirm-message="<?= $delete_confirm ?>">
+                        <i class="fas fa-circle-xmark icon-red"></i>
+                        <?= _("Delete") ?>
                     </a>
                 <?php } ?>
             <?php } ?>

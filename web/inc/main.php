@@ -469,41 +469,55 @@ function get_percentage($used, $total)
 
 function send_email($to, $subject, $mailtext, $from, $from_name, $to_name = "")
 {
-    $mail = new PHPMailer();
+    // PHPMailer might not be available in some environments (e.g., depending on composer install).
+    // Guard against undefined class to avoid analyzer/runtime fatal errors.
+    if (!class_exists('\PHPMailer\PHPMailer\PHPMailer')) {
+        trigger_error(
+            'PHPMailer not available. Please run v-add-sys-dependencies or install composer dependencies.',
+            E_USER_WARNING,
+        );
+        return;
+    }
 
-    if (isset($_SESSION["USE_SERVER_SMTP"]) && $_SESSION["USE_SERVER_SMTP"] == "true") {
-        if (!empty($_SESSION["SERVER_SMTP_ADDR"]) && $_SESSION["SERVER_SMTP_ADDR"] != "") {
-            if (filter_var($_SESSION["SERVER_SMTP_ADDR"], FILTER_VALIDATE_EMAIL)) {
-                $from = $_SESSION["SERVER_SMTP_ADDR"];
+    try {
+        $mail = new \PHPMailer\PHPMailer\PHPMailer(true);
+
+        if (isset($_SESSION["USE_SERVER_SMTP"]) && $_SESSION["USE_SERVER_SMTP"] == "true") {
+            if (!empty($_SESSION["SERVER_SMTP_ADDR"]) && $_SESSION["SERVER_SMTP_ADDR"] != "") {
+                if (filter_var($_SESSION["SERVER_SMTP_ADDR"], FILTER_VALIDATE_EMAIL)) {
+                    $from = $_SESSION["SERVER_SMTP_ADDR"];
+                }
             }
+
+            $mail->isSMTP();
+            $mail->Mailer = "smtp";
+            $mail->SMTPDebug = 0;
+            $mail->SMTPAuth = true;
+            $mail->SMTPSecure = $_SESSION["SERVER_SMTP_SECURITY"];
+            $mail->Port = $_SESSION["SERVER_SMTP_PORT"];
+            $mail->Host = $_SESSION["SERVER_SMTP_HOST"];
+            $mail->Username = $_SESSION["SERVER_SMTP_USER"];
+            $mail->Password = $_SESSION["SERVER_SMTP_PASSWD"];
         }
 
-        $mail->IsSMTP();
-        $mail->Mailer = "smtp";
-        $mail->SMTPDebug = 0;
-        $mail->SMTPAuth = true;
-        $mail->SMTPSecure = $_SESSION["SERVER_SMTP_SECURITY"];
-        $mail->Port = $_SESSION["SERVER_SMTP_PORT"];
-        $mail->Host = $_SESSION["SERVER_SMTP_HOST"];
-        $mail->Username = $_SESSION["SERVER_SMTP_USER"];
-        $mail->Password = $_SESSION["SERVER_SMTP_PASSWD"];
-    }
+        $mail->isHTML(true);
+        $mail->clearReplyTos();
+        if (empty($to_name)) {
+            $mail->addAddress($to);
+        } else {
+            $mail->addAddress($to, $to_name);
+        }
+        $mail->setFrom($from, $from_name);
 
-    $mail->IsHTML(true);
-    $mail->ClearReplyTos();
-    if (empty($to_name)) {
-        $mail->AddAddress($to);
-    } else {
-        $mail->AddAddress($to, $to_name);
+        $mail->CharSet = "utf-8";
+        $mail->Subject = $subject;
+        $content = $mailtext;
+        $content = nl2br($content);
+        $mail->msgHTML($content);
+        $mail->send();
+    } catch (\PHPMailer\PHPMailer\Exception $e) {
+        // swallow intentionally — sending failure shouldn't break the caller
     }
-    $mail->SetFrom($from, $from_name);
-
-    $mail->CharSet = "utf-8";
-    $mail->Subject = $subject;
-    $content = $mailtext;
-    $content = nl2br($content);
-    $mail->MsgHTML($content);
-    $mail->Send();
 }
 
 function list_timezones()

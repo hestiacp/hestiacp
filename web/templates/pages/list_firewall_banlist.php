@@ -50,24 +50,33 @@
             <div class="units-table-row js-unit">
                 <div class="units-table-cell">
                     <div>
-                        <input id="check<?= $i ?>" class="js-unit-checkbox" type="checkbox" title="<?= _("Select") ?>" name="ipchain[]" value="<?= $ip . ":" . $value["CHAIN"] ?>">
+                        <?php $checkbox_value = $ip . ':' . $value['CHAIN']; ?>
+                        <input id="check<?= $i ?>"
+                            class="js-unit-checkbox"
+                            type="checkbox"
+                            title="<?= _("Select") ?>"
+                            name="ipchain[]"
+                            value="<?= $checkbox_value ?>">
                         <label for="check<?= $i ?>" class="u-hide-desktop"><?= _("Select") ?></label>
                     </div>
                 </div>
                 <div class="units-table-cell units-table-heading-cell u-text-bold">
                     <span class="u-hide-desktop"><?= _("IP Address") ?>:</span>
-                <?= $ip ?>
+                    <?= $ip ?>
                 </div>
                 <div class="units-table-cell">
                     <ul class="units-table-row-actions">
+                        <?php
+                        $delete_href = '/delete/firewall/banlist/?ip=' . $ip . '&chain=' . $value['CHAIN'] . '&token=' . $_SESSION['token'];
+                        $confirm_msg = sprintf(_("Are you sure you want to delete IP address %s?"), $key);
+                        ?>
                         <li class="units-table-row-action shortcut-delete" data-key-action="js">
                             <a
                                 class="units-table-row-action-link data-controls js-confirm-action"
-                                href="/delete/firewall/banlist/?ip=<?= $ip ?>&chain=<?= $value["CHAIN"] ?>&token=<?= $_SESSION["token"] ?>"
+                                href="<?= $delete_href ?>"
                                 title="<?= _("Delete") ?>"
                                 data-confirm-title="<?= _("Delete") ?>"
-                                data-confirm-message="<?= sprintf(_("Are you sure you want to delete IP address %s?"), $key) ?>"
-                            >
+                                data-confirm-message="<?= $confirm_msg ?>">
                                 <i class="fas fa-trash icon-red"></i>
                                 <span class="u-hide-desktop"><?= _("Delete") ?></span>
                             </a>
@@ -80,11 +89,11 @@
                 </div>
                 <div class="units-table-cell u-text-center-desktop">
                     <span class="u-hide-desktop u-text-bold"><?= _("Time") ?>:</span>
-                <?= $data[$key]["TIME"] ?>
+                    <?= $data[$key]["TIME"] ?>
                 </div>
                 <div class="units-table-cell u-text-bold u-text-center-desktop">
                     <span class="u-hide-desktop"><?= _("Chain") ?>:</span>
-                <?= _($value["CHAIN"]) ?>
+                    <?= _($value["CHAIN"]) ?>
                 </div>
             </div>
         <?php } ?>

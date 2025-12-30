@@ -65,7 +65,11 @@
                             <label for="<?= $field_name ?>" class="form-label">
                                 <?= $field_label ?>
                                 <?php if ($field_type == "password") : ?>
-                                    <button type="button" title="<?= _("Generate") ?>" class="u-unstyled-button u-ml5 js-generate-password">
+                                    <?php $generate_title = _("Generate"); ?>
+                                    <button
+                                        type="button"
+                                        title="<?= $generate_title ?>"
+                                        class="u-unstyled-button u-ml5 js-generate-password">
                                         <i class="fas fa-arrows-rotate icon-green"></i>
                                     </button>
                                 <?php endif; ?>

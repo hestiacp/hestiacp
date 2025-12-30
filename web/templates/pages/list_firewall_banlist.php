@@ -67,7 +67,11 @@
                 <div class="units-table-cell">
                     <ul class="units-table-row-actions">
                         <?php
-                        $delete_href = '/delete/firewall/banlist/?ip=' . $ip . '&chain=' . $value['CHAIN'] . '&token=' . $_SESSION['token'];
+                        $token = $_SESSION['token'];
+                        $chain = $value['CHAIN'];
+                        $delete_href = '/delete/firewall/banlist/?ip=' . $ip
+                            . '&chain=' . $chain
+                            . '&token=' . $token;
                         $confirm_msg = sprintf(_("Are you sure you want to delete IP address %s?"), $key);
                         ?>
                         <li class="units-table-row-action shortcut-delete" data-key-action="js">

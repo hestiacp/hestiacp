@@ -46,9 +46,15 @@
             $iplist = [];
             $lowercaseType = strtolower($type);
             foreach ($country as $iso => $name) {
+                $source = sprintf(
+                    'https://raw.githubusercontent.com/ipverse/rir-ip/master/country/%s/%s-aggregated.txt',
+                    $iso,
+                    $lowercaseType
+                );
+
                 $iplist[] = [
                     "name" => "[$type] " . _("Country") . " - $name",
-                    "source" => "https://raw.githubusercontent.com/ipverse/rir-ip/master/country/$iso/$lowercaseType-aggregated.txt",
+                    "source" => $source,
                 ];
             }
             return $iplist;

@@ -59,10 +59,34 @@
         // $country_ipv6lists = generate_iplist($country, 'IPv6');
 
         $blacklist_iplists = [
-            ["name" => "[IPv4] " . _("Block Malicious IPs"), "source" => "script:/usr/local/hestia/install/common/firewall/ipset/blacklist.sh"],
+            [
+                "name" => "[IPv4] " . _("Block Malicious IPs"),
+                "source" => "script:/usr/local/hestia/install/common/firewall/ipset/blacklist.sh",
+            ],
             // Uncomment below for IPv6
-            // array('name' => "[IPv6] " . _("Block Malicious IPs"), 'source' => "script:/usr/local/hestia/install/common/firewall/ipset/blacklist.ipv6.sh"),
+            // array(
+            //     'name' => "[IPv6] " . _("Block Malicious IPs"),
+            //     'source' => "script:/usr/local/hestia/install/common/firewall/ipset/blacklist.ipv6.sh",
+            // ),
         ];
+
+        // Precompute JSON payloads used in data- attributes — keep individual lines under the limit
+        $country_iplists_json = htmlspecialchars(
+            json_encode($country_iplists),
+            ENT_QUOTES,
+            "UTF-8"
+        );
+        $blacklist_iplists_json = htmlspecialchars(
+            json_encode($blacklist_iplists),
+            ENT_QUOTES,
+            "UTF-8"
+        );
+
+        // Precompute selected flags for options
+        $v_ipver_v4_selected = (!empty($v_ipver) && ($v_ipver == "'v4'")) ? 'selected' : '';
+        $v_ipver_v6_selected = (!empty($v_ipver) && ($v_ipver == "'v6'")) ? 'selected' : '';
+        $v_autoupdate_yes = (!empty($v_autoupdate) && ($v_autoupdate == "'yes'")) ? 'selected' : '';
+        $v_autoupdate_no = (!empty($v_autoupdate) && ($v_autoupdate == "'no'")) ? 'selected' : '';
         ?>
 
         <div class="form-container">
@@ -70,7 +94,13 @@
             <?php show_alert_message($_SESSION); ?>
             <div class="u-mb10">
                 <label for="v_ipname" class="form-label"><?= _("IP List Name") ?></label>
-                <input type="text" class="form-control" name="v_ipname" id="v_ipname" maxlength="255" value="<?= htmlentities(trim($v_ipname, "'")) ?>">
+                <input
+                    type="text"
+                    class="form-control"
+                    name="v_ipname"
+                    id="v_ipname"
+                    maxlength="255"
+                    value="<?= htmlentities(trim($v_ipname, "'")) ?>">
             </div>
             <div class="u-mb10">
                 <label for="v_datasource" class="form-label">
@@ -81,34 +111,31 @@
                         class="form-select js-datasource-select"
                         tabindex="-1"
                         onchange="this.nextElementSibling.value=this.value"
-                        data-country-iplists="<?= htmlspecialchars(json_encode($country_iplists), ENT_QUOTES, "UTF-8") ?>"
-                        data-blacklist-iplists="<?= htmlspecialchars(json_encode($blacklist_iplists), ENT_QUOTES, "UTF-8") ?>"
-                    >
+                        data-country-iplists="<?= $country_iplists_json ?>"
+                        data-blacklist-iplists="<?= $blacklist_iplists_json ?>">
                         <option value=""><?= _("Clear") ?></option>
                     </select>
-                    <input type="text" class="form-control list-editor" name="v_datasource" id="v_datasource" maxlength="255" value="<?= htmlentities(trim($v_datasource, "'")) ?>">
+                    <input
+                        type="text"
+                        class="form-control list-editor"
+                        name="v_datasource"
+                        id="v_datasource"
+                        maxlength="255"
+                        value="<?= htmlentities(trim($v_datasource, "'")) ?>">
                 </div>
             </div>
             <div class="u-mb10">
                 <label for="v_ipver" class="form-label"><?= _("IP Version") ?></label>
                 <select class="form-select" name="v_ipver" id="v_ipver">
-                    <option value="v4" <?php if ((!empty($v_ipver)) && ( $v_ipver == "'v4'" )) {
-                        echo 'selected';
-                                       }?>>IPv4</option>
-                    <option value="v6" <?php if ((!empty($v_ipver)) && ( $v_ipver == "'v6'" )) {
-                        echo 'selected';
-                                       }?>>IPv6</option>
+                    <option value="v4" <?= $v_ipver_v4_selected ?>>IPv4</option>
+                    <option value="v6" <?= $v_ipver_v6_selected ?>>IPv6</option>
                 </select>
             </div>
             <div class="u-mb10">
                 <label for="v_autoupdate" class="form-label"><?= _("Auto Update") ?></label>
                 <select class="form-select" name="v_autoupdate" id="v_autoupdate">
-                    <option value="yes" <?php if ((!empty($v_autoupdate)) && ( $v_autoupdate == "'yes'" )) {
-                        echo 'selected';
-                                        }?>><?= _("Yes") ?></option>
-                    <option value="no" <?php if ((!empty($v_autoupdate)) && ( $v_autoupdate == "'no'" )) {
-                        echo 'selected';
-                                       }?>><?= _("No") ?></option>
+                    <option value="yes" <?= $v_autoupdate_yes ?>><?= _("Yes") ?></option>
+                    <option value="no" <?= $v_autoupdate_no ?>><?= _("No") ?></option>
                 </select>
             </div>
         </div>

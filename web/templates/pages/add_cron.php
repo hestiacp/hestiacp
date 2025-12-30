@@ -34,39 +34,105 @@
             <?php show_alert_message($_SESSION); ?>
             <div class="u-mb20">
                 <label for="v_cmd" class="form-label"><?= _("Command") ?></label>
-                <input type="text" class="form-control" name="v_cmd" id="v_cmd" value="<?= htmlentities(trim($v_cmd, "'")) ?>">
+                <input
+                    type="text"
+                    class="form-control"
+                    name="v_cmd"
+                    id="v_cmd"
+                    value="<?= htmlentities(trim($v_cmd, "'")) ?>">
             </div>
             <div class="sidebar-left-grid">
                 <div class="sidebar-left-grid-sidebar">
                     <div class="u-mb10">
                         <label for="v_min" class="form-label"><?= _("Minute") ?></label>
-                        <input type="text" class="form-control" name="v_min" id="v_min" value="<?= htmlentities(trim($v_min, "'")) ?>">
+                        <input
+                            type="text"
+                            class="form-control"
+                            name="v_min"
+                            id="v_min"
+                            value="<?= htmlentities(trim($v_min, "'")) ?>">
                     </div>
                     <div class="u-mb10">
                         <label for="v_hour" class="form-label"><?= _("Hour") ?></label>
-                        <input type="text" class="form-control" name="v_hour" id="v_hour" value="<?= htmlentities(trim($v_hour, "'")) ?>">
+                        <input
+                            type="text"
+                            class="form-control"
+                            name="v_hour"
+                            id="v_hour"
+                            value="<?= htmlentities(trim($v_hour, "'")) ?>">
                     </div>
                     <div class="u-mb10">
                         <label for="v_day" class="form-label"><?= _("Day") ?></label>
-                        <input type="text" class="form-control" name="v_day" id="v_day" value="<?= htmlentities(trim($v_day, "'")) ?>">
+                        <input
+                            type="text"
+                            class="form-control"
+                            name="v_day"
+                            id="v_day"
+                            value="<?= htmlentities(trim($v_day, "'")) ?>">
                     </div>
                     <div class="u-mb10">
                         <label for="v_month" class="form-label"><?= _("Month") ?></label>
-                        <input type="text" class="form-control" name="v_month" id="v_month" value="<?= htmlentities(trim($v_month, "'")) ?>">
+                        <input
+                            type="text"
+                            class="form-control"
+                            name="v_month"
+                            id="v_month"
+                            value="<?= htmlentities(trim($v_month, "'")) ?>">
                     </div>
                     <div class="u-mb10">
                         <label for="v_wday" class="form-label"><?= _("Day of Week") ?></label>
-                        <input type="text" class="form-control" name="v_wday" id="v_wday" value="<?= htmlentities(trim($v_wday, "'")) ?>">
+                        <input
+                            type="text"
+                            class="form-control"
+                            name="v_wday"
+                            id="v_wday"
+                            value="<?= htmlentities(trim($v_wday, "'")) ?>">
                     </div>
                 </div>
                 <div class="sidebar-left-grid-content">
                     <div class="tabs cron-tabs js-tabs">
                         <div class="tabs-items" role="tablist">
-                            <button type="button" class="tabs-item" id="tab-one" role="tab" tabindex="0" aria-selected="true"><?= _("Minutes") ?></button>
-                            <button type="button" class="tabs-item" id="tab-two" role="tab" tabindex="-1"><?= _("Hourly") ?></button>
-                            <button type="button" class="tabs-item" id="tab-three" role="tab" tabindex="-1"><?= _("Daily") ?></button>
-                            <button type="button" class="tabs-item" id="tab-four" role="tab" tabindex="-1"><?= _("Weekly") ?></button>
-                            <button type="button" class="tabs-item" id="tab-five" role="tab" tabindex="-1"><?= _("Monthly") ?></button>
+                            <button
+                                type="button"
+                                class="tabs-item"
+                                id="tab-one"
+                                role="tab"
+                                tabindex="0"
+                                aria-selected="true">
+                                <?= _("Minutes") ?>
+                            </button>
+                            <button
+                                type="button"
+                                class="tabs-item"
+                                id="tab-two"
+                                role="tab"
+                                tabindex="-1">
+                                <?= _("Hourly") ?>
+                            </button>
+                            <button
+                                type="button"
+                                class="tabs-item"
+                                id="tab-three"
+                                role="tab"
+                                tabindex="-1">
+                                <?= _("Daily") ?>
+                            </button>
+                            <button
+                                type="button"
+                                class="tabs-item"
+                                id="tab-four"
+                                role="tab"
+                                tabindex="-1">
+                                <?= _("Weekly") ?>
+                            </button>
+                            <button
+                                type="button"
+                                class="tabs-item"
+                                id="tab-five"
+                                role="tab"
+                                tabindex="-1">
+                                <?= _("Monthly") ?>
+                            </button>
                         </div>
                         <div class="tabs-panel" role="tabpanel" aria-labelledby="tab-one" tabindex="0">
                             <fieldset>

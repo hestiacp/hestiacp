@@ -1,6 +1,10 @@
 <div class="login">
     <a href="/" class="u-block u-mb40">
-        <img src="/images/logo.svg" alt="<?= htmlentities($_SESSION["APP_NAME"]) ?>" width="100" height="120">
+        <img
+            src="/images/logo.svg"
+            alt="<?= htmlentities($_SESSION["APP_NAME"]) ?>"
+            width="100"
+            height="120">
     </a>
     <form id="login-form" method="post" action="/login/">
         <input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
@@ -17,7 +21,14 @@
                     <?= _("Forgot Token") ?>
                 </a>
             </label>
-            <input type="text" class="form-control" name="twofa" id="twofa" autocomplete="one-time-code" required autofocus>
+            <input
+                type="text"
+                class="form-control"
+                name="twofa"
+                id="twofa"
+                autocomplete="one-time-code"
+                required
+                autofocus>
         </div>
         <div class="u-side-by-side">
             <button type="submit" class="button">

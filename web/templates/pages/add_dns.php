@@ -56,7 +56,14 @@
             <?php if (($_SESSION["role"] == "admin" && $accept === "true") || $_SESSION["role"] !== "admin") { ?>
                 <div class="u-mb10">
                     <label for="v_domain" class="form-label"><?= _("Domain") ?></label>
-                    <input type="text" class="form-control" name="v_domain" id="v_domain" value="<?= htmlentities(trim($v_domain, "'")) ?>" required>
+                    <?php $v_domain_value = htmlentities(trim($v_domain, "'")); ?>
+                    <input
+                        type="text"
+                        class="form-control"
+                        name="v_domain"
+                        id="v_domain"
+                        value="<?= $v_domain_value ?>"
+                        required>
                 </div>
                 <div class="u-mb10">
                     <label for="v_ip" class="form-label"><?= _("IP Address") ?></label>

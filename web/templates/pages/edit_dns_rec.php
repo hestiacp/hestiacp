@@ -93,9 +93,13 @@
                         <option value="">&nbsp;</option>
                         <?php foreach ($v_ips as $ip => $value) {
                             $display_ip = empty($value['NAT']) ? $ip : $value['NAT'];
-                            $val_selected = (!empty($v_val) && ($v_val == $ip || $v_val == $display_ip)) ? ' selected' : '';
+                            $val_selected = (!empty($v_val) && ($v_val == $ip || $v_val == $display_ip))
+                                ? ' selected'
+                                : '';
                             ?>
-                            <option value="<?= $display_ip ?>" <?= $val_selected ?>><?= htmlentities($display_ip) ?></option>
+                            <option
+                                value="<?= $display_ip ?>"
+                                <?= $val_selected ?>><?= htmlentities($display_ip) ?></option>
                         <?php } ?>
                     </select>
                     <input

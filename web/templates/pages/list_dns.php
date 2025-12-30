@@ -10,7 +10,10 @@
         </div>
         <div class="toolbar-right">
             <div class="toolbar-sorting">
-                <button class="toolbar-sorting-toggle js-toggle-sorting-menu" type="button" title="<?= _("Sort items") ?>">
+                <button
+                    class="toolbar-sorting-toggle js-toggle-sorting-menu"
+                    type="button"
+                    title="<?= _("Sort items") ?>">
                     <?= _("Sort by") ?>:
                     <span class="u-text-bold">
                         <?php if ($_SESSION['userSortOrder'] === 'name') {
@@ -102,7 +105,11 @@
     <div class="units-table js-units-container">
         <div class="units-table-header">
             <div class="units-table-cell">
-                <input type="checkbox" class="js-toggle-all-checkbox" title="<?= _("Select all") ?>" <?= $display_mode ?>>
+                <input
+                    type="checkbox"
+                    class="js-toggle-all-checkbox"
+                    title="<?= _("Select all") ?>"
+                    <?= $display_mode ?>>
             </div>
             <div class="units-table-cell"><?= _("Name") ?></div>
             <div class="units-table-cell"></div>
@@ -122,7 +129,9 @@
             $session_token = $_SESSION['token'];
             $src_html = '';
             if (!empty($data[$key]['SRC'])) {
-                $src_html = '<br>⇢ <span class="u-text-small">' . htmlspecialchars($data[$key]['SRC'], ENT_QUOTES) . '</span>';
+                $src_html = '<br>⇢ <span class="u-text-small">'
+                    . htmlspecialchars($data[$key]['SRC'], ENT_QUOTES)
+                    . '</span>';
             }
             if ($data[$key]['SUSPENDED'] == 'yes') {
                 $status = 'suspended';
@@ -206,11 +215,17 @@
                                         <span class="u-hide-desktop"><?= _("Edit DNS Domain") ?></span>
                                     </a>
                                 </li>
-                                <?php if ($data[$key]["DNSSEC"] == "yes") { ?>
+                                <?php if ($data[$key]["DNSSEC"] == "yes") {
+                                    $dnssec_href = sprintf(
+                                        '/list/dns/?domain=%s&action=dnssec&token=%s',
+                                        $domain_html,
+                                        $session_token
+                                    );
+                                    ?>
                                     <li class="units-table-row-action shortcut-enter" data-key-action="href">
                                         <a
                                             class="units-table-row-action-link"
-                                            href="/list/dns/?domain=<?= $domain_html ?>&action=dnssec&token=<?= $session_token ?>"
+                                            href="<?= $dnssec_href ?>"
                                             title="<?= _("View Public DNSSEC Key") ?>">
                                             <i class="fas fa-key icon-orange"></i>
                                             <span class="u-hide-desktop"><?= _("View Public DNSSEC Key") ?></span>
@@ -228,9 +243,17 @@
                                 </a>
                             </li>
                             <li class="units-table-row-action shortcut-s" data-key-action="js">
+                                <?php
+                                $spnd_href = sprintf(
+                                    '/%s/dns/?domain=%s&token=%s',
+                                    $spnd_action,
+                                    $domain_html,
+                                    $session_token
+                                );
+                                ?>
                                 <a
                                     class="units-table-row-action-link data-controls js-confirm-action"
-                                    href="/<?= $spnd_action ?>/dns/?domain=<?= $domain_html ?>&token=<?= $session_token ?>"
+                                    href="<?= $spnd_href ?>"
                                     title="<?= $spnd_action_title ?>"
                                     data-confirm-title="<?= $spnd_action_title ?>"
                                     data-confirm-message="<?= sprintf($spnd_confirmation, $key) ?>">
@@ -239,12 +262,18 @@
                                 </a>
                             </li>
                             <li class="units-table-row-action shortcut-delete" data-key-action="js">
+                                <?php
+                                $delete_confirm = sprintf(
+                                    _("Are you sure you want to delete domain %s?"),
+                                    $key
+                                );
+                                ?>
                                 <a
                                     class="units-table-row-action-link data-controls js-confirm-action"
                                     href="/delete/dns/?domain=<?= $domain_html ?>&token=<?= $session_token ?>"
                                     title="<?= _("Delete") ?>"
                                     data-confirm-title="<?= _("Delete") ?>"
-                                    data-confirm-message="<?= sprintf(_("Are you sure you want to delete domain %s?"), $key) ?>">
+                                    data-confirm-message="<?= $delete_confirm ?>">
                                     <i class="fas fa-trash icon-red"></i>
                                     <span class="u-hide-desktop"><?= _("Delete") ?></span>
                                 </a>

@@ -21,12 +21,28 @@
         <input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
         <input type="hidden" name="save" value="save">
 
+        <?php
+        $v_database_clean = htmlentities(trim($v_database, "'"));
+        $v_dbuser_clean = htmlentities(trim($v_dbuser, "'"));
+        $v_password_clean = htmlentities(trim($v_password, "'"));
+        $v_type_clean = htmlentities(trim($v_type, "'"));
+        $v_host_clean = htmlentities(trim($v_host, "'"));
+        $v_charset_clean = htmlentities(trim($v_charset, "'"));
+        $password_requirements_path = $_SERVER["HESTIA"] . "/web/templates/includes/password-requirements.php";
+        ?>
+
         <div class="form-container">
             <h1 class="u-mb20"><?= _("Edit Database") ?></h1>
             <?php show_alert_message($_SESSION); ?>
             <div class="u-mb10">
                 <label for="v_database" class="form-label"><?= _("Database") ?></label>
-                <input type="text" class="form-control js-db-hint-database-name" name="v_database" id="v_database" value="<?= htmlentities(trim($v_database, "'")) ?>" disabled>
+                <input
+                    type="text"
+                    class="form-control js-db-hint-database-name"
+                    name="v_database"
+                    id="v_database"
+                    value="<?= $v_database_clean ?>"
+                    disabled>
                 <small class="hint"></small>
             </div>
             <div class="u-mb10">
@@ -34,35 +50,66 @@
                     <?= _("Username") ?>
                     <em><small>(<?= sprintf(_("Maximum %s characters length, including prefix"), 32) ?>)</small></em>
                 </label>
-                <input type="text" class="form-control js-db-hint-username" name="v_dbuser" id="v_dbuser" value="<?= htmlentities(trim($v_dbuser, "'")) ?>">
+                <input
+                    type="text"
+                    class="form-control js-db-hint-username"
+                    name="v_dbuser"
+                    id="v_dbuser"
+                    value="<?= $v_dbuser_clean ?>">
                 <small class="hint"></small>
             </div>
             <div class="u-mb10">
                 <label for="v_password" class="form-label">
                     <?= _("Password") ?>
-                    <button type="button" title="<?= _("Generate") ?>" class="u-unstyled-button u-ml5 js-generate-password">
+                    <button
+                        type="button"
+                        title="<?= _("Generate") ?>"
+                        class="u-unstyled-button u-ml5 js-generate-password">
                         <i class="fas fa-arrows-rotate icon-green"></i>
                     </button>
                 </label>
                 <div class="u-pos-relative u-mb10">
-                    <input type="text" class="form-control js-password-input" name="v_password" id="v_password" value="<?= htmlentities(trim($v_password, "'")) ?>">
+                    <input
+                        type="text"
+                        class="form-control js-password-input"
+                        name="v_password"
+                        id="v_password"
+                        value="<?= $v_password_clean ?>">
                     <div class="password-meter">
                         <meter max="4" class="password-meter-input js-password-meter"></meter>
                     </div>
                 </div>
             </div>
-            <?php require $_SERVER["HESTIA"] . "/web/templates/includes/password-requirements.php"; ?>
+            <?php require $password_requirements_path; ?>
             <div class="u-mb10">
                 <label for="v_type" class="form-label"><?= _("Type") ?></label>
-                <input type="text" class="form-control" name="v_type" id="v_type" value="<?= htmlentities(trim($v_type, "'")) ?>" disabled>
+                <input
+                    type="text"
+                    class="form-control"
+                    name="v_type"
+                    id="v_type"
+                    value="<?= $v_type_clean ?>"
+                    disabled>
             </div>
             <div class="u-mb10">
                 <label for="v_host" class="form-label"><?= _("Host") ?></label>
-                <input type="text" class="form-control" name="v_host" id="v_host" value="<?= htmlentities(trim($v_host, "'")) ?>" disabled>
+                <input
+                    type="text"
+                    class="form-control"
+                    name="v_host"
+                    id="v_host"
+                    value="<?= $v_host_clean ?>"
+                    disabled>
             </div>
             <div class="u-mb10">
                 <label for="v_charset" class="form-label"><?= _("Charset") ?></label>
-                <input type="text" class="form-control" name="v_charset" id="v_charset" value="<?= htmlentities(trim($v_charset, "'")) ?>" disabled>
+                <input
+                    type="text"
+                    class="form-control"
+                    name="v_charset"
+                    id="v_charset"
+                    value="<?= $v_charset_clean ?>"
+                    disabled>
             </div>
         </div>
 

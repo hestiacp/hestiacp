@@ -11,16 +11,36 @@
             </label>
         </div>
         <?php if (!empty($v_twofa)) { ?>
-            <p class="u-mb10"><?= _("Account Recovery Code") . ": " . $v_twofa ?></p>
-            <p class="u-mb10"><?= _("Please scan the code below in your 2FA application") ?>:</p>
+            <p class="u-mb10">
+                <?= _("Account Recovery Code") ?>: <?= $v_twofa ?>
+            </p>
+            <?php $scan_2fa_msg = _("Please scan the code below in your 2FA application"); ?>
+            <p class="u-mb10"><?= $scan_2fa_msg ?>:</p>
             <div class="u-mb10">
-                <img class="qr-code" src="<?= htmlentities($v_qrcode) ?>" alt="<?= _("2FA QR Code") ?>">
+                <?php $v_qrcode_src = htmlentities($v_qrcode);
+                $v_qrcode_alt = _("2FA QR Code"); ?>
+                <img
+                    class="qr-code"
+                    src="<?= $v_qrcode_src ?>"
+                    alt="<?= $v_qrcode_alt ?>">
             </div>
         <?php } ?>
     </div>
     <div x-cloak x-show="!loginDisabled" id="password-options-ip">
         <div class="form-check">
-            <input x-model="useIpAllowList" class="form-check-input" type="checkbox" name="v_login_use_iplist" id="v_login_use_iplist">
+            <?php
+            $v_login_use_iplist_checked = '';
+            if (!empty($v_login_use_iplist) && $v_login_use_iplist == 'yes') {
+                $v_login_use_iplist_checked = 'checked';
+            }
+            ?>
+            <input
+                x-model="useIpAllowList"
+                class="form-check-input"
+                type="checkbox"
+                name="v_login_use_iplist"
+                id="v_login_use_iplist"
+                <?= $v_login_use_iplist_checked ?>>
             <label for="v_login_use_iplist">
                 <?= _("Use IP address allow list for login attempts") ?>
             </label>
@@ -40,26 +60,37 @@
     <select class="form-select" name="v_language" id="v_language" required>
         <?php
         foreach ($languages as $key => $value) {
-            echo "\n\t\t\t\t\t\t\t\t\t<option value=\"" . $key . "\"";
+            $selected = '';
             $skey = "'" . $key . "'";
             if (($key == $v_language) || ($skey == $v_language)) {
-                echo 'selected';
+                $selected = 'selected';
             }
             if (($key == detect_user_language()) && (empty($v_language))) {
-                echo 'selected';
+                $selected = 'selected';
             }
-            echo ">" . htmlentities($value) . "</option>\n";
-        }
-        ?>
+            ?>
+            <option value="<?= $key ?>" <?= $selected ?>><?= htmlentities($value) ?></option>
+        <?php } ?>
     </select>
 </div>
-<?php if ($v_username != "admin" && $_SESSION["userContext"] === "admin" && $_SESSION["user"] != $v_username) : ?>
+<?php
+$allow_role_edit = (
+    $v_username != "admin"
+    && $_SESSION["userContext"] === "admin"
+    && $_SESSION["user"] != $v_username
+);
+?>
+<?php if ($allow_role_edit) : ?>
     <div class="u-mb10">
         <label for="v_role" class="form-label"><?= _("Role") ?></label>
+        <?php
+        $v_role_admin_selected = ($v_role == "admin") ? "selected" : "";
+        $v_role_dns_selected = ($v_role == "dns-cluster") ? "selected" : "";
+        ?>
         <select class="form-select" name="v_role" id="v_role" required>
             <option value="user"><?= _("User") ?></option>
-            <option value="admin" <?= $v_role == "admin" ? "selected" : "" ?>><?= _("Administrator") ?></option>
-            <option value="dns-cluster" <?= $v_role == "dns-cluster" ? "selected" : "" ?>><?= _("DNS Sync User") ?></option>
+            <option value="admin" <?= $v_role_admin_selected ?>><?= _("Administrator") ?></option>
+            <option value="dns-cluster" <?= $v_role_dns_selected ?>><?= _("DNS Sync User") ?></option>
         </select>
     </div>
 <?php endif; ?>
@@ -83,14 +114,14 @@
     </div>
 <?php } ?>
 <div class="u-mb10">
-    <label for="v_sort_order" class="form-label"><?= _("Default List Sort Order") ?></label>
+    <label for="v_sort_order" class="form-label">
+        <?= _("Default List Sort Order") ?>
+    </label>
+    <?php $date_selected = ($v_sort_order === 'date') ? 'selected' : ''; ?>
+    <?php $name_selected = ($v_sort_order === 'name') ? 'selected' : ''; ?>
     <select class="form-select" name="v_sort_order" id="v_sort_order">
-        <option value='date' <?php if ($v_sort_order === 'date') {
-                                    echo 'selected';
-                             } ?>><?= _("Date") ?></option>
-        <option value='name' <?php if ($v_sort_order === 'name') {
-                                    echo 'selected';
-                             } ?>><?= _("Name") ?></option>
+        <option value='date' <?= $date_selected ?>><?= _("Date") ?></option>
+        <option value='name' <?= $name_selected ?>><?= _("Name") ?></option>
     </select>
 </div>
 <?php if ($_SESSION['userContext'] === 'admin') { ?>

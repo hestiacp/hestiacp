@@ -57,7 +57,11 @@
     <div class="units-table js-units-container">
         <div class="units-table-header">
             <div class="units-table-cell">
-                <input type="checkbox" class="js-toggle-all-checkbox" title="<?= _("Select all") ?>" <?= $display_mode ?>>
+                <input
+                    type="checkbox"
+                    class="js-toggle-all-checkbox"
+                    title="<?= _("Select all") ?>"
+                    <?= $display_mode ?>>
             </div>
             <div class="units-table-cell"><?= _("File Name") ?></div>
             <div class="units-table-cell"></div>
@@ -116,16 +120,29 @@
                     <?php if ($read_only === "true") { ?>
                         <?= $key ?>
                     <?php } else { ?>
-                        <a href="/list/backup/?backup=<?= $key ?>&token=<?= $_SESSION["token"] ?>" title="<?= _("Restore") ?>">
+                        <?php $restore_href = sprintf('/list/backup/?backup=%s&token=%s', $key, $_SESSION['token']); ?>
+                        <a
+                            href="<?= $restore_href ?>"
+                            title="<?= _("Restore") ?>">
                             <?= $key ?>
                         </a>
                     <?php } ?>
                 </div>
                 <div class="units-table-cell">
-                    <?php if (!($_SESSION["userContext"] === "admin" && $_SESSION["look"] === "admin" && $read_only === "true")) { ?>
+                    <?php if (
+                    !(
+                        $_SESSION["userContext"] === "admin" &&
+                        $_SESSION["look"] === "admin" &&
+                        $read_only === "true"
+                    )
+) { ?>
                         <ul class="units-table-row-actions">
                             <li class="units-table-row-action shortcut-d" data-key-action="href">
-                                <?php $download_href = "/download/backup/?backup=" . $key . "&token=" . $_SESSION["token"]; ?>
+                                <?php $download_href = sprintf(
+                                    '/download/backup/?backup=%s&token=%s',
+                                    $key,
+                                    $_SESSION['token']
+                                ); ?>
                                 <a
                                     class="units-table-row-action-link"
                                     href="<?= $download_href ?>"
@@ -145,12 +162,16 @@
                                     </a>
                                 </li>
                                 <li class="units-table-row-action shortcut-delete" data-key-action="js">
+                                    <?php $delete_confirm = sprintf(
+                                        _("Are you sure you want to delete backup %s?"),
+                                        $key
+                                    ); ?>
                                     <a
                                         class="units-table-row-action-link data-controls js-confirm-action"
                                         href="/delete/backup/?backup=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
                                         title="<?= _("Delete") ?>"
                                         data-confirm-title="<?= _("Delete") ?>"
-                                        data-confirm-message="<?= sprintf(_("Are you sure you want to delete backup %s?"), $key) ?>">
+                                        data-confirm-message="<?= $delete_confirm ?>">
                                         <i class="fas fa-trash icon-red"></i>
                                         <span class="u-hide-desktop"><?= _("Delete") ?></span>
                                     </a>

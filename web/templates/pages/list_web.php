@@ -11,7 +11,10 @@
         <div class="toolbar-right">
             <div class="toolbar-sorting">
                 <?php $user_sort_label = ($_SESSION['userSortOrder'] === 'name') ? _('Name') : _('Date'); ?>
-                <button class="toolbar-sorting-toggle js-toggle-sorting-menu" type="button" title="<?= _('Sort items') ?>">
+                <button
+                    class="toolbar-sorting-toggle js-toggle-sorting-menu"
+                    type="button"
+                    title="<?= _('Sort items') ?>">
                     <?= _('Sort by') ?>:
                     <span class="u-text-bold">
                         <?= $user_sort_label ?> <i class="fas fa-arrow-down-a-z"></i>
@@ -27,7 +30,10 @@
                         <span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
                     </li>
                     <li data-entity="sort-date" data-sort-as-int="1">
-                        <span class="name <?= $sort_date_active ?>"><?= _("Date") ?> <i class="fas fa-arrow-down-a-z"></i></span>
+                        <span class="name <?= $sort_date_active ?>">
+                            <?= _("Date") ?>
+                            <i class="fas fa-arrow-down-a-z"></i>
+                        </span>
                         <span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
                     </li>
                     <li data-entity="sort-disk" data-sort-as-int="1">
@@ -35,7 +41,10 @@
                         <span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
                     </li>
                     <li data-entity="sort-name">
-                        <span class="name <?= $sort_name_active ?>"><?= _("Name") ?> <i class="fas fa-arrow-down-a-z"></i></span>
+                        <span class="name <?= $sort_name_active ?>">
+                            <?= _("Name") ?>
+                            <i class="fas fa-arrow-down-a-z"></i>
+                        </span>
                         <span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
                     </li>
                     <li data-entity="sort-ip" data-sort-as-int="1">
@@ -91,7 +100,11 @@
     <div class="units-table js-units-container">
         <div class="units-table-header">
             <div class="units-table-cell">
-                <input type="checkbox" class="js-toggle-all-checkbox" title="<?= _("Select all") ?>" <?= $display_mode ?>>
+                <input
+                    type="checkbox"
+                    class="js-toggle-all-checkbox"
+                    title="<?= _("Select all") ?>"
+                    <?= $display_mode ?>>
             </div>
             <div class="units-table-cell"><?= _("Name") ?></div>
             <div class="units-table-cell"></div>
@@ -210,6 +223,7 @@
             $has_ssl = filter_var($data[$key]['SSL'], FILTER_VALIDATE_BOOL);
             $vstats_scheme = $has_ssl ? 'https' : 'http';
             $row_disabled_class = ($data[$key]['SUSPENDED'] == 'yes') ? 'disabled' : '';
+            $ip_display = empty($ips[$data[$key]['IP']]['NAT']) ? $data[$key]['IP'] : $ips[$data[$key]['IP']]['NAT'];
             ?>
             <div class="units-table-row <?= $row_disabled_class ?> js-unit"
                 data-sort-ip="<?= str_replace(".", "", $data[$key]["IP"]) ?>"
@@ -302,12 +316,14 @@
                     <div class="progress-label">
                         <i class="fas fa-hard-drive"></i>
                         <?= _("Disk") ?>:
-                        <?= humanize_usage_size($data[$key]["U_DISK"]) ?> <?= humanize_usage_measure($data[$key]["U_DISK"]) ?>
+                        <?= humanize_usage_size($data[$key]["U_DISK"]) ?>
+                        <?= humanize_usage_measure($data[$key]["U_DISK"]) ?>
                     </div>
                     <div class="progress-label">
                         <i class="fas fa-right-left"></i>
                         <?= _("Bandwidth") ?>:
-                        <?= humanize_usage_size($data[$key]["U_BANDWIDTH"]) ?> <?= humanize_usage_measure($data[$key]["U_BANDWIDTH"]) ?>
+                        <?= humanize_usage_size($data[$key]["U_BANDWIDTH"]) ?>
+                        <?= humanize_usage_measure($data[$key]["U_BANDWIDTH"]) ?>
                     </div>
                 </div>
                 <div class="units-table-cell">
@@ -433,7 +449,7 @@
                 </div>
                 <div class="units-table-cell u-text-center-desktop">
                     <span class="u-hide-desktop u-text-bold"><?= _("IP Address") ?>:</span>
-                    <?= empty($ips[$data[$key]["IP"]]["NAT"]) ? $data[$key]["IP"] : "{$ips[$data[$key]["IP"]]["NAT"]}" ?>
+                    <?= $ip_display ?>
                 </div>
                 <div class="units-table-cell u-text-center-desktop">
                     <span class="u-hide-desktop u-text-bold"><?= _("Disk") ?>:</span>

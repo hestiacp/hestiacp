@@ -467,6 +467,11 @@ function get_percentage($used, $total)
     return $percent;
 }
 
+/**
+ * @psalm-suppress UndefinedClass
+ * @psalm-suppress UndefinedType
+ * @noinspection PhpUndefinedClassInspection
+ */
 function send_email($to, $subject, $mailtext, $from, $from_name, $to_name = "")
 {
     // PHPMailer might not be available in some environments (e.g., depending on composer install).
@@ -480,7 +485,13 @@ function send_email($to, $subject, $mailtext, $from, $from_name, $to_name = "")
     }
 
     try {
-        $mail = new \PHPMailer\PHPMailer\PHPMailer(true);
+        $phppmailer_class = '\\PHPMailer\\PHPMailer\\PHPMailer';
+        if (!class_exists($phppmailer_class)) {
+            trigger_error('PHPMailer not available. Please run v-add-sys-dependencies or install composer dependencies.', E_USER_WARNING);
+            return;
+        }
+
+        $mail = new $phppmailer_class(true);
 
         if (isset($_SESSION["USE_SERVER_SMTP"]) && $_SESSION["USE_SERVER_SMTP"] == "true") {
             if (!empty($_SESSION["SERVER_SMTP_ADDR"]) && $_SESSION["SERVER_SMTP_ADDR"] != "") {
@@ -515,7 +526,7 @@ function send_email($to, $subject, $mailtext, $from, $from_name, $to_name = "")
         $content = nl2br($content);
         $mail->msgHTML($content);
         $mail->send();
-    } catch (\PHPMailer\PHPMailer\Exception $e) {
+    } catch (\Throwable $e) {
         // swallow intentionally — sending failure shouldn't break the caller
     }
 }

@@ -39,7 +39,13 @@
                 <label for="v_locality" class="form-label">
                     <?= _("City / Locality") ?>
                 </label>
-                <input type="text" class="form-control" name="v_locality" id="v_locality" value="<?= htmlentities(trim($v_locality, "'")) ?>">
+                <?php $v_locality_value = htmlentities(trim($v_locality, "'")); ?>
+                <input
+                    type="text"
+                    class="form-control"
+                    name="v_locality"
+                    id="v_locality"
+                    value="<?= $v_locality_value ?>">
             </div>
             <div class="u-mb20">
                 <label for="v_org" class="form-label">

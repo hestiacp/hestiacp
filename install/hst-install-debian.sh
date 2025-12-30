@@ -1495,12 +1495,12 @@ $HESTIA/bin/v-generate-ssl-cert $(hostname) '' 'US' 'California' \
 	'San Francisco' 'Hestia Control Panel' 'IT' > /tmp/hst.pem
 
 crt_end=$(grep -n "END CERTIFICATE-" /tmp/hst.pem | cut -f 1 -d:)
-if [ "$release" = "12" ]; then
-	key_start=$(grep -n "BEGIN PRIVATE KEY" /tmp/hst.pem | cut -f 1 -d:)
-	key_end=$(grep -n "END PRIVATE KEY" /tmp/hst.pem | cut -f 1 -d:)
-else
+if [ "$release" = "11" ]; then
 	key_start=$(grep -n "BEGIN RSA" /tmp/hst.pem | cut -f 1 -d:)
 	key_end=$(grep -n "END RSA" /tmp/hst.pem | cut -f 1 -d:)
+else
+	key_start=$(grep -n "BEGIN PRIVATE KEY" /tmp/hst.pem | cut -f 1 -d:)
+	key_end=$(grep -n "END PRIVATE KEY" /tmp/hst.pem | cut -f 1 -d:)
 fi
 
 # Adding SSL certificate
@@ -2367,6 +2367,7 @@ $HESTIA/bin/v-update-sys-rrd
 
 # Enabling file system quota
 if [ "$quota" = 'yes' ]; then
+	echo "[ * ] Configuring quota..."
 	$HESTIA/bin/v-add-sys-quota
 fi
 

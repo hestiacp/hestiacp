@@ -12,16 +12,17 @@
 #----------------------------------------------------------#
 
 # Includes
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
-source $HESTIA/func/main.sh
+source "$HESTIA"/func/main.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
-#                    Verifications                         #
+#                    Install packages                      #
 #----------------------------------------------------------#
 
-# Checking quota package
+# Install quota package
 if ! type -P quota &> /dev/null; then
 	export DEBIAN_FRONTEND=noninteractive
 	apt-get -y install quota > /dev/null 2>&1
@@ -35,165 +36,251 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Adding group and user quota on /home partition
+# Extracting file system and partition info
 mnt=$(df -P /home | awk '{print $6}' | tail -n1)
-fs_type=$(df -T "$mnt" | awk '{print $2}' | tail -n1)
-lnr=$(cat -n /etc/fstab | grep -v "#" | awk '{print $1,$3}' | grep "$mnt$" | cut -f 1 -d ' ')
-opt=$(sed -n ${lnr}p /etc/fstab | awk '{print $4}')
+dev=$(df -P /home | awk '{print $1}' | tail -n1)
+lnr=$(awk -v mnt="$mnt" '$1 !~ /^#/ && $2 == mnt {print NR; exit}' /etc/fstab)
 
-case "$fs_type" in
-	xfs)
-		log_history "XFS filesystem detected on $mnt."
-		
-		# Check if /home is on root partition or separate partition
-		if [[ "$mnt" == "/" ]]; then
-			# /home is on root partition - modify GRUB
-			log_history "/home is on root partition. Modifying GRUB for XFS quota."
-			grub_conf="/etc/default/grub"
+# Verify line number was found
+if [ -z "$lnr" ]; then
+	log_history "Error: No entry found in /etc/fstab for $mnt"
+	exit "$E_NOTEXIST"
+fi
 
-			if ! grep -q "rootflags=.*uquota" "$grub_conf" || ! grep -q "systemd.unified_cgroup_hierarchy=1" "$grub_conf"; then
-				params="rootflags=uquota,pquota,gquota systemd.unified_cgroup_hierarchy=1"
-				sed -i 's/^\(GRUB_CMDLINE_LINUX="[^"]*\)/\1 '"$params"'/' "$grub_conf"
-				check_result $? "Failed to add kernel parameters to $grub_conf"
-				update-grub > /dev/null 2>&1
-				log_history "GRUB updated. A system reboot is REQUIRED to apply XFS quota changes."
-				echo "Important: A system reboot is REQUIRED to enable XFS quotas on root partition."
-				reboot_req="Y"
-			else
-				log_history "XFS quota flags already present in GRUB configuration."
-			fi
-		else
-			# /home is on separate partition - modify fstab
-			log_history "/home is on separate partition ($mnt). Modifying fstab for XFS quota."
-			
-			# Check if quota options are already present
-			if ! echo "$opt" | grep -qE "uquota|pquota|gquota"; then
-				# Add XFS quota options to fstab
-				new_opt="$opt,uquota,pquota,gquota"
-				sed -i "$lnr s/$opt/$new_opt/" /etc/fstab
-				check_result $? "Failed to modify fstab for XFS quota"
-				systemctl daemon-reload
-				mount -o remount "$mnt"
-				log_history "XFS quota options added to fstab. A system reboot is recommended."
-				echo "Note: A system reboot is recommended to fully enable XFS quotas."
-				reboot_req="Y"
-			else
-				log_history "XFS quota options already present in fstab."
-			fi
-		fi
-		;;
-		
+# Read fstab line details and create variables fstype and opt
+read -r _ _ fstype opt _ _ < <(sed -n "${lnr}p" /etc/fstab)
+
+case "$fstype" in
 	ext4)
 		log_history "ext4 filesystem detected on $mnt. Configuring quota."
 
-		# Check if native quota is already enabled in filesystem
+		# Detect native quota support
+		fs_features=$(tune2fs -l "$dev" 2> /dev/null | grep "^Filesystem features:")
 		native_quota_enabled=0
-		if tune2fs -l "$mnt" 2>/dev/null | grep -q "^Filesystem features:.*quota"; then
+
+		if echo "$fs_features" | grep -q "quota"; then
 			native_quota_enabled=1
 			log_history "Native quota detected on ext4 filesystem."
 		fi
 
-		# Check current fstab configuration for external quotas
+		# Check for external quota configuration in current mount options
 		external_quota_configured=0
-		if echo "$opt" | grep -qE "usrquota|grpquota|usrjquota=|grpjquota=|jqfmt="; then
+		if echo "$opt" | grep -qE "usrjquota=|grpjquota=|prjjquota=|jqfmt="; then
 			external_quota_configured=1
 			log_history "External quota configuration detected in fstab."
 		fi
 
-		# Decide which quota system to use
-		if [ $native_quota_enabled -eq 1 ]; then
-			# Use native quotas
+		# Determine quota options based on native support
+		if [[ $native_quota_enabled -eq 1 ]]; then
 			log_history "Using native ext4 quota support."
-			
-			# Remove external quota options from fstab if present
+
+			# If switching from external to native, clean up first
 			if [ $external_quota_configured -eq 1 ]; then
-				old=$(echo "$opt" | tr ',' '\n' | grep -vE 'usrquota|grpquota|usrjquota=|grpjquota=|jqfmt=' | tr '\n' ',' | sed 's/,$//')
-				if [ -n "$old" ]; then
-					sed -i "$lnr s/$opt/$old/" /etc/fstab
+				log_history "Removing external quota configuration before enabling native quotas."
+				clean_opts=$(echo "$opt" | tr ',' '\n' \
+					| grep -vE '^(usrquota|grpquota|prjquota|usrjquota=|grpjquota=|prjjquota=|jqfmt=|uquota|gquota|pquota)' \
+					| tr '\n' ',' | sed 's/,$//')
+
+				if [ -n "$clean_opts" ]; then
+					sed -i "${lnr}s|$opt|$clean_opts|" /etc/fstab
+				else
+					# If no other options, use defaults
+					sed -i "${lnr}s|$opt|defaults|" /etc/fstab
 				fi
+
 				systemctl daemon-reload
-				mount -o remount "$mnt"
-				log_history "Removed external quota options from fstab for native quota."
+				if mount -o remount "$mnt"; then
+					log_history "Removed external quota options from fstab."
+				else
+					log_history "WARNING: Failed to remount after removing external quotas."
+				fi
+
+				# Update $opt to reflect current state
+				opt="$clean_opts"
+				[ -z "$opt" ] && opt="defaults"
 			fi
-			
-			# Ensure native quota is enabled
-			if ! tune2fs -l "$mnt" 2>/dev/null | grep -q "^Filesystem features:.*quota"; then
-				tune2fs -O quota "$mnt" > /dev/null 2>&1
-				check_result $? "Failed to enable native quota on ext4 filesystem"
-			fi
-			
+
+			new_opts="usrquota,grpquota"
 		else
-			# Use external quotas (current configuration)
 			log_history "Using external quota files for ext4."
-			
-			# Ensure that quota kernel modules are installed for external quotas
-			if ! find "/lib/modules/$(uname -r)" -type f -name '*quota_v*.ko*' | grep -q '.*'; then
-				# Install kernel modules for quota support.
-				# Requires reboot to activate updated kernel.
-				echo "Installing required kernel modules for quota support..."
+
+			# Ensure kernel modules are available for external quotas
+			if ! find "/lib/modules/$(uname -r)" -type f -name '*quota_v*.ko*' | grep -q .; then
+				log_history "Installing required kernel modules for quota support..."
 				reboot_req="Y"
 				apt-get -qq install linux-image-extra-virtual -y
 				check_result $? "kernel module installation failed" "$E_UPDATE"
 			fi
-			
-			fnd='usrquota\|grpquota\|usrjquota=aquota.user\|grpjquota=aquota.group\|jqfmt=vfsv0'
-			new='usrquota,grpquota,usrjquota=aquota.user,grpjquota=aquota.group,jqfmt=vfsv0'
 
-			# Modify /etc/fstab
-			if [ "$(echo "$opt" | tr ',' '\n' | grep -c -xE "$fnd")" -ne "$(echo "$fnd" | tr '\|' '\n' | wc -l)" ]; then
-				old=$(echo "$opt" | tr ',' '\n' | grep -vE 'usrquota|grpquota|usrjquota=|grpjquota=|jqfmt=|uquota|gquota' | tr '\n' ',' | sed 's/,$//')
-				if [ -n "$old" ]; then
-					sed -i "$lnr s/$opt/$old,$new/" /etc/fstab
-				fi
-				systemctl daemon-reload
-				mount -o remount "$mnt"
+			new_opts="usrquota,grpquota,usrjquota=aquota.user,grpjquota=aquota.group,jqfmt=vfsv0"
+		fi
+
+		# Remove all quota-related options from current options
+		clean_opts=$(echo "$opt" | tr ',' '\n' \
+			| grep -vE '^(usrquota|grpquota|prjquota|usrjquota=|grpjquota=|prjjquota=|jqfmt=|uquota|gquota|pquota)' \
+			| tr '\n' ',' | sed 's/,$//')
+
+		# Update fstab if needed
+		if ! echo "$opt" | grep -qF "$new_opts"; then
+			if [ -n "$clean_opts" ]; then
+				new_full_opts="$clean_opts,$new_opts"
+			else
+				new_full_opts="$new_opts"
 			fi
-			
-			# Create quota files for external quotas
+
+			sed -i "${lnr}s|$opt|$new_full_opts|" /etc/fstab
+			systemctl daemon-reload
+
+			if mount -o remount "$mnt"; then
+				log_history "Remounted $mnt with quota options: $new_opts"
+			else
+				log_history "WARNING: Failed to remount $mnt"
+			fi
+		fi
+
+		# Create external quota files if using external quotas
+		if [[ $native_quota_enabled -eq 0 ]]; then
 			if [ ! -e "$mnt/aquota.user" ] || [ ! -e "$mnt/aquota.group" ]; then
 				quotacheck -avcugm > /dev/null 2>&1
+				log_history "Created external quota files."
 			fi
 		fi
 		;;
-		
+
+	xfs)
+		log_history "XFS filesystem detected on $mnt."
+
+		# XFS quota options (always the same for XFS)
+		xfs_quota_opts="uquota,gquota,pquota"
+
+		# Check if quota options are already present
+		if echo "$opt" | grep -qE "uquota|gquota|pquota"; then
+			log_history "XFS quota options already present in mount options."
+		else
+			needs_update=1
+		fi
+
+		# Handle root partition (requires GRUB modification)
+		if [[ "$mnt" == "/" ]]; then
+			log_history "/home is on root partition. Configuring XFS quota via GRUB and fstab."
+
+			# Check and modify GRUB configuration
+			grub_conf="/etc/default/grub"
+			grub_conf="/etc/default/grub"
+			if ! grep -qE "rootflags=.*(uquota|gquota|pquota)" "$grub_conf"; then
+				# Add or update rootflags with uquota, gquota, pquota
+				sed -i -E '
+        /^GRUB_CMDLINE_LINUX=/{
+          # If rootflags= already exists...
+          /rootflags=/{
+            /rootflags=[^" ]*uquota/! s/rootflags=([^" ]*)/rootflags=\1,uquota/
+            /rootflags=[^" ]*gquota/! s/rootflags=([^" ]*)/rootflags=\1,gquota/
+            /rootflags=[^" ]*pquota/! s/rootflags=([^" ]*)/rootflags=\1,pquota/
+          } 
+          # If rootflags= does NOT exist, add it complete without touching the rest
+          /rootflags=/! s/^(GRUB_CMDLINE_LINUX="[^"]*)"/\1 rootflags=uquota,gquota,pquota"/
+        }
+        ' "$grub_conf"
+				check_result $? "Failed to add kernel parameters to $grub_conf"
+
+				# Clean up duplicate spaces and spaces before closing quotes
+				sed -i -E '/^GRUB_CMDLINE_LINUX=/ {s/  +/ /g; s/" /"/; s/ "/"/;}' "$grub_conf"
+				check_result $? "Failed to clean up GRUB configuration"
+
+				update-grub > /dev/null 2>&1
+				log_history "GRUB updated with XFS quota flags. Reboot REQUIRED."
+				reboot_req="Y"
+			else
+				log_history "XFS quota flags already present in GRUB configuration."
+			fi
+
+			# Update fstab for consistency (even though GRUB controls it)
+			if [[ ${needs_update:-0} -eq 1 ]]; then
+				# Remove any existing quota options first
+				clean_opts=$(echo "$opt" | tr ',' '\n' \
+					| grep -vE '^(uquota|gquota|pquota|usrquota|grpquota|prjquota)' \
+					| tr '\n' ',' | sed 's/,$//')
+
+				if [ -n "$clean_opts" ]; then
+					new_full_opts="$clean_opts,$xfs_quota_opts"
+				else
+					new_full_opts="$xfs_quota_opts"
+				fi
+
+				sed -i "${lnr}s|$opt|$new_full_opts|" /etc/fstab
+				check_result $? "Failed to modify fstab for XFS quota"
+				systemctl daemon-reload
+				log_history "XFS quota options added to fstab for root partition."
+			fi
+
+		# Handle separate partition (fstab only)
+		else
+			log_history "/home is on separate partition ($mnt). Configuring XFS quota via fstab."
+
+			if [[ ${needs_update:-0} -eq 1 ]]; then
+				# Remove any existing quota options first
+				clean_opts=$(echo "$opt" | tr ',' '\n' \
+					| grep -vE '^(uquota|gquota|pquota|usrquota|grpquota|prjquota)' \
+					| tr '\n' ',' | sed 's/,$//')
+
+				if [ -n "$clean_opts" ]; then
+					new_full_opts="$clean_opts,$xfs_quota_opts"
+				else
+					new_full_opts="$xfs_quota_opts"
+				fi
+
+				sed -i "${lnr}s|$opt|$new_full_opts|" /etc/fstab
+				check_result $? "Failed to modify fstab for XFS quota"
+				systemctl daemon-reload
+
+				if mount -o remount "$mnt"; then
+					log_history "Remounted $mnt with XFS quota options."
+				else
+					log_history "WARNING: Failed to remount $mnt. Reboot required."
+					reboot_req="Y"
+				fi
+			fi
+		fi
+		;;
+
 	*)
 		# Unsupported filesystem
-		echo "Error: Hestia does not support quotas on $fs_type filesystem."
-		log_history "Quota setup failed: $fs_type filesystem is not supported."
+		echo "Error: Hestia does not support quotas on $fstype filesystem."
+		log_history "Quota setup failed: $fstype filesystem is not supported."
 		exit "$E_DISK"
 		;;
 esac
 
 # Adding quotacheck on reboot (only for ext4 with external quotas)
-if [[ "$fs_type" == "ext4" ]] && [ $native_quota_enabled -eq 0 ]; then
+if [[ "$fstype" == "ext4" ]] && [[ $native_quota_enabled -eq 0 ]]; then
 	touch /forcequotacheck
-	
+
 	# Adding cron job for periodic quota check
 	echo '#!/bin/bash' > /etc/cron.daily/quotacheck
 	echo 'touch /forcequotacheck' >> /etc/cron.daily/quotacheck
 	chmod a+x /etc/cron.daily/quotacheck
 	log_history "Quotacheck cron job configured for external quotas."
 else
-	# Remove quotacheck cron job if it exists (not needed for XFS or native quotas)
+	# Remove quotacheck cron job if it exists (not needed for XFS or ext4 native quotas)
 	if [ -f /etc/cron.daily/quotacheck ]; then
 		rm -f /etc/cron.daily/quotacheck
-		log_history "Removed quotacheck cron job (not needed for $fs_type)."
+		log_history "Removed quotacheck cron job (not needed for $fstype)."
 	fi
 fi
 
 # Enabling group and user quota
-if [ -n "$(quotaon -pa | grep " $mnt " | grep 'user\|group' | grep 'is off')" ]; then
-	quotaon -v $mnt
+if quotaon -pa | grep " $mnt " | grep -E 'user|group' | grep -q 'is off'; then
+	quotaon -v "$mnt"
 	check_result $? "quota can't be enabled in $mnt" "$E_DISK"
 fi
 
 # Updating hestia.conf value
-$BIN/v-change-sys-config-value "DISK_QUOTA" "yes"
+"$BIN"/v-change-sys-config-value "DISK_QUOTA" "yes"
 
 # Rebuilding user quota (only if reboot is not required)
 if [ "$reboot_req" != "Y" ]; then
-	for user in $("$BIN/v-list-users" list); do
-		"$BIN/v-update-user-quota" "$user"
+	for user in $("$BIN"/v-list-users list); do
+		"$BIN"/v-update-user-quota "$user"
 	done
 	log_history "User quotas updated successfully."
 else
@@ -209,15 +296,15 @@ rm -f /usr/local/hestia/bin/v-update-quotas-after-reboot.sh
 rm -f /etc/cron.d/hestia-quota-reboot
 EOF
 	chmod +x /usr/local/hestia/bin/v-update-quotas-after-reboot.sh
-	
+
 	# Create one-time cron job
 	cat > /etc/cron.d/hestia-quota-reboot << EOF
 @reboot root sleep 30 && /usr/local/hestia/bin/v-update-quotas-after-reboot.sh
 EOF
 	chmod 644 /etc/cron.d/hestia-quota-reboot
-	
+
 	log_history "Created one-time job to update user quotas after reboot."
-	echo "Note: User quotas will be automatically updated after the system reboots."
+	echo "[ ! ] Note: User quotas will be automatically updated after the system reboots."
 fi
 
 #----------------------------------------------------------#
@@ -225,13 +312,13 @@ fi
 #----------------------------------------------------------#
 
 # Logging
-$BIN/v-log-action "system" "Info" "Plugins" "System Quota enforcement enabled."
+"$BIN"/v-log-action "system" "Info" "Plugins" "System Quota enforcement enabled."
 log_history "system quota enforcement enabled"
 log_event "$OK" "$ARGUMENTS"
 
 if [ "$reboot_req" = "Y" ]; then
 	log_history "A system reboot is required to complete enable quota."
-	echo "Note: A system reboot is required to complete quota setup."
+	echo "[ ! ] Note: A system reboot is required to complete quota setup."
 fi
 
 exit

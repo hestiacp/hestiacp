@@ -2406,10 +2406,15 @@ BIN="$HESTIA/bin"
 source $HESTIA/func/syshealth.sh
 syshealth_repair_system_config
 
-# Add /usr/local/hestia/bin/ to path variable
-echo 'if [ "${PATH#*/usr/local/hestia/bin*}" = "$PATH" ]; then
+# Add /usr/local/hestia/bin/ to PATH variable in .bashrc if it exists
+[[ -f /root/.bashrc ]] && echo 'if [ "${PATH#*/usr/local/hestia/bin*}" = "$PATH" ]; then
     . /etc/profile.d/hestia.sh
 fi' >> /root/.bashrc
+
+# Add /usr/local/hestia/bin/ to PATH variable in .zshrc if it exists
+[[ -f /root/.zshrc ]] && echo 'if [ "${PATH#*/usr/local/hestia/bin*}" = "$PATH" ]; then
+    . /etc/profile.d/hestia.sh
+fi' >> /root/.zshrc
 
 #----------------------------------------------------------#
 #                   Hestia Access Info                     #

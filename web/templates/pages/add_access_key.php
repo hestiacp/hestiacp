@@ -26,7 +26,13 @@
             <p class="u-mb10"><?= _("Permissions") ?></p>
             <?php foreach ($apis as $api_name => $api_data) { ?>
                 <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="<?= $api_name ?>" name="v_apis[]" id="v_apis_<?= $api_name ?>" tabindex="5">
+                    <input
+                        class="form-check-input"
+                        type="checkbox"
+                        value="<?= $api_name ?>"
+                        name="v_apis[]"
+                        id="v_apis_<?= $api_name ?>"
+                        tabindex="5">
                     <label for="v_apis_<?= $api_name ?>">
                         <?= _($api_name) ?>
                     </label>

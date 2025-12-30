@@ -156,7 +156,7 @@
                         $edit_lnk = '/edit/' . $value['TYPE'] . '/?database=' . $value['RESULT']
                             . '&user=' . $value['USER'];
                     }
-                    if (($value['KEY'] != 'RECORD') && ($value['KEY'] != 'ACCOUNT') && ($value['KEY'] != 'JOB') && ($value['KEY'] != 'DATABASE')) {
+                    if (!in_array($value['KEY'], ['RECORD', 'ACCOUNT', 'JOB', 'DATABASE'])) {
                         $edit_lnk = '/edit/' . $value['TYPE'] . '/?'
                             . strtolower($value['KEY']) . '=' . $value['RESULT']
                             . '&user=' . $value['USER'];

@@ -6,12 +6,23 @@
             $back_href_admin = "/edit/user/?user=" . htmlentities($_SESSION["look"]) . "&token=" . $_SESSION["token"];
             $back_href_self = "/edit/user/?user=" . htmlentities($_SESSION["user"]) . "&token=" . $_SESSION["token"];
             ?>
-            <?php if ($_SESSION["userContext"] === "admin" && $_SESSION['look'] !== '' && $_GET["user"] !== "admin") { ?>
-                <a href="<?= $back_href_admin ?>" class="button button-secondary button-back js-button-back">
+            <?php
+            $show_admin_back = (
+                ($_SESSION['userContext'] === 'admin') &&
+                ($_SESSION['look'] !== '') &&
+                ($_GET['user'] !== 'admin')
+            );
+            ?>
+            <?php if ($show_admin_back) { ?>
+                <a
+                    href="<?= $back_href_admin ?>"
+                    class="button button-secondary button-back js-button-back">
                     <i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
                 </a>
             <?php } else { ?>
-                <a href="<?= $back_href_self ?>" class="button button-secondary button-back js-button-back">
+                <a
+                    href="<?= $back_href_self ?>"
+                    class="button button-secondary button-back js-button-back">
                     <i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
                 </a>
             <?php } ?>
@@ -21,7 +32,10 @@
         </div>
         <div class="toolbar-right">
             <div class="toolbar-sorting">
-                <button class="toolbar-sorting-toggle js-toggle-sorting-menu" type="button" title="<?= _("Sort items") ?>">
+                <button
+                    class="toolbar-sorting-toggle js-toggle-sorting-menu"
+                    type="button"
+                    title="<?= _("Sort items") ?>">
                     <?= _("Sort by") ?>:
                     <span class="u-text-bold">
                         <?= _("Date") ?> <i class="fas fa-arrow-down-a-z"></i>
@@ -30,7 +44,9 @@
                 <ul class="toolbar-sorting-menu js-sorting-menu u-hidden">
                     <?php $date_active = ($_SESSION['userSortOrder'] === 'date') ? 'active' : ''; ?>
                     <li data-entity="sort-date" data-sort-as-int="1">
-                        <span class="name <?= $date_active ?>"><?= _("Date") ?> <i class="fas fa-arrow-down-a-z"></i></span>
+                        <span class="name <?= $date_active ?>">
+                            <?= _("Date") ?> <i class="fas fa-arrow-down-a-z"></i>
+                        </span>
                         <span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
                     </li>
                     <li data-entity="sort-key">

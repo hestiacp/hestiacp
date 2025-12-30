@@ -7,14 +7,14 @@ include $_SERVER["DOCUMENT_ROOT"] . "/inc/main.php";
 
 // Check user
 if ($_SESSION["userContext"] != "admin") {
-	header("Location: /list/user");
-	exit();
+    header("Location: /list/user");
+    exit();
 }
 
 // Check POST request
 if (!empty($_POST["save"])) {
-	// Set success message
-	$_SESSION["ok_msg"] = _("Info (read-only mode): Crontab can only be edited via SSH.");
+    // Set success message
+    $_SESSION["ok_msg"] = _("Info (read-only mode): Crontab can only be edited via SSH.");
 }
 
 $v_config_path = "/etc/crontab";

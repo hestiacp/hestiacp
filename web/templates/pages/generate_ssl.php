@@ -79,7 +79,13 @@
                 <label for="v_org" class="form-label">
                     <?= _("Organization") ?>
                 </label>
-                <input type="text" class="form-control" name="v_org" id="v_org" value="<?= htmlentities(trim($v_org, "'")) ?>">
+                <?php $v_org_value = htmlentities(trim($v_org, "'")); ?>
+                <input
+                    type="text"
+                    class="form-control"
+                    name="v_org"
+                    id="v_org"
+                    value="<?= $v_org_value ?>">
             </div>
             <div>
                 <button type="submit" class="button" name="generate">

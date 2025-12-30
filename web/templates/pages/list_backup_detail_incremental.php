@@ -74,7 +74,12 @@
                 <div class="units-table-row js-unit">
                     <div class="units-table-cell">
                         <div class="clearfix l-unit__stat-col--left super-compact">
-                            <input id="check<?= $i ?>" class="js-unit-checkbox" type="checkbox" name="web[]" value="<?= $key ?>">
+                            <input
+                                id="check<?= $i ?>"
+                                class="js-unit-checkbox"
+                                type="checkbox"
+                                name="web[]"
+                                value="<?= $key ?>">
                             <label for="check<?= $i ?>" class="u-hide-desktop"><?= _("Select") ?></label>
                         </div>
                     </div>
@@ -115,7 +120,12 @@
                 <div class="units-table-row js-unit">
                     <div class="units-table-cell">
                         <div class="clearfix l-unit__stat-col--left super-compact">
-                            <input id="check<?= $i ?>" class="js-unit-checkbox" type="checkbox" name="mail[]" value="<?= $key ?>">
+                            <input
+                                id="check<?= $i ?>"
+                                class="js-unit-checkbox"
+                                type="checkbox"
+                                name="mail[]"
+                                value="<?= $key ?>">
                             <label for="check<?= $i ?>" class="u-hide-desktop"><?= _("Select") ?></label>
                         </div>
                     </div>
@@ -156,7 +166,12 @@
                 <div class="units-table-row js-unit">
                     <div class="units-table-cell">
                         <div class="clearfix l-unit__stat-col--left super-compact">
-                            <input id="check<?= $i ?>" class="js-unit-checkbox" type="checkbox" name="dns[]" value="<?= $key ?>">
+                            <input
+                                id="check<?= $i ?>"
+                                class="js-unit-checkbox"
+                                type="checkbox"
+                                name="dns[]"
+                                value="<?= $key ?>">
                             <label for="check<?= $i ?>" class="u-hide-desktop"><?= _("Select") ?></label>
                         </div>
                     </div>
@@ -197,7 +212,12 @@
                 <div class="units-table-row js-unit">
                     <div class="units-table-cell">
                         <div class="clearfix l-unit__stat-col--left super-compact">
-                            <input id="check<?= $i ?>" class="js-unit-checkbox" type="checkbox" name="db[]" value="<?= $key ?>">
+                            <input
+                                id="check<?= $i ?>"
+                                class="js-unit-checkbox"
+                                type="checkbox"
+                                name="db[]"
+                                value="<?= $key ?>">
                             <label for="check<?= $i ?>" class="u-hide-desktop"><?= _("Select") ?></label>
                         </div>
                     </div>
@@ -238,7 +258,12 @@
                 <div class="units-table-row js-unit">
                     <div class="units-table-cell">
                         <div class="clearfix l-unit__stat-col--left super-compact">
-                            <input id="check<?= $i ?>" class="js-unit-checkbox" type="checkbox" name="cron[]" value="<?= $key ?>">
+                            <input
+                                id="check<?= $i ?>"
+                                class="js-unit-checkbox"
+                                type="checkbox"
+                                name="cron[]"
+                                value="<?= $key ?>">
                             <label for="check<?= $i ?>" class="u-hide-desktop"><?= _("Select") ?></label>
                         </div>
                     </div>

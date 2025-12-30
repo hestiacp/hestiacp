@@ -26,7 +26,10 @@
             <?php show_alert_message($_SESSION); ?>
             <div class="u-mb20">
                 <label for="v_config" class="form-label"><?= $v_config_path ?></label>
-                <textarea class="form-control u-min-height300 u-allow-resize u-console" name="v_config" id="v_config"><?= $v_config ?></textarea>
+                <textarea
+                    class="form-control u-min-height300 u-allow-resize u-console"
+                    name="v_config"
+                    id="v_config"><?= $v_config ?></textarea>
             </div>
             <?php if (!empty($v_config_path1)) { ?>
                 <div class="u-mb20">

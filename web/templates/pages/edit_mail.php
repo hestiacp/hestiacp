@@ -89,8 +89,14 @@
                     </label>
                 </div>
             <?php } ?>
+            <?php $v_dkim_checked = ($v_dkim == 'yes') ? 'checked' : ''; ?>
             <div class="form-check u-mb10">
-                <input class="form-check-input" type="checkbox" name="v_dkim" id="v_dkim" <?= ($v_dkim == 'yes') ? 'checked' : '' ?>>
+                <input
+                    class="form-check-input"
+                    type="checkbox"
+                    name="v_dkim"
+                    id="v_dkim"
+                    <?= $v_dkim_checked ?>>
                 <label for="v_dkim">
                     <?= _("DKIM Support") ?>
                 </label>
@@ -103,7 +109,12 @@
             </div>
             <div x-cloak x-show="sslEnabled" class="u-pl30">
                 <div class="form-check u-mb10">
-                    <input x-model="letsEncryptEnabled" class="form-check-input" type="checkbox" name="v_letsencrypt" id="v_letsencrypt">
+                    <input
+                        x-model="letsEncryptEnabled"
+                        class="form-check-input"
+                        type="checkbox"
+                        name="v_letsencrypt"
+                        id="v_letsencrypt">
                     <label for="v_letsencrypt">
                         <?= _("Use Let's Encrypt to obtain SSL certificate") ?>
                     </label>
@@ -126,13 +137,14 @@
                 </div>
                 <div x-cloak x-show="!letsEncryptEnabled">
                     <div class="u-mb10">
+                        <?php $generate_ssl_href = '/generate/ssl/?domain=' . htmlentities($v_domain); ?>
                         <label for="v_ssl_crt" class="form-label">
                             <?= _("SSL Certificate") ?>
                             <span x-cloak x-show="!letsEncryptEnabled" id="generate-csr"> /
                                 <a
                                     class="form-link"
                                     target="_blank"
-                                    href="/generate/ssl/?domain=<?= htmlentities($v_domain) ?>">
+                                    href="<?= $generate_ssl_href ?>">
                                     <?= _("Generate Self-Signed SSL Certificate") ?>
                                 </a>
                             </span>
@@ -199,7 +211,12 @@
                 <?php } ?>
             </div>
             <div class="form-check u-mb10">
-                <input x-model="hasSmtpRelay" class="form-check-input" type="checkbox" name="v_smtp_relay" id="v_smtp_relay">
+                <input
+                    x-model="hasSmtpRelay"
+                    class="form-check-input"
+                    type="checkbox"
+                    name="v_smtp_relay"
+                    id="v_smtp_relay">
                 <label for="v_smtp_relay">
                     <?= _("SMTP Relay") ?>
                 </label>

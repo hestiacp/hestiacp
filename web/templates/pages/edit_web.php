@@ -109,7 +109,12 @@
                             <label for="v_ftp_user[<?= $i ?>][v_ftp_user]" class="form-label">
                                 <?= _("Username") ?><br>
                                 <span style="color:#777;">
-                                    <?php $prefix_msg = sprintf(_('Prefix %s will be added to username automatically'), $user_plain . "_"); ?>
+                                    <?php
+                                    $prefix_msg = sprintf(
+                                        _('Prefix %s will be added to username automatically'),
+                                        $user_plain . "_"
+                                    );
+                                    ?>
                                     <?= $prefix_msg ?>
                                 </span>
                             </label>
@@ -198,7 +203,7 @@
             <label for="v_ftp_user[%INDEX%][v_ftp_user]" class="form-label">
                 <?= _("Username") ?><br>
                 <span style="color:#777;">
-                    <?= sprintf(_('Prefix %s will be added to username automatically'), $user_plain . "_"); ?>
+                    <?= $prefix_msg ?>
                 </span>
             </label>
             <?php $ftp_user_name = 'v_ftp_user[%INDEX%][v_ftp_user]';

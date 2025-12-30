@@ -11,7 +11,10 @@
         </div>
         <div class="toolbar-right">
             <div class="toolbar-sorting">
-                <button class="toolbar-sorting-toggle js-toggle-sorting-menu" type="button" title="<?= _("Sort items") ?>">
+                <button
+                    class="toolbar-sorting-toggle js-toggle-sorting-menu"
+                    type="button"
+                    title="<?= _("Sort items") ?>">
                     <?= _("Sort by") ?>:
                     <span class="u-text-bold">
                         <?php if ($_SESSION['userSortOrder'] === 'name') {
@@ -179,12 +182,18 @@
                         </li>
                         <?php if ($key != "system") { ?>
                             <li class="units-table-row-action shortcut-delete" data-key-action="js">
+                                <?php
+                                $delete_confirm_message = sprintf(
+                                    _("Are you sure you want to delete package %s?"),
+                                    $key
+                                );
+                                ?>
                                 <a
                                     class="units-table-row-action-link data-controls js-confirm-action"
                                     href="/delete/package/?package=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
                                     title="<?= _("Delete") ?>"
                                     data-confirm-title="<?= _("Delete") ?>"
-                                    data-confirm-message="<?= sprintf(_("Are you sure you want to delete package %s?"), $key) ?>">
+                                    data-confirm-message="<?= $delete_confirm_message ?>">
                                     <i class="fas fa-trash icon-red"></i>
                                     <span class="u-hide-desktop"><?= _("Delete") ?></span>
                                 </a>
@@ -278,8 +287,9 @@
                     </span>
                 </div>
                 <div class="units-table-cell compact u-text-bold u-text-center-desktop">
+                    <?php $dns_records_title = _("DNS Records") . ": " . $data[$key]["DNS_RECORDS"]; ?>
                     <span class="u-hide-desktop"><?= _("DNS Records") ?>:</span>
-                    <span class="units-table-badge" title="<?= _("DNS Records") ?>: <?= $data[$key]["DNS_RECORDS"] ?>">
+                    <span class="units-table-badge" title="<?= $dns_records_title ?>">
                         <?php if ($data[$key]["DNS_RECORDS"] == "unlimited") { ?>
                             &infin;
                         <?php } else { ?>
@@ -288,8 +298,9 @@
                     </span>
                 </div>
                 <div class="units-table-cell compact u-text-bold u-text-center-desktop">
+                    <?php $mail_domains_title = _("Mail Domains") . ": " . $data[$key]["MAIL_DOMAINS"]; ?>
                     <span class="u-hide-desktop"><?= _("Mail Domains") ?>:</span>
-                    <span class="units-table-badge" title="<?= _("Mail Domains") ?>: <?= $data[$key]["MAIL_DOMAINS"] ?>">
+                    <span class="units-table-badge" title="<?= $mail_domains_title ?>">
                         <?php if ($data[$key]["MAIL_DOMAINS"] == "unlimited") { ?>
                             &infin;
                         <?php } else { ?>
@@ -298,8 +309,9 @@
                     </span>
                 </div>
                 <div class="units-table-cell compact u-text-bold u-text-center-desktop">
+                    <?php $mail_accounts_title = _("Mail Accounts") . ": " . $data[$key]["MAIL_ACCOUNTS"]; ?>
                     <span class="u-hide-desktop"><?= _("Mail Accounts") ?>:</span>
-                    <span class="units-table-badge" title="<?= _("Mail Accounts") ?>: <?= $data[$key]["MAIL_ACCOUNTS"] ?>">
+                    <span class="units-table-badge" title="<?= $mail_accounts_title ?>">
                         <?php if ($data[$key]["MAIL_ACCOUNTS"] == "unlimited") { ?>
                             &infin;
                         <?php } else { ?>

@@ -75,7 +75,11 @@
                             name="backup[]"
                             value="<?= $value['short_id'] ?>"
                             <?= $display_mode ?>>
-                        <span class="u-hide-desktop"><label for="check<?= $i ?>" class="u-hide-desktop"><?= _("Select") ?></label></span>
+                        <span class="u-hide-desktop">
+                            <label for="check<?= $i ?>" class="u-hide-desktop">
+                                <?= _("Select") ?>
+                            </label>
+                        </span>
                     </div>
                 </div>
                 <div class="units-table-cell units-table-heading-cell u-text-bold">

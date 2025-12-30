@@ -9,31 +9,59 @@
             <?php show_alert_message($_SESSION); ?>
             <div class="u-mb10">
                 <label for="v_domain" class="form-label"><?= _("Domain") ?></label>
-                <input type="text" class="form-control" name="v_domain" id="v_domain" value="<?= htmlentities(trim($v_domain, "'")) ?>">
+                <?php $v_domain_value = htmlentities(trim($v_domain, "'")); ?>
+                <input
+                    type="text"
+                    class="form-control"
+                    name="v_domain"
+                    id="v_domain"
+                    value="<?= $v_domain_value ?>">
             </div>
             <div class="u-mb10">
                 <label for="v_aliases" class="form-label"><?= _("Aliases") ?></label>
-                <textarea class="form-control" name="v_aliases" id="v_aliases"><?= htmlentities(trim($v_aliases, "'")) ?></textarea>
+                <?php $v_aliases_value = htmlentities(trim($v_aliases, "'")); ?>
+                <textarea
+                    class="form-control"
+                    name="v_aliases"
+                    id="v_aliases"><?= $v_aliases_value ?></textarea>
             </div>
             <div class="u-mb10">
                 <label for="v_email" class="form-label">
                     <?= _("Email") ?>
                     <span class="optional">(<?php print _("Optional"); ?>)</span>
                 </label>
-                <input type="email" class="form-control" name="v_email" id="v_email" value="<?= htmlentities(trim($v_email, "'")) ?>">
+                <?php $v_email_value = htmlentities(trim($v_email, "'")); ?>
+                <input
+                    type="email"
+                    class="form-control"
+                    name="v_email"
+                    id="v_email"
+                    value="<?= $v_email_value ?>">
             </div>
             <div class="u-mb10">
                 <label for="v_country" class="form-label">
                     <?= _("Country") ?>
                     <span class="optional">(<?= _("ISO 3166-1 alpha-2 two-letter code") ?>)</span>
                 </label>
-                <input type="text" class="form-control" name="v_country" id="v_country" value="<?= htmlentities(trim($v_country, "'")) ?>">
+                <?php $v_country_value = htmlentities(trim($v_country, "'")); ?>
+                <input
+                    type="text"
+                    class="form-control"
+                    name="v_country"
+                    id="v_country"
+                    value="<?= $v_country_value ?>">
             </div>
             <div class="u-mb10">
                 <label for="v_state" class="form-label">
                     <?= _("State / Province") ?>
                 </label>
-                <input type="text" class="form-control" name="v_state" id="v_state" value="<?= htmlentities(trim($v_state, "'")) ?>">
+                <?php $v_state_value = htmlentities(trim($v_state, "'")); ?>
+                <input
+                    type="text"
+                    class="form-control"
+                    name="v_state"
+                    id="v_state"
+                    value="<?= $v_state_value ?>">
             </div>
             <div class="u-mb10">
                 <label for="v_locality" class="form-label">

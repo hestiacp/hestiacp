@@ -36,7 +36,13 @@
             </div>
             <div class="u-mb10">
                 <label for="v_netmask" class="form-label"><?= _("Netmask") ?></label>
-                <input type="text" class="form-control" name="v_netmask" id="v_netmask" value="<?= htmlentities(trim($v_netmask, "'")) ?>">
+                <?php $v_netmask_value = htmlentities(trim($v_netmask, "'")); ?>
+                <input
+                    type="text"
+                    class="form-control"
+                    name="v_netmask"
+                    id="v_netmask"
+                    value="<?= $v_netmask_value ?>">
             </div>
             <div class="u-mb10">
                 <label for="v_interface" class="form-label"><?= _("Interface") ?></label>

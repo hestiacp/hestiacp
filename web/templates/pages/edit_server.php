@@ -706,7 +706,10 @@
                     <label for="v_backup_gzip" class="form-label">
                         <?= _("Compression Level") ?>
                         <a
-                            <?php $backup_optimal_compression_href = 'https://hestiacp.com/docs/server-administration/backup-restore.html#what-is-the-optimal-compression-ratio'; ?>
+                            <?php
+                            $backup_optimal_compression_href = 'https://hestiacp.com/docs/server-administration/backup-restore.html'
+                                . '#what-is-the-optimal-compression-ratio';
+                            ?>
                             href="<?= $backup_optimal_compression_href ?>"
                             target="_blank"
                             class="u-ml5">
@@ -727,8 +730,12 @@
                 <div class="u-mb20">
                     <label for="v_backup_dir" class="form-label">
                         <?= _("Directory") ?>
+                        <?php
+                        $backup_change_folder_href = 'https://hestiacp.com/docs/server-administration/backup-restore.html'
+                            . '#how-to-change-default-backup-folder';
+                        ?>
                         <a
-                            href="https://hestiacp.com/docs/server-administration/backup-restore.html#how-to-change-default-backup-folder"
+                            href="<?= $backup_change_folder_href ?>"
                             target="_blank"
                             class="u-ml5">
                             <i class="fas fa-circle-question"></i>

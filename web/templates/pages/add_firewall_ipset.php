@@ -1,3 +1,4 @@
+<?php /* phpcs:ignoreFile */ ?>
 <!-- Begin toolbar -->
 <div class="toolbar">
     <div class="toolbar-inner">

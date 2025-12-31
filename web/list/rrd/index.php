@@ -7,8 +7,8 @@ include $_SERVER["DOCUMENT_ROOT"] . "/inc/main.php";
 
 // Check user
 if ($_SESSION["userContext"] != "admin") {
-	header("Location: /list/user");
-	exit();
+    header("Location: /list/user");
+    exit();
 }
 
 // Data
@@ -26,20 +26,20 @@ if (empty($_GET["period"])) {
 }
 */
 if (empty($_GET["period"])) {
-	$period = "daily";
+    $period = "daily";
 } elseif (
-	!in_array($_GET["period"], [
-		"daily",
-		"weekly",
-		"monthly",
-		"yearly",
-		"biennially",
-		"triennially",
-	])
+    !in_array($_GET["period"], [
+        "daily",
+        "weekly",
+        "monthly",
+        "yearly",
+        "biennially",
+        "triennially",
+    ])
 ) {
-	$period = "daily";
+    $period = "daily";
 } else {
-	$period = $_GET["period"];
+    $period = $_GET["period"];
 }
 
 // Render page

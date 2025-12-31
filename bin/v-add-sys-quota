@@ -234,7 +234,12 @@ case "$fstype" in
 				systemctl daemon-reload
 
 				if mount -o remount "$mnt"; then
-					log_history "Remounted $mnt with XFS quota options."
+					if quotaon -p "$dev" 2> /dev/null | grep -q '^user.*on$'; then
+						log_history "Remounted $mnt with XFS quota options."
+					else
+						log_history "Reboot required to apply quota options on $mnt."
+						reboot_req="Y"
+					fi
 				else
 					log_history "WARNING: Failed to remount $mnt. Reboot required."
 					reboot_req="Y"

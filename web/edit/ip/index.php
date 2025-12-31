@@ -8,14 +8,14 @@ include $_SERVER["DOCUMENT_ROOT"] . "/inc/main.php";
 
 // Check user
 if ($_SESSION["userContext"] != "admin") {
-	header("Location: /list/user");
-	exit();
+    header("Location: /list/user");
+    exit();
 }
 
 // Check ip argument
 if (empty($_GET["ip"])) {
-	header("Location: /list/ip/");
-	exit();
+    header("Location: /list/ip/");
+    exit();
 }
 
 // List ip
@@ -34,7 +34,7 @@ $v_name = $data[$v_ip]["NAME"];
 $v_nat = $data[$v_ip]["NAT"];
 $v_ipstatus = $data[$v_ip]["STATUS"];
 if ($v_ipstatus == "dedicated") {
-	$v_dedicated = "yes";
+    $v_dedicated = "yes";
 }
 $v_owner = $data[$v_ip]["OWNER"];
 $v_date = $data[$v_ip]["DATE"];
@@ -47,54 +47,54 @@ unset($output);
 
 // Check POST request
 if (!empty($_POST["save"])) {
-	// Check token
-	verify_csrf($_POST);
+    // Check token
+    verify_csrf($_POST);
 
-	$v_ip = escapeshellarg($_POST["v_ip"]);
+    $v_ip = escapeshellarg($_POST["v_ip"]);
 
-	// Change Status
-	if ($v_ipstatus == "shared" && empty($_POST["v_shared"]) && empty($_SESSION["error_msg"])) {
-		exec(HESTIA_CMD . "v-change-sys-ip-status " . $v_ip . " 'dedicated'", $output, $return_var);
-		check_return_code($return_var, $output);
-		unset($output);
-		$v_dedicated = "yes";
-	}
-	if ($v_ipstatus == "dedicated" && !empty($_POST["v_shared"]) && empty($_SESSION["error_msg"])) {
-		exec(HESTIA_CMD . "v-change-sys-ip-status " . $v_ip . " 'shared'", $output, $return_var);
-		check_return_code($return_var, $output);
-		unset($output);
-		unset($v_dedicated);
-	}
+    // Change Status
+    if ($v_ipstatus == "shared" && empty($_POST["v_shared"]) && empty($_SESSION["error_msg"])) {
+        exec(HESTIA_CMD . "v-change-sys-ip-status " . $v_ip . " 'dedicated'", $output, $return_var);
+        check_return_code($return_var, $output);
+        unset($output);
+        $v_dedicated = "yes";
+    }
+    if ($v_ipstatus == "dedicated" && !empty($_POST["v_shared"]) && empty($_SESSION["error_msg"])) {
+        exec(HESTIA_CMD . "v-change-sys-ip-status " . $v_ip . " 'shared'", $output, $return_var);
+        check_return_code($return_var, $output);
+        unset($output);
+        unset($v_dedicated);
+    }
 
-	// Change owner
-	if ($v_owner != $_POST["v_owner"] && empty($_SESSION["error_msg"])) {
-		$v_owner = escapeshellarg($_POST["v_owner"]);
-		exec(HESTIA_CMD . "v-change-sys-ip-owner " . $v_ip . " " . $v_owner, $output, $return_var);
-		check_return_code($return_var, $output);
-		$v_owner = $_POST["v_owner"];
-		unset($output);
-	}
+    // Change owner
+    if ($v_owner != $_POST["v_owner"] && empty($_SESSION["error_msg"])) {
+        $v_owner = escapeshellarg($_POST["v_owner"]);
+        exec(HESTIA_CMD . "v-change-sys-ip-owner " . $v_ip . " " . $v_owner, $output, $return_var);
+        check_return_code($return_var, $output);
+        $v_owner = $_POST["v_owner"];
+        unset($output);
+    }
 
-	// Change associated domain
-	if ($v_name != $_POST["v_name"] && empty($_SESSION["error_msg"])) {
-		$v_name = escapeshellarg($_POST["v_name"]);
-		exec(HESTIA_CMD . "v-change-sys-ip-name " . $v_ip . " " . $v_name, $output, $return_var);
-		check_return_code($return_var, $output);
-		unset($output);
-	}
+    // Change associated domain
+    if ($v_name != $_POST["v_name"] && empty($_SESSION["error_msg"])) {
+        $v_name = escapeshellarg($_POST["v_name"]);
+        exec(HESTIA_CMD . "v-change-sys-ip-name " . $v_ip . " " . $v_name, $output, $return_var);
+        check_return_code($return_var, $output);
+        unset($output);
+    }
 
-	// Change NAT address
-	if ($v_nat != $_POST["v_nat"] && empty($_SESSION["error_msg"])) {
-		$v_nat = escapeshellarg($_POST["v_nat"]);
-		exec(HESTIA_CMD . "v-change-sys-ip-nat " . $v_ip . " " . $v_nat, $output, $return_var);
-		check_return_code($return_var, $output);
-		unset($output);
-	}
+    // Change NAT address
+    if ($v_nat != $_POST["v_nat"] && empty($_SESSION["error_msg"])) {
+        $v_nat = escapeshellarg($_POST["v_nat"]);
+        exec(HESTIA_CMD . "v-change-sys-ip-nat " . $v_ip . " " . $v_nat, $output, $return_var);
+        check_return_code($return_var, $output);
+        unset($output);
+    }
 
-	// Set success message
-	if (empty($_SESSION["error_msg"])) {
-		$_SESSION["ok_msg"] = _("Changes have been saved.");
-	}
+    // Set success message
+    if (empty($_SESSION["error_msg"])) {
+        $_SESSION["ok_msg"] = _("Changes have been saved.");
+    }
 }
 
 // Render page

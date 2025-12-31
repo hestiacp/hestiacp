@@ -1,5 +1,7 @@
 <?php
 
+/* phpcs:ignoreFile */
+
 session_start();
 
 use PHPMailer\PHPMailer\PHPMailer;

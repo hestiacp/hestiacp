@@ -5,8 +5,19 @@
     </p>
     <div class="u-mb10">
         <label for="email_settings_username"><?= _("Username") ?></label>
+        <?php
+        $email_username_value = htmlentities(trim($v_account, "'")) . '@' . htmlentities(trim($v_domain, "'"));
+        $email_postfix = '@' . htmlentities(trim($v_domain, "'"));
+        ?>
         <div class="clipboard">
-            <input type="text" class="form-control clipboard-input js-copy-input js-account-output" name="email_settings_username" id="email_settings_username" value="<?= htmlentities(trim($v_account, "'")) ?>@<?= htmlentities(trim($v_domain, "'")) ?>" data-postfix="@<?= htmlentities(trim($v_domain, "'")) ?>" readonly>
+            <input
+                type="text"
+                class="form-control clipboard-input js-copy-input js-account-output"
+                name="email_settings_username"
+                id="email_settings_username"
+                value="<?= $email_username_value ?>"
+                data-postfix="<?= $email_postfix ?>"
+                readonly>
             <button type="button" class="clipboard-button js-copy-button" title="<?= _("Copy to clipboard") ?>">
                 <i class="fas fa-copy"></i>
             </button>
@@ -15,7 +26,12 @@
     <div class="u-mb10">
         <label for="email_settings_password"><?= _("Password") ?></label>
         <div class="clipboard">
-            <input type="text" class="form-control clipboard-input js-copy-input js-password-output" name="email_settings_password" id="email_settings_password" readonly>
+            <input
+                type="text"
+                class="form-control clipboard-input js-copy-input js-password-output"
+                name="email_settings_password"
+                id="email_settings_password"
+                readonly>
             <button type="button" class="clipboard-button js-copy-button" title="<?= _("Copy to clipboard") ?>">
                 <i class="fas fa-copy"></i>
             </button>
@@ -24,8 +40,15 @@
     <?php if ($_SESSION["WEBMAIL_SYSTEM"]) { ?>
         <div class="u-mb10">
             <label for="email_settings_webmail"><?= _("Webmail") ?></label>
+            <?php $webmail_url = 'http://' . htmlentities($v_webmail_alias); ?>
             <div class="clipboard">
-                <input type="text" class="form-control clipboard-input js-copy-input" name="email_settings_webmail" id="email_settings_webmail" value="http://<?= htmlentities($v_webmail_alias) ?>" readonly>
+                <input
+                    type="text"
+                    class="form-control clipboard-input js-copy-input"
+                    name="email_settings_webmail"
+                    id="email_settings_webmail"
+                    value="<?= $webmail_url ?>"
+                    readonly>
                 <button type="button" class="clipboard-button js-copy-button" title="<?= _("Copy to clipboard") ?>">
                     <i class="fas fa-copy"></i>
                 </button>
@@ -34,8 +57,15 @@
     <?php } ?>
     <div class="u-mb20">
         <label for="email_settings_hostname"><?= _("Hostname") ?></label>
+        <?php $mail_hostname = 'mail.' . htmlentities($v_domain); ?>
         <div class="clipboard">
-            <input type="text" class="form-control clipboard-input js-copy-input" name="email_settings_hostname" id="email_settings_hostname" value="mail.<?= htmlentities($v_domain) ?>" readonly>
+            <input
+                type="text"
+                class="form-control clipboard-input js-copy-input"
+                name="email_settings_hostname"
+                id="email_settings_hostname"
+                value="<?= $mail_hostname ?>"
+                readonly>
             <button type="button" class="clipboard-button js-copy-button" title="<?= _("Copy to clipboard") ?>">
                 <i class="fas fa-copy"></i>
             </button>

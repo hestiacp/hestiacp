@@ -7,8 +7,8 @@ verify_csrf($_GET);
 
 // Check if administrator is viewing system log (currently 'admin' user)
 if ($_SESSION["userContext"] === "admin" && !empty($_GET["user"])) {
-	$user = escapeshellarg($_GET["user"]);
-	$token = $_SESSION["token"];
+    $user = escapeshellarg($_GET["user"]);
+    $token = $_SESSION["token"];
 }
 
 // Clear log
@@ -17,18 +17,18 @@ check_return_code($return_var, $output);
 unset($output);
 
 if ($return_var > 0) {
-	header("Location: /list/log/");
+    header("Location: /list/log/");
 } else {
-	// Set correct page reload target
-	if ($_SESSION["userContext"] === "admin" && !empty($_GET["user"])) {
-		if ($_GET["user"] != "system") {
-			header("Location: /list/log/?user=" . $_GET["user"] . "&token=$token");
-		} else {
-			header("Location: /list/log/?user=system&token=$token");
-		}
-	} else {
-		header("Location: /list/log/");
-	}
+    // Set correct page reload target
+    if ($_SESSION["userContext"] === "admin" && !empty($_GET["user"])) {
+        if ($_GET["user"] != "system") {
+            header("Location: /list/log/?user=" . $_GET["user"] . "&token=$token");
+        } else {
+            header("Location: /list/log/?user=system&token=$token");
+        }
+    } else {
+        header("Location: /list/log/");
+    }
 }
 
 // Flush session messages

@@ -12,5 +12,7 @@
 	},
 	"[javascript]": {
 		"editor.defaultFormatter": "biomejs.biome"
-	}
+	},
+	"intelephense.environment.includePaths": ["./web/inc/vendor", "./web/src/vendor"],
+	"intelephense.maxMemory": 2048
 }

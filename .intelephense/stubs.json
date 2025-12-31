@@ -1,0 +1,3 @@
+{
+	"paths": ["./web/inc/vendor", "./web/src/vendor"]
+}

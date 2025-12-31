@@ -8,13 +8,13 @@ verify_csrf($_GET);
 
 // Delete as someone else?
 if ($_SESSION["userContext"] === "admin" && !empty($_GET["user"])) {
-	$user = escapeshellarg($_GET["user"]);
+    $user = escapeshellarg($_GET["user"]);
 }
 
 if (!empty($_GET["domain"])) {
-	$v_domain = escapeshellarg($_GET["domain"]);
-	exec(HESTIA_CMD . "v-purge-nginx-cache " . $user . " " . $v_domain, $output, $return_var);
-	check_return_code($return_var, $output);
+    $v_domain = escapeshellarg($_GET["domain"]);
+    exec(HESTIA_CMD . "v-purge-nginx-cache " . $user . " " . $v_domain, $output, $return_var);
+    check_return_code($return_var, $output);
 }
 $_SESSION["ok_msg"] = _("NGINX cache has been purged successfully.");
 header("Location: /edit/web/?domain=" . $_GET["domain"]);

@@ -7,27 +7,27 @@ include $_SERVER["DOCUMENT_ROOT"] . "/inc/main.php";
 
 // Do not show the users list for regular users
 if ($_SESSION["userContext"] === "user") {
-	header("Location: /login/");
-	exit();
+    header("Location: /login/");
+    exit();
 }
 
 // Do not show the users list if user is impersonating another user
 if (!empty($_SESSION["look"])) {
-	header("Location: /login/");
-	exit();
+    header("Location: /login/");
+    exit();
 }
 
 // Data
 if ($_SESSION["userContext"] === "admin") {
-	exec(HESTIA_CMD . "v-list-users json", $output, $return_var);
+    exec(HESTIA_CMD . "v-list-users json", $output, $return_var);
 } else {
-	exec(HESTIA_CMD . "v-list-user " . $user . " json", $output, $return_var);
+    exec(HESTIA_CMD . "v-list-user " . $user . " json", $output, $return_var);
 }
 $data = json_decode(implode("", $output), true);
 if ($_SESSION["userSortOrder"] == "name") {
-	ksort($data);
+    ksort($data);
 } else {
-	$data = array_reverse($data, true);
+    $data = array_reverse($data, true);
 }
 
 // Render page

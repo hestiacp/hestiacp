@@ -6,6 +6,18 @@
                 <i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
             </a>
 
+            <?php
+            $v_twofa_checked = '';
+            if (!empty($v_twofa)) {
+                $v_twofa_checked = 'checked';
+            }
+            ?>
+            <input
+                class="form-check-input"
+                type="checkbox"
+                name="v_twofa"
+                id="v_twofa"
+                <?= $v_twofa_checked ?>>
             <label for="v_twofa">
                 <?= _("Enable two-factor authentication") ?>
             </label>

@@ -41,7 +41,13 @@
                         <div>
                             <p class="u-mb10"><?= _("Data Loss Warning!") ?></p>
                             <p class="u-mb10"><?= $data_loss_warning ?></p>
-                            <p><?php echo sprintf(_("Please make sure ~/web/%s/public_html is empty!"), $v_domain); ?></p>
+                            <p><?php
+                                $message = sprintf(
+                                    _("Please make sure ~/web/%s/public_html is empty!"),
+                                    $v_domain
+                                );
+                                echo $message;
+                                ?></p>
                         </div>
                     </div>
                 <?php } ?>

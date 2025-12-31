@@ -5,8 +5,8 @@ include $_SERVER["DOCUMENT_ROOT"] . "/inc/main.php";
 
 // Check user
 if ($_SESSION["userContext"] != "admin") {
-	header("Location: /list/user");
-	exit();
+    header("Location: /list/user");
+    exit();
 }
 
 $requestPayload = json_decode(file_get_contents("php://input"), true);
@@ -14,47 +14,47 @@ $requestPayload = json_decode(file_get_contents("php://input"), true);
 $allowedPeriods = ["daily", "weekly", "monthly", "yearly", "biennially", "triennially"];
 
 if (!empty($requestPayload["period"]) && in_array($requestPayload["period"], $allowedPeriods)) {
-	$period = $requestPayload["period"];
+    $period = $requestPayload["period"];
 } else {
-	$period = "daily";
+    $period = "daily";
 }
 
 if (!empty($requestPayload["service"])) {
-	$service = $requestPayload["service"];
+    $service = $requestPayload["service"];
 } else {
-	$service = "la";
+    $service = "la";
 }
 
 // Data
 exec(
-	HESTIA_CMD . "v-export-rrd " . escapeshellarg($service) . " " . escapeshellarg($period),
-	$output,
-	$return_var,
+    HESTIA_CMD . "v-export-rrd " . escapeshellarg($service) . " " . escapeshellarg($period),
+    $output,
+    $return_var,
 );
 
 if ($return_var != 0) {
-	http_response_code(500);
-	exit("Error fetching RRD data");
+    http_response_code(500);
+    exit("Error fetching RRD data");
 }
 
 $serviceUnits = [
-	"la" => "Points",
-	"mem" => "Mbytes",
-	"apache2" => "Connections",
-	"nginx" => "Connections",
-	"mail" => "Queue Size",
-	"ftp" => "Connections",
-	"ssh" => "Connections",
+    "la" => "Points",
+    "mem" => "Mbytes",
+    "apache2" => "Connections",
+    "nginx" => "Connections",
+    "mail" => "Queue Size",
+    "ftp" => "Connections",
+    "ssh" => "Connections",
 ];
 
 if (preg_match("/^net_/", $service)) {
-	$serviceUnits[$service] = "KBytes";
+    $serviceUnits[$service] = "KBytes";
 }
 if (preg_match("/^pgsql_/", $service)) {
-	$serviceUnits[$service] = "Queries";
+    $serviceUnits[$service] = "Queries";
 }
 if (preg_match("/^mysql_/", $service)) {
-	$serviceUnits[$service] = "Queries";
+    $serviceUnits[$service] = "Queries";
 }
 
 $data = json_decode(implode("", $output), true);

@@ -12,8 +12,10 @@
                 <?= _("Account Unlocked") ?>
             </h1>
             <div class="u-mt20">
-                <p><?= _("Two-factor authentication is now turned off for your account.") ?></p>
-                <p><?= _("You may now proceed to log in.") ?></p>
+                <p>
+                    <?= _("Two-factor authentication is now turned off for your account.") ?><br><br>
+                    <?= _("You may now proceed to log in.") ?>
+                </p>
                 <a href="/login/" class="button button-secondary">
                     <?= _("Log in") ?>
                 </a>

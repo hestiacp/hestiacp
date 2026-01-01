@@ -281,42 +281,51 @@ function authenticate_user($user, $password, $twofa = "") {
 						$_SESSION["login"]["password"] = $password;
 						return false;
 					} else {
-						$v_twofa = quoteshellarg($twofa);
-						exec(
-							HESTIA_CMD . "v-check-user-2fa " . $v_user . " " . $v_twofa,
-							$output,
-							$return_var,
-						);
-						unset($output);
-						if ($return_var > 0) {
+						if (strlen($twofa) < 10) {
+							$v_twofa = quoteshellarg($twofa);
+							exec(
+								HESTIA_CMD . "v-check-user-2fa " . $v_user . " " . $v_twofa,
+								$output,
+								$return_var,
+							);
+							unset($output);
+							if ($return_var !== 0) {
+								sleep(2);
+								$error = _("Invalid or missing 2FA token");
+								$_SESSION["login"]["username"] = $user;
+								$_SESSION["login"]["password"] = $password;
+								$v_session_id = quoteshellarg($_POST["token"]);
+								if (isset($_SESSION["failed_twofa"])) {
+									//allow a few failed attemps before start of logging.
+									if ($_SESSION["failed_twofa"] > 2) {
+										exec(
+											HESTIA_CMD .
+												"v-log-user-login " .
+												$v_user .
+												" " .
+												$v_ip .
+												" failed " .
+												$v_session_id .
+												" " .
+												$v_user_agent .
+												' yes "Invalid or missing 2FA token"',
+											$output,
+											$return_var,
+										);
+									}
+									$_SESSION["failed_twofa"]++;
+								} else {
+									$_SESSION["failed_twofa"] = 1;
+								}
+								unset($_POST["twofa"]);
+								return $error;
+							}
+						} else {
 							sleep(2);
 							$error = _("Invalid or missing 2FA token");
 							$_SESSION["login"]["username"] = $user;
 							$_SESSION["login"]["password"] = $password;
 							$v_session_id = quoteshellarg($_POST["token"]);
-							if (isset($_SESSION["failed_twofa"])) {
-								//allow a few failed attemps before start of logging.
-								if ($_SESSION["failed_twofa"] > 2) {
-									exec(
-										HESTIA_CMD .
-											"v-log-user-login " .
-											$v_user .
-											" " .
-											$v_ip .
-											" failed " .
-											$v_session_id .
-											" " .
-											$v_user_agent .
-											' yes "Invalid or missing 2FA token"',
-										$output,
-										$return_var,
-									);
-								}
-								$_SESSION["failed_twofa"]++;
-							} else {
-								$_SESSION["failed_twofa"] = 1;
-							}
-							unset($_POST["twofa"]);
 							return $error;
 						}
 					}

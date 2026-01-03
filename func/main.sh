@@ -792,7 +792,7 @@ is_alias_format_valid() {
 # IP format validator
 is_ip_format_valid() {
 	object_name=${2-ip}
-	valid=$($HESTIA_PHP -r '$ip="$argv[1]"; echo (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) ? 0 : 1);' $1)
+	valid=$($HESTIA_PHP -r '$ip=$argv[1]; echo (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) ? 0 : 1);' "$1")
 	if [ "$valid" -ne 0 ]; then
 		check_result "$E_INVALID" "invalid $object_name :: $1"
 	fi
@@ -801,14 +801,14 @@ is_ip_format_valid() {
 # IPv6 format validator
 is_ipv6_format_valid() {
 	object_name=${2-ipv6}
-	valid=$($HESTIA_PHP -r '$ip="$argv[1]"; echo (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) ? 0 : 1);' $1)
+	valid=$($HESTIA_PHP -r '$ip=$argv[1]; echo (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) ? 0 : 1);' "$1")
 	if [ "$valid" -ne 0 ]; then
 		check_result "$E_INVALID" "invalid $object_name :: $1"
 	fi
 }
 
 is_ip46_format_valid() {
-	valid=$($HESTIA_PHP -r '$ip="$argv[1]"; echo (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_IPV6) ? 0 : 1);' $1)
+	valid=$($HESTIA_PHP -r '$ip=$argv[1]; echo (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_IPV6) ? 0 : 1);' "$1")
 	if [ "$valid" -ne 0 ]; then
 		check_result "$E_INVALID" "invalid IP format :: $1"
 	fi
@@ -824,7 +824,7 @@ is_ipv4_cidr_format_valid() {
 
 is_ipv6_cidr_format_valid() {
 	object_name=${2-ipv6}
-	valid=$($HESTIA_PHP -r '$cidr="$argv[1]"; list($ip, $netmask) = [...explode("/", $cidr), 128]; echo ((filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) && $netmask <= 128) ? 0 : 1);' $1)
+	valid=$($HESTIA_PHP -r '$cidr=$argv[1]; list($ip, $netmask) = [...explode("/", $cidr), 128]; echo ((filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) && $netmask <= 128) ? 0 : 1);' "$1")
 	if [ "$valid" -ne 0 ]; then
 		check_result "$E_INVALID" "invalid $object_name :: $1"
 	fi
@@ -832,7 +832,7 @@ is_ipv6_cidr_format_valid() {
 
 is_netmask_format_valid() {
 	object_name=${2-netmask}
-	valid=$($HESTIA_PHP -r '$netmask="$argv[1]"; echo (preg_match("/^(128|192|224|240|248|252|254|255)\.(0|128|192|224|240|248|252|254|255)\.(0|128|192|224|240|248|252|254|255)\.(0|128|192|224|240|248|252|254|255)/", $netmask) ? 0 : 1);' $1)
+	valid=$($HESTIA_PHP -r '$netmask=$argv[1]; echo (preg_match("/^(128|192|224|240|248|252|254|255)\.(0|128|192|224|240|248|252|254|255)\.(0|128|192|224|240|248|252|254|255)\.(0|128|192|224|240|248|252|254|255)/", $netmask) ? 0 : 1);' "$1")
 	if [ "$valid" -ne 0 ]; then
 		check_result "$E_INVALID" "invalid $object_name :: $1"
 	fi
@@ -960,29 +960,45 @@ is_dbuser_format_valid() {
 
 # DNS record type validator
 is_dns_type_format_valid() {
-	known_dnstype='A,AAAA,NS,CNAME,MX,TXT,SRV,DNSKEY,KEY,IPSECKEY,PTR,SPF,TLSA,CAA,DS'
-	if [ -z "$(echo $known_dnstype | grep -w $1)" ]; then
+	is_valid=$(
+		$HESTIA_PHP -- "$1" << 'EOPHP'
+	<?php
+	$type = $argv[1];
+	$known_types = array("A","AAAA","NS","CNAME","MX","TXT","SRV","DNSKEY",
+	"KEY","IPSECKEY","PTR","SPF","TLSA","CAA","DS");
+	echo in_array($type, $known_types, true) ? "0" : "1";
+EOPHP
+	)
+	if [ "$is_valid" -ne 0 ]; then
 		check_result "$E_INVALID" "invalid dns record type format :: $1"
 	fi
 }
 
 # DNS record validator
 is_dns_record_format_valid() {
-	if [ "$rtype" = 'A' ]; then
-		is_ip_format_valid "$1"
-	fi
-	if [ "$rtype" = 'NS' ]; then
-		is_domain_format_valid "${1::-1}" 'ns_record'
-	fi
-	if [ "$rtype" = 'MX' ]; then
-		is_domain_format_valid "${1::-1}" 'mx_record'
-		is_int_format_valid "$priority" 'priority_record'
-	fi
-	if [ "$rtype" = 'SRV' ]; then
-		format_no_quotes "$priority" 'priority_record'
-	fi
-
 	is_no_new_line_format "$1"
+
+	json_from_php=$(
+		$HESTIA_PHP "$HESTIA/func/internal/dns_record_validator.php" "$1" "$rtype" "$priority"
+	)
+	check_result $? "dns record validation failed :: $1" "$E_INVALID"
+
+	is_valid=$(jq -er '.valid' <<< "$json_from_php")
+	if [ $? -ne 0 ]; then
+		check_result "$E_INVALID" "dns record validation failed :: $1"
+	fi
+	if [ "$is_valid" != 'true' ]; then
+		error_message=$(jq -r '.error_message // "invalid dns record format"' <<< "$json_from_php")
+		check_result "$E_INVALID" "$error_message :: $1"
+	fi
+	cleaned_record=$(jq -r '.cleaned_record // empty' <<< "$json_from_php")
+	if [ -n "$cleaned_record" ]; then
+		dvalue="$cleaned_record"
+	fi
+	updated_priority=$(jq -r '.new_priority // empty' <<< "$json_from_php")
+	if [ -n "$updated_priority" ]; then
+		priority="$updated_priority"
+	fi
 }
 
 # Email format validator

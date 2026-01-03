@@ -1,7 +1,7 @@
 server {
 	listen      %ip%:%proxy_port%;
 	server_name %domain_idn% %alias_idn%;
-	root        /var/lib/roundcube;
+	root        /var/lib/roundcube/public_html;
 	index       index.php index.html index.htm;
 	access_log  /var/log/nginx/domains/%domain%.log combined;
 	error_log   /var/log/nginx/domains/%domain%.error.log error;
@@ -19,16 +19,13 @@ server {
 	}
 
 	location / {
-		alias /var/lib/roundcube/;
-
-		try_files $uri $uri/ =404;
-
+                proxy_set_header Host $host;
+                proxy_set_header X-Real-IP $remote_addr;
+                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                proxy_set_header X-Forwarded-Proto $scheme;
+                proxy_set_header SCRIPT_NAME "";
+                proxy_set_header PATH_INFO $request_uri;
 		proxy_pass http://%ip%:%web_port%;
-
-		location ~* ^.+\.(ogg|ogv|svg|svgz|swf|eot|otf|woff|woff2|mov|mp3|mp4|webm|flv|ttf|rss|atom|jpg|jpeg|gif|png|webp|ico|bmp|mid|midi|wav|rtf|css|js|jar)$ {
-			expires 7d;
-			fastcgi_hide_header "Set-Cookie";
-		}
 	}
 
 	location @fallback {

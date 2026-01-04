@@ -167,19 +167,181 @@ r' "key"
 }
 
 @test "is_dns_record_format_valid" {
-    rtype='MX'
-    priority=1;
-    run is_dns_record_format_valid 'mx.hestiacp.com.'
-    assert_success
+	rtype='MX'
+	priority=1;
+	run is_dns_record_format_valid 'mx.hestiacp.com.'
+	assert_success
+}
+
+@test "is_dns_record_format_valid MX missing priority" {
+	rtype='MX'
+	priority=''
+	run is_dns_record_format_valid 'mx.hestiacp.com.'
+	assert_failure $E_INVALID
+}
+
+@test "is_dns_record_format_valid SRV 4-field" {
+	rtype='SRV'
+	priority=''
+	run is_dns_record_format_valid '10 20 5060 srv.hestiacp.com.'
+	assert_success
+}
+
+@test "is_dns_record_format_valid SRV invalid priority" {
+	rtype='SRV'
+	priority=''
+	run is_dns_record_format_valid 'abc 20 5060 srv.hestiacp.com.'
+	assert_failure $E_INVALID
+}
+
+@test "is_dns_record_format_valid SRV null target" {
+	rtype='SRV'
+	priority=''
+	run is_dns_record_format_valid '0 5 0 .'
+	assert_success
+}
+
+@test "is_dns_record_format_valid TXT newline" {
+	rtype='TXT'
+	priority=''
+	run is_dns_record_format_valid 'foo
+bar'
+	assert_failure $E_INVALID
+}
+
+@test "is_dns_record_format_valid TXT single quote" {
+	rtype='TXT'
+	priority=''
+	run is_dns_record_format_valid "foo'bar"
+	assert_success
+}
+
+@test "is_dns_record_format_valid TXT empty" {
+	rtype='TXT'
+	priority=''
+	run is_dns_record_format_valid ''
+	assert_failure $E_INVALID
+}
+
+@test "is_dns_record_format_valid TXT non-ascii" {
+	rtype='TXT'
+	priority=''
+	run is_dns_record_format_valid 'café'
+	assert_failure $E_INVALID
+}
+
+@test "is_dns_record_format_valid DNSKEY valid" {
+	rtype='DNSKEY'
+	priority=''
+	run is_dns_record_format_valid '257 3 13 AwEAAc1='
+	assert_success
+}
+
+@test "is_dns_record_format_valid DNSKEY invalid protocol" {
+	rtype='DNSKEY'
+	priority=''
+	run is_dns_record_format_valid '257 1 13 AwEAAc1'
+	assert_failure $E_INVALID
+}
+
+@test "is_dns_record_format_valid DS invalid hex" {
+	rtype='DS'
+	priority=''
+	run is_dns_record_format_valid '12345 8 1 ZZZZ'
+	assert_failure $E_INVALID
+}
+
+@test "is_dns_record_format_valid TLSA valid" {
+	rtype='TLSA'
+	priority=''
+	run is_dns_record_format_valid '3 1 1 0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef'
+	assert_success
+}
+
+@test "is_dns_record_format_valid CAA missing value" {
+	rtype='CAA'
+	priority=''
+	run is_dns_record_format_valid '0 issue'
+	assert_failure $E_INVALID
+}
+
+@test "is_dns_record_format_valid IPSECKEY valid" {
+	rtype='IPSECKEY'
+	priority=''
+	run is_dns_record_format_valid '10 1 2 192.0.2.1 AQIDBA=='
+	assert_success
+}
+
+@test "is_dns_record_format_valid IPSECKEY invalid gateway" {
+	rtype='IPSECKEY'
+	priority=''
+	run is_dns_record_format_valid '10 1 2 not-an-ip AQIDBA=='
+	assert_failure $E_INVALID
+}
+
+@test "is_dns_record_format_valid IPSECKEY algorithm0 with key fails" {
+	rtype='IPSECKEY'
+	priority=''
+	run is_dns_record_format_valid '10 1 0 192.0.2.1 AQIDBA=='
+	assert_failure $E_INVALID
+}
+
+@test "is_dns_record_format_valid TLSA type1 wrong length" {
+	rtype='TLSA'
+	priority=''
+	run is_dns_record_format_valid '3 1 1 0123'
+	assert_failure $E_INVALID
+}
+
+@test "is_dns_record_format_valid TLSA matching_type plus sign wrong length" {
+	rtype='TLSA'
+	priority=''
+	run is_dns_record_format_valid '3 1 +1 0123'
+	assert_failure $E_INVALID
+}
+
+@test "is_dns_record_format_valid DS type1 wrong length" {
+	rtype='DS'
+	priority=''
+	run is_dns_record_format_valid '12345 8 1 012345'
+	assert_failure $E_INVALID
+}
+
+@test "is_dns_record_format_valid DS type2 correct length" {
+	rtype='DS'
+	priority=''
+	run is_dns_record_format_valid '12345 8 2 0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef'
+	assert_success
+}
+
+@test "is_dns_record_format_valid KEY algorithm0 empty key" {
+	rtype='KEY'
+	priority=''
+	run is_dns_record_format_valid '256 3 0'
+	assert_success
+}
+
+@test "is_dns_record_format_valid KEY algorithm0 with key fails" {
+	rtype='KEY'
+	priority=''
+	run is_dns_record_format_valid '256 3 0 AQID'
+	assert_failure $E_INVALID
+}
+
+@test "is_dns_record_format_valid KEY algorithm1 missing key fails" {
+	rtype='KEY'
+	priority=''
+	run is_dns_record_format_valid '256 3 1'
+	assert_failure $E_INVALID
 }
 
 @test "is_dns_record_format_valid test" {
-    rtype='MX'
-priority=1;
-     run is_dns_record_format_valid 'c
+	rtype='MX'
+	priority=1;
+	run is_dns_record_format_valid 'c
 1eshutdown
 r'
-    assert_failure $E_INVALID
+	assert_failure $E_INVALID
 }
 
 @test "is_alias_format_valid success" {

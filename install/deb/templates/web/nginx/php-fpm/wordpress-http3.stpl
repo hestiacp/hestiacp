@@ -5,6 +5,7 @@
 #=========================================================================#
 
 server {
+	listen      %ip%:%web_ssl_port% quic;
 	listen      %ip%:%web_ssl_port% ssl;
 	server_name %domain_idn% %alias_idn%;
 	root        %sdocroot%;
@@ -22,6 +23,9 @@ server {
 	# TLS 1.3 0-RTT anti-replay
 	if ($anti_replay = 307) { return 307 https://$host$request_uri; }
 	if ($anti_replay = 425) { return 425; }
+
+	# Add support to HTTP/3
+        add_header Alt-Svc 'h3=":$server_port"; ma=86400';
 
 	include %home%/%user%/conf/web/%domain%/nginx.hsts.conf*;
 

@@ -61,6 +61,10 @@ remove_quota_files() {
 
 	for idx in "${quota_files[@]}"; do
 		if [ -e "$mount_point/$idx" ]; then
+			if lsattr -d "$mount_point/$idx" 2> /dev/null | awk '{print $1}' | grep -q 'i'; then
+				log_history "INFO" "Removing immutable attribute from $mount_point/$idx"
+				chattr -i "$mount_point/$idx"
+			fi
 			log_history "INFO" "Removing $mount_point/$idx"
 			rm -f "$mount_point/$idx"
 		fi

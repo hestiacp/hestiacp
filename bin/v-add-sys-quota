@@ -271,6 +271,19 @@ else
 		rm -f /etc/cron.daily/quotacheck
 		log_history "Removed quotacheck cron job (not needed for $fstype)."
 	fi
+
+	# Remove aquota.* files if they exist (not needed for XFS or ext4 native quotas)
+	quota_files=("quota.user" "quota.group" "quota.project" "aquota.user" "aquota.group" "aquota.project")
+	for idx in "${quota_files[@]}"; do
+		if [ -e "$mnt/$idx" ]; then
+			if lsattr -d "$mnt/$idx" 2> /dev/null | awk '{print $1}' | grep -q 'i'; then
+				log_history "INFO" "Removing immutable attribute from $mnt/$idx"
+				chattr -i "$mount_point/$idx"
+			fi
+			log_history "INFO" "Removing $mnt/$idx"
+			rm -f "$mnt/$idx"
+		fi
+	done
 fi
 
 # Enabling group and user quota

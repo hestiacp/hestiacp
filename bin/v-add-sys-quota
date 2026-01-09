@@ -50,6 +50,12 @@ fi
 # Read fstab line details and create variables fstype and opt
 read -r _ _ fstype opt _ _ < <(sed -n "${lnr}p" /etc/fstab)
 
+# Policy for quotaon.service handling:
+#   leave        -> don't touch the unit
+#   mask         -> systemctl mask --now quotaon.service (recommended for ext4 native quotas and XFS)
+#   unmask_start -> systemctl unmask + start quotaon.service (recommended for ext4 external quotas)
+quotaon_policy="leave"
+
 case "$fstype" in
 	ext4)
 		log_history "ext4 filesystem detected on $mnt. Configuring quota."
@@ -115,6 +121,9 @@ case "$fstype" in
 				new_opts="$new_opts,prjquota"
 				log_history "Enabling native project quota support."
 			fi
+
+			# quotaon.service fails noisily on ext4 native quotas -> mask it
+			quotaon_policy="mask"
 		else
 			log_history "Using external quota files for ext4 (Project quota not supported here)."
 
@@ -128,6 +137,9 @@ case "$fstype" in
 
 			# External quotas: only user and group
 			new_opts="usrquota,grpquota,usrjquota=aquota.user,grpjquota=aquota.group,jqfmt=vfsv0"
+
+			# For external quotas, allow quotaon.service to run at boot
+			quotaon_policy="unmask_start"
 		fi
 
 		# Remove all quota-related options from current options
@@ -161,7 +173,6 @@ case "$fstype" in
 			fi
 		fi
 		;;
-
 	xfs)
 		log_history "XFS filesystem detected on $mnt."
 
@@ -174,6 +185,9 @@ case "$fstype" in
 		else
 			needs_update=1
 		fi
+
+		# XFS quotas are controlled by mount/rootflags; quotaon.service is unnecessary
+		quotaon_policy="mask"
 
 		# Handle root partition (requires GRUB modification)
 		if [[ "$mnt" == "/" ]]; then
@@ -191,7 +205,7 @@ case "$fstype" in
             /rootflags=[^" ]*uquota/! s/rootflags=([^" ]*)/rootflags=\1,uquota/
             /rootflags=[^" ]*gquota/! s/rootflags=([^" ]*)/rootflags=\1,gquota/
             /rootflags=[^" ]*pquota/! s/rootflags=([^" ]*)/rootflags=\1,pquota/
-          } 
+          }
           # If rootflags= does NOT exist, add it complete without touching the rest
           /rootflags=/! s/^(GRUB_CMDLINE_LINUX="[^"]*)"/\1 rootflags=uquota,gquota,pquota"/
         }
@@ -271,6 +285,26 @@ case "$fstype" in
 		;;
 esac
 
+#----------------------------------------------------------#
+#                 quotaon.service handling                 #
+#----------------------------------------------------------#
+if systemctl list-unit-files quotaon.service > /dev/null 2>&1; then
+	case "$quotaon_policy" in
+		mask)
+			log_history "Masking quotaon.service."
+			systemctl mask --now quotaon.service > /dev/null 2>&1 || true
+			;;
+		unmask_start)
+			log_history "Unmasking and starting quotaon.service."
+			systemctl unmask quotaon.service > /dev/null 2>&1 || true
+			systemctl start quotaon.service > /dev/null 2>&1 || true
+			;;
+		leave | *)
+			log_history "Leaving quotaon.service unchanged."
+			;;
+	esac
+fi
+
 # Adding quotacheck on reboot (only for ext4 with external quotas)
 if [[ "$fstype" == "ext4" ]] && [[ $native_quota_enabled -eq 0 ]]; then
 	touch /forcequotacheck
@@ -293,7 +327,7 @@ else
 		if [ -e "$mnt/$idx" ]; then
 			if lsattr -d "$mnt/$idx" 2> /dev/null | awk '{print $1}' | grep -q 'i'; then
 				log_history "INFO" "Removing immutable attribute from $mnt/$idx"
-				chattr -i "$mount_point/$idx"
+				chattr -i "$mnt/$idx"
 			fi
 			log_history "INFO" "Removing $mnt/$idx"
 			rm -f "$mnt/$idx"
@@ -322,7 +356,7 @@ else
 #!/bin/bash
 BIN=/usr/local/hestia/bin
 for user in $("$BIN/v-list-users" list); do
-	"$BIN/v-update-user-quota" "$user"
+        "$BIN/v-update-user-quota" "$user"
 done
 # Self-delete after execution
 rm -f /usr/local/hestia/bin/v-update-quotas-after-reboot.sh

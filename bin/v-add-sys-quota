@@ -63,6 +63,13 @@ case "$fstype" in
 			log_history "Native quota detected on ext4 filesystem."
 		fi
 
+		# Detect project feature (Only works with native quotas on ext4)
+		project_feature_available=0
+		if echo "$fs_features" | grep -q "project"; then
+			project_feature_available=1
+			log_history "Project feature detected on ext4 filesystem."
+		fi
+
 		# Check for external quota configuration in current mount options
 		external_quota_configured=0
 		if echo "$opt" | grep -qE "usrjquota=|grpjquota=|prjjquota=|jqfmt="; then
@@ -100,9 +107,16 @@ case "$fstype" in
 				[ -z "$opt" ] && opt="defaults"
 			fi
 
+			# Build native options: usr and grp are standard
 			new_opts="usrquota,grpquota"
+
+			# Add prjquota ONLY if native quota AND project feature are present
+			if [[ $project_feature_available -eq 1 ]]; then
+				new_opts="$new_opts,prjquota"
+				log_history "Enabling native project quota support."
+			fi
 		else
-			log_history "Using external quota files for ext4."
+			log_history "Using external quota files for ext4 (Project quota not supported here)."
 
 			# Ensure kernel modules are available for external quotas
 			if ! find "/lib/modules/$(uname -r)" -type f -name '*quota_v*.ko*' | grep -q .; then
@@ -112,6 +126,7 @@ case "$fstype" in
 				check_result $? "kernel module installation failed" "$E_UPDATE"
 			fi
 
+			# External quotas: only user and group
 			new_opts="usrquota,grpquota,usrjquota=aquota.user,grpjquota=aquota.group,jqfmt=vfsv0"
 		fi
 

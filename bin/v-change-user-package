@@ -103,7 +103,6 @@ SWAP_LIMIT='$SWAP_LIMIT'
 BANDWIDTH='$BANDWIDTH'
 NS='$NS'
 SHELL='$SHELL'
-SHELL_JAIL_ENABLED='$SHELL_JAIL_ENABLED'
 BACKUPS='$BACKUPS'
 BACKUPS_INCREMENTAL='$BACKUPS_INCREMENTAL'
 CONTACT='$CONTACT'
@@ -176,8 +175,7 @@ change_user_package
 
 # Update user shell
 shell_conf=$(cat "$HESTIA/data/packages/$package.pkg" | grep -m1 'SHELL' | cut -f 2 -d \')
-shell_jail_enabled_conf=$(cat "$HESTIA/data/packages/$package.pkg" | grep 'SHELL_JAIL_ENABLED' | cut -f 2 -d \')
-$BIN/v-change-user-shell "$user" "$shell_conf" "$shell_jail_enabled_conf"
+$BIN/v-change-user-shell "$user" "$shell_conf"
 
 # Run template trigger
 if [ -x "$HESTIA/data/packages/$package.sh" ]; then

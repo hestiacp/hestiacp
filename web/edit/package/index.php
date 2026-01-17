@@ -51,7 +51,6 @@ $v_cron_jobs = $data[$v_package]["CRON_JOBS"];
 $v_disk_quota = $data[$v_package]["DISK_QUOTA"];
 $v_bandwidth = $data[$v_package]["BANDWIDTH"];
 $v_shell = $data[$v_package]["SHELL"];
-$v_shell_jail_enabled = $data[$v_package]["SHELL_JAIL_ENABLED"];
 $v_cpu_quota = $data[$v_package]["CPU_QUOTA"];
 $v_cpu_quota_period = $data[$v_package]["CPU_QUOTA_PERIOD"];
 $v_memory_limit = $data[$v_package]["MEMORY_LIMIT"];
@@ -226,15 +225,6 @@ if (!empty($_POST["save"])) {
 		}
 	}
 
-	if (
-		isset($_POST["v_shell"]) &&
-		isset($_POST["v_shell_jail_enabled"]) &&
-		in_array($_POST["v_shell"], ["nologin", "rssh"]) &&
-		$_POST["v_shell_jail_enabled"] == "yes"
-	) {
-		$_SESSION["error_msg"] = _("Cannot combine nologin and rssh shell with jailed shell.");
-	}
-
 	if (!empty($errors[0])) {
 		foreach ($errors as $i => $error) {
 			if ($i == 0) {
@@ -261,11 +251,6 @@ if (!empty($_POST["save"])) {
 		$v_shell = quoteshellarg($_POST["v_shell"]);
 	} else {
 		$v_shell = "nologin";
-	}
-	if (!empty($_POST["v_shell_jail_enabled"])) {
-		$v_shell_jail_enabled = quoteshellarg($_POST["v_shell_jail_enabled"]);
-	} else {
-		$v_shell_jail_enabled = "no";
 	}
 	$v_web_domains = quoteshellarg($_POST["v_web_domains"]);
 	$v_web_aliases = quoteshellarg($_POST["v_web_aliases"]);
@@ -343,7 +328,6 @@ if (!empty($_POST["save"])) {
 	$pkg .= "BANDWIDTH=" . $v_bandwidth . "\n";
 	$pkg .= "NS=" . $v_ns . "\n";
 	$pkg .= "SHELL=" . $v_shell . "\n";
-	$pkg .= "SHELL_JAIL_ENABLED=" . $v_shell_jail_enabled . "\n";
 	$pkg .= "BACKUPS=" . $v_backups . "\n";
 	$pkg .= "BACKUPS_INCREMENTAL=" . $v_backups_incremental . "\n";
 	$pkg .= "TIME=" . $v_time . "\n";

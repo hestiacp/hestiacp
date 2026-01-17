@@ -26,6 +26,8 @@ source_conf "$HESTIA/conf/hestia.conf"
 #                       Action                             #
 #----------------------------------------------------------#
 
+is_format_valid 'restart'
+
 # Check if /install/upgrade/manual/install_awstats_geoip.sh has been applied
 awstats_patch=$(cat $HESTIA/data/templates/web/awstats/awstats.tpl | grep "LoadPlugin=\"geoip GEOIP_STANDARD /usr/share/GeoIP/GeoIP.dat\"")
 

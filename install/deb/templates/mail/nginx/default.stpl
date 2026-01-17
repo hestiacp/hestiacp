@@ -8,8 +8,9 @@ server {
 
 	ssl_certificate     %ssl_pem%;
 	ssl_certificate_key %ssl_key%;
-	ssl_stapling        on;
-	ssl_stapling_verify on;
+	#Commented out ssl_stapling directives due to Lets Encrypt ending OCSP support in 2025
+	#ssl_stapling        on;
+	#ssl_stapling_verify on;
 
 	# TLS 1.3 0-RTT anti-replay
 	if ($anti_replay = 307) { return 307 https://$host$request_uri; }
@@ -30,6 +31,8 @@ server {
 
 		try_files $uri $uri/ =404;
 
+		proxy_ssl_server_name on;
+		proxy_ssl_name $host;
 		proxy_pass https://%ip%:%web_ssl_port%;
 
 		location ~* ^.+\.(ogg|ogv|svg|svgz|swf|eot|otf|woff|woff2|mov|mp3|mp4|webm|flv|ttf|rss|atom|jpg|jpeg|gif|png|webp|ico|bmp|mid|midi|wav|rtf|css|js|jar)$ {
@@ -39,6 +42,8 @@ server {
 	}
 
 	location @fallback {
+		proxy_ssl_server_name on;
+		proxy_ssl_name $host;
 		proxy_pass https://%ip%:%web_ssl_port%;
 	}
 

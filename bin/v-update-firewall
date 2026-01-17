@@ -110,7 +110,9 @@ for line in $(sort -r -n -k 2 -t \' $rules); do
 
 		if [[ "$IP" =~ ^ipset: ]]; then
 			ipset_name="${IP#ipset:}"
-			$("$BIN/v-list-firewall-ipset" plain | grep "^$ipset_name\s" > /dev/null) || log_event $E_NOTEXIST "IPset IP list ($ipset_name) not found"
+			if ! "$BIN/v-list-firewall-ipset" plain | grep "^$ipset_name\s" > /dev/null; then
+				log_event $E_NOTEXIST "IPset IP list ($ipset_name) not found"
+			fi
 			ip="-m set --match-set '${ipset_name}' src"
 		else
 			ip="-s $IP"
@@ -133,7 +135,6 @@ for line in $(sort -r -n -k 2 -t \' $rules); do
 			else
 				port="-m multiport --dports 20,21,12000:12100"
 			fi
-			ftp="yes"
 		fi
 
 		# Adding firewall rule

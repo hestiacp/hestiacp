@@ -432,10 +432,8 @@ is_web_domain_cert_valid() {
 	fi
 
 	if [ -e "$ssl_dir/$domain.ca" ]; then
-		s1=$(openssl x509 -text -in $ssl_dir/$domain.crt 2> /dev/null)
-		s1=$(echo "$s1" | grep Issuer | awk -F = '{print $6}' | head -n1)
-		s2=$(openssl x509 -text -in $ssl_dir/$domain.ca 2> /dev/null)
-		s2=$(echo "$s2" | grep Subject | awk -F = '{print $6}' | head -n1)
+		s1=$(openssl x509 -noout -in $ssl_dir/$domain.crt -issuer 2> /dev/null | cut -d = -f2-)
+		s2=$(openssl x509 -noout -in $ssl_dir/$domain.ca -subject 2> /dev/null | cut -d = -f2-)
 		if [ "$s1" != "$s2" ]; then
 			check_result "$E_NOTEXIST" "SSL intermediate chain is not valid"
 		fi
@@ -487,36 +485,95 @@ is_dns_domain_new() {
 	fi
 }
 
+# Safely parse KEY='value' pairs from dns.conf lines without using eval
+parse_dns_record_line() {
+	local line="$1"
+	local json
+
+	json=$(
+		$HESTIA_PHP -- "$line" << 'EOPHP'
+<?php
+$line = $argv[1];
+$allowed_keys = array('ID','RECORD','TYPE','PRIORITY','VALUE','SUSPENDED','TIME','DATE','TTL');
+$pattern = "/([A-Za-z](?:[A-Za-z0-9_]{0,64}[A-Za-z])?)='([^']*)'/";
+
+$matches = [];
+if (!preg_match_all($pattern, $line, $matches, PREG_SET_ORDER)) {
+	fwrite(STDERR, "no key/value pairs");
+	exit(1);
+}
+
+$remainder = trim(preg_replace($pattern, '', $line));
+if ($remainder !== '') {
+	fwrite(STDERR, "leftover content");
+	exit(1);
+}
+
+$result = [];
+foreach ($matches as $match) {
+	[, $key, $value] = $match;
+	if (!in_array($key, $allowed_keys, true)) {
+		fwrite(STDERR, "invalid key $key");
+		exit(1);
+	}
+	$result[$key] = $value;
+}
+
+echo json_encode($result, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+EOPHP
+	)
+	check_result $? "invalid dns record format in $USER_DATA/dns/$domain.conf line: $line" $E_INVALID
+
+	RECORD=$(jq -r '.RECORD // empty' <<< "$json")
+	TYPE=$(jq -r '.TYPE // empty' <<< "$json")
+	PRIORITY=$(jq -r '.PRIORITY // empty' <<< "$json")
+	VALUE=$(jq -r '.VALUE // empty' <<< "$json")
+	SUSPENDED=$(jq -r '.SUSPENDED // empty' <<< "$json")
+	TIME=$(jq -r '.TIME // empty' <<< "$json")
+	DATE=$(jq -r '.DATE // empty' <<< "$json")
+	TTL=$(jq -r '.TTL // empty' <<< "$json")
+}
+
 # Update domain zone
 update_domain_zone() {
 	domain_param=$(grep "DOMAIN='$domain'" $USER_DATA/dns.conf)
 	parse_object_kv_list "$domain_param"
 	local zone_ttl="$TTL"
+	local value_for_zone
 	SOA=$(idn2 --quiet "$SOA")
 	if [ -z "$SERIAL" ]; then
 		SERIAL=$(date +'%Y%m%d01')
 	fi
 	if [[ "$domain" = *[![:ascii:]]* ]]; then
-		domain_idn=$(idn2 --quiet $domain)
+		domain_idn=$(idn2 --quiet "$domain")
 	else
 		domain_idn=$domain
 	fi
+
+	# Set SOA refresh value based on TLD
+	tld="${domain_idn##*.}"
+	case "$tld" in
+		de | cz | pl | pt)
+			refresh=1800
+			;;
+		*)
+			refresh=3600
+			;;
+	esac
+
 	zn_conf="$HOMEDIR/$user/conf/dns/$domain.db"
-	echo "\$TTL $TTL
+	echo "\$TTL $zone_ttl
 @    IN    SOA    $SOA.    root.$domain_idn. (
                                             $SERIAL
                                             7200
-                                            3600
+                                            $refresh
                                             1209600
                                             180 )
-" > $zn_conf
-	fields='$RECORD\t$TTL\tIN\t$TYPE\t$PRIORITY\t$VALUE'
-	while read line; do
-		unset TTL
-		IFS=$'\n'
-		for key in $(echo $line | sed "s/' /'\n/g"); do
-			eval ${key%%=*}="${key#*=}"
-		done
+" > "$zn_conf"
+
+	while IFS= read -r line; do
+		unset TTL RECORD TYPE PRIORITY VALUE SUSPENDED TIME DATE
+		parse_dns_record_line "$line"
 
 		# inherit zone TTL if record lacks explicit TTL value
 		[ -z "$TTL" ] && TTL="$zone_ttl"
@@ -527,6 +584,8 @@ update_domain_zone() {
 		fi
 
 		if [ "$TYPE" = 'TXT' ]; then
+			# Restore single quotes before chunking so %quote% tokens are not split mid-way
+			VALUE=${VALUE//%quote%/\'}
 			txtlength=${#VALUE}
 			if [ $txtlength -gt 255 ]; then
 				already_chunked=0
@@ -544,9 +603,10 @@ update_domain_zone() {
 		fi
 
 		if [ "$SUSPENDED" != 'yes' ]; then
-			eval echo -e "\"$fields\"" | sed "s/%quote%/'/g" >> $zn_conf
+			value_for_zone=${VALUE//%quote%/\'}
+			printf "%s\t%s\tIN\t%s\t%s\t%s\n" "$RECORD" "$TTL" "$TYPE" "$PRIORITY" "$value_for_zone" >> "$zn_conf"
 		fi
-	done < $USER_DATA/dns/$domain.conf
+	done < "$USER_DATA/dns/$domain.conf"
 }
 
 # Update zone serial
@@ -608,6 +668,13 @@ is_dns_record_critical() {
 is_dns_fqnd() {
 	t=$1
 	r=$2
+	if [ "$t" = 'SRV' ]; then
+		first_field=$(echo "$r" | awk '{print $1}')
+		last_field=$(echo "$r" | awk '{print $NF}')
+		if [ "$first_field" = "." ] || [ "$last_field" = "." ]; then
+			return
+		fi
+	fi
 	fqdn_type=$(echo $t | grep "^NS\|CNAME\|MX\|PTR\|SRV")
 	tree_length=3
 	if [[ $t = 'CNAME' || $t = 'MX' || $t = 'PTR' ]]; then

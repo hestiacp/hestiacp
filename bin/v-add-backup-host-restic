@@ -2,7 +2,7 @@
 # info: add backup host
 # options: TYPE HOST USERNAME PASSWORD [PATH] [PORT]
 #
-# example: v-add-backup-host sftp backup.acme.com admin p4$$w@Rd
+# example: v-add-backup-host sftp backup.acme.com admin 'P4$$w@rD'
 #          v-add-backup-host b2 bucketName keyID applicationKey
 #
 # Add a new remote backup location. Currently SFTP, FTP and Backblaze are supported
@@ -64,6 +64,23 @@ if ! which /usr/bin/restic > /dev/null 2>&1; then
 fi
 # Update restic to last release
 restic self-update > /dev/null 2>&1
+
+# Check if $repo starts with a slash
+if [[ $repo == "/"* ]]; then
+	if [ ! -d "$repo" ]; then
+		check_result $E_NOTEXIST "Directory '$repo' does not exist"
+	fi
+fi
+
+# Check if $repo starts with rclone
+if [[ $repo == "rclone:"* ]]; then
+	# remove rclone: from $repo
+	repo2=$(echo "$repo" | sed 's/rclone://')
+	# check if rclone is working
+	if ! rclone lsd "$repo2" > /dev/null 2>&1; then
+		check_result $E_NOTEXIST "Rclone repository '$repo2' does not exist"
+	fi
+fi
 
 echo "REPO='$repo'" > /usr/local/hestia/conf/restic.conf
 echo "SNAPSHOTS='$snapshots'" >> /usr/local/hestia/conf/restic.conf

@@ -2,7 +2,7 @@
 # info: add system user
 # options: USER PASSWORD EMAIL [PACKAGE] [NAME] [LASTNAME]
 #
-# example: v-add-user user P4$$w@rD bgates@aol.com
+# example: v-add-user user 'P4$$w@rD' bgates@aol.com
 #
 # This function creates new user account.
 
@@ -75,6 +75,13 @@ pkg_data=$(cat $HESTIA/data/packages/$package.pkg | egrep -v "TIME|DATE")
 
 # Checking shell
 shell_conf=$(echo "$pkg_data" | grep -m1 'SHELL' | cut -f 2 -d \')
+resource_enabled=$(grep -m1 'RESOURCES_LIMIT' "$HESTIA"/conf/hestia.conf | cut -f 2 -d \')
+disk_quota_status=$(echo "$pkg_data" | grep -m1 'DISK_QUOTA' | cut -f 2 -d \')
+if [[ "$disk_quota_status" =~ ^[0-9]+$ ]]; then
+	disk_quota_enabled="yes"
+else
+	disk_quota_enabled="no"
+fi
 shell=$(grep -w "$shell_conf" /etc/shells | head -n1)
 
 # Adding user
@@ -264,12 +271,12 @@ DATE='$date'" > $USER_DATA/user.conf
 chmod 660 $USER_DATA/user.conf
 
 # Updating quota
-if [ "$DISK_QUOTA" = 'yes' ]; then
+if [ "$disk_quota_enabled" = 'yes' ]; then
 	$BIN/v-update-user-quota "$user"
 fi
 
 # Update resource limitation (cgroup)
-if [ "$RESOURCES_LIMIT" = 'yes' ]; then
+if [ "$resource_enabled" = 'yes' ]; then
 	$BIN/v-update-user-cgroup "$user"
 fi
 
@@ -285,11 +292,6 @@ fi
 
 # Adding jailed sftp env
 $BIN/v-add-user-sftp-jail $user
-
-# Adding jailed ssh env
-if [ "$SHELL_JAIL_ENABLED" = 'yes' ]; then
-	$BIN/v-add-user-ssh-jail $user
-fi
 
 #----------------------------------------------------------#
 #                       Hestia                             #

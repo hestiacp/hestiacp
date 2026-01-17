@@ -411,7 +411,7 @@ function check_ip_not_banned(){
 }
 
 @test "User: Change user shell" {
-    run v-change-user-shell $user bash no
+    run v-change-user-shell $user bash
     assert_success
     refute_output
 
@@ -422,13 +422,13 @@ function check_ip_not_banned(){
 }
 
 @test "User: Change user invalid shell" {
-    run v-change-user-shell $user bashinvalid no
+    run v-change-user-shell $user bashinvalid
     assert_failure $E_INVALID
     assert_output --partial 'shell bashinvalid is not valid'
 }
 
 @test "User: Change user nologin" {
-    run v-change-user-shell $user nologin no
+    run v-change-user-shell $user nologin
     assert_success
     refute_output
 
@@ -438,15 +438,15 @@ function check_ip_not_banned(){
 		assert_file_exist /etc/systemd/system/$mount_file
 }
 
-@test "User: Change user bash with jail" {
-    run v-change-user-shell $user bash yes
+@test "User: Change user bash with bubblewrap jail" {
+    run v-change-user-shell $user jailbash
     assert_success
     refute_output
 
     run stat -c '%U' /home/$user
-    assert_output --partial 'root'
-		mount_file=$(systemd-escape -p --suffix=mount "/srv/jail/$user/home/$user")
-		assert_file_exist /etc/systemd/system/$mount_file
+    assert_output --partial "$user"
+		mount_file=$(systemd-escape -p --suffix=mount "/srv/jail/$user/home")
+		assert_file_not_exist /etc/systemd/system/$mount_file
 }
 
 @test "User: Change user default ns" {
@@ -465,7 +465,7 @@ function check_ip_not_banned(){
   refute_output
 }
 
-@test "User: Change user language (Does not exists)" {
+@test "User: Change user language (Does not exist)" {
   run v-change-user-language $user "aa"
   assert_failure $E_NOTEXIST
 }
@@ -482,7 +482,7 @@ function check_ip_not_banned(){
   refute_output
 }
 
-@test "User: Change user theme (Does not exists)" {
+@test "User: Change user theme (Does not exist)" {
   run v-change-user-theme $user "aa"
   assert_failure $E_NOTEXIST
 }
@@ -913,6 +913,12 @@ function check_ip_not_banned(){
 
 @test "WEB: Rebuild web domain" {
     run v-rebuild-web-domains $user
+    assert_success
+    refute_output
+}
+
+@test "WEB: Use quick install app on web domain" {
+    run v-quick-install-app install $user $domain Laravel
     assert_success
     refute_output
 }
@@ -1722,10 +1728,6 @@ function check_ip_not_banned(){
     assert_success
     refute_output
 
-    run grep "RECORD='_domainkey'" "${HESTIA}/data/users/${user}/dns/${domain}.conf"
-    assert_failure
-    refute_output
-
     run grep "RECORD='mail._domainkey'" "${HESTIA}/data/users/${user}/dns/${domain}.conf"
     assert_failure
     refute_output
@@ -1735,10 +1737,6 @@ function check_ip_not_banned(){
     run v-add-mail-domain-dkim $user $domain
     assert_success
     refute_output
-
-    run grep "RECORD='_domainkey'" "${HESTIA}/data/users/${user}/dns/${domain}.conf"
-    assert_success
-    assert_output --partial "RECORD='_domainkey' TYPE='TXT'"
 
     run grep "RECORD='mail._domainkey'" "${HESTIA}/data/users/${user}/dns/${domain}.conf"
     assert_success

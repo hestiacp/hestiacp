@@ -1,0 +1,334 @@
+/* ------------------------------ */
+
+/*            General           */
+
+/* ------------------------------ */
+
+.navbar,
+body,
+html {
+	background: #f7f7f7 !important;
+}
+
+@media (prefers-color-scheme: dark) {
+	.navbar,
+	body,
+	html {
+		background-color: #121212 !important;
+	}
+}
+
+@media screen and (width >= 1024px) {
+	.container {
+		max-width: 1100px !important;
+	}
+}
+
+/* ------------------------------ */
+
+/*            Table             */
+
+/* ------------------------------ */
+
+.table,
+.b-table .table {
+	border: 1px solid #0000001f !important;
+	border-radius: 4px !important;
+}
+
+.table td,
+.table th {
+	border: none !important;
+	border-width: 0 0 1px !important;
+	padding: 2px 4px !important;
+	vertical-align: top !important;
+}
+
+.b-table .table .checkbox-cell {
+	width: 40px !important;
+	padding-left: 12px !important;
+}
+
+.b-table .table .checkbox-cell .checkbox {
+	vertical-align: middle !important;
+	font-size: 12px !important;
+}
+
+.table.is-hoverable tbody tr:nth-child(odd) {
+	background-color: #f7f7f7 !important;
+}
+
+@media (prefers-color-scheme: dark) {
+	.table.is-hoverable tbody tr:nth-child(odd) {
+		background-color: #222 !important;
+	}
+
+	.table.is-hoverable tbody tr:not(.is-selected):hover {
+		background-color: #303030 !important;
+	}
+}
+
+/* ------------------------------ */
+
+/*           Buttons            */
+
+/* ------------------------------ */
+
+#single-actions:not([data-v]) {
+	padding: 0 !important;
+}
+
+#multi-actions a:not([data-v]),
+#multi-actions .upload a:not([data-v]) {
+	background: #fff !important;
+	padding: 3px 11px !important;
+	border-radius: 6px !important;
+	color: #424242 !important;
+	border: 1px solid #26232c26 !important;
+}
+
+#multi-actions a:not([data-v]):hover {
+	background: #343b44 !important;
+	color: #fff !important;
+}
+
+#multi-actions .upload a:not([data-v]) {
+	background: #343b44 !important;
+	color: #fff !important;
+}
+
+#multi-actions .upload a:not([data-v]):hover {
+	background: #424952 !important;
+	color: #fff !important;
+}
+
+#multi-actions a:not([data-v]) .dropdown-item {
+	background: none !important;
+	border: none !important;
+	padding: 5px 15px !important;
+	border-radius: 0 !important;
+}
+
+#multi-actions a:not([data-v]) .dropdown-item:hover {
+	background: #f5f5f5 !important;
+	color: #343434 !important;
+}
+
+@media (prefers-color-scheme: dark) {
+	#multi-actions a:not([data-v]) {
+		background: #222 !important;
+		color: #fff !important;
+		border: 1px solid #222 !important;
+	}
+
+	#multi-actions a:not([data-v]):hover {
+		background: #303030 !important;
+		color: #fff !important;
+	}
+
+	#multi-actions a:not([data-v]) .dropdown-item:hover {
+		background: #545454 !important;
+		color: #fff !important;
+	}
+
+	#multi-actions .upload a:not([data-v]) {
+		background: #172924 !important;
+		color: #34b891 !important;
+		border: 1px solid #26232c26 !important;
+	}
+
+	#multi-actions .upload a:not([data-v]):hover {
+		background: #083426 !important;
+		color: #34b891 !important;
+	}
+}
+
+/* ------------------------------ */
+
+/*     Folder and file icons    */
+
+/* ------------------------------ */
+
+.file-row.type-dir a.name:not([data-v])::before,
+.file-row.type-file a.name:not([data-v])::before {
+	font-family: "Font Awesome 5 Free" !important;
+}
+
+.file-row.type-dir a.name:not([data-v])::before {
+	content: "\f07b" !important;
+	color: #f9b30f !important;
+}
+
+.file-row.type-file a.name:not([data-v])::before {
+	content: "\f15c" !important;
+	color: #363636 !important;
+}
+
+@media (prefers-color-scheme: dark) {
+	.file-row.type-file a.name:not([data-v])::before {
+		color: #cbcbcb !important;
+	}
+}
+
+/* ------------------------------ */
+
+/*          Breadcrumb          */
+
+/* ------------------------------ */
+
+.breadcrumb a:not([data-v]),
+.breadcrumb li + li::before {
+	font-weight: 400 !important;
+	padding: 1px 6px !important;
+	border-radius: 5px !important;
+}
+
+.breadcrumb a:not([data-v]) {
+	background: #fff !important;
+	color: #343b44 !important;
+	border: 1px solid #00000017 !important;
+}
+
+.breadcrumb a:not([data-v]):hover {
+	background: #343b44 !important;
+	color: #fff !important;
+}
+
+.breadcrumb li + li::before {
+	color: #383838 !important;
+	content: "\0002f" !important;
+	margin: 0 !important;
+}
+
+@media (prefers-color-scheme: dark) {
+	.breadcrumb a:not([data-v]) {
+		background: #172924 !important;
+		color: #34b891 !important;
+		border: 1px solid #00000017 !important;
+	}
+
+	.breadcrumb a:not([data-v]):hover {
+		background: #083426 !important;
+		color: #34b891 !important;
+	}
+
+	.breadcrumb li + li::before {
+		color: #dbdbdb !important;
+	}
+}
+
+/* ------------------------------ */
+
+/*          Dropdown            */
+
+/* ------------------------------ */
+
+.dropdown-trigger .button {
+	background-color: #fff0 !important;
+	border-color: #fff0 !important;
+	border-width: 1px !important;
+	color: #363636 !important;
+	cursor: pointer !important;
+	justify-content: center !important;
+	padding: calc(0.375em - 1px) 0.75em !important;
+	text-align: center !important;
+	white-space: nowrap !important;
+}
+
+.dropdown-trigger .button:hover {
+	color: #363636 !important;
+	background: #e9e9e9 !important;
+	border-radius: 6px !important;
+}
+
+@media (prefers-color-scheme: dark) {
+	.dropdown-trigger .button {
+		color: #fff !important;
+	}
+
+	.dropdown-trigger .button:hover {
+		color: #fff !important;
+		background: #181818 !important;
+		border-radius: 6px !important;
+	}
+}
+
+/* ------------------------------ */
+
+/*       Tree folder list       */
+
+/* ------------------------------ */
+
+.tree-list .button.is-primary {
+	background-color: #efefef !important;
+	border-color: transparent !important;
+	color: #282828 !important;
+	border-radius: 6px !important;
+	font-size: 10px !important;
+}
+
+.tree-list .button.is-primary:hover {
+	background: #d9d9d9 !important;
+}
+
+@media (prefers-color-scheme: dark) {
+	.tree-list .button.is-primary {
+		background-color: #282828 !important;
+		color: #fff !important;
+	}
+
+	.tree-list .button.is-primary:hover {
+		background: #343434 !important;
+	}
+}
+
+.tree-list a:not([data-v]),
+a:not([data-v])::before {
+	font-weight: 700 !important;
+	padding: 4px 6px !important;
+	border-radius: 5px !important;
+}
+
+.tree-list a:not([data-v]):hover {
+	background: #efefef !important;
+}
+
+.tree-list a:not([data-v])::before {
+	content: "\f07b" !important;
+	font-family: "Font Awesome 5 Free" !important;
+	color: #f9b30f !important;
+}
+
+@media (prefers-color-scheme: dark) {
+	.tree-list a:not([data-v]):hover {
+		background: #282828 !important;
+	}
+}
+
+/* ------------------------------ */
+
+/*         Code editor          */
+
+/* ------------------------------ */
+
+:not(pre) > code[class*="language-"],
+pre[class*="language-"] {
+	background: #161616 !important;
+}
+
+code[class*="language-"],
+pre[class*="language-"] {
+	color: #cbcbcb !important;
+	text-shadow: none !important;
+}
+
+.prism-editor__line-numbers {
+	background: #161616 !important;
+}
+
+code[class*="language-"]::selection,
+code[class*="language-"] ::selection,
+pre[class*="language-"]::selection,
+pre[class*="language-"] ::selection {
+	background: #3a3a3a !important;
+}

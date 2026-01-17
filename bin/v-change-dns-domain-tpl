@@ -40,7 +40,7 @@ format_domain_idn
 #----------------------------------------------------------#
 
 check_args '3' "$#" 'USER DOMAIN TEMPLATE [RESTART]'
-is_format_valid 'user' 'domain' 'template'
+is_format_valid 'user' 'domain' 'template' 'restart'
 is_system_enabled "$DNS_SYSTEM" 'DNS_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
@@ -110,10 +110,6 @@ if [ "$template" = "default" ] || [ "$template" = "child-ns" ]; then
 		check_dns_domain=$(is_object_valid 'dns' 'DOMAIN' "$domain")
 		if [ "$?" -eq 0 ]; then
 			p=$(cat "$USER_DATA/mail/$domain.pub" | grep -v ' KEY---' | tr -d '\n')
-			record='_domainkey'
-			policy="\"t=y; o=~;\""
-			$BIN/v-add-dns-record "$user" "$domain" "$record" TXT "$policy" '' '' 'no'
-
 			record='mail._domainkey'
 			selector="\"v=DKIM1\; k=rsa\; p=$p\""
 			$BIN/v-add-dns-record "$user" "$domain" "$record" TXT "$selector"

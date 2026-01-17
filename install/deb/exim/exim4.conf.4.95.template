@@ -9,7 +9,7 @@
 #SPAM_REJECT_SCORE = 100
 #CLAMD = yes
 
-smtp_banner = $smtp_active_hostname
+smtp_banner = $smtp_active_hostname ESMTP
 smtp_active_hostname = ${lookup dnsdb{>: defer_never,ptr=$interface_address}{${listextract{1}{$value}}}{$primary_hostname}}
 add_environment = <; PATH=/bin:/usr/bin
 keep_environment =
@@ -227,8 +227,8 @@ acl_check_data:
 
   # Deny spam at high score if spam score > SPAM_REJECT_SCORE and delete_spam is enabled
   deny   message        = This message scored $spam_score spam points
-         spam           = debian-spamd:true
          condition      = ${if eq{$acl_m3}{yes}{yes}{no}}
+         spam           = debian-spamd:true
          condition      = ${if >{$spam_score_int}{SPAM_REJECT_SCORE}{1}{0}}
 .endif
 

@@ -1,7 +1,7 @@
 # Hestia Nginx Cache
 
-By [Jakob Bouchard](https://github.com/jakobbouchard/)  
-[View the project](https://wordpress.org/plugins/hestia-nginx-cache/) – [Source code](https://github.com/jakobbouchard/hestia-nginx-cache)
+By [Juniper Bouchard](https://github.com/imjuniper/)  
+[View the project](https://wordpress.org/plugins/hestia-nginx-cache/) – [Source code](https://github.com/imjuniper/hestia-nginx-cache)
 
 ::: info
 Requires **Hestia >= 1.6.0**, as it uses the latest API.

@@ -33,13 +33,13 @@ check_hestia_demo_mode
 
 # Checking sshd directives
 config='/etc/ssh/sshd_config'
-sftp_n=$(grep -n "Subsystem.*sftp" $config | grep -v internal | grep -v ":#")
+sftp_n=$(grep -n "Subsystem.*sftp" $config | grep -v internal | grep -v /usr/lib/sftp-server | grep -v ":#")
 sftp_i=$(grep -n "^# Hestia SFTP Chroot" $config)
 
 # Disabling normal sftp
 if [ -n "$sftp_n" ]; then
 	fline=$(echo $sftp_n | cut -f 1 -d :)
-	sed -i "${fline}s/Subsystem.*sftp/#Subsystem sftp/" $config
+	sed -i "${fline}s/Subsystem.*sftp.*/Subsystem sftp internal-sftp/" $config
 	restart='yes'
 fi
 
@@ -51,7 +51,7 @@ if [ -z "$sftp_i" ]; then
 	echo "    ChrootDirectory /srv/jail/%u" >> $config
 	echo "    X11Forwarding no" >> $config
 	echo "    AllowTCPForwarding no" >> $config
-	echo "    ForceCommand internal-sftp -d /home" >> $config
+	echo "    ForceCommand internal-sftp -d /home/%u" >> $config
 	restart='yes'
 fi
 
@@ -65,7 +65,7 @@ if [ "$restart" = 'yes' ]; then
             \n\n$(/usr/sbin/sshd -t)"
 		echo -e "$mail_text" | $SENDMAIL -s "$subj" $email
 	else
-		service sshd restart > /dev/null 2>&1
+		service ssh restart > /dev/null 2>&1
 	fi
 fi
 

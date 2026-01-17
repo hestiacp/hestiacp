@@ -129,7 +129,7 @@
 						<ul>
 							<li><code>logo.svg</code> <small>(100px x 120px)</small></li>
 							<li><code>logo.png</code> <small>(100px x 120px)</small></li>
-							<li><code>logo-header.svg</code> <small>(54x x 29px)</small></li>
+							<li><code>logo-header.svg</code> <small>(54px x 29px)</small></li>
 							<li><code>favicon.png</code> <small>(64px x 64px)</small></li>
 							<li><code>favicon.ico</code> <small>(16px x 16px)</small></li>
 						</ul>

@@ -24,11 +24,7 @@ if [ ! -e /usr/bin/rsync ] || [ ! -e /usr/bin/file ]; then
 	echo "rsync not installed, try install it"
 	echo "This script need: rsync, file"
 	echo "#######################################"
-	if [ -e /etc/redhat-release ]; then
-		echo "Run: yum install rync file"
-	else
-		echo "Run: apt-get install rsync file"
-	fi
+	echo "Run: apt-get install rsync file"
 	exit 3
 fi
 # Put this to 0 if you want use bash -x to debug it
@@ -47,7 +43,7 @@ fi
 if [ -z "$BACKUP_TEMP" ]; then
 	BACKUP_TEMP=$BACKUP
 else
-	echo "File does not exists"
+	echo "File does not exist"
 	exit 1
 fi
 

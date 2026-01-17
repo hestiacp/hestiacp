@@ -71,7 +71,7 @@ is_package_consistent() {
 		is_int_format_valid "$BANDWIDTH" 'BANDWIDTH'
 	fi
 	is_int_format_valid "$BACKUPS" 'BACKUPS'
-	is_boolean_format_valid "$BACKUPS_INCREMENTAL" 'BACKUP_INCREMENTAL'
+	is_boolean_format_valid "$BACKUPS_INCREMENTAL" 'BACKUPS_INCREMENTAL'
 	if [ -n "$WEB_TEMPLATE" ]; then
 		is_web_template_valid "$WEB_TEMPLATE"
 	fi
@@ -94,7 +94,6 @@ is_package_consistent() {
 	fi
 
 	is_format_valid_shell "$SHELL"
-	is_boolean_format_valid "$SHELL_JAIL_ENABLED" 'SHELL_JAIL_ENABLED'
 }
 
 #----------------------------------------------------------#
@@ -110,7 +109,7 @@ else
 fi
 
 if [ ! -f "$tmpfile" ]; then
-	echo "$tmpfile does not exists"
+	echo "$tmpfile does not exist"
 	exit "$E_NOTEXIST"
 fi
 
@@ -150,9 +149,8 @@ SWAP_LIMIT='$SWAP_LIMIT'
 BANDWIDTH='$BANDWIDTH'
 NS='$NS'
 SHELL='$SHELL'
-SHELL_JAIL_ENABLED='$SHELL_JAIL_ENABLED'
 BACKUPS='$BACKUPS'
-BACKUPS_INCREMENTAL='$BACKUP_INCREMENTAL'
+BACKUPS_INCREMENTAL='$BACKUPS_INCREMENTAL'
 TIME='$time'
 DATE='$date'
 " > "$HESTIA/data/packages/$package.pkg"

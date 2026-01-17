@@ -17,11 +17,11 @@
 ####### You can use \n within the string to create new lines.                   #######
 #######################################################################################
 
-upgrade_config_set_value 'UPGRADE_UPDATE_WEB_TEMPLATES' 'false'
-upgrade_config_set_value 'UPGRADE_UPDATE_DNS_TEMPLATES' 'false'
-upgrade_config_set_value 'UPGRADE_UPDATE_MAIL_TEMPLATES' 'false'
+upgrade_config_set_value 'UPGRADE_UPDATE_WEB_TEMPLATES' 'true'
+upgrade_config_set_value 'UPGRADE_UPDATE_DNS_TEMPLATES' 'true'
+upgrade_config_set_value 'UPGRADE_UPDATE_MAIL_TEMPLATES' 'true'
 upgrade_config_set_value 'UPGRADE_REBUILD_USERS' 'yes'
-upgrade_config_set_value 'UPGRADE_UPDATE_FILEMANAGER_CONFIG' 'false'
+upgrade_config_set_value 'UPGRADE_UPDATE_FILEMANAGER_CONFIG' 'true'
 
 # update config sftp jail
 $BIN/v-delete-sys-sftp-jail
@@ -65,9 +65,6 @@ chown hestiaweb:hestiaweb /usr/local/hestia/data/sessions
 packages=$(ls --sort=time $HESTIA/data/packages | grep .pkg)
 # Update Hestia Packages
 for package in $packages; do
-	if [ -z "$(grep -e 'SHELL_JAIL_ENABLED' $HESTIA/data/packages/$package)" ]; then
-		echo "SHELL_JAIL_ENABLED='no'" >> $HESTIA/data/packages/$package
-	fi
 	if [ -z "$(grep -e 'BACKUPS_INCREMENTAL' $HESTIA/data/packages/$package)" ]; then
 		echo "BACKUPS_INCREMENTAL='no'" >> $HESTIA/data/packages/$package
 	fi
@@ -95,9 +92,30 @@ if [ -s /etc/exim4/exim4.conf.template ] && ! grep -Fq "smtp_accept_max" /etc/ex
 	sed -i '/disable_ipv6 = true/a\smtp_accept_max = 100\nsmtp_accept_max_per_host = 20' /etc/exim4/exim4.conf.template
 fi
 
-# Update phymyadmin.inc for nginx
-if [ -s /etc/nginx/conf.d/phpmyadmin.inc ]; then
-	cp -f $HESTIA_INSTALL_DIR/install/deb/nginx/phpmyadmin.inc /etc/nginx/conf.d/phpmyadmin.inc
+# Update www.conf due security issue
+php_versions=$($BIN/v-list-sys-php plain)
+# Substitute php-fpm service name formats
+for version in $php_versions; do
+	if [ -f "/etc/php/$version/fpm/pool.d/www.conf" ]; then
+		cp -f $HESTIA_INSTALL_DIR/php-fpm/www.conf "/etc/php/$version/fpm/pool.d/www.conf"
+	fi
+done
+
+# Recreate PHPMYADMIN / PHPGADMIN conf correctly
+if [ -n "$DB_PMA_ALIAS" ]; then
+	old=$DB_PMA_ALIAS
+	$BIN/v-change-sys-db-alias pma "randomstring"
+	$BIN/v-change-sys-db-alias pma "$old"
+fi
+if [ -n "$DB_PGA_ALIAS" ]; then
+	old=$DB_PGA_ALIAS
+	$BIN/v-change-sys-db-alias pga "randomstring"
+	$BIN/v-change-sys-db-alias pga "$old"
+fi
+
+# Fix MySQL lc-messages-dir path for mariadb
+if [ -x /usr/bin/mariadb ]; then
+	sed -i 's|/usr/share/mysql|/usr/share/mariadb|g' /etc/mysql/my.cnf
 fi
 
 $BIN/v-add-user-notification 'admin' 'Hestia security has been upgraded' ' A new user "hestiaweb" has been created and is used for login. Make sure other Hestia packages are updated as well otherwise the system may not work as expected.'

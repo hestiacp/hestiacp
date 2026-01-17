@@ -120,17 +120,7 @@ if [ $architecture == 'aarch64' ]; then
 else
 	BUILD_ARCH='amd64'
 fi
-RPM_DIR="$BUILD_DIR/rpm/"
 DEB_DIR="$BUILD_DIR/deb/"
-if [ -f '/etc/redhat-release' ]; then
-	BUILD_RPM=true
-	BUILD_DEB=false
-	OSTYPE='rhel'
-else
-	BUILD_RPM=false
-	BUILD_DEB=true
-	OSTYPE='debian'
-fi
 
 # Set command variables
 fork=$1
@@ -176,21 +166,12 @@ warning_message() {
 install_build() {
 	# Install all available packages
 	echo "Installing packages..."
-	if [ "$OSTYPE" = 'rhel' ]; then
-		for i in $RPM_DIR/*.rpm; do
-			dnf -y install $i
-			if [ $? -ne 0 ]; then
-				exit 1
-			fi
-		done
-	else
-		for i in $DEB_DIR/*.deb; do
-			dpkg -i $i
-			if [ $? -ne 0 ]; then
-				exit 1
-			fi
-		done
-	fi
+	for i in $DEB_DIR/*.deb; do
+		dpkg -i $i
+		if [ $? -ne 0 ]; then
+			exit 1
+		fi
+	done
 	unset $answer
 	# Remove temporary files
 	rm -rf $BUILD_DIR
@@ -242,32 +223,18 @@ branch_dash=$(echo "$branch" | sed 's/\//-/g')
 #----------------------------------------------------------#
 
 # Install needed software
-if [ "$OSTYPE" = 'rhel' ]; then
-	# Set package dependencies for compiling
-	SOFTWARE=' rpm-build wget tar git curl unzip'
+# Set package dependencies for compiling
+SOFTWARE='build-essential wget tar git curl unzip'
 
-	echo "Updating system DNF repositories..."
-	dnf install -y -q 'dnf-command(config-manager)'
-	dnf install -y -q dnf-plugins-core
-	dnf config-manager --set-enabled powertools > /dev/null 2>&1
-	dnf config-manager --set-enabled PowerTools > /dev/null 2>&1
-	dnf upgrade -y -q
-	echo "Installing dependencies for compilation..."
-	dnf install -y -q $SOFTWARE
-else
-	# Set package dependencies for compiling
-	SOFTWARE='build-essential wget tar git curl unzip'
+echo "Updating system APT repositories..."
+apt-get -qq update > /dev/null 2>&1
+echo "Installing dependencies for compilation..."
+apt-get -qq install -y $SOFTWARE > /dev/null 2>&1
 
-	echo "Updating system APT repositories..."
-	apt-get -qq update > /dev/null 2>&1
-	echo "Installing dependencies for compilation..."
-	apt-get -qq install -y $SOFTWARE > /dev/null 2>&1
-
-	# Fix for Debian PHP environment
-	if [ $BUILD_ARCH == "amd64" ]; then
-		if [ ! -L /usr/local/include/curl ]; then
-			ln -s /usr/include/x86_64-linux-gnu/curl /usr/local/include/curl
-		fi
+# Fix for Debian PHP environment
+if [ $BUILD_ARCH == "amd64" ]; then
+	if [ ! -L /usr/local/include/curl ]; then
+		ln -s /usr/include/x86_64-linux-gnu/curl /usr/local/include/curl
 	fi
 fi
 
@@ -326,37 +293,20 @@ find $BUILD_DIR_HESTIA/usr/local/hestia/install/ \( -name '*.sh' \) -exec chmod 
 chmod -x $BUILD_DIR_HESTIA/usr/local/hestia/install/*.sh
 chown -R root:root $BUILD_DIR_HESTIA
 
-if [ "$BUILD_DEB" = true ]; then
-	# Get Debian package files
-	mkdir -p $BUILD_DIR_HESTIA/DEBIAN
-	get_branch_file 'src/deb/hestia/control' "$BUILD_DIR_HESTIA/DEBIAN/control"
-	if [ "$BUILD_ARCH" != "amd64" ]; then
-		sed -i "s/amd64/${BUILD_ARCH}/g" "$BUILD_DIR_HESTIA/DEBIAN/control"
-	fi
-	get_branch_file 'src/deb/hestia/copyright' "$BUILD_DIR_HESTIA/DEBIAN/copyright"
-	get_branch_file 'src/deb/hestia/preinst' "$BUILD_DIR_HESTIA/DEBIAN/preinst"
-	get_branch_file 'src/deb/hestia/postinst' "$BUILD_DIR_HESTIA/DEBIAN/postinst"
-	chmod +x $BUILD_DIR_HESTIA/DEBIAN/postinst
-	chmod +x $BUILD_DIR_HESTIA/DEBIAN/preinst
-
-	echo Building Hestia DEB
-	dpkg-deb -Zxz --build $BUILD_DIR_HESTIA $DEB_DIR
+# Get Debian package files
+mkdir -p $BUILD_DIR_HESTIA/DEBIAN
+get_branch_file 'src/deb/hestia/control' "$BUILD_DIR_HESTIA/DEBIAN/control"
+if [ "$BUILD_ARCH" != "amd64" ]; then
+	sed -i "s/amd64/${BUILD_ARCH}/g" "$BUILD_DIR_HESTIA/DEBIAN/control"
 fi
+get_branch_file 'src/deb/hestia/copyright' "$BUILD_DIR_HESTIA/DEBIAN/copyright"
+get_branch_file 'src/deb/hestia/preinst' "$BUILD_DIR_HESTIA/DEBIAN/preinst"
+get_branch_file 'src/deb/hestia/postinst' "$BUILD_DIR_HESTIA/DEBIAN/postinst"
+chmod +x $BUILD_DIR_HESTIA/DEBIAN/postinst
+chmod +x $BUILD_DIR_HESTIA/DEBIAN/preinst
 
-if [ "$BUILD_RPM" = true ]; then
-	# Get RHEL package files
-	get_branch_file 'src/rpm/hestia/hestia.spec' "${BUILD_DIR_HESTIA}/hestia.spec"
-	sed -i "s/%HESTIA-VERSION%/${HESTIA_V}/g" "${BUILD_DIR_HESTIA}/hestia.spec"
-	get_branch_file 'src/rpm/hestia/hestia.service' "${BUILD_DIR_HESTIA}/hestia.service"
-
-	# Build RPM package
-	mkdir -p $BUILD_DIR/rpmbuild
-	echo Building Hestia RPM
-	rpmbuild -bb --define "sourcedir $BUILD_DIR_HESTIA" --buildroot=$BUILD_DIR/rpmbuild/ ${BUILD_DIR_HESTIA}/hestia.spec > ${BUILD_DIR_HESTIA}.rpm.log
-	cp ~/rpmbuild/RPMS/$(arch)/hestia-*.rpm $RPM_DIR
-	rm ~/rpmbuild/RPMS/$(arch)/hestia-*.rpm
-	rm -rf $BUILD_DIR/rpmbuild
-fi
+echo Building Hestia DEB
+dpkg-deb -Zxz --build $BUILD_DIR_HESTIA $DEB_DIR
 
 # clear up the source folder
 if [ "$KEEPBUILD" != 'true' ]; then

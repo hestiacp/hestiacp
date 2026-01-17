@@ -44,7 +44,7 @@ fi
 if [ -z "$BACKUP_TEMP" ]; then
 	BACKUP_TEMP=$BACKUP
 else
-	echo "File does not exists"
+	echo "File does not exist"
 	exit 1
 fi
 
@@ -85,11 +85,11 @@ if [ $dbprefix == 1 ]; then
 	exit 255
 fi
 main_domain1=$(grep main_domain userdata/main | cut -d " " -f2)
-new_user=$(grep "user:" userdata/${main_domain1} | cut -d " " -f2)
+new_user=$(grep "^user:" userdata/${main_domain1} | cut -d " " -f2)
 echo "Get User: $new_user"
 check_sysuser=$(cut -f 1 -d : /etc/passwd | grep "^$new_user$")
 if [ -n "$check_sysuser" ] || [ -e "$HESTIA/data/users/$new_user" ]; then
-	check_result "$E_EXISTS" "user $user exists"
+	check_result "$E_EXISTS" "user $new_user exists"
 	echo "User allready exists"
 	exit 2
 fi
@@ -302,7 +302,7 @@ for ssl_domain in apache_tls/*; do
             block_count++;
             cert_file = "apache_tls/ssl/" ssl_domain "/" ssl_domain ".crt";
             print "-----BEGIN CERTIFICATE-----" $0 > cert_file;
-        } 
+        }
         NR>2 {
             block_count++;
             cert_file = "apache_tls/ssl/" ssl_domain "/" ssl_domain ".ca";

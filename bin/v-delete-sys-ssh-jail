@@ -29,37 +29,23 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Checking sshd directives
-config='/etc/ssh/sshd_config'
-ssh_i=$(grep -n "^# Hestia SSH Chroot" $config)
+# Unregister /usr/sbin/jailbash
+sed -i "/\/usr\/sbin\/jailbash/d" /etc/shells
 
-# Backing up config
-cp $config $config.bak
+# Remove jailbash from /usr/sbin
+if [ -x /usr/sbin/jailbash ]; then
+	rm -f /usr/sbin/jailbash
+	rm -f /etc/apparmor.d/bwrap-userns-restrict
 
-# Disabling jailed ssh
-if [ -n "$ssh_i" ]; then
-	fline=$(echo "$ssh_i" | cut -f 1 -d :)
-	lline=$((fline + 4))
-	sed -i "${fline},${lline}d" $config
-	restart='yes'
+	service apparmor reload > /dev/null 2>&1
 fi
 
-# Validating opensshd config
-if [ "$restart" = 'yes' ]; then
-	subj="OpenSSH restart failed"
-	email=$(grep CONTACT "$HESTIA/data/users/$ROOT_USER/user.conf" | cut -f 2 -d \')
-	/usr/sbin/sshd -t > /dev/null 2>&1
-	if [ "$?" -ne 0 ]; then
-		mail_text="OpenSSH can not be restarted. Please check config:
-            \n\n$(/usr/sbin/sshd -t)"
-		echo -e "$mail_text" | $SENDMAIL -s "$subj" $email
-	else
-		service sshd restart > /dev/null 2>&1
-	fi
-fi
+# Revert back to internal-sftp
+if [ -z "$(grep 'Subsystem sftp internal-sftp' /etc/ssh/sshd_config)" ]; then
+	sed -i -E "s/Subsystem sftp \/usr\/lib\/sftp-server/Subsystem sftp internal-sftp/g" /etc/ssh/sshd_config
 
-# Remove group ssh-jailed
-groupdel ssh-jailed 2> /dev/null
+	service ssh restart > /dev/null 2>&1
+fi
 
 #----------------------------------------------------------#
 #                       Hestia                             #

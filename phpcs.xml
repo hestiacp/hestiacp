@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<ruleset name="HestiaCP">
+	<file>./web/src/app</file>
+
+	<exclude-pattern>*.js</exclude-pattern>
+
+	<!-- This is the rule we inherit from. If you want to exlude some specific rules, see the docs on how to do that -->
+	<rule ref="PSR12"/>
+
+	<!-- Lines can be a bit longer before they break the build -->
+	<rule ref="Generic.Files.LineLength">
+		<properties>
+			<property name="lineLimit" value="120"/>
+			<property name="absoluteLineLimit" value="150"/>
+		</properties>
+	</rule>
+</ruleset>

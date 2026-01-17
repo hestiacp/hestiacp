@@ -124,7 +124,9 @@ if (
 
 $redirect_code_options = [301, 302];
 $v_redirect = $data[$v_domain]["REDIRECT"];
-$v_redirect_code = $data[$v_domain]["REDIRECT_CODE"];
+$v_redirect_code = isset($data[$v_domain]["REDIRECT_CODE"])
+	? intval($data[$v_domain]["REDIRECT_CODE"])
+	: 302;
 if (!in_array($v_redirect, ["www." . $v_domain, $v_domain])) {
 	$v_redirect_custom = $v_redirect;
 }

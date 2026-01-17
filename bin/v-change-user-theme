@@ -37,7 +37,7 @@ is_object_unsuspended 'user' 'USER' "$user"
 themes=$($BIN/v-list-sys-themes plain)
 
 if ! echo "$themes" | grep -q -x "$theme"; then
-	echo "Theme does not exists"
+	echo "Theme does not exist"
 	exit "$E_NOTEXIST"
 fi
 

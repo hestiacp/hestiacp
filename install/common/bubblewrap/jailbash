@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+
+# Use bubblewrap to run /bin/bash reusing the host OS binaries (/usr), but with
+# separate /tmp, /home, /var, /run, and /etc. For /etc we just inherit the
+# host's resolv.conf, and set up "stub" passwd/group files.
+
+set -euo pipefail
+(exec -a jailbash bwrap --ro-bind /usr /usr \
+	--ro-bind /lib /lib \
+	--ro-bind-try /lib64 /lib64 \
+	--tmpfs /usr/lib/modules \
+	--tmpfs /usr/lib/systemd \
+	--tmpfs /usr/local/hestia \
+	--tmpfs /usr/share \
+	--ro-bind /bin /bin \
+	--ro-bind /sbin /sbin \
+	--dir /var \
+	--dir /tmp \
+	--symlink ../tmp var/tmp \
+	--proc /proc \
+	--dev /dev \
+	--bind ${HOME} ${HOME} \
+	--ro-bind-try /etc/profile /etc/profile \
+	--ro-bind-try /etc/alternatives /etc/alternatives \
+	--ro-bind-try /etc/localtime /etc/localtime \
+	--ro-bind-try /etc/ld.so.cache /etc/ld.so.cache \
+	--ro-bind-try /etc/resolv.conf /etc/resolv.conf \
+	--ro-bind-try /etc/hosts /etc/hosts \
+	--ro-bind-try /etc/nsswitch.conf /etc/nsswitch.conf \
+	--ro-bind-try /etc/ssl /etc/ssl \
+	--ro-bind-try /etc/pki /etc/pki \
+	--ro-bind-try /etc/manpath.config /etc/manpath.config \
+	--bind-try /run/mysqld/mysqld.sock /run/mysqld/mysqld.sock \
+	--chdir ${HOME} \
+	--unshare-all \
+	--share-net \
+	--die-with-parent \
+	--dir /run/user/$(id -u) \
+	--setenv XDG_RUNTIME_DIR "/run/user/$(id -u)" \
+	--setenv PS1 "$(id -nu)$ " \
+	--file 11 /etc/passwd \
+	--file 12 /etc/group \
+	/bin/bash -l "$@") \
+	11< <(getent passwd $UID 65534) \
+	12< <(getent group $(id -g) 65534)

@@ -43,6 +43,10 @@ server {
 				expires off;
 				try_files $uri $uri/ /index.php?$query_string;
 		}
+		location = /livewire/livewire.min.js {
+				expires off;
+				try_files $uri $uri/ /index.php?$query_string;
+		}
 
 		location ~ [^/]\.php(/|$) {
 			try_files $uri =404;

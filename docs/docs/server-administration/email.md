@@ -64,7 +64,7 @@ When you are done you can check the configuration via [MXToolBox](https://mxtool
 1. Fill in the form and verify your email address by via the link in the email you recive.
 1. Once logged, go to Products → DQS and you will see your Query Key and below you will see the exactly fqdn that you will need to use Zen Spamhaus black list. Something like: `HereYourQueryKey.zen.dq.spamhaus.net`
 1. Edit /etc/exim4/dnsbl.conf and replace `zen.spamhaus.org` with `HereYourQueryKey.zen.dq.spamhaus.net`
-1. Also edit /etc/exim4/exim4.conf.template on the line: `deny    message       = Rejected because $sender_host_address is in a black list at $dnslist_domain\n$dnslist_text` to `deny    message       = Rejected because $sender_host_address is in a black list` to prevent your Query key from leaking
+1. Also edit /etc/exim4/exim4.conf.template on the line: `deny    message       = Rejected because $sender_host_address is in a black list at $dnslist_domain\n$dnslist_text` to `deny    message       = Rejected because $sender_host_address is in a black list at ${if match{$dnslist_domain}{.*zen.dq.spamhaus.*}{zen.dq.spamhaus.net}{$dnslist_domain}}\n$dnslist_text` to prevent your Query key from leaking
 1. Restart exim4 with systemctl restart exim4
 
 ## How do I disable internal lookup for email
@@ -121,8 +121,7 @@ No, Cloudflare’s Proxy does not work with email. If you use email hosted on yo
 - A record with name **webmail** pointing to your server IP.
 - MX record with name **@** with pointing to `mail.domain.tld`.
 - TXT record with name **@** containing `v=spf1 a mx ip4:your ip; \~all`
-- TXT record with name **\_domainkey** containing `t=y; o=~;`
-- TXT record with name **mail.\_domainkey** containing `t=y; o=~DKIM key;`
+- TXT record with name **mail.\_domainkey** containing `v=DKIM1; k=rsa; p=<DKIM key>;`
 - TXT record with name **\_dmarc** containing `v=DMARC1; p=quarantine; sp=quarantine; adkim=s; aspf=s;`
 
 The DKIM key and SPF record can be found in the **Mail Domains** list ([documentation](../user-guide/mail-domains#get-dns-records)).

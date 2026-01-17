@@ -16,12 +16,11 @@ location /%pma_alias% {
 		include       /etc/nginx/fastcgi_params;
 		fastcgi_index index.php;
 		fastcgi_param HTTP_EARLY_DATA $rfc_early_data if_not_empty;
-		fastcgi_param SCRIPT_FILENAME $request_filename;
-		fastcgi_pass  127.0.0.1:9000;
+		fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+		fastcgi_pass  unix:/run/php/www.sock;
 	}
 
-	# Serve static files like CSS and JS
-	location ~ ^/%pma_alias%/(.*\.(jpg|jpeg|gif|css|png|webp|js|ico|html|xml|txt))$ {
-		alias /usr/share/phpmyadmin/$1; # Corrected from root to alias
+	location /%pma_alias%/(.+\.(jpg|jpeg|gif|css|png|webp|js|ico|html|xml|txt))$ {
+		root /usr/share/phpmyadmin/;
 	}
 }

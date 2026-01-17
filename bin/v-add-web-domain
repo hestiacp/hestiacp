@@ -6,7 +6,7 @@
 #
 # This function adds virtual host to a server. In cases when ip is
 # undefined in the script, "default" template will be used. The alias of
-# www.domain.tld type will be automatically assigned to the domain unless
+# `www.domain.tld` type will be automatically assigned to the domain unless
 # "none" is transmited as argument. If ip have associated dns name, this
 # domain will also get the alias domain-tpl.$ipname. An alias with the ip
 # name is useful during the site testing while dns isn't moved to server yet.
@@ -50,7 +50,7 @@ domain_utf=$(idn2 --quiet -d "$domain_idn")
 
 is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
 check_args '2' "$#" 'USER DOMAIN [IP] [RESTART] [ALIASES] [PROXY_EXTENSIONS]'
-is_format_valid 'user' 'domain' 'aliases' 'ip' 'proxy_ext'
+is_format_valid 'user' 'domain' 'aliases' 'ip' 'proxy_ext' 'restart'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 is_package_full 'WEB_DOMAINS'

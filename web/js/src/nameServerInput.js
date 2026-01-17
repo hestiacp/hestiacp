@@ -33,6 +33,8 @@ function addNsInput(addNsButton) {
 function removeNsInput(removeNsElement) {
 	removeNsElement.parentElement.remove();
 	const currentNsInputs = document.querySelectorAll('input[name^=v_ns]');
-	currentNsInputs.forEach((input, index) => (input.name = `v_ns${index + 1}`));
+	currentNsInputs.forEach((input, index) => {
+		input.name = `v_ns${index + 1}`;
+	});
 	document.querySelector('.js-add-ns').classList.remove('u-hidden');
 }

@@ -27,6 +27,9 @@
 # Web templates (for now)
 web/templates/
 
+# Modern Web (handled by PHPCS)
+web/src/
+
 # Patch files
 /install/upgrade/patch/*
 

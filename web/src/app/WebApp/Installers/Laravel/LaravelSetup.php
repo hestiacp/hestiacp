@@ -1,55 +1,43 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Hestia\WebApp\Installers\Laravel;
 
-use Hestia\WebApp\Installers\BaseSetup as BaseSetup;
+use Hestia\WebApp\BaseSetup;
+use Hestia\WebApp\InstallationTarget\InstallationTarget;
+use function file_get_contents;
 
-class LaravelSetup extends BaseSetup {
-	protected $appname = "laravel";
+class LaravelSetup extends BaseSetup
+{
+    protected array $info = [
+        'name' => 'Laravel',
+        'group' => 'framework',
+        'version' => 'latest',
+        'thumbnail' => 'laravel-thumb.png',
+    ];
 
-	protected $appInfo = [
-		"name" => "Laravel",
-		"group" => "framework",
-		"enabled" => true,
-		"version" => "latest",
-		"thumbnail" => "laravel-thumb.png",
-	];
+    protected array $config = [
+        'form' => [],
+        'database' => false,
+        'resources' => [
+            'composer' => ['src' => 'laravel/laravel', 'dst' => '/'],
+        ],
+        'server' => [
+            'nginx' => [
+                'template' => 'laravel',
+            ],
+            'php' => [
+                'supported' => ['8.1', '8.2', '8.3', '8.4'],
+            ],
+        ],
+    ];
 
-	protected $config = [
-		"form" => [],
-		"database" => true,
-		"resources" => [
-			"composer" => ["src" => "laravel/laravel", "dst" => "/"],
-		],
-		"server" => [
-			"nginx" => [
-				"template" => "laravel",
-			],
-			"php" => [
-				"supported" => ["8.1", "8.2", "8.3"],
-			],
-		],
-	];
-
-	public function install(array $options = null): bool {
-		parent::install($options);
-		parent::setup($options);
-
-		$result = null;
-
-		$htaccess_rewrite = '
-<IfModule mod_rewrite.c>
-		RewriteEngine On
-		RewriteRule ^(.*)$ public/$1 [L]
-</IfModule>';
-
-		$tmp_configpath = $this->saveTempFile($htaccess_rewrite);
-		$this->appcontext->runUser(
-			"v-move-fs-file",
-			[$tmp_configpath, $this->getDocRoot(".htaccess")],
-			$result,
-		);
-
-		return $result->code === 0;
-	}
+    protected function setupApplication(InstallationTarget $target, array $options): void
+    {
+        $this->appcontext->createFile(
+            $target->getDocRoot('.htaccess'),
+            file_get_contents(__DIR__ . '/.htaccess'),
+        );
+    }
 }

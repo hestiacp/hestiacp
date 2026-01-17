@@ -1,7 +1,0 @@
-/var/log/roundcube/*.log {
-    rotate 12
-    monthly
-    missingok
-    notifempty
-    create 644 www-data www-data
-}

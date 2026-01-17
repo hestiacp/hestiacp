@@ -26,7 +26,7 @@
 			<?php } ?>
 			<?php
 				$api_status = (!empty($_SESSION['API_SYSTEM']) && is_numeric($_SESSION['API_SYSTEM'])) ? $_SESSION['API_SYSTEM'] : 0;
-				if (($user_plain == 'admin' && $api_status > 0) || ($user_plain != 'admin' && $api_status > 1)) { ?>
+				if (($user_plain == $_SESSION['ROOT_USER'] && $api_status > 0) || ($user_plain != $_SESSION['ROOT_USER'] && $api_status > 1)) { ?>
 				<a href="<?= $keys_url; ?>" class="button button-secondary js-button-create" title="<?= _("Access Keys") ?>">
 					<i class="fas fa-key icon-purple"></i><?= _("Access Keys") ?>
 				</a>
@@ -220,12 +220,6 @@
 								}
 							?>
 						</select>
-					</div>
-					<div class="form-check u-mb10">
-						<input class="form-check-input" type="checkbox" name="v_shell_jail_enabled" id="v_shell_jail_enabled" value="yes" <?php if (htmlentities(trim($v_shell_jail_enabled, "'")) == "yes") echo 'checked' ?>>
-						<label for="v_shell_jail_enabled">
-							<?= _("Jail User Shell") ?>
-						</label>
 					</div>
 					<div class="u-mb10">
 						<label for="v_phpcli" class="form-label"><?= _("PHP CLI Version") ?></label>

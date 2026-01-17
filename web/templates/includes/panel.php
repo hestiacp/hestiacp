@@ -15,15 +15,13 @@
 
 				<!-- Usage Statistics -->
 				<div class="top-bar-usage">
-					<?php
-						if ($_SESSION['look'] !== '') {
-							$user_icon = 'fa-binoculars';
-						} else if ($_SESSION['userContext'] === 'admin') {
-							$user_icon = 'fa-user-tie';
-						} else {
-							$user_icon = 'fa-user';
-						}
-					?>
+					<?php if ($_SESSION["look"] !== "") {
+     	$user_icon = "fa-binoculars";
+     } elseif ($_SESSION["userContext"] === "admin") {
+     	$user_icon = "fa-user-tie";
+     } else {
+     	$user_icon = "fa-user";
+     } ?>
 					<div class="top-bar-usage-inner">
 						<span class="top-bar-usage-item">
 							<i class="fas <?= $user_icon ?>" title="<?= _("Logged in as") ?>: <?= htmlspecialchars($panel[$user]["NAME"]) ?>"></i>
@@ -37,6 +35,11 @@
 								<?= humanize_usage_size($panel[$user]["U_DISK"]) ?>
 							</span>
 							<?= humanize_usage_measure($panel[$user]["U_DISK"]) ?>
+							/
+							<span class="u-text-bold">
+							<?= humanize_usage_size($panel[$user]["DISK_QUOTA"]) ?>
+							</span>
+							<?= humanize_usage_measure($panel[$user]["DISK_QUOTA"]) ?>
 						</span>
 						<span class="top-bar-usage-item">
 							<i class="fas fa-right-left" title="<?= _("Bandwidth") ?>: <?= humanize_usage_size($panel[$user]["U_BANDWIDTH"]) ?> <?= humanize_usage_measure($panel[$user]["U_BANDWIDTH"]) ?>"></i>
@@ -44,6 +47,11 @@
 								<?= humanize_usage_size($panel[$user]["U_BANDWIDTH"]) ?>
 							</span>
 							<?= humanize_usage_measure($panel[$user]["U_BANDWIDTH"]) ?>
+							/
+							<span class="u-text-bold">
+								<?= humanize_usage_size($panel[$user]["BANDWIDTH"]) ?>
+							</span>
+							<?= humanize_usage_measure($panel[$user]["BANDWIDTH"]) ?>
 						</span>
 					</div>
 				</div>
@@ -55,9 +63,9 @@
 
 				<!-- Notifications -->
 				<?php
-				$impersonatingAdmin = ($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] !== '' && ($user == 'admin'));
-				// Do not show notifications panel when impersonating 'admin' user
-				if (!$impersonatingAdmin) { ?>
+    $impersonatingAdmin = $_SESSION["userContext"] === "admin" && ($_SESSION["look"] !== "" && $user == "admin");
+    // Do not show notifications panel when impersonating 'admin' user
+    if (!$impersonatingAdmin) { ?>
 					<div x-data="notifications" class="top-bar-notifications">
 						<button
 							x-on:click="toggle()"
@@ -141,7 +149,8 @@
 							</template>
 						</div>
 					</div>
-				<?php } ?>
+				<?php }
+    ?>
 
 				<!-- Menu -->
 				<nav x-data="{ open: false }" class="top-bar-menu">
@@ -161,11 +170,13 @@
 
 							<!-- File Manager -->
 							<?php if (isset($_SESSION["FILE_MANAGER"]) && !empty($_SESSION["FILE_MANAGER"]) && $_SESSION["FILE_MANAGER"] == "true") { ?>
-								<?php if ($_SESSION["userContext"] === "admin" &&  $_SESSION["look"] === "admin" && $_SESSION["POLICY_SYSTEM_PROTECTED_ADMIN"] == "yes") { ?>
+								<?php if ($_SESSION["userContext"] === "admin" && $_SESSION["look"] === "admin" && $_SESSION["POLICY_SYSTEM_PROTECTED_ADMIN"] == "yes") { ?>
 									<!-- Hide file manager when impersonating admin-->
 								<?php } else { ?>
 									<li class="top-bar-menu-item">
-										<a title="<?= _("File manager") ?>" class="top-bar-menu-link <?php if ($TAB == 'FM') echo 'active' ?>" href="/fm/">
+										<a title="<?= _("File manager") ?>" class="top-bar-menu-link <?php if ($TAB == "FM") {
+	echo "active";
+} ?>" href="/fm/">
 											<i class="fas fa-folder-open"></i>
 											<span class="top-bar-menu-link-label u-hide-desktop"><?= _("File manager") ?></span>
 										</a>
@@ -175,11 +186,13 @@
 
 							<!-- Web Terminal -->
 							<?php if (isset($_SESSION["WEB_TERMINAL"]) && !empty($_SESSION["WEB_TERMINAL"]) && $_SESSION["WEB_TERMINAL"] == "true") { ?>
-								<?php if ($_SESSION["userContext"] === "admin" &&  $_SESSION["look"] === "admin" && $_SESSION["POLICY_SYSTEM_PROTECTED_ADMIN"] == "yes") { ?>
+								<?php if ($_SESSION["userContext"] === "admin" && $_SESSION["look"] === "admin" && $_SESSION["POLICY_SYSTEM_PROTECTED_ADMIN"] == "yes") { ?>
 									<!-- Hide web terminal when impersonating admin -->
-								<?php } else if ($_SESSION["login_shell"] != "nologin") { ?>
+								<?php } elseif ($_SESSION["login_shell"] != "nologin") { ?>
 									<li class="top-bar-menu-item">
-										<a title="<?= _("Web terminal") ?>" class="top-bar-menu-link <?php if ($TAB == 'TERMINAL') echo 'active' ?>" href="/list/terminal/">
+										<a title="<?= _("Web terminal") ?>" class="top-bar-menu-link <?php if ($TAB == "TERMINAL") {
+	echo "active";
+} ?>" href="/list/terminal/">
 											<i class="fas fa-terminal"></i>
 											<span class="top-bar-menu-link-label u-hide-desktop"><?= _("Web terminal") ?></span>
 										</a>
@@ -189,11 +202,13 @@
 
 							<!-- Server Settings -->
 							<?php if (($_SESSION["userContext"] === "admin" && $_SESSION["POLICY_SYSTEM_HIDE_SERVICES"] !== "yes") || $_SESSION["user"] === "admin") { ?>
-								<?php if ($_SESSION["userContext"] === "admin" && $_SESSION["look"] !== '') { ?>
+								<?php if ($_SESSION["userContext"] === "admin" && $_SESSION["look"] !== "") { ?>
 									<!-- Hide 'Server Settings' button when impersonating 'admin' or other users -->
 								<?php } else { ?>
 									<li class="top-bar-menu-item">
-										<a title="<?= _("Server settings") ?>" class="top-bar-menu-link <?php if (in_array($TAB, ['SERVER', 'IP', 'RRD', 'FIREWALL'])) echo 'active' ?>" href="/list/server/">
+										<a title="<?= _("Server settings") ?>" class="top-bar-menu-link <?php if (in_array($TAB, ["SERVER", "IP", "RRD", "FIREWALL"])) {
+	echo "active";
+} ?>" href="/list/server/">
 											<i class="fas fa-gear"></i>
 											<span class="top-bar-menu-link-label u-hide-desktop"><?= _("Server settings") ?></span>
 										</a>
@@ -202,10 +217,12 @@
 							<?php } ?>
 
 							<!-- Edit User -->
-							<?php if ($_SESSION["userContext"] === "admin" && ($_SESSION["look"] !== '' && $user == "admin")) { ?>
+							<?php if ($_SESSION["userContext"] === "admin" && ($_SESSION["look"] !== "" && $user == "admin")) { ?>
 								<!-- Hide 'edit user' entry point from other administrators for default 'admin' account-->
 								<li class="top-bar-menu-item">
-									<a title="<?= _("Logs") ?>" class="top-bar-menu-link <?php if ($TAB == 'LOG') echo 'active' ?>" href="/list/log/">
+									<a title="<?= _("Logs") ?>" class="top-bar-menu-link <?php if ($TAB == "LOG") {
+	echo "active";
+} ?>" href="/list/log/">
 										<i class="fas fa-clock-rotate-left"></i>
 										<span class="top-bar-menu-link-label u-hide-desktop"><?= _("Logs") ?></span>
 									</a>
@@ -223,13 +240,14 @@
 
 							<!-- Statistics -->
 							<li class="top-bar-menu-item">
-								<a title="<?= _("Statistics") ?>" class="top-bar-menu-link <?php if ($TAB == 'STATS') echo 'active' ?>" href="/list/stats/">
+								<a title="<?= _("Statistics") ?>" class="top-bar-menu-link <?php if ($TAB == "STATS") {
+	echo "active";
+} ?>" href="/list/stats/">
 									<i class="fas fa-chart-line"></i>
 									<span class="top-bar-menu-link-label u-hide-desktop"><?= _("Statistics") ?></span>
 								</a>
 							</li>
-							<?php if ( $_SESSION['HIDE_DOCS'] !== 'yes'){
-							?>
+							<?php if ($_SESSION["HIDE_DOCS"] !== "yes") { ?>
 								<!-- Help / Documentation -->
 								<li class="top-bar-menu-item">
 									<a title="<?= _("Help") ?>" class="top-bar-menu-link" href="https://hestiacp.com/docs/" target="_blank" rel="noopener">
@@ -278,16 +296,16 @@
 			<ul x-cloak x-show="open" class="main-menu-list">
 
 				<!-- Users tab -->
-				<?php if (($_SESSION['userContext'] == 'admin') && ($_SESSION['look'] === '')) { ?>
-					<?php
-						if (($_SESSION['user'] !== 'admin') && ($_SESSION['POLICY_SYSTEM_HIDE_ADMIN'] === 'yes')) {
-							$user_count = $panel[$user]['U_USERS'] - 1;
-						} else {
-							$user_count = $panel[$user]['U_USERS'];
-						}
-					?>
+				<?php if ($_SESSION["userContext"] == "admin" && $_SESSION["look"] === "") { ?>
+					<?php if ($_SESSION["user"] !== "admin" && $_SESSION["POLICY_SYSTEM_HIDE_ADMIN"] === "yes") {
+     	$user_count = $panel[$user]["U_USERS"] - 1;
+     } else {
+     	$user_count = $panel[$user]["U_USERS"];
+     } ?>
 					<li class="main-menu-item">
-						<a class="main-menu-item-link <?php if (in_array($TAB, ['USER', 'LOG'])) echo 'active' ?>" href="/list/user/" title="<?= _("Users") ?>: <?= $user_count;?>&#13;<?= _("Suspended") ?>: <?= $panel[$user]['SUSPENDED_USERS'] ?>">
+						<a class="main-menu-item-link <?php if (in_array($TAB, ["USER", "LOG"])) {
+      	echo "active";
+      } ?>" href="/list/user/" title="<?= _("Users") ?>: <?= $user_count ?>&#13;<?= _("Suspended") ?>: <?= $panel[$user]["SUSPENDED_USERS"] ?>">
 							<p class="main-menu-item-label"><?= _("USER") ?><i class="fas fa-users"></i></p>
 							<ul class="main-menu-stats">
 								<li>
@@ -305,14 +323,24 @@
 				<?php if (isset($_SESSION["WEB_SYSTEM"]) && !empty($_SESSION["WEB_SYSTEM"])) { ?>
 					<?php if ($panel[$user]["WEB_DOMAINS"] != "0") { ?>
 						<li class="main-menu-item">
-							<a class="main-menu-item-link <?php if ($TAB == 'WEB') echo 'active' ?>" href="/list/web/" title="<?= _("Domains") ?>: <?= $panel[$user]['U_WEB_DOMAINS'] ?>&#13;<?= _("Aliases") ?>: <?= $panel[$user]['U_WEB_ALIASES'] ?>&#13;<?= _("Limit") ?>: <?= $panel[$user]['WEB_DOMAINS']=='unlimited' ? "∞" : $panel[$user]['WEB_DOMAINS'] ?>&#13;<?= _("Suspended") ?>: <?= $panel[$user]['SUSPENDED_WEB'] ?>">
+							<a class="main-menu-item-link <?php if ($TAB == "WEB") {
+       	echo "active";
+       } ?>" href="/list/web/" title="<?= _("Domains") ?>: <?= $panel[$user]["U_WEB_DOMAINS"] ?>&#13;<?= _("Aliases") ?>: <?= $panel[$user]["U_WEB_ALIASES"] ?>&#13;<?= _("Limit") ?>: <?= $panel[
+	$user
+]["WEB_DOMAINS"] == "unlimited"
+	? "∞"
+	: $panel[$user]["WEB_DOMAINS"] ?>&#13;<?= _("Suspended") ?>: <?= $panel[$user]["SUSPENDED_WEB"] ?>">
 								<p class="main-menu-item-label"><?= _("WEB") ?><i class="fas fa-earth-americas"></i></p>
 								<ul class="main-menu-stats">
 									<li>
-										<?= _("Domains") ?>: <?= $panel[$user]["U_WEB_DOMAINS"] ?> / <?= $panel[$user]["WEB_DOMAINS"] == "unlimited" ? "<span class=\"u-text-bold\">∞</span>" : $panel[$user]["WEB_DOMAINS"] ?> (<?= $panel[$user]["SUSPENDED_WEB"] ?>)
+										<?= _("Domains") ?>: <?= $panel[$user]["U_WEB_DOMAINS"] ?> / <?= $panel[$user]["WEB_DOMAINS"] == "unlimited" ? "<span class=\"u-text-bold\">∞</span>" : $panel[$user]["WEB_DOMAINS"] ?> (<?= $panel[
+ 	$user
+ ]["SUSPENDED_WEB"] ?>)
 									</li>
 									<li>
-										<?= _("Aliases") ?>: <?= $panel[$user]["U_WEB_ALIASES"] ?> / <?= $panel[$user]["WEB_ALIASES"] == "unlimited" || $panel[$user]["WEB_DOMAINS"] == "unlimited" ? "<span class=\"u-text-bold\">∞</span>" : $panel[$user]["WEB_ALIASES"] * $panel[$user]["WEB_DOMAINS"] ?>
+										<?= _("Aliases") ?>: <?= $panel[$user]["U_WEB_ALIASES"] ?> / <?= $panel[$user]["WEB_ALIASES"] == "unlimited" || $panel[$user]["WEB_DOMAINS"] == "unlimited"
+ 	? "<span class=\"u-text-bold\">∞</span>"
+ 	: $panel[$user]["WEB_ALIASES"] * $panel[$user]["WEB_DOMAINS"] ?>
 									</li>
 								</ul>
 							</a>
@@ -324,14 +352,22 @@
 				<?php if (isset($_SESSION["DNS_SYSTEM"]) && !empty($_SESSION["DNS_SYSTEM"])) { ?>
 					<?php if ($panel[$user]["DNS_DOMAINS"] != "0") { ?>
 						<li class="main-menu-item">
-							<a class="main-menu-item-link <?php if ($TAB == 'DNS') echo 'active' ?>" href="/list/dns/" title="<?= _("Domains") ?>: <?= $panel[$user]['U_DNS_DOMAINS'] ?>&#13;<?= _("Limit") ?>: <?= $panel[$user]['DNS_DOMAINS']=='unlimited' ? "∞" : $panel[$user]['DNS_DOMAINS'] ?>&#13;<?= _("Suspended") ?>: <?= $panel[$user]['SUSPENDED_DNS'] ?>">
+							<a class="main-menu-item-link <?php if ($TAB == "DNS") {
+       	echo "active";
+       } ?>" href="/list/dns/" title="<?= _("Domains") ?>: <?= $panel[$user]["U_DNS_DOMAINS"] ?>&#13;<?= _("Limit") ?>: <?= $panel[$user]["DNS_DOMAINS"] == "unlimited"
+	? "∞"
+	: $panel[$user]["DNS_DOMAINS"] ?>&#13;<?= _("Suspended") ?>: <?= $panel[$user]["SUSPENDED_DNS"] ?>">
 								<p class="main-menu-item-label"><?= _("DNS") ?><i class="fas fa-book-atlas"></i></p>
 								<ul class="main-menu-stats">
 									<li>
-										<?= _("Zones") ?>: <?= $panel[$user]["U_DNS_DOMAINS"] ?> / <?= $panel[$user]["DNS_DOMAINS"] == "unlimited" ? "<span class=\"u-text-bold\">∞</span>" : $panel[$user]["DNS_DOMAINS"] ?> (<?= $panel[$user]["SUSPENDED_DNS"] ?>)
+										<?= _("Zones") ?>: <?= $panel[$user]["U_DNS_DOMAINS"] ?> / <?= $panel[$user]["DNS_DOMAINS"] == "unlimited" ? "<span class=\"u-text-bold\">∞</span>" : $panel[$user]["DNS_DOMAINS"] ?> (<?= $panel[
+ 	$user
+ ]["SUSPENDED_DNS"] ?>)
 									</li>
 									<li>
-										<?= _("Records") ?>: <?= $panel[$user]["U_DNS_RECORDS"] ?> / <?= $panel[$user]["DNS_RECORDS"] == "unlimited" || $panel[$user]["DNS_DOMAINS"] == "unlimited" ? "<span class=\"u-text-bold\">∞</span>" : $panel[$user]["DNS_RECORDS"] * $panel[$user]["DNS_DOMAINS"] ?>
+										<?= _("Records") ?>: <?= $panel[$user]["U_DNS_RECORDS"] ?> / <?= $panel[$user]["DNS_RECORDS"] == "unlimited" || $panel[$user]["DNS_DOMAINS"] == "unlimited"
+ 	? "<span class=\"u-text-bold\">∞</span>"
+ 	: $panel[$user]["DNS_RECORDS"] * $panel[$user]["DNS_DOMAINS"] ?>
 									</li>
 								</ul>
 							</a>
@@ -343,14 +379,22 @@
 				<?php if (isset($_SESSION["MAIL_SYSTEM"]) && !empty($_SESSION["MAIL_SYSTEM"])) { ?>
 					<?php if ($panel[$user]["MAIL_DOMAINS"] != "0") { ?>
 						<li class="main-menu-item">
-							<a class="main-menu-item-link <?php if ($TAB == 'MAIL') echo 'active' ?>" href="/list/mail/" title="<?= _("Domains") ?>: <?= $panel[$user]['U_MAIL_DOMAINS'] ?>&#13;<?= _("Limit") ?>: <?= $panel[$user]['MAIL_DOMAINS']=='unlimited' ? "∞" : $panel[$user]['MAIL_DOMAINS'] ?>&#13;<?= _("Suspended") ?>: <?= $panel[$user]['SUSPENDED_MAIL'] ?>">
+							<a class="main-menu-item-link <?php if ($TAB == "MAIL") {
+       	echo "active";
+       } ?>" href="/list/mail/" title="<?= _("Domains") ?>: <?= $panel[$user]["U_MAIL_DOMAINS"] ?>&#13;<?= _("Limit") ?>: <?= $panel[$user]["MAIL_DOMAINS"] == "unlimited"
+	? "∞"
+	: $panel[$user]["MAIL_DOMAINS"] ?>&#13;<?= _("Suspended") ?>: <?= $panel[$user]["SUSPENDED_MAIL"] ?>">
 								<p class="main-menu-item-label"><?= _("MAIL") ?><i class="fas fa-envelopes-bulk"></i></p>
 								<ul class="main-menu-stats">
 									<li>
-										<?= _("Domains") ?>: <?= $panel[$user]["U_MAIL_DOMAINS"] ?> / <?= $panel[$user]["MAIL_DOMAINS"] == "unlimited" ? "<span class=\"u-text-bold\">∞</span>" : $panel[$user]["MAIL_DOMAINS"] ?> (<?= $panel[$user]["SUSPENDED_MAIL"] ?>)
+										<?= _("Domains") ?>: <?= $panel[$user]["U_MAIL_DOMAINS"] ?> / <?= $panel[$user]["MAIL_DOMAINS"] == "unlimited" ? "<span class=\"u-text-bold\">∞</span>" : $panel[$user]["MAIL_DOMAINS"] ?> (<?= $panel[
+ 	$user
+ ]["SUSPENDED_MAIL"] ?>)
 									</li>
 									<li>
-										<?= _("Accounts") ?>: <?= $panel[$user]['U_MAIL_ACCOUNTS'] ?> / <?= $panel[$user]['MAIL_ACCOUNTS']=='unlimited' || $panel[$user]['MAIL_DOMAINS']=='unlimited' ? "<span class=\"u-text-bold\">∞</span>" : $panel[$user]['MAIL_ACCOUNTS'] * $panel[$user]['MAIL_DOMAINS'] ?>
+										<?= _("Accounts") ?>: <?= $panel[$user]["U_MAIL_ACCOUNTS"] ?> / <?= $panel[$user]["MAIL_ACCOUNTS"] == "unlimited" || $panel[$user]["MAIL_DOMAINS"] == "unlimited"
+ 	? "<span class=\"u-text-bold\">∞</span>"
+ 	: $panel[$user]["MAIL_ACCOUNTS"] * $panel[$user]["MAIL_DOMAINS"] ?>
 									</li>
 								</ul>
 							</a>
@@ -362,11 +406,17 @@
 				<?php if (isset($_SESSION["DB_SYSTEM"]) && !empty($_SESSION["DB_SYSTEM"])) { ?>
 					<?php if ($panel[$user]["DATABASES"] != "0") { ?>
 						<li class="main-menu-item">
-							<a class="main-menu-item-link <?php if ($TAB == 'DB') echo 'active' ?>" href="/list/db/" title="<?= _("Databases") ?>: <?= $panel[$user]['U_DATABASES'] ?>&#13;<?= _("Limit") ?>: <?= $panel[$user]['DATABASES']=='unlimited' ? "∞" : $panel[$user]['DATABASES'] ?>&#13;<?= _("Suspended") ?>: <?= $panel[$user]['SUSPENDED_DB'] ?>">
+							<a class="main-menu-item-link <?php if ($TAB == "DB") {
+       	echo "active";
+       } ?>" href="/list/db/" title="<?= _("Databases") ?>: <?= $panel[$user]["U_DATABASES"] ?>&#13;<?= _("Limit") ?>: <?= $panel[$user]["DATABASES"] == "unlimited"
+	? "∞"
+	: $panel[$user]["DATABASES"] ?>&#13;<?= _("Suspended") ?>: <?= $panel[$user]["SUSPENDED_DB"] ?>">
 								<p class="main-menu-item-label"><?= _("DB") ?><i class="fas fa-database"></i></p>
 								<ul class="main-menu-stats">
 									<li>
-										<?= _("Databases") ?>: <?= $panel[$user]["U_DATABASES"] ?> / <?= $panel[$user]["DATABASES"] == "unlimited" ? "<span class=\"u-text-bold\">∞</span>" : $panel[$user]["DATABASES"] ?> (<?= $panel[$user]["SUSPENDED_DB"] ?>)
+										<?= _("Databases") ?>: <?= $panel[$user]["U_DATABASES"] ?> / <?= $panel[$user]["DATABASES"] == "unlimited" ? "<span class=\"u-text-bold\">∞</span>" : $panel[$user]["DATABASES"] ?> (<?= $panel[$user][
+ 	"SUSPENDED_DB"
+ ] ?>)
 									</li>
 								</ul>
 							</a>
@@ -378,11 +428,17 @@
 				<?php if (isset($_SESSION["CRON_SYSTEM"]) && !empty($_SESSION["CRON_SYSTEM"])) { ?>
 					<?php if ($panel[$user]["CRON_JOBS"] != "0") { ?>
 						<li class="main-menu-item">
-							<a class="main-menu-item-link <?php if ($TAB == 'CRON') echo 'active' ?>" href="/list/cron/" title="<?= _("Jobs") ?>: <?= $panel[$user]['U_WEB_DOMAINS'] ?>&#13;<?= _("Limit") ?>: <?= $panel[$user]['CRON_JOBS']=='unlimited' ? "∞" : $panel[$user]['CRON_JOBS'] ?>&#13;<?= _("Suspended") ?>: <?= $panel[$user]['SUSPENDED_CRON'] ?>">
+							<a class="main-menu-item-link <?php if ($TAB == "CRON") {
+       	echo "active";
+       } ?>" href="/list/cron/" title="<?= _("Jobs") ?>: <?= $panel[$user]["U_WEB_DOMAINS"] ?>&#13;<?= _("Limit") ?>: <?= $panel[$user]["CRON_JOBS"] == "unlimited"
+	? "∞"
+	: $panel[$user]["CRON_JOBS"] ?>&#13;<?= _("Suspended") ?>: <?= $panel[$user]["SUSPENDED_CRON"] ?>">
 								<p class="main-menu-item-label"><?= _("CRON") ?><i class="fas fa-clock"></i></p>
 								<ul class="main-menu-stats">
 									<li>
-										<?= _("Jobs") ?>: <?= $panel[$user]["U_CRON_JOBS"] ?> / <?= $panel[$user]["CRON_JOBS"] == "unlimited" ? "<span class=\"u-text-bold\">∞</span>" : $panel[$user]["CRON_JOBS"] ?> (<?= $panel[$user]["SUSPENDED_CRON"] ?>)
+										<?= _("Jobs") ?>: <?= $panel[$user]["U_CRON_JOBS"] ?> / <?= $panel[$user]["CRON_JOBS"] == "unlimited" ? "<span class=\"u-text-bold\">∞</span>" : $panel[$user]["CRON_JOBS"] ?> (<?= $panel[$user][
+ 	"SUSPENDED_CRON"
+ ] ?>)
 									</li>
 								</ul>
 							</a>
@@ -394,7 +450,9 @@
 				<?php if (isset($_SESSION["BACKUP_SYSTEM"]) && !empty($_SESSION["BACKUP_SYSTEM"])) { ?>
 					<?php if ($panel[$user]["BACKUPS"] != "0" || $panel[$user]["U_BACKUPS"] != "0" || $panel[$user]["BACKUPS_INCREMENTAL"] == "yes") { ?>
 						<li class="main-menu-item">
-							<a class="main-menu-item-link <?php if ($TAB == 'BACKUP') echo 'active' ?>" href="/list/backup/" title="<?= _("Backups") ?>: <?= $panel[$user]['U_BACKUPS'] ?>&#13;<?= _("Limit") ?>: <?= $panel[$user]['BACKUPS']=='unlimited' ? "∞" : $panel[$user]['BACKUPS'] ?>">
+							<a class="main-menu-item-link <?php if ($TAB == "BACKUP") {
+       	echo "active";
+       } ?>" href="/list/backup/" title="<?= _("Backups") ?>: <?= $panel[$user]["U_BACKUPS"] ?>&#13;<?= _("Limit") ?>: <?= $panel[$user]["BACKUPS"] == "unlimited" ? "∞" : $panel[$user]["BACKUPS"] ?>">
 								<p class="main-menu-item-label"><?= _("BACKUP") ?><i class="fas fa-file-zipper"></i></p>
 								<ul class="main-menu-stats">
 									<li>

@@ -4,11 +4,8 @@ Managing a server is not easy. Here are some best practices you should try to ad
 
 ## Use a regular user
 
-::: danger Never run a web or mail domain with the **admin** user
-By default, the **admin** user has elevated privileges. This can pose a **security threat** to your server. For example, if you run WordPress under your **admin** user and a vulnerability is found in WordPress or a plugin, a malicious user might be able to run commands as **root**!
-:::
-
 Before adding any web or mail domain on your server, you should create a regular user. To do this, you can refer to our [User Management Guide](../user-guide/users#adding-a-user).
+Remember, Hestia uses Linux system for User Management, so any user you already created can't be added to Hestia.
 
 ## Enable two-factor authentication (2FA) for the _admin_ user
 

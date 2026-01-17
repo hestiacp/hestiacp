@@ -40,7 +40,8 @@
 	--icon-color-lightblue: #6eb6f0;
 
 	/* Top Bar */
-	--top-bar-background: linear-gradient(
+	--top-bar-background:
+		linear-gradient(
 			to bottom,
 			rgb(104 145 196 / 100%) 0%,
 			rgb(69 114 181 / 100%) 50%,
@@ -266,7 +267,7 @@
 }
 
 .top-bar-notification-content {
-	word-break: break-word;
+	overflow-wrap: break-word;
 
 	& p {
 		margin-bottom: 15px;
@@ -779,7 +780,8 @@
 
 		&.active {
 			color: #4686b8;
-			background: linear-gradient(
+			background:
+				linear-gradient(
 					to bottom,
 					rgb(255 255 255 / 60%) 0%,
 					rgb(255 255 255 / 75%) 50%,
@@ -1295,7 +1297,7 @@
 	@media (--viewport-medium) {
 		display: grid;
 		grid-template-columns: 1fr 2fr;
-		grid-gap: 20px;
+		gap: 20px;
 		align-items: flex-start;
 	}
 
@@ -1332,12 +1334,12 @@
 	@media (--viewport-small) {
 		display: grid;
 		grid-template-columns: 1fr 1fr;
-		grid-gap: 5px 40px;
+		gap: 5px 40px;
 	}
 
 	@media (--viewport-medium) {
 		font-size: 0.8rem;
-		grid-row-gap: 20px;
+		row-gap: 20px;
 		margin-top: 0;
 	}
 }
@@ -1841,7 +1843,8 @@
 	text-shadow: 0 1px 1px rgb(255 255 255 / 85%);
 	border: 1px solid #0083db;
 	border-radius: 3px;
-	background: linear-gradient(
+	background:
+		linear-gradient(
 			to bottom,
 			rgb(235 243 249 / 100%) 0%,
 			rgb(192 216 236 / 100%) 51%,
@@ -2206,7 +2209,8 @@
 
 .page-login,
 .page-reset {
-	background: radial-gradient(circle, rgb(102 158 231 / 100%) 0%, rgb(43 86 177 / 100%) 100%),
+	background:
+		radial-gradient(circle, rgb(102 158 231 / 100%) 0%, rgb(43 86 177 / 100%) 100%),
 		rgb(102 158 231);
 
 	& .debug-panel {

@@ -48,6 +48,9 @@ for nic in $nics; do
 	if [ -z "$ips" ]; then
 		ips="$nic_ipv4s"
 	else
+		if [ -z "$nic_ipv4s" ]; then
+			break
+		fi
 		ips="$ips $nic_ipv4s"
 	fi
 done

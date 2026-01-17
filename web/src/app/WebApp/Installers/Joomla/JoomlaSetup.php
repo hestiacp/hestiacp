@@ -1,113 +1,81 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Hestia\WebApp\Installers\Joomla;
 
 use Hestia\System\Util;
-use Hestia\WebApp\Installers\BaseSetup as BaseSetup;
-use function Hestiacp\quoteshellarg\quoteshellarg;
+use Hestia\WebApp\BaseSetup;
+use Hestia\WebApp\InstallationTarget\InstallationTarget;
 
-class JoomlaSetup extends BaseSetup {
-	protected $appInfo = [
-		"name" => "Joomla",
-		"group" => "cms",
-		"enabled" => true,
-		"version" => "latest",
-		"thumbnail" => "joomla_thumb.png",
-	];
+class JoomlaSetup extends BaseSetup
+{
+    protected array $info = [
+        'name' => 'Joomla',
+        'group' => 'cms',
+        'version' => '5.2.3',
+        'thumbnail' => 'joomla_thumb.png',
+    ];
 
-	protected $appname = "joomla";
-	protected $config = [
-		"form" => [
-			"site_name" => [
-				"type" => "text",
-				"value" => "Joomla Site",
-				"placeholder" => "Joomla Site",
-			],
-			"admin_username" => [
-				"type" => "text",
-				"value" => "admin",
-				"placeholder" => "Admin Username",
-			],
-			"admin_password" => [
-				"type" => "password",
-				"value" => "",
-				"placeholder" => "Admin Password",
-			],
-			"admin_email" => [
-				"type" => "text",
-				"value" => "admin@example.com",
-				"placeholder" => "Admin Email",
-			],
-			"install_directory" => [
-				"type" => "text",
-				"value" => "",
-				"placeholder" => "/",
-			],
-		],
-		"database" => true,
-		"resources" => [
-			"archive" => [
-				"src" => "https://www.joomla.org/latest",
-			],
-		],
-		"server" => [
-			"nginx" => [
-				"template" => "joomla",
-			],
-			"php" => [
-				"supported" => ["7.4", "8.0", "8.1", "8.2"],
-			],
-		],
-	];
+    protected array $config = [
+        'form' => [
+            'admin_username' => [
+                'type' => 'text',
+                'value' => 'admin',
+                'placeholder' => 'Admin Username',
+            ],
+            'admin_password' => [
+                'type' => 'password',
+                'value' => '',
+                'placeholder' => 'Admin Password',
+            ],
+            'admin_email' => [
+                'type' => 'text',
+                'value' => '',
+                'placeholder' => 'Admin Email',
+            ],
+        ],
+        'database' => true,
+        'resources' => [
+            'archive' => [
+                'src' => 'https://downloads.joomla.org/cms/'
+                    . 'joomla5/5-2-3/Joomla_5-2-3-Stable-Full_Package.zip?format=zip',
+            ],
+        ],
+        'server' => [
+            'nginx' => [
+                'template' => 'joomla',
+            ],
+            'php' => [
+                'supported' => ['7.4', '8.0', '8.1', '8.2', '8.3'],
+            ],
+        ],
+    ];
 
-	public function install(array $options = null): bool {
-		$installDir =
-			rtrim($this->getDocRoot(), "/") . "/" . ltrim($options["install_directory"] ?? "", "/");
-		parent::setAppDirInstall($options["install_directory"] ?? "");
-		parent::install($options);
-		parent::setup($options);
+    protected function setupApplication(InstallationTarget $target, array $options): void
+    {
+        $this->appcontext->moveFile(
+            $target->getDocRoot('htaccess.txt'),
+            $target->getDocRoot('.htaccess'),
+        );
 
-		if (!is_dir($installDir)) {
-			throw new \Exception("Installation directory does not exist: " . $installDir);
-		}
-
-		// Database credentials
-		$dbHost = $options["database_host"];
-		$dbName = $this->appcontext->user() . "_" . $options["database_name"];
-		$dbUser = $this->appcontext->user() . "_" . $options["database_user"];
-		$dbPass = $options["database_password"];
-
-		// Site and admin credentials
-		$siteName = $options["site_name"];
-		$adminUsername = $options["admin_username"];
-		$adminPassword = $options["admin_password"];
-		$adminEmail = $options["admin_email"];
-
-		// Initialize Joomla using the CLI
-		$cliCmd = [
-			"/usr/bin/php",
-			quoteshellarg("$installDir/installation/joomla.php"),
-			"install",
-			"--site-name=" . quoteshellarg($siteName),
-			"--admin-user=" . quoteshellarg($adminUsername),
-			"--admin-username=" . quoteshellarg($adminUsername),
-			"--admin-password=" . quoteshellarg($adminPassword),
-			"--admin-email=" . quoteshellarg($adminEmail),
-			"--db-user=" . quoteshellarg($dbUser),
-			"--db-pass=" . quoteshellarg($dbPass),
-			"--db-name=" . quoteshellarg($dbName),
-			"--db-prefix=" . quoteshellarg(Util::generate_string(5, false) . "_"),
-			"--db-host=" . quoteshellarg($dbHost),
-			"--db-type=mysqli",
-		];
-
-		$status = null;
-		$this->appcontext->runUser("v-run-cli-cmd", $cliCmd, $status);
-
-		if ($status->code !== 0) {
-			throw new \Exception("Failed to install Joomla using CLI: " . $status->text);
-		}
-
-		return true;
-	}
+        $this->appcontext->runPHP(
+            $options['php_version'],
+            $target->getDocRoot('installation/joomla.php'),
+            [
+                'install',
+                '--site-name=Joomla',
+                '--admin-user=' . $options['admin_username'],
+                '--admin-username=' . $options['admin_username'],
+                '--admin-password=' . $options['admin_password'],
+                '--admin-email=' . $options['admin_email'],
+                '--db-user=' . $target->database->user,
+                '--db-pass=' . $target->database->password,
+                '--db-name=' . $target->database->name,
+                '--db-host=' . $target->database->host,
+                '--db-type=mysqli',
+                '--no-interaction',
+            ],
+        );
+    }
 }

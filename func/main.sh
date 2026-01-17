@@ -88,7 +88,7 @@ detect_os() {
 			fi
 		elif [ "$get_os_type" = "debian" ]; then
 			OS_TYPE='Debian'
-			OS_VERSION=$(cat /etc/debian_version | grep -o "[0-9]\{1,2\}" | head -n1)
+			OS_VERSION=$(grep -o "[0-9]\{1,2\}" /etc/debian_version | head -n1)
 		fi
 	else
 		OS_TYPE="Unsupported OS"
@@ -403,8 +403,8 @@ parse_object_kv_list() {
 
 # Check if object is supended
 is_object_suspended() {
-	if [ $2 = 'USER' ]; then
-		spnd=$(cat $USER_DATA/$1.conf | grep "SUSPENDED='yes'")
+	if [ "$2" = 'USER' ]; then
+		spnd=$(grep "SUSPENDED='yes'" $USER_DATA/$1.conf)
 	else
 		spnd=$(grep "$2='$3'" $USER_DATA/$1.conf | grep "SUSPENDED='yes'")
 	fi
@@ -416,7 +416,7 @@ is_object_suspended() {
 # Check if object is unsupended
 is_object_unsuspended() {
 	if [ $2 = 'USER' ]; then
-		spnd=$(cat $USER_DATA/$1.conf | grep "SUSPENDED='yes'")
+		spnd=$(grep "SUSPENDED='yes'" "$USER_DATA/$1.conf")
 	else
 		spnd=$(grep "$2='$3'" $USER_DATA/$1.conf | grep "SUSPENDED='yes'")
 	fi
@@ -530,7 +530,7 @@ get_user_value() {
 # Update user value in user.conf
 update_user_value() {
 	key="${2//$/}"
-	lnr=$(grep -n "^$key='" $HESTIA/data/users/$1/user.conf | cut -f 1 -d ':')
+	lnr=$(grep -m 1 -n "^$key='" $HESTIA/data/users/$1/user.conf | cut -f 1 -d ':')
 	if [ -n "$lnr" ]; then
 		sed -i "$lnr d" $HESTIA/data/users/$1/user.conf
 		sed -i "$lnr i\\$key='${3}'" $HESTIA/data/users/$1/user.conf
@@ -642,7 +642,7 @@ recalc_user_disk_usage() {
 		sed -i "s/U_DISK_DB='$d'/U_DISK_DB='$usage'/g" $USER_DATA/user.conf
 		u_usage=$((u_usage + usage))
 	fi
-	usage=$(grep 'U_DISK_DIRS=' $USER_DATA/user.conf | cut -f 2 -d "'")
+	usage=$(grep -m 1 'U_DISK_DIRS=' $USER_DATA/user.conf | cut -f 2 -d "'")
 	u_usage=$((u_usage + usage))
 	old=$(grep "U_DISK='" $USER_DATA/user.conf | cut -f 2 -d \')
 	sed -i "s/U_DISK='$old'/U_DISK='$u_usage'/g" $USER_DATA/user.conf
@@ -671,7 +671,7 @@ get_next_cronjob() {
 
 # Sort cron jobs by id
 sort_cron_jobs() {
-	cat $USER_DATA/cron.conf | sort -n -k 2 -t \' > $USER_DATA/cron.tmp
+	sort -n -k 2 -t \' $USER_DATA/cron.conf > $USER_DATA/cron.tmp
 	mv -f $USER_DATA/cron.tmp $USER_DATA/cron.conf
 }
 
@@ -792,115 +792,49 @@ is_alias_format_valid() {
 # IP format validator
 is_ip_format_valid() {
 	object_name=${2-ip}
-	ip_regex='([1-9]?[0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])'
-	ip_clean=$(echo "${1%/*}")
-	if ! [[ $ip_clean =~ ^$ip_regex\.$ip_regex\.$ip_regex\.$ip_regex$ ]]; then
-		check_result "$E_INVALID" "invalid $object_name format :: $1"
-	fi
-	if [ $1 != "$ip_clean" ]; then
-		ip_cidr="$ip_clean/"
-		ip_cidr=$(echo "${1#$ip_cidr}")
-		if [[ "$ip_cidr" -gt 32 ]] || [[ "$ip_cidr" =~ [:alnum:] ]]; then
-			check_result "$E_INVALID" "invalid $object_name format :: $1"
-		fi
+	valid=$($HESTIA_PHP -r '$ip=$argv[1]; echo (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) ? 0 : 1);' "$1")
+	if [ "$valid" -ne 0 ]; then
+		check_result "$E_INVALID" "invalid $object_name :: $1"
 	fi
 }
 
 # IPv6 format validator
 is_ipv6_format_valid() {
 	object_name=${2-ipv6}
-	ip_regex='([1-9]?[0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])'
-	t_ip=$(echo $1 | awk -F / '{print $1}')
-	t_cidr=$(echo $1 | awk -F / '{print $2}')
-	valid_cidr=1
-
-	WORD="[0-9A-Fa-f]\{1,4\}"
-	# flat address, no compressed words
-	FLAT="^${WORD}\(:${WORD}\)\{7\}$"
-
-	COMP2="^\(${WORD}:\)\{1,1\}\(:${WORD}\)\{1,6\}$"
-	COMP3="^\(${WORD}:\)\{1,2\}\(:${WORD}\)\{1,5\}$"
-	COMP4="^\(${WORD}:\)\{1,3\}\(:${WORD}\)\{1,4\}$"
-	COMP5="^\(${WORD}:\)\{1,4\}\(:${WORD}\)\{1,3\}$"
-	COMP6="^\(${WORD}:\)\{1,5\}\(:${WORD}\)\{1,2\}$"
-	COMP7="^\(${WORD}:\)\{1,6\}\(:${WORD}\)\{1,1\}$"
-	# trailing :: edge case, includes case of only :: (all 0's)
-	EDGE_TAIL="^\(\(${WORD}:\)\{1,7\}\|:\):$"
-	# leading :: edge case
-	EDGE_LEAD="^:\(:${WORD}\)\{1,7\}$"
-
-	echo $t_ip | grep --silent "\(${FLAT}\)\|\(${COMP2}\)\|\(${COMP3}\)\|\(${COMP4}\)\|\(${COMP5}\)\|\(${COMP6}\)\|\(${COMP7}\)\|\(${EDGE_TAIL}\)\|\(${EDGE_LEAD}\)"
-	if [ $? -ne 0 ]; then
-		check_result "$E_INVALID" "invalid $object_name format :: $1"
-	fi
-
-	if [ -n "$(echo $1 | grep '/')" ]; then
-		if [[ "$t_cidr" -lt 0 ]] || [[ "$t_cidr" -gt 128 ]]; then
-			valid_cidr=0
-		fi
-		if ! [[ "$t_cidr" =~ ^[0-9]+$ ]]; then
-			valid_cidr=0
-		fi
-	fi
-	if [ "$valid_cidr" -eq 0 ]; then
-		check_result "$E_INVALID" "invalid $object_name format :: $1"
+	valid=$($HESTIA_PHP -r '$ip=$argv[1]; echo (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) ? 0 : 1);' "$1")
+	if [ "$valid" -ne 0 ]; then
+		check_result "$E_INVALID" "invalid $object_name :: $1"
 	fi
 }
 
 is_ip46_format_valid() {
-	t_ip=$(echo $1 | awk -F / '{print $1}')
-	t_cidr=$(echo $1 | awk -F / '{print $2}')
-	valid_octets=0
-	valid_cidr=1
-	for octet in ${t_ip//./ }; do
-		if [[ $octet =~ ^[0-9]{1,3}$ ]] && [[ $octet -le 255 ]]; then
-			((++valid_octets))
-		fi
-	done
-
-	if [ -n "$(echo $1 | grep '/')" ]; then
-		if [[ "$t_cidr" -lt 0 ]] || [[ "$t_cidr" -gt 32 ]]; then
-			valid_cidr=0
-		fi
-		if ! [[ "$t_cidr" =~ ^[0-9]+$ ]]; then
-			valid_cidr=0
-		fi
+	valid=$($HESTIA_PHP -r '$ip=$argv[1]; echo (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_IPV6) ? 0 : 1);' "$1")
+	if [ "$valid" -ne 0 ]; then
+		check_result "$E_INVALID" "invalid IP format :: $1"
 	fi
-	if [ "$valid_octets" -lt 4 ] || [ "$valid_cidr" -eq 0 ]; then
-		#Check IPV6
-		ipv6_valid=""
-		WORD="[0-9A-Fa-f]\{1,4\}"
-		# flat address, no compressed words
-		FLAT="^${WORD}\(:${WORD}\)\{7\}$"
+}
 
-		COMP2="^\(${WORD}:\)\{1,1\}\(:${WORD}\)\{1,6\}$"
-		COMP3="^\(${WORD}:\)\{1,2\}\(:${WORD}\)\{1,5\}$"
-		COMP4="^\(${WORD}:\)\{1,3\}\(:${WORD}\)\{1,4\}$"
-		COMP5="^\(${WORD}:\)\{1,4\}\(:${WORD}\)\{1,3\}$"
-		COMP6="^\(${WORD}:\)\{1,5\}\(:${WORD}\)\{1,2\}$"
-		COMP7="^\(${WORD}:\)\{1,6\}\(:${WORD}\)\{1,1\}$"
-		# trailing :: edge case, includes case of only :: (all 0's)
-		EDGE_TAIL="^\(\(${WORD}:\)\{1,7\}\|:\):$"
-		# leading :: edge case
-		EDGE_LEAD="^:\(:${WORD}\)\{1,7\}$"
+is_ipv4_cidr_format_valid() {
+	object_name=${2-ip}
+	valid=$($HESTIA_PHP -r '[$ip, $net] = [...explode("/", $argv[1]), "32"]; echo (preg_match("/^(\d{1,3}\.){3}\d{1,3}$/", $ip) && filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) && is_numeric($net) && $net >= 0 && $net <= 32) ? 0 : 1;' "$1")
+	if [ "$valid" -ne 0 ]; then
+		check_result "$E_INVALID" "invalid $object_name :: $1"
+	fi
+}
 
-		echo $t_ip | grep --silent "\(${FLAT}\)\|\(${COMP2}\)\|\(${COMP3}\)\|\(${COMP4}\)\|\(${COMP5}\)\|\(${COMP6}\)\|\(${COMP7}\)\|\(${EDGE_TAIL}\)\|\(${EDGE_LEAD}\)"
-		if [ $? -ne 0 ]; then
-			ipv6_valid="INVALID"
-		fi
+is_ipv6_cidr_format_valid() {
+	object_name=${2-ipv6}
+	valid=$($HESTIA_PHP -r '$cidr=$argv[1]; list($ip, $netmask) = [...explode("/", $cidr), 128]; echo ((filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) && $netmask <= 128) ? 0 : 1);' "$1")
+	if [ "$valid" -ne 0 ]; then
+		check_result "$E_INVALID" "invalid $object_name :: $1"
+	fi
+}
 
-		if [ -n "$(echo $1 | grep '/')" ]; then
-			if [[ "$t_cidr" -lt 0 ]] || [[ "$t_cidr" -gt 128 ]]; then
-				valid_cidr=0
-			fi
-			if ! [[ "$t_cidr" =~ ^[0-9]+$ ]]; then
-				valid_cidr=0
-			fi
-		fi
-
-		if [ -n "$ipv6_valid" ] || [ "$valid_cidr" -eq 0 ]; then
-			check_result "$E_INVALID" "invalid IP format :: $1"
-		fi
+is_netmask_format_valid() {
+	object_name=${2-netmask}
+	valid=$($HESTIA_PHP -r '$netmask=$argv[1]; echo (preg_match("/^(128|192|224|240|248|252|254|255)\.(0|128|192|224|240|248|252|254|255)\.(0|128|192|224|240|248|252|254|255)\.(0|128|192|224|240|248|252|254|255)/", $netmask) ? 0 : 1);' "$1")
+	if [ "$valid" -ne 0 ]; then
+		check_result "$E_INVALID" "invalid $object_name :: $1"
 	fi
 }
 
@@ -991,7 +925,11 @@ is_string_format_valid() {
 	fi
 	is_no_new_line_format "$1"
 }
-
+is_cron_command_valid_format() {
+	if [[ ! "$1" =~ ^[^\`]*?$ ]]; then
+		check_result "$E_INVALID" "Invalid cron command format"
+	fi
+}
 # Database format validator
 is_database_format_valid() {
 	exclude="[!|@|#|$|^|&|*|(|)|+|=|{|}|:|,|<|>|?|/|\|\"|'|;|%|\`| ]"
@@ -1022,29 +960,45 @@ is_dbuser_format_valid() {
 
 # DNS record type validator
 is_dns_type_format_valid() {
-	known_dnstype='A,AAAA,NS,CNAME,MX,TXT,SRV,DNSKEY,KEY,IPSECKEY,PTR,SPF,TLSA,CAA,DS'
-	if [ -z "$(echo $known_dnstype | grep -w $1)" ]; then
+	is_valid=$(
+		$HESTIA_PHP -- "$1" << 'EOPHP'
+	<?php
+	$type = $argv[1];
+	$known_types = array("A","AAAA","NS","CNAME","MX","TXT","SRV","DNSKEY",
+	"KEY","IPSECKEY","PTR","SPF","TLSA","CAA","DS");
+	echo in_array($type, $known_types, true) ? "0" : "1";
+EOPHP
+	)
+	if [ "$is_valid" -ne 0 ]; then
 		check_result "$E_INVALID" "invalid dns record type format :: $1"
 	fi
 }
 
 # DNS record validator
 is_dns_record_format_valid() {
-	if [ "$rtype" = 'A' ]; then
-		is_ip_format_valid "$1"
-	fi
-	if [ "$rtype" = 'NS' ]; then
-		is_domain_format_valid "${1::-1}" 'ns_record'
-	fi
-	if [ "$rtype" = 'MX' ]; then
-		is_domain_format_valid "${1::-1}" 'mx_record'
-		is_int_format_valid "$priority" 'priority_record'
-	fi
-	if [ "$rtype" = 'SRV' ]; then
-		format_no_quotes "$priority" 'priority_record'
-	fi
-
 	is_no_new_line_format "$1"
+
+	json_from_php=$(
+		$HESTIA_PHP "$HESTIA/func/internal/dns_record_validator.php" "$1" "$rtype" "$priority"
+	)
+	check_result $? "dns record validation failed :: $1" "$E_INVALID"
+
+	is_valid=$(jq -er '.valid' <<< "$json_from_php")
+	if [ $? -ne 0 ]; then
+		check_result "$E_INVALID" "dns record validation failed :: $1"
+	fi
+	if [ "$is_valid" != 'true' ]; then
+		error_message=$(jq -r '.error_message // "invalid dns record format"' <<< "$json_from_php")
+		check_result "$E_INVALID" "$error_message :: $1"
+	fi
+	cleaned_record=$(jq -r '.cleaned_record // empty' <<< "$json_from_php")
+	if [ -n "$cleaned_record" ]; then
+		dvalue="$cleaned_record"
+	fi
+	updated_priority=$(jq -r '.new_priority // empty' <<< "$json_from_php")
+	if [ -n "$updated_priority" ]; then
+		priority="$updated_priority"
+	fi
 }
 
 # Email format validator
@@ -1109,6 +1063,13 @@ is_interface_format_valid() {
 is_ip_status_format_valid() {
 	if [ -z "$(echo shared,dedicated | grep -w "$1")" ]; then
 		check_result "$E_INVALID" "invalid status format :: $1"
+	fi
+}
+
+# Comment validator
+is_comment_format_valid() {
+	if ! [[ "$1" =~ ^[[:alnum:]][[:alnum:][:space:]._-]{0,64}[[:alnum:]]$ ]]; then
+		check_result "$E_INVALID" "invalid $2 format :: $1"
 	fi
 }
 
@@ -1265,7 +1226,8 @@ is_format_valid() {
 				charset) is_object_format_valid "$arg" "$arg_name" ;;
 				charsets) is_common_format_valid "$arg" 'charsets' ;;
 				chain) is_object_format_valid "$arg" 'chain' ;;
-				comment) is_object_format_valid "$arg" 'comment' ;;
+				comment) is_comment_format_valid "$arg" 'comment' ;;
+				cron_command) is_cron_command_valid_format "$arg" ;;
 				database) is_database_format_valid "$arg" 'database' ;;
 				day) is_cron_format_valid "$arg" $arg_name ;;
 				dbpass) is_password_format_valid "$arg" ;;
@@ -1290,6 +1252,8 @@ is_format_valid() {
 				ip) is_ip_format_valid "$arg" ;;
 				ipv6) is_ipv6_format_valid "$arg" ;;
 				ip46) is_ip46_format_valid "$arg" ;;
+				ipv4_cidr) is_ipv4_cidr_format_valid "$arg" ;;
+				ipv6_cidr) is_ipv6_cidr_format_valid "$arg" ;;
 				ip_name) is_domain_format_valid "$arg" 'IP name' ;;
 				ip_status) is_ip_status_format_valid "$arg" ;;
 				job) is_int_format_valid "$arg" 'job' ;;
@@ -1300,7 +1264,7 @@ is_format_valid() {
 				month) is_cron_format_valid "$arg" $arg_name ;;
 				name) is_name_format_valid "$arg" "name" ;;
 				nat_ip) is_ip_format_valid "$arg" ;;
-				netmask) is_ip_format_valid "$arg" 'netmask' ;;
+				netmask) is_netmask_format_valid "$arg" 'netmask' ;;
 				newid) is_int_format_valid "$arg" 'id' ;;
 				ns1) is_domain_format_valid "$arg" 'ns1' ;;
 				ns2) is_domain_format_valid "$arg" 'ns2' ;;
@@ -1331,7 +1295,6 @@ is_format_valid() {
 				soa) is_domain_format_valid "$arg" 'SOA' ;;
 				#missing command: is_format_valid_shell
 				shell) is_format_valid_shell "$arg" ;;
-				shell_jail_enabled) is_boolean_format_valid "$arg" 'shell_jail_enabled' ;;
 				ssl_dir) is_folder_exists "$arg" "$arg_name" ;;
 				stats_pass) is_password_format_valid "$arg" ;;
 				stats_user) is_user_format_valid "$arg" "$arg_name" ;;
@@ -1530,19 +1493,21 @@ format_aliases() {
 }
 
 is_restart_format_valid() {
-	if [ "$1" != 'yes' ] && [ "$1" != 'no' ] && [ "$1" != 'ssl' ] && [ "$1" != 'reload' ] && [ "$1" != 'updatessl' ]; then
-		check_result "$E_INVALID" "invalid $2 format :: $1"
+	if [ -n "$1" ]; then
+		if [ "$1" != 'yes' ] && [ "$1" != 'no' ] && [ "$1" != 'ssl' ] && [ "$1" != 'reload' ] && [ "$1" != 'updatessl' ] && [ "$1" != "scheduled" ]; then
+			check_result "$E_INVALID" "invalid $2 format :: $1"
+		fi
 	fi
 }
 
 check_backup_conditions() {
 	# Checking load average
-	la=$(cat /proc/loadavg | cut -f 1 -d ' ' | cut -f 1 -d '.')
+	la=$(awk -F'[. ]' '{print $1}' /proc/loadavg)
 	# i=0
 	while [ "$la" -ge "$BACKUP_LA_LIMIT" ]; do
 		echo -e "$(date "+%F %T") Load Average $la"
 		sleep 60
-		la=$(cat /proc/loadavg | cut -f 1 -d ' ' | cut -f 1 -d '.')
+		la=$(awk -F'[. ]' '{print $1}' /proc/loadavg)
 	done
 }
 
@@ -1679,7 +1644,8 @@ format_no_quotes() {
 }
 
 is_username_format_valid() {
-	if [[ ! "$1" =~ ^[A-Za-z0-9._%+-]+@[[:alnum:].-]+\.[A-Za-z]{2,63}$ ]]; then
+	if [[ ! "$1" =~ ^[A-Za-z0-9._%+-]+@[[:alnum:].-]+\.[A-Za-z]{2,63}$ ]] \
+		&& [[ ! "$1" =~ ^[A-Za-z0-9._%+-]+(/|\\)[A-Za-z0-9._%+-]+$ ]]; then
 		is_string_format_valid "$1" "$2"
 	fi
 }
@@ -1817,11 +1783,6 @@ add_chroot_jail() {
 		mkdir -p /srv/jail/$user/home/$user
 		chown 0:0 /srv/jail/$user/home/$user
 		chmod 755 /srv/jail/$user/home/$user
-	fi
-	if [ ! -d /srv/jail/$user/tmp ]; then
-		mkdir -p /srv/jail/$user/tmp
-		chown "$user:$user" /srv/jail/$user/tmp
-		chmod 755 /srv/jail/$user/tmp
 	fi
 
 	systemd=$(systemd-escape -p --suffix=mount "/srv/jail/$user/home/$user")

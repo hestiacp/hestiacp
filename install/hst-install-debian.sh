@@ -31,9 +31,9 @@ HESTIA_COMMON_DIR="$HESTIA/install/common"
 VERBOSE='no'
 
 # Define software versions
-HESTIA_INSTALL_VER='1.9.0~alpha'
+HESTIA_INSTALL_VER='1.10.0~alpha'
 # Supported PHP versions
-multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0" "8.1" "8.2" "8.3" "8.4")
+multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0" "8.1" "8.2" "8.3" "8.4" "8.5")
 # One of the following PHP versions is required for Roundcube / phpmyadmin
 multiphp_required=("7.3" "7.4" "8.0" "8.1" "8.2" "8.3")
 # Default PHP version if none supplied
@@ -44,7 +44,7 @@ mariadb_v="11.4"
 node_v="20"
 
 # Defining software pack for all distros
-software="acl apache2 apache2-suexec-custom apache2-suexec-pristine apache2-utils awstats bc bind9 bsdmainutils bsdutils
+software="acl apache2 apache2-suexec-custom apache2-utils at awstats bc bind9 bsdmainutils bsdutils
   clamav-daemon cron curl dnsutils dovecot-imapd dovecot-managesieved dovecot-pop3d dovecot-sieve e2fslibs e2fsprogs
   exim4 exim4-daemon-heavy expect fail2ban flex ftp git hestia=${HESTIA_INSTALL_VER} hestia-nginx hestia-php hestia-web-terminal
   idn2 imagemagick ipset jq libapache2-mod-fcgid libapache2-mod-php$fpm_v libapache2-mpm-itk libmail-dkim-perl lsb-release
@@ -52,7 +52,7 @@ software="acl apache2 apache2-suexec-custom apache2-suexec-pristine apache2-util
   php$fpm_v php$fpm_v-apcu php$fpm_v-bz2 php$fpm_v-cgi php$fpm_v-cli php$fpm_v-common php$fpm_v-curl php$fpm_v-gd
   php$fpm_v-imagick php$fpm_v-imap php$fpm_v-intl php$fpm_v-ldap php$fpm_v-mbstring php$fpm_v-mysql php$fpm_v-opcache
   php$fpm_v-pgsql php$fpm_v-pspell php$fpm_v-readline php$fpm_v-xml php$fpm_v-zip postgresql postgresql-contrib
-  proftpd-basic quota rrdtool rsyslog spamd sysstat unrar-free unzip util-linux vim-common vsftpd xxd whois zip zstd jailkit restic"
+  proftpd-basic quota rrdtool rsyslog spamd sysstat unrar-free unzip util-linux vim-common vsftpd xxd whois zip zstd bubblewrap restic"
 
 installer_dependencies="apt-transport-https ca-certificates curl dirmngr gnupg openssl wget sudo"
 
@@ -1529,7 +1529,7 @@ check_result $? "can't enable ssh jail"
 echo "[ * ] Creating default admin account..."
 $HESTIA/bin/v-add-user "$username" "$vpass" "$email" "default" "System Administrator"
 check_result $? "can't create admin user"
-$HESTIA/bin/v-change-user-shell "$username" nologin no
+$HESTIA/bin/v-change-user-shell "$username" nologin
 $HESTIA/bin/v-change-user-role "$username" admin
 $HESTIA/bin/v-change-user-language "$username" "$lang"
 $HESTIA/bin/v-change-sys-config-value 'POLICY_SYSTEM_PROTECTED_ADMIN' 'yes'
@@ -1776,6 +1776,7 @@ if [ "$mysql" = 'yes' ] || [ "$mysql8" = 'yes' ]; then
 	fi
 
 	if [ "$mysql_type" = 'MariaDB' ]; then
+		sed -i 's|/usr/share/mysql|/usr/share/mariadb|g' /etc/mysql/my.cnf
 		update-rc.d mariadb defaults > /dev/null 2>&1
 		systemctl -q enable mariadb 2> /dev/null
 		systemctl start mariadb >> $LOG
@@ -1852,16 +1853,14 @@ if [ "$mysql" = 'yes' ] || [ "$mysql8" = 'yes' ]; then
 
 	# Create copy of config file
 	cp -f $HESTIA_INSTALL_DIR/phpmyadmin/config.inc.php /etc/phpmyadmin/
-	mkdir -p /var/lib/phpmyadmin/tmp
-	chmod 770 /var/lib/phpmyadmin/tmp
-	chown -R root:www-data /usr/share/phpmyadmin/tmp/
 
 	# Set config and log directory
 	sed -i "s|'configFile' => ROOT_PATH . 'config.inc.php',|'configFile' => '/etc/phpmyadmin/config.inc.php',|g" /usr/share/phpmyadmin/libraries/vendor_config.php
 
 	# Create temporary folder and change permission
-	chmod 770 /usr/share/phpmyadmin/tmp
-	chown -R root:www-data /usr/share/phpmyadmin/tmp/
+	mkdir -p /var/lib/phpmyadmin/tmp
+	chmod 770 /var/lib/phpmyadmin/tmp
+	chown -R hestiamail:www-data /usr/share/phpmyadmin/tmp/
 
 	# Generate blow fish
 	blowfish=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 32)
@@ -1880,7 +1879,7 @@ if [ "$mysql" = 'yes' ] || [ "$mysql8" = 'yes' ]; then
 	source $HESTIA_INSTALL_DIR/phpmyadmin/pma.sh > /dev/null 2>&1
 
 	# Limit access to /etc/phpmyadmin/
-	chown -R root:www-data /etc/phpmyadmin/
+	chown -R root:hestiamail /etc/phpmyadmin/
 	chmod 640 /etc/phpmyadmin/config.inc.php
 	chmod 750 /etc/phpmyadmin/conf.d/
 fi
@@ -1914,6 +1913,10 @@ if [ "$postgresql" = 'yes' ]; then
 	rm phppgadmin-v$pga_v.tar.gz
 	write_config_value "DB_PGA_ALIAS" "phppgadmin"
 	$HESTIA/bin/v-change-sys-db-alias 'pga' "phppgadmin"
+
+	# Limit access to /etc/phppgadmin/
+	chown -R root:hestiamail /etc/phppgadmin/
+	chmod 640 /etc/phppgadmin/config.inc.php
 fi
 
 #----------------------------------------------------------#
@@ -2403,10 +2406,15 @@ BIN="$HESTIA/bin"
 source $HESTIA/func/syshealth.sh
 syshealth_repair_system_config
 
-# Add /usr/local/hestia/bin/ to path variable
-echo 'if [ "${PATH#*/usr/local/hestia/bin*}" = "$PATH" ]; then
+# Add /usr/local/hestia/bin/ to PATH variable in .bashrc if it exists
+[[ -f /root/.bashrc ]] && echo 'if [ "${PATH#*/usr/local/hestia/bin*}" = "$PATH" ]; then
     . /etc/profile.d/hestia.sh
 fi' >> /root/.bashrc
+
+# Add /usr/local/hestia/bin/ to PATH variable in .zshrc if it exists
+[[ -f /root/.zshrc ]] && echo 'if [ "${PATH#*/usr/local/hestia/bin*}" = "$PATH" ]; then
+    . /etc/profile.d/hestia.sh
+fi' >> /root/.zshrc
 
 #----------------------------------------------------------#
 #                   Hestia Access Info                     #

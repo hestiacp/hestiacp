@@ -34,7 +34,7 @@ source_conf "$HESTIA/conf/hestia.conf"
 #----------------------------------------------------------#
 
 check_args '1' "$#" 'USER [RESTART]'
-is_format_valid 'user'
+is_format_valid 'user' 'restart'
 is_object_valid 'user' 'USER' "$user"
 if [ "$user" = "$ROOT_USER" ]; then
 	exit
@@ -88,9 +88,6 @@ sed -i "/ $user$/d" "$HESTIA/data/queue/traffic.pipe"
 
 # Deleting sftp jail
 $BIN/v-delete-user-sftp-jail "$user"
-
-# Deleting ssh jail
-$BIN/v-delete-user-ssh-jail "$user"
 
 # Deleting system user
 /usr/sbin/userdel -f "$user" >> /dev/null 2>&1

@@ -46,10 +46,6 @@ check_hestia_demo_mode
 # Get current time
 start_time=$(date '+%s')
 
-# Set notification email and subject
-subj="$user → backup failed"
-email=$(grep CONTACT "$HESTIA/data/users/admin/user.conf" | cut -f 2 -d \')
-
 tmpdir="/home/$user/backup/"
 
 # We delete the backup dir first make sure all old database has been cleared

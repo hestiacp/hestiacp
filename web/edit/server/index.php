@@ -41,6 +41,7 @@ $v_php_versions = [
 	"php-8.2",
 	"php-8.3",
 	"php-8.4",
+	"php-8.5",
 ];
 sort($v_php_versions);
 
@@ -308,6 +309,7 @@ if (!empty($_POST["save"])) {
 		unset($output);
 		$v_hostname = $_POST["v_hostname"];
 	}
+
 	if ($_SESSION["WEB_BACKEND"] == "php-fpm") {
 		// Install/remove php versions
 		if (empty($_SESSION["error_msg"])) {
@@ -1305,7 +1307,7 @@ if (!empty($_POST["save"])) {
 				);
 				check_return_code($return_var, $output);
 				unset($output);
-
+				$v_backup_incremental = "yes";
 				$v_repo = $_POST["v_repo"];
 				$v_snapshots = $_POST["v_snapshots"];
 				$v_keep_daily = $_POST["v_keep_daily"];
@@ -1320,7 +1322,7 @@ if (!empty($_POST["save"])) {
 			exec(HESTIA_CMD . "v-delete-backup-host-restic ", $output, $return);
 			check_return_code($return_var, $output);
 			unset($output);
-
+			$v_backup_incremental = "";
 			$v_repo = "";
 			$v_snapshots = "";
 			$v_keep_daily = "";
@@ -1330,13 +1332,7 @@ if (!empty($_POST["save"])) {
 		}
 	}
 	if (empty($_SESSION["error_msg"])) {
-		if (
-			$v_incremental_backups["SNAPSHOTS"] != $_POST["v_snapshots"] ||
-			$v_incremental_backups["KEEP_DAILY"] != $_POST["v_keep_daily"] ||
-			$v_incremental_backups["KEEP_WEEKLY"] != $_POST["v_keep_weekly"] ||
-			$v_incremental_backups["KEEP_MONTHLY"] != $_POST["v_keep_montly"] ||
-			$v_incremental_backups["KEEP_YEARLY"] != $_POST["v_keep_yearly"]
-		) {
+		if ($_POST["v_backup_incremental"] === "yes" && $_SESSION["BACKUP_INCREMENTAL"] === "yes") {
 			exec(HESTIA_CMD . "v-delete-backup-host-restic ", $output, $return);
 			check_return_code($return_var, $output);
 			unset($output);

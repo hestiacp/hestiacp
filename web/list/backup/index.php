@@ -15,7 +15,6 @@ if (empty($_GET["backup"])) {
 		$data = array_reverse($data, true);
 	}
 	unset($output);
-
 	render_page($user, $TAB, "list_backup");
 } else {
 	exec(

@@ -1,6 +1,0 @@
-[nginx]
-name=Nginx Repository for RHEL $releasever - $basearch
-baseurl=https://nginx.org/packages/rhel/$releasever/$basearch/
-gpgkey=https://nginx.org/keys/nginx_signing.key
-gpgcheck=1
-enabled=1

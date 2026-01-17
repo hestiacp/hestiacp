@@ -4,13 +4,14 @@
 		<div class="toolbar-buttons">
 			<a class="button button-secondary button-back js-button-back" href="/list/backup/incremental/"><i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?></a>
 			<?php if ($read_only !== "true") { ?>
-			<a href="/schedule/restore/incremental/?token=<?= $_SESSION["token"] ?>&backup=<?= htmlentities($_GET["backup"]) ?>" class="button button-secondary"><i class="fas fa-arrow-rotate-left icon-green"></i><?= _("Restore All") ?></a>
+			<a href="/schedule/restore/incremental/?token=<?= $_SESSION["token"] ?>&snapshot=<?= htmlentities($_GET["snapshot"]) ?>" class="button button-secondary"><i class="fas fa-arrow-rotate-left icon-green"></i><?= _("Restore All") ?></a>
 			<?php } ?>
 		</div>
 		<div class="toolbar-right">
 			<?php if ($read_only !== "true") { ?>
-				<form x-data x-bind="BulkEdit" action="/bulk/backup/incremental" method="post">
+				<form x-data x-bind="BulkEdit" action="/bulk/restore/incremental/" method="post">
 					<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
+					<input type="hidden" name="snapshot" value="<?= htmlentities($_GET["snapshot"]) ?>">
 					<select class="form-select" name="action">
 						<option value=""><?= _("Apply to selected") ?></option>
 						<option value="restore"><?= _("Restore Snapshot") ?></option>

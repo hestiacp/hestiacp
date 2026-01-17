@@ -18,5 +18,5 @@ exec(
 if ($return_var == 0) {
 	header("Content-type: application/sql");
 	header("Content-Disposition: attachment; filename=" . $output[0]);
-	header("X-Accel-Redirect: " . $output[1]);
+	header("X-Accel-Redirect: " . $output[0]);
 }

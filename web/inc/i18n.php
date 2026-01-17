@@ -3,7 +3,7 @@
 // I18N support information here
 
 putenv("LANGUAGE=" . detect_user_language());
-setlocale(LC_ALL, "C.UTF-8");
+setlocale(LC_ALL, "en_US.UTF-8");
 
 $domain = "hestiacp";
 $localedir = "/usr/local/hestia/web/locale";
@@ -81,5 +81,4 @@ function translate_email($string, $replace) {
  * @return string Language code (such as 'en' and 'ja')
  */
 
-function detect_login_language() {
-}
+function detect_login_language() {}

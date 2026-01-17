@@ -23,9 +23,10 @@ export function moveFocusUp() {
 
 // Navigate to whatever item has been selected in the UI by other shortcuts
 export function enterFocused() {
-	const activeMainMenuItem = document.querySelector(state.menu_selector + '.focus a');
+	const activeMainMenuItem = document.querySelector(`${state.menu_selector}.focus a`);
 	if (activeMainMenuItem) {
-		return (location.href = activeMainMenuItem.getAttribute('href'));
+		location.href = activeMainMenuItem.getAttribute('href');
+		return;
 	}
 
 	const activeUnit = document.querySelector(
@@ -53,14 +54,16 @@ function moveFocusLeftRight(direction) {
 	const activeSelector = state.menu_active_selector;
 	const menuItems = Array.from(document.querySelectorAll(menuSelector));
 	const currentFocused = document.querySelector(`${menuSelector}.focus`);
-	const currentActive = document.querySelector(menuSelector + activeSelector);
+	const currentActive = document.querySelector(`${menuSelector}${activeSelector}`);
 	let index = menuItems.indexOf(currentFocused);
 
 	if (index === -1) {
 		index = menuItems.indexOf(currentActive);
 	}
 
-	menuItems.forEach((item) => item.classList.remove('focus'));
+	menuItems.forEach((item) => {
+		item.classList.remove('focus');
+	});
 
 	if (direction === 'left') {
 		if (index > 0) {

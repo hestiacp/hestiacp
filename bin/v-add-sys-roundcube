@@ -159,6 +159,10 @@ if [ "$UPDATE" == "no" ]; then
 	sed -i "s/%des_key%/$rcDesKey/g" $RC_CONFIG_DIR/config.inc.php
 	# Update server hostname in password change plugin
 	sed -i "s/localhost/$(hostname)/g" $RC_CONFIG_DIR/plugins/password/config.inc.php
+	# Add roundcube configuration file to logrotate
+	if [[ -f "$HESTIA"/install/deb/logrotate/roundcube ]]; then
+		cp -f "$HESTIA"/install/deb/logrotate/roundcube /etc/logrotate.d/
+	fi
 
 	# Clean up
 	rm -f -r $RC_INSTALL_DIR/installer
@@ -193,6 +197,10 @@ else
 	$RC_INSTALL_DIR/bin/update.sh --version "$version" > /dev/null 2>&1
 	$RC_INSTALL_DIR/bin/indexcontacts.sh > /dev/null 2>&1
 	chown -R hestiamail:www-data $RC_INSTALL_DIR
+	# Add roundcube configuration file to logrotate
+	if [[ -f "$HESTIA/install/deb/logrotate/roundcube" && ! -f /etc/logrotate.d/roundcube ]]; then
+		cp -f "$HESTIA/install/deb/logrotate/roundcube" /etc/logrotate.d/
+	fi
 
 	#clean up the mess
 	if [ -d "$RC_INSTALL_DIR/installer" ]; then

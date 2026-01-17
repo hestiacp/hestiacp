@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: add firewall blocking rule
-# options: IP CHAIN
+# options: IPV4_CIDR CHAIN
 #
 # example: v-add-firewall-ban 37.120.129.20 MAIL
 #
@@ -11,7 +11,7 @@
 #----------------------------------------------------------#
 
 # Argument definition
-ip=$1
+ipv4_cidr=$1
 chain=$(echo $2 | tr '[:lower:]' '[:upper:]')
 
 # Defining absolute path for iptables and modprobe
@@ -31,8 +31,8 @@ source_conf "$HESTIA/conf/hestia.conf"
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'IP CHAIN'
-is_format_valid 'ip' 'chain'
+check_args '2' "$#" 'IPV4_CIDR CHAIN'
+is_format_valid 'ipv4_cidr' 'chain'
 is_system_enabled "$FIREWALL_SYSTEM" 'FIREWALL_SYSTEM'
 
 # Perform verification if read-only mode is enabled
@@ -46,20 +46,20 @@ check_hestia_demo_mode
 heal_iptables_links
 
 # Checking server ip
-if [ -e "$HESTIA/data/ips/$ip" ] || [ "$ip" = '127.0.0.1' ]; then
+if [ -e "$HESTIA/data/ips/$ipv4_cidr" ] || [ "$ipv4_cidr" = '127.0.0.1' ]; then
 	exit
 fi
 
 # Checking ip exclusions
 excludes="$HESTIA/data/firewall/excludes.conf"
-check_excludes=$(grep "^$ip$" $excludes 2> /dev/null)
+check_excludes=$(grep "^$ipv4_cidr$" $excludes 2> /dev/null)
 if [ -n "$check_excludes" ]; then
 	exit
 fi
 
 # Checking ip in banlist
 conf="$HESTIA/data/firewall/banlist.conf"
-check_ip=$(grep "IP='$ip' CHAIN='$chain'" $conf 2> /dev/null)
+check_ip=$(grep "IP='$ipv4_cidr' CHAIN='$chain'" $conf 2> /dev/null)
 if [ -n "$check_ip" ]; then
 	exit
 fi
@@ -73,8 +73,8 @@ time=$(echo "$time_n_date" | cut -f 1 -d \ )
 date=$(echo "$time_n_date" | cut -f 2 -d \ )
 
 # Adding ip to banlist
-echo "IP='$ip' CHAIN='$chain' TIME='$time' DATE='$date'" >> $conf
-$iptables -I fail2ban-$chain 1 -s $ip \
+echo "IP='$ipv4_cidr' CHAIN='$chain' TIME='$time' DATE='$date'" >> $conf
+$iptables -I fail2ban-$chain 1 -s $ipv4_cidr \
 	-j REJECT --reject-with icmp-port-unreachable 2> /dev/null
 
 # Changing permissions
@@ -85,7 +85,7 @@ chmod 660 $conf
 #----------------------------------------------------------#
 
 # Logging
-$BIN/v-log-action "system" "Warning" "Firewall" "Banned IP address $ip."
+$BIN/v-log-action "system" "Warning" "Firewall" "Banned IP address $ipv4_cidr."
 log_event "$OK" "$ARGUMENTS"
 
 exit

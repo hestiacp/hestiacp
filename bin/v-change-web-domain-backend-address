@@ -1,0 +1,127 @@
+#!/bin/bash
+# info: change web domain backend address
+# options: USER DOMAIN BACKEND_ADDRESS [RESTART]
+#
+# example: v-change-web-domain-backend-address admin app.example.com http://127.0.0.1:3000
+# example: v-change-web-domain-backend-address admin app.example.com 127.0.0.1:3000
+# example: v-change-web-domain-backend-address admin app.example.com '' yes
+#
+# This function changes the backend address for reverse proxy configuration.
+# The backend address specifies where Nginx should forward requests (e.g., 
+# http://127.0.0.1:3000 for a Node.js app). If empty, the default behavior
+# is restored (proxy to the web server).
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+domain=$2
+domain_idn=$2
+backend_address=$3
+restart=$4
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
+source $HESTIA/func/domain.sh
+# shellcheck source=/usr/local/hestia/func/ip.sh
+source $HESTIA/func/ip.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+# Additional argument formatting
+format_domain
+format_domain_idn
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '2' "$#" 'USER DOMAIN [BACKEND_ADDRESS] [RESTART]'
+is_format_valid 'user' 'domain' 'restart'
+is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
+is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
+is_object_valid 'web' 'DOMAIN' "$domain"
+is_object_unsuspended 'web' 'DOMAIN' "$domain"
+get_domain_values 'web'
+
+# Normalize backend address (add http:// if only IP:port or hostname:port provided)
+if [ -n "$backend_address" ]; then
+	if [[ ! "$backend_address" =~ ^https?:// ]]; then
+		backend_address="http://$backend_address"
+	fi
+	# Basic validation: check if it looks like a valid URL
+	if [[ ! "$backend_address" =~ ^https?://[a-zA-Z0-9.-]+(:[0-9]+)?(/.*)?$ ]]; then
+		check_result "$E_INVALID" "Invalid backend address format: $backend_address"
+	fi
+fi
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Parsing domain values
+get_domain_values 'web'
+local_ip=$(get_real_ip "$IP")
+
+# Set the new backend address
+BACKEND_ADDRESS="$backend_address"
+
+# Prepare web domain values
+prepare_web_domain_values
+
+# Rebuilding vhost
+del_web_config "$WEB_SYSTEM" "$TPL.tpl"
+add_web_config "$WEB_SYSTEM" "$TPL.tpl"
+if [ "$SSL" = 'yes' ]; then
+	del_web_config "$WEB_SYSTEM" "$TPL.stpl"
+	add_web_config "$WEB_SYSTEM" "$TPL.stpl"
+fi
+
+# Rebuilding proxy configuration
+if [ -n "$PROXY_SYSTEM" ] && [ -n "$PROXY" ]; then
+	del_web_config "$PROXY_SYSTEM" "$PROXY.tpl"
+	add_web_config "$PROXY_SYSTEM" "$PROXY.tpl"
+	if [ "$SSL" = 'yes' ]; then
+		del_web_config "$PROXY_SYSTEM" "$PROXY.stpl"
+		add_web_config "$PROXY_SYSTEM" "$PROXY.stpl"
+	fi
+fi
+
+# Update config - add key if it doesn't exist
+add_object_key "web" 'DOMAIN' "$domain" 'BACKEND_ADDRESS' 'STATS'
+update_object_value 'web' 'DOMAIN' "$domain" '$BACKEND_ADDRESS' "$backend_address"
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Restarting web server
+$BIN/v-restart-web "$restart"
+check_result $? "Web restart failed" > /dev/null
+
+# Restarting proxy server
+if [ -n "$PROXY_SYSTEM" ]; then
+	$BIN/v-restart-proxy "$restart"
+	check_result $? "Proxy restart failed" > /dev/null
+fi
+
+# Logging
+if [ -n "$backend_address" ]; then
+	$BIN/v-log-action "$user" "Info" "Web" "Backend address changed (Domain: $domain, Address: $backend_address)."
+else
+	$BIN/v-log-action "$user" "Info" "Web" "Backend address removed (Domain: $domain)."
+fi
+log_event "$OK" "$ARGUMENTS"
+
+exit
+

@@ -14,9 +14,62 @@
 # shellcheck source=/etc/hestiacp/hestia.conf
 source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
-source $HESTIA/func/main.sh
+source "$HESTIA/func/main.sh"
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
+
+# Function to safely remove quota options from fstab
+remove_quota_options() {
+	local line_num="$1"
+	local options="$2"
+	local pattern="$3"
+
+	# Remove quota-related options
+	local new_options
+	new_options=$(echo "$options" | tr ',' '\n' | grep -v -E "$pattern" | tr '\n' ',' | sed 's/,$//')
+
+	# Handle case where all options are removed
+	if [ -z "$new_options" ]; then
+		new_options="defaults"
+	fi
+
+	# Escape special characters for sed
+	local escaped_old
+	local escaped_new
+	escaped_old=$(printf '%s\n' "$options" | sed 's/[[\.*^$/]/\\&/g')
+	escaped_new=$(printf '%s\n' "$new_options" | sed 's/[[\.*^$/]/\\&/g')
+
+	sed -i "${line_num}s/${escaped_old}/${escaped_new}/" /etc/fstab
+}
+
+# Function to disable quota if active
+disable_quota() {
+	local mount_point="$1"
+
+	if quotaon="$(type -P quotaon 2> /dev/null)" && quotaoff="$(type -P quotaoff 2> /dev/null)"; then
+		if "${quotaon}" -pa 2> /dev/null | grep " $mount_point " | grep -E 'user|group|project' | grep -q 'is on'; then
+			log_history "INFO" "Disabling quota on $mount_point"
+			"$quotaoff" "$mount_point" &> /dev/null
+		fi
+	fi
+}
+
+# Function to remove quota index files
+remove_quota_files() {
+	local mount_point="$1"
+	local quota_files=("quota.user" "quota.group" "quota.project" "aquota.user" "aquota.group" "aquota.project")
+
+	for idx in "${quota_files[@]}"; do
+		if [ -e "$mount_point/$idx" ]; then
+			if lsattr -d "$mount_point/$idx" 2> /dev/null | awk '{print $1}' | grep -q 'i'; then
+				log_history "INFO" "Removing immutable attribute from $mount_point/$idx"
+				chattr -i "$mount_point/$idx"
+			fi
+			log_history "INFO" "Removing $mount_point/$idx"
+			rm -f "$mount_point/$idx"
+		fi
+	done
+}
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -29,50 +82,139 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
+log_history "INFO" "Starting quota removal process"
+
 # Deleting group and user quota on /home partition
-mnt=$(df -P /home | awk '{print $6}' | tail -n1)
-lnr=$(cat -n /etc/fstab | grep -v "#" | awk '{print $1,$3}' | grep "$mnt$" | cut -f 1 -d ' ')
-opt=$(sed -n ${lnr}p /etc/fstab | awk '{print $4}')
-fnd='usrquota\|grpquota\|usrjquota=\|grpjquota=\|jqfmt='
-if [ -n "$(echo $opt | grep $fnd)" ]; then
-	rep=$(echo $(echo $opt | tr ',' '\n' | grep -v $fnd) | tr ' ' ',')
-	sed -i "$lnr s/$opt/$rep/" /etc/fstab
-	systemctl daemon-reload
-	mount -o remount "$mnt"
+mnt=$(df -P /home 2> /dev/null | awk 'NR==2 {print $6}')
+
+# Verify mount point exists
+if [ -z "$mnt" ]; then
+	log_history "ERROR" "Could not determine mount point for /home"
+	exit "$E_NOTEXIST"
 fi
 
-# Disabling group and user quota
-if quotaon="$(type -P quotaon 2> /dev/null)" && quotaoff="$(type -P quotaoff 2> /dev/null)"; then
-	if "${quotaon}" -pa | grep " $mnt " | grep 'user\|group' | grep -q 'is on' &> /dev/null; then
-		"$quotaoff" "$mnt"
-	fi
+log_history "INFO" "Mount point detected: $mnt"
+
+# Find the line in fstab (excluding comments)
+lnr=$(awk -v mnt="$mnt" '$1 !~ /^#/ && $2 == mnt {print NR; exit}' /etc/fstab)
+
+# Verify line number was found
+if [ -z "$lnr" ]; then
+	log_history "WARNING" "Mount point $mnt not found in /etc/fstab"
+else
+	# Read fstab line details
+	read -r _ _ fstype opt _ _ < <(sed -n "${lnr}p" /etc/fstab)
+
+	log_history "INFO" "Filesystem type: $fstype, Current options: $opt"
+
+	case "$fstype" in
+		ext4)
+			# Pattern for ext4 quota options
+			quota_pattern='usrquota|grpquota|prjquota|usrjquota=|grpjquota=|prjquota=|jqfmt='
+
+			if echo "$opt" | grep -qE "$quota_pattern"; then
+				log_history "INFO" "Removing ext4 quota options from fstab"
+				remove_quota_options "$lnr" "$opt" "$quota_pattern"
+				systemctl daemon-reload 2> /dev/null
+				mount -o remount "$mnt"
+			fi
+
+			# Disabling quota
+			disable_quota "$mnt"
+
+			# Remove quota index files
+			remove_quota_files "$mnt"
+			;;
+
+		xfs)
+			# Pattern for XFS quota options
+			quota_pattern='uquota|gquota|pquota|uqnoenforce|gqnoenforce|pqnoenforce'
+
+			if echo "$opt" | grep -qE "$quota_pattern"; then
+				log_history "INFO" "Removing XFS quota options from fstab"
+				remove_quota_options "$lnr" "$opt" "$quota_pattern"
+			fi
+
+			# Disabling XFS quota
+			disable_quota "$mnt"
+
+			# Handle root partition GRUB configuration
+			if [ "$mnt" = "/" ]; then
+				grub_cfg="/etc/default/grub"
+				if [ -f "$grub_cfg" ]; then
+					if grep -qE 'rootflags=.*(uquota|gquota|pquota)' "$grub_cfg"; then
+						log_history "INFO" "Removing quota options from GRUB configuration"
+
+						# Backup GRUB config
+						cp "$grub_cfg" "${grub_cfg}.bak.$(date +%Y%m%d_%H%M%S)"
+
+						# Remove quota options from rootflags
+						sed -i -E '/^GRUB_CMDLINE_LINUX=/ {
+                            :a
+                            # Remove uquota, gquota, pquota from rootflags
+                            s/(rootflags=[^" ]*),?(uquota|gquota|pquota),?/\1/g
+                            ta
+                            # Clean up leftover commas
+                            s/rootflags=,/rootflags=/g
+                            s/(rootflags=[^" ]*),([" ])/\1\2/g
+                            # Remove empty rootflags
+                            s/ rootflags= / /g
+                            s/ rootflags="/ "/g
+                            s/"rootflags="/""/g
+                        }' "$grub_cfg"
+						check_result $? "Failed to remove kernel parameters to $grub_conf"
+						# Clean up duplicate spaces and spaces before closing quotes
+						sed -i -E '/^GRUB_CMDLINE_LINUX=/ {
+                            s/  +/ /g
+                            s/" /"/g
+                            s/ "/"/g
+                        }' "$grub_cfg"
+						check_result $? "Failed to clean up GRUB configuration"
+
+						# Update GRUB
+						if type -P update-grub > /dev/null 2>&1; then
+							update-grub 2> /dev/null
+						elif type -P grub-mkconfig > /dev/null 2>&1; then
+							grub-mkconfig -o /boot/grub/grub.cfg 2> /dev/null
+						fi
+					fi
+				fi
+			fi
+
+			# Remount filesystem
+			systemctl daemon-reload 2> /dev/null
+			mount -o remount "$mnt" 2> /dev/null
+			;;
+
+		*)
+			log_history "WARNING" "Unsupported or undetected filesystem type: $fstype"
+			;;
+	esac
 fi
 
-# Deleting v1 + v2 group and user quota index
-for idx in quota.user quota.group aquota.user aquota.group; do
-	[ -e "$mnt/$idx" ] && rm -f "$mnt/$idx"
-done
+# Remove cron job and forcequotacheck
+log_history "INFO" "Cleaning up quota-related files"
+[ -f "/etc/cron.daily/quotacheck" ] && rm -f "/etc/cron.daily/quotacheck"
+[ -f "/forcequotacheck" ] && rm -f "/forcequotacheck"
 
-# Deleting cron job and forcequotacheck
-if [[ -f "/etc/cron.daily/quotacheck" ]]; then
-	rm -f "/etc/cron.daily/quotacheck"
-fi
-if [[ -f "/forcequotacheck" ]]; then
-	rm -f "/forcequotacheck"
-fi
-
-# Updating hestia.conf value
-$BIN/v-change-sys-config-value "DISK_QUOTA" "no"
+# Update hestia.conf value
+log_history "INFO" "Updating Hestia configuration"
+"$BIN/v-change-sys-config-value" "DISK_QUOTA" "no"
 
 # Remove quota package
-apt-get -y purge quota > /dev/null 2>&1
+if dpkg -l 2> /dev/null | grep -q "^ii.*quota"; then
+	log_history "INFO" "Removing quota package"
+	apt-get -y purge quota > /dev/null 2>&1
+fi
 
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
 
 # Logging
-$BIN/v-log-action "system" "Info" "Plugins" "System Quota Enforcement disabled."
+"$BIN/v-log-action" "system" "Info" "Plugins" "System Quota Enforcement disabled."
 log_event "$OK" "$ARGUMENTS"
+
+log_history "INFO" "Quota removal completed successfully"
 
 exit

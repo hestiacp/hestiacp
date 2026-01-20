@@ -40,6 +40,14 @@ server {
 		# Uncomment to enable naxsi on this location
 		# include /etc/nginx/naxsi.rules
 
+		location = /mtc.js {
+			try_files $uri /index.php$is_args$args;
+		}
+
+		location = /mtracking.gif {
+			try_files $uri /index.php$is_args$args;
+		}
+
 		location ~* ^.+\.(jpeg|jpg|png|gif|bmp|ico|svg|css|js)$ {
 			expires max;
 			fastcgi_hide_header "Set-Cookie";

@@ -600,11 +600,25 @@ function syshealth_repair_system_cronjobs() {
 # Activates or deactivates port listing on IPV4 or/and IPV6 network interfaces
 function syshealth_adapt_hestia_nginx_listen_ports() {
 	# Detect "physical" NICs only (virtual NICs created by Docker, WireGuard etc. are excluded)
+	# Also handle bonding interfaces properly
 	physical_nics="$(ip -d -j link show | jq -r '.[] | if .link_type == "loopback" // .linkinfo.info_kind then empty else .ifname end')"
 	if [ -z "$physical_nics" ]; then
 		physical_nics="$(ip -d -j link show | jq -r '.[] | if .link_type == "loopback" then empty else .ifname end')"
 	fi
+	
+	# Add bonding master interfaces to the list if not already included
+	bonding_masters="$(ip -d -j link show | jq -r '.[] | select(.linkinfo.info_kind == "bond") | .ifname')"
+	if [ -n "$bonding_masters" ]; then
+		physical_nics="$physical_nics $bonding_masters"
+	fi
+	
 	for nic in $physical_nics; do
+		# Skip bonding slave interfaces - they don't have IP addresses
+		is_slave="$(ip -d -j link show "$nic" | jq -r '.[0].master // empty')"
+		if [ -n "$is_slave" ]; then
+			continue
+		fi
+		
 		if [ -z "$ipv4_scope_global" ]; then
 			ipv4_scope_global="$(ip -4 -d -j addr show "$nic" | jq -r '.[] | select(length > 0) | .addr_info[] | if .scope == "global" then .local else empty end')"
 		fi

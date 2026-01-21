@@ -769,8 +769,17 @@ is_user_format_valid() {
 # Domain format validator
 is_domain_format_valid() {
 	object_name=${2-domain}
-	exclude="[!|@|#|$|^|&|*|(|)|+|=|{|}|:|,|<|>|?|_|/|\|\"|'|;|%|\`| ]"
-	if [[ $1 =~ $exclude ]] || [[ $1 =~ ^[0-9]+$ ]] || [[ $1 =~ \.\. ]] || [[ $1 =~ $(printf '\t') ]] || [[ "$1" = "www" ]]; then
+	exclude='[][!@#$^&*()+={},<>?_/\\"|'\''`;%[:space:]]'
+	if [[ $1 =~ $exclude ]] \
+		|| [[ $1 =~ ^[0-9]+$ ]] \
+		|| [[ $1 =~ \.\. ]] \
+		|| [[ $1 =~ ^- ]] \
+		|| [[ $1 =~ -$ ]] \
+		|| [[ $1 =~ ^\. ]] \
+		|| [[ $1 =~ \.$ ]] \
+		|| [[ $1 =~ \.- ]] \
+		|| [[ $1 =~ -\. ]] \
+		|| [[ "$1" = "www" ]]; then
 		check_result "$E_INVALID" "invalid $object_name format :: $1"
 	fi
 	is_no_new_line_format "$1"
@@ -779,8 +788,15 @@ is_domain_format_valid() {
 # Alias forman validator
 is_alias_format_valid() {
 	for object in ${1//,/ }; do
-		exclude="[!|@|#|$|^|&|(|)|+|=|{|}|:|<|>|?|_|/|\|\"|'|;|%|\`| ]"
-		if [[ "$object" =~ $exclude ]]; then
+		exclude='[][!@#$^&()+={},<>?_/\\"|'\''`;%[:space:]]'
+		if [[ $object =~ $exclude ]] \
+			|| [[ $object =~ \.\. ]] \
+			|| [[ $object =~ ^- ]] \
+			|| [[ $object =~ -$ ]] \
+			|| [[ $object =~ ^\. ]] \
+			|| [[ $object =~ \.$ ]] \
+			|| [[ $object =~ \.- ]] \
+			|| [[ $object =~ -\. ]]; then
 			check_result "$E_INVALID" "invalid alias format :: $object"
 		fi
 		if [[ "$object" =~ [*] ]] && ! [[ "$object" =~ ^[*]\..* ]]; then

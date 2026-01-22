@@ -2212,6 +2212,7 @@ if [ "$sieve" = 'yes' ]; then
 	fi
 
 	# Dovecot default file install
+	mkdir -p /etc/dovecot/sieve/
 	echo -e "require [\"fileinto\"];\n# rule:[SPAM]\nif header :contains \"X-Spam-Flag\" \"YES\" {\n    fileinto \"INBOX.Spam\";\n}\n" > /etc/dovecot/sieve/default
 
 	# exim4 install

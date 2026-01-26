@@ -52,7 +52,7 @@ function syshealth_update_web_config_format() {
 	# WEB DOMAINS
 	# Create array of known keys in configuration file
 	system="web"
-	known_keys="DOMAIN IP IP6 CUSTOM_DOCROOT CUSTOM_PHPROOT FASTCGI_CACHE FASTCGI_DURATION ALIAS TPL SSL SSL_FORCE SSL_HSTS SSL_HOME LETSENCRYPT FTP_USER FTP_MD5 FTP_PATH BACKEND PROXY PROXY_EXT STATS STATS_USER STATS_CRYPT REDIRECT REDIRECT_CODE AUTH_USER AUTH_HASH SUSPENDED TIME DATE"
+        known_keys="DOMAIN IP IP6 CUSTOM_DOCROOT CUSTOM_PHPROOT FASTCGI_CACHE FASTCGI_DURATION ALIAS TPL SSL SSL_FORCE SSL_HSTS SSL_HOME LETSENCRYPT CF_ORIGIN_CERT CF_ORIGIN_CERT_ID FTP_USER FTP_MD5 FTP_PATH BACKEND PROXY PROXY_EXT STATS STATS_USER STATS_CRYPT REDIRECT REDIRECT_CODE AUTH_USER AUTH_HASH SUSPENDED TIME DATE"
 	write_kv_config_file
 	unset system
 	unset known_keys
@@ -198,7 +198,7 @@ function syshealth_update_system_config_format() {
 	# SYSTEM CONFIGURATION
 	# Create array of known keys in configuration file
 	system="system"
-	known_keys="ANTISPAM_SYSTEM ANTIVIRUS_SYSTEM API_ALLOWED_IP API BACKEND_PORT BACKUP_GZIP BACKUP_MODE BACKUP_SYSTEM CRON_SYSTEM DB_PMA_ALIAS DB_SYSTEM DISK_QUOTA DNS_SYSTEM ENFORCE_SUBDOMAIN_OWNERSHIP FILE_MANAGER FIREWALL_EXTENSION FIREWALL_SYSTEM FTP_SYSTEM IMAP_SYSTEM INACTIVE_SESSION_TIMEOUT LANGUAGE LOGIN_STYLE MAIL_SYSTEM PROXY_PORT PROXY_SSL_PORT PROXY_SYSTEM RELEASE_BRANCH STATS_SYSTEM THEME UPDATE_HOSTNAME_SSL UPGRADE_SEND_EMAIL UPGRADE_SEND_EMAIL_LOG WEB_BACKEND WEBMAIL_ALIAS WEBMAIL_SYSTEM WEB_PORT WEB_RGROUPS WEB_SSL WEB_SSL_PORT WEB_SYSTEM WEB_TERMINAL WEB_TERMINAL_PORT VERSION DISABLE_IP_CHECK"
+        known_keys="ANTISPAM_SYSTEM ANTIVIRUS_SYSTEM API_ALLOWED_IP API BACKEND_PORT BACKUP_GZIP BACKUP_MODE BACKUP_SYSTEM CF_ORIGIN_ENABLED CF_ORIGIN_AUTH_TYPE CF_ORIGIN_API_TOKEN CF_ORIGIN_SERVICE_KEY CF_ORIGIN_AUTH_EMAIL CF_ORIGIN_REQUEST_TYPE CF_ORIGIN_RSA_BITS CF_ORIGIN_ECC_CURVE CF_ORIGIN_VALIDITY CF_ORIGIN_SSL_MODE CRON_SYSTEM DB_PMA_ALIAS DB_SYSTEM DISK_QUOTA DNS_SYSTEM ENFORCE_SUBDOMAIN_OWNERSHIP FILE_MANAGER FIREWALL_EXTENSION FIREWALL_SYSTEM FTP_SYSTEM IMAP_SYSTEM INACTIVE_SESSION_TIMEOUT LANGUAGE LOGIN_STYLE MAIL_SYSTEM PROXY_PORT PROXY_SSL_PORT PROXY_SYSTEM RELEASE_BRANCH STATS_SYSTEM THEME UPDATE_HOSTNAME_SSL UPGRADE_SEND_EMAIL UPGRADE_SEND_EMAIL_LOG WEB_BACKEND WEBMAIL_ALIAS WEBMAIL_SYSTEM WEB_PORT WEB_RGROUPS WEB_SSL WEB_SSL_PORT WEB_SYSTEM WEB_TERMINAL WEB_TERMINAL_PORT VERSION DISABLE_IP_CHECK"
 	write_kv_config_file
 	unset system
 	unset known_keys
@@ -543,10 +543,48 @@ function syshealth_repair_system_config() {
 		echo "[ ! ] Adding missing variable to hestia.conf: ROOT_USER ('admin')"
 		$BIN/v-change-sys-config-value "ROOT_USER" "admin"
 	fi
-	if [[ -z $(check_key_exists 'DOMAINDIR_WRITABLE') ]]; then
-		echo "[ ! ] Adding missing variable to hestia.conf: DOMAINDIR_WRITABLE ('no')"
-		$BIN/v-change-sys-config-value "DOMAINDIR_WRITABLE" "no"
-	fi
+        if [[ -z $(check_key_exists 'DOMAINDIR_WRITABLE') ]]; then
+                echo "[ ! ] Adding missing variable to hestia.conf: DOMAINDIR_WRITABLE ('no')"
+                $BIN/v-change-sys-config-value "DOMAINDIR_WRITABLE" "no"
+        fi
+
+        if [[ -z $(check_key_exists 'CF_ORIGIN_ENABLED') ]]; then
+                echo "[ ! ] Adding missing variable to hestia.conf: CF_ORIGIN_ENABLED ('no')"
+                $BIN/v-change-sys-config-value 'CF_ORIGIN_ENABLED' 'no'
+        fi
+        if [[ -z $(check_key_exists 'CF_ORIGIN_AUTH_TYPE') ]]; then
+                echo "[ ! ] Adding missing variable to hestia.conf: CF_ORIGIN_AUTH_TYPE ('token')"
+                $BIN/v-change-sys-config-value 'CF_ORIGIN_AUTH_TYPE' 'token'
+        fi
+        if [[ -z $(check_key_exists 'CF_ORIGIN_REQUEST_TYPE') ]]; then
+                echo "[ ! ] Adding missing variable to hestia.conf: CF_ORIGIN_REQUEST_TYPE ('origin-rsa')"
+                $BIN/v-change-sys-config-value 'CF_ORIGIN_REQUEST_TYPE' 'origin-rsa'
+        fi
+        if [[ -z $(check_key_exists 'CF_ORIGIN_RSA_BITS') ]]; then
+                echo "[ ! ] Adding missing variable to hestia.conf: CF_ORIGIN_RSA_BITS ('2048')"
+                $BIN/v-change-sys-config-value 'CF_ORIGIN_RSA_BITS' '2048'
+        fi
+        if [[ -z $(check_key_exists 'CF_ORIGIN_ECC_CURVE') ]]; then
+                echo "[ ! ] Adding missing variable to hestia.conf: CF_ORIGIN_ECC_CURVE ('prime256v1')"
+                $BIN/v-change-sys-config-value 'CF_ORIGIN_ECC_CURVE' 'prime256v1'
+        fi
+        if [[ -z $(check_key_exists 'CF_ORIGIN_VALIDITY') ]]; then
+                echo "[ ! ] Adding missing variable to hestia.conf: CF_ORIGIN_VALIDITY ('5475')"
+                $BIN/v-change-sys-config-value 'CF_ORIGIN_VALIDITY' '5475'
+        fi
+        if [[ -z $(check_key_exists 'CF_ORIGIN_SSL_MODE') ]]; then
+                echo "[ ! ] Adding missing variable to hestia.conf: CF_ORIGIN_SSL_MODE ('off')"
+                $BIN/v-change-sys-config-value 'CF_ORIGIN_SSL_MODE' 'off'
+        fi
+        if [[ -z $(check_key_exists 'CF_ORIGIN_API_TOKEN') ]]; then
+                $BIN/v-change-sys-config-value 'CF_ORIGIN_API_TOKEN' ''
+        fi
+        if [[ -z $(check_key_exists 'CF_ORIGIN_SERVICE_KEY') ]]; then
+                $BIN/v-change-sys-config-value 'CF_ORIGIN_SERVICE_KEY' ''
+        fi
+        if [[ -z $(check_key_exists 'CF_ORIGIN_AUTH_EMAIL') ]]; then
+                $BIN/v-change-sys-config-value 'CF_ORIGIN_AUTH_EMAIL' ''
+        fi
 
 	touch $HESTIA/conf/hestia.conf.new
 	while IFS='= ' read -r lhs rhs; do

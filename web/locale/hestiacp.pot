@@ -425,6 +425,35 @@ msgstr ""
 msgid "Package"
 msgstr ""
 
+#: ../../web/edit/server/index.php:703
+msgid "Invalid Cloudflare authentication method."
+msgstr ""
+
+#: ../../web/edit/server/index.php:766
+msgid "Invalid Cloudflare certificate type."
+msgstr ""
+
+#: ../../web/edit/server/index.php:803
+msgid "Cloudflare Origin certificate validity must be between 7 and 5475 days."
+msgstr ""
+
+#: ../../web/edit/server/index.php:835
+msgid "Cloudflare API token is required when token authentication is selected."
+msgstr ""
+
+#: ../../web/edit/server/index.php:842
+msgid "Cloudflare user service key is required when service-key authentication is selected."
+msgstr ""
+
+#: ../../web/edit/web/index.php:216
+#: ../../web/edit/web/index.php:1013
+msgid "Cloudflare Origin CA integration is not configured by the server administrator."
+msgstr ""
+
+#: ../../web/edit/web/index.php:219
+msgid "Please choose either Let's Encrypt or Cloudflare for automatic SSL certificates."
+msgstr ""
+
 #: ../../web/edit/package/index.php:146 ../../web/add/package/index.php:26
 #: ../../web/templates/pages/add_package.php:97
 #: ../../web/templates/pages/edit_web.php:265
@@ -2308,6 +2337,14 @@ msgstr ""
 msgid "Use Let's Encrypt to obtain SSL certificate"
 msgstr ""
 
+#: ../../web/templates/pages/edit_web.php:197
+msgid "Use Cloudflare to obtain SSL origin certificate"
+msgstr ""
+
+#: ../../web/templates/pages/edit_web.php:200
+msgid "Cloudflare credentials are required before requesting new certificates."
+msgstr ""
+
 #: ../../web/templates/pages/edit_web.php:180
 msgid "Enable automatic HTTPS redirection"
 msgstr ""
@@ -2321,6 +2358,90 @@ msgstr ""
 #: ../../web/templates/pages/edit_mail.php:119
 #: ../../web/templates/pages/list_ssl.php:19
 msgid "SSL Certificate"
+msgstr ""
+
+#: ../../web/templates/pages/edit_server.php:1079
+msgid "Cloudflare Origin CA"
+msgstr ""
+
+#: ../../web/templates/pages/edit_server.php:1092
+msgid "Enable Cloudflare Origin CA integration"
+msgstr ""
+
+#: ../../web/templates/pages/edit_server.php:1102
+msgid "Authentication method"
+msgstr ""
+
+#: ../../web/templates/pages/edit_server.php:1110
+msgid "API Token"
+msgstr ""
+
+#: ../../web/templates/pages/edit_server.php:1111
+msgid "User Service Key"
+msgstr ""
+
+#: ../../web/templates/pages/edit_server.php:1113
+msgid "Provide a token with Origin CA and (optional) Zone:Settings:Edit permissions."
+msgstr ""
+
+#: ../../web/templates/pages/edit_server.php:1117
+msgid "Cloudflare API token"
+msgstr ""
+
+#: ../../web/templates/pages/edit_server.php:1127
+msgid "Leave blank to keep the currently stored token."
+msgstr ""
+
+#: ../../web/templates/pages/edit_server.php:1132
+msgid "Cloudflare User Service Key"
+msgstr ""
+
+#: ../../web/templates/pages/edit_server.php:1142
+msgid "Leave blank to keep the currently stored service key."
+msgstr ""
+
+#: ../../web/templates/pages/edit_server.php:1147
+msgid "Account email (optional)"
+msgstr ""
+
+#: ../../web/templates/pages/edit_server.php:1159
+msgid "Certificate key type"
+msgstr ""
+
+#: ../../web/templates/pages/edit_server.php:1167
+msgid "RSA (origin-rsa)"
+msgstr ""
+
+#: ../../web/templates/pages/edit_server.php:1168
+msgid "ECC (origin-ecc)"
+msgstr ""
+
+#: ../../web/templates/pages/edit_server.php:1173
+msgid "RSA key size"
+msgstr ""
+
+#: ../../web/templates/pages/edit_server.php:1183
+msgid "ECC curve"
+msgstr ""
+
+#: ../../web/templates/pages/edit_server.php:1192
+msgid "Requested validity (days)"
+msgstr ""
+
+#: ../../web/templates/pages/edit_server.php:1206
+msgid "Zone SSL mode after issuance"
+msgstr ""
+
+#: ../../web/templates/pages/edit_server.php:1209
+msgid "Do not change"
+msgstr ""
+
+#: ../../web/templates/pages/edit_server.php:1210
+msgid "Full (strict)"
+msgstr ""
+
+#: ../../web/templates/pages/edit_server.php:1212
+msgid "Requires API permissions that allow editing zone SSL settings."
 msgstr ""
 
 #: ../../web/templates/pages/edit_web.php:196

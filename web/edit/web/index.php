@@ -67,8 +67,25 @@ if (!empty($v_ssl)) {
 }
 $v_letsencrypt = $data[$v_domain]["LETSENCRYPT"];
 if (empty($v_letsencrypt)) {
-	$v_letsencrypt = "no";
+        $v_letsencrypt = "no";
 }
+$v_cf_origin = $data[$v_domain]["CF_ORIGIN_CERT"] ?? "no";
+if (empty($v_cf_origin)) {
+        $v_cf_origin = "no";
+}
+$v_cf_origin_id = $data[$v_domain]["CF_ORIGIN_CERT_ID"] ?? "";
+$cf_origin_enabled_global = (!empty($_SESSION["CF_ORIGIN_ENABLED"]) && $_SESSION["CF_ORIGIN_ENABLED"] === "yes");
+$cf_auth_type = $_SESSION["CF_ORIGIN_AUTH_TYPE"] ?? "token";
+$cf_origin_credentials_ready = false;
+if ($cf_origin_enabled_global) {
+        if ($cf_auth_type === "service_key") {
+                $cf_origin_credentials_ready = !empty($_SESSION["CF_ORIGIN_SERVICE_KEY"]);
+        } else {
+                $cf_origin_credentials_ready = !empty($_SESSION["CF_ORIGIN_API_TOKEN"]);
+        }
+}
+$cf_origin_issue_allowed = $cf_origin_enabled_global && $cf_origin_credentials_ready;
+$cf_origin_option_visible = $cf_origin_enabled_global || $v_cf_origin === "yes";
 $v_ssl_home = $data[$v_domain]["SSL_HOME"] ?? "";
 $v_backend_template = $data[$v_domain]["BACKEND"] ?? "";
 $v_nginx_cache = $data[$v_domain]["FASTCGI_CACHE"] ?? "";
@@ -190,8 +207,17 @@ if (!empty($_POST["save"])) {
 	if (!in_array($v_domain, $user_domains)) {
 		check_return_code(3, ["Unknown domain"]);
 	}
-	// Check token
-	verify_csrf($_POST);
+        // Check token
+        verify_csrf($_POST);
+        if (empty($_POST["v_cf_origin"])) {
+                $_POST["v_cf_origin"] = "";
+        }
+        if (!empty($_POST["v_cf_origin"]) && !$cf_origin_issue_allowed && $v_cf_origin !== "yes") {
+                $_SESSION["error_msg"] = _("Cloudflare Origin CA integration is not configured by the server administrator.");
+        }
+        if (!empty($_POST["v_cf_origin"]) && !empty($_POST["v_letsencrypt"])) {
+                $_SESSION["error_msg"] = _("Please choose either Let's Encrypt or Cloudflare for automatic SSL certificates.");
+        }
 
 	// Change web domain IP
 	$v_newip = "";
@@ -583,11 +609,11 @@ if (!empty($_POST["save"])) {
 			}
 		}
 
-		// Regenerate LE if aliases are different
-		if (
-			!empty($_POST["v_ssl"]) &&
-			$v_letsencrypt == "yes" &&
-			!empty($_POST["v_letsencrypt"]) &&
+                // Regenerate LE if aliases are different
+                if (
+                        !empty($_POST["v_ssl"]) &&
+                        $v_letsencrypt == "yes" &&
+                        !empty($_POST["v_letsencrypt"]) &&
 			empty($_SESSION["error_msg"])
 		) {
 			// If aliases are different from stored aliases
@@ -633,10 +659,68 @@ if (!empty($_POST["save"])) {
 				$v_ssl_not_before = $ssl_str[$v_domain]["NOT_BEFORE"];
 				$v_ssl_not_after = $ssl_str[$v_domain]["NOT_AFTER"];
 				$v_ssl_signature = $ssl_str[$v_domain]["SIGNATURE"];
-				$v_ssl_pub_key = $ssl_str[$v_domain]["PUB_KEY"];
-				$v_ssl_issuer = $ssl_str[$v_domain]["ISSUER"];
-			}
-		}
+                                $v_ssl_pub_key = $ssl_str[$v_domain]["PUB_KEY"];
+                                $v_ssl_issuer = $ssl_str[$v_domain]["ISSUER"];
+                        }
+                }
+
+                // Regenerate Cloudflare certificate if aliases are different
+                if (
+                        !empty($_POST["v_ssl"]) &&
+                        $v_cf_origin == "yes" &&
+                        !empty($_POST["v_cf_origin"]) &&
+                        empty($_SESSION["error_msg"]) &&
+                        $cf_origin_issue_allowed
+                ) {
+                        if (array_diff($valiases, $aliases) || array_diff($aliases, $valiases)) {
+                                $cf_aliases = str_replace("\n", ",", $v_aliases);
+                                exec(
+                                        HESTIA_CMD .
+                                                "v-add-cloudflare-origin-cert " .
+                                                $user .
+                                                " " .
+                                                quoteshellarg($v_domain) .
+                                                " " .
+                                                quoteshellarg($cf_aliases),
+                                        $output,
+                                        $return_var,
+                                );
+                                check_return_code($return_var, $output);
+                                unset($output);
+                                if ($return_var == 0) {
+                                        $v_cf_origin = "yes";
+                                        $v_letsencrypt = "no";
+                                        $v_ssl = "yes";
+                                        $restart_web = "yes";
+                                        $restart_proxy = "yes";
+
+                                        exec(
+                                                HESTIA_CMD .
+                                                        "v-list-web-domain-ssl " .
+                                                        $user .
+                                                        " " .
+                                                        quoteshellarg($v_domain) .
+                                                        " json",
+                                                $output,
+                                                $return_var,
+                                        );
+                                        $ssl_str = json_decode(implode("", $output), true);
+                                        unset($output);
+                                        $v_ssl_crt = $ssl_str[$v_domain]["CRT"];
+                                        $v_ssl_key = $ssl_str[$v_domain]["KEY"];
+                                        $v_ssl_ca = $ssl_str[$v_domain]["CA"];
+                                        $v_ssl_subject = $ssl_str[$v_domain]["SUBJECT"];
+                                        $v_ssl_aliases = $ssl_str[$v_domain]["ALIASES"];
+                                        $v_ssl_not_before = $ssl_str[$v_domain]["NOT_BEFORE"];
+                                        $v_ssl_not_after = $ssl_str[$v_domain]["NOT_AFTER"];
+                                        $v_ssl_signature = $ssl_str[$v_domain]["SIGNATURE"];
+                                        $v_ssl_pub_key = $ssl_str[$v_domain]["PUB_KEY"];
+                                        $v_ssl_issuer = $ssl_str[$v_domain]["ISSUER"];
+                                } else {
+                                        $v_cf_origin = "no";
+                                }
+                        }
+                }
 
 		if (!empty($v_stats) && $_POST["v_stats"] == $v_stats && empty($_SESSION["error_msg"])) {
 			// Update statistics configuration when changing domain aliases
@@ -752,11 +836,11 @@ if (!empty($_POST["save"])) {
 	}
 
 	// Delete Lets Encrypt support
-	if (
-		$v_letsencrypt == "yes" &&
-		(empty($_POST["v_letsencrypt"]) || empty($_POST["v_ssl"])) &&
-		empty($_SESSION["error_msg"])
-	) {
+        if (
+                $v_letsencrypt == "yes" &&
+                (empty($_POST["v_letsencrypt"]) || empty($_POST["v_ssl"])) &&
+                empty($_SESSION["error_msg"])
+        ) {
 		exec(
 			HESTIA_CMD .
 				"v-delete-letsencrypt-domain " .
@@ -774,16 +858,44 @@ if (!empty($_POST["save"])) {
 		$v_ssl_ca = "";
 		$v_letsencrypt = "no";
 		$v_letsencrypt_deleted = "yes";
-		$v_ssl = "no";
-		$restart_web = "yes";
-		$restart_proxy = "yes";
-	}
+                $v_ssl = "no";
+                $restart_web = "yes";
+                $restart_proxy = "yes";
+        }
 
-	// Delete SSL certificate
-	if ($v_ssl == "yes" && empty($_POST["v_ssl"]) && empty($_SESSION["error_msg"])) {
-		exec(
-			HESTIA_CMD .
-				"v-delete-web-domain-ssl " .
+        if (
+                $v_cf_origin == "yes" &&
+                (empty($_POST["v_cf_origin"]) || empty($_POST["v_ssl"])) &&
+                empty($_SESSION["error_msg"])
+        ) {
+                exec(
+                        HESTIA_CMD .
+                                "v-delete-cloudflare-origin-cert " .
+                                $user .
+                                " " .
+                                quoteshellarg($v_domain) .
+                                " 'no'",
+                        $output,
+                        $return_var,
+                );
+                check_return_code($return_var, $output);
+                unset($output);
+                $v_cf_origin = "no";
+                if (empty($_POST["v_ssl"])) {
+                        $v_ssl = "no";
+                }
+                $v_ssl_crt = "";
+                $v_ssl_key = "";
+                $v_ssl_ca = "";
+                $restart_web = "yes";
+                $restart_proxy = "yes";
+        }
+
+        // Delete SSL certificate
+        if ($v_ssl == "yes" && empty($_POST["v_ssl"]) && empty($_SESSION["error_msg"])) {
+                exec(
+                        HESTIA_CMD .
+                                "v-delete-web-domain-ssl " .
 				$user .
 				" " .
 				quoteshellarg($v_domain) .
@@ -804,12 +916,12 @@ if (!empty($_POST["save"])) {
 	}
 
 	// Add Lets Encrypt support
-	if (
-		!empty($_POST["v_ssl"]) &&
-		$v_letsencrypt == "no" &&
-		!empty($_POST["v_letsencrypt"]) &&
-		empty($_SESSION["error_msg"])
-	) {
+        if (
+                !empty($_POST["v_ssl"]) &&
+                $v_letsencrypt == "no" &&
+                !empty($_POST["v_letsencrypt"]) &&
+                empty($_SESSION["error_msg"])
+        ) {
 		$l_aliases = str_replace("\n", ",", $v_aliases);
 		exec(
 			HESTIA_CMD .
@@ -836,17 +948,80 @@ if (!empty($_POST["save"])) {
 		} else {
 			$v_ssl_forcessl = "no";
 		}
-		$restart_web = "yes";
-		$restart_proxy = "yes";
-	}
+                $restart_web = "yes";
+                $restart_proxy = "yes";
+        }
 
-	// Add SSL certificate
-	if (
-		$v_ssl == "no" &&
-		!empty($_POST["v_ssl"]) &&
-		empty($v_letsencrypt_deleted) &&
-		empty($_SESSION["error_msg"])
-	) {
+        if (
+                !empty($_POST["v_ssl"]) &&
+                $v_cf_origin == "no" &&
+                !empty($_POST["v_cf_origin"]) &&
+                empty($_SESSION["error_msg"]) &&
+                $cf_origin_issue_allowed
+        ) {
+                $cf_aliases = str_replace("\n", ",", $v_aliases);
+                exec(
+                        HESTIA_CMD .
+                                "v-add-cloudflare-origin-cert " .
+                                $user .
+                                " " .
+                                quoteshellarg($v_domain) .
+                                " " .
+                                quoteshellarg($cf_aliases),
+                        $output,
+                        $return_var,
+                );
+                check_return_code($return_var, $output);
+                unset($output);
+                if ($return_var == 0) {
+                        $v_cf_origin = "yes";
+                        $v_letsencrypt = "no";
+                        $v_ssl = "yes";
+                        if (!empty($_POST["v_ssl_forcessl"]) && $_POST["v_ssl_forcessl"] == "on") {
+                                $v_ssl_forcessl = "yes";
+                        } else {
+                                $v_ssl_forcessl = "no";
+                        }
+                        $restart_web = "yes";
+                        $restart_proxy = "yes";
+                        exec(
+                                HESTIA_CMD .
+                                        "v-list-web-domain-ssl " .
+                                        $user .
+                                        " " .
+                                        quoteshellarg($v_domain) .
+                                        " json",
+                                $output,
+                                $return_var,
+                        );
+                        $ssl_str = json_decode(implode("", $output), true);
+                        unset($output);
+                        $v_ssl_crt = $ssl_str[$v_domain]["CRT"];
+                        $v_ssl_key = $ssl_str[$v_domain]["KEY"];
+                        $v_ssl_ca = $ssl_str[$v_domain]["CA"];
+                        $v_ssl_subject = $ssl_str[$v_domain]["SUBJECT"];
+                        $v_ssl_aliases = $ssl_str[$v_domain]["ALIASES"];
+                        $v_ssl_not_before = $ssl_str[$v_domain]["NOT_BEFORE"];
+                        $v_ssl_not_after = $ssl_str[$v_domain]["NOT_AFTER"];
+                        $v_ssl_signature = $ssl_str[$v_domain]["SIGNATURE"];
+                        $v_ssl_pub_key = $ssl_str[$v_domain]["PUB_KEY"];
+                        $v_ssl_issuer = $ssl_str[$v_domain]["ISSUER"];
+                } else {
+                        $v_cf_origin = "no";
+                }
+        } elseif (!empty($_POST["v_cf_origin"]) && !$cf_origin_issue_allowed && $v_cf_origin !== "yes" && empty($_SESSION["error_msg"])) {
+                $_SESSION["error_msg"] = _("Cloudflare Origin CA integration is not configured by the server administrator.");
+        }
+
+        // Add SSL certificate
+        if (
+                $v_ssl == "no" &&
+                !empty($_POST["v_ssl"]) &&
+                empty($v_letsencrypt_deleted) &&
+                $v_cf_origin != "yes" &&
+                empty($_POST["v_cf_origin"]) &&
+                empty($_SESSION["error_msg"])
+        ) {
 		if (empty($_POST["v_ssl_crt"])) {
 			$errors[] = "ssl certificate";
 		}

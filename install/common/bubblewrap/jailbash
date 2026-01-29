@@ -11,7 +11,7 @@ set -euo pipefail
 	--tmpfs /usr/lib/modules \
 	--tmpfs /usr/lib/systemd \
 	--tmpfs /usr/local/hestia \
-	--tmpfs /usr/share \
+	--ro-bind /usr/share /usr/share \
 	--ro-bind /bin /bin \
 	--ro-bind /sbin /sbin \
 	--dir /var \
@@ -30,9 +30,12 @@ set -euo pipefail
 	--ro-bind-try /etc/ssl /etc/ssl \
 	--ro-bind-try /etc/pki /etc/pki \
 	--ro-bind-try /etc/manpath.config /etc/manpath.config \
+        --ro-bind-try /etc/php /etc/php \
+        --ro-bind-try /usr/lib/php /usr/lib/php \
 	--bind-try /run/mysqld/mysqld.sock /run/mysqld/mysqld.sock \
 	--chdir ${HOME} \
 	--unshare-all \
+    --unshare-pid \
 	--share-net \
 	--die-with-parent \
 	--dir /run/user/$(id -u) \

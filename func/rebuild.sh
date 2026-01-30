@@ -892,20 +892,28 @@ rebuild_pgsql_database() {
 
 # Import MySQL dump
 import_mysql_database() {
+	# Read the complete MySQL configuration line from the file
+	local conf_line
+	conf_line=$(cat "$HESTIA/conf/mysql.conf")
 
-	host_str=$(grep "HOST='$HOST'" $HESTIA/conf/mysql.conf)
-	parse_object_kv_list "$host_str"
-	if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ]; then
+	# Extract the values using sed
+	MYSQL_HOST=$(echo "$conf_line" | sed -n "s/.*HOST='\([^']*\)'.*/\1/p")
+	MYSQL_USER=$(echo "$conf_line" | sed -n "s/.*USER='\([^']*\)'.*/\1/p")
+	MYSQL_PASSWORD=$(echo "$conf_line" | sed -n "s/.*PASSWORD='\([^']*\)'.*/\1/p")
+
+	# Verify that all necessary values have been obtained
+	if [ -z "$MYSQL_HOST" ] || [ -z "$MYSQL_USER" ] || [ -z "$MYSQL_PASSWORD" ]; then
 		echo "Error: mysql config parsing failed"
 		log_event "$E_PARSING" "$ARGUMENTS"
 		exit "$E_PARSING"
 	fi
-	if [ -f '/usr/bin/mariadb' ]; then
-		mariadb -h $HOST -u $USER -p$PASSWORD $DB < $1 > /dev/null 2>&1
-	else
-		mysql -h $HOST -u $USER -p$PASSWORD $DB < $1 > /dev/null 2>&1
-	fi
 
+	# Use the MariaDB client if available; otherwise, use mysql
+	if [ -f '/usr/bin/mariadb' ]; then
+		mariadb -h "$MYSQL_HOST" -u "$MYSQL_USER" -p"$MYSQL_PASSWORD" "$DB" < "$1" > /dev/null 2>&1
+	else
+		mysql -h "$MYSQL_HOST" -u "$MYSQL_USER" -p"$MYSQL_PASSWORD" "$DB" < "$1" > /dev/null 2>&1
+	fi
 }
 
 # Import PostgreSQL dump

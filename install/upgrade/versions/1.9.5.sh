@@ -88,3 +88,10 @@ for user in $("$HESTIA"/bin/v-list-users list); do
 		"$HESTIA"/bin/v-update-user-quota "$user"
 	fi
 done
+
+# Fix: improve return_path handling in Exim to prevent panic logs
+if [ "$MAIL_SYSTEM" = "exim4" ]; then
+	echo "[ * ] Improving return_path handling in Exim configuration"
+	#shellcheck disable=SC2016
+	sed -i 's|^  return_path = ${srs_encode {SRS_SECRET} {$return_path} {$original_domain}}$|  return_path = ${srs_encode {SRS_SECRET} \\\n\t{${if and{ {def:return_path} {!eq{$return_path}{}} } \\\n\t\t\t{$return_path} \\\n\t\t\t{${if and{ {def:sender_address} {!eq{$sender_address}{}} } \\\n\t\t\t\t{$sender_address} \\\n\t\t\t\t{postmaster@$primary_hostname} \\\n\t\t\t}} \\\n\t\t}} \\\n\t\t{${if and{ {def:original_domain} {!eq{$original_domain}{}} } \\\n\t\t\t{$original_domain} \\\n\t\t\t{${if and{ {def:sender_address_domain} {!eq{$sender_address_domain}{}} } \\\n\t\t\t\t{$sender_address_domain} \\\n\t\t\t\t{$primary_hostname} \\\n\t\t\t}} \\\n\t\t}} \\\n\t}|' /etc/exim4/exim4.conf.template
+fi

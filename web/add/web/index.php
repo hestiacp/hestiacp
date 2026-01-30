@@ -68,6 +68,21 @@ if (!empty($_POST["ok"])) {
 	$v_backend_template = $user_config[$user_plain]["BACKEND_TEMPLATE"];
 	$v_proxy_template = $user_config[$user_plain]["PROXY_TEMPLATE"];
 
+	// Get backend address (optional)
+	$v_backend_address = !empty($_POST["v_backend_address"]) ? trim($_POST["v_backend_address"]) : "";
+
+	// Validate backend address format if provided
+	if (!empty($v_backend_address)) {
+		// Normalize: add http:// if no protocol specified
+		if (!preg_match('/^https?:\/\//', $v_backend_address)) {
+			$v_backend_address = "http://" . $v_backend_address;
+		}
+		// Validate format: must be valid URL with optional port
+		if (!preg_match('/^https?:\/\/[a-zA-Z0-9.-]+(:[0-9]+)?(\/.*)?$/', $v_backend_address)) {
+			$_SESSION["error_msg"] = _("Invalid backend address format. Use format: http://127.0.0.1:3000 or 127.0.0.1:3000");
+		}
+	}
+
 	// Add web domain
 	if (empty($_SESSION["error_msg"])) {
 		exec(
@@ -78,7 +93,8 @@ if (!empty($_POST["ok"])) {
 				quoteshellarg($v_domain) .
 				" " .
 				$v_ip .
-				" 'yes'",
+				" 'yes' '' '' " .
+				quoteshellarg($v_backend_address),
 			$output,
 			$return_var,
 		);

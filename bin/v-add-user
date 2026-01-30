@@ -60,6 +60,9 @@ if [ -n "$name" ]; then
 fi
 
 is_user_free "$user"
+if [[ $user =~ ^[0-9]+$ ]]; then
+	check_result "$E_INVALID" "Username cannot be numeric"
+fi
 is_password_valid
 is_package_valid
 

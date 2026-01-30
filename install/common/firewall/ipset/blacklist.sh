@@ -22,7 +22,7 @@ for i in "${BLACKLISTS[@]}"; do
 	IP_TMP=$(mktemp)
 	((HTTP_RC = $(curl -L --connect-timeout 10 --max-time 10 -o "$IP_TMP" -s -w "%{http_code}" "$i")))
 	if ((HTTP_RC == 200 || HTTP_RC == 302 || HTTP_RC == 0)); then # "0" because file:/// returns 000
-		command grep -Po '^(?:\d{1,3}\.){3}\d{1,3}(?:/\d{1,2})?' "$IP_TMP" | sed -r 's/^0*([0-9]+)\.0*([0-9]+)\.0*([0-9]+)\.0*([0-9]+)$/\1.\2.\3.\4/' >> "$IP_BLACKLIST_TMP"
+		command grep -Po '(?:\d{1,3}\.){3}\d{1,3}(?:/\d{1,2})?' "$IP_TMP" | sed -E 's/^0*([0-9]+)\.0*([0-9]+)\.0*([0-9]+)\.0*([0-9]+)(.*)$/\1.\2.\3.\4\5/' >> "$IP_BLACKLIST_TMP"
 	elif ((HTTP_RC == 503)); then
 		echo >&2 -e "\\nUnavailable (${HTTP_RC}): $i"
 	else
@@ -31,5 +31,5 @@ for i in "${BLACKLISTS[@]}"; do
 	rm -f "$IP_TMP"
 done
 
-sed -r -e '/^(0\.0\.0\.0|10\.|127\.|172\.1[6-9]\.|172\.2[0-9]\.|172\.3[0-1]\.|192\.168\.|22[4-9]\.|23[0-9]\.)/d' "$IP_BLACKLIST_TMP" | sort -n | sort -mu
+sed -E -e '/^(0\.0\.0\.0|10\.|127\.|172\.1[6-9]\.|172\.2[0-9]\.|172\.3[0-1]\.|192\.168\.|22[4-9]\.|23[0-9]\.)/d' "$IP_BLACKLIST_TMP" | sort -Vu
 rm -f "$IP_BLACKLIST_TMP"

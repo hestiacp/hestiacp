@@ -1,0 +1,58 @@
+<div class="spinner-overlay js-spinner">
+    <i class="fas fa-circle-notch fa-spin"></i>
+</div>
+
+<div x-data>
+    <dialog x-ref="dialog" class="shortcuts">
+        <div class="shortcuts-header">
+            <div class="shortcuts-title">{{ 'Shortcuts' | trans }}</div>
+            <div
+                x-on:click="$refs.dialog.close()"
+                class="shortcuts-close"
+            >
+                <i class="fas fa-xmark"></i>
+            </div>
+        </div>
+        <div class="shortcuts-inner">
+            <ul class="shortcuts-list">
+                <li><span class="key">a</span>{{ 'Add new object' | trans }}</li>
+                <li><span class="key">Ctrl + Enter</span>{{ 'Save form' | trans }}</li>
+                <li class="u-mb20"><span class="key">Ctrl + Backspace</span>{{ 'Unsave form' | trans }}</li>
+                <li><span class="key">1</span>{{ 'Go to WEB list' | trans }}</li>
+                <li><span class="key">2</span>{{ 'Go to DNS list' | trans }}</li>
+                <li><span class="key">3</span>{{ 'Go to MAIL list' | trans }}</li>
+                <li><span class="key">4</span>{{ 'Go to DB list' | trans }}</li>
+                <li><span class="key">5</span>{{ 'Go to CRON list' | trans }}</li>
+                <li><span class="key">6</span>{{ 'Go to BACKUP list' | trans }}</li>
+            </ul>
+            <ul class="shortcuts-list">
+                <li class="u-mb20"><span class="key">f</span>{{ 'Focus on search' | trans }}</li>
+                <li class="u-mb20"><span class="key">h</span>{{ 'Display / Hide shortcuts' | trans }}</li>
+                <li><span class="key bigger">&larr;</span>{{ 'Move backward through top menu' | trans }}</li>
+                <li><span class="key bigger">&rarr;</span>{{ 'Move forward through top menu' | trans }}</li>
+                <li class="u-mb20"><span class="key">Enter</span>{{ 'Enter focused element' | trans }}</li>
+                <li><span class="key bigger">&uarr;</span>{{ 'Move up through elements list' | trans }}</li>
+                <li><span class="key bigger">&darr;</span>{{ 'Move down through elements list' | trans }}</li>
+            </ul>
+        </div>
+    </dialog>
+
+    <button
+        x-on:click="$refs.dialog.showModal()"
+        type="button"
+        class="button button-secondary button-circle button-floating button-floating-shortcuts"
+        title="{{ 'Shortcuts' | trans }}"
+    >
+    <i class="fas fa-keyboard"></i>
+    <span class="u-hidden">{{ 'Shortcuts' | trans }}</span>
+    </button>
+</div>
+
+<a
+    href="#top"
+    class="button button-secondary button-circle button-floating button-floating-top"
+    title="{{ 'Top' | trans }}"
+>
+<i class="fas fa-arrow-up"></i>
+<span class="u-hidden">{{ 'Top' | trans }}</span>
+</a>

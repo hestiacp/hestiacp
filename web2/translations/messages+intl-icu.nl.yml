@@ -1,0 +1,788 @@
+"Error: Hestia did not return any output.": "Foutmelding: Hestia gaf geen melding"
+Top: Top
+Logged in as: "Ingelogd in als "
+Disk: Schijfruimte
+Bandwidth: Bandbreedte
+Notifications: Meldingen
+Loading...: Laden...
+No notifications: Geen meldingen
+Delete notification: Verwijder notificatie
+Delete all notifications: Verwijder alle notificaties
+Close menu: Sluit menu
+Open menu: Open menu
+File manager: Bestand beheer
+Web terminal: Web terminal
+Server settings: Server instellingen
+Logs: Geschiedenis
+Statistics: Statistieken
+Help: Hulp
+Log out: Uitloggen
+Collapse main menu: Sla menu in
+Expand main menu: Klap menu uit
+Users: Gebruikers
+Suspended: Opgeschort
+USER: GEBRUIKER
+Domains: Domeinen
+Aliases: Aliassen
+Limit: Limiet
+WEB: WEBSITES
+DNS: DNS
+Zones: Zones
+Records: Records
+MAIL: E-MAIL
+Accounts: Accounts
+Databases: Databases
+DB: Databases
+Jobs: Taken
+CRON: CRON
+Backups: Back-ups
+BACKUP: BACK-UP
+Common Account Settings: Algemene account instellingen
+"Connect to this account using credentials:": "Maak verbinding met dit account met behulp van inloggegevens:"
+Username: Gebruikersnaam
+Copy to clipboard: Kopieer naar klembord
+Password: Wachtwoord
+Webmail: Webmail
+Hostname: Hostnaam
+IMAP Settings: IMAP instellingen
+Authentication: Authenticatie
+Normal password: Normaal wachtwoord
+Port: Poort
+No encryption: Geen encryptie
+POP3 Settings: POP3 instellingen
+SMTP Settings: SMTP instellingen
+Password must include: Wachtwoord moet bevatten
+8 characters minimum: Minimaal 8 tekens
+"1 uppercase & 1 lowercase character": "1 hoofdletter & 1 kleine letter"
+1 number: 1 nummer
+Unlimited: Onbeperkt
+Are you sure you want to leave the page?: Bent u zeker dat u deze pagina wilt verlaten?
+BLACKLIST: BLACKLIST
+IPVERSE: IPVERSE
+Remove: Verwijder
+Shortcuts: Snelkoppelingen
+Add new object: Een object toevoegen
+Save form: Formulier opslaan
+Unsave form: Formulier ongedaan maken
+Go to WEB list: Ga naar WEBSITES lijst
+Go to DNS list: Ga naar DNS lijst
+Go to MAIL list: Ga naar MAIL lijst
+Go to DB list: Ga naar DATABASES lijst
+Go to CRON list: Ga naar CRON lijst
+Go to BACKUP list: Ga naar BACKUP lijst
+Focus on search: Focus op zoek
+Display / Hide shortcuts: Beschikbare sneltoetsen weergeven
+Move backward through top menu: Beweeg terug door topmenu
+Move forward through top menu: Beweeg vooruit door topmenu
+Enter focused element: Enter gefocust element
+Move up through elements list: Beweeg omhoog door elementen lijst
+Move down through elements list: Beweeg omlaag door elementen lijst
+Back: Terug
+Manage SSH Keys: Beheer SSH Sleutels
+Access Keys: Toegang sleutels
+Save: Opslaan
+Edit User: Gebruiker bewerken
+Contact Name: Naam contactpersoon
+Email: E-mail
+Generate: Genereren
+Do not allow user to log in to Control Panel: Blokkeer toegang tot controlepaneel voor deze gebruiker
+Enable two-factor authentication: Schakel tweestapsverificatie in
+Account Recovery Code: Account herstelcode
+Please scan the code below in your 2FA application: Scan de onderstaande code in uw 2FA-applicatie
+2FA QR Code: 2FA QR code
+Use IP address allow list for login attempts: Beperk toegang ip adressen voor login pogingen
+For example: Bijvoorbeeld
+Language: Taal
+Role: Rol
+User: Gebruiker
+Administrator: Beheerder
+DNS Sync User: DNS Sync gebruiker
+Theme: Thema
+Default List Sort Order: Standaard sorteervolgorde lijst
+Date: Datum
+Name: Naam
+Package: Pakket
+Advanced Options: Geavanceerde Opties
+SSH Access: SSH Toegang
+PHP CLI Version: PHP CLI versie
+Default Name Servers: Standaard Naamservers
+Add Name Server: Voeg Naam Server toe
+Add Web Domain: Domein toevoegen
+"It is strongly advised to {create a standard user account} before adding %s to the server due to the increased privileges the admin account possesses and potential security risks.": "Het wordt ten zeerste aangeraden om {create a standard user account} voor het toevoegen van %s aan de server door de toegenomen privileges die de beheerdersaccount heeft en potentiële beveiligingsrisico's."
+a web domain: een web domein
+Add User: Gebruiker toevoegen
+Continue: Doorgaan
+Domain: Domein
+IP Address: IP adres
+DNS Support: DNS Ondersteuning
+Mail Support: Mail Ondersteuning
+Add IP list: voeg IP lijst toe
+Apply to selected: Toepassen op selectie
+Delete: Verwijder
+IPset IP Lists: IPset IP-lijsten
+Select all: Selecteer alles
+IP List Name: IP List Naam
+Auto Update: Automatische update
+IP Version: IP Versie
+Time: Tijd
+Select: Selecteer
+"Are you sure you want to delete IP list %s?": "Weet u zeker dat u de IP lijst {%s} wilt verwijderen?"
+Disabled: Uitgeschakeld
+Enabled: "Ingeschakeld "
+There are currently no IP lists defined.: Er zijn op dit moment geen ip lijsten gedefineerd
+"%d IP list": "%d IP lijst"
+"%d IP lists": "%d IP lijsten"
+Edit Mail Account: E-mailaccount Aanpassen
+Account: Account
+Your password must have at least: Je wachtwoord moet minimaal voldoen aan
+8 characters long: 8 karakters lang
+"Email login credentials to:": "E-mail inloggegevens naar:"
+Quota: Quotum
+in MB: in MB
+Use local-part without domain name: Gebruik lokaal deel zonder domeinnaam
+Discard all mail: Wis alle inkomende email
+Do not store forwarded mail: Doorgestuurde e-mail niet opslaan
+Forward to: Doorsturen naar
+one or more email addresses: Eén of meerdere e-mailadressen
+Auto Reply: Automatisch antwoord
+Message: Bericht
+Rate Limit: Rate Limiet
+email / hour: email / hour
+Configure Server: Server configureren
+Restart: Herstart
+DNS Records: DNS records
+Record: Record
+Type: Type
+Priority: Prioriteit
+TTL: TTL
+IP or Value: IP of Waarde
+Add Record: Voeg Record Toe
+Edit DNS Domain: DNS Domein bewerken
+Sort items: Sorteer items
+Sort by: Sorteer op
+Suspend: Opschorten
+Unsuspend: Heractiveren
+Search: Zoeken
+Edit DNS Record: DNS record bewerken
+"Are you sure you want to delete record %s?": "Weet u zeker dat u record %s wilt verwijderen?"
+Default: Standaard
+"%d DNS record": "%d DNS-record"
+"%d DNS records": "%d DNS-records"
+View Logs: Logboek weergeven
+Download: Download
+Error Log: Fouten Log
+Refresh: Ververs
+"Last 70 lines of %s.%s.log": "Laatste 70 lijnen van %s.%s.log"
+Packages: Pakketten
+Rebuild All: Herbouw alles
+Rebuild User Profile: Herbouw Gebruikers Profiel
+Rebuild Web Domains: Herbouw Web Domeinen
+Rebuild DNS Zones: Herbouw DNS Zones
+Rebuild Mail Domains: Herbouw Mail Domeinen
+Rebuild Databases: Herbouw Databases
+Rebuild Cron Jobs: Herbouw Cron Jobs
+Update Usage Counters: Update gebruik tellers
+IPs: "IP's"
+Web Domains: Web Domeinen
+DNS Zones: DNS zones
+Mail Domains: E-mail Domeinen
+"Are you sure you want to unsuspend user %s?": "Weet je zeker dat je de gebruiker %s wilt activeren?"
+"Are you sure you want to suspend user %s?": "Weet je zeker dat je gebruiker %s wilt opschorten?"
+Log in as: Log in als
+"Are you sure you want to delete user %s?": "Weet u zeker dat u gebruiker %s wilt verwijderen?"
+Edit Package: Wijzig pakket
+"%d user account": "%d gebruikers account"
+"%d user accounts": "%d gebruikers accounts"
+Edit Backup Exclusions: Bewerk Back-up Uitsluitingen
+Backup Exclusions: Back-up Uitsluitingen
+Value: Waarde
+No exclusions: Geen uitsluitingen
+Add SSH Key: Voeg SSH sleutel toe
+SSH Keys: SSH-sleutels
+SSH ID: SSH ID
+SSH Key: SSH sleutels
+"Are you sure you want to delete SSH key %s?": "Weet u zeker dat u SSH sleutel %s wilt verwijderen?"
+"%d SSH key": "%d SSH sleutel"
+"%d SSH keys": "%d SSH sleutel"
+Are you sure you want to delete the logs?: Weet u zeker dat u dit log wilt wissen?
+Auth Log: Authenticatie log
+Status: Status
+Browser: Browser
+Success: Succes
+Failed: Mislukt
+"%d log record": "%d logboekrecord"
+"%d log records": "%d logboekrecords"
+"Install %s": "Installeer %s"
+"Data Loss Warning!": "Data verlies waarschuwing!"
+Your web folder already has files uploaded to it. The installer will overwrite your files and/or the installation might fail.: Je web map bevat al geüploade bestanden. De installer zal deze bestanden overschrijven en/of the installatie kan mislukken
+"Please make sure ~/web/%s/public_html is empty!": "Controleer of ~/web/%s/public_html leeg is"
+Search Results: Zoekresultaten
+Owner: Eigenaar
+"%d object": "%d object"
+"%d objects": "%d objecten"
+Advanced Details: Extra Details
+Daily: Dagelijks
+Weekly: Wekelijks
+Monthly: Maandelijks
+Yearly: Jaarlijks
+Biennially: Tweejaarlijks
+Triennially: Driejaarlijks
+Login History: Login Geschiedenis
+Category: Catergorie
+Information: Informatie
+Warning: Waarschuwing
+Error: Foutmelding
+Add Mail Account: Account Toevoegen
+Edit Mail Domain: Wijzig e-maildomein
+Mail Accounts: E-mail Accounts
+Forwarding: Doorsturen
+"Are you sure you want to unsuspend %s?": "Bent u zeker dat u op te schorten %s?"
+No aliases: Geen aliassen
+Aliases used: Aliassen gebruikt
+"Are you sure you want to suspend %s?": "Bent u zeker dat u op te schorten %s?"
+Open Webmail: Open Webmail
+"Are you sure you want to delete %s?": "Weet u zeker dat u %s wilt verwijderen?"
+"%d mail account": "%d email account"
+"%d mail accounts": "%d email accounts"
+Add IP Address to Banlist: IP-adres Toevoegen aan Banlijst
+Support CIDR format: Ondersteuning CIDR formaat
+Banlist: Banlijst
+SSH: SSH
+FTP: FTP
+HESTIA: HESTIA
+Configure: Configureren
+"Type domain name, one per line. To exclude all domains use *. To exclude specific dirs use following format: domain.tld:public_html/cache:public_html/tmp": "Type domeinnaam, één per regel. Om alle domeinen uit te sluiten, gebruik *. Om specifieke schrijfformaten uit te sluiten: domain.tld:public_html/cache:public_html/tmp"
+"Type domain name, one per line. To exclude all domains use *. To exclude specific accounts use following format: domain.tld:info:support:postmaster": "Type domeinnaam, één per regel. Om alle domeinen uit te sluiten, gebruik *. Om specifieke account uit te sluiten: domain.tld:info:support:postmaster"
+"Type full database name, one per line. To exclude all databases use *": "Typ de volledige databasenaam één per regel. Om alle databases uit te sluiten, gebruik *"
+User Directory: Gebruikersdirectory
+"Type directory name, one per line. To exlude all dirs use *": "Typ de map naam één per regel. Om alle mappen uit te sluiten, gebruik *"
+Task Monitor: Taak monitor
+Updates: Updates
+Firewall: Firewall
+Are you sure you want to restart the server?: Weet je zeker dat je de server wilt herstarten?
+Stop: Stop
+Start: Start
+Production Release: Productie-release
+Operating System: Besturing Systeem
+Load Average: Gemiddelde Belasting
+Uptime: Up-time
+Services: Diensten
+Service: Dienst
+Description: Omschrijving
+CPU: CPU
+Memory: Geheugen
+Edit: Bewerken
+"Are you sure you want to restart the %s service?": "Weet je zeker dat je de %s service wilt herstarten?"
+"Are you sure you want to stop the %s service?": "Weet je zeker dat je de %s service wilt stoppen?"
+"Are you sure you want to start the %s service?": "Weet je zeker dat je de %s service wilt starten?"
+MB: MB
+Restore All: Herstel alles
+Restore: Herstel
+Backup Details: Back-up details
+Details: Details
+Web Domain: Web Domein
+"Are you sure you want to restore %s?": "Weet je zeker dat je %s wilt herstellen?"
+Mail Domain: Email Domein
+DNS Zone: DNS zones
+Database: Database
+Cron Jobs: Cron Jobs
+"%d item": "%d item"
+"%d items": "%d items"
+Send welcome email: Verstuur welkom email
+Package Name: Pakketnaam
+Incremental Backups: Incrementele Back-ups
+Web Aliases: Web Aliassen
+per domain: per domein
+Web Template: Web Sjabloon
+Backend Template: Backend Sjabloon
+Proxy Template: Proxy Sjabloon
+DNS Template: DNS Sjabloon
+Name Servers: Naam Servers
+per account / hour: per account / uur
+System: Systeem
+System Resources: Systeembronnen
+"CPU Quota (in %)": "CPU Quota (in %)"
+"CPUQuota=20% ensures that the executed processes will never get more than 20% CPU time on one CPU.": "CPUQuota=20% zorgt ervoor dat de uitgevoerde processen nooit meer dan 20% CPU-tijd op één CPU."
+CPU Quota Period (in ms for milliseconds or s for seconds.): CPU Quota Periode (in ms voor milliseconden of s voor seconden.)
+CPUQuotaPeriodSec=10ms to request that the CPU quota is measured in periods of 10ms.: CPUQuotaPeriodSec=10ms om aan te vragen dat de CPU-quota worden gemeten in perioden van 10ms.
+"Memory Limit (in bytes or with units like '2G')": "Geheugenlimiet (in bytes of met eenheden zoals '2G')"
+"Takes a memory size in bytes. If the value is suffixed with K, M, G or T, the specified memory size is parsed as Kilobytes, Megabytes, Gigabytes, or Terabytes (with the base 1024), respectively": "Neemt een geheugen grootte in bytes. Als de waarde is achtergelaten met K, M, G of T, wordt de opgegeven geheugengrootte geparseerd als Kilobytes, Megabytes, Gigabytes, of Terabytes (met de basis 1024), respectievelijk"
+"Swap Limit (in bytes or with units like '2G')": "Wissel limiet (in bytes of met eenheden zoals '2G')"
+"Takes a swap size in bytes. If the value is suffixed with K, M, G or T, the specified swap size is parsed as Kilobytes, Megabytes, Gigabytes, or Terabytes (with the base 1024), respectively": "Neemt een swap grootte in bytes. Als de waarde is achtergesteld met K, M, G of T, wordt de opgegeven swap grootte geparseerd als Kilobytes, Megabytes, Gigabytes, of Terabytes (met de basis 1024), respectievelijk"
+Add Mail Domain: Domein toevoegen
+Anti-Virus: Antivirus
+Spam Filter: Spam Filter
+DKIM: DKIM
+SSL: SSL
+"Are you sure you want to unsuspend domain %s?": "Weet je zeker dat je de domein %s wilt activeren?"
+"Are you sure you want to suspend domain %s?": "Weet je zeker dat je domain %s wilt opschorten?"
+"Are you sure you want to delete domain %s?": "Weet je zeker dat je domain %s wilt verwijderen?"
+"%d mail domain": "%d mail domein"
+"%d mail domains": "%d mail domeinen"
+Add DNS Domain: Domein toevoegen
+View Public DNSSEC Key: Bekijk Publieke DNSSEC Sleutel
+DNSKEY Record: DNSKEY Record
+DS Record: DS Record
+Public Key: Publieke sleutel
+Key Type / Flag: Key Type / Vlag
+Key Tag: Key Tag
+Flag: Flag
+Algorithm: Algoritme
+Create Snapshot: Maak Snapshot
+Delete Snapshot: Verwijder Snapshot
+Snapshots: Snapshots
+Snapshot: Snapshot
+Browse: Bladeren
+"%d snapshot": "%d snapshot"
+"%d snapshots": "%d snapshots"
+Disable Automatic Updates: Schakel automatisch updates uit
+Enable Automatic Updates: Schakel automatisch updates in
+Version: Versie
+Package Names: Pakket namen
+Update available: Update beschikbaar
+Package up-to-date: Pakket up-to-date
+Add Access Key: Voeg toegangs sleutel toe
+Access Key: Toegangs sleutel
+Comment: Commentaar
+"Are you sure you want to delete access key %s?": "Weet u zeker dat u toegangs sleutel %s wilt verwijderen?"
+"%d access key": "%d toegangs sleutel"
+"%d access keys": "%d toegangs sleutels"
+Basic Options: Basis Options
+Permissions: Rechten
+Optional: Optioneel
+White Label Options: White Label-instellingen
+General: Algemeen
+Application Name: Applicatienaam
+Title: Titel
+Supported variables: Ondersteunde variabelen
+Sender Name: Afzendernaam
+Sender Email Address: E-mailadres van afzender
+Email Subject: Email onderwerp
+Hide link to Documentation: Verberg link naar documentatie
+"Yes": Ja
+"No": Nee
+Custom Logo: Eigen logo
+"Upload the files to %s": "Bestanden uploaden naar %s"
+Update logo: Logo bijwerken
+Reset Logo: Reset Logo
+Expire: Loopt af
+Rebuild: Herbouwen
+Template: Sjabloon
+SOA: SOA
+DNSSEC: DNSSEC
+Expiration Date: Vervaldatum
+Add DNS Record: DNS Record toevoegen
+"%d DNS zone": "%d DNS zone"
+"%d DNS zones": "%d DNS zones"
+Edit IP Address: IP-Adres Bewerken
+Netmask: Netmasker
+Interface: Interface
+Shared: Gedeeld
+Assigned User: Toegewezen gebruiker
+Assigned Domain: Toegewezen domein
+NAT IP Association: NAT IP-associatie
+Generate Self-Signed SSL Certificate: Genereer Self-Signed SSL-certificaat
+Country: Land
+ISO 3166-1 alpha-2 two-letter code: ISO 3166-1 alpha-2 twee-letterige code
+State / Province: Staat / Provincie
+City / Locality: Plaats
+Organization: Organisatie
+Enable DNSSEC: Schakkel DNSSEC
+YYYY-MM-DD: DD-MM-YYYY
+Ban IP Address: IP toevoegen
+Banned IP Addresses: Geblokeerde IP addressen
+Chain: Chain
+"Are you sure you want to delete IP address %s?": "Weet u zeker dat u de IP adres {%s} wilt verwijderen?"
+There are currently no banned IP addresses.: Er zijn momenteel geen geblokeerde IP adressen.
+"%d banned IP address": "%d geblokeerde IP address"
+"%d banned IP addresses": "%d geblokeerde IP addressen"
+Add Package: Pakket toevoegen
+Shell: Shell
+Duplicate: Kopieer
+"Are you sure you want to delete package %s?": "Weet je zeker dat je pakket {%s} wilt verwijderen?"
+"%d package": "%d pakket"
+"%d packages": "%d pakketen"
+a mail domain: een email domein
+Webmail Client: Webmail client
+Reject Spam: Weiger Spam
+DKIM Support: DKIM Ondersteuning
+SMTP Relay: SMTP Relay
+Host: Host
+Access Key ID: Toegangs sleutel id
+Secret Key: Geheime toegangs sleutel
+"Warning! Last chance to save secret key!": "Waarschuwing! Laatste kans om the geheime toegangs sleutel op te slaan!"
+Preview Features: Beta functies
+Policy: Beleid
+Allow suspended users to log in with read-only access: Sta opgeschorte gebruikers toe om in te loggen met alleen-lezen toegang
+Partially implemented: Gedeeltelijk geïmplementeerd
+Overall Statistics: Alle Statistieken
+Show Per User: Toon Per Gebruiker
+IP Addresses: IP Adressen
+Web: Web
+Mail: E-mail
+SSL Domains: SSL domein
+"%d month": "%d maand"
+"%d months": "%d maanden"
+Add DNS Zone: Voeg DNS Zone toe
+a dns domain: een dns domain
+Add IP Address: IP-adres toevoegen
+Refresh IP Addresses: Verniew IP adressen
+"%d IP address": "%d IP adress"
+"%d IP addresses": "%d IP adressen"
+Hestia Control Panel: Hestia Control Panel
+RAM: Geheugen
+Network: Netwerk
+Edit Database: Bewerk database
+"Maximum %s characters length, including prefix": "Maximaal %s karakters lang, inclusief prefix"
+Charset: Karakterset
+Add Cron Job: Nieuwe Cronjob
+System time: Systeem tijd
+Command: Commando
+Minute: Minuut
+Hour: Uur
+Day: Dag
+Month: Maand
+Day of Week: Dag van de Week
+Minutes: Minuten
+Hourly: Ieder uur
+Run Command: Voer commando uit
+Every minute: Elke minuut
+"Every %s minutes": "Elke %s minuten"
+Every hour: Elk uur
+"Every %s hours": "Elke %s uren"
+Every day: Elke dag
+Every odd day: Elke oneven dag
+Every even day: Elke even dag
+"Every %s days": "Alle %s dagen"
+Weekdays (5 days): Weekdagen (5 dagen)
+Weekend (2 days): Weekend (2 dagen)
+Monday: Maandag
+Tuesday: Dinsdag
+Wednesday: Woensdag
+Thursday: Donderdag
+Friday: Vrijdag
+Saturday: Zaterdag
+Sunday: Zondag
+Every month: Elke maand
+Every odd month: Elke oneven maand
+Every even month: Elke even maand
+"Every %s months": "Iedere %s maanden"
+Jan: Jan
+Feb: Feb
+Mar: Mrt
+Apr: Apr
+May: Mei
+Jun: Jun
+Jul: Jul
+Aug: Aug
+Sep: Sep
+Oct: Okt
+Nov: Nov
+Dec: Dec
+Block Malicious IPs: "Blokkeer schadelijke IP's"
+Add IPset IP List for Firewall: Voeg IPset IP-lijst toe voor Firewall
+Data Source: Bron
+"URL, script or file": "URL, script of bestand"
+Clear: Verwijder
+Edit Cron Job: Cronjob bewerken
+Add Database: Nieuwe database
+Suspend All: Alles stoppen
+Unsuspend All: Alles ongedaan maken
+"Are you sure you want to unsuspend database %s?": "Weet je zeker dat je de database %s wilt activeren?"
+"Are you sure you want to suspend database %s?": "Weet je zeker dat je database %s wilt opschorten?"
+Download Database: Download de database
+"Are you sure you want to delete database %s?": "Weet je zeker dat je database %s wilt verwijderen?"
+"%d database": "%d database"
+"%d databases": "%d databases"
+One or more email addresses: Eén of meerdere e-mailadressen
+White Label: White label
+Panel Cronjobs: Paneel Cronjobs
+Time Zone: Tijdzone
+Set as selected theme for all users: Stel in als standaard thema voor alle gebruikers
+Default Language: Standaard Taal
+Set as default language for all users: Stel in als standaardtaal voor alle gebruikers
+Enable debug mode: Schakel debug mode in
+Release: Uitgave
+Options: Opties
+Enable preview features: Schakel preview features in
+View: Bekijk
+Send email notification when an update has been installed: Stun een email notification waneer een update is geïnstalleerd
+Send update installation log by email: Verstuur installatielogboek via e-mail na de update
+Web Server: Web server
+Proxy Server: Proxy Server
+PHP Interpreter: PHP Interpreter
+Backend Pool Mode: Backend Pool Stand
+Enabled PHP Versions: Ingeschakelde PHP Versies
+It may take a few minutes to save your changes. Please wait until the process has completed and do not refresh the page.: Het kan een paar minuten duren om uw wijzigingen op te slaan. Wacht tot het proces is voltooid en ververs de pagina niet.
+System PHP Version: Systeem PHP versie
+DNS Server: DNS server
+DNS Cluster: DNS Cluster
+Mail Server: Mail server
+Webmail Alias: Webmail Alias
+Global SMTP Relay: Globale SMTP relay
+MySQL Support: MySQL Ondersteuning
+phpMyAdmin Alias: phpMyAdmin Alias
+phpMyAdmin Single Sign On: phpMyAdmin automatische inlog
+More info: Meer informatie
+Maximum Number of Databases: Maximale aantal Databases
+Current Number of Databases: Huidige aantal Databases
+PostgreSQL Support: PostgreSQL ondersteuning
+phpPgAdmin Alias: phpPgAdmin Alias
+Local Backup: Lokale Backup
+Compression: Compressie
+Compression Level: Compressie Level
+zstd only: Alleen zstd
+Directory: Map
+Remote Backup: Externe Backup
+Protocol: Protocol
+Enable incremental backup: Schakel incrementele back-up in
+Repository: Repository
+Keep last daily backups: Behoud dagelijkse backups
+Keep last weekly backups: Behoud vorige week back-ups
+Keep last monthly backups: Bewaar de laatste maandelijkse back-ups
+Keep last yearly backups: Bewaar de laatste jaarlijkse back-ups
+SSL Certificate: SSL Certificaat
+SSL Private Key: SSL Privé sleutel
+Issued To: Uitgegeven aan
+Alternate: Alternatief
+Not Before: Niet voor
+Not After: Niet na
+Signature: Handtekening
+Key Size: Sleutelgrootte
+Issued By: Uitgegeven door
+Security: Beveiliging
+API: API
+Enable API access: Schakel API toegang in
+Enabled for admin: Ingeschakeld voor admin
+Enabled for all users: Ingeschakeld voor alle gebruikers
+Enable legacy API access: Schakel Legacy API toegang in
+Allowed IP addresses for API: IP adressen toegestaan voor gebruik van api
+Login: Inloggen
+Login screen style: Login scherm stijl
+Old Style: Oude stijl
+Allow users to reset their passwords: Sta gebruikers toe om wachtwoord te herstellen
+Inactive session timeout: "Time-out voor inactieve sessie "
+Prevent CSRF: Voorkom CSRF
+Strict: Streng
+System Protection: Systeem berscherming
+System Administrator account: Systeem Administrator account
+Restrict access to read-only for other administrators: Beperk toegang tot read-only voor andere administrators
+Hide account from other administrators: Verberg account voor andere adminstrators
+Do not allow other administrators to access Server Settings: Geef andere beheerders geen toegang tot de serverinstellingen
+Policies: Beleid
+Allow users to edit their account details: Sta gebruikers om hun account details te wijzigen
+Allow users to change templates when editing web domains: Sta gebruikers om templates te wijzigen tijdens wijzig web domein
+Allow users to change templates when editing DNS zones: Sta gebruikers om templates te wijzigen tijdens wijzig DNS zones
+Allow users to view action and login history logs: Sta gebruikers toe om logs te bekijken
+Allow users to delete log history: Sta gebruikers toe om geschiedenis te wissen
+Preview: Bezichtiging
+Allow suspended users to create new backups: Sta opgeschorte gebruikers toe om nieuwe back-ups te maken
+Sync Error document templates on user rebuild: Sync Foutdocumentsjablonen bij de wederopbouw van de gebruiker
+Sync Skeleton templates: Synchroniseer Skelet templates
+Enforce subdomain ownership: Dwing eigendom van het subdomein af
+Plugins: Plugins
+Quick App Installer: Quick App Installer
+File Manager: Bestandsbeheer
+Web Terminal: Web Terminal
+Limit System Resources: Beperk Systeembronnen
+File System Disk Quota: Bestandssysteem schijfquotum
+Quick Install App: Snelle Installatie App
+Setup: Installeer
+a database: een database
+"Prefix %s will be automatically added to database name and database user": "Voorvoegsel %s zal automatisch worden toegevoegd aan de database naam en gebruiker"
+Purge NGINX Cache: Wis NGINX Cache
+Edit Web Domain: Wijzig Web Domein
+"If the aliases changes, Let's Encrypt will obtain a new SSL certificate.": "Als de aliassen veranderen, zal Let's Encrypt een nieuw SSL-certificaat aanvragen."
+Web Statistics: Web Statistieken
+Statistics Authorization: Vereis Autorisatie webstatistieken
+Enable domain redirection: Domeinomleiding inschakelen
+"Redirect visitors to %s": "Stuur bezoeker to naar %s"
+Redirect visitors to a custom domain or web address: Stuur bezoekers door naar een aangepast domain of web adres
+Target domain or URL: Doel domein of URL
+Status code: Statuscode
+Enable SSL for this domain: SSL voor dit domein inschakelen
+"Use Let's Encrypt to obtain SSL certificate": "Gebruik Let's Encrypt om een SSL-certificaat te verkrijgen"
+Enable automatic HTTPS redirection: Automatische HTTPS omleiding inschakelen
+Enable HTTP Strict Transport Security (HSTS): Inschakelen van HTTP strikte Transport Security (HSTS)
+SSL Certificate Authority / Intermediate: SSL Certificeringsinstantie / Tussenpersoon
+Hide Certificate: Verberg Certificaat
+Show Certificate: Laat certificaat zien
+Enable FastCGI cache: Schakel FastCGI Cache in
+Cache Duration: Cache duur
+Proxy Support: Proxy Ondersteuning
+Proxy Extensions: Proxy Extensies
+Custom document root: Aangepast document root
+Point to: Wijs naar
+Additional FTP account(s): Extra FTP account(s)
+"Prefix %s will be added to username automatically": "Voorvoegsel %s wordt automatisch toegevoegd aan gebruikersnaam"
+Path: Pad
+Send FTP credentials to email: Stuur FTP inloggegevens naar e-mailadres
+Add FTP account: Nieuw FTP-account
+Edit Firewall Rule: Firewall regel bewerken
+Action: Actie
+DROP: DROP
+ACCEPT: ACCEPT
+Ranges and lists are acceptable: Bereiken en lijsten zijn toegestaan
+"All ports: 0, Range: 80-82, List: 80,443,8080,8443": "Alle porten: 0, Range: 80-82, Lijst: 80,443,8080,8443"
+IP Address / IPset IP List: IP Adres / IPset IP lijst
+Create Backup: Maak back-up
+File Name: Bestandsnaam
+Size: Groote
+Runtime: looptijd
+"Are you sure you want to delete backup %s?": "Weet je zeker dat je reserve kopie {%s} wilt verwijderen?"
+"%d backup": "%d backup"
+"%d backups": "%d backups"
+Account Unlocked: Account ontgrendeld
+"Two-factor authentication is now turned off for your account.<br><br>You may now proceed to log in.": "Tweestapsverificatie is nu uitgeschakeld voor uw account.<br><br>U kunt nu doorgaan met inloggen."
+Log in: Inloggen
+Unlock Account: Ontgrendel Account
+2FA Reset Code: Account Herstel Code
+Submit: Versturen
+Forgot Password: Wachtwoord Vergeten
+Two-factor Authentication: Twee-factor-authenticatie
+2FA Token: OTP Pincode
+Forgot Token: Verwijder token
+"Welcome to %s": "Welkom bij %s"
+Next: Volgende
+Password reset code has been sent to your email address: Wachtwoord herstel koppeling is verzonden naar uw e-mailadres
+Reset Code: Herstelcode
+Confirm: Bevestig
+Welcome: Welkom
+New Password: Nieuw wachtwoord
+Confirm Password: Bevestig wachtwoord
+Reset: Herstellen
+Restore Files: Bestanden herstellen
+Files: Bestanden
+Date / Time: Datum / Tijd
+Restore Snapshot: Hestel Snapshot
+DNS Domain: DNS domeinnaam
+Cronjob: Cronjob
+Catch-All Email: Catch-all e-mail
+email / hour / account: e-mail / uur / account
+"To enable Let's Encrypt SSL, ensure that DNS records exist for mail.%s and %s!": "Om Lets Encrypt SSL te activeer controleer or DNS records bestaan voor mail.%s en %s!"
+Add Firewall Rule: Firewall Regel Toevoegen
+Purge Nginx Cache: Leeg Nginx Cache
+Edit Domain: Domein bewerken
+Visit: Bezoek
+Download Site: Website downloaden
+"%d web domain": "%d web domein"
+"%d web domains": "%d web domeinen"
+Disable Notifications: Meldingen uitschakelen
+Enable Notifications: Meldingen inschakelen
+Are you sure you want to unsuspend this cron job?: "Weet je zeker dat je de cron job %s wilt activeren?"
+Are you sure you want to suspend this cron job?: "Weet je zeker dat je cron job %s wilt opschorten?"
+Are you sure you want to delete this cron job?: Weet u zeker dat u wilt verwijderen cron job?
+"%d cron job": "%d cron job"
+"%d cron jobs": "%d cron jobs"
+SSL CSR: SSL CSR
+Add Rule: Regel toevoegen
+Firewall Rules: Firewall regels
+"Are you sure you want to unsuspend rule #%s?": "Weet je zeker dat je de regel #%s wilt activeren?"
+"Are you sure you want to suspend rule #%s?": "Weet je zeker dat je regel #%s wilt opschorten?"
+"Are you sure you want to delete rule #%s?": "Weet je zeker dat je regel %s wilt verwijderen?"
+"%d firewall rule": "%d firewall regel"
+"%d firewall rules": "%d firewall regels"
+Close debug panel: Sluit debug panel
+Open debug panel: Open debug paneel
+State: Staat / Provincie
+City: Plaats
+"Field \"%s\" can not be blank.": "Veld \"%s\" kan niet leeg zijn."
+"Error code: %s": "Foutcode: %s"
+Certificate has been generated successfully.: Certificaat is met success geneneerd.
+NGINX cache has been purged successfully.: NGINX cache is met success verwijderd
+"Error: %s update failed.": "Error: %s update mislukt"
+Download of remote backup file has been scheduled.: Download van externe back-up bestand is gepland.
+"Hello {{name}},\n\nTo reset your {{appname}} password, please follow this link:\nhttps://{{hostname}}/reset/?action=confirm&user={{user}}&code={{resetcode}}\n\nAlternatively, you may go to https://{{hostname}}/reset/?action=code&user={{user}} and enter the following reset code:\n{{resetcode}}\n\nIf you did not request password reset, please ignore this message and accept our apologies.\n\nBest regards,\n\n--\n{{appname}}": "Hallo {{name}},\n\nOm het {{appname}} wachtwoord te resetten, volg de volgende link:\nhttps://{{hostname}}/reset/?action=confirm&user={{user}}&code={{resetcode}}\n\nAls alternatief kun je naar https://{{hostname}}/reset/?action=code&user={{user}} en voer de volgende reset code in:\n{{resetcode}}\n\nAls je geen wachtwoord hebt aangevraagd, negeer dit bericht en accepteer onze excuses.\n\nMet vriendelijke groet,\n\n--\n{{appname}}"
+"Password Reset at %s": "Wachtwoord reset om %s"
+Password reset instructions have been sent to the email address associated with this account.: Wachtwoord reset instructies zijn verzonden naar het email adress gelinkt met did account
+Please wait 15 minutes before sending a new request.: Wacht 15 minuten voor het versturen van een nieuwe aanvraag
+An internal error occurred: Er is een interne error opgetreden
+Code has been expired: Code is verlopen
+Invalid username or code: Verkeerde gebruikersnaam of code
+Passwords do not match: Wachtwoorden komen niet overeen
+Changes have been saved.: Wijzigingen zijn opgeslagen.
+"Info (read-only mode): Crontab can only be edited via SSH.": "Info (modus alleen-lezen): Crontab kan alleen worden bewerkt via SSH."
+Repository can not be empty: Repository kan niet leeg zijn
+Inactive session timeout can not lower than 1 minute.: Time-out voor inactieve sessie mag niet korter zijn dan 1 minuut.
+Please enter a valid email address.: Vul een geldig e-mailadres in.
+Password does not match the minimum requirements.: Het wachtwoord komt voldoet niet aan de minimumvereisten.
+"Mail account has been created.\n\nCommon Account Settings:\nUsername: {{account}}@{{domain}}\nPassword: {{password}}\nWebmail: {{webmail}}\nHostname: {{hostname}}\n\nIMAP Settings\nAuthentication: Normal Password\nSSL/TLS: Port 993\nSTARTTLS: Port 143\nNo encryption: Port 143\n\nPOP3 Settings\nAuthentication: Normal Password\nSSL/TLS: Port 995\nSTARTTLS: Port 110\nNo encryption: Port 110\n\nSMTP Settings\nAuthentication: Normal Password\nSSL/TLS: Port 465\nSTARTTLS: Port 587\nNo encryption: Port 25\n\nBest regards,\n\n--\n{{appname}}": "Email account is aangemaakt.\n\nAlgemene Account Instellingen:\nGebruikersnaam: {{account}}@{{domain}}\nWachwoord: {{password}}\nWebmail: {{webmail}}\nHostnaam: {{hostname}}\n\nIMAP Instellingen\nAuthentication: Normal Password\nSSL/TLS: Port 993\nSTARTTLS: Port 143\nGeen encryptie: Port 143\n\nPOP3 Settings\nAuthentication: Normal Password\nSSL/TLS: Port 995\nSTARTTLS: Port 110\nGeen encryptie: Port 110\n\nSMTP Settings\nAuthentication: Normal Password\nSSL/TLS: Port 465\nSTARTTLS: Port 587\nGeen encryptie: Port 25\n\nMet vriendelijke groet,\n\n--\n{{appname}}"
+"Email Credentials: %s@%s": "E-mail aanmeldgegevens: %s@%s"
+"FTP account has been created and ready to use.\n\nHostname: {{domain}}\nUsername: {{username}}\nPassword: {{password}}\n\nBest regards,\n\n--\n{{appname}}": "FTP account is aangemaakt en klaar voor gebruik.\n\nHostname: {{domain}}\nGebruikersnaam: {{username}}\nWachtwoord: {{password}}\n\nMet vriendelijke groet,\n\n--\n{{appname}}"
+"FTP Account Credentials: %s": "FTP accountaanmeldgegevens: %s"
+"Error: unknown record ID.": "Fout: onbekende record ID."
+CPU quota: CPU quota
+CPU quota period: CPU Quota periode
+Memory Limit: Geheugen limiet
+Swap Limit: Swap limiet
+Nameserver 1: Naamserver 1
+Nameserver 2: Naamserver 2
+Please enter a valid contact name.: Voer een geldige naam in.
+"Start \"%s\" failed": "Start \"%s\" mislukt"
+"Stop \"%s\" failed": "Stop %s mislukt"
+"The system is going down for reboot NOW!": "Het systeem gaat NU herstarten!"
+"Restart \"%s\" failed": "Herstart \"%s\" mislukt"
+Task has been added to the queue. You will receive an email notification when your restore has been completed.: Taak is toegevoegd aan de wachtrij. U zult een e-mail ontvangen wanneer uw herstel is voltooid.
+An existing restoration task is already running. Please wait for it to finish before launching it again.: Er is al een bestaande hersteltaak in uitvoering. Wacht tot deze is voltooid voordat u deze opnieuw opstart.
+Cron job email reporting has been successfully disabled.: E-mailrapportage van cronjob is succesvol uitgeschakeld
+Cron job email reporting has been successfully enabled.: E-mailrapportage van cronjob is succesvol ingeschakeld
+SSH Key already exists.: SSH sleutel bestaal al
+SSH Key has been created successfully.: SSH Sleutel is met success aangemaakt.
+"Access key {%s} has been created successfully.": "Access key {%s} is met success aangemaakt"
+"Mail domain {%s} has been created successfully.": "Mail domein {%s} is met success aangemaakt."
+"Mail account {%s@%s} has been created successfully.": "Mail account {%s@%s} is aangemaakt."
+Rule has been created successfully.: Regel is met success aangemaakt.
+IP list has been created successfully.: IP list is met success aangemaakt.
+IP address has been banned successfully.: IP adres is succesvol geblokeerd.
+"IP address {%s} has been created successfully.": "Ip address {%s} is met success aangemaakt."
+"Database has been created.\n\nDatabase: {{database}}\nUsername: {{username}}\nPassword: {{password}}\nSQL Manager: {{dbadmin}}\n\nBest regards,\n\n--\n{{appname}}": "Database is aangemaakt.\n\nDatabase: {{database}}\nGebruikersnaam: {{username}}\nWachtwoord: {{password}}\nSQL Manager: {{dbadmin}}\n\nMet vriendelijke groet,\n\n--\n{{appname}}"
+"Database Credentials: %s": "Database Gegevens %s"
+"Database {%s} has been created successfully. / {Open %s}": "Database {%s} is succesvol gemaakt. / {Open %s}"
+"Unable to install %s, %s is not available.": "Niet instaat om %s te installeren, %s is niet beschikbaar"
+"%s installer missing.": "%s installatieprogramma ontbreekt"
+"%s installed successfully.": "%s met success geïnstalleerd"
+"Domain {%s} has been created successfully.": "Domein {%s} is met success aangemaakt."
+"DNS zone {%s} has been created successfully.": "DNS domein {%s} is met success aangemaakt."
+"Record {%s.%s} has been created successfully.": "Record {%s.%s} is aangemaakt."
+"Package {%s} has been created successfully.": "Paket {%s} is met success aangemaakt."
+Cron job has been created successfully.: Cron job is met success aangemaakt
+"Hello {{name}},\n\nYour account has been created and ready to use.\n\nhttps://{{hostname}}/login/\nUsername: {{user}}\nPassword: {{password}}\n\nBest regards,\n\n--\n{{appname}}": "Hallo {{name}},\n\nJe account is aangemaakt en klaar voor gebruik.\n\nhttps://{{hostname}}/login/\nGebruikersnaam: {{user}}\nWachtwoord: {{password}}\n\nMet vriendelijke groet,\n\n--\n{{appname}}"
+"User {%s} has been created successfully. / {Log in as %s}": "Gebruiker {%s} is met success aangemaakt. / {Login als %s}"
+"Unable to add database! Limit reached!": "Limiet bereikt! Het is niet mogelijk om nog een database toe te voegen!"
+"Unable to add database!": "Het is niet mogelijk om nog een database toe te voegen!"
+"Error: unable to copy package.": "Fout: kan pakket niet kopiëren."
+Account has been suspended: Account is opgeschort
+Unsupported hash method: Niet ondersteunde hash methode
+Invalid username or password: Verkeerde gebruikersnaam en/of wachtwoord
+Invalid or missing 2FA token: Ongeldige of missende 2FA token
+"You are logged out, please log in again.": U bent uitgelogd. Gelieve opnieuw in te loggen.
+"%d day": "%d dag"
+"%d days": "%d dagen"
+"%d hour": "%d uur"
+"%d hours": "%d uren"
+"%d minute": "%d minuut"
+"%d minutes": "%d minuten"
+Snapshot has been sheduled: Snapshot is ingeplaned
+Task has been added to the queue. You will receive an email notification when your backup is ready for download.: De taak is toegevoegd aan de wachtrij. U ontvangt een melding per e-mail wanneer uw back-up klaar is om te downloaden.
+"An existing backup task is already running, please wait for it to complete.": "Er is al een bestaande back-up taak actief, wacht tot deze is voltooid."
+File: Bestand
+Symlink: Symbolische Link
+Unknown: Onbekend
+Hestia core package: Hestia kern pakket
+Hestia internal php interpreter: Hestia internal php interpreter
+Hestia internal web server: Hestia internal web server
+web server: web server
+php interpreter: php interpreter
+reverse proxy: reverse proxy
+dns server: dns server
+mail server: mail server
+imap/pop3 server: imap/pop3 server
+email anti-virus: email anti-virus
+email spam filter: e-mail spam filter
+database server: database server
+ftp server: ftp server
+job scheduler: Cron planner
+ssh server: ssh server
+firewall: firewall
+brute-force protection: brute force bescherming
+web terminal backend: web terminal backend

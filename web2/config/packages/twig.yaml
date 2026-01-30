@@ -1,0 +1,9 @@
+twig:
+    file_name_pattern: '*.twig'
+    globals:
+      app_version: no-verions-yet
+      app_name: "Hestia CP"
+
+when@test:
+    twig:
+        strict_variables: true

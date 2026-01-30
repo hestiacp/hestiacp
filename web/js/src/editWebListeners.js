@@ -35,19 +35,37 @@ export default function handleEditWebListeners() {
 		});
 	});
 
-	// Listen to "Use Lets Encrypt to obtain SSL certificate" checkbox to
-	// hide/show SSL textareas
-	const toggleLetsEncryptCheckbox = document.querySelector('.js-toggle-lets-encrypt');
-	const sslDetails = document.querySelector('.js-ssl-details');
-	if (toggleLetsEncryptCheckbox && sslDetails) {
-		toggleLetsEncryptCheckbox.addEventListener('change', () => {
-			if (toggleLetsEncryptCheckbox.checked) {
-				sslDetails.style.display = 'none';
-			} else {
-				sslDetails.style.display = 'block';
-			}
-		});
-	}
+        // Listen to automatic certificate checkboxes to hide/show SSL textareas
+        const toggleLetsEncryptCheckbox = document.querySelector('.js-toggle-lets-encrypt');
+        const toggleCloudflareCheckbox = document.querySelector('.js-toggle-cloudflare-origin');
+        const sslDetails = document.querySelector('.js-ssl-details');
+        const updateSslDetailsVisibility = () => {
+                if (!sslDetails) {
+                        return;
+                }
+                const letsEncryptChecked = toggleLetsEncryptCheckbox && toggleLetsEncryptCheckbox.checked;
+                const cloudflareChecked = toggleCloudflareCheckbox && toggleCloudflareCheckbox.checked;
+                sslDetails.style.display = letsEncryptChecked || cloudflareChecked ? 'none' : 'block';
+        };
+        if (toggleLetsEncryptCheckbox) {
+                toggleLetsEncryptCheckbox.addEventListener('change', () => {
+                        if (toggleLetsEncryptCheckbox.checked && toggleCloudflareCheckbox && toggleCloudflareCheckbox.checked) {
+                                toggleCloudflareCheckbox.checked = false;
+                                toggleCloudflareCheckbox.dispatchEvent(new Event('change'));
+                        }
+                        updateSslDetailsVisibility();
+                });
+        }
+        if (toggleCloudflareCheckbox) {
+                toggleCloudflareCheckbox.addEventListener('change', () => {
+                        if (toggleCloudflareCheckbox.checked && toggleLetsEncryptCheckbox && toggleLetsEncryptCheckbox.checked) {
+                                toggleLetsEncryptCheckbox.checked = false;
+                                toggleLetsEncryptCheckbox.dispatchEvent(new Event('change'));
+                        }
+                        updateSslDetailsVisibility();
+                });
+        }
+        updateSslDetailsVisibility();
 
 	// Listen to "Advanced Options -> Proxy Template" select menu to
 	// show "Purge Nginx Cache" button if "caching" selected

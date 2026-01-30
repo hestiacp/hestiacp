@@ -27,11 +27,14 @@
 <!-- Begin form -->
 <div class="container">
 	<form
-		x-data="{
-			timezone: '<?= $v_timezone ?? "" ?>',
-			theme: '<?= $_SESSION["THEME"] ?>',
-			language: '<?= $_SESSION["LANGUAGE"] ?>',
-			hasSmtpRelay: <?= $v_smtp_relay == "true" ? "true" : "false" ?>,
+                x-data="{
+                        timezone: '<?= $v_timezone ?? "" ?>',
+                        theme: '<?= $_SESSION["THEME"] ?>',
+                        language: '<?= $_SESSION["LANGUAGE"] ?>',
+                        hasSmtpRelay: <?= $v_smtp_relay == "true" ? "true" : "false" ?>,
+                        cfOriginEnabled: <?= $v_cf_origin_enabled === "yes" ? "true" : "false" ?>,
+                        cfAuthType: '<?= $v_cf_origin_auth_type ?>',
+                        cfRequestType: '<?= $v_cf_origin_request_type ?>',
 			remoteBackupEnabled: <?= !empty($v_backup_remote_adv) ? "true" : "false" ?>,
 			incrementalBackups: '<?=$v_backup_incremental ?? '' ?>',
 			backupType: '<?= (!empty($v_backup_type)) ? trim($v_backup_type, "'") : "" ?>',
@@ -1038,11 +1041,11 @@
 							id="v_ssl_key"
 						><?= htmlentities(trim($v_ssl_key, "'")) ?></textarea>
 					</div>
-					<ul class="values-list">
-						<li class="values-list-item">
-							<span class="values-list-label"><?= _("Issued To") ?></span>
-							<span class="values-list-value"><?= htmlentities($v_ssl_subject) ?></span>
-						</li>
+                                        <ul class="values-list">
+                                                <li class="values-list-item">
+                                                        <span class="values-list-label"><?= _("Issued To") ?></span>
+                                                        <span class="values-list-value"><?= htmlentities($v_ssl_subject) ?></span>
+                                                </li>
 						<?php if ($v_ssl_aliases) { ?>
 							<li class="values-list-item">
 								<span class="values-list-label"><?= _("Alternate") ?></span>
@@ -1067,11 +1070,152 @@
 						</li>
 						<li class="values-list-item">
 							<span class="values-list-label"><?= _("Issued By") ?></span>
-							<span class="values-list-value"><?= htmlentities($v_ssl_issuer) ?></span>
-						</li>
-					</ul>
-				</div>
-			</details>
+                                                        <span class="values-list-value"><?= htmlentities($v_ssl_issuer) ?></span>
+                                                </li>
+                                        </ul>
+
+                                        <details class="collapse">
+                                                <summary class="collapse-header">
+                                                        <?= _("Cloudflare Origin CA") ?>
+                                                </summary>
+                                                <div class="collapse-content">
+                                                        <div class="form-check u-mb10">
+                                                                <input
+                                                                        x-model="cfOriginEnabled"
+                                                                        class="form-check-input"
+                                                                        type="checkbox"
+                                                                        name="v_cf_origin_enabled"
+                                                                        id="v_cf_origin_enabled"
+                                                                        <?= $v_cf_origin_enabled === "yes" ? "checked" : "" ?>
+                                                                >
+                                                                <label for="v_cf_origin_enabled">
+                                                                        <?= _("Enable Cloudflare Origin CA integration") ?>
+                                                                </label>
+                                                        </div>
+                                                        <div
+                                                                x-cloak
+                                                                x-show="cfOriginEnabled"
+                                                                class="u-pl30 u-mt15"
+                                                        >
+                                                                <div class="u-mb10">
+                                                                        <label for="v_cf_origin_auth_type" class="form-label">
+                                                                                <?= _("Authentication method") ?>
+                                                                        </label>
+                                                                        <select
+                                                                                x-model="cfAuthType"
+                                                                                class="form-select"
+                                                                                name="v_cf_origin_auth_type"
+                                                                                id="v_cf_origin_auth_type"
+                                                                        >
+                                                                                <option value="token"><?= _("API Token") ?></option>
+                                                                                <option value="service_key"><?= _("User Service Key") ?></option>
+                                                                        </select>
+                                                                        <p class="hint"><?= _("Provide a token with Origin CA and (optional) Zone:Settings:Edit permissions.") ?></p>
+                                                                </div>
+                                                                <div class="u-mb10" x-cloak x-show="cfAuthType === 'token'">
+                                                                        <label for="v_cf_origin_api_token" class="form-label">
+                                                                                <?= _("Cloudflare API token") ?>
+                                                                        </label>
+                                                                        <input
+                                                                                type="password"
+                                                                                class="form-control"
+                                                                                name="v_cf_origin_api_token"
+                                                                                id="v_cf_origin_api_token"
+                                                                                placeholder="••••••••"
+                                                                        >
+                                                                        <p class="hint">
+                                                                                <?= _("Leave blank to keep the currently stored token.") ?>
+                                                                        </p>
+                                                                </div>
+                                                                <div class="u-mb10" x-cloak x-show="cfAuthType === 'service_key'">
+                                                                        <label for="v_cf_origin_service_key" class="form-label">
+                                                                                <?= _("Cloudflare User Service Key") ?>
+                                                                        </label>
+                                                                        <input
+                                                                                type="password"
+                                                                                class="form-control"
+                                                                                name="v_cf_origin_service_key"
+                                                                                id="v_cf_origin_service_key"
+                                                                                placeholder="••••••••"
+                                                                        >
+                                                                        <p class="hint">
+                                                                                <?= _("Leave blank to keep the currently stored service key.") ?>
+                                                                        </p>
+                                                                </div>
+                                                                <div class="u-mb10" x-cloak x-show="cfAuthType === 'service_key'">
+                                                                        <label for="v_cf_origin_auth_email" class="form-label">
+                                                                                <?= _("Account email (optional)") ?>
+                                                                        </label>
+                                                                        <input
+                                                                                type="email"
+                                                                                class="form-control"
+                                                                                name="v_cf_origin_auth_email"
+                                                                                id="v_cf_origin_auth_email"
+                                                                                value="<?= htmlentities($_SESSION["CF_ORIGIN_AUTH_EMAIL"] ?? "") ?>"
+                                                                        >
+                                                                </div>
+                                                                <div class="u-mb10">
+                                                                        <label for="v_cf_origin_request_type" class="form-label">
+                                                                                <?= _("Certificate key type") ?>
+                                                                        </label>
+                                                                        <select
+                                                                                x-model="cfRequestType"
+                                                                                class="form-select"
+                                                                                name="v_cf_origin_request_type"
+                                                                                id="v_cf_origin_request_type"
+                                                                        >
+                                                                                <option value="origin-rsa"><?= _("RSA (origin-rsa)") ?></option>
+                                                                                <option value="origin-ecc"><?= _("ECC (origin-ecc)") ?></option>
+                                                                        </select>
+                                                                </div>
+                                                                <div class="u-mb10" x-cloak x-show="cfRequestType === 'origin-rsa'">
+                                                                        <label for="v_cf_origin_rsa_bits" class="form-label">
+                                                                                <?= _("RSA key size") ?>
+                                                                        </label>
+                                                                        <select class="form-select" name="v_cf_origin_rsa_bits" id="v_cf_origin_rsa_bits">
+                                                                                <option value="2048" <?= $v_cf_origin_rsa_bits === "2048" ? "selected" : "" ?>>2048</option>
+                                                                                <option value="3072" <?= $v_cf_origin_rsa_bits === "3072" ? "selected" : "" ?>>3072</option>
+                                                                                <option value="4096" <?= $v_cf_origin_rsa_bits === "4096" ? "selected" : "" ?>>4096</option>
+                                                                        </select>
+                                                                </div>
+                                                                <div class="u-mb10" x-cloak x-show="cfRequestType === 'origin-ecc'">
+                                                                        <label for="v_cf_origin_ecc_curve" class="form-label">
+                                                                                <?= _("ECC curve") ?>
+                                                                        </label>
+                                                                        <select class="form-select" name="v_cf_origin_ecc_curve" id="v_cf_origin_ecc_curve">
+                                                                                <option value="prime256v1" <?= $v_cf_origin_ecc_curve === "prime256v1" ? "selected" : "" ?>>prime256v1</option>
+                                                                                <option value="secp384r1" <?= $v_cf_origin_ecc_curve === "secp384r1" ? "selected" : "" ?>>secp384r1</option>
+                                                                        </select>
+                                                                </div>
+                                                                <div class="u-mb10">
+                                                                        <label for="v_cf_origin_validity" class="form-label">
+                                                                                <?= _("Requested validity (days)") ?>
+                                                                        </label>
+                                                                        <input
+                                                                                type="number"
+                                                                                class="form-control"
+                                                                                name="v_cf_origin_validity"
+                                                                                id="v_cf_origin_validity"
+                                                                                min="7"
+                                                                                max="5475"
+                                                                                value="<?= htmlentities($v_cf_origin_validity) ?>"
+                                                                        >
+                                                                </div>
+                                                                <div class="u-mb10">
+                                                                        <label for="v_cf_origin_ssl_mode" class="form-label">
+                                                                                <?= _("Zone SSL mode after issuance") ?>
+                                                                        </label>
+                                                                        <select class="form-select" name="v_cf_origin_ssl_mode" id="v_cf_origin_ssl_mode">
+                                                                                <option value="off" <?= $v_cf_origin_ssl_mode === "off" ? "selected" : "" ?>><?= _("Do not change") ?></option>
+                                                                                <option value="strict" <?= $v_cf_origin_ssl_mode === "strict" ? "selected" : "" ?>><?= _("Full (strict)") ?></option>
+                                                                        </select>
+                                                                        <p class="hint"><?= _("Requires API permissions that allow editing zone SSL settings.") ?></p>
+                                                                </div>
+                                                        </div>
+                                                </div>
+                                        </details>
+                                </div>
+                        </details>
 
 			<!-- Security section -->
 			<details class="box-collapse u-mb10">

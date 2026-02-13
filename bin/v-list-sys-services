@@ -160,7 +160,7 @@ get_srv_state() {
 
 # Saving current proccess list
 tmp_file=$(mktemp)
-ps -eo pid,pcpu,size > $tmp_file
+ps -eo pid,pcpu,rss > $tmp_file
 
 # Checking current time
 ctime=$(date +%s)

@@ -832,7 +832,6 @@ get_ip_format() {
 			ret_code=0
 		fi
 	fi
-}
 
 	# Check for IPV4 cidr
 	if [[ "$ret_string" != "6" ]] && [[ -n "$cidr_prefixlen" ]] || [[ "$object_name" = "cidr" ]]; then

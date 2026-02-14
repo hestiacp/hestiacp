@@ -27,6 +27,10 @@ source_conf "$HESTIA/conf/hestia.conf"
 #----------------------------------------------------------#
 
 check_args '1' "$#" 'RESTART [DELAY]'
+is_format_valid 'restart'
+if [ -n "$delay" ]; then
+	is_format_valid "$delay" 'delay'
+fi
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode

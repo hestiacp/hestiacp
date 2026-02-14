@@ -1,0 +1,105 @@
+#!/bin/bash
+# info: backup system user with all its objects
+# options: USER NOTIFY
+#
+# example: v-backup-user admin yes
+#
+# This function is used for backing up user with all its domains and databases.
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+snapshot=$2
+format=${3-plain}
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
+source $HESTIA/func/domain.sh
+# shellcheck source=/usr/local/hestia/func/db.sh
+source $HESTIA/func/db.sh
+# shellcheck source=/usr/local/hestia/func/backup.sh
+source $HESTIA/func/backup.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '1' "$#" 'USER'
+is_format_valid 'user'
+is_system_enabled "$BACKUP_SYSTEM" 'BACKUP_SYSTEM'
+is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# JSON list function
+json_list() {
+	echo '{'
+	echo '    "'$BACKUP'": {
+		"TYPE": "'$TYPE'",
+		"WEB": "'$WEB'",
+		"DNS": "'$DNS'",
+		"MAIL": "'$MAIL'",
+		"DB": "'$DB'",
+		"CRON": "'$CRON'",
+		"UDIR": "'$UDIR'",
+		"RUNTIME": "'$RUNTIME'",
+		"TIME": "'$TIME'",
+		"DATE": "'$DATE'"
+	}'
+	echo '}'
+}
+
+# SHELL list function
+shell_list() {
+	echo "BACKUP:         $BACKUP"
+	echo "TYPE:           $TYPE"
+	echo "RUNTIME:        $RUNTIME min"
+	echo "WEB:            ${WEB//,/ }"
+	echo "DNS:            ${DNS//,/ }"
+	echo "MAIL:           ${MAIL//,/ }"
+	echo "DB:             ${DB//,/ }"
+	echo "CRON:           $CRON"
+	echo "UDIR:           ${UDIR//,/ }"
+	echo "TIME:           $TIME"
+	echo "DATE:           $DATE"
+}
+
+# PLAIN list function
+plain_list() {
+	echo -ne "$BACKUP\t$TYPE\t$WEB\t$DNS\t$MAIL\t$DB\t$CRON\t"
+	echo -e "$UDIR\t$RUNTIME\t$TIME\t$DATE"
+}
+
+source_conf $HESTIA/conf/restic.conf
+
+restic --repo "$REPO$user" --password-file $USER_DATA/restic.conf --json dump $snapshot /home/$user/backup/backup.conf > /home/$user/tmp/backup.conf
+
+parse_object_kv_list $(cat /home/$user/tmp/backup.conf)
+
+rm /home/$user/tmp/backup.conf
+# Listing data
+case $format in
+	json) json_list ;;
+	plain) plain_list ;;
+	shell) shell_list ;;
+esac
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+exit

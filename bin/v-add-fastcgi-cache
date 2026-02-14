@@ -91,7 +91,9 @@ else
 fi
 
 mkdir -p /var/cache/nginx/micro/$domain
-
+# Update permissions
+chown www-data:root /var/cache/nginx/micro/$domain
+chmod 640 /var/cache/nginx/micro/$domain
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#

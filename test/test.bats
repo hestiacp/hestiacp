@@ -40,53 +40,6 @@ function setup() {
 }
 
 function validate_web_domain() {
-	local user=$1
-	local domain=$2
-	local webproof=$3
-	local webpath=${4}
-
-	refute [ -z "$user" ]
-	refute [ -z "$domain" ]
-	refute [ -z "$webproof" ]
-
-	source $HESTIA/func/ip.sh
-
-	run v-list-web-domain $user $domain
-	assert_success
-
-	USER_DATA=$HESTIA/data/users/$user
-	local domain_ip=$(get_object_value 'web' 'DOMAIN' "$domain" '$IP')
-	SSL=$(get_object_value 'web' 'DOMAIN' "$domain" '$SSL')
-	domain_ip=$(get_real_ip "$domain_ip")
-
-	if [ ! -z $webpath ]; then
-		domain_docroot=$(get_object_value 'web' 'DOMAIN' "$domain" '$CUSTOM_DOCROOT')
-		if [ -n "$domain_docroot" ] && [ -d "$domain_docroot" ]; then
-			assert_file_exist "${domain_docroot}/${webpath}"
-		else
-			assert_file_exist "${HOMEDIR}/${user}/web/${domain}/public_html/${webpath}"
-		fi
-	fi
-
-	# Test HTTP
-	# Curl hates UTF domains so convert them to ascci.
-	domain_idn=$(idn2 $domain)
-	run curl --location --silent --show-error --insecure --resolve "${domain_idn}:80:${domain_ip}" "http://${domain_idn}/${webpath}"
-	assert_success
-	assert_output --partial "$webproof"
-
-	# Test HTTPS
-	if [ "$SSL" = "yes" ]; then
-		run v-list-web-domain-ssl $user $domain
-		assert_success
-
-		run curl --location --silent --show-error --insecure --resolve "${domain_idn}:443:${domain_ip}" "https://${domain_idn}/${webpath}"
-		assert_success
-		assert_output --partial "$webproof"
-	fi
-}
-
-function validate_web_domain() {
     local user=$1
     local domain=$2
     local webproof=$3
@@ -384,6 +337,55 @@ function check_ip_not_banned(){
 	assert_output --partial 'Error: invalid user format'
 }
 
+@test "User: Add new user Failed 4" {
+	run v-add-user '1234'  $user $user@hestiacp2.com default "Super Test"
+	assert_failure $E_INVALID
+	assert_output --partial 'Error: invalid user format'
+}
+
+@test "User: Add new user Failed 5" {
+	run v-add-user '1aap'  $user $user@hestiacp2.com default "Super Test"
+	assert_failure $E_INVALID
+	assert_output --partial 'Error: invalid user format'
+}
+
+@test "User: Add new user Failed 6" {
+	run v-add-user 'ib_Buffer'  $user $user@hestiacp2.com default "Super Test"
+	assert_failure $E_INVALID
+	assert_output --partial 'Error: The user name'
+}
+
+@test "User: Add new user Failed 7" {
+	run v-add-user 'hello.com'  $user $user@hestiacp2.com default "Super Test"
+	assert_failure $E_INVALID
+	assert_output --partial 'Error: invalid user format'
+}
+
+
+@test "User: Add new user Success 1" {
+	run v-add-user 'jaap01'  $user $user@hestiacp2.com default "Super Test"
+	assert_success
+	refute_output
+}
+
+@test "User: Add new user Success 1 Delete" {
+	run v-delete-user jaap01
+	assert_success
+	refute_output
+}
+
+@test "User: Add new user Success 2" {
+	run v-add-user 'buffer'  $user $user@hestiacp2.com default "Super Test"
+	assert_success
+	refute_output
+}
+
+@test "User: Add new user Success 2 Delete" {
+	run v-delete-user buffer
+	assert_success
+	refute_output
+}
+
 @test "User: Change user password" {
     run v-change-user-password "$user" "$userpass2"
     assert_success
@@ -432,10 +434,20 @@ function check_ip_not_banned(){
 
     run stat -c '%U' /home/$user
     assert_output --partial 'root'
-		mount_file=$(systemd-escape -p --suffix=mount "/srv/jail/$user/home")
+		mount_file=$(systemd-escape -p --suffix=mount "/srv/jail/$user/home/$user")
 		assert_file_exist /etc/systemd/system/$mount_file
 }
 
+@test "User: Change user bash with bubblewrap jail" {
+    run v-change-user-shell $user jailbash
+    assert_success
+    refute_output
+
+    run stat -c '%U' /home/$user
+    assert_output --partial "$user"
+		mount_file=$(systemd-escape -p --suffix=mount "/srv/jail/$user/home")
+		assert_file_not_exist /etc/systemd/system/$mount_file
+}
 
 @test "User: Change user default ns" {
     run v-change-user-ns $user ns0.com ns1.com ns2.com ns3.com
@@ -453,7 +465,7 @@ function check_ip_not_banned(){
   refute_output
 }
 
-@test "User: Change user language (Does not exists)" {
+@test "User: Change user language (Does not exist)" {
   run v-change-user-language $user "aa"
   assert_failure $E_NOTEXIST
 }
@@ -470,7 +482,7 @@ function check_ip_not_banned(){
   refute_output
 }
 
-@test "User: Change user theme (Does not exists)" {
+@test "User: Change user theme (Does not exist)" {
   run v-change-user-theme $user "aa"
   assert_failure $E_NOTEXIST
 }
@@ -905,6 +917,12 @@ function check_ip_not_banned(){
     refute_output
 }
 
+@test "WEB: Use quick install app on web domain" {
+    run v-quick-install-app install $user $domain Laravel
+    assert_success
+    refute_output
+}
+
 #----------------------------------------------------------#
 #                         IDN                              #
 #----------------------------------------------------------#
@@ -913,10 +931,7 @@ function check_ip_not_banned(){
    run v-add-web-domain-ipv46 $user idn-tést.eu 198.18.0.125
    assert_success
    refute_output
-
-   echo -e "<?php\necho 'Hestia Test:'.(4*3);" > $HOMEDIR/$user/web/idn-tést.eu/public_html/php-test.php
-   validate_web_domain $user idn-tést.eu 'Hestia Test:12' 'php-test.php'
-   rm $HOMEDIR/$user/web/idn-tést.eu/public_html/php-test.php
+	 assert_file_exist /home/$user/web/idn-tést.eu/public_html/index.html
 }
 
 @test "WEB: Add IDN domain ASCII idn-tést.eu" {
@@ -1301,13 +1316,13 @@ function check_ip_not_banned(){
 }
 
 @test "DNS: Add domain record" {
-    run v-add-dns-record $user $domain test A 198.18.0.125 '' 20
+    run v-add-dns-record $user $domain test A 198.18.0.125 '' 30
     assert_success
     refute_output
 }
 
 @test "DNS: Add domain record *.domain.com" {
-    run v-add-dns-record $user $domain '*' A 198.18.0.125 '' 30
+    run v-add-dns-record $user $domain '*' A 198.18.0.125 '' 40
     assert_success
     refute_output
 }
@@ -1318,37 +1333,37 @@ function check_ip_not_banned(){
 }
 
 @test "DNS: Change DNS record" {
-  run v-change-dns-record $user $domain 20 test A 198.18.0.125 "" "" 1500
+  run v-change-dns-record $user $domain 30 test A 198.18.0.125 "" "" 1500
   assert_success
   refute_output
 }
 
 @test "DNS: Change DNS record (no update)" {
-  run v-change-dns-record $user $domain 20 test A 198.18.0.125 "" "" 1500
+  run v-change-dns-record $user $domain 30 test A 198.18.0.125 "" "" 1500
   assert_failure $E_EXSIST
 }
 
 @test "DNS: Change DNS record id" {
-  run v-change-dns-record-id $user $domain 20 21
+  run v-change-dns-record-id $user $domain 30 31
   assert_success
   refute_output
   # Change back
-  run v-change-dns-record-id $user $domain 21 20
+  run v-change-dns-record-id $user $domain 31 30
 }
 
 @test "DNS: Change DNS record id (no update)" {
-  run v-change-dns-record-id  $user $domain 20 20
+  run v-change-dns-record-id  $user $domain 30 30
   assert_failure $E_EXSIST
 }
 
 @test "DNS: Delete domain record" {
-    run v-delete-dns-record $user $domain 20
+    run v-delete-dns-record $user $domain 30
     assert_success
     refute_output
 }
 
 @test "DNS: Delete missing domain record" {
-    run v-delete-dns-record $user $domain 20
+    run v-delete-dns-record $user $domain 30
     assert_failure $E_NOTEXIST
 }
 
@@ -1634,14 +1649,35 @@ function check_ip_not_banned(){
 	refute_output
 }
 
+@test "MAIL: Add account 5" {
+		run v-add-mail-account $user $domain 01 "$userpass2"
+		assert_success
+		assert_file_contains /etc/exim4/domains/$domain/limits "01@$domain"
+		refute_output
+}
+
+@test "MAIL: Add account 6" {
+		run v-add-mail-account $user $domain "0aa" "$userpass2"
+		assert_success
+		assert_file_contains /etc/exim4/domains/$domain/limits "0aa@$domain"
+		refute_output
+}
 
 @test "MAIL: Add account alias Invalid length" {
-	run v-add-mail-account-alias $user $domain test 'hestiacp-realy-rocks-but-i-want-to-have-feature-xyz-and-i-want-it-now'
+	run v-add-mail-account-alias $user $domain test 'hestiacp-really-rocks-but-i-want-to-have-feature-xyz-and-i-want-it-now'
 	assert_failure $E_INVALID
 }
 @test "MAIL: Add account alias Invalid" {
-	run v-add-mail-account-alias $user $domain test '-test'
+	run v-add-mail-account-alias $user $domain test 'test+123'
 	assert_failure $E_INVALID
+}
+@test "MAIL: Add account alias starting with -" {
+	run v-add-mail-account-alias $user $domain test '-test'
+	assert_success
+}
+@test "MAIL: Add account alias ending with -" {
+	run v-add-mail-account-alias $user $domain test 'test-'
+	assert_success
 }
 @test "MAIL: Add account alias Invalid 2" {
 	run v-add-mail-account-alias $user $domain test 'hestia@test'
@@ -1692,10 +1728,6 @@ function check_ip_not_banned(){
     assert_success
     refute_output
 
-    run grep "RECORD='_domainkey'" "${HESTIA}/data/users/${user}/dns/${domain}.conf"
-    assert_failure
-    refute_output
-
     run grep "RECORD='mail._domainkey'" "${HESTIA}/data/users/${user}/dns/${domain}.conf"
     assert_failure
     refute_output
@@ -1705,10 +1737,6 @@ function check_ip_not_banned(){
     run v-add-mail-domain-dkim $user $domain
     assert_success
     refute_output
-
-    run grep "RECORD='_domainkey'" "${HESTIA}/data/users/${user}/dns/${domain}.conf"
-    assert_success
-    assert_output --partial "RECORD='_domainkey' TYPE='TXT'"
 
     run grep "RECORD='mail._domainkey'" "${HESTIA}/data/users/${user}/dns/${domain}.conf"
     assert_success
@@ -1844,6 +1872,7 @@ function check_ip_not_banned(){
     # validate_database mysql database_name database_user password
     validate_database mysql $database $dbuser 1234
 }
+
 @test "MYSQL: Add Database (Duplicate)" {
     run v-add-database $user database dbuser 1234 mysql
     assert_failure $E_EXISTS

@@ -1,4 +1,5 @@
 <script defer src="/js/dist/main.min.js?<?= JS_LATEST_UPDATE ?>"></script>
+<script defer src="/js/dist/alpinejs-collapse.min.js?<?= JS_LATEST_UPDATE ?>"></script>
 <script defer src="/js/dist/alpinejs.min.js?<?= JS_LATEST_UPDATE ?>"></script>
 <script>
 	document.documentElement.classList.replace('no-js', 'js');

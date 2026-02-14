@@ -6,7 +6,7 @@ We currently only support changing the layout via CSS. You can customise HTML fi
 
 ## Adding a new theme
 
-Create a new theme in `/usr/local/hestia/web/css/theme/custom/my_theme.css`
+Create a new theme in `/usr/local/hestia/web/css/themes/custom/my_theme.css`
 
 ```css
 .page-login,

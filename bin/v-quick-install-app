@@ -1,0 +1,179 @@
+#!/usr/local/hestia/php/bin/php
+<?php
+//# info: Install Quick Install Web App via CLI
+//# options: action [user] [domain] [app] [options ...]
+//#
+//# example: v-quick-install-app install admin domain.com WordPress email="info@hestiacp" password="123456" username="admin" site_name="HestiaCP Demo" install_directory="/" language="nl_NL" php_version="8.2" database_create="true"
+//# example: v-quick-install-app app
+//# example: v-quick-install-app options admin domain.com WordPress
+//#
+//# - The v-quick-install-app install command is used to automate the installation of web applications on a server managed by Hestia Control Panel.
+//# - The v-quick-install-app app command is used to retrieve a list of web applications that can be quickly installed through the v-quick-install-app install command in the Hestia Control Panel. This command provides a convenient overview of supported applications and their versions, allowing users to choose which application they would like to deploy on their server. The names of the applications are case sensitive.
+//# - v-quick-install-app options admin domain.com WordPress list all the options available for the specified web application. This command provides a list of all the required and optional fields that need to be filled in when installing the application. The command also provides the default values for each field, if available.
+
+use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Output\ConsoleOutput;
+
+
+use Hestiacp\quoteshellarg\quoteshellarg;
+
+session_start();
+require_once( __DIR__ . '/../web/inc/vendor/autoload.php');
+require_once( __DIR__ . '/../web/src/init.php');
+
+
+define("HESTIA_DIR_BIN", "/usr/local/hestia/bin/");
+define("HESTIA_CMD", "/usr/bin/sudo /usr/local/hestia/bin/");
+define("DEFAULT_PHP_VERSION", "php-" . exec('php -r "echo substr(phpversion(),0,3);"'));
+
+exec(HESTIA_CMD . "v-list-sys-config json", $output, $return_var);
+$data = json_decode(implode("", $output), true);
+$sys_arr = $data["config"];
+foreach ($sys_arr as $key => $value) {
+$_SESSION[$key] = $value;
+}
+
+
+$_SESSION['userContext'] = 'user';
+$application = new Application();
+$application -> register('install')
+	->setDescription('Install app via the CLI')
+	-> addArgument('user', InputArgument::REQUIRED, 'Hestia User')
+	-> addArgument('domain', InputArgument::REQUIRED, 'Domain')
+	-> addArgument('app', InputArgument::REQUIRED, 'App Name')
+	-> addArgument('options', InputArgument::IS_ARRAY, 'Options')
+	-> setCode(function($input, $output){
+		$user = $input -> getArgument('user');
+		$_SESSION['user'] = $user;
+		$v_domain = $input -> getArgument('domain');
+		$app = $input -> getArgument('app');
+		$options = $input -> getArgument('options');
+		$data = [];
+		foreach($options as $option){
+			$o  = explode('=', $option);
+			$data['webapp_'.$o[0]] = $o[1];
+		}
+		$hestia = new \Hestia\System\HestiaApp();
+		if(class_exists("\Hestia\WebApp\Installers\\" . $app . "\\" . $app . "Setup") === false){
+			$output -> writeln('App not found');
+			return Command::FAILURE;
+		}
+		$app_installer_class = "\Hestia\WebApp\Installers\\" . $app . "\\" . $app . "Setup";
+		$app_installer = new $app_installer_class($hestia);
+
+		// check for default fields
+		$WebappInstaller = new \Hestia\WebApp\AppWizard($app_installer, $v_domain, $hestia);
+		$fields = $WebappInstaller -> getOptions();
+		$array = [];
+		foreach($fields as $key => $field){
+			if(is_array($field)){
+				if(!empty($field['value'])){
+					$array['webapp_'.$key] = $field['value'];
+				}
+			}
+		}
+		$data = array_merge($array, $data);
+		//loop trough data and check all fields are set
+
+		$error = false;
+		foreach($fields as $key => $field){
+			if(empty($data['webapp_'.$key])){
+				if(strpos($key, 'database_') !== false){
+					if($data['webapp_database_create'] != true){
+					$output -> writeln('Missing required field: ' . $key);
+						$error = true;
+					}
+				}else{
+					//all ways the case
+					$output -> writeln('Missing required field: ' . $key);
+					$error = true;
+				}
+			}
+		}
+
+		if($error !== false){
+			return Command::FAILURE;
+		}
+
+		$installer = new \Hestia\WebApp\AppWizard($app_installer, $v_domain, $hestia);
+		$installer -> execute($data);
+		return Command::SUCCESS;
+	});
+
+$application -> register('apps')
+	->setDescription('List availble apps')
+	-> setCode(function($input, $output){
+	$appInstallers = glob(__DIR__ . "/../web/src/app/WebApp/Installers/*/*.php");
+	$output -> writeln('Available Apps');
+	$output -> writeln('---------------------------------');
+	foreach($appInstallers as $appInstaller){
+		$app = basename(dirname($appInstaller));
+		$hestia = new \Hestia\System\HestiaApp();
+		$domain = 'demo.hestiacp.com';
+		if( !file_exists(__DIR__ . "/../web/src/app/WebApp/Installers/" . $app . "/". $app . "Setup.php") ){
+			continue;
+		}
+		$app_installer_class = "\Hestia\WebApp\Installers\\" . $app . "\\" . $app . "Setup";
+		$app_installer = new $app_installer_class($domain, $hestia);
+		$info = $app_installer -> info();
+		$output -> writeln($info['name'] . ' - ' . $info['version']);
+	}
+	$output -> writeln('---------------------------------');
+	$output -> writeln('Please note app names are case sensitive');
+
+	return Command::SUCCESS;
+});
+
+$application -> register('options')
+->setDescription('List options requied / optional for the app')
+	-> addArgument('user', InputArgument::REQUIRED, 'Hestia User')
+	-> addArgument('domain', InputArgument::REQUIRED, 'Domain')
+	-> addArgument('app', InputArgument::REQUIRED, 'App Name')
+	-> setCode(function($input, $output){
+		$user = $input -> getArgument('user');
+		$_SESSION['user'] = $user;
+		$v_domain = $input -> getArgument('domain');
+		$app = $input -> getArgument('app');
+		$hestia = new \Hestia\System\HestiaApp();
+
+		if(class_exists("\Hestia\WebApp\Installers\\" . $app . "\\" . $app . "Setup") === false){
+			$output -> writeln('App not found');
+			return Command::FAILURE;
+		}
+		$app_installer_class = "\Hestia\WebApp\Installers\\" . $app . "\\" . $app . "Setup";
+		$app_installer = new $app_installer_class($v_domain, $hestia);
+		$WebappInstaller = new \Hestia\WebApp\AppWizard($app_installer, $v_domain, $hestia);
+		$output -> writeln('To install '.$app.' use the following command:');
+		$output -> writeln('v-quick-install-app install ' . $user . ' ' . $v_domain . ' ' . $app . ' email="info@hestiacp" password="12346"');
+		$output -> writeln('---------------------------------');
+		$output -> writeln('Options for ' . $app);
+		$output -> writeln('---------------------------------');
+		$options = $WebappInstaller -> getOptions();
+		foreach($options as $key => $option){
+			if(!is_array($option)){
+				$output -> writeln('Key: ' . $key . ' Type: ' . $option .' (Required)');
+			}else{
+				$required = '';
+				if(empty($option['value'])){
+					 $option['value'] = 'none';
+					 if(strpos($key, 'database_') === false){
+					 $required = '('	. 'Required' . ')';
+					 }
+				}
+				if(!empty($option['type'])){
+					if($option['type'] == 'boolean'){
+						$option['value'] = $option['value'] ? 'true' : 'false';
+					}
+					$output -> writeln('Key: ' .$key . ' Default Value: ' . $option['value'] .' Type: ' . $option['type'] . ' ' . $required);
+				}else{
+					$output -> writeln('Key :' .$key . ' Default Value: ' . $option['value'] . ' ' . $required);
+				}
+			}
+		}
+		return Command::SUCCESS;
+	});
+
+
+$application -> run();

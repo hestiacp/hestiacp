@@ -1,0 +1,5 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{REQUEST_URI} !^/htdocs/
+    RewriteRule ^(.*)$ /htdocs/$1 [QSA,L]
+</IfModule>

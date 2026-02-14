@@ -93,18 +93,17 @@ get_srv_state() {
 	fi
 	used_pgrep=0
 	if [ -z "$pids" ] && [ "$name" != 'nginx' ]; then
-		pids=$(pgrep $name | tr '\n' '|')
+		if [[ ${#name} -ge 15 ]]; then
+			pids=$(pgrep -f $name | tr '\n' '|')
+		else
+			pids=$(pgrep $name | tr '\n' '|')
+		fi
 		used_pgrep=1
 	fi
 
 	# Correctly handle hestia-web-terminal service
 	if [ "$name" == 'hestia-web-terminal' ] && [ "$(systemctl show $name.service | grep 'SubState=' | cut -f2 -d=)" == "running" ]; then
 		pids=$(systemctl show $name.service | grep '^MainPID=' | cut -f2 -d=)
-	fi
-
-	# Prevent from an SSH false positive when there is a TTY or SFTP connection but service is down
-	if [ "$name" == 'ssh' ] && [ "$(systemctl show sshd.service | grep 'SubState=' | cut -f2 -d=)" != "running" ]; then
-		pids=''
 	fi
 
 	# Checking pid
@@ -263,8 +262,8 @@ if [ -n "$DB_SYSTEM" ] && [ "$DB_SYSTEM" != 'remote' ]; then
 				if [ -f $mysql ]; then
 					mariadb_v=$($mysql -V | awk 'NR==1{print $5}')
 					if [[ $mariadb_v =~ $mariadb_string ]]; then
-						mariadb_v=$(echo $mariadb_v | cut -f2 -d'.')
-						if [ $mariadb_v -le "4" ]; then
+						mariadb_v=$(echo $mariadb_v | awk -F "." '{ print $1 $2 }')
+						if [ $mariadb_v -le "104" ]; then
 							service='mariadb'
 							proc_name='mysqld'
 						fi

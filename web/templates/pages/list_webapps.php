@@ -18,14 +18,14 @@
 		<div class="cards">
 			<!-- List available web apps -->
 			<?php foreach ($v_web_apps as $webapp): ?>
-				<div class="card <?= $webapp["enabled"] ? "" : "disabled" ?>">
+				<div class="card <?= $webapp->isInstallable() ? "" : "disabled" ?>">
 					<div class="card-thumb">
-						<img src="/src/app/WebApp/Installers/<?= $webapp["name"] ?>/<?= $webapp["thumbnail"] ?>" alt="<?= $webapp["name"] ?>">
+						<img src="/src/app/WebApp/Installers/<?= $webapp->name ?>/<?= $webapp->thumbnail ?>" alt="<?= $webapp->name ?>">
 					</div>
 					<div class="card-content">
-						<p class="card-title"><?= $webapp["name"] ?></p>
-						<p class="u-mb10"><?= _("Version") ?>: <?= $webapp["version"] ?></p>
-						<a class="button" href="/add/webapp/?app=<?= $webapp["name"] ?>&domain=<?= htmlentities($v_domain) ?>">
+						<p class="card-title"><?= $webapp->name ?></p>
+						<p class="u-mb10"><?= _("Version") ?>: <?= $webapp->version ?></p>
+						<a class="button" href="/add/webapp/?app=<?= $webapp->name ?>&domain=<?= htmlentities($v_domain) ?>">
 							<?= _("Setup") ?>
 						</a>
 					</div>

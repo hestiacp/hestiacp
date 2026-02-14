@@ -54,6 +54,11 @@ if [ "$DISK_QUOTA" = 'yes' ]; then
 	$BIN/v-update-user-quota "$user"
 fi
 
+# Update cgroup
+if [ "$RESOURCES_LIMIT" = 'yes' ]; then
+	$BIN/v-update-user-cgroup "$user"
+fi
+
 # Rebuild user
 rebuild_user_conf
 

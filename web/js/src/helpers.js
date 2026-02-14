@@ -47,8 +47,13 @@ export function parseAndSortIpLists(ipListsData) {
 export function isDesktopSafari() {
 	const userAgent = window.navigator.userAgent;
 	const isSafari = /^((?!chrome|android).)*safari/i.test(userAgent);
-	const isMobile = /iPhone|iPad|iPod|Android/i.test(userAgent);
-	return isSafari && !isMobile;
+	const isMac = /Macintosh|MacIntel/i.test(window.navigator.platform);
+	return isSafari && isMac;
+}
+
+// Waits for the given number of milliseconds
+export function delay(milliseconds) {
+	return new Promise((resolve) => setTimeout(resolve, milliseconds));
 }
 
 // Posts data to the given URL and returns the response

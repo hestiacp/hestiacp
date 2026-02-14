@@ -1,6 +1,0 @@
-[dovecot]
-name=Dovecot 2.3-latest RHEL $releasever - $basearch
-baseurl=https://repo.dovecot.org/ce-2.3-latest/rhel/$releasever/RPMS/$basearch
-gpgkey=https://repo.dovecot.org/DOVECOT-REPO-GPG
-gpgcheck=1
-enabled=1

@@ -88,7 +88,7 @@ detect_os() {
 			fi
 		elif [ "$get_os_type" = "debian" ]; then
 			OS_TYPE='Debian'
-			OS_VERSION=$(cat /etc/debian_version | grep -o "[0-9]\{1,2\}" | head -n1)
+			OS_VERSION=$(grep -o "[0-9]\{1,2\}" /etc/debian_version | head -n1)
 		fi
 	else
 		OS_TYPE="Unsupported OS"
@@ -291,6 +291,13 @@ is_backup_enabled() {
 	fi
 }
 
+is_incremental_backup_enabled() {
+	BACKUPS_INCREMENTAL=$(grep "^BACKUPS_INCREMENTAL=" $USER_DATA/user.conf | cut -f2 -d \')
+	if [ -z "$BACKUPS_INCREMENTAL" ] || [[ "$BACKUPS_INCREMENTAL" != "yes" ]]; then
+		check_result "$E_DISABLED" "incremental backups are disabled"
+	fi
+}
+
 # Check user backup settings
 is_backup_scheduled() {
 	if [ -e "$HESTIA/data/queue/backup.pipe" ]; then
@@ -396,8 +403,8 @@ parse_object_kv_list() {
 
 # Check if object is supended
 is_object_suspended() {
-	if [ $2 = 'USER' ]; then
-		spnd=$(cat $USER_DATA/$1.conf | grep "SUSPENDED='yes'")
+	if [ "$2" = 'USER' ]; then
+		spnd=$(grep "SUSPENDED='yes'" $USER_DATA/$1.conf)
 	else
 		spnd=$(grep "$2='$3'" $USER_DATA/$1.conf | grep "SUSPENDED='yes'")
 	fi
@@ -409,7 +416,7 @@ is_object_suspended() {
 # Check if object is unsupended
 is_object_unsuspended() {
 	if [ $2 = 'USER' ]; then
-		spnd=$(cat $USER_DATA/$1.conf | grep "SUSPENDED='yes'")
+		spnd=$(grep "SUSPENDED='yes'" "$USER_DATA/$1.conf")
 	else
 		spnd=$(grep "$2='$3'" $USER_DATA/$1.conf | grep "SUSPENDED='yes'")
 	fi
@@ -523,7 +530,7 @@ get_user_value() {
 # Update user value in user.conf
 update_user_value() {
 	key="${2//$/}"
-	lnr=$(grep -n "^$key='" $HESTIA/data/users/$1/user.conf | cut -f 1 -d ':')
+	lnr=$(grep -m 1 -n "^$key='" $HESTIA/data/users/$1/user.conf | cut -f 1 -d ':')
 	if [ -n "$lnr" ]; then
 		sed -i "$lnr d" $HESTIA/data/users/$1/user.conf
 		sed -i "$lnr i\\$key='${3}'" $HESTIA/data/users/$1/user.conf
@@ -635,7 +642,7 @@ recalc_user_disk_usage() {
 		sed -i "s/U_DISK_DB='$d'/U_DISK_DB='$usage'/g" $USER_DATA/user.conf
 		u_usage=$((u_usage + usage))
 	fi
-	usage=$(grep 'U_DISK_DIRS=' $USER_DATA/user.conf | cut -f 2 -d "'")
+	usage=$(grep -m 1 'U_DISK_DIRS=' $USER_DATA/user.conf | cut -f 2 -d "'")
 	u_usage=$((u_usage + usage))
 	old=$(grep "U_DISK='" $USER_DATA/user.conf | cut -f 2 -d \')
 	sed -i "s/U_DISK='$old'/U_DISK='$u_usage'/g" $USER_DATA/user.conf
@@ -664,7 +671,7 @@ get_next_cronjob() {
 
 # Sort cron jobs by id
 sort_cron_jobs() {
-	cat $USER_DATA/cron.conf | sort -n -k 2 -t \' > $USER_DATA/cron.tmp
+	sort -n -k 2 -t \' $USER_DATA/cron.conf > $USER_DATA/cron.tmp
 	mv -f $USER_DATA/cron.tmp $USER_DATA/cron.conf
 }
 
@@ -704,7 +711,32 @@ sync_cron_jobs() {
 	chmod 600 $crontab
 }
 
-# User format validator
+# Validates Local part email and mail alias
+is_localpart_format_valid() {
+	if [ ${#1} -eq 1 ]; then
+		if ! [[ "$1" =~ ^[[:alnum:]]$ ]]; then
+			check_result "$E_INVALID" "invalid $2 format :: $1"
+		fi
+	else
+		if [ -n "$3" ]; then
+			maxlenght=$(($3 - 2))
+			# Allow leading and trailing special characters by adjusting the regex
+			if ! [[ "$1" =~ ^[[:alnum:]_.-][[:alnum:]_.-]{0,$maxlenght}[[:alnum:]_.-]$ ]]; then
+				check_result "$E_INVALID" "invalid $2 format :: $1"
+			fi
+		else
+			# Allow leading and trailing special characters by adjusting the regex
+			if ! [[ "$1" =~ ^[[:alnum:]_.-][[:alnum:]_.-]{0,28}[[:alnum:]_.-]$ ]]; then
+				check_result "$E_INVALID" "invalid $2 format :: $1"
+			fi
+		fi
+	fi
+	if [ "$1" != "${1//[^[:ascii:]]/}" ]; then
+		check_result "$E_INVALID" "invalid $2 format :: $1"
+	fi
+}
+
+# Username / ftp username format validator
 is_user_format_valid() {
 	if [ ${#1} -eq 1 ]; then
 		if ! [[ "$1" =~ ^^[[:alnum:]]$ ]]; then
@@ -724,6 +756,13 @@ is_user_format_valid() {
 	fi
 	if [ "$1" != "${1//[^[:ascii:]]/}" ]; then
 		check_result "$E_INVALID" "invalid $2 format :: $1"
+	fi
+
+	# Only for new users
+	if [[ "$FROM_V_ADD_USER" == "true" ]]; then
+		if ! [[ "$1" =~ ^[a-zA-Z][-|_[:alnum:]]{0,28}[[:alnum:]]$ ]]; then
+			check_result "$E_INVALID" "invalid $2 format :: $1"
+		fi
 	fi
 }
 
@@ -793,6 +832,7 @@ get_ip_format() {
 			ret_code=0
 		fi
 	fi
+}
 
 	# Check for IPV4 cidr
 	if [[ "$ret_string" != "6" ]] && [[ -n "$cidr_prefixlen" ]] || [[ "$object_name" = "cidr" ]]; then
@@ -970,7 +1010,11 @@ is_string_format_valid() {
 	fi
 	is_no_new_line_format "$1"
 }
-
+is_cron_command_valid_format() {
+	if [[ ! "$1" =~ ^[^\`]*?$ ]]; then
+		check_result "$E_INVALID" "Invalid cron command format"
+	fi
+}
 # Database format validator
 is_database_format_valid() {
 	exclude="[!|@|#|$|^|&|*|(|)|+|=|{|}|:|,|<|>|?|/|\|\"|'|;|%|\`| ]"
@@ -1001,29 +1045,45 @@ is_dbuser_format_valid() {
 
 # DNS record type validator
 is_dns_type_format_valid() {
-	known_dnstype='A,AAAA,NS,CNAME,MX,TXT,SRV,DNSKEY,KEY,IPSECKEY,PTR,SPF,TLSA,CAA,DS'
-	if [ -z "$(echo $known_dnstype | grep -w $1)" ]; then
+	is_valid=$(
+		$HESTIA_PHP -- "$1" << 'EOPHP'
+	<?php
+	$type = $argv[1];
+	$known_types = array("A","AAAA","NS","CNAME","MX","TXT","SRV","DNSKEY",
+	"KEY","IPSECKEY","PTR","SPF","TLSA","CAA","DS");
+	echo in_array($type, $known_types, true) ? "0" : "1";
+EOPHP
+	)
+	if [ "$is_valid" -ne 0 ]; then
 		check_result "$E_INVALID" "invalid dns record type format :: $1"
 	fi
 }
 
 # DNS record validator
 is_dns_record_format_valid() {
-	if [ "$rtype" = 'A' ]; then
-		is_ip_format_valid "$1"
-	fi
-	if [ "$rtype" = 'NS' ]; then
-		is_domain_format_valid "${1::-1}" 'ns_record'
-	fi
-	if [ "$rtype" = 'MX' ]; then
-		is_domain_format_valid "${1::-1}" 'mx_record'
-		is_int_format_valid "$priority" 'priority_record'
-	fi
-	if [ "$rtype" = 'SRV' ]; then
-		format_no_quotes "$priority" 'priority_record'
-	fi
-
 	is_no_new_line_format "$1"
+
+	json_from_php=$(
+		$HESTIA_PHP "$HESTIA/func/internal/dns_record_validator.php" "$1" "$rtype" "$priority"
+	)
+	check_result $? "dns record validation failed :: $1" "$E_INVALID"
+
+	is_valid=$(jq -er '.valid' <<< "$json_from_php")
+	if [ $? -ne 0 ]; then
+		check_result "$E_INVALID" "dns record validation failed :: $1"
+	fi
+	if [ "$is_valid" != 'true' ]; then
+		error_message=$(jq -r '.error_message // "invalid dns record format"' <<< "$json_from_php")
+		check_result "$E_INVALID" "$error_message :: $1"
+	fi
+	cleaned_record=$(jq -r '.cleaned_record // empty' <<< "$json_from_php")
+	if [ -n "$cleaned_record" ]; then
+		dvalue="$cleaned_record"
+	fi
+	updated_priority=$(jq -r '.new_priority // empty' <<< "$json_from_php")
+	if [ -n "$updated_priority" ]; then
+		priority="$updated_priority"
+	fi
 }
 
 # Email format validator
@@ -1099,6 +1159,13 @@ is_ip_status_format_valid() {
 	fi
 }
 
+# Comment validator
+is_comment_format_valid() {
+	if ! [[ "$1" =~ ^[[:alnum:]][[:alnum:][:space:]._-]{0,64}[[:alnum:]]$ ]]; then
+		check_result "$E_INVALID" "invalid $2 format :: $1"
+	fi
+}
+
 # Cron validator
 is_cron_format_valid() {
 	limit=59
@@ -1143,6 +1210,35 @@ is_cron_format_valid() {
 	done
 	if [ "$check_format" != 'ok' ]; then
 		check_result "$E_INVALID" "invalid $2 format :: $1"
+	fi
+}
+
+# Validate CPU Quota:
+is_valid_cpu_quota() {
+	local cpu_quota="$1"
+	if [[ ! "$cpu_quota" =~ ^[1-9][0-9]*%$ ]]; then
+		check_result "$E_INVALID" "Invalid CPU Quota format: $cpu_quota"
+	fi
+}
+
+# Validate CPU Quota Period:
+is_valid_cpu_quota_period() {
+	if [[ ! "$1" =~ ^[0-9]+(ms|s)$ ]]; then
+		check_result "$E_INVALID" "Invalid CPU Quota Period format :: $1"
+	fi
+}
+
+# Validate Memory Size:
+is_valid_memory_size() {
+	if [[ ! "$1" =~ ^[0-9]+[KMGTK]?$ ]]; then
+		check_result "$E_INVALID" "Invalid Memory Size format :: $1"
+	fi
+}
+
+# Validate Swap Size:
+is_valid_swap_size() {
+	if [[ ! "$1" =~ ^[0-9]+[KMGTK]?$ ]]; then
+		check_result "$E_INVALID" "Invalid Swap Size format :: $1"
 	fi
 }
 
@@ -1211,7 +1307,7 @@ is_format_valid() {
 		if [ -n "$arg" ]; then
 			case $arg_name in
 				access_key_id) is_access_key_id_format_valid "$arg" "$arg_name" ;;
-				account) is_user_format_valid "$arg" "$arg_name" '64' ;;
+				account) is_localpart_format_valid "$arg" "$arg_name" '64' ;;
 				action) is_fw_action_format_valid "$arg" ;;
 				active) is_boolean_format_valid "$arg" 'active' ;;
 				aliases) is_alias_format_valid "$arg" ;;
@@ -1224,7 +1320,8 @@ is_format_valid() {
 				charsets) is_common_format_valid "$arg" 'charsets' ;;
 				chain) is_object_format_valid "$arg" 'chain' ;;
 				cidr) is_ip_format_valid "$arg" 'cidr' ;;
-				comment) is_object_format_valid "$arg" 'comment' ;;
+				comment) is_comment_format_valid "$arg" 'comment' ;;
+				cron_command) is_cron_command_valid_format "$arg" ;;
 				database) is_database_format_valid "$arg" 'database' ;;
 				day) is_cron_format_valid "$arg" $arg_name ;;
 				dbpass) is_password_format_valid "$arg" ;;
@@ -1255,7 +1352,7 @@ is_format_valid() {
 				iptables) is_fw_iptables_format_valid "$arg" ;;
 				job) is_int_format_valid "$arg" 'job' ;;
 				key) is_common_format_valid "$arg" "$arg_name" ;;
-				malias) is_user_format_valid "$arg" "$arg_name" '64' ;;
+				malias) is_localpart_format_valid "$arg" "$arg_name" '64' ;;
 				max_db) is_int_format_valid "$arg" 'max db' ;;
 				min) is_cron_format_valid "$arg" $arg_name ;;
 				month) is_cron_format_valid "$arg" $arg_name ;;
@@ -1491,19 +1588,21 @@ format_aliases() {
 }
 
 is_restart_format_valid() {
-	if [ "$1" != 'yes' ] && [ "$1" != 'no' ] && [ "$1" != 'ssl' ] && [ "$1" != 'reload' ] && [ "$1" != 'updatessl' ]; then
-		check_result "$E_INVALID" "invalid $2 format :: $1"
+	if [ -n "$1" ]; then
+		if [ "$1" != 'yes' ] && [ "$1" != 'no' ] && [ "$1" != 'ssl' ] && [ "$1" != 'reload' ] && [ "$1" != 'updatessl' ] && [ "$1" != "scheduled" ]; then
+			check_result "$E_INVALID" "invalid $2 format :: $1"
+		fi
 	fi
 }
 
 check_backup_conditions() {
 	# Checking load average
-	la=$(cat /proc/loadavg | cut -f 1 -d ' ' | cut -f 1 -d '.')
+	la=$(awk -F'[. ]' '{print $1}' /proc/loadavg)
 	# i=0
 	while [ "$la" -ge "$BACKUP_LA_LIMIT" ]; do
 		echo -e "$(date "+%F %T") Load Average $la"
 		sleep 60
-		la=$(cat /proc/loadavg | cut -f 1 -d ' ' | cut -f 1 -d '.')
+		la=$(awk -F'[. ]' '{print $1}' /proc/loadavg)
 	done
 }
 
@@ -1640,7 +1739,8 @@ format_no_quotes() {
 }
 
 is_username_format_valid() {
-	if [[ ! "$1" =~ ^[A-Za-z0-9._%+-]+@[[:alnum:].-]+\.[A-Za-z]{2,63}$ ]]; then
+	if [[ ! "$1" =~ ^[A-Za-z0-9._%+-]+@[[:alnum:].-]+\.[A-Za-z]{2,63}$ ]] \
+		&& [[ ! "$1" =~ ^[A-Za-z0-9._%+-]+(/|\\)[A-Za-z0-9._%+-]+$ ]]; then
 		is_string_format_valid "$1" "$2"
 	fi
 }
@@ -1774,8 +1874,13 @@ add_chroot_jail() {
 		chown 0:0 /srv/jail/$user/home
 		chmod 755 /srv/jail/$user/home
 	fi
+	if [ ! -d /srv/jail/$user/home/$user ]; then
+		mkdir -p /srv/jail/$user/home/$user
+		chown 0:0 /srv/jail/$user/home/$user
+		chmod 755 /srv/jail/$user/home/$user
+	fi
 
-	systemd=$(systemd-escape -p --suffix=mount "/srv/jail/$user/home")
+	systemd=$(systemd-escape -p --suffix=mount "/srv/jail/$user/home/$user")
 	cat > "/etc/systemd/system/$systemd" << EOF
 [Unit]
 Description=Mount $user's home directory to the jail chroot
@@ -1783,7 +1888,7 @@ Before=local-fs.target
 
 [Mount]
 What=$(getent passwd $user | cut -d : -f 6)
-Where=/srv/jail/$user/home
+Where=/srv/jail/$user/home/$user
 Type=none
 Options=bind
 LazyUnmount=yes
@@ -1800,11 +1905,19 @@ EOF
 delete_chroot_jail() {
 	local user=$1
 
+	# Backwards compatibility with old style home jail
 	systemd=$(systemd-escape -p --suffix=mount "/srv/jail/$user/home")
 	systemctl stop "$systemd" > /dev/null 2>&1
 	systemctl disable "$systemd" > /dev/null 2>&1
 	rm -f "/etc/systemd/system/$systemd"
+
+	# Remove the new style home jail
+	systemd=$(systemd-escape -p --suffix=mount "/srv/jail/$user/home/$user")
+	systemctl stop "$systemd" > /dev/null 2>&1
+	systemctl disable "$systemd" > /dev/null 2>&1
+	rm -f "/etc/systemd/system/$systemd"
+
 	systemctl daemon-reload > /dev/null 2>&1
-	rmdir /srv/jail/$user/home > /dev/null 2>&1
+	rm -r /srv/jail/$user/ > /dev/null 2>&1
 	rmdir /srv/jail/$user > /dev/null 2>&1
 }

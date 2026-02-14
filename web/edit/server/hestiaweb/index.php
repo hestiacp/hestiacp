@@ -1,5 +1,6 @@
 <?php
 
+use function Hestiacp\quoteshellarg\quoteshellarg;
 $TAB = "SERVER";
 
 // Main include
@@ -14,19 +15,24 @@ if ($_SESSION["userContext"] !== "admin" && $user_plain === "$ROOT_USER") {
 // Check POST request
 if (!empty($_POST["save"])) {
 	if (!empty($_POST["v_config"])) {
-		exec("mktemp", $mktemp_output, $return_var);
-		$new_conf = $mktemp_output[0];
-		$fp = fopen($new_conf, "w");
-		fwrite($fp, str_replace("\r\n", "\n", $_POST["v_config"]));
-		fclose($fp);
+		$fp = tmpfile();
+		$new_conf = stream_get_meta_data($fp)["uri"];
+		$config = str_replace("\r\n", "\n", $_POST["v_config"]);
+		if (!str_ends_with($config, "\n")) {
+			$config .= "\n";
+		}
+		fwrite($fp, $config);
 		exec(
-			HESTIA_CMD . "v-change-sys-service-config " . $new_conf . " hestiaweb no",
+			HESTIA_CMD .
+				"v-change-sys-service-config " .
+				quoteshellarg($new_conf) .
+				" hestiaweb yes",
 			$output,
 			$return_var,
 		);
 		check_return_code($return_var, $output);
 		unset($output);
-		unlink($new_conf);
+		fclose($fp);
 	}
 }
 

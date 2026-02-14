@@ -1,0 +1,66 @@
+{
+	"$schema": "https://biomejs.dev/schemas/2.3.13/schema.json",
+	"vcs": {
+		"enabled": false,
+		"clientKind": "git",
+		"useIgnoreFile": false
+	},
+	"files": {
+		"ignoreUnknown": false,
+		"includes": [
+			"**",
+			"!**/dist",
+			"!**/vendor",
+			"!**/node_modules",
+			"!**/test-results",
+			"!**/.vitepress/cache",
+			"!**/test/test_helper",
+			"!**/email/examples/*.html",
+			"!**/*.bats",
+			"!**/*.min.css",
+			"!**/*.min.js"
+		]
+	},
+	"formatter": {
+		"enabled": false,
+		"useEditorconfig": true
+	},
+	"linter": {
+		"enabled": true,
+		"rules": {
+			"recommended": true,
+			"style": {
+				"noDescendingSpecificity": "off"
+			},
+			"correctness": {
+				"noUnknownMediaFeatureName": "off",
+				"noUnusedVariables": "off",
+				"noUnusedImports": "off"
+			},
+			"suspicious": {
+				"noEmptyBlock": "off",
+				"noShorthandPropertyOverrides": "off",
+				"noDuplicateProperties": "off",
+				"noDoubleEquals": "off",
+				"noUnknownAtRules": "off"
+			},
+			"complexity": {
+				"noImportantStyles": "off"
+			}
+		}
+	},
+	"javascript": {
+		"formatter": {
+			"quoteStyle": "single",
+			"semicolons": "asNeeded"
+		}
+	},
+	"assist": {
+		"enabled": true,
+		"actions": {
+			"source": {
+				"organizeImports": "on"
+			}
+		}
+	}
+}

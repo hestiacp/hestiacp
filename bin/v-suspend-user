@@ -27,7 +27,7 @@ source_conf "$HESTIA/conf/hestia.conf"
 #----------------------------------------------------------#
 
 check_args '1' "$#" 'USER [RESTART]'
-is_format_valid 'user'
+is_format_valid 'user' 'restart'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 if [ "$user" = "$ROOT_USER" ]; then

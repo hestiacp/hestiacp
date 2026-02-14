@@ -47,8 +47,8 @@ server {
 		# The following 2 rules are only needed with webfinger
 		rewrite ^/.well-known/host-meta /public.php?service=host-meta last;
 		rewrite ^/.well-known/host-meta.json /public.php?service=host-meta-json last;
-		rewrite ^/.well-known/carddav /remote.php/carddav/ redirect;
-		rewrite ^/.well-known/caldav /remote.php/caldav/ redirect;
+		rewrite ^/.well-known/carddav /remote.php/dav redirect;
+		rewrite ^/.well-known/caldav /remote.php/dav redirect;
 		rewrite ^(/core/doc/[^\/]+/)$ $1/index.html;
 
 		try_files $uri $uri/ /index.php;

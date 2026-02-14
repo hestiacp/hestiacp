@@ -60,6 +60,7 @@ fi
 
 # Deleting dkim dns record
 if [ "$DKIM" = 'yes' ] && [ -e "$USER_DATA/dns/$domain.conf" ]; then
+	# Legacy _domainkey policy records are deprecated but still cleaned up; remove once obsolete.
 	dkim_records=$($BIN/v-list-dns-records "$user" "$domain" | grep -E "\s(mail\._domainkey|_domainkey)\s" | cut -f 1 -d ' ')
 	for id in $dkim_records; do
 		$BIN/v-delete-dns-record "$user" "$domain" "$id" '' 'yes'
@@ -76,6 +77,11 @@ if [ -n "$WEB_SYSTEM" ] || [ -n "$PROXY_SYSTEM" ]; then
 	if [ -n "$IMAP_SYSTEM" ]; then
 		$BIN/v-delete-mail-domain-webmail "$user" "$domain" 'yes'
 	fi
+fi
+
+# Run extension trigger
+if [ -x "$HESTIA/data/extensions/delete-mail-domain.sh" ]; then
+	$HESTIA/data/extensions/delete-mail-domain.sh "$user" "$domain"
 fi
 
 #----------------------------------------------------------#

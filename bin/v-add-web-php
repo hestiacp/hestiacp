@@ -35,7 +35,7 @@ fi
 php_fpm="/etc/init.d/php$version-fpm"
 
 # Verify php version format
-if [[ ! $version =~ ^[0-9]\.[0-9]+ ]]; then
+if [[ ! $version =~ ^[0-9]+\.[0-9]+ ]]; then
 	echo "The specified PHP version format is invalid, it should look like [0-9].[0-9]."
 	echo "Example: 7.0, 7.4, 8.0"
 	exit "$E_INVALID"
@@ -63,14 +63,14 @@ check_hestia_demo_mode
 mph="php$version-common php$version-mbstring php$version-bcmath php$version-cli php$version-curl
      php$version-fpm php$version-gd php$version-intl php$version-mysql
      php$version-soap php$version-xml php$version-zip php$version-json php$version-bz2
-     php$version-pspell php$version-imagick php$version-pgsql php$version-imap php$version-ldap"
+     php$version-pspell php$version-imagick php$version-pgsql php$version-imap php$version-ldap php$version-apcu"
 
-# Check is version is 7.1 or below to add mcrypt
+# Check if version is 7.1 or below to add mcrypt
 if [[ $(echo "$version 7.2" | awk '{print ($1 < $2)}') == 1 ]]; then
 	mph="$mph php$version-mcrypt"
 fi
 
-# Check if version is 8.0 or higher and drop php json.
+# Check if version is 8.0 or higher and drop json
 if [[ ${version:0:1} == "8" ]]; then
 	mph=$(echo "$mph" | sed -e "s/php$version-json//")
 fi
@@ -84,13 +84,9 @@ if ! echo "$DB_SYSTEM" | grep -w 'pgsql' > /dev/null; then
 fi
 
 # Install php packages
-if [ -f '/etc/redhat-release' ]; then
-	dnf makecache -q
-	dnf install -q -y $mph > /dev/null 2>&1 &
-else
-	apt-get -qq update
-	apt-get -y -qq -o Dpkg::Options::="--force-confold" install $mph > /dev/null 2>&1 &
-fi
+apt-get -qq update
+apt-get -y -qq -o Dpkg::Options::="--force-confold" install $mph > /dev/null 2>&1 &
+
 BACK_PID=$!
 
 # Check if package installation is done, print a spinner
@@ -108,11 +104,7 @@ echo
 # Check if installation was successful
 if [ ! -f "$php_fpm" ]; then
 	echo "ERROR: Installation failed, please run the following command manually for debugging:"
-	if [ -f '/etc/redhat-release' ]; then
-		echo "dnf install $mph"
-	else
-		echo "apt-get install $mph"
-	fi
+	echo "apt-get install $mph"
 fi
 
 # Check if required modules for apache2 are enabled

@@ -47,6 +47,7 @@ if [ -n "$ip_format" ]; then
 		is_format_valid 'nat_ip'
 	fi
 fi
+is_restart_format_valid "$restart"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
@@ -104,7 +105,7 @@ if [ -n "$old" ] && [ -n "$FTP_SYSTEM" ]; then
 				sed -i "/pasv_address/d" "$ftp_conf"
 			fi
 			if [ -n "$check_pasv" ] && [ -n "$nat_ip" ]; then
-				sed -i "s/pasv_address=.*/pasv_address='$nat_ip'/g" "$ftp_conf"
+				sed -i "s/pasv_address=.*/pasv_address=$nat_ip/g" "$ftp_conf"
 			fi
 		fi
 	fi

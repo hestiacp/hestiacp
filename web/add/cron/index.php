@@ -106,6 +106,12 @@ if (empty($v_hour)) {
 if (empty($v_min)) {
 	$v_min = "";
 }
+
+// Get current system time
+exec(HESTIA_CMD . "v-get-sys-timezone", $output, $return_var);
+date_default_timezone_set($output[0]);
+$current_timestamp = time();
+
 // Render
 render_page($user, $TAB, "add_cron");
 

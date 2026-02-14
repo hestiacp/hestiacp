@@ -1,0 +1,462 @@
+#!/bin/bash
+# info: backup system user config only
+# options: USER NOTIFY
+#
+# example: v-backup-user admin yes
+#
+# This function is used for backing up user with all its domains and databases.
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
+source $HESTIA/func/domain.sh
+# shellcheck source=/usr/local/hestia/func/db.sh
+source $HESTIA/func/db.sh
+# shellcheck source=/usr/local/hestia/func/backup.sh
+source $HESTIA/func/backup.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '1' "$#" 'USER'
+is_format_valid 'user'
+is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Get current time
+start_time=$(date '+%s')
+
+tmpdir="/home/$user/backup/"
+
+# We delete the backup dir first make sure all old database has been cleared
+rm -fr "/home/$user/backup/"
+mkdir -p "$tmpdir"
+
+# Backup sys configs
+echo "-- SYSTEM --" | tee $BACKUP/$user.log
+mkdir -p $tmpdir/hestia
+
+echo -e "$(date "+%F %T") $user.conf" | tee -a $BACKUP/$user.log
+cp -r $USER_DATA/user.conf $tmpdir/hestia/
+cp -r $USER_DATA/ssl $tmpdir/hestia/
+
+if [ -e "$USER_DATA/stats.log" ]; then
+	echo -e "$(date "+%F %T") stats.log" | tee -a $BACKUP/$user.log
+	cp -r $USER_DATA/stats.log $tmpdir/hestia/
+fi
+
+if [ -e "$USER_DATA/history.log" ]; then
+	echo -e "$(date "+%F %T") history.log" | tee -a $BACKUP/$user.log
+	cp -r $USER_DATA/history.log $tmpdir/hestia/
+fi
+
+if [ -e "$USER_DATA/backup-excludes.conf" ]; then
+	echo -e "$(date "+%F %T") backup-excludes.conf" | tee -a $BACKUP/$user.log
+	cp -r $USER_DATA/backup-excludes.conf $tmpdir/hestia/
+fi
+
+# Backup PAM
+mkdir -p $tmpdir/pam
+echo -e "$(date "+%F %T") pam" | tee -a $BACKUP/$user.log
+grep "^$user:" /etc/passwd > $tmpdir/pam/passwd
+grep "^$user:" /etc/shadow > $tmpdir/pam/shadow
+grep "^$user:" /etc/group > $tmpdir/pam/group
+echo
+
+# Parsing excludes
+if [ -e "$USER_DATA/backup-excludes.conf" ]; then
+	source $USER_DATA/backup-excludes.conf
+fi
+
+# WEB domains
+if [ -n "$WEB_SYSTEM" ] && [ "$WEB" != '*' ]; then
+	echo -e "\n-- WEB --" | tee -a $BACKUP/$user.log
+	mkdir -p $tmpdir/web/
+
+	# Parsing domain exclusions
+	conf="$USER_DATA/web.conf"
+	for domain in $(search_objects 'web' 'SUSPENDED' "*" 'DOMAIN'); do
+		exclusion=$(echo -e "$WEB" | tr ',' '\n' | grep "^$domain$\|^\*$")
+		if [ -z "$exclusion" ]; then
+			web_list="$web_list $domain"
+		else
+			echo "$(date "+%F %T") excluding $domain" | tee -a $BACKUP/$user.log
+		fi
+	done
+	web_list=$(echo "$web_list" | sed -e "s/  */\ /g" -e "s/^ //")
+
+	i=0
+
+	for domain in $web_list; do
+		check_backup_conditions
+		((i++))
+		echo -e "$(date "+%F %T") $domain" | tee -a $BACKUP/$user.log
+		mkdir -p -p $tmpdir/web/$domain/conf
+		mkdir -p -p $tmpdir/web/$domain/hestia
+
+		# Get domain variables
+		domain_idn=$domain
+		format_domain_idn
+		get_domain_values 'web'
+
+		# Backup web.conf
+		cd $tmpdir/web/$domain/
+		conf="$USER_DATA/web.conf"
+		grep "DOMAIN='$domain'" $conf > hestia/web.conf
+
+		# Backup vhost config
+		if [ -e "$HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.conf" ]; then
+			cp $HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.conf* conf/
+		elif [ -e "$HOMEDIR/$user/conf/web/$domain.$WEB_SYSTEM.conf" ]; then
+			cp $HOMEDIR/$user/conf/web/$domain.$WEB_SYSTEM.conf* conf/
+		else
+			# legacy format: all domain configs in single file
+			tpl_file="$WEBTPL/$WEB_SYSTEM/$WEB_BACKEND/$TPL.tpl"
+			conf="$HOMEDIR/$user/conf/web/$WEB_SYSTEM.conf"
+			get_web_config_lines "$tpl_file" "$conf"
+			sed -n "$top_line,$bottom_line p" $conf > conf/$WEB_SYSTEM.conf
+		fi
+
+		# Backup ssl vhost
+		if [ "$SSL" = 'yes' ]; then
+			if [ -e "$HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.ssl.conf" ]; then
+				cp $HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.ssl.conf* conf/
+			elif [ -e "$HOMEDIR/$user/conf/web/$domain.$WEB_SYSTEM.ssl.conf" ]; then
+				cp $HOMEDIR/$user/conf/web/$domain.$WEB_SYSTEM.ssl.conf* conf/
+			else
+				# legacy format: all domain configs in single file
+				tpl_file="$WEBTPL/$WEB_SYSTEM/$WEB_BACKEND/$TPL.stpl"
+				conf="$HOMEDIR/$user/conf/web/s$WEB_SYSTEM.conf"
+				get_web_config_lines "$tpl_file" "$conf"
+				sed -n "$top_line,$bottom_line p" $conf > conf/s$WEB_SYSTEM.conf
+			fi
+		fi
+
+		# Backup proxy config
+		if [ -n "$PROXY_SYSTEM" ] && [ -n "$PROXY" ]; then
+			if [ -e "$HOMEDIR/$user/conf/web/$domain/$PROXY_SYSTEM.conf" ]; then
+				cp $HOMEDIR/$user/conf/web/$domain/$PROXY_SYSTEM.conf* conf/
+			elif [ -e "$HOMEDIR/$user/conf/web/$domain.$PROXY_SYSTEM.conf" ]; then
+				cp $HOMEDIR/$user/conf/web/$domain.$PROXY_SYSTEM.conf* conf/
+			else
+				# legacy format: all domain configs in single file
+				tpl_file="$WEBTPL/$PROXY_SYSTEM/$PROXY.tpl"
+				conf="$HOMEDIR/$user/conf/web/$PROXY_SYSTEM.conf"
+				get_web_config_lines "$tpl_file" "$conf"
+				sed -n "$top_line,$bottom_line p" $conf > conf/$PROXY_SYSTEM.conf
+			fi
+		fi
+
+		# Backup ssl proxy config
+		if [ -n "$PROXY_SYSTEM" ] && [ -n "$PROXY" ] && [ "$SSL" = 'yes' ]; then
+			if [ -e "$HOMEDIR/$user/conf/web/$domain/$PROXY_SYSTEM.ssl.conf" ]; then
+				cp $HOMEDIR/$user/conf/web/$domain/$PROXY_SYSTEM.ssl.conf* conf/
+			elif [ -e "$HOMEDIR/$user/conf/web/$domain.$PROXY_SYSTEM.ssl.conf" ]; then
+				cp $HOMEDIR/$user/conf/web/$domain.$PROXY_SYSTEM.ssl.conf* conf/
+			else
+				# legacy format: all domain configs in single file
+				tpl_file="$WEBTPL/$PROXY_SYSTEM/$PROXY.stpl"
+				conf="$HOMEDIR/$user/conf/web/s$PROXY_SYSTEM.conf"
+				get_web_config_lines "$tpl_file" "$conf"
+				sed -n "$top_line,$bottom_line p" $conf > conf/s$PROXY_SYSTEM.conf
+			fi
+		fi
+
+		domain_conf=$(grep "DOMAIN='$domain'" $conf)
+		parse_object_kv_list_non_eval domain_conf
+
+		mkdir -p -p template/$WEB_SYSTEM/
+		mkdir -p template/php-fpm/
+
+		if [ $WEB_BACKEND == 'php-fpm' ]; then
+			cp $HESTIA/data/templates/web/$WEB_SYSTEM/php-fpm/$TPL.tpl template/$WEB_SYSTEM/
+			cp $HESTIA/data/templates/web/$WEB_SYSTEM/php-fpm/$TPL.stpl template/$WEB_SYSTEM/
+			cp $HESTIA/data/templates/web/php-fpm/$BACKEND.tpl template/php-fpm/
+		else
+			cp $HESTIA/data/templates/web/$WEB_SYSTEM/$TPL.tpl template/$WEB_SYSTEM/
+			cp $HESTIA/data/templates/web/$WEB_SYSTEM/$TPL.stpl template/$WEB_SYSTEM/
+		fi
+		if [ -n "$PROXY_SYSTEM" ] && [ -n "$PROXY" ]; then
+			mkdir -p template/$PROXY_SYSTEM
+			cp $HESTIA/data/templates/web/$PROXY_SYSTEM/$PROXY.tpl template/$PROXY_SYSTEM/
+			cp $HESTIA/data/templates/web/$PROXY_SYSTEM/$PROXY.stpl template/$PROXY_SYSTEM/
+		fi
+
+		# Backup ssl certificates
+		if [ "$SSL" = 'yes' ]; then
+			cp $HOMEDIR/$user/conf/web/$domain/ssl/$domain.* conf/
+			cp $USER_DATA/ssl/$domain.* hestia/
+		fi
+	done
+
+	# Print total
+	if [ "$i" -eq 1 ]; then
+		echo -e "$(date "+%F %T") *** $i domain ***" | tee -a $BACKUP/$user.log
+	else
+		echo -e "$(date "+%F %T") *** $i domains ***" | tee -a $BACKUP/$user.log
+	fi
+fi
+
+# DNS domains
+if [ -n "$DNS_SYSTEM" ] && [ "$DNS" != '*' ]; then
+	echo -e "\n-- DNS --" | tee -a $BACKUP/$user.log
+	mkdir -p $tmpdir/dns/
+
+	# Parsing domain exclusions
+	for domain in $(search_objects 'dns' 'SUSPENDED' "*" 'DOMAIN'); do
+		exclusion=$(echo "$DNS" | tr ',' '\n' | grep "^$domain$")
+		if [ -z "$exclusion" ]; then
+			dns_list="$dns_list $domain"
+		else
+			echo "$(date "+%F %T") excluding $domain"
+			msg="$msg\n$(date "+%F %T") excluding $domain"
+		fi
+	done
+	dns_list=$(echo "$dns_list" | sed -e "s/  */\ /g" -e "s/^ //")
+
+	i=0
+	for domain in $dns_list; do
+		((i++))
+		echo -e "$(date "+%F %T") $domain" | tee -a $BACKUP/$user.log
+
+		# Building directory tree
+		mkdir -p $tmpdir/dns/$domain/conf
+		mkdir -p $tmpdir/dns/$domain/conf/keys
+		mkdir -p $tmpdir/dns/$domain/hestia
+
+		# Backup dns.conf
+		cd $tmpdir/dns/$domain/
+		conf="$USER_DATA/dns.conf"
+		grep "DOMAIN='$domain'" $conf > hestia/dns.conf
+
+		# Backup dns recods
+		cp $USER_DATA/dns/$domain.conf hestia/$domain.conf
+		if [ "$DNS_SYSTEM" != 'remote' ]; then
+			cp $HOMEDIR/$user/conf/dns/$domain.db conf/$domain.db
+		fi
+		# Backup DNSSEC public and private key if enabled
+		dnssec=$(grep "DOMAIN='$domain'" $USER_DATA/dns.conf | grep "DNSSEC='yes'")
+		if [ -n "$dnssec" ]; then
+			format_domain_idn
+			cp $USER_DATA/keys/K$domain_idn*.* $tmpdir/dns/$domain/conf/keys
+		fi
+	done
+
+	# Print total
+	if [ "$i" -eq 1 ]; then
+		echo -e "$(date "+%F %T") *** $i domain ***" | tee -a $BACKUP/$user.log
+	else
+		echo -e "$(date "+%F %T") *** $i domains ***" | tee -a $BACKUP/$user.log
+	fi
+fi
+
+# Mail domains
+if [ -n "$MAIL_SYSTEM" ] && [ "$MAIL" != '*' ]; then
+	echo -e "\n-- MAIL --" | tee -a $BACKUP/$user.log
+	mkdir -p $tmpdir/mail/
+
+	# Parsing domain exclusions
+	conf="$USER_DATA/mail.conf"
+	for domain in $(search_objects 'mail' 'SUSPENDED' "*" 'DOMAIN'); do
+		check_exl=$(echo "$MAIL" | tr ',' '\n' | grep "^$domain$")
+		if [ -z "$check_exl" ]; then
+			mail_list="$mail_list $domain"
+		else
+			echo "$(date "+%F %T") excluding $domain" | tee -a $BACKUP/$user.log
+		fi
+	done
+	mail_list=$(echo "$mail_list" | sed -e "s/  */\ /g" -e "s/^ //")
+
+	i=0
+	for domain in $mail_list; do
+		check_backup_conditions
+		((i++))
+		echo -e "$(date "+%F %T") $domain" | tee -a $BACKUP/$user.log
+		mkdir -p $tmpdir/mail/$domain/conf
+		mkdir -p $tmpdir/mail/$domain/hestia
+		domain_idn=$domain
+		format_domain_idn
+
+		# Backup exim config
+		if [[ "$MAIL_SYSTEM" =~ exim ]]; then
+			cd $tmpdir/mail/$domain/
+			cp -r $HOMEDIR/$user/conf/mail/$domain/* conf/
+		fi
+
+		# Backup mail.conf
+		conf="$USER_DATA/mail.conf"
+		grep "DOMAIN='$domain'" $conf > hestia/mail.conf
+		cp $USER_DATA/mail/$domain.* hestia/
+		if [ -n "$(ls $USER_DATA/mail/ | grep *@$domain)" ]; then
+			cp $USER_DATA/mail/*@$domain.* hestia/
+		fi
+	done
+
+	# Print total
+	if [ "$i" -eq 1 ]; then
+		echo -e "$(date "+%F %T") *** $i domain ***" | tee -a $BACKUP/$user.log
+	else
+		echo -e "$(date "+%F %T") *** $i domains ***" | tee -a $BACKUP/$user.log
+	fi
+fi
+
+# Databases
+if [ -n "$DB_SYSTEM" ] && [ "$DB" != '*' ]; then
+	echo -e "\n-- DB --" | tee -a $BACKUP/$user.log
+	mkdir -p $tmpdir/db/
+
+	# Parsing database exclusions
+	for database in $(search_objects 'db' 'SUSPENDED' "*" 'DB'); do
+		exclusion=$(echo "$DB" | tr ',' '\n' | grep "^$database$")
+		if [ -z "$exclusion" ]; then
+			db_list="$db_list $database"
+		else
+			echo "$(date "+%F %T") excluding $database" \
+				| tee -a $BACKUP/$user.log
+		fi
+	done
+
+	i=0
+	conf="$USER_DATA/db.conf"
+	db_list=$(echo "$db_list" | sed -e "s/  */\ /g" -e "s/^ //")
+	for database in $db_list; do
+		check_backup_conditions
+		((i++))
+		get_database_values
+
+		echo -e "$(date "+%F %T") $database ($TYPE)" | tee -a $BACKUP/$user.log
+		mkdir -p $tmpdir/db/$database/conf
+		mkdir -p $tmpdir/db/$database/hestia
+
+		cd $tmpdir/db/$database/
+		grep "DB='$database'" $conf > hestia/db.conf
+
+		dump="$tmpdir/db/$database/$database.$TYPE.sql"
+		if [ "$BACKUP_MODE" = 'zstd' ]; then
+			dumpgz="$tmpdir/db/$database/$database.$TYPE.sql.zst"
+		else
+			dumpgz="$tmpdir/db/$database/$database.$TYPE.sql.gz"
+		fi
+
+		grants="$tmpdir/db/$database/conf/$database.$TYPE.$DBUSER"
+		if [ ! -f "$dumpgz" ]; then
+
+			WAIT_LOOP_ENTERED=0
+			while true; do
+				if pgrep -x "mysqldump" > /dev/null; then
+					WAIT_LOOP_ENTERED=1
+					echo "Wait other mysqldump to finish"
+					sleep 1
+				else
+					if [ "$WAIT_LOOP_ENTERED" -eq 1 ]; then
+						echo "We can use mysqldump now"
+					fi
+					break
+				fi
+			done
+
+			case $TYPE in
+				mysql) dump_mysql_database ;;
+				pgsql) dump_pgsql_database ;;
+			esac
+
+			# Compress dump
+			if [ "$BACKUP_MODE" = 'zstd' ]; then
+				pzstd -$BACKUP_GZIP $dump
+				rm $dump
+			else
+				gzip -$BACKUP_GZIP $dump
+			fi
+		fi
+	done
+
+	# Print total
+	if [ "$i" -eq 1 ]; then
+		echo -e "$(date "+%F %T") *** $i database ***" \
+			| tee -a $BACKUP/$user.log
+	else
+		echo -e "$(date "+%F %T") *** $i databases ***" \
+			| tee -a $BACKUP/$user.log
+	fi
+fi
+
+# Cron jobs
+if [ -n "$CRON_SYSTEM" ] && [ "$CRON" != '*' ]; then
+	echo -e "\n-- CRON --" | tee -a $BACKUP/$user.log
+	mkdir -p $tmpdir/cron/
+
+	# Backup cron.conf
+	cp $USER_DATA/cron.conf $tmpdir/cron/
+	cron_record=$(wc -l $USER_DATA/cron.conf | cut -f 1 -d ' ')
+
+	if [ -e "/var/spool/cron/$user" ]; then
+		cron_list="$cron_record"
+		cp /var/spool/cron/$user $tmpdir/cron/
+	fi
+
+	# Print total
+	if [ "$cron_record" -eq 1 ]; then
+		echo -e "$(date "+%F %T") *** $cron_record job ***" \
+			| tee -a $BACKUP/$user.log
+	else
+		echo -e "$(date "+%F %T") *** $cron_record jobs ***" \
+			| tee -a $BACKUP/$user.log
+	fi
+fi
+# There is no need to create
+
+# Calculation run time
+run_time=$((end_time - start_time))
+run_time=$((run_time / 60))
+current_time=$(date "+%T")
+if [ "$run_time" -lt 1 ]; then
+	run_time=1
+fi
+min=minutes
+if [ "$run_time" -eq 1 ]; then
+	min=minute
+fi
+
+time_n_date=$(date +'%T %F')
+time=$(echo "$time_n_date" | cut -f 1 -d \ )
+date=$(echo "$time_n_date" | cut -f 2 -d \ )
+echo "$(date "+%F %T") Runtime: $run_time $min" | tee -a $BACKUP/$user.log
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Registering new backup
+backup_str="BACKUP='snapshot'"
+backup_str="$backup_str TYPE='restic'"
+backup_str="$backup_str WEB='${web_list// /,}'"
+backup_str="$backup_str DNS='${dns_list// /,}'"
+backup_str="$backup_str MAIL='${mail_list// /,}'"
+backup_str="$backup_str DB='${db_list// /,}'"
+backup_str="$backup_str CRON='$cron_record'"
+backup_str="$backup_str UDIR='${udir_list// /,}'"
+backup_str="$backup_str RUNTIME='$run_time' TIME='$time' DATE='$date'"
+backup_str="$backup_str BACKUP_MODE='$BACKUP_MODE'"
+echo "$backup_str" > $tmpdir/backup.conf
+
+exit

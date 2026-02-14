@@ -74,7 +74,7 @@ mysql_connect() {
 		if [ "$notify" != 'no' ]; then
 			email=$(grep CONTACT "$HESTIA/data/users/$ROOT_USER/user.conf" | cut -f 2 -d \')
 			subj="MySQL connection error on $(hostname)"
-			echo -e "Can't connect to MySQL $HOST\n$(cat $mysql_out)" \
+			echo -e "Can't connect to MySQL $HOST:$PORT\n$(cat $mysql_out)" \
 				| $SENDMAIL -s "$subj" $email
 		fi
 		rm -f $mysql_out
@@ -147,7 +147,7 @@ psql_connect() {
 		if [ "$notify" != 'no' ]; then
 			email=$(grep CONTACT "$HESTIA/data/users/$ROOT_USER/user.conf" | cut -f 2 -d \')
 			subj="PostgreSQL connection error on $(hostname)"
-			echo -e "Can't connect to PostgreSQL $HOST\n$(cat /tmp/e.psql)" \
+			echo -e "Can't connect to PostgreSQL $HOST:$PORT\n$(cat /tmp/e.psql)" \
 				| $SENDMAIL -s "$subj" $email
 		fi
 		echo "Error: Connection to $HOST failed"

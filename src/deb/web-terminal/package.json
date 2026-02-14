@@ -1,17 +1,17 @@
 {
 	"name": "@hestiacp/web-terminal-ws",
 	"private": true,
-	"version": "1.0.0",
+	"version": "1.0.2",
 	"type": "module",
 	"scripts": {
 		"start": "node server.js"
 	},
 	"dependencies": {
-		"node-pty": "1.0.0",
-		"ws": "8.14.2"
+		"node-pty": "^1.1.0",
+		"ws": "^8.19.0"
 	},
 	"devDependencies": {
-		"@types/ws": "8.5.10",
-		"@types/node": "20.10.0"
+		"@types/ws": "^8.18.1",
+		"@types/node": "^24.10.9"
 	}
 }

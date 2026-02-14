@@ -67,7 +67,10 @@ mkdir -p "$COMPOSER_DIR"
 chown $user: "$COMPOSER_DIR"
 mkdir -p "$HOMEDIR/$user/.config"
 chown $user: "$HOMEDIR/$user/.config"
-echo "alias composer=/home/"$user"/.composer/composer" >> /home/$user/.bash_aliases
+if [[ -f "/home/$user/.bash_aliases" ]]; then
+	sed -i '/^alias composer=/d' "/home/$user/.bash_aliases"
+fi
+echo "alias composer='php /home/$user/.composer/composer'" >> "/home/$user/.bash_aliases"
 
 COMPOSER_SETUP_FILE=$(mktemp)
 check_result $? "Create temp file"

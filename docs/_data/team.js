@@ -9,10 +9,7 @@ export const projectManagers = [
 	{
 		avatar: 'https://www.github.com/jaapmarcus.png',
 		name: 'Jaap Marcus 🇳🇱',
-		links: [
-			{ icon: 'github', link: 'https://github.com/jaapmarcus' },
-			{ icon: 'twitter', link: 'https://twitter.com/jaapmarcus' },
-		],
+		links: [{ icon: 'github', link: 'https://github.com/jaapmarcus' }],
 	},
 	{
 		avatar: 'https://www.github.com/Lupul.png',
@@ -28,15 +25,11 @@ const globeIcon = {
 /** @type {import("vitepress").DefaultTheme.TeamMember[]} */
 export const teamMembers = [
 	{
-		avatar: 'https://www.github.com/jakobbouchard.png',
-		name: 'Jakob Bouchard 🇨🇦',
-		title: 'Developer',
-		org: 'Prosomo',
-		orgLink: 'https://prosomo.com',
+		avatar: 'https://www.github.com/imjuniper.png',
+		name: 'Juniper Bouchard 🇨🇦',
 		links: [
-			{ icon: 'github', link: 'https://github.com/jakobbouchard' },
-			{ icon: 'linkedin', link: 'https://www.linkedin.com/in/jakobbouchard' },
-			{ icon: globeIcon, link: 'https://jakobbouchard.dev' },
+			{ icon: 'github', link: 'https://github.com/imjuniper' },
+			{ icon: globeIcon, link: 'https://imjuniper.fyi' },
 		],
 	},
 	{

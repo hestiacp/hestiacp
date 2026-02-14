@@ -42,8 +42,9 @@ if [ ! -z "$WEB_SYSTEM" ]; then
 	cp -rf "${HESTIA_INSTALL_DIR}/templates/web/$WEB_SYSTEM" "${WEBTPL}/"
 fi
 
-sed -i "/^WEB_BACKEND=/d" $HESTIA/conf/hestia.conf
+sed -i "/^WEB_BACKEND=/d" $HESTIA/conf/hestia.conf $HESTIA/conf/defaults/hestia.conf
 echo "WEB_BACKEND='php-fpm'" >> $HESTIA/conf/hestia.conf
+echo "WEB_BACKEND='php-fpm'" >> $HESTIA/conf/defaults/hestia.conf
 
 for user in $($BIN/v-list-sys-users plain); do
 	# Define user data and get suspended status

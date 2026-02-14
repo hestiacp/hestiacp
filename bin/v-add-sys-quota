@@ -33,12 +33,8 @@ fi
 
 # Checking quota package
 if ! type -P quota &> /dev/null; then
-	if [ -f "/etc/redhat-release" ]; then
-		dnf -y install quota > /dev/null 2>&1
-	else
-		export DEBIAN_FRONTEND=noninteractive
-		apt-get -y install quota > /dev/null 2>&1
-	fi
+	export DEBIAN_FRONTEND=noninteractive
+	apt-get -y install quota > /dev/null 2>&1
 	check_result $? "quota package installation failed" "$E_UPDATE"
 fi
 
@@ -51,20 +47,47 @@ check_hestia_demo_mode
 
 # Adding group and user quota on /home partition
 mnt=$(df -P /home | awk '{print $6}' | tail -n1)
+fs_type=$(df -T "$mnt" | awk '{print $2}' | tail -n1)
 lnr=$(cat -n /etc/fstab | grep -v "#" | awk '{print $1,$3}' | grep "$mnt$" | cut -f 1 -d ' ')
 opt=$(sed -n ${lnr}p /etc/fstab | awk '{print $4}')
-fnd='usrquota\|grpquota\|usrjquota=aquota.user\|grpjquota=aquota.group\|jqfmt=vfsv0'
-if [ "$(echo "$opt" | tr ',' '\n' | grep -c -x $fnd)" -ne 5 ]; then
-	old=$(echo $(echo $opt | tr ',' '\n' | grep -v 'usrquota\|grpquota\|usrjquota=\|grpjquota=\|jqfmt=') | tr ' ' ',')
+
+if [[ "$fs_type" == "xfs" ]]; then
+	log_history "XFS filesystem detected on $mnt. Modifying GRUB for XFS quota."
+	grub_conf="/etc/default/grub"
+
+	if ! grep -q "rootflags=.*uquota" "$grub_conf" || ! grep -q "systemd.unified_cgroup_hierarchy=1" "$grub_conf"; then
+		params="rootflags=uquota,pquota,gquota systemd.unified_cgroup_hierarchy=1"
+		sed -i 's/^\(GRUB_CMDLINE_LINUX="[^"]*\)/\1 '"$params"'/' "$grub_conf"
+		check_result $? "Failed to add kernel parameters to $grub_conf"
+		update-grub > /dev/null 2>&1
+		log_history "GRUB updated. A system reboot is required to apply changes."
+		reboot_req="Y"
+	else
+		log_history "XFS quota flags already present in GRUB configuration."
+	fi
+else
+	# >> Non XFS Filesystem
+	log_history "$fs_type filesystem on $mnt. Using standard quota parameters."
+	fnd='usrquota\|grpquota\|usrjquota=aquota.user\|grpjquota=aquota.group\|jqfmt=vfsv0'
 	new='usrquota,grpquota,usrjquota=aquota.user,grpjquota=aquota.group,jqfmt=vfsv0'
-	sed -i "$lnr s/$opt/$old,$new/" /etc/fstab
-	systemctl daemon-reload
-	mount -o remount "$mnt"
+
+	# >> Modify /etc/fstab
+	if [ "$(echo "$opt" | tr ',' '\n' | grep -c -xE "$fnd")" -ne "$(echo "$fnd" | tr '\|' '\n' | wc -l)" ]; then
+		old=$(echo "$opt" | tr ',' '\n' | grep -vE 'usrquota|grpquota|usrjquota=|grpjquota=|jqfmt=|uquota|gquota' | tr '\n' ',' | sed 's/,$//')
+		if [ -n "$old" ]; then
+			sed -i "$lnr s/$opt/$old,$new/" /etc/fstab
+		fi
+		systemctl daemon-reload
+		mount -o remount "$mnt"
+	fi
 fi
 
-# Adding v2 group and user quota index
-if [ ! -e "$mnt/aquota.user" ] || [ ! -e "$mnt/aquota.group" ]; then
-	quotacheck -avcugm > /dev/null 2>&1
+# >> Adding v2 group and user quota index
+# >> For XFS, aquota files are not typically used, quota is managed directly within filesystem.
+if [ "$fs_type" != "xfs" ]; then
+	if [ ! -e "$mnt/aquota.user" ] || [ ! -e "$mnt/aquota.group" ]; then
+		quotacheck -avcugm > /dev/null 2>&1
+	fi
 fi
 
 # Adding quotacheck on reboot
@@ -97,5 +120,10 @@ done
 $BIN/v-log-action "system" "Info" "Plugins" "System Quota enforcement enabled."
 log_history "system quota enforcement enabled"
 log_event "$OK" "$ARGUMENTS"
+
+if [ "$reboot_req" = "Y" ]; then
+	log_history "A system reboot is required to complete enable quota."
+	echo "Warning: A system reboot is required to complete enable quota."
+fi
 
 exit

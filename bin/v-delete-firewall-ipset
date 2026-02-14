@@ -42,11 +42,7 @@ IPSET_FILE="${ip_name}.${ip_version}"
 
 # Install ipset package if missing
 if [ -z "$IPSET_BIN" ]; then
-	if [ -f '/etc/redhat-release' ]; then
-		dnf install -q -y ipset > /dev/null
-	else
-		apt-get --quiet --yes install ipset > /dev/null
-	fi
+	apt-get --quiet --yes install ipset > /dev/null
 	check_result $? "Installing IPset package"
 
 	IPSET_BIN="$(which ipset)"

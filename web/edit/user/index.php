@@ -373,6 +373,7 @@ if (!empty($_POST["save"])) {
 				empty($_SESSION["error_msg"])
 			) {
 				$v_shell = quoteshellarg($_POST["v_shell"]);
+
 				exec(
 					HESTIA_CMD .
 						"v-change-user-shell " .

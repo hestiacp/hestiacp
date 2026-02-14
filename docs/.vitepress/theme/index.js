@@ -4,9 +4,9 @@ import '@fortawesome/fontawesome-free/css/solid.css';
 import './styles/base.css';
 import './styles/vars.css';
 import 'floating-vue/dist/style.css';
+import FloatingVue from 'floating-vue';
 import FeaturePage from './components/FeaturePage.vue';
 import InstallPage from './components/InstallPage.vue';
-import FloatingVue from 'floating-vue';
 
 export default {
 	...Theme,

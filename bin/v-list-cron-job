@@ -47,6 +47,7 @@ shell_list() {
 	echo "MINUTE:         $MIN"
 	echo "HOUR:           $HOUR"
 	echo "DAY:            $DAY"
+	echo "MONTH:          $MONTH"
 	echo "DAY OF WEEK:    $WDAY"
 	echo "COMMAND:        $CMD"
 	echo "SUSPENDED:      $SUSPENDED"
@@ -56,13 +57,13 @@ shell_list() {
 
 # PLAIN list function
 plain_list() {
-	echo -e "$MIN\t$HOUR\t$DAY\t$WDAY\t$CMD\t$SUSPENDED\t$TIME\t$DATE"
+	echo -e "$MIN\t$HOUR\t$DAY\t$MONTH\t$WDAY\t$CMD\t$SUSPENDED\t$TIME\t$DATE"
 }
 
 # CSV list function
 csv_list() {
-	echo "MIN,HOUR,DAY,WDAY,CMD,SUSPENDED,TIME,DATE"
-	echo "$MIN,$HOUR,$DAY,$WDAY,\"$CMD\",$SUSPENDED,$TIME,$DATE'"
+	echo "MIN,HOUR,DAY,MONTH,WDAY,CMD,SUSPENDED,TIME,DATE"
+	echo "$MIN,$HOUR,$DAY,$MONTH,$WDAY,\"$CMD\",$SUSPENDED,$TIME,$DATE'"
 }
 
 #----------------------------------------------------------#

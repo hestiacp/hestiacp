@@ -86,7 +86,7 @@ bind-address = "your.server.ip.address"
 
 ## PhpMyAdmin Single Sign On
 
-NOTE: PhpMyAdmin Single Sign On enabled only for individual databases. Primary "PhpMyAdmin" button for existing database credintials only.
+NOTE: PhpMyAdmin Single Sign On enabled only for individual databases. Primary "PhpMyAdmin" button for existing database credentials only.
 
 ### Unable to activate phpMyAdmin Single Sign on
 

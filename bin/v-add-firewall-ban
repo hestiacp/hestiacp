@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: add firewall blocking rule
-# options: IP CHAIN
+# options: IPV4_CIDR CHAIN
 #
 # example: v-add-firewall-ban 37.120.129.20 MAIL
 #

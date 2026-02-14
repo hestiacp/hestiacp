@@ -8,9 +8,8 @@
 #
 # Currently Supported Operating Systems:
 #
-# Debian 10, 11
-# Ubuntu 20.04, 22.04
-# AlmaLinux, EuroLinux, Red Hat EnterPrise Linux, Rocky Linux 8, 9
+# Debian 11, 12
+# Ubuntu 20.04, 22.04, 24.04 LTS
 #
 # ======================================================== #
 
@@ -56,21 +55,8 @@ if [ -e "/etc/os-release" ] && [ ! -e "/etc/redhat-release" ]; then
 	elif [ "$type" = "debian" ]; then
 		release=$(cat /etc/debian_version | grep -o "[0-9]\{1,2\}" | head -n1)
 		VERSION='debian'
-	fi
-elif [ -e "/etc/os-release" ] && [ -e "/etc/redhat-release" ]; then
-	type=$(grep "^ID=" /etc/os-release | cut -f 2 -d '"')
-	if [ "$type" = "rhel" ]; then
-		release=$(cat /etc/redhat-release | cut -f 1 -d '.' | awk '{print $3}')
-		VERSION='rhel'
-	elif [ "$type" = "almalinux" ]; then
-		release=$(cat /etc/redhat-release | cut -f 1 -d '.' | awk '{print $3}')
-		VERSION='almalinux'
-	elif [ "$type" = "eurolinux" ]; then
-		release=$(cat /etc/redhat-release | cut -f 1 -d '.' | awk '{print $3}')
-		VERSION='eurolinux'
-	elif [ "$type" = "rocky" ]; then
-		release=$(cat /etc/redhat-release | cut -f 1 -d '.' | awk '{print $3}')
-		VERSION='rockylinux'
+	else
+		type="NoSupport"
 	fi
 else
 	type="NoSupport"
@@ -81,10 +67,8 @@ no_support_message() {
 	echo "Your operating system (OS) is not supported by"
 	echo "Hestia Control Panel. Officially supported releases:"
 	echo "****************************************************"
-	echo "  Debian 10, 11"
-	echo "  Ubuntu 20.04, 22.04 LTS"
-	# Commenting this out for now
-	# echo "  AlmaLinux, EuroLinux, Red Hat EnterPrise Linux, Rocky Linux 8,9"
+	echo "  Debian 11, 12"
+	echo "  Ubuntu 22.04, 24.04 LTS"
 	echo ""
 	exit 1
 }
@@ -93,59 +77,60 @@ if [ "$type" = "NoSupport" ]; then
 	no_support_message
 fi
 
+ensure_utf8_locale() {
+	local locale_file="/etc/default/locale"
+
+	if locale | grep -qi 'utf-8'; then
+		return
+	fi
+
+	echo "[ * ] Enabling UTF-8 locale support via C.UTF-8"
+	if ! locale-gen C.UTF-8; then
+		echo "[ ! ] Failed to generate C.UTF-8 locale. Leaving existing locale untouched."
+		return
+	fi
+
+	if ! update-locale LANG=C.UTF-8; then
+		echo "[ ! ] Failed to update LANG in $locale_file. Leaving existing locale untouched."
+		return
+	fi
+
+	export LANG=C.UTF-8
+}
+
+ensure_utf8_locale
+
 check_wget_curl() {
 	# Check wget
 	if [ -e '/usr/bin/wget' ]; then
-		if [ -e '/etc/redhat-release' ]; then
-			wget -q https://raw.githubusercontent.com/hestiacp/hestiacp/release/install/hst-install-rhel.sh -O hst-install-rhel.sh
-			if [ "$?" -eq '0' ]; then
-				bash hst-install-rhel.sh $*
-				exit
-			else
-				echo "Error: hst-install-rhel.sh download failed."
-				exit 1
-			fi
+		wget -q https://raw.githubusercontent.com/hestiacp/hestiacp/release/install/hst-install-$type.sh -O hst-install-$type.sh
+		if [ "$?" -eq '0' ]; then
+			bash hst-install-$type.sh $*
+			exit
 		else
-			wget -q https://raw.githubusercontent.com/hestiacp/hestiacp/release/install/hst-install-$type.sh -O hst-install-$type.sh
-			if [ "$?" -eq '0' ]; then
-				bash hst-install-$type.sh $*
-				exit
-			else
-				echo "Error: hst-install-$type.sh download failed."
-				exit 1
-			fi
+			echo "Error: hst-install-$type.sh download failed."
+			exit 1
 		fi
+		# fi
 	fi
 
 	# Check curl
 	if [ -e '/usr/bin/curl' ]; then
-		if [ -e '/etc/redhat-release' ]; then
-			curl -s -O https://raw.githubusercontent.com/hestiacp/hestiacp/release/install/hst-install-rhel.sh
-			if [ "$?" -eq '0' ]; then
-				bash hst-install-rhel.sh $*
-				exit
-			else
-				echo "Error: hst-install-rhel.sh download failed."
-				exit 1
-			fi
+		curl -s -O https://raw.githubusercontent.com/hestiacp/hestiacp/release/install/hst-install-$type.sh
+		if [ "$?" -eq '0' ]; then
+			bash hst-install-$type.sh $*
+			exit
 		else
-			curl -s -O https://raw.githubusercontent.com/hestiacp/hestiacp/release/install/hst-install-$type.sh
-			if [ "$?" -eq '0' ]; then
-				bash hst-install-$type.sh $*
-				exit
-			else
-				echo "Error: hst-install-$type.sh download failed."
-				exit 1
-			fi
+			echo "Error: hst-install-$type.sh download failed."
+			exit 1
 		fi
+		# fi
 	fi
 }
 
 # Check for supported operating system before proceeding with download
 # of OS-specific installer, and throw error message if unsupported OS detected.
-if [[ "$release" =~ ^(10|11|12|20.04|22.04)$ ]]; then
-	check_wget_curl $*
-elif [[ -e "/etc/redhat-release" ]] && [[ "$release" =~ ^(8|9)$ ]]; then
+if [[ "$release" =~ ^(11|12|22.04|24.04)$ ]]; then
 	check_wget_curl $*
 else
 	no_support_message

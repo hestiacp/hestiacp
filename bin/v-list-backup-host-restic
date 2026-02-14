@@ -1,0 +1,80 @@
+#!/bin/bash
+# info: list backup host
+# options: TYPE [FORMAT]
+#
+# example: v-list-backup-host local
+#
+# This function for obtaining the list of backup host parameters.
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Argument definition
+format=${1-shell}
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+# JSON list function
+json_list() {
+	echo '{'
+	echo '    "restic": {
+	"REPO": "'$REPO'",
+	"SNAPSHOTS": "'$SNAPSHOTS'",
+	"KEEP_DAILY": "'$KEEP_DAILY'",
+	"KEEP_WEEKLY": "'$KEEP_WEEKLY'",
+	"KEEP_MONTHLY": "'$KEEP_MONTHLY'",
+	"KEEP_YEARLY": "'$KEEP_YEARLY'"
+	}'
+	echo '}'
+}
+
+# SHELL list function
+shell_list() {
+	echo "REPO:           $REPO"
+	echo "SNAPSHOTS:      $SNAPSHOTS"
+	echo "KEEP_DAILY:      $KEEP_DAILY"
+	echo "KEEP_WEEKLY:     $KEEP_WEEKLY"
+	echo "KEEP_MONTHLY:    $KEEP_MONTHLY"
+	echo "KEEP_YEARLY:     $KEEP_YEARLY"
+}
+
+# PLAIN list function
+plain_list() {
+	echo -e "$REPO\t$SNAPSHOTS\t$KEEP_DAILY\t$KEEP_WEEKLY\t$KEEP_MONTHLY\t$KEEP_YEARLY"
+}
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Checking backup config
+if [ ! -e "$HESTIA/conf/restic.conf" ]; then
+	exit
+fi
+
+# Parsing backup config
+source_conf "$HESTIA/conf/restic.conf"
+
+# Listing data
+case $format in
+	json) json_list ;;
+	plain) plain_list ;;
+	shell) shell_list | column -t ;;
+esac
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+exit

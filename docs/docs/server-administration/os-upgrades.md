@@ -18,6 +18,15 @@ apt update && apt upgrade
 
 Follow system instructions to upgrade your OS. When done, make sure to check that the files in `/etc/apt/sources.list.d` are not hashed out. If they are, remove the hash and run `apt update && apt upgrade` again.
 
+## Debian 11 Bullseye to Debian 12 Bookworm
+
+### Exim config
+
+```bash
+rm -f /etc/exim4/exim4.conf.template
+cp -f /usr/local/hestia/install/deb/exim/exim4.conf.4.95.template /etc/exim4/exim4.conf.template
+```
+
 ## Debian 10 Buster to Debian 11 Bullseye
 
 ### SHA512 password encryption
@@ -40,6 +49,19 @@ Comment out [line 29](https://github.com/hestiacp/hestiacp/blob/1ff8a4e5207aae1e
 ## Debian 9 Stretch to Debian 10 Buster
 
 No issues have been found in the past.
+
+## Ubuntu 22.04 Jammy to Ubuntu 24.04 Noble
+
+::: tip
+Verify that MariaDB is running at least version 11.4. If not, first upgrade to this version in your current operating system! After that, comment out the line in `/etc/apt/sources.list.d/mariadb.list` and then upgrade your OS.
+:::
+
+### Exim4 config
+
+```bash
+rm -f /etc/exim4/exim4.conf.template
+cp -f /usr/local/hestia/install/deb/exim/exim4.conf.4.95.template /etc/exim4/exim4.conf.template
+```
 
 ## Ubuntu 20.04 Focal to Ubuntu 22.04 Jammy
 

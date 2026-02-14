@@ -27,6 +27,10 @@ NEW_ALIAS=$1
 
 restart=${2-yes}
 
+check_args '1' "$#" 'ALIAS [RESTART]'
+is_common_format_valid "$NEW_ALIAS" "Alias"
+is_restart_format_valid "$restart"
+
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
@@ -51,7 +55,7 @@ for user in $("$BIN/v-list-users" list); do
 	done
 done
 
-if [ -d /etc/apache2/ ]; then
+if [ -s /etc/apache2/apache2.conf ]; then
 	sed -i "s/IncludeOptional conf.d\/domains\/$WEBMAIL_ALIAS.*.conf/IncludeOptional conf.d\/domains\/$NEW_ALIAS.*.conf/g" /etc/apache2/apache2.conf
 fi
 

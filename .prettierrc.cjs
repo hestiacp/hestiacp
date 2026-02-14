@@ -9,6 +9,8 @@ module.exports = {
 	// PHP Settings
 	phpVersion: '8.2',
 	braceStyle: '1tbs',
+	endOfLine: 'lf',
+
 	// Overrides for some files
 	overrides: [
 		// JavaScript files

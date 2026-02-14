@@ -74,6 +74,9 @@ if (!empty($_POST["ok"])) {
 	if (!isset($_POST["v_backups"])) {
 		$errors[] = _("Backups");
 	}
+	if (!isset($_POST["v_backups_incremental"])) {
+		$errors[] = _("Incremental Backups");
+	}
 	if (!isset($_POST["v_disk_quota"])) {
 		$errors[] = _("Quota");
 	}
@@ -83,6 +86,22 @@ if (!empty($_POST["ok"])) {
 	if (!isset($_POST["v_ratelimit"])) {
 		$errors[] = _("Rate Limit");
 	}
+
+	if ($_SESSION["RESOURCES_LIMIT"] == "yes") {
+		if (!isset($_POST["v_cpu_quota"])) {
+			$errors[] = _("CPU quota");
+		}
+		if (!isset($_POST["v_cpu_quota_period"])) {
+			$errors[] = _("CPU quota period");
+		}
+		if (!isset($_POST["v_memory_limit"])) {
+			$errors[] = _("Memory Limit");
+		}
+		if (!isset($_POST["v_swap_limit"])) {
+			$errors[] = _("Swap Limit");
+		}
+	}
+
 	// Check if name server entries are blank if DNS server is installed
 	if (isset($_SESSION["DNS_SYSTEM"]) && !empty($_SESSION["DNS_SYSTEM"])) {
 		if (empty($_POST["v_ns1"])) {
@@ -118,9 +137,22 @@ if (!empty($_POST["ok"])) {
 		$v_databases = quoteshellarg($_POST["v_databases"]);
 		$v_cron_jobs = quoteshellarg($_POST["v_cron_jobs"]);
 		$v_backups = quoteshellarg($_POST["v_backups"]);
+		$v_backups_incremental = quoteshellarg($_POST["v_backups_incremental"]);
 		$v_disk_quota = quoteshellarg($_POST["v_disk_quota"]);
 		$v_bandwidth = quoteshellarg($_POST["v_bandwidth"]);
 		$v_ratelimit = quoteshellarg($_POST["v_ratelimit"]);
+
+		$v_cpu_quota =
+			$_SESSION["RESOURCES_LIMIT"] == "yes" ? quoteshellarg($_POST["v_cpu_quota"]) : "";
+		$v_cpu_quota_period =
+			$_SESSION["RESOURCES_LIMIT"] == "yes"
+				? quoteshellarg($_POST["v_cpu_quota_period"])
+				: "";
+		$v_memory_limit =
+			$_SESSION["RESOURCES_LIMIT"] == "yes" ? quoteshellarg($_POST["v_memory_limit"]) : "";
+		$v_swap_limit =
+			$_SESSION["RESOURCES_LIMIT"] == "yes" ? quoteshellarg($_POST["v_swap_limit"]) : "";
+
 		$v_ns1 = !empty($_POST["v_ns1"]) ? trim($_POST["v_ns1"], ".") : "";
 		$v_ns2 = !empty($_POST["v_ns2"]) ? trim($_POST["v_ns2"], ".") : "";
 		$v_ns3 = !empty($_POST["v_ns3"]) ? trim($_POST["v_ns3"], ".") : "";
@@ -172,11 +204,16 @@ if (!empty($_POST["ok"])) {
 			$pkg .= "DATABASES=" . $v_databases . "\n";
 			$pkg .= "CRON_JOBS=" . $v_cron_jobs . "\n";
 			$pkg .= "DISK_QUOTA=" . $v_disk_quota . "\n";
+			$pkg .= "CPU_QUOTA=" . $v_cpu_quota . "\n";
+			$pkg .= "CPU_QUOTA_PERIOD=" . $v_cpu_quota_period . "\n";
+			$pkg .= "MEMORY_LIMIT=" . $v_memory_limit . "\n";
+			$pkg .= "SWAP_LIMIT=" . $v_swap_limit . "\n";
 			$pkg .= "BANDWIDTH=" . $v_bandwidth . "\n";
 			$pkg .= "RATE_LIMIT=" . $v_ratelimit . "\n";
 			$pkg .= "NS=" . $v_ns . "\n";
 			$pkg .= "SHELL=" . $v_shell . "\n";
 			$pkg .= "BACKUPS=" . $v_backups . "\n";
+			$pkg .= "BACKUPS_INCREMENTAL=" . $v_backups_incremental . "\n";
 			$pkg .= "TIME=" . $v_time . "\n";
 			$pkg .= "DATE=" . $v_date . "\n";
 
@@ -194,19 +231,18 @@ if (!empty($_POST["ok"])) {
 			fclose($fp);
 			unlink($tmpfile);
 		}
-	}
-
-	// Flush field values on success
-	if (empty($_SESSION["error_msg"])) {
-		$_SESSION["ok_msg"] = htmlify_trans(
-			sprintf(
-				_("Package {%s} has been created successfully."),
-				htmlentities($_POST["v_package"]),
-			),
-			"</a>",
-			'<a href="/edit/package/?package=' . htmlentities($_POST["v_package"]) . '">',
-		);
-		unset($v_package);
+		// Flush field values on success
+		if (empty($_SESSION["error_msg"])) {
+			$_SESSION["ok_msg"] = htmlify_trans(
+				sprintf(
+					_("Package {%s} has been created successfully."),
+					htmlentities($_POST["v_package"]),
+				),
+				"</a>",
+				'<a href="/edit/package/?package=' . htmlentities($_POST["v_package"]) . '">',
+			);
+			unset($v_package);
+		}
 	}
 }
 
@@ -294,6 +330,20 @@ if (empty($v_bandwidth)) {
 if (empty($v_ratelimit)) {
 	$v_ratelimit = "'200'";
 }
+
+if (empty($v_cpu_quota)) {
+	$v_cpu_quota = "'unlimited'";
+}
+if (empty($v_cpu_quota_period)) {
+	$v_cpu_quota_period = "'unlimited'";
+}
+if (empty($v_memory_limit)) {
+	$v_memory_limit = "'unlimited'";
+}
+if (empty($v_swap_limit)) {
+	$v_swap_limit = "'unlimited'";
+}
+
 if (empty($v_ns1)) {
 	$v_ns1 = "ns1.example.tld";
 }

@@ -17,6 +17,10 @@ domain=$2
 aliases=$3
 mail=${4// /}
 
+# Define variables to preserve redirect/force-ssl if renewal fails
+deleted_redirect=0
+deleted_force_ssl=0
+
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
 source /etc/hestiacp/hestia.conf
@@ -32,6 +36,11 @@ LE_API='https://acme-v02.api.letsencrypt.org'
 
 if [[ "$LE_STAGING" = 'yes' ]]; then
 	LE_API='https://acme-staging-v02.api.letsencrypt.org'
+fi
+
+# LE Pre-Hook
+if [ -x "/etc/hestiacp/hooks/le_pre.sh" ]; then
+	/etc/hestiacp/hooks/le_pre.sh "$user" "$domain" "$aliases" "$mail"
 fi
 
 # encode base64
@@ -62,6 +71,26 @@ query_le_v2() {
 	curl --location --user-agent "HestiaCP" --insecure --retry 5 --retry-connrefused --silent --dump-header /dev/stdout --data "$post_data" "$1" --header "$content" --output "$save_to_file"
 	debug_log "API call" "exit status: $?"
 }
+
+# Function to preserve redirect/force-ssl on cert renewal failure
+on_error_exit() {
+	local exit_code=$?
+	if [[ $exit_code -eq 0 ]]; then
+		exit "$exit_code"
+	fi
+
+	if [[ -z "$mail" ]]; then
+		if [[ "$domain_forcessl" == 'yes' && "${deleted_force_ssl:-0}" -eq 1 ]]; then
+			"$BIN/v-add-web-domain-ssl-force" "$user" "$domain"
+		fi
+		if [[ -n "$domain_redirect" && "${deleted_redirect:-0}" -eq 1 ]]; then
+			"$BIN/v-add-web-domain-redirect" "$user" "$domain" "$domain_redirect" "$domain_redirect_code"
+		fi
+	fi
+}
+
+# Trap exit code to keep redirect/force-ssl if cert renewal fails
+trap on_error_exit EXIT
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -131,11 +160,13 @@ else
 	if [[ -n "$domain_redirect" ]]; then
 		domain_redirect_code="$REDIRECT_CODE"
 		$BIN/v-delete-web-domain-redirect $user $domain
+		deleted_redirect=1
 	fi
 
 	domain_forcessl="$SSL_FORCE"
 	if [[ "$domain_forcessl" == 'yes' ]]; then
 		$BIN/v-delete-web-domain-ssl-force $user $domain
+		deleted_force_ssl=1
 	fi
 fi
 
@@ -239,13 +270,13 @@ for identifier in $(echo $domain,$aliases | tr ',' '\n' | sort -u); do
 done
 payload=$(echo "$payload" | sed "s/,$//")
 payload=$payload']}'
+
 answer=$(query_le_v2 "$url" "$payload" "$nonce")
 nonce=$(echo "$answer" | grep -i nonce | cut -f2 -d \  | tr -d '\r\n')
 authz=$(echo "$answer" | grep "acme/authz" | cut -f2 -d '"')
 finalize=$(echo "$answer" | grep 'finalize":' | cut -f4 -d '"')
 status=$(echo "$answer" | grep HTTP/ | tail -n1 | cut -f2 -d ' ')
 order=$(echo -e "$answer" | grep -i location | cut -f2 -d \  | tr -d '\r\n')
-
 debug_log "Step 2" "- status: ${status}\n- nonce: ${nonce}\n- authz: ${authz}\n- finalize: ${finalize}\n- payload: ${payload}\n- answer: ${answer}\n order: ${order}"
 
 if [[ "$status" -ne 201 ]]; then
@@ -306,7 +337,7 @@ for auth in $authz; do
 			if [ "$WEB_SYSTEM" = 'nginx' ] || [ "$PROXY_SYSTEM" = 'nginx' ]; then
 				conf="$HOMEDIR/$user/conf/web/$domain/nginx.conf_letsencrypt"
 				sconf="$HOMEDIR/$user/conf/web/$domain/nginx.ssl.conf_letsencrypt"
-				echo 'location ~ "^/\.well-known/acme-challenge/([-_A-Za-z0-9]+)$" {' \
+				echo 'location ~ "^/\.well-known/acme-challenge/(.*)$" {' \
 					> $conf
 				echo '    default_type text/plain;' >> $conf
 				echo '    return 200 "$1.'$THUMB'";' >> $conf
@@ -339,7 +370,7 @@ for auth in $authz; do
 			if [ "$WEB_SYSTEM" = 'nginx' ] || [ "$PROXY_SYSTEM" = 'nginx' ]; then
 				conf="$HOMEDIR/$user/conf/mail/$root_domain/nginx.conf_letsencrypt"
 				sconf="$HOMEDIR/$user/conf/mail/$root_domain/nginx.ssl.conf_letsencrypt"
-				echo 'location ~ "^/\.well-known/acme-challenge/([-_A-Za-z0-9]+)$" {' \
+				echo 'location ~ "^/\.well-known/acme-challenge/(.*)$" {' \
 					> $conf
 				echo '    default_type text/plain;' >> $conf
 				echo '    return 200 "$1.'$THUMB'";' >> $conf
@@ -384,12 +415,23 @@ for auth in $authz; do
 	# Doing pol check on status
 	i=1
 	while [ "$validation" = 'pending' ]; do
-		payload='{}'
-		answer=$(query_le_v2 "$url" "$payload" "$nonce")
-		validation=$(echo "$answer" | grep -A1 $proto | tail -n1 | cut -f4 -d \")
-		nonce=$(echo "$answer" | grep -i nonce | cut -f2 -d \  | tr -d '\r\n')
-		status=$(echo "$answer" | grep HTTP/ | tail -n1 | cut -f 2 -d ' ')
-		details=$(echo "$answer" | grep detail | cut -f 1 -d ',' | cut -f 2-4 -d ':' | cut -f 2 -d '"')
+		i=0
+		while true; do
+			payload='{}'
+			answer=$(query_le_v2 "$url" "$payload" "$nonce")
+			validation=$(echo "$answer" | grep -A1 $proto | tail -n1 | cut -f4 -d \")
+			nonce=$(echo "$answer" | grep -i nonce | cut -f2 -d \  | tr -d '\r\n')
+			status=$(echo "$answer" | grep HTTP/ | tail -n1 | cut -f 2 -d ' ')
+			details=$(echo "$answer" | grep detail | cut -f 1 -d ',' | cut -f 2-4 -d ':' | cut -f 2 -d '"')
+			if [[ $(echo "$answer" | grep addressesResolved) != "" ]]; then
+				break
+			fi
+			i=$((i + 1))
+			if ((i > 30)); then
+				break
+			fi
+			sleep 2
+		done
 
 		debug_log "Step 5" "- status: ${status}\n- url: ${url}\n- nonce: ${nonce}\n- validation: ${validation}\n- details: ${details}\n- answer: ${answer}"
 
@@ -581,10 +623,10 @@ if [ "$?" -ne '0' ]; then
 fi
 
 # Adding LE autorenew cronjob
-if [ -z "$(grep v-update-letsen "$HESTIA/data/users/$ROOT_USER/cron.conf")" ]; then
+if [ -z "$(grep $BIN/v-update-letsencrypt "/var/spool/cron/crontabs/hestiaweb")" ]; then
 	min=$(generate_password '012345' '2')
 	hour=$(generate_password '1234567' '1')
-	echo "$min $hour * * * sudo /usr/local/hestia/bin/v-update-letsencrypt-ssl" > /etc/cron.d/hestiaweb
+	sed -i -e "\$a*/5 * * * * sudo $BIN/v-update-letsencrypt" "/var/spool/cron/crontabs/hestiaweb"
 fi
 
 # Updating letsencrypt key
@@ -598,9 +640,11 @@ if [ -z "$mail" ]; then
 
 	if [[ "$domain_forcessl" == 'yes' ]]; then
 		$BIN/v-add-web-domain-ssl-force $user $domain
+		deleted_force_ssl=0
 	fi
 	if [[ -n "$domain_redirect" ]]; then
 		$BIN/v-add-web-domain-redirect $user $domain $domain_redirect $domain_redirect_code
+		deleted_redirect=0
 	fi
 
 else
@@ -610,6 +654,11 @@ else
 	fi
 	update_object_value 'mail' 'DOMAIN' "$root_domain" '$LETSENCRYPT' 'yes'
 	update_object_value 'mail' 'DOMAIN' "$root_domain" '$LETSENCRYPT_FAIL_COUNT' "0"
+fi
+
+# LE Post-Hook
+if [ -x "/etc/hestiacp/hooks/le_post.sh" ]; then
+	/etc/hestiacp/hooks/le_post.sh "$user" "$domain" "$aliases" "$mail"
 fi
 
 # Remove challenge folder if exist

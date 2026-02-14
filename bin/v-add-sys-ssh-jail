@@ -1,0 +1,69 @@
+#!/bin/bash
+# info: add system ssh jail
+# options: NONE
+#
+# example: v-add-sys-ssh-jail
+#
+# This function enables ssh jailed environment.
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+# Checking if bubblewrap is installed
+if [ ! -x /bin/bwrap ]; then
+	exit
+fi
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Move jailbash to /usr/sbin
+if [ ! -x /usr/sbin/jailbash ]; then
+	cp -f $HESTIA_COMMON_DIR/bubblewrap/jailbash /usr/sbin/jailbash
+	chmod +x /usr/sbin/jailbash
+
+	# only install the apparmor profile is abi 4.0 is available
+	if [ -f /etc/apparmor.d/abi/4.0 ]; then
+		cp -f $HESTIA_COMMON_DIR/bubblewrap/bwrap-userns-restrict /etc/apparmor.d/bwrap-userns-restrict
+	fi
+
+	service apparmor reload > /dev/null 2>&1
+fi
+
+# Register /usr/sbin/jailbash
+if [ -z "$(grep ^/usr/sbin/jailbash /etc/shells)" ]; then
+	echo "/usr/sbin/jailbash" >> /etc/shells
+fi
+
+# Use sftp-server binary so the sftp process can run inside jailbash
+if [ -z "$(grep 'Subsystem sftp /usr/lib/sftp-server' /etc/ssh/sshd_config)" ]; then
+	sed -i -E "s/Subsystem sftp internal-sftp/Subsystem sftp \/usr\/lib\/sftp-server/g" /etc/ssh/sshd_config
+
+	service ssh restart > /dev/null 2>&1
+fi
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Logging
+log_event "$OK" "$ARGUMENTS"
+
+exit

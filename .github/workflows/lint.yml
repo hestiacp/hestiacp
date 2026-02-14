@@ -12,10 +12,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
+        uses: actions/checkout@v6
 
       - name: Run markdownlint
-        uses: DavidAnson/markdownlint-cli2-action@455b6612a7b7a80f28be9e019b70abdd11696e4e # v14
+        uses: DavidAnson/markdownlint-cli2-action@v22
         with:
           globs: |
             *.md
@@ -26,10 +26,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
+        uses: actions/checkout@v6
 
       - name: Run ShellCheck
-        uses: ludeeus/action-shellcheck@00cae500b08a931fb5698e11e79bfbd38e612a38 # 2.0.0
+        uses: ludeeus/action-shellcheck@master
         with:
           severity: error
 
@@ -38,51 +38,28 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
+        uses: actions/checkout@v6
 
       - name: Setup Node
-        uses: actions/setup-node@8f152de45cc393bb48ce5d89d36b731f54556e65 # v4
+        uses: actions/setup-node@v6
         with:
-          node-version: 16
+          node-version: "lts/*"
 
       - name: Install Node packages
         run: npm ci --ignore-scripts
 
-      - name: Run Prettier
+      - name: Check formatting
         run: npx prettier --check .
 
-  eslint:
-    name: ESLint
+  biome:
+    name: Biome
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
+        uses: actions/checkout@v6
 
-      - name: Setup Node
-        uses: actions/setup-node@8f152de45cc393bb48ce5d89d36b731f54556e65 # v4
-        with:
-          node-version: 16
+      - name: Setup Biome
+        uses: biomejs/setup-biome@v2
 
-      - name: Install Node packages
-        run: npm ci --ignore-scripts
-
-      - name: Run ESLint
-        run: npx eslint .
-
-  stylelint:
-    name: Stylelint
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
-
-      - name: Setup Node
-        uses: actions/setup-node@8f152de45cc393bb48ce5d89d36b731f54556e65 # v4
-        with:
-          node-version: 16
-
-      - name: Install Node packages
-        run: npm ci --ignore-scripts
-
-      - name: Run Stylelint
-        run: npx stylelint web/css/src/**/*.css
+      - name: Run Biome lint
+        run: biome lint .

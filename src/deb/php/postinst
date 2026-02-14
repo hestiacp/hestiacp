@@ -11,6 +11,11 @@ if [ ! -e "/usr/local/hestia/data/users/" ]; then
 	exit
 fi
 
+# Prevent running and causes issues with outdated hestia version
+if ! id "hestiaweb" &> /dev/null; then
+	exit
+fi
+
 # Check if preinstall hook exists
 if [ -e "/etc/hestiacp/hooks/php/pre_install.sh" ]; then
 	/etc/hestiacp/hooks/php/pre_install.sh

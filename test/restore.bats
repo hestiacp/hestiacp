@@ -139,6 +139,10 @@ function validate_web_domain() {
 #      - 1: /bin/true
 #
 
+@test "Check if test.hestiacp.com is present" {
+	assert_file_contains /etc/hosts test.hestia.com
+}
+
 # Testing Hestia backups
 @test "Restore[1]: Hestia archive for a non-existing user" {
     if [ -d "$HOMEDIR/$userbk" ]; then

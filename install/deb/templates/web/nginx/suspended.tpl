@@ -32,5 +32,6 @@ server {
 		alias %home%/%user%/web/%domain%/document_errors/;
 	}
 
-	include %home%/%user%/conf/web/%domain%/nginx.conf_*;
+	include %home%/%user%/conf/web/%domain%/nginx.conf_lets*;
+
 }

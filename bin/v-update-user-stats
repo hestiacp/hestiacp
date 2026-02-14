@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: update user statistics
-# options: USER
+# options: [USER]
 #
 # example: v-update-user-stats admin
 #
@@ -10,12 +10,9 @@
 #                Variables & Functions                     #
 #----------------------------------------------------------#
 
-# Argument definition
-user=$1
-
 # Importing system environment  as we run this script
 #       mostly by cron wich not read it by itself
-source /etc/profile
+source /etc/profile.d/hestia.sh
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -27,11 +24,14 @@ source $HESTIA/func/domain.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
+# Argument definition
+user=$1
+
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '0' "$#" 'USER'
+check_args '0' "$#" '[USER]'
 if [ ! -z "$user" ]; then
 	is_format_valid 'user'
 	is_object_valid 'user' 'USER' "$user"

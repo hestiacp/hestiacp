@@ -92,7 +92,7 @@ function handleDeleteAccountClick() {
 
 			updateUserNumbers();
 
-			if (document.querySelectorAll('.js-active-ftp-accounts .js-ftp-account-nrm').length == 0) {
+			if (document.querySelectorAll('.js-active-ftp-accounts .js-ftp-account-nrm').length === 0) {
 				document.querySelector('.js-add-ftp-account').style.display = 'none';
 				document.querySelector('input[name="v_ftp"]').checked = false;
 			}

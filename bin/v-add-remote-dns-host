@@ -123,11 +123,11 @@ cmd="v-update-sys-queue dns-cluster"
 check_cron=$(grep "$cmd" "/var/spool/cron/crontabs/hestiaweb" 2> /dev/null)
 if [ -z "$check_cron" ] && [ ! -z "$CRON_SYSTEM" ]; then
 	min='*/5'
-	hour='0'
+	hour='*'
 	day='*'
 	month='*'
 	wday='*'
-	echo "$min $hour * * * sudo /usr/local/hestia/bin/$cmd" > "/var/spool/cron/crontabs/hestiaweb"
+	sed -i -e "\$a$min $hour * * * sudo /usr/local/hestia/bin/$cmd" "/var/spool/cron/crontabs/hestiaweb"
 fi
 
 # Logging

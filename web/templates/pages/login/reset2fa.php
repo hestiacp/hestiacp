@@ -42,7 +42,3 @@
 		</form>
 	<?php } ?>
 </div>
-
-</body>
-
-</html>

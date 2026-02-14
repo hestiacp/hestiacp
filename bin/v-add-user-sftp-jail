@@ -86,7 +86,7 @@ if [ "$restart" = 'no' ]; then
 	# Skip restart of SSH daemon
 	echo "" > /dev/null 2>&1
 else
-	service sshd restart > /dev/null 2>&1
+	service ssh restart > /dev/null 2>&1
 fi
 
 # Logging

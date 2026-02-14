@@ -36,7 +36,14 @@
 			<?php if ($_SESSION["role"] == "admin" && $accept !== "true") { ?>
 				<div class="alert alert-danger" role="alert">
 					<i class="fas fa-exclamation"></i>
-					<p><?= htmlify_trans(sprintf(_("It is strongly advised to {create a standard user account} before adding %s to the server due to the increased privileges the admin account possesses and potential security risks."), _('a mail domain')), '</a>', '<a href="/add/user/">'); ?></p>
+					<p><?= htmlify_trans(
+     	sprintf(
+     		_("It is strongly advised to {create a standard user account} before adding %s to the server due to the increased privileges the admin account possesses and potential security risks."),
+     		_("a mail domain"),
+     	),
+     	"</a>",
+     	'<a href="/add/user/">',
+     ) ?></p>
 				</div>
 			<?php } ?>
 			<?php if ($_SESSION["role"] == "admin" && empty($accept)) { ?>
@@ -54,42 +61,51 @@
 					<div class="u-mb20">
 						<label for="v_webmail" class="form-label"><?= _("Webmail Client") ?></label>
 						<select class="form-select" name="v_webmail" id="v_webmail" tabindex="6">
-							<?php foreach ($webmail_clients as $client){
-								echo "\t\t\t\t<option value=\"".htmlentities($client)."\"";
-								if (( $v_webmail == $client )) {
-									echo ' selected' ;
-								}
-								echo ">".htmlentities(ucfirst($client))."</option>\n";
-								}
-							?>
-							<option value="" <?php if (empty($v_webmail) || $v_webmail == 'disabled' ){ echo "selected"; }?>><?= _("Disabled") ?></option>
+							<?php foreach ($webmail_clients as $client) {
+       	echo "\t\t\t\t<option value=\"" . htmlentities($client) . "\"";
+       	if ($v_webmail == $client) {
+       		echo " selected";
+       	}
+       	echo ">" . htmlentities(ucfirst($client)) . "</option>\n";
+       } ?>
+							<option value="" <?php if (empty($v_webmail) || $v_webmail == "disabled") {
+       	echo "selected";
+       } ?>><?= _("Disabled") ?></option>
 						</select>
 					</div>
 				<?php } ?>
 				<?php if (!empty($_SESSION["ANTISPAM_SYSTEM"])) { ?>
 					<div class="form-check u-mb10">
-						<input class="form-check-input" type="checkbox" name="v_antispam" id="v_antispam" <?php if ((empty($v_antispam)) || ($v_antispam == 'yes')) echo 'checked'; ?>>
+						<input class="form-check-input" type="checkbox" name="v_antispam" id="v_antispam" <?php if (empty($v_antispam) || $v_antispam == "yes") {
+      	echo "checked";
+      } ?>>
 						<label for="v_antispam">
 							<?= _("Spam Filter") ?>
 						</label>
 					</div>
 					<div class="form-check u-mb10">
-						<input class="form-check-input" type="checkbox" name="v_reject" id="v_reject" <?php if ((empty($v_reject)) || ($v_reject == 'yes')) echo 'checked'; ?>>
+						<input class="form-check-input" type="checkbox" name="v_reject" id="v_reject" <?php if (empty($v_reject) || $v_reject == "yes") {
+      	echo "checked";
+      } ?>>
 						<label for="v_reject">
 							<?= _("Reject Spam") ?>
 						</label>
 					</div>
 				<?php } ?>
-				<?php if (!empty($_SESSION['ANTIVIRUS_SYSTEM'])) { ?>
+				<?php if (!empty($_SESSION["ANTIVIRUS_SYSTEM"])) { ?>
 					<div class="form-check u-mb10">
-						<input class="form-check-input" type="checkbox" name="v_antivirus" id="v_antivirus" <?php if ((empty($v_antivirus)) || ($v_antivirus == 'yes')) echo 'checked'; ?>>
+						<input class="form-check-input" type="checkbox" name="v_antivirus" id="v_antivirus" <?php if (empty($v_antivirus) || $v_antivirus == "yes") {
+      	echo "checked";
+      } ?>>
 						<label for="v_antivirus">
 							<?= _("Anti-Virus") ?>
 						</label>
 					</div>
 				<?php } ?>
 				<div class="form-check u-mb10">
-					<input class="form-check-input" type="checkbox" name="v_dkim" id="v_dkim" <?php if (isset($v_dkim)&&$v_dkim == 'yes') echo 'checked'; ?>>
+					<input class="form-check-input" type="checkbox" name="v_dkim" id="v_dkim" <?php if (empty($v_dkim) || $v_dkim == "yes") {
+     	echo "checked";
+     } ?>>
 					<label for="v_dkim">
 						<?= _("DKIM Support") ?>
 					</label>

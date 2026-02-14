@@ -179,6 +179,12 @@ function check_return_code($return_var, $output) {
 		if (empty($error)) {
 			$error = sprintf(_("Error code: %s"), $return_var);
 		}
+
+		// Add backtrace if debug mode is activated to find out the cause
+		if ($_SESSION["DEBUG_MODE"] == "true") {
+			$error .= " | DEBUG BACKTRACE: " . var_export(debug_backtrace(), true);
+		}
+
 		$_SESSION["error_msg"] = $error;
 	}
 }
@@ -329,6 +335,11 @@ function top_panel($user, $TAB) {
 function translate_date($date) {
 	$date = new DateTime($date);
 	return $date->format("d") . " " . _($date->format("M")) . " " . $date->format("Y");
+}
+
+function convert_datetime($date, $format = "Y-m-d H:i:s") {
+	$date = new DateTime($date);
+	return $date->format($format);
 }
 
 function humanize_time($usage) {

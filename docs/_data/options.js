@@ -100,7 +100,8 @@ export const options = [
 	{
 		flag: 'multiphp',
 		label: 'MultiPHP',
-		description: 'Allows installing multiple PHP versions',
+		description: 'Allows installing multiple PHP versions, specify comma separated. Eg: 7.4,8.3',
+		type: 'text',
 		default: 'no',
 	},
 	{

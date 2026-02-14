@@ -32,9 +32,10 @@ is_package_valid
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
-
 for user in $("$BIN/v-list-users" list); do
-	check_package=$(grep "PACKAGE='$package'" $USER_DATA/$user/user.conf)
+	# Fix Bug User Data contain path to the root user
+	USER_DATA="$HESTIA/data/users/$user"
+	check_package=$(grep "PACKAGE='$package'" $USER_DATA/user.conf)
 	if [ -n "$check_package" ]; then
 		"$BIN/v-change-user-package" "$user" "$package" 'yes'
 	fi

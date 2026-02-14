@@ -76,7 +76,7 @@ delete_chroot_jail $user
 #----------------------------------------------------------#
 
 # Restart ssh service
-service sshd restart > /dev/null 2>&1
+service ssh restart > /dev/null 2>&1
 
 # Logging
 log_event "$OK" "$ARGUMENTS"

@@ -4,7 +4,12 @@
             "Hestia\\": "app/"
         }
     },
+    "require": {
+        "symfony/console": "^8.0.4",
+        "composer": "*",
+        "symfony/process": "^8.0.5"
+    },
     "require-dev": {
-        "filp/whoops": "2.15.4"
+        "squizlabs/php_codesniffer": "^4.0.1"
     }
 }

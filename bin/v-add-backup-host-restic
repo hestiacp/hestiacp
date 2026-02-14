@@ -1,0 +1,101 @@
+#!/bin/bash
+# info: add backup host
+# options: TYPE HOST USERNAME PASSWORD [PATH] [PORT]
+#
+# example: v-add-backup-host sftp backup.acme.com admin 'P4$$w@rD'
+#          v-add-backup-host b2 bucketName keyID applicationKey
+#
+# Add a new remote backup location. Currently SFTP, FTP and Backblaze are supported
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Argument definition
+repo=$1
+snapshots=$2
+daily=$3
+weekly=$4
+monthly=$5
+yearly=$6
+
+# CPU Architecture
+arch=$(arch)
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+# Fetch current verison B2 CLI tool
+source_conf "$HESTIA/install/upgrade/upgrade.conf"
+
+is_negative_one_or_int() {
+	if [[ "$1" != '-1' ]]; then
+		is_int_format_valid "$1" "$2"
+	fi
+}
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '6' "$#" "REPO SNAPSHOTS DAILY WEEKLY MONTHLY YEARLY"
+
+format_no_quotes $repo 'Repository host'
+is_negative_one_or_int $snapshots 'Snapshots'
+is_negative_one_or_int $daily 'Daily snapshots'
+is_negative_one_or_int $weekly 'Weekly snapshots'
+is_negative_one_or_int $monthly 'Monthly snapshots'
+is_negative_one_or_int $yearly 'Yearly snapshots'
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Check if Restic is allready installed if not install it ...
+if ! which /usr/bin/restic > /dev/null 2>&1; then
+	apt install restic
+fi
+# Update restic to last release
+restic self-update > /dev/null 2>&1
+
+# Check if $repo starts with a slash
+if [[ $repo == "/"* ]]; then
+	if [ ! -d "$repo" ]; then
+		check_result $E_NOTEXIST "Directory '$repo' does not exist"
+	fi
+fi
+
+# Check if $repo starts with rclone
+if [[ $repo == "rclone:"* ]]; then
+	# remove rclone: from $repo
+	repo2=$(echo "$repo" | sed 's/rclone://')
+	# check if rclone is working
+	if ! rclone lsd "$repo2" > /dev/null 2>&1; then
+		check_result $E_NOTEXIST "Rclone repository '$repo2' does not exist"
+	fi
+fi
+
+echo "REPO='$repo'" > /usr/local/hestia/conf/restic.conf
+echo "SNAPSHOTS='$snapshots'" >> /usr/local/hestia/conf/restic.conf
+echo "KEEP_DAILY='$daily'" >> /usr/local/hestia/conf/restic.conf
+echo "KEEP_WEEKLY='$weekly'" >> /usr/local/hestia/conf/restic.conf
+echo "KEEP_MONTHLY='$monthly'" >> /usr/local/hestia/conf/restic.conf
+echo "KEEP_YEARLY='$yearly'" >> /usr/local/hestia/conf/restic.conf
+
+$BIN/v-change-sys-config-value 'BACKUP_INCREMENTAL' 'yes'
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Logging
+log_event "$OK" "$ARGUMENTS"
+
+exit

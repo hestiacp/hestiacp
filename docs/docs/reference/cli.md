@@ -38,7 +38,24 @@ add backup host
 **Examples**:
 
 ```bash
-v-add-backup-host sftp backup.acme.com admin p4$$w@Rd
+v-add-backup-host sftp backup.acme.com admin 'P4$$w@rD'
+v-add-backup-host b2 bucketName keyID applicationKey
+```
+
+Add a new remote backup location. Currently SFTP, FTP and Backblaze are supported
+
+## v-add-backup-host-restic
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-backup-host-restic)
+
+add backup host
+
+**Options**: `TYPE` `HOST` `USERNAME` `PASSWORD` `[PATH]` `[PORT]`
+
+**Examples**:
+
+```bash
+v-add-backup-host sftp backup.acme.com admin 'P4$$w@rD'
 v-add-backup-host b2 bucketName keyID applicationKey
 ```
 
@@ -61,7 +78,7 @@ that can be downloaded from apt or git.
 
 add cron job
 
-**Options**: `USER` `MIN` `HOUR` `DAY` `MONTH` `WDAY` `COMMAND` `[JOB]` `[RESTART]`
+**Options**: `USER` `MIN` `HOUR` `DAY` `MONTH` `WDAY` `CRON_COMMAND` `[JOB]` `[RESTART]`
 
 **Examples**:
 
@@ -284,7 +301,7 @@ Add "yes" as last parameter to restart nginx
 
 add firewall blocking rule
 
-**Options**: `IP` `CHAIN`
+**Options**: `IPV4_CIDR` `CHAIN`
 
 **Examples**:
 
@@ -332,7 +349,7 @@ This function adds new ipset to system firewall
 
 add firewall rule
 
-**Options**: `ACTION` `IP` `PORT` `[PROTOCOL]` `[COMMENT]` `[RULE]`
+**Options**: `ACTION` `IPV4_CIDR` `PORT` `[PROTOCOL]` `[COMMENT]` `[RULE]`
 
 **Examples**:
 
@@ -722,6 +739,20 @@ add IP address to API allow list
 v-add-sys-api-ip 1.1.1.1
 ```
 
+## v-add-sys-cgroups
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-sys-cgroups)
+
+Enable cgroup support for user
+
+**Options**: –
+
+**Examples**:
+
+```bash
+v-add-sys-cgroup
+```
+
 ## v-add-sys-dependencies
 
 [Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-sys-dependencies)
@@ -868,6 +899,16 @@ Install SnappyMail webmail client
 
 This function installs the SnappyMail webmail client.
 
+## v-add-sys-ssh-jail
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-sys-ssh-jail)
+
+add system ssh jail
+
+**Options**: –
+
+This function enables ssh jailed environment.
+
 ## v-add-sys-web-terminal
 
 [Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-sys-web-terminal)
@@ -889,7 +930,7 @@ add system user
 **Examples**:
 
 ```bash
-v-add-user user P4$$w@rD bgates@aol.com
+v-add-user user 'P4$$w@rD' bgates@aol.com
 ```
 
 This function creates new user account.
@@ -1023,7 +1064,7 @@ v-add-web-domain admin wonderland.com 192.18.22.43 yes www.wonderland.com
 !!! WRAPPER SCRIPT FOR COMPATIBILITY PURPOSES WITH OLD IPV4 SCRIPTS AND EXTERNAL CALLS !!!
 This function adds virtual host to a server. In cases when ip is
 undefined in the script, "default" template will be used. The alias of
-<www.domain.tld> type will be automatically assigned to the domain unless
+`www.domain.tld` type will be automatically assigned to the domain unless
 "none" is transmited as argument. If ip have associated dns name, this
 domain will also get the alias domain-tpl.$ipname. An alias with the ip
 name is useful during the site testing while dns isn't moved to server yet.
@@ -1180,7 +1221,7 @@ adding ssl for domain
 **Examples**:
 
 ```bash
-v-add-web-domain-ssl admin example.com /home/admin/conf/example.com/web
+v-add-web-domain-ssl admin example.com /tmp/folder/contains/certificate/files/
 ```
 
 This function turns on SSL support for a domain. Parameter ssl_dir is a path
@@ -1294,6 +1335,38 @@ v-backup-user admin yes
 
 This function is used for backing up user with all its domains and databases.
 
+## v-backup-user-config
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-backup-user-config)
+
+backup system user config only
+
+**Options**: `USER` `NOTIFY`
+
+**Examples**:
+
+```bash
+v-backup-user admin yes
+```
+
+This function is used for backing up user with all its domains and databases.
+
+## v-backup-user-restic
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-backup-user-restic)
+
+backup system user with all its objects to restic backup
+
+**Options**: `USER` `NOTIFY`
+
+**Examples**:
+
+```bash
+v-backup-user admin yes
+```
+
+This function is used for backing up user with all its domains and databases.
+
 ## v-backup-users
 
 [Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-backup-users)
@@ -1304,18 +1377,34 @@ backup all users
 
 This function backups all system users.
 
+## v-backup-users-restic
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-backup-users-restic)
+
+backup all users
+
+**Options**: –
+
+**Examples**:
+
+```bash
+v-backup-users
+```
+
+This function backups all system users.
+
 ## v-change-cron-job
 
 [Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-cron-job)
 
 change cron job
 
-**Options**: `USER` `JOB` `MIN` `HOUR` `DAY` `MONTH` `WDAY` `COMMAND`
+**Options**: `USER` `JOB` `MIN` `HOUR` `DAY` `MONTH` `WDAY` `CRON_COMMAND`
 
 **Examples**:
 
 ```bash
-v-change-cron-job admin 7 * * * * * * /usr/bin/uptime
+v-change-cron-job admin 7 * * * * * /usr/bin/uptime
 ```
 
 This function is used for changing existing job. It fully replace job
@@ -1543,7 +1632,7 @@ This function of changing domain ownership.
 
 change firewall rule
 
-**Options**: `RULE` `ACTION` `IP` `PORT` `[PROTOCOL]` `[COMMENT]`
+**Options**: `RULE` `ACTION` `IPV4_CIDR` `PORT` `[PROTOCOL]` `[COMMENT]`
 
 **Examples**:
 
@@ -2638,6 +2727,22 @@ v-delete-backup-host sftp
 
 This function deletes ftp backup host
 
+## v-delete-backup-host-restic
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-backup-host-restic)
+
+delete backup ftp server
+
+**Options**: –
+
+**Examples**:
+
+```bash
+v-delete-backup-host sftp
+```
+
+This function deletes ftp backup host
+
 ## v-delete-cron-hestia-autoupdate
 
 [Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-cron-hestia-autoupdate)
@@ -2736,7 +2841,7 @@ deletes temp database user
 **Examples**:
 
 ```bash
-v-add-database-temp-user wordress hestia_sso_user mysql
+v-delete-database-temp-user wordpress hestia_sso_user mysql
 ```
 
 Revokes "temp user" access to a database and removes the user
@@ -2877,7 +2982,7 @@ This function disables FastCGI cache for nginx
 
 delete firewall blocking rule
 
-**Options**: `IP` `CHAIN`
+**Options**: `IPV4_CIDR` `CHAIN`
 
 **Examples**:
 
@@ -3297,6 +3402,16 @@ delete ip adresss from allowed ip list api
 v-delete-sys-api-ip 1.1.1.1
 ```
 
+## v-delete-sys-cgroups
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-sys-cgroups)
+
+delete all cgroups
+
+**Options**: –
+
+This function disables cgroups
+
 ## v-delete-sys-filemanager
 
 [Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-sys-filemanager)
@@ -3397,6 +3512,26 @@ disable system wide smtp relay support
 **Options**:
 
 options:
+
+## v-delete-sys-snappymail
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-sys-snappymail)
+
+Delete SnappyMail webmail client
+
+**Options**: –
+
+This function removes the SnappyMail webmail client.
+
+## v-delete-sys-ssh-jail
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-sys-ssh-jail)
+
+delete system ssh jail
+
+**Options**: –
+
+This function disables ssh jailed environment
 
 ## v-delete-sys-web-terminal
 
@@ -3867,18 +4002,20 @@ This function download back-up from remote server
 
 [Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-dump-database)
 
-Dumps database contents in STDIN / file
+Dumps database contents in STDIN or file optional file can be compressed
 
-**Options**: `USER` `DATABASE` `[FILE]`
+**Options**: `USER` `DATABASE` `[FILE]` `[COMPRESSION]`
 
 **Examples**:
 
 ```bash
 v-dump-database user user_databse > test.sql
-example: v-dump-database user user_databse file
+example: v-dump-database user user_databse file gzip
+example: v-dump-database user user_databse file zstd
 ```
 
-Dumps database in STDIN or /backup/user.database.type.sql
+Dumps database in STDIN or file (/backup/user.database.type.sql)
+For compression gzip or zstd is supported by default plain sql is used
 
 ## v-dump-site
 
@@ -3937,15 +4074,6 @@ generate api key
 
 This function creates a key file in $HESTIA/data/keys/
 
-## v-generate-debug-report
-
-[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-generate-debug-report)
-
-**Options**:
-
-Includes
-shellcheck source=/etc/hestiacp/hestia.conf
-
 ## v-generate-password-hash
 
 [Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-generate-password-hash)
@@ -3957,7 +4085,7 @@ generate password hash
 **Examples**:
 
 ```php
-		v-generate-password-hash sha-512 rAnDom_string yourPassWord
+v-generate-password-hash sha-512 rAnDom_string yourPassWord
 ```
 
 This function generates password hash
@@ -4118,6 +4246,40 @@ Based on sk-import-cpanel-backup-to-vestacp
 Credits: Maks Usmanov (skamasle) and contributors:
 Thanks to <https://github.com/Skamasle/sk-import-cpanel-backup-to-vestacp/graphs/contributors>
 
+## v-import-database
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-import-database)
+
+import database
+
+**Options**: `USER` `DB` `PATH`
+
+**Examples**:
+
+```bash
+v-import-database alice mydb /full/path/to.sql
+```
+
+This function for importing database.
+
+## v-import-directadmin
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-import-directadmin)
+
+Import DirectAdmin backup to a new user
+
+**Options**:
+
+**Examples**:
+
+```bash
+v-import-directadmin /backup/backup.tar.gz
+```
+
+Based on sk-da-importer
+Credits: Maks Usmanov (skamasle), Jaap Marcus (jaapmarcus) and contributors:
+Thanks to <https://github.com/Skamasle/sk_da_importer/graphs/contributors>
+
 ## v-insert-dns-domain
 
 [Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-insert-dns-domain)
@@ -4207,6 +4369,22 @@ v-list-apis json
 ## v-list-backup-host
 
 [Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-backup-host)
+
+list backup host
+
+**Options**: `TYPE` `[FORMAT]`
+
+**Examples**:
+
+```bash
+v-list-backup-host local
+```
+
+This function for obtaining the list of backup host parameters.
+
+## v-list-backup-host-restic
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-backup-host-restic)
 
 list backup host
 
@@ -5123,6 +5301,22 @@ v-list-user-backup-exclusions admin
 
 This function for obtaining the backup exclusion list
 
+## v-list-user-backup-restic
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-user-backup-restic)
+
+backup system user with all its objects
+
+**Options**: `USER` `NOTIFY`
+
+**Examples**:
+
+```bash
+v-backup-user admin yes
+```
+
+This function is used for backing up user with all its domains and databases.
+
 ## v-list-user-backups
 
 [Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-user-backups)
@@ -5138,6 +5332,38 @@ v-list-user-backups admin
 ```
 
 This function for obtaining the list of available user backups.
+
+## v-list-user-backups-restic
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-user-backups-restic)
+
+backup system user with all its objects
+
+**Options**: `USER` `NOTIFY`
+
+**Examples**:
+
+```bash
+v-backup-user admin yes
+```
+
+This function is used for backing up user with all its domains and databases.
+
+## v-list-user-files-restic
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-user-files-restic)
+
+backup system user with all its objects
+
+**Options**: `USER` `SNAPSHOT` `FOLDER`
+
+**Examples**:
+
+```bash
+v-backup-user admin yes
+```
+
+This function is used for backing up user with all its domains and databases.
 
 ## v-list-user-ips
 
@@ -5180,7 +5406,7 @@ list user notifications
 v-list-user-notifications admin
 ```
 
-This function for getting the list notifications
+This function for getting the notifications list
 
 ## v-list-user-ns
 
@@ -5492,6 +5718,26 @@ v-purge-nginx-cache user domain.tld
 ```
 
 This function purges nginx cache.
+
+## v-quick-install-app
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-quick-install-app)
+
+Install Quick Install Web App via CLI
+
+**Options**: `ACTION` `[USER]` `[DOMAIN]` `[APP]` `[OPTIONS` `...]`
+
+**Examples**:
+
+```php
+v-quick-install-app install admin domain.com WordPress email="info@hestiacp" password="123456" username="admin" site_name="HestiaCP Demo" install_directory="/" language="nl_NL" php_version="8.2" database_create="true"
+ example: v-quick-install-app app
+ example: v-quick-install-app options admin domain.com WordPress
+```
+
+- The v-quick-install-app install command is used to automate the installation of web applications on a server managed by Hestia Control Panel.
+- The v-quick-install-app app command is used to retrieve a list of web applications that can be quickly installed through the v-quick-install-app install command in the Hestia Control Panel. This command provides a convenient overview of supported applications and their versions, allowing users to choose which application they would like to deploy on their server. The names of the applications are case sensitive.
+- v-quick-install-app options admin domain.com WordPress list all the options available for the specified web application. This command provides a list of all the required and optional fields that need to be filled in when installing the application. The command also provides the default values for each field, if available.
 
 ## v-rebuild-all
 
@@ -5828,6 +6074,23 @@ v-restore-cron-job USER BACKUP CRON [NOTIFY]
 This function allows the user to restore a single cron job
 from a backup archive.
 
+## v-restore-cron-job-restic
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-restore-cron-job-restic)
+
+restore single cron job
+
+**Options**: `USER` `SNAPSHOT` `[NOTIFY]`
+
+**Examples**:
+
+```bash
+v-restore-cron-job USER BACKUP [NOTIFY]
+```
+
+This function allows the user to restore a cron jobs
+from a snapshot.
+
 ## v-restore-database
 
 [Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-restore-database)
@@ -5844,6 +6107,24 @@ v-restore-database USER BACKUP DATABASE [NOTIFY]
 
 This function allows the user to restore a single database
 from a backup archive.
+
+## v-restore-database-restic
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-restore-database-restic)
+
+restore Database
+
+**Options**: `USER` `SNAPSHOT` `DATABASE`
+
+**Examples**:
+
+```bash
+v-restore-database-restic user snapshot user_database
+example: v-restore-database-restic user snapshot 'user_database,user_database2'
+example: v-restore-database-restic user snapshot '*'
+```
+
+This function for restoring database from restic snapshot.
 
 ## v-restore-dns-domain
 
@@ -5862,6 +6143,38 @@ v-restore-dns-domain USER BACKUP DOMAIN [NOTIFY]
 This function allows the user to restore a single DNS domain
 from a backup archive.
 
+## v-restore-dns-domain-restic
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-restore-dns-domain-restic)
+
+restore DNS domain
+
+**Options**: `USER` `SNAPSHOT` `DOMAIN`
+
+**Examples**:
+
+```bash
+v-restore-user user snapshot domain.com
+```
+
+This function for restoring database from restic snapshot.
+
+## v-restore-file-restic
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-restore-file-restic)
+
+restore file or folder
+
+**Options**: `USER` `SNAPSHOT` `PATH`
+
+**Examples**:
+
+```bash
+v-restore-user user snapshot path
+```
+
+This function for restoring database from restic snapshot.
+
 ## v-restore-mail-domain
 
 [Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-restore-mail-domain)
@@ -5878,6 +6191,24 @@ v-restore-mail-domain USER BACKUP DOMAIN [NOTIFY]
 
 This function allows the user to restore a single mail domain
 from a backup archive.
+
+## v-restore-mail-domain-restic
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-restore-mail-domain-restic)
+
+restore WEB domain
+
+**Options**: `USER` `SNAPSHOT` `DOMAIN`
+
+**Examples**:
+
+```bash
+v-restore-mail-domain-restic user snapshot domain.com
+example: v-restore-mail-domain-restic user snapshot 'domain.com,domain2.com'
+example: v-restore-mail-domain-restic user snapshot '*'
+```
+
+This function for restoring database from restic snapshot.
 
 ## v-restore-user
 
@@ -5896,6 +6227,38 @@ v-restore-user admin 2019-04-22_01-00-00.tar
 This function for restoring user from backup. To be able to restore the backup,
 the archive needs to be placed in /backup.
 
+## v-restore-user-full-restic
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-restore-user-full-restic)
+
+restore user via Restic
+
+**Options**: `USER` `SNAPSHOT` `KEY`
+
+**Examples**:
+
+```bash
+v-restore-user-full-restic user snapshot key
+```
+
+Full user restore from a non existing user
+
+## v-restore-user-restic
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-restore-user-restic)
+
+restore user via Restic
+
+**Options**: `USER` `SNAPSHOT` `WEB` `DNS` `MAIL` `DB` `CRON` `UDIR`
+
+**Examples**:
+
+```bash
+v-restore-user-restic user snapshot
+```
+
+This function for restoring database from restic snapshot.
+
 ## v-restore-web-domain
 
 [Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-restore-web-domain)
@@ -5912,6 +6275,24 @@ v-restore-web-domain USER BACKUP DOMAIN [NOTIFY]
 
 This function allows the user to restore a single web domain
 from a backup archive.
+
+## v-restore-web-domain-restic
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-restore-web-domain-restic)
+
+restore WEB domain
+
+**Options**: `USER` `SNAPSHOT` `DOMAIN`
+
+**Examples**:
+
+```bash
+v-restore-web-domain-restic user snapshot domain.com
+example: v-restore-web-domain-restic user snapshot 'domain.com,domain2.com'
+example: v-restore-web-domain-restic user snapsho '*'
+```
+
+This function for restoring database from restic snapshot.
 
 ## v-revoke-api-key
 
@@ -5993,9 +6374,41 @@ v-schedule-user-backup-download admin 2019-04-22_01-00-00.tar
 
 This function for scheduling user backup creation.
 
+## v-schedule-user-backup-restic
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-schedule-user-backup-restic)
+
+schedule user backup creation
+
+**Options**: `USER`
+
+**Examples**:
+
+```bash
+v-schedule-user-backup admin
+```
+
+This function for scheduling user backup creation.
+
 ## v-schedule-user-restore
 
 [Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-schedule-user-restore)
+
+schedule user backup restoration
+
+**Options**: `USER` `BACKUP` `[WEB]` `[DNS]` `[MAIL]` `[DB]` `[CRON]` `[UDIR]`
+
+**Examples**:
+
+```bash
+v-schedule-user-restore 2019-04-22_01-00-00.tar
+```
+
+This function for scheduling user backup restoration.
+
+## v-schedule-user-restore-restic
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-schedule-user-restore-restic)
 
 schedule user backup restoration
 
@@ -7108,6 +7521,22 @@ v-update-user-backup-exclusions admin /tmp/backup_exclusions
 ```
 
 This function for updating backup exclusion list
+
+## v-update-user-cgroup
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-user-cgroup)
+
+update user disk quota
+
+**Options**: `USER`
+
+**Examples**:
+
+```bash
+v-update-user-cgroup admin
+```
+
+The functions upates cgroup, cpu, ram ,... for specific user
 
 ## v-update-user-counters
 

@@ -2,10 +2,10 @@
 
 Hestia is an open-source project, and we welcome contributions from the community. Please read the [contributing guidelines](https://github.com/hestiacp/hestiacp/blob/main/CONTRIBUTING.md) for additional information.
 
-Hestia is designed to be installed on a web server. To develop Hestia on your local machine, a virtual machine is recommend.
+Hestia is designed to be installed on a web server. To develop Hestia on your local machine, a virtual machine is recommended.
 
 ::: warning
-Development builds are unstable. If you encounter a bug please [report it via GitHub](https://github.com/hestiacp/hestiacp/issues/new/choose) or [submit a Pull Request](https://github.com/hestiacp/hestiacp/pulls).
+Development builds are unstable. If you encounter a bug, please [report it via GitHub](https://github.com/hestiacp/hestiacp/issues/new/choose) or [submit a Pull Request](https://github.com/hestiacp/hestiacp/pulls).
 :::
 
 ## Creating a virtual machine for development
@@ -36,21 +36,21 @@ These instructions use [Multipass](https://multipass.run/) to create an Ubuntu V
    multipass mount ~/projects/hestiacp hestia-dev:/home/ubuntu/hestiacp
    ```
 
-1. SSH into the VM as root then install some required packages
+1. SSH into the VM as root, then install some required packages
 
    ```bash
    multipass exec hestia-dev -- sudo bash
    sudo apt update && sudo apt install -y jq libjq1
    ```
 
-1. Navigate to `/src` in the VM then build Hestia packages
+1. Navigate to `/src` in the VM, then build Hestia packages
 
    ```bash
    cd src
    ./hst_autocompile.sh --all --noinstall --keepbuild '~localsrc'
    ```
 
-1. Navigate to `/install` in the VM then install Hestia with these flags
+1. Navigate to `/install` in the VM, then install Hestia with these flags
 
    _(update the [installation flags](../introduction/getting-started#list-of-installation-options) to your liking, note that login credentials are set here)_
 
@@ -82,7 +82,7 @@ These instructions use [Multipass](https://multipass.run/) to create an Ubuntu V
 Hestia is now running in a virtual machine. If you'd like to make changes to the source code and test them in your browser, please continue to the next section.
 
 ::: warning
-Sometimes (with Multipass) the mapping between the source code directory on your local machine to the directory in the VM can be lost with a "failed to obtain exit status for remote process" error. If this happens simply unmount and remount e.g.
+Sometimes (with Multipass), the mapping between the source code directory on your local machine to the directory in the VM can be lost with a "failed to obtain exit status for remote process" error. If this happens, simply unmount and remount, e.g.
 
 ```bash
 multipass unmount hestia-dev
@@ -93,7 +93,7 @@ multipass mount ~/projects/hestiacp hestia-dev:/home/ubuntu/hestiacp
 
 ## Making changes to Hestia
 
-After setting up Hestia in a development VM you can now make changes to the source code at `~/projects/hestiacp` on your local machine (outside of the VM) using your editor of choice.
+After setting up Hestia in a development VM, you can now make changes to the source code at `~/projects/hestiacp` on your local machine (outside of the VM) using your editor of choice.
 
 Below are some instructions for making a change to Hestia's UI, running the build script and testing the change locally.
 

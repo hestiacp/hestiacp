@@ -46,7 +46,7 @@ function updateFtpPathHint(pathInput, path) {
 function normalizePath(path) {
 	// Add leading slash
 	if (path[0] !== '/') {
-		path = '/' + path;
+		path = `/${path}`;
 	}
 
 	// Remove double slashes

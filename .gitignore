@@ -16,6 +16,8 @@
 !.vscode/launch.json
 !.vscode/extensions.json
 !.vscode/*.code-snippets
+nbproject/project.properties
+nbproject/project.xml
 
 # macOS
 .DS_Store
@@ -46,6 +48,3 @@ web/src/vendor/
 # Node
 **/node_modules/
 npm-debug.log
-
-# optional eslint cache
-.eslintcache

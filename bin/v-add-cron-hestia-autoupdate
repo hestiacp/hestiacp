@@ -62,7 +62,7 @@ if [ "$mode" = "git" ]; then
 	command='v-update-sys-hestia-git'
 fi
 
-echo "$min $hour * * * sudo /usr/local/hestia/bin/$command" > "/var/spool/cron/crontabs/hestiaweb"
+sed -i -e "\$a$min $hour * * * sudo /usr/local/hestia/bin/$command" "/var/spool/cron/crontabs/hestiaweb"
 
 #----------------------------------------------------------#
 #                       Hestia                             #

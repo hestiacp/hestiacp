@@ -23,7 +23,7 @@
 				class="button button-secondary button-danger data-controls js-confirm-action"
 				href="/restart/system/?hostname=<?= $sys["sysinfo"]["HOSTNAME"] ?>&token=<?= $_SESSION["token"] ?>&system_reset_token=<?= time() ?>"
 				data-confirm-title="<?= _("Restart") ?>"
-				data-confirm-message="<?= sprintf(_("Are you sure you want to restart %s?"), "Server") ?>"
+				data-confirm-message="<?= _("Are you sure you want to restart the server?") ?>"
 			>
 				<i class="fas fa-arrow-rotate-left icon-red"></i><?= _("Restart") ?>
 			</a>
@@ -168,7 +168,7 @@
 								href="/restart/service/?srv=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
 								title="<?= _("Restart") ?>"
 								data-confirm-title="<?= _("Restart") ?>"
-								data-confirm-message="<?= sprintf(_("Are you sure you want to restart %s?"), $key) ?>"
+								data-confirm-message="<?= sprintf(_("Are you sure you want to restart the %s service?"), $key) ?>"
 							>
 								<i class="fas fa-arrow-rotate-left icon-highlight"></i>
 								<span class="u-hide-desktop"><?= _("Restart") ?></span>
@@ -178,11 +178,12 @@
 							<a
 								class="units-table-row-action-link data-controls js-confirm-action"
 								href="/<?= $action ?>/service/?srv=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
-								title="<?=$action_text ?>"
-								data-confirm-message="<?php if ($action == 'stop'){ echo sprintf(_('Are you sure you want to stop service %s?'), $key); } else { echo sprintf(_('Are you sure you want to start service %s?'), $key); }?>"
+								title="<?= $action_text ?>"
+								data-confirm-title="<?= $action_text ?>"
+								data-confirm-message="<?php if ($action == 'stop') { echo sprintf(_('Are you sure you want to stop the %s service?'), $key); } else { echo sprintf(_('Are you sure you want to start the %s service?'), $key); }?>"
 							>
 								<i class="fas <?= $spnd_icon ?> <?= $spnd_icon_class ?>"></i>
-								<span class="u-hide-desktop"><?=$action_text ?></span>
+								<span class="u-hide-desktop"><?= $action_text ?></span>
 							</a>
 						</li>
 					</ul>

@@ -85,7 +85,7 @@ function generate_mysql_table() {
 			XPORT:a:Queries \
 			XPORT:s:Slow
 	else
-		echo "Does not exists"
+		echo "Does not exist"
 		exit 1
 	fi
 }
@@ -98,7 +98,7 @@ function generate_pgsql_table() {
 			XPORT:a:Queries \
 			XPORT:t:Transactions
 	else
-		echo "Does not exists"
+		echo "Does not exist"
 		exit 1
 	fi
 }
@@ -117,7 +117,7 @@ function generate_net_table() {
 			XPORT:inoctets:"Input (rx)" \
 			XPORT:outoctets:"Output (tx)"
 	else
-		echo "Does not exists"
+		echo "Does not exist"
 		exit 1
 	fi
 }
@@ -193,9 +193,8 @@ case $chart in
 		generate_net_table
 		;;
 
-	\
-		*)
-		echo "Does not exists"
+	*)
+		echo "Does not exist"
 		exit 1
 		;;
 esac

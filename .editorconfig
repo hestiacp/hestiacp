@@ -24,3 +24,8 @@ indent_style = space
 # Views have longer line length for now
 [web/templates/**/*.php]
 max_line_length = 200
+
+# Modern PHP uses spaces for indentation
+[web/src/**/*.php]
+indent_size = 4
+indent_style = space

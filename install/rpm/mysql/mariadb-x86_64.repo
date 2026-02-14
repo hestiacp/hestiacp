@@ -1,7 +1,0 @@
-[mariadb]
-name = MariaDB 10.6 for RHEL $releasever - $basearch
-baseurl = https://ftp.osuosl.org/pub/mariadb/yum/10.6/rhel$releasever-amd64
-module_hotfixes=1
-gpgkey=https://ftp.osuosl.org/pub/mariadb/yum/RPM-GPG-KEY-MariaDB
-gpgcheck=1
-enabled=1

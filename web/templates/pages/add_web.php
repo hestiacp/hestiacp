@@ -43,7 +43,7 @@
 					<label for="v_domain" class="form-label"><?= _("Domain") ?></label>
 					<input type="text" class="form-control" name="v_domain" id="v_domain" value="<?= htmlentities(trim($v_domain, "'")) ?>" required>
 				</div>
-				<div class="u-mb20">
+				<div class="u-mb10">
 					<label for="v_ip" class="form-label"><?= _("IP Address") ?></label>
 					<select class="form-select" name="v_ip" id="v_ip">
 						<?php
@@ -54,6 +54,13 @@
 							}
 						?>
 					</select>
+				</div>
+				<div class="u-mb20">
+					<label for="v_backend_address" class="form-label">
+						<?= _("Backend Address") ?> <span class="optional">(<?= _("optional") ?>)</span>
+					</label>
+					<input type="text" class="form-control" name="v_backend_address" id="v_backend_address" value="<?= htmlentities(trim($v_backend_address ?? '', "'")) ?>" placeholder="<?= _("e.g., http://127.0.0.1:3000 or 127.0.0.1:3000") ?>">
+					<small class="hint"><?= _("Specify a backend address for reverse proxy. Leave empty for default web server.") ?></small>
 				</div>
 				<?php if (isset($_SESSION["DNS_SYSTEM"]) && !empty($_SESSION["DNS_SYSTEM"])) { ?>
 					<?php if ($panel[$user_plain]["DNS_DOMAINS"] != "0") { ?>

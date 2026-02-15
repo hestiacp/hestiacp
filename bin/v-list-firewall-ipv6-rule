@@ -4,7 +4,6 @@
 #
 # The function of obtaining firewall rule parameters.
 
-
 #----------------------------------------------------------#
 #                    Variable&Function                     #
 #----------------------------------------------------------#
@@ -17,8 +16,8 @@ format=${2-shell}
 source $HESTIA/func/main.sh
 
 json_list() {
-    echo '{'
-    echo '    "'$RULE'": {
+	echo '{'
+	echo '    "'$RULE'": {
         "ACTION": "'$ACTION'",
         "PROTOCOL": "'$PROTOCOL'",
         "PORT": "'$PORT'",
@@ -28,33 +27,32 @@ json_list() {
         "TIME": "'$TIME'",
         "DATE": "'$DATE'"
     }'
-    echo '}'
+	echo '}'
 }
 
 # SHELL list function
 shell_list() {
-    echo "ACTION:         $ACTION"
-    echo "PROTOCOL:       $PROTOCOL"
-    echo "PORT:           $PORT"
-    echo "IP6:            $IP6"
-    echo "COMMENT:        $COMMENT"
-    echo "SUSPENDED:      $SUSPENDED"
-    echo "TIME:           $TIME"
-    echo "DATE:           $DATE"
+	echo "ACTION:         $ACTION"
+	echo "PROTOCOL:       $PROTOCOL"
+	echo "PORT:           $PORT"
+	echo "IP6:            $IP6"
+	echo "COMMENT:        $COMMENT"
+	echo "SUSPENDED:      $SUSPENDED"
+	echo "TIME:           $TIME"
+	echo "DATE:           $DATE"
 }
 
 # PLAIN list function
 plain_list() {
-    echo -ne "$RULE\t$ACTION\t$PROTOCOL\t$PORT\t$IP6\t$COMMENT\t"
-    echo -e "$SUSPENDED\t$TIME\t$DATE"
+	echo -ne "$RULE\t$ACTION\t$PROTOCOL\t$PORT\t$IP6\t$COMMENT\t"
+	echo -e "$SUSPENDED\t$TIME\t$DATE"
 }
 
 # CSV list function
 csv_list() {
-    echo "RULE,ACTION,PROTOCOL,PORT,IP6,COMMENT,SUSPENDED,TIME,DATE"
-    echo "$RULE,$ACTION,$PROTOCOL,$PORT,$IP6,$COMMENT,$SUSPENDED,$TIME,$DATE"
+	echo "RULE,ACTION,PROTOCOL,PORT,IP6,COMMENT,SUSPENDED,TIME,DATE"
+	echo "$RULE,$ACTION,$PROTOCOL,$PORT,$IP6,$COMMENT,$SUSPENDED,$TIME,$DATE"
 }
-
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -63,7 +61,6 @@ csv_list() {
 check_args '1' "$#" 'RULE [FORMAT]'
 is_number_format_valid "$rule" "rule id"
 is_object_valid '../../data/firewallv6/rules' 'RULE' "$rule"
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -74,12 +71,11 @@ eval $(grep "RULE='$rule'" $HESTIA/data/firewallv6/rules.conf)
 
 # Listing data
 case $format in
-    json)   json_list ;;
-    plain)  plain_list ;;
-    csv)    csv_list ;;
-    shell)  shell_list ;;
+	json) json_list ;;
+	plain) plain_list ;;
+	csv) csv_list ;;
+	shell) shell_list ;;
 esac
-
 
 #----------------------------------------------------------#
 #                       HESTIA                              #

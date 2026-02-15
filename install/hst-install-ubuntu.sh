@@ -311,7 +311,7 @@ while getopts "a:w:v:j:k:m:M:g:d:x:z:Z:c:t:i:b:r:o:q:L:l:y:6:s:u:e:p:W:D:fh" Opt
 		l) lang=$OPTARG ;;          # Language
 		d) api=$OPTARG ;;           # Activate API
 		y) interactive=$OPTARG ;;   # Interactive install
-        6) ipv6_support=$OPTARG ;;  # IPV6
+		6) ipv6_support=$OPTARG ;;  # IPV6
 		s) servername=$OPTARG ;;    # Hostname
 		e) email=$OPTARG ;;         # Admin email
 		u) username=$OPTARG ;;      # Admin username

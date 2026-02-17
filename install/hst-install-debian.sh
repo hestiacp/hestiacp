@@ -6,7 +6,7 @@
 # https://www.hestiacp.com/
 #
 # Currently Supported Versions:
-# Debian 11 12
+# Debian 11 12 13
 #
 # ======================================================== #
 
@@ -39,9 +39,9 @@ multiphp_required=("7.3" "7.4" "8.0" "8.1" "8.2" "8.3")
 # Default PHP version if none supplied
 fpm_v="8.3"
 # MariaDB version
-mariadb_v="11.4"
+mariadb_v="11.8"
 # Node.js version
-node_v="20"
+node_v="24"
 
 # Defining software pack for all distros
 software="acl apache2 apache2-suexec-custom apache2-utils at awstats bc bind9 bsdmainutils bsdutils
@@ -875,7 +875,7 @@ fi
 
 # Installing HestiaCP repo
 echo "[ * ] Hestia Control Panel"
-echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/hestia-keyring.gpg] https://$RHOST/ $codename main" > $apt/hestia.list
+echo "#deb [arch=$ARCH signed-by=/usr/share/keyrings/hestia-keyring.gpg] https://$RHOST/ $codename main" > $apt/hestia.list
 gpg --no-default-keyring --keyring /usr/share/keyrings/hestia-keyring.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys A189E93654F0B0E5 > /dev/null 2>&1
 
 # Installing Node.js repo
@@ -899,22 +899,25 @@ echo
 # Updating system
 echo -ne "Updating currently installed packages, please wait... "
 apt-get -qq update
-apt-get -y upgrade >> $LOG &
-BACK_PID=$!
+apt-get -y upgrade
+
+# For now don't hide the out put
+#>> $LOG &
+#BACK_PID=$!
 
 # Check if package installation is done, print a spinner
-spin_i=1
-while kill -0 $BACK_PID > /dev/null 2>&1; do
-	printf "\b${spinner:spin_i++%${#spinner}:1}"
-	sleep 0.5
-done
+#spin_i=1
+#while kill -0 $BACK_PID > /dev/null 2>&1; do
+#	printf "\b${spinner:spin_i++%${#spinner}:1}"
+#	sleep 0.5
+#done
 
 # Do a blank echo to get the \n back
-echo
+echo "Jaap"
 
 # Check Installation result
-wait $BACK_PID
-check_result $? 'apt-get upgrade failed'
+#wait $BACK_PID
+#check_result $? 'apt-get upgrade failed'
 
 #----------------------------------------------------------#
 #                         Backup                           #
@@ -1111,22 +1114,23 @@ chmod a+x /usr/sbin/policy-rc.d
 echo "The installer is now downloading and installing all required packages."
 echo -ne "NOTE: This process may take 10 to 15 minutes to complete, please wait... "
 echo
-apt-get -y install $software > $LOG
-BACK_PID=$!
+apt-get -y install $software
+#> $LOG
+#BACK_PID=$!
 
 # Check if package installation is done, print a spinner
-spin_i=1
-while kill -0 $BACK_PID > /dev/null 2>&1; do
-	printf "\b${spinner:spin_i++%${#spinner}:1}"
-	sleep 0.5
-done
+#spin_i=1
+#while kill -0 $BACK_PID > /dev/null 2>&1; do
+#	printf "\b${spinner:spin_i++%${#spinner}:1}"
+#	sleep 0.5
+#done
 
 # Do a blank echo to get the \n back
 echo
 
 # Check Installation result
-wait $BACK_PID
-check_result $? "apt-get install failed"
+#wait $BACK_PID
+#check_result $? "apt-get install failed"
 
 echo
 echo "========================================================================"
@@ -1488,7 +1492,7 @@ echo "[ * ] Configuring OpenSSL to improve TLS performance..."
 tls13_ciphers="TLS_AES_128_GCM_SHA256:TLS_CHACHA20_POLY1305_SHA256:TLS_AES_256_GCM_SHA384"
 if [ "$release" = "11" ]; then
 	sed -i '/^system_default = system_default_sect$/a system_default = hestia_openssl_sect\n\n[hestia_openssl_sect]\nCiphersuites = '"$tls13_ciphers"'\nOptions = PrioritizeChaCha' /etc/ssl/openssl.cnf
-elif [ "$release" = "12" ]; then
+else
 	if ! grep -qw "^ssl_conf = ssl_sect$" /etc/ssl/openssl.cnf 2> /dev/null; then
 		sed -i '/providers = provider_sect$/a ssl_conf = ssl_sect' /etc/ssl/openssl.cnf
 	fi
@@ -1505,12 +1509,12 @@ $HESTIA/bin/v-generate-ssl-cert $(hostname) '' 'US' 'California' \
 	'San Francisco' 'Hestia Control Panel' 'IT' > /tmp/hst.pem
 
 crt_end=$(grep -n "END CERTIFICATE-" /tmp/hst.pem | cut -f 1 -d:)
-if [ "$release" = "12" ]; then
-	key_start=$(grep -n "BEGIN PRIVATE KEY" /tmp/hst.pem | cut -f 1 -d:)
-	key_end=$(grep -n "END PRIVATE KEY" /tmp/hst.pem | cut -f 1 -d:)
-else
+if [ "$release" = "11" ]; then
 	key_start=$(grep -n "BEGIN RSA" /tmp/hst.pem | cut -f 1 -d:)
 	key_end=$(grep -n "END RSA" /tmp/hst.pem | cut -f 1 -d:)
+else
+	key_start=$(grep -n "BEGIN PRIVATE KEY" /tmp/hst.pem | cut -f 1 -d:)
+	key_end=$(grep -n "END PRIVATE KEY" /tmp/hst.pem | cut -f 1 -d:)
 fi
 
 # Adding SSL certificate
@@ -1776,7 +1780,7 @@ if [ "$proftpd" = 'yes' ]; then
 		fi
 	fi
 
-	if [ "$release" -eq 12 ]; then
+	if [ "$release" -eq 12 ] || [ "$release" -eq 13 ]; then
 		systemctl disable --now proftpd.socket
 		systemctl enable --now proftpd.service
 	fi
@@ -1978,6 +1982,10 @@ if [ "$named" = 'yes' ]; then
 			systemctl restart apparmor >> $LOG
 		fi
 	fi
+	# Debian 13 removed the named.conf.default-zones file if doesn't exsists remove it from the config file
+	if [ ! -f /etc/bind/named.conf.default-zones ]; then
+		sed -i "/^include.*named.conf.default-zones/d" /etc/bind/named.conf
+	fi
 	update-rc.d bind9 defaults > /dev/null 2>&1
 	systemctl start bind9
 	check_result $? "bind9 start failed"
@@ -2047,7 +2055,12 @@ fi
 if [ "$dovecot" = 'yes' ]; then
 	echo "[ * ] Configuring Dovecot POP/IMAP mail server..."
 	gpasswd -a dovecot mail > /dev/null 2>&1
-	cp -rf $HESTIA_COMMON_DIR/dovecot /etc/
+	if [ $release = "13" ]; then
+		# Debian Trixie uses 2.4.1
+		cp -rf $HESTIA_COMMON_DIR/dovecot/2.4.1 /etc/dovecot/
+	else
+		cp -rf $HESTIA_COMMON_DIR/dovecot/2.3 /etc/dovecot/
+	fi
 	cp -f $HESTIA_INSTALL_DIR/logrotate/dovecot /etc/logrotate.d/
 	rm -f /etc/dovecot/conf.d/15-mailboxes.conf
 	chown -R root:root /etc/dovecot*
@@ -2055,7 +2068,6 @@ if [ "$dovecot" = 'yes' ]; then
 	chown -R dovecot:mail /var/log/dovecot.log
 	chmod 660 /var/log/dovecot.log
 	# Alter config for 2.2
-	version=$(dovecot --version | cut -f -2 -d .)
 	if [ "$version" = "2.2" ]; then
 		echo "[ * ] Downgrade dovecot config to sync with 2.2 settings"
 		sed -i 's|#ssl_dh_parameters_length = 4096|ssl_dh_parameters_length = 4096|g' /etc/dovecot/conf.d/10-ssl.conf

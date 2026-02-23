@@ -52,7 +52,8 @@ source "$HESTIA/func/syshealth.sh"
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
-if [ -z "$4" ]; then
+# Si el estado de la IP es shared, siempre usamos ROOT_USER
+if [ "$ip_status" = "shared" ]; then
 	user="$ROOT_USER"
 fi
 
@@ -126,11 +127,12 @@ if [ -n "$ip_format" ]; then
 		ip=''
 		ipv6="$ip46"
 		add_string_ipv6="6"
-		[ -n "$cidr_prefixlen" ] && prefix_length="$cidr_prefixlen"
-		if [ -n "$ip_cidr" ]; then
+		if [ -n "$cidr_prefixlen" ]; then
+			prefix_length="$cidr_prefixlen"
+		elif [ -n "$ip_cidr" ] && [[ "$ip_cidr" =~ ^/[0-9]{1,3}$ ]]; then
 			prefix_length="$ip_cidr"
 		else
-			[ -z "$prefix_length" ] && prefix_length="/64"
+			prefix_length="/64"
 		fi
 		is_ip_format_valid "$ipv6" 'ipv6' # check for correct ipv6 format
 		broadcast=""                      # reset broadcast
@@ -144,7 +146,13 @@ fi
 [ -z "$iface" ] && iface=$("$BIN/v-list-sys-interfaces" plain | head -n 1) # Get first available system interface, if none defined
 [ -z "$iface" ] && iface='eth0'                                            # eth0, if still not defined
 
-is_format_valid 'netmask' 'cidr' 'prefix_length' 'iface' 'user' 'ip_status'
+# Eliminar la barra inicial para la validación
+if [[ "$prefix_length" =~ ^/([0-9]{1,3})$ ]]; then
+	prefix_length_num="${BASH_REMATCH[1]}"
+else
+	prefix_length_num=""
+fi
+is_format_valid 'netmask' 'cidr' "$prefix_length_num" 'iface' 'user' 'ip_status'
 is_ip_free "$ip46"
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
@@ -170,7 +178,7 @@ check_ip_par=""
 sys_ip_check=$(ip$check_ip_par addr | sed -ne "/inet[6]*[ \t]${ip46}\//p")
 if [ -z "$sys_ip_check" ]; then
 	# Adding system IP
-	if [ -n "$ip_format" ] && [ $ip_format -eq 6 ]; then
+	if [ -n "$ip_format" ] && [ "$ip_format" -eq 6 ]; then
 		/sbin/ip addr add "$full_ip46" dev "${iface%:*}" label "$iface"
 	else
 		ip addr add "$full_ip46" dev "$iface" broadcast "$broadcast" label "$iface"
@@ -282,7 +290,11 @@ if [ -n "$PROXY_SYSTEM" ]; then
 			-e "s/%proxy_ssl_port%/$PROXY_SSL_PORT/g" \
 			> "/etc/$PROXY_SYSTEM/conf.d/$ip46.conf"
 
-	process_http2_directive "/etc/$PROXY_SYSTEM/conf.d/$ip46.conf"
+	if [ "$ip_format" -eq 6 ]; then
+		process_http2_directive "/etc/$PROXY_SYSTEM/conf.d/${ip46}.conf"
+	else
+		process_http2_directive "/etc/$PROXY_SYSTEM/conf.d/${ip}.conf"
+	fi
 
 	# mod_extract_forwarded
 	fw_conf="/etc/$WEB_SYSTEM/conf.d/mod_extract_forwarded.conf"
@@ -325,11 +337,11 @@ if [ "$user" = $ROOT_USER ]; then
 			increase_user_value "$hestia_user" '$IP'$add_cap_string_ipv6'_AVAIL'
 		done
 	else
-		increase_user_value $ROOT_USER '$IP'$add_cap_string_ipv6'_AVAIL'
+		increase_user_value "$ROOT_USER" '$IP'$add_cap_string_ipv6'_AVAIL'
 	fi
 else
 	increase_user_value "$user" '$IP'$add_cap_string_ipv6'_AVAIL'
-	increase_user_value $ROOT_USER '$IP'$add_cap_string_ipv6'_AVAIL'
+	increase_user_value "$ROOT_USER" '$IP'$add_cap_string_ipv6'_AVAIL'
 fi
 
 # Restarting web server

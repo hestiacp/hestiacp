@@ -130,7 +130,7 @@ if [[ "$prefix_length" =~ ^/([0-9]{1,3})$ ]]; then
 else
 	prefix_length_num=""
 fi
-is_format_valid 'netmask' 'cidr' "$prefix_length_num" "$iface" "$user" "$ip_status"
+is_format_valid 'netmask' 'cidr' 'prefix_length' 'iface' 'user' 'ip_status'
 is_ip_free "$ip46"
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
@@ -315,11 +315,11 @@ if [ "$user" = $ROOT_USER ]; then
 			increase_user_value "$hestia_user" '$IP'$add_cap_string_ipv6'_AVAIL'
 		done
 	else
-		increase_user_value 'admin' '$IP'$add_cap_string_ipv6'_AVAIL'
+		increase_user_value "$ROOT_USER" '$IP'$add_cap_string_ipv6'_AVAIL'
 	fi
 else
 	increase_user_value "$user" '$IP'$add_cap_string_ipv6'_AVAIL'
-	increase_user_value 'admin' '$IP'$add_cap_string_ipv6'_AVAIL'
+	increase_user_value "$ROOT_USER" '$IP'$add_cap_string_ipv6'_AVAIL'
 fi
 
 # Restarting web server

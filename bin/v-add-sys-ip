@@ -121,8 +121,9 @@ if [ -n "$ip_format" ]; then
 	fi
 fi
 
-[ -z "$iface" ] && iface=$("$BIN/v-list-sys-interfaces" plain | head -n 1) # Get first available system interface, if none defined
-[ -z "$iface" ] && iface='eth0'                                            # eth0, if still not defined
+[ -z "$iface" ] && iface=$("$BIN/v-list-sys-interfaces" plain | head -n 1)                              # Get first available system interface, if none defined
+[ -z "$iface" ] && iface="$(ip route | sed -ne '/default/s/default.*dev[\t ]\([^\t^ ]*\)[\t ].*/\1/p')" # Get system interface from default route, if still not defined
+[ -z "$iface" ] && check_result 4 "Unable to determine the network interface automatically!" > /dev/null
 
 is_format_valid 'netmask' 'cidr' 'prefix_length' 'iface' 'user' 'ip_status'
 is_ip_free "$ip46"

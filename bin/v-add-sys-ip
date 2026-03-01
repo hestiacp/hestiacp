@@ -100,7 +100,7 @@ if [ -n "$ip_format" ]; then
 		broadcast=$(get_broadcast "$ip" "$netmask") # generate broadcast
 		full_ip46="$ip$cidr"
 		netmask_prelen="$netmask"
-		closed_ip="$ip"
+		formatted_ip="$ip"
 	fi
 	if [ $ip_format -eq 6 ]; then
 		ip=''
@@ -116,7 +116,7 @@ if [ -n "$ip_format" ]; then
 		broadcast=""                      # reset broadcast
 		full_ip46="$ipv6$prefix_length"
 		netmask_prelen="$prefix_length"
-		closed_ip="[$ipv6]"
+		formatted_ip="[$ipv6]"
 		add_cap_string_ipv6="V6"
 	fi
 fi

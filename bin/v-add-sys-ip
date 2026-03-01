@@ -237,7 +237,7 @@ if [ -n "$WEB_SYSTEM" ]; then
 			echo "NameVirtualHost ${formatted_ip}:$WEB_PORT" > "$web_conf"
 		fi
 		echo "Listen ${formatted_ip}:$WEB_PORT" >> "$web_conf"
-		cat $HESTIA_INSTALL_DIR/apache2/unassigned.conf >> "$web_conf"
+		cat "$HESTIA_INSTALL_DIR/apache2/unassigned.conf" >> "$web_conf"
 		[ -n "$ip_format" ] && [ $ip_format -eq 6 ] && sed -i 's/\(VirtualHost \)directIP/\1'${formatted_ip}'/g' "$web_conf"
 		sed -i 's/directIP/'${ip46}'/g' "$web_conf"
 		sed -i 's/directPORT/'$WEB_PORT'/g' "$web_conf"

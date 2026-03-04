@@ -1300,6 +1300,13 @@ rm -f $HESTIA/conf/hestia.conf > /dev/null 2>&1
 touch $HESTIA/conf/hestia.conf
 chmod 660 $HESTIA/conf/hestia.conf
 
+# IPV6 support
+if [ "$ipv6_support" = 'yes' ]; then
+	write_config_value "IPV6_SUPPORT" "yes"
+else
+	write_config_value "IPV6_SUPPORT" "no"
+fi
+
 # Write default port value to hestia.conf
 # If a custom port is specified it will be set at the end of the installation process
 write_config_value "BACKEND_PORT" "8083"

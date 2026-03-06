@@ -54,6 +54,10 @@ class SessionStorage implements Service, SessionStorageInterface {
 		$this->getSession()->invalidate();
 	}
 
+	public function migrate($destroy = false, $lifetime = null): bool {
+		return $this->getSession()->migrate($destroy, $lifetime);
+	}
+
 	private function setSession(Session $session) {
 		return $this->request->setSession($session);
 	}

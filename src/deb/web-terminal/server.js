@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { execSync } from 'node:child_process';
+import { execFileSync, execSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 import { spawn } from 'node-pty';
 import { WebSocketServer } from 'ws';
@@ -51,17 +51,27 @@ wss.on('connection', (ws, req) => {
 	const sessionID = req.headers.cookie.split(`${sessionName}=`)[1].split(';')[0];
 	console.log(`New connection from ${remoteIP} (${sessionID})`);
 
-	const file = readFileSync(`${process.env.HESTIA}/data/sessions/sess_${sessionID}`);
-	if (!file) {
-		console.error(`Invalid session ID ${sessionID}, refusing connection`);
+	let authResult;
+	try {
+		const raw = execFileSync(
+			`${process.env.HESTIA}/php/bin/php`,
+			[`${process.env.HESTIA}/web-terminal/web-terminal-session-auth.php`, sessionID],
+			{ encoding: 'utf8' },
+		);
+		authResult = JSON.parse(raw);
+	} catch (error) {
+		console.error(`Session helper failed for ${sessionID}, refusing connection: ${error.message}`);
 		ws.close(1000, 'Your session has expired.');
 		return;
 	}
-	const session = file.toString();
 
-	// Get username
-	const login = session.split('user|s:')[1].split('"')[1];
-	const impersonating = session.split('look|s:')[1].split('"')[1];
+	if (!authResult?.ok || typeof authResult.user !== 'string' || authResult.user.length === 0) {
+		console.error(`Unauthenticated session ${sessionID}, refusing connection`);
+		ws.close(1000, 'You are not authenticated.');
+		return;
+	}
+	const login = authResult.user;
+	const impersonating = typeof authResult.look === 'string' ? authResult.look : '';
 	const username = impersonating.length > 0 ? impersonating : login;
 
 	// Get user info

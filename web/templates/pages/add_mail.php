@@ -36,14 +36,14 @@
 			<?php if ($_SESSION["role"] == "admin" && $accept !== "true") { ?>
 				<div class="alert alert-danger" role="alert">
 					<i class="fas fa-exclamation"></i>
-					<p><?= tohtml(htmlify_trans(
+						<p><?= htmlify_trans(
      	sprintf(
      		_("It is strongly advised to {create a standard user account} before adding %s to the server due to the increased privileges the admin account possesses and potential security risks."),
      		_("a mail domain"),
      	),
      	"</a>",
      	'<a href="/add/user/">',
-     )) ?></p>
+     ) ?></p>
 				</div>
 			<?php } ?>
 			<?php if ($_SESSION["role"] == "admin" && empty($accept)) { ?>

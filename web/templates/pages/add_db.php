@@ -46,9 +46,11 @@
 				</div>
 			<?php } ?>
 			<?php if (($_SESSION["role"] == "admin" && $accept === "true") || $_SESSION["role"] !== "admin") { ?>
-				<p class="hint u-mb20">
-					<?= tohtml(sprintf(_("Prefix %s will be automatically added to database name and database user"), "<span class=\"u-text-bold\">" . $user_plain . "_</span>")) ?>
-				</p>
+					<p class="hint u-mb20">
+						<?= tohtml(_("Prefix")) ?>
+						<span class="u-text-bold"><?= tohtml($user_plain) ?>_</span>
+						<?= tohtml(_("will be automatically added to database name and database user")) ?>
+					</p>
 				<div class="u-mb10">
 					<label for="v_database" class="form-label"><?= tohtml( _("Database")) ?></label>
 					<input type="text" class="form-control js-db-hint-database-name" name="v_database" id="v_database" value="<?= tohtml(trim($v_database, "'")) ?>">

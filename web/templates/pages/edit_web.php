@@ -306,15 +306,15 @@
 							<select class="form-select" name="v_backend_template" id="v_backend_template">
 								<?php
 									foreach ($backend_templates as $key => $value) {
-										echo "\t\t\t\t<option value=\"".$value."\"";
+										echo "\t\t\t\t<option value=\"".tohtml($value)."\"";
 										$svalue = "'".$value."'";
-										if ((!empty($v_backend_template)) && ( $value == $v_backend_template ) || ($svalue == $v_backend_template)){
+										if ((!empty($v_backend_template)) && (($value == $v_backend_template) || ($svalue == $v_backend_template))) {
 											echo ' selected' ;
 										}
 										if ((empty($v_backend_template)) && ($value == 'default')){
 											echo ' selected' ;
 										}
-										echo ">".htmlentities($value)."</option>\n";
+										echo ">".tohtml($value)."</option>\n";
 									}
 								?>
 							</select>
@@ -335,15 +335,15 @@
 								<select class="form-select js-proxy-template-select" name="v_proxy_template" id="v_proxy_template">
 									<?php
 										foreach ($proxy_templates as $key => $value) {
-											echo "\t\t\t\t<option value=\"".htmlentities($value)."\"";
+											echo "\t\t\t\t<option value=\"".tohtml($value)."\"";
 											$svalue = "'".$value."'";
-											if ((!empty($v_proxy_template)) && ( $value == $v_proxy_template ) || ($svalue == $v_proxy_template)){
+											if ((!empty($v_proxy_template)) && (($value == $v_proxy_template) || ($svalue == $v_proxy_template))) {
 												echo ' selected' ;
 											}
 											if ((empty($v_proxy_template)) && ($value == 'default')){
 												echo ' selected' ;
 											}
-											echo ">".htmlentities($value)."</option>\n";
+											echo ">".tohtml($value)."</option>\n";
 										}
 									?>
 								</select>

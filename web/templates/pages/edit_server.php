@@ -24,25 +24,28 @@
 </div>
 <!-- End toolbar -->
 
-<!-- Begin form -->
-<div class="container">
-	<form
-		x-data="{
-			timezone: '<?= tohtml($v_timezone ?? "") ?>',
-			theme: '<?= tohtml($_SESSION["THEME"]) ?>',
-			language: '<?= tohtml($_SESSION["LANGUAGE"]) ?>',
-			hasSmtpRelay: <?= tohtml($v_smtp_relay == "true" ? "true" : "false") ?>,
-			remoteBackupEnabled: <?= tohtml(!empty($v_backup_remote_adv) ? "true" : "false") ?>,
-			incrementalBackups: '<?= tohtml($v_backup_incremental ?? '') ?>',
-			backupType: '<?= tohtml((!empty($v_backup_type)) ? trim($v_backup_type, "'") : "") ?>',
-			webmailAlias: '<?= tohtml($_SESSION["WEBMAIL_ALIAS"] ?? "") ?>',
-			apiSystem: '<?= tohtml($_SESSION["API_SYSTEM"]) ?>',
-			legacyApi: '<?= tohtml($_SESSION["API"]) ?>',
-		}"
-		id="main-form"
-		name="v_configure_server"
-		method="post"
-	>
+	<!-- Begin form -->
+	<div class="container">
+		<?php
+			$server_x_data = [
+				"timezone" => $v_timezone ?? "",
+				"theme" => $_SESSION["THEME"],
+				"language" => $_SESSION["LANGUAGE"],
+				"hasSmtpRelay" => $v_smtp_relay == "true",
+				"remoteBackupEnabled" => !empty($v_backup_remote_adv),
+				"incrementalBackups" => $v_backup_incremental ?? "",
+				"backupType" => !empty($v_backup_type) ? trim($v_backup_type, "'") : "",
+				"webmailAlias" => $_SESSION["WEBMAIL_ALIAS"] ?? "",
+				"apiSystem" => $_SESSION["API_SYSTEM"],
+				"legacyApi" => $_SESSION["API"],
+			];
+		?>
+			<form
+				x-data="<?= tohtml(json_encode($server_x_data, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_THROW_ON_ERROR)) ?>"
+				id="main-form"
+				name="v_configure_server"
+				method="post"
+			>
 		<input type="hidden" name="token" value="<?= tohtml($_SESSION["token"]) ?>">
 		<input type="hidden" name="save" value="save">
 

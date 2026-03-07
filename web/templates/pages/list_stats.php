@@ -3,15 +3,15 @@
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
 			<?php if ($_SESSION["userContext"] === "admin" && $_SESSION["look"] == '') { ?>
-				<a class="button button-secondary" href='/list/stats/'><i class="fas fa-binoculars icon-lightblue"></i><?= _("Overall Statistics") ?></a>
+				<a class="button button-secondary" href='/list/stats/'><i class="fas fa-binoculars icon-lightblue"></i><?= tohtml( _("Overall Statistics")) ?></a>
 			<?php } ?>
 		</div>
 		<div class="toolbar-right">
 			<?php if ($_SESSION["userContext"] === "admin" && $_SESSION["look"] == '') { ?>
 				<form x-data x-bind="BulkEdit" action="/list/stats/" method="get">
-					<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
+					<input type="hidden" name="token" value="<?= tohtml($_SESSION["token"]) ?>">
 					<select class="form-select" name="user">
-						<option value=""><?= _("Show Per User") ?></option>
+						<option value=""><?= tohtml( _("Show Per User")) ?></option>
 						<?php
 							foreach ($users as $key => $value) {
 								if (($_SESSION['POLICY_SYSTEM_HIDE_ADMIN'] === 'yes') && ($value === 'admin')) {
@@ -26,16 +26,16 @@
 							}
 						?>
 					</select>
-					<button type="submit" class="toolbar-input-submit" title="<?= _("Apply to selected") ?>">
+					<button type="submit" class="toolbar-input-submit" title="<?= tohtml( _("Apply to selected")) ?>">
 						<i class="fas fa-arrow-right"></i>
 					</button>
 				</form>
 			<?php } ?>
 			<div class="toolbar-search">
 				<form action="/search/" method="get">
-					<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
-					<input type="search" class="form-control js-search-input" name="q" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" title="<?= _("Search") ?>">
-					<button type="submit" class="toolbar-input-submit" title="<?= _("Search") ?>">
+					<input type="hidden" name="token" value="<?= tohtml($_SESSION["token"]) ?>">
+					<input type="search" class="form-control js-search-input" name="q" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" title="<?= tohtml( _("Search")) ?>">
+					<button type="submit" class="toolbar-input-submit" title="<?= tohtml( _("Search")) ?>">
 						<i class="fas fa-magnifying-glass"></i>
 					</button>
 				</form>
@@ -66,75 +66,75 @@
 					<div class="stats-item-summary">
 						<h3 class="stats-item-summary-title">
 							<span class="u-text-bold">
-								<i class="fas fa-right-left icon-dim icon-large u-mr5" title="<?= _("Bandwidth") ?>"></i>
-								<?= _("Bandwidth") ?>
+								<i class="fas fa-right-left icon-dim icon-large u-mr5" title="<?= tohtml( _("Bandwidth")) ?>"></i>
+								<?= tohtml( _("Bandwidth")) ?>
 							</span>
 							<span class="u-mr10">
-								<span class="u-text-bold"><?= humanize_usage_size($data[$key]["U_BANDWIDTH"]) ?></span>
-								<?= humanize_usage_measure($data[$key]["U_BANDWIDTH"]) ?> / <span class="u-text-bold"><?= humanize_usage_size($data[$key]["BANDWIDTH"]) ?></span>
-									<?= humanize_usage_measure($data[$key]["BANDWIDTH"]) ?>
+								<span class="u-text-bold"><?= tohtml(humanize_usage_size($data[$key]["U_BANDWIDTH"])) ?></span>
+								<?= tohtml(humanize_usage_measure($data[$key]["U_BANDWIDTH"])) ?> / <span class="u-text-bold"><?= tohtml(humanize_usage_size($data[$key]["BANDWIDTH"])) ?></span>
+									<?= tohtml(humanize_usage_measure($data[$key]["BANDWIDTH"])) ?>
 							</span>
 						</h3>
 						<ul class="stats-item-summary-list u-mb10">
 							<li class="stats-item-summary-list-item">
 								<span>
 									<?php if ($_SESSION["userContext"] === "admin" || ($_SESSION["userContext"] === "user" && $data[$key]["IP_OWNED"] != "0")) { ?>
-										<?= _("IP Addresses") ?>:
+										<?= tohtml( _("IP Addresses")) ?>:
 									<?php } ?>
 								</span>
 								<span>
-									<span class="u-text-bold"><?= $data[$key]["IP_OWNED"] ?></span>
-									<?= _("IPs") ?>
+									<span class="u-text-bold"><?= tohtml($data[$key]["IP_OWNED"]) ?></span>
+									<?= tohtml( _("IPs")) ?>
 								</span>
 							</li>
 						</ul>
 						<h3 class="stats-item-summary-title">
 							<span class="u-text-bold">
 								<i class="fas fa-hard-drive icon-dim icon-large u-mr5" title="Disk"></i>
-								<?= _("Disk") ?>
+								<?= tohtml( _("Disk")) ?>
 							</span>
 							<span class="u-mr10">
-								<span class="u-text-bold"><?= humanize_usage_size($data[$key]["U_DISK"]) ?></span>
-								<?= humanize_usage_measure($data[$key]["U_DISK"]) ?> / <span class="u-text-bold"><?= humanize_usage_size($data[$key]["DISK_QUOTA"]) ?></span>
-										<?= humanize_usage_measure($data[$key]["DISK_QUOTA"]) ?>
+								<span class="u-text-bold"><?= tohtml(humanize_usage_size($data[$key]["U_DISK"])) ?></span>
+								<?= tohtml(humanize_usage_measure($data[$key]["U_DISK"])) ?> / <span class="u-text-bold"><?= tohtml(humanize_usage_size($data[$key]["DISK_QUOTA"])) ?></span>
+										<?= tohtml(humanize_usage_measure($data[$key]["DISK_QUOTA"])) ?>
 								</span>
 							</span>
 						</h3>
 						<ul class="stats-item-summary-list">
 							<li class="stats-item-summary-list-item">
 								<span>
-									<?= _("Web") ?>:
+									<?= tohtml( _("Web")) ?>:
 								</span>
 								<span>
-									<span class="u-text-bold"><?= humanize_usage_size($data[$key]["U_DISK_WEB"]) ?></span>
-									<?= humanize_usage_measure($data[$key]["U_DISK_WEB"]) ?>
+									<span class="u-text-bold"><?= tohtml(humanize_usage_size($data[$key]["U_DISK_WEB"])) ?></span>
+									<?= tohtml(humanize_usage_measure($data[$key]["U_DISK_WEB"])) ?>
 								</span>
 							</li>
 							<li class="stats-item-summary-list-item u-mb5">
 								<span>
-									<?= _("Databases") ?>:
+									<?= tohtml( _("Databases")) ?>:
 								</span>
 								<span>
-									<span class="u-text-bold"><?= humanize_usage_size($data[$key]["U_DISK_DB"]) ?></span>
-									<?= humanize_usage_measure($data[$key]["U_DISK_DB"]) ?>
-								</span>
-							</li>
-							<li class="stats-item-summary-list-item">
-								<span>
-									<?= _("Mail") ?>:
-								</span>
-								<span>
-									<span class="u-text-bold"><?= humanize_usage_size($data[$key]["U_DISK_MAIL"]) ?></span>
-									<?= humanize_usage_measure($data[$key]["U_DISK_MAIL"]) ?>
+									<span class="u-text-bold"><?= tohtml(humanize_usage_size($data[$key]["U_DISK_DB"])) ?></span>
+									<?= tohtml(humanize_usage_measure($data[$key]["U_DISK_DB"])) ?>
 								</span>
 							</li>
 							<li class="stats-item-summary-list-item">
 								<span>
-									<?= _("User Directory") ?>:
+									<?= tohtml( _("Mail")) ?>:
 								</span>
 								<span>
-									<span class="u-text-bold"><?= humanize_usage_size($data[$key]["U_DISK_DIRS"]) ?></span>
-									<?= humanize_usage_measure($data[$key]["U_DISK_DIRS"]) ?>
+									<span class="u-text-bold"><?= tohtml(humanize_usage_size($data[$key]["U_DISK_MAIL"])) ?></span>
+									<?= tohtml(humanize_usage_measure($data[$key]["U_DISK_MAIL"])) ?>
+								</span>
+							</li>
+							<li class="stats-item-summary-list-item">
+								<span>
+									<?= tohtml( _("User Directory")) ?>:
+								</span>
+								<span>
+									<span class="u-text-bold"><?= tohtml(humanize_usage_size($data[$key]["U_DISK_DIRS"])) ?></span>
+									<?= tohtml(humanize_usage_measure($data[$key]["U_DISK_DIRS"])) ?>
 								</span>
 							</li>
 						</ul>
@@ -143,82 +143,82 @@
 					<ul class="stats-item-list">
 						<li class="stats-item-list-item">
 							<span class="stats-item-list-item-label">
-								<?= _("Web Domains") ?>:
+								<?= tohtml( _("Web Domains")) ?>:
 							</span>
 							<span class="stats-item-list-item-value">
-								<?= $data[$key]["U_WEB_DOMAINS"] ?>
+								<?= tohtml($data[$key]["U_WEB_DOMAINS"]) ?>
 							</span>
 						</li>
 						<li class="stats-item-list-item">
 							<span class="stats-item-list-item-label">
-								<?= _("Mail Domains") ?>:
+								<?= tohtml( _("Mail Domains")) ?>:
 							</span>
 							<span class="stats-item-list-item-value">
-								<?= $data[$key]["U_MAIL_DOMAINS"] ?>
+								<?= tohtml($data[$key]["U_MAIL_DOMAINS"]) ?>
 							</span>
 						</li>
 						<li class="stats-item-list-item">
 							<span class="stats-item-list-item-label">
-								<?= _("SSL Domains") ?>:
+								<?= tohtml( _("SSL Domains")) ?>:
 							</span>
 							<span class="stats-item-list-item-value">
-								<?= $data[$key]["U_WEB_SSL"] ?>
+								<?= tohtml($data[$key]["U_WEB_SSL"]) ?>
 							</span>
 						</li>
 						<li class="stats-item-list-item">
 							<span class="stats-item-list-item-label">
-								<?= _("Mail Accounts") ?>:
+								<?= tohtml( _("Mail Accounts")) ?>:
 							</span>
 							<span class="stats-item-list-item-value">
-								<?= $data[$key]["U_MAIL_ACCOUNTS"] ?>
+								<?= tohtml($data[$key]["U_MAIL_ACCOUNTS"]) ?>
 							</span>
 						</li>
 						<li class="stats-item-list-item">
 							<span class="stats-item-list-item-label">
-								<?= _("Web Aliases") ?>:
+								<?= tohtml( _("Web Aliases")) ?>:
 							</span>
 							<span class="stats-item-list-item-value">
-								<?= $data[$key]["U_WEB_ALIASES"] ?>
+								<?= tohtml($data[$key]["U_WEB_ALIASES"]) ?>
 							</span>
 						</li>
 						<li class="stats-item-list-item">
 							<span class="stats-item-list-item-label">
-								<?= _("Databases") ?>:
+								<?= tohtml( _("Databases")) ?>:
 							</span>
 							<span class="stats-item-list-item-value">
-								<?= $data[$key]["U_DATABASES"] ?>
+								<?= tohtml($data[$key]["U_DATABASES"]) ?>
 							</span>
 						</li>
 						<li class="stats-item-list-item">
 							<span class="stats-item-list-item-label">
-								<?= _("DNS Zones") ?>:
+								<?= tohtml( _("DNS Zones")) ?>:
 							</span>
 							<span class="stats-item-list-item-value">
-								<?= $data[$key]["U_DNS_DOMAINS"] ?>
+								<?= tohtml($data[$key]["U_DNS_DOMAINS"]) ?>
 							</span>
 						</li>
 						<li class="stats-item-list-item">
 							<span class="stats-item-list-item-label">
-								<?= _("Cron Jobs") ?>:
+								<?= tohtml( _("Cron Jobs")) ?>:
 							</span>
 							<span class="stats-item-list-item-value">
-								<?= $data[$key]["U_CRON_JOBS"] ?>
+								<?= tohtml($data[$key]["U_CRON_JOBS"]) ?>
 							</span>
 						</li>
 						<li class="stats-item-list-item">
 							<span class="stats-item-list-item-label">
-								<?= _("DNS Records") ?>:
+								<?= tohtml( _("DNS Records")) ?>:
 							</span>
 							<span class="stats-item-list-item-value">
-								<?= $data[$key]["U_DNS_RECORDS"] ?>
+								<?= tohtml($data[$key]["U_DNS_RECORDS"]) ?>
 							</span>
 						</li>
 						<li class="stats-item-list-item">
 							<span class="stats-item-list-item-label">
-								<?= _("Backups") ?>:
+								<?= tohtml( _("Backups")) ?>:
 							</span>
 							<span class="stats-item-list-item-value">
-								<?= $data[$key]["U_BACKUPS"] ?>
+								<?= tohtml($data[$key]["U_BACKUPS"]) ?>
 							</span>
 						</li>
 					</ul>

@@ -8,8 +8,8 @@ if( !defined("HESTIA_DIR_BIN") ){
 		type="button"
 		class="debug-panel-toggle"
 		x-on:click="open = !open"
-		x-text="open ? '<?= _("Close debug panel") ?>' : '<?= _("Open debug panel") ?>'">
-		<?= _("Open debug panel") ?>
+		x-text="open ? '<?= tohtml( _("Close debug panel")) ?>' : '<?= tohtml( _("Open debug panel")) ?>'">
+		<?= tohtml( _("Open debug panel")) ?>
 	</button>
 	<div x-cloak x-show="open" class="debug-panel-content">
 		<?php

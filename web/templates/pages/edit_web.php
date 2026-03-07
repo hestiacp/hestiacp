@@ -410,7 +410,7 @@
 									<?= tohtml( _("Username")) ?><br>
 									<span style="color:#777;"><?= tohtml(sprintf(_('Prefix %s will be added to username automatically'),$user_plain."_")) ?></span>
 								</label>
-								<input type="text" class="form-control js-ftp-user" <?= tohtml($ftp_user['is_new'] != 1 ? 'disabled="disabled"' : '') ?>
+								<input type="text" class="form-control js-ftp-user"<?= $ftp_user['is_new'] != 1 ? ' disabled="disabled"' : '' ?>
 								name="v_ftp_user[<?= tohtml($i) ?>][v_ftp_user]" id="v_ftp_user[<?= tohtml($i) ?>][v_ftp_user]" value="<?= tohtml(trim($v_ftp_user, "'")) ?>">
 								<small class="hint js-ftp-user-hint"></small>
 							</div>

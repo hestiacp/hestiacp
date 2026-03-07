@@ -77,7 +77,7 @@
 	<div class="units-table js-units-container">
 		<div class="units-table-header">
 			<div class="units-table-cell">
-				<input type="checkbox" class="js-toggle-all-checkbox" title="<?= tohtml( _("Select all")) ?>" <?= tohtml($display_mode) ?>>
+				<input type="checkbox" class="js-toggle-all-checkbox" title="<?= tohtml( _("Select all")) ?>"<?= $display_mode === "disabled" ? " disabled" : "" ?>>
 			</div>
 			<div class="units-table-cell"><?= tohtml( _("Record")) ?></div>
 			<div class="units-table-cell"></div>
@@ -105,7 +105,7 @@
 					data-sort-value="<?= tohtml($data[$key]['VALUE']) ?>">
 					<div class="units-table-cell">
 						<div>
-							<input id="check<?= tohtml($data[$key]["ID"]) ?>" class="js-unit-checkbox" type="checkbox" title="<?= tohtml( _("Select")) ?>" name="record[]" value="<?= tohtml($data[$key]["ID"]) ?>" <?= tohtml($display_mode) ?>>
+							<input id="check<?= tohtml($data[$key]["ID"]) ?>" class="js-unit-checkbox" type="checkbox" title="<?= tohtml( _("Select")) ?>" name="record[]" value="<?= tohtml($data[$key]["ID"]) ?>"<?= $display_mode === "disabled" ? " disabled" : "" ?>>
 							<label for="check<?= tohtml($data[$key]["ID"]) ?>" class="u-hide-desktop"><?= tohtml( _("Select")) ?></label>
 						</div>
 					</div>

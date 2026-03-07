@@ -3,17 +3,17 @@
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
 			<?php if ($_SESSION["userContext"] === "admin" && $_SESSION['look'] !== '' && $_GET["user"] !== $_SESSION['ROOT_USER']) { ?>
-				<a href="/edit/user/?user=<?= tohtml( htmlentities($_SESSION["look"])) ?>&token=<?= tohtml($_SESSION["token"]) ?>" class="button button-secondary button-back js-button-back">
+				<a href="/edit/user/?user=<?= tohtml($_SESSION["look"]) ?>&token=<?= tohtml($_SESSION["token"]) ?>" class="button button-secondary button-back js-button-back">
 					<i class="fas fa-arrow-left icon-blue"></i><?= tohtml( _("Back")) ?>
 				</a>
 			<?php } else { ?>
-				<a href="/edit/user/?user=<?= tohtml( htmlentities($_SESSION["user"])) ?>&token=<?= tohtml($_SESSION["token"]) ?>" class="button button-secondary button-back js-button-back">
+				<a href="/edit/user/?user=<?= tohtml($_SESSION["user"]) ?>&token=<?= tohtml($_SESSION["token"]) ?>" class="button button-secondary button-back js-button-back">
 					<i class="fas fa-arrow-left icon-blue"></i><?= tohtml( _("Back")) ?>
 				</a>
 			<?php } ?>
 
 			<?php if ($_SESSION["userContext"] === "admin" && isset($_GET["user"]) && $_GET["user"] !== "admin") { ?>
-				<a href="/add/key/?user=<?= tohtml( htmlentities($_GET["user"])) ?>" class="button button-secondary js-button-create">
+				<a href="/add/key/?user=<?= tohtml($_GET["user"]) ?>" class="button button-secondary js-button-create">
 					<i class="fas fa-circle-plus icon-green"></i><?= tohtml( _("Add SSH Key")) ?>
 				</a>
 			<?php } else { ?>
@@ -47,7 +47,7 @@
 				<div class="units-table-cell units-table-heading-cell u-text-bold">
 					<span class="u-hide-desktop"><?= tohtml( _("SSH ID")) ?>:</span>
 					<span class="u-text-break">
-						<?= tohtml( htmlspecialchars($data[$key]["ID"])) ?>
+						<?= tohtml($data[$key]["ID"]) ?>
 					</span>
 				</div>
 				<div class="units-table-cell">
@@ -56,7 +56,7 @@
 							<a
 								class="units-table-row-action-link data-controls js-confirm-action"
 								<?php if ($_SESSION["userContext"] === "admin" && isset($_GET["user"]) && $_GET["user"] !== "admin") { ?>
-									href="/delete/key/?user=<?= tohtml( htmlentities($_GET["user"])) ?>&key=<?= tohtml($key) ?>&token=<?= tohtml($_SESSION["token"]) ?>"
+									href="/delete/key/?user=<?= tohtml($_GET["user"]) ?>&key=<?= tohtml($key) ?>&token=<?= tohtml($_SESSION["token"]) ?>"
 								<?php } else { ?>
 									href="/delete/key/?key=<?= tohtml($key) ?>&token=<?= tohtml($_SESSION["token"]) ?>"
 								<?php } ?>
@@ -73,7 +73,7 @@
 				<div class="units-table-cell u-text-bold">
 					<span class="u-hide-desktop"><?= tohtml( _("SSH Key")) ?>:</span>
 					<span class="u-text-break">
-						<?= tohtml( htmlspecialchars($data[$key]["KEY"], ENT_QUOTES)) ?>
+						<?= tohtml($data[$key]["KEY"]) ?>
 					</span>
 				</div>
 			</div>

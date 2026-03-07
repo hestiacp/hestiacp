@@ -43,7 +43,7 @@
 				<label for="v_port" class="form-label">
 					<?= tohtml( _("Port")) ?> <span class="optional">(<?= tohtml( _("Ranges and lists are acceptable")) ?>)</span>
 				</label>
-				<input type="text" class="form-control" name="v_port" id="v_port" value="<?= tohtml( htmlentities(trim($v_port, "'"))) ?>" placeholder="<?= tohtml( _("All ports: 0, Range: 80-82, List: 80,443,8080,8443")) ?>">
+				<input type="text" class="form-control" name="v_port" id="v_port" value="<?= tohtml(trim($v_port, "'")) ?>" placeholder="<?= tohtml( _("All ports: 0, Range: 80-82, List: 80,443,8080,8443")) ?>">
 			</div>
 			<div class="u-mb10">
 				<label for="v_ip" class="form-label">
@@ -54,18 +54,18 @@
 						class="form-select js-ip-list-select"
 						tabindex="-1"
 						onchange="this.nextElementSibling.value=this.value"
-						data-ipset-lists="<?= tohtml( htmlspecialchars($ipset_lists_json, ENT_QUOTES, "UTF-8")) ?>"
+						data-ipset-lists="<?= tohtml($ipset_lists_json) ?>"
 					>
 						<option value=""><?= tohtml( _("Clear")) ?></option>
 					</select>
-					<input type="text" class="form-control list-editor" name="v_ip" id="v_ip" value="<?= tohtml( htmlentities(trim($v_ip, "'"))) ?>">
+					<input type="text" class="form-control list-editor" name="v_ip" id="v_ip" value="<?= tohtml(trim($v_ip, "'")) ?>">
 				</div>
 			</div>
 			<div class="u-mb10">
 				<label for="v_comment" class="form-label">
 					<?= tohtml( _("Comment")) ?> <span class="optional">(<?= tohtml( _("Optional")) ?>)</span>
 				</label>
-				<input type="text" class="form-control" name="v_comment" id="v_comment" maxlength="255" value="<?= tohtml( htmlentities(trim($v_comment, "'"))) ?>">
+				<input type="text" class="form-control" name="v_comment" id="v_comment" maxlength="255" value="<?= tohtml(trim($v_comment, "'")) ?>">
 			</div>
 		</div>
 

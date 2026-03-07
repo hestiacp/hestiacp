@@ -2,7 +2,7 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<a class="button button-secondary button-back js-button-back" href="/list/mail/?domain=<?= tohtml( htmlentities(trim($v_domain, "'"))) ?>&token=<?= tohtml($_SESSION["token"]) ?>">
+			<a class="button button-secondary button-back js-button-back" href="/list/mail/?domain=<?= tohtml(trim($v_domain, "'")) ?>&token=<?= tohtml($_SESSION["token"]) ?>">
 				<i class="fas fa-arrow-left icon-blue"></i><?= tohtml( _("Back")) ?>
 			</a>
 		</div>
@@ -35,12 +35,12 @@
 				<div class="sidebar-right-grid-content">
 					<div class="u-mb10">
 						<label for="v_domain" class="form-label"><?= tohtml( _("Domain")) ?></label>
-						<input type="text" class="form-control" name="v_domain" id="v_domain" value="<?= tohtml( htmlentities(trim($v_domain, "'"))) ?>" disabled>
-						<input type="hidden" name="v_domain" value="<?= tohtml( htmlentities(trim($v_domain, "'"))) ?>">
+						<input type="text" class="form-control" name="v_domain" id="v_domain" value="<?= tohtml(trim($v_domain, "'")) ?>" disabled>
+						<input type="hidden" name="v_domain" value="<?= tohtml(trim($v_domain, "'")) ?>">
 					</div>
 					<div class="u-mb10">
 						<label for="v_account" class="form-label"><?= tohtml( _("Account")) ?></label>
-						<input type="text" class="form-control js-account-input" name="v_account" id="v_account" value="<?= tohtml( htmlentities(trim($v_account, "'"))) ?>" required>
+						<input type="text" class="form-control js-account-input" name="v_account" id="v_account" value="<?= tohtml(trim($v_account, "'")) ?>" required>
 					</div>
 					<div class="u-mb10">
 						<label for="v_password" class="form-label">
@@ -71,7 +71,7 @@
 								<?= tohtml( _("Quota")) ?> <span class="optional">(<?= tohtml( _("in MB")) ?>)</span>
 							</label>
 							<div class="u-pos-relative">
-								<input type="text" class="form-control" name="v_quota" id="v_quota" value="<?= tohtml( htmlentities(trim($v_quota, "'"))) ?>">
+								<input type="text" class="form-control" name="v_quota" id="v_quota" value="<?= tohtml(trim($v_quota, "'")) ?>">
 								<button type="button" class="unlimited-toggle js-unlimited-toggle" title="<?= tohtml( _("Unlimited")) ?>">
 									<i class="fas fa-infinity"></i>
 								</button>
@@ -81,13 +81,13 @@
 							<label for="v_aliases" class="form-label">
 								<?= tohtml( _("Aliases")) ?> <span class="optional">(<?= tohtml( _("Use local-part without domain name")) ?>)</span>
 							</label>
-							<textarea class="form-control" name="v_aliases" id="v_aliases"><?= tohtml( htmlentities(trim($v_aliases, "'"))) ?></textarea>
+							<textarea class="form-control" name="v_aliases" id="v_aliases"><?= tohtml(trim($v_aliases, "'")) ?></textarea>
 						</div>
 						<div class="u-mb10">
 							<label for="v_fwd" class="form-label">
 								<?= tohtml( _("Forward to")) ?> <span class="optional">(<?= tohtml( _("One or more email addresses")) ?>)</span>
 							</label>
-							<textarea class="form-control js-forward-to-textarea" name="v_fwd" id="v_fwd" <?php if ($v_blackhole == 'yes') echo "disabled"; ?>><?= tohtml( htmlentities(trim($v_fwd, "'"))) ?></textarea>
+							<textarea class="form-control js-forward-to-textarea" name="v_fwd" id="v_fwd" <?php if ($v_blackhole == 'yes') echo "disabled"; ?>><?= tohtml(trim($v_fwd, "'")) ?></textarea>
 						</div>
 						<div class="form-check">
 							<input class="form-check-input js-discard-all-mail" type="checkbox" name="v_blackhole" id="v_blackhole" <?php if ($v_blackhole == 'yes') echo 'checked' ?>>
@@ -105,14 +105,14 @@
 							<label for="v_rate" class="form-label">
 								<?= tohtml( _("Rate Limit")) ?> <span class="optional">(<?= tohtml( _("email / hour")) ?>)</span>
 							</label>
-							<input type="text" class="form-control" name="v_rate" id="v_rate" value="<?= tohtml( htmlentities(trim($v_rate, "'"))) ?>" <?php if ($_SESSION['userContext'] != "admin"){ echo "disabled"; }?>>
+							<input type="text" class="form-control" name="v_rate" id="v_rate" value="<?= tohtml(trim($v_rate, "'")) ?>" <?php if ($_SESSION['userContext'] != "admin"){ echo "disabled"; }?>>
 						</div>
 					</div>
 					<div class="u-mt15 u-mb20">
 						<label for="v_send_email" class="form-label">
 							<?= tohtml( _("Email login credentials to:")) ?>
 						</label>
-						<input type="email" class="form-control" name="v_send_email" id="v_send_email" value="<?= tohtml( htmlentities(trim($v_send_email, "'"))) ?>">
+						<input type="email" class="form-control" name="v_send_email" id="v_send_email" value="<?= tohtml(trim($v_send_email, "'")) ?>">
 					</div>
 				</div>
 				<div class="sidebar-right-grid-sidebar">

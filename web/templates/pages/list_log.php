@@ -12,11 +12,11 @@
 				</a>
 			<?php } else { ?>
 				<?php if ($_SESSION["userContext"] === "admin" && $_SESSION['look'] !== '' && $_GET["user"] !== "admin") { ?>
-					<a href="/edit/user/?user=<?= tohtml( htmlentities($_SESSION["look"])) ?>&token=<?= tohtml($_SESSION["token"]) ?>" class="button button-secondary button-back js-button-back">
+					<a href="/edit/user/?user=<?= tohtml($_SESSION["look"]) ?>&token=<?= tohtml($_SESSION["token"]) ?>" class="button button-secondary button-back js-button-back">
 						<i class="fas fa-arrow-left icon-blue"></i><?= tohtml( _("Back")) ?>
 					</a>
 				<?php } else { ?>
-					<a href="/edit/user/?user=<?= tohtml( htmlentities($_SESSION["user"])) ?>&token=<?= tohtml($_SESSION["token"]) ?>" class="button button-secondary button-back js-button-back">
+					<a href="/edit/user/?user=<?= tohtml($_SESSION["user"]) ?>&token=<?= tohtml($_SESSION["token"]) ?>" class="button button-secondary button-back js-button-back">
 						<i class="fas fa-arrow-left icon-blue"></i><?= tohtml( _("Back")) ?>
 					</a>
 				<?php } ?>
@@ -25,7 +25,7 @@
 			if (($_SESSION['userContext'] === 'admin') && (htmlentities($_GET['user']) !== 'admin')) { ?>
 				<?php if (($_SESSION['userContext'] === 'admin') && ($_GET['user'] != '') && (htmlentities($_GET['user']) !== 'admin')) { ?>
 					<?php if (htmlentities($_GET['user']) !== 'system') { ?>
-						<a href="/list/log/auth/?user=<?= tohtml(htmlentities($_GET['user'])) ?>&token=<?= tohtml($_SESSION['token']) ?>" class="button button-secondary button-back js-button-back" title="<?= tohtml( _("Login History")) ?>">
+						<a href="/list/log/auth/?user=<?= tohtml($_GET['user']) ?>&token=<?= tohtml($_SESSION['token']) ?>" class="button button-secondary button-back js-button-back" title="<?= tohtml( _("Login History")) ?>">
 							<i class="fas fa-binoculars icon-green"></i><?= tohtml( _("Login History")) ?>
 						</a>
 					<?php } ?>
@@ -51,7 +51,7 @@
 					<a
 						class="button button-secondary button-danger data-controls js-confirm-action"
 						<?php if ($_SESSION["userContext"] === "admin" && isset($_GET["user"])) { ?>
-							href="/delete/log/?user=<?= tohtml( htmlentities($_GET["user"])) ?>&token=<?= tohtml($_SESSION["token"]) ?>"
+							href="/delete/log/?user=<?= tohtml($_GET["user"]) ?>&token=<?= tohtml($_SESSION["token"]) ?>"
 						<?php } else { ?>
 							href="/delete/log/?token=<?= tohtml($_SESSION["token"]) ?>"
 						<?php } ?>
@@ -104,25 +104,25 @@
 				</div>
 				<div class="units-table-cell units-table-heading-cell u-text-bold">
 					<span class="u-hide-desktop"><?= tohtml( _("Date")) ?>:</span>
-					<time datetime="<?= tohtml( htmlspecialchars($data[$key]["DATE"])) ?>" class="u-text-no-wrap">
+					<time datetime="<?= tohtml($data[$key]["DATE"]) ?>" class="u-text-no-wrap">
 						<?= tohtml(translate_date($data[$key]["DATE"])) ?>
 					</time>
 				</div>
 				<div class="units-table-cell u-text-bold">
 					<span class="u-hide-desktop"><?= tohtml( _("Time")) ?>:</span>
-					<time datetime="<?= tohtml( htmlspecialchars($data[$key]["TIME"])) ?>">
-						<?= tohtml( htmlspecialchars($data[$key]["TIME"])) ?>
+					<time datetime="<?= tohtml($data[$key]["TIME"]) ?>">
+						<?= tohtml($data[$key]["TIME"]) ?>
 					</time>
 				</div>
 				<div class="units-table-cell u-text-bold">
 					<span class="u-hide-desktop"><?= tohtml( _("Category")) ?>:</span>
 					<span class="u-text-no-wrap">
-						<?= tohtml( htmlspecialchars($data[$key]["CATEGORY"])) ?>
+						<?= tohtml($data[$key]["CATEGORY"]) ?>
 					</span>
 				</div>
 				<div class="units-table-cell">
 					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Message")) ?>:</span>
-					<?= tohtml( htmlspecialchars($data[$key]["MESSAGE"], ENT_QUOTES)) ?>
+					<?= tohtml($data[$key]["MESSAGE"]) ?>
 				</div>
 			</div>
 		<?php } ?>

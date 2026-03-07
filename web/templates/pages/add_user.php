@@ -33,15 +33,15 @@
 			<?php show_alert_message($_SESSION); ?>
 			<div class="u-mb10">
 				<label for="v_username" class="form-label"><?= tohtml( _("Username")) ?></label>
-				<input type="text" class="form-control" name="v_username" id="v_username" value="<?= tohtml( htmlentities(trim($v_username, "'"))) ?>" tabindex="1" required>
+				<input type="text" class="form-control" name="v_username" id="v_username" value="<?= tohtml(trim($v_username, "'")) ?>" tabindex="1" required>
 			</div>
 			<div class="u-mb10">
 				<label for="v_name" class="form-label"><?= tohtml( _("Contact Name")) ?></label>
-				<input type="text" class="form-control" name="v_name" id="v_name" value="<?= tohtml( htmlentities(trim($v_name, "'"))) ?>" tabindex="2" required>
+				<input type="text" class="form-control" name="v_name" id="v_name" value="<?= tohtml(trim($v_name, "'")) ?>" tabindex="2" required>
 			</div>
 			<div class="u-mb10">
 				<label for="v_email" class="form-label"><?= tohtml( _("Email")) ?></label>
-				<input type="email" class="form-control js-sync-email-input" name="v_email" id="v_email" value="<?= tohtml( htmlentities(trim($v_email, "'"))) ?>" tabindex="3" required>
+				<input type="email" class="form-control js-sync-email-input" name="v_email" id="v_email" value="<?= tohtml(trim($v_email, "'")) ?>" tabindex="3" required>
 			</div>
 			<div class="u-mb10">
 				<label for="v_password" class="form-label">
@@ -51,7 +51,7 @@
 					</button>
 				</label>
 				<div class="u-pos-relative u-mb10">
-					<input type="text" class="form-control js-password-input" name="v_password" id="v_password" value="<?= tohtml( htmlentities(trim($v_password, "'"))) ?>" tabindex="4" required>
+					<input type="text" class="form-control js-password-input" name="v_password" id="v_password" value="<?= tohtml(trim($v_password, "'")) ?>" tabindex="4" required>
 					<div class="password-meter">
 						<meter max="4" class="password-meter-input js-password-meter"></meter>
 					</div>
@@ -121,7 +121,7 @@
 				<label for="v_notify" class="form-label">
 					<?= tohtml( _("Email login credentials to:")) ?>
 				</label>
-				<input type="email" class="form-control js-sync-email-output" name="v_notify" id="v_notify" value="<?= tohtml( htmlentities(trim($v_notify, "'"))) ?>" tabindex="8">
+				<input type="email" class="form-control js-sync-email-output" name="v_notify" id="v_notify" value="<?= tohtml(trim($v_notify, "'")) ?>" tabindex="8">
 			</div>
 		</div>
 

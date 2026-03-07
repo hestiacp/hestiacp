@@ -1,11 +1,11 @@
 <div class="login">
 	<a href="/" class="u-block u-mb40">
-		<img src="/images/logo.svg" alt="<?= tohtml( htmlentities($_SESSION["APP_NAME"])) ?>" width="100" height="120">
+		<img src="/images/logo.svg" alt="<?= tohtml($_SESSION["APP_NAME"]) ?>" width="100" height="120">
 	</a>
 	<form id="login-form" method="post" action="/login/">
 		<input type="hidden" name="token" value="<?= tohtml($_SESSION["token"]) ?>">
 		<h1 class="login-title">
-			<?= tohtml( _("Welcome")) ?> <?= tohtml( htmlspecialchars($_SESSION["login"]["username"])) ?>!
+			<?= tohtml( _("Welcome")) ?> <?= tohtml($_SESSION["login"]["username"]) ?>!
 		</h1>
 		<div class="u-mb20">
 			<label for="password" class="form-label u-side-by-side">

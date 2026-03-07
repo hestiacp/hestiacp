@@ -26,7 +26,7 @@
 			<?php show_alert_message($_SESSION); ?>
 			<div class="u-mb10">
 				<label for="v_database" class="form-label"><?= tohtml( _("Database")) ?></label>
-				<input type="text" class="form-control js-db-hint-database-name" name="v_database" id="v_database" value="<?= tohtml( htmlentities(trim($v_database, "'"))) ?>" disabled>
+				<input type="text" class="form-control js-db-hint-database-name" name="v_database" id="v_database" value="<?= tohtml(trim($v_database, "'")) ?>" disabled>
 				<small class="hint"></small>
 			</div>
 			<div class="u-mb10">
@@ -34,7 +34,7 @@
 					<?= tohtml( _("Username")) ?>
 					<em><small>(<?= tohtml(sprintf(_("Maximum %s characters length, including prefix"), 32)) ?>)</small></em>
 				</label>
-				<input type="text" class="form-control js-db-hint-username" name="v_dbuser" id="v_dbuser" value="<?= tohtml( htmlentities(trim($v_dbuser, "'"))) ?>">
+				<input type="text" class="form-control js-db-hint-username" name="v_dbuser" id="v_dbuser" value="<?= tohtml(trim($v_dbuser, "'")) ?>">
 				<small class="hint"></small>
 			</div>
 			<div class="u-mb10">
@@ -45,7 +45,7 @@
 					</button>
 				</label>
 				<div class="u-pos-relative u-mb10">
-					<input type="text" class="form-control js-password-input" name="v_password" id="v_password" value="<?= tohtml( htmlentities(trim($v_password, "'"))) ?>">
+					<input type="text" class="form-control js-password-input" name="v_password" id="v_password" value="<?= tohtml(trim($v_password, "'")) ?>">
 					<div class="password-meter">
 						<meter max="4" class="password-meter-input js-password-meter"></meter>
 					</div>
@@ -54,15 +54,15 @@
 			<?php require $_SERVER["HESTIA"] . "/web/templates/includes/password-requirements.php"; ?>
 			<div class="u-mb10">
 				<label for="v_type" class="form-label"><?= tohtml( _("Type")) ?></label>
-				<input type="text" class="form-control" name="v_type" id="v_type" value="<?= tohtml( htmlentities(trim($v_type, "'"))) ?>" disabled>
+				<input type="text" class="form-control" name="v_type" id="v_type" value="<?= tohtml(trim($v_type, "'")) ?>" disabled>
 			</div>
 			<div class="u-mb10">
 				<label for="v_host" class="form-label"><?= tohtml( _("Host")) ?></label>
-				<input type="text" class="form-control" name="v_host" id="v_host" value="<?= tohtml( htmlentities(trim($v_host, "'"))) ?>" disabled>
+				<input type="text" class="form-control" name="v_host" id="v_host" value="<?= tohtml(trim($v_host, "'")) ?>" disabled>
 			</div>
 			<div class="u-mb10">
 				<label for="v_charset" class="form-label"><?= tohtml( _("Charset")) ?></label>
-				<input type="text" class="form-control" name="v_charset" id="v_charset" value="<?= tohtml( htmlentities(trim($v_charset, "'"))) ?>" disabled>
+				<input type="text" class="form-control" name="v_charset" id="v_charset" value="<?= tohtml(trim($v_charset, "'")) ?>" disabled>
 			</div>
 		</div>
 

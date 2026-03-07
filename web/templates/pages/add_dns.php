@@ -48,7 +48,7 @@
 			<?php if (($_SESSION["role"] == "admin" && $accept === "true") || $_SESSION["role"] !== "admin") { ?>
 				<div class="u-mb10">
 					<label for="v_domain" class="form-label"><?= tohtml( _("Domain")) ?></label>
-					<input type="text" class="form-control" name="v_domain" id="v_domain" value="<?= tohtml( htmlentities(trim($v_domain, "'"))) ?>" required>
+					<input type="text" class="form-control" name="v_domain" id="v_domain" value="<?= tohtml(trim($v_domain, "'")) ?>" required>
 				</div>
 				<div class="u-mb10">
 					<label for="v_ip" class="form-label"><?= tohtml( _("IP Address")) ?></label>
@@ -62,7 +62,7 @@
 								}
 							?>
 						</select>
-						<input type="text" class="form-control list-editor" name="v_ip" id="v_ip" value="<?= tohtml( htmlentities(trim($v_ip, "'"))) ?>">
+						<input type="text" class="form-control list-editor" name="v_ip" id="v_ip" value="<?= tohtml(trim($v_ip, "'")) ?>">
 					</div>
 				</div>
 				<?php if ($_SESSION["userContext"] === "admin" || ($_SESSION["userContext"] === "user" && $_SESSION["POLICY_USER_EDIT_DNS_TEMPLATES"] === "yes")) { ?>
@@ -102,18 +102,18 @@
 						<label for="v_exp" class="form-label">
 							<?= tohtml( _("Expiration Date")) ?> <span class="optional">(<?= tohtml( _("YYYY-MM-DD")) ?>)</span>
 						</label>
-						<input type="text" class="form-control" name="v_exp" id="v_exp" value="<?= tohtml( htmlentities(trim($v_exp, "'"))) ?>">
+						<input type="text" class="form-control" name="v_exp" id="v_exp" value="<?= tohtml(trim($v_exp, "'")) ?>">
 					</div>
 					<div class="u-mb10">
 						<label for="v_ttl" class="form-label"><?= tohtml( _("TTL")) ?></label>
-						<input type="text" class="form-control" name="v_ttl" id="v_ttl" value="<?= tohtml( htmlentities(trim($v_ttl, "'"))) ?>">
+						<input type="text" class="form-control" name="v_ttl" id="v_ttl" value="<?= tohtml(trim($v_ttl, "'")) ?>">
 					</div>
 					<p class="form-label u-mb10"><?= tohtml( _("Name Servers")) ?></p>
 					<div class="u-mb5">
-						<input type="text" class="form-control" name="v_ns1" value="<?= tohtml( htmlentities(trim($v_ns1, "'"))) ?>">
+						<input type="text" class="form-control" name="v_ns1" value="<?= tohtml(trim($v_ns1, "'")) ?>">
 					</div>
 					<div class="u-mb5">
-						<input type="text" class="form-control" name="v_ns2" value="<?= tohtml( htmlentities(trim($v_ns2, "'"))) ?>">
+						<input type="text" class="form-control" name="v_ns2" value="<?= tohtml(trim($v_ns2, "'")) ?>">
 					</div>
 					<?php require $_SERVER["HESTIA"] . "/web/templates/includes/extra-ns-fields.php"; ?>
 					<button type="button" class="form-link u-mt20 js-add-ns" <?php if ($v_ns8) echo 'style="display:none;"'; ?>>

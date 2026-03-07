@@ -26,19 +26,19 @@
 			<?php show_alert_message($_SESSION); ?>
 			<div class="u-mb10">
 				<label for="v_web" class="form-label"><?= tohtml( _("Web Domains")) ?></label>
-				<textarea class="form-control" name="v_web" id="v_web" placeholder="<?= tohtml( _("Type domain name, one per line. To exclude all domains use *. To exclude specific dirs use following format: domain.tld:public_html/cache:public_html/tmp")) ?>"><?= tohtml( htmlentities(trim($v_web, "'"))) ?></textarea>
+				<textarea class="form-control" name="v_web" id="v_web" placeholder="<?= tohtml( _("Type domain name, one per line. To exclude all domains use *. To exclude specific dirs use following format: domain.tld:public_html/cache:public_html/tmp")) ?>"><?= tohtml(trim($v_web, "'")) ?></textarea>
 			</div>
 			<div class="u-mb10">
 				<label for="v_mail" class="form-label"><?= tohtml( _("Mail Domains")) ?></label>
-				<textarea class="form-control" name="v_mail" id="v_mail" placeholder="<?= tohtml( _("Type domain name, one per line. To exclude all domains use *. To exclude specific accounts use following format: domain.tld:info:support:postmaster")) ?>"><?= tohtml( htmlentities(trim($v_mail, "'"))) ?></textarea>
+				<textarea class="form-control" name="v_mail" id="v_mail" placeholder="<?= tohtml( _("Type domain name, one per line. To exclude all domains use *. To exclude specific accounts use following format: domain.tld:info:support:postmaster")) ?>"><?= tohtml(trim($v_mail, "'")) ?></textarea>
 			</div>
 			<div class="u-mb10">
 				<label for="v_db" class="form-label"><?= tohtml( _("Databases")) ?></label>
-				<textarea class="form-control" name="v_db" id="v_db" placeholder="<?= tohtml( _("Type full database name, one per line. To exclude all databases use *")) ?>"><?= tohtml( htmlentities(trim($v_db, "'"))) ?></textarea>
+				<textarea class="form-control" name="v_db" id="v_db" placeholder="<?= tohtml( _("Type full database name, one per line. To exclude all databases use *")) ?>"><?= tohtml(trim($v_db, "'")) ?></textarea>
 			</div>
 			<div class="u-mb10">
 				<label for="v_userdir" class="form-label"><?= tohtml( _("User Directory")) ?></label>
-				<textarea class="form-control" name="v_userdir" id="v_userdir" placeholder="<?= tohtml( _("Type directory name, one per line. To exlude all dirs use *")) ?>"><?= tohtml( htmlentities(trim($v_userdir, "'"))) ?></textarea>
+				<textarea class="form-control" name="v_userdir" id="v_userdir" placeholder="<?= tohtml( _("Type directory name, one per line. To exlude all dirs use *")) ?>"><?= tohtml(trim($v_userdir, "'")) ?></textarea>
 			</div>
 		</div>
 

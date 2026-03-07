@@ -67,7 +67,7 @@
 							class="form-control"
 							name="v_hostname"
 							id="v_hostname"
-							value="<?= tohtml( htmlentities(trim($v_hostname, "'"))) ?>"
+							value="<?= tohtml(trim($v_hostname, "'")) ?>"
 						>
 					</div>
 					<div class="u-mb10">
@@ -439,7 +439,7 @@
 									class="form-control"
 									name="v_smtp_relay_host"
 									id="v_smtp_relay_host"
-									value="<?= tohtml( htmlentities(trim($v_smtp_relay_host, "'"))) ?>"
+									value="<?= tohtml(trim($v_smtp_relay_host, "'")) ?>"
 								>
 							</div>
 							<div class="u-mb10">
@@ -451,7 +451,7 @@
 									class="form-control"
 									name="v_smtp_relay_port"
 									id="v_smtp_relay_port"
-									value="<?= tohtml( htmlentities(trim($v_smtp_relay_port, "'"))) ?>"
+									value="<?= tohtml(trim($v_smtp_relay_port, "'")) ?>"
 								>
 							</div>
 							<div class="u-mb10">
@@ -463,7 +463,7 @@
 									class="form-control"
 									name="v_smtp_relay_user"
 									id="v_smtp_relay_user"
-									value="<?= tohtml( htmlentities(trim($v_smtp_relay_user, "'"))) ?>"
+									value="<?= tohtml(trim($v_smtp_relay_user, "'")) ?>"
 								>
 							</div>
 							<div class="u-mb10">
@@ -513,7 +513,7 @@
 									class="form-control"
 									name="v_mysql_url"
 									id="v_mysql_url"
-										value="<?= tohtml(htmlentities($_SESSION["DB_PMA_ALIAS"])) ?>"
+										value="<?= tohtml($_SESSION["DB_PMA_ALIAS"]) ?>"
 								>
 							</div>
 							<div class="u-mb10">
@@ -619,7 +619,7 @@
 								<label for="v_pgsql_url" class="form-label">
 									<?= tohtml( _("phpPgAdmin Alias")) ?>
 								</label>
-								<input type="text" class="form-control" name="v_pgsql_url" id="v_pgsql_url" value="<?= tohtml( htmlentities($_SESSION["DB_PGA_ALIAS"])) ?>">
+								<input type="text" class="form-control" name="v_pgsql_url" id="v_pgsql_url" value="<?= tohtml($_SESSION["DB_PGA_ALIAS"]) ?>">
 							</div>
 						<?php } ?>
 						<?php if ($v_pgsql == "yes") {
@@ -728,7 +728,7 @@
 							class="form-control"
 							name="v_backup_dir"
 							id="v_backup_dir"
-							value="<?= tohtml( htmlentities(trim($v_backup_dir, "'"))) ?>"
+							value="<?= tohtml(trim($v_backup_dir, "'")) ?>"
 							disabled
 						>
 					</div>
@@ -786,7 +786,7 @@
 									class="form-control"
 									name="v_backup_host"
 									id="v_backup_host"
-									value="<?= tohtml( htmlentities(trim($v_backup_host, "'"))) ?>"
+									value="<?= tohtml(trim($v_backup_host, "'")) ?>"
 								>
 							</div>
 							<div class="u-mb20">
@@ -798,7 +798,7 @@
 									class="form-control"
 									name="v_backup_port"
 									id="v_backup_port"
-									value="<?= tohtml( htmlentities(trim($v_backup_port, "'"))) ?>"
+									value="<?= tohtml(trim($v_backup_port, "'")) ?>"
 								>
 							</div>
 							<div class="u-mb10">
@@ -810,7 +810,7 @@
 									class="form-control"
 									name="v_backup_username"
 									id="v_backup_username"
-									value="<?= tohtml( htmlentities(trim($v_backup_username, "'"))) ?>"
+									value="<?= tohtml(trim($v_backup_username, "'")) ?>"
 								>
 							</div>
 							<div class="u-mb20">
@@ -823,7 +823,7 @@
 										class="form-control js-password-input"
 										name="v_backup_password"
 										id="v_backup_password"
-										value="<?= tohtml( htmlentities(trim($v_backup_password, "'"))) ?>"
+										value="<?= tohtml(trim($v_backup_password, "'")) ?>"
 									>
 								</div>
 							</div>
@@ -836,7 +836,7 @@
 									class="form-control"
 									name="v_backup_bpath"
 									id="v_backup_bpath"
-									value="<?= tohtml( htmlentities(trim($v_backup_bpath, "'"))) ?>"
+									value="<?= tohtml(trim($v_backup_bpath, "'")) ?>"
 								>
 							</div>
 						</div>
@@ -850,7 +850,7 @@
 									class="form-control"
 									name="v_backup_bucket"
 									id="v_backup_bucket"
-									value="<?= tohtml( htmlentities(trim($v_backup_bucket, "'"))) ?>"
+									value="<?= tohtml(trim($v_backup_bucket, "'")) ?>"
 								>
 							</div>
 							<div class="u-mb10">
@@ -862,7 +862,7 @@
 									class="form-control"
 									name="v_backup_application_id"
 									id="v_backup_application_id"
-									value="<?= tohtml( htmlentities(trim($v_backup_application_id, "'"))) ?>"
+									value="<?= tohtml(trim($v_backup_application_id, "'")) ?>"
 								>
 							</div>
 							<div class="u-mb10">
@@ -874,7 +874,7 @@
 									class="form-control"
 									name="v_backup_application_key"
 									id="v_backup_application_key"
-									value="<?= tohtml( htmlentities(trim($v_backup_application_key, "'"))) ?>"
+									value="<?= tohtml(trim($v_backup_application_key, "'")) ?>"
 								>
 							</div>
 						</div>
@@ -888,7 +888,7 @@
 									class="form-control"
 									name="v_rclone_host"
 									id="v_rclone_host"
-									value="<?= tohtml( htmlentities(trim($v_rclone_host, "'"))) ?>"
+									value="<?= tohtml(trim($v_rclone_host, "'")) ?>"
 								>
 							</div>
 							<div class="u-mb10">
@@ -900,7 +900,7 @@
 									class="form-control"
 									name="v_rclone_path"
 									id="v_rclone_path"
-									value="<?= tohtml( htmlentities(trim($v_rclone_path, "'"))) ?>"
+									value="<?= tohtml(trim($v_rclone_path, "'")) ?>"
 								>
 							</div>
 						</div>
@@ -1015,7 +1015,7 @@
 								/
 								<a
 									class="form-link"
-									href="/generate/ssl/?domain=<?= tohtml( htmlentities(trim($v_hostname, '"'))) ?>"
+									href="/generate/ssl/?domain=<?= tohtml(trim($v_hostname, '"')) ?>"
 									target="_blank"
 								>
 									<?= tohtml( _("Generate Self-Signed SSL Certificate")) ?>
@@ -1026,7 +1026,7 @@
 							class="form-control u-min-height100 u-console"
 							name="v_ssl_crt"
 							id="v_ssl_crt"
-						><?= tohtml( htmlentities(trim($v_ssl_crt, "'"))) ?></textarea>
+						><?= tohtml(trim($v_ssl_crt, "'")) ?></textarea>
 					</div>
 					<div class="u-mb20">
 						<label for="v_ssl_key" class="form-label">
@@ -1036,38 +1036,38 @@
 							class="form-control u-min-height100 u-console"
 							name="v_ssl_key"
 							id="v_ssl_key"
-						><?= tohtml( htmlentities(trim($v_ssl_key, "'"))) ?></textarea>
+						><?= tohtml(trim($v_ssl_key, "'")) ?></textarea>
 					</div>
 					<ul class="values-list">
 						<li class="values-list-item">
 							<span class="values-list-label"><?= tohtml( _("Issued To")) ?></span>
-							<span class="values-list-value"><?= tohtml( htmlentities($v_ssl_subject)) ?></span>
+							<span class="values-list-value"><?= tohtml($v_ssl_subject) ?></span>
 						</li>
 						<?php if ($v_ssl_aliases) { ?>
 							<li class="values-list-item">
 								<span class="values-list-label"><?= tohtml( _("Alternate")) ?></span>
-								<span class="values-list-value"><?= tohtml( htmlentities($v_ssl_aliases)) ?></span>
+								<span class="values-list-value"><?= tohtml($v_ssl_aliases) ?></span>
 							</li>
 						<?php } ?>
 						<li class="values-list-item">
 							<span class="values-list-label"><?= tohtml( _("Not Before")) ?></span>
-							<span class="values-list-value"><?= tohtml( htmlentities($v_ssl_not_before)) ?></span>
+							<span class="values-list-value"><?= tohtml($v_ssl_not_before) ?></span>
 						</li>
 						<li class="values-list-item">
 							<span class="values-list-label"><?= tohtml( _("Not After")) ?></span>
-							<span class="values-list-value"><?= tohtml( htmlentities($v_ssl_not_after)) ?></span>
+							<span class="values-list-value"><?= tohtml($v_ssl_not_after) ?></span>
 						</li>
 						<li class="values-list-item">
 							<span class="values-list-label"><?= tohtml( _("Signature")) ?></span>
-							<span class="values-list-value"><?= tohtml( htmlentities($v_ssl_signature)) ?></span>
+							<span class="values-list-value"><?= tohtml($v_ssl_signature) ?></span>
 						</li>
 						<li class="values-list-item">
 							<span class="values-list-label"><?= tohtml( _("Key Size")) ?></span>
-							<span class="values-list-value"><?= tohtml( htmlentities($v_ssl_pub_key)) ?></span>
+							<span class="values-list-value"><?= tohtml($v_ssl_pub_key) ?></span>
 						</li>
 						<li class="values-list-item">
 							<span class="values-list-label"><?= tohtml( _("Issued By")) ?></span>
-							<span class="values-list-value"><?= tohtml( htmlentities($v_ssl_issuer)) ?></span>
+							<span class="values-list-value"><?= tohtml($v_ssl_issuer) ?></span>
 						</li>
 					</ul>
 				</div>

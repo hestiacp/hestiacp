@@ -1,6 +1,6 @@
 <div class="login">
 	<a href="/" class="u-block u-mb40">
-		<img src="/images/logo.svg" alt="<?= tohtml( htmlentities($_SESSION["APP_NAME"])) ?>" width="100" height="120">
+		<img src="/images/logo.svg" alt="<?= tohtml($_SESSION["APP_NAME"]) ?>" width="100" height="120">
 	</a>
 	<form method="get" action="/reset/">
 		<h1 class="login-title">
@@ -14,8 +14,8 @@
 		</p>
 		<div class="u-mb20">
 			<input type="hidden" name="action" value="confirm">
-			<input type="hidden" name="token" value="<?= tohtml( htmlentities($_SESSION["token"])) ?>">
-			<input type="hidden" name="user" value="<?= tohtml( htmlentities($_GET["user"])) ?>">
+			<input type="hidden" name="token" value="<?= tohtml($_SESSION["token"]) ?>">
+			<input type="hidden" name="user" value="<?= tohtml($_GET["user"]) ?>">
 			<label for="code" class="form-label"><?= tohtml( _("Reset Code")) ?></label>
 			<input type="text" class="form-control" name="code" id="code" required autofocus>
 		</div>

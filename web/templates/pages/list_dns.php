@@ -122,7 +122,7 @@
 			<div class="units-table-row <?php if ($status == 'suspended') echo 'disabled'; ?> js-unit"
 				data-sort-ip="<?= tohtml(str_replace('.', '', $data[$key]['IP'])) ?>"
 				data-sort-date="<?= tohtml(strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])) ?>"
-				data-sort-name="<?= tohtml(htmlentities($key)) ?>"
+				data-sort-name="<?= tohtml($key) ?>"
 				data-sort-expire="<?= tohtml(strtotime($data[$key]['EXP'])) ?>"
 				data-sort-records="<?= tohtml((int)$data[$key]['RECORDS']) ?>">
 				<div class="units-table-cell">
@@ -133,8 +133,8 @@
 				</div>
 				<div class="units-table-cell units-table-heading-cell u-text-bold">
 					<span class="u-hide-desktop"><?= tohtml( _("Name")) ?>:</span>
-					<a href="/list/dns/?domain=<?= tohtml( htmlentities($key)) ?>&token=<?= tohtml($_SESSION["token"]) ?>" title="<?= tohtml( _("DNS Records")) ?>: <?= tohtml( htmlentities($key)) ?>">
-						<?= tohtml( htmlentities($key)) ?>
+					<a href="/list/dns/?domain=<?= tohtml($key) ?>&token=<?= tohtml($_SESSION["token"]) ?>" title="<?= tohtml( _("DNS Records")) ?>: <?= tohtml($key) ?>">
+						<?= tohtml($key) ?>
 					</a>
 					<?= tohtml(empty($data[$key]["SRC"]) ? "" : '<br>⇢ <span class="u-text-small">' . htmlspecialchars($data[$key]["SRC"], ENT_QUOTES) . "</span>") ?>
 				</div>
@@ -145,7 +145,7 @@
 								<li class="units-table-row-action shortcut-n" data-key-action="href">
 									<a
 										class="units-table-row-action-link"
-										href="/add/dns/?domain=<?= tohtml( htmlentities($key)) ?>&token=<?= tohtml($_SESSION["token"]) ?>"
+										href="/add/dns/?domain=<?= tohtml($key) ?>&token=<?= tohtml($_SESSION["token"]) ?>"
 										title="<?= tohtml( _("Add DNS Record")) ?>"
 									>
 										<i class="fas fa-circle-plus icon-green"></i>
@@ -155,7 +155,7 @@
 								<li class="units-table-row-action shortcut-enter" data-key-action="href">
 									<a
 										class="units-table-row-action-link"
-										href="/edit/dns/?domain=<?= tohtml( htmlentities($key)) ?>&token=<?= tohtml($_SESSION["token"]) ?>"
+										href="/edit/dns/?domain=<?= tohtml($key) ?>&token=<?= tohtml($_SESSION["token"]) ?>"
 										title="<?= tohtml( _("Edit DNS Domain")) ?>"
 									>
 										<i class="fas fa-pencil icon-orange"></i>
@@ -166,7 +166,7 @@
 									<li class="units-table-row-action shortcut-enter" data-key-action="href">
 										<a
 											class="units-table-row-action-link"
-											href="/list/dns/?domain=<?= tohtml( htmlentities($key)) ?>&action=dnssec&token=<?= tohtml($_SESSION["token"]) ?>"
+											href="/list/dns/?domain=<?= tohtml($key) ?>&action=dnssec&token=<?= tohtml($_SESSION["token"]) ?>"
 											title="<?= tohtml( _("View Public DNSSEC Key")) ?>"
 										>
 											<i class="fas fa-key icon-orange"></i>
@@ -178,7 +178,7 @@
 							<li class="units-table-row-action shortcut-l" data-key-action="href">
 								<a
 									class="units-table-row-action-link"
-									href="/list/dns/?domain=<?= tohtml( htmlentities($key)) ?>&token=<?= tohtml($_SESSION["token"]) ?>"
+									href="/list/dns/?domain=<?= tohtml($key) ?>&token=<?= tohtml($_SESSION["token"]) ?>"
 									title="<?= tohtml( _("DNS Records")) ?>"
 								>
 									<i class="fas fa-list icon-lightblue"></i>
@@ -188,7 +188,7 @@
 							<li class="units-table-row-action shortcut-s" data-key-action="js">
 								<a
 									class="units-table-row-action-link data-controls js-confirm-action"
-									href="/<?= tohtml($spnd_action) ?>/dns/?domain=<?= tohtml( htmlentities($key)) ?>&token=<?= tohtml($_SESSION["token"]) ?>"
+									href="/<?= tohtml($spnd_action) ?>/dns/?domain=<?= tohtml($key) ?>&token=<?= tohtml($_SESSION["token"]) ?>"
 									title="<?= tohtml($spnd_action_title) ?>"
 									data-confirm-title="<?= tohtml($spnd_action_title) ?>"
 									data-confirm-message="<?= tohtml(sprintf($spnd_confirmation, $key)) ?>"
@@ -200,7 +200,7 @@
 							<li class="units-table-row-action shortcut-delete" data-key-action="js">
 								<a
 									class="units-table-row-action-link data-controls js-confirm-action"
-									href="/delete/dns/?domain=<?= tohtml( htmlentities($key)) ?>&token=<?= tohtml($_SESSION["token"]) ?>"
+									href="/delete/dns/?domain=<?= tohtml($key) ?>&token=<?= tohtml($_SESSION["token"]) ?>"
 									title="<?= tohtml( _("Delete")) ?>"
 									data-confirm-title="<?= tohtml( _("Delete")) ?>"
 									data-confirm-message="<?= tohtml(sprintf(_("Are you sure you want to delete domain %s?"), $key)) ?>"

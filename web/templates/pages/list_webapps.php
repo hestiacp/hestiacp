@@ -2,7 +2,7 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<a class="button button-secondary button-back js-button-back" href="/edit/web/?domain=<?= tohtml( htmlentities($v_domain)) ?>">
+			<a class="button button-secondary button-back js-button-back" href="/edit/web/?domain=<?= tohtml($v_domain) ?>">
 				<i class="fas fa-arrow-left icon-blue"></i><?= tohtml( _("Back")) ?>
 			</a>
 		</div>
@@ -25,7 +25,7 @@
 					<div class="card-content">
 						<p class="card-title"><?= tohtml($webapp->name) ?></p>
 						<p class="u-mb10"><?= tohtml( _("Version")) ?>: <?= tohtml($webapp->version) ?></p>
-						<a class="button" href="/add/webapp/?app=<?= tohtml($webapp->name) ?>&domain=<?= tohtml( htmlentities($v_domain)) ?>">
+						<a class="button" href="/add/webapp/?app=<?= tohtml($webapp->name) ?>&domain=<?= tohtml($v_domain) ?>">
 							<?= tohtml( _("Setup")) ?>
 						</a>
 					</div>

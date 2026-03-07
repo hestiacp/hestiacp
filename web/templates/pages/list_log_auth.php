@@ -3,7 +3,7 @@
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
 			<?php if ($_SESSION["userContext"] === "admin" && isset($_GET["user"]) && htmlentities($_GET["user"]) !== "admin") { ?>
-				<a href="/list/log/?user=<?= tohtml( htmlentities($_GET["user"])) ?>&token=<?= tohtml($_SESSION["token"]) ?>" class="button button-secondary button-back js-button-back">
+				<a href="/list/log/?user=<?= tohtml($_GET["user"]) ?>&token=<?= tohtml($_SESSION["token"]) ?>" class="button button-secondary button-back js-button-back">
 					<i class="fas fa-arrow-left icon-blue"></i><?= tohtml( _("Back")) ?>
 				</a>
 			<?php } else { ?>
@@ -21,7 +21,7 @@
 					<a
 						class="button button-secondary button-danger data-controls js-confirm-action"
 						<?php if ($_SESSION["userContext"] === "admin" && isset($_GET["user"])) { ?>
-							href="/delete/log/auth/?user=<?= tohtml( htmlentities($_GET["user"])) ?>&token=<?= tohtml($_SESSION["token"]) ?>"
+							href="/delete/log/auth/?user=<?= tohtml($_GET["user"]) ?>&token=<?= tohtml($_SESSION["token"]) ?>"
 						<?php } else { ?>
 							href="/delete/log/auth/?token=<?= tohtml($_SESSION["token"]) ?>"
 						<?php } ?>
@@ -76,23 +76,23 @@
 				</div>
 				<div class="units-table-cell units-table-heading-cell u-text-bold">
 					<span class="u-hide-desktop"><?= tohtml( _("Date")) ?>:</span>
-					<time class="u-text-no-wrap" datetime="<?= tohtml( htmlspecialchars($data[$key]["DATE"])) ?>">
+					<time class="u-text-no-wrap" datetime="<?= tohtml($data[$key]["DATE"]) ?>">
 						<?= tohtml(translate_date($data[$key]["DATE"])) ?>
 					</time>
 				</div>
 				<div class="units-table-cell u-text-bold">
 					<span class="u-hide-desktop"><?= tohtml( _("Time")) ?>:</span>
-					<time datetime="<?= tohtml( htmlspecialchars($data[$key]["TIME"])) ?>">
-						<?= tohtml( htmlspecialchars($data[$key]["TIME"])) ?>
+					<time datetime="<?= tohtml($data[$key]["TIME"]) ?>">
+						<?= tohtml($data[$key]["TIME"]) ?>
 					</time>
 				</div>
 				<div class="units-table-cell">
 					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("IP Address")) ?>:</span>
-					<?= tohtml( htmlspecialchars($data[$key]["IP"])) ?>
+					<?= tohtml($data[$key]["IP"]) ?>
 				</div>
 				<div class="units-table-cell">
 					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Browser")) ?>:</span>
-					<?= tohtml( htmlspecialchars($data[$key]["USER_AGENT"])) ?>
+					<?= tohtml($data[$key]["USER_AGENT"]) ?>
 				</div>
 			</div>
 		<?php } ?>

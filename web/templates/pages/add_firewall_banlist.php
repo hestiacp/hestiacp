@@ -28,7 +28,7 @@
 				<label for="v_ip" class="form-label">
 					<?= tohtml( _("IP Address")) ?> <span class="optional">(<?= tohtml( _("Support CIDR format")) ?>)</span>
 				</label>
-				<input type="text" class="form-control" name="v_ip" id="v_ip" value="<?= tohtml( htmlentities(trim($v_ip, "'"))) ?>" required>
+				<input type="text" class="form-control" name="v_ip" id="v_ip" value="<?= tohtml(trim($v_ip, "'")) ?>" required>
 			</div>
 			<div class="u-mb10">
 				<label for="v_chain" class="form-label"><?= tohtml( _("Banlist")) ?></label>

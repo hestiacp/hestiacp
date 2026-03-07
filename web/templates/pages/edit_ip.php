@@ -33,16 +33,16 @@
 			<?php show_alert_message($_SESSION); ?>
 			<div class="u-mb10">
 				<label for="v_ip" class="form-label"><?= tohtml( _("IP Address")) ?></label>
-				<input type="text" class="form-control" name="v_ip" id="v_ip" value="<?= tohtml( htmlentities(trim($v_ip, "'"))) ?>" disabled>
-				<input type="hidden" name="v_ip" value="<?= tohtml( htmlentities(trim($v_ip, "'"))) ?>">
+				<input type="text" class="form-control" name="v_ip" id="v_ip" value="<?= tohtml(trim($v_ip, "'")) ?>" disabled>
+				<input type="hidden" name="v_ip" value="<?= tohtml(trim($v_ip, "'")) ?>">
 			</div>
 			<div class="u-mb10">
 				<label for="v_netmask" class="form-label"><?= tohtml( _("Netmask")) ?></label>
-				<input type="text" class="form-control" name="v_netmask" id="v_netmask" value="<?= tohtml( htmlentities(trim($v_netmask, "'"))) ?>" disabled>
+				<input type="text" class="form-control" name="v_netmask" id="v_netmask" value="<?= tohtml(trim($v_netmask, "'")) ?>" disabled>
 			</div>
 			<div class="u-mb10">
 				<label for="v_interface" class="form-label"><?= tohtml( _("Interface")) ?></label>
-				<input type="text" class="form-control" name="v_interface" id="v_interface" value="<?= tohtml( htmlentities(trim($v_interface, "'"))) ?>" disabled>
+				<input type="text" class="form-control" name="v_interface" id="v_interface" value="<?= tohtml(trim($v_interface, "'")) ?>" disabled>
 			</div>
 			<div class="form-check u-mb10">
 				<input x-model="showUserTable" class="form-check-input" type="checkbox" name="v_shared" id="v_shared">
@@ -68,13 +68,13 @@
 				<label for="v_name" class="form-label">
 					<?= tohtml( _("Assigned Domain")) ?> <span class="optional">(<?= tohtml( _("Optional")) ?>)</span>
 				</label>
-				<input type="text" class="form-control" name="v_name" id="v_name" value="<?= tohtml( htmlentities(trim($v_name, "'"))) ?>">
+				<input type="text" class="form-control" name="v_name" id="v_name" value="<?= tohtml(trim($v_name, "'")) ?>">
 			</div>
 			<div class="u-mb10">
 				<label for="v_nat" class="form-label">
 					<?= tohtml( _("NAT IP Association")) ?> <span class="optional">(<?= tohtml( _("Optional")) ?>)</span>
 				</label>
-				<input type="text" class="form-control" name="v_nat" id="v_nat" value="<?= tohtml( htmlentities(trim($v_nat, "'"))) ?>">
+				<input type="text" class="form-control" name="v_nat" id="v_nat" value="<?= tohtml(trim($v_nat, "'")) ?>">
 			</div>
 		</div>
 

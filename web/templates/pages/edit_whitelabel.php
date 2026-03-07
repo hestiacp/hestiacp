@@ -50,7 +50,7 @@
 							class="form-control"
 							name="v_app_name"
 							id="v_app_name"
-							value="<?= tohtml( htmlentities(trim($v_app_name, "'"))) ?>"
+							value="<?= tohtml(trim($v_app_name, "'")) ?>"
 						>
 					</div>
 					<div class="u-mb10">
@@ -62,19 +62,19 @@
 							class="form-control"
 							name="v_title"
 							id="v_title"
-							value="<?= tohtml( htmlentities(trim($v_title, "'"))) ?>"
+							value="<?= tohtml(trim($v_title, "'")) ?>"
 						>
 					</div>
 					<div class="u-mb10">
 						<label for="v_from_name" class="form-label">
-							<?= tohtml( _("Sender Name")) ?><span class="optional">(<?= tohtml( _("Default")) ?>: <?= tohtml( htmlentities(trim($v_app_name, "'"))) ?>)</span>
+							<?= tohtml( _("Sender Name")) ?><span class="optional">(<?= tohtml( _("Default")) ?>: <?= tohtml(trim($v_app_name, "'")) ?>)</span>
 						</label>
 						<input
 							type="text"
 							class="form-control"
 							name="v_from_name"
 							id="v_from_name"
-							value="<?= tohtml( htmlentities(trim($v_from_name, "'"))) ?>"
+							value="<?= tohtml(trim($v_from_name, "'")) ?>"
 						>
 					</div>
 					<div class="u-mb10">
@@ -86,7 +86,7 @@
 							class="form-control"
 							name="v_from_email"
 							id="v_from_email"
-							value="<?= tohtml( htmlentities(trim($v_from_email, "'"))) ?>"
+							value="<?= tohtml(trim($v_from_email, "'")) ?>"
 						>
 					</div>
 					<div class="u-mb10">
@@ -98,7 +98,7 @@
 							class="form-control"
 							name="v_subject_email"
 							id="v_subject_email"
-							value="<?= tohtml( htmlentities(trim($v_subject_email, "'"))) ?>"
+							value="<?= tohtml(trim($v_subject_email, "'")) ?>"
 						>
 					</div>
 					<div class="u-mb10">

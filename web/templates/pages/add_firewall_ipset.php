@@ -69,7 +69,7 @@
 			<?php show_alert_message($_SESSION); ?>
 			<div class="u-mb10">
 				<label for="v_ipname" class="form-label"><?= tohtml( _("IP List Name")) ?></label>
-				<input type="text" class="form-control" name="v_ipname" id="v_ipname" maxlength="255" value="<?= tohtml( htmlentities(trim($v_ipname, "'"))) ?>">
+				<input type="text" class="form-control" name="v_ipname" id="v_ipname" maxlength="255" value="<?= tohtml(trim($v_ipname, "'")) ?>">
 			</div>
 			<div class="u-mb10">
 				<label for="v_datasource" class="form-label">
@@ -80,12 +80,12 @@
 						class="form-select js-datasource-select"
 						tabindex="-1"
 						onchange="this.nextElementSibling.value=this.value"
-						data-country-iplists="<?= tohtml( htmlspecialchars(json_encode($country_iplists), ENT_QUOTES, "UTF-8")) ?>"
-						data-blacklist-iplists="<?= tohtml( htmlspecialchars(json_encode($blacklist_iplists), ENT_QUOTES, "UTF-8")) ?>"
+						data-country-iplists="<?= tohtml(json_encode($country_iplists)) ?>"
+						data-blacklist-iplists="<?= tohtml(json_encode($blacklist_iplists)) ?>"
 					>
 						<option value=""><?= tohtml( _("Clear")) ?></option>
 					</select>
-					<input type="text" class="form-control list-editor" name="v_datasource" id="v_datasource" maxlength="255" value="<?= tohtml( htmlentities(trim($v_datasource, "'"))) ?>">
+					<input type="text" class="form-control list-editor" name="v_datasource" id="v_datasource" maxlength="255" value="<?= tohtml(trim($v_datasource, "'")) ?>">
 				</div>
 			</div>
 			<div class="u-mb10">

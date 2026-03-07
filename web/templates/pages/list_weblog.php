@@ -16,8 +16,8 @@
 			<div class="top-bar">
 				<div class="container top-bar-inner">
 					<div class="top-bar-left">
-						<a href="/" class="top-bar-logo" title="<?= tohtml(htmlentities($_SESSION['APP_NAME'])) ?>">
-							<img src="<?php if ( !empty($_SESSION['LOGO_HEADER'])){ echo $_SESSION['LOGO_HEADER']; } else{ echo "/images/logo-header.svg"; } ?>" alt="<?= tohtml(htmlentities($_SESSION['APP_NAME'])) ?>" width="54" height="29">
+						<a href="/" class="top-bar-logo" title="<?= tohtml($_SESSION['APP_NAME']) ?>">
+							<img src="<?php if ( !empty($_SESSION['LOGO_HEADER'])){ echo $_SESSION['LOGO_HEADER']; } else{ echo "/images/logo-header.svg"; } ?>" alt="<?= tohtml($_SESSION['APP_NAME']) ?>" width="54" height="29">
 						</a>
 					</div>
 					<div class="top-bar-right">
@@ -40,25 +40,25 @@
 										</a>
 									</li>
 									<li class="top-bar-menu-item">
-										<a class="top-bar-menu-link <?php if ($_GET['type'] == 'access') echo 'active' ?>" href="/list/web-log/?domain=<?= tohtml( htmlentities($_GET['domain'])) ?>&type=access&token=<?= tohtml($_SESSION['token']) ?>" title="<?= tohtml( _("View Logs")) ?>">
+										<a class="top-bar-menu-link <?php if ($_GET['type'] == 'access') echo 'active' ?>" href="/list/web-log/?domain=<?= tohtml($_GET['domain']) ?>&type=access&token=<?= tohtml($_SESSION['token']) ?>" title="<?= tohtml( _("View Logs")) ?>">
 											<i class="fas fa-eye"></i>
 											<span class="top-bar-menu-link-label"><?= tohtml( _("View Logs")) ?></span>
 										</a>
 									</li>
 									<li class="top-bar-menu-item">
-										<a class="top-bar-menu-link <?php if ($_GET['type'] == 'access') echo 'active' ?>" href="/download/web-log/?domain=<?= tohtml( htmlentities($_GET['domain'])) ?>&type=access&&token=<?= tohtml($_SESSION['token']) ?>" title="<?= tohtml( _("Download")) ?>">
+										<a class="top-bar-menu-link <?php if ($_GET['type'] == 'access') echo 'active' ?>" href="/download/web-log/?domain=<?= tohtml($_GET['domain']) ?>&type=access&&token=<?= tohtml($_SESSION['token']) ?>" title="<?= tohtml( _("Download")) ?>">
 											<i class="fas fa-download"></i>
 											<span class="u-hidden"><?= tohtml( _("Download")) ?></span>
 										</a>
 									</li>
 									<li class="top-bar-menu-item">
-										<a class="top-bar-menu-link <?php if ($_GET['type'] == 'error') echo 'active' ?>" href="/list/web-log/?domain=<?= tohtml( htmlentities($_GET['domain'])) ?>&type=error&token=<?= tohtml($_SESSION['token']) ?>" title="<?= tohtml( _("Error Log")) ?>">
+										<a class="top-bar-menu-link <?php if ($_GET['type'] == 'error') echo 'active' ?>" href="/list/web-log/?domain=<?= tohtml($_GET['domain']) ?>&type=error&token=<?= tohtml($_SESSION['token']) ?>" title="<?= tohtml( _("Error Log")) ?>">
 											<i class="fas fa-circle-exclamation"></i>
 											<span class="top-bar-menu-link-label"><?= tohtml( _("Error Log")) ?></span>
 										</a>
 									</li>
 									<li class="top-bar-menu-item">
-										<a class="top-bar-menu-link <?php if ($_GET['type'] == 'error') echo 'active' ?>" href="/download/web-log/?domain=<?= tohtml( htmlentities($_GET['domain'])) ?>&type=error&token=<?= tohtml($_SESSION['token']) ?>" title="<?= tohtml( _("Download")) ?>">
+										<a class="top-bar-menu-link <?php if ($_GET['type'] == 'error') echo 'active' ?>" href="/download/web-log/?domain=<?= tohtml($_GET['domain']) ?>&type=error&token=<?= tohtml($_SESSION['token']) ?>" title="<?= tohtml( _("Download")) ?>">
 											<i class="fas fa-download"></i>
 											<span class="u-hidden"><?= tohtml( _("Download")) ?></span>
 										</a>
@@ -70,9 +70,9 @@
 										</a>
 									</li>
 									<li class="top-bar-menu-item">
-										<a class="top-bar-menu-link" href="/list/user/" title="<?= tohtml( htmlentities($user)) ?>">
+										<a class="top-bar-menu-link" href="/list/user/" title="<?= tohtml($user) ?>">
 											<i class="fas fa-circle-user"></i>
-											<span class="u-hidden"><?= tohtml( htmlentities($user)) ?></span>
+											<span class="u-hidden"><?= tohtml($user) ?></span>
 										</a>
 									</li>
 									<li class="top-bar-menu-item">

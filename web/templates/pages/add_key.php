@@ -3,7 +3,7 @@
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
 			<?php if ($_SESSION["userContext"] === "admin" && isset($_GET["user"]) && $_GET["user"] !== "admin") { ?>
-				<a class="button button-secondary button-back js-button-back" href="/list/key/?user=<?= tohtml( htmlentities($_GET["user"])) ?>">
+				<a class="button button-secondary button-back js-button-back" href="/list/key/?user=<?= tohtml($_GET["user"]) ?>">
 					<i class="fas fa-arrow-left icon-blue"></i><?= tohtml( _("Back")) ?>
 				</a>
 			<?php } else { ?>
@@ -32,7 +32,7 @@
 			<?php show_alert_message($_SESSION); ?>
 			<div>
 				<label for="v_key" class="form-label"><?= tohtml( _("SSH Key")) ?></label>
-				<textarea class="form-control u-min-height300" name="v_key" id="v_key" required><?= tohtml( htmlentities(trim($v_key, "'"))) ?></textarea>
+				<textarea class="form-control u-min-height300" name="v_key" id="v_key" required><?= tohtml(trim($v_key, "'")) ?></textarea>
 			</div>
 		</div>
 

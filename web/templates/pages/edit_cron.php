@@ -34,29 +34,29 @@
 			<?php show_alert_message($_SESSION); ?>
 			<div class="u-mb20">
 				<label for="v_cmd" class="form-label"><?= tohtml( _("Command")) ?></label>
-				<input type="text" class="form-control" name="v_cmd" id="v_cmd" value="<?= tohtml( htmlentities(trim($v_cmd, "'"))) ?>">
+				<input type="text" class="form-control" name="v_cmd" id="v_cmd" value="<?= tohtml(trim($v_cmd, "'")) ?>">
 			</div>
 			<div class="sidebar-left-grid">
 				<div class="sidebar-left-grid-sidebar">
 					<div class="u-mb10">
 						<label for="v_min" class="form-label"><?= tohtml( _("Minute")) ?></label>
-						<input type="text" class="form-control" name="v_min" id="v_min" value="<?= tohtml( htmlentities(trim($v_min, "'"))) ?>">
+						<input type="text" class="form-control" name="v_min" id="v_min" value="<?= tohtml(trim($v_min, "'")) ?>">
 					</div>
 					<div class="u-mb10">
 						<label for="v_hour" class="form-label"><?= tohtml( _("Hour")) ?></label>
-						<input type="text" class="form-control" name="v_hour" id="v_hour" value="<?= tohtml( htmlentities(trim($v_hour, "'"))) ?>">
+						<input type="text" class="form-control" name="v_hour" id="v_hour" value="<?= tohtml(trim($v_hour, "'")) ?>">
 					</div>
 					<div class="u-mb10">
 						<label for="v_day" class="form-label"><?= tohtml( _("Day")) ?></label>
-						<input type="text" class="form-control" name="v_day" id="v_day" value="<?= tohtml( htmlentities(trim($v_day, "'"))) ?>">
+						<input type="text" class="form-control" name="v_day" id="v_day" value="<?= tohtml(trim($v_day, "'")) ?>">
 					</div>
 					<div class="u-mb10">
 						<label for="v_month" class="form-label"><?= tohtml( _("Month")) ?></label>
-						<input type="text" class="form-control" name="v_month" id="v_month" value="<?= tohtml( htmlentities(trim($v_month, "'"))) ?>">
+						<input type="text" class="form-control" name="v_month" id="v_month" value="<?= tohtml(trim($v_month, "'")) ?>">
 					</div>
 					<div class="u-mb10">
 						<label for="v_wday" class="form-label"><?= tohtml( _("Day of Week")) ?></label>
-						<input type="text" class="form-control" name="v_wday" id="v_wday" value="<?= tohtml( htmlentities(trim($v_wday, "'"))) ?>">
+						<input type="text" class="form-control" name="v_wday" id="v_wday" value="<?= tohtml(trim($v_wday, "'")) ?>">
 					</div>
 				</div>
 				<div class="sidebar-left-grid-content">

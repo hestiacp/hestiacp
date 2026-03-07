@@ -105,7 +105,7 @@
 		?>
 			<div class="units-table-row <?php if ($status == 'suspended') echo 'disabled'; ?> js-unit"
 				data-sort-date="<?= tohtml(strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])) ?>"
-				data-sort-name="<?= tohtml( htmlspecialchars($data[$key]['CMD'], ENT_NOQUOTES)) ?>">
+				data-sort-name="<?= tohtml($data[$key]['CMD']) ?>">
 				<div class="units-table-cell">
 					<div>
 						<input id="check<?= tohtml($i) ?>" class="js-unit-checkbox" type="checkbox" title="<?= tohtml( _("Select")) ?>" name="job[]" value="<?= tohtml($key) ?>" <?= tohtml($display_mode) ?>>
@@ -115,10 +115,10 @@
 				<div class="units-table-cell units-table-heading-cell u-text-bold">
 					<span class="u-hide-desktop"><?= tohtml( _("Command")) ?>:</span>
 					<?php if ($read_only === "true" || $data[$key]["SUSPENDED"] == "yes") { ?>
-						<?= tohtml( htmlspecialchars($data[$key]["CMD"], ENT_NOQUOTES)) ?>
+						<?= tohtml($data[$key]["CMD"]) ?>
 					<?php } else { ?>
-						<a href="/edit/cron/?job=<?= tohtml($data[$key]["JOB"]) ?>&token=<?= tohtml($_SESSION["token"]) ?>" title="<?= tohtml( _("Edit Cron Job")) ?>: <?= tohtml( htmlspecialchars($data[$key]["CMD"], ENT_NOQUOTES)) ?>">
-							<?= tohtml( htmlspecialchars($data[$key]["CMD"], ENT_NOQUOTES)) ?>
+						<a href="/edit/cron/?job=<?= tohtml($data[$key]["JOB"]) ?>&token=<?= tohtml($_SESSION["token"]) ?>" title="<?= tohtml( _("Edit Cron Job")) ?>: <?= tohtml($data[$key]["CMD"]) ?>">
+							<?= tohtml($data[$key]["CMD"]) ?>
 						</a>
 					<?php } ?>
 				</div>

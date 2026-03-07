@@ -2,7 +2,7 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<a class="button button-secondary button-back js-button-back" href="/list/mail/?domain=<?= tohtml( htmlentities(trim($v_domain, "'"))) ?>&token=<?= tohtml($_SESSION["token"]) ?>">
+			<a class="button button-secondary button-back js-button-back" href="/list/mail/?domain=<?= tohtml(trim($v_domain, "'")) ?>&token=<?= tohtml($_SESSION["token"]) ?>">
 				<i class="fas fa-arrow-left icon-blue"></i><?= tohtml( _("Back")) ?>
 			</a>
 		</div>
@@ -36,9 +36,9 @@
 				<div class="sidebar-right-grid-content">
 					<div class="u-mb10">
 						<label for="v_email" class="form-label"><?= tohtml( _("Account")) ?></label>
-						<input type="text" class="form-control" name="v_email" id="v_email" value="<?= tohtml( htmlentities($_GET["account"]) . "@" . htmlentities($_GET["domain"])) ?>" disabled>
-						<input type="hidden" name="v_domain" value="<?= tohtml( htmlentities(trim($v_domain, "'"))) ?>">
-						<input type="hidden" name="v_account" value="<?= tohtml( htmlentities(trim($v_account, "'"))) ?>" class="js-account-input">
+						<input type="text" class="form-control" name="v_email" id="v_email" value="<?= tohtml($_GET["account"] . "@" . $_GET["domain"]) ?>" disabled>
+						<input type="hidden" name="v_domain" value="<?= tohtml(trim($v_domain, "'")) ?>">
+						<input type="hidden" name="v_account" value="<?= tohtml(trim($v_account, "'")) ?>" class="js-account-input">
 					</div>
 					<div class="u-mb10">
 						<label for="v_password" class="form-label">
@@ -48,7 +48,7 @@
 							</button>
 						</label>
 						<div class="u-pos-relative u-mb10">
-							<input type="text" class="form-control js-password-input" name="v_password" id="v_password" value="<?= tohtml( htmlentities(trim($v_password, "'"))) ?>">
+							<input type="text" class="form-control js-password-input" name="v_password" id="v_password" value="<?= tohtml(trim($v_password, "'")) ?>">
 							<div class="password-meter">
 								<meter max="4" class="password-meter-input js-password-meter"></meter>
 							</div>
@@ -64,7 +64,7 @@
 						<label for="v_send_email" class="form-label">
 							<?= tohtml( _("Email login credentials to:")) ?>
 						</label>
-						<input type="email" class="form-control" name="v_send_email" id="v_send_email" value="<?= tohtml( htmlentities(trim($v_send_email, "'"))) ?>">
+						<input type="email" class="form-control" name="v_send_email" id="v_send_email" value="<?= tohtml(trim($v_send_email, "'")) ?>">
 					</div>
 					<div class="u-mb10">
 						<label for="v_quota" class="form-label">
@@ -81,7 +81,7 @@
 						<label for="v_aliases" class="form-label">
 							<?= tohtml( _("Aliases")) ?> <span class="optional">(<?= tohtml( _("Use local-part without domain name")) ?>)</span>
 						</label>
-						<textarea class="form-control" name="v_aliases" id="v_aliases"><?= tohtml( htmlentities(trim($v_aliases, "'"))) ?></textarea>
+						<textarea class="form-control" name="v_aliases" id="v_aliases"><?= tohtml(trim($v_aliases, "'")) ?></textarea>
 					</div>
 					<div class="form-check">
 						<input class="form-check-input js-discard-all-mail" type="checkbox" name="v_blackhole" id="v_blackhole" <?php if ($v_blackhole == 'yes') echo 'checked' ?>>
@@ -99,7 +99,7 @@
 						<label for="v_fwd" class="form-label">
 							<?= tohtml( _("Forward to")) ?> <span class="optional">(<?= tohtml( _("one or more email addresses")) ?>)</span>
 						</label>
-						<textarea class="form-control js-forward-to-textarea" name="v_fwd" id="v_fwd" <?php if ($v_blackhole == 'yes') echo "disabled"; ?>><?= tohtml( htmlentities(trim($v_fwd, "'"))) ?></textarea>
+						<textarea class="form-control js-forward-to-textarea" name="v_fwd" id="v_fwd" <?php if ($v_blackhole == 'yes') echo "disabled"; ?>><?= tohtml(trim($v_fwd, "'")) ?></textarea>
 					</div>
 					<div class="form-check u-mb10">
 						<input x-model="hasAutoReply" class="form-check-input" type="checkbox" name="v_autoreply" id="v_autoreply">
@@ -110,14 +110,14 @@
 					<div x-cloak x-show="hasAutoReply" id="autoreplytable">
 						<div class="u-mb10">
 							<label for="v_autoreply_message" class="form-label"><?= tohtml( _("Message")) ?></label>
-							<textarea class="form-control" name="v_autoreply_message" id="v_autoreply_message"><?= tohtml( htmlentities(trim($v_autoreply_message, "'"))) ?></textarea>
+							<textarea class="form-control" name="v_autoreply_message" id="v_autoreply_message"><?= tohtml(trim($v_autoreply_message, "'")) ?></textarea>
 						</div>
 					</div>
 					<div class="u-mb20">
 						<label for="v_rate" class="form-label">
 							<?= tohtml( _("Rate Limit")) ?> <span class="optional">(<?= tohtml( _("email / hour")) ?>)</span>
 						</label>
-						<input type="text" class="form-control" name="v_rate" id="v_rate" value="<?= tohtml( htmlentities(trim($v_rate, "'"))) ?>" <?php if ($_SESSION['userContext'] != "admin"){ echo "disabled"; }?>>
+						<input type="text" class="form-control" name="v_rate" id="v_rate" value="<?= tohtml(trim($v_rate, "'")) ?>" <?php if ($_SESSION['userContext'] != "admin"){ echo "disabled"; }?>>
 					</div>
 				</div>
 				<div class="sidebar-right-grid-sidebar">

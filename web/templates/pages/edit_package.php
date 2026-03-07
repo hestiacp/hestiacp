@@ -31,15 +31,15 @@
 			<?php show_alert_message($_SESSION); ?>
 			<div class="u-mb10">
 				<label for="v_package_new" class="form-label"><?= tohtml( _("Package Name")) ?></label>
-				<input type="text" class="form-control" name="v_package_new" id="v_package_new" value="<?= tohtml( htmlentities(trim($v_package_new, "'"))) ?>" required>
-				<input type="hidden" name="v_package" value="<?= tohtml( htmlentities(trim($v_package, "'"))) ?>">
+				<input type="text" class="form-control" name="v_package_new" id="v_package_new" value="<?= tohtml(trim($v_package_new, "'")) ?>" required>
+				<input type="hidden" name="v_package" value="<?= tohtml(trim($v_package, "'")) ?>">
 			</div>
 			<div class="u-mb10">
 				<label for="v_disk_quota" class="form-label">
 					<?= tohtml( _("Quota")) ?> <span class="optional">(<?= tohtml( _("in MB")) ?>)</span>
 				</label>
 				<div class="u-pos-relative">
-					<input type="text" class="form-control" name="v_disk_quota" id="v_disk_quota" value="<?= tohtml( htmlentities(trim($v_disk_quota, "'"))) ?>">
+					<input type="text" class="form-control" name="v_disk_quota" id="v_disk_quota" value="<?= tohtml(trim($v_disk_quota, "'")) ?>">
 					<button type="button" class="unlimited-toggle js-unlimited-toggle" title="<?= tohtml( _("Unlimited")) ?>">
 						<i class="fas fa-infinity"></i>
 					</button>
@@ -50,7 +50,7 @@
 					<?= tohtml( _("Bandwidth")) ?> <span class="optional">(<?= tohtml( _("in MB")) ?>)</span>
 				</label>
 				<div class="u-pos-relative">
-					<input type="text" class="form-control" name="v_bandwidth" id="v_bandwidth" value="<?= tohtml( htmlentities(trim($v_bandwidth, "'"))) ?>">
+					<input type="text" class="form-control" name="v_bandwidth" id="v_bandwidth" value="<?= tohtml(trim($v_bandwidth, "'")) ?>">
 					<button type="button" class="unlimited-toggle js-unlimited-toggle" title="<?= tohtml( _("Unlimited")) ?>">
 						<i class="fas fa-infinity"></i>
 					</button>
@@ -58,7 +58,7 @@
 			</div>
 			<div class="u-mb10">
 				<label for="v_backups" class="form-label"><?= tohtml( _("Backups")) ?></label>
-				<input type="text" class="form-control" name="v_backups" id="v_backups" value="<?= tohtml( htmlentities(trim($v_backups, "'"))) ?>">
+				<input type="text" class="form-control" name="v_backups" id="v_backups" value="<?= tohtml(trim($v_backups, "'")) ?>">
 			</div>
 			<div class="u-mb10">
 				<label for="v_backups_incremental" class="form-label"><?= tohtml( _("Incremental Backups")) ?></label>
@@ -77,7 +77,7 @@
 					<div class="u-mb10">
 						<label for="v_web_domains" class="form-label"><?= tohtml( _("Web Domains")) ?></label>
 						<div class="u-pos-relative">
-							<input type="text" class="form-control" name="v_web_domains" id="v_web_domains" value="<?= tohtml( htmlentities(trim($v_web_domains, "'"))) ?>">
+							<input type="text" class="form-control" name="v_web_domains" id="v_web_domains" value="<?= tohtml(trim($v_web_domains, "'")) ?>">
 							<button type="button" class="unlimited-toggle js-unlimited-toggle" title="<?= tohtml( _("Unlimited")) ?>">
 								<i class="fas fa-infinity"></i>
 							</button>
@@ -88,7 +88,7 @@
 							<?= tohtml( _("Web Aliases")) ?> <span class="optional">(<?= tohtml( _("per domain")) ?>)</span>
 						</label>
 						<div class="u-pos-relative">
-							<input type="text" class="form-control" name="v_web_aliases" id="v_web_aliases" value="<?= tohtml( htmlentities(trim($v_web_aliases, "'"))) ?>">
+							<input type="text" class="form-control" name="v_web_aliases" id="v_web_aliases" value="<?= tohtml(trim($v_web_aliases, "'")) ?>">
 							<button type="button" class="unlimited-toggle js-unlimited-toggle" title="<?= tohtml( _("Unlimited")) ?>">
 								<i class="fas fa-infinity"></i>
 							</button>
@@ -177,7 +177,7 @@
 					<div class="u-mb10">
 						<label for="v_dns_domains" class="form-label"><?= tohtml( _("DNS Zones")) ?></label>
 						<div class="u-pos-relative">
-							<input type="text" class="form-control" name="v_dns_domains" id="v_dns_domains" value="<?= tohtml( htmlentities(trim($v_dns_domains, "'"))) ?>">
+							<input type="text" class="form-control" name="v_dns_domains" id="v_dns_domains" value="<?= tohtml(trim($v_dns_domains, "'")) ?>">
 							<button type="button" class="unlimited-toggle js-unlimited-toggle" title="<?= tohtml( _("Unlimited")) ?>">
 								<i class="fas fa-infinity"></i>
 							</button>
@@ -188,7 +188,7 @@
 							<?= tohtml( _("DNS Records")) ?> <span class="optional">(<?= tohtml( _("per domain")) ?>)</span>
 						</label>
 						<div class="u-pos-relative">
-							<input type="text" class="form-control" name="v_dns_records" id="v_dns_records" value="<?= tohtml( htmlentities(trim($v_dns_records, "'"))) ?>">
+							<input type="text" class="form-control" name="v_dns_records" id="v_dns_records" value="<?= tohtml(trim($v_dns_records, "'")) ?>">
 							<button type="button" class="unlimited-toggle js-unlimited-toggle" title="<?= tohtml( _("Unlimited")) ?>">
 								<i class="fas fa-infinity"></i>
 							</button>
@@ -197,10 +197,10 @@
 					<?php if (isset($_SESSION["DNS_SYSTEM"]) && !empty($_SESSION["DNS_SYSTEM"])) { ?>
 						<p class="form-label u-mb10"><?= tohtml( _("Name Servers")) ?></p>
 						<div class="u-mb5">
-							<input type="text" class="form-control" name="v_ns1" value="<?= tohtml( htmlentities(trim($v_ns1, "'"))) ?>">
+							<input type="text" class="form-control" name="v_ns1" value="<?= tohtml(trim($v_ns1, "'")) ?>">
 						</div>
 						<div class="u-mb5">
-							<input type="text" class="form-control" name="v_ns2" value="<?= tohtml( htmlentities(trim($v_ns2, "'"))) ?>">
+							<input type="text" class="form-control" name="v_ns2" value="<?= tohtml(trim($v_ns2, "'")) ?>">
 						</div>
 						<?php require $_SERVER["HESTIA"] . "/web/templates/includes/extra-ns-fields.php"; ?>
 						<button type="button" class="form-link u-mt20 js-add-ns" <?php if ($v_ns8) echo 'style="display:none;"'; ?>>
@@ -217,7 +217,7 @@
 					<div class="u-mb10">
 						<label for="v_mail_domains" class="form-label"><?= tohtml( _("Mail Domains")) ?></label>
 						<div class="u-pos-relative">
-							<input type="text" class="form-control" name="v_mail_domains" id="v_mail_domains" value="<?= tohtml( htmlentities(trim($v_mail_domains, "'"))) ?>">
+							<input type="text" class="form-control" name="v_mail_domains" id="v_mail_domains" value="<?= tohtml(trim($v_mail_domains, "'")) ?>">
 							<button type="button" class="unlimited-toggle js-unlimited-toggle" title="<?= tohtml( _("Unlimited")) ?>">
 								<i class="fas fa-infinity"></i>
 							</button>
@@ -228,7 +228,7 @@
 							<?= tohtml( _("Mail Accounts")) ?> <span class="optional">(<?= tohtml( _("per domain")) ?>)</span>
 						</label>
 						<div class="u-pos-relative">
-							<input type="text" class="form-control" name="v_mail_accounts" id="v_mail_accounts" value="<?= tohtml( htmlentities(trim($v_mail_accounts, "'"))) ?>">
+							<input type="text" class="form-control" name="v_mail_accounts" id="v_mail_accounts" value="<?= tohtml(trim($v_mail_accounts, "'")) ?>">
 							<button type="button" class="unlimited-toggle js-unlimited-toggle" title="<?= tohtml( _("Unlimited")) ?>">
 								<i class="fas fa-infinity"></i>
 							</button>
@@ -238,7 +238,7 @@
 						<label for="v_ratelimit" class="form-label">
 							<?= tohtml( _("Rate Limit")) ?> <span class="optional">(<?= tohtml( _("per account / hour")) ?>)</span>
 						</label>
-						<input type="text" class="form-control" name="v_ratelimit" id="v_ratelimit" value="<?= tohtml( htmlentities(trim($v_ratelimit, "'"))) ?>">
+						<input type="text" class="form-control" name="v_ratelimit" id="v_ratelimit" value="<?= tohtml(trim($v_ratelimit, "'")) ?>">
 					</div>
 				</div>
 			</details>
@@ -250,7 +250,7 @@
 					<div class="u-mb10">
 						<label for="v_databases" class="form-label"><?= tohtml( _("Databases")) ?></label>
 						<div class="u-pos-relative">
-							<input type="text" class="form-control" name="v_databases" id="v_databases" value="<?= tohtml( htmlentities(trim($v_databases, "'"))) ?>">
+							<input type="text" class="form-control" name="v_databases" id="v_databases" value="<?= tohtml(trim($v_databases, "'")) ?>">
 							<button type="button" class="unlimited-toggle js-unlimited-toggle" title="<?= tohtml( _("Unlimited")) ?>">
 								<i class="fas fa-infinity"></i>
 							</button>
@@ -266,7 +266,7 @@
 					<div class="u-mb10">
 						<label for="v_cron_jobs" class="form-label"><?= tohtml( _("Cron Jobs")) ?></label>
 						<div class="u-pos-relative">
-							<input type="text" class="form-control" name="v_cron_jobs" id="v_cron_jobs" value="<?= tohtml( htmlentities(trim($v_cron_jobs, "'"))) ?>">
+							<input type="text" class="form-control" name="v_cron_jobs" id="v_cron_jobs" value="<?= tohtml(trim($v_cron_jobs, "'")) ?>">
 							<button type="button" class="unlimited-toggle js-unlimited-toggle" title="<?= tohtml( _("Unlimited")) ?>">
 								<i class="fas fa-infinity"></i>
 							</button>
@@ -276,12 +276,12 @@
 						<label for="v_shell" class="form-label"><?= tohtml( _("SSH Access")) ?></label>
 						<select class="form-select" name="v_shell" id="v_shell">
 							<?php foreach ($shells as $key => $value): ?>
-								<option value="<?= tohtml( htmlentities($value)) ?>"
+								<option value="<?= tohtml($value) ?>"
 									<?php if (!empty($v_shell) && $value == trim($v_shell, "''")): ?>
 										selected
 									<?php endif; ?>
 								>
-									<?= tohtml( htmlentities($value)) ?>
+									<?= tohtml($value) ?>
 								</option>
 							<?php endforeach; ?>
 						</select>
@@ -300,7 +300,7 @@
 								<?= tohtml( _("CPU Quota (in %)")) ?>
 							</label>
 							<div class="u-pos-relative">
-								<input type="text" class="form-control" name="v_cpu_quota" id="v_cpu_quota" value="<?= tohtml( htmlentities(trim($v_cpu_quota, "'"))) ?>">
+								<input type="text" class="form-control" name="v_cpu_quota" id="v_cpu_quota" value="<?= tohtml(trim($v_cpu_quota, "'")) ?>">
 								<button type="button" class="unlimited-toggle js-unlimited-toggle" title="<?= tohtml( _("Unlimited")) ?>">
 									<i class="fas fa-infinity"></i>
 								</button>
@@ -313,7 +313,7 @@
 								<?= tohtml( _("CPU Quota Period (in ms for milliseconds or s for seconds.)")) ?>
 							</label>
 							<div class="u-pos-relative">
-								<input type="text" class="form-control" name="v_cpu_quota_period" id="v_cpu_quota_period" value="<?= tohtml( htmlentities(trim($v_cpu_quota_period, "'"))) ?>">
+								<input type="text" class="form-control" name="v_cpu_quota_period" id="v_cpu_quota_period" value="<?= tohtml(trim($v_cpu_quota_period, "'")) ?>">
 								<button type="button" class="unlimited-toggle js-unlimited-toggle" title="<?= tohtml( _("Unlimited")) ?>">
 									<i class="fas fa-infinity"></i>
 								</button>
@@ -326,7 +326,7 @@
 								<?= tohtml( _("Memory Limit (in bytes or with units like '2G')")) ?>
 							</label>
 							<div class="u-pos-relative">
-								<input type="text" class="form-control" name="v_memory_limit" id="v_memory_limit" value="<?= tohtml( htmlentities(trim($v_memory_limit, "'"))) ?>">
+								<input type="text" class="form-control" name="v_memory_limit" id="v_memory_limit" value="<?= tohtml(trim($v_memory_limit, "'")) ?>">
 								<button type="button" class="unlimited-toggle js-unlimited-toggle" title="<?= tohtml( _("Unlimited")) ?>">
 									<i class="fas fa-infinity"></i>
 								</button>
@@ -339,7 +339,7 @@
 								<?= tohtml( _("Swap Limit (in bytes or with units like '2G')")) ?>
 							</label>
 							<div class="u-pos-relative">
-								<input type="text" class="form-control" name="v_swap_limit" id="v_swap_limit" value="<?= tohtml( htmlentities(trim($v_swap_limit, "'"))) ?>">
+								<input type="text" class="form-control" name="v_swap_limit" id="v_swap_limit" value="<?= tohtml(trim($v_swap_limit, "'")) ?>">
 								<button type="button" class="unlimited-toggle js-unlimited-toggle" title="<?= tohtml( _("Unlimited")) ?>">
 									<i class="fas fa-infinity"></i>
 								</button>

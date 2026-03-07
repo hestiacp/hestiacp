@@ -7,11 +7,11 @@
 			</a>
 		</div>
 		<div class="toolbar-buttons">
-			<a href="/delete/web/cache/?domain=<?= tohtml(htmlentities($v_domain)) ?>&token=<?= tohtml($_SESSION['token']) ?>" class="button button-secondary js-clear-cache-button <?php if (!($v_nginx_cache == 'yes' || (($v_proxy_template == 'caching' || is_int(strpos($v_proxy_template, 'caching-'))) && $_SESSION['PROXY_SYSTEM'] == 'nginx'))) { echo "u-hidden"; } ?>">
+			<a href="/delete/web/cache/?domain=<?= tohtml($v_domain) ?>&token=<?= tohtml($_SESSION['token']) ?>" class="button button-secondary js-clear-cache-button <?php if (!($v_nginx_cache == 'yes' || (($v_proxy_template == 'caching' || is_int(strpos($v_proxy_template, 'caching-'))) && $_SESSION['PROXY_SYSTEM'] == 'nginx'))) { echo "u-hidden"; } ?>">
 				<i class="fas fa-trash icon-red"></i><?= tohtml( _("Purge NGINX Cache")) ?>
 			</a>
 			<?php if ($_SESSION["PLUGIN_APP_INSTALLER"] !== "false") { ?>
-				<a href="/add/webapp/?domain=<?= tohtml( htmlentities($v_domain)) ?>" class="button button-secondary">
+				<a href="/add/webapp/?domain=<?= tohtml($v_domain) ?>" class="button button-secondary">
 					<i class="fas fa-magic icon-blue"></i><?= tohtml( _("Quick Install App")) ?>
 				</a>
 			<?php } ?>
@@ -50,12 +50,12 @@
 			<?php show_alert_message($_SESSION); ?>
 			<div class="u-mb10">
 				<label for="v_domain" class="form-label"><?= tohtml( _("Domain")) ?></label>
-				<input type="text" class="form-control" name="v_domain" id="v_domain" value="<?= tohtml( htmlentities(trim($v_domain, "'"))) ?>" disabled required>
-				<input type="hidden" name="v_domain" value="<?= tohtml( htmlentities(trim($v_domain, "'"))) ?>">
+				<input type="text" class="form-control" name="v_domain" id="v_domain" value="<?= tohtml(trim($v_domain, "'")) ?>" disabled required>
+				<input type="hidden" name="v_domain" value="<?= tohtml(trim($v_domain, "'")) ?>">
 			</div>
 			<div class="u-mb10">
 				<label for="v_aliases" class="form-label"><?= tohtml( _("Aliases")) ?></label>
-				<textarea class="form-control" name="v_aliases" id="v_aliases"><?= tohtml( htmlentities(trim($v_aliases, "'"))) ?></textarea>
+				<textarea class="form-control" name="v_aliases" id="v_aliases"><?= tohtml(trim($v_aliases, "'")) ?></textarea>
 			</div>
 			<?php if ($v_letsencrypt == "yes" || $v_letsencrypt == "on") { ?>
 				<div class="alert alert-info u-mb10" role="alert">
@@ -103,7 +103,7 @@
 				<div x-cloak x-show="statsAuthEnabled" name="v-add-web-domain-stats-user">
 					<div class="u-mb10">
 						<label for="v_stats_user" class="form-label"><?= tohtml( _("Username")) ?></label>
-						<input type="text" class="form-control" name="v_stats_user" id="v_stats_user" value="<?= tohtml( htmlentities(trim($v_stats_user, "'"))) ?>">
+						<input type="text" class="form-control" name="v_stats_user" id="v_stats_user" value="<?= tohtml(trim($v_stats_user, "'")) ?>">
 					</div>
 					<div class="u-mb20">
 						<label for="v_password" class="form-label">
@@ -132,7 +132,7 @@
 					</label>
 				</div>
 				<div class="form-check">
-					<input class="form-check-input js-redirect-custom-value" type="radio" name="v-redirect" id="v-redirect-radio-2" value="<?= tohtml(htmlentities($v_domain)) ?>" <?php if ( $v_redirect == $v_domain) echo 'checked'; ?>>
+					<input class="form-check-input js-redirect-custom-value" type="radio" name="v-redirect" id="v-redirect-radio-2" value="<?= tohtml($v_domain) ?>" <?php if ( $v_redirect == $v_domain) echo 'checked'; ?>>
 					<label for="v-redirect-radio-2">
 						<?= tohtml(sprintf(_("Redirect visitors to %s"), htmlentities($v_domain))) ?>
 					</label>
@@ -193,19 +193,19 @@
 					<div class="u-mb10">
 						<label for="ssl_crt" class="form-label">
 							<?= tohtml( _("SSL Certificate")) ?>
-							<span id="generate-csr"> / <a class="form-link" target="_blank" href="/generate/ssl/?domain=<?= tohtml( htmlentities($v_domain)) ?>"><?= tohtml( _("Generate Self-Signed SSL Certificate")) ?></a></span>
+							<span id="generate-csr"> / <a class="form-link" target="_blank" href="/generate/ssl/?domain=<?= tohtml($v_domain) ?>"><?= tohtml( _("Generate Self-Signed SSL Certificate")) ?></a></span>
 						</label>
-						<textarea class="form-control u-min-height100 u-console" name="v_ssl_crt" id="ssl_crt"><?= tohtml( htmlentities(trim($v_ssl_crt, "'"))) ?></textarea>
+						<textarea class="form-control u-min-height100 u-console" name="v_ssl_crt" id="ssl_crt"><?= tohtml(trim($v_ssl_crt, "'")) ?></textarea>
 					</div>
 					<div class="u-mb10">
 						<label for="v_ssl_key" class="form-label"><?= tohtml( _("SSL Private Key")) ?></label>
-						<textarea class="form-control u-min-height100 u-console" name="v_ssl_key" id="v_ssl_key"><?= tohtml( htmlentities(trim($v_ssl_key, "'"))) ?></textarea>
+						<textarea class="form-control u-min-height100 u-console" name="v_ssl_key" id="v_ssl_key"><?= tohtml(trim($v_ssl_key, "'")) ?></textarea>
 					</div>
 					<div class="u-mb20">
 						<label for="v_ssl_ca" class="form-label">
 							<?= tohtml( _("SSL Certificate Authority / Intermediate")) ?> <span class="optional">(<?= tohtml( _("Optional")) ?>)</span>
 						</label>
-						<textarea class="form-control u-min-height100 u-console" name="v_ssl_ca" id="v_ssl_ca"><?= tohtml( htmlentities(trim($v_ssl_ca, "'"))) ?></textarea>
+						<textarea class="form-control u-min-height100 u-console" name="v_ssl_ca" id="v_ssl_ca"><?= tohtml(trim($v_ssl_ca, "'")) ?></textarea>
 					</div>
 				</div>
 				<?php if ($v_ssl != "no") { ?>
@@ -292,7 +292,7 @@
 								<label for="v_nginx_cache_duration" class="form-label">
 									<?= tohtml( _("Cache Duration")) ?> <span class="optional">(<?= tohtml( _("For example")) ?>: 30s, 10m or 1d)</span>
 								</label>
-								<input type="text" class="form-control" name="v_nginx_cache_duration" id="v_nginx_cache_duration" value="<?= tohtml( htmlentities(trim($v_nginx_cache_duration, "'"))) ?>">
+								<input type="text" class="form-control" name="v_nginx_cache_duration" id="v_nginx_cache_duration" value="<?= tohtml(trim($v_nginx_cache_duration, "'")) ?>">
 							</div>
 						</div>
 					<?php } ?>
@@ -365,9 +365,9 @@
 						<input type="hidden" class="js-custom-docroot-prepath" name="v-custom-doc-root_prepath" value="<?= tohtml($v_custom_doc_root_prepath) ?>">
 						<select class="form-select js-custom-docroot-domain" name="v-custom-doc-domain" id="v-custom-doc-domain">
 							<?php foreach ($user_domains as $domain): ?>
-							<option value="<?= tohtml( htmlentities($domain)) ?>"
+							<option value="<?= tohtml($domain) ?>"
 								<?= tohtml($v_custom_doc_domain === $domain || (empty($v_custom_doc_domain) && $domain === $v_domain) ? ' selected="selected" ' : "") ?>>
-								<?= tohtml( htmlentities($domain)) ?>
+								<?= tohtml($domain) ?>
 							</option>
 							<?php endforeach; ?>
 						</select>
@@ -376,7 +376,7 @@
 						<label for="v-custom-doc-folder" class="form-label">
 							<?php print _("Directory"); ?> <span class="optional">(<?= tohtml( _("Optional")) ?>)</span>
 						</label>
-						<input type="text" class="form-control js-custom-docroot-dir" name="v-custom-doc-folder" id="v-custom-doc-folder" value="<?= tohtml( htmlentities(trim($v_custom_doc_folder, "'"))) ?>">
+						<input type="text" class="form-control js-custom-docroot-dir" name="v-custom-doc-folder" id="v-custom-doc-folder" value="<?= tohtml(trim($v_custom_doc_folder, "'")) ?>">
 						<small class="js-custom-docroot-hint"></small>
 					</div>
 				</div>
@@ -401,7 +401,7 @@
 								<?= tohtml( _("FTP")) ?> #<span class="js-ftp-user-number"><?= tohtml($i + 1) ?></span>
 								<button type="button" class="form-link form-link-danger u-ml5 js-delete-ftp-account"><?= tohtml( _("Delete")) ?></button>
 								<input type="hidden" class="js-ftp-user-deleted" name="v_ftp_user[<?= tohtml($i) ?>][delete]" value="0">
-								<input type="hidden" class="js-ftp-user-is-new" name="v_ftp_user[<?= tohtml($i) ?>][is_new]" value="<?= tohtml( htmlentities($ftp_user['is_new'])) ?>">
+								<input type="hidden" class="js-ftp-user-is-new" name="v_ftp_user[<?= tohtml($i) ?>][is_new]" value="<?= tohtml($ftp_user['is_new']) ?>">
 							</div>
 							<div class="u-pl30 u-mb10">
 								<label for="v_ftp_user[<?= tohtml($i) ?>][v_ftp_user]" class="form-label">
@@ -409,7 +409,7 @@
 									<span style="color:#777;"><?= tohtml(sprintf(_('Prefix %s will be added to username automatically'),$user_plain."_")) ?></span>
 								</label>
 								<input type="text" class="form-control js-ftp-user" <?= tohtml($ftp_user['is_new'] != 1 ? 'disabled="disabled"' : '') ?>
-								name="v_ftp_user[<?= tohtml($i) ?>][v_ftp_user]" id="v_ftp_user[<?= tohtml($i) ?>][v_ftp_user]" value="<?= tohtml( htmlentities(trim($v_ftp_user, "'"))) ?>">
+								name="v_ftp_user[<?= tohtml($i) ?>][v_ftp_user]" id="v_ftp_user[<?= tohtml($i) ?>][v_ftp_user]" value="<?= tohtml(trim($v_ftp_user, "'")) ?>">
 								<small class="hint js-ftp-user-hint"></small>
 							</div>
 							<div class="u-pl30 u-mb10">
@@ -419,19 +419,19 @@
 										<i class="fas fa-arrows-rotate icon-green"></i>
 									</button>
 								</label>
-								<input type="text" class="form-control js-ftp-user-psw" name="v_ftp_user[<?= tohtml($i) ?>][v_ftp_password]" id="v_ftp_user[<?= tohtml($i) ?>][v_ftp_password]" value="<?= tohtml( htmlentities(trim($v_ftp_password, "'"))) ?>">
+								<input type="text" class="form-control js-ftp-user-psw" name="v_ftp_user[<?= tohtml($i) ?>][v_ftp_password]" id="v_ftp_user[<?= tohtml($i) ?>][v_ftp_password]" value="<?= tohtml(trim($v_ftp_password, "'")) ?>">
 							</div>
 							<div class="u-pl30 u-mb10">
 								<label for="v_ftp_user[<?= tohtml($i) ?>][v_ftp_path]" class="form-label"><?= tohtml( _("Path")) ?></label>
 								<input type="hidden" name="v_ftp_pre_path" value="<?= tohtml(!empty($v_ftp_pre_path) ? htmlentities(trim($v_ftp_pre_path, "'")) : '/') ?>">
 								<input type="hidden" name="v_ftp_user[<?= tohtml($i) ?>][v_ftp_path_prev]" value="<?php if (!empty($v_ftp_path)) echo ($v_ftp_path[0] != '/' ? '/' : '').htmlentities(trim($v_ftp_path, "'")) ?>">
 								<input type="text" class="form-control js-ftp-path" name="v_ftp_user[<?= tohtml($i) ?>][v_ftp_path]" id="v_ftp_user[<?= tohtml($i) ?>][v_ftp_path]" value="<?php if (!empty($v_ftp_path)) echo ($v_ftp_path[0] != '/' ? '/' : '').htmlentities(trim($v_ftp_path, "'")) ?>">
-								<span class="hint-prefix"><?= tohtml( htmlentities(trim($v_ftp_pre_path, "'"))) ?></span><span class="hint js-ftp-path-hint"></span>
+								<span class="hint-prefix"><?= tohtml(trim($v_ftp_pre_path, "'")) ?></span><span class="hint js-ftp-path-hint"></span>
 							</div>
 							<?php if ($ftp_user['is_new'] == 1): ?>
 								<div class="u-pl30 u-mb10">
 									<label for="v_ftp_user[<?= tohtml($i) ?>][v_ftp_email]" class="form-label"><?= tohtml( _("Send FTP credentials to email")) ?></label>
-									<input type="email" class="form-control js-email-alert-on-psw" name="v_ftp_user[<?= tohtml($i) ?>][v_ftp_email]" id="v_ftp_user[<?= tohtml($i) ?>][v_ftp_email]" value="<?= tohtml( htmlentities(trim($v_ftp_email, "'"))) ?>">
+									<input type="email" class="form-control js-email-alert-on-psw" name="v_ftp_user[<?= tohtml($i) ?>][v_ftp_email]" id="v_ftp_user[<?= tohtml($i) ?>][v_ftp_email]" value="<?= tohtml(trim($v_ftp_email, "'")) ?>">
 								</div>
 							<?php endif; ?>
 						</div>
@@ -478,7 +478,7 @@
 			<label for="v_ftp_user[%INDEX%][v_ftp_path]" class="form-label"><?= tohtml( _("Path")) ?></label>
 			<input type="hidden" name="v_ftp_pre_path" value="">
 			<input type="text" class="form-control js-ftp-path" name="v_ftp_user[%INDEX%][v_ftp_path]" id="v_ftp_user[%INDEX%][v_ftp_path]" value="">
-			<span class="hint-prefix"><?= tohtml( htmlentities(trim($v_ftp_pre_path_new_user, "'"))) ?></span><span class="hint js-ftp-path-hint"></span>
+			<span class="hint-prefix"><?= tohtml(trim($v_ftp_pre_path_new_user, "'")) ?></span><span class="hint js-ftp-path-hint"></span>
 		</div>
 		<div class="u-pl30 u-mb10">
 			<label for="v_ftp_user[%INDEX%][v_ftp_email]" class="form-label"><?= tohtml( _("Send FTP credentials to email")) ?></label>

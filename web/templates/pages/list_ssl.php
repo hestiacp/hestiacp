@@ -19,7 +19,7 @@
 					<?= tohtml( _("SSL Certificate")) ?>
 					<a
 						x-bind:href="blob()"
-						download="<?= tohtml( htmlentities($v_domain)) ?>.crt"
+						download="<?= tohtml($v_domain) ?>.crt"
 						title="<?= tohtml( _("Download")) ?>"
 					>
 						<i class="fas fa-download"></i>
@@ -46,7 +46,7 @@
 					<?= tohtml( _("SSL Private Key")) ?>
 					<a
 						x-bind:href="blob()"
-						download="<?= tohtml( htmlentities($v_domain)) ?>.key"
+						download="<?= tohtml($v_domain) ?>.key"
 						title="<?= tohtml( _("Download")) ?>"
 					>
 						<i class="fas fa-download"></i>
@@ -73,7 +73,7 @@
 					<?= tohtml( _("SSL CSR")) ?>
 					<a
 						x-bind:href="blob()"
-						download="<?= tohtml( htmlentities($v_domain)) ?>.csr"
+						download="<?= tohtml($v_domain) ?>.csr"
 						title="<?= tohtml( _("Download")) ?>"
 					>
 						<i class="fas fa-download"></i>

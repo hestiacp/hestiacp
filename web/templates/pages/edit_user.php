@@ -62,21 +62,21 @@
 			<?php show_alert_message($_SESSION); ?>
 			<div class="u-mb10">
 				<label for="v_user" class="form-label"><?= tohtml( _("Username")) ?></label>
-				<input type="text" class="form-control" name="v_user" id="v_user" value="<?= tohtml( htmlentities(trim($v_username, "'"))) ?>" disabled required>
-				<input type="hidden" name="v_username" value="<?= tohtml( htmlentities(trim($v_username, "'"))) ?>">
+				<input type="text" class="form-control" name="v_user" id="v_user" value="<?= tohtml(trim($v_username, "'")) ?>" disabled required>
+				<input type="hidden" name="v_username" value="<?= tohtml(trim($v_username, "'")) ?>">
 			</div>
 			<div class="u-mb10">
 				<label for="v_name" class="form-label"><?= tohtml( _("Contact Name")) ?></label>
-				<input type="text" class="form-control" name="v_name" id="v_name" value="<?= tohtml( htmlentities(trim($v_name, "'"))) ?>" <?php if (($_SESSION['userContext'] !=='admin' ) && ($_SESSION['POLICY_USER_EDIT_DETAILS'] !=='yes' )) { echo 'disabled' ; }?> required>
+				<input type="text" class="form-control" name="v_name" id="v_name" value="<?= tohtml(trim($v_name, "'")) ?>" <?php if (($_SESSION['userContext'] !=='admin' ) && ($_SESSION['POLICY_USER_EDIT_DETAILS'] !=='yes' )) { echo 'disabled' ; }?> required>
 				<?php if (($_SESSION['userContext'] !== 'admin') && ($_SESSION['POLICY_USER_EDIT_DETAILS'] !== 'yes')) { ?>
-					<input type="hidden" name="v_name" value="<?= tohtml( htmlentities(trim($v_name, "'"))) ?>">
+					<input type="hidden" name="v_name" value="<?= tohtml(trim($v_name, "'")) ?>">
 				<?php } ?>
 			</div>
 			<div class="u-mb10">
 				<label for="v_email" class="form-label"><?= tohtml( _("Email")) ?></label>
-				<input type="email" class="form-control" name="v_email" id="v_email" value="<?= tohtml( htmlentities(trim($v_email, "'"))) ?>" <?php if (($_SESSION['userContext'] !=='admin' ) && ($_SESSION['POLICY_USER_EDIT_DETAILS'] !=='yes' )) { echo 'disabled' ; }?> required>
+				<input type="email" class="form-control" name="v_email" id="v_email" value="<?= tohtml(trim($v_email, "'")) ?>" <?php if (($_SESSION['userContext'] !=='admin' ) && ($_SESSION['POLICY_USER_EDIT_DETAILS'] !=='yes' )) { echo 'disabled' ; }?> required>
 				<?php if (($_SESSION['userContext'] !== 'admin') && ($_SESSION['POLICY_USER_EDIT_DETAILS'] !== 'yes')) { ?>
-					<input type="hidden" name="v_email" value="<?= tohtml( htmlentities(trim($v_email, "'"))) ?>">
+					<input type="hidden" name="v_email" value="<?= tohtml(trim($v_email, "'")) ?>">
 				<?php } ?>
 			</div>
 			<div class="u-mb10">
@@ -87,7 +87,7 @@
 					</button>
 				</label>
 				<div class="u-pos-relative u-mb10">
-					<input type="text" class="form-control js-password-input" name="v_password" id="v_password" value="<?= tohtml( htmlentities(trim($v_password, "'"))) ?>">
+					<input type="text" class="form-control js-password-input" name="v_password" id="v_password" value="<?= tohtml(trim($v_password, "'")) ?>">
 					<div class="password-meter">
 						<meter max="4" class="password-meter-input js-password-meter"></meter>
 					</div>
@@ -114,7 +114,7 @@
 						<p class="u-mb10"><?= tohtml( _("Account Recovery Code") . ": " . $v_twofa) ?></p>
 						<p class="u-mb10"><?= tohtml( _("Please scan the code below in your 2FA application")) ?>:</p>
 						<div class="u-mb10">
-							<img class="qr-code" src="<?= tohtml( htmlentities($v_qrcode)) ?>" alt="<?= tohtml( _("2FA QR Code")) ?>">
+							<img class="qr-code" src="<?= tohtml($v_qrcode) ?>" alt="<?= tohtml( _("2FA QR Code")) ?>">
 						</div>
 					<?php } ?>
 				</div>
@@ -127,7 +127,7 @@
 					</div>
 				</div>
 				<div x-cloak x-show="useIpAllowList" id="ip-allowlist" class="u-mt10">
-					<input type="text" class="form-control" name="v_login_allowed_ips" value="<?= tohtml( htmlentities(trim($v_login_allowed_ips, "'"))) ?>" placeholder="<?= tohtml( _("For example")) ?>: 127.0.0.1,192.168.1.100">
+					<input type="text" class="form-control" name="v_login_allowed_ips" value="<?= tohtml(trim($v_login_allowed_ips, "'")) ?>" placeholder="<?= tohtml( _("For example")) ?>: 127.0.0.1,192.168.1.100">
 				</div>
 			</div>
 			<div class="u-mb10">
@@ -243,10 +243,10 @@
 					<?php if ((isset($_SESSION['DNS_SYSTEM'])) && (!empty($_SESSION['DNS_SYSTEM']))) { ?>
 						<p class="form-label u-mb10"><?= tohtml( _("Default Name Servers")) ?></p>
 						<div class="u-mb5">
-							<input type="text" class="form-control" name="v_ns1" value="<?= tohtml( htmlentities(trim($v_ns1, "'"))) ?>">
+							<input type="text" class="form-control" name="v_ns1" value="<?= tohtml(trim($v_ns1, "'")) ?>">
 						</div>
 						<div class="u-mb5">
-							<input type="text" class="form-control" name="v_ns2" value="<?= tohtml( htmlentities(trim($v_ns2, "'"))) ?>">
+							<input type="text" class="form-control" name="v_ns2" value="<?= tohtml(trim($v_ns2, "'")) ?>">
 						</div>
 						<?php require $_SERVER["HESTIA"] . "/web/templates/includes/extra-ns-fields.php"; ?>
 						<button type="button" class="form-link u-mt20 js-add-ns" <?php if ($v_ns8) echo 'style="display:none;"'; ?>>

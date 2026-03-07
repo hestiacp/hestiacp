@@ -51,7 +51,7 @@
 				</p>
 				<div class="u-mb10">
 					<label for="v_database" class="form-label"><?= tohtml( _("Database")) ?></label>
-					<input type="text" class="form-control js-db-hint-database-name" name="v_database" id="v_database" value="<?= tohtml( htmlentities(trim($v_database, "'"))) ?>">
+					<input type="text" class="form-control js-db-hint-database-name" name="v_database" id="v_database" value="<?= tohtml(trim($v_database, "'")) ?>">
 					<small class="hint"></small>
 				</div>
 				<div class="u-mb10">
@@ -71,7 +71,7 @@
 						<?= tohtml( _("Username")) ?>
 						<em><small>(<?= tohtml(sprintf(_("Maximum %s characters length, including prefix"), 32)) ?>)</small></em>
 					</label>
-					<input type="text" class="form-control js-db-hint-username" name="v_dbuser" id="v_dbuser" value="<?= tohtml( htmlentities(trim($v_dbuser, "'"))) ?>">
+					<input type="text" class="form-control js-db-hint-username" name="v_dbuser" id="v_dbuser" value="<?= tohtml(trim($v_dbuser, "'")) ?>">
 					<small class="hint"></small>
 				</div>
 				<div class="u-mb10">
@@ -93,7 +93,7 @@
 					<label for="v_db_email" class="form-label">
 						<?= tohtml( _("Email login credentials to:")) ?>
 					</label>
-					<input type="email" class="form-control" name="v_db_email" id="v_db_email" value="<?= tohtml( htmlentities(trim($v_db_email, "'"))) ?>">
+					<input type="email" class="form-control" name="v_db_email" id="v_db_email" value="<?= tohtml(trim($v_db_email, "'")) ?>">
 				</div>
 				<div class="u-mb20">
 					<button x-on:click="showAdvanced = !showAdvanced" type="button" class="button button-secondary">

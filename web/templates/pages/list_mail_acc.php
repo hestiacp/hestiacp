@@ -12,10 +12,10 @@ if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
 				<i class="fas fa-arrow-left icon-blue"></i><?= tohtml( _("Back")) ?>
 			</a>
 			<?php if ($read_only !== "true") { ?>
-				<a href="/add/mail/?domain=<?= tohtml( htmlentities($_GET["domain"])) ?>" class="button button-secondary js-button-create">
+				<a href="/add/mail/?domain=<?= tohtml($_GET["domain"]) ?>" class="button button-secondary js-button-create">
 					<i class="fas fa-circle-plus icon-green"></i><?= tohtml( _("Add Mail Account")) ?>
 				</a>
-				<a href="/edit/mail/?domain=<?= tohtml( htmlentities($_GET["domain"])) ?>" class="button button-secondary js-button-create">
+				<a href="/edit/mail/?domain=<?= tohtml($_GET["domain"]) ?>" class="button button-secondary js-button-create">
 					<i class="fas fa-pencil icon-blue"></i><?= tohtml( _("Edit Mail Domain")) ?>
 				</a>
 			<?php } ?>
@@ -46,7 +46,7 @@ if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
 				<?php if ($read_only !== "true") { ?>
 					<form x-data x-bind="BulkEdit" action="/bulk/mail/" method="post">
 						<input type="hidden" name="token" value="<?= tohtml($_SESSION["token"]) ?>">
-						<input type="hidden" value="<?= tohtml( htmlspecialchars($_GET["domain"])) ?>" name="domain">
+						<input type="hidden" value="<?= tohtml($_GET["domain"]) ?>" name="domain">
 						<select class="form-select" name="action">
 							<option value=""><?= tohtml( _("Apply to selected")) ?></option>
 							<option value="suspend"><?= tohtml( _("Suspend")) ?></option>
@@ -169,7 +169,7 @@ if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
 					<?php if ($read_only === "true" || $data[$key]["SUSPENDED"] == "yes") { ?>
 						<?= tohtml($key . "@" . htmlentities($_GET["domain"])) ?>
 					<?php } else { ?>
-						<a href="/edit/mail/?domain=<?= tohtml( htmlspecialchars($_GET['domain'])) ?>&account=<?= tohtml($key) ?>&token=<?= tohtml($_SESSION['token']) ?>" title="<?= tohtml( _("Edit Mail Account")) ?>: <?= tohtml($key) ?>@<?= tohtml( htmlspecialchars($_GET['domain'])) ?>">
+						<a href="/edit/mail/?domain=<?= tohtml($_GET['domain']) ?>&account=<?= tohtml($key) ?>&token=<?= tohtml($_SESSION['token']) ?>" title="<?= tohtml( _("Edit Mail Account")) ?>: <?= tohtml($key) ?>@<?= tohtml($_GET['domain']) ?>">
 							<?= tohtml($key."@".htmlentities($_GET['domain'])) ?>
 						</a>
 					<?php } ?>
@@ -182,7 +182,7 @@ if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
 								<li class="units-table-row-action" data-key-action="href">
 									<a
 										class="units-table-row-action-link"
-										href="http://<?= tohtml($v_webmail_alias) ?>.<?= tohtml( htmlspecialchars($_GET["domain"])) ?>/?_user=<?= tohtml($key) ?>@<?= tohtml( htmlspecialchars($_GET["domain"])) ?>"
+										href="http://<?= tohtml($v_webmail_alias) ?>.<?= tohtml($_GET["domain"]) ?>/?_user=<?= tohtml($key) ?>@<?= tohtml($_GET["domain"]) ?>"
 										target="_blank"
 										title="<?= tohtml( _("Open Webmail")) ?>"
 									>
@@ -198,7 +198,7 @@ if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
 										<li class="units-table-row-action" data-key-action="href">
 											<a
 												class="units-table-row-action-link"
-												href="http://<?= tohtml($v_webmail_alias) ?>.<?= tohtml( htmlspecialchars($_GET["domain"])) ?>/?_user=<?= tohtml($key) ?>@<?= tohtml( htmlspecialchars($_GET["domain"])) ?>"
+												href="http://<?= tohtml($v_webmail_alias) ?>.<?= tohtml($_GET["domain"]) ?>/?_user=<?= tohtml($key) ?>@<?= tohtml($_GET["domain"]) ?>"
 												target="_blank"
 												title="<?= tohtml( _("Open Webmail")) ?>"
 											>
@@ -211,7 +211,7 @@ if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
 								<li class="units-table-row-action shortcut-enter" data-key-action="href">
 									<a
 										class="units-table-row-action-link"
-										href="/edit/mail/?domain=<?= tohtml( htmlspecialchars($_GET["domain"])) ?>&account=<?= tohtml($key) ?>&token=<?= tohtml($_SESSION["token"]) ?>"
+										href="/edit/mail/?domain=<?= tohtml($_GET["domain"]) ?>&account=<?= tohtml($key) ?>&token=<?= tohtml($_SESSION["token"]) ?>"
 										title="<?= tohtml( _("Edit Mail Account")) ?>"
 									>
 										<i class="fas fa-pencil icon-orange"></i>
@@ -222,7 +222,7 @@ if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
 							<li class="units-table-row-action shortcut-s" data-key-action="js">
 								<a
 									class="units-table-row-action-link data-controls js-confirm-action"
-									href="/<?= tohtml($spnd_action) ?>/mail/?domain=<?= tohtml( htmlspecialchars($_GET["domain"])) ?>&account=<?= tohtml($key) ?>&token=<?= tohtml($_SESSION["token"]) ?>"
+									href="/<?= tohtml($spnd_action) ?>/mail/?domain=<?= tohtml($_GET["domain"]) ?>&account=<?= tohtml($key) ?>&token=<?= tohtml($_SESSION["token"]) ?>"
 									title="<?= tohtml($spnd_action_title) ?>"
 									data-confirm-title="<?= tohtml($spnd_action_title) ?>"
 									data-confirm-message="<?= tohtml(sprintf($spnd_confirmation, $key)) ?>"
@@ -234,7 +234,7 @@ if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
 							<li class="units-table-row-action shortcut-delete" data-key-action="js">
 								<a
 									class="units-table-row-action-link data-controls js-confirm-action"
-									href="/delete/mail/?domain=<?= tohtml( htmlspecialchars($_GET["domain"])) ?>&account=<?= tohtml($key) ?>&token=<?= tohtml($_SESSION["token"]) ?>"
+									href="/delete/mail/?domain=<?= tohtml($_GET["domain"]) ?>&account=<?= tohtml($key) ?>&token=<?= tohtml($_SESSION["token"]) ?>"
 									title="<?= tohtml( _("Delete")) ?>"
 									data-confirm-title="<?= tohtml( _("Delete")) ?>"
 									data-confirm-message="<?= tohtml(sprintf(_("Are you sure you want to delete %s?"), $key)) ?>"

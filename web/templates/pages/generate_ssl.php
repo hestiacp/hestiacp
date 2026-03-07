@@ -9,43 +9,43 @@
 			<?php show_alert_message($_SESSION); ?>
 			<div class="u-mb10">
 				<label for="v_domain" class="form-label"><?= tohtml( _("Domain")) ?></label>
-				<input type="text" class="form-control" name="v_domain" id="v_domain" value="<?= tohtml( htmlentities(trim($v_domain, "'"))) ?>">
+				<input type="text" class="form-control" name="v_domain" id="v_domain" value="<?= tohtml(trim($v_domain, "'")) ?>">
 			</div>
 			<div class="u-mb10">
 				<label for="v_aliases" class="form-label"><?= tohtml( _("Aliases")) ?></label>
-				<textarea class="form-control" name="v_aliases" id="v_aliases"><?= tohtml( htmlentities(trim($v_aliases, "'"))) ?></textarea>
+				<textarea class="form-control" name="v_aliases" id="v_aliases"><?= tohtml(trim($v_aliases, "'")) ?></textarea>
 			</div>
 			<div class="u-mb10">
 				<label for="v_email" class="form-label">
 					<?= tohtml( _("Email")) ?>
 					<span class="optional">(<?php print _("Optional"); ?>)</span>
 				</label>
-				<input type="email" class="form-control" name="v_email" id="v_email" value="<?= tohtml( htmlentities(trim($v_email, "'"))) ?>">
+				<input type="email" class="form-control" name="v_email" id="v_email" value="<?= tohtml(trim($v_email, "'")) ?>">
 			</div>
 			<div class="u-mb10">
 				<label for="v_country" class="form-label">
 					<?= tohtml( _("Country")) ?>
 					<span class="optional">(<?= tohtml( _("ISO 3166-1 alpha-2 two-letter code")) ?>)</span>
 				</label>
-				<input type="text" class="form-control" name="v_country" id="v_country" value="<?= tohtml( htmlentities(trim($v_country, "'"))) ?>">
+				<input type="text" class="form-control" name="v_country" id="v_country" value="<?= tohtml(trim($v_country, "'")) ?>">
 			</div>
 			<div class="u-mb10">
 				<label for="v_state" class="form-label">
 					<?= tohtml( _("State / Province")) ?>
 				</label>
-				<input type="text" class="form-control" name="v_state" id="v_state" value="<?= tohtml( htmlentities(trim($v_state, "'"))) ?>">
+				<input type="text" class="form-control" name="v_state" id="v_state" value="<?= tohtml(trim($v_state, "'")) ?>">
 			</div>
 			<div class="u-mb10">
 				<label for="v_locality" class="form-label">
 					<?= tohtml( _("City / Locality")) ?>
 				</label>
-				<input type="text" class="form-control" name="v_locality" id="v_locality" value="<?= tohtml( htmlentities(trim($v_locality, "'"))) ?>">
+				<input type="text" class="form-control" name="v_locality" id="v_locality" value="<?= tohtml(trim($v_locality, "'")) ?>">
 			</div>
 			<div class="u-mb20">
 				<label for="v_org" class="form-label">
 					<?= tohtml( _("Organization")) ?>
 				</label>
-				<input type="text" class="form-control" name="v_org" id="v_org" value="<?= tohtml( htmlentities(trim($v_org, "'"))) ?>">
+				<input type="text" class="form-control" name="v_org" id="v_org" value="<?= tohtml(trim($v_org, "'")) ?>">
 			</div>
 			<div>
 				<button type="submit" class="button" name="generate">

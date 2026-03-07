@@ -41,7 +41,7 @@
 			<?php if (($_SESSION["role"] == "admin" && $accept === "true") || $_SESSION["role"] !== "admin") { ?>
 				<div class="u-mb10">
 					<label for="v_domain" class="form-label"><?= tohtml( _("Domain")) ?></label>
-					<input type="text" class="form-control" name="v_domain" id="v_domain" value="<?= tohtml( htmlentities(trim($v_domain, "'"))) ?>" required>
+					<input type="text" class="form-control" name="v_domain" id="v_domain" value="<?= tohtml(trim($v_domain, "'")) ?>" required>
 				</div>
 				<div class="u-mb20">
 					<label for="v_ip" class="form-label"><?= tohtml( _("IP Address")) ?></label>

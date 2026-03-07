@@ -29,7 +29,7 @@ if (!empty($_POST["ok"])) { ?>
 			<?php if (!empty($key_data["ACCESS_KEY_ID"])) { ?>
 				<div class="u-mt15 u-mb10">
 					<label for="access_key_id" class="form-label"><?= tohtml( _("Access Key ID")) ?></label>
-					<input type="text" class="form-control" id="access_key_id" maxlength="255" readonly value="<?= tohtml( htmlentities(trim($key_data["ACCESS_KEY_ID"], "'"))) ?>">
+					<input type="text" class="form-control" id="access_key_id" maxlength="255" readonly value="<?= tohtml(trim($key_data["ACCESS_KEY_ID"], "'")) ?>">
 				</div>
 			<?php } ?>
 			<?php if (!empty($_SESSION["ok_msg"])) { ?>
@@ -39,7 +39,7 @@ if (!empty($_POST["ok"])) { ?>
 							<?= tohtml( _("Secret Key")) ?><br>
 							<span class="inline-alert inline-alert-warning u-mb20"><?= tohtml( _("Warning! Last chance to save secret key!")) ?></span>
 						</label>
-						<input type="text" class="form-control" id="secret_key" maxlength="255" readonly value="<?= tohtml( htmlentities(trim($key_data["SECRET_ACCESS_KEY"], "'"))) ?>">
+						<input type="text" class="form-control" id="secret_key" maxlength="255" readonly value="<?= tohtml(trim($key_data["SECRET_ACCESS_KEY"], "'")) ?>">
 					</div>
 				<?php } ?>
 			<?php } ?>
@@ -51,7 +51,7 @@ if (!empty($_POST["ok"])) { ?>
 			</ul>
 			<div class="u-mb10">
 				<label for="service" class="form-label"><?= tohtml( _("Comment")) ?></label>
-				<input type="text" class="form-control" id="service" maxlength="255" readonly value="<?= tohtml( htmlentities(trim($key_data["COMMENT"], "'"))) ?>">
+				<input type="text" class="form-control" id="service" maxlength="255" readonly value="<?= tohtml(trim($key_data["COMMENT"], "'")) ?>">
 			</div>
 		</div>
 

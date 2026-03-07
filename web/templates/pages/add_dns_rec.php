@@ -2,7 +2,7 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<a class="button button-secondary button-back js-button-back" href="/list/dns/?domain=<?= tohtml( htmlentities(trim($v_domain, "'"))) ?>&token=<?= tohtml($_SESSION["token"]) ?>">
+			<a class="button button-secondary button-back js-button-back" href="/list/dns/?domain=<?= tohtml(trim($v_domain, "'")) ?>&token=<?= tohtml($_SESSION["token"]) ?>">
 				<i class="fas fa-arrow-left icon-blue"></i><?= tohtml( _("Back")) ?>
 			</a>
 		</div>
@@ -26,12 +26,12 @@
 			<?php show_alert_message($_SESSION); ?>
 			<div class="u-mb10">
 				<label for="v_domain" class="form-label"><?= tohtml( _("Domain")) ?></label>
-				<input type="text" class="form-control js-dns-record-domain" name="v_domain" id="v_domain" value="<?= tohtml( htmlentities(trim($v_domain, "'"))) ?>" disabled>
-				<input type="hidden" name="v_domain" value="<?= tohtml( htmlentities(trim($v_domain, "'"))) ?>">
+				<input type="text" class="form-control js-dns-record-domain" name="v_domain" id="v_domain" value="<?= tohtml(trim($v_domain, "'")) ?>" disabled>
+				<input type="hidden" name="v_domain" value="<?= tohtml(trim($v_domain, "'")) ?>">
 			</div>
 			<div class="u-mb10">
 				<label for="v_rec" class="form-label"><?= tohtml( _("Record")) ?></label>
-				<input type="text" class="form-control js-dns-record-input" name="v_rec" id="v_rec" value="<?= tohtml( htmlentities(trim($v_rec, "'"))) ?>">
+				<input type="text" class="form-control js-dns-record-input" name="v_rec" id="v_rec" value="<?= tohtml(trim($v_rec, "'")) ?>">
 				<small class="hint"></small>
 			</div>
 			<div class="u-mb10">
@@ -66,20 +66,20 @@
 							}
 						?>
 					</select>
-					<input type="text" class="form-control list-editor" name="v_val" id="v_val" value="<?= tohtml( htmlentities(trim($v_val, "'"))) ?>" required>
+					<input type="text" class="form-control list-editor" name="v_val" id="v_val" value="<?= tohtml(trim($v_val, "'")) ?>" required>
 				</div>
 			</div>
 			<div class="u-mb10">
 				<label for="v_priority" class="form-label">
 					<?= tohtml( _("Priority")) ?> <span class="optional">(<?= tohtml( _("Optional")) ?>)</span>
 				</label>
-				<input type="text" class="form-control" name="v_priority" id="v_priority" value="<?= tohtml( htmlentities(trim($v_priority, "'"))) ?>">
+				<input type="text" class="form-control" name="v_priority" id="v_priority" value="<?= tohtml(trim($v_priority, "'")) ?>">
 			</div>
 			<div class="u-mb10">
 				<label for="v_ttl" class="form-label">
 					<?= tohtml( _("TTL")) ?> <span class="optional">(<?= tohtml( _("Optional")) ?>)</span>
 				</label>
-				<input type="text" class="form-control" name="v_ttl" id="v_ttl" value="<?= tohtml( htmlentities(trim($v_ttl, "'"))) ?>">
+				<input type="text" class="form-control" name="v_ttl" id="v_ttl" value="<?= tohtml(trim($v_ttl, "'")) ?>">
 			</div>
 		</div>
 

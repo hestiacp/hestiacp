@@ -153,13 +153,13 @@
 				</div>
 				<div class="units-table-cell u-text-center-desktop">
 					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Date")) ?>:</span>
-					<time datetime="<?= tohtml( htmlspecialchars($value["DATE"])) ?>">
+					<time datetime="<?= tohtml($value["DATE"]) ?>">
 						<?= tohtml(translate_date($value["DATE"])) ?>
 					</time>
 				</div>
 				<div class="units-table-cell u-text-bold u-text-center-desktop">
 					<span class="u-hide-desktop"><?= tohtml( _("Owner")) ?>:</span>
-					<a href="/search/?q=<?= tohtml( htmlentities($_GET["q"])) ?>&u=<?= tohtml($value["USER"]) ?>&token=<?= tohtml($_SESSION["token"]) ?>">
+					<a href="/search/?q=<?= tohtml($_GET["q"]) ?>&u=<?= tohtml($value["USER"]) ?>&token=<?= tohtml($_SESSION["token"]) ?>">
 						<?= tohtml($value["USER"]) ?>
 					</a>
 					<?php if (!($_SESSION["POLICY_SYSTEM_HIDE_ADMIN"] === "yes" && $value["USER"] !== "admin") && $_SESSION["userContext"] === "admin") { ?>

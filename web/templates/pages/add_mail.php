@@ -55,7 +55,7 @@
 			<?php if (($_SESSION["role"] == "admin" && $accept === "true") || $_SESSION["role"] !== "admin") { ?>
 				<div class="u-mb20">
 					<label for="v_domain" class="form-label"><?= tohtml( _("Domain")) ?></label>
-					<input type="text" class="form-control" name="v_domain" id="v_domain" value="<?= tohtml( htmlentities(trim($v_domain, "'"))) ?>" required>
+					<input type="text" class="form-control" name="v_domain" id="v_domain" value="<?= tohtml(trim($v_domain, "'")) ?>" required>
 				</div>
 				<?php if ($_SESSION["WEBMAIL_SYSTEM"]) { ?>
 					<div class="u-mb20">
@@ -119,15 +119,15 @@
 				<div x-cloak x-show="hasSmtpRelay" id="smtp_relay_table" class="u-pl30">
 					<div class="u-mb10">
 						<label for="v_smtp_relay_host" class="form-label"><?= tohtml( _("Host")) ?></label>
-						<input type="text" class="form-control" name="v_smtp_relay_host" id="v_smtp_relay_host" value="<?= tohtml( htmlentities(trim($v_smtp_relay_host, "'"))) ?>">
+						<input type="text" class="form-control" name="v_smtp_relay_host" id="v_smtp_relay_host" value="<?= tohtml(trim($v_smtp_relay_host, "'")) ?>">
 					</div>
 					<div class="u-mb10">
 						<label for="v_smtp_relay_port" class="form-label"><?= tohtml( _("Port")) ?></label>
-						<input type="text" class="form-control" name="v_smtp_relay_port" id="v_smtp_relay_port" value="<?= tohtml( htmlentities(trim($v_smtp_relay_port, "'"))) ?>">
+						<input type="text" class="form-control" name="v_smtp_relay_port" id="v_smtp_relay_port" value="<?= tohtml(trim($v_smtp_relay_port, "'")) ?>">
 					</div>
 					<div class="u-mb10">
 						<label for="v_smtp_relay_user" class="form-label"><?= tohtml( _("Username")) ?></label>
-						<input type="text" class="form-control" name="v_smtp_relay_user" id="v_smtp_relay_user" value="<?= tohtml( htmlentities(trim($v_smtp_relay_user, "'"))) ?>">
+						<input type="text" class="form-control" name="v_smtp_relay_user" id="v_smtp_relay_user" value="<?= tohtml(trim($v_smtp_relay_user, "'")) ?>">
 					</div>
 					<div class="u-mb10">
 						<label for="v_smtp_relay_pass" class="form-label"><?= tohtml( _("Password")) ?></label>

@@ -2,7 +2,7 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<a class="button button-secondary button-back js-button-back" href="/add/webapp/?domain=<?= tohtml( htmlentities($v_domain)) ?>">
+			<a class="button button-secondary button-back js-button-back" href="/add/webapp/?domain=<?= tohtml($v_domain) ?>">
 				<i class="fas fa-arrow-left icon-blue"></i><?= tohtml( _("Back")) ?>
 			</a>
 		</div>
@@ -73,7 +73,7 @@
 									$key = !is_numeric($key) ? $key : $option;
 									$selected = (!empty($form_control["value"]) && $key == $form_control["value"]) ? "selected" : ""; ?>
 									<option value="<?= tohtml($key) ?>" <?= tohtml($selected) ?>>
-										<?= tohtml( htmlentities($option)) ?>
+										<?= tohtml($option) ?>
 									</option>
 								<?php endforeach; ?>
 							</select>

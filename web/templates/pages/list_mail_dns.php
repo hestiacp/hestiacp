@@ -31,7 +31,7 @@ if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
 		<div class="units-table-row js-unit">
 			<div class="units-table-cell">
 				<label class="u-hide-desktop u-text-bold"><?= tohtml( _("Record")) ?>:</label>
-				<input type="text" class="form-control" value="mail.<?= tohtml( htmlspecialchars($_GET["domain"])) ?>">
+				<input type="text" class="form-control" value="mail.<?= tohtml($_GET["domain"]) ?>">
 			</div>
 			<div class="units-table-cell u-text-bold u-text-center-desktop">
 				<span class="u-hide-desktop"><?= tohtml( _("Type")) ?>:</span>
@@ -53,7 +53,7 @@ if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
 			<div class="units-table-row js-unit">
 				<div class="units-table-cell">
 					<label class="u-hide-desktop u-text-bold"><?= tohtml( _("Record")) ?>:</label>
-					<input type="text" class="form-control" value="<?= tohtml($v_webmail_alias) ?>.<?= tohtml( htmlspecialchars($_GET["domain"])) ?>">
+					<input type="text" class="form-control" value="<?= tohtml($v_webmail_alias) ?>.<?= tohtml($_GET["domain"]) ?>">
 				</div>
 				<div class="units-table-cell u-text-bold u-text-center-desktop">
 					<span class="u-hide-desktop"><?= tohtml( _("Type")) ?>:</span>
@@ -75,7 +75,7 @@ if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
 		<div class="units-table-row js-unit">
 			<div class="units-table-cell">
 				<label class="u-hide-desktop u-text-bold"><?= tohtml( _("Record")) ?>:</label>
-				<input type="text" class="form-control" value="<?= tohtml( htmlspecialchars($_GET["domain"])) ?>">
+				<input type="text" class="form-control" value="<?= tohtml($_GET["domain"]) ?>">
 			</div>
 			<div class="units-table-cell u-text-bold u-text-center-desktop">
 				<span class="u-hide-desktop"><?= tohtml( _("Type")) ?>:</span>
@@ -91,13 +91,13 @@ if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
 			</div>
 			<div class="units-table-cell u-text-center-desktop">
 				<label class="u-hide-desktop u-text-bold"><?= tohtml( _("IP or Value")) ?>:</label>
-				<input type="text" class="form-control" value="mail.<?= tohtml( htmlspecialchars($_GET["domain"])) ?>.">
+				<input type="text" class="form-control" value="mail.<?= tohtml($_GET["domain"]) ?>.">
 			</div>
 		</div>
 		<div class="units-table-row js-unit">
 			<div class="units-table-cell">
 				<label class="u-hide-desktop u-text-bold"><?= tohtml( _("Record")) ?>:</label>
-				<input type="text" class="form-control" value="<?= tohtml( htmlspecialchars($_GET["domain"])) ?>">
+				<input type="text" class="form-control" value="<?= tohtml($_GET["domain"]) ?>">
 			</div>
 			<div class="units-table-cell u-text-bold u-text-center-desktop">
 				<span class="u-hide-desktop"><?= tohtml( _("Type")) ?>:</span>
@@ -113,7 +113,7 @@ if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
 			<div class="units-table-cell u-text-center-desktop">
 				<label class="u-hide-desktop u-text-bold"><?= tohtml( _("IP or Value")) ?>:</label>
 				<?php $ip = empty($ips[array_key_first($ips)]["NAT"]) ? array_key_first($ips) : $ips[array_key_first($ips)]["NAT"]; ?>
-				<input type="text" class="form-control" value="<?= tohtml( htmlspecialchars("v=spf1 a mx ip4:" . $ip . " -all")) ?>">
+				<input type="text" class="form-control" value="<?= tohtml("v=spf1 a mx ip4:" . $ip . " -all") ?>">
 			</div>
 		</div>
 		<div class="units-table-row js-unit">
@@ -134,14 +134,14 @@ if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
 			</div>
 			<div class="units-table-cell u-text-center-desktop">
 				<label class="u-hide-desktop u-text-bold"><?= tohtml( _("IP or Value")) ?>:</label>
-				<input type="text" class="form-control" value="<?= tohtml( htmlspecialchars("v=DMARC1; p=quarantine; pct=100")) ?>">
+				<input type="text" class="form-control" value="<?= tohtml("v=DMARC1; p=quarantine; pct=100") ?>">
 			</div>
 		</div>
 		<?php foreach ($dkim as $key => $value) { ?>
 			<div class="units-table-row js-unit">
 				<div class="units-table-cell">
 					<label class="u-hide-desktop u-text-bold"><?= tohtml( _("Record")) ?>:</label>
-					<input type="text" class="form-control" value="<?= tohtml( htmlspecialchars($key)) ?>">
+					<input type="text" class="form-control" value="<?= tohtml($key) ?>">
 				</div>
 				<div class="units-table-cell u-text-bold u-text-center-desktop">
 					<span class="u-hide-desktop"><?= tohtml( _("Type")) ?>:</span>
@@ -156,7 +156,7 @@ if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
 				</div>
 				<div class="units-table-cell u-text-center-desktop">
 					<label class="u-hide-desktop u-text-bold"><?= tohtml( _("IP or Value")) ?>:</label>
-					<input type="text" class="form-control" value="<?= tohtml( htmlspecialchars(str_replace(['"', "'"], "", $dkim[$key]["TXT"]))) ?>">
+					<input type="text" class="form-control" value="<?= tohtml(str_replace(['"', "'"], "", $dkim[$key]["TXT"])) ?>">
 				</div>
 			</div>
 		<?php } ?>

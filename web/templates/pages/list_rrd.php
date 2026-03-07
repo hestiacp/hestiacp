@@ -26,11 +26,11 @@
 		<!-- Begin graph list item loop -->
 		<?php foreach ($data as $key => $value) { ?>
 			<div class="u-mb40">
-				<h2 class="u-mb20"><?= tohtml( htmlspecialchars($data[$key]["TITLE"])) ?></h2>
+				<h2 class="u-mb20"><?= tohtml($data[$key]["TITLE"]) ?></h2>
 				<canvas
 					class="u-max-height300 js-rrd-chart"
 					data-service="<?= tohtml($data[$key]["TYPE"] !== "net" ? htmlspecialchars($data[$key]["RRD"]) : "net_" . htmlspecialchars($data[$key]["RRD"])) ?>"
-					data-period="<?= tohtml( htmlspecialchars($period)) ?>"
+					data-period="<?= tohtml($period) ?>"
 				></canvas>
 			</div>
 		<?php } ?>

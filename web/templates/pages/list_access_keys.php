@@ -3,11 +3,11 @@
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
 			<?php if ($_SESSION["userContext"] === "admin" && $_SESSION['look'] !== '' && $_GET["user"] !== "admin") { ?>
-				<a href="/edit/user/?user=<?= tohtml( htmlentities($_SESSION["look"])) ?>&token=<?= tohtml($_SESSION["token"]) ?>" class="button button-secondary button-back js-button-back">
+				<a href="/edit/user/?user=<?= tohtml($_SESSION["look"]) ?>&token=<?= tohtml($_SESSION["token"]) ?>" class="button button-secondary button-back js-button-back">
 					<i class="fas fa-arrow-left icon-blue"></i><?= tohtml( _("Back")) ?>
 				</a>
 			<?php } else { ?>
-				<a href="/edit/user/?user=<?= tohtml( htmlentities($_SESSION["user"])) ?>&token=<?= tohtml($_SESSION["token"]) ?>" class="button button-secondary button-back js-button-back">
+				<a href="/edit/user/?user=<?= tohtml($_SESSION["user"]) ?>&token=<?= tohtml($_SESSION["token"]) ?>" class="button button-secondary button-back js-button-back">
 					<i class="fas fa-arrow-left icon-blue"></i><?= tohtml( _("Back")) ?>
 				</a>
 			<?php } ?>
@@ -88,7 +88,7 @@
 				</div>
 				<div class="units-table-cell units-table-heading-cell u-text-bold">
 					<span class="u-hide-desktop"><?= tohtml( _("Access Key")) ?>:</span>
-					<a href="/list/access-key/?key=<?= tohtml( htmlentities($key)) ?>&token=<?= tohtml($_SESSION["token"]) ?>" title="<?= tohtml( _("Access Key")) ?>: <?= tohtml($key) ?>">
+					<a href="/list/access-key/?key=<?= tohtml($key) ?>&token=<?= tohtml($_SESSION["token"]) ?>" title="<?= tohtml( _("Access Key")) ?>: <?= tohtml($key) ?>">
 						<?= tohtml($key) ?>
 					</a>
 				</div>

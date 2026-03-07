@@ -224,7 +224,7 @@
 							<span class="u-ml5">
 								<?= tohtml($_SESSION["PROXY_SYSTEM"]) ?>
 							</span>
-							<a href="/edit/server/<?= tohtml($_SESSION["PROXY_SYSTEM"]) ?>/" class="u-ml5">
+							<a href="/edit/server/<?= tohtml(rawurlencode($_SESSION["PROXY_SYSTEM"])) ?>/" class="u-ml5">
 								<i class="fas fa-pencil icon-orange"></i>
 							</a>
 						</p>
@@ -235,7 +235,7 @@
 							<span class="u-ml5">
 								<?= tohtml($_SESSION["WEB_SYSTEM"]) ?>
 							</span>
-							<a href="/edit/server/<?= tohtml($_SESSION["WEB_SYSTEM"]) ?>/" class="u-ml5">
+							<a href="/edit/server/<?= tohtml(rawurlencode($_SESSION["WEB_SYSTEM"])) ?>/" class="u-ml5">
 								<i class="fas fa-pencil icon-orange"></i>
 							</a>
 						</p>
@@ -246,7 +246,7 @@
 							<span class="u-ml5">
 								<?= tohtml($_SESSION["WEB_BACKEND"]) ?>
 							</span>
-							<a href="/edit/server/<? echo $_SESSION["WEB_BACKEND"] ?>/" class="u-ml5">
+							<a href="/edit/server/<?= tohtml(rawurlencode($_SESSION["WEB_BACKEND"])) ?>/" class="u-ml5">
 								<i class="fas fa-pencil icon-orange"></i>
 							</a>
 						</p>
@@ -330,7 +330,7 @@
 							<span class="u-ml5">
 								<?= tohtml($_SESSION["DNS_SYSTEM"]) ?>
 							</span>
-							<a href="/edit/server/<? echo $_SESSION["DNS_SYSTEM"] ?>/" class="u-ml5">
+							<a href="/edit/server/<?= tohtml(rawurlencode($_SESSION["DNS_SYSTEM"])) ?>/" class="u-ml5">
 								<i class="fas fa-pencil icon-orange"></i>
 							</a>
 						</p>
@@ -375,7 +375,7 @@
 							<span class="u-ml5">
 								<?= tohtml($_SESSION["MAIL_SYSTEM"]) ?>
 							</span>
-							<a href="/edit/server/<? echo $_SESSION["MAIL_SYSTEM"] ?>/" class="u-ml5">
+							<a href="/edit/server/<?= tohtml(rawurlencode($_SESSION["MAIL_SYSTEM"])) ?>/" class="u-ml5">
 								<i class="fas fa-pencil icon-orange"></i>
 							</a>
 						</p>
@@ -385,7 +385,7 @@
 								<span class="u-ml5">
 									<?= tohtml($_SESSION["ANTIVIRUS_SYSTEM"]) ?>
 								</span>
-								<a href="/edit/server/<? echo $_SESSION["ANTIVIRUS_SYSTEM"] ?>/" class="u-ml5">
+								<a href="/edit/server/<?= tohtml(rawurlencode($_SESSION["ANTIVIRUS_SYSTEM"])) ?>/" class="u-ml5">
 									<i class="fas fa-pencil icon-orange"></i>
 								</a>
 							</p>
@@ -396,7 +396,7 @@
 								<span class="u-ml5">
 									<?= tohtml($_SESSION["ANTISPAM_SYSTEM"]) ?>
 								</span>
-								<a href="/edit/server/<?= tohtml($_SESSION["ANTISPAM_SYSTEM"]) ?>/" class="u-ml5">
+								<a href="/edit/server/<?= tohtml(rawurlencode($_SESSION["ANTISPAM_SYSTEM"])) ?>/" class="u-ml5">
 									<i class="fas fa-pencil icon-orange"></i>
 								</a>
 							</p>

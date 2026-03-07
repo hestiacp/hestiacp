@@ -16,9 +16,9 @@
 		</div>
 		<div class="toolbar-right">
 					<?php if ($read_only !== "true") { ?>
-					<form x-data x-bind="BulkEdit" action="/bulk/restore/" method="post">
-						<input type="hidden" name="backup" value="<?=htmlentities($_GET["snapshot"]);?>"
-						<input type="hidden" name="token" value="<?= tohtml($_SESSION["token"]) ?>">
+						<form x-data x-bind="BulkEdit" action="/bulk/restore/" method="post">
+							<input type="hidden" name="backup" value="<?= tohtml($_GET["snapshot"]) ?>">
+							<input type="hidden" name="token" value="<?= tohtml($_SESSION["token"]) ?>">
 						<select class="form-select" name="action">
 							<option value=""><?= tohtml( _("Apply to selected")) ?></option>
 							<option value="delete"><?= tohtml( _("Restore Files")) ?></option>

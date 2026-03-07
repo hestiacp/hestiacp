@@ -86,7 +86,7 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
 			<div class="toolbar-search">
 				<form action="/search/" method="get">
 					<input type="hidden" name="token" value="<?= tohtml($_SESSION["token"]) ?>">
-					<input type="search" class="form-control js-search-input" name="q" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" title="<?= tohtml( _("Search")) ?>">
+					<input type="search" class="form-control js-search-input" name="q" value="<?= tohtml($_POST['q'] ?? '') ?>" title="<?= tohtml( _("Search")) ?>">
 					<button type="submit" class="toolbar-input-submit" title="<?= tohtml( _("Search")) ?>">
 						<i class="fas fa-magnifying-glass"></i>
 					</button>

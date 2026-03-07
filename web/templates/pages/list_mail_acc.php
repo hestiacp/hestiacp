@@ -167,10 +167,10 @@ if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
 				<div class="units-table-cell units-table-heading-cell u-text-bold">
 					<span class="u-hide-desktop"><?= tohtml( _("Name")) ?>:</span>
 					<?php if ($read_only === "true" || $data[$key]["SUSPENDED"] == "yes") { ?>
-						<?= tohtml($key . "@" . htmlentities($_GET["domain"])) ?>
+						<?= tohtml($key . "@" . $_GET["domain"]) ?>
 					<?php } else { ?>
 						<a href="/edit/mail/?domain=<?= tohtml($_GET['domain']) ?>&account=<?= tohtml($key) ?>&token=<?= tohtml($_SESSION['token']) ?>" title="<?= tohtml( _("Edit Mail Account")) ?>: <?= tohtml($key) ?>@<?= tohtml($_GET['domain']) ?>">
-							<?= tohtml($key."@".htmlentities($_GET['domain'])) ?>
+							<?= tohtml($key . "@" . $_GET['domain']) ?>
 						</a>
 					<?php } ?>
 				</div>

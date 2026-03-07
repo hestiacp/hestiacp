@@ -5,7 +5,7 @@
 	<form id="login-form" method="post" action="/login/">
 		<input type="hidden" name="token" value="<?= tohtml($_SESSION["token"]) ?>">
 		<h1 class="login-title">
-			<?= tohtml(sprintf(_("Welcome to %s"), htmlentities($_SESSION["APP_NAME"]))) ?>
+			<?= tohtml(sprintf(_("Welcome to %s"), $_SESSION["APP_NAME"])) ?>
 		</h1>
 		<?php if (!empty($error)) { ?>
 			<p class="error"><?= tohtml($error) ?></p>

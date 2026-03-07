@@ -94,6 +94,6 @@
 			<div class="logs-container">
 
 				<p class="u-text-center u-mb20">
-					<?= tohtml(sprintf(_("Last 70 lines of %s.%s.log"), htmlentities($_GET["domain"]), htmlentities($type))) ?>
+					<?= tohtml(sprintf(_("Last 70 lines of %s.%s.log"), $_GET["domain"], $type)) ?>
 				</p>
 				<pre class="console-output">

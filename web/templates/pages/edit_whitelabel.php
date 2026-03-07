@@ -79,7 +79,7 @@
 					</div>
 					<div class="u-mb10">
 						<label for="v_from_email" class="form-label">
-							<?= tohtml( _("Sender Email Address")) ?><span class="optional">(<?= tohtml( _("Default")) ?>: <?= tohtml(sprintf("noreply@%s", htmlentities(trim(get_hostname(), "'")))) ?>)</span>
+							<?= tohtml( _("Sender Email Address")) ?><span class="optional">(<?= tohtml( _("Default")) ?>: <?= tohtml(sprintf("noreply@%s", trim(get_hostname(), "'"))) ?>)</span>
 						</label>
 						<input
 							type="email"

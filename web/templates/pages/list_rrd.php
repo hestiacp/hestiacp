@@ -29,7 +29,7 @@
 				<h2 class="u-mb20"><?= tohtml($data[$key]["TITLE"]) ?></h2>
 				<canvas
 					class="u-max-height300 js-rrd-chart"
-					data-service="<?= tohtml($data[$key]["TYPE"] !== "net" ? htmlspecialchars($data[$key]["RRD"]) : "net_" . htmlspecialchars($data[$key]["RRD"])) ?>"
+					data-service="<?= tohtml($data[$key]["TYPE"] !== "net" ? $data[$key]["RRD"] : "net_" . $data[$key]["RRD"]) ?>"
 					data-period="<?= tohtml($period) ?>"
 				></canvas>
 			</div>

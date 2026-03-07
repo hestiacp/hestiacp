@@ -136,7 +136,7 @@
 					<a href="/list/dns/?domain=<?= tohtml($key) ?>&token=<?= tohtml($_SESSION["token"]) ?>" title="<?= tohtml( _("DNS Records")) ?>: <?= tohtml($key) ?>">
 						<?= tohtml($key) ?>
 					</a>
-					<?= tohtml(empty($data[$key]["SRC"]) ? "" : '<br>⇢ <span class="u-text-small">' . htmlspecialchars($data[$key]["SRC"], ENT_QUOTES) . "</span>") ?>
+					<?= tohtml(empty($data[$key]["SRC"]) ? "" : '<br>⇢ <span class="u-text-small">' . $data[$key]["SRC"] . "</span>") ?>
 				</div>
 				<div class="units-table-cell">
 					<?php if (!$read_only) { ?>

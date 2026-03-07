@@ -126,15 +126,15 @@
 			</div>
 			<div x-cloak x-show="redirectEnabled" id="v_redirect" class="u-pl30 u-mb10">
 				<div class="form-check">
-					<input class="form-check-input js-redirect-custom-value" type="radio" name="v-redirect" id="v-redirect-radio-1" value="<?= tohtml('www.'.htmlentities($v_domain)) ?>" <?php if ($v_redirect == "www.".$v_domain) echo 'checked'; ?>>
+					<input class="form-check-input js-redirect-custom-value" type="radio" name="v-redirect" id="v-redirect-radio-1" value="<?= tohtml('www.'.$v_domain) ?>" <?php if ($v_redirect == "www.".$v_domain) echo 'checked'; ?>>
 					<label for="v-redirect-radio-1">
-						<?= tohtml(sprintf(_("Redirect visitors to %s"), "www." . htmlentities($v_domain))) ?>
+						<?= tohtml(sprintf(_("Redirect visitors to %s"), "www." . $v_domain)) ?>
 					</label>
 				</div>
 				<div class="form-check">
 					<input class="form-check-input js-redirect-custom-value" type="radio" name="v-redirect" id="v-redirect-radio-2" value="<?= tohtml($v_domain) ?>" <?php if ( $v_redirect == $v_domain) echo 'checked'; ?>>
 					<label for="v-redirect-radio-2">
-						<?= tohtml(sprintf(_("Redirect visitors to %s"), htmlentities($v_domain))) ?>
+						<?= tohtml(sprintf(_("Redirect visitors to %s"), $v_domain)) ?>
 					</label>
 				</div>
 				<div class="form-check">
@@ -423,7 +423,7 @@
 							</div>
 							<div class="u-pl30 u-mb10">
 								<label for="v_ftp_user[<?= tohtml($i) ?>][v_ftp_path]" class="form-label"><?= tohtml( _("Path")) ?></label>
-								<input type="hidden" name="v_ftp_pre_path" value="<?= tohtml(!empty($v_ftp_pre_path) ? htmlentities(trim($v_ftp_pre_path, "'")) : '/') ?>">
+								<input type="hidden" name="v_ftp_pre_path" value="<?= tohtml(!empty($v_ftp_pre_path) ? trim($v_ftp_pre_path, "'") : '/') ?>">
 								<input type="hidden" name="v_ftp_user[<?= tohtml($i) ?>][v_ftp_path_prev]" value="<?php if (!empty($v_ftp_path)) echo ($v_ftp_path[0] != '/' ? '/' : '').htmlentities(trim($v_ftp_path, "'")) ?>">
 								<input type="text" class="form-control js-ftp-path" name="v_ftp_user[<?= tohtml($i) ?>][v_ftp_path]" id="v_ftp_user[<?= tohtml($i) ?>][v_ftp_path]" value="<?php if (!empty($v_ftp_path)) echo ($v_ftp_path[0] != '/' ? '/' : '').htmlentities(trim($v_ftp_path, "'")) ?>">
 								<span class="hint-prefix"><?= tohtml(trim($v_ftp_pre_path, "'")) ?></span><span class="hint js-ftp-path-hint"></span>

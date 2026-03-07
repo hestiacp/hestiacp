@@ -26,8 +26,8 @@ const E_RESTART = 20;
 const E_API_DISABLED = 21;
 
 if (!function_exists("tohtml")) {
-	function tohtml(string|int|float|bool $str): string {
-		if ($str === "") {
+	function tohtml(string|int|float|bool|null $str): string {
+		if ($str === null || $str === "") {
 			return "";
 		}
 		if (is_int($str) || is_float($str)) {

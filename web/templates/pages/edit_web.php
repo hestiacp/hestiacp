@@ -39,7 +39,7 @@
 	?>
 
 	<form
-		x-data="<?= tohtml(json_encode($web_x_data, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_THROW_ON_ERROR)) ?>"
+		x-data="<?= tohtml(json_encode($web_x_data, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_THROW_ON_ERROR)) ?>"
 		id="main-form"
 		name="v_edit_web"
 		method="post"
@@ -376,7 +376,7 @@
 					</div>
 					<div class="u-mb10">
 						<label for="v-custom-doc-folder" class="form-label">
-							<?php print _("Directory"); ?> <span class="optional">(<?= tohtml( _("Optional")) ?>)</span>
+							<?= tohtml( _("Directory")) ?> <span class="optional">(<?= tohtml( _("Optional")) ?>)</span>
 						</label>
 						<input type="text" class="form-control js-custom-docroot-dir" name="v-custom-doc-folder" id="v-custom-doc-folder" value="<?= tohtml(trim($v_custom_doc_folder, "'")) ?>">
 						<small class="js-custom-docroot-hint"></small>

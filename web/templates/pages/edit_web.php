@@ -248,7 +248,7 @@
 								type="button"
 								class="form-link"
 								x-on:click="showCertificates = !showCertificates"
-								x-text="showCertificates ? '<?= tohtml( _("Hide Certificate")) ?>' : '<?= tohtml( _("Show Certificate")) ?>'">
+								x-text="showCertificates ? <?= json_encode(_("Hide Certificate"), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_THROW_ON_ERROR) ?> : <?= json_encode(_("Show Certificate"), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_THROW_ON_ERROR) ?>">
 								<?= tohtml( _("Show Certificate")) ?>
 							</button>
 						</p>

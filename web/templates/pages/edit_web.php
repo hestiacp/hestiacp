@@ -368,7 +368,7 @@
 						<select class="form-select js-custom-docroot-domain" name="v-custom-doc-domain" id="v-custom-doc-domain">
 							<?php foreach ($user_domains as $domain): ?>
 							<option value="<?= tohtml($domain) ?>"
-								<?= tohtml($v_custom_doc_domain === $domain || (empty($v_custom_doc_domain) && $domain === $v_domain) ? ' selected="selected" ' : "") ?>>
+								<?php if ($v_custom_doc_domain === $domain || (empty($v_custom_doc_domain) && $domain === $v_domain)) echo 'selected="selected"'; ?>>
 								<?= tohtml($domain) ?>
 							</option>
 							<?php endforeach; ?>

@@ -68,7 +68,7 @@
 				<?php if ($_SESSION["userContext"] === "admin" || ($_SESSION["userContext"] === "user" && $_SESSION["POLICY_USER_EDIT_DNS_TEMPLATES"] === "yes")) { ?>
 					<div class="u-mb10">
 						<label for="v_template" class="form-label">
-							<?= tohtml( _("Template") . "<span class='optional'>" . strtoupper($_SESSION["DNS_SYSTEM"]) . "</span>") ?>
+							<?= tohtml( _("Template")) ?> <span class="optional"><?= tohtml(strtoupper($_SESSION["DNS_SYSTEM"])) ?></span>
 						</label>
 						<select class="form-select" name="v_template" id="v_template">
 							<?php

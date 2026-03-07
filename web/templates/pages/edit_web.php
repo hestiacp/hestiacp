@@ -262,7 +262,7 @@
 				<?php if ($_SESSION["userContext"] === "admin" || ($_SESSION["userContext"] === "user" && $_SESSION["POLICY_USER_EDIT_WEB_TEMPLATES"] === "yes")) { ?>
 					<div class="u-mb10">
 						<label for="v_template" class="form-label">
-							<?= tohtml( _("Web Template") . "<span class='optional'>" . strtoupper($_SESSION["WEB_SYSTEM"]) . "</span>") ?>
+							<?= tohtml( _("Web Template")) ?> <span class="optional"><?= tohtml(strtoupper($_SESSION["WEB_SYSTEM"])) ?></span>
 						</label>
 						<select class="form-select" name="v_template" id="v_template">
 							<?php
@@ -298,9 +298,9 @@
 					<?php } ?>
 					<?php if (!empty($_SESSION["WEB_BACKEND"])) { ?>
 						<div class="u-mb10">
-							<label for="v_backend_template" class="form-label">
-								<?= tohtml( _("Backend Template") . " <span class='optional'>" . strtoupper($_SESSION["WEB_BACKEND"]) . "</span>") ?>
-							</label>
+								<label for="v_backend_template" class="form-label">
+									<?= tohtml( _("Backend Template")) ?> <span class="optional"><?= tohtml(strtoupper($_SESSION["WEB_BACKEND"])) ?></span>
+								</label>
 							<select class="form-select" name="v_backend_template" id="v_backend_template">
 								<?php
 									foreach ($backend_templates as $key => $value) {
@@ -322,9 +322,9 @@
 						<div style="display: none;">
 							<div class="form-check u-mb10">
 								<input x-model="proxySupportEnabled" class="form-check-input" type="checkbox" name="v_proxy" id="v_proxy">
-								<label for="v_proxy">
-									<?= tohtml( _("Proxy Support") . "<span class='optional'>" . strtoupper($_SESSION["PROXY_SYSTEM"]) . "</span>") ?>
-								</label>
+									<label for="v_proxy">
+										<?= tohtml( _("Proxy Support")) ?> <span class="optional"><?= tohtml(strtoupper($_SESSION["PROXY_SYSTEM"])) ?></span>
+									</label>
 							</div>
 						</div>
 						<div x-cloak x-show="proxySupportEnabled" id="proxytable">

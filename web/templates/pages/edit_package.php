@@ -96,7 +96,7 @@
 					</div>
 					<div class="u-mb10">
 						<label for="v_web_template" class="form-label">
-							<?= tohtml( _("Web Template") . " <span class='optional'> " . strtoupper($_SESSION["WEB_SYSTEM"]) . "</span>") ?>
+							<?= tohtml( _("Web Template")) ?> <span class="optional"><?= tohtml(strtoupper($_SESSION["WEB_SYSTEM"])) ?></span>
 						</label>
 						<select class="form-select" name="v_web_template" id="v_web_template">
 							<?php
@@ -113,9 +113,9 @@
 					<?php if (!empty($_SESSION['WEB_BACKEND'])) {
 						echo ""; ?>
 						<div class="u-mb10">
-							<label for="v_backend_template" class="form-label">
-								<?= tohtml( _("Backend Template") . "<span class='optional'>" . strtoupper($_SESSION["WEB_BACKEND"]) . "</span>") ?>
-							</label>
+								<label for="v_backend_template" class="form-label">
+									<?= tohtml( _("Backend Template")) ?> <span class="optional"><?= tohtml(strtoupper($_SESSION["WEB_BACKEND"])) ?></span>
+								</label>
 							<select class="form-select" name="v_backend_template" id="v_backend_template">
 								<?php
 								foreach ($backend_templates as $key => $value) {
@@ -132,9 +132,9 @@
 					<?php if (!empty($_SESSION['PROXY_SYSTEM'])) {
 						echo ""; ?>
 						<div class="u-mb10">
-							<label for="v_proxy_template" class="form-label">
-								<?= tohtml( _("Proxy Template") . "<span class='optional'>" . strtoupper($_SESSION["PROXY_SYSTEM"]) . "</span>") ?>
-							</label>
+								<label for="v_proxy_template" class="form-label">
+									<?= tohtml( _("Proxy Template")) ?> <span class="optional"><?= tohtml(strtoupper($_SESSION["PROXY_SYSTEM"])) ?></span>
+								</label>
 							<select class="form-select" name="v_proxy_template" id="v_proxy_template">
 								<?php
 								foreach ($proxy_templates as $key => $value) {
@@ -157,7 +157,7 @@
 				<div class="collapse-content">
 					<div class="u-mb10">
 						<label for="v_dns_template" class="form-label">
-							<?= tohtml( _("DNS Template") . "<span class='optional'>" . strtoupper($_SESSION["DNS_SYSTEM"]) . "</span>") ?>
+							<?= tohtml( _("DNS Template")) ?> <span class="optional"><?= tohtml(strtoupper($_SESSION["DNS_SYSTEM"])) ?></span>
 						</label>
 						<select class="form-select" name="v_dns_template" id="v_dns_template">
 							<?php

@@ -27,9 +27,9 @@
 								class="top-bar-menu-link u-hide-tablet"
 								x-on:click="open = !open">
 								<i class="fas fa-bars"></i>
-								<span class="u-hidden" x-text="open ? '<?= tohtml( _("Close menu")) ?>' : '<?= tohtml( _("Open menu")) ?>'">
-									<?= tohtml( _("Open menu")) ?>
-								</span>
+									<span class="u-hidden" x-text="open ? <?= tohtml(json_encode(_("Close menu"), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_THROW_ON_ERROR)) ?> : <?= tohtml(json_encode(_("Open menu"), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_THROW_ON_ERROR)) ?>">
+										<?= tohtml( _("Open menu")) ?>
+									</span>
 							</button>
 							<div x-cloak x-show="open" x-on:click.outside="open = false" class="top-bar-menu-panel">
 								<ul class="top-bar-menu-list">

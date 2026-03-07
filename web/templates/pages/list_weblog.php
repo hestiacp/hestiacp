@@ -15,11 +15,12 @@
 		<header class="app-header">
 			<div class="top-bar">
 				<div class="container top-bar-inner">
-					<div class="top-bar-left">
-						<a href="/" class="top-bar-logo" title="<?= tohtml($_SESSION['APP_NAME']) ?>">
-							<img src="<?php if ( !empty($_SESSION['LOGO_HEADER'])){ echo $_SESSION['LOGO_HEADER']; } else{ echo "/images/logo-header.svg"; } ?>" alt="<?= tohtml($_SESSION['APP_NAME']) ?>" width="54" height="29">
-						</a>
-					</div>
+						<div class="top-bar-left">
+							<?php $logo_header = !empty($_SESSION['LOGO_HEADER']) ? $_SESSION['LOGO_HEADER'] : "/images/logo-header.svg"; ?>
+							<a href="/" class="top-bar-logo" title="<?= tohtml($_SESSION['APP_NAME']) ?>">
+								<img src="<?= tohtml($logo_header) ?>" alt="<?= tohtml($_SESSION['APP_NAME']) ?>" width="54" height="29">
+							</a>
+						</div>
 					<div class="top-bar-right">
 						<nav x-data="{ open: false }" class="top-bar-menu">
 							<button
@@ -27,9 +28,9 @@
 								class="top-bar-menu-link u-hide-tablet"
 								x-on:click="open = !open">
 								<i class="fas fa-bars"></i>
-								<span class="u-hidden" x-text="open ? '<?= tohtml( _("Close menu")) ?>' : '<?= tohtml( _("Open menu")) ?>'">
-									<?= tohtml( _("Open menu")) ?>
-								</span>
+									<span class="u-hidden" x-text="open ? <?= tohtml(json_encode(_("Close menu"), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_THROW_ON_ERROR)) ?> : <?= tohtml(json_encode(_("Open menu"), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_THROW_ON_ERROR)) ?>">
+										<?= tohtml( _("Open menu")) ?>
+									</span>
 							</button>
 							<div x-cloak x-show="open" x-on:click.outside="open = false" class="top-bar-menu-panel">
 								<ul class="top-bar-menu-list">

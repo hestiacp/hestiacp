@@ -47,9 +47,11 @@
 			<?php } ?>
 			<?php if (($_SESSION["role"] == "admin" && $accept === "true") || $_SESSION["role"] !== "admin") { ?>
 					<p class="hint u-mb20">
-						<?= tohtml(_("Prefix")) ?>
-						<span class="u-text-bold"><?= tohtml($user_plain) ?>_</span>
-						<?= tohtml(_("will be automatically added to database name and database user")) ?>
+						<?php
+							$prefix_hint = tohtml(_("Prefix %s will be automatically added to database name and database user"));
+							$prefix_hint_html = '<span class="u-text-bold">' . tohtml($user_plain) . '_</span>';
+							printf($prefix_hint, $prefix_hint_html);
+						?>
 					</p>
 				<div class="u-mb10">
 					<label for="v_database" class="form-label"><?= tohtml( _("Database")) ?></label>

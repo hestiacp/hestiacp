@@ -7,11 +7,11 @@
 					<i class="fas fa-circle-plus icon-green"></i><?= tohtml( _("Add Cron Job")) ?>
 				</a>
 				<?php if ($panel[$user_plain]["CRON_REPORTS"] == "yes") { ?>
-					<a class="button button-secondary" href="/delete/cron/reports/?token=<?= tohtml($_SESSION["token"]) ?>">
+					<a class="button button-secondary" href="/delete/cron/reports/?<?= tohtml(http_build_query(["token" => $_SESSION["token"]])) ?>">
 						<i class="fas fa-toggle-on icon-green"></i><?= tohtml( _("Disable Notifications")) ?>
 					</a>
 				<?php } else { ?>
-					<a class="button button-secondary" href="/add/cron/reports/?token=<?= tohtml($_SESSION["token"]) ?>">
+					<a class="button button-secondary" href="/add/cron/reports/?<?= tohtml(http_build_query(["token" => $_SESSION["token"]])) ?>">
 						<i class="fas fa-toggle-off"></i><?= tohtml( _("Enable Notifications")) ?>
 					</a>
 				<?php } ?>
@@ -117,7 +117,7 @@
 					<?php if ($read_only === "true" || $data[$key]["SUSPENDED"] == "yes") { ?>
 						<?= tohtml($data[$key]["CMD"]) ?>
 					<?php } else { ?>
-						<a href="/edit/cron/?job=<?= tohtml($data[$key]["JOB"]) ?>&token=<?= tohtml($_SESSION["token"]) ?>" title="<?= tohtml( _("Edit Cron Job")) ?>: <?= tohtml($data[$key]["CMD"]) ?>">
+						<a href="/edit/cron/?<?= tohtml(http_build_query(["job" => $data[$key]["JOB"], "token" => $_SESSION["token"]])) ?>" title="<?= tohtml( _("Edit Cron Job")) ?>: <?= tohtml($data[$key]["CMD"]) ?>">
 							<?= tohtml($data[$key]["CMD"]) ?>
 						</a>
 					<?php } ?>
@@ -129,7 +129,7 @@
 								<li class="units-table-row-action shortcut-enter" data-key-action="href">
 									<a
 										class="units-table-row-action-link"
-										href="/edit/cron/?job=<?= tohtml($data[$key]["JOB"]) ?>&token=<?= tohtml($_SESSION["token"]) ?>"
+										href="/edit/cron/?<?= tohtml(http_build_query(["job" => $data[$key]["JOB"], "token" => $_SESSION["token"]])) ?>"
 										title="<?= tohtml( _("Edit")) ?>"
 									>
 										<i class="fas fa-pencil icon-orange"></i>
@@ -140,7 +140,7 @@
 							<li class="units-table-row-action shortcut-s" data-key-action="js">
 								<a
 									class="units-table-row-action-link data-controls js-confirm-action"
-									href="/<?= tohtml($spnd_action) ?>/cron/?job=<?= tohtml($data[$key]["JOB"]) ?>&token=<?= tohtml($_SESSION["token"]) ?>"
+									href="/<?= tohtml($spnd_action) ?>/cron/?<?= tohtml(http_build_query(["job" => $data[$key]["JOB"], "token" => $_SESSION["token"]])) ?>"
 									title="<?= tohtml($spnd_action_title) ?>"
 									data-confirm-title="<?= tohtml($spnd_action_title) ?>"
 									data-confirm-message="<?= tohtml(sprintf($spnd_confirmation, $key)) ?>"
@@ -152,7 +152,7 @@
 							<li class="units-table-row-action shortcut-delete" data-key-action="js">
 								<a
 									class="units-table-row-action-link data-controls js-confirm-action"
-									href="/delete/cron/?job=<?= tohtml($data[$key]["JOB"]) ?>&token=<?= tohtml($_SESSION["token"]) ?>"
+									href="/delete/cron/?<?= tohtml(http_build_query(["job" => $data[$key]["JOB"], "token" => $_SESSION["token"]])) ?>"
 									title="<?= tohtml( _("Delete")) ?>"
 									data-confirm-title="<?= tohtml( _("Delete")) ?>"
 									data-confirm-message="<?= tohtml(sprintf(_("Are you sure you want to delete this cron job?"), $key)) ?>"

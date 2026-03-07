@@ -3,11 +3,11 @@
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
 			<?php if ($_SESSION["userContext"] === "admin" && $_SESSION['look'] !== '' && $_GET["user"] !== "admin") { ?>
-				<a href="/edit/user/?user=<?= tohtml($_SESSION["look"]) ?>&token=<?= tohtml($_SESSION["token"]) ?>" class="button button-secondary button-back js-button-back">
+				<a href="/edit/user/?<?= tohtml(http_build_query(["user" => $_SESSION["look"], "token" => $_SESSION["token"]])) ?>" class="button button-secondary button-back js-button-back">
 					<i class="fas fa-arrow-left icon-blue"></i><?= tohtml( _("Back")) ?>
 				</a>
 			<?php } else { ?>
-				<a href="/edit/user/?user=<?= tohtml($_SESSION["user"]) ?>&token=<?= tohtml($_SESSION["token"]) ?>" class="button button-secondary button-back js-button-back">
+				<a href="/edit/user/?<?= tohtml(http_build_query(["user" => $_SESSION["user"], "token" => $_SESSION["token"]])) ?>" class="button button-secondary button-back js-button-back">
 					<i class="fas fa-arrow-left icon-blue"></i><?= tohtml( _("Back")) ?>
 				</a>
 			<?php } ?>
@@ -88,7 +88,7 @@
 				</div>
 				<div class="units-table-cell units-table-heading-cell u-text-bold">
 					<span class="u-hide-desktop"><?= tohtml( _("Access Key")) ?>:</span>
-					<a href="/list/access-key/?key=<?= tohtml($key) ?>&token=<?= tohtml($_SESSION["token"]) ?>" title="<?= tohtml( _("Access Key")) ?>: <?= tohtml($key) ?>">
+					<a href="/list/access-key/?<?= tohtml(http_build_query(["key" => $key, "token" => $_SESSION["token"]])) ?>" title="<?= tohtml( _("Access Key")) ?>: <?= tohtml($key) ?>">
 						<?= tohtml($key) ?>
 					</a>
 				</div>
@@ -97,7 +97,7 @@
 						<li class="units-table-row-action shortcut-delete" data-key-action="js">
 							<a
 								class="units-table-row-action-link data-controls js-confirm-action"
-								href="/delete/access-key/?key=<?= tohtml($key) ?>&token=<?= tohtml($_SESSION["token"]) ?>"
+								href="/delete/access-key/?<?= tohtml(http_build_query(["key" => $key, "token" => $_SESSION["token"]])) ?>"
 								title="<?= tohtml( _("Delete")) ?>"
 								data-confirm-title="<?= tohtml( _("Delete")) ?>"
 								data-confirm-message="<?= tohtml(sprintf(_("Are you sure you want to delete access key %s?"), $key)) ?>"

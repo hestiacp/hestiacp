@@ -63,7 +63,7 @@
 						<li class="units-table-row-action shortcut-delete" data-key-action="js">
 							<a
 								class="units-table-row-action-link data-controls js-confirm-action"
-								href="/delete/firewall/banlist/?ip=<?= tohtml($ip) ?>&chain=<?= tohtml($value["CHAIN"]) ?>&token=<?= tohtml($_SESSION["token"]) ?>"
+								href="/delete/firewall/banlist/?<?= tohtml(http_build_query(["ip" => $ip, "chain" => $value["CHAIN"], "token" => $_SESSION["token"]])) ?>"
 								title="<?= tohtml( _("Delete")) ?>"
 								data-confirm-title="<?= tohtml( _("Delete")) ?>"
 								data-confirm-message="<?= tohtml(sprintf(_("Are you sure you want to delete IP address %s?"), $key)) ?>"

@@ -3,7 +3,7 @@
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
 		<?php if ($read_only !== "true") { ?>
-			<a href="/schedule/backup/incremental/?token=<?= tohtml($_SESSION["token"]) ?>" class="button button-secondary js-button-create">
+			<a href="/schedule/backup/incremental/?<?= tohtml(http_build_query(["token" => $_SESSION["token"]])) ?>" class="button button-secondary js-button-create">
 				<i class="fas fa-circle-plus icon-green"></i><?= tohtml( _("Create Snapshot")) ?>
 			</a>
 		<?php } ?>
@@ -69,7 +69,7 @@
 							<?= tohtml($value['short_id']) ?>
 					<?php } else { ?>
 						<span class="u-hide-desktop"><?= tohtml( _("Snapshot")) ?>:</span>
-						<a href="/list/backup/incremental/?snapshot=<?= tohtml($value['short_id']) ?>&token=<?= tohtml($_SESSION["token"]) ?>" title="<?= tohtml( _("Restore")) ?>"><?= tohtml($value['short_id']) ?></a>
+						<a href="/list/backup/incremental/?<?= tohtml(http_build_query(["snapshot" => $value['short_id'], "token" => $_SESSION["token"]])) ?>" title="<?= tohtml( _("Restore")) ?>"><?= tohtml($value['short_id']) ?></a>
 					<?php } ?>
 				</b>
 			</div>
@@ -77,10 +77,10 @@
 				<?php if (!$read_only) { ?>
 					<ul class="units-table-row-actions">
 						<li class="units-table-row-action shortcut-enter" data-key-action="href">
-							<a href="/list/backup/incremental/?snapshot=<?= tohtml($value['short_id']) ?>&browse=yes&token=<?= tohtml($_SESSION["token"]) ?>" title="<?= tohtml( _("Browse")) ?>"><i class="fas fa-folder-open icon-lightblue icon-dim"></i></a>
+							<a href="/list/backup/incremental/?<?= tohtml(http_build_query(["snapshot" => $value['short_id'], "browse" => 'yes', "token" => $_SESSION["token"]])) ?>" title="<?= tohtml( _("Browse")) ?>"><i class="fas fa-folder-open icon-lightblue icon-dim"></i></a>
 						</li>
 						<li class="units-table-row-action shortcut-enter" data-key-action="href">
-							<a href="/list/backup/incremental/?snapshot=<?= tohtml($value['short_id']) ?>&token=<?= tohtml($_SESSION["token"]) ?>" title="<?= tohtml( _("Restore")) ?>"><i class="fas fa-arrow-rotate-left icon-green icon-dim"></i></a>
+							<a href="/list/backup/incremental/?<?= tohtml(http_build_query(["snapshot" => $value['short_id'], "token" => $_SESSION["token"]])) ?>" title="<?= tohtml( _("Restore")) ?>"><i class="fas fa-arrow-rotate-left icon-green icon-dim"></i></a>
 						</li>
 					</ul>
 				<?php } ?>

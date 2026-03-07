@@ -3,7 +3,7 @@
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
 			<?php if ($_SESSION["userContext"] === "admin" && isset($_GET["user"]) && $_GET["user"] !== "admin") { ?>
-				<a class="button button-secondary button-back js-button-back" href="/list/key/?user=<?= tohtml($_GET["user"]) ?>">
+				<a class="button button-secondary button-back js-button-back" href="/list/key/?<?= tohtml(http_build_query(["user" => $_GET["user"]])) ?>">
 					<i class="fas fa-arrow-left icon-blue"></i><?= tohtml( _("Back")) ?>
 				</a>
 			<?php } else { ?>

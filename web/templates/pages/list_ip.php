@@ -92,7 +92,7 @@
 				</div>
 				<div class="units-table-cell units-table-heading-cell u-text-bold">
 					<span class="u-hide-desktop"><?= tohtml( _("IP Address")) ?>:</span>
-					<a href="/edit/ip/?ip=<?= tohtml($key) ?>&token=<?= tohtml($_SESSION['token']) ?>" title="<?= tohtml( _("Edit IP Address")) ?>">
+					<a href="/edit/ip/?<?= tohtml(http_build_query(["ip" => $key, "token" => $_SESSION['token']])) ?>" title="<?= tohtml( _("Edit IP Address")) ?>">
 						<?= tohtml($key) ?> <?php if (!empty($data[$key]['NAT'])) echo ' → ' . $data[$key]['NAT'] . ''; ?>
 					</a>
 				</div>
@@ -101,7 +101,7 @@
 						<li class="units-table-row-action shortcut-enter" data-key-action="href">
 							<a
 								class="units-table-row-action-link"
-								href="/edit/ip/?ip=<?= tohtml($key) ?>&token=<?= tohtml($_SESSION["token"]) ?>"
+								href="/edit/ip/?<?= tohtml(http_build_query(["ip" => $key, "token" => $_SESSION["token"]])) ?>"
 								title="<?= tohtml( _("Edit IP Address")) ?>"
 							>
 								<i class="fas fa-pencil icon-orange"></i>
@@ -111,7 +111,7 @@
 						<li class="units-table-row-action shortcut-delete" data-key-action="js">
 							<a
 								class="units-table-row-action-link data-controls js-confirm-action"
-								href="/delete/ip/?ip=<?= tohtml($key) ?>&token=<?= tohtml($_SESSION["token"]) ?>"
+								href="/delete/ip/?<?= tohtml(http_build_query(["ip" => $key, "token" => $_SESSION["token"]])) ?>"
 								title="<?= tohtml( _("Delete")) ?>"
 								data-confirm-title="<?= tohtml( _("Delete")) ?>"
 								data-confirm-message="<?= tohtml(sprintf(_("Are you sure you want to delete IP address %s?"), $key)) ?>"

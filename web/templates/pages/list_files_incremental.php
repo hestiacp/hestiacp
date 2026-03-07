@@ -5,10 +5,10 @@
 			<?php if ($read_only !== "true") { ?>
 			<?php if(str_starts_with($files[0]['path'],'/home/'.$user_plain) && $files[0]['path'] != '/home/'.$user_plain ){
 			?>
-			<a class="button button-secondary" id="btn-back" href="/list/backup/incremental/?snapshot=<?= tohtml($_GET["snapshot"]) ?>&browse=yes&folder=<?=htmlentities($files[0]['path'])?>/../&token=<?= tohtml($_SESSION["token"]) ?>"><i class="fas fa-arrow-left icon-blue"></i><?= tohtml( _("Back")) ?></a>
+			<a class="button button-secondary" id="btn-back" href="/list/backup/incremental/?<?= tohtml(http_build_query(["snapshot" => $_GET["snapshot"], "browse" => "yes", "folder" => $files[0]["path"] . "/../", "token" => $_SESSION["token"]])) ?>"><i class="fas fa-arrow-left icon-blue"></i><?= tohtml( _("Back")) ?></a>
 			<?php }else{
 			?>
-			<a class="button button-secondary" id="btn-back" href="/list/backup/incremental/?token=<?= tohtml($_SESSION["token"]) ?>"><i class="fas fa-arrow-left icon-blue"></i><?= tohtml( _("Back")) ?></a>
+			<a class="button button-secondary" id="btn-back" href="/list/backup/incremental/?<?= tohtml(http_build_query(["token" => $_SESSION["token"]])) ?>"><i class="fas fa-arrow-left icon-blue"></i><?= tohtml( _("Back")) ?></a>
 			<?php
 			}
 			?>
@@ -63,7 +63,7 @@
 						<div class="units-table-cell">
 						</div>
 						<div class="units-table-cell units-table-heading-cell u-text-bold">
-								<b><a href="/list/backup/incremental/?snapshot=<?= tohtml($_GET["snapshot"]) ?>&browse=yes&folder=<?=htmlentities($files[0]['path'])?>/../&token=<?= tohtml($_SESSION["token"]) ?>"><i class="fas fa-folder icon-dim u-mr5"></i>..</a></b>
+								<b><a href="/list/backup/incremental/?<?= tohtml(http_build_query(["snapshot" => $_GET["snapshot"], "browse" => "yes", "folder" => $files[0]["path"] . "/../", "token" => $_SESSION["token"]])) ?>"><i class="fas fa-folder icon-dim u-mr5"></i>..</a></b>
 						</div>
 						<div class="units-table-cell">
 						</div>
@@ -94,7 +94,7 @@
 								<?php
 									}else{
 									?>
-										<b><a href="/list/backup/incremental/?snapshot=<?= tohtml($_GET["snapshot"]) ?>&browse=yes&folder=<?=htmlentities($file['path'])?>&token=<?= tohtml($_SESSION["token"]) ?>"><i class="fas fa-folder icon-dim u-mr5"></i><?= tohtml($file['name']) ?></a></b>
+											<b><a href="/list/backup/incremental/?<?= tohtml(http_build_query(["snapshot" => $_GET["snapshot"], "browse" => "yes", "folder" => $file["path"], "token" => $_SESSION["token"]])) ?>"><i class="fas fa-folder icon-dim u-mr5"></i><?= tohtml($file['name']) ?></a></b>
 									<?php
 									}
 								}else{
@@ -105,7 +105,7 @@
 							</div>
 						</div>
 						<div class="units-table-cell">
-							<a href="/schedule/restore/incremental/?snapshot=<?= tohtml($_GET["snapshot"]) ?>&type=file&object=<?=htmlentities($file['path'])?>&token=<?= tohtml($_SESSION["token"]) ?>" title="<?= tohtml( _("Restore")) ?>">
+							<a href="/schedule/restore/incremental/?<?= tohtml(http_build_query(["snapshot" => $_GET["snapshot"], "type" => "file", "object" => $file["path"], "token" => $_SESSION["token"]])) ?>" title="<?= tohtml( _("Restore")) ?>">
 								<i class="fas fa-arrow-rotate-left icon-green icon-dim u-mr5"></i>
 							</a>
 						</div>

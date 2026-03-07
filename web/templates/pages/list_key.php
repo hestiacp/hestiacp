@@ -3,17 +3,17 @@
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
 			<?php if ($_SESSION["userContext"] === "admin" && $_SESSION['look'] !== '' && $_GET["user"] !== $_SESSION['ROOT_USER']) { ?>
-				<a href="/edit/user/?user=<?= tohtml($_SESSION["look"]) ?>&token=<?= tohtml($_SESSION["token"]) ?>" class="button button-secondary button-back js-button-back">
+				<a href="/edit/user/?<?= tohtml(http_build_query(["user" => $_SESSION["look"], "token" => $_SESSION["token"]])) ?>" class="button button-secondary button-back js-button-back">
 					<i class="fas fa-arrow-left icon-blue"></i><?= tohtml( _("Back")) ?>
 				</a>
 			<?php } else { ?>
-				<a href="/edit/user/?user=<?= tohtml($_SESSION["user"]) ?>&token=<?= tohtml($_SESSION["token"]) ?>" class="button button-secondary button-back js-button-back">
+				<a href="/edit/user/?<?= tohtml(http_build_query(["user" => $_SESSION["user"], "token" => $_SESSION["token"]])) ?>" class="button button-secondary button-back js-button-back">
 					<i class="fas fa-arrow-left icon-blue"></i><?= tohtml( _("Back")) ?>
 				</a>
 			<?php } ?>
 
 			<?php if ($_SESSION["userContext"] === "admin" && isset($_GET["user"]) && $_GET["user"] !== "admin") { ?>
-				<a href="/add/key/?user=<?= tohtml($_GET["user"]) ?>" class="button button-secondary js-button-create">
+				<a href="/add/key/?<?= tohtml(http_build_query(["user" => $_GET["user"]])) ?>" class="button button-secondary js-button-create">
 					<i class="fas fa-circle-plus icon-green"></i><?= tohtml( _("Add SSH Key")) ?>
 				</a>
 			<?php } else { ?>
@@ -56,9 +56,9 @@
 							<a
 								class="units-table-row-action-link data-controls js-confirm-action"
 								<?php if ($_SESSION["userContext"] === "admin" && isset($_GET["user"]) && $_GET["user"] !== "admin") { ?>
-									href="/delete/key/?user=<?= tohtml($_GET["user"]) ?>&key=<?= tohtml($key) ?>&token=<?= tohtml($_SESSION["token"]) ?>"
+									href="/delete/key/?<?= tohtml(http_build_query(["user" => $_GET["user"], "key" => $key, "token" => $_SESSION["token"]])) ?>"
 								<?php } else { ?>
-									href="/delete/key/?key=<?= tohtml($key) ?>&token=<?= tohtml($_SESSION["token"]) ?>"
+									href="/delete/key/?<?= tohtml(http_build_query(["key" => $key, "token" => $_SESSION["token"]])) ?>"
 								<?php } ?>
 								title="<?= tohtml( _("Delete")) ?>"
 								data-confirm-title="<?= tohtml( _("Delete")) ?>"

@@ -161,7 +161,7 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
 					<?php if ($read_only === "true" || $data[$key]["SUSPENDED"] == "yes") { ?>
 						<?= tohtml($key) ?>
 					<?php } else { ?>
-						<a href="/edit/db/?database=<?= tohtml($key) ?>&token=<?= tohtml($_SESSION["token"]) ?>" title="<?= tohtml( _("Edit Database")) ?>: <?= tohtml($key) ?>">
+						<a href="/edit/db/?<?= tohtml(http_build_query(["database" => $key, "token" => $_SESSION["token"]])) ?>" title="<?= tohtml( _("Edit Database")) ?>: <?= tohtml($key) ?>">
 							<?= tohtml($key) ?>
 						</a>
 					<?php } ?>
@@ -173,7 +173,7 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
 								<li class="units-table-row-action shortcut-enter" data-key-action="href">
 									<a
 										class="units-table-row-action-link"
-										href="/edit/db/?database=<?= tohtml($key) ?>&token=<?= tohtml($_SESSION["token"]) ?>"
+											href="/edit/db/?<?= tohtml(http_build_query(["database" => $key, "token" => $_SESSION["token"]])) ?>"
 										title="<?= tohtml( _("Edit Database")) ?>"
 									>
 										<i class="fas fa-pencil icon-orange"></i>
@@ -208,7 +208,7 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
 							<li class="units-table-row-action shortcut-enter" data-key-action="href">
 								<a
 									class="units-table-row-action-link"
-									href="/download/database/?database=<?= tohtml($key) ?>&token=<?= tohtml($_SESSION["token"]) ?>"
+									href="/download/database/?<?= tohtml(http_build_query(["database" => $key, "token" => $_SESSION["token"]])) ?>"
 									title="<?= tohtml( _("Download Database")) ?>"
 								>
 									<i class="fas fa-download icon-orange"></i>
@@ -218,7 +218,7 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
 							<li class="units-table-row-action shortcut-s" data-key-action="js">
 								<a
 									class="units-table-row-action-link data-controls js-confirm-action"
-									href="/<?= tohtml($spnd_action) ?>/db/?database=<?= tohtml($key) ?>&token=<?= tohtml($_SESSION["token"]) ?>"
+									href="/<?= tohtml($spnd_action) ?>/db/?<?= tohtml(http_build_query(["database" => $key, "token" => $_SESSION["token"]])) ?>"
 									title="<?= tohtml($spnd_action_title) ?>"
 									data-confirm-title="<?= tohtml($spnd_action_title) ?>"
 									data-confirm-message="<?= tohtml(sprintf($spnd_confirmation, $key)) ?>"
@@ -230,7 +230,7 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
 							<li class="units-table-row-action shortcut-delete" data-key-action="js">
 								<a
 									class="units-table-row-action-link data-controls js-confirm-action"
-									href="/delete/db/?database=<?= tohtml($key) ?>&token=<?= tohtml($_SESSION["token"]) ?>"
+									href="/delete/db/?<?= tohtml(http_build_query(["database" => $key, "token" => $_SESSION["token"]])) ?>"
 									title="<?= tohtml( _("Delete")) ?>"
 									data-confirm-title="<?= tohtml( _("Delete")) ?>"
 									data-confirm-message="<?= tohtml(sprintf(_("Are you sure you want to delete database %s?"), $key)) ?>"

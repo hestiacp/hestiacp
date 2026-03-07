@@ -22,7 +22,7 @@
 			<button type="submit" class="button">
 				<i class="fas fa-right-to-bracket"></i><?= tohtml( _("Login")) ?>
 			</button>
-			<a href="/login/?logout=true" class="button button-secondary">
+			<a href="/login/?<?= tohtml(http_build_query(["logout" => 'true'])) ?>" class="button button-secondary">
 				<?= tohtml( _("Back")) ?>
 			</a>
 		</div>

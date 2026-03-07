@@ -7,11 +7,11 @@
 			</a>
 		</div>
 		<div class="toolbar-buttons">
-			<a href="/delete/web/cache/?domain=<?= tohtml($v_domain) ?>&token=<?= tohtml($_SESSION['token']) ?>" class="button button-secondary js-clear-cache-button <?php if (!($v_nginx_cache == 'yes' || (($v_proxy_template == 'caching' || is_int(strpos($v_proxy_template, 'caching-'))) && $_SESSION['PROXY_SYSTEM'] == 'nginx'))) { echo "u-hidden"; } ?>">
+			<a href="/delete/web/cache/?<?= tohtml(http_build_query(["domain" => $v_domain, "token" => $_SESSION['token']])) ?>" class="button button-secondary js-clear-cache-button <?php if (!($v_nginx_cache == 'yes' || (($v_proxy_template == 'caching' || is_int(strpos($v_proxy_template, 'caching-'))) && $_SESSION['PROXY_SYSTEM'] == 'nginx'))) { echo "u-hidden"; } ?>">
 				<i class="fas fa-trash icon-red"></i><?= tohtml( _("Purge NGINX Cache")) ?>
 			</a>
 			<?php if ($_SESSION["PLUGIN_APP_INSTALLER"] !== "false") { ?>
-				<a href="/add/webapp/?domain=<?= tohtml($v_domain) ?>" class="button button-secondary">
+				<a href="/add/webapp/?<?= tohtml(http_build_query(["domain" => $v_domain])) ?>" class="button button-secondary">
 					<i class="fas fa-magic icon-blue"></i><?= tohtml( _("Quick Install App")) ?>
 				</a>
 			<?php } ?>
@@ -195,7 +195,7 @@
 					<div class="u-mb10">
 						<label for="ssl_crt" class="form-label">
 							<?= tohtml( _("SSL Certificate")) ?>
-							<span id="generate-csr"> / <a class="form-link" target="_blank" href="/generate/ssl/?domain=<?= tohtml($v_domain) ?>"><?= tohtml( _("Generate Self-Signed SSL Certificate")) ?></a></span>
+							<span id="generate-csr"> / <a class="form-link" target="_blank" href="/generate/ssl/?<?= tohtml(http_build_query(["domain" => $v_domain])) ?>"><?= tohtml( _("Generate Self-Signed SSL Certificate")) ?></a></span>
 						</label>
 						<textarea class="form-control u-min-height100 u-console" name="v_ssl_crt" id="ssl_crt"><?= tohtml(trim($v_ssl_crt, "'")) ?></textarea>
 					</div>

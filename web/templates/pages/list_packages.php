@@ -124,7 +124,7 @@
 					<?php if ($key == "system") { ?>
 						<?= tohtml($key) ?>
 					<?php } else { ?>
-						<a href="/edit/package/?package=<?= tohtml($key) ?>&token=<?= tohtml($_SESSION["token"]) ?>" title="<?= tohtml( _("Edit Package")) ?>: <?= tohtml($key) ?>">
+						<a href="/edit/package/?<?= tohtml(http_build_query(["package" => $key, "token" => $_SESSION["token"]])) ?>" title="<?= tohtml( _("Edit Package")) ?>: <?= tohtml($key) ?>">
 							<?= tohtml($key) ?>
 						</a>
 					<?php } ?>
@@ -135,7 +135,7 @@
 							<li class="units-table-row-action shortcut-enter" data-key-action="href">
 								<a
 									class="units-table-row-action-link"
-									href="/edit/package/?package=<?= tohtml($key) ?>&token=<?= tohtml($_SESSION["token"]) ?>"
+									href="/edit/package/?<?= tohtml(http_build_query(["package" => $key, "token" => $_SESSION["token"]])) ?>"
 									title="<?= tohtml( _("Edit Package")) ?>"
 								>
 									<i class="fas fa-pencil icon-orange"></i>
@@ -146,7 +146,7 @@
 						<li class="units-table-row-action" data-key-action="href">
 							<a
 								class="units-table-row-action-link"
-								href="/copy/package/?package=<?= tohtml($key) ?>&token=<?= tohtml($_SESSION["token"]) ?>"
+								href="/copy/package/?<?= tohtml(http_build_query(["package" => $key, "token" => $_SESSION["token"]])) ?>"
 								title="<?= tohtml( _("Duplicate")) ?>"
 							>
 								<i class="fas fa-clone icon-teal"></i>
@@ -157,7 +157,7 @@
 							<li class="units-table-row-action shortcut-delete" data-key-action="js">
 								<a
 									class="units-table-row-action-link data-controls js-confirm-action"
-									href="/delete/package/?package=<?= tohtml($key) ?>&token=<?= tohtml($_SESSION["token"]) ?>"
+									href="/delete/package/?<?= tohtml(http_build_query(["package" => $key, "token" => $_SESSION["token"]])) ?>"
 									title="<?= tohtml( _("Delete")) ?>"
 									data-confirm-title="<?= tohtml( _("Delete")) ?>"
 									data-confirm-message="<?= tohtml(sprintf(_("Are you sure you want to delete package %s?"), $key)) ?>"

@@ -213,7 +213,7 @@
 							}
 						}
 						?>
-						<a href="/edit/web/?domain=<?= tohtml($key) ?>&token=<?= tohtml($_SESSION['token']) ?>" title="<?= tohtml( _("Edit Domain")) ?>: <?= tohtml($key) ?>">
+						<a href="/edit/web/?<?= tohtml(http_build_query(["domain" => $key, "token" => $_SESSION['token']])) ?>" title="<?= tohtml( _("Edit Domain")) ?>: <?= tohtml($key) ?>">
 							<?= tohtml($key) ?>
 							<?php
 								if (!empty($alias_new) && !empty($data[$key]['ALIAS'])) {
@@ -257,7 +257,7 @@
 								<li class="units-table-row-action shortcut-enter" data-key-action="href">
 									<a
 										class="units-table-row-action-link"
-										href="/edit/web/?domain=<?= tohtml($key) ?>&token=<?= tohtml($_SESSION["token"]) ?>"
+										href="/edit/web/?<?= tohtml(http_build_query(["domain" => $key, "token" => $_SESSION["token"]])) ?>"
 										title="<?= tohtml( _("Edit Domain")) ?>"
 									>
 										<i class="fas fa-pencil icon-orange"></i>
@@ -267,7 +267,7 @@
 								<li class="units-table-row-action" data-key-action="href">
 									<a
 										class="units-table-row-action-link"
-										href="/download/site/?site=<?= tohtml($key) ?>&token=<?= tohtml($_SESSION["token"]) ?>"
+										href="/download/site/?<?= tohtml(http_build_query(["site" => $key, "token" => $_SESSION["token"]])) ?>"
 										title="<?= tohtml( _("Download Site")) ?>"
 									>
 										<i class="fas fa-download icon-orange"></i>
@@ -278,7 +278,7 @@
 							<li class="units-table-row-action shortcut-l" data-key-action="href">
 								<a
 									class="units-table-row-action-link"
-									href="/list/web-log/?domain=<?= tohtml($key) ?>&type=access#"
+									href="/list/web-log/?<?= tohtml(http_build_query(["domain" => $key, "type" => "access"])) ?>#"
 									title="<?= tohtml( _("View Logs")) ?>"
 								>
 									<i class="fas fa-binoculars icon-purple"></i>
@@ -288,7 +288,7 @@
 							<li class="units-table-row-action shortcut-s" data-key-action="js">
 								<a
 									class="units-table-row-action-link data-controls js-confirm-action"
-									href="/<?= tohtml($spnd_action) ?>/web/?domain=<?= tohtml($key) ?>&token=<?= tohtml($_SESSION["token"]) ?>"
+									href="/<?= tohtml($spnd_action) ?>/web/?<?= tohtml(http_build_query(["domain" => $key, "token" => $_SESSION["token"]])) ?>"
 									title="<?= tohtml($spnd_action_title) ?>"
 									data-confirm-title="<?= tohtml($spnd_action_title) ?>"
 									data-confirm-message="<?= tohtml(sprintf($spnd_confirmation, $key)) ?>"
@@ -300,7 +300,7 @@
 							<li class="units-table-row-action shortcut-delete" data-key-action="js">
 								<a
 									class="units-table-row-action-link data-controls js-confirm-action"
-									href="/delete/web/?domain=<?= tohtml($key) ?>&token=<?= tohtml($_SESSION["token"]) ?>"
+									href="/delete/web/?<?= tohtml(http_build_query(["domain" => $key, "token" => $_SESSION["token"]])) ?>"
 									title="<?= tohtml( _("Delete")) ?>"
 									data-confirm-title="<?= tohtml( _("Delete")) ?>"
 									data-confirm-message="<?= tohtml(sprintf(_("Are you sure you want to delete domain %s?"), $key)) ?>"

@@ -148,14 +148,14 @@
 				<div class="units-table-cell units-table-heading-cell">
 					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Name")) ?>:</span>
 					<?php if ($key == $user_plain) { ?>
-						<a href="/edit/user/?user=<?= tohtml($key) ?>&token=<?= tohtml($_SESSION["token"]) ?>" title="<?= tohtml( _("Edit User")) ?>">
+						<a href="/edit/user/?<?= tohtml(http_build_query(["user" => $key, "token" => $_SESSION["token"]])) ?>" title="<?= tohtml( _("Edit User")) ?>">
 							<span class="u-text-bold">
 								<?= tohtml($key) ?>
 							</span>
 							(<?= tohtml($data[$key]["NAME"]) ?>)
 						</a>
 					<?php } else { ?>
-						<a href="/login/?loginas=<?= tohtml($key) ?>&token=<?= tohtml($_SESSION["token"]) ?>" title="<?= tohtml( _("Log in as")) ?> <?= tohtml($key) ?>">
+						<a href="/login/?<?= tohtml(http_build_query(["loginas" => $key, "token" => $_SESSION["token"]])) ?>" title="<?= tohtml( _("Log in as")) ?> <?= tohtml($key) ?>">
 							<span class="u-text-bold">
 								<?= tohtml($key) ?>
 							</span>
@@ -178,7 +178,7 @@
 							<li class="units-table-row-action">
 								<a
 									class="units-table-row-action-link"
-									href="/login/?loginas=<?= tohtml($key) ?>&token=<?= tohtml($_SESSION["token"]) ?>"
+									href="/login/?<?= tohtml(http_build_query(["loginas" => $key, "token" => $_SESSION["token"]])) ?>"
 									title="<?= tohtml( _("Log in as")) ?> <?= tohtml($key) ?>"
 								>
 									<i class="fas fa-right-to-bracket icon-green"></i>
@@ -190,7 +190,7 @@
 							<li class="units-table-row-action shortcut-enter" data-key-action="href">
 								<a
 									class="units-table-row-action-link"
-									href="/edit/user/?user=<?= tohtml($key) ?>&token=<?= tohtml($_SESSION["token"]) ?>"
+									href="/edit/user/?<?= tohtml(http_build_query(["user" => $key, "token" => $_SESSION["token"]])) ?>"
 									title="<?= tohtml( _("Edit User")) ?>"
 								>
 									<i class="fas fa-pencil icon-orange"></i>
@@ -202,7 +202,7 @@
 							<li class="units-table-row-action shortcut-s" data-key-action="js">
 								<a
 									class="units-table-row-action-link data-controls js-confirm-action"
-									href="/<?= tohtml($spnd_action) ?>/user/?user=<?= tohtml($key) ?>&token=<?= tohtml($_SESSION["token"]) ?>"
+									href="/<?= tohtml($spnd_action) ?>/user/?<?= tohtml(http_build_query(["user" => $key, "token" => $_SESSION["token"]])) ?>"
 									title="<?= tohtml($spnd_action_title) ?>"
 									data-confirm-title="<?= tohtml($spnd_action_title) ?>"
 									data-confirm-message="<?= tohtml(sprintf($spnd_confirmation, $key)) ?>"
@@ -214,7 +214,7 @@
 							<li class="units-table-row-action shortcut-delete" data-key-action="js">
 								<a
 									class="units-table-row-action-link data-controls js-confirm-action"
-									href="/delete/user/?user=<?= tohtml($key) ?>&token=<?= tohtml($_SESSION["token"]) ?>"
+									href="/delete/user/?<?= tohtml(http_build_query(["user" => $key, "token" => $_SESSION["token"]])) ?>"
 									title="<?= tohtml( _("Delete")) ?>"
 									data-confirm-title="<?= tohtml( _("Delete")) ?>"
 									data-confirm-message="<?= tohtml(sprintf(_("Are you sure you want to delete user %s?"), $key)) ?>"
@@ -231,7 +231,7 @@
 					<?php if ($data[$key]["PACKAGE"] === "system") { ?>
 						<?= tohtml($data[$key]["PACKAGE"]) ?>
 					<?php } else { ?>
-						<a href="/edit/package/?package=<?= tohtml($data[$key]["PACKAGE"]) ?>&token=<?= tohtml($_SESSION["token"]) ?>" title="<?= tohtml( _("Edit Package")) ?>">
+						<a href="/edit/package/?<?= tohtml(http_build_query(["package" => $data[$key]["PACKAGE"], "token" => $_SESSION["token"]])) ?>" title="<?= tohtml( _("Edit Package")) ?>">
 							<?= tohtml($data[$key]["PACKAGE"]) ?>
 						</a>
 					<?php } ?>

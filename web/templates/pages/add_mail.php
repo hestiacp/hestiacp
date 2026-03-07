@@ -49,7 +49,7 @@
 			<?php if ($_SESSION["role"] == "admin" && empty($accept)) { ?>
 				<div class="u-side-by-side u-mt20">
 					<a href="/add/user/" class="button u-width-full u-mr10"><?= tohtml( _("Add User")) ?></a>
-					<a href="/add/mail/?accept=true" class="button button-danger u-width-full u-ml10"><?= tohtml( _("Continue")) ?></a>
+					<a href="/add/mail/?<?= tohtml(http_build_query(["accept" => 'true'])) ?>" class="button button-danger u-width-full u-ml10"><?= tohtml( _("Continue")) ?></a>
 				</div>
 			<?php } ?>
 			<?php if (($_SESSION["role"] == "admin" && $accept === "true") || $_SESSION["role"] !== "admin") { ?>

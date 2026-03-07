@@ -1018,7 +1018,7 @@
 								/
 								<a
 									class="form-link"
-									href="/generate/ssl/?domain=<?= tohtml(trim($v_hostname, '"')) ?>"
+									href="/generate/ssl/?<?= tohtml(http_build_query(["domain" => trim($v_hostname, '"')])) ?>"
 									target="_blank"
 								>
 									<?= tohtml( _("Generate Self-Signed SSL Certificate")) ?>

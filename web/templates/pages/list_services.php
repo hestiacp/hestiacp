@@ -16,12 +16,12 @@
 					<i class="fas fa-shield-halved icon-red"></i><?= tohtml( _("Firewall")) ?>
 				</a>
 			<?php } ?>
-			<a href="/list/log/?user=system&token=<?= tohtml($_SESSION["token"]) ?>" class="button button-secondary">
+			<a href="/list/log/?<?= tohtml(http_build_query(["user" => 'system', "token" => $_SESSION["token"]])) ?>" class="button button-secondary">
 				<i class="fas fa-binoculars icon-orange"></i><?= tohtml( _("Logs")) ?>
 			</a>
 			<a
 				class="button button-secondary button-danger data-controls js-confirm-action"
-				href="/restart/system/?hostname=<?= tohtml($sys["sysinfo"]["HOSTNAME"]) ?>&token=<?= tohtml($_SESSION["token"]) ?>&system_reset_token=<?= tohtml(time()) ?>"
+				href="/restart/system/?<?= tohtml(http_build_query(["hostname" => $sys["sysinfo"]["HOSTNAME"], "token" => $_SESSION["token"], "system_reset_token" => time()])) ?>"
 				data-confirm-title="<?= tohtml( _("Restart")) ?>"
 				data-confirm-message="<?= tohtml( _("Are you sure you want to restart the server?")) ?>"
 			>
@@ -165,7 +165,7 @@
 						<li class="units-table-row-action shortcut-s" data-key-action="js">
 							<a
 								class="units-table-row-action-link data-controls js-confirm-action"
-								href="/restart/service/?srv=<?= tohtml($key) ?>&token=<?= tohtml($_SESSION["token"]) ?>"
+								href="/restart/service/?<?= tohtml(http_build_query(["srv" => $key, "token" => $_SESSION["token"]])) ?>"
 								title="<?= tohtml( _("Restart")) ?>"
 								data-confirm-title="<?= tohtml( _("Restart")) ?>"
 								data-confirm-message="<?= tohtml(sprintf(_("Are you sure you want to restart the %s service?"), $key)) ?>"
@@ -177,7 +177,7 @@
 						<li class="units-table-row-action shortcut-delete" data-key-action="js">
 							<a
 								class="units-table-row-action-link data-controls js-confirm-action"
-								href="/<?= tohtml($action) ?>/service/?srv=<?= tohtml($key) ?>&token=<?= tohtml($_SESSION["token"]) ?>"
+								href="/<?= tohtml($action) ?>/service/?<?= tohtml(http_build_query(["srv" => $key, "token" => $_SESSION["token"]])) ?>"
 								title="<?= tohtml($action_text) ?>"
 								data-confirm-title="<?= tohtml($action_text) ?>"
 								data-confirm-message="<?php if ($action == 'stop') { echo sprintf(_('Are you sure you want to stop the %s service?'), $key); } else { echo sprintf(_('Are you sure you want to start the %s service?'), $key); }?>"

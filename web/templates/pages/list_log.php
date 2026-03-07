@@ -12,11 +12,11 @@
 				</a>
 			<?php } else { ?>
 				<?php if ($_SESSION["userContext"] === "admin" && $_SESSION['look'] !== '' && $_GET["user"] !== "admin") { ?>
-					<a href="/edit/user/?user=<?= tohtml($_SESSION["look"]) ?>&token=<?= tohtml($_SESSION["token"]) ?>" class="button button-secondary button-back js-button-back">
+					<a href="/edit/user/?<?= tohtml(http_build_query(["user" => $_SESSION["look"], "token" => $_SESSION["token"]])) ?>" class="button button-secondary button-back js-button-back">
 						<i class="fas fa-arrow-left icon-blue"></i><?= tohtml( _("Back")) ?>
 					</a>
 				<?php } else { ?>
-					<a href="/edit/user/?user=<?= tohtml($_SESSION["user"]) ?>&token=<?= tohtml($_SESSION["token"]) ?>" class="button button-secondary button-back js-button-back">
+					<a href="/edit/user/?<?= tohtml(http_build_query(["user" => $_SESSION["user"], "token" => $_SESSION["token"]])) ?>" class="button button-secondary button-back js-button-back">
 						<i class="fas fa-arrow-left icon-blue"></i><?= tohtml( _("Back")) ?>
 					</a>
 				<?php } ?>
@@ -25,7 +25,7 @@
 			if (($_SESSION['userContext'] === 'admin') && (htmlentities($_GET['user']) !== 'admin')) { ?>
 				<?php if (($_SESSION['userContext'] === 'admin') && ($_GET['user'] != '') && (htmlentities($_GET['user']) !== 'admin')) { ?>
 					<?php if (htmlentities($_GET['user']) !== 'system') { ?>
-						<a href="/list/log/auth/?user=<?= tohtml($_GET['user']) ?>&token=<?= tohtml($_SESSION['token']) ?>" class="button button-secondary button-back js-button-back" title="<?= tohtml( _("Login History")) ?>">
+						<a href="/list/log/auth/?<?= tohtml(http_build_query(["user" => $_GET['user'], "token" => $_SESSION['token']])) ?>" class="button button-secondary button-back js-button-back" title="<?= tohtml( _("Login History")) ?>">
 							<i class="fas fa-binoculars icon-green"></i><?= tohtml( _("Login History")) ?>
 						</a>
 					<?php } ?>
@@ -51,9 +51,9 @@
 					<a
 						class="button button-secondary button-danger data-controls js-confirm-action"
 						<?php if ($_SESSION["userContext"] === "admin" && isset($_GET["user"])) { ?>
-							href="/delete/log/?user=<?= tohtml($_GET["user"]) ?>&token=<?= tohtml($_SESSION["token"]) ?>"
+							href="/delete/log/?<?= tohtml(http_build_query(["user" => $_GET["user"], "token" => $_SESSION["token"]])) ?>"
 						<?php } else { ?>
-							href="/delete/log/?token=<?= tohtml($_SESSION["token"]) ?>"
+							href="/delete/log/?<?= tohtml(http_build_query(["token" => $_SESSION["token"]])) ?>"
 						<?php } ?>
 						data-confirm-title="<?= tohtml( _("Delete")) ?>"
 						data-confirm-message="<?= tohtml( _("Are you sure you want to delete the logs?")) ?>"

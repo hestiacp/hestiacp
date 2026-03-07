@@ -120,7 +120,7 @@
 				</div>
 				<div class="units-table-cell units-table-heading-cell u-text-bold">
 					<span class="u-hide-desktop"><?= tohtml( _("Position")) ?>:</span>
-					<a href="/edit/firewall/?rule=<?= tohtml($key) ?>&token=<?= tohtml($_SESSION["token"]) ?>" title="<?= tohtml( _("Edit Firewall Rule")) ?>">
+					<a href="/edit/firewall/?<?= tohtml(http_build_query(["rule" => $key, "token" => $_SESSION["token"]])) ?>" title="<?= tohtml( _("Edit Firewall Rule")) ?>">
 						<?php
 							$rule = $key;
 						?>
@@ -133,7 +133,7 @@
 							<a
 								class="units-table-row-action-link data-controls js-confirm-action"
 								style="<?= tohtml($move_up_enabled ? "display:block!important" : "display:none!important") ?>"
-								href="/move/firewall/?rule=<?= tohtml($key) ?>&direction=up&token=<?= tohtml($_SESSION["token"]) ?>"
+								href="/move/firewall/?<?= tohtml(http_build_query(["rule" => $key, "direction" => 'up', "token" => $_SESSION["token"]])) ?>"
 								title="<?= tohtml( _("Move Firewall Rule Up")) ?>"
 								data-confirm-title="<?= tohtml( _("Move Up")) ?>"
 								data-confirm-message="<?= tohtml(sprintf(_("Are you sure you want to move rule #%s up?"), $key)) ?>">
@@ -145,7 +145,7 @@
 							<a
 								class="units-table-row-action-link data-controls js-confirm-action"
 								style="<?= tohtml($move_down_enabled ? "" : "display:block!important") ?>"
-								href="/move/firewall/?rule=<?= tohtml($key) ?>&direction=down&token=<?= tohtml($_SESSION["token"]) ?>"
+								href="/move/firewall/?<?= tohtml(http_build_query(["rule" => $key, "direction" => 'down', "token" => $_SESSION["token"]])) ?>"
 								title="<?= tohtml( _("Move Firewall Rule Down")) ?>"
 								data-confirm-title="<?= tohtml( _("Move Down")) ?>"
 								data-confirm-message="<?= tohtml(sprintf(_("Are you sure you want to move rule #%s down?"), $key)) ?>">
@@ -157,7 +157,7 @@
 				</div>
 				<div class="units-table-cell units-table-heading-cell u-text-bold">
 					<span class="u-hide-desktop"><?= tohtml( _("Action")) ?>:</span>
-					<a href="/edit/firewall/?rule=<?= tohtml($key) ?>&token=<?= tohtml($_SESSION["token"]) ?>" title="<?= tohtml( _("Edit Firewall Rule")) ?>">
+					<a href="/edit/firewall/?<?= tohtml(http_build_query(["rule" => $key, "token" => $_SESSION["token"]])) ?>" title="<?= tohtml( _("Edit Firewall Rule")) ?>">
 						<?php
 							$suspended = $data[$key]["SUSPENDED"] == "no";
 							$action = $data[$key]["ACTION"];
@@ -172,7 +172,7 @@
 						<li class="units-table-row-action shortcut-enter" data-key-action="href">
 							<a
 								class="units-table-row-action-link"
-								href="/edit/firewall/?rule=<?= tohtml($key) ?>&token=<?= tohtml($_SESSION["token"]) ?>"
+								href="/edit/firewall/?<?= tohtml(http_build_query(["rule" => $key, "token" => $_SESSION["token"]])) ?>"
 								title="<?= tohtml( _("Edit Firewall Rule")) ?>"
 							>
 								<i class="fas fa-pencil icon-orange"></i>
@@ -182,7 +182,7 @@
 						<li class="units-table-row-action shortcut-s" data-key-action="js">
 							<a
 								class="units-table-row-action-link data-controls js-confirm-action"
-								href="/<?= tohtml($spnd_action) ?>/firewall/?rule=<?= tohtml($key) ?>&token=<?= tohtml($_SESSION["token"]) ?>"
+								href="/<?= tohtml($spnd_action) ?>/firewall/?<?= tohtml(http_build_query(["rule" => $key, "token" => $_SESSION["token"]])) ?>"
 								title="<?= tohtml($spnd_action_title) ?>"
 								data-confirm-title="<?= tohtml($spnd_action_title) ?>"
 								data-confirm-message="<?= tohtml(sprintf($spnd_confirmation, $key)) ?>"
@@ -194,7 +194,7 @@
 						<li class="units-table-row-action shortcut-delete" data-key-action="js">
 							<a
 								class="units-table-row-action-link data-controls js-confirm-action"
-								href="/delete/firewall/?rule=<?= tohtml($key) ?>&token=<?= tohtml($_SESSION["token"]) ?>"
+								href="/delete/firewall/?<?= tohtml(http_build_query(["rule" => $key, "token" => $_SESSION["token"]])) ?>"
 								title="<?= tohtml( _("Delete")) ?>"
 								data-confirm-title="<?= tohtml( _("Delete")) ?>"
 								data-confirm-message="<?= tohtml(sprintf(_("Are you sure you want to delete rule #%s?"), $key)) ?>"

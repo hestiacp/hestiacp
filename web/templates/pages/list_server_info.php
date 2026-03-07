@@ -102,7 +102,7 @@
 										</a>
 									</li>
 									<li class="top-bar-menu-item">
-										<a class="top-bar-menu-link top-bar-menu-link-logout" href="/logout/?token=<?= tohtml($_SESSION["token"]) ?>" title="<?= tohtml( _("Log out")) ?>">
+										<a class="top-bar-menu-link top-bar-menu-link-logout" href="/logout/?<?= tohtml(http_build_query(["token" => $_SESSION["token"]])) ?>" title="<?= tohtml( _("Log out")) ?>">
 											<i class="fas fa-right-from-bracket"></i>
 											<span class="u-hidden"><?= tohtml( _("Log out")) ?></span>
 										</a>

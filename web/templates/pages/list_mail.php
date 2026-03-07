@@ -177,7 +177,7 @@
 				</div>
 				<div class="units-table-cell units-table-heading-cell u-text-bold">
 					<span class="u-hide-desktop"><?= tohtml( _("Name")) ?>:</span>
-					<a href="?domain=<?= tohtml($key) ?>&token=<?= tohtml($_SESSION["token"]) ?>" title="<?= tohtml( _("Mail Accounts")) ?>: <?= tohtml($key) ?>">
+					<a href="?<?= tohtml(http_build_query(["domain" => $key, "token" => $_SESSION["token"]])) ?>" title="<?= tohtml( _("Mail Accounts")) ?>: <?= tohtml($key) ?>">
 						<?= tohtml($key) ?>
 					</a>
 				</div>
@@ -187,7 +187,7 @@
 							<li class="units-table-row-action shortcut-l" data-key-action="href">
 								<a
 									class="units-table-row-action-link"
-									href="?domain=<?= tohtml($key) ?>&token=<?= tohtml($_SESSION["token"]) ?>"
+									href="?<?= tohtml(http_build_query(["domain" => $key, "token" => $_SESSION["token"]])) ?>"
 									title="<?= tohtml( _("Mail Accounts")) ?>"
 								>
 									<i class="fas fa-users icon-blue"></i>
@@ -197,7 +197,7 @@
 							<li class="units-table-row-action shortcut-l" data-key-action="href">
 								<a
 									class="units-table-row-action-link"
-									href="?domain=<?= tohtml($key) ?>&dns=1&token=<?= tohtml($_SESSION["token"]) ?>"
+									href="?<?= tohtml(http_build_query(["domain" => $key, "dns" => '1', "token" => $_SESSION["token"]])) ?>"
 									title="<?= tohtml( _("DNS Records")) ?>"
 								>
 									<i class="fas fa-book-atlas icon-blue"></i>
@@ -222,7 +222,7 @@
 								<li class="units-table-row-action shortcut-n" data-key-action="href">
 									<a
 										class="units-table-row-action-link"
-										href="/add/mail/?domain=<?= tohtml($key) ?>&token=<?= tohtml($_SESSION["token"]) ?>"
+										href="/add/mail/?<?= tohtml(http_build_query(["domain" => $key, "token" => $_SESSION["token"]])) ?>"
 										title="<?= tohtml( _("Add Mail Account")) ?>"
 									>
 										<i class="fas fa-circle-plus icon-green"></i>
@@ -247,7 +247,7 @@
 								<li class="units-table-row-action shortcut-enter" data-key-action="href">
 									<a
 										class="units-table-row-action-link"
-										href="/edit/mail/?domain=<?= tohtml($key) ?>&token=<?= tohtml($_SESSION["token"]) ?>"
+										href="/edit/mail/?<?= tohtml(http_build_query(["domain" => $key, "token" => $_SESSION["token"]])) ?>"
 										title="<?= tohtml( _("Edit Mail Domain")) ?>"
 									>
 										<i class="fas fa-pencil icon-orange"></i>
@@ -258,7 +258,7 @@
 							<li class="units-table-row-action shortcut-l" data-key-action="href">
 								<a
 									class="units-table-row-action-link"
-									href="?domain=<?= tohtml($key) ?>&dns=1&token=<?= tohtml($_SESSION["token"]) ?>"
+									href="?<?= tohtml(http_build_query(["domain" => $key, "dns" => '1', "token" => $_SESSION["token"]])) ?>"
 									title="<?= tohtml( _("DNS Records")) ?>"
 								>
 									<i class="fas fa-book-atlas icon-blue"></i>
@@ -268,7 +268,7 @@
 							<li class="units-table-row-action shortcut-s" data-key-action="js">
 								<a
 									class="units-table-row-action-link data-controls js-confirm-action"
-									href="/<?= tohtml($spnd_action) ?>/mail/?domain=<?= tohtml($key) ?>&token=<?= tohtml($_SESSION["token"]) ?>"
+									href="/<?= tohtml($spnd_action) ?>/mail/?<?= tohtml(http_build_query(["domain" => $key, "token" => $_SESSION["token"]])) ?>"
 									title="<?= tohtml($spnd_action_title) ?>"
 									data-confirm-title="<?= tohtml($spnd_action_title) ?>"
 									data-confirm-message="<?= tohtml(sprintf($spnd_confirmation, $key)) ?>"
@@ -280,7 +280,7 @@
 							<li class="units-table-row-action shortcut-delete" data-key-action="js">
 								<a
 									class="units-table-row-action-link data-controls js-confirm-action"
-									href="/delete/mail/?domain=<?= tohtml($key) ?>&token=<?= tohtml($_SESSION["token"]) ?>"
+									href="/delete/mail/?<?= tohtml(http_build_query(["domain" => $key, "token" => $_SESSION["token"]])) ?>"
 									title="<?= tohtml( _("Delete")) ?>"
 									data-confirm-title="<?= tohtml( _("Delete")) ?>"
 									data-confirm-message="<?= tohtml(sprintf(_("Are you sure you want to delete domain %s?"), $key)) ?>"

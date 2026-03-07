@@ -3,7 +3,7 @@
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
 			<?php if ($read_only !== "true") { ?>
-				<a href="/schedule/backup/?token=<?= tohtml($_SESSION["token"]) ?>" class="button button-secondary"><i class="fas fa-circle-plus icon-green"></i><?= tohtml( _("Create Backup")) ?></a>
+				<a href="/schedule/backup/?<?= tohtml(http_build_query(["token" => $_SESSION["token"]])) ?>" class="button button-secondary"><i class="fas fa-circle-plus icon-green"></i><?= tohtml( _("Create Backup")) ?></a>
 				<a href="/list/backup/exclusions/" class="button button-secondary"><i class="fas fa-folder-minus icon-orange"></i><?= tohtml( _("Backup Exclusions")) ?></a>
 			<?php } ?>
 			<?php if ($panel[$user_plain]['BACKUPS_INCREMENTAL'] === 'yes') { ?>
@@ -84,7 +84,7 @@
 					<?php if ($read_only === "true") { ?>
 						<?= tohtml($key) ?>
 					<?php } else { ?>
-						<a href="/list/backup/?backup=<?= tohtml($key) ?>&token=<?= tohtml($_SESSION["token"]) ?>" title="<?= tohtml( _("Restore")) ?>">
+						<a href="/list/backup/?<?= tohtml(http_build_query(["backup" => $key, "token" => $_SESSION["token"]])) ?>" title="<?= tohtml( _("Restore")) ?>">
 							<?= tohtml($key) ?>
 						</a>
 					<?php } ?>
@@ -95,7 +95,7 @@
 							<li class="units-table-row-action shortcut-d" data-key-action="href">
 								<a
 									class="units-table-row-action-link"
-									href="/download/backup/?backup=<?= tohtml($key) ?>&token=<?= tohtml($_SESSION["token"]) ?>"
+									href="/download/backup/?<?= tohtml(http_build_query(["backup" => $key, "token" => $_SESSION["token"]])) ?>"
 									title="<?= tohtml( _("Download")) ?>"
 								>
 									<i class="fas fa-file-arrow-down icon-lightblue"></i>
@@ -106,7 +106,7 @@
 								<li class="units-table-row-action shortcut-enter" data-key-action="href">
 									<a
 										class="units-table-row-action-link data-controls"
-										href="/list/backup/?backup=<?= tohtml($key) ?>&token=<?= tohtml($_SESSION["token"]) ?>"
+										href="/list/backup/?<?= tohtml(http_build_query(["backup" => $key, "token" => $_SESSION["token"]])) ?>"
 										title="<?= tohtml( _("Restore")) ?>"
 									>
 										<i class="fas fa-arrow-rotate-left icon-green"></i>
@@ -116,7 +116,7 @@
 								<li class="units-table-row-action shortcut-delete" data-key-action="js">
 									<a
 										class="units-table-row-action-link data-controls js-confirm-action"
-										href="/delete/backup/?backup=<?= tohtml($key) ?>&token=<?= tohtml($_SESSION["token"]) ?>"
+										href="/delete/backup/?<?= tohtml(http_build_query(["backup" => $key, "token" => $_SESSION["token"]])) ?>"
 										title="<?= tohtml( _("Delete")) ?>"
 										data-confirm-title="<?= tohtml( _("Delete")) ?>"
 										data-confirm-message="<?= tohtml(sprintf(_("Are you sure you want to delete backup %s?"), $key)) ?>"

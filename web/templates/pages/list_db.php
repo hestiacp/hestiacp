@@ -181,13 +181,25 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
 									</a>
 								</li>
 							<?php } ?>
-							<?php if ($data[$key]['TYPE'] == 'mysql' && isset($_SESSION['PHPMYADMIN_KEY']) && $_SESSION['PHPMYADMIN_KEY'] != '' && !ipUsed()) { $time = time(); ?>
-								<li class="units-table-row-action shortcut-enter" data-key-action="href">
-									<a
-										class="units-table-row-action-link"
-										href="<?= tohtml($db_myadmin_link) ?>hestia-sso.php?database=<?= tohtml($key) ?>&user=<?= tohtml($user_plain) ?>&exp=<?= tohtml($time) ?>&hestia_token=<?= tohtml(password_hash($key.$user_plain.$_SESSION['user_combined_ip'].$time.$_SESSION['PHPMYADMIN_KEY'], PASSWORD_DEFAULT)) ?>"
-										title="phpMyAdmin" target="_blank"
-									>
+								<?php if ($data[$key]['TYPE'] == 'mysql' && isset($_SESSION['PHPMYADMIN_KEY']) && $_SESSION['PHPMYADMIN_KEY'] != '' && !ipUsed()) { $time = time(); ?>
+									<?php
+										$hestia_sso_token = password_hash(
+											$key . $user_plain . $_SESSION['user_combined_ip'] . $time . $_SESSION['PHPMYADMIN_KEY'],
+											PASSWORD_DEFAULT,
+										);
+										$hestia_sso_url = $db_myadmin_link . "hestia-sso.php?" . http_build_query([
+											"database" => $key,
+											"user" => $user_plain,
+											"exp" => $time,
+											"hestia_token" => $hestia_sso_token,
+										]);
+									?>
+									<li class="units-table-row-action shortcut-enter" data-key-action="href">
+										<a
+											class="units-table-row-action-link"
+											href="<?= tohtml($hestia_sso_url) ?>"
+											title="phpMyAdmin" target="_blank"
+										>
 										<i class="fas fa-right-to-bracket icon-orange"></i>
 										<span class="u-hide-desktop">phpMyAdmin</span>
 									</a>

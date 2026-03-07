@@ -24,19 +24,22 @@
 <!-- End toolbar -->
 
 <div class="container">
+	<?php
+		$web_x_data = [
+			"statsAuthEnabled" => !empty($v_stats_user),
+			"redirectEnabled" => !empty($v_redirect),
+			"sslEnabled" => $v_ssl == "yes",
+			"letsEncryptEnabled" => $v_letsencrypt == "yes" || $v_letsencrypt == "on",
+			"showCertificates" => !($v_letsencrypt == "yes" || $v_letsencrypt == "on"),
+			"showAdvanced" => false,
+			"nginxCacheEnabled" => $v_nginx_cache == "yes",
+			"proxySupportEnabled" => !empty($v_proxy),
+			"customDocumentRootEnabled" => !empty($v_custom_doc_root),
+		];
+	?>
 
 	<form
-		x-data="{
-			statsAuthEnabled: <?= tohtml(!empty($v_stats_user) ? "true" : "false") ?>,
-			redirectEnabled: <?= tohtml(!empty($v_redirect) ? "true" : "false") ?>,
-			sslEnabled: <?= tohtml($v_ssl == "yes" ? "true" : "false") ?>,
-			letsEncryptEnabled: <?= tohtml($v_letsencrypt == "yes" || $v_letsencrypt == "on" ? "true" : "false") ?>,
-			showCertificates: <?= tohtml($v_letsencrypt == "yes" || $v_letsencrypt == "on" ? "false" : "true") ?>,
-			showAdvanced: false,
-			nginxCacheEnabled: <?= tohtml($v_nginx_cache == "yes" ? "true" : "false") ?>,
-			proxySupportEnabled: <?= tohtml(!empty($v_proxy) ? "true" : "false") ?>,
-			customDocumentRootEnabled: <?= tohtml(!empty($v_custom_doc_root) ? "true" : "false") ?>
-		}"
+		x-data="<?= tohtml(json_encode($web_x_data, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_THROW_ON_ERROR)) ?>"
 		id="main-form"
 		name="v_edit_web"
 		method="post"

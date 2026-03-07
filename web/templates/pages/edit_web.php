@@ -152,8 +152,7 @@
 						<label for="v-redirect-code" class="form-label"><?= tohtml( _("Status code")) ?>:</label>
 						<select class="form-select" name="v-redirect-code" id="v-redirect-code">
 							<?php foreach ($redirect_code_options as $status_code): ?>
-							<option value="<?= tohtml($status_code) ?>"
-								<?= tohtml(trim($v_redirect_code) === $status_code || (empty($v_redirect_code) && $status_code === trim($v_redirect_code)) ? ' selected="selected" ' : "") ?>>
+								<option value="<?= tohtml($status_code) ?>" <?php if ((int) $v_redirect_code === (int) $status_code) echo 'selected="selected"'; ?>>
 								<?= tohtml($status_code) ?>
 							</option>
 							<?php endforeach; ?>

@@ -14,10 +14,48 @@ const { config } = JSON.parse(
 	execSync(`${process.env.HESTIA}/bin/v-list-sys-config json`, { silent: true }).toString(),
 );
 
+function parseCookies(cookieHeader) {
+	const cookies = {};
+	if (typeof cookieHeader !== 'string' || cookieHeader.length === 0) {
+		return cookies;
+	}
+
+	for (const part of cookieHeader.split(';')) {
+		const cookie = part.trim();
+		if (cookie.length === 0) {
+			continue;
+		}
+
+		const separatorIndex = cookie.indexOf('=');
+		if (separatorIndex < 0) {
+			cookies[cookie] = cookies[cookie] || [];
+			cookies[cookie].push('');
+			continue;
+		}
+
+		if (separatorIndex === 0) {
+			continue;
+		}
+
+		const key = cookie.slice(0, separatorIndex).trim();
+		const value = cookie.slice(separatorIndex + 1).trim();
+		if (key.length === 0) {
+			continue;
+		}
+
+		cookies[key] = cookies[key] || [];
+		cookies[key].push(value);
+	}
+
+	return cookies;
+}
+
 const wss = new WebSocketServer({
 	port: Number.parseInt(config.WEB_TERMINAL_PORT, 10),
 	verifyClient: async (info, cb) => {
-		if (!info.req.headers.cookie.includes(sessionName)) {
+		const cookies = parseCookies(info.req.headers.cookie);
+		const sessionIDs = cookies[sessionName] || [];
+		if (sessionIDs.length !== 1 || sessionIDs[0].length === 0) {
 			cb(false, 401, 'Unauthorized');
 			return;
 		}
@@ -48,7 +86,14 @@ wss.on('connection', (ws, req) => {
 	const remoteIP = req.headers['x-real-ip'] || req.socket.remoteAddress;
 
 	// Check if session is valid
-	const sessionID = req.headers.cookie.split(`${sessionName}=`)[1].split(';')[0];
+	const cookies = parseCookies(req.headers.cookie);
+	const sessionIDs = cookies[sessionName] || [];
+	if (sessionIDs.length !== 1 || sessionIDs[0].length === 0) {
+		console.error(`Missing ${sessionName} cookie from ${remoteIP}, refusing connection`);
+		ws.close(1000, 'You are not authenticated.');
+		return;
+	}
+	const sessionID = sessionIDs[0];
 	console.log(`New connection from ${remoteIP} (${sessionID})`);
 
 	let authResult;

@@ -25,6 +25,27 @@ const E_UPDATE = 19;
 const E_RESTART = 20;
 const E_API_DISABLED = 21;
 
+if (!function_exists("tohtml")) {
+	function tohtml(string|int|float|bool|null $str): string {
+		if ($str === null || $str === "") {
+			return "";
+		}
+		if (is_int($str) || is_float($str)) {
+			return (string) $str;
+		}
+		if (is_bool($str)) {
+			return $str ? "1" : "0";
+		}
+
+		return htmlentities(
+			$str,
+			ENT_QUOTES | ENT_SUBSTITUTE | ENT_DISALLOWED | ENT_HTML5,
+			"UTF-8",
+			true,
+		);
+	}
+}
+
 /**
  * Looks for a code equivalent to "exit_code" to use in http_code.
  *

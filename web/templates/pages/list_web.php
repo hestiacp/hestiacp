@@ -58,7 +58,7 @@
 			<div class="toolbar-search">
 				<form action="/search/" method="get">
 					<input type="hidden" name="token" value="<?= tohtml($_SESSION["token"]) ?>">
-					<input type="search" class="form-control js-search-input" name="q" value="<?= tohtml($_POST['q'] ?? '') ?>" title="<?= tohtml( _("Search")) ?>">
+					<input type="search" class="form-control js-search-input" name="q" value="<?= tohtml($_GET['q'] ?? '') ?>" title="<?= tohtml( _("Search")) ?>">
 					<button type="submit" class="toolbar-input-submit" title="<?= tohtml( _("Search")) ?>">
 						<i class="fas fa-magnifying-glass"></i>
 					</button>
@@ -215,14 +215,14 @@
 						?>
 						<a href="/edit/web/?<?= tohtml(http_build_query(["domain" => $key, "token" => $_SESSION['token']])) ?>" title="<?= tohtml( _("Edit Domain")) ?>: <?= tohtml($key) ?>">
 							<?= tohtml($key) ?>
-							<?php
-								if (!empty($alias_new) && !empty($data[$key]['ALIAS'])) {
-									$aliases = implode(', ', $alias_new);
-									echo "<p class='hint u-max-width300 u-text-truncate'>($aliases)</p>";
-								}
-							?>
-						</a>
-					<?php } ?>
+								<?php
+									if (!empty($alias_new) && !empty($data[$key]['ALIAS'])) {
+										$aliases = implode(', ', $alias_new);
+										echo "<p class='hint u-max-width300 u-text-truncate'>(" . tohtml($aliases) . ")</p>";
+									}
+								?>
+							</a>
+						<?php } ?>
 				</div>
 				<div class="units-table-cell">
 					<ul class="units-table-row-actions">

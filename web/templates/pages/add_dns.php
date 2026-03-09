@@ -55,13 +55,13 @@
 					<div class="u-pos-relative">
 						<select class="form-select" tabindex="-1" onchange="this.nextElementSibling.value=this.value">
 							<option value="">clear</option>
-							<?php
-								foreach ($v_ips as $ip => $value) {
-									$display_ip = empty($value['NAT']) ? $ip : "{$value['NAT']}";
-									echo "<option value='{$display_ip}'>" . htmlentities($display_ip) . "</option>\n";
-								}
-							?>
-						</select>
+								<?php
+									foreach ($v_ips as $ip => $value) {
+										$display_ip = empty($value['NAT']) ? $ip : "{$value['NAT']}";
+										echo "<option value=\"" . tohtml($display_ip) . "\">" . tohtml($display_ip) . "</option>\n";
+									}
+								?>
+							</select>
 						<input type="text" class="form-control list-editor" name="v_ip" id="v_ip" value="<?= tohtml(trim($v_ip, "'")) ?>">
 					</div>
 				</div>

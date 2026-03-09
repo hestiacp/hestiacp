@@ -13,7 +13,7 @@
 				<button class="toolbar-sorting-toggle js-toggle-sorting-menu" type="button" title="<?= tohtml( _("Sort items")) ?>">
 					<?= tohtml( _("Sort by")) ?>:
 					<span class="u-text-bold">
-						<?php if ($_SESSION['userSortOrder'] === 'name') { $label = ('Name'); } else { $label = _('Date'); } ?>
+							<?php if ($_SESSION['userSortOrder'] === 'name') { $label = _('Name'); } else { $label = _('Date'); } ?>
 						<?= tohtml($label) ?> <i class="fas fa-arrow-down-a-z"></i>
 					</span>
 				</button>

@@ -29,7 +29,7 @@ class SessionStorage implements Service, SessionStorageInterface {
 		if (!$this->getSession()) {
 			$handler = $config["handler"];
 			$session = new Session($handler());
-			//$session->setName('filegator');
+			//$session->setName("filegator");
 			$this->setSession($session);
 		}
 	}
@@ -60,5 +60,9 @@ class SessionStorage implements Service, SessionStorageInterface {
 
 	private function getSession(): ?Session {
 		return $this->request->getSession();
+	}
+
+	public function migrate($destroy = false, $lifetime = null): bool {
+		return $this->request->getSession()->migrate($destroy, $lifetime);
 	}
 }

@@ -75,9 +75,9 @@
 
 	<div class="units-table js-units-container">
 		<div class="units-table-header">
-			<div class="units-table-cell">
-				<input type="checkbox" class="js-toggle-all-checkbox" title="<?= tohtml( _("Select all")) ?>" <?= tohtml($display_mode) ?>>
-			</div>
+				<div class="units-table-cell">
+					<input type="checkbox" class="js-toggle-all-checkbox" title="<?= tohtml( _("Select all")) ?>"<?= $display_mode === "disabled" ? " disabled" : "" ?>>
+				</div>
 			<div class="units-table-cell"><?= tohtml( _("Name")) ?></div>
 			<div class="units-table-cell"></div>
 			<div class="units-table-cell u-text-center"><?= tohtml( _("IP Address")) ?></div>
@@ -196,7 +196,7 @@
 				data-sort-disk="<?= tohtml($data[$key]["U_DISK"]) ?>">
 				<div class="units-table-cell">
 					<div>
-						<input id="check<?= tohtml($i) ?>" class="js-unit-checkbox" type="checkbox" title="<?= tohtml( _("Select")) ?>" name="domain[]" value="<?= tohtml($key) ?>" <?= tohtml($display_mode) ?>>
+						<input id="check<?= tohtml($i) ?>" class="js-unit-checkbox" type="checkbox" title="<?= tohtml( _("Select")) ?>" name="domain[]" value="<?= tohtml($key) ?>"<?= $display_mode === "disabled" ? " disabled" : "" ?>>
 						<label for="check<?= tohtml($i) ?>" class="u-hide-desktop"><?= tohtml( _("Select")) ?></label>
 					</div>
 				</div>

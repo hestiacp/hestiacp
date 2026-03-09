@@ -4,13 +4,13 @@ if( !defined("HESTIA_DIR_BIN") ){
 }
 ?>
 <div x-data="{ open: false }" class="debug-panel">
-	<button
-		type="button"
-		class="debug-panel-toggle"
-		x-on:click="open = !open"
-		x-text="open ? '<?= _("Close debug panel") ?>' : '<?= _("Open debug panel") ?>'">
-		<?= _("Open debug panel") ?>
-	</button>
+		<button
+			type="button"
+			class="debug-panel-toggle"
+			x-on:click="open = !open"
+			x-text="open ? <?= tohtml(json_encode(_("Close debug panel"), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_THROW_ON_ERROR)) ?> : <?= tohtml(json_encode(_("Open debug panel"), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_THROW_ON_ERROR)) ?>">
+			<?= tohtml( _("Open debug panel")) ?>
+		</button>
 	<div x-cloak x-show="open" class="debug-panel-content">
 		<?php
 			echo "<h3 class=\"u-mb10\">Server Variables</h3>";

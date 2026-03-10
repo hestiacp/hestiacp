@@ -59,7 +59,11 @@ class SessionStorage implements Service, SessionStorageInterface {
 	}
 
 	private function getSession(): ?Session {
-		return $this->request->getSession();
+		try {
+			return $this->request->getSession();
+		} catch (\Symfony\Component\HttpFoundation\Exception\SessionNotFoundException $e) {
+			return null;
+		}
 	}
 
 	public function migrate($destroy = false, $lifetime = null): bool {

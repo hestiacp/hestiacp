@@ -323,7 +323,7 @@
 				</div>
 				<div class="units-table-cell u-text-center-desktop">
 					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("IPV6 Address")) ?>:</span>
-					<?= tohtml(empty($ips[$data[$key]['IP6']]) ? '' : $data[$key]['IP6'];) ?>
+					<?= tohtml(empty($ips[$data[$key]['IP6']]) ? '' : $data[$key]['IP6']) ?>
 				</div>
 				<div class="units-table-cell u-text-center-desktop">
 					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Disk")) ?>:</span>

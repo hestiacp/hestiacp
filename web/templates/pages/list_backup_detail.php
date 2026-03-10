@@ -49,13 +49,14 @@
 			<div class="units-table-cell"><?= tohtml( _("Restore")) ?></div>
 		</div>
 
-		<!-- List web domains -->
-		<?php
-			$backup = $_GET['backup'];
-			$web = explode(',',$data[$backup]['WEB']);
-			foreach ($web as $key) {
-				if (!empty($key)) {
-					++$i;
+			<!-- List web domains -->
+			<?php
+				$i = 0;
+				$backup = $_GET['backup'];
+				$web = explode(',',$data[$backup]['WEB']);
+				foreach ($web as $key) {
+					if (!empty($key)) {
+						++$i;
 			?>
 			<div class="units-table-row js-unit">
 				<div class="units-table-cell">
@@ -92,12 +93,13 @@
 		<?php }} ?>
 
 		<!-- List mail domains -->
-		<?php
-			$mail = explode(',',$data[$backup]['MAIL']);
-			foreach ($mail as $key) {
-				if (!empty($key)) {
-			?>
-			<div class="units-table-row js-unit">
+			<?php
+				$mail = explode(',',$data[$backup]['MAIL']);
+				foreach ($mail as $key) {
+					if (!empty($key)) {
+						++$i;
+				?>
+				<div class="units-table-row js-unit">
 				<div class="units-table-cell">
 					<div>
 						<input id="check2<?= tohtml($i) ?>" class="js-unit-checkbox" type="checkbox" name="mail[]" value="<?= tohtml($key) ?>">
@@ -132,12 +134,13 @@
 		<?php }} ?>
 
 		<!-- List DNS zones -->
-		<?php
-			$dns = explode(',',$data[$backup]['DNS']);
-			foreach ($dns as $key) {
-				if (!empty($key)) {
-			?>
-			<div class="units-table-row js-unit">
+			<?php
+				$dns = explode(',',$data[$backup]['DNS']);
+				foreach ($dns as $key) {
+					if (!empty($key)) {
+						++$i;
+				?>
+				<div class="units-table-row js-unit">
 				<div class="units-table-cell">
 					<div>
 						<input id="check3<?= tohtml($i) ?>" class="js-unit-checkbox" type="checkbox" name="dns[]" value="<?= tohtml($key) ?>">
@@ -172,12 +175,13 @@
 		<?php }} ?>
 
 		<!-- List Databases -->
-		<?php
-			$db = explode(',',$data[$backup]['DB']);
-			foreach ($db as $key) {
-				if (!empty($key)) {
-			?>
-			<div class="units-table-row js-unit">
+			<?php
+				$db = explode(',',$data[$backup]['DB']);
+				foreach ($db as $key) {
+					if (!empty($key)) {
+						++$i;
+				?>
+				<div class="units-table-row js-unit">
 				<div class="units-table-cell">
 					<div>
 						<input id="check4<?= tohtml($i) ?>" class="js-unit-checkbox" type="checkbox" name="db[]" value="<?= tohtml($key) ?>">
@@ -212,7 +216,7 @@
 		<?php }} ?>
 
 		<!-- List Cron Jobs -->
-			<?php if (!empty($data[$backup]["CRON"])) { ?>
+			<?php if (!empty($data[$backup]["CRON"])) { ++$i; ?>
 				<div class="units-table-row js-unit">
 					<div class="units-table-cell">
 						<div>
@@ -248,11 +252,12 @@
 			<?php } ?>
 
 		<!-- List user directories -->
-		<?php
-			$udir = explode(',',$data[$backup]['UDIR']);
-			foreach ($udir as $key) {
-				if (!empty($key)) {
-			?>
+			<?php
+				$udir = explode(',',$data[$backup]['UDIR']);
+				foreach ($udir as $key) {
+					if (!empty($key)) {
+						++$i;
+				?>
 			<div class="units-table-row js-unit">
 				<div class="units-table-cell">
 					<div>

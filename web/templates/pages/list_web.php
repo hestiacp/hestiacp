@@ -194,7 +194,7 @@
 			?>
 			<div class="units-table-row <?php if ($data[$key]['SUSPENDED'] == 'yes') echo 'disabled'; ?> js-unit"
 				data-sort-ipv4="<?= tohtml(str_replace(".", "", $data[$key]["IP"])) ?>"
-				data-sort-ipv6="<?= tohtml(str_replace(".", "", $data[$key]["IP6"])) ?>"
+				data-sort-ipv6="<?= tohtml(str_replace(":", "", $data[$key]["IP6"])) ?>"
 				data-sort-date="<?= tohtml(strtotime($data[$key]["DATE"] . " " . $data[$key]["TIME"])) ?>"
 				data-sort-name="<?= tohtml($key) ?>"
 				data-sort-bandwidth="<?= tohtml($data[$key]["U_BANDWIDTH"]) ?>"

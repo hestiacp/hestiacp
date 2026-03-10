@@ -136,8 +136,8 @@
 						<a href="/list/dns/?<?= tohtml(http_build_query(array("domain" => $key, "token" => $_SESSION["token"]))) ?>" title="<?= tohtml( _("DNS Records")) ?>: <?= tohtml($key) ?>">
 						<?= tohtml($key) ?>
 					</a>
-					<?= tohtml(empty($data[$key]["SRC"]) ? "" : '<br>⇢ <span class="u-text-small">' . $data[$key]["SRC"] . "</span>") ?>
-				</div>
+						<?= empty($data[$key]["SRC"]) ? "" : '<br>⇢ <span class="u-text-small">' . tohtml($data[$key]["SRC"]) . "</span>" ?>
+					</div>
 				<div class="units-table-cell">
 					<?php if (!$read_only) { ?>
 						<ul class="units-table-row-actions">

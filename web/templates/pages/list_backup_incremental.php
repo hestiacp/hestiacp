@@ -97,12 +97,12 @@
 					Restic
 				</span>
 			</div>
-			<div class="units-table-cell">
-				<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Hostname")) ?>:</span>
-				<span class="u-text-bold">
-					<?=htmlentities($value['hostname'])?>
-				</span>
-			</div>
+				<div class="units-table-cell">
+					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Hostname")) ?>:</span>
+					<span class="u-text-bold">
+						<?= tohtml($value['hostname']) ?>
+					</span>
+				</div>
 		</div>
 	<?php
 	}

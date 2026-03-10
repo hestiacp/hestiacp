@@ -61,10 +61,10 @@
 			<div class="u-mb10">
 				<label for="v_backups_incremental" class="form-label"><?= tohtml( _("Incremental Backups")) ?></label>
 				<select class="form-select" name="v_backups_incremental" id="v_backups_incremental">
-					<option value="no"><?=_('Disabled')?></option>
-					<option value="yes" <?php if ('yes' == trim($v_backups_incremental, "''")): ?>
-						selected
-					<?php endif; ?>><?=_('Enabled')?></option>
+						<option value="no"><?= tohtml( _("Disabled")) ?></option>
+						<option value="yes" <?php if ('yes' == trim($v_backups_incremental, "''")): ?>
+							selected
+						<?php endif; ?>><?= tohtml( _("Enabled")) ?></option>
 				</select>
 			</div>
 			<details class="collapse" id="web-options">
@@ -114,15 +114,15 @@
 									<?= tohtml( _("Backend Template")) ?> <span class="optional"><?= tohtml(strtoupper($_SESSION["WEB_BACKEND"])) ?></span>
 								</label>
 							<select class="form-select" name="v_backend_template" id="v_backend_template">
-								<?php
-									foreach ($backend_templates as $key => $value) {
-										echo "\t\t\t\t<option value=\"".$value."\"";
-										if ((!empty($v_backend_template)) && ( $value == trim($v_backend_template, "'"))){
-											echo ' selected' ;
+									<?php
+										foreach ($backend_templates as $key => $value) {
+											echo "\t\t\t\t<option value=\"" . tohtml($value) . "\"";
+											if ((!empty($v_backend_template)) && ( $value == trim($v_backend_template, "'"))){
+												echo ' selected' ;
+											}
+											echo ">" . tohtml($value) . "</option>\n";
 										}
-										echo ">".htmlentities($value)."</option>\n";
-									}
-								?>
+									?>
 							</select>
 						</div>
 						<?php } ?>

@@ -49,14 +49,14 @@
 					</form>
 				<?php } ?>
 			</div>
-			<div class="toolbar-search">
-				<form action="/search/" method="get">
-					<input type="hidden" name="token" value="<?= tohtml($_SESSION["token"]) ?>">
-					<input type="search" class="form-control js-search-input" name="q" value="<?= tohtml($_POST['q'] ?? '') ?>" title="<?= tohtml( _("Search")) ?>">
-					<button type="submit" class="toolbar-input-submit" title="<?= tohtml( _("Search")) ?>">
-						<i class="fas fa-magnifying-glass"></i>
-					</button>
-				</form>
+				<div class="toolbar-search">
+					<form action="/search/" method="get">
+						<input type="hidden" name="token" value="<?= tohtml($_SESSION["token"]) ?>">
+						<input type="search" class="form-control js-search-input" name="q" value="<?= tohtml($_GET['q'] ?? '') ?>" title="<?= tohtml( _("Search")) ?>">
+						<button type="submit" class="toolbar-input-submit" title="<?= tohtml( _("Search")) ?>">
+							<i class="fas fa-magnifying-glass"></i>
+						</button>
+					</form>
 			</div>
 		</div>
 	</div>
@@ -205,13 +205,13 @@
 								</a>
 							</li>
 							<?php if ($data[$key]["SUSPENDED"] == "no") { ?>
-								<li class="units-table-row-action" data-key-action="href">
-									<a
-										class="units-table-row-action-link"
-										href="http://<?= tohtml($webmail) ?>.<?= tohtml($key) ?>/"
-										target="_blank"
-										title="<?= tohtml( _("Open Webmail")) ?>"
-									>
+									<li class="units-table-row-action" data-key-action="href">
+										<a
+											class="units-table-row-action-link"
+											href="https://<?= tohtml($webmail) ?>.<?= tohtml($key) ?>/"
+											target="_blank"
+											title="<?= tohtml( _("Open Webmail")) ?>"
+										>
 										<i class="fas fa-paper-plane icon-lightblue"></i>
 										<span class="u-hide-desktop"><?= tohtml( _("Open Webmail")) ?></span>
 									</a>
@@ -231,13 +231,13 @@
 								</li>
 								<?php if ($_SESSION["WEBMAIL_SYSTEM"]) { ?>
 									<?php if (!empty($data[$key]["WEBMAIL"])) { ?>
-										<li class="units-table-row-action" data-key-action="href">
-											<a
-												class="units-table-row-action-link"
-												href="http://<?= tohtml($webmail) ?>.<?= tohtml($key) ?>/"
-												target="_blank"
-												title="<?= tohtml( _("Open Webmail")) ?>"
-											>
+											<li class="units-table-row-action" data-key-action="href">
+												<a
+													class="units-table-row-action-link"
+													href="https://<?= tohtml($webmail) ?>.<?= tohtml($key) ?>/"
+													target="_blank"
+													title="<?= tohtml( _("Open Webmail")) ?>"
+												>
 												<i class="fas fa-paper-plane icon-lightblue"></i>
 												<span class="u-hide-desktop"><?= tohtml( _("Open Webmail")) ?></span>
 											</a>
@@ -292,15 +292,15 @@
 						<?php } ?>
 					</ul>
 				</div>
-				<div class="units-table-cell u-text-center-desktop">
-					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Accounts")) ?>:</span>
-					<?php
-						if ($data[$key]['ACCOUNTS']) {
-							$mail_accounts = htmlentities($data[$key]['ACCOUNTS']);
-						} else {
-							$mail_accounts = '0';
-						}
-					?>
+					<div class="units-table-cell u-text-center-desktop">
+						<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Accounts")) ?>:</span>
+						<?php
+							if ($data[$key]['ACCOUNTS']) {
+								$mail_accounts = $data[$key]['ACCOUNTS'];
+							} else {
+								$mail_accounts = '0';
+							}
+						?>
 					<?= tohtml($mail_accounts) ?>
 				</div>
 				<div class="units-table-cell u-text-center-desktop">

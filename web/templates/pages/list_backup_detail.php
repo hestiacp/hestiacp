@@ -216,7 +216,7 @@
 		<?php }} ?>
 
 		<!-- List Cron Jobs -->
-			<?php if (!empty($data[$backup]["CRON"])) { ++$i; ?>
+			<?php if (!empty($data[$backup]["CRON"])) { ?>
 				<div class="units-table-row js-unit">
 					<div class="units-table-cell">
 						<div>

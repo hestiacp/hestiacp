@@ -24,7 +24,7 @@
 			<div class="toolbar-search">
 				<form action="/search/" method="get">
 					<input type="hidden" name="token" value="<?= tohtml($_SESSION["token"]) ?>">
-					<input type="search" class="form-control js-search-input" name="q" value="<?= tohtml($_POST['q'] ?? '') ?>" title="<?= tohtml( _("Search")) ?>">
+						<input type="search" class="form-control js-search-input" name="q" value="<?= tohtml($_GET['q'] ?? '') ?>" title="<?= tohtml( _("Search")) ?>">
 					<button type="submit" class="toolbar-input-submit" title="<?= tohtml( _("Search")) ?>">
 						<i class="fas fa-magnifying-glass"></i>
 					</button>
@@ -212,15 +212,14 @@
 		<?php }} ?>
 
 		<!-- List Cron Jobs -->
-		<?php if (!empty($data[$backup]["CRON"])) {
-		if (!empty($key)) { ?>
-			<div class="units-table-row js-unit">
-				<div class="units-table-cell">
-					<div>
-						<input id="check5<?= tohtml($i) ?>" class="js-unit-checkbox" type="checkbox" name="check" value="<?= tohtml($key) ?>">
-						<label for="check5<?= tohtml($i) ?>" class="u-hide-desktop"><?= tohtml( _("Select")) ?></label>
+			<?php if (!empty($data[$backup]["CRON"])) { ?>
+				<div class="units-table-row js-unit">
+					<div class="units-table-cell">
+						<div>
+							<input id="check5<?= tohtml($i) ?>" class="js-unit-checkbox" type="checkbox" name="cron" value="yes">
+							<label for="check5<?= tohtml($i) ?>" class="u-hide-desktop"><?= tohtml( _("Select")) ?></label>
+						</div>
 					</div>
-				</div>
 				<div class="units-table-cell units-table-heading-cell">
 					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Type")) ?>:</span>
 					<?= tohtml( _("Cron Jobs")) ?>
@@ -232,21 +231,21 @@
 				<div class="units-table-cell">
 					<ul class="units-table-row-actions">
 						<li class="units-table-row-action shortcut-enter" data-key-action="href">
-							<a
-								class="units-table-row-action-link data-controls js-confirm-action"
-								href="/schedule/restore/?<?= tohtml(http_build_query(array("backup" => $backup, "type" => "cron", "object" => "records", "token" => $_SESSION["token"]))) ?>"
-								title="<?= tohtml( _("Restore")) ?>"
-								data-confirm-title="<?= tohtml( _("Restore")) ?>"
-								data-confirm-message="<?= tohtml(sprintf(_("Are you sure you want to restore %s?"), $key)) ?>"
-							>
-								<i class="fas fa-arrow-rotate-left icon-green"></i>
-								<span class="u-hide-desktop"><?= tohtml( _("Restore")) ?></span>
+								<a
+									class="units-table-row-action-link data-controls js-confirm-action"
+									href="/schedule/restore/?<?= tohtml(http_build_query(array("backup" => $backup, "type" => "cron", "object" => "records", "token" => $_SESSION["token"]))) ?>"
+									title="<?= tohtml( _("Restore")) ?>"
+									data-confirm-title="<?= tohtml( _("Restore")) ?>"
+									data-confirm-message="<?= tohtml( _("Are you sure you want to restore cron jobs?")) ?>"
+								>
+									<i class="fas fa-arrow-rotate-left icon-green"></i>
+									<span class="u-hide-desktop"><?= tohtml( _("Restore")) ?></span>
 							</a>
 						</li>
 					</ul>
 				</div>
 			</div>
-		<?php }} ?>
+			<?php } ?>
 
 		<!-- List user directories -->
 		<?php

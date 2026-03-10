@@ -1,27 +1,31 @@
 <!-- Begin toolbar -->
 <div class="toolbar">
 	<div class="toolbar-inner">
-		<div class="toolbar-buttons">
-			<a class="button button-secondary button-back js-button-back" href="/list/backup/">
-				<i class="fas fa-arrow-left icon-blue"></i><?= tohtml( _("Back")) ?>
-			</a>
-			<a href="/schedule/restore/?<?= tohtml(http_build_query(array("token" => $_SESSION["token"], "backup" => $_GET["backup"]))) ?>" class="button button-secondary">
-				<i class="fas fa-arrow-rotate-left icon-green"></i><?= tohtml( _("Restore All")) ?>
-			</a>
-		</div>
-		<div class="toolbar-right">
-			<form x-data x-bind="BulkEdit" action="/bulk/restore/" method="post">
-				<input type="hidden" name="token" value="<?= tohtml($_SESSION["token"]) ?>">
-				<input type="hidden" name="backup" value="<?= tohtml($_GET["backup"]) ?>">
-				<select class="form-select" name="action">
-					<option value=""><?= tohtml( _("Apply to selected")) ?></option>
-					<option value="restore"><?= tohtml( _("Restore")) ?></option>
-				</select>
-				<button type="submit" class="toolbar-input-submit" title="<?= tohtml( _("Apply to selected")) ?>">
-					<i class="fas fa-arrow-right"></i>
-				</button>
-			</form>
-			<div class="toolbar-search">
+			<div class="toolbar-buttons">
+				<a class="button button-secondary button-back js-button-back" href="/list/backup/">
+					<i class="fas fa-arrow-left icon-blue"></i><?= tohtml( _("Back")) ?>
+				</a>
+				<?php if ($read_only !== "true") { ?>
+					<a href="/schedule/restore/?<?= tohtml(http_build_query(array("token" => $_SESSION["token"], "backup" => $_GET["backup"]))) ?>" class="button button-secondary">
+						<i class="fas fa-arrow-rotate-left icon-green"></i><?= tohtml( _("Restore All")) ?>
+					</a>
+				<?php } ?>
+			</div>
+			<div class="toolbar-right">
+				<?php if ($read_only !== "true") { ?>
+					<form x-data x-bind="BulkEdit" action="/bulk/restore/" method="post">
+						<input type="hidden" name="token" value="<?= tohtml($_SESSION["token"]) ?>">
+						<input type="hidden" name="backup" value="<?= tohtml($_GET["backup"]) ?>">
+						<select class="form-select" name="action">
+							<option value=""><?= tohtml( _("Apply to selected")) ?></option>
+							<option value="restore"><?= tohtml( _("Restore")) ?></option>
+						</select>
+						<button type="submit" class="toolbar-input-submit" title="<?= tohtml( _("Apply to selected")) ?>">
+							<i class="fas fa-arrow-right"></i>
+						</button>
+					</form>
+				<?php } ?>
+				<div class="toolbar-search">
 				<form action="/search/" method="get">
 					<input type="hidden" name="token" value="<?= tohtml($_SESSION["token"]) ?>">
 						<input type="search" class="form-control js-search-input" name="q" value="<?= tohtml($_GET['q'] ?? '') ?>" title="<?= tohtml( _("Search")) ?>">

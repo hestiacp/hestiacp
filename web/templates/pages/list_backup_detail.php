@@ -51,20 +51,22 @@
 
 			<!-- List web domains -->
 			<?php
-				$i = 0;
+				$item_count = 0;
 				$backup = $_GET['backup'];
+				$web_index = 0;
 				$web = explode(',',$data[$backup]['WEB']);
 				foreach ($web as $key) {
 					if (!empty($key)) {
-						++$i;
-			?>
-			<div class="units-table-row js-unit">
-				<div class="units-table-cell">
-					<div>
-						<input id="check<?= tohtml($i) ?>" class="js-unit-checkbox" type="checkbox" name="web[]" value="<?= tohtml($key) ?>">
-						<label for="check<?= tohtml($i) ?>" class="u-hide-desktop"><?= tohtml( _("Select")) ?></label>
+						++$web_index;
+						++$item_count;
+				?>
+				<div class="units-table-row js-unit">
+					<div class="units-table-cell">
+						<div>
+							<input id="check-web<?= tohtml($web_index) ?>" class="js-unit-checkbox" type="checkbox" name="web[]" value="<?= tohtml($key) ?>">
+							<label for="check-web<?= tohtml($web_index) ?>" class="u-hide-desktop"><?= tohtml( _("Select")) ?></label>
+						</div>
 					</div>
-				</div>
 				<div class="units-table-cell units-table-heading-cell">
 					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Type")) ?>:</span>
 					<?= tohtml( _("Web Domain")) ?>
@@ -94,18 +96,20 @@
 
 		<!-- List mail domains -->
 			<?php
+				$mail_index = 0;
 				$mail = explode(',',$data[$backup]['MAIL']);
 				foreach ($mail as $key) {
 					if (!empty($key)) {
-						++$i;
+						++$mail_index;
+						++$item_count;
 				?>
 				<div class="units-table-row js-unit">
-				<div class="units-table-cell">
-					<div>
-						<input id="check2<?= tohtml($i) ?>" class="js-unit-checkbox" type="checkbox" name="mail[]" value="<?= tohtml($key) ?>">
-						<label for="check2<?= tohtml($i) ?>" class="u-hide-desktop"><?= tohtml( _("Select")) ?></label>
+					<div class="units-table-cell">
+						<div>
+							<input id="check-mail<?= tohtml($mail_index) ?>" class="js-unit-checkbox" type="checkbox" name="mail[]" value="<?= tohtml($key) ?>">
+							<label for="check-mail<?= tohtml($mail_index) ?>" class="u-hide-desktop"><?= tohtml( _("Select")) ?></label>
+						</div>
 					</div>
-				</div>
 				<div class="units-table-cell units-table-heading-cell">
 					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Type")) ?>:</span>
 					<?= tohtml( _("Mail Domain")) ?>
@@ -135,18 +139,20 @@
 
 		<!-- List DNS zones -->
 			<?php
+				$dns_index = 0;
 				$dns = explode(',',$data[$backup]['DNS']);
 				foreach ($dns as $key) {
 					if (!empty($key)) {
-						++$i;
+						++$dns_index;
+						++$item_count;
 				?>
 				<div class="units-table-row js-unit">
-				<div class="units-table-cell">
-					<div>
-						<input id="check3<?= tohtml($i) ?>" class="js-unit-checkbox" type="checkbox" name="dns[]" value="<?= tohtml($key) ?>">
-						<label for="check3<?= tohtml($i) ?>" class="u-hide-desktop"><?= tohtml( _("Select")) ?></label>
+					<div class="units-table-cell">
+						<div>
+							<input id="check-dns<?= tohtml($dns_index) ?>" class="js-unit-checkbox" type="checkbox" name="dns[]" value="<?= tohtml($key) ?>">
+							<label for="check-dns<?= tohtml($dns_index) ?>" class="u-hide-desktop"><?= tohtml( _("Select")) ?></label>
+						</div>
 					</div>
-				</div>
 				<div class="units-table-cell units-table-heading-cell">
 					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Type")) ?>:</span>
 					<?= tohtml( _("DNS Zone")) ?>
@@ -176,18 +182,20 @@
 
 		<!-- List Databases -->
 			<?php
+				$db_index = 0;
 				$db = explode(',',$data[$backup]['DB']);
 				foreach ($db as $key) {
 					if (!empty($key)) {
-						++$i;
+						++$db_index;
+						++$item_count;
 				?>
 				<div class="units-table-row js-unit">
-				<div class="units-table-cell">
-					<div>
-						<input id="check4<?= tohtml($i) ?>" class="js-unit-checkbox" type="checkbox" name="db[]" value="<?= tohtml($key) ?>">
-						<label for="check4<?= tohtml($i) ?>" class="u-hide-desktop"><?= tohtml( _("Select")) ?></label>
+					<div class="units-table-cell">
+						<div>
+							<input id="check-db<?= tohtml($db_index) ?>" class="js-unit-checkbox" type="checkbox" name="db[]" value="<?= tohtml($key) ?>">
+							<label for="check-db<?= tohtml($db_index) ?>" class="u-hide-desktop"><?= tohtml( _("Select")) ?></label>
+						</div>
 					</div>
-				</div>
 				<div class="units-table-cell units-table-heading-cell">
 					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Type")) ?>:</span>
 					<?= tohtml( _("Database")) ?>
@@ -215,13 +223,18 @@
 			</div>
 		<?php }} ?>
 
-		<!-- List Cron Jobs -->
-			<?php if (!empty($data[$backup]["CRON"])) { ?>
+			<!-- List Cron Jobs -->
+			<?php
+				$cron_index = 0;
+				if (!empty($data[$backup]["CRON"])) {
+					++$cron_index;
+					++$item_count;
+			?>
 				<div class="units-table-row js-unit">
 					<div class="units-table-cell">
 						<div>
-							<input id="check5<?= tohtml($i) ?>" class="js-unit-checkbox" type="checkbox" name="cron" value="yes">
-							<label for="check5<?= tohtml($i) ?>" class="u-hide-desktop"><?= tohtml( _("Select")) ?></label>
+							<input id="check-cron<?= tohtml($cron_index) ?>" class="js-unit-checkbox" type="checkbox" name="cron" value="yes">
+							<label for="check-cron<?= tohtml($cron_index) ?>" class="u-hide-desktop"><?= tohtml( _("Select")) ?></label>
 						</div>
 					</div>
 				<div class="units-table-cell units-table-heading-cell">
@@ -253,18 +266,20 @@
 
 		<!-- List user directories -->
 			<?php
+				$udir_index = 0;
 				$udir = explode(',',$data[$backup]['UDIR']);
 				foreach ($udir as $key) {
 					if (!empty($key)) {
-						++$i;
+						++$udir_index;
+						++$item_count;
 				?>
-			<div class="units-table-row js-unit">
-				<div class="units-table-cell">
-					<div>
-						<input id="check6<?= tohtml($i) ?>" class="js-unit-checkbox" type="checkbox" name="udir[]" value="<?= tohtml($key) ?>">
-						<label for="check6<?= tohtml($i) ?>" class="u-hide-desktop"><?= tohtml( _("Select")) ?></label>
+				<div class="units-table-row js-unit">
+					<div class="units-table-cell">
+						<div>
+							<input id="check-udir<?= tohtml($udir_index) ?>" class="js-unit-checkbox" type="checkbox" name="udir[]" value="<?= tohtml($key) ?>">
+							<label for="check-udir<?= tohtml($udir_index) ?>" class="u-hide-desktop"><?= tohtml( _("Select")) ?></label>
+						</div>
 					</div>
-				</div>
 				<div class="units-table-cell units-table-heading-cell">
 					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Type")) ?>:</span>
 					<?= tohtml( _("User Directory")) ?>
@@ -295,8 +310,8 @@
 
 	<div class="units-table-footer">
 		<p>
-			<?php printf(ngettext("%d item", "%d items", $i), $i); ?>
-		</p>
-	</div>
+				<?php printf(ngettext("%d item", "%d items", $item_count), $item_count); ?>
+			</p>
+		</div>
 
 </div>

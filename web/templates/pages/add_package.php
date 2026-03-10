@@ -97,15 +97,15 @@
 							<?= tohtml( _("Web Template")) ?> <span class="optional"><?= tohtml(strtoupper($_SESSION["WEB_SYSTEM"])) ?></span>
 						</label>
 						<select class="form-select" name="v_web_template" id="v_web_template">
-							<?php
-								foreach ($web_templates as $key => $value) {
-									echo "\t\t\t\t<option value=\"".htmlentities($value)."\"";
-									if ((!empty($v_web_template)) && ( $value == trim($v_web_template, "'"))){
-										echo ' selected' ;
+								<?php
+									foreach ($web_templates as $key => $value) {
+										echo "\t\t\t\t<option value=\"" . tohtml($value) . "\"";
+										if ((!empty($v_web_template)) && ( $value == trim($v_web_template, "'"))){
+											echo ' selected' ;
+										}
+										echo ">" . tohtml($value) . "</option>\n";
 									}
-									echo ">".htmlentities($value)."</option>\n";
-								}
-							?>
+								?>
 						</select>
 					</div>
 					<?php if (!empty($_SESSION['WEB_BACKEND'])) { echo ""; ?>
@@ -134,11 +134,11 @@
 							<select class="form-select" name="v_proxy_template" id="v_proxy_template">
 								<?php
 									foreach ($proxy_templates as $key => $value) {
-										echo "\t\t\t\t<option value=\"".htmlentities($value)."\"";
+										echo "\t\t\t\t<option value=\"" . tohtml($value) . "\"";
 										if ((!empty($v_proxy_template)) && ( $value == trim($v_proxy_template, "'"))){
 											echo ' selected' ;
 										}
-										echo ">".htmlentities($value)."</option>\n";
+										echo ">" . tohtml($value) . "</option>\n";
 									}
 								?>
 							</select>
@@ -156,15 +156,15 @@
 							<?= tohtml( _("DNS Template")) ?> <span class="optional"><?= tohtml(strtoupper($_SESSION["DNS_SYSTEM"])) ?></span>
 						</label>
 						<select class="form-select" name="v_dns_template" id="v_dns_template">
-							<?php
-								foreach ($dns_templates as $key => $value) {
-									echo "\t\t\t\t<option value=\"".htmlentities($value)."\"";
-									if ((!empty($v_dns_template)) && ( $value == trim($v_dns_template, "'"))){
-										echo ' selected' ;
+								<?php
+									foreach ($dns_templates as $key => $value) {
+										echo "\t\t\t\t<option value=\"" . tohtml($value) . "\"";
+										if ((!empty($v_dns_template)) && ( $value == trim($v_dns_template, "'"))){
+											echo ' selected' ;
+										}
+										echo ">" . tohtml($value) . "</option>\n";
 									}
-									echo ">".htmlentities($value)."</option>\n";
-								}
-							?>
+								?>
 						</select>
 					</div>
 					<div class="u-mb10">

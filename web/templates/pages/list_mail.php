@@ -1,3 +1,12 @@
+<?php
+	$search_query = $_GET['q'] ?? '';
+	if (!is_scalar($search_query)) {
+		http_response_code(400);
+		echo tohtml(sprintf(_("Bad Request: parameter q must be scalar, got %s."), gettype($search_query)));
+		return;
+	}
+	$search_query = (string) $search_query;
+?>
 <!-- Begin toolbar -->
 <div class="toolbar">
 	<div class="toolbar-inner">
@@ -52,7 +61,7 @@
 				<div class="toolbar-search">
 					<form action="/search/" method="get">
 						<input type="hidden" name="token" value="<?= tohtml($_SESSION["token"]) ?>">
-						<input type="search" class="form-control js-search-input" name="q" value="<?= tohtml($_GET['q'] ?? '') ?>" title="<?= tohtml( _("Search")) ?>">
+						<input type="search" class="form-control js-search-input" name="q" value="<?= tohtml($search_query) ?>" title="<?= tohtml( _("Search")) ?>">
 						<button type="submit" class="toolbar-input-submit" title="<?= tohtml( _("Search")) ?>">
 							<i class="fas fa-magnifying-glass"></i>
 						</button>

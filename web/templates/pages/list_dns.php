@@ -55,7 +55,7 @@
 			<div class="toolbar-search">
 				<form action="/search/" method="get">
 					<input type="hidden" name="token" value="<?= tohtml($_SESSION["token"]) ?>">
-					<input type="search" class="form-control js-search-input" name="q" value="<?= tohtml($_POST['q'] ?? '') ?>" title="<?= tohtml( _("Search")) ?>">
+						<input type="search" class="form-control js-search-input" name="q" value="<?= tohtml($_GET['q'] ?? '') ?>" title="<?= tohtml( _("Search")) ?>">
 					<button type="submit" class="toolbar-input-submit" title="<?= tohtml( _("Search")) ?>">
 						<i class="fas fa-magnifying-glass"></i>
 					</button>
@@ -131,11 +131,11 @@
 						<label for="check<?= tohtml($i) ?>" class="u-hide-desktop"><?= tohtml( _("Select")) ?></label>
 					</div>
 				</div>
-				<div class="units-table-cell units-table-heading-cell u-text-bold">
-					<span class="u-hide-desktop"><?= tohtml( _("Name")) ?>:</span>
+					<div class="units-table-cell units-table-heading-cell u-text-bold">
+						<span class="u-hide-desktop"><?= tohtml( _("Name")) ?>:</span>
 						<a href="/list/dns/?<?= tohtml(http_build_query(array("domain" => $key, "token" => $_SESSION["token"]))) ?>" title="<?= tohtml( _("DNS Records")) ?>: <?= tohtml($key) ?>">
-						<?= tohtml($key) ?>
-					</a>
+							<?= tohtml($key) ?>
+						</a>
 						<?= empty($data[$key]["SRC"]) ? "" : '<br>⇢ <span class="u-text-small">' . tohtml($data[$key]["SRC"]) . "</span>" ?>
 					</div>
 				<div class="units-table-cell">

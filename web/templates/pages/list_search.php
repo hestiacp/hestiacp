@@ -122,32 +122,43 @@
 				<div class="units-table-cell units-table-heading-cell u-text-bold">
 					<span class="u-hide-desktop"><?= tohtml( _("Search Results")) ?>:</span>
 					<?php
-						if ($value['KEY'] == 'RECORD') {
-							$edit_lnk = '/edit/'.$value['TYPE'].'/?domain='.$value['PARENT'].'&record_id='.$value['LINK'].'&user='.$value['USER'];
+						$edit_query = [
+							"user" => $value["USER"],
+						];
+						if ($value["KEY"] == "RECORD") {
+							$edit_query["domain"] = $value["PARENT"];
+							$edit_query["record_id"] = $value["LINK"];
 						}
-						if ($value['KEY'] == 'ACCOUNT') {
-							$edit_lnk = '/edit/'.$value['TYPE'].'/?domain='.$value['PARENT'].'&account='.$value['LINK'].'&user='.$value['USER'];
+						if ($value["KEY"] == "ACCOUNT") {
+							$edit_query["domain"] = $value["PARENT"];
+							$edit_query["account"] = $value["LINK"];
 						}
-						if ($value['KEY'] == 'JOB') {
-							$edit_lnk = '/edit/'.$value['TYPE'].'/?job='.$value['LINK'].'&user='.$value['USER'];
+						if ($value["KEY"] == "JOB") {
+							$edit_query["job"] = $value["LINK"];
 						}
-						if ($value['KEY'] == 'DATABASE') {
-							$edit_lnk = '/edit/'.$value['TYPE'].'/?database='.$value['RESULT'].'&user='.$value['USER'];
+						if ($value["KEY"] == "DATABASE") {
+							$edit_query["database"] = $value["RESULT"];
 						}
-						if (($value['KEY'] != 'RECORD') && ($value['KEY'] != 'ACCOUNT') && ($value['KEY'] != 'JOB') && ($value['KEY'] != 'DATABASE') ) {
-							$edit_lnk = '/edit/'.$value['TYPE'].'/?'.strtolower($value['KEY']).'='.$value['RESULT'].'&user='.$value['USER'];
+						if (($value["KEY"] != "RECORD") && ($value["KEY"] != "ACCOUNT") && ($value["KEY"] != "JOB") && ($value["KEY"] != "DATABASE")) {
+							$edit_query[strtolower($value["KEY"])] = $value["RESULT"];
 						}
+
+						$edit_lnk = "/edit/" . rawurlencode($value["TYPE"]) . "/?" . http_build_query($edit_query);
 					?>
 					<?php
 						if (($_SESSION['userContext'] === 'admin') && ($_SESSION['user'] !== 'admin') && ($value['USER'] === 'admin') && ($_SESSION['POLICY_SYSTEM_PROTECTED_ADMIN'] === 'yes')) {
-							echo $value['RESULT'];
+							echo tohtml($value["RESULT"]);
 						} else {
-							if ($value['USER'] == $_SESSION['user']) {
-								$href = $edit_lnk.'&token='.$_SESSION['token'];
+							if ($value["USER"] == $_SESSION["user"]) {
+								$href = $edit_lnk . "&" . http_build_query(["token" => $_SESSION["token"]]);
 							} else {
-								$href = '/login/?loginas='.$value['USER'].'&token='.$_SESSION['token'].'&edit_link='.urlencode($edit_lnk);
+								$href = "/login/?" . http_build_query([
+									"loginas" => $value["USER"],
+									"token" => $_SESSION["token"],
+									"edit_link" => $edit_lnk,
+								]);
 							}
-							echo '<a href="' . $href . '">' . $value['RESULT'] . '</a>';
+							echo '<a href="' . tohtml($href) . '">' . tohtml($value["RESULT"]) . '</a>';
 						}
 					?>
 				</div>

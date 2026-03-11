@@ -3,13 +3,13 @@
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
 			<a class="button button-secondary button-back js-button-back" href="/list/mail/">
-				<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
+				<i class="fas fa-arrow-left icon-blue"></i><?= tohtml( _("Back")) ?>
 			</a>
 		</div>
 		<div class="toolbar-buttons">
 			<?php if (($_SESSION["role"] == "admin" && $accept === "true") || $user_plain !== "admin") { ?>
 				<button type="submit" class="button" form="main-form">
-					<i class="fas fa-floppy-disk icon-purple"></i><?= _("Save") ?>
+					<i class="fas fa-floppy-disk icon-purple"></i><?= tohtml( _("Save")) ?>
 				</button>
 			<?php } ?>
 		</div>
@@ -21,22 +21,22 @@
 
 	<form
 		x-data="{
-			hasSmtpRelay: <?= $v_smtp_relay == "true" ? "true" : "false" ?>
+			hasSmtpRelay: <?= tohtml($v_smtp_relay == "true" ? "true" : "false") ?>
 		}"
 		id="main-form"
 		name="v_add_mail"
 		method="post"
 	>
-		<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
+		<input type="hidden" name="token" value="<?= tohtml($_SESSION["token"]) ?>">
 		<input type="hidden" name="ok" value="Add">
 
 		<div class="form-container">
-			<h1 class="u-mb20"><?= _("Add Mail Domain") ?></h1>
+			<h1 class="u-mb20"><?= tohtml( _("Add Mail Domain")) ?></h1>
 			<?php show_alert_message($_SESSION); ?>
 			<?php if ($_SESSION["role"] == "admin" && $accept !== "true") { ?>
 				<div class="alert alert-danger" role="alert">
 					<i class="fas fa-exclamation"></i>
-					<p><?= htmlify_trans(
+						<p><?= htmlify_trans(
      	sprintf(
      		_("It is strongly advised to {create a standard user account} before adding %s to the server due to the increased privileges the admin account possesses and potential security risks."),
      		_("a mail domain"),
@@ -48,18 +48,18 @@
 			<?php } ?>
 			<?php if ($_SESSION["role"] == "admin" && empty($accept)) { ?>
 				<div class="u-side-by-side u-mt20">
-					<a href="/add/user/" class="button u-width-full u-mr10"><?= _("Add User") ?></a>
-					<a href="/add/mail/?accept=true" class="button button-danger u-width-full u-ml10"><?= _("Continue") ?></a>
+					<a href="/add/user/" class="button u-width-full u-mr10"><?= tohtml( _("Add User")) ?></a>
+					<a href="/add/mail/?<?= tohtml(http_build_query(["accept" => 'true'])) ?>" class="button button-danger u-width-full u-ml10"><?= tohtml( _("Continue")) ?></a>
 				</div>
 			<?php } ?>
 			<?php if (($_SESSION["role"] == "admin" && $accept === "true") || $_SESSION["role"] !== "admin") { ?>
 				<div class="u-mb20">
-					<label for="v_domain" class="form-label"><?= _("Domain") ?></label>
-					<input type="text" class="form-control" name="v_domain" id="v_domain" value="<?= htmlentities(trim($v_domain, "'")) ?>" required>
+					<label for="v_domain" class="form-label"><?= tohtml( _("Domain")) ?></label>
+					<input type="text" class="form-control" name="v_domain" id="v_domain" value="<?= tohtml(trim($v_domain, "'")) ?>" required>
 				</div>
 				<?php if ($_SESSION["WEBMAIL_SYSTEM"]) { ?>
 					<div class="u-mb20">
-						<label for="v_webmail" class="form-label"><?= _("Webmail Client") ?></label>
+						<label for="v_webmail" class="form-label"><?= tohtml( _("Webmail Client")) ?></label>
 						<select class="form-select" name="v_webmail" id="v_webmail" tabindex="6">
 							<?php foreach ($webmail_clients as $client) {
        	echo "\t\t\t\t<option value=\"" . htmlentities($client) . "\"";
@@ -70,7 +70,7 @@
        } ?>
 							<option value="" <?php if (empty($v_webmail) || $v_webmail == "disabled") {
        	echo "selected";
-       } ?>><?= _("Disabled") ?></option>
+       } ?>><?= tohtml( _("Disabled")) ?></option>
 						</select>
 					</div>
 				<?php } ?>
@@ -80,7 +80,7 @@
       	echo "checked";
       } ?>>
 						<label for="v_antispam">
-							<?= _("Spam Filter") ?>
+							<?= tohtml( _("Spam Filter")) ?>
 						</label>
 					</div>
 					<div class="form-check u-mb10">
@@ -88,7 +88,7 @@
       	echo "checked";
       } ?>>
 						<label for="v_reject">
-							<?= _("Reject Spam") ?>
+							<?= tohtml( _("Reject Spam")) ?>
 						</label>
 					</div>
 				<?php } ?>
@@ -98,7 +98,7 @@
       	echo "checked";
       } ?>>
 						<label for="v_antivirus">
-							<?= _("Anti-Virus") ?>
+							<?= tohtml( _("Anti-Virus")) ?>
 						</label>
 					</div>
 				<?php } ?>
@@ -107,30 +107,30 @@
      	echo "checked";
      } ?>>
 					<label for="v_dkim">
-						<?= _("DKIM Support") ?>
+						<?= tohtml( _("DKIM Support")) ?>
 					</label>
 				</div>
 				<div class="form-check u-mb10">
 					<input x-model="hasSmtpRelay" class="form-check-input" type="checkbox" name="v_smtp_relay" id="v_smtp_relay">
 					<label for="v_smtp_relay">
-						<?= _("SMTP Relay") ?>
+						<?= tohtml( _("SMTP Relay")) ?>
 					</label>
 				</div>
 				<div x-cloak x-show="hasSmtpRelay" id="smtp_relay_table" class="u-pl30">
 					<div class="u-mb10">
-						<label for="v_smtp_relay_host" class="form-label"><?= _("Host") ?></label>
-						<input type="text" class="form-control" name="v_smtp_relay_host" id="v_smtp_relay_host" value="<?= htmlentities(trim($v_smtp_relay_host, "'")) ?>">
+						<label for="v_smtp_relay_host" class="form-label"><?= tohtml( _("Host")) ?></label>
+						<input type="text" class="form-control" name="v_smtp_relay_host" id="v_smtp_relay_host" value="<?= tohtml(trim($v_smtp_relay_host, "'")) ?>">
 					</div>
 					<div class="u-mb10">
-						<label for="v_smtp_relay_port" class="form-label"><?= _("Port") ?></label>
-						<input type="text" class="form-control" name="v_smtp_relay_port" id="v_smtp_relay_port" value="<?= htmlentities(trim($v_smtp_relay_port, "'")) ?>">
+						<label for="v_smtp_relay_port" class="form-label"><?= tohtml( _("Port")) ?></label>
+						<input type="text" class="form-control" name="v_smtp_relay_port" id="v_smtp_relay_port" value="<?= tohtml(trim($v_smtp_relay_port, "'")) ?>">
 					</div>
 					<div class="u-mb10">
-						<label for="v_smtp_relay_user" class="form-label"><?= _("Username") ?></label>
-						<input type="text" class="form-control" name="v_smtp_relay_user" id="v_smtp_relay_user" value="<?= htmlentities(trim($v_smtp_relay_user, "'")) ?>">
+						<label for="v_smtp_relay_user" class="form-label"><?= tohtml( _("Username")) ?></label>
+						<input type="text" class="form-control" name="v_smtp_relay_user" id="v_smtp_relay_user" value="<?= tohtml(trim($v_smtp_relay_user, "'")) ?>">
 					</div>
 					<div class="u-mb10">
-						<label for="v_smtp_relay_pass" class="form-label"><?= _("Password") ?></label>
+						<label for="v_smtp_relay_pass" class="form-label"><?= tohtml( _("Password")) ?></label>
 						<input type="text" class="form-control" name="v_smtp_relay_pass" id="v_smtp_relay_pass">
 					</div>
 				</div>

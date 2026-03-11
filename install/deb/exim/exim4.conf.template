@@ -122,7 +122,13 @@ acl_check_spammers:
 
 acl_check_mail:
   deny  condition     = ${if eq{$sender_helo_name}{}}
-        message       = HELO required before MAIL
+    	message       = HELO required before MAIL
+
+  deny  spf 		  = fail : softfail
+    	message 	  = SPF validation failed: \
+                		$sender_host_address is not allowed to send mail from \
+                		${if def:sender_address_domain \
+                    	{$sender_address_domain}{$sender_helo_name}}
 
   drop  !authenticated = *
 		message       =  Helo name contains an IP address (HELO was $sender_helo_name) and not is valid

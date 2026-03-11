@@ -59,7 +59,7 @@
 					</select>
 				</div>
 				<div class="u-mb20">
-					<label for="v_ipv6" class="form-label"<?= tohtml( _("IPV6 Address")) ?></label>
+					<label for="v_ipv6" class="form-label"><?= tohtml( _("IPV6 Address")) ?></label>
 					<select class="form-select" name="v_ipv6" id="v_ipv6">
 					<option value="">clear</option>
 						<?php

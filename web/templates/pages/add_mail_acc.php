@@ -2,13 +2,13 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<a class="button button-secondary button-back js-button-back" href="/list/mail/?domain=<?= htmlentities(trim($v_domain, "'")) ?>&token=<?= $_SESSION["token"] ?>">
-				<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
+			<a class="button button-secondary button-back js-button-back" href="/list/mail/?<?= tohtml(http_build_query(["domain" => trim($v_domain, "'"), "token" => $_SESSION["token"]])) ?>">
+				<i class="fas fa-arrow-left icon-blue"></i><?= tohtml( _("Back")) ?>
 			</a>
 		</div>
 		<div class="toolbar-buttons">
 			<button type="submit" class="button" form="main-form">
-				<i class="fas fa-floppy-disk icon-purple"></i><?= _("Save") ?>
+				<i class="fas fa-floppy-disk icon-purple"></i><?= tohtml( _("Save")) ?>
 			</button>
 		</div>
 	</div>
@@ -19,33 +19,33 @@
 
 	<form
 		x-data="{
-			showAdvanced: <?= empty($v_adv) ? "false" : "true" ?>
+			showAdvanced: <?= tohtml(empty($v_adv) ? "false" : "true") ?>
 		}"
 		id="main-form"
 		name="v_add_mail_acc"
 		method="post"
 	>
-		<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
+		<input type="hidden" name="token" value="<?= tohtml($_SESSION["token"]) ?>">
 		<input type="hidden" name="ok_acc" value="add">
 
 		<div class="form-container form-container-wide">
-			<h1 class="u-mb20"><?= _("Add Mail Account") ?></h1>
+			<h1 class="u-mb20"><?= tohtml( _("Add Mail Account")) ?></h1>
 			<?php show_alert_message($_SESSION); ?>
 			<div class="sidebar-right-grid">
 				<div class="sidebar-right-grid-content">
 					<div class="u-mb10">
-						<label for="v_domain" class="form-label"><?= _("Domain") ?></label>
-						<input type="text" class="form-control" name="v_domain" id="v_domain" value="<?= htmlentities(trim($v_domain, "'")) ?>" disabled>
-						<input type="hidden" name="v_domain" value="<?= htmlentities(trim($v_domain, "'")) ?>">
+						<label for="v_domain" class="form-label"><?= tohtml( _("Domain")) ?></label>
+						<input type="text" class="form-control" name="v_domain" id="v_domain" value="<?= tohtml(trim($v_domain, "'")) ?>" disabled>
+						<input type="hidden" name="v_domain" value="<?= tohtml(trim($v_domain, "'")) ?>">
 					</div>
 					<div class="u-mb10">
-						<label for="v_account" class="form-label"><?= _("Account") ?></label>
-						<input type="text" class="form-control js-account-input" name="v_account" id="v_account" value="<?= htmlentities(trim($v_account, "'")) ?>" required>
+						<label for="v_account" class="form-label"><?= tohtml( _("Account")) ?></label>
+						<input type="text" class="form-control js-account-input" name="v_account" id="v_account" value="<?= tohtml(trim($v_account, "'")) ?>" required>
 					</div>
 					<div class="u-mb10">
 						<label for="v_password" class="form-label">
-							<?= _("Password") ?>
-							<button type="button" title="<?= _("Generate") ?>" class="u-unstyled-button u-ml5 js-generate-password">
+							<?= tohtml( _("Password")) ?>
+							<button type="button" title="<?= tohtml( _("Generate")) ?>" class="u-unstyled-button u-ml5 js-generate-password">
 								<i class="fas fa-arrows-rotate icon-green"></i>
 							</button>
 						</label>
@@ -56,63 +56,63 @@
 							</div>
 						</div>
 					</div>
-					<p class="u-mb10"><?= _("Your password must have at least") ?>:</p>
+					<p class="u-mb10"><?= tohtml( _("Your password must have at least")) ?>:</p>
 					<ul class="u-list-bulleted u-mb20">
-						<li><?= _("8 characters long") ?></li>
-						<li><?= _("1 uppercase & 1 lowercase character") ?></li>
-						<li><?= _("1 number") ?></li>
+						<li><?= tohtml( _("8 characters long")) ?></li>
+						<li><?= tohtml( _("1 uppercase & 1 lowercase character")) ?></li>
+						<li><?= tohtml( _("1 number")) ?></li>
 					</ul>
 					<button x-on:click="showAdvanced = !showAdvanced" type="button" class="button button-secondary u-mb20">
-						<?= _("Advanced Options") ?>
+						<?= tohtml( _("Advanced Options")) ?>
 					</button>
 					<div x-cloak x-show="showAdvanced" id="advtable">
 						<div class="u-mb10">
 							<label for="v_quota" class="form-label">
-								<?= _("Quota") ?> <span class="optional">(<?= _("in MB") ?>)</span>
+								<?= tohtml( _("Quota")) ?> <span class="optional">(<?= tohtml( _("in MB")) ?>)</span>
 							</label>
 							<div class="u-pos-relative">
-								<input type="text" class="form-control" name="v_quota" id="v_quota" value="<?= htmlentities(trim($v_quota, "'")) ?>">
-								<button type="button" class="unlimited-toggle js-unlimited-toggle" title="<?= _("Unlimited") ?>">
+								<input type="text" class="form-control" name="v_quota" id="v_quota" value="<?= tohtml(trim($v_quota, "'")) ?>">
+								<button type="button" class="unlimited-toggle js-unlimited-toggle" title="<?= tohtml( _("Unlimited")) ?>">
 									<i class="fas fa-infinity"></i>
 								</button>
 							</div>
 						</div>
 						<div class="u-mb10">
 							<label for="v_aliases" class="form-label">
-								<?= _("Aliases") ?> <span class="optional">(<?= _("Use local-part without domain name") ?>)</span>
+								<?= tohtml( _("Aliases")) ?> <span class="optional">(<?= tohtml( _("Use local-part without domain name")) ?>)</span>
 							</label>
-							<textarea class="form-control" name="v_aliases" id="v_aliases"><?= htmlentities(trim($v_aliases, "'")) ?></textarea>
+							<textarea class="form-control" name="v_aliases" id="v_aliases"><?= tohtml(trim($v_aliases, "'")) ?></textarea>
 						</div>
 						<div class="u-mb10">
 							<label for="v_fwd" class="form-label">
-								<?= _("Forward to") ?> <span class="optional">(<?= _("One or more email addresses") ?>)</span>
+								<?= tohtml( _("Forward to")) ?> <span class="optional">(<?= tohtml( _("One or more email addresses")) ?>)</span>
 							</label>
-							<textarea class="form-control js-forward-to-textarea" name="v_fwd" id="v_fwd" <?php if ($v_blackhole == 'yes') echo "disabled"; ?>><?= htmlentities(trim($v_fwd, "'")) ?></textarea>
+							<textarea class="form-control js-forward-to-textarea" name="v_fwd" id="v_fwd" <?php if ($v_blackhole == 'yes') echo "disabled"; ?>><?= tohtml(trim($v_fwd, "'")) ?></textarea>
 						</div>
 						<div class="form-check">
 							<input class="form-check-input js-discard-all-mail" type="checkbox" name="v_blackhole" id="v_blackhole" <?php if ($v_blackhole == 'yes') echo 'checked' ?>>
 							<label for="v_blackhole">
-								<?= _("Discard all mail") ?>
+								<?= tohtml( _("Discard all mail")) ?>
 							</label>
 						</div>
 						<div class="form-check <?php if ($v_blackhole == 'yes') { echo 'u-hidden'; } ?>">
 							<input class="form-check-input js-do-not-store-checkbox" type="checkbox" name="v_fwd_only" id="v_fwd_for" <?php if ($v_fwd_only == 'yes') echo 'checked' ?>>
 							<label for="v_fwd_for">
-								<?= _("Do not store forwarded mail") ?>
+								<?= tohtml( _("Do not store forwarded mail")) ?>
 							</label>
 						</div>
 						<div class="u-mt10 u-mb10">
 							<label for="v_rate" class="form-label">
-								<?= _("Rate Limit") ?> <span class="optional">(<?= _("email / hour") ?>)</span>
+								<?= tohtml( _("Rate Limit")) ?> <span class="optional">(<?= tohtml( _("email / hour")) ?>)</span>
 							</label>
-							<input type="text" class="form-control" name="v_rate" id="v_rate" value="<?= htmlentities(trim($v_rate, "'")) ?>" <?php if ($_SESSION['userContext'] != "admin"){ echo "disabled"; }?>>
+							<input type="text" class="form-control" name="v_rate" id="v_rate" value="<?= tohtml(trim($v_rate, "'")) ?>" <?php if ($_SESSION['userContext'] != "admin"){ echo "disabled"; }?>>
 						</div>
 					</div>
 					<div class="u-mt15 u-mb20">
 						<label for="v_send_email" class="form-label">
-							<?= _("Email login credentials to:") ?>
+							<?= tohtml( _("Email login credentials to:")) ?>
 						</label>
-						<input type="email" class="form-control" name="v_send_email" id="v_send_email" value="<?= htmlentities(trim($v_send_email, "'")) ?>">
+						<input type="email" class="form-control" name="v_send_email" id="v_send_email" value="<?= tohtml(trim($v_send_email, "'")) ?>">
 					</div>
 				</div>
 				<div class="sidebar-right-grid-sidebar">

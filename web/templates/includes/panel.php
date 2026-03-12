@@ -36,10 +36,15 @@
 							</span>
 							<?= humanize_usage_measure($panel[$user]["U_DISK"]) ?>
 							/
-							<span class="u-text-bold">
-							<?= humanize_usage_size($panel[$user]["DISK_QUOTA"]) ?>
-							</span>
-							<?= humanize_usage_measure($panel[$user]["DISK_QUOTA"]) ?>
+							<?php if ($panel[$user]["DISK_QUOTA"] === "unlimited"): ?>
+ 							   <?php $disk_total = disk_total_space("/"); $disk_total_gb = round($disk_total / 1073741824, 1) . "G"; ?>
+   									 <span class="u-text-bold"><?= $disk_total_gb ?></span>
+						<?php else: ?>
+  							  <span class="u-text-bold">
+  								  <?= humanize_usage_size($panel[$user]["DISK_QUOTA"]) ?>
+  						  </span>
+ 						   <?= humanize_usage_measure($panel[$user]["DISK_QUOTA"]) ?>
+						<?php endif; ?>
 						</span>
 						<span class="top-bar-usage-item">
 							<i class="fas fa-right-left" title="<?= _("Bandwidth") ?>: <?= humanize_usage_size($panel[$user]["U_BANDWIDTH"]) ?> <?= humanize_usage_measure($panel[$user]["U_BANDWIDTH"]) ?>"></i>

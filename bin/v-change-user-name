@@ -31,8 +31,9 @@ check_args '2' "$#" 'USER NAME [LAST_NAME]'
 is_format_valid 'user' 'name'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
+is_common_format_spaces_valid "$name" "name"
 if [ -n "$lname" ]; then
-	is_common_format_valid "$name $lname" "last name"
+	is_common_format_spaces_valid "$lname" "last name"
 fi
 
 # Perform verification if read-only mode is enabled

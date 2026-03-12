@@ -217,9 +217,9 @@ fi
 echo "Build version $BUILD_VER, with Nginx version $NGINX_V, PHP version $PHP_V and Web Terminal version $WEB_TERMINAL_V"
 
 HESTIA_V="${BUILD_VER}_${BUILD_ARCH}"
-OPENSSL_V='3.4.0'
-PCRE_V='10.44'
-ZLIB_V='1.3.1'
+OPENSSL_V='3.4.4'
+PCRE_V='10.47'
+ZLIB_V='1.3.2'
 
 # Create build directories
 if [ "$KEEPBUILD" != 'true' ]; then

@@ -911,6 +911,76 @@ is_common_format_valid() {
 	is_no_new_line_format "$1"
 }
 
+# Common format validator for fields that need spaces
+is_common_format_spaces_valid() {
+	# Block injection chars but allow spaces
+	exclude="[!|#|$|^|&|(|)|+|=|{|}|:|<|>|?|/|\|\"|'|;|%|\`]"
+
+	# Block tabs, newlines, carriage returns
+	if [[ "$1" == *$'\t'* || "$1" == *$'\n'* || "$1" == *$'\r'* || "$1" == *$'\v'* || "$1" == *$'\f'* ]]; then
+		check_result "$E_INVALID" "invalid $2 format :: $1"
+	fi
+
+	# No leading/trailing spaces
+	if [[ "$1" == " "* || "$1" == *" " ]]; then
+		check_result "$E_INVALID" "invalid $2 format :: $1"
+	fi
+
+	# No multiple consecutive spaces
+	if [[ "$1" =~ "  " ]]; then
+		check_result "$E_INVALID" "invalid $2 format :: $1"
+	fi
+
+	# Check excluded chars
+	if [[ "$1" =~ $exclude ]]; then
+		check_result "$E_INVALID" "invalid $2 format :: $1"
+	fi
+
+	# Max length
+	if [ 400 -le ${#1} ]; then
+		check_result "$E_INVALID" "invalid $2 format :: $1"
+	fi
+
+	# No @ (except single char)
+	if [[ "$1" =~ @ ]] && [ ${#1} -gt 1 ]; then
+		check_result "$E_INVALID" "invalid $2 format :: $1"
+	fi
+
+	# No wildcards
+	if [[ "$1" =~ \* ]]; then
+		if [[ "$(echo "$1" | grep -o '\*\.' | wc -l)" -eq 0 ]] && [[ "$1" != '*' ]]; then
+			check_result "$E_INVALID" "invalid $2 format :: $1"
+		fi
+	fi
+
+	# Must end with alphanumeric
+	if [[ $(echo -n "$1" | tail -c 1) =~ [^a-zA-Z0-9] ]]; then
+		check_result "$E_INVALID" "invalid $2 format :: $1"
+	fi
+
+	# No consecutive dots
+	if [[ $(echo -n "$1" | grep -c '\.\.') -gt 0 ]]; then
+		check_result "$E_INVALID" "invalid $2 format :: $1"
+	fi
+
+	# Must start with alphanumeric
+	if [[ $(echo -n "$1" | head -c 1) =~ [^a-zA-Z0-9] ]]; then
+		check_result "$E_INVALID" "invalid $2 format :: $1"
+	fi
+
+	# No consecutive dashes
+	if [[ $(echo -n "$1" | grep -c '\-\-') -gt 0 ]]; then
+		check_result "$E_INVALID" "invalid $2 format :: $1"
+	fi
+
+	# No consecutive underscores
+	if [[ $(echo -n "$1" | grep -c '\_\_') -gt 0 ]]; then
+		check_result "$E_INVALID" "invalid $2 format :: $1"
+	fi
+
+	is_no_new_line_format "$1"
+}
+
 is_no_new_line_format() {
 	test=$(echo "$1" | head -n1)
 	if [[ "$test" != "$1" ]]; then

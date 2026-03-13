@@ -51,6 +51,10 @@ server {
 
 	proxy_hide_header Upgrade;
 
+	location ^~ /assets {
+                alias /opt/openproject/public/assets;
+        }
+
 	include /etc/nginx/conf.d/phpmyadmin.inc*;
 	include /etc/nginx/conf.d/phppgadmin.inc*;
 	include %home%/%user%/conf/web/%domain%/nginx.ssl.conf_*;

@@ -40,7 +40,7 @@
 		"browserslist": "^4.28.1",
 		"esbuild": "^0.27.2",
 		"husky": "^9.1.7",
-		"jsdom": "^27.4.0",
+		"jsdom": "^28.1.0",
 		"lightningcss": "^1.31.1",
 		"lint-staged": "^16.2.7",
 		"markdownlint-cli2": "^0.20.0",

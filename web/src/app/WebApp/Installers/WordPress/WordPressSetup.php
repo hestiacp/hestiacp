@@ -181,35 +181,6 @@ class WordpressSetup extends BaseSetup {
 			);
 		}
 
-		$this->appcontext->downloadUrl(
-			"https://raw.githubusercontent.com/roots/wp-password-bcrypt/master/wp-password-bcrypt.php",
-			null,
-			$plugin_output,
-		);
-		$this->appcontext->runUser(
-			"v-add-fs-directory",
-			[$this->getDocRoot("wp-content/mu-plugins/")],
-			$result,
-		);
-		if (
-			!$this->appcontext->runUser(
-				"v-copy-fs-file",
-				[
-					$plugin_output->file,
-					$this->getDocRoot("wp-content/mu-plugins/wp-password-bcrypt.php"),
-				],
-				$result,
-			)
-		) {
-			throw new \Exception(
-				"Error installing wp-password-bcrypt file in: " .
-					$plugin_output->file .
-					" to:" .
-					$this->getDocRoot("wp-content/mu-plugins/wp-password-bcrypt.php") .
-					$result->text,
-			);
-		}
-
 		$this->appcontext->runUser("v-list-web-domain", [$this->domain, "json"], $status);
 
 		$sslEnabled = $status->json[$this->domain]["SSL"] == "no" ? 0 : 1;

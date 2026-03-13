@@ -38,6 +38,7 @@ check_hestia_demo_mode
 PRVKEY_FILE="$HOMEDIR/$user/.ssh/hst-filemanager-key"
 PUBKEY_FILE="$HOMEDIR/$user/.ssh/hst-filemanager-key.pub"
 AUTHKEY_FILE="$HOMEDIR/$user/.ssh/authorized_keys"
+SSH_DIR="$HOMEDIR/$user/.ssh"
 
 [ -z "$(readlink -f "$PRVKEY_FILE" | egrep "^$HOMEDIR/$user/.ssh/")" ] && check_result "$E_FORBIDEN" "Invalid private key file path"
 [ -z "$(readlink -f "$PUBKEY_FILE" | egrep "^$HOMEDIR/$user/.ssh/")" ] && check_result "$E_FORBIDEN" "Invalid public key file path"
@@ -71,6 +72,14 @@ fi
 #
 chown ${user}: "${AUTHKEY_FILE}"
 chown "hestiaweb": "${PRVKEY_FILE}"
+
+# Ensure file manager service account can traverse user's .ssh folder
+# to read the dedicated private key.
+if command -v setfacl > /dev/null 2>&1; then
+	setfacl -m u:hestiaweb:--x "${SSH_DIR}" > /dev/null 2>&1
+else
+	chmod o+x "${SSH_DIR}"
+fi
 
 #----------------------------------------------------------#
 #                       Hestia                             #

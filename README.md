@@ -46,8 +46,8 @@ Smart Chain: 0xfF3Dd2c889bd0Ff73d8085B84A314FC7c88e5D51<br>
 
 ## Supported platforms and operating systems
 
-- **Debian:** 12, 11
-- **Ubuntu:** 24.04 LTS, 22.04 LTS, 20.04 LTS
+- **Debian:** 13, 12, 11
+- **Ubuntu:** 24.04 LTS, 22.04 LTS
 
 **NOTES:**
 

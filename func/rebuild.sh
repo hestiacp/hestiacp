@@ -234,7 +234,12 @@ rebuild_web_domain_conf() {
 
 	syshealth_repair_web_config
 	get_domain_values 'web'
-	is_ip_valid $IP
+	if [ -n "$IP" ]; then
+		is_ip_valid ${IP}
+	fi
+	if [ -n "$IP6" ]; then
+		is_ipv6_valid ${IP6}
+	fi
 	prepare_web_domain_values
 
 	# Remove old web configuration files
@@ -487,16 +492,11 @@ rebuild_dns_domain_conf() {
 	if [ "$SLAVE" != "yes" ]; then
 		# Checking zone file
 		if [ ! -e "$USER_DATA/dns/$domain.conf" ]; then
-			cat $DNSTPL/$TPL.tpl \
-				| sed -e "s/%ip%/$IP/g" \
-					-e "s/%domain_idn%/$domain_idn/g" \
-					-e "s/%domain%/$domain/g" \
-					-e "s/%ns1%/$ns1/g" \
-					-e "s/%ns2%/$ns2/g" \
-					-e "s/%ns3%/$ns3/g" \
-					-e "s/%ns4%/$ns4/g" \
-					-e "s/%time%/$TIME/g" \
-					-e "s/%date%/$DATE/g" > $USER_DATA/dns/$domain.conf
+			ip=${IP}
+			ipv6=${IP6}
+			time=${TIME}
+			date=${DATE}
+			create_dns_domain_config
 		fi
 
 		# Sorting records
@@ -704,10 +704,18 @@ rebuild_mail_domain_conf() {
 			if [ "$QUOTA" = 'unlimited' ]; then
 				QUOTA=0
 			fi
-			str="$account:$MD5:$user:mail::$HOMEDIR/$user:${QUOTA}:userdb_quota_rule=*:storage=${QUOTA}M"
-			echo $str >> $HOMEDIR/$user/conf/mail/$domain/passwd
-			userstr="$account:$account:$user:mail:$HOMEDIR/$user"
-			echo $userstr >> $HOMEDIR/$user/conf/mail/$domain/accounts
+			dovecot_version="$(dovecot --version | cut -f -2 -d .)"
+			if [[ "$dovecot_version" = "2.4" ]]; then
+				str="$account:$MD5:$user:mail::$HOMEDIR/$user/mail/$domain/$account:${QUOTA}:userdb_quota_storage_size=${QUOTA}M"
+				echo $str >> $HOMEDIR/$user/conf/mail/$domain/passwd
+				userstr="$account:$account:$user:mail:$HOMEDIR/$user/mail/$domain/$account"
+				echo $userstr >> $HOMEDIR/$user/conf/mail/$domain/accounts
+			else
+				str="$account:$MD5:$user:mail::$HOMEDIR/$user:${QUOTA}:userdb_quota_rule=*:storage=${QUOTA}M"
+				echo $str >> $HOMEDIR/$user/conf/mail/$domain/passwd
+				userstr="$account:$account:$user:mail:$HOMEDIR/$user"
+				echo $userstr >> $HOMEDIR/$user/conf/mail/$domain/accounts
+			fi
 			for malias in ${ALIAS//,/ }; do
 				echo "$malias@$domain_idn:$account@$domain_idn" >> $dom_aliases
 			done

@@ -340,7 +340,7 @@ expand_ipv6() {
 	blocks=$(echo $ip | grep -o "[0-9a-f]\+")
 	set $blocks
 
-	printf "%04x:%04x:%04x:%04x:%04x:%04x:%04x:%04x\n" $(hex2dec $@)
+	printf "%04x:%04x:%04x:%04x:%04x:%04x:%04x:%04x\n" $(hex2dec "$@")
 }
 
 # Get full interface name

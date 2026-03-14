@@ -43,6 +43,18 @@ only_ip_list() {
 	done
 }
 
+# Expanded IPV6 list function
+expanded_ipv6_list() {
+	echo "$IPS" | while read IP; do
+		ip_format="$(get_ip_format $IP)"
+		if [ "$ip_format" = "6" ]; then
+			expand_ipv6 "$IP"
+		else
+			echo "$IP"
+		fi
+	done
+}
+
 # JSON list function
 json_list() {
 	echo '{'
@@ -119,6 +131,7 @@ case $format in
 	csv) csv_list ;;
 	shell) shell_list | column -t ;;
 	list) echo "$IPS" ;;
+	expanded_ipv6_list) expanded_ipv6_list ;;
 esac
 
 #----------------------------------------------------------#

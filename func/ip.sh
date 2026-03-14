@@ -313,6 +313,37 @@ is_ip_valid() {
 
 # === IPV6 specific functions ===
 
+# convert hex to dec (portable version)
+# snippet from wg-ip https://github.com/chmduquesne/wg-ip
+hex2dec() {
+	for i in $(echo "$@"); do
+		printf "%d\n" "$((0x$i))"
+	done
+}
+
+# expand an ipv6 address
+# snippet from wg-ip https://github.com/chmduquesne/wg-ip
+expand_ipv6() {
+	ip=$1
+
+	# prepend 0 if we start with :
+	echo $ip | grep -qs "^:" && ip="0${ip}"
+
+	# expand ::
+	if echo $ip | grep -qs "::"; then
+		colons=$(echo $ip | sed 's/[^:]//g')
+		missing=$(echo ":::::::::" | sed "s/$colons//")
+		expanded=$(echo $missing | sed 's/:/:0/g')
+		ip=$(echo $ip | sed "s/::/$expanded/")
+	fi
+
+	blocks=$(echo $ip | grep -o "[0-9a-f]\+")
+	set $blocks
+
+	printf "%04x:%04x:%04x:%04x:%04x:%04x:%04x:%04x\n" \
+		$(hex2dec $@)
+}
+
 # Get full interface name
 get_ipv6_iface() {
 	i=$(/sbin/ip addr | grep -w $interface \

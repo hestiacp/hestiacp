@@ -9,6 +9,67 @@
 # === Global definitions ===
 REGEX_IPV4="^((1?[0-9][0-9]?|2[0-4][0-9]|25[0-5])\.){3}(1?[0-9][0-9]?|2[0-4][0-9]|25[0-5])$"
 
+# === Common functions ===
+
+# convert hex to dec (portable version)
+# snippet from wg-ip https://github.com/chmduquesne/wg-ip
+hex2dec() {
+	for i in $(echo "$@"); do
+		printf "%d\n" "$((0x$i))"
+	done
+}
+
+# expand an ipv6 address
+# snippet from wg-ip https://github.com/chmduquesne/wg-ip
+expand_ipv6() {
+	ip=$1
+
+	# prepend 0 if we start with :
+	echo $ip | grep -qs "^:" && ip="0${ip}"
+
+	# expand ::
+	if echo $ip | grep -qs "::"; then
+		colons=$(echo $ip | sed 's/[^:]//g')
+		missing=$(echo ":::::::::" | sed "s/$colons//")
+		expanded=$(echo $missing | sed 's/:/:0/g')
+		ip=$(echo $ip | sed "s/::/$expanded/")
+	fi
+
+	blocks=$(echo $ip | grep -o "[0-9a-f]\+")
+	set $blocks
+
+	printf "%04x:%04x:%04x:%04x:%04x:%04x:%04x:%04x\n" $(hex2dec "$@")
+}
+
+# find used ip address and print it in saved version, if exists
+# This function is important for IPV6 addresses, which use typicaly
+# a compact form. Since this compact form is not unique, both
+# IPV6 addresses will be expanded to its unique expanded form and
+# will be compared with each other. Finally saved address will be
+# printed, if both addresses are the same
+find_used_ip() {
+	# ip address (ipv4/ipv6) as first parameter, otherwise $ip (ipv4)
+	ip_for_test="${1-$ip}"
+	ip_format="$(get_ip_format "$ip_for_test")"
+	if [[ "$ip_format" == "6" ]]; then
+		expanded_ip_for_test="$(expand_ipv6 "$ip_for_test")" # expand only IPV6 address
+	else
+		expanded_ip_for_test="$ip_for_test" # otherwise without expand
+	fi
+	ls "$HESTIA/data/ips/" | while read IP; do
+		IP_fmt="$(get_ip_format "$IP")"
+		if [[ "$IP_fmt" == "6" ]]; then
+			expanded_IP="$(expand_ipv6 "$IP")" # expand only IPV6 address
+		else
+			expanded_IP="$IP" # otherwise without expand
+		fi
+		if [ "$expanded_IP" = "$expanded_ip_for_test" ]; then
+			echo "$IP" # print saved version of ip address
+			break      # return with success after first match
+		fi
+	done
+}
+
 # === IPV4 specific functions ===
 
 # Check ip ownership
@@ -24,7 +85,8 @@ is_ip_owner() {
 # Check if ip address is free
 is_ip_free() {
 	ip_for_test="${1-$ip}" # ip address (ipv4/ipv6) as first parameter, otherwise $ip (ipv4)
-	if [ -e "$HESTIA/data/ips/$ip_for_test" ]; then
+	used_ip="$(find_used_ip ${ip_for_test})"
+	if [ -n "$used_ip" ]; then
 		check_result "$E_EXISTS" "$ip_for_test is already exists"
 	fi
 }
@@ -312,36 +374,6 @@ is_ip_valid() {
 }
 
 # === IPV6 specific functions ===
-
-# convert hex to dec (portable version)
-# snippet from wg-ip https://github.com/chmduquesne/wg-ip
-hex2dec() {
-	for i in $(echo "$@"); do
-		printf "%d\n" "$((0x$i))"
-	done
-}
-
-# expand an ipv6 address
-# snippet from wg-ip https://github.com/chmduquesne/wg-ip
-expand_ipv6() {
-	ip=$1
-
-	# prepend 0 if we start with :
-	echo $ip | grep -qs "^:" && ip="0${ip}"
-
-	# expand ::
-	if echo $ip | grep -qs "::"; then
-		colons=$(echo $ip | sed 's/[^:]//g')
-		missing=$(echo ":::::::::" | sed "s/$colons//")
-		expanded=$(echo $missing | sed 's/:/:0/g')
-		ip=$(echo $ip | sed "s/::/$expanded/")
-	fi
-
-	blocks=$(echo $ip | grep -o "[0-9a-f]\+")
-	set $blocks
-
-	printf "%04x:%04x:%04x:%04x:%04x:%04x:%04x:%04x\n" $(hex2dec "$@")
-}
 
 # Get full interface name
 get_ipv6_iface() {

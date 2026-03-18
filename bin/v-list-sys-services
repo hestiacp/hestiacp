@@ -90,10 +90,7 @@ get_srv_state() {
 	    # Directly use the ps command to get the real RSS (KB -> MB)
 	    mem_kb=$(ps -C postgres -o rss= 2>/dev/null | awk '{sum+=$1} END {print sum}')
 	    if [ -n "$mem_kb" ] && [ "$mem_kb" -gt 0 ]; then
-	        mem=$(echo "scale=1; $mem_kb / 1024" | bc 2>/dev/null)
-	        if [[ "$mem" =~ ^\.[0-9]+$ ]]; then
-	            mem="0$mem"
-	        fi
+	        mem=$(awk "BEGIN {printf \"%.0f\", $mem_kb / 1024}")
 	    else
 	        mem=0
 	    fi
@@ -179,11 +176,7 @@ get_srv_state() {
 		mem_kb=$(echo "$pids" | awk '{sum += $3} END {print sum}')
 		if [ ! -z "$mem_kb" ] && [ "$mem_kb" -gt 0 ]; then
 			# Convert to MB, keeping one decimal place
-			mem=$(echo "scale=1; $mem_kb / 1024" | bc 2>/dev/null)
-			# Ensure that .5 is displayed as 0.5
-			if [[ "$mem" =~ ^\.[0-9]+$ ]]; then
-				mem="0$mem"
-			fi
+			mem=$(awk "BEGIN {printf \"%.0f\", $mem_kb / 1024}")
 		else
 			mem=0
 		fi

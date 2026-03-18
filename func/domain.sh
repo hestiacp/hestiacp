@@ -1026,19 +1026,19 @@ get_domain_values() {
 #----------------------------------------------------------#
 
 is_valid_extension() {
-	local pbl
-	pbl="https://publicsuffix.org/list/public_suffix_list.dat"
+	local psl
+	psl="https://publicsuffix.org/list/public_suffix_list.dat"
 	if [ ! -e "$HESTIA/data/extensions/public_suffix_list.dat" ]; then
 		mkdir -p "$HESTIA/data/extensions/"
 		chmod 750 "$HESTIA/data/extensions/"
-		if /usr/bin/wget --tries=3 --timeout=15 --read-timeout=15 --waitretry=3 --no-dns-cache --quiet -O "$HESTIA/data/extensions/public_suffix_list.dat.tmp" "$pbl"; then
+		if /usr/bin/wget --tries=3 --timeout=15 --read-timeout=15 --waitretry=3 --no-dns-cache --quiet -O "$HESTIA/data/extensions/public_suffix_list.dat.tmp" "$psl"; then
 			mv "$HESTIA/data/extensions/public_suffix_list.dat.tmp" "$HESTIA/data/extensions/public_suffix_list.dat"
 		else
 			rm -f "$HESTIA/data/extensions/public_suffix_list.dat.tmp"
 		fi
 	elif find "$HESTIA/data/extensions/public_suffix_list.dat" -mtime +7 2> /dev/null | grep -q .; then
 		mv "$HESTIA/data/extensions/public_suffix_list.dat" "$HESTIA/data/extensions/public_suffix_list.dat.save"
-		if /usr/bin/wget --tries=3 --timeout=15 --read-timeout=15 --waitretry=3 --no-dns-cache --quiet -O "$HESTIA/data/extensions/public_suffix_list.dat.tmp" "$pbl"; then
+		if /usr/bin/wget --tries=3 --timeout=15 --read-timeout=15 --waitretry=3 --no-dns-cache --quiet -O "$HESTIA/data/extensions/public_suffix_list.dat.tmp" "$psl"; then
 			mv "$HESTIA/data/extensions/public_suffix_list.dat.tmp" "$HESTIA/data/extensions/public_suffix_list.dat"
 			rm -f "$HESTIA/data/extensions/public_suffix_list.dat.save"
 		else
@@ -1055,19 +1055,19 @@ is_valid_extension() {
 }
 
 is_valid_2_part_extension() {
-	local pbl
-	pbl="https://publicsuffix.org/list/public_suffix_list.dat"
+	local psl
+	psl="https://publicsuffix.org/list/public_suffix_list.dat"
 	if [ ! -e "$HESTIA/data/extensions/public_suffix_list.dat" ]; then
 		mkdir -p "$HESTIA/data/extensions/"
 		chmod 750 "$HESTIA/data/extensions/"
-		if /usr/bin/wget --tries=3 --timeout=15 --read-timeout=15 --waitretry=3 --no-dns-cache --quiet -O "$HESTIA/data/extensions/public_suffix_list.dat.tmp" "$pbl"; then
+		if /usr/bin/wget --tries=3 --timeout=15 --read-timeout=15 --waitretry=3 --no-dns-cache --quiet -O "$HESTIA/data/extensions/public_suffix_list.dat.tmp" "$psl"; then
 			mv "$HESTIA/data/extensions/public_suffix_list.dat.tmp" "$HESTIA/data/extensions/public_suffix_list.dat"
 		else
 			rm -f "$HESTIA/data/extensions/public_suffix_list.dat.tmp"
 		fi
 	elif find "$HESTIA/data/extensions/public_suffix_list.dat" -mtime +7 2> /dev/null | grep -q .; then
 		mv "$HESTIA/data/extensions/public_suffix_list.dat" "$HESTIA/data/extensions/public_suffix_list.dat.save"
-		if /usr/bin/wget --tries=3 --timeout=15 --read-timeout=15 --waitretry=3 --no-dns-cache --quiet -O "$HESTIA/data/extensions/public_suffix_list.dat.tmp" "$pbl"; then
+		if /usr/bin/wget --tries=3 --timeout=15 --read-timeout=15 --waitretry=3 --no-dns-cache --quiet -O "$HESTIA/data/extensions/public_suffix_list.dat.tmp" "$psl"; then
 			mv "$HESTIA/data/extensions/public_suffix_list.dat.tmp" "$HESTIA/data/extensions/public_suffix_list.dat"
 			rm -f "$HESTIA/data/extensions/public_suffix_list.dat.save"
 		else

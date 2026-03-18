@@ -1026,25 +1026,61 @@ get_domain_values() {
 #----------------------------------------------------------#
 
 is_valid_extension() {
+	local pbl
+	pbl="https://publicsuffix.org/list/public_suffix_list.dat"
 	if [ ! -e "$HESTIA/data/extensions/public_suffix_list.dat" ]; then
-		mkdir $HESTIA/data/extensions/
-		chmod 750 $HESTIA/data/extensions/
-		/usr/bin/wget --tries=3 --timeout=15 --read-timeout=15 --waitretry=3 --no-dns-cache --quiet -O $HESTIA/data/extensions/public_suffix_list.dat https://raw.githubusercontent.com/publicsuffix/list/master/public_suffix_list.dat
+		mkdir -p "$HESTIA/data/extensions/"
+		chmod 750 "$HESTIA/data/extensions/"
+		if /usr/bin/wget --tries=3 --timeout=15 --read-timeout=15 --waitretry=3 --no-dns-cache --quiet -O "$HESTIA/data/extensions/public_suffix_list.dat.tmp" "$pbl"; then
+			mv "$HESTIA/data/extensions/public_suffix_list.dat.tmp" "$HESTIA/data/extensions/public_suffix_list.dat"
+		else
+			rm -f "$HESTIA/data/extensions/public_suffix_list.dat.tmp"
+		fi
+	elif find "$HESTIA/data/extensions/public_suffix_list.dat" -mtime +7 2> /dev/null | grep -q .; then
+		mv "$HESTIA/data/extensions/public_suffix_list.dat" "$HESTIA/data/extensions/public_suffix_list.dat.save"
+		if /usr/bin/wget --tries=3 --timeout=15 --read-timeout=15 --waitretry=3 --no-dns-cache --quiet -O "$HESTIA/data/extensions/public_suffix_list.dat.tmp" "$pbl"; then
+			mv "$HESTIA/data/extensions/public_suffix_list.dat.tmp" "$HESTIA/data/extensions/public_suffix_list.dat"
+			rm -f "$HESTIA/data/extensions/public_suffix_list.dat.save"
+		else
+			rm -f "$HESTIA/data/extensions/public_suffix_list.dat.tmp"
+			mv "$HESTIA/data/extensions/public_suffix_list.dat.save" "$HESTIA/data/extensions/public_suffix_list.dat"
+		fi
+	fi
+	if [ ! -e "$HESTIA/data/extensions/public_suffix_list.dat" ]; then
+		check_result "$E_NOTEXIST" "public_suffix_list.dat not found"
 	fi
 	test_domain=$(idn2 -d "$1")
-	extension=$(/bin/echo "${test_domain}" | /usr/bin/rev | /usr/bin/cut -d "." --output-delimiter="." -f 1 | /usr/bin/rev)
-	exten=$(grep "^$extension\$" $HESTIA/data/extensions/public_suffix_list.dat)
+	extension="${test_domain##*.}"
+	exten=$(grep -Fx "$extension" "$HESTIA/data/extensions/public_suffix_list.dat")
 }
 
 is_valid_2_part_extension() {
+	local pbl
+	pbl="https://publicsuffix.org/list/public_suffix_list.dat"
 	if [ ! -e "$HESTIA/data/extensions/public_suffix_list.dat" ]; then
-		mkdir $HESTIA/data/extensions/
-		chmod 750 $HESTIA/data/extensions/
-		/usr/bin/wget --tries=3 --timeout=15 --read-timeout=15 --waitretry=3 --no-dns-cache --quiet -O $HESTIA/data/extensions/public_suffix_list.dat https://raw.githubusercontent.com/publicsuffix/list/master/public_suffix_list.dat
+		mkdir -p "$HESTIA/data/extensions/"
+		chmod 750 "$HESTIA/data/extensions/"
+		if /usr/bin/wget --tries=3 --timeout=15 --read-timeout=15 --waitretry=3 --no-dns-cache --quiet -O "$HESTIA/data/extensions/public_suffix_list.dat.tmp" "$pbl"; then
+			mv "$HESTIA/data/extensions/public_suffix_list.dat.tmp" "$HESTIA/data/extensions/public_suffix_list.dat"
+		else
+			rm -f "$HESTIA/data/extensions/public_suffix_list.dat.tmp"
+		fi
+	elif find "$HESTIA/data/extensions/public_suffix_list.dat" -mtime +7 2> /dev/null | grep -q .; then
+		mv "$HESTIA/data/extensions/public_suffix_list.dat" "$HESTIA/data/extensions/public_suffix_list.dat.save"
+		if /usr/bin/wget --tries=3 --timeout=15 --read-timeout=15 --waitretry=3 --no-dns-cache --quiet -O "$HESTIA/data/extensions/public_suffix_list.dat.tmp" "$pbl"; then
+			mv "$HESTIA/data/extensions/public_suffix_list.dat.tmp" "$HESTIA/data/extensions/public_suffix_list.dat"
+			rm -f "$HESTIA/data/extensions/public_suffix_list.dat.save"
+		else
+			rm -f "$HESTIA/data/extensions/public_suffix_list.dat.tmp"
+			mv "$HESTIA/data/extensions/public_suffix_list.dat.save" "$HESTIA/data/extensions/public_suffix_list.dat"
+		fi
+	fi
+	if [ ! -e "$HESTIA/data/extensions/public_suffix_list.dat" ]; then
+		check_result "$E_NOTEXIST" "public_suffix_list.dat not found"
 	fi
 	test_domain=$(idn2 -d "$1")
-	extension=$(/bin/echo "${test_domain}" | /usr/bin/rev | /usr/bin/cut -d "." --output-delimiter="." -f 1-2 | /usr/bin/rev)
-	exten=$(grep "^$extension\$" $HESTIA/data/extensions/public_suffix_list.dat)
+	extension=$(/bin/echo "${test_domain}" | awk -F. '{print $(NF-1)"."$NF}')
+	exten=$(grep -Fx "$extension" "$HESTIA/data/extensions/public_suffix_list.dat")
 }
 
 get_base_domain() {

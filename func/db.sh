@@ -61,7 +61,7 @@ mysql_connect() {
 			echo "user='$USER'" >> $mycnf
 			echo "password='$PASSWORD'" >> $mycnf
 			echo "port='$PORT'" >> $mycnf
-			chmod 660 $mycnf
+			chmod 600 $mycnf
 		fi
 	fi
 	mysql_out=$(mktemp)
@@ -115,7 +115,7 @@ mysql_dump() {
 	if [ '0' -ne "$?" ]; then
 		$mysqldmp --defaults-extra-file=$mycnf --single-transaction --routines -r $1 $2 2> $err
 		if [ '0' -ne "$?" ]; then
-			rm -rf $tmpdir
+			rm -rf "$tmpdir"
 			if [ "$notify" != 'no' ]; then
 				email=$(grep CONTACT "$HESTIA/data/users/$ROOT_USER/user.conf" | cut -f 2 -d \')
 				subj="MySQL error on $(hostname)"
@@ -166,7 +166,7 @@ psql_query() {
 psql_dump() {
 	pg_dump -h $HOST -U $USER -c --inserts -O -x -f $1 $2 2> /tmp/e.psql
 	if [ '0' -ne "$?" ]; then
-		rm -rf $tmpdir
+		rm -rf "$tmpdir"
 		if [ "$notify" != 'no' ]; then
 			email=$(grep CONTACT "$HESTIA/data/users/$ROOT_USER/user.conf" | cut -f 2 -d \')
 			subj="PostgreSQL error on $(hostname)"

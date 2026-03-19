@@ -34,13 +34,17 @@ if (isset($_SESSION["user"])) {
 					HESTIA_CMD .
 						"v-log-action " .
 						$v_impersonator .
-						" 'Info' 'Security' 'Logged in as another user (User: $v_user)'",
+						" 'Info' 'Security' 'Logged in as another user' " .
+						$v_user,
 					$output,
 					$return_var,
 				);
 				exec(
 					HESTIA_CMD .
-						"v-log-action system 'Warning' 'Security' 'User impersonation session started (User: $v_user, Administrator: $v_impersonator)'",
+						"v-log-action system 'Warning' 'Security' 'User impersonation session started' " .
+						$v_user .
+						" " .
+						$v_impersonator,
 					$output,
 					$return_var,
 				);
@@ -49,8 +53,11 @@ if (isset($_SESSION["user"])) {
 				unset($_SESSION["_sf2_meta"]);
 				if (!empty($_GET["edit_link"])) {
 					$edit_link = urldecode($_GET["edit_link"]);
-					$url = $edit_link . "&token=" . $_SESSION["token"];
-					header("Location: " . $url);
+					// Only allow relative paths to prevent open redirect
+					if (strpos($edit_link, '/') === 0 && !preg_match('/^\/\//', $edit_link)) {
+						$url = $edit_link . "&token=" . $_SESSION["token"];
+						header("Location: " . $url);
+					}
 					die();
 				}
 				header("Location: /login/");

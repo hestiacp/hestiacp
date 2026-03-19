@@ -1,8 +1,8 @@
 #!/bin/bash
 # info: Removes Jailkit and migrates to Bubblewrap
 #
-# Jailkit was availble for a short period in 1.9.0 Beta releases
-# How ever it has been replaced by Bubblewrap
+# Jailkit was available for a short period in 1.9.0 Beta releases
+# However it has been replaced by Bubblewrap
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

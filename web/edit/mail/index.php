@@ -86,38 +86,10 @@ if (!empty($_GET["domain"]) && empty($_GET["account"])) {
 		$v_ssl_pub_key = $ssl_str[$v_domain]["PUB_KEY"];
 		$v_ssl_issuer = $ssl_str[$v_domain]["ISSUER"];
 	}
-	$v_letsencrypt = $data[$v_domain]["LETSENCRYPT"] ?: "no";
-	$v_actalis = $data[$v_domain]["ACTALIS"] ?: "no";
-	if ($v_letsencrypt == "yes") {
-		$v_ssl_type = "letsencrypt";
-	} elseif ($v_actalis == "yes") {
-		$v_ssl_type = "actalis";
-	} else {
-		$v_ssl_type = "";
+	$v_letsencrypt = $data[$v_domain]["LETSENCRYPT"];
+	if (empty($v_letsencrypt)) {
+		$v_letsencrypt = "no";
 	}
-
-	// Check Actalis EAB Creds
-	$has_actalis_eab = false;
-
-	exec(
-		HESTIA_CMD . "v-list-actalis-user " . quoteshellarg($user_plain) . " json",
-		$output,
-		$return_var,
-	);
-
-	if ($return_var === 0) {
-		$actalis_data = json_decode(implode("", $output), true);
-
-		if (
-			is_array($actalis_data) &&
-			isset($actalis_data[$user_plain]) &&
-			!empty($actalis_data[$user_plain]["EAB_KID"]) &&
-			!empty($actalis_data[$user_plain]["EAB_HMAC"])
-		) {
-			$has_actalis_eab = true;
-		}
-	}
-	unset($output);
 }
 
 // List mail account
@@ -445,7 +417,6 @@ if (!empty($_POST["save"]) && !empty($_GET["domain"]) && empty($_GET["account"])
 	if (
 		$v_letsencrypt == "no" &&
 		empty($_POST["v_letsencrypt"]) &&
-		empty($_POST["v_actalis"]) &&
 		$v_ssl == "yes" &&
 		!empty($_POST["v_ssl"]) &&
 		empty($_SESSION["error_msg"])
@@ -562,32 +533,6 @@ if (!empty($_POST["save"]) && !empty($_GET["domain"]) && empty($_GET["account"])
 		$restart_mail = "yes";
 	}
 
-	// Delete Actalis support
-	if (
-		$v_actalis == "yes" &&
-		(empty($_POST["v_actalis"]) || empty($_POST["v_ssl"])) &&
-		empty($_SESSION["error_msg"])
-	) {
-		exec(
-			HESTIA_CMD .
-				"v-delete-actalis-domain " .
-				$user .
-				" " .
-				quoteshellarg($v_domain) .
-				" '' 'yes'",
-			$output,
-			$return_var,
-		);
-		check_return_code($return_var, $output);
-		unset($output);
-		$v_ssl_crt = "";
-		$v_ssl_key = "";
-		$v_ssl_ca = "";
-		$v_actalis = "no";
-		$v_ssl = "no";
-		$restart_mail = "yes";
-	}
-
 	// Delete SSL certificate
 	if ($v_ssl == "yes" && empty($_POST["v_ssl"]) && empty($_SESSION["error_msg"])) {
 		exec(
@@ -624,30 +569,6 @@ if (!empty($_POST["save"]) && !empty($_GET["domain"]) && empty($_GET["account"])
 		check_return_code($return_var, $output);
 		unset($output);
 		$v_letsencrypt = "yes";
-		$v_ssl = "yes";
-		$restart_mail = "yes";
-	}
-
-	// Add Actalis support
-	if (
-		!empty($_POST["v_ssl"]) &&
-		$v_actalis == "no" &&
-		!empty($_POST["v_actalis"]) &&
-		empty($_SESSION["error_msg"])
-	) {
-		exec(
-			HESTIA_CMD .
-				"v-add-actalis-domain " .
-				$user .
-				" " .
-				quoteshellarg($v_domain) .
-				" ' ' 'yes'",
-			$output,
-			$return_var,
-		);
-		check_return_code($return_var, $output);
-		unset($output);
-		$v_actalis = "yes";
 		$v_ssl = "yes";
 		$restart_mail = "yes";
 	}

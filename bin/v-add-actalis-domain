@@ -154,10 +154,7 @@ check_hestia_demo_mode
 if [ -n "$mail" ]; then
 	root_domain=$domain
 	domain="mail.$root_domain"
-	webmail=$(get_object_value "mail" "DOMAIN" "$root_domain" '$WEBMAIL')
-	if [ -n "$webmail" ]; then
-		aliases="$WEBMAIL_ALIAS.$root_domain"
-	fi
+	aliases=""
 else
 	parse_object_kv_list $(grep "DOMAIN='$domain'" $USER_DATA/web.conf)
 

@@ -2354,6 +2354,7 @@ echo "10 05 * * * sudo /usr/local/hestia/bin/v-backup-users" >> /var/spool/cron/
 echo "20 00 * * * sudo /usr/local/hestia/bin/v-update-user-stats" >> /var/spool/cron/crontabs/hestiaweb
 echo "*/5 * * * * sudo /usr/local/hestia/bin/v-update-sys-rrd" >> /var/spool/cron/crontabs/hestiaweb
 echo "$min $hour * * * sudo /usr/local/hestia/bin/v-update-letsencrypt-ssl" >> /var/spool/cron/crontabs/hestiaweb
+echo "$min $hour * * * sudo /usr/local/hestia/bin/v-update-actalis-ssl" >> /var/spool/cron/crontabs/hestiaweb
 echo "41 4 * * * sudo /usr/local/hestia/bin/v-update-sys-hestia-all" >> /var/spool/cron/crontabs/hestiaweb
 
 chmod 600 /var/spool/cron/crontabs/hestiaweb
@@ -2394,7 +2395,7 @@ mkdir -p /backup/
 chmod 755 /backup/
 
 # Create cronjob to generate ssl
-echo "@reboot root sleep 10 && rm /etc/cron.d/hestia-ssl && PATH='/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:' && /usr/local/hestia/bin/v-add-letsencrypt-host" > /etc/cron.d/hestia-ssl
+echo "@reboot root sleep 10 && PATH='/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:' /usr/local/hestia/bin/v-add-letsencrypt-host && PATH='/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:' /usr/local/hestia/bin/v-add-actalis-host && rm -f /etc/cron.d/hestia-ssl" > /etc/cron.d/hestia-ssl
 
 #----------------------------------------------------------#
 #              Set hestia.conf default values              #

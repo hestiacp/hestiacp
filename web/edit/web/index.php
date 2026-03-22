@@ -65,10 +65,39 @@ if (!empty($v_ssl)) {
 	$v_ssl_forcessl = $data[$v_domain]["SSL_FORCE"];
 	$v_ssl_hsts = $data[$v_domain]["SSL_HSTS"];
 }
-$v_letsencrypt = $data[$v_domain]["LETSENCRYPT"];
-if (empty($v_letsencrypt)) {
-	$v_letsencrypt = "no";
+$v_letsencrypt = $data[$v_domain]["LETSENCRYPT"] ?: "no";
+$v_actalis = $data[$v_domain]["ACTALIS"] ?: "no";
+if ($v_letsencrypt == "yes") {
+	$v_ssl_type = "letsencrypt";
+} elseif ($v_actalis == "yes") {
+	$v_ssl_type = "actalis";
+} else {
+	$v_ssl_type = "";
 }
+
+// Check Actalis EAB Creds
+$has_actalis_eab = false;
+
+exec(
+	HESTIA_CMD . "v-list-actalis-user " . quoteshellarg($user_plain) . " json",
+	$output,
+	$return_var,
+);
+
+if ($return_var === 0) {
+	$actalis_data = json_decode(implode("", $output), true);
+
+	if (
+		is_array($actalis_data) &&
+		isset($actalis_data[$user_plain]) &&
+		!empty($actalis_data[$user_plain]["EAB_KID"]) &&
+		!empty($actalis_data[$user_plain]["EAB_HMAC"])
+	) {
+		$has_actalis_eab = true;
+	}
+}
+unset($output);
+
 $v_ssl_home = $data[$v_domain]["SSL_HOME"] ?? "";
 $v_backend_template = $data[$v_domain]["BACKEND"] ?? "";
 $v_nginx_cache = $data[$v_domain]["FASTCGI_CACHE"] ?? "";
@@ -192,6 +221,19 @@ if (!empty($_POST["save"])) {
 	}
 	// Check token
 	verify_csrf($_POST);
+
+	// Check SSL Type
+	$v_ssl_type_post = $_POST["v_ssl_type"] ?? "";
+	$_POST["v_letsencrypt"] = $v_ssl_type_post === "letsencrypt" ? "yes" : "";
+	$_POST["v_actalis"] = $v_ssl_type_post === "actalis" ? "yes" : "";
+
+	if (!empty($_POST["v_letsencrypt"]) && !empty($_POST["v_actalis"])) {
+		$_SESSION["error_msg"] = _("Choose either Let's Encrypt or Actalis, not both.");
+	}
+
+	if (!empty($_POST["v_actalis"]) && !$has_actalis_eab) {
+		$_SESSION["error_msg"] = _("Configure Actalis EAB credentials in your profile first.");
+	}
 
 	// Change web domain IP
 	$v_newip = "";
@@ -638,6 +680,61 @@ if (!empty($_POST["save"])) {
 			}
 		}
 
+		// Regenerate ACTALIS if aliases are different
+		if (
+			!empty($_POST["v_ssl"]) &&
+			$v_actalis == "yes" &&
+			!empty($_POST["v_actalis"]) &&
+			empty($_SESSION["error_msg"])
+		) {
+			// If aliases are different from stored aliases
+			if (array_diff($valiases, $aliases) || array_diff($aliases, $valiases)) {
+				// Add certificate with new aliases
+				$l_aliases = str_replace("\n", ",", $v_aliases);
+				exec(
+					HESTIA_CMD .
+						"v-add-actalis-domain " .
+						$user .
+						" " .
+						quoteshellarg($v_domain) .
+						" " .
+						quoteshellarg($l_aliases) .
+						" ''",
+					$output,
+					$return_var,
+				);
+				check_return_code($return_var, $output);
+				unset($output);
+				$v_actalis = "yes";
+				$v_ssl = "yes";
+				$restart_web = "yes";
+				$restart_proxy = "yes";
+
+				exec(
+					HESTIA_CMD .
+						"v-list-web-domain-ssl " .
+						$user .
+						" " .
+						quoteshellarg($v_domain) .
+						" json",
+					$output,
+					$return_var,
+				);
+				$ssl_str = json_decode(implode("", $output), true);
+				unset($output);
+				$v_ssl_crt = $ssl_str[$v_domain]["CRT"];
+				$v_ssl_key = $ssl_str[$v_domain]["KEY"];
+				$v_ssl_ca = $ssl_str[$v_domain]["CA"];
+				$v_ssl_subject = $ssl_str[$v_domain]["SUBJECT"];
+				$v_ssl_aliases = $ssl_str[$v_domain]["ALIASES"];
+				$v_ssl_not_before = $ssl_str[$v_domain]["NOT_BEFORE"];
+				$v_ssl_not_after = $ssl_str[$v_domain]["NOT_AFTER"];
+				$v_ssl_signature = $ssl_str[$v_domain]["SIGNATURE"];
+				$v_ssl_pub_key = $ssl_str[$v_domain]["PUB_KEY"];
+				$v_ssl_issuer = $ssl_str[$v_domain]["ISSUER"];
+			}
+		}
+
 		if (!empty($v_stats) && $_POST["v_stats"] == $v_stats && empty($_SESSION["error_msg"])) {
 			// Update statistics configuration when changing domain aliases
 			$v_stats = quoteshellarg($_POST["v_stats"]);
@@ -660,7 +757,9 @@ if (!empty($_POST["save"])) {
 	// Change SSL certificate
 	if (
 		$v_letsencrypt == "no" &&
+		$v_actalis == "no" &&
 		empty($_POST["v_letsencrypt"]) &&
+		empty($_POST["v_actalis"]) &&
 		$v_ssl == "yes" &&
 		!empty($_POST["v_ssl"]) &&
 		empty($_SESSION["error_msg"])
@@ -779,6 +878,34 @@ if (!empty($_POST["save"])) {
 		$restart_proxy = "yes";
 	}
 
+	// Delete Actalis support
+	if (
+		$v_actalis == "yes" &&
+		(empty($_POST["v_actalis"]) || empty($_POST["v_ssl"])) &&
+		empty($_SESSION["error_msg"])
+	) {
+		exec(
+			HESTIA_CMD .
+				"v-delete-actalis-domain " .
+				$user .
+				" " .
+				quoteshellarg($v_domain) .
+				" ''",
+			$output,
+			$return_var,
+		);
+		check_return_code($return_var, $output);
+		unset($output);
+		$v_ssl_crt = "";
+		$v_ssl_key = "";
+		$v_ssl_ca = "";
+		$v_actalis = "no";
+		$v_actalis_deleted = "yes";
+		$v_ssl = "no";
+		$restart_web = "yes";
+		$restart_proxy = "yes";
+	}
+
 	// Delete SSL certificate
 	if ($v_ssl == "yes" && empty($_POST["v_ssl"]) && empty($_SESSION["error_msg"])) {
 		exec(
@@ -840,11 +967,47 @@ if (!empty($_POST["save"])) {
 		$restart_proxy = "yes";
 	}
 
+	// Add Actalis support
+	if (
+		!empty($_POST["v_ssl"]) &&
+		$v_actalis == "no" &&
+		!empty($_POST["v_actalis"]) &&
+		empty($_SESSION["error_msg"])
+	) {
+		$l_aliases = str_replace("\n", ",", $v_aliases);
+		exec(
+			HESTIA_CMD .
+				"v-add-actalis-domain " .
+				$user .
+				" " .
+				quoteshellarg($v_domain) .
+				" " .
+				quoteshellarg($l_aliases) .
+				" ''",
+			$output,
+			$return_var,
+		);
+		check_return_code($return_var, $output);
+		unset($output);
+		if ($return_var != 0) {
+			$v_actalis = "no";
+		} else {
+			$v_actalis = "yes";
+		}
+		$v_ssl = "yes";
+		if ($_POST["v_ssl_forcessl"] == "on") {
+			$v_ssl_forcessl = "yes";
+		} else {
+			$v_ssl_forcessl = "no";
+		}
+		$restart_web = "yes";
+		$restart_proxy = "yes";
+	}
+
 	// Add SSL certificate
 	if (
 		$v_ssl == "no" &&
 		!empty($_POST["v_ssl"]) &&
-		empty($v_letsencrypt_deleted) &&
 		empty($_SESSION["error_msg"])
 	) {
 		if (empty($_POST["v_ssl_crt"])) {

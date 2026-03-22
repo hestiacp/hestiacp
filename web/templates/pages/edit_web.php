@@ -29,8 +29,10 @@
 			"statsAuthEnabled" => !empty($v_stats_user),
 			"redirectEnabled" => !empty($v_redirect),
 			"sslEnabled" => $v_ssl == "yes",
-			"letsEncryptEnabled" => $v_letsencrypt == "yes" || $v_letsencrypt == "on",
-			"showCertificates" => !($v_letsencrypt == "yes" || $v_letsencrypt == "on"),
+			"sslType" => $v_ssl_type,
+			"letsEncryptEnabled" => $v_ssl_type == "letsencrypt",
+			"actalisEnabled" => $v_ssl_type == "actalis",
+			"showCertificates" => $v_ssl_type == "" ? true : false,
 			"showAdvanced" => false,
 			"nginxCacheEnabled" => $v_nginx_cache == "yes",
 			"proxySupportEnabled" => !empty($v_proxy),
@@ -60,10 +62,16 @@
 				<label for="v_aliases" class="form-label"><?= tohtml( _("Aliases")) ?></label>
 				<textarea class="form-control" name="v_aliases" id="v_aliases"><?= tohtml(trim($v_aliases, "'")) ?></textarea>
 			</div>
-			<?php if ($v_letsencrypt == "yes" || $v_letsencrypt == "on") { ?>
+			<?php if ($v_ssl_type == "letsencrypt") { ?>
 				<div class="alert alert-info u-mb10" role="alert">
 					<i class="fas fa-exclamation"></i>
 					<p><?= tohtml( _("If the aliases changes, Let's Encrypt will obtain a new SSL certificate.")) ?></p>
+				</div>
+			<?php } ?>
+			<?php if ($v_ssl_type == "actalis") { ?>
+				<div class="alert alert-info u-mb10" role="alert">
+					<i class="fas fa-exclamation"></i>
+					<p><?= _("If the aliases changes, Actalis will obtain a new SSL certificate.") ?></p>
 				</div>
 			<?php } ?>
 			<div class="u-mb20">
@@ -171,10 +179,19 @@
 			</div>
 			<div x-cloak x-show="sslEnabled" class="u-pl30">
 				<div class="form-check u-mb10">
-					<input x-model="letsEncryptEnabled" class="form-check-input js-toggle-lets-encrypt" type="checkbox" name="v_letsencrypt" id="v_letsencrypt">
-					<label for="v_letsencrypt">
-						<?= tohtml( _("Use Let's Encrypt to obtain SSL certificate")) ?>
-					</label>
+					<label for="v_ssl_type" class="form-label"><?= _("SSL Provider") ?></label>
+					<select class="form-select js-ssl-type-select" name="v_ssl_type" id="v_ssl_type" x-model="sslType" x-on:change="
+						showCertificates = $event.target.value === '';
+						letsEncryptEnabled = $event.target.value === 'letsencrypt';
+						actalisEnabled = $event.target.value === 'actalis';
+					">
+						<option value="" <?= $v_ssl_type == "" ? 'selected' : '' ?>><?= _("-- Default (Manual Certificate) --") ?></option>
+						<option value="letsencrypt" name="v_letsencrypt" id="v_letsencrypt" <?= $v_ssl_type == "letsencrypt" ? 'selected' : '' ?>><?= _("Let's Encrypt") ?></option>
+						<option value="actalis" name="v_actalis" id="v_actalis"
+							<?= $v_ssl_type == "actalis" ? 'selected' : '' ?>
+							<?= !$has_actalis_eab ? 'disabled' : '' ?>
+						><?= _("Actalis") ?><?= !$has_actalis_eab ? ' (' . _("Configure EAB credentials in your profile first") . ')' : '' ?></option>
+					</select>
 				</div>
 				<div class="form-check u-mb10">
 					<input class="form-check-input" type="checkbox" name="v_ssl_forcessl" id="v_ssl_forcessl" <?php if ($v_ssl_forcessl == 'yes') echo 'checked' ?>>
@@ -243,7 +260,7 @@
 							<span class="values-list-label"><?= tohtml( _("Issued By")) ?></span>
 							<span class="values-list-value"><?= tohtml($v_ssl_issuer) ?></span>
 						</li>
-						<p x-cloak x-show="letsEncryptEnabled" id="letsinfo">
+						<p x-cloak x-show="letsEncryptEnabled || actalisEnabled" id="letsinfo">
 							<button
 								type="button"
 								class="form-link"

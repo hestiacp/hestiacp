@@ -253,6 +253,23 @@
 							<?= tohtml( _("Add Name Server")) ?>
 						</button>
 					<?php } ?>
+					<div class="u-mt20">
+						<h2 class="form-section-title"><?= _("Actalis ACME Credentials") ?></h2>
+						<p class="u-mb10">
+							<?= tohtml(_("Used only to enable Actalis SSL issuance for this user. Not required for Let's Encrypt.")) ?>
+						</p>
+						<div class="u-mb10 u-mt10">
+							<label for="v_actalis_eab_kid" class="form-label"><?= tohtml(_("Actalis EAB Key ID")) ?></label>
+							<input type="text" class="form-control" name="v_actalis_eab_kid" id="v_actalis_eab_kid" value="<?= tohtml($v_actalis_eab_kid) ?>">
+						</div>
+						<div class="u-mb10">
+							<label for="v_actalis_eab_hmac" class="form-label"><?= tohtml(_("Actalis EAB HMAC Key")) ?></label>
+							<input type="password" class="form-control" name="v_actalis_eab_hmac" id="v_actalis_eab_hmac" value="<?= tohtml($v_actalis_eab_hmac) ?>" autocomplete="new-password">
+							<small class="form-text text-muted">
+								<?= tohtml(_("Leave blank to keep the current key. If you change the EAB Key ID, you must also enter the matching HMAC key.")) ?>
+							</small>
+						</div>
+					</div>
 				</div>
 			<?php } ?>
 		</div>

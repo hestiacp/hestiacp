@@ -20,7 +20,8 @@
 	<form
 		x-data="{
 			sslEnabled: <?= tohtml($v_ssl == "yes" ? "true" : "false") ?>,
-			letsEncryptEnabled: <?= tohtml($v_letsencrypt == "yes" ? "true" : "false") ?>,
+			letsEncryptEnabled: <?= tohtml($v_ssl_type == "letsencrypt" ? "true" : "false") ?>,
+			actalisEnabled: <?= tohtml($v_ssl_type == "actalis" ? "true" : "false") ?>,
 			hasSmtpRelay: <?= tohtml($v_smtp_relay == "true" ? "true" : "false") ?>
 		}"
 		id="main-form"
@@ -101,35 +102,44 @@
 			</div>
 			<div x-cloak x-show="sslEnabled" class="u-pl30">
 				<div class="form-check u-mb10">
-					<input x-model="letsEncryptEnabled" class="form-check-input" type="checkbox" name="v_letsencrypt" id="v_letsencrypt">
-					<label for="v_letsencrypt">
-						<?= tohtml( _("Use Let's Encrypt to obtain SSL certificate")) ?>
-					</label>
+					<label for="v_ssl_type" class="form-label"><?= _("SSL Provider") ?></label>
+					<select class="form-select js-ssl-type-select" name="v_ssl_type" id="v_ssl_type" x-model="sslType" x-on:change="
+						showCertificates = $event.target.value === '';
+						letsEncryptEnabled = $event.target.value === 'letsencrypt';
+						actalisEnabled = $event.target.value === 'actalis';
+					">
+						<option value="" <?= $v_ssl_type == "" ? 'selected' : '' ?>><?= _("-- Default (Manual Certificate) --") ?></option>
+						<option value="letsencrypt" name="v_letsencrypt" id="v_letsencrypt" <?= $v_ssl_type == "letsencrypt" ? 'selected' : '' ?>><?= _("Let's Encrypt") ?></option>
+						<option value="actalis" name="v_actalis" id="v_actalis"
+							<?= $v_ssl_type == "actalis" ? 'selected' : '' ?>
+							<?= !$has_actalis_eab ? 'disabled' : '' ?>
+						><?= _("Actalis") ?><?= !$has_actalis_eab ? ' (' . _("Configure EAB credentials in your profile first") . ')' : '' ?></option>
+					</select>
 				</div>
 				<div class="alert alert-info u-mb20" role="alert">
 					<i class="fas fa-exclamation"></i>
 					<div>
 						<p><?php echo $v_webmail_alias; ?></p>
-						<p><?= tohtml(sprintf(_("To enable Let's Encrypt SSL, ensure that DNS records exist for mail.%s and %s!"), $v_domain, $v_webmail_alias)) ?></p>
+						<p><?= tohtml(sprintf(_("To enable Let's Encrypt or Actalis SSL, ensure that DNS records exist for mail.%s and %s!"), $v_domain, $v_webmail_alias)) ?></p>
 					</div>
 				</div>
-				<div x-cloak x-show="!letsEncryptEnabled">
+				<div x-cloak x-show="!letsEncryptEnabled || !actalisEnabled">
 					<div class="u-mb10">
 						<label for="v_ssl_crt" class="form-label">
 							<?= tohtml( _("SSL Certificate")) ?>
-							<span x-cloak x-show="!letsEncryptEnabled" id="generate-csr" > / <a class="form-link" target="_blank" href="/generate/ssl/?<?= tohtml(http_build_query(["domain" => $v_domain])) ?>"><?= tohtml( _("Generate Self-Signed SSL Certificate")) ?></a></span>
+							<span x-cloak x-show="!letsEncryptEnabled || !actalisEnabled" id="generate-csr" > / <a class="form-link" target="_blank" href="/generate/ssl/?<?= tohtml(http_build_query(["domain" => $v_domain])) ?>"><?= tohtml( _("Generate Self-Signed SSL Certificate")) ?></a></span>
 						</label>
-						<textarea x-bind:disabled="letsEncryptEnabled" class="form-control u-min-height100 u-console" name="v_ssl_crt" id="v_ssl_crt"><?= tohtml(trim($v_ssl_crt, "'")) ?></textarea>
+						<textarea x-bind:disabled="letsEncryptEnabled || actalisEnabled" class="form-control u-min-height100 u-console" name="v_ssl_crt" id="v_ssl_crt"><?= tohtml(trim($v_ssl_crt, "'")) ?></textarea>
 					</div>
 					<div class="u-mb10">
 						<label for="v_ssl_key" class="form-label"><?= tohtml( _("SSL Private Key")) ?></label>
-						<textarea x-bind:disabled="letsEncryptEnabled" class="form-control u-min-height100 u-console" name="v_ssl_key" id="v_ssl_key"><?= tohtml(trim($v_ssl_key, "'")) ?></textarea>
+						<textarea x-bind:disabled="letsEncryptEnabled || actalisEnabled" class="form-control u-min-height100 u-console" name="v_ssl_key" id="v_ssl_key"><?= tohtml(trim($v_ssl_key, "'")) ?></textarea>
 					</div>
 					<div class="u-mb20">
 						<label for="v_ssl_ca" class="form-label">
 							<?= tohtml( _("SSL Certificate Authority / Intermediate")) ?> <span class="optional">(<?= tohtml( _("Optional")) ?>)</span>
 						</label>
-						<textarea x-bind:disabled="letsEncryptEnabled" class="form-control u-min-height100 u-console" name="v_ssl_ca" id="v_ssl_ca"><?= tohtml(trim($v_ssl_ca, "'")) ?></textarea>
+						<textarea x-bind:disabled="letsEncryptEnabled || actalisEnabled" class="form-control u-min-height100 u-console" name="v_ssl_ca" id="v_ssl_ca"><?= tohtml(trim($v_ssl_ca, "'")) ?></textarea>
 					</div>
 				</div>
 				<?php if ($v_ssl != "no") { ?>

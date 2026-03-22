@@ -114,6 +114,23 @@ if ($v_suspended == "yes") {
 $v_time = $data[$v_username]["TIME"];
 $v_date = $data[$v_username]["DATE"];
 
+$v_actalis_eab_kid = "";
+$v_actalis_eab_hmac = "";
+exec(
+	HESTIA_CMD . "v-list-actalis-user " . quoteshellarg($v_username) . " json",
+	$output,
+	$return_var,
+);
+
+if ($return_var === 0) {
+	$actalis_data = json_decode(implode("", $output), true);
+	if (is_array($actalis_data) && isset($actalis_data[$v_username])) {
+		$v_actalis_eab_kid = $actalis_data[$v_username]["EAB_KID"] ?? "";
+		$v_actalis_eab_hmac = $actalis_data[$v_username]["EAB_HMAC"] ? "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" : "";
+	}
+}
+unset($output);
+
 if (empty($v_phpcli)) {
 	$v_phpcli = substr(DEFAULT_PHP_VERSION, 4);
 }
@@ -554,6 +571,29 @@ if (!empty($_POST["save"])) {
 				$v_ns8 = str_replace("'", "", $v_ns8);
 			}
 		}
+	}
+
+	// Save Actalis EAB credentials
+	if (
+		isset($_POST["v_actalis_eab_kid"]) &&
+		isset($_POST["v_actalis_eab_hmac"]) &&
+		empty($_SESSION["error_msg"])
+	) {
+		exec(
+			HESTIA_CMD .
+				"v-update-actalis-eab " .
+				quoteshellarg($v_username) .
+				" " .
+				quoteshellarg($_POST["v_actalis_eab_kid"]) .
+				" " .
+				quoteshellarg($_POST["v_actalis_eab_hmac"]),
+			$output,
+			$return_var,
+		);
+		check_return_code($return_var, $output);
+		unset($output);
+		$v_actalis_eab_kid = $_POST["v_actalis_eab_kid"];
+		$v_actalis_eab_hmac = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
 	}
 
 	// Set success message

@@ -872,7 +872,6 @@ if (!empty($_POST["save"])) {
 		$v_ssl_key = "";
 		$v_ssl_ca = "";
 		$v_letsencrypt = "no";
-		$v_letsencrypt_deleted = "yes";
 		$v_ssl = "no";
 		$restart_web = "yes";
 		$restart_proxy = "yes";
@@ -900,7 +899,6 @@ if (!empty($_POST["save"])) {
 		$v_ssl_key = "";
 		$v_ssl_ca = "";
 		$v_actalis = "no";
-		$v_actalis_deleted = "yes";
 		$v_ssl = "no";
 		$restart_web = "yes";
 		$restart_proxy = "yes";

@@ -126,7 +126,6 @@ if ($return_var === 0) {
 	$actalis_data = json_decode(implode("", $output), true);
 	if (is_array($actalis_data) && isset($actalis_data[$v_username])) {
 		$v_actalis_eab_kid = $actalis_data[$v_username]["EAB_KID"] ?? "";
-		$v_actalis_eab_hmac = $actalis_data[$v_username]["EAB_HMAC"] ? "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" : "";
 	}
 }
 unset($output);
@@ -579,21 +578,36 @@ if (!empty($_POST["save"])) {
 		isset($_POST["v_actalis_eab_hmac"]) &&
 		empty($_SESSION["error_msg"])
 	) {
-		exec(
-			HESTIA_CMD .
-				"v-update-actalis-eab " .
-				quoteshellarg($v_username) .
-				" " .
-				quoteshellarg($_POST["v_actalis_eab_kid"]) .
-				" " .
-				quoteshellarg($_POST["v_actalis_eab_hmac"]),
-			$output,
-			$return_var,
-		);
-		check_return_code($return_var, $output);
-		unset($output);
-		$v_actalis_eab_kid = $_POST["v_actalis_eab_kid"];
-		$v_actalis_eab_hmac = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
+		$new_actalis_eab_kid = trim($_POST["v_actalis_eab_kid"]);
+		$new_actalis_eab_hmac = trim($_POST["v_actalis_eab_hmac"]);
+
+		$kid_changed = $new_actalis_eab_kid !== $v_actalis_eab_kid;
+		$hmac_provided = $new_actalis_eab_hmac !== "";
+
+		// Check if changed kid or hmac is true
+		if (($kid_changed && !$hmac_provided) || (!$kid_changed && $hmac_provided)) {
+			$_SESSION["error_msg"] = _(
+				"To update Actalis EAB credentials, you must provide both the EAB Key ID and the matching HMAC key."
+			);
+		}
+
+		if (empty($_SESSION["error_msg"]) && $kid_changed && $hmac_provided) {
+			exec(
+				HESTIA_CMD .
+					"v-update-actalis-eab " .
+					quoteshellarg($v_username) .
+					" " .
+					quoteshellarg($new_actalis_eab_kid) .
+					" " .
+					quoteshellarg($new_actalis_eab_hmac),
+				$output,
+				$return_var,
+			);
+			check_return_code($return_var, $output);
+			unset($output);
+			$v_actalis_eab_kid = $_POST["v_actalis_eab_kid"];
+			$v_actalis_eab_hmac = "";
+		}
 	}
 
 	// Set success message

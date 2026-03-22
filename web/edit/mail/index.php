@@ -529,6 +529,7 @@ if (!empty($_POST["save"]) && !empty($_GET["domain"]) && empty($_GET["account"])
 		$v_ssl_key = "";
 		$v_ssl_ca = "";
 		$v_letsencrypt = "no";
+		$v_letsencrypt_deleted = "yes";
 		$v_ssl = "no";
 		$restart_mail = "yes";
 	}
@@ -577,6 +578,7 @@ if (!empty($_POST["save"]) && !empty($_GET["domain"]) && empty($_GET["account"])
 	if (
 		$v_ssl == "no" &&
 		!empty($_POST["v_ssl"]) &&
+		empty($v_letsencrypt_deleted) &&
 		empty($_SESSION["error_msg"])
 	) {
 		if (empty($_POST["v_ssl_crt"])) {

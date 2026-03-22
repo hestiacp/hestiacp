@@ -71,7 +71,7 @@
 			<?php if ($v_ssl_type == "actalis") { ?>
 				<div class="alert alert-info u-mb10" role="alert">
 					<i class="fas fa-exclamation"></i>
-					<p><?= _("If the aliases changes, Actalis will obtain a new SSL certificate.") ?></p>
+					<p><?= tohtml( _("If the aliases changes, Actalis will obtain a new SSL certificate.")) ?></p>
 				</div>
 			<?php } ?>
 			<div class="u-mb20">
@@ -179,18 +179,18 @@
 			</div>
 			<div x-cloak x-show="sslEnabled" class="u-pl30">
 				<div class="form-check u-mb10">
-					<label for="v_ssl_type" class="form-label"><?= _("SSL Provider") ?></label>
+					<label for="v_ssl_type" class="form-label"><?= tohtml(_("SSL Provider")) ?></label>
 					<select class="form-select js-ssl-type-select" name="v_ssl_type" id="v_ssl_type" x-model="sslType" x-on:change="
 						showCertificates = $event.target.value === '';
 						letsEncryptEnabled = $event.target.value === 'letsencrypt';
 						actalisEnabled = $event.target.value === 'actalis';
 					">
-						<option value="" <?= $v_ssl_type == "" ? 'selected' : '' ?>><?= _("-- Default (Manual Certificate) --") ?></option>
-						<option value="letsencrypt" name="v_letsencrypt" id="v_letsencrypt" <?= $v_ssl_type == "letsencrypt" ? 'selected' : '' ?>><?= _("Let's Encrypt") ?></option>
+						<option value="" <?= $v_ssl_type == "" ? 'selected' : '' ?>><?= tohtml(_("-- Default (Manual Certificate) --")) ?></option>
+						<option value="letsencrypt" name="v_letsencrypt" id="v_letsencrypt" <?= $v_ssl_type == "letsencrypt" ? 'selected' : '' ?>><?= tohtml(_("Let's Encrypt")) ?></option>
 						<option value="actalis" name="v_actalis" id="v_actalis"
 							<?= $v_ssl_type == "actalis" ? 'selected' : '' ?>
 							<?= !$has_actalis_eab ? 'disabled' : '' ?>
-						><?= _("Actalis") ?><?= !$has_actalis_eab ? ' (' . _("Configure EAB credentials in your profile first") . ')' : '' ?></option>
+						><?= tohtml(_("Actalis")) ?><?= !$has_actalis_eab ? ' (' . tohtml(_("Configure EAB credentials in your profile first")) . ')' : '' ?></option>
 					</select>
 				</div>
 				<div class="form-check u-mb10">

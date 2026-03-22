@@ -254,7 +254,7 @@
 						</button>
 					<?php } ?>
 					<div class="u-mt20">
-						<h2 class="form-section-title"><?= _("Actalis ACME Credentials") ?></h2>
+						<h2 class="form-section-title"><?= tohtml(_("Actalis ACME Credentials")) ?></h2>
 						<p class="u-mb10">
 							<?= tohtml(_("Used only to enable Actalis SSL issuance for this user. Not required for Let's Encrypt.")) ?>
 						</p>

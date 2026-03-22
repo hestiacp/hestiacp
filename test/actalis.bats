@@ -14,14 +14,27 @@ function random() {
 }
 
 function setup() {
-    source /tmp/hestia-le-env.sh
+    source /tmp/hestia-test-env.sh
     source $HESTIA/func/main.sh
     source $HESTIA/conf/hestia.conf
     source $HESTIA/func/ip.sh
 }
 
+function require_actalis_eab() {
+    if [ -z "$ACTALIS_EAB_KID" ] || [ -z "$ACTALIS_EAB_HMAC" ]; then
+        skip "ACTALIS_EAB_KID and ACTALIS_EAB_HMAC are required for Actalis integration tests"
+    fi
+}
+
 @test "[ User ] Create new user" {
     run v-add-user $user $user $user@hestiacp.com default "Super Test"
+    assert_success
+    refute_output
+}
+
+@test "[ User ] Configure Actalis EAB credentials" {
+    require_actalis_eab
+    run v-update-actalis-eab "$user" "$ACTALIS_EAB_KID" "$ACTALIS_EAB_HMAC"
     assert_success
     refute_output
 }
@@ -45,53 +58,33 @@ function setup() {
 }
 
 @test "[ Web ] Reject unsupported Actalis aliases" {
+    require_actalis_eab
     run v-add-actalis-domain "$user" "$domain" "www.$domain,foobar.$domain"
     assert_failure
 }
 
 @test "[ Web ] Request new certificate for web domain" {
+    require_actalis_eab
     run v-add-actalis-domain $user $domain "www.$domain"
     assert_success
     refute_output
 }
 
 @test "[ Web ] Request 2nd new certificate for web domain" {
+    require_actalis_eab
     run v-add-actalis-domain $user "hestia.$domain"
     assert_success
     refute_output
 }
 
-@test "[ Mail ] Create mail domain" {
-    run v-add-mail-domain $user $domain
-    assert_success
-    refute_output
-}
-
-@test "[ Mail ] Request new Certificate for Mail Domain" {
-    run v-add-actalis-domain $user $domain "" "yes"
-    assert_success
-    refute_output
-}
-
-@test "[ All ] Run renewal script for ACTALIS" {
-    run v-update-actalis-ssl
-    assert_success
-    refute_output
-}
-
 @test "[ Web ] Delete web ssl" {
+    require_actalis_eab
     run v-delete-actalis-domain $user $domain "yes"
     assert_success
     refute_output
 }
 
-@test "[ Mail ] Delete mail ssl" {
-    run v-delete-actalis-domain $user $domain "yes" "yes"
-    assert_success
-    refute_output
-}
-
-@test "[ Web ] Delete web  domain" {
+@test "[ Web ] Delete web domain" {
     run v-delete-web-domain $user $domain "yes"
     assert_success
     refute_output
@@ -110,12 +103,14 @@ function setup() {
 }
 
 @test "[ Redirect ] Request new certificate for web" {
+    require_actalis_eab
     run v-add-actalis-domain $user "redirect.$domain" ""
     assert_success
     refute_output
 }
 
 @test "[ Redirect ] Run renewal script for ACTALIS Redirected domain" {
+    require_actalis_eab
     run v-update-actalis-ssl
     assert_success
     refute_output

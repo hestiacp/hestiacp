@@ -235,6 +235,23 @@ if (!empty($_POST["save"])) {
 		$_SESSION["error_msg"] = _("Configure Actalis EAB credentials in your profile first.");
 	}
 
+	// Pre-validate aliases for Actalis before applying any changes
+	if (!empty($_POST["v_actalis"]) && empty($_SESSION["error_msg"])) {
+		$waliases_check = preg_replace("/\n/", " ", $_POST["v_aliases"]);
+		$waliases_check = preg_replace("/,/", " ", $waliases_check);
+		$waliases_check = preg_replace("/\s+/", " ", $waliases_check);
+		$waliases_check = trim($waliases_check);
+
+		$aliases_check = array_values(array_filter(explode(" ", $waliases_check)));
+		$allowed_alias = "www." . $v_domain;
+
+		if (count($aliases_check) > 1) {
+			$_SESSION["error_msg"] = _("Actalis ACME only supports a single domain plus www.");
+		} elseif (count($aliases_check) === 1 && $aliases_check[0] !== $allowed_alias) {
+			$_SESSION["error_msg"] = _("Actalis ACME only supports the www alias.");
+		}
+	}
+
 	// Change web domain IP
 	$v_newip = "";
 	$v_newip_public = "";

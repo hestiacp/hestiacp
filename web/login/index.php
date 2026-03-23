@@ -113,24 +113,8 @@ function authenticate_user($user, $password, $twofa = "") {
 	unset($_SESSION["login"]);
 	if (verify_csrf($_POST, true)) {
 		$v_user = quoteshellarg($user);
-		$ip = $_SERVER["REMOTE_ADDR"];
+		$ip = get_real_user_ip();
 		$user_agent = $_SERVER["HTTP_USER_AGENT"];
-
-		if (
-			!empty($_SERVER["HTTP_CF_CONNECTING_IP"]) &&
-			filter_var(
-				$_SERVER["HTTP_CF_CONNECTING_IP"],
-				FILTER_VALIDATE_IP,
-				FILTER_FLAG_IPV4 | FILTER_FLAG_IPV6,
-			)
-		) {
-			$ip = $_SERVER["HTTP_CF_CONNECTING_IP"];
-		}
-
-		// Handling IPv4-mapped IPv6 address
-		if (strpos($ip, ":") === 0 && strpos($ip, ".") > 0) {
-			$ip = substr($ip, strrpos($ip, ":") + 1); // Strip IPv4 Compatibility notation
-		}
 
 		$v_ip = quoteshellarg($ip);
 		$v_user_agent = quoteshellarg($user_agent);

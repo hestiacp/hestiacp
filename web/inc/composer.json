@@ -2,6 +2,7 @@
     "require": {
         "phpmailer/phpmailer": "7.0.2",
         "hestiacp/phpquoteshellarg": "1.1.0",
-        "robthree/twofactorauth": "3.0.3"
+        "robthree/twofactorauth": "3.0.3",
+        "divinity76/cloudflare-ip-validator": "1.0.0"
     }
 }

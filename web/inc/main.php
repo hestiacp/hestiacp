@@ -37,30 +37,7 @@ function destroy_sessions() {
 $i = 0;
 
 // Saving user IPs to the session for preventing session hijacking
-$user_combined_ip = "";
-if (isset($_SERVER["REMOTE_ADDR"])) {
-	$user_combined_ip = $_SERVER["REMOTE_ADDR"];
-}
-if (isset($_SERVER["HTTP_CLIENT_IP"])) {
-	$user_combined_ip .= "|" . $_SERVER["HTTP_CLIENT_IP"];
-}
-if (isset($_SERVER["HTTP_X_FORWARDED_FOR"])) {
-	$user_combined_ip .= "|" . $_SERVER["HTTP_X_FORWARDED_FOR"];
-}
-if (isset($_SERVER["HTTP_FORWARDED_FOR"])) {
-	$user_combined_ip .= "|" . $_SERVER["HTTP_FORWARDED_FOR"];
-}
-if (isset($_SERVER["HTTP_X_FORWARDED"])) {
-	$user_combined_ip .= "|" . $_SERVER["HTTP_X_FORWARDED"];
-}
-if (isset($_SERVER["HTTP_FORWARDED"])) {
-	$user_combined_ip .= "|" . $_SERVER["HTTP_FORWARDED"];
-}
-if (isset($_SERVER["HTTP_CF_CONNECTING_IP"])) {
-	if (!empty($_SERVER["HTTP_CF_CONNECTING_IP"])) {
-		$user_combined_ip = $_SERVER["HTTP_CF_CONNECTING_IP"];
-	}
-}
+$user_combined_ip = get_real_user_ip();
 
 if (!isset($_SESSION["user_combined_ip"])) {
 	$_SESSION["user_combined_ip"] = $user_combined_ip;

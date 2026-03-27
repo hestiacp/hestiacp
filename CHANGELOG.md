@@ -2,6 +2,34 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.9.5] - Service Release
+
+### Features
+
+- Add support for PHP 8.4 in Quick Install apps
+- Improve security and performance optimizations
+
+### Bug fixes
+
+- Fix: 421 error on all web and mail domains after Apache 2.4.64 update
+- Fix: Set default SOA retry value to 1800 for DENIC compliance
+- Fix domain alias replacement logic when changing web domain
+- Fix ipv4_cidr validation
+- Update magento.tpl / magento.stpl for healthcheck support
+- Add: Show user and bandwidth quota in the dashboard
+- Sort backup file list before retention check
+- Improve logging of Spamhaus DQS lookups without exposing query key
+- Bump Roundcube to version 1.6.11
+- Remove the apache2-suexec-pristine package from the Debian installer
+- Fix domain redirects not being suspended
+- Ensure newline at end of hestiaweb user crontab
+- Allow slash when adding username to smtp relay
+- Prevent empty user variable from affecting multiple scripts
+- Fix editing Panel Cronjobs for hestiaweb
+- Fix missing dependency proftpd-mod-crypto on Ubuntu
+- Fix the way Hestia validates chain certificate
+- Class change for latest version of file manager
+
 ## [1.9.4] - Service release
 
 - Dropping support for Ubuntu 20.04 for new installs

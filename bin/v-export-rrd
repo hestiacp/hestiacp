@@ -193,8 +193,7 @@ case $chart in
 		generate_net_table
 		;;
 
-	\
-		*)
+	*)
 		echo "Does not exists"
 		exit 1
 		;;

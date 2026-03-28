@@ -159,12 +159,12 @@ psql_connect() {
 psql_query() {
 	sql_tmp=$(mktemp)
 	echo "$1" > $sql_tmp
-	psql -h $HOST -U $USER -f "$sql_tmp" 2> /dev/null
+	psql -h $HOST -U $USER -p $PORT -f "$sql_tmp" 2> /dev/null
 	rm -f $sql_tmp
 }
 
 psql_dump() {
-	pg_dump -h $HOST -U $USER -c --inserts -O -x -f $1 $2 2> /tmp/e.psql
+	pg_dump -h $HOST -U $USER -p $PORT -c --inserts -O -x -f $1 $2 2> /tmp/e.psql
 	if [ '0' -ne "$?" ]; then
 		rm -rf $tmpdir
 		if [ "$notify" != 'no' ]; then

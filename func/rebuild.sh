@@ -848,6 +848,8 @@ rebuild_pgsql_database() {
 	host_str=$(grep "HOST='$HOST'" $HESTIA/conf/pgsql.conf)
 	parse_object_kv_list "$host_str"
 	export PGPASSWORD="$PASSWORD"
+	
+	if [ -z $PORT ]; then PORT=5432; fi
 	if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ] || [ -z $TPL ]; then
 		echo "Error: postgresql config parsing failed"
 		if [ -n "$SENDMAIL" ]; then
@@ -858,7 +860,7 @@ rebuild_pgsql_database() {
 	fi
 
 	query='SELECT VERSION()'
-	psql -h $HOST -U $USER -c "$query" > /dev/null 2>&1
+	psql -h $HOST -U $USER -p $PORT -c "$query" > /dev/null 2>&1
 	if [ '0' -ne "$?" ]; then
 		echo "Error: Connection failed"
 		if [ -n "$SENDMAIL" ]; then
@@ -870,10 +872,10 @@ rebuild_pgsql_database() {
 	fi
 
 	query="CREATE ROLE $DBUSER"
-	psql -h $HOST -U $USER -c "$query" > /dev/null 2>&1
+	psql -h $HOST -U $USER -p $PORT -c "$query" > /dev/null 2>&1
 
 	query="UPDATE pg_authid SET rolpassword='$MD5' WHERE rolname='$DBUSER'"
-	psql -h $HOST -U $USER -c "$query" > /dev/null 2>&1
+	psql -h $HOST -U $USER -p $PORT -c "$query" > /dev/null 2>&1
 
 	query="CREATE DATABASE $DB OWNER $DBUSER"
 	if [ "$TPL" = 'template0' ]; then
@@ -881,13 +883,13 @@ rebuild_pgsql_database() {
 	else
 		query="$query TEMPLATE $TPL"
 	fi
-	psql -h $HOST -U $USER -c "$query" > /dev/null 2>&1
+	psql -h $HOST -U $USER -p $PORT -c "$query" > /dev/null 2>&1
 
 	query="GRANT ALL PRIVILEGES ON DATABASE $DB TO $DBUSER"
-	psql -h $HOST -U $USER -c "$query" > /dev/null 2>&1
+	psql -h $HOST -U $USER -p $PORT -c "$query" > /dev/null 2>&1
 
 	query="GRANT CONNECT ON DATABASE template1 to $DBUSER"
-	psql -h $HOST -U $USER -c "$query" > /dev/null 2>&1
+	psql -h $HOST -U $USER -p $PORT -c "$query" > /dev/null 2>&1
 }
 
 # Import MySQL dump

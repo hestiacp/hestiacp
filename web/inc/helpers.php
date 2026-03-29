@@ -95,7 +95,10 @@ function check_local_ip($addr) {
 function get_real_user_ip() {
 	$ip = "";
 
-	if(!empty($_SERVER["REMOTE_ADDR"]) && filter_var($_SERVER["REMOTE_ADDR"], FILTER_VALIDATE_IP)) {
+	if (
+		!empty($_SERVER["REMOTE_ADDR"]) &&
+		filter_var($_SERVER["REMOTE_ADDR"], FILTER_VALIDATE_IP)
+	) {
 		$ip = $_SERVER["REMOTE_ADDR"];
 	}
 

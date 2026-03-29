@@ -93,12 +93,20 @@ function check_local_ip($addr) {
 }
 
 function get_real_user_ip() {
-	$ip = $_SERVER["REMOTE_ADDR"];
+	$ip = "";
+
+	if (
+		!empty($_SERVER["REMOTE_ADDR"]) &&
+		filter_var($_SERVER["REMOTE_ADDR"], FILTER_VALIDATE_IP)
+	) {
+		$ip = $_SERVER["REMOTE_ADDR"];
+	}
+
 	if (
 		!empty($_SERVER["HTTP_CF_CONNECTING_IP"]) &&
 		filter_var($_SERVER["HTTP_CF_CONNECTING_IP"], FILTER_VALIDATE_IP) &&
-		filter_var($_SERVER["REMOTE_ADDR"], FILTER_VALIDATE_IP) &&
-		CloudflareIpValidator::isCloudflareIp($_SERVER["REMOTE_ADDR"])
+		!empty($ip) &&
+		CloudflareIpValidator::isCloudflareIp($ip)
 	) {
 		$ip = $_SERVER["HTTP_CF_CONNECTING_IP"];
 	}

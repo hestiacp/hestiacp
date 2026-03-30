@@ -78,7 +78,7 @@ if (isset($_SESSION["user"])) {
 		$_SESSION["token"] = $token;
 	}
 	$username = $_SESSION["user"];
-	if ($_SESSION["look"] != "") {
+	if (!empty($_SESSION["look"])) {
 		$username = $_SESSION["look"];
 	}
 
@@ -137,7 +137,7 @@ if (isset($_SESSION["look"]) && $_SESSION["look"] != "" && $_SESSION["userContex
 if (empty($user_plain)) {
 	$user_plain = "";
 }
-if (empty($_SESSION["look"])) {
+if (!isset($_SESSION["look"])) {
 	$_SESSION["look"] = "";
 }
 

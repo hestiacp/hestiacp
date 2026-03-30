@@ -3,12 +3,12 @@
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
 			<a class="button button-secondary button-back js-button-back" href="/list/firewall/ipset/">
-				<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
+				<i class="fas fa-arrow-left icon-blue"></i><?= tohtml( _("Back")) ?>
 			</a>
 		</div>
 		<div class="toolbar-buttons">
 			<button type="submit" class="button" form="main-form">
-				<i class="fas fa-floppy-disk icon-purple"></i><?= _("Save") ?>
+				<i class="fas fa-floppy-disk icon-purple"></i><?= tohtml( _("Save")) ?>
 			</button>
 		</div>
 	</div>
@@ -18,7 +18,7 @@
 <div class="container">
 
 	<form id="main-form" name="v_add_ipset" method="post">
-		<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
+		<input type="hidden" name="token" value="<?= tohtml($_SESSION["token"]) ?>">
 		<input type="hidden" name="ok" value="Add">
 
 		<?php
@@ -65,41 +65,41 @@
 		?>
 
 		<div class="form-container">
-			<h1 class="u-mb20"><?= _("Add IPset IP List for Firewall") ?></h1>
+			<h1 class="u-mb20"><?= tohtml( _("Add IPset IP List for Firewall")) ?></h1>
 			<?php show_alert_message($_SESSION); ?>
 			<div class="u-mb10">
-				<label for="v_ipname" class="form-label"><?= _("IP List Name") ?></label>
-				<input type="text" class="form-control" name="v_ipname" id="v_ipname" maxlength="255" value="<?= htmlentities(trim($v_ipname, "'")) ?>">
+				<label for="v_ipname" class="form-label"><?= tohtml( _("IP List Name")) ?></label>
+				<input type="text" class="form-control" name="v_ipname" id="v_ipname" maxlength="255" value="<?= tohtml(trim($v_ipname, "'")) ?>">
 			</div>
 			<div class="u-mb10">
 				<label for="v_datasource" class="form-label">
-					<?= _("Data Source") ?> <span class="optional">(<?= _("URL, script or file") ?>)</span>
+					<?= tohtml( _("Data Source")) ?> <span class="optional">(<?= tohtml( _("URL, script or file")) ?>)</span>
 				</label>
 				<div class="u-pos-relative">
 					<select
 						class="form-select js-datasource-select"
 						tabindex="-1"
 						onchange="this.nextElementSibling.value=this.value"
-						data-country-iplists="<?= htmlspecialchars(json_encode($country_iplists), ENT_QUOTES, "UTF-8") ?>"
-						data-blacklist-iplists="<?= htmlspecialchars(json_encode($blacklist_iplists), ENT_QUOTES, "UTF-8") ?>"
+						data-country-iplists="<?= tohtml(json_encode($country_iplists)) ?>"
+						data-blacklist-iplists="<?= tohtml(json_encode($blacklist_iplists)) ?>"
 					>
-						<option value=""><?= _("Clear") ?></option>
+						<option value=""><?= tohtml( _("Clear")) ?></option>
 					</select>
-					<input type="text" class="form-control list-editor" name="v_datasource" id="v_datasource" maxlength="255" value="<?= htmlentities(trim($v_datasource, "'")) ?>">
+					<input type="text" class="form-control list-editor" name="v_datasource" id="v_datasource" maxlength="255" value="<?= tohtml(trim($v_datasource, "'")) ?>">
 				</div>
 			</div>
 			<div class="u-mb10">
-				<label for="v_ipver" class="form-label"><?= _("IP Version") ?></label>
+				<label for="v_ipver" class="form-label"><?= tohtml( _("IP Version")) ?></label>
 				<select class="form-select" name="v_ipver" id="v_ipver">
 					<option value="v4" <?php if ((!empty($v_ipver)) && ( $v_ipver == "'v4'" )) echo 'selected'?>>IPv4</option>
 					<option value="v6" <?php if ((!empty($v_ipver)) && ( $v_ipver == "'v6'" )) echo 'selected'?>>IPv6</option>
 				</select>
 			</div>
 			<div class="u-mb10">
-				<label for="v_autoupdate" class="form-label"><?= _("Auto Update") ?></label>
+				<label for="v_autoupdate" class="form-label"><?= tohtml( _("Auto Update")) ?></label>
 				<select class="form-select" name="v_autoupdate" id="v_autoupdate">
-					<option value="yes" <?php if ((!empty($v_autoupdate)) && ( $v_autoupdate == "'yes'" )) echo 'selected'?>><?= _("Yes") ?></option>
-					<option value="no" <?php if ((!empty($v_autoupdate)) && ( $v_autoupdate == "'no'" )) echo 'selected'?>><?= _("No") ?></option>
+					<option value="yes" <?php if ((!empty($v_autoupdate)) && ( $v_autoupdate == "'yes'" )) echo 'selected'?>><?= tohtml( _("Yes")) ?></option>
+					<option value="no" <?php if ((!empty($v_autoupdate)) && ( $v_autoupdate == "'no'" )) echo 'selected'?>><?= tohtml( _("No")) ?></option>
 				</select>
 			</div>
 		</div>

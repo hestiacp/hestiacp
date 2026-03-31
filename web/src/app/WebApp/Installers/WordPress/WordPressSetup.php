@@ -15,52 +15,8 @@ class WordpressSetup extends BaseSetup {
 		"thumbnail" => "wp-thumb.png",
 	];
 
-    protected array $config = [
-        'form' => [
-            'site_name' => ['type' => 'text', 'value' => 'WordPress Blog'],
-            'username' => ['value' => 'wpadmin'],
-            'email' => 'text',
-            'password' => 'password',
-            'language' => [
-                'type' => 'select',
-                'value' => 'en_US',
-                'options' => [
-                    'cs_CZ' => 'Czech',
-                    'de_DE' => 'German',
-                    'es_ES' => 'Spanish',
-                    'en_US' => 'English',
-                    'fr_FR' => 'French',
-                    'hu_HU' => 'Hungarian',
-                    'it_IT' => 'Italian',
-                    'ja' => 'Japanese',
-                    'nl_NL' => 'Dutch',
-                    'pt_PT' => 'Portuguese',
-                    'pt_BR' => 'Portuguese (Brazil)',
-                    'sk_SK' => 'Slovak',
-                    'sr_RS' => 'Serbian',
-                    'sv_SE' => 'Swedish',
-                    'tr_TR' => 'Turkish',
-                    'ru_RU' => 'Russian',
-                    'uk' => 'Ukrainian',
-                    'zh-CN' => 'Simplified Chinese (China)',
-                    'zh_TW' => 'Traditional Chinese',
-                ],
-            ],
-        ],
-        'database' => true,
-        'resources' => [
-            'wp' => ['src' => 'https://wordpress.org/latest.tar.gz'],
-        ],
-        'server' => [
-            'nginx' => [
-                'template' => 'wordpress',
-            ],
-            'php' => [
-                'supported' => ['7.4', '8.0', '8.1', '8.2', '8.3', '8.4', '8.5'],
-            ],
-        ],
-    ];
-
+	protected array $config = [
+		"form" => [
 			"site_name" => ["type" => "text", "value" => "WordPress Blog"],
 			"username" => ["value" => "wpadmin"],
 			"email" => "text",
@@ -101,7 +57,7 @@ class WordpressSetup extends BaseSetup {
 				"template" => "wordpress",
 			],
 			"php" => [
-				"supported" => ["7.4", "8.0", "8.1", "8.2", "8.3"],
+				"supported" => ["7.4", "8.0", "8.1", "8.2", "8.3", "8.4", "8.5"],
 			],
 		],
 	];

@@ -76,11 +76,13 @@ if (!in_array($rtype, $known_types, true)) {
 	if (!$valid) {
 		$error_message = "invalid AAAA record format";
 	}
-} elseif ($rtype === "NS" || $rtype === "CNAME" || $rtype === "PTR") {
+} elseif ($rtype === "NS" || $rtype === "PTR") {
 	$valid = $validateDomain($record);
 	if (!$valid) {
 		$error_message = "invalid $rtype record format";
 	}
+} elseif ($rtype === "CNAME") {
+	$valid = filter_var(rtrim($record, "."), FILTER_VALIDATE_DOMAIN);
 } elseif ($rtype === "MX") {
 	$valid = $validateDomain($record);
 	if (!$valid) {

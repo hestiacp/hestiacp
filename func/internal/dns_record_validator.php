@@ -83,6 +83,9 @@ if (!in_array($rtype, $known_types, true)) {
 	}
 } elseif ($rtype === "CNAME") {
 	$valid = filter_var(rtrim($record, "."), FILTER_VALIDATE_DOMAIN);
+	if (!$valid) {
+		$error_message = "invalid CNAME record format";
+	}
 } elseif ($rtype === "MX") {
 	$valid = $validateDomain($record);
 	if (!$valid) {

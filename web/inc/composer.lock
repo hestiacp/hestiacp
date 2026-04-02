@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d75dd082b587a517bf30598cfbcefb90",
+    "content-hash": "fad6bd8a45b9a059be7fc0bbdf1f1168",
     "packages": [
         {
             "name": "divinity76/cloudflare-ip-validator",

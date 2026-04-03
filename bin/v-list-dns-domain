@@ -19,7 +19,7 @@ format=${3-shell}
 # shellcheck source=/etc/hestiacp/hestia.conf
 source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
-source $HESTIA/func/main.sh
+source "$HESTIA/func/main.sh"
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
@@ -28,6 +28,7 @@ json_list() {
 	echo '{'
 	echo '    "'$DOMAIN'": {
         "IP": "'$IP'",
+        "IP6": "'$IP6'",
         "TPL": "'$TPL'",
         "TTL": "'$TTL'",
         "EXP": "'$EXP'",
@@ -47,6 +48,7 @@ json_list() {
 shell_list() {
 	echo "DOMAIN:         $DOMAIN"
 	echo "IP:             $IP"
+	echo "IP6:            $IP6"
 	echo "TEMPLATE:       $TPL"
 	echo "TTL:            $TTL"
 	echo "EXP:            $EXP"
@@ -61,15 +63,20 @@ shell_list() {
 
 # PLAIN list function
 plain_list() {
-	echo -ne "$DOMAIN\t$IP\t$TPL\t$TTL\t$EXP\t$SOA\t$SERIAL\t$DNSSEC\t$RECORDS\t"
+	echo -ne "$DOMAIN\t$IP\t$IP6\t$TPL\t$TTL\t$EXP\t$SOA\t$SERIAL\t$DNSSEC\t$RECORDS\t"
 	echo -e "$SUSPENDED\t$TIME\t$DATE"
 }
 
 # CSV list function
 csv_list() {
-	echo "DOMAIN,IP,TPL,TTL,EXP,SOA,SERIAL,DNSSEC,RECORDS,SUSPENDED,TIME,DATE"
-	echo -n "$DOMAIN,$IP,$TPL,$TTL,$EXP,$SOA,$SERIAL,$DNSSEC,$RECORDS,$SUSPENDED,"
+	echo "DOMAIN,IP,IP6,TPL,TTL,EXP,SOA,SERIAL,DNSSEC,RECORDS,SUSPENDED,TIME,DATE"
+	echo -n "$DOMAIN,$IP,$IP6,$TPL,$TTL,$EXP,$SOA,$SERIAL,$DNSSEC,$RECORDS,$SUSPENDED,"
 	echo "$TIME,$DATE"
+}
+
+# DOMAIN ONLY list (Simple list, only domain names)
+only_domain_list() {
+	echo "$DOMAIN"
 }
 
 #----------------------------------------------------------#
@@ -86,7 +93,7 @@ is_object_valid 'dns' 'DOMAIN' "$domain"
 #----------------------------------------------------------#
 
 # Parsing domain
-parse_object_kv_list $(grep "DOMAIN='$domain'" $USER_DATA/dns.conf)
+parse_object_kv_list $(grep "DOMAIN='$domain'" "$USER_DATA/dns.conf")
 
 # Listing data
 case $format in
@@ -94,6 +101,7 @@ case $format in
 	plain) plain_list ;;
 	csv) csv_list ;;
 	shell) shell_list ;;
+	list) only_domain_list ;;
 esac
 
 #----------------------------------------------------------#

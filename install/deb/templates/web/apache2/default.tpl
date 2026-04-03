@@ -4,7 +4,7 @@
 # https://hestiacp.com/docs/server-administration/web-templates.html      #
 #=========================================================================#
 
-<VirtualHost %ip%:%web_port%>
+<VirtualHost%<i4 %web_ipv4%:%web_port%i4>%%<i6 %web_ipv6%:%web_port%i6>%>
 
     ServerName %domain_idn%
     %alias_string%
@@ -39,6 +39,12 @@
     </IfModule>
     <IfModule mpm_itk.c>
         AssignUserID %user% %group%
+    </IfModule>
+	<IfModule mod_remoteip.c>
+        RemoteIPHeader X-Real-IP
+        RemoteIPInternalProxy 127.0.0.1
+        RemoteIPInternalProxy %web_ipv4%
+        RemoteIPInternalProxy %web_ipv6%
     </IfModule>
 
     IncludeOptional %home%/%user%/conf/web/%domain%/%web_system%.conf_*

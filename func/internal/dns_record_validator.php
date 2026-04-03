@@ -44,8 +44,12 @@ $validateInt = static function ($value, $min, $max) {
 		"options" => ["min_range" => $min, "max_range" => $max],
 	]);
 };
-$validateDomain = static function ($value) {
-	return filter_var(rtrim($value, "."), FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME);
+$validateDomain = static function ($value, $filter_flag_hostname = true) {
+	if ($filter_flag_hostname == true) {
+		return filter_var(rtrim($value, "."), FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME);
+	} else {
+		return filter_var(rtrim($value, "."), FILTER_VALIDATE_DOMAIN);
+	}
 };
 $validateHex = static function ($value) {
 	return preg_match('/^[A-Fa-f0-9]+$/', $value) === 1;
@@ -76,8 +80,13 @@ if (!in_array($rtype, $known_types, true)) {
 	if (!$valid) {
 		$error_message = "invalid AAAA record format";
 	}
-} elseif ($rtype === "NS" || $rtype === "CNAME" || $rtype === "PTR") {
+} elseif ($rtype === "NS" || $rtype === "PTR") {
 	$valid = $validateDomain($record);
+	if (!$valid) {
+		$error_message = "invalid $rtype record format";
+	}
+} elseif ($rtype === "CNAME") {
+	$valid = $validateDomain($record, false);
 	if (!$valid) {
 		$error_message = "invalid $rtype record format";
 	}

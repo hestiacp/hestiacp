@@ -2,13 +2,13 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<a class="button button-secondary button-back js-button-back" href="/add/webapp/?<?= tohtml(http_build_query(["domain" => $v_domain])) ?>">
-				<i class="fas fa-arrow-left icon-blue"></i><?= tohtml( _("Back")) ?>
+			<a class="button button-secondary button-back js-button-back" href="/add/webapp/?domain=<?= tohtml($v_domain) ?>">
+				<i class="fas fa-arrow-left icon-blue"></i><?= tohtml(_("Back")) ?>
 			</a>
 		</div>
 		<div class="toolbar-buttons">
 			<button type="submit" class="button" form="main-form">
-				<i class="fas fa-floppy-disk icon-purple"></i><?= tohtml( _("Save")) ?>
+				<i class="fas fa-floppy-disk icon-purple"></i><?= tohtml(_("Save")) ?>
 			</button>
 		</div>
 	</div>
@@ -20,19 +20,19 @@
 
 	<?php if (!empty($WebappInstaller->getOptions())) { ?>
 		<form id="main-form" method="POST" name="v_setup_webapp">
-			<input type="hidden" name="token" value="<?= tohtml($_SESSION["token"]) ?>">
+			<input type="hidden" name="token" value="<?=tohtml($_SESSION["token"]) ?>">
 			<input type="hidden" name="ok" value="true">
 
 			<div class="form-container">
-				<h1 class="u-mb20"><?= tohtml(sprintf(_("Install %s"), $WebappInstaller->applicationName())) ?></h1>
+				<h1 class="u-mb20"><?= tohtml(sprintf(_("Install %s"), tohtml($WebappInstaller->info()["name"]))) ?></h1>
 				<?php show_alert_message($_SESSION); ?>
 				<?php if (!$WebappInstaller->isDomainRootClean()) { ?>
 					<div class="alert alert-info u-mb10" role="alert">
 						<i class="fas fa-info"></i>
 						<div>
-							<p class="u-mb10"><?= tohtml( _("Data Loss Warning!")) ?></p>
-							<p class="u-mb10"><?= tohtml( _("Your web folder already has files uploaded to it. The installer will overwrite your files and/or the installation might fail.")) ?></p>
-							<p><?php echo sprintf(_("Please make sure ~/web/%s/public_html is empty!"), $v_domain); ?></p>
+							<p class="u-mb10"><?= tohtml(_("Data Loss Warning!")) ?></p>
+							<p class="u-mb10"><?= tohtml(_("Your web folder already has files uploaded to it. The installer will overwrite your files and/or the installation might fail.")) ?></p>
+							<p><?php echo sprintf(_("Please make sure ~/web/%s/public_html is empty!"), tohtml($v_domain)); ?></p>
 						</div>
 					</div>
 				<?php } ?>
@@ -60,7 +60,7 @@
 							<label for="<?= tohtml($field_name) ?>" class="form-label">
 								<?= tohtml($field_label) ?>
 								<?php if ($field_type == "password"): ?>
-									<button type="button" title="<?= tohtml( _("Generate")) ?>" class="u-unstyled-button u-ml5 js-generate-password">
+									<button type="button" title="<?= tohtml(_("Generate")) ?>" class="u-unstyled-button u-ml5 js-generate-password">
 										<i class="fas fa-arrows-rotate icon-green"></i>
 									</button>
 								<?php endif; ?>
@@ -72,7 +72,7 @@
 								<?php foreach ($form_control["options"] as $key => $option):
 									$key = !is_numeric($key) ? $key : $option;
 									$selected = (!empty($form_control["value"]) && $key == $form_control["value"]) ? "selected" : ""; ?>
-									<option value="<?= tohtml($key) ?>" <?= tohtml($selected) ?>>
+									<option value="<?= tohtml($key) ?>" <?= $selected ?>>
 										<?= tohtml($option) ?>
 									</option>
 								<?php endforeach; ?>
@@ -86,7 +86,7 @@
 									name="<?= tohtml($field_name) ?>"
 									id="<?= tohtml($field_name) ?>"
 									value="true"
-									<?= tohtml($checked) ?>
+									<?= $checked ?>
 								>
 								<label for="<?= tohtml($field_name) ?>">
 									<?= tohtml($field_label) ?>

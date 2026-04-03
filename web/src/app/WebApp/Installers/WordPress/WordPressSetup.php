@@ -15,7 +15,7 @@ class WordpressSetup extends BaseSetup {
 		"thumbnail" => "wp-thumb.png",
 	];
 
-	protected array $config = [
+	protected $config = [
 		"form" => [
 			"site_name" => ["type" => "text", "value" => "WordPress Blog"],
 			"username" => ["value" => "wpadmin"],

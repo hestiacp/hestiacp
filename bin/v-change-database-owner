@@ -113,7 +113,7 @@ case $TYPE in
 esac
 
 # Deleting tmpdir
-rm -rf $tmpdir
+rm -rf "$tmpdir"
 
 # Remove old database
 $BIN/v-unsuspend-database "$owner" "$database" > /dev/null 2>&1

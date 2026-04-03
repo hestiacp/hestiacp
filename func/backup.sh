@@ -30,11 +30,11 @@ local_backup() {
 	# Checking disk space
 	disk_usage=$(df $BACKUP | tail -n1 | tr ' ' '\n' | grep % | cut -f 1 -d %)
 	if [ "$disk_usage" -ge "$BACKUP_DISK_LIMIT" ]; then
-		rm -rf $tmpdir
+		rm -rf "$tmpdir"
 		rm -f $BACKUP/$user.log
 		sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
 		echo "Not enough disk space" | $SENDMAIL -s "$subj" "$email" "yes"
-		check_result "$E_DISK" "Not enough dsk space"
+		check_result "$E_DISK" "Not enough disk space"
 	fi
 
 	# Creating final tarball

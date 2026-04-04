@@ -63,6 +63,16 @@ is_object_valid 'user' 'USER' "$user"
 if [ -e "$USER_DATA/ssl/le.conf" ]; then
 	source "$USER_DATA/ssl/le.conf"
 fi
+KEY="$USER_DATA/ssl/user.key"
+if [ -e "$KEY" ] && [ -n "$MODULUS" ]; then
+        current_modulus=$(openssl rsa -in "$KEY" -modulus -noout \
+            | sed -e 's/^Modulus=//' | xxd -r -p | encode_base64)
+        if [ "$current_modulus" != "$MODULUS" ]; then
+            echo "Key mismatch detected, regenerating user key..."
+            rm -f "$KEY"
+            unset KID MODULUS EXPONENT THUMB
+        fi
+fi
 if [ -n "$KID" ]; then
 	exit
 fi
@@ -138,7 +148,13 @@ if [ ! -e "$USER_DATA/ssl/le.conf" ]; then
 	echo "KID='$kid'" >> $USER_DATA/ssl/le.conf
 	chmod 660 $USER_DATA/ssl/le.conf
 else
+	sed -i '/^EXPONENT=/d' $USER_DATA/ssl/le.conf
+	sed -i '/^MODULUS=/d' $USER_DATA/ssl/le.conf
+	sed -i '/^THUMB=/d' $USER_DATA/ssl/le.conf
 	sed -i '/^KID=/d' $USER_DATA/ssl/le.conf
+	echo "EXPONENT='$EXPONENT'" >> $USER_DATA/ssl/le.conf
+	echo "MODULUS='$MODULUS'" >> $USER_DATA/ssl/le.conf
+	echo "THUMB='$THUMB'" >> $USER_DATA/ssl/le.conf
 	echo "KID='$kid'" >> $USER_DATA/ssl/le.conf
 fi
 

@@ -1,0 +1,80 @@
+#!/bin/bash
+# info: add exim blacklist
+# options: none
+# example: v-add-exim-blacklist
+#
+# Creates /etc/exim4/blacklist if missing and inserts a custom deny rule
+# into /etc/exim4/exim4.conf.template under the `acl_check_rcpt:` section.
+set -euo pipefail
+
+# Ensure 'user' is defined to avoid "unbound variable" when main.sh checks it (set -u active)
+# Use ROOT_USER if set, otherwise default to 'root' to skip main.sh auto-loading behavior.
+user="${ROOT_USER:-root}"
+
+# Includes
+source $HESTIA/func/main.sh
+source_conf "$HESTIA/conf/hestia.conf"
+
+BLACKLIST_FILE="/etc/exim4/blacklist"
+TEMPLATE_FILE="/etc/exim4/exim4.conf.template"
+TMP_FILE="${TEMPLATE_FILE}.tmp"
+# Create blacklist file if it does not exist
+# Create blacklist file if it does not exist
+if [ ! -f "$BLACKLIST_FILE" ]; then
+    echo "# Hestia managed Exim blacklist (one entry per line)" > "$BLACKLIST_FILE"
+    chmod 640 "$BLACKLIST_FILE"
+    chown root:root "$BLACKLIST_FILE" 2>/dev/null || true
+    echo "Created $BLACKLIST_FILE"
+fi
+
+if [ ! -f "$TEMPLATE_FILE" ]; then
+    echo "Error: Exim template not found: $TEMPLATE_FILE"
+    exit 1
+fi
+
+# Detect if block already present (idempotent)
+if grep -q "deny[[:space:]]\+senders[[:space:]]\+=[[:space:]]*/etc/exim4/blacklist" "$TEMPLATE_FILE"; then
+    echo "Exim blacklist block already present in template; nothing to do."
+    exit 0
+fi
+
+# Insert the block after the `accept  hosts         = :` line inside acl_check_rcpt
+awk '
+    BEGIN { in_acl=0 }
+    /^acl_check_rcpt:/ { print; in_acl=1; next }
+    in_acl && $0 ~ /accept[[:space:]]+hosts[[:space:]]*=[[:space:]]*:/ {
+        print
+        print "  # CUSTOM BLACKLIST"
+        print "  deny    senders       = /etc/exim4/blacklist"
+        print "          message       = 550 Sender blocked by server policy"
+        print "  # END CUSTOM BLACKLIST"
+        in_acl=0
+        next
+    }
+    { print }
+' "$TEMPLATE_FILE" > "$TMP_FILE"
+
+mv -f "$TMP_FILE" "$TEMPLATE_FILE"
+chmod 640 "$TEMPLATE_FILE"
+chown root:root "$TEMPLATE_FILE" 2>/dev/null || true
+
+echo "Updated $TEMPLATE_FILE with custom blacklist block"
+
+# Restart Exim
+if command -v systemctl >/dev/null 2>&1; then
+    systemctl restart exim4 || {
+        echo "Warning: failed to restart exim4, check logs"
+        exit 1
+    }
+else
+    echo "Warning: systemctl not available, please restart exim4 manually"
+fi
+
+# Log action
+if [ -x "$BIN/v-log-action" ]; then
+    $BIN/v-log-action "system" "Info" "Mail" "Added Exim blacklist and updated exim4.conf.template"
+fi
+
+echo "Done."
+
+exit 0

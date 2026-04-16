@@ -565,10 +565,10 @@ update_domain_zone() {
 	echo "\$TTL $zone_ttl
 @    IN    SOA    $SOA.    root.$domain_idn. (
                                             $SERIAL
-                                            7200
+                                            14400
                                             $refresh
                                             1209600
-                                            180 )
+                                            300 )
 " > "$zn_conf"
 
 	while IFS= read -r line; do

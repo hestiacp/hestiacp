@@ -567,8 +567,8 @@ update_domain_zone() {
                                             $SERIAL
                                             14400
                                             $refresh
-                                            1209600
-                                            300 )
+                                            3600000
+                                            3600 )
 " > "$zn_conf"
 
 	while IFS= read -r line; do

@@ -1,8 +1,8 @@
 #!/bin/bash
 # info: list user IPs
-# options: USER [FORMAT]
+# options: USER [FORMAT] [FILTER]
 #
-# example: v-list-user-ips admin
+# example: v-list-user-ips admin 6
 #
 # This function for obtaining the list of available IP addresses.
 
@@ -11,70 +11,115 @@
 #----------------------------------------------------------#
 
 # Argument definition
-user="$1"
-format="${2-shell}"
+user=$1
+format=$2
+filter=$3
+filter_match=""
+
+[ -z "$format" ] && format="shell"
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
 source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
-source $HESTIA/func/main.sh
+source "$HESTIA/func/main.sh"
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
+
+# Read and filter IP config file
+read_ip_config() {
+	VERSION=""
+	source_conf "${HESTIA}/data/ips/$1"
+	if [ -z "$VERSION" ]; then
+		VERSION=4
+	fi
+	if [ -n "$filter" ]; then
+		if [ "$filter" = "$VERSION" ]; then
+			filter_match="y"
+		else
+			filter_match=""
+		fi
+	else
+		filter_match="y"
+	fi
+}
 
 # JSON list function
 json_list() {
 	echo '{'
-	ip_count="$(echo "$ips" | wc -l)"
+	ip_count=$(echo "$ips" | wc -l)
 	i=1
 	for IP in $ips; do
-		source_conf "$HESTIA/data/ips/$IP"
-		echo -n '    "'$IP'": {
-        "OWNER": "'$OWNER'",
-        "STATUS": "'$STATUS'",
-        "NAME": "'$NAME'",
-        "NAT": "'$NAT'"
-        }'
-		if [ "$i" -lt "$ip_count" ]; then
-			echo ','
-		else
-			echo
+		read_ip_config "$IP"
+		if [ -n "$filter_match" ]; then
+			if [ "$i" -ne 1 ]; then
+				echo ','
+			fi
+			echo -n '    "'$IP'": {
+			"OWNER": "'$OWNER'",
+			"STATUS": "'$STATUS'",
+			"NAME": "'$NAME'",
+			"NAT": "'$NAT'",
+			"VERSION": "'$VERSION'"
+			}'
+			((i++))
 		fi
-		((i++))
 	done
-	echo '}'
+	if [ "$i" -gt 1 ]; then
+		echo -e '\n}'
+	else
+		echo '}'
+	fi
 }
 
 # SHELL list function
 shell_list() {
-	echo "IP  NAT  OWNER   STATUS   NAME"
-	echo "--  ---  -----   ------   ---"
+	echo "IP  NAT  OWNER   STATUS   NAME   VER"
+	echo "--  ---  -----   ------   ----   ---"
 	for IP in $ips; do
-		source_conf "$HESTIA/data/ips/$IP"
+		read_ip_config "$IP"
 		if [ -z "$NAT" ]; then
 			NAT='no'
 		fi
 		if [ -z "$NAME" ]; then
 			NAME='no'
 		fi
-		echo "$IP $NAT $OWNER $STATUS $NAME"
+		if [ -n "$filter_match" ]; then
+			echo "$IP $NAT $OWNER $STATUS $NAME $VERSION"
+		fi
 	done
 }
 
 # PLAIN list function
 plain_list() {
 	for IP in $ips; do
-		source_conf "$HESTIA/data/ips/$IP"
-		echo -e "$IP\t$OWNER\t$STATUS\t$NAME\t$NAT"
+		VERSION=""
+		read_ip_config "$IP"
+		if [ -n "$filter_match" ]; then
+			echo -e "$IP\t$OWNER\t$STATUS\t$NAME\t$NAT\t$VERSION"
+		fi
 	done
 }
 
 # CSV list function
 csv_list() {
-	echo "IP,OWNER,STATUS,NAME,NAT"
+	echo "IP,OWNER,STATUS,NAME,NAT,VERSION"
 	for IP in $ips; do
-		source_conf "$HESTIA/data/ips/$IP"
-		echo "$IP,$OWNER,$STATUS,$NAME,$NAT"
+		read_ip_config "$IP"
+		if [ -n "$filter_match" ]; then
+			echo "$IP,$OWNER,$STATUS,$NAME,$NAT,$VERSION"
+		fi
+	done
+}
+
+# ONLY IP list function
+plain_list() {
+	for IP in $ips; do
+		VERSION=""
+		read_ip_config "$IP"
+		if [ -n "$filter_match" ]; then
+			echo "$IP"
+		fi
 	done
 }
 
@@ -82,7 +127,7 @@ csv_list() {
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '1' "$#" 'USER [FORMAT]'
+check_args '1' "$#" 'USER [FORMAT] [FILTER]'
 is_format_valid 'user'
 is_object_valid 'user' 'USER' "$user"
 
@@ -92,13 +137,10 @@ is_object_valid 'user' 'USER' "$user"
 
 # Defining fileds to select
 owner="$ROOT_USER"
-owner_ips="$(grep -A 1 -H "OWNER='$owner'" $HESTIA/data/ips/*)"
-owner_ips="$(echo "$owner_ips" | grep "STATUS='shared'")"
-owner_ips="$(echo "$owner_ips" | cut -f 7 -d / | cut -f 1 -d -)"
-user_ips="$(grep -H "OWNER='$user'" $HESTIA/data/ips/*)"
-user_ips="$(echo "$user_ips" | cut -f 7 -d / | cut -f 1 -d :)"
+owner_ips="$(grep -A 1 -H "OWNER='$owner'" $HESTIA/data/ips/* | grep "STATUS='shared'" | sed 's/.*\/\([^\/*]\)/\1/;s/-STATUS.*//')"
+user_ips="$(grep -l "OWNER='$user'" $HESTIA/data/ips/* | sed 's/.*\/\([^\/*]\)/\1/')"
 ips="$(echo -e "$user_ips\n$owner_ips" | sort -u | sed "/^$/d")"
-fields='$IP $OWNER $STATUS $NAME $NAT'
+fields='$IP $OWNER $STATUS $NAME $NAT $VERSION'
 
 # Listing data
 case $format in
@@ -106,6 +148,7 @@ case $format in
 	plain) plain_list ;;
 	csv) csv_list ;;
 	shell) shell_list | column -t ;;
+	list) only_ip_list ;;
 esac
 
 #----------------------------------------------------------#

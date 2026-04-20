@@ -30,8 +30,11 @@
 					<li data-entity="sort-name">
 						<span class="name <?php if ($_SESSION['userSortOrder'] === 'name') { echo 'active'; } ?>"><?= tohtml( _("Name")) ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
 					</li>
-					<li data-entity="sort-ip" data-sort-as-int="1">
-						<span class="name"><?= tohtml( _("IP Address")) ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
+					<li data-entity="sort-ipv4" data-sort-as-int="1">
+						<span class="name"><?= tohtml( _("IPV4 Address")) ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
+					</li>
+					<li data-entity="sort-ipv6" data-sort-as-int="1">
+						<span class="name"><?= tohtml( _("IPV6 Address")) ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
 					</li>
 				</ul>
 				<?php if ($read_only !== "true") { ?>
@@ -80,7 +83,8 @@
 				</div>
 			<div class="units-table-cell"><?= tohtml( _("Name")) ?></div>
 			<div class="units-table-cell"></div>
-			<div class="units-table-cell u-text-center"><?= tohtml( _("IP Address")) ?></div>
+			<div class="units-table-cell u-text-center"><?= tohtml( _("IPV4 Address")) ?></div>
+			<div class="units-table-cell u-text-center"><?= tohtml( _("IPV6 Address")) ?></div>
 			<div class="units-table-cell u-text-center"><?= tohtml( _("Disk")) ?></div>
 			<div class="units-table-cell u-text-center"><?= tohtml( _("Bandwidth")) ?></div>
 			<div class="units-table-cell u-text-center"><?= tohtml( _("SSL")) ?></div>
@@ -189,7 +193,8 @@
 				$vstats_scheme = $has_ssl ? 'https' : 'http';
 			?>
 			<div class="units-table-row <?php if ($data[$key]['SUSPENDED'] == 'yes') echo 'disabled'; ?> js-unit"
-				data-sort-ip="<?= tohtml(str_replace(".", "", $data[$key]["IP"])) ?>"
+				data-sort-ipv4="<?= tohtml(str_replace(".", "", $data[$key]["IP"])) ?>"
+				data-sort-ipv6="<?= tohtml(str_replace(":", "", $data[$key]["IP6"])) ?>"
 				data-sort-date="<?= tohtml(strtotime($data[$key]["DATE"] . " " . $data[$key]["TIME"])) ?>"
 				data-sort-name="<?= tohtml($key) ?>"
 				data-sort-bandwidth="<?= tohtml($data[$key]["U_BANDWIDTH"]) ?>"
@@ -313,8 +318,12 @@
 					</ul>
 				</div>
 				<div class="units-table-cell u-text-center-desktop">
-					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("IP Address")) ?>:</span>
+					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("IPV4 Address")) ?>:</span>
 					<?= tohtml(empty($ips[$data[$key]["IP"]]["NAT"]) ? $data[$key]["IP"] : "{$ips[$data[$key]["IP"]]["NAT"]}") ?>
+				</div>
+				<div class="units-table-cell u-text-center-desktop">
+					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("IPV6 Address")) ?>:</span>
+					<?= tohtml(empty($ips[$data[$key]['IP6']]) ? '' : $data[$key]['IP6']) ?>
 				</div>
 				<div class="units-table-cell u-text-center-desktop">
 					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Disk")) ?>:</span>

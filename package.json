@@ -44,7 +44,7 @@
 		"lightningcss": "^1.31.1",
 		"lint-staged": "^16.2.7",
 		"markdownlint-cli2": "^0.20.0",
-		"prettier": "^3.8.2",
+		"prettier": "^3.8.3",
 		"prettier-plugin-nginx": "^1.0.3",
 		"prettier-plugin-sh": "^0.18.0",
 		"prettier-plugin-sql": "^0.19.2",

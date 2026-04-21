@@ -189,7 +189,7 @@ check_result() {
 check_args() {
 	if [ "$1" -gt "$2" ]; then
 		echo "Usage: $(basename $0) $3"
-		check_result "$E_ARGS" "not enought arguments" > /dev/null
+		check_result "$E_ARGS" "not enough arguments" > /dev/null
 	fi
 }
 

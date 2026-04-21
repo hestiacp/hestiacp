@@ -723,7 +723,7 @@ for backup_type in $(echo -e "${BACKUP_SYSTEM//,/\\n}"); do
 done
 
 # Removing tmpdir
-rm -rf $tmpdir
+rm -rf "$tmpdir"
 if [[ "$errorcode" != "0" ]]; then
 	if [[ "$BACKUP_SYSTEM" =~ "local" ]]; then
 		echo -e "$(date "+%F %T") *** Local backup was successfully executed. Remote backup failed ***" \

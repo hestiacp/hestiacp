@@ -1,0 +1,44 @@
+security:
+  password_hashers:
+    App\Users\User\Infrastructure\Security\HestiaUser:
+      id: App\Users\User\Infrastructure\Security\PasswordHasher\YesCryptPasswordHasher
+
+  providers:
+    database_users:
+      id: App\Users\User\Infrastructure\Security\HestiaUserProvider
+
+  firewalls:
+    dev:
+      pattern: ^/(_(profiler|wdt|error)|css|images|js)/
+      security: false
+
+    secured_area:
+      pattern: ^/
+      switch_user: { role: CAN_SWITCH_USER }
+      form_login:
+        check_path: user_login
+        login_path: user_login
+
+      logout:
+        path: user_logout
+        target: user_login
+
+  access_control:
+    # allow unauthenticated users to access the public locations
+    - { path: ^/login, roles: PUBLIC_ACCESS }
+
+    # but require authentication for all other routes permissions are handled by App
+    - { path: ^/, roles: IS_AUTHENTICATED_REMEMBERED }
+
+when@test:
+    security:
+        password_hashers:
+            # By default, password hashers are resource intensive and take time. This is
+            # important to generate secure password hashes. In tests however, secure hashes
+            # are not important, waste resources and increase test times. The following
+            # reduces the work factor to the lowest possible values.
+            Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface:
+                algorithm: auto
+                cost: 4 # Lowest possible value for bcrypt
+                time_cost: 3 # Lowest possible value for argon
+                memory_cost: 10 # Lowest possible value for argon

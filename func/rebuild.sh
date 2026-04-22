@@ -754,7 +754,7 @@ rebuild_mail_domain_conf() {
 	# for per-domain SSL migration
 	sslcheck=$(grep "DOMAIN='$domain'" $USER_DATA/mail.conf | grep SSL)
 	if [ -z "$sslcheck" ]; then
-		sed -i "s|$domain'|$domain' SSL='no' LETSENCRYPT='no'|g" $USER_DATA/mail.conf
+		sed -i "s|$domain'|$domain' SSL='no' LETSENCRYPT='no' ACTALIS='no'|g" $USER_DATA/mail.conf
 	fi
 
 	# Remove and recreate SSL configuration

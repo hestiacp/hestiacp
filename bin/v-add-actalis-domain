@@ -1,0 +1,654 @@
+#!/bin/bash
+# info: check actalis domain
+# options: USER DOMAIN [ALIASES] [MAIL]
+#
+# example: v-add-actalis-domain admin wonderland.com www.wonderland.com
+# example: v-add-actalis-domain admin wonderland.com '' yes
+#
+# This function check and validates domain with Actalis
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+domain=$2
+aliases=$3
+mail=${4// /}
+
+# Define variables to preserve redirect/force-ssl if renewal fails
+deleted_redirect=0
+deleted_force_ssl=0
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
+source $HESTIA/func/domain.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+ACTALIS_API='https://acme-api.actalis.com/acme'
+
+# ACTALIS Pre-Hook
+if [ -x "/etc/hestiacp/hooks/actalis_pre.sh" ]; then
+	/etc/hestiacp/hooks/actalis_pre.sh "$user" "$domain" "$aliases" "$mail"
+fi
+
+encode_base64() {
+	cat | base64 | tr '+/' '-_' | tr -d '\r\n='
+}
+
+# Actalis curl function
+query_actalis() {
+	protected='{"nonce": "'$3'",'
+	protected=''$protected' "url": "'$1'",'
+	protected=''$protected' "alg": "RS256", "kid": "'$KID'"}'
+	content="Content-Type: application/jose+json"
+
+	payload_=$(echo -n "$2" | encode_base64)
+	protected_=$(echo -n "$protected" | encode_base64)
+	signature_=$(printf "%s" "$protected_.$payload_" \
+		| openssl dgst -sha256 -binary -sign $USER_DATA/ssl/user.key \
+		| encode_base64)
+
+	post_data='{"protected":"'"$protected_"'",'
+	post_data=$post_data'"payload":"'"$payload_"'",'
+	post_data=$post_data'"signature":"'"$signature_"'"}'
+
+	# Save http response to file passed as "$4" arg or print to stdout if not provided
+	# http response headers are always sent to stdout
+	local save_to_file=${4:-"/dev/stdout"}
+	curl --location --user-agent "HestiaCP" --insecure --retry 5 --retry-connrefused --silent --dump-header /dev/stdout --data "$post_data" "$1" --header "$content" --output "$save_to_file"
+	debug_log "API call" "exit status: $?"
+}
+
+# Function to preserve redirect/force-ssl on cert renewal failure
+on_error_exit() {
+	local exit_code=$?
+	if [[ $exit_code -eq 0 ]]; then
+		exit "$exit_code"
+	fi
+
+	if [[ -z "$mail" ]]; then
+		if [[ "$domain_forcessl" == 'yes' && "${deleted_force_ssl:-0}" -eq 1 ]]; then
+			"$BIN/v-add-web-domain-ssl-force" "$user" "$domain"
+		fi
+		if [[ -n "$domain_redirect" && "${deleted_redirect:-0}" -eq 1 ]]; then
+			"$BIN/v-add-web-domain-redirect" "$user" "$domain" "$domain_redirect" "$domain_redirect_code"
+		fi
+	fi
+}
+
+# Trap exit code to keep redirect/force-ssl if cert renewal fails
+trap on_error_exit EXIT
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '2' "$#" 'USER DOMAIN [ALIASES] [MAIL]'
+is_format_valid 'user' 'domain' 'aliases'
+is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
+if [ -n "$mail" ]; then
+	is_boolean_format_valid "$mail" 'mail'
+fi
+
+# Set DNS CAA record retrieval commands
+if [ -n "$DNS_SYSTEM" ]; then
+	dns_domain=$($BIN/v-list-dns-domains "$user" | grep "$domain" | cut -d' ' -f1)
+	caa_record=$($BIN/v-list-dns-records "$user" "$domain" | grep -i "CAA" | grep -i "actalis.com" | cut -d' ' -f1)
+fi
+
+if [ -z "$mail" ] || [ "$mail" = 'no' ]; then
+	mail=''
+	is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
+	is_object_valid 'web' 'DOMAIN' "$domain"
+	is_object_unsuspended 'web' 'DOMAIN' "$domain"
+	get_domain_values 'web'
+
+	# Actalis ACME only supports the base domain and optional www alias
+	if [ -n "$aliases" ]; then
+		normalized_aliases=$(echo "$aliases" | tr ',' '\n' | sed '/^$/d' | sort -u)
+		alias_count=$(echo "$normalized_aliases" | wc -l)
+		allowed_alias="www.$domain"
+
+		if [ "$alias_count" -gt 1 ]; then
+			check_result "$E_INVALID" "Actalis ACME only supports a single domain plus www"
+		fi
+
+		for alias in $normalized_aliases; do
+			if [ "$alias" != "$allowed_alias" ]; then
+				check_result "$E_INVALID" "Actalis ACME only supports the www alias"
+			fi
+
+			check_alias="$(echo "$ALIAS" | tr ',' '\n' | grep "^$alias$")"
+			if [ -z "$check_alias" ]; then
+				check_result "$E_NOTEXIST" "domain alias $alias doesn't exist"
+			fi
+		done
+	fi
+else
+	is_system_enabled "$MAIL_SYSTEM" 'MAIL_SYSTEM'
+	is_object_valid 'mail' 'DOMAIN' "$domain"
+	is_object_unsuspended 'mail' 'DOMAIN' "$domain"
+fi
+
+# Dump debug info
+debug_log() {
+	echo -e "\n==[${1}]==\n${2}\n" >> "$log_file"
+}
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Generate correct variables for mail domain SSL certificates
+if [ -n "$mail" ]; then
+	root_domain=$domain
+	domain="mail.$root_domain"
+	aliases=""
+else
+	parse_object_kv_list $(grep "DOMAIN='$domain'" $USER_DATA/web.conf)
+
+	domain_redirect="$REDIRECT"
+	if [[ -n "$domain_redirect" ]]; then
+		domain_redirect_code="$REDIRECT_CODE"
+		$BIN/v-delete-web-domain-redirect $user $domain
+		deleted_redirect=1
+	fi
+
+	domain_forcessl="$SSL_FORCE"
+	if [[ "$domain_forcessl" == 'yes' ]]; then
+		$BIN/v-delete-web-domain-ssl-force $user $domain
+		deleted_force_ssl=1
+	fi
+fi
+
+# Normalize aliases for Actalis ACME
+if [ -z "$mail" ]; then
+	if [ -n "$aliases" ]; then
+		if [ "$aliases" = "www.$domain" ]; then
+			aliases="www.$domain"
+		else
+			check_result "$E_INVALID" "Actalis ACME only supports the www alias"
+		fi
+	fi
+fi
+
+log_file="/var/log/hestia/ACTALIS-${user}-${domain}.log"
+touch "$log_file"
+chmod 600 "$log_file"
+
+echo -e "\n\n=============================
+Date Time: $(date +%Y-%m-%d) $(date +%H:%M:%S)
+WEB_SYSTEM: ${WEB_SYSTEM}
+PROXY_SYSTEM: ${PROXY_SYSTEM}
+user: ${user}
+domain: ${domain}
+" >> "$log_file"
+
+# Registering Actalis user account
+$BIN/v-add-actalis-user $user
+if [ "$?" -ne 0 ]; then
+	touch $HESTIA/data/queue/actalis.pipe
+	sed -i "/ $domain /d" $HESTIA/data/queue/actalis.pipe
+	send_notice "ACTALIS" "Account registration failed ($user)"
+	check_result "$E_CONNECT" "Actalis account registration ($user)" > /dev/null
+fi
+
+# Parsing Actalis account data
+source $USER_DATA/ssl/actalis.conf
+
+# Checking wildcard alias
+if [ "$aliases" = "*.$domain" ]; then
+	wildcard='yes'
+	check_result "$E_INVALID" "Actalis ACME does not support wildcard certificates"
+else
+	proto="http-01"
+fi
+
+echo -e "
+- aliases: ${aliases}
+- proto: ${proto}
+- wildcard: ${wildcard}
+" >> "$log_file"
+
+# Check if dns records exist for requested domain/aliases
+if [ "$proto" = "http-01" ]; then
+	for identifier in $(echo $domain,$aliases | tr ',' '\n' | sort -u); do
+		if [[ "$identifier" = *[![:ascii:]]* ]]; then
+			identifier=$(idn2 --quiet $identifier)
+		fi
+		if ! nslookup "${identifier}" > /dev/null 2>&1; then
+			# Attempt against Cloudflare DNS
+			if ! nslookup "${identifier}" 1.1.1.1 > /dev/null 2>&1; then
+				check_result "$E_NOTEXIST" "DNS record for $identifier doesn't exist"
+			fi
+		fi
+	done
+fi
+
+# Ensure DNS CAA record exists for Actalis before requesting certificate
+if [ -n "$DNS_SYSTEM" ]; then
+	# Check for DNS zone
+	if [ "$dns_domain" = "$domain" ]; then
+		# Replace DNS domain CAA records with Actalis values
+		if [ -z "$caa_record" ]; then
+			$BIN/v-add-dns-record "$user" "$domain" '@' 'CAA' '0 issue "actalis.com"'
+		else
+			$BIN/v-delete-dns-record "$user" "$domain" "$caa_record"
+			$BIN/v-add-dns-record "$user" "$domain" '@' 'CAA' '0 issue "actalis.com"'
+		fi
+	fi
+fi
+
+# Requesting nonce / STEP 1
+answer=$(curl --user-agent "HestiaCP" -s -I "$ACTALIS_API/newnonce")
+nonce=$(echo "$answer" | grep -i nonce | cut -f2 -d \  | tr -d '\r\n')
+status=$(echo "$answer" | grep HTTP/ | tail -n1 | cut -f 2 -d ' ')
+
+debug_log "Step 1" "- status: ${status}\n- nonce: ${nonce}\n- answer: ${answer}"
+
+if [[ "$status" -ne 200 ]]; then
+	# Delete DNS CAA record
+	if [ -n "$DNS_SYSTEM" ]; then
+		if [ "$dns_domain" = "$domain" ]; then
+			if [ -n "$caa_record" ]; then
+				$BIN/v-delete-dns-record "$user" "$domain" "$caa_record"
+			fi
+		fi
+	fi
+	check_result "$E_CONNECT" "Actalis nonce request status $status ($domain)"
+fi
+
+# Placing new order / STEP 2
+url="$ACTALIS_API/neworders"
+payload='{"identifiers":['
+for identifier in $(echo $domain,$aliases | tr ',' '\n' | sort -u); do
+	if [[ "$identifier" = *[![:ascii:]]* ]]; then
+		identifier=$(idn2 --quiet $identifier)
+	fi
+	payload=$payload'{"type":"dns","value":"'$identifier'"},'
+done
+payload=$(echo "$payload" | sed "s/,$//")
+payload=$payload']}'
+
+answer=$(query_actalis "$url" "$payload" "$nonce")
+nonce=$(echo "$answer" | grep -i nonce | cut -f2 -d \  | tr -d '\r\n')
+status=$(echo "$answer" | grep HTTP/ | tail -n1 | cut -f2 -d ' ')
+order=$(echo -e "$answer" | grep -i Location | cut -f2 -d \  | tr -d '\r\n')
+json=$(echo "$answer" | sed -n '/^{/,$p' | tr -d '\r')
+authz=$(echo "$json" | jq -r '.authorizations[]')
+finalize=$(echo "$json" | jq -r '.finalize')
+debug_log "Step 2" "- status: ${status}\n- nonce: ${nonce}\n- authz: ${authz}\n- finalize: ${finalize}\n- payload: ${payload}\n- answer: ${answer}\n order: ${order}"
+detail=$(echo "$answer" | sed -n 's/.*"detail":"\([^"]*\)".*/\1/p')
+
+if [[ "$status" -ne 201 ]]; then
+	# Delete DNS CAA record
+	if [ -n "$DNS_SYSTEM" ]; then
+		if [ "$dns_domain" = "$domain" ]; then
+			if [ -n "$caa_record" ]; then
+				$BIN/v-delete-dns-record "$user" "$domain" "$caa_record"
+			fi
+		fi
+	fi
+	check_result $E_CONNECT "Actalis new auth status $status ($domain) $detail"
+fi
+
+# Requesting authorization token / STEP 3
+for auth in $authz; do
+	payload=''
+	answer=$(query_actalis "$auth" "$payload" "$nonce")
+	nonce=$(echo "$answer" | grep -i nonce | cut -f2 -d \  | tr -d '\r\n')
+	status=$(echo "$answer" | grep HTTP/ | tail -n1 | cut -f 2 -d ' ')
+	json=$(echo "$answer" | sed -n '/^{/,$p' | tr -d '\r')
+	url=$(echo "$json" | jq -r --arg proto "$proto" '.challenges[] | select(.type == $proto) | .url')
+	token=$(echo "$json" | jq -r --arg proto "$proto" '.challenges[] | select(.type == $proto) | .token')
+
+	if [ -z "$url" ] || [ -z "$token" ]; then
+		check_result "$E_CONNECT" "Actalis challenge parsing failed ($domain)"
+	fi
+
+	debug_log "Step 3" "- status: ${status}\n- nonce: ${nonce}\n- url: ${url}\n- token: ${token}\n- answer: ${answer}"
+
+	if [[ "$status" -ne 200 ]]; then
+		# Delete DNS CAA record
+		if [ -n "$DNS_SYSTEM" ]; then
+			dns_domain=$($BIN/v-list-dns-domains "$user" | grep "$domain" | cut -d' ' -f1)
+			caa_record=$($BIN/v-list-dns-records "$user" "$domain" | grep -i "actalis" | cut -d' ' -f1)
+
+			if [ "$dns_domain" = "$domain" ]; then
+				if [ -n "$caa_record" ]; then
+					$BIN/v-delete-dns-record "$user" "$domain" "$caa_record"
+				fi
+			fi
+		fi
+		check_result "$E_CONNECT" "Actalis acme/authz bad status $status ($domain)"
+	fi
+
+	# Accepting challenge / STEP 4
+	if [ -z "$mail" ]; then
+		if [ "$WEB_SYSTEM" = 'nginx' ] || [ "$PROXY_SYSTEM" = 'nginx' ]; then
+			if [ -z "$THUMB" ]; then
+				check_result "$E_CONNECT" "Actalis THUMB is empty ($domain)"
+			fi
+
+			conf="$HOMEDIR/$user/conf/web/$domain/nginx.conf_actalis"
+			sconf="$HOMEDIR/$user/conf/web/$domain/nginx.ssl.conf_actalis"
+			echo 'location ~ "^/\.well-known/acme-challenge/(.*)$" {' \
+				> $conf
+			echo '    default_type text/plain;' >> $conf
+			echo '    return 200 "$1.'$THUMB'";' >> $conf
+			echo '}' >> $conf
+			if [ ! -e "$sconf" ]; then
+				ln -s "$conf" "$sconf"
+			fi
+			if [ -n "$PROXY_SYSTEM" ]; then
+				$BIN/v-restart-proxy
+				check_result $? "Proxy restart failed" > /dev/null
+			fi
+		else
+			# Get root directory from configuration
+			domain_config="$HOMEDIR/$user/conf/web/$domain"
+			if [ -f "$domain_config/apache2.conf" ]; then
+				well_known="$(cat $domain_config/apache2.conf | egrep \
+					'^\s+DocumentRoot' | awk '{split($0, a, " "); \
+                                print a[2]}')/.well-known"
+			else
+				well_known="$(cat $domain_config/nginx.conf | egrep '^\s+root' \
+					| awk '{split($0, a, " "); print a[2]}' \
+					| sed 's/;$//')/.well-known"
+			fi
+			acme_challenge="$well_known/acme-challenge"
+			mkdir -p $acme_challenge
+			echo "$token.$THUMB" > $acme_challenge/$token
+			chown -R $user:$user $well_known
+		fi
+	else
+		if [ "$WEB_SYSTEM" = 'nginx' ] || [ "$PROXY_SYSTEM" = 'nginx' ]; then
+			conf="$HOMEDIR/$user/conf/mail/$root_domain/nginx.conf_actalis"
+			sconf="$HOMEDIR/$user/conf/mail/$root_domain/nginx.ssl.conf_actalis"
+			echo 'location ~ "^/\.well-known/acme-challenge/(.*)$" {' \
+				> $conf
+			echo '    default_type text/plain;' >> $conf
+			echo '    return 200 "$1.'$THUMB'";' >> $conf
+			echo '}' >> $conf
+			if [ ! -e "$sconf" ]; then
+				ln -s "$conf" "$sconf"
+			fi
+			if [ -n "$PROXY_SYSTEM" ]; then
+				$BIN/v-restart-proxy
+				check_result $? "Proxy restart failed" > /dev/null
+			fi
+		else
+			get_object_value 'mail' 'DOMAIN' "$root_domain" "WEBMAIL"
+			if [ -n "$WEBMAIL" ]; then
+				well_known="/var/lib/$WEBMAIL/.well-known"
+				acme_challenge="$well_known/acme-challenge"
+				mkdir -p $acme_challenge
+				echo "$token.$THUMB" > $acme_challenge/$token
+				chown -R $user:$user $well_known
+			fi
+		fi
+	fi
+	if [ "$WEB_SYSTEM" = 'nginx' ]; then
+		$BIN/v-restart-web
+		check_result $? "Web restart failed" > /dev/null
+	fi
+
+	if [ "$DNS_CLUSTER" = "yes" ]; then
+		$BIN/v-update-sys-queue dns-cluster
+	fi
+
+	# Requesting ACME validation / STEP 5
+	payload='{}'
+	answer=$(query_actalis "$url" "$payload" "$nonce")
+	nonce=$(echo "$answer" | grep -i nonce | cut -f2 -d \  | tr -d '\r\n')
+	status=$(echo "$answer" | grep HTTP/ | tail -n1 | cut -f 2 -d ' ')
+	json=$(echo "$answer" | sed -n '/^{/,$p' | tr -d '\r')
+	validation=$(echo "$json" | jq -r '.status')
+	details=$(echo "$json" | jq -r '.error.detail // empty')
+
+	debug_log "Step 5 ack" "- status: ${status}\n- url: ${url}\n- nonce: ${nonce}\n- validation: ${validation}\n- details: ${details}\n- answer: ${answer}"
+
+	if [[ "$status" -ne 200 ]]; then
+		check_result "$E_CONNECT" "Actalis validation status $status ($domain). Details: $details"
+	fi
+
+	attempt=1
+	while [ "$validation" = "pending" ] || [ "$validation" = "processing" ]; do
+		sleep $((attempt * 2))
+
+		payload=''
+		answer=$(query_actalis "$url" "$payload" "$nonce")
+		nonce=$(echo "$answer" | grep -i nonce | cut -f2 -d \  | tr -d '\r\n')
+		status=$(echo "$answer" | grep HTTP/ | tail -n1 | cut -f 2 -d ' ')
+		json=$(echo "$answer" | sed -n '/^{/,$p' | tr -d '\r')
+		validation=$(echo "$json" | jq -r '.status')
+		details=$(echo "$json" | jq -r '.error.detail // empty')
+
+		debug_log "Step 5 poll" "- attempt: ${attempt}\n- status: ${status}\n- url: ${url}\n- nonce: ${nonce}\n- validation: ${validation}\n- details: ${details}\n- answer: ${answer}"
+
+		if [[ "$status" -ne 200 ]]; then
+			check_result "$E_CONNECT" "Actalis validation status $status ($domain). Details: $details"
+		fi
+
+		attempt=$((attempt + 1))
+		if [ "$attempt" -gt 10 ]; then
+			check_result "$E_CONNECT" "Actalis domain validation timeout ($domain)"
+		fi
+	done
+
+	if [ "$validation" = "invalid" ]; then
+		check_result "$E_CONNECT" "Actalis domain verification failed ($domain). Details: $details"
+	fi
+done
+
+# Generating new ssl certificate
+ssl_dir=$($BIN/v-generate-ssl-cert "$domain" "info@$domain" "US" "California" \
+	"San Francisco" "Hestia" "IT" "$aliases" | tail -n1 | awk '{print $2}')
+
+# Sending CSR to finalize order / STEP 6
+csr=$(openssl req -in $ssl_dir/$domain.csr -outform DER | encode_base64)
+payload='{"csr":"'$csr'"}'
+answer=$(query_actalis "$finalize" "$payload" "$nonce")
+nonce=$(echo "$answer" | grep -i nonce | cut -f2 -d \  | tr -d '\r\n')
+status=$(echo "$answer" | grep HTTP/ | tail -n1 | cut -f 2 -d ' ')
+json=$(echo "$answer" | sed -n '/^{/,$p' | tr -d '\r')
+certificate=$(echo "$json" | jq -r '.certificate // empty')
+
+debug_log "Step 6" "- status: ${status}\n- nonce: ${nonce}\n- payload: ${payload}\n- certificate: ${certificate}\n- answer: ${answer}"
+
+if [[ "$status" -ne 200 ]]; then
+	[ -d "$ssl_dir" ] && rm -rf "$ssl_dir"
+	check_result "$E_CONNECT" "Actalis finalize bad status $status ($domain)"
+fi
+
+if [ -z "$certificate" ]; then
+	validation="processing"
+	i=1
+	while [ "$validation" = "processing" ]; do
+		answer=$(query_actalis "$order" "" "$nonce")
+		i=$((i + 1))
+
+		nonce=$(echo "$answer" | grep -i nonce | cut -f2 -d \  | tr -d '\r\n')
+		status=$(echo "$answer" | grep HTTP/ | tail -n1 | cut -f 2 -d ' ')
+		json=$(echo "$answer" | sed -n '/^{/,$p' | tr -d '\r')
+		validation=$(echo "$json" | jq -r '.status // empty')
+		certificate=$(echo "$json" | jq -r '.certificate // empty')
+		sleep $((i * 2)) # Sleep for 2s, 4s, 6s, 8s
+		if [ $i -gt 10 ]; then
+			check_result "$E_CONNECT" "Certificate processing timeout ($domain)"
+		fi
+		debug_log "Step 7" "- status: ${status}\n- nonce: ${nonce}\n- payload: ${payload}\n- certificate: ${certificate}\n- answer: ${answer}"
+	done
+
+	if [ -z "$certificate" ]; then
+		check_result "$E_CONNECT" "Actalis certificate URL missing after finalize ($domain)"
+	fi
+fi
+
+# Downloading signed certificate / STEP 7
+status=0
+retry=0
+
+while [[ $status != 200 && $retry -lt 3 ]]; do
+
+	answer=$(query_actalis "$certificate" "" "$nonce" "$ssl_dir/$domain.pem")
+	status=$(echo "$answer" | grep HTTP/ | tail -n1 | cut -f 2 -d ' ')
+
+	debug_log "Step 8" "- status: ${status}\n- retry: ${retry}\n- answer: ${answer}"
+
+	if [[ $status != 200 ]]; then
+		retry=$((retry + 1))
+		sleep $((retry * 2)) # Sleep for 2s, 4s, 6s, 8s
+	fi
+
+done
+
+# Fallback on depreciated download method for certs (unauthenticated GET)
+if [[ $status != 200 ]]; then
+	answer=$(curl --insecure --user-agent "HestiaCP" --retry 5 --retry-connrefused --silent --dump-header /dev/stdout "$certificate" --output "$ssl_dir/$domain.pem")
+	status=$(echo "$answer" | grep HTTP/ | tail -n1 | cut -f 2 -d ' ')
+
+	debug_log "Step 8 - Fallback" "- status: ${status}\n- answer: ${answer}"
+fi
+
+debug_log "CERT DIR" "$(ls -las "$ssl_dir/")"
+debug_log "CERT PEM" "$(cat "$ssl_dir/$domain.pem")"
+
+if [[ "$status" -ne 200 ]]; then
+	[ -d "$ssl_dir" ] && rm -rf "$ssl_dir"
+	check_result "$E_NOTEXIST" "Actalis downloading signed cert failed status:$status ($domain)"
+fi
+
+# Splitting up downloaded pem
+crt_end=$(grep -n 'END CERTIFICATE' $ssl_dir/$domain.pem | head -n1 | cut -f1 -d:)
+head -n $crt_end $ssl_dir/$domain.pem > $ssl_dir/$domain.crt
+
+pem_lines=$(wc -l $ssl_dir/$domain.pem | cut -f 1 -d ' ')
+ca_end=$(grep -n 'BEGIN CERTIFICATE' $ssl_dir/$domain.pem | tail -n1 | cut -f 1 -d :)
+ca_end=$((pem_lines - crt_end + 1))
+tail -n $ca_end $ssl_dir/$domain.pem > $ssl_dir/$domain.ca
+
+debug_log "CERT CRT" "$(cat "$ssl_dir/$domain.crt")"
+debug_log "CERT CA-1" "$(cat "$ssl_dir/$domain.ca")"
+# Temporary fix for double "END CERTIFICATE"
+if [[ $(head -n 1 $ssl_dir/$domain.ca) = "-----END CERTIFICATE-----" ]]; then
+	sed -i '1d' $ssl_dir/$domain.ca
+fi
+debug_log "CERT CA-2" "$(cat "$ssl_dir/$domain.ca")"
+
+# Rename certs for mail
+if [ -n "$mail" ]; then
+	mv $ssl_dir/$domain.ca $ssl_dir/$root_domain.ca
+	mv $ssl_dir/$domain.crt $ssl_dir/$root_domain.crt
+	mv $ssl_dir/$domain.csr $ssl_dir/$root_domain.csr
+	mv $ssl_dir/$domain.key $ssl_dir/$root_domain.key
+	mv $ssl_dir/$domain.pem $ssl_dir/$root_domain.pem
+fi
+
+# Adding SSL
+if [ -z "$mail" ]; then
+	ssl_home="$(get_object_value 'web' 'DOMAIN' "$domain" '$SSL_HOME')"
+	ssl_enabled="$(get_object_value 'web' 'DOMAIN' "$domain" '$SSL')"
+	if [ "$ssl_enabled" = "yes" ]; then
+		$BIN/v-update-web-domain-ssl "$user" "$domain" "$ssl_dir" "updatessl"
+	else
+		$BIN/v-add-web-domain-ssl "$user" "$domain" "$ssl_dir" "$ssl_home" "updatessl"
+	fi
+else
+	# TODO replace with v-update-mail-domain-ssl if ssl is enabled
+	ssl_enabled="$(get_object_value 'mail' 'DOMAIN' "$root_domain" '$SSL')"
+	if [ "$ssl_enabled" = "yes" ]; then
+		$BIN/v-update-mail-domain-ssl "$user" "$root_domain" "$ssl_dir" "updatessl"
+	else
+		$BIN/v-add-mail-domain-ssl "$user" "$root_domain" "$ssl_dir" "updatessl"
+	fi
+fi
+
+debug_log "After SSL install" "$(grep -A1 "DOMAIN='$domain'" "$USER_DATA/web.conf")"
+
+if [ "$?" -ne '0' ]; then
+	[ -d "$ssl_dir" ] && rm -rf "$ssl_dir"
+	touch $HESTIA/data/queue/actalis.pipe
+	sed -i "/ $domain /d" $HESTIA/data/queue/actalis.pipe
+	send_notice 'ACTALIS' "$domain certificate installation failed ($domain)"
+	check_result $? "SSL install" > /dev/null
+fi
+
+# Adding ACTALIS autorenew cronjob
+if [ -z "$(grep $BIN/v-update-actalis "/var/spool/cron/crontabs/hestiaweb")" ]; then
+	min=$(generate_password '012345' '2')
+	hour=$(generate_password '1234567' '1')
+	sed -i -e "\$a*/5 * * * * sudo $BIN/v-update-actalis-ssl" "/var/spool/cron/crontabs/hestiaweb"
+fi
+
+# Updating actalis key
+if [ -z "$mail" ]; then
+	if [ -z "$ACTALIS" ]; then
+		add_object_key "web" 'DOMAIN' "$domain" 'ACTALIS' 'FTP_USER'
+		add_object_key "web" 'DOMAIN' "$domain" 'ACTALIS_FAIL_COUNT' 'ACTALIS'
+	fi
+	update_object_value 'web' 'DOMAIN' "$domain" '$ACTALIS' 'yes'
+	update_object_value 'web' 'DOMAIN' "$domain" '$ACTALIS_FAIL_COUNT' "0"
+
+	if [[ "$domain_forcessl" == 'yes' ]]; then
+		$BIN/v-add-web-domain-ssl-force $user $domain
+		deleted_force_ssl=0
+	fi
+	if [[ -n "$domain_redirect" ]]; then
+		$BIN/v-add-web-domain-redirect $user $domain $domain_redirect $domain_redirect_code
+		deleted_redirect=0
+	fi
+
+else
+	if [ -z "$ACTALIS" ]; then
+		add_object_key "mail" 'DOMAIN' "$root_domain" 'ACTALIS'
+		add_object_key "mail" 'DOMAIN' "$root_domain" 'ACTALIS_FAIL_COUNT' 'ACTALIS'
+	fi
+	update_object_value 'mail' 'DOMAIN' "$root_domain" '$ACTALIS' 'yes'
+	update_object_value 'mail' 'DOMAIN' "$root_domain" '$ACTALIS_FAIL_COUNT' "0"
+fi
+
+debug_log "After ACTALIS write" "$(grep -A1 "DOMAIN='$domain'" "$USER_DATA/web.conf")"
+
+# ACTALIS Post-Hook
+if [ -x "/etc/hestiacp/hooks/actalis_post.sh" ]; then
+	/etc/hestiacp/hooks/actalis_post.sh "$user" "$domain" "$aliases" "$mail"
+fi
+
+# Remove challenge folder if exist
+if [ -n "$well_known" ]; then
+	rm -fr $well_known
+fi
+
+# Remove temporary SSL folder
+[ -d "$ssl_dir" ] && rm -rf "$ssl_dir"
+
+#----------------------------------------------------------#
+#                        Hestia                            #
+#----------------------------------------------------------#
+
+# Deleting task from queue
+touch $HESTIA/data/queue/actalis.pipe
+sed -i "/ $domain /d" $HESTIA/data/queue/actalis.pipe
+
+# Notifying user
+send_notice 'ACTALIS' "$domain SSL has been installed successfully"
+
+# Logging
+log_event "$OK" "$ARGUMENTS"
+
+# Cleanup debug since the SSL was issues successfully
+rm -f "$log_file"
+
+exit

@@ -1987,6 +1987,7 @@ if [ "$exim" = 'yes' ]; then
 	cp -f $HESTIA_INSTALL_DIR/exim/limit.conf /etc/exim4/
 	cp -f $HESTIA_INSTALL_DIR/exim/system.filter /etc/exim4/
 	touch /etc/exim4/white-blocks.conf
+	touch /etc/exim4/ratelimit_whitelist
 
 	if [ "$spamd" = 'yes' ]; then
 		sed -i "s/#SPAM/SPAM/g" /etc/exim4/exim4.conf.template

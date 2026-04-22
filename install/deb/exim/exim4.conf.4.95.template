@@ -147,12 +147,15 @@ acl_check_rcpt:
   accept  hosts         = :
 
 # Limit per email account for SMTP auhenticated users
+  warn    set acl_c_msg_limit  = ${if exists{/etc/exim4/domains/${lookup{${domain:$authenticated_id}}dsearch{/etc/exim4/domains/}}/limits}{${lookup {$authenticated_id} lsearch{/etc/exim4/domains/${lookup{${domain:$authenticated_id}}dsearch{/etc/exim4/domains/}}/limits}{$value}{${readfile{/etc/exim4/limit.conf}}}}}{${readfile{/etc/exim4/limit.conf}}} }
+
   deny    message       = Email account $authenticated_id is sending too many emails - rate overlimit = $sender_rate / $sender_rate_period
-          set acl_c_msg_limit  = ${if exists{/etc/exim4/domains/${lookup{${domain:$authenticated_id}}dsearch{/etc/exim4/domains/}}/limits}{${lookup {$authenticated_id} lsearch{/etc/exim4/domains/${lookup{${domain:$authenticated_id}}dsearch{/etc/exim4/domains/}}/limits}{$value}{${readfile{/etc/exim4/limit.conf}}}}}{${readfile{/etc/exim4/limit.conf}}} }
+          !senders      = ${if exists{/etc/exim4/ratelimit_whitelist}{/etc/exim4/ratelimit_whitelist}{}}
           ratelimit     = $acl_c_msg_limit / 1h / strict/ $authenticated_id
 
-  warn    ratelimit     = ${eval:$acl_c_msg_limit / 2} / 1h / strict / $authenticated_id
-  log_message           = Sender rate [limitlog]: log / email / $authenticated_id / $sender_rate / $sender_rate_period
+  warn    !senders      = ${if exists{/etc/exim4/ratelimit_whitelist}{/etc/exim4/ratelimit_whitelist}{}}
+          ratelimit     = ${eval:$acl_c_msg_limit / 2} / 1h / strict / $authenticated_id
+          log_message   = Sender rate [limitlog]: log / email / $authenticated_id / $sender_rate / $sender_rate_period
 
   deny    message       = Restricted characters in address
           domains       = +local_domains

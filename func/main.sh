@@ -374,9 +374,10 @@ parse_object_kv_list_non_eval() {
 # Check if a object string with key values pairs has the correct format and load it afterwards
 parse_object_kv_list() {
 	local str
-	local objkv
+	local objkv obj_key obj_val
 	local suboutput
 	local OLD_IFS="$IFS"
+	trap 'IFS="$OLD_IFS"' RETURN
 
 	str=${@//$'\n'/ }
 	str=${str//\"/\\\"}
@@ -396,9 +397,10 @@ parse_object_kv_list() {
 			check_result "$E_INVALID" "Invalid key value format [$objkv]"
 		fi
 
-		eval "$objkv"
+		obj_key="${BASH_REMATCH[1]}"
+		obj_val="${BASH_REMATCH[2]}"
+		printf -v "$obj_key" '%s' "$obj_val"
 	done
-	IFS="$OLD_IFS"
 }
 
 # Check if object is supended
@@ -429,7 +431,8 @@ is_object_unsuspended() {
 is_object_value_empty() {
 	str=$(grep "$2='$3'" $USER_DATA/$1.conf)
 	parse_object_kv_list "$str"
-	eval value=$4
+	local varname="${4#\$}"
+	value="${!varname}"
 	if [ -n "$value" ] && [ "$value" != 'no' ]; then
 		check_result "$E_EXISTS" "${4//$/}=$value already exists"
 	fi
@@ -439,7 +442,8 @@ is_object_value_empty() {
 is_object_value_exist() {
 	str=$(grep "$2='$3'" $USER_DATA/$1.conf)
 	parse_object_kv_list "$str"
-	eval value=$4
+	local varname="${4#\$}"
+	value="${!varname}"
 	if [ -z "$value" ] || [ "$value" = 'no' ]; then
 		check_result "$E_NOTEXIST" "${4//$/}=$value doesn't exist"
 	fi
@@ -478,7 +482,9 @@ is_dir_symlink() {
 get_object_value() {
 	object=$(grep "$2='$3'" $USER_DATA/$1.conf)
 	parse_object_kv_list "$object"
-	eval echo $4
+	local varname="${4#\$}"
+	value="${!varname}"
+	echo "$value"
 }
 
 get_object_values() {
@@ -491,7 +497,8 @@ update_object_value() {
 	lnr=$(echo $row | cut -f 1 -d ':')
 	object=$(echo $row | sed "s/^$lnr://")
 	parse_object_kv_list "$object"
-	eval old="$4"
+	local varname="${4#\$}"
+	old="${!varname}"
 	old=$(echo "$old" | sed -e 's/\\/\\\\/g' -e 's/&/\\&/g' -e 's/\//\\\//g')
 	new=$(echo "$5" | sed -e 's/\\/\\\\/g' -e 's/&/\\&/g' -e 's/\//\\\//g')
 	sed -i "$lnr s/${4//$/}='${old//\*/\\*}'/${4//$/}='${new//\*/\\*}'/g" \
@@ -504,7 +511,8 @@ add_object_key() {
 	lnr=$(echo $row | cut -f 1 -d ':')
 	object=$(echo $row | sed "s/^$lnr://")
 	if [ -z "$(echo $object | grep $4=)" ]; then
-		eval old="$4"
+		local varname="${4#\$}"
+		old="${!varname}"
 		sed -i "$lnr s/$5='/$4='' $5='/" $USER_DATA/$1.conf
 	fi
 }
@@ -516,7 +524,7 @@ search_objects() {
 	if [ -f $USER_DATA/$1.conf ]; then
 		for line in $(grep $2=\'$3\' $USER_DATA/$1.conf); do
 			parse_object_kv_list "$line"
-			eval echo \$$4
+			echo "${!4}"
 		done
 	fi
 	IFS="$OLD_IFS"
@@ -1280,7 +1288,7 @@ is_hash_format_valid() {
 # Format validation controller
 is_format_valid() {
 	for arg_name in $*; do
-		eval arg=\$$arg_name
+		arg="${!arg_name}"
 		if [ -n "$arg" ]; then
 			case $arg_name in
 				access_key_id) is_access_key_id_format_valid "$arg" "$arg_name" ;;

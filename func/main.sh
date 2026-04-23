@@ -376,13 +376,11 @@ parse_object_kv_list() {
 	local str
 	local objkv obj_key obj_val
 	local suboutput
-	local OLD_IFS="$IFS"
-	trap 'IFS="$OLD_IFS"' RETURN
+	local IFS=$'\n'
 
 	str=${@//$'\n'/ }
 	str=${str//\"/\\\"}
 	str=${str//$/\\$}
-	IFS=$'\n'
 
 	suboutput=$(setpriv --clear-groups --reuid nobody --regid nogroup bash -c "PS4=''; set -xe; eval \"${str}\"" 2>&1)
 	check_result $? "Invalid object format: ${str}" $E_INVALID

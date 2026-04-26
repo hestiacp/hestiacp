@@ -1,3 +1,5 @@
+# syntax=docker/dockerfile:1.7
+
 FROM ubuntu:24.04
 
 ENV DEBIAN_FRONTEND=noninteractive
@@ -47,20 +49,24 @@ RUN locale-gen en_US.UTF-8 \
 RUN printf 'd /run/sshd 0755 root root -\n' > /etc/tmpfiles.d/sshd.conf
 
 # Avoid ssh.service entering start-limit-hit during rapid restart loops in tests.
-RUN mkdir -p /etc/systemd/system/ssh.service.d \
-	&& cat > /etc/systemd/system/ssh.service.d/10-docker.conf << 'EOF'
+RUN << 'EOF'
+mkdir -p /etc/systemd/system/ssh.service.d
+cat > /etc/systemd/system/ssh.service.d/10-docker.conf <<'UNIT'
 [Unit]
 StartLimitIntervalSec=0
+UNIT
 EOF
 
 # Ensure netplan exists in Ubuntu containers so v-add-sys-ip uses netplan path in tests.
-RUN cat > /etc/netplan/01-docker.yaml << 'EOF'
+RUN << 'EOF'
+cat > /etc/netplan/01-docker.yaml <<'NETPLAN'
 network:
   version: 2
   renderer: networkd
   ethernets:
     eth0:
       dhcp4: true
+NETPLAN
 EOF
 
 VOLUME ["/sys/fs/cgroup"]

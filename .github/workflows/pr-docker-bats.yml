@@ -50,6 +50,10 @@ jobs:
             -v "${GITHUB_WORKSPACE}:/hestiacp-git" \
             -w /hestiacp-git \
             hestia-ci:${{ github.sha }}
+          for _ in {1..100}; do
+            docker exec hestia-ci bash -lc 'systemctl is-system-running 2>/dev/null | grep -Eq "running|degraded"' && break
+            sleep 0.1
+          done
 
       - name: Install Hestia from local git
         run: |

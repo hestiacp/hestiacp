@@ -2,6 +2,31 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.9.4] - Service release
+
+- Dropping support for Ubuntu 20.04 for new installs
+
+### Bug fixes
+
+- Fix: 421 error on all web and mail domains after Apache 2.4.64 update (#5058)
+- Fix: Set default SOA retry value to 1800 for DENIC compliance (#5030)
+- Fix domain alias replacement logic when changing web domain (Fixes #5015) (#5041)
+- Fix ipv4_cidr validation (#5044)
+- Update magento.tpl / magento.stpl for healthcheck support (#5036)
+- Add: Show user and bandwidth quota in the dashboard
+- Sort backup file list before retention check (Fixes #5017) (#5018)
+- Improve logging of Spamhaus DQS lookups without exposing query key (#5011)
+- Bump Roundcube to version 1.6.11
+- Remove the apache2-suexec-pristine package from the Debian installer
+- Fix(#4979): Fixes domain redirects not being suspended (#4991)
+- Ensure newline at end of hestiaweb user crontab (#4992)
+- Allow slash when adding username to smtp relay (Fixes #4973) (#4974)
+- fix: prevent empty user variable from affecting multiple scripts (Fixes #4926) (#4928)
+- Fix editing Panel Cronjobs for hestiaweb (#4891)
+- Fix missing dependency proftpd-mod-crypto on Ubuntu (#4895)
+- Fix the way Hestia validates chain certificate (#4887)
+- Class change for latest version of file manager. (#4871)
+
 ## [1.9.3] - Service release
 
 ### Bug fixes

@@ -13,7 +13,7 @@
 # Argument definition
 user=$1
 domain=$2
-domain=$(echo $domain | tr '[:upper:]' '[:lower:]')
+domain=$(echo "$domain" | tr '[:upper:]' '[:lower:]')
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf

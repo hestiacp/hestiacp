@@ -1,0 +1,138 @@
+#!/bin/bash
+# info: change firewall rule
+# options: RULE DIRECTION
+#
+# example: v-move-firewall-rule 4 up
+#
+# This function is used for moving an existing firewall rule.
+# Direction can be either "up" or "down".
+#
+# If the direction is "up", the rule will be moved to a lower
+# number (higher priority).
+#
+# If the direction is "down", the rule will be moved to a
+# higher number (lower priority).
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Argument definition
+source_rule=$1
+direction=$(echo $2 | tr '[:lower:]' '[:upper:]')
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+get_rule_id() {
+	local old_rule_no=$1
+	local direction=$2
+	local new_rule_no
+	if [[ "$direction" == "UP" ]]; then
+		new_rule_no=$((old_rule_no - 1))
+	else
+		new_rule_no=$((old_rule_no + 1))
+	fi
+	echo "$new_rule_no"
+}
+
+# Sort function
+sort_fw_rules() {
+	cat $HESTIA/data/firewall/rules.conf \
+		| sort -n -k 2 -t \' > $HESTIA/data/firewall/rules.conf.tmp
+	mv -f $HESTIA/data/firewall/rules.conf.tmp \
+		$HESTIA/data/firewall/rules.conf
+}
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '2' "$#" 'RULE DIRECTION'
+is_format_valid 'rule' "$source_rule"
+if [ ! -z "$comment" ]; then
+	is_format_valid 'comment'
+fi
+is_system_enabled "$FIREWALL_SYSTEM" 'FIREWALL_SYSTEM'
+is_object_valid '../../../data/firewall/rules' 'RULE' "$source_rule"
+
+# Check if the direction is valid
+if [[ "$direction" != "UP" && "$direction" != "DOWN" ]]; then
+	echo "Invalid direction. Use 'up' or 'down'."
+	exit 1
+fi
+
+# Check if the rule can be moved up (if it's not the first rule)
+if [[ "$direction" == "UP" && "$source_rule" -eq 1 ]]; then
+	echo "Cannot move rule up. It's already the first rule."
+	exit 1
+fi
+# Check if the rule can be moved down (if it's not the last rule)
+last_rule=$(tail -n 1 $HESTIA/data/firewall/rules.conf | cut -d "'" -f 2)
+if [[ "$direction" == "DOWN" && "$source_rule" -eq "$last_rule" ]]; then
+	echo "Cannot move rule down. It's already the last rule."
+	exit 1
+fi
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+target_rule=$(get_rule_id "$source_rule" "$direction")
+
+# Get the rule that will be moved
+parse_object_kv_list $(grep "RULE='$source_rule'" $HESTIA/data/firewall/rules.conf)
+
+# Generating timestamp
+time_n_date=$(date +'%T %F')
+time=$(echo "$time_n_date" | cut -f 1 -d \ )
+date=$(echo "$time_n_date" | cut -f 2 -d \ )
+
+# Concatenating firewall rule
+source_str="RULE='$target_rule' ACTION='$ACTION' PROTOCOL='$PROTOCOL' PORT='$PORT'"
+source_str="$source_str IP='$IP' COMMENT='$COMMENT' SUSPENDED='$SUSPENDED'"
+source_str="$source_str TIME='$time' DATE='$date'"
+
+# Deleting old source rule
+sed -i "/RULE='$source_rule' /d" $HESTIA/data/firewall/rules.conf
+
+parse_object_kv_list $(grep "RULE='$target_rule'" $HESTIA/data/firewall/rules.conf)
+
+# Generating timestamp
+time_n_date=$(date +'%T %F')
+time=$(echo "$time_n_date" | cut -f 1 -d \ )
+date=$(echo "$time_n_date" | cut -f 2 -d \ )
+
+# Concatenating firewall rule
+target_str="RULE='$source_rule' ACTION='$ACTION' PROTOCOL='$PROTOCOL' PORT='$PORT'"
+target_str="$target_str IP='$IP' COMMENT='$COMMENT' SUSPENDED='$SUSPENDED'"
+target_str="$target_str TIME='$time' DATE='$date'"
+
+# Deleting old target rule
+sed -i "/RULE='$target_rule' /d" $HESTIA/data/firewall/rules.conf
+
+# Adding new source and target rules
+echo "$source_str" >> $HESTIA/data/firewall/rules.conf
+echo "$target_str" >> $HESTIA/data/firewall/rules.conf
+
+# Sorting firewall rules by id number
+sort_fw_rules
+
+# Updating system firewall
+$BIN/v-update-firewall
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Logging
+$BIN/v-log-action "system" "Info" "Firewall" "Firewall rule $source_rule moved $direction (Source rule: $source_rule, Target rule: $target_rule)."
+log_event "$OK" "$ARGUMENTS"
+exit

@@ -12,7 +12,7 @@
 
 # Argument definition
 domain=$1
-domain=$(echo $domain | sed -e 's/\.*$//g' -e 's/^\.*//g')
+domain=$(echo "$domain" | sed -e 's/\.*$//g' -e 's/^\.*//g')
 domain_alias=$domain
 email=$2
 country=$3

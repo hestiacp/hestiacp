@@ -55,8 +55,21 @@ jobs:
         run: |
           docker exec hestia-ci bash -lc '
             set -euxo pipefail
+            export TERM=xterm
             cd /hestiacp-git/src
             bash ./hst_autocompile.sh --hestia --noinstall --keepbuild "~localsrc"
+            DEB_PATH=""
+            if compgen -G "/tmp/hestiacp-src/deb/hestia_*.deb" >/dev/null; then
+              DEB_PATH="/tmp/hestiacp-src/deb"
+            elif compgen -G "/tmp/hestiacp-src/debs/hestia_*.deb" >/dev/null; then
+              DEB_PATH="/tmp/hestiacp-src/debs"
+            else
+              echo "No local hestia debs found under /tmp/hestiacp-src/{deb,debs}"
+              ls -la /tmp/hestiacp-src || true
+              ls -la /tmp/hestiacp-src/deb || true
+              ls -la /tmp/hestiacp-src/debs || true
+              exit 1
+            fi
             cd /hestiacp-git
             bash install/hst-install-ubuntu.sh \
               --hostname hestia.local.test \
@@ -65,7 +78,7 @@ jobs:
               --password Password123 \
               --interactive no \
               --force \
-              --with-debs /tmp/hestiacp-src/deb \
+              --with-debs "${DEB_PATH}" \
               --clamav no \
               --spamassassin no
           '

@@ -59,6 +59,14 @@ jobs:
             cd /hestiacp-git/src
             bash ./hst_autocompile.sh --hestia --noinstall --keepbuild "~localsrc"
             DEB_PATH=""
+            if [[ -f "/tmp/hestiacp-src/deb" ]]; then
+              pkg="$(dpkg-deb -f /tmp/hestiacp-src/deb Package)"
+              ver="$(dpkg-deb -f /tmp/hestiacp-src/deb Version)"
+              arch="$(dpkg-deb -f /tmp/hestiacp-src/deb Architecture)"
+              DEB_PATH="/tmp/hestiacp-src/debs"
+              mkdir -p "${DEB_PATH}"
+              cp /tmp/hestiacp-src/deb "${DEB_PATH}/${pkg}_${ver}_${arch}.deb"
+            fi
             if compgen -G "/tmp/hestiacp-src/deb/hestia_*.deb" >/dev/null; then
               DEB_PATH="/tmp/hestiacp-src/deb"
             elif compgen -G "/tmp/hestiacp-src/debs/hestia_*.deb" >/dev/null; then

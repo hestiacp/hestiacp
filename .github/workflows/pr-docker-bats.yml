@@ -1,0 +1,119 @@
+name: BATS testsuite
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - ready_for_review
+
+permissions:
+  contents: read
+
+jobs:
+  docker-bats:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          submodules: recursive
+
+      - name: Build CI container
+        run: |
+          docker build \
+            -f .github/docker/hestia-ci.Dockerfile \
+            -t hestia-ci:${{ github.sha }} \
+            .
+
+      - name: Start CI container
+        run: |
+          docker run -d \
+            --name hestia-ci \
+            --hostname hestia-dev.local \
+            --privileged \
+            --cgroupns=host \
+            --tmpfs /run \
+            --tmpfs /run/lock \
+            --tmpfs /tmp:exec,mode=1777 \
+            --dns 8.8.8.8 \
+            --dns 8.8.4.4 \
+            --dns 2001:4860:4860::8888 \
+            --dns 2001:4860:4860::8844 \
+            -e TZ=UTC \
+            -e LANG=en_US.UTF-8 \
+            -e LC_ALL=en_US.UTF-8 \
+            -v /sys/fs/cgroup:/sys/fs/cgroup:rw \
+            -v "${GITHUB_WORKSPACE}:/hestiacp-git" \
+            -w /hestiacp-git \
+            hestia-ci:${{ github.sha }}
+          for _ in {1..100}; do
+            docker exec hestia-ci bash -lc 'systemctl is-system-running 2>/dev/null | grep -Eq "running|degraded"' && break
+            sleep 0.1
+          done
+
+      - name: Install Hestia from local git
+        run: |
+          docker exec hestia-ci bash -lc '
+            set -euxo pipefail
+            export TERM=xterm
+            cd /hestiacp-git/src
+            bash ./hst_autocompile.sh --hestia --noinstall --keepbuild "~localsrc"
+            DEB_PATH=""
+            if [[ -f "/tmp/hestiacp-src/deb" ]]; then
+              pkg="$(dpkg-deb -f /tmp/hestiacp-src/deb Package)"
+              ver="$(dpkg-deb -f /tmp/hestiacp-src/deb Version)"
+              arch="$(dpkg-deb -f /tmp/hestiacp-src/deb Architecture)"
+              DEB_PATH="/tmp/hestiacp-src/debs"
+              mkdir -p "${DEB_PATH}"
+              cp /tmp/hestiacp-src/deb "${DEB_PATH}/${pkg}_${ver}_${arch}.deb"
+            fi
+            if compgen -G "/tmp/hestiacp-src/deb/hestia_*.deb" >/dev/null; then
+              DEB_PATH="/tmp/hestiacp-src/deb"
+            elif compgen -G "/tmp/hestiacp-src/debs/hestia_*.deb" >/dev/null; then
+              DEB_PATH="/tmp/hestiacp-src/debs"
+            else
+              echo "No local hestia debs found under /tmp/hestiacp-src/{deb,debs}"
+              ls -la /tmp/hestiacp-src || true
+              ls -la /tmp/hestiacp-src/deb || true
+              ls -la /tmp/hestiacp-src/debs || true
+              exit 1
+            fi
+            cd /hestiacp-git
+            bash install/hst-install-ubuntu.sh \
+              --hostname hestia.local.test \
+              --email admin@example.com \
+              --username admin \
+              --password Password123 \
+              --interactive no \
+              --force \
+              --with-debs "${DEB_PATH}" \
+              --clamav no \
+              --spamassassin no
+          '
+
+      - name: Run BATS test suite
+        run: |
+          docker exec hestia-ci bash -lc '
+            set -euxo pipefail
+            cd /hestiacp-git
+            if ! command -v bats >/dev/null 2>&1; then
+              test/test_helper/bats-core/install.sh /usr/local
+            fi
+            bats test/test.bats
+          '
+
+      - name: Collect logs on failure
+        if: failure()
+        run: |
+          docker exec hestia-ci bash -lc 'journalctl --no-pager -n 500' || true
+          docker exec hestia-ci bash -lc 'ls -la /root/hst_install_backups || true' || true
+          docker exec hestia-ci bash -lc 'tail -n 500 /root/hst_install_backups/hst_install-*.log || true' || true
+
+      - name: Cleanup container
+        if: always()
+        run: |
+          docker rm -f hestia-ci || true

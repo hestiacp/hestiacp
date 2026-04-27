@@ -69,7 +69,7 @@ for domain in $domains; do
 		if [ -z "$check_config" ]; then
 			check_new=$(is_domain_new 'dns' "$domain")
 			if [ "$check_new" = "yes" ]; then
-				rm -rf $tmpdir
+				rm -rf "$tmpdir"
 				error="$domain belongs to another user"
 				echo "$error" | $SENDMAIL -s "$subj" "$email" "$notify"
 				sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe

@@ -553,7 +553,7 @@ case $architecture in
 		echo -e "\e[91mInstallation aborted\e[0m"
 		echo "===================================================================="
 		echo -e "\e[33mERROR: $architecture is currently not supported!\e[0m"
-		echo -e "\e[33mPlease verify the achitecture used is currenlty supported\e[0m"
+		echo -e "\e[33mPlease verify the architecture used is currently supported\e[0m"
 		echo ""
 		echo -e "\e[33mhttps://github.com/hestiacp/hestiacp/blob/main/README.md\e[0m"
 		echo ""

@@ -169,7 +169,7 @@ if [ "$create_user" = 'yes' ]; then
 	# Unpacking user container
 	tar xf "$BACKUP/$backup" -C "$tmpdir" --no-wildcards "./$backup_system" 2> /dev/null
 	if [ "$?" -ne 0 ]; then
-		rm -rf $tmpdir
+		rm -rf "$tmpdir"
 		echo "Can't unpack user container" | $SENDMAIL -s "$subj" $email $notify
 		sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
 		check_result "$E_PARSING" "Can't unpack user container"
@@ -189,7 +189,7 @@ fi
 chown "$user" "$tmpdir"
 tar xf $BACKUP/$backup -C $tmpdir ./pam
 if [ "$?" -ne 0 ]; then
-	rm -rf $tmpdir
+	rm -rf "$tmpdir"
 	echo "Can't unpack PAM container" | $SENDMAIL -s "$subj" $email $notify
 	sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
 	check_result "$E_PARSING" "Can't unpack PAM container"
@@ -229,7 +229,7 @@ if [ "$web" != 'no' ] && [ -n "$WEB_SYSTEM" ]; then
 		if [ -z "$check_config" ]; then
 			check_new=$(is_domain_new 'web' $domain)
 			if [ -n "$check_new" ]; then
-				rm -rf $tmpdir
+				rm -rf "$tmpdir"
 				error="$domain belongs to another user"
 				echo "$error" | $SENDMAIL -s "$subj" $email $notify
 				sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
@@ -240,7 +240,7 @@ if [ "$web" != 'no' ] && [ -n "$WEB_SYSTEM" ]; then
 		# Unpacking domain container
 		tar xf $BACKUP/$backup -C $tmpdir ./web/$domain
 		if [ "$?" -ne 0 ]; then
-			rm -rf $tmpdir
+			rm -rf "$tmpdir"
 			error="Can't unpack $domain web container"
 			echo "$error" | $SENDMAIL -s "$subj" $email $notify
 			sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
@@ -363,7 +363,7 @@ if [ "$web" != 'no' ] && [ -n "$WEB_SYSTEM" ]; then
 
 		# Restoring web domain data
 		if [ -d "$HOMEDIR/$user/web/$domain/public_html" ]; then
-			rm -rf $HOMEDIR/$user/web/$domain/public_html/*
+			rm -rf "$HOMEDIR/$user/web/$domain/public_html/*"
 		fi
 		chmod u+w "$HOMEDIR/$user/web/$domain"
 		[[ -d $HOMEDIR/$user/web/$domain/stats ]] && chmod u+w "$HOMEDIR/$user/web/$domain/stats"
@@ -381,7 +381,7 @@ if [ "$web" != 'no' ] && [ -n "$WEB_SYSTEM" ]; then
 		fi
 
 		if [ "$?" -ne 0 ]; then
-			rm -rf $tmpdir
+			rm -rf "$tmpdir"
 			error="Can't unpack $domain data tarball"
 			echo "$error" | $SENDMAIL -s "$subj" $email $notify
 			sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
@@ -438,7 +438,7 @@ if [ "$dns" != 'no' ] && [ -n "$DNS_SYSTEM" ]; then
 		if [ -z "$check_config" ]; then
 			check_new=$(is_domain_new 'dns' $domain)
 			if [ -n "$check_new" ]; then
-				rm -rf $tmpdir
+				rm -rf "$tmpdir"
 				error="$domain belongs to another user"
 				echo "$error" | $SENDMAIL -s "$subj" $email $notify
 				sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
@@ -449,7 +449,7 @@ if [ "$dns" != 'no' ] && [ -n "$DNS_SYSTEM" ]; then
 		# Unpacking domain container
 		tar xf $BACKUP/$backup -C $tmpdir ./dns/$domain
 		if [ "$?" -ne 0 ]; then
-			rm -rf $tmpdir
+			rm -rf "$tmpdir"
 			error="Can't unpack $domain dns container"
 			echo "$error" | $SENDMAIL -s "$subj" $email $notify
 			sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
@@ -545,7 +545,7 @@ if [ "$mail" != 'no' ] && [ -n "$MAIL_SYSTEM" ]; then
 		if [ -z "$check_config" ]; then
 			check_new=$(is_domain_new 'mail' $domain)
 			if [ -n "$check_new" ]; then
-				rm -rf $tmpdir
+				rm -rf "$tmpdir"
 				error="$domain belongs to another user"
 				echo "$error" | $SENDMAIL -s "$subj" $email $notify
 				sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
@@ -557,7 +557,7 @@ if [ "$mail" != 'no' ] && [ -n "$MAIL_SYSTEM" ]; then
 		tar xf $BACKUP/$backup -C $tmpdir ./mail/$domain
 
 		if [ "$?" -ne 0 ]; then
-			rm -rf $tmpdir
+			rm -rf "$tmpdir"
 			error="Can't unpack $domain mail container"
 			echo "$error" | $SENDMAIL -s "$subj" $email $notify
 			sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
@@ -672,7 +672,7 @@ if [ "$mail" != 'no' ] && [ -n "$MAIL_SYSTEM" ]; then
 			if [ -e "$tmpdir/mail/$domain/accounts.tar.zst" ]; then
 				$BIN/v-extract-fs-archive "$user" "$tmpdir/mail/$domain/accounts.tar.zst" "$HOMEDIR/$user/mail/$domain_idn/"
 				if [ "$?" -ne 0 ]; then
-					rm -rf $tmpdir
+					rm -rf "$tmpdir"
 					error="Can't unpack $domain mail account container"
 					echo "$error" | $SENDMAIL -s "$subj" $email $notify
 					sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
@@ -687,7 +687,7 @@ if [ "$mail" != 'no' ] && [ -n "$MAIL_SYSTEM" ]; then
 			if [ -e "$tmpdir/mail/$domain/accounts.tar.gz" ]; then
 				$BIN/v-extract-fs-archive "$user" "$tmpdir/mail/$domain/accounts.tar.gz" "$HOMEDIR/$user/mail/$domain_idn/"
 				if [ "$?" -ne 0 ]; then
-					rm -rf $tmpdir
+					rm -rf "$tmpdir"
 					error="Can't unpack $domain mail account container"
 					echo "$error" | $SENDMAIL -s "$subj" $email $notify
 					sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
@@ -746,7 +746,7 @@ if [ "$db" != 'no' ] && [ -n "$DB_SYSTEM" ]; then
 		# Unpacking database container
 		tar xf $BACKUP/$backup -C $tmpdir ./db/$database
 		if [ "$?" -ne 0 ]; then
-			rm -rf $tmpdir
+			rm -rf "$tmpdir"
 			error="Can't unpack $database database container"
 			echo "$error" | $SENDMAIL -s "$subj" $email $notify
 			sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
@@ -805,7 +805,7 @@ if [ "$cron" != 'no' ] && [ -n "$CRON_SYSTEM" ]; then
 	# Unpacking cron container
 	tar xf $BACKUP/$backup -C $tmpdir ./cron
 	if [ "$?" -ne 0 ]; then
-		rm -rf $tmpdir
+		rm -rf "$tmpdir"
 		error="Can't unpack cron container"
 		echo "$error" | $SENDMAIL -s "$subj" $email $notify
 		sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
@@ -869,7 +869,7 @@ if [ "$udir" != 'no' ]; then
 				tar xf "$BACKUP/$backup" -C "$tmpdir" --no-wildcards "./user_dir/$user_dir.tar.gz"
 			fi
 			if [ "$?" -ne 0 ]; then
-				rm -rf $tmpdir
+				rm -rf "$tmpdir"
 				error="Can't unpack $user_dir user dir container"
 				echo "$error" | $SENDMAIL -s "$subj" $email $notify
 				sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
@@ -887,7 +887,7 @@ if [ "$udir" != 'no' ]; then
 			cmdstatus="$?"
 			chown root:root "$HOMEDIR/$user"
 			if [ "$cmdstatus" -ne 0 ]; then
-				rm -rf $tmpdir
+				rm -rf "$tmpdir"
 				error="Can't unpack $user_dir user dir container"
 				echo "$error" | $SENDMAIL -s "$subj" $email $notify
 				sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
@@ -919,7 +919,7 @@ cat $tmpdir/restore.log | $SENDMAIL -s "$subj" $email $notify
 $BIN/v-add-user-notification "$user" "Backup restored successfully" "<p><span class='u-text-bold'>Archive:</span> <code>$backup</code></p>"
 
 # Deleting temporary data
-rm -rf $tmpdir
+rm -rf "$tmpdir"
 
 # Cleaning restore queue
 sed -i "/v-restore-user $user /d" $HESTIA/data/queue/backup.pipe

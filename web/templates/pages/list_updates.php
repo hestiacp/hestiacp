@@ -3,7 +3,7 @@
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
 			<a class="button button-secondary button-back js-button-back" href="/list/server/">
-				<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
+				<i class="fas fa-arrow-left icon-blue"></i><?= tohtml( _("Back")) ?>
 			</a>
 			<?php
 				if ($autoupdate == 'Enabled') {
@@ -16,8 +16,8 @@
 					$btn_label = _('Enable Automatic Updates');
 				}
 			?>
-			<a class="button button-secondary" href="<?= $btn_url ?>">
-				<i class="fas <?= $btn_icon ?>"></i><?= $btn_label ?>
+			<a class="button button-secondary" href="<?= tohtml($btn_url) ?>">
+				<i class="fas <?= tohtml($btn_icon) ?>"></i><?= tohtml($btn_label) ?>
 			</a>
 		</div>
 	</div>
@@ -26,14 +26,14 @@
 
 <div class="container">
 
-	<h1 class="u-text-center u-hide-desktop u-mt20 u-pr30 u-mb20 u-pl30"><?= _("Updates") ?></h1>
+	<h1 class="u-text-center u-hide-desktop u-mt20 u-pr30 u-mb20 u-pl30"><?= tohtml( _("Updates")) ?></h1>
 
 	<div class="units-table js-units-container">
 		<div class="units-table-header">
-			<div class="units-table-cell"><?= _("Package Name") ?></div>
-			<div class="units-table-cell"><?= _("Description") ?></div>
-			<div class="units-table-cell u-text-center"><?= _("Version") ?></div>
-			<div class="units-table-cell u-text-center"><?= _("Status") ?></div>
+			<div class="units-table-cell"><?= tohtml( _("Package Name")) ?></div>
+			<div class="units-table-cell"><?= tohtml( _("Description")) ?></div>
+			<div class="units-table-cell u-text-center"><?= tohtml( _("Version")) ?></div>
+			<div class="units-table-cell u-text-center"><?= tohtml( _("Status")) ?></div>
 		</div>
 
 		<!-- Begin update list item loop -->
@@ -51,23 +51,23 @@
 			?>
 			<div class="units-table-row <?php if ($status == 'suspended') echo 'disabled'; ?> js-unit">
 				<div class="units-table-cell units-table-heading-cell u-text-bold">
-					<span class="u-hide-desktop"><?= _("Package Names") ?>:</span>
-					<?= $key ?>
+					<span class="u-hide-desktop"><?= tohtml( _("Package Names")) ?>:</span>
+					<?= tohtml($key) ?>
 				</div>
 				<div class="units-table-cell">
-					<span class="u-hide-desktop u-text-bold"><?= _("Description") ?>:</span>
-					<?= _($data[$key]["DESCR"]) ?>
+					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Description")) ?>:</span>
+					<?= tohtml( _($data[$key]["DESCR"])) ?>
 				</div>
 				<div class="units-table-cell u-text-center-desktop">
-					<span class="u-hide-desktop u-text-bold"><?= _("Version") ?>:</span>
-					<?= $data[$key]["VERSION"] ?> (<?= $data[$key]["ARCH"] ?>)
+					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Version")) ?>:</span>
+					<?= tohtml($data[$key]["VERSION"]) ?> (<?= tohtml($data[$key]["ARCH"]) ?>)
 				</div>
 				<div class="units-table-cell u-text-center-desktop">
-					<span class="u-hide-desktop u-text-bold"><?= _("Status") ?>:</span>
+					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Status")) ?>:</span>
 					<?php if ($data[$key]['UPDATED'] == 'no'): ?>
-						<i class="fas fa-triangle-exclamation icon-orange" title="<?= _("Update available") ?>"></i>
+						<i class="fas fa-triangle-exclamation icon-orange" title="<?= tohtml( _("Update available")) ?>"></i>
 					<?php elseif ($data[$key]['UPDATED'] == 'yes'): ?>
-						<i class="fas fa-circle-check icon-green" title="<?= _("Package up-to-date") ?>"></i>
+						<i class="fas fa-circle-check icon-green" title="<?= tohtml( _("Package up-to-date")) ?>"></i>
 					<?php endif; ?>
 				</div>
 			</div>

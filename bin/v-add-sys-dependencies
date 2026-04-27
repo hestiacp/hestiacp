@@ -97,6 +97,18 @@ else
 	COMPOSER_HOME="$HOMEDIR/$user/.config/composer" user_exec $HESTIA_PHP $COMPOSER_BIN --quiet --no-dev install
 fi
 
+# Check if installation was successful, if not abort script and throw error message notification and clean-up
+if [ $? -ne 0 ]; then
+	echo "ERROR: Quick install dependencies installation failed!"
+	echo "Please report this to our development team:"
+	echo "https://github.com/hestiacp/hestiacp/issues"
+	$BIN/v-add-user-notification "$ROOT_USER" 'Hestia Quick Install dependencies installation failed!' '<p>Please <a href="https://github.com/hestiacp/hestiacp/issues" target="_blank">open an issue on GitHub</a> to report this to our development team.</p>'
+	# Installation failed, clean up files
+	rm --recursive --force ${QUICK_INSTALL_DIR}/vendor
+	$BIN/v-log-action "system" "Error" "Plugins" "Quick Install dependencies installation failed"
+	exit 1
+fi
+
 # Set permissions
 chown root: -R "${PM_INSTALL_DIR}/vendor"
 chown root: -R "${QUICK_INSTALL_DIR}/vendor"

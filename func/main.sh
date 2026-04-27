@@ -372,33 +372,156 @@ parse_object_kv_list_non_eval() {
 }
 
 # Check if a object string with key values pairs has the correct format and load it afterwards
-parse_object_kv_list() {
-	local str
-	local objkv
-	local suboutput
-	local OLD_IFS="$IFS"
+_parse_object_kv_list_php() {
+	local str check_status validated_output
+	local IFS=$'\n'
 
 	str=${@//$'\n'/ }
-	str=${str//\"/\\\"}
-	str=${str//$/\\$}
-	IFS=$'\n'
+	validated_output=$(
+		"$HESTIA_PHP" -- "$str" << 'EOPHP'
+<?php
+declare(strict_types=1);
 
-	suboutput=$(setpriv --clear-groups --reuid nobody --regid nogroup bash -c "PS4=''; set -xe; eval \"${str}\"" 2>&1)
-	check_result $? "Invalid object format: ${str}" $E_INVALID
+// Supported syntax:
+//   KEY1='value1' KEY2='value with spaces' KEY3=''
+//   KEY=value
+//   KEY=value\ with\ spaces
+//   KEY=ab\ c'de f'ghi
+//   KEY=
+//   KEY= KEY2=value
+//   KEY='abc'def
+//   KEY=abc''
+//   KEY=\'
+//   KEY=\\
+//
+// Notes:
+// - Key names must match: [a-zA-Z][a-zA-Z0-9_]*
+// - Inside single quotes, every character is literal except the closing single quote.
+// - Outside single quotes, backslash escapes the next character.
+function fail(string $message): never
+{
+    fwrite(STDERR, $message . PHP_EOL);
+    exit(2);
+}
 
-	for objkv in $suboutput; do
+if ($argc < 2) {
+    fail('Usage: php '.$argv[0].' "KEY=\'value\' KEY2=value"');
+}
 
-		if [[ "$objkv" =~ ^'eval ' ]]; then
-			continue
-		fi
+$unparsed = ($argv[1]);
+$result = [];
 
-		if ! [[ "$objkv" =~ ^([[:alnum:]][_[:alnum:]]{0,64}[[:alnum:]])=(\'?[^\']+?\'?)?$ ]]; then
-			check_result "$E_INVALID" "Invalid key value format [$objkv]"
-		fi
+while ($unparsed !== '') {
+    $unparsed = ltrim($unparsed);
+    if ($unparsed === '') {
+        break;
+    }
 
-		eval "$objkv"
-	done
-	IFS="$OLD_IFS"
+    $key_name_extracted = preg_match('/^([a-zA-Z][a-zA-Z0-9_]*)=/', $unparsed, $m);
+
+    if ($key_name_extracted !== 1) {
+		// example: `eval(code)=123`
+        fail('Invalid key value format. Could not extract key name from: ' . $unparsed);
+    }
+
+    $key_name = $m[1];
+    $unparsed = substr($unparsed, strlen($m[0]));
+
+    $key_value = '';
+    $is_in_quote = false;
+
+    while (true) {
+        if ($is_in_quote) {
+            // Inside single quotes, only a single quote is special.
+            $pos = strpos($unparsed, "'");
+
+            if ($pos === false) {
+				// example: `KEY='value` (missing closing quote)
+                fail('Invalid key value format. No closing quote for key: ' . $key_name . ' in: ' . $unparsed);
+            }
+
+            $key_value .= substr($unparsed, 0, $pos);
+            $unparsed = substr($unparsed, $pos + 1);
+            $is_in_quote = false;
+
+            if ($unparsed === '') {
+				// parsing complete
+                break;
+            }
+            continue;
+        }
+
+        // Outside single quotes, whitespace, single quote, and backslash are special.
+        $match = preg_match('/\s|\'|\\\\/u', $unparsed, $m, PREG_OFFSET_CAPTURE);
+        if ($match !== 1) {
+            // No more special chars; rest of string is the value.
+            $key_value .= $unparsed;
+            $unparsed = '';
+            break;
+        }
+
+        $matched_char = $m[0][0];
+        $pos = $m[0][1];
+
+        // Add everything before the matched special character.
+        $key_value .= substr($unparsed, 0, $pos);
+		$unparsed = substr($unparsed, $pos + strlen($matched_char));
+
+        if ($matched_char === "'") {
+            if ($unparsed === '') {
+				// example: `KEY='` - missing closing quote. nearest legal alternative is `KEY=''`
+                fail('Invalid key value format. No closing quote for key: ' . $key_name);
+            }
+            $is_in_quote = true;
+            continue;
+        }
+        if ($matched_char === '\\') {
+			if($unparsed === '') {
+				// example: `KEY=foo\`
+                fail('Invalid key value format. Escape character cannot be the last character in value for key: ' . $key_name . ' in: ' . $unparsed);
+            }
+
+            // Backslash escapes the next character verbatim
+			$next_char = mb_substr($unparsed, 0, 1, 'UTF-8'); // remember multi-byte unicode support, æøåÆØÅ
+			$key_value .= $next_char;
+			$unparsed = substr($unparsed, strlen($next_char));
+            continue;
+        }
+
+        // Matched whitespace: end of this key-value pair.
+        $unparsed = ltrim($unparsed);
+        break;
+    }
+    if (array_key_exists($key_name, $result)) {
+        $msg = 'Warning: Duplicate key name: ' . $key_name . '. ';
+
+        if ($result[$key_name] === $key_value) {
+            $msg .= 'value is identical.';
+        } else {
+            $msg .= var_export([
+                'old_value' => $result[$key_name],
+                'new_value' => $key_value,
+            ], true);
+        }
+        fwrite(STDERR, $msg . PHP_EOL);
+    }
+    $result[$key_name] = $key_value;
+}
+$assignments = [];
+foreach ($result as $k => $v) {
+    $v_quoted = "'" . strtr($v, ["'" => "'\\''"]) . "'";
+    $assignments[] = "$k=$v_quoted";
+}
+echo implode(' ', $assignments);
+EOPHP
+	)
+	check_status=$?
+	check_result "$check_status" "Invalid object format: ${str}" "$E_INVALID"
+	eval "$validated_output"
+}
+
+parse_object_kv_list() {
+	_parse_object_kv_list_php "$@"
 }
 
 # Check if object is supended
@@ -429,7 +552,8 @@ is_object_unsuspended() {
 is_object_value_empty() {
 	str=$(grep "$2='$3'" $USER_DATA/$1.conf)
 	parse_object_kv_list "$str"
-	eval value=$4
+	local varname="${4#\$}"
+	value="${!varname}"
 	if [ -n "$value" ] && [ "$value" != 'no' ]; then
 		check_result "$E_EXISTS" "${4//$/}=$value already exists"
 	fi
@@ -439,7 +563,8 @@ is_object_value_empty() {
 is_object_value_exist() {
 	str=$(grep "$2='$3'" $USER_DATA/$1.conf)
 	parse_object_kv_list "$str"
-	eval value=$4
+	local varname="${4#\$}"
+	value="${!varname}"
 	if [ -z "$value" ] || [ "$value" = 'no' ]; then
 		check_result "$E_NOTEXIST" "${4//$/}=$value doesn't exist"
 	fi
@@ -478,7 +603,9 @@ is_dir_symlink() {
 get_object_value() {
 	object=$(grep "$2='$3'" $USER_DATA/$1.conf)
 	parse_object_kv_list "$object"
-	eval echo $4
+	local varname="${4#\$}"
+	value="${!varname}"
+	echo "$value"
 }
 
 get_object_values() {
@@ -491,7 +618,8 @@ update_object_value() {
 	lnr=$(echo $row | cut -f 1 -d ':')
 	object=$(echo $row | sed "s/^$lnr://")
 	parse_object_kv_list "$object"
-	eval old="$4"
+	local varname="${4#\$}"
+	old="${!varname}"
 	old=$(echo "$old" | sed -e 's/\\/\\\\/g' -e 's/&/\\&/g' -e 's/\//\\\//g')
 	new=$(echo "$5" | sed -e 's/\\/\\\\/g' -e 's/&/\\&/g' -e 's/\//\\\//g')
 	sed -i "$lnr s/${4//$/}='${old//\*/\\*}'/${4//$/}='${new//\*/\\*}'/g" \
@@ -504,7 +632,8 @@ add_object_key() {
 	lnr=$(echo $row | cut -f 1 -d ':')
 	object=$(echo $row | sed "s/^$lnr://")
 	if [ -z "$(echo $object | grep $4=)" ]; then
-		eval old="$4"
+		local varname="${4#\$}"
+		old="${!varname}"
 		sed -i "$lnr s/$5='/$4='' $5='/" $USER_DATA/$1.conf
 	fi
 }
@@ -516,7 +645,7 @@ search_objects() {
 	if [ -f $USER_DATA/$1.conf ]; then
 		for line in $(grep $2=\'$3\' $USER_DATA/$1.conf); do
 			parse_object_kv_list "$line"
-			eval echo \$$4
+			echo "${!4}"
 		done
 	fi
 	IFS="$OLD_IFS"
@@ -792,7 +921,7 @@ is_alias_format_valid() {
 # IP format validator
 is_ip_format_valid() {
 	object_name=${2-ip}
-	valid=$($HESTIA_PHP -r '$ip="$argv[1]"; echo (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) ? 0 : 1);' $1)
+	valid=$($HESTIA_PHP -r '$ip=$argv[1]; echo (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) ? 0 : 1);' "$1")
 	if [ "$valid" -ne 0 ]; then
 		check_result "$E_INVALID" "invalid $object_name :: $1"
 	fi
@@ -801,14 +930,14 @@ is_ip_format_valid() {
 # IPv6 format validator
 is_ipv6_format_valid() {
 	object_name=${2-ipv6}
-	valid=$($HESTIA_PHP -r '$ip="$argv[1]"; echo (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) ? 0 : 1);' $1)
+	valid=$($HESTIA_PHP -r '$ip=$argv[1]; echo (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) ? 0 : 1);' "$1")
 	if [ "$valid" -ne 0 ]; then
 		check_result "$E_INVALID" "invalid $object_name :: $1"
 	fi
 }
 
 is_ip46_format_valid() {
-	valid=$($HESTIA_PHP -r '$ip="$argv[1]"; echo (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_IPV6) ? 0 : 1);' $1)
+	valid=$($HESTIA_PHP -r '$ip=$argv[1]; echo (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_IPV6) ? 0 : 1);' "$1")
 	if [ "$valid" -ne 0 ]; then
 		check_result "$E_INVALID" "invalid IP format :: $1"
 	fi
@@ -824,7 +953,7 @@ is_ipv4_cidr_format_valid() {
 
 is_ipv6_cidr_format_valid() {
 	object_name=${2-ipv6}
-	valid=$($HESTIA_PHP -r '$cidr="$argv[1]"; list($ip, $netmask) = [...explode("/", $cidr), 128]; echo ((filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) && $netmask <= 128) ? 0 : 1);' $1)
+	valid=$($HESTIA_PHP -r '$cidr=$argv[1]; list($ip, $netmask) = [...explode("/", $cidr), 128]; echo ((filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) && $netmask <= 128) ? 0 : 1);' "$1")
 	if [ "$valid" -ne 0 ]; then
 		check_result "$E_INVALID" "invalid $object_name :: $1"
 	fi
@@ -832,7 +961,7 @@ is_ipv6_cidr_format_valid() {
 
 is_netmask_format_valid() {
 	object_name=${2-netmask}
-	valid=$($HESTIA_PHP -r '$netmask="$argv[1]"; echo (preg_match("/^(128|192|224|240|248|252|254|255)\.(0|128|192|224|240|248|252|254|255)\.(0|128|192|224|240|248|252|254|255)\.(0|128|192|224|240|248|252|254|255)/", $netmask) ? 0 : 1);' $1)
+	valid=$($HESTIA_PHP -r '$netmask=$argv[1]; echo (preg_match("/^(128|192|224|240|248|252|254|255)\.(0|128|192|224|240|248|252|254|255)\.(0|128|192|224|240|248|252|254|255)\.(0|128|192|224|240|248|252|254|255)/", $netmask) ? 0 : 1);' "$1")
 	if [ "$valid" -ne 0 ]; then
 		check_result "$E_INVALID" "invalid $object_name :: $1"
 	fi
@@ -911,6 +1040,76 @@ is_common_format_valid() {
 	is_no_new_line_format "$1"
 }
 
+# Common format validator for fields that need spaces
+is_common_format_spaces_valid() {
+	# Block injection chars but allow spaces
+	exclude="[!|#|$|^|&|(|)|+|=|{|}|:|<|>|?|/|\|\"|'|;|%|\`]"
+
+	# Block tabs, newlines, carriage returns
+	if [[ "$1" == *$'\t'* || "$1" == *$'\n'* || "$1" == *$'\r'* || "$1" == *$'\v'* || "$1" == *$'\f'* ]]; then
+		check_result "$E_INVALID" "invalid $2 format :: $1"
+	fi
+
+	# No leading/trailing spaces
+	if [[ "$1" == " "* || "$1" == *" " ]]; then
+		check_result "$E_INVALID" "invalid $2 format :: $1"
+	fi
+
+	# No multiple consecutive spaces
+	if [[ "$1" =~ "  " ]]; then
+		check_result "$E_INVALID" "invalid $2 format :: $1"
+	fi
+
+	# Check excluded chars
+	if [[ "$1" =~ $exclude ]]; then
+		check_result "$E_INVALID" "invalid $2 format :: $1"
+	fi
+
+	# Max length
+	if [ 400 -le ${#1} ]; then
+		check_result "$E_INVALID" "invalid $2 format :: $1"
+	fi
+
+	# No @ (except single char)
+	if [[ "$1" =~ @ ]] && [ ${#1} -gt 1 ]; then
+		check_result "$E_INVALID" "invalid $2 format :: $1"
+	fi
+
+	# No wildcards
+	if [[ "$1" =~ \* ]]; then
+		if [[ "$(echo "$1" | grep -o '\*\.' | wc -l)" -eq 0 ]] && [[ "$1" != '*' ]]; then
+			check_result "$E_INVALID" "invalid $2 format :: $1"
+		fi
+	fi
+
+	# Must end with alphanumeric
+	if [[ $(echo -n "$1" | tail -c 1) =~ [^a-zA-Z0-9] ]]; then
+		check_result "$E_INVALID" "invalid $2 format :: $1"
+	fi
+
+	# No consecutive dots
+	if [[ $(echo -n "$1" | grep -c '\.\.') -gt 0 ]]; then
+		check_result "$E_INVALID" "invalid $2 format :: $1"
+	fi
+
+	# Must start with alphanumeric
+	if [[ $(echo -n "$1" | head -c 1) =~ [^a-zA-Z0-9] ]]; then
+		check_result "$E_INVALID" "invalid $2 format :: $1"
+	fi
+
+	# No consecutive dashes
+	if [[ $(echo -n "$1" | grep -c '\-\-') -gt 0 ]]; then
+		check_result "$E_INVALID" "invalid $2 format :: $1"
+	fi
+
+	# No consecutive underscores
+	if [[ $(echo -n "$1" | grep -c '\_\_') -gt 0 ]]; then
+		check_result "$E_INVALID" "invalid $2 format :: $1"
+	fi
+
+	is_no_new_line_format "$1"
+}
+
 is_no_new_line_format() {
 	test=$(echo "$1" | head -n1)
 	if [[ "$test" != "$1" ]]; then
@@ -960,29 +1159,45 @@ is_dbuser_format_valid() {
 
 # DNS record type validator
 is_dns_type_format_valid() {
-	known_dnstype='A,AAAA,NS,CNAME,MX,TXT,SRV,DNSKEY,KEY,IPSECKEY,PTR,SPF,TLSA,CAA,DS'
-	if [ -z "$(echo $known_dnstype | grep -w $1)" ]; then
+	is_valid=$(
+		$HESTIA_PHP -- "$1" << 'EOPHP'
+	<?php
+	$type = $argv[1];
+	$known_types = array("A","AAAA","NS","CNAME","MX","TXT","SRV","DNSKEY",
+	"KEY","IPSECKEY","PTR","SPF","TLSA","CAA","DS");
+	echo in_array($type, $known_types, true) ? "0" : "1";
+EOPHP
+	)
+	if [ "$is_valid" -ne 0 ]; then
 		check_result "$E_INVALID" "invalid dns record type format :: $1"
 	fi
 }
 
 # DNS record validator
 is_dns_record_format_valid() {
-	if [ "$rtype" = 'A' ]; then
-		is_ip_format_valid "$1"
-	fi
-	if [ "$rtype" = 'NS' ]; then
-		is_domain_format_valid "${1::-1}" 'ns_record'
-	fi
-	if [ "$rtype" = 'MX' ]; then
-		is_domain_format_valid "${1::-1}" 'mx_record'
-		is_int_format_valid "$priority" 'priority_record'
-	fi
-	if [ "$rtype" = 'SRV' ]; then
-		format_no_quotes "$priority" 'priority_record'
-	fi
-
 	is_no_new_line_format "$1"
+
+	json_from_php=$(
+		$HESTIA_PHP "$HESTIA/func/internal/dns_record_validator.php" "$1" "$rtype" "$priority"
+	)
+	check_result $? "dns record validation failed :: $1" "$E_INVALID"
+
+	is_valid=$(jq -er '.valid' <<< "$json_from_php")
+	if [ $? -ne 0 ]; then
+		check_result "$E_INVALID" "dns record validation failed :: $1"
+	fi
+	if [ "$is_valid" != 'true' ]; then
+		error_message=$(jq -r '.error_message // "invalid dns record format"' <<< "$json_from_php")
+		check_result "$E_INVALID" "$error_message :: $1"
+	fi
+	cleaned_record=$(jq -r '.cleaned_record // empty' <<< "$json_from_php")
+	if [ -n "$cleaned_record" ]; then
+		dvalue="$cleaned_record"
+	fi
+	updated_priority=$(jq -r '.new_priority // empty' <<< "$json_from_php")
+	if [ -n "$updated_priority" ]; then
+		priority="$updated_priority"
+	fi
 }
 
 # Email format validator
@@ -1194,7 +1409,7 @@ is_hash_format_valid() {
 # Format validation controller
 is_format_valid() {
 	for arg_name in $*; do
-		eval arg=\$$arg_name
+		arg="${!arg_name}"
 		if [ -n "$arg" ]; then
 			case $arg_name in
 				access_key_id) is_access_key_id_format_valid "$arg" "$arg_name" ;;

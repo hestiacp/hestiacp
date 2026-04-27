@@ -13,11 +13,11 @@
 
 # Argument definition
 rule=$1
-action=$(echo $2 | tr '[:lower:]' '[:upper:]')
+action=$(echo "$2" | tr '[:lower:]' '[:upper:]')
 ipv4_cidr=$3
 port_ext=$4
 protocol=${5-TCP}
-protocol=$(echo $protocol | tr '[:lower:]' '[:upper:]')
+protocol=$(echo "$protocol" | tr '[:lower:]' '[:upper:]')
 comment=$6
 
 # Includes

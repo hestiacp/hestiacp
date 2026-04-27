@@ -1494,14 +1494,18 @@ echo "[ * ] Generating default self-signed SSL certificate..."
 $HESTIA/bin/v-generate-ssl-cert $(hostname) '' 'US' 'California' \
 	'San Francisco' 'Hestia Control Panel' 'IT' > /tmp/hst.pem
 
-crt_end=$(grep -n "END CERTIFICATE-" /tmp/hst.pem | cut -f 1 -d:)
-if [ "$release" = "11" ]; then
-	key_start=$(grep -n "BEGIN RSA" /tmp/hst.pem | cut -f 1 -d:)
-	key_end=$(grep -n "END RSA" /tmp/hst.pem | cut -f 1 -d:)
-else
-	key_start=$(grep -n "BEGIN PRIVATE KEY" /tmp/hst.pem | cut -f 1 -d:)
-	key_end=$(grep -n "END PRIVATE KEY" /tmp/hst.pem | cut -f 1 -d:)
+crt_end=$(grep -n "END CERTIFICATE-" /tmp/hst.pem | head -n1 | cut -f 1 -d:)
+# Newer OpenSSL may emit BEGIN PRIVATE KEY while older flows emit BEGIN RSA PRIVATE KEY.
+key_start=$(grep -nE "BEGIN (RSA |EC |ENCRYPTED )?PRIVATE KEY" /tmp/hst.pem | head -n1 | cut -f 1 -d:)
+key_end=$(grep -nE "END (RSA |EC |ENCRYPTED )?PRIVATE KEY" /tmp/hst.pem | head -n1 | cut -f 1 -d:)
+if [ -z "$key_start" ] || [ -z "$key_end" ]; then
+	key_start=$(grep -n "BEGIN RSA" /tmp/hst.pem | head -n1 | cut -f 1 -d:)
+	key_end=$(grep -n "END RSA" /tmp/hst.pem | head -n1 | cut -f 1 -d:)
 fi
+check_result $(
+	[ -n "$crt_end" ] && [ -n "$key_start" ] && [ -n "$key_end" ]
+	echo $?
+) "failed to parse generated SSL certificate"
 
 # Adding SSL certificate
 echo "[ * ] Adding SSL certificate to Hestia Control Panel..."

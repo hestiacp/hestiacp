@@ -18,7 +18,7 @@ hour=$3
 day=$4
 month=$5
 wday=$6
-cron_command=$(echo $7 | sed "s/'/%quote%/g")
+cron_command=$(echo "$7" | sed "s/'/%quote%/g")
 job=$8
 restart=$9
 

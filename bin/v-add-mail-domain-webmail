@@ -142,7 +142,7 @@ else
 	fi
 fi
 
-WEBMAIL=$(get_object_value 'web' 'DOMAIN' "$domain" "$WEBMAIL")
+WEBMAIL=$(get_object_value 'mail' 'DOMAIN' "$domain" '$WEBMAIL')
 if [ -z "$WEBMAIL" ]; then
 	add_object_key 'mail' 'DOMAIN' "$domain" 'WEBMAIL' 'SSL'
 fi

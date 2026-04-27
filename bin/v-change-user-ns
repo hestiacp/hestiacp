@@ -12,14 +12,14 @@
 
 # Argument definition
 user=$1
-ns1=$(echo $2 | sed -e 's/\.*$//g' -e 's/^\.*//g')
-ns2=$(echo $3 | sed -e 's/\.*$//g' -e 's/^\.*//g')
-ns3=$(echo $4 | sed -e 's/\.*$//g' -e 's/^\.*//g')
-ns4=$(echo $5 | sed -e 's/\.*$//g' -e 's/^\.*//g')
-ns5=$(echo $6 | sed -e 's/\.*$//g' -e 's/^\.*//g')
-ns6=$(echo $7 | sed -e 's/\.*$//g' -e 's/^\.*//g')
-ns7=$(echo $8 | sed -e 's/\.*$//g' -e 's/^\.*//g')
-ns8=$(echo $9 | sed -e 's/\.*$//g' -e 's/^\.*//g')
+ns1=$(echo "$2" | sed -e 's/\.*$//g' -e 's/^\.*//g')
+ns2=$(echo "$3" | sed -e 's/\.*$//g' -e 's/^\.*//g')
+ns3=$(echo "$4" | sed -e 's/\.*$//g' -e 's/^\.*//g')
+ns4=$(echo "$5" | sed -e 's/\.*$//g' -e 's/^\.*//g')
+ns5=$(echo "$6" | sed -e 's/\.*$//g' -e 's/^\.*//g')
+ns6=$(echo "$7" | sed -e 's/\.*$//g' -e 's/^\.*//g')
+ns7=$(echo "$8" | sed -e 's/\.*$//g' -e 's/^\.*//g')
+ns8=$(echo "$9" | sed -e 's/\.*$//g' -e 's/^\.*//g')
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf

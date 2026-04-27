@@ -372,33 +372,156 @@ parse_object_kv_list_non_eval() {
 }
 
 # Check if a object string with key values pairs has the correct format and load it afterwards
-parse_object_kv_list() {
-	local str
-	local objkv
-	local suboutput
-	local OLD_IFS="$IFS"
+_parse_object_kv_list_php() {
+	local str check_status validated_output
+	local IFS=$'\n'
 
 	str=${@//$'\n'/ }
-	str=${str//\"/\\\"}
-	str=${str//$/\\$}
-	IFS=$'\n'
+	validated_output=$(
+		"$HESTIA_PHP" -- "$str" << 'EOPHP'
+<?php
+declare(strict_types=1);
 
-	suboutput=$(setpriv --clear-groups --reuid nobody --regid nogroup bash -c "PS4=''; set -xe; eval \"${str}\"" 2>&1)
-	check_result $? "Invalid object format: ${str}" $E_INVALID
+// Supported syntax:
+//   KEY1='value1' KEY2='value with spaces' KEY3=''
+//   KEY=value
+//   KEY=value\ with\ spaces
+//   KEY=ab\ c'de f'ghi
+//   KEY=
+//   KEY= KEY2=value
+//   KEY='abc'def
+//   KEY=abc''
+//   KEY=\'
+//   KEY=\\
+//
+// Notes:
+// - Key names must match: [a-zA-Z][a-zA-Z0-9_]*
+// - Inside single quotes, every character is literal except the closing single quote.
+// - Outside single quotes, backslash escapes the next character.
+function fail(string $message): never
+{
+    fwrite(STDERR, $message . PHP_EOL);
+    exit(2);
+}
 
-	for objkv in $suboutput; do
+if ($argc < 2) {
+    fail('Usage: php '.$argv[0].' "KEY=\'value\' KEY2=value"');
+}
 
-		if [[ "$objkv" =~ ^'eval ' ]]; then
-			continue
-		fi
+$unparsed = ($argv[1]);
+$result = [];
 
-		if ! [[ "$objkv" =~ ^([[:alnum:]][_[:alnum:]]{0,64}[[:alnum:]])=(\'?[^\']+?\'?)?$ ]]; then
-			check_result "$E_INVALID" "Invalid key value format [$objkv]"
-		fi
+while ($unparsed !== '') {
+    $unparsed = ltrim($unparsed);
+    if ($unparsed === '') {
+        break;
+    }
 
-		eval "$objkv"
-	done
-	IFS="$OLD_IFS"
+    $key_name_extracted = preg_match('/^([a-zA-Z][a-zA-Z0-9_]*)=/', $unparsed, $m);
+
+    if ($key_name_extracted !== 1) {
+		// example: `eval(code)=123`
+        fail('Invalid key value format. Could not extract key name from: ' . $unparsed);
+    }
+
+    $key_name = $m[1];
+    $unparsed = substr($unparsed, strlen($m[0]));
+
+    $key_value = '';
+    $is_in_quote = false;
+
+    while (true) {
+        if ($is_in_quote) {
+            // Inside single quotes, only a single quote is special.
+            $pos = strpos($unparsed, "'");
+
+            if ($pos === false) {
+				// example: `KEY='value` (missing closing quote)
+                fail('Invalid key value format. No closing quote for key: ' . $key_name . ' in: ' . $unparsed);
+            }
+
+            $key_value .= substr($unparsed, 0, $pos);
+            $unparsed = substr($unparsed, $pos + 1);
+            $is_in_quote = false;
+
+            if ($unparsed === '') {
+				// parsing complete
+                break;
+            }
+            continue;
+        }
+
+        // Outside single quotes, whitespace, single quote, and backslash are special.
+        $match = preg_match('/\s|\'|\\\\/u', $unparsed, $m, PREG_OFFSET_CAPTURE);
+        if ($match !== 1) {
+            // No more special chars; rest of string is the value.
+            $key_value .= $unparsed;
+            $unparsed = '';
+            break;
+        }
+
+        $matched_char = $m[0][0];
+        $pos = $m[0][1];
+
+        // Add everything before the matched special character.
+        $key_value .= substr($unparsed, 0, $pos);
+		$unparsed = substr($unparsed, $pos + strlen($matched_char));
+
+        if ($matched_char === "'") {
+            if ($unparsed === '') {
+				// example: `KEY='` - missing closing quote. nearest legal alternative is `KEY=''`
+                fail('Invalid key value format. No closing quote for key: ' . $key_name);
+            }
+            $is_in_quote = true;
+            continue;
+        }
+        if ($matched_char === '\\') {
+			if($unparsed === '') {
+				// example: `KEY=foo\`
+                fail('Invalid key value format. Escape character cannot be the last character in value for key: ' . $key_name . ' in: ' . $unparsed);
+            }
+
+            // Backslash escapes the next character verbatim
+			$next_char = mb_substr($unparsed, 0, 1, 'UTF-8'); // remember multi-byte unicode support, æøåÆØÅ
+			$key_value .= $next_char;
+			$unparsed = substr($unparsed, strlen($next_char));
+            continue;
+        }
+
+        // Matched whitespace: end of this key-value pair.
+        $unparsed = ltrim($unparsed);
+        break;
+    }
+    if (array_key_exists($key_name, $result)) {
+        $msg = 'Warning: Duplicate key name: ' . $key_name . '. ';
+
+        if ($result[$key_name] === $key_value) {
+            $msg .= 'value is identical.';
+        } else {
+            $msg .= var_export([
+                'old_value' => $result[$key_name],
+                'new_value' => $key_value,
+            ], true);
+        }
+        fwrite(STDERR, $msg . PHP_EOL);
+    }
+    $result[$key_name] = $key_value;
+}
+$assignments = [];
+foreach ($result as $k => $v) {
+    $v_quoted = "'" . strtr($v, ["'" => "'\\''"]) . "'";
+    $assignments[] = "$k=$v_quoted";
+}
+echo implode(' ', $assignments);
+EOPHP
+	)
+	check_status=$?
+	check_result "$check_status" "Invalid object format: ${str}" "$E_INVALID"
+	eval "$validated_output"
+}
+
+parse_object_kv_list() {
+	_parse_object_kv_list_php "$@"
 }
 
 # Check if object is supended
@@ -429,7 +552,8 @@ is_object_unsuspended() {
 is_object_value_empty() {
 	str=$(grep "$2='$3'" $USER_DATA/$1.conf)
 	parse_object_kv_list "$str"
-	eval value=$4
+	local varname="${4#\$}"
+	value="${!varname}"
 	if [ -n "$value" ] && [ "$value" != 'no' ]; then
 		check_result "$E_EXISTS" "${4//$/}=$value already exists"
 	fi
@@ -439,7 +563,8 @@ is_object_value_empty() {
 is_object_value_exist() {
 	str=$(grep "$2='$3'" $USER_DATA/$1.conf)
 	parse_object_kv_list "$str"
-	eval value=$4
+	local varname="${4#\$}"
+	value="${!varname}"
 	if [ -z "$value" ] || [ "$value" = 'no' ]; then
 		check_result "$E_NOTEXIST" "${4//$/}=$value doesn't exist"
 	fi
@@ -478,7 +603,9 @@ is_dir_symlink() {
 get_object_value() {
 	object=$(grep "$2='$3'" $USER_DATA/$1.conf)
 	parse_object_kv_list "$object"
-	eval echo $4
+	local varname="${4#\$}"
+	value="${!varname}"
+	echo "$value"
 }
 
 get_object_values() {
@@ -491,7 +618,8 @@ update_object_value() {
 	lnr=$(echo $row | cut -f 1 -d ':')
 	object=$(echo $row | sed "s/^$lnr://")
 	parse_object_kv_list "$object"
-	eval old="$4"
+	local varname="${4#\$}"
+	old="${!varname}"
 	old=$(echo "$old" | sed -e 's/\\/\\\\/g' -e 's/&/\\&/g' -e 's/\//\\\//g')
 	new=$(echo "$5" | sed -e 's/\\/\\\\/g' -e 's/&/\\&/g' -e 's/\//\\\//g')
 	sed -i "$lnr s/${4//$/}='${old//\*/\\*}'/${4//$/}='${new//\*/\\*}'/g" \
@@ -504,7 +632,8 @@ add_object_key() {
 	lnr=$(echo $row | cut -f 1 -d ':')
 	object=$(echo $row | sed "s/^$lnr://")
 	if [ -z "$(echo $object | grep $4=)" ]; then
-		eval old="$4"
+		local varname="${4#\$}"
+		old="${!varname}"
 		sed -i "$lnr s/$5='/$4='' $5='/" $USER_DATA/$1.conf
 	fi
 }
@@ -516,7 +645,7 @@ search_objects() {
 	if [ -f $USER_DATA/$1.conf ]; then
 		for line in $(grep $2=\'$3\' $USER_DATA/$1.conf); do
 			parse_object_kv_list "$line"
-			eval echo \$$4
+			echo "${!4}"
 		done
 	fi
 	IFS="$OLD_IFS"
@@ -1372,7 +1501,7 @@ is_hash_format_valid() {
 # Format validation controller
 is_format_valid() {
 	for arg_name in $*; do
-		eval arg=\$$arg_name
+		arg="${!arg_name}"
 		if [ -n "$arg" ]; then
 			case $arg_name in
 				access_key_id) is_access_key_id_format_valid "$arg" "$arg_name" ;;

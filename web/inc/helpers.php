@@ -1,4 +1,5 @@
 <?php
+use Divinity76\CloudflareIpValidator\CloudflareIpValidator;
 use function Hestiacp\quoteshellarg\quoteshellarg;
 
 # Return codes
@@ -84,7 +85,7 @@ function exit_code_to_http_code(int $exit_code, int $default = 400): int {
 }
 
 function check_local_ip($addr) {
-	if (in_array($addr, [$_SERVER["SERVER_ADDR"], "127.0.0.1"])) {
+	if (in_array($addr, [$_SERVER["SERVER_ADDR"], "127.0.0.1"], true)) {
 		return true;
 	} else {
 		return false;
@@ -92,47 +93,22 @@ function check_local_ip($addr) {
 }
 
 function get_real_user_ip() {
-	$ip = $_SERVER["REMOTE_ADDR"];
-	if (isset($_SERVER["HTTP_CLIENT_IP"]) && !check_local_ip($_SERVER["HTTP_CLIENT_IP"])) {
-		if (filter_var($_SERVER["HTTP_CLIENT_IP"], FILTER_VALIDATE_IP)) {
-			$ip = $_SERVER["HTTP_CLIENT_IP"];
-		}
+	$ip = "";
+
+	if (
+		!empty($_SERVER["REMOTE_ADDR"]) &&
+		filter_var($_SERVER["REMOTE_ADDR"], FILTER_VALIDATE_IP)
+	) {
+		$ip = $_SERVER["REMOTE_ADDR"];
 	}
 
 	if (
-		isset($_SERVER["HTTP_X_FORWARDED_FOR"]) &&
-		!check_local_ip($_SERVER["HTTP_X_FORWARDED_FOR"])
+		!empty($_SERVER["HTTP_CF_CONNECTING_IP"]) &&
+		filter_var($_SERVER["HTTP_CF_CONNECTING_IP"], FILTER_VALIDATE_IP) &&
+		!empty($ip) &&
+		CloudflareIpValidator::isCloudflareIp($ip)
 	) {
-		if (filter_var($_SERVER["HTTP_X_FORWARDED_FOR"], FILTER_VALIDATE_IP)) {
-			$ip = $_SERVER["HTTP_X_FORWARDED_FOR"];
-		}
-	}
-
-	if (isset($_SERVER["HTTP_FORWARDED_FOR"]) && !check_local_ip($_SERVER["HTTP_FORWARDED_FOR"])) {
-		if (filter_var($_SERVER["HTTP_FORWARDED_FOR"], FILTER_VALIDATE_IP)) {
-			$ip = $_SERVER["HTTP_FORWARDED_FOR"];
-		}
-	}
-
-	if (isset($_SERVER["HTTP_X_FORWARDED"]) && !check_local_ip($_SERVER["HTTP_X_FORWARDED"])) {
-		if (filter_var($_SERVER["HTTP_X_FORWARDED"], FILTER_VALIDATE_IP)) {
-			$ip = $_SERVER["HTTP_X_FORWARDED"];
-		}
-	}
-
-	if (isset($_SERVER["HTTP_FORWARDED"]) && !check_local_ip($_SERVER["HTTP_FORWARDED"])) {
-		if (filter_var($_SERVER["HTTP_FORWARDED"], FILTER_VALIDATE_IP)) {
-			$ip = $_SERVER["HTTP_FORWARDED"];
-		}
-	}
-
-	if (
-		isset($_SERVER["HTTP_CF_CONNECTING_IP"]) &&
-		!check_local_ip($_SERVER["HTTP_CF_CONNECTING_IP"])
-	) {
-		if (filter_var($_SERVER["HTTP_CF_CONNECTING_IP"], FILTER_VALIDATE_IP)) {
-			$ip = $_SERVER["HTTP_CF_CONNECTING_IP"];
-		}
+		$ip = $_SERVER["HTTP_CF_CONNECTING_IP"];
 	}
 
 	// Handling IPv4-mapped IPv6 address

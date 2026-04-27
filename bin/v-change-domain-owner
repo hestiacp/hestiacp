@@ -79,7 +79,7 @@ if [ -n "$web_data" ]; then
 		get_user_ip
 	fi
 	old_ip=$IP
-	new_ip=$ip
+	new_ip=${local_ip:-$ip}
 	echo $ip
 
 	# Change IP

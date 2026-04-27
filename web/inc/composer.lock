@@ -4,8 +4,45 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "086d256282e0f8f84760be89c386abb2",
+    "content-hash": "fad6bd8a45b9a059be7fc0bbdf1f1168",
     "packages": [
+        {
+            "name": "divinity76/cloudflare-ip-validator",
+            "version": "v1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/divinity76/cloudflare-ip-validator.git",
+                "reference": "557a95ef8db59192a6688a30316440e73403644f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/divinity76/cloudflare-ip-validator/zipball/557a95ef8db59192a6688a30316440e73403644f",
+                "reference": "557a95ef8db59192a6688a30316440e73403644f",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.0"
+            },
+            "suggest": {
+                "ext-filter": "Used for additional input validation in your application stack"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Divinity76\\CloudflareIpValidator\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Unlicense"
+            ],
+            "description": "Fast Cloudflare IP validator for PHP",
+            "support": {
+                "issues": "https://github.com/divinity76/cloudflare-ip-validator/issues",
+                "source": "https://github.com/divinity76/cloudflare-ip-validator/tree/v1.0.0"
+            },
+            "time": "2026-03-23T21:11:01+00:00"
+        },
         {
             "name": "hestiacp/phpquoteshellarg",
             "version": "v1.1.0",

@@ -37,7 +37,7 @@ is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 
 # Check owner existence
-owner=$(echo $database | cut -f 1 -d '_')
+owner=$(echo "$database" | cut -f 1 -d '_')
 if [ ! -d "$HESTIA/data/users/$owner" ]; then
 	echo "Error: database owner doesn't exist"
 	log_event "$E_NOTEXIST" "$ARGUMENTS"
@@ -66,7 +66,7 @@ else
 fi
 
 # Check if database name is uniqe
-new_db=$(echo $database | sed "s/^${owner}_/${usersmall}_/")
+new_db=$(echo "$database" | sed "s/^${owner}_/${usersmall}_/")
 check_db=$(grep "DB='$new_db'" $HESTIA/data/users/$user/db.conf)
 if [ -n "$check_db" ]; then
 	echo "Error: $new_db database exists"

@@ -1,4 +1,4 @@
-name: PR Docker BATS testsuite
+name: BATS testsuite
 
 on:
   pull_request:

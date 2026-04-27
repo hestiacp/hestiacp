@@ -39,9 +39,9 @@ multiphp_required=("7.3" "7.4" "8.0" "8.1" "8.2" "8.3")
 # Default PHP version if none supplied
 fpm_v="8.3"
 # MariaDB version
-mariadb_v="11.4"
+mariadb_v="11.8"
 # Node.js version
-node_v="20"
+node_v="24"
 
 # Defining software pack for all distros
 software="acl apache2 apache2.2-common apache2-suexec-custom apache2-utils apparmor-utils at awstats bc bind9 bsdmainutils bsdutils
@@ -83,6 +83,7 @@ help() {
   -r, --port              Change Backend Port             default: 8083
   -l, --lang              Default language                default: en
   -y, --interactive       Interactive install   [yes|no]  default: yes
+  -6, --ipv6              Enable IPv6 Support   [yes|no]  default: no
   -s, --hostname          Set hostname
   -e, --email             Set admin email
   -u, --username          Set admin user
@@ -267,6 +268,7 @@ for arg; do
 		--port) args="${args}-r " ;;
 		--lang) args="${args}-l " ;;
 		--interactive) args="${args}-y " ;;
+		--ipv6) args="${args}-6 " ;;
 		--api) args="${args}-d " ;;
 		--hostname) args="${args}-s " ;;
 		--email) args="${args}-e " ;;
@@ -284,7 +286,7 @@ done
 eval set -- "$args"
 
 # Parsing arguments
-while getopts "a:w:v:j:k:m:M:g:d:x:z:Z:c:t:i:b:r:o:q:L:l:y:s:u:e:p:W:D:fh" Option; do
+while getopts "a:w:v:j:k:m:M:g:d:x:z:Z:c:t:i:b:r:o:q:L:l:y:6:s:u:e:p:W:D:fh" Option; do
 	case $Option in
 		a) apache=$OPTARG ;;        # Apache
 		w) phpfpm=$OPTARG ;;        # PHP-FPM
@@ -309,6 +311,7 @@ while getopts "a:w:v:j:k:m:M:g:d:x:z:Z:c:t:i:b:r:o:q:L:l:y:s:u:e:p:W:D:fh" Optio
 		l) lang=$OPTARG ;;          # Language
 		d) api=$OPTARG ;;           # Activate API
 		y) interactive=$OPTARG ;;   # Interactive install
+		6) ipv6_support=$OPTARG ;;  # IPV6
 		s) servername=$OPTARG ;;    # Hostname
 		e) email=$OPTARG ;;         # Admin email
 		u) username=$OPTARG ;;      # Admin username
@@ -387,6 +390,7 @@ set_default_value 'quota' 'no'
 set_default_value 'resourcelimit' 'no'
 set_default_value 'webterminal' 'no'
 set_default_value 'interactive' 'yes'
+set_default_value 'ipv6_support' 'no'
 set_default_value 'api' 'yes'
 set_default_port '8083'
 set_default_lang 'en'
@@ -764,10 +768,16 @@ if ! [[ "$servername" =~ ^${mask1}${mask2}$ ]]; then
 		servername="example.com"
 	fi
 	echo "127.0.0.1 $servername" >> /etc/hosts
+	if [ "$ipv6_support" = 'yes' ]; then
+		echo "::1 $servername" >> /etc/hosts
+	fi
 fi
 
 if [[ -z $(grep -i "$servername" /etc/hosts) ]]; then
 	echo "127.0.0.1 $servername" >> /etc/hosts
+	if [ "$ipv6_support" = 'yes' ]; then
+		echo "::1 $servername" >> /etc/hosts
+	fi
 fi
 
 # Set email if it wasn't set
@@ -1060,7 +1070,6 @@ if [ -d "$withdebs" ]; then
 	software=$(echo "$software" | sed -e "s/hestia-web-terminal//")
 	software=$(echo "$software" | sed -e "s/hestia=${HESTIA_INSTALL_VER}//")
 fi
-
 if [ "$release" = '24.04' ]; then
 	software=$(echo "$software" | sed -e "s/libzip4/libzip4t64/")
 fi
@@ -1231,6 +1240,18 @@ if [ ! -e "/sbin/iptables" ]; then
 			ln -s "$autoiptables" /sbin/iptables
 		fi
 	fi
+	if [ "$ipv6_support" = 'yes' ]; then
+		if which ip6tables; then
+			ln -s "$(which ip6tables)" /sbin/ip6tables
+		elif [ -e "/usr/sbin/ip6tables" ]; then
+			ln -s /usr/sbin/ip6tables /sbin/ip6tables
+		elif whereis -B /bin /sbin /usr/bin /usr/sbin -f -b ip6tables; then
+			autoip6tables=$(whereis -B /bin /sbin /usr/bin /usr/sbin -f -b ip6tables | cut -d '' -f 2)
+			if [ -x "$autoip6tables" ]; then
+				ln -s "$autoip6tables" /sbin/ip6tables
+			fi
+		fi
+	fi
 fi
 
 if [ ! -e "/sbin/iptables-save" ]; then
@@ -1244,6 +1265,18 @@ if [ ! -e "/sbin/iptables-save" ]; then
 			ln -s "$autoiptables_save" /sbin/iptables-save
 		fi
 	fi
+	if [ "$ipv6_support" = 'yes' ]; then
+		if which ip6tables-save; then
+			ln -s "$(which ip6tables-save)" /sbin/ip6tables-save
+		elif [ -e "/usr/sbin/ip6tables-save" ]; then
+			ln -s /usr/sbin/ip6tables-save /sbin/ip6tables-save
+		elif whereis -B /bin /sbin /usr/bin /usr/sbin -f -b ip6tables-save; then
+			autoip6tables_save=$(whereis -B /bin /sbin /usr/bin /usr/sbin -f -b iptables-save | cut -d '' -f 2)
+			if [ -x "$autoip6tables_save" ]; then
+				ln -s "$autoip6tables_save" /sbin/ip6tables-save
+			fi
+		fi
+	fi
 fi
 
 if [ ! -e "/sbin/iptables-restore" ]; then
@@ -1255,6 +1288,18 @@ if [ ! -e "/sbin/iptables-restore" ]; then
 		autoiptables_restore=$(whereis -B /bin /sbin /usr/bin /usr/sbin -f -b iptables-restore | cut -d '' -f 2)
 		if [ -x "$autoiptables_restore" ]; then
 			ln -s "$autoiptables_restore" /sbin/iptables-restore
+		fi
+	fi
+	if [ "$ipv6_support" = 'yes' ]; then
+		if which ip6tables-restore; then
+			ln -s "$(which ip6tables-restore)" /sbin/ip6tables-restore
+		elif [ -e "/usr/sbin/ip6tables-restore" ]; then
+			ln -s /usr/sbin/ip6tables-restore /sbin/ip6tables-restore
+		elif whereis -B /bin /sbin /usr/bin /usr/sbin -f -b ip6tables-restore; then
+			autoip6tables_restore=$(whereis -B /bin /sbin /usr/bin /usr/sbin -f -b iptables-restore | cut -d '' -f 2)
+			if [ -x "$autoip6tables_restore" ]; then
+				ln -s "$autoip6tables_restore" /sbin/ip6tables-restore
+			fi
 		fi
 	fi
 fi
@@ -1316,6 +1361,13 @@ chmod 770 $HESTIA/data/sessions
 rm -f $HESTIA/conf/hestia.conf > /dev/null 2>&1
 touch $HESTIA/conf/hestia.conf
 chmod 660 $HESTIA/conf/hestia.conf
+
+# IPV6 support
+if [ "$ipv6_support" = 'yes' ]; then
+	write_config_value "IPV6_SUPPORT" "yes"
+else
+	write_config_value "IPV6_SUPPORT" "no"
+fi
 
 # Write default port value to hestia.conf
 # If a custom port is specified it will be set at the end of the installation process
@@ -1582,23 +1634,42 @@ cp -f $HESTIA_INSTALL_DIR/nginx/cloudflare.inc /etc/nginx/conf.d/
 cp -f $HESTIA_INSTALL_DIR/nginx/phpmyadmin.inc /etc/nginx/conf.d/
 cp -f $HESTIA_INSTALL_DIR/nginx/phppgadmin.inc /etc/nginx/conf.d/
 cp -f $HESTIA_INSTALL_DIR/logrotate/nginx /etc/logrotate.d/
+if [ "$ipv6_support" = 'yes' ]; then
+	resolver_line_ipv6="1.0.0.1 8.8.4.4 1.1.1.1 8.8.8.8 [2606:4700:4700::1111] [2606:4700:4700::1001] valid=300s ipv6=on;"
+	sed -i -e "s/\(resolver[ \t]*\)[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*.*/\1$resolver_line_ipv6/" /etc/nginx/nginx.conf
+	listen_nginx_ipv6="listen	[::1]:8084 default;"
+	sed -i -e "/listen[ \t]*[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*.*/a\\\t$listen_nginx_ipv6" /etc/nginx/conf.d/status.conf
+fi
 mkdir -p /etc/nginx/conf.d/domains
 mkdir -p /etc/nginx/conf.d/main
 mkdir -p /etc/nginx/modules-enabled
 mkdir -p /var/log/nginx/domains
 
 # Update dns servers in nginx.conf
-for nameserver in $(grep -is '^nameserver' /etc/resolv.conf | cut -d' ' -f2 | tr '\r\n' ' ' | xargs); do
+dns_resolver="$(sed -ne '/^nameserver/s/^nameserver[ \t]*\(.*\)/\1/p' /etc/resolv.conf)"
+for nameserver in $dns_resolver; do
 	if [[ "$nameserver" =~ ^([0-9]{1,3}\.){3}[0-9]{1,3}$ ]]; then
-		if [ -z "$resolver" ]; then
-			resolver="$nameserver"
+		if [ -z "$resolver_ipv4" ]; then
+			resolver_ipv4="$nameserver"
 		else
-			resolver="$resolver $nameserver"
+			resolver_ipv4="$resolver_ipv4 $nameserver"
+		fi
+	fi
+	if [ "$ipv6_support" = 'yes' ]; then
+		if [[ $nameserver =~ ^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))$ ]]; then
+			if [ -z "$resolver_ipv6" ]; then
+				resolver_ipv6="[$nameserver]"
+			else
+				resolver_ipv6="$resolver_ipv6 [$nameserver]"
+			fi
 		fi
 	fi
 done
-if [ -n "$resolver" ]; then
-	sed -i "s/1.0.0.1 8.8.4.4 1.1.1.1 8.8.8.8/$resolver/g" /etc/nginx/nginx.conf
+if [ -n "$resolver_ipv4" ]; then
+	sed -i "s/1.0.0.1 8.8.4.4 1.1.1.1 8.8.8.8/$resolver_ipv4/g" /etc/nginx/nginx.conf
+fi
+if [ "$ipv6_support" = 'yes' -a -n "$resolver_ipv6" ]; then
+	sed -i "s/\[2606:4700:4700::1111\] \[2606:4700:4700::1001\]/$resolver_ipv6/g" /etc/nginx/nginx.conf
 fi
 
 # https://github.com/ergin/nginx-cloudflare-real-ip/
@@ -1642,6 +1713,12 @@ if [ "$apache" = 'yes' ]; then
 	cp -f $HESTIA_INSTALL_DIR/apache2/status.conf /etc/apache2/mods-available/hestia-status.conf
 	cp -f /etc/apache2/mods-available/status.load /etc/apache2/mods-available/hestia-status.load
 	cp -f $HESTIA_INSTALL_DIR/logrotate/apache2 /etc/logrotate.d/
+	if [ "$ipv6_support" = 'yes' ]; then
+		listen_apache_ipv6="Listen [::1]:8081"
+		sed -i -e "/Listen 127\.0\.0\.1:8081.*/a$listen_apache_ipv6" /etc/apache2/mods-available/hestia-status.conf
+		allow_from_apache_ipv6="Allow from ::1"
+		sed -i -e "/Allow from 127\.0\.0\.1*/a\\\t$allow_from_apache_ipv6" /etc/apache2/mods-available/hestia-status.conf
+	fi
 
 	# Enable needed modules
 	a2enmod rewrite > /dev/null 2>&1
@@ -1736,6 +1813,9 @@ chmod 755 /etc/cron.daily/php-session-cleanup
 if [ "$vsftpd" = 'yes' ]; then
 	echo "[ * ] Configuring Vsftpd server..."
 	cp -f $HESTIA_INSTALL_DIR/vsftpd/vsftpd.conf /etc/
+	if [ "$ipv6_support" = 'yes' ]; then
+		sed -i -e "s/\(listen\)\(=YES\)/\1_ipv6\2/" /etc/vsftpd.conf
+	fi
 	touch /var/log/vsftpd.log
 	chown root:adm /var/log/vsftpd.log
 	chmod 640 /var/log/vsftpd.log
@@ -1763,11 +1843,6 @@ if [ "$proftpd" = 'yes' ]; then
 	update-rc.d proftpd defaults > /dev/null 2>&1
 	systemctl start proftpd >> $LOG
 	check_result $? "proftpd start failed"
-
-	unit_files="$(systemctl list-unit-files | grep proftpd)"
-	if [[ "$unit_files" =~ "disabled" ]]; then
-		systemctl enable proftpd
-	fi
 fi
 
 #----------------------------------------------------------#
@@ -2030,25 +2105,30 @@ fi
 #----------------------------------------------------------#
 
 if [ "$dovecot" = 'yes' ]; then
+	dovecot_version="$(dovecot --version | cut -f -2 -d .)"
 	echo "[ * ] Configuring Dovecot POP/IMAP mail server..."
 	gpasswd -a dovecot mail > /dev/null 2>&1
-	cp -rf $HESTIA_COMMON_DIR/dovecot /etc/
+	mkdir -p /etc/dovecot/conf.d/
+	if [[ "$dovecot_version" = "2.4" ]]; then
+		cp -f $HESTIA_COMMON_DIR/dovecot-24/dovecot.conf /etc/dovecot/
+		cp -f $HESTIA_COMMON_DIR/dovecot-24/conf.d/* /etc/dovecot/conf.d/
+	else
+		cp -f $HESTIA_COMMON_DIR/dovecot/dovecot.conf /etc/dovecot/
+		cp -f $HESTIA_COMMON_DIR/dovecot/conf.d/* /etc/dovecot/conf.d/
+		rm -f /etc/dovecot/conf.d/15-mailboxes.conf
+	fi
 	cp -f $HESTIA_INSTALL_DIR/logrotate/dovecot /etc/logrotate.d/
-	rm -f /etc/dovecot/conf.d/15-mailboxes.conf
 	chown -R root:root /etc/dovecot*
 	touch /var/log/dovecot.log
 	chown -R dovecot:mail /var/log/dovecot.log
 	chmod 660 /var/log/dovecot.log
-
 	# Alter config for 2.2
-	version=$(dovecot --version | cut -f -2 -d .)
-	if [ "$version" = "2.2" ]; then
+	if [ "$dovecot_version" = "2.2" ]; then
 		echo "[ * ] Downgrade dovecot config to sync with 2.2 settings"
 		sed -i 's|#ssl_dh_parameters_length = 4096|ssl_dh_parameters_length = 4096|g' /etc/dovecot/conf.d/10-ssl.conf
 		sed -i 's|ssl_dh = </etc/ssl/dhparam.pem|#ssl_dh = </etc/ssl/dhparam.pem|g' /etc/dovecot/conf.d/10-ssl.conf
 		sed -i 's|ssl_min_protocol = TLSv1.2|ssl_protocols = !SSLv3 !TLSv1 !TLSv1.1|g' /etc/dovecot/conf.d/10-ssl.conf
 	fi
-
 	update-rc.d dovecot defaults
 	systemctl start dovecot >> $LOG
 	check_result $? "dovecot start failed"
@@ -2172,21 +2252,38 @@ if [ "$sieve" = 'yes' ]; then
 
 	echo "[ * ] Installing Sieve Mail Filter..."
 
-	# dovecot.conf install
-	sed -i "s/namespace/service stats \{\n  unix_listener stats-writer \{\n    group = mail\n    mode = 0660\n    user = dovecot\n  \}\n\}\n\nnamespace/g" /etc/dovecot/dovecot.conf
+	dovecot_version="$(dovecot --version | cut -f -2 -d .)"
+	if [[ "$dovecot_version" = "2.4" ]]; then
+		# dovecot conf files
+		# dovecot.conf install
+		sed -i -E 's/protocols = imap/protocols = sieve imap/' /etc/dovecot/dovecot.conf
+		#  10-master.conf
+		sed -i -E -z 's/    user = dovecot\n  \}\n\}/    user = dovecot\n  \}\n\n  unix_listener auth-master {\n    group = mail\n    mode = 0660\n    user = dovecot\n  }\n\}/' /etc/dovecot/conf.d/10-master.conf
+		#  15-lda.conf
+		sed -i '/^protocol lda {$/a\  mail_plugins = mail_compress quota sieve' /etc/dovecot/conf.d/15-lda.conf
+		#  20-imap.conf
+		sed -i "s/quota imap_quota/quota imap_quota imap_sieve/g" /etc/dovecot/conf.d/20-imap.conf
+		# replace dovecot-sieve config files
+		cp -f "$HESTIA_COMMON_DIR"/dovecot-24/sieve/* /etc/dovecot/conf.d
 
-	# Dovecot conf files
-	#  10-master.conf
-	sed -i -E -z "s/  }\n  user = dovecot\n}/  \}\n  unix_listener auth-master \{\n    group = mail\n    mode = 0660\n    user = dovecot\n  \}\n  user = dovecot\n\}/g" /etc/dovecot/conf.d/10-master.conf
-	#  15-lda.conf
-	sed -i "s/\#mail_plugins = \\\$mail_plugins/mail_plugins = \$mail_plugins quota sieve\n  auth_socket_path = \/var\/run\/dovecot\/auth-master/g" /etc/dovecot/conf.d/15-lda.conf
-	#  20-imap.conf
-	sed -i "s/mail_plugins = quota imap_quota/mail_plugins = quota imap_quota imap_sieve/g" /etc/dovecot/conf.d/20-imap.conf
+	else
+		# dovecot.conf install
+		sed -i "s/namespace/service stats \{\n  unix_listener stats-writer \{\n    group = mail\n    mode = 0660\n    user = dovecot\n  \}\n\}\n\nnamespace/g" /etc/dovecot/dovecot.conf
 
-	# Replace dovecot-sieve config files
-	cp -f $HESTIA_COMMON_DIR/dovecot/sieve/* /etc/dovecot/conf.d
+		# Dovecot conf files
+		#  10-master.conf
+		sed -i -E -z "s/  }\n  user = dovecot\n}/  \}\n  unix_listener auth-master \{\n    group = mail\n    mode = 0660\n    user = dovecot\n  \}\n  user = dovecot\n\}/g" /etc/dovecot/conf.d/10-master.conf
+		#  15-lda.conf
+		sed -i "s/\#mail_plugins = \\\$mail_plugins/mail_plugins = \$mail_plugins quota sieve\n  auth_socket_path = \/var\/run\/dovecot\/auth-master/g" /etc/dovecot/conf.d/15-lda.conf
+		#  20-imap.conf
+		sed -i "s/mail_plugins = quota imap_quota/mail_plugins = quota imap_quota imap_sieve/g" /etc/dovecot/conf.d/20-imap.conf
+
+		# Replace dovecot-sieve config files
+		cp -f $HESTIA_COMMON_DIR/dovecot/sieve/* /etc/dovecot/conf.d
+	fi
 
 	# Dovecot default file install
+	mkdir -p /etc/dovecot/sieve/
 	echo -e "require [\"fileinto\"];\n# rule:[SPAM]\nif header :contains \"X-Spam-Flag\" \"YES\" {\n    fileinto \"INBOX.Spam\";\n}\n" > /etc/dovecot/sieve/default
 
 	# exim4 install
@@ -2276,10 +2373,18 @@ $HESTIA/bin/v-update-sys-ip > /dev/null 2>&1
 default_nic="$(ip -d -j route show | jq -r '.[] | if .dst == "default" then .dev else empty end')"
 # IPv4
 primary_ipv4="$(ip -4 -d -j addr show "$default_nic" | jq -r '.[] | select(length > 0) | .addr_info[] | if .scope == "global" then .local else empty end' | head -n1)"
-# IPv6
-#primary_ipv6="$(ip -6 -d -j addr show "$default_nic" | jq -r '.[] | select(length > 0) | .addr_info[] | if .scope == "global" then .local else empty end' | head -n1)"
 ip="$primary_ipv4"
 local_ip="$primary_ipv4"
+# IPv6
+if [ "$ipv6_support" = 'yes' ]; then
+	primary_ipv6="$(ip -6 -d -j addr show "$default_nic" | jq -r '.[] | select(length > 0) | .addr_info[] | if .scope == "global" then .local else empty end' | tail -1)"
+	ipv6="$primary_ipv6"
+	local_ipv6="$primary_ipv6"
+else
+	primary_ipv6=""
+	ipv6=""
+	local_ipv6=""
+fi
 
 # Configuring firewall
 if [ "$iptables" = 'yes' ]; then
@@ -2288,6 +2393,12 @@ fi
 
 # Get public IP
 pub_ipv4="$(curl -fsLm5 --retry 2 --ipv4 https://ip.hestiacp.com/)"
+if [ "$ipv6_support" = 'yes' ]; then
+	pub_ipv6="$(curl -fsLm5 --retry 2 --ipv6 https://ip.hestiacp.com/)"
+else
+	pub_ipv6=""
+fi
+
 if [ -n "$pub_ipv4" ] && [ "$pub_ipv4" != "$ip" ]; then
 	if [ -e /etc/rc.local ]; then
 		sed -i '/exit 0/d' /etc/rc.local
@@ -2335,7 +2446,17 @@ if [ "$apache" = 'yes' ] && [ "$nginx" = 'yes' ]; then
 fi
 
 # Adding default domain
-$HESTIA/bin/v-add-web-domain "$username" "$servername" "$ip"
+if [ -n "$ip" ]; then
+	if [ -n "$ipv6" ]; then
+		$HESTIA/bin/v-add-web-domain-ipv46 "$username" "$servername" "$ip" "$ipv6"
+	else
+		$HESTIA/bin/v-add-web-domain-ipv46 "$username" "$servername" "$ip"
+	fi
+else
+	if [ -n "$ipv6" ]; then
+		$HESTIA/bin/v-add-web-domain-ipv46 "$username" "$servername" "" "$ipv6"
+	fi
+fi
 check_result $? "can't create $servername domain"
 
 # Adding cron jobs
@@ -2421,9 +2542,21 @@ fi' >> /root/.zshrc
 #----------------------------------------------------------#
 
 # Comparing hostname and IP
-host_ip=$(host $servername | head -n 1 | awk '{print $NF}')
-if [ "$host_ip" = "$ip" ]; then
-	ip="$servername"
+host_ipv4=$(host -t A "$servername")
+if [ $? -eq 0 ]; then
+	host_ipv4=$(echo "$host_ipv4" | sed -e 's/[^ ]* .* \([^ ]*\)/\1/')
+else
+	host_ipv4=""
+fi
+if [ "$ipv6_support" = 'yes' ]; then
+	host_ipv6=$(host -t AAAA "$servername")
+	if [ $? -eq 0 ]; then
+		host_ipv6=$(echo "$host_ipv6" | sed -e 's/[^ ]* .* \([^ ]*\)/\1/')
+	else
+		host_ipv6=""
+	fi
+else
+	host_ipv6=""
 fi
 
 echo -e "\n"
@@ -2436,10 +2569,28 @@ echo -e "Congratulations!
 You have successfully installed Hestia Control Panel on your server.
 
 Ready to get started? Log in using the following credentials:
-
-	Admin URL:  https://$servername:$port" > $tmpfile
-if [ "$host_ip" != "$ip" ]; then
+" > $tmpfile
+if [ -n "$ip" -a "$host_ipv4" = "$ip" ]; then
+	ipv4_accessible=1
+else
+	ipv4_accessible=0
+fi
+if [ -n "$ipv6" -a "$host_ipv6" = "$ipv6" ]; then
+	ipv6_accessible=1
+else
+	ipv6_accessible=0
+fi
+if [ $ipv4_accessible -eq 1 -o $ipv6_accessible -eq 1 ]; then
+	echo -e "	Admin URL:  https://$servername:$port" >> $tmpfile
+else
+	echo -e "	${servername} is not accessible from internet!" >> $tmpfile
+	echo -e "	Use Backup URL for Admin login:" >> $tmpfile
+fi
+if [ -n "$ip" ]; then
 	echo "	Backup URL: https://$ip:$port" >> $tmpfile
+fi
+if [ -n "$ipv6" ]; then
+	echo "	Backup URL: https://[$ipv6]:$port" >> $tmpfile
 fi
 echo -e -n " 	Username:   $username
 	Password:   $displaypass

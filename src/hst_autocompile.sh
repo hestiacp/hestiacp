@@ -249,7 +249,7 @@ if [ "$dontinstalldeps" != 'true' ]; then
 	codename="$(lsb_release -s -c)"
 
 	if [ -z $(which "node") ]; then
-		curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
+		curl -fsSL https://deb.nodesource.com/setup_24.x | bash -
 	fi
 
 	echo "Installing Node.js..."
@@ -527,6 +527,10 @@ if [ "$PHP_B" = true ]; then
 
 	os=$(lsb_release -is)
 	release=$(lsb_release -rs)
+	if [[ "$os" = "Debian" ]] && [[ "$release" = "13" ]]; then
+		sed -i "/Conflct: libzip5/d" "$BUILD_DIR_HESTIAPHP/DEBIAN/control"
+		sed -i "s/libzip4/libzip5/g" "$BUILD_DIR_HESTIAPHP/DEBIAN/control"
+	fi
 	if [[ "$os" = "Ubuntu" ]] && [[ "$release" = "20.04" ]]; then
 		sed -i "/Conflicts: libzip5/d" "$BUILD_DIR_HESTIAPHP/DEBIAN/control"
 		sed -i "s/libzip4/libzip5/g" "$BUILD_DIR_HESTIAPHP/DEBIAN/control"

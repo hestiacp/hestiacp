@@ -13,7 +13,7 @@ smtp_banner = $smtp_active_hostname ESMTP
 smtp_active_hostname = ${lookup dnsdb{>: defer_never,ptr=$interface_address}{${listextract{1}{$value}}}{$primary_hostname}}
 add_environment = <; PATH=/bin:/usr/bin
 keep_environment =
-disable_ipv6 = true
+disable_ipv6 = false
 smtp_accept_max = 100
 smtp_accept_max_per_host = 20
 
@@ -384,7 +384,7 @@ remote_smtp:
   dkim_canon = relaxed
   dkim_strict = 0
   hosts_try_fastopen = !*.l.google.com
-  interface = ${if exists{OUTGOING_IP}{${readfile{OUTGOING_IP}}}}
+  interface = ${if exists{/home/${authenticated_id}/conf/mail/${sender_address_domain}/ipv6}{<;${readfile{/home/${authenticated_id}/conf/mail/${sender_address_domain}/ipv6}}}{${if exists{OUTGOING_IP}{${readfile{OUTGOING_IP}}}{$interface_address}}}}
 
 procmail:
   driver = pipe

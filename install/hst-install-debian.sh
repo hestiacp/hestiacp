@@ -2371,6 +2371,7 @@ $HESTIA/bin/v-update-sys-rrd
 
 # Enabling file system quota
 if [ "$quota" = 'yes' ]; then
+	echo "[ * ] Configuring quota..."
 	$HESTIA/bin/v-add-sys-quota
 fi
 

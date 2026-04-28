@@ -914,11 +914,58 @@ import_pgsql_database() {
 	host_str=$(grep "HOST='$HOST'" $HESTIA/conf/pgsql.conf)
 	parse_object_kv_list "$host_str"
 	export PGPASSWORD="$PASSWORD"
+	if [ -z "$PORT" ]; then PORT=5432; fi
 	if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ] || [ -z $TPL ]; then
 		echo "Error: postgresql config parsing failed"
 		log_event "$E_PARSING" "$ARGUMENTS"
 		exit "$E_PARSING"
 	fi
 
-	psql -h $HOST -U $USER $DB < $1 > /dev/null 2>&1
+	dbuser_literal=$(echo "$DBUSER" | sed "s/'/''/g")
+	acl_tmp=$(mktemp)
+
+	psql -h $HOST -p $PORT -U $USER "$DB" -f "$1" \
+		> /dev/null 2> /tmp/e.psql
+	if [ "$?" -ne 0 ]; then
+		rm -f "$acl_tmp"
+		echo "Error: postgresql import failed"
+		log_event "$E_DB" "$ARGUMENTS"
+		exit "$E_DB"
+	fi
+
+	cat > "$acl_tmp" << EOF
+DO \$\$
+DECLARE
+	target_role name := '$dbuser_literal';
+	sch record;
+BEGIN
+	FOR sch IN
+		SELECT nspname
+		FROM pg_namespace
+		WHERE nspname NOT LIKE 'pg\_%'
+			AND nspname <> 'information_schema'
+	LOOP
+		EXECUTE format('ALTER SCHEMA %I OWNER TO %I', sch.nspname, target_role);
+		EXECUTE format('GRANT USAGE, CREATE ON SCHEMA %I TO %I', sch.nspname, target_role);
+		EXECUTE format('GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA %I TO %I', sch.nspname, target_role);
+		EXECUTE format('GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA %I TO %I', sch.nspname, target_role);
+		EXECUTE format('GRANT ALL PRIVILEGES ON ALL FUNCTIONS IN SCHEMA %I TO %I', sch.nspname, target_role);
+		EXECUTE format('ALTER DEFAULT PRIVILEGES FOR ROLE %I IN SCHEMA %I GRANT ALL PRIVILEGES ON TABLES TO %I', target_role, sch.nspname, target_role);
+		EXECUTE format('ALTER DEFAULT PRIVILEGES FOR ROLE %I IN SCHEMA %I GRANT ALL PRIVILEGES ON SEQUENCES TO %I', target_role, sch.nspname, target_role);
+		EXECUTE format('ALTER DEFAULT PRIVILEGES FOR ROLE %I IN SCHEMA %I GRANT ALL PRIVILEGES ON FUNCTIONS TO %I', target_role, sch.nspname, target_role);
+	END LOOP;
+END
+\$\$;
+EOF
+
+	psql -h $HOST -p $PORT -U $USER -v ON_ERROR_STOP=1 "$DB" -f "$acl_tmp" \
+		> /dev/null 2> /tmp/e.psql
+	if [ "$?" -ne 0 ]; then
+		rm -f "$acl_tmp"
+		echo "Error: postgresql permissions update failed"
+		log_event "$E_DB" "$ARGUMENTS"
+		exit "$E_DB"
+	fi
+
+	rm -f "$acl_tmp"
 }

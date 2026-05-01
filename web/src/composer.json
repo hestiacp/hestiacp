@@ -5,9 +5,9 @@
         }
     },
     "require": {
-        "symfony/console": "^7.4",
+        "symfony/console": "^8.0.9",
         "composer": "*",
-        "symfony/process": "^7.4"
+        "symfony/process": "^8.0.8"
     },
     "require-dev": {
         "squizlabs/php_codesniffer": "^4.0.1"

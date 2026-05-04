@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file.
 
 ### Bug fixes
 
+- Fix: Cleanup argument handling and improve kv parsing (#5309)
 - Fix: 421 error on all web and mail domains after Apache 2.4.64 update
 - Fix: Set default SOA retry value to 1800 for DENIC compliance
 - Fix domain alias replacement logic when changing web domain

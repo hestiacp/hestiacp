@@ -27,9 +27,7 @@ class HestiaAuth implements Service, AuthInterface {
 	protected $hestia_user = "";
 
 	public function init(array $config = []) {
-		if (isset($_SESSION["user"])) {
-			$v_user = $_SESSION["user"];
-		}
+		$v_user = $_SESSION["user"] ?? $_SESSION["USER"] ?? "";
 		if (!empty($_SESSION["look"])) {
 			if (isset($_SESSION["look"]) && $_SESSION["userContext"] === "admin") {
 				$v_user = $_SESSION["look"];
@@ -43,7 +41,7 @@ class HestiaAuth implements Service, AuthInterface {
 				exit();
 			}
 		}
-		$this->hestia_user = $v_user;
+		$this->hestia_user = is_string($v_user) ? $v_user : "";
 		$this->permissions = isset($config["permissions"]) ? (array) $config["permissions"] : [];
 		$this->private_repos = isset($config["private_repos"])
 			? (bool) $config["private_repos"]
@@ -51,13 +49,19 @@ class HestiaAuth implements Service, AuthInterface {
 	}
 
 	public function user(): ?User {
+		if ($this->hestia_user === "") {
+			return $this->getGuest();
+		}
+
 		$cmd = "/usr/bin/sudo /usr/local/hestia/bin/v-list-user";
 		exec($cmd . " " . quoteshellarg($this->hestia_user) . " json", $output, $return_var);
 
 		if ($return_var == 0) {
 			$data = json_decode(implode("", $output), true);
-			$hestia_user_info = $data[$this->hestia_user];
-			return $this->transformUser($hestia_user_info);
+			$hestia_user_info = $data[$this->hestia_user] ?? null;
+			if (is_array($hestia_user_info)) {
+				return $this->transformUser($hestia_user_info);
+			}
 		}
 
 		return $this->getGuest();

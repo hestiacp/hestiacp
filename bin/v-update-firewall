@@ -12,6 +12,7 @@
 
 # Defining absolute path for iptables and modprobe
 iptables="/sbin/iptables"
+ip6tables="/sbin/ip6tables"
 modprobe="/sbin/modprobe"
 sysctl="/sbin/sysctl"
 
@@ -91,7 +92,7 @@ if [ "$conntrack" != 'no' ] || grep --quiet container=lxc /proc/1/environ; then
 	echo "$str" >> "$tmp"
 fi
 
-ips="$(ls $HESTIA/data/ips)"
+ips="$("$BIN/v-list-sys-ips" list)"
 # Handling local traffic
 for ip in $ips; do
 	echo "$iptables -A INPUT -s $ip -j ACCEPT" >> "$tmp"

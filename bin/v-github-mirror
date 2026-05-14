@@ -1,0 +1,450 @@
+#!/bin/bash
+set -o pipefail
+
+# HestiaCP GitHub Mirror Tool
+# Clones or updates git repositories for HestiaCP users.
+# Integrates with HestiaCP for logging and email notifications.
+
+# Configuration
+CONFIG_FILE="/etc/hestiacp-github-mirror.conf"
+LOG_FILE="/var/log/hestia/github-mirror.log"
+
+# Email Notification Settings
+# Set to "true" to receive emails on success AND failure.
+# Set to "false" to receive emails ONLY when failures occur.
+NOTIFY_ON_SUCCESS="false"
+
+# ==============================================================================
+# BACKUP RETENTION SETTINGS
+# ==============================================================================
+# These settings apply when retention_mode is set to 'backup' in the config file.
+# ------------------------------------------------------------------------------
+
+# Daily Backups: Keep one backup per day for the last N days
+ENABLE_DAILY_BACKUPS="false"
+DAILY_BACKUPS_COUNT=7
+
+# Weekly Backups: Keep one backup per week (Sunday) for the last N weeks
+ENABLE_WEEKLY_BACKUPS="false"
+WEEKLY_BACKUPS_COUNT=4
+
+# Monthly Backups: Keep one backup per month (1st) for the last N months
+ENABLE_MONTHLY_BACKUPS="false"
+MONTHLY_BACKUPS_COUNT=3
+
+# ==============================================================================
+# LOAD EXTERNAL SETTINGS
+# ==============================================================================
+if [ -f "/etc/hestiacp-github-mirror.settings" ]; then
+	source /etc/hestiacp-github-mirror.settings
+fi
+# ==============================================================================
+
+# Ensure log file exists
+touch "$LOG_FILE"
+chmod 640 "$LOG_FILE"
+
+# Initialize HestiaCP environment
+source /etc/profile
+HESTIA=/usr/local/hestia
+if [ -f "$HESTIA/func/main.sh" ]; then
+	source $HESTIA/func/main.sh 2> /dev/null
+	source $HESTIA/conf/hestia.conf 2> /dev/null
+fi
+
+# Detect Admin Email
+ADMIN_EMAIL=""
+# Try to find admin email from Hestia configuration by scanning users
+if [ -z "$ADMIN_EMAIL" ]; then
+	for user_conf in "$HESTIA/data/users"/*/user.conf; do
+		[ -f "$user_conf" ] || continue
+		if grep -q "ROLE='admin'" "$user_conf" 2> /dev/null; then
+			ADMIN_EMAIL=$(grep "^CONTACT=" "$user_conf" 2> /dev/null | cut -d"'" -f2)
+			break
+		fi
+	done
+fi
+# Fallback to hestia.conf
+if [ -z "$ADMIN_EMAIL" ] && [ -f "$HESTIA/conf/hestia.conf" ]; then
+	ADMIN_EMAIL=$(grep "^CONTACT=" "$HESTIA/conf/hestia.conf" 2> /dev/null | cut -d"'" -f2)
+fi
+# Final fallback
+if [ -z "$ADMIN_EMAIL" ]; then
+	ADMIN_EMAIL="root"
+fi
+
+# Email notification on unexpected fatal crash (trap)
+_send_fatal_email_mirror() {
+	local exit_code="$1"
+	local line="$2"
+	[ "$exit_code" -eq 0 ] 2> /dev/null && return 0
+	[ -z "$ADMIN_EMAIL" ] && return 0
+	local hostname
+	hostname=$(hostname -f 2> /dev/null || echo "HestiaCP Server")
+	local subject="[FATAL] v-github-mirror crashed on $hostname"
+	local body="Script v-github-mirror terminated unexpectedly.\nExit code: $exit_code at line $line.\nCheck $LOG_FILE for details."
+	local SENDMAIL="/usr/local/hestia/web/inc/mail-wrapper.php"
+	if [ -f "$SENDMAIL" ]; then
+		echo "$body" | "$SENDMAIL" -s "$subject" "$ADMIN_EMAIL" 2> /dev/null
+	else
+		{
+			echo "Subject: $subject"
+			echo
+			echo "$body"
+		} | /usr/sbin/sendmail "$ADMIN_EMAIL" 2> /dev/null
+	fi
+}
+trap '_send_fatal_email_mirror "$?" "$LINENO"' EXIT INT TERM ABRT
+
+# Arrays to track status
+REPOS_SUCCESS=()
+REPOS_FAILED=()
+
+log() {
+	local _ts
+	_ts=$(date '+%Y-%m-%d %H:%M:%S')
+	echo "$_ts - $1" >> "$LOG_FILE"
+	echo "$1"
+}
+
+LOCK_FILE="/var/run/v-github-mirror.lock"
+exec 9> "$LOCK_FILE"
+if ! flock -n 9; then
+	_ts=$(date '+%Y-%m-%d %H:%M:%S')
+	echo "$_ts - Another instance is already running. Skipping this run." >> "$LOG_FILE"
+	echo "Another instance is already running. Skipping this run."
+	exit 0
+fi
+
+# Helper for file size (from v-clean-garbage, simplified)
+convert_space() {
+	local space_kb=$1
+	if [ -z "$space_kb" ] || [ "$space_kb" -eq 0 ] 2> /dev/null; then
+		echo "0 MB"
+		return
+	fi
+	local space_mb=$((space_kb / 1024))
+	if [ "$space_mb" -lt 1024 ]; then
+		echo "${space_mb} MB"
+	else
+		local space_gb=$((space_mb / 1024))
+		echo "${space_gb} GB"
+	fi
+}
+
+send_html_email() {
+	local status="$1"
+	local admin_email="$2"
+	[ -z "$admin_email" ] && return 1
+
+	local hostname=$(hostname -f 2> /dev/null || hostname 2> /dev/null || echo "HestiaCP Server")
+	local timestamp=$(date +"%Y-%m-%d %H:%M:%S")
+
+	if [ "$status" = "SUCCESS" ]; then
+		local subject="GitHub Mirror Report - $hostname - SUCCESS"
+		local status_color="#4CAF50"
+		local status_text="[OK] SUCCESS"
+	else
+		local subject="GitHub Mirror Report - $hostname - FAILED"
+		local status_color="#F44336"
+		local status_text="[FAIL] CONTAINS ERRORS"
+	fi
+
+	local success_count=${#REPOS_SUCCESS[@]}
+	local failed_count=${#REPOS_FAILED[@]}
+
+	local success_list=""
+	for repo in "${REPOS_SUCCESS[@]}"; do
+		success_list="${success_list}<tr><td style=\"padding:6px 12px; border-bottom:1px solid #555;\"><span style=\"color:#4CAF50; font-weight:bold;\">[OK]</span> <span style=\"color:#E0E0E0;\">$repo</span></td></tr>"
+	done
+	[ -z "$success_list" ] && success_list="<tr><td style=\"padding:6px 12px; color:#A0A0A0;\">None</td></tr>"
+
+	local failed_list=""
+	for repo in "${REPOS_FAILED[@]}"; do
+		failed_list="${failed_list}<tr><td style=\"padding:6px 12px; border-bottom:1px solid #555;\"><span style=\"color:#F44336; font-weight:bold;\">[FAIL]</span> <span style=\"color:#E0E0E0;\">$repo</span></td></tr>"
+	done
+	[ -z "$failed_list" ] && failed_list="<tr><td style=\"padding:6px 12px; color:#A0A0A0;\">None</td></tr>"
+
+	local html_body="<!DOCTYPE html>
+<html lang=\"en\">
+<head>
+<meta charset=\"UTF-8\">
+<title>GitHub Mirror Report</title>
+</head>
+<body style=\"font-family:Arial,sans-serif; background:#222222; margin:0; padding:20px; color:#E0E0E0;\">
+<div style=\"max-width:700px; margin:0 auto; background:#3A3A3A; border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,.5); overflow:hidden; border:1px solid #555;\">
+  <div style=\"background:${status_color}; color:#fff; padding:16px; text-align:center; border-bottom:2px solid rgba(255,255,255,.1);\">
+    <h1 style=\"margin:0; font-size:18px; font-weight:bold;\">HestiaCP GitHub Mirror Report</h1>
+    <p style=\"margin:4px 0 0 0; font-size:12px; opacity:0.9;\">${hostname}</p>
+  </div>
+  <div style=\"padding:20px;\">
+    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:100%; border-collapse:collapse; margin-bottom:16px; background:#2C2C2C; border:1px solid #555;\">
+      <tr>
+        <td style=\"padding:10px; border-right:1px solid #555; text-align:center; width:50%;\">
+          <div style=\"font-size:11px; color:#A0A0A0; margin-bottom:4px;\">Status</div>
+          <div style=\"font-size:14px; color:${status_color}; font-weight:bold;\">${status_text}</div>
+        </td>
+        <td style=\"padding:10px; text-align:center; width:50%;\">
+          <div style=\"font-size:11px; color:#A0A0A0; margin-bottom:4px;\">Total Repos</div>
+          <div style=\"font-size:14px; color:#E0E0E0; font-weight:bold;\">$((success_count + failed_count))</div>
+        </td>
+      </tr>
+    </table>
+    
+    <details open style=\"margin-bottom:10px;\">
+      <summary style=\"cursor:pointer; padding:10px; background:#2C2C2C; border:1px solid #555; border-radius:4px; font-weight:bold; color:#FFFFFF;\">Failed Repositories (${failed_count})</summary>
+      <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:100%; border-collapse:collapse; font-size:13px; background:#2C2C2C; border:1px solid #555; margin-top:4px;\">
+        ${failed_list}
+      </table>
+    </details>
+    
+    <details style=\"margin-bottom:10px;\">
+      <summary style=\"cursor:pointer; padding:10px; background:#2C2C2C; border:1px solid #555; border-radius:4px; font-weight:bold; color:#FFFFFF;\">Successful Repositories (${success_count})</summary>
+      <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:100%; border-collapse:collapse; font-size:13px; background:#2C2C2C; border:1px solid #555; margin-top:4px;\">
+        ${success_list}
+      </table>
+    </details>
+  </div>
+  <div style=\"background:#2C2C2C; padding:12px; text-align:center; font-size:11px; color:#A0A0A0; border-top:1px solid #555;\">
+    ${hostname} - ${timestamp}
+  </div>
+</div>
+</body>
+</html>"
+
+	local temp_html="/tmp/github_mirror_email_$$.html"
+	echo "$html_body" > "$temp_html"
+
+	local SENDMAIL="$HESTIA/web/inc/mail-wrapper.php"
+	[ ! -f "$SENDMAIL" ] && SENDMAIL="/usr/local/hestia/web/inc/mail-wrapper.php"
+
+	if [ -f "$SENDMAIL" ]; then
+		cat "$temp_html" | $SENDMAIL -s "$subject" "$admin_email" "yes" 2> /dev/null
+	else
+		(
+			echo "Subject: $subject"
+			echo "MIME-Version: 1.0"
+			echo "Content-Type: text/html; charset=UTF-8"
+			echo
+			cat "$temp_html"
+		) | /usr/sbin/sendmail "$admin_email" 2> /dev/null
+	fi
+
+	rm -f "$temp_html" 2> /dev/null
+	return 0
+}
+
+# Argument parsing
+# Check for test mode
+if [ "$1" == "--test-email" ]; then
+	log "Running in TEST EMAIL mode..."
+	REPOS_SUCCESS+=("TestUser/TestRepo1: Updated successfully")
+	REPOS_FAILED+=("TestUser/TestRepo2: Authentication failed")
+	send_html_email "FAILED" "$ADMIN_EMAIL"
+	echo "Test email sent to $ADMIN_EMAIL"
+	exit 0
+fi
+
+if [ "$1" == "--force-notification" ]; then
+	log "Running in FORCE NOTIFICATION mode..."
+	NOTIFY_ON_SUCCESS="true"
+
+fi
+
+if [ ! -f "$CONFIG_FILE" ]; then
+	msg="ERROR: Config file $CONFIG_FILE not found."
+	log "$msg"
+	# Can't send email if we don't know who to send to, but we have ADMIN_EMAIL now.
+	REPOS_FAILED+=("Config: $msg")
+	send_html_email "FAILED" "$ADMIN_EMAIL"
+	exit 1
+fi
+
+log "Starting GitHub Mirror process..."
+
+# Read config file line by line
+# Format: USER|REPO_URL|BRANCH|DESTINATION_PATH|RETENTION_MODE|RETENTION_COUNT
+while IFS='|' read -r user repo branch dest_path retention_mode retention_count || [ -n "$user" ]; do
+	# Skip empty lines and comments
+	[[ $user =~ ^#.* ]] && continue
+	[[ -z $user ]] && continue
+
+	# Strip whitespace from variables
+	user=$(echo "$user" | tr -d '[:space:]')
+	repo=$(echo "$repo" | tr -d '[:space:]')
+	branch=$(echo "$branch" | tr -d '[:space:]')
+	dest_path=$(echo "$dest_path" | tr -d '[:space:]')
+	retention_mode=$(echo "$retention_mode" | tr -d '[:space:]')
+	retention_count=$(echo "$retention_count" | tr -d '[:space:]')
+
+	# Default values
+	retention_mode=${retention_mode:-"overwrite"}
+	retention_count=${retention_count:-1}
+
+	# Validate User
+	if ! id "$user" > /dev/null 2>&1; then
+		msg="User $user does not exist. Skipping $repo."
+		log "WARNING: $msg"
+		REPOS_FAILED+=("$user/$repo: $msg")
+		continue
+	fi
+
+	USER_HOME=$(getent passwd "$user" | cut -d: -f6)
+	[ -z "$USER_HOME" ] && USER_HOME="/home/$user"
+	BASE_DEST_PATH="$USER_HOME/$dest_path"
+
+	# Ensure destination parent directory exists
+	if [ ! -d "$(dirname "$BASE_DEST_PATH")" ]; then
+		log "Creating parent directory for $user: $(dirname "$BASE_DEST_PATH")"
+		mkdir -p "$(dirname "$BASE_DEST_PATH")"
+		chown "$user:$user" "$(dirname "$BASE_DEST_PATH")"
+	fi
+
+	log "Processing $repo for user $user (Mode: $retention_mode)..."
+
+	error_msg=""
+
+	if [ "$retention_mode" == "overwrite" ]; then
+		# === OVERWRITE MODE ===
+		if [ -d "$BASE_DEST_PATH/.git" ]; then
+			cd "$BASE_DEST_PATH"
+			if git fetch origin "$branch" && git reset --hard "origin/$branch" >> "$LOG_FILE" 2>&1; then
+				log "SUCCESS: Updated $repo."
+				chown -R "$user:$user" "$BASE_DEST_PATH"
+				last_commit=$(git log -1 --date=format:"%Y-%m-%d %H:%M" --format="%cd")
+				short_hash=$(git log -1 --format="%h")
+				REPOS_SUCCESS+=("$user/$repo (Updated: $last_commit - $short_hash)")
+			else
+				error_msg="Failed to update $repo"
+				log "ERROR: $error_msg"
+				REPOS_FAILED+=("$user/$repo: $error_msg")
+			fi
+		else
+			log "Cloning $repo into $BASE_DEST_PATH..."
+			if git clone -b "$branch" "$repo" "$BASE_DEST_PATH" >> "$LOG_FILE" 2>&1; then
+				log "SUCCESS: Cloned $repo."
+				chown -R "$user:$user" "$BASE_DEST_PATH"
+				cd "$BASE_DEST_PATH"
+				last_commit=$(git log -1 --date=format:"%Y-%m-%d %H:%M" --format="%cd")
+				short_hash=$(git log -1 --format="%h")
+				REPOS_SUCCESS+=("$user/$repo (Cloned: $last_commit - $short_hash)")
+			else
+				error_msg="Failed to clone $repo"
+				log "ERROR: $error_msg"
+				REPOS_FAILED+=("$user/$repo: $error_msg")
+			fi
+		fi
+
+	elif [ "$retention_mode" == "versioned" ] || [ "$retention_mode" == "backup" ]; then
+		# === BACKUP / VERSIONED MODE ===
+		TIMESTAMP=$(date '+%Y%m%d_%H%M%S')
+		VERSION_DIR="${BASE_DEST_PATH}_${TIMESTAMP}"
+
+		log "Cloning new version into $VERSION_DIR..."
+		if git clone -b "$branch" --depth 1 "$repo" "$VERSION_DIR" >> "$LOG_FILE" 2>&1; then
+			log "SUCCESS: Cloned version $TIMESTAMP."
+			rm -rf "$VERSION_DIR/.git"
+			chown -R "$user:$user" "$VERSION_DIR"
+			REPOS_SUCCESS+=("$user/$repo (Backup)")
+
+			# --- Retention Cleanup Logic ---
+			if [ "$retention_mode" == "backup" ]; then
+				# SMART RETENTION (Daily/Weekly/Monthly)
+				log "Running smart retention cleanup..."
+
+				# Get all backup directories sorted by name (which implies date order for YYYYMMDD)
+				BACKUPS=$(find "$(dirname "${BASE_DEST_PATH}_x")" -maxdepth 1 -type d -name "$(basename "${BASE_DEST_PATH}")_*" -print0 2> /dev/null | sort -z | tr '\0' '\n' | sed '/^$/d')
+
+				# We need to parse dates from directory names to apply logic
+				# Format: name_YYYYMMDD_HHMMSS
+				# Simple approach: Keep all dailies for last N days, keep weekly for last M weeks, etc.
+
+				CURRENT_DATE_SEC=$(date +%s)
+
+				# Arrays to keep track of what to keep
+				declare -A KEEP_LIST
+
+				for backup in $BACKUPS; do
+					dirname=$(basename "$backup")
+					# Extract date part: YYYYMMDD
+					date_str=$(echo "$dirname" | grep -oE '[0-9]{8}' | head -n1)
+
+					if [ -z "$date_str" ]; then continue; fi
+
+					# Calculate age in days
+					backup_date_sec=$(date -d "$date_str" +%s 2> /dev/null)
+					if [ -z "$backup_date_sec" ]; then continue; fi
+
+					age_days=$(((CURRENT_DATE_SEC - backup_date_sec) / 86400))
+					day_of_week=$(date -d "$date_str" +%u)   # 1=Monday, 7=Sunday
+					day_of_month=$(date -d "$date_str" +%-d) # 1-31 (no leading zero)
+
+					# DAILY RETENTION
+					if [ "$ENABLE_DAILY_BACKUPS" == "true" ] && [ "$age_days" -lt "$DAILY_BACKUPS_COUNT" ]; then
+						KEEP_LIST["$backup"]=1
+						log "Keeping DAILY backup: $dirname (Age: $age_days days)"
+					fi
+
+					# WEEKLY RETENTION (Keep Sunday backups)
+					if [ "$ENABLE_WEEKLY_BACKUPS" == "true" ] && [ "$day_of_week" -eq 7 ] && [ "$age_days" -lt $((WEEKLY_BACKUPS_COUNT * 7)) ]; then
+						KEEP_LIST["$backup"]=1
+						log "Keeping WEEKLY backup: $dirname (Sunday)"
+					fi
+
+					# MONTHLY RETENTION (Keep 1st of month backups)
+					if [ "$ENABLE_MONTHLY_BACKUPS" == "true" ] && [ "$day_of_month" -eq 1 ] && [ "$age_days" -lt $((MONTHLY_BACKUPS_COUNT * 30)) ]; then
+						KEEP_LIST["$backup"]=1
+						log "Keeping MONTHLY backup: $dirname (1st of Month)"
+					fi
+				done
+
+				# Cleanup phase
+				for backup in $BACKUPS; do
+					if [ -z "${KEEP_LIST["$backup"]}" ]; then
+						log "Deleting old backup: $(basename "$backup")"
+						rm -rf "$backup"
+					fi
+				done
+
+			else
+				# SIMPLE RETENTION (Keep last N)
+				log "Cleaning up old versions (keeping last $retention_count)..."
+				find "$(dirname "${BASE_DEST_PATH}_x")" -maxdepth 1 -type d -name "$(basename "${BASE_DEST_PATH}")_*" -print0 2> /dev/null \
+					| sort -rz | tail -z -n +$((retention_count + 1)) | xargs -0 -r rm -rf
+			fi
+		else
+			error_msg="Failed to clone version $TIMESTAMP"
+			log "ERROR: $error_msg"
+			REPOS_FAILED+=("$user/$repo: $error_msg")
+		fi
+	fi
+
+done < "$CONFIG_FILE"
+
+# Determine final status
+if [ ${#REPOS_FAILED[@]} -eq 0 ]; then
+	FINAL_STATUS="SUCCESS"
+else
+	FINAL_STATUS="FAILED"
+fi
+
+log "GitHub Mirror process finished. Status: $FINAL_STATUS"
+
+if [ "$FINAL_STATUS" = "SUCCESS" ]; then
+	log_event "$OK" "GitHub Mirror Process Completed"
+else
+	log_event "$E_UPDATE" "GitHub Mirror Process Completed with Failures"
+fi
+
+# Send email report
+if [ -n "$ADMIN_EMAIL" ]; then
+	# Convert NOTIFY_ON_SUCCESS to lowercase for reliable comparison
+	NOTIFY_ON_SUCCESS_LOWER=$(echo "$NOTIFY_ON_SUCCESS" | tr '[:upper:]' '[:lower:]')
+
+	if [ "$FINAL_STATUS" = "FAILED" ] || [ "$NOTIFY_ON_SUCCESS_LOWER" = "true" ]; then
+		log "Sending email report to $ADMIN_EMAIL..."
+		send_html_email "$FINAL_STATUS" "$ADMIN_EMAIL"
+	else
+		log "Skipping email report (Success and NOTIFY_ON_SUCCESS=$NOTIFY_ON_SUCCESS)"
+	fi
+fi

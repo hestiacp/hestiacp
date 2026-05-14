@@ -1,0 +1,747 @@
+#!/bin/bash
+
+#==========================================
+# HESTIACP WEB PERMISSIONS FIXER
+# Fixes ownership and permissions for web domains
+# Works with any CMS/framework (WordPress, Laravel, static, custom PHP)
+#==========================================
+#
+# WARNING: This script applies STANDARD HestiaCP permissions (dirs: 755,
+# files: 644, owner: user:user). If your domain uses custom permissions
+# (e.g. CGI scripts at 750, custom PHP-FPM pools with different groups,
+# or intentional world-writable dirs), this script WILL overwrite them.
+#
+# To EXCLUDE a domain, create a sentinel file:
+#   touch /home/USER/web/DOMAIN/public_html/.no-fix-permissions
+#
+# Always run with --audit or --dry first to preview changes.
+#
+#==========================================
+# Usage:
+#   v-fix-web-permissions USER DOMAIN         Fix a single domain
+#   v-fix-web-permissions USER                Fix all domains for a user
+#   v-fix-web-permissions --all               Fix all domains for all users
+#   v-fix-web-permissions --audit             Audit only (no changes)
+#   v-fix-web-permissions USER DOMAIN --dry   Dry-run (show changes without applying)
+#==========================================
+
+set -uo pipefail
+
+HESTIA=${HESTIA:-/usr/local/hestia}
+if [ -f "$HESTIA/func/main.sh" ]; then
+	source /etc/profile
+	source "$HESTIA/func/main.sh" 2> /dev/null
+	source "$HESTIA/conf/hestia.conf" 2> /dev/null
+fi
+
+DIR_PERM="755"
+FILE_PERM="644"
+WP_CONFIG_PERM="640"
+
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+CYAN='\033[0;36m'
+NC='\033[0m'
+BOLD='\033[1m'
+
+DRY_RUN=false
+AUDIT_ONLY=false
+FIXED_TOTAL=0
+SKIPPED_TOTAL=0
+DOMAINS_PROCESSED=0
+CMS_OVERRIDE=""
+CMS_FILTER=""
+
+LOG_DIR="/var/log/hestia/fix-permissions"
+LOG_FILE=""
+
+for arg in "$@"; do
+	case "$arg" in
+		--dry) DRY_RUN=true ;;
+		--audit) AUDIT_ONLY=true ;;
+		--wordpress) CMS_OVERRIDE="wordpress" ;;
+		--drupal) CMS_OVERRIDE="drupal" ;;
+		--joomla) CMS_OVERRIDE="joomla" ;;
+		--laravel) CMS_OVERRIDE="laravel" ;;
+		--symfony) CMS_OVERRIDE="symfony" ;;
+		--magento) CMS_OVERRIDE="magento" ;;
+		--opencart) CMS_OVERRIDE="opencart" ;;
+		--prestashop) CMS_OVERRIDE="prestashop" ;;
+		--static) CMS_OVERRIDE="static" ;;
+		--filter-wordpress) CMS_FILTER="wordpress" ;;
+		--filter-drupal) CMS_FILTER="drupal" ;;
+		--filter-joomla) CMS_FILTER="joomla" ;;
+		--filter-laravel) CMS_FILTER="laravel" ;;
+		--filter-symfony) CMS_FILTER="symfony" ;;
+		--filter-magento) CMS_FILTER="magento" ;;
+		--filter-opencart) CMS_FILTER="opencart" ;;
+		--filter-prestashop) CMS_FILTER="prestashop" ;;
+		--filter-composer) CMS_FILTER="php-composer" ;;
+		--filter-static) CMS_FILTER="static" ;;
+		--filter-generic) CMS_FILTER="generic-php" ;;
+	esac
+done
+
+log_ok() { echo -e "  ${GREEN}[OK]${NC} $1"; }
+log_fix() {
+	echo -e "  ${YELLOW}[FIX]${NC} $1"
+	FIXED_TOTAL=$((FIXED_TOTAL + 1))
+}
+log_dry() { echo -e "  ${CYAN}[DRY]${NC} $1"; }
+log_warn() { echo -e "  ${RED}[WARN]${NC} $1"; }
+log_skip() {
+	echo -e "  ${YELLOW}[SKIP]${NC} $1"
+	SKIPPED_TOTAL=$((SKIPPED_TOTAL + 1))
+}
+
+init_log() {
+	mkdir -p "$LOG_DIR" 2> /dev/null
+	chmod 700 "$LOG_DIR" 2> /dev/null
+	LOG_FILE="$LOG_DIR/$(date +%Y%m%d-%H%M%S).log"
+	{
+		echo "# v-fix-web-permissions — Detailed Change Log"
+		echo "# Date: $(date)"
+		echo "# Mode: $([ "$DRY_RUN" = true ] && echo 'DRY-RUN' || ([ "$AUDIT_ONLY" = true ] && echo 'AUDIT' || echo 'LIVE'))"
+		echo "#"
+		echo "# Format: ACTION | TYPE | PATH | BEFORE | AFTER"
+		echo "#=========================================="
+	} > "$LOG_FILE"
+}
+
+log_change() {
+	local action="$1"
+	local type="$2"
+	local path="$3"
+	local before="$4"
+	local after="$5"
+	[ -n "$LOG_FILE" ] && echo "$action | $type | $path | $before | $after" >> "$LOG_FILE"
+}
+
+snapshot_perms() {
+	local pubhtml="$1"
+	find "$pubhtml" -maxdepth 5 \( -type f -o -type d \) -printf '%m %U:%G %p\n' 2> /dev/null | sort -k3
+}
+
+record_diff() {
+	local user="$1"
+	local domain="$2"
+	local before_file="$3"
+	local after_file="$4"
+
+	[ -z "$LOG_FILE" ] && return
+	[ ! -f "$before_file" ] || [ ! -f "$after_file" ] && return
+
+	echo "" >> "$LOG_FILE"
+	echo "# [$user] $domain" >> "$LOG_FILE"
+
+	local changes_found=0
+	while IFS= read -r before_line && IFS= read -r after_line <&3; do
+		if [ "$before_line" != "$after_line" ]; then
+			local fpath=$(echo "$before_line" | awk '{$1=""; $2=""; print}' | sed 's/^ *//')
+			local old_perm=$(echo "$before_line" | awk '{print $1}')
+			local old_owner=$(echo "$before_line" | awk '{print $2}')
+			local new_perm=$(echo "$after_line" | awk '{print $1}')
+			local new_owner=$(echo "$after_line" | awk '{print $2}')
+			local ftype=$([ -d "$fpath" ] && echo "DIR" || echo "FILE")
+			log_change "CHANGED" "$ftype" "$fpath" "${old_perm} ${old_owner}" "${new_perm} ${new_owner}"
+			changes_found=$((changes_found + 1))
+		fi
+	done < "$before_file" 3< "$after_file"
+
+	echo "# Total changes: $changes_found" >> "$LOG_FILE"
+}
+
+is_more_permissive_than() {
+	local actual="$1"
+	local threshold="$2"
+	local actual_dec=$(printf "%d" "0$actual" 2> /dev/null)
+	local threshold_dec=$(printf "%d" "0$threshold" 2> /dev/null)
+	[ "$actual_dec" -gt "$threshold_dec" ] 2> /dev/null && return 0
+	return 1
+}
+
+harden_file() {
+	local fpath="$1"
+	local target_perm="$2"
+	local label="$3"
+	[ ! -f "$fpath" ] && return
+	local current=$(stat -c '%a' "$fpath" 2> /dev/null)
+	if is_more_permissive_than "$current" "$target_perm"; then
+		if [ "$AUDIT_ONLY" != true ] && [ "$DRY_RUN" != true ]; then
+			chmod "$target_perm" "$fpath" 2> /dev/null
+			log_fix "$label hardened: $current → $target_perm"
+		elif [ "$DRY_RUN" = true ]; then
+			log_dry "Would harden $label: $current → $target_perm"
+		else
+			log_warn "$label too permissive: $current (should be ≤$target_perm)"
+		fi
+	fi
+}
+
+harden_dir() {
+	local dpath="$1"
+	local target_perm="$2"
+	local label="$3"
+	[ ! -d "$dpath" ] && return
+	local current=$(stat -c '%a' "$dpath" 2> /dev/null)
+	if is_more_permissive_than "$current" "$target_perm"; then
+		if [ "$AUDIT_ONLY" != true ] && [ "$DRY_RUN" != true ]; then
+			chmod "$target_perm" "$dpath" 2> /dev/null
+			log_fix "$label hardened: $current → $target_perm"
+		elif [ "$DRY_RUN" = true ]; then
+			log_dry "Would harden $label: $current → $target_perm"
+		else
+			log_warn "$label too permissive: $current (should be ≤$target_perm)"
+		fi
+	fi
+}
+
+harden_executable() {
+	local fpath="$1"
+	local label="$2"
+	[ ! -f "$fpath" ] && return
+	local current=$(stat -c '%a' "$fpath" 2> /dev/null)
+	if [ "$current" != "755" ]; then
+		if [ "$AUDIT_ONLY" != true ] && [ "$DRY_RUN" != true ]; then
+			chmod 755 "$fpath" 2> /dev/null
+			log_fix "$label executable: $current → 755"
+		elif [ "$DRY_RUN" = true ]; then
+			log_dry "Would fix $label executable: $current → 755"
+		else
+			log_warn "$label not executable: $current (should be 755)"
+		fi
+	fi
+}
+
+restore_writable() {
+	local target="$1"
+	local label="$2"
+	local user="$3"
+	local dir_perm="${4:-755}"
+	[ ! -d "$target" ] && return
+	if [ "$AUDIT_ONLY" != true ] && [ "$DRY_RUN" != true ]; then
+		chown -R "$user:$user" "$target" 2> /dev/null
+		find "$target" -type d -exec chmod "$dir_perm" {} + 2> /dev/null
+		find "$target" -type f -perm /022 -exec chmod 664 {} + 2> /dev/null
+		log_fix "$label writable restored ($dir_perm dirs, owner $user:$user)"
+	elif [ "$DRY_RUN" = true ]; then
+		log_dry "Would restore $label writable dir"
+	else
+		local owner=$(stat -c '%U:%G' "$target" 2> /dev/null)
+		[ "$owner" != "$user:$user" ] && log_warn "$label wrong owner: $owner"
+	fi
+}
+
+detect_cms() {
+	local pubhtml="$1"
+	if [ -f "$pubhtml/wp-config.php" ] || [ -f "$pubhtml/wp-login.php" ]; then
+		echo "wordpress"
+	elif [ -f "$pubhtml/artisan" ]; then
+		echo "laravel"
+	elif [ -f "$pubhtml/../.env" ] && [ -f "$pubhtml/../config/bundles.php" ]; then
+		echo "symfony"
+	elif [ -f "$pubhtml/../app/etc/env.php" ] || [ -f "$pubhtml/../bin/magento" ]; then
+		echo "magento"
+	elif [ -f "$pubhtml/administrator/manifests/files/joomla.xml" ]; then
+		echo "joomla"
+	elif [ -f "$pubhtml/sites/default/settings.php" ] || [ -d "$pubhtml/core/lib/Drupal" ]; then
+		echo "drupal"
+	elif [ -f "$pubhtml/web/sites/default/settings.php" ] || [ -d "$pubhtml/web/core/lib/Drupal" ]; then
+		echo "drupal-composer"
+	elif [ -f "$pubhtml/config.php" ] && [ -d "$pubhtml/system/storage" ]; then
+		echo "opencart"
+	elif [ -f "$pubhtml/config/settings.inc.php" ] || ([ -d "$pubhtml/../app/Resources" ] && [ -f "$pubhtml/../composer.json" ]); then
+		echo "prestashop"
+	elif [ -f "$pubhtml/../composer.json" ] && [ -d "$pubhtml/vendor" ]; then
+		echo "php-composer"
+	elif [ -f "$pubhtml/index.html" ] && [ ! -f "$pubhtml/index.php" ]; then
+		echo "static"
+	else
+		echo "generic-php"
+	fi
+}
+
+fix_domain() {
+	local user="$1"
+	local domain="$2"
+	local webdir="/home/$user/web/$domain"
+	local pubhtml="$webdir/public_html"
+	local changes=0
+
+	if [ ! -d "$webdir" ]; then
+		log_warn "$domain: web directory not found ($webdir)"
+		return 1
+	fi
+
+	if [ ! -d "$pubhtml" ]; then
+		log_warn "$domain: public_html not found"
+		return 1
+	fi
+
+	if [ -f "$pubhtml/.no-fix-permissions" ]; then
+		log_skip "$domain: .no-fix-permissions sentinel found — skipping (custom permissions)"
+		[ -n "$LOG_FILE" ] && log_change "SKIPPED" "DOMAIN" "$domain" "sentinel" "—"
+		return 0
+	fi
+
+	DOMAINS_PROCESSED=$((DOMAINS_PROCESSED + 1))
+	local cms
+	if [ -n "$CMS_OVERRIDE" ]; then
+		cms="$CMS_OVERRIDE"
+		echo -e "\n${BOLD}[$user] $domain${NC} (forced: $cms)"
+	else
+		cms=$(detect_cms "$pubhtml")
+		echo -e "\n${BOLD}[$user] $domain${NC} (detected: $cms)"
+	fi
+
+	local cms_match="$cms"
+	[ "$cms" = "drupal-composer" ] && [ "$CMS_FILTER" = "drupal" ] && cms_match="drupal"
+
+	if [ -n "$CMS_FILTER" ] && [ "$cms_match" != "$CMS_FILTER" ]; then
+		log_skip "$domain: CMS is '$cms', filter is '--filter-$CMS_FILTER' — skipping"
+		DOMAINS_PROCESSED=$((DOMAINS_PROCESSED - 1))
+		return 0
+	fi
+
+	local php_user="$user"
+	local fpm_conf=$(find /etc/php -name "$user.conf" -path "*/fpm/pool.d/*" 2> /dev/null | head -1)
+	if [ -n "$fpm_conf" ]; then
+		local pool_user=$(grep "^user\s*=" "$fpm_conf" 2> /dev/null | awk -F= '{print $2}' | tr -d ' ')
+		if [ -n "$pool_user" ] && [ "$pool_user" != "$user" ]; then
+			log_warn "PHP-FPM pool runs as '$pool_user', not '$user'. Ownership change may break file writes."
+			log_warn "Add '.no-fix-permissions' to this domain to skip it, or verify your pool config."
+			php_user="$pool_user"
+		fi
+	fi
+
+	local tmp_before=$(mktemp)
+	local tmp_after=$(mktemp)
+	if [ "$AUDIT_ONLY" != true ] && [ "$DRY_RUN" != true ]; then
+		snapshot_perms "$pubhtml" > "$tmp_before"
+	fi
+
+	local current_owner=$(stat -c '%U:%G' "$pubhtml" 2> /dev/null)
+	local expected_owner="$user:$user"
+
+	if [ "$current_owner" != "$expected_owner" ]; then
+		if [ "$AUDIT_ONLY" = true ]; then
+			log_warn "WRONG OWNER: $current_owner (expected $expected_owner)"
+		elif [ "$DRY_RUN" = true ]; then
+			log_dry "Would fix ownership: $current_owner → $expected_owner"
+		else
+			chown -R "$user:$user" "$pubhtml" 2> /dev/null
+			if [ $? -eq 0 ]; then
+				log_fix "Ownership: $current_owner → $expected_owner"
+				changes=$((changes + 1))
+			else
+				log_warn "Failed to fix ownership on $pubhtml"
+			fi
+		fi
+	else
+		[ "$AUDIT_ONLY" = true ] && log_ok "Ownership: $current_owner"
+	fi
+
+	local EXCLUDE_DIRS="-not -path '*/cgi-bin/*' -not -path '*/.well-known/*'"
+
+	local bad_dirs=$(eval "find '$pubhtml' -type d -perm /002 $EXCLUDE_DIRS 2>/dev/null" | wc -l)
+	if [ "$bad_dirs" -gt 0 ]; then
+		if [ "$AUDIT_ONLY" = true ]; then
+			log_warn "Directories with world-write bit: $bad_dirs"
+		elif [ "$DRY_RUN" = true ]; then
+			log_dry "Would fix $bad_dirs world-writable directories → $DIR_PERM"
+		else
+			eval "find '$pubhtml' -type d -perm /002 $EXCLUDE_DIRS -exec chmod '$DIR_PERM' {} + 2>/dev/null"
+			log_fix "Directories: $bad_dirs world-writable fixed → $DIR_PERM"
+			changes=$((changes + 1))
+		fi
+	else
+		[ "$AUDIT_ONLY" = true ] && log_ok "No world-writable directories"
+	fi
+
+	local EXCLUDE_FILES="! -name 'wp-config.php' ! -name '.htaccess' ! -name '.env' ! -name 'artisan' ! -name '*.cgi' ! -name '*.pl' ! -name '*.sh'"
+	local overperm_files=$(eval "find '$pubhtml' -type f -perm /022 $EXCLUDE_FILES $EXCLUDE_DIRS 2>/dev/null" | wc -l)
+	if [ "$overperm_files" -gt 0 ]; then
+		if [ "$AUDIT_ONLY" = true ]; then
+			log_warn "Files with group/world write bit: $overperm_files"
+		elif [ "$DRY_RUN" = true ]; then
+			log_dry "Would fix $overperm_files over-permissive files → $FILE_PERM"
+		else
+			eval "find '$pubhtml' -type f -perm /022 $EXCLUDE_FILES $EXCLUDE_DIRS -exec chmod '$FILE_PERM' {} + 2>/dev/null"
+			log_fix "Files: $overperm_files over-permissive fixed → $FILE_PERM"
+			changes=$((changes + 1))
+		fi
+	else
+		[ "$AUDIT_ONLY" = true ] && log_ok "No over-permissive files"
+	fi
+
+	if [ "$cms" = "wordpress" ]; then
+		fix_wordpress_extras "$pubhtml" "$user"
+	elif [ "$cms" = "laravel" ] || [ "$cms" = "symfony" ]; then
+		fix_laravel_extras "$pubhtml" "$user"
+	elif [ "$cms" = "drupal" ]; then
+		fix_drupal_extras "$pubhtml" "$user"
+	elif [ "$cms" = "drupal-composer" ]; then
+		fix_drupal_extras "$pubhtml/web" "$user"
+	elif [ "$cms" = "joomla" ]; then
+		fix_joomla_extras "$pubhtml" "$user"
+	elif [ "$cms" = "magento" ]; then
+		fix_magento_extras "$pubhtml" "$user"
+	elif [ "$cms" = "prestashop" ]; then
+		fix_prestashop_extras "$pubhtml" "$user"
+	elif [ "$cms" = "opencart" ]; then
+		fix_opencart_extras "$pubhtml" "$user"
+	fi
+
+	security_scan "$pubhtml" "$user" "$cms"
+
+	if [ "$AUDIT_ONLY" != true ] && [ "$DRY_RUN" != true ]; then
+		snapshot_perms "$pubhtml" > "$tmp_after"
+		record_diff "$user" "$domain" "$tmp_before" "$tmp_after"
+	fi
+	rm -f "$tmp_before" "$tmp_after" 2> /dev/null
+
+	if [ "$changes" -eq 0 ] && [ "$AUDIT_ONLY" != true ] && [ "$DRY_RUN" != true ]; then
+		log_ok "No changes needed"
+	fi
+}
+
+fix_wordpress_extras() {
+	local pubhtml="$1"
+	local user="$2"
+
+	harden_file "$pubhtml/wp-config.php" "$WP_CONFIG_PERM" "wp-config.php"
+	harden_file "$pubhtml/wp-content/debug.log" "640" "wp-content/debug.log"
+
+	for writable_dir in "wp-content/uploads" "wp-content/cache" "wp-content/w3tc-config" "wp-content/upgrade" "wp-content/wc-logs"; do
+		restore_writable "$pubhtml/$writable_dir" "WP $writable_dir" "$user" "755"
+	done
+}
+
+fix_laravel_extras() {
+	local pubhtml="$1"
+	local user="$2"
+	local basedir=$(dirname "$pubhtml")
+
+	for env_file in "$basedir/.env" "$basedir/.env.local" "$basedir/.env.production" "$basedir/.env.staging"; do
+		harden_file "$env_file" "640" ".env"
+	done
+
+	harden_executable "$basedir/artisan" "artisan"
+	harden_executable "$basedir/bin/console" "bin/console (Symfony)"
+
+	restore_writable "$basedir/storage" "Laravel storage" "$user" "775"
+	restore_writable "$basedir/bootstrap/cache" "Laravel bootstrap/cache" "$user" "775"
+	restore_writable "$basedir/var" "Symfony var" "$user" "775"
+}
+
+fix_drupal_extras() {
+	local pubhtml="$1"
+	local user="$2"
+
+	harden_file "$pubhtml/sites/default/settings.php" "444" "Drupal settings.php"
+	harden_file "$pubhtml/sites/default/settings.local.php" "444" "Drupal settings.local.php"
+	harden_file "$pubhtml/sites/default/services.yml" "444" "Drupal services.yml"
+
+	harden_dir "$pubhtml/sites/default" "555" "Drupal sites/default dir"
+
+	restore_writable "$pubhtml/sites/default/files" "Drupal files" "$user" "755"
+	restore_writable "$pubhtml/sites/default/private" "Drupal private" "$user" "750"
+}
+
+fix_joomla_extras() {
+	local pubhtml="$1"
+	local user="$2"
+
+	harden_file "$pubhtml/configuration.php" "640" "Joomla configuration.php"
+
+	for writable_dir in "cache" "tmp" "logs" "images" "media"; do
+		restore_writable "$pubhtml/$writable_dir" "Joomla $writable_dir" "$user" "755"
+	done
+}
+
+fix_magento_extras() {
+	local pubhtml="$1"
+	local user="$2"
+	local basedir=$(dirname "$pubhtml")
+
+	harden_file "$basedir/app/etc/env.php" "640" "Magento env.php"
+	harden_file "$basedir/app/etc/config.php" "640" "Magento config.php"
+	harden_dir "$basedir/app/etc" "750" "Magento app/etc dir"
+	harden_executable "$basedir/bin/magento" "bin/magento"
+
+	restore_writable "$basedir/var" "Magento var" "$user" "775"
+	restore_writable "$basedir/generated" "Magento generated" "$user" "775"
+	restore_writable "$basedir/pub/media" "Magento pub/media" "$user" "775"
+
+	harden_dir "$basedir/pub/static" "755" "Magento pub/static"
+}
+
+fix_prestashop_extras() {
+	local pubhtml="$1"
+	local user="$2"
+	local basedir=$(dirname "$pubhtml")
+
+	harden_file "$pubhtml/config/settings.inc.php" "640" "PrestaShop settings.inc.php"
+	harden_file "$basedir/app/config/parameters.php" "640" "PrestaShop parameters.php (PS 1.7+)"
+	harden_file "$basedir/app/config/parameters.yml" "640" "PrestaShop parameters.yml (PS 1.7+)"
+
+	harden_dir "$pubhtml/config" "750" "PrestaShop config dir"
+
+	for writable_dir in "cache" "log" "img" "upload" "download" "mails" "translations" "themes"; do
+		restore_writable "$pubhtml/$writable_dir" "PrestaShop $writable_dir" "$user" "755"
+	done
+
+	restore_writable "$basedir/var" "PrestaShop var (PS 1.7+)" "$user" "775"
+	restore_writable "$basedir/cache" "PrestaShop cache (PS 1.7+)" "$user" "775"
+}
+
+fix_opencart_extras() {
+	local pubhtml="$1"
+	local user="$2"
+
+	harden_file "$pubhtml/config.php" "640" "OpenCart config.php"
+	harden_file "$pubhtml/admin/config.php" "640" "OpenCart admin/config.php"
+
+	restore_writable "$pubhtml/system/storage" "OpenCart system/storage" "$user" "755"
+	restore_writable "$pubhtml/image/cache" "OpenCart image/cache" "$user" "755"
+	restore_writable "$pubhtml/image/catalog" "OpenCart image/catalog" "$user" "755"
+
+	if [ -d "$pubhtml/system/storage" ]; then
+		log_warn "OpenCart: system/storage is inside public_html — consider moving it above webroot (OC 3.x+)"
+	fi
+}
+
+security_scan() {
+	local pubhtml="$1"
+	local user="$2"
+	local cms="$3"
+	local issues=0
+
+	if [ -d "$pubhtml/.git" ]; then
+		log_warn "⚠  SECURITY: .git directory is publicly accessible ($pubhtml/.git)"
+		issues=$((issues + 1))
+	fi
+
+	if [ -f "$pubhtml/.env" ]; then
+		log_warn "⚠  SECURITY: .env file is in public_html — credentials may be exposed"
+		harden_file "$pubhtml/.env" "640" ".env in public_html"
+		issues=$((issues + 1))
+	fi
+
+	for danger_dir in "install" "installation" "installer" "setup"; do
+		if [ -d "$pubhtml/$danger_dir" ]; then
+			log_warn "⚠  SECURITY: $danger_dir/ directory found — remove it from production ($pubhtml/$danger_dir)"
+			issues=$((issues + 1))
+		fi
+	done
+
+	for debug_file in phpinfo.php test.php info.php debug.php probe.php check.php; do
+		if [ -f "$pubhtml/$debug_file" ]; then
+			log_warn "⚠  SECURITY: Debug file found: $debug_file — remove from production"
+			issues=$((issues + 1))
+		fi
+	done
+
+	if [ -f "$pubhtml/composer.json" ] || [ -f "$pubhtml/composer.lock" ]; then
+		log_warn "⚠  SECURITY: composer.json/lock is in public_html — exposes dependency versions"
+		issues=$((issues + 1))
+	fi
+
+	if [ -f "$pubhtml/wp-config-sample.php" ] && [ "$cms" != "wordpress" ]; then
+		log_warn "⚠  SECURITY: wp-config-sample.php found but CMS is $cms — leftover file?"
+		issues=$((issues + 1))
+	fi
+
+	if [ "$issues" -eq 0 ]; then
+		[ "$AUDIT_ONLY" = true ] && log_ok "Security scan: no issues found"
+	fi
+}
+
+get_user_domains() {
+	local user="$1"
+	local web_conf="$HESTIA/data/users/$user/web.conf"
+	if [ -f "$web_conf" ]; then
+		grep "^DOMAIN=" "$web_conf" | cut -d"'" -f2
+	else
+		ls /home/"$user"/web/ 2> /dev/null
+	fi
+}
+
+get_all_users() {
+	if [ -x "$HESTIA/bin/v-list-users" ]; then
+		"$HESTIA/bin/v-list-users" list 2> /dev/null
+	else
+		ls /home/ 2> /dev/null | while read dir; do
+			[ -d "/home/$dir/web" ] && echo "$dir"
+		done
+	fi
+}
+
+show_usage() {
+	echo "=========================================="
+	echo " HestiaCP Web Permissions Fixer"
+	echo "=========================================="
+	echo ""
+	echo "Usage:"
+	echo "  v-fix-web-permissions USER DOMAIN [options]  Fix a single domain"
+	echo "  v-fix-web-permissions USER [options]         Fix all domains for a user"
+	echo "  v-fix-web-permissions --all [options]        Fix all domains on server"
+	echo ""
+	echo "Options:"
+	echo "  --audit             Read-only audit (no changes)"
+	echo "  --dry               Dry-run (show what would change)"
+	echo ""
+	echo "CMS Override (force CMS mode, skip auto-detection):"
+	echo "  --wordpress   --drupal   --joomla  --laravel"
+	echo "  --symfony     --magento  --opencart --prestashop --static"
+	echo ""
+	echo "CMS Filter (only process domains of this CMS type):"
+	echo "  --filter-wordpress   --filter-drupal    --filter-joomla"
+	echo "  --filter-laravel     --filter-symfony   --filter-magento"
+	echo "  --filter-opencart    --filter-prestashop"
+	echo "  --filter-composer    --filter-static    --filter-generic"
+	echo ""
+	echo "  --email             Send email report to Hestia panel admin"
+	echo ""
+	echo "Examples:"
+	echo "  v-fix-web-permissions --all --filter-wordpress     Only fix WordPress sites"
+	echo "  v-fix-web-permissions admin example.com --drupal   Force Drupal mode"
+	echo "  v-fix-web-permissions --all --email                Run and email report"
+	echo ""
+}
+
+echo "=========================================="
+echo " HestiaCP Web Permissions Fixer"
+echo " Date: $(date)"
+if [ "$DRY_RUN" = true ]; then
+	echo " Mode: DRY-RUN (no changes will be made)"
+elif [ "$AUDIT_ONLY" = true ]; then
+	echo " Mode: AUDIT (read-only)"
+else
+	echo " Mode: LIVE (changes will be applied)"
+fi
+[ -n "$CMS_OVERRIDE" ] && echo " CMS: FORCED → $CMS_OVERRIDE"
+[ -n "$CMS_FILTER" ] && echo " Filter: only '$CMS_FILTER' domains"
+echo ""
+echo " ⚠  WARNING: This resets permissions to HestiaCP defaults."
+echo "    Domains with custom setups (CGI, custom FPM pools, etc.)"
+echo "    should be excluded via: .no-fix-permissions sentinel file."
+echo "    Run with --audit or --dry first to preview changes."
+echo "=========================================="
+
+if [ "$AUDIT_ONLY" != true ]; then
+	init_log
+fi
+
+USER_ARG=""
+DOMAIN_ARG=""
+RUN_ALL=false
+SEND_EMAIL=false
+
+for arg in "$@"; do
+	case "$arg" in
+		--dry | --audit) continue ;;
+		--all) RUN_ALL=true ;;
+		--email) SEND_EMAIL=true ;;
+		--help | -h)
+			show_usage
+			exit 0
+			;;
+		--wordpress | --drupal | --joomla | --laravel | --symfony | --magento | --opencart | --prestashop | --static) continue ;;
+		--filter-wordpress | --filter-drupal | --filter-joomla | --filter-laravel | --filter-symfony) continue ;;
+		--filter-magento | --filter-opencart | --filter-prestashop | --filter-composer | --filter-static | --filter-generic) continue ;;
+		*)
+			if [ -z "$USER_ARG" ]; then
+				USER_ARG="$arg"
+			elif [ -z "$DOMAIN_ARG" ]; then
+				DOMAIN_ARG="$arg"
+			fi
+			;;
+	esac
+done
+
+if [ "$RUN_ALL" = true ]; then
+	for user in $(get_all_users); do
+		for domain in $(get_user_domains "$user"); do
+			fix_domain "$user" "$domain"
+		done
+	done
+elif [ -n "$USER_ARG" ] && [ -n "$DOMAIN_ARG" ]; then
+	fix_domain "$USER_ARG" "$DOMAIN_ARG"
+elif [ -n "$USER_ARG" ]; then
+	for domain in $(get_user_domains "$USER_ARG"); do
+		fix_domain "$USER_ARG" "$domain"
+	done
+else
+	show_usage
+	exit 1
+fi
+
+echo ""
+echo "=========================================="
+echo " Summary"
+echo "=========================================="
+echo " Domains processed: $DOMAINS_PROCESSED"
+if [ "$AUDIT_ONLY" = true ]; then
+	echo " Mode: AUDIT (no changes made)"
+elif [ "$DRY_RUN" = true ]; then
+	echo " Mode: DRY-RUN (no changes made)"
+else
+	echo " Fixes applied: $FIXED_TOTAL"
+	echo " Skipped: $SKIPPED_TOTAL"
+fi
+if [ -n "$LOG_FILE" ] && [ -f "$LOG_FILE" ]; then
+	log_line_count=$(wc -l < "$LOG_FILE")
+	if [ "$log_line_count" -gt 6 ]; then
+		echo " Change log: $LOG_FILE"
+	else
+		rm -f "$LOG_FILE" 2> /dev/null
+		echo " Change log: (no changes, log not created)"
+		LOG_FILE=""
+	fi
+fi
+echo "=========================================="
+
+if [ "$SEND_EMAIL" = true ]; then
+	admin_email=$(grep "^CONTACT=" /usr/local/hestia/conf/hestia.conf 2> /dev/null | cut -d"'" -f2)
+	if [ -n "$admin_email" ]; then
+		hostname=$(hostname -f 2> /dev/null || echo "Server")
+		subject="[Web Permissions] Fix Report - $hostname"
+		body="HestiaCP Web Permissions Fixer\n============================\n"
+		body+="Domains processed: $DOMAINS_PROCESSED\n"
+		body+="Fixes applied: $FIXED_TOTAL\n"
+		body+="Skipped: $SKIPPED_TOTAL\n\n"
+		if [ "$FIXED_TOTAL" -gt 0 ] && [ -n "$LOG_FILE" ] && [ -f "$LOG_FILE" ]; then
+			body+="Check full change log attached or at $LOG_FILE on the server.\n\n"
+			body+="$(head -n 50 "$LOG_FILE")"
+			if [ "$log_line_count" -gt 50 ]; then
+				body+="\n... (truncated, see full log on server)"
+			fi
+		fi
+
+		SENDMAIL="/usr/local/hestia/web/inc/mail-wrapper.php"
+		if [ -f "$SENDMAIL" ]; then
+			echo -e "$body" | "$SENDMAIL" -s "$subject" "$admin_email" 2> /dev/null
+		else
+			{
+				echo "Subject: $subject"
+				echo ""
+				echo -e "$body"
+			} | /usr/sbin/sendmail "$admin_email" 2> /dev/null
+		fi
+		echo " Email report sent to $admin_email"
+	else
+		echo " Could not auto-detect admin email for reporting."
+	fi
+fi
+
+if type log_event > /dev/null 2>&1; then
+	if [ "$AUDIT_ONLY" != true ] && [ "$DRY_RUN" != true ]; then
+		if [ "$FIXED_TOTAL" -gt 0 ]; then
+			log_event "$OK" "Fix Web Permissions: $FIXED_TOTAL fixes across $DOMAINS_PROCESSED domains"
+		else
+			log_event "$OK" "Fix Web Permissions: No changes needed ($DOMAINS_PROCESSED domains checked)"
+		fi
+	fi
+fi

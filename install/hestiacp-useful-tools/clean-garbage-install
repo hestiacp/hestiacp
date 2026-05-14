@@ -1,0 +1,23 @@
+#!/bin/bash
+# Installer for Clean Garbage module
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+HESTIA_BIN="/usr/local/hestia/bin"
+
+echo "--- Installing v-clean-garbage ---"
+
+# Script
+target_bin="$HESTIA_BIN/v-clean-garbage"
+[ -f "$target_bin" ] && cp "$target_bin" "${target_bin}.bak.$(date +%Y%m%d-%H%M%S)"
+cp "$SCRIPT_DIR/v-clean-garbage" "$target_bin"
+chmod +x "$target_bin"
+echo "  -> [OK] Installed script: $target_bin"
+
+# Config
+if [ ! -f "/etc/hestiacp-clean-garbage.conf" ]; then
+	cp "$SCRIPT_DIR/clean-garbage.conf.sample" "/etc/hestiacp-clean-garbage.conf"
+	chmod 600 "/etc/hestiacp-clean-garbage.conf"
+	echo "  -> [OK] Installed config: /etc/hestiacp-clean-garbage.conf"
+else
+	echo "  -> [INFO] Config exists (skipped): /etc/hestiacp-clean-garbage.conf"
+fi

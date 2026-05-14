@@ -1,0 +1,214 @@
+#!/bin/bash
+# HestiaCP Backup Global Master Notification Hook
+# Compiles a summary of all backups executed today into a beautiful HTML email
+
+HESTIA="/usr/local/hestia"
+source $HESTIA/conf/hestia.conf 2> /dev/null
+
+# Detect admin email: scan user configs for ROLE='admin', fallback to hestia.conf
+ADMIN_EMAIL=""
+for user_conf in "$HESTIA/data/users"/*/user.conf; do
+	[ -f "$user_conf" ] || continue
+	if grep -q "ROLE='admin'" "$user_conf" 2> /dev/null; then
+		ADMIN_EMAIL=$(grep "^CONTACT=" "$user_conf" 2> /dev/null | cut -d"'" -f2)
+		[ -n "$ADMIN_EMAIL" ] && break
+	fi
+done
+if [ -z "$ADMIN_EMAIL" ]; then
+	ADMIN_EMAIL=$(grep "^CONTACT=" "$HESTIA/conf/hestia.conf" 2> /dev/null | cut -d"'" -f2)
+fi
+
+HOSTNAME=$(hostname -f 2> /dev/null || hostname 2> /dev/null || echo "HestiaCP Server")
+TODAY=$(date +"%Y-%m-%d")
+TIMESTAMP=$(date +"%Y-%m-%d %H:%M:%S")
+MAIL_FROM="${MAIL_FROM:-root@$HOSTNAME}"
+MAIL_FROM_NAME="${MAIL_FROM_NAME:-HestiaCP Backup}"
+LOG_FILE="/usr/local/hestia/log/backup.log"
+
+upload_global_log_to_b2() {
+	[ -f "$LOG_FILE" ] || return 0
+	[ -f "$HESTIA/conf/b2.backup.conf" ] || return 0
+	command -v b2 > /dev/null 2>&1 || return 0
+
+	# shellcheck disable=SC1091
+	source "$HESTIA/conf/b2.backup.conf" 2> /dev/null || return 0
+	[ -n "$BUCKET" ] || return 0
+	[ -n "$B2_KEYID" ] || return 0
+	[ -n "$B2_KEY" ] || return 0
+
+	b2 clear-account > /dev/null 2>&1 || true
+	b2 authorize-account "$B2_KEYID" "$B2_KEY" > /dev/null 2>&1 || return 0
+
+	local b2_year
+	local b2_month
+	local b2_log_name
+	local b2_log_path
+	b2_year=$(date +%Y)
+	b2_month=$(date +%m_%B | tr '[:lower:]' '[:upper:]')
+	b2_log_name="backup-users-$(date +%Y-%m-%d_%H-%M-%S).log"
+	b2_log_path="${b2_year}/${b2_month}/${b2_log_name}"
+
+	echo "$(date +"%Y-%m-%d %H:%M:%S") Upload global backup log to B2: ${b2_log_path}" >> "$LOG_FILE"
+	b2 upload-file "$BUCKET" "$LOG_FILE" "$b2_log_path" > /dev/null 2>&1 || true
+}
+
+TOTAL_SIZE=0
+TOTAL_TIME=0
+BACKUP_ROWS=""
+SUCCESS_COUNT=0
+FAIL_COUNT=0
+
+# Iterate through all users to find today's backups
+for USER_DIR in $HESTIA/data/users/*; do
+	[ ! -d "$USER_DIR" ] && continue
+	USER=$(basename "$USER_DIR")
+	CONF="$USER_DIR/backup.conf"
+
+	[ ! -f "$CONF" ] && continue
+
+	# Parse today's backup for this user if it exists
+	LATEST=$(grep "DATE='$TODAY'" "$CONF" | tail -n 1)
+	if [ -n "$LATEST" ]; then
+		# Parse fields securely
+		B_TYPE=$(echo "$LATEST" | grep -o "TYPE='[^']*'" | cut -d"'" -f2)
+		B_SIZE=$(echo "$LATEST" | grep -o "SIZE='[^']*'" | cut -d"'" -f2)
+		B_TIME=$(echo "$LATEST" | grep -o "RUNTIME='[^']*'" | cut -d"'" -f2)
+
+		TOTAL_SIZE=$((TOTAL_SIZE + B_SIZE))
+		TOTAL_TIME=$((TOTAL_TIME + B_TIME))
+		SUCCESS_COUNT=$((SUCCESS_COUNT + 1))
+
+		BACKUP_ROWS="${BACKUP_ROWS}<tr>
+            <td style=\"padding:8px 12px; border-bottom:1px solid #555;\"><span style=\"color:#E0E0E0;\">$USER</span></td>
+            <td style=\"padding:8px 12px; border-bottom:1px solid #555; text-align:center;\"><span style=\"color:#4CAF50; font-weight:bold;\">SUCCESS</span></td>
+            <td style=\"padding:8px 12px; border-bottom:1px solid #555; text-align:center;\"><span style=\"color:#E0E0E0;\">$B_TYPE</span></td>
+            <td style=\"padding:8px 12px; border-bottom:1px solid #555; text-align:right;\"><span style=\"color:#E0E0E0;\">${B_SIZE} MB</span></td>
+            <td style=\"padding:8px 12px; border-bottom:1px solid #555; text-align:right;\"><span style=\"color:#A0A0A0;\">${B_TIME} min</span></td>
+        </tr>"
+
+	else
+		# Did it fail today? Check the log
+		if [ -f "/backup/$USER.log" ]; then
+			# Just verify if log was modified today
+			LOG_DATE=$(stat -c %y "/backup/$USER.log" 2> /dev/null | cut -d' ' -f1)
+			if [ "$LOG_DATE" = "$TODAY" ]; then
+				if grep -qiE "error|fail" "/backup/$USER.log"; then
+					FAIL_COUNT=$((FAIL_COUNT + 1))
+					BACKUP_ROWS="${BACKUP_ROWS}<tr>
+                        <td style=\"padding:8px 12px; border-bottom:1px solid #555;\"><span style=\"color:#E0E0E0;\">$USER</span></td>
+                        <td style=\"padding:8px 12px; border-bottom:1px solid #555; text-align:center;\"><span style=\"color:#F44336; font-weight:bold;\">FAILED</span></td>
+                        <td style=\"padding:8px 12px; border-bottom:1px solid #555; text-align:center;\"><span style=\"color:#F44336;\">-</span></td>
+                        <td style=\"padding:8px 12px; border-bottom:1px solid #555; text-align:right;\"><span style=\"color:#F44336;\">-</span></td>
+                        <td style=\"padding:8px 12px; border-bottom:1px solid #555; text-align:right;\"><span style=\"color:#F44336;\">Check Log</span></td>
+                    </tr>"
+				fi
+			fi
+		fi
+	fi
+done
+
+[ "$SUCCESS_COUNT" -eq 0 ] && [ "$FAIL_COUNT" -eq 0 ] && exit 0
+
+if [ "$FAIL_COUNT" -gt 0 ]; then
+	GLOBAL_STATUS="CONTAINS ERRORS"
+	GLOBAL_COLOR="#F44336"
+else
+	GLOBAL_STATUS="ALL SUCCESSFUL"
+	GLOBAL_COLOR="#4CAF50"
+fi
+
+HTML_BODY="<!DOCTYPE html>
+<html lang=\"en\">
+<head>
+<meta charset=\"UTF-8\">
+<title>Global Backup Report</title>
+</head>
+<body style=\"font-family:Arial,sans-serif; background:#222222; margin:0; padding:20px; color:#E0E0E0;\">
+<div style=\"max-width:800px; margin:0 auto; background:#3A3A3A; border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,.5); overflow:hidden; border:1px solid #555;\">
+  <div style=\"background:${GLOBAL_COLOR}; color:#fff; padding:16px; text-align:center; border-bottom:2px solid rgba(255,255,255,.1);\">
+    <h1 style=\"margin:0; font-size:18px; font-weight:bold;\">Global Backup Report ($TODAY)</h1>
+    <p style=\"margin:4px 0 0 0; font-size:12px; opacity:0.9;\">${HOSTNAME}</p>
+  </div>
+  
+  <div style=\"padding:20px;\">
+    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:100%; border-collapse:collapse; margin-bottom:20px; background:#2C2C2C; border:1px solid #555;\">
+      <tr>
+        <td style=\"padding:10px; border-right:1px solid #555; text-align:center; width:25%;\">
+          <div style=\"font-size:11px; color:#A0A0A0; margin-bottom:4px;\">Status</div>
+          <div style=\"font-size:14px; color:${GLOBAL_COLOR}; font-weight:bold;\">${GLOBAL_STATUS}</div>
+        </td>
+        <td style=\"padding:10px; border-right:1px solid #555; text-align:center; width:25%;\">
+          <div style=\"font-size:11px; color:#A0A0A0; margin-bottom:4px;\">Users</div>
+          <div style=\"font-size:14px; color:#E0E0E0; font-weight:bold;\"><span style=\"color:#4CAF50\">${SUCCESS_COUNT}</span> / <span style=\"color:#F44336\">${FAIL_COUNT}</span></div>
+        </td>
+        <td style=\"padding:10px; border-right:1px solid #555; text-align:center; width:25%;\">
+          <div style=\"font-size:11px; color:#A0A0A0; margin-bottom:4px;\">Total Size</div>
+          <div style=\"font-size:14px; color:#E0E0E0; font-weight:bold;\">${TOTAL_SIZE} MB</div>
+        </td>
+        <td style=\"padding:10px; text-align:center; width:25%;\">
+          <div style=\"font-size:11px; color:#A0A0A0; margin-bottom:4px;\">Total Time</div>
+          <div style=\"font-size:14px; color:#E0E0E0; font-weight:bold;\">${TOTAL_TIME} min</div>
+        </td>
+      </tr>
+    </table>
+    
+    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:100%; border-collapse:collapse; font-size:13px; background:#2C2C2C; border:1px solid #555; margin-top:4px;\">
+        <tr style=\"background:#1E1E1E;\">
+            <th style=\"padding:10px 12px; text-align:left; border-bottom:1px solid #555; color:#A0A0A0;\">User</th>
+            <th style=\"padding:10px 12px; text-align:center; border-bottom:1px solid #555; color:#A0A0A0;\">Status</th>
+            <th style=\"padding:10px 12px; text-align:center; border-bottom:1px solid #555; color:#A0A0A0;\">Type</th>
+            <th style=\"padding:10px 12px; text-align:right; border-bottom:1px solid #555; color:#A0A0A0;\">Size</th>
+            <th style=\"padding:10px 12px; text-align:right; border-bottom:1px solid #555; color:#A0A0A0;\">Time</th>
+        </tr>
+        ${BACKUP_ROWS}
+    </table>
+
+  </div>
+  <div style=\"background:#2C2C2C; padding:12px; text-align:center; font-size:11px; color:#A0A0A0; border-top:1px solid #555;\">
+    HestiaCP Native Override • ${TIMESTAMP}
+  </div>
+</div>
+</body>
+</html>"
+
+upload_global_log_to_b2
+
+[ -z "$ADMIN_EMAIL" ] && exit 0
+
+BOUNDARY="--==_boundary_$(date +%Y%m%d%H%M%S)_==--"
+TEMP_MAIL="/tmp/backup_global_notify_$$.eml"
+
+SUBJ="Global Backup Report - $HOSTNAME - $GLOBAL_STATUS"
+
+# Construct raw email with attachment
+(
+	echo "To: $ADMIN_EMAIL"
+	echo "From: $MAIL_FROM_NAME <$MAIL_FROM>"
+	echo "Reply-To: $MAIL_FROM"
+	echo "Subject: $SUBJ"
+	echo "MIME-Version: 1.0"
+	echo "Content-Type: multipart/mixed; boundary=\"$BOUNDARY\""
+	echo ""
+	echo "--$BOUNDARY"
+	echo "Content-Type: text/html; charset=UTF-8"
+	echo ""
+	echo "$HTML_BODY"
+	echo ""
+	echo "--$BOUNDARY"
+	echo "Content-Type: text/plain; charset=UTF-8; name=\"backup.log\""
+	echo "Content-Disposition: attachment; filename=\"backup.log\""
+	echo ""
+	if [ -f "$LOG_FILE" ]; then
+		cat "$LOG_FILE"
+	else
+		echo "Log file not found at $LOG_FILE"
+	fi
+	echo ""
+	echo "--$BOUNDARY--"
+) > "$TEMP_MAIL"
+
+# Send via direct Exim/Sendmail to preserve MIME headers
+cat "$TEMP_MAIL" | /usr/sbin/sendmail -f "$MAIL_FROM" -t 2> /dev/null
+
+rm -f "$TEMP_MAIL" 2> /dev/null
+exit 0

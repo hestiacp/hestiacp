@@ -1,0 +1,44 @@
+#!/bin/bash
+# HestiaCP Backup Retention Hook
+# Runs optional classic .tar retention after the native v-backup-users loop.
+
+HESTIA="${HESTIA:-/usr/local/hestia}"
+BIN="${BIN:-$HESTIA/bin}"
+CONFIG_FILE="${CONFIG_FILE:-/etc/hestiacp-backup-retention.conf}"
+RETENTION_ENABLED="FALSE"
+RETENTION_AUTO_RUN="FALSE"
+RETENTION_DRY_RUN="TRUE"
+RETENTION_LOG_FILE="$HESTIA/log/backup-retention.log"
+
+[ -f "$CONFIG_FILE" ] || exit 0
+
+# shellcheck disable=SC1090
+source "$CONFIG_FILE" 2> /dev/null || exit 0
+
+is_true() {
+	case "$1" in
+		TRUE | true | YES | yes | 1) return 0 ;;
+		*) return 1 ;;
+	esac
+}
+
+is_true "$RETENTION_ENABLED" || exit 0
+is_true "$RETENTION_AUTO_RUN" || exit 0
+
+mode="--dry-run"
+if ! is_true "$RETENTION_DRY_RUN"; then
+	mode="--apply"
+fi
+
+mkdir -p "$(dirname "$RETENTION_LOG_FILE")"
+{
+	echo "================================"
+	echo "$(date "+%F %T") Starting backup retention ($mode)"
+	"$BIN/v-prune-backups" "$mode"
+	rc=$?
+	echo "$(date "+%F %T") Finished backup retention (exit: $rc)"
+	echo ""
+} >> "$RETENTION_LOG_FILE" 2>&1
+
+# Never fail the backup batch because a retention adapter failed.
+exit 0

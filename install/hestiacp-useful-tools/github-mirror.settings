@@ -1,0 +1,26 @@
+# Global Settings for v-github-mirror
+# Place this file at /etc/hestiacp-github-mirror.settings
+
+#==========================================
+# EMAIL NOTIFICATIONS
+#==========================================
+# Set to "true" to receive emails on success AND failure.
+# Set to "false" to receive emails ONLY when failures occur.
+NOTIFY_ON_SUCCESS="false"
+
+#==========================================
+# SMART BACKUP RETENTION SETTINGS
+#==========================================
+# These settings apply when retention_mode is set to 'backup' in the repo config.
+
+# Daily Backups: Keep one backup per day for the last N days
+ENABLE_DAILY_BACKUPS="false"
+DAILY_BACKUPS_COUNT=7
+
+# Weekly Backups: Keep one backup per week (Sunday) for the last N weeks
+ENABLE_WEEKLY_BACKUPS="false"
+WEEKLY_BACKUPS_COUNT=4
+
+# Monthly Backups: Keep one backup per month (1st) for the last N months
+ENABLE_MONTHLY_BACKUPS="false"
+MONTHLY_BACKUPS_COUNT=3

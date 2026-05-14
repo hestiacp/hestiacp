@@ -1,0 +1,64 @@
+#!/bin/bash
+# info: Organize user backups into YYYY/MM_MONTH/username/ folders
+# options: USER TARBALL
+#
+# This hook is injected into Hestia's native v-backup-user script.
+# It organizes the resulting local tarball into monthly folders to
+# keep the root /backup directory clean, while providing symlinks
+# so the Hestia panel still detects the backups natively.
+
+user=$1
+tarball=$2
+
+if [ -z "$user" ] || [ -z "$tarball" ]; then
+	exit 1
+fi
+
+BACKUP_DIR="/backup"
+source_tar="$BACKUP_DIR/$tarball"
+
+if [ ! -f "$source_tar" ]; then
+	# If the user uses ONLY cloud backups (no 'local' in BACKUP_SYSTEM),
+	# Hestia deletes the tarball before this hook runs. We must clean up the orphaned log.
+	[ -f "$BACKUP_DIR/$user.log" ] && rm -f "$BACKUP_DIR/$user.log"
+	log_file="${tarball%.tar}.log"
+	[ -f "$BACKUP_DIR/$log_file" ] && rm -f "$BACKUP_DIR/$log_file"
+	exit 0
+fi
+
+# Calculate organized paths
+current_year=$(date +%Y)
+current_month=$(date +%m_%B | tr '[:lower:]' '[:upper:]')
+org_dir="$BACKUP_DIR/$current_year/$current_month/$user"
+
+# Create target directories
+mkdir -p "$org_dir"
+chmod 755 "$BACKUP_DIR/$current_year" 2> /dev/null
+chmod 755 "$BACKUP_DIR/$current_year/$current_month" 2> /dev/null
+chmod 755 "$org_dir" 2> /dev/null
+
+# Move tarball
+mv -f "$source_tar" "$org_dir/"
+# Create symlink for Hestia native detection
+ln -s "$org_dir/$tarball" "$source_tar"
+
+# Move log file (Hestia typically creates it as $user.log or $tarball.log)
+log_file="${tarball%.tar}.log"
+if [ -f "$BACKUP_DIR/$user.log" ]; then
+	cp "$BACKUP_DIR/$user.log" "$org_dir/$log_file"
+	rm -f "$BACKUP_DIR/$user.log"
+	ln -s "$org_dir/$log_file" "$BACKUP_DIR/$log_file" 2> /dev/null
+elif [ -f "$BACKUP_DIR/$log_file" ]; then
+	mv -f "$BACKUP_DIR/$log_file" "$org_dir/"
+	ln -s "$org_dir/$log_file" "$BACKUP_DIR/$log_file"
+fi
+
+# Apply permissions
+chmod 640 "$org_dir/$tarball" 2> /dev/null
+[ -f "$org_dir/$log_file" ] && chmod 640 "$org_dir/$log_file" 2> /dev/null
+
+# Set ownership to Hestia defaults (hestiaweb avoids panel errors sometimes)
+chown hestiaweb:hestiaweb "$org_dir/$tarball" 2> /dev/null
+[ -f "$org_dir/$log_file" ] && chown root:root "$org_dir/$log_file" 2> /dev/null
+
+exit 0

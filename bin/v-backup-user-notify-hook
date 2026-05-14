@@ -1,0 +1,121 @@
+#!/bin/bash
+# HestiaCP Backup User Notification Hook
+# Replaces standard plaintext email with beautiful HTML format + inline logs
+
+USER="$1"
+SUBJ="${2:-Backup Completed}"
+ADMIN_EMAIL="$3"
+NOTIFY="$4"
+LOG_FILE="$5"
+
+[ -z "$ADMIN_EMAIL" ] && exit 0
+[ "$NOTIFY" != "yes" ] && exit 0
+[ ! -f "$LOG_FILE" ] && exit 0
+
+HOSTNAME=$(hostname -f 2> /dev/null || hostname 2> /dev/null || echo "HestiaCP Server")
+TIMESTAMP=$(date +"%Y-%m-%d %H:%M:%S")
+MAIL_FROM="${MAIL_FROM:-root@$HOSTNAME}"
+MAIL_FROM_NAME="${MAIL_FROM_NAME:-HestiaCP Backup}"
+
+# Check for errors in the log
+if grep -qE "Error:|Failed|failed|command not found" "$LOG_FILE"; then
+	STATUS="FAILED"
+	STATUS_COLOR="#F44336"
+	STATUS_TEXT="[!] ERRORS DETECTED"
+elif grep -qEi "repairing|corrupt|warning" "$LOG_FILE"; then
+	STATUS="WARNING"
+	STATUS_COLOR="#FFB300"
+	STATUS_TEXT="[!] DB AUTO-REPAIRED"
+else
+	STATUS="SUCCESS"
+	STATUS_COLOR="#4CAF50"
+	STATUS_TEXT="[✓] BACKUP SUCCESSFUL"
+fi
+
+# Get size and runtime if available from summary
+SIZE=$(grep -i "Size:" "$LOG_FILE" | cut -d: -f4 | xargs 2> /dev/null || echo "Unknown")
+RUNTIME=$(grep -i "Runtime:" "$LOG_FILE" | cut -d: -f4 | xargs 2> /dev/null || echo "Unknown")
+if [ "$SIZE" = "Unknown" ]; then
+	SIZE=$(grep -i "Size:" "$LOG_FILE" | awk '{print $4, $5}')
+fi
+if [ "$RUNTIME" = "Unknown" ]; then
+	RUNTIME=$(grep -i "Runtime:" "$LOG_FILE" | awk '{print $4, $5}')
+fi
+
+# Build Multipart MIME Email
+BOUNDARY="--==_boundary_$(date +%Y%m%d%H%M%S)_==--"
+TEMP_MAIL="/tmp/backup_notify_$$.eml"
+
+# HTML Template without the inline log block
+HTML_BODY="<!DOCTYPE html>
+<html lang=\"en\">
+<head>
+<meta charset=\"UTF-8\">
+<title>$SUBJ</title>
+</head>
+<body style=\"font-family:Arial,sans-serif; background:#222222; margin:0; padding:20px; color:#E0E0E0;\">
+<div style=\"max-width:800px; margin:0 auto; background:#3A3A3A; border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,.5); overflow:hidden; border:1px solid #555;\">
+  <div style=\"background:${STATUS_COLOR}; color:#fff; padding:16px; text-align:center; border-bottom:2px solid rgba(255,255,255,.1);\">
+    <h1 style=\"margin:0; font-size:18px; font-weight:bold;\">$SUBJ</h1>
+    <p style=\"margin:4px 0 0 0; font-size:12px; opacity:0.9;\">${HOSTNAME}</p>
+  </div>
+  
+  <div style=\"padding:20px;\">
+    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:100%; border-collapse:collapse; background:#2C2C2C; border:1px solid #555;\">
+      <tr>
+        <td style=\"padding:12px; border-right:1px solid #555; text-align:center; width:33%;\">
+          <div style=\"font-size:11px; color:#A0A0A0; margin-bottom:4px;\">Status</div>
+          <div style=\"font-size:14px; color:${STATUS_COLOR}; font-weight:bold;\">${STATUS_TEXT}</div>
+        </td>
+        <td style=\"padding:12px; border-right:1px solid #555; text-align:center; width:33%;\">
+          <div style=\"font-size:11px; color:#A0A0A0; margin-bottom:4px;\">Size</div>
+          <div style=\"font-size:14px; color:#E0E0E0; font-weight:bold;\">${SIZE}</div>
+        </td>
+        <td style=\"padding:12px; text-align:center; width:33%;\">
+          <div style=\"font-size:11px; color:#A0A0A0; margin-bottom:4px;\">Runtime</div>
+          <div style=\"font-size:14px; color:#E0E0E0; font-weight:bold;\">${RUNTIME}</div>
+        </td>
+      </tr>
+    </table>
+    <div style=\"margin-top:20px; text-align:center; color:#A0A0A0; font-size:13px;\">
+      The complete system execution log is attached to this email.
+    </div>
+  </div>
+  <div style=\"background:#2C2C2C; padding:12px; text-align:center; font-size:11px; color:#A0A0A0; border-top:1px solid #555;\">
+    HestiaCP Native Override • ${TIMESTAMP}
+  </div>
+</div>
+</body>
+</html>"
+
+# Append native log notice
+echo "$(date +"%Y-%m-%d %H:%M:%S") Notification sent to $ADMIN_EMAIL via Custom Hook" >> "$LOG_FILE"
+
+# Construct raw email
+(
+	echo "To: $ADMIN_EMAIL"
+	echo "From: $MAIL_FROM_NAME <$MAIL_FROM>"
+	echo "Reply-To: $MAIL_FROM"
+	echo "Subject: $SUBJ"
+	echo "MIME-Version: 1.0"
+	echo "Content-Type: multipart/mixed; boundary=\"$BOUNDARY\""
+	echo ""
+	echo "--$BOUNDARY"
+	echo "Content-Type: text/html; charset=UTF-8"
+	echo ""
+	echo "$HTML_BODY"
+	echo ""
+	echo "--$BOUNDARY"
+	echo "Content-Type: text/plain; charset=UTF-8; name=\"${USER}.log\""
+	echo "Content-Disposition: attachment; filename=\"${USER}.log\""
+	echo ""
+	cat "$LOG_FILE"
+	echo ""
+	echo "--$BOUNDARY--"
+) > "$TEMP_MAIL"
+
+# Send via direct Exim/Sendmail to preserve MIME headers
+cat "$TEMP_MAIL" | /usr/sbin/sendmail -f "$MAIL_FROM" -t 2> /dev/null
+
+rm -f "$TEMP_MAIL" 2> /dev/null
+exit 0

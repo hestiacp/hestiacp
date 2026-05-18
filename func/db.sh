@@ -522,7 +522,7 @@ delete_pgsql_database() {
 	fi
 }
 
-# Dump MySQL database
+# Dump MySQL database (standard)
 dump_mysql_database() {
 	mysql_connect $HOST
 
@@ -533,6 +533,75 @@ dump_mysql_database() {
 
 	query="SHOW GRANTS FOR '$DBUSER'@'%'"
 	mysql_query "$query" | grep -v "Grants for" > $grants
+}
+
+# Dump MySQL database (extended)
+dump_mysql_extended_database() {
+
+	# This func uses the extended dump script to create:
+	# - table structures 													: {DB}_0-table-structs.sql
+	# - view definitions with dependency ordering	: {DB}_1-views.sql
+	# - stored routines and functions 						: {DB}_2-routines.sql
+	# - triggers 																	: {DB}_3-triggers.sql
+	# - full structure and data (all in one file) : {DB}.mysql.sql
+
+	local extended_backup_dir="${1:-$tmpdir/db/$database}"
+	local extended_script="$HESTIA/func/dump_mysql_extended.sh"
+	local tmp_extended_dir
+
+	if [ -z "${dump:-}" ]; then
+		dump="$extended_backup_dir/$database.mysql.sql"
+	fi
+	if [ -z "${grants:-}" ]; then
+		grants="$extended_backup_dir/conf/$database.mysql.$DBUSER"
+	fi
+
+	if [ ! -f "$extended_script" ]; then
+		echo "Error: Extended backup script not found at $extended_script"
+		log_event "$E_NOTEXIST" "Extended backup script missing"
+		return 1
+	fi
+
+	mkdir -p "$extended_backup_dir"
+	mkdir -p "$(dirname "$grants")"
+
+	mysql_connect $HOST
+	tmp_extended_dir=$(mktemp -p "$extended_backup_dir" -d ".extended.XXXXXXXXXX")
+
+	export BACKUP_DIR="$tmp_extended_dir"
+	export MYSQL_HOST="$HOST"
+	export MYSQL_USER="$USER"
+	export MYSQL_PASS="$PASSWORD"
+	export MYSQL_PORT="${PORT:-3306}"
+	export MYSQL_DEFAULTS_FILE="$mycnf"
+	if [ -f '/usr/bin/mariadb' ]; then
+		export MYSQL_BIN="/usr/bin/mariadb"
+	fi
+	if [ -f '/usr/bin/mariadb-dump' ]; then
+		export MYSQLDUMP_BIN="/usr/bin/mariadb-dump"
+	fi
+
+	"$extended_script" "$database"
+
+	if [ $? -eq 0 ] && [ -f "$tmp_extended_dir/$database.mysql.sql" ]; then
+		rm -f "$extended_backup_dir/$database.mysql.sql" "$extended_backup_dir/$database"_*.sql
+		cp -a "$tmp_extended_dir"/. "$extended_backup_dir"/
+		echo "$(date '+%F %T') Extended backup created for $database" >> $BACKUP/$user.log
+	else
+		echo "Error: Extended dump failed for $database"
+		rm -rf "$tmp_extended_dir"
+		unset BACKUP_DIR MYSQL_HOST MYSQL_USER MYSQL_PASS MYSQL_PORT MYSQL_DEFAULTS_FILE MYSQL_BIN MYSQLDUMP_BIN
+		return 1
+	fi
+
+	rm -rf "$tmp_extended_dir"
+	unset BACKUP_DIR MYSQL_HOST MYSQL_USER MYSQL_PASS MYSQL_PORT MYSQL_DEFAULTS_FILE MYSQL_BIN MYSQLDUMP_BIN
+
+	query="SHOW GRANTS FOR '$DBUSER'@'localhost'"
+	mysql_query "$query" | grep -v "Grants for" > $grants
+
+	query="SHOW GRANTS FOR '$DBUSER'@'%'"
+	mysql_query "$query" | grep -v "Grants for" >> $grants
 }
 
 # Dump PostgreSQL database

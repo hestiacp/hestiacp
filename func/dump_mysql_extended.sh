@@ -569,6 +569,17 @@ else
   } > "${DB}_3-triggers.sql"
 fi
 
+echo "step ---> events"
+
+"$MYSQLDUMP_BIN" "${MYSQL_AUTH[@]}" \
+  --single-transaction \
+  --no-data \
+  --no-create-info \
+  --skip-routines \
+  --skip-triggers \
+  --events \
+  "$DB" > "${DB}_4-events.sql"
+
 echo "step ---> combining sql files into single dump"
 
 # Combine all SQL files into single {DB}.mysql.sql in correct order
@@ -598,6 +609,10 @@ for large_data_file in $(ls "${DB}"_*-data.sql 2>/dev/null | grep -v "_zzz-small
     cat "$large_data_file" >> "$COMBINED_SQL"
   fi
 done
+
+echo "  combining: events"
+cat "${DB}_4-events.sql" >> "$COMBINED_SQL"
+
 # Remove intermediate-data files
 rm -f "${DB}"_*-data.sql "${DB}_zzz-small-tb-data.sql"
 
@@ -609,5 +624,6 @@ echo "····> Structural files: ${DB}_0-table-structs.sql"
 echo "····>               ... ${DB}_1-views.sql"
 echo "····>               ... ${DB}_2-routines.sql"
 echo "····>               ... ${DB}_3-triggers.sql"
+echo "····>               ... ${DB}_4-events.sql"
 echo "····> Ready for compression and archival"
 echo "·······················································"

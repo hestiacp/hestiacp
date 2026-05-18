@@ -543,6 +543,7 @@ dump_mysql_extended_database() {
 	# - view definitions with dependency ordering	: {DB}_1-views.sql
 	# - stored routines and functions 						: {DB}_2-routines.sql
 	# - triggers 																	: {DB}_3-triggers.sql
+	# - events 																		: {DB}_4-events.sql
 	# - full structure and data (all in one file) : {DB}.mysql.sql
 
 	local extended_backup_dir="${1:-$tmpdir/db/$database}"

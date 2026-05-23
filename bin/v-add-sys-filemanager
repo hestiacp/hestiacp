@@ -23,8 +23,8 @@ MODE=$1
 user="$ROOT_USER"
 
 FM_INSTALL_DIR="$HESTIA/web/fm"
-FM_FILE="filegator_latest"
-FM_URL="https://github.com/filegator/static/raw/master/builds/filegator_latest.zip"
+FM_FILE="filegator_v${fm_v}"
+FM_URL="https://github.com/filegator/static/raw/master/builds/${FM_FILE}.zip"
 COMPOSER_BIN="$HOMEDIR/$user/.composer/composer"
 
 #----------------------------------------------------------#

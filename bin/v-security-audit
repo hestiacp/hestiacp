@@ -1,0 +1,220 @@
+#!/bin/bash
+set -uo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")" && pwd)"
+LIB_DIR="${V_SECURITY_AUDIT_LIB_DIR:-$SCRIPT_DIR/v-security-audit.d}"
+
+if [ ! -f "$LIB_DIR/core.sh" ] && [ -f "$SCRIPT_DIR/lib/core.sh" ]; then
+	LIB_DIR="$SCRIPT_DIR/lib"
+fi
+
+source "${LIB_DIR}/core.sh"
+source "${LIB_DIR}/system/main.sh"
+source "${LIB_DIR}/backend/main.sh"
+source "${LIB_DIR}/frontend/main.sh"
+source "${LIB_DIR}/pentest/main.sh"
+
+# Single-instance guard (prevents concurrent runs from cron + manual)
+LOCK_FILE="/var/run/v-security-audit.lock"
+exec 9> "$LOCK_FILE"
+if ! flock -n 9; then
+	echo "[$(date)] : v-security-audit is already running. Exiting."
+	exit 1
+fi
+trap cleanup_on_exit EXIT INT TERM
+
+usage() {
+	cat << EOF
+v-security-audit v${TOOL_VERSION} — HestiaCP Security Audit Tool
+
+Usage:
+  v-security-audit --system                         OS & service hardening
+  v-security-audit --backend [USER] [DOMAIN]        File-level security scan
+  v-security-audit --frontend https://domain.com    External HTTP security scan
+  v-security-audit --frontend [USER]                Scan all domains for a user
+  v-security-audit --pentest https://domain.com     Offensive self-attack simulation
+  v-security-audit --pentest [USER]                 Pentest all domains for a user
+  v-security-audit --all                            Full audit (system + backend + frontend + pentest)
+  v-security-audit --all [USER]                     Full audit for specific user
+
+Options:
+  --json          Output results as JSON
+  --html          Generate HTML report
+  --quiet         Only show FAIL and CRITICAL findings
+  --verbose       Show all checks including PASS
+  --no-color      Disable ANSI colours
+  --skip-ssl      Skip SSL/TLS checks
+  --skip-malware  Skip PHP malware signature scan
+  -h, --help      Show this help
+
+Examples:
+  v-security-audit --all
+  v-security-audit --system --verbose
+  v-security-audit --backend johndoe example.com
+  v-security-audit --frontend https://example.com
+  v-security-audit --pentest https://example.com
+  v-security-audit --all --json --quiet
+EOF
+	exit 0
+}
+
+MODE=""
+TARGET_USER=""
+TARGET_DOMAIN=""
+TARGET_URL=""
+
+parse_args() {
+	if [ $# -eq 0 ]; then usage; fi
+
+	while [ $# -gt 0 ]; do
+		case "$1" in
+			--system)
+				MODE="system"
+				shift
+				;;
+			--backend)
+				MODE="backend"
+				shift
+				if [ $# -gt 0 ] && [[ ! "$1" == --* ]]; then
+					TARGET_USER="$1"
+					shift
+					if [ $# -gt 0 ] && [[ ! "$1" == --* ]]; then
+						TARGET_DOMAIN="$1"
+						shift
+					fi
+				fi
+				;;
+			--frontend)
+				MODE="frontend"
+				shift
+				if [ $# -gt 0 ] && [[ ! "$1" == --* ]]; then
+					TARGET_URL="$1"
+					shift
+				fi
+				;;
+			--pentest)
+				MODE="pentest"
+				shift
+				if [ $# -gt 0 ] && [[ ! "$1" == --* ]]; then
+					TARGET_URL="$1"
+					shift
+				fi
+				;;
+			--all)
+				MODE="all"
+				shift
+				if [ $# -gt 0 ] && [[ ! "$1" == --* ]]; then
+					TARGET_USER="$1"
+					shift
+				fi
+				;;
+			--json)
+				MODE_JSON=true
+				shift
+				;;
+			--html)
+				MODE_HTML=true
+				shift
+				;;
+			--md)
+				MODE_MD=true
+				shift
+				;;
+			--email)
+				MODE_EMAIL="auto"
+				shift
+				if [ $# -gt 0 ] && [[ ! "$1" =~ ^- ]]; then
+					MODE_EMAIL="$1"
+					shift
+				fi
+				;;
+			--quiet)
+				MODE_QUIET=true
+				shift
+				;;
+			--verbose)
+				MODE_VERBOSE=true
+				shift
+				;;
+			--no-color)
+				MODE_NO_COLOR=true
+				shift
+				;;
+			--skip-ssl)
+				SKIP_SSL=true
+				shift
+				;;
+			--skip-malware)
+				SKIP_MALWARE=true
+				shift
+				;;
+			-h | --help)
+				usage
+				;;
+			*)
+				echo "Unknown option: $1"
+				usage
+				;;
+		esac
+	done
+
+	if [ -z "$MODE" ]; then
+		echo "Error: No scan mode specified. Use --system, --backend, --frontend, --pentest, or --all."
+		exit 1
+	fi
+}
+
+main() {
+	parse_args "$@"
+
+	check_root
+
+	if $MODE_NO_COLOR; then
+		disable_colors
+	fi
+
+	local mode_label
+	case "$MODE" in
+		system) mode_label="SYSTEM AUDIT" ;;
+		backend) mode_label="BACKEND AUDIT" ;;
+		frontend) mode_label="FRONTEND AUDIT" ;;
+		pentest) mode_label="PENTEST (self-attack simulation)" ;;
+		all) mode_label="FULL AUDIT (system + backend + frontend + pentest)" ;;
+	esac
+	if [ -n "$TARGET_USER" ]; then
+		mode_label="${mode_label} [user: ${TARGET_USER}]"
+	fi
+
+	init_logging "$mode_label"
+	print_banner "$mode_label"
+
+	case "$MODE" in
+		system)
+			run_system_checks
+			;;
+		backend)
+			run_backend_checks "$TARGET_USER" "$TARGET_DOMAIN"
+			;;
+		frontend)
+			run_frontend_checks "$TARGET_URL"
+			;;
+		pentest)
+			run_pentest_checks "$TARGET_URL"
+			;;
+		all)
+			run_system_checks
+			run_backend_checks "$TARGET_USER" "$TARGET_DOMAIN"
+			if [ -n "$TARGET_USER" ]; then
+				run_frontend_checks "$TARGET_USER"
+				run_pentest_checks "$TARGET_USER"
+			else
+				run_frontend_checks ""
+				run_pentest_checks ""
+			fi
+			;;
+	esac
+
+	print_summary
+}
+
+main "$@"

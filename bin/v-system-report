@@ -1,0 +1,2461 @@
+#!/bin/bash
+set -o pipefail
+
+#==========================================
+# CONFIGURATION
+#==========================================
+# Default Configuration (can be overridden by /etc/hestiacp-system-report.conf)
+
+# Email notification (leave empty to auto-detect from admin user)
+ADMIN_EMAIL_OVERRIDE=""
+
+# Sender used for report emails (leave empty to use noreply@server-hostname)
+MAIL_FROM_ADDRESS=""
+MAIL_FROM_NAME="HestiaCP System Report"
+
+# Enable/disable checks (TRUE/FALSE)
+CHECK_SYSTEM_RESOURCES="TRUE"
+CHECK_HESTIACP_SERVICES="TRUE"
+CHECK_PHP="TRUE"
+CHECK_MYSQL="TRUE"
+CHECK_CLAMAV="TRUE"
+CHECK_FAIL2BAN="TRUE"
+CHECK_EXIM4="TRUE"
+CHECK_SSL="TRUE"
+CHECK_BACKUP="TRUE"
+CHECK_USERS_DOMAINS="TRUE"
+CHECK_PHP_ERRORS="TRUE"
+CHECK_WEB_ERRORS="TRUE"
+CHECK_EMAIL_BLACKLIST="TRUE"
+CHECK_SYSTEM_LOGS="TRUE"
+CHECK_DISK_USAGE="TRUE"
+CHECK_DOMAIN_STATUS="TRUE"
+CHECK_DATABASE_HEALTH="TRUE"
+CHECK_CRON_JOBS="TRUE"
+CHECK_SYSTEM_UPDATES="TRUE"
+CHECK_INODES="TRUE"
+CHECK_HIGH_RESOURCE_PROCESSES="TRUE"
+CHECK_SWAP_USAGE="TRUE"
+CHECK_SYSTEM_UPTIME="TRUE"
+
+# Send email report (TRUE/FALSE)
+SEND_EMAIL_REPORT="TRUE"
+
+# Load external configuration if exists
+if [ -f "/etc/hestiacp-system-report.conf" ]; then
+	source /etc/hestiacp-system-report.conf
+fi
+#==========================================
+
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m'
+
+# Single-instance guard using flock (atomic, race-condition free)
+LOCK_FILE="/var/run/v-system-report.lock"
+exec 9> "$LOCK_FILE"
+if ! flock -n 9; then
+	echo "[$(date)] : v-system-report is already running. Exiting."
+	exit 1
+fi
+
+source /etc/profile
+HESTIA=/usr/local/hestia
+source $HESTIA/func/main.sh 2> /dev/null
+source $HESTIA/conf/hestia.conf 2> /dev/null
+
+ADMIN_EMAIL=""
+if [ -n "$ADMIN_EMAIL_OVERRIDE" ]; then
+	ADMIN_EMAIL="$ADMIN_EMAIL_OVERRIDE"
+else
+	for user_conf in "$HESTIA/data/users"/*/user.conf; do
+		[ -f "$user_conf" ] || continue
+		if grep -q "ROLE='admin'" "$user_conf" 2> /dev/null; then
+			ADMIN_EMAIL=$(grep "^CONTACT=" "$user_conf" 2> /dev/null | cut -d"'" -f2)
+			break
+		fi
+	done
+fi
+
+if [ -z "$ADMIN_EMAIL" ]; then
+	ADMIN_EMAIL=$(grep "^CONTACT=" "$HESTIA/conf/hestia.conf" 2> /dev/null | cut -d"'" -f2)
+fi
+
+get_mail_from_address() {
+	local hostname_value="$1"
+	if [ -n "$MAIL_FROM_ADDRESS" ]; then
+		echo "$MAIL_FROM_ADDRESS"
+		return 0
+	fi
+
+	echo "noreply@$hostname_value"
+}
+
+# Email notification on unexpected fatal crash (trap)
+_send_fatal_email_sysreport() {
+	local exit_code="$1"
+	local line="$2"
+	[ "$exit_code" -eq 0 ] 2> /dev/null && return 0
+	[ -z "$ADMIN_EMAIL" ] && return 0
+	local hostname
+	hostname=$(hostname -f 2> /dev/null || echo "HestiaCP Server")
+	local subject="[FATAL] v-system-report crashed on $hostname"
+	local body="Script v-system-report terminated unexpectedly.\nExit code: $exit_code at line $line."
+	local mail_from
+	mail_from=$(get_mail_from_address "$hostname")
+	{
+		echo "To: $ADMIN_EMAIL"
+		echo "From: ${MAIL_FROM_NAME:-HestiaCP System Report} <$mail_from>"
+		echo "Reply-To: $mail_from"
+		echo "Subject: $subject"
+		echo
+		echo "$body"
+	} | /usr/sbin/sendmail -f "$mail_from" -t 2> /dev/null
+}
+trap '_send_fatal_email_sysreport "$?" "$LINENO"' EXIT INT TERM ABRT
+
+LOG_DIR="/var/log/v-system-report"
+LOG_FILE=""
+high_issues=0
+medium_issues=0
+low_issues=0
+declare -A detailed_report
+declare -A module_health_score
+declare -A module_health_level
+
+setup_logging() {
+	if [ ! -d "$LOG_DIR" ]; then
+		mkdir -p "$LOG_DIR"
+		chmod 755 "$LOG_DIR"
+	fi
+	local timestamp=$(date '+%Y-%m-%d_%H-%M-%S')
+	LOG_FILE="$LOG_DIR/$timestamp-v-system-report.log"
+	{
+		echo "================================================"
+		echo "            HestiaCP System Report Log         "
+		echo "================================================"
+		echo ""
+		echo "Started at: $(date '+%Y-%m-%d %H:%M:%S')"
+		echo "Hostname: $(hostname -f)"
+		echo ""
+		echo "================================================"
+		echo ""
+	} > "$LOG_FILE"
+}
+
+log_message() {
+	local message="$1"
+	local timestamp=$(date '+%Y-%m-%d %H:%M:%S')
+	echo -e "$message"
+	echo "[$timestamp] $message" | sed 's/\x1B\[[0-9;]*[mGK]//g' >> "$LOG_FILE"
+}
+
+run_with_timeout() {
+	local timeout=$1
+	local command=$2
+	local output
+	output=$(timeout "$timeout" bash -c "$command" 2>&1)
+	local exit_code=$?
+	if [ $exit_code -eq 124 ]; then
+		return 1
+	elif [ $exit_code -ne 0 ]; then
+		return 1
+	fi
+	echo "$output"
+	return 0
+}
+
+check_resources() {
+	log_message "${BLUE}=== System Resources ===${NC}"
+	local issues=0
+
+	log_message "${YELLOW}CPU:${NC}"
+	local load_avg=$(cat /proc/loadavg 2> /dev/null | awk '{print $3}')
+	local cpu_cores=$(nproc 2> /dev/null || echo "1")
+
+	local cpu_usage=0
+	if command -v vmstat > /dev/null 2>&1; then
+		cpu_usage=$(vmstat 1 2 2> /dev/null | tail -1 | awk '{print 100 - $15}' | awk '{printf "%.0f", $1}')
+		[ -z "$cpu_usage" ] && cpu_usage=0
+	fi
+
+	if [ "$cpu_usage" -eq 0 ] 2> /dev/null; then
+		local cpu_line=$(top -bn1 2> /dev/null | grep -i 'cpu(s)' | head -1)
+		if [ -n "$cpu_line" ]; then
+			local cpu_idle=$(echo "$cpu_line" | grep -oE '[0-9]+\.[0-9]+%id' | grep -oE '[0-9]+\.[0-9]+' | head -1)
+			if [ -n "$cpu_idle" ]; then
+				cpu_usage=$(echo "100 - $cpu_idle" | bc -l 2> /dev/null | awk '{printf "%.0f", $1}')
+			else
+				local cpu_idle=$(echo "$cpu_line" | grep -oE 'id, [0-9]+\.[0-9]+%' | grep -oE '[0-9]+\.[0-9]+' | head -1)
+				if [ -n "$cpu_idle" ]; then
+					cpu_usage=$(echo "100 - $cpu_idle" | bc -l 2> /dev/null | awk '{printf "%.0f", $1}')
+				fi
+			fi
+		fi
+	fi
+
+	[ -z "$cpu_usage" ] && cpu_usage=0
+	[ "$cpu_usage" -lt 0 ] 2> /dev/null && cpu_usage=0
+	[ "$cpu_usage" -gt 100 ] 2> /dev/null && cpu_usage=100
+
+	if [ -n "$load_avg" ] && [ -n "$cpu_cores" ]; then
+		if (($(echo "$load_avg > $cpu_cores" | bc -l 2> /dev/null || echo "0"))); then
+			log_message "${RED}[FAIL] System Load (5min): $load_avg (High - Above $cpu_cores cores)${NC}"
+			log_message "${RED}[FAIL] CPU Usage: ${cpu_usage}%${NC}"
+			((issues++))
+		else
+			log_message "${GREEN}[OK] System Load (5min): $load_avg (CPU cores: $cpu_cores)${NC}"
+			log_message "${GREEN}[OK] CPU Usage: ${cpu_usage}%${NC}"
+		fi
+	fi
+
+	log_message "${YELLOW}Memory:${NC}"
+	local mem_line=$(free -m 2> /dev/null | awk '/^Mem:/')
+	if [ -n "$mem_line" ]; then
+		local total_mem=$(echo "$mem_line" | awk '{print $2}')
+		local used_mem=$(echo "$mem_line" | awk '{print $3}')
+		local available_mem=$(echo "$mem_line" | awk '{print $7}')
+
+		if [ -z "$available_mem" ] || [ "$available_mem" -eq 0 ] 2> /dev/null; then
+			available_mem=$(echo "$mem_line" | awk '{print $4}')
+		fi
+
+		if [ -n "$available_mem" ] && [ "$available_mem" -gt 0 ] 2> /dev/null && [ "$available_mem" -lt "$total_mem" ] 2> /dev/null; then
+			local mem_usage=$(echo "$available_mem $total_mem" | awk '{printf "%.0f", (($2 - $1) / $2) * 100}')
+			used_mem=$((total_mem - available_mem))
+		else
+			local mem_usage=$(echo "$used_mem $total_mem" | awk '{printf "%.0f", ($1 / $2) * 100}')
+		fi
+
+		[ -z "$mem_usage" ] && mem_usage=0
+		[ "$mem_usage" -lt 0 ] 2> /dev/null && mem_usage=0
+		[ "$mem_usage" -gt 100 ] 2> /dev/null && mem_usage=100
+		[ -z "$used_mem" ] && used_mem=0
+
+		if [ "$mem_usage" -gt 90 ] 2> /dev/null; then
+			log_message "${RED}[FAIL] Memory Usage: ${mem_usage}% (${used_mem}MB / ${total_mem}MB) - High${NC}"
+			((issues++))
+		else
+			log_message "${GREEN}[OK] Memory Usage: ${mem_usage}% (${used_mem}MB / ${total_mem}MB)${NC}"
+		fi
+	fi
+
+	log_message "${YELLOW}Disk:${NC}"
+	local disk_info=$(df -h / 2> /dev/null | awk 'NR==2')
+	if [ -n "$disk_info" ]; then
+		local total_size=$(echo "$disk_info" | awk '{print $2}')
+		local used_size=$(echo "$disk_info" | awk '{print $3}')
+		local avail_size=$(echo "$disk_info" | awk '{print $4}')
+		local disk_usage_str=$(echo "$disk_info" | awk '{print $5}' | sed 's/%//')
+		local disk_usage=$(echo "$disk_usage_str" | grep -oE '^[0-9]+' || echo "0")
+
+		if [ -z "$disk_usage" ] || [ "$disk_usage" = "" ]; then
+			local used_bytes=$(df / 2> /dev/null | awk 'NR==2 {print $3}')
+			local total_bytes=$(df / 2> /dev/null | awk 'NR==2 {print $2}')
+			if [ -n "$used_bytes" ] && [ -n "$total_bytes" ] && [ "$total_bytes" -gt 0 ] 2> /dev/null; then
+				disk_usage=$(echo "$used_bytes $total_bytes" | awk '{printf "%.0f", ($1 / $2) * 100}')
+			fi
+		fi
+
+		[ -z "$disk_usage" ] && disk_usage=0
+		[ "$disk_usage" -lt 0 ] 2> /dev/null && disk_usage=0
+		[ "$disk_usage" -gt 100 ] 2> /dev/null && disk_usage=100
+
+		if [ "$disk_usage" -gt 90 ] 2> /dev/null; then
+			log_message "${RED}[FAIL] Disk Usage: ${disk_usage}% (${used_size} / ${total_size}, ${avail_size} available) - High${NC}"
+			((issues++))
+		else
+			log_message "${GREEN}[OK] Disk Usage: ${disk_usage}% (${used_size} / ${total_size}, ${avail_size} available)${NC}"
+		fi
+	fi
+
+	if [ $issues -gt 0 ]; then
+		((medium_issues += issues))
+		module_health_score["system_resources"]=75
+		module_health_level["system_resources"]="FAIR"
+		detailed_report["system_resources"]="Load: $load_avg, CPU: ${cpu_usage}%, Memory: ${mem_usage}%, Disk: ${disk_usage}%"
+		return 1
+	else
+		module_health_score["system_resources"]=100
+		module_health_level["system_resources"]="EXCELLENT"
+		detailed_report["system_resources"]="Load: $load_avg, CPU: ${cpu_usage}%, Memory: ${mem_usage}%, Disk: ${disk_usage}% - All normal"
+		return 0
+	fi
+}
+
+check_hestiacp_services() {
+	log_message "${BLUE}=== HestiaCP Services Status ===${NC}"
+	local issues=0
+	local critical_issues=0
+
+	local web_services=("apache2" "nginx")
+	local php_services=()
+	for fpm_conf in /etc/php/*/fpm/php-fpm.conf; do
+		[ -f "$fpm_conf" ] || continue
+		version=$(echo "$fpm_conf" | awk -F'/' '{print $4}')
+		php_services+=("php${version}-fpm")
+	done
+	local mail_services=("exim4" "dovecot")
+	local security_services=("clamav-daemon" "fail2ban")
+	local db_services=("mariadb")
+
+	log_message "${YELLOW}Web Services:${NC}"
+	for service in "${web_services[@]}"; do
+		if systemctl is-active --quiet "$service" 2> /dev/null; then
+			log_message "${GREEN}[OK] $service${NC}"
+		else
+			log_message "${RED}[FAIL] $service - NOT RUNNING${NC}"
+			((issues++))
+			((critical_issues++))
+		fi
+	done
+
+	log_message "${YELLOW}PHP Services:${NC}"
+	for service in "${php_services[@]}"; do
+		if systemctl is-active --quiet "$service" 2> /dev/null; then
+			log_message "${GREEN}[OK] $service${NC}"
+		else
+			log_message "${RED}[FAIL] $service - NOT RUNNING${NC}"
+			((issues++))
+		fi
+	done
+
+	log_message "${YELLOW}Mail Services:${NC}"
+	for service in "${mail_services[@]}"; do
+		if systemctl is-active --quiet "$service" 2> /dev/null; then
+			log_message "${GREEN}[OK] $service${NC}"
+		else
+			log_message "${RED}[FAIL] $service - NOT RUNNING${NC}"
+			((issues++))
+			((critical_issues++))
+		fi
+	done
+
+	log_message "${YELLOW}Security Services:${NC}"
+	for service in "${security_services[@]}"; do
+		if systemctl is-active --quiet "$service" 2> /dev/null; then
+			log_message "${GREEN}[OK] $service${NC}"
+		else
+			log_message "${RED}[FAIL] $service - NOT RUNNING${NC}"
+			((issues++))
+		fi
+	done
+
+	log_message "${YELLOW}Database Services:${NC}"
+	for service in "${db_services[@]}"; do
+		if systemctl is-active --quiet "$service" 2> /dev/null; then
+			log_message "${GREEN}[OK] $service${NC}"
+		else
+			log_message "${RED}[FAIL] $service - NOT RUNNING${NC}"
+			((issues++))
+			((critical_issues++))
+		fi
+	done
+
+	local health_score=$((100 - (issues * 10)))
+	[ $health_score -lt 0 ] && health_score=0
+
+	local health_level="EXCELLENT"
+	[ $health_score -le 95 ] && [ $health_score -gt 85 ] && health_level="GOOD"
+	[ $health_score -le 85 ] && [ $health_score -gt 65 ] && health_level="FAIR"
+	[ $health_score -le 65 ] && [ $health_score -gt 35 ] && health_level="POOR"
+	[ $health_score -le 35 ] && health_level="CRITICAL"
+
+	if [ $issues -eq 0 ]; then
+		log_message "${GREEN}Health Level: $health_level (Score: $health_score/100)${NC}"
+		log_message "${GREEN}[OK] All HestiaCP services running normally${NC}"
+	else
+		log_message "${YELLOW}Health Level: $health_level (Score: $health_score/100)${NC}"
+		[ $critical_issues -gt 0 ] && log_message "${RED}[FAIL] Critical: $critical_issues service(s) down${NC}"
+		[ $((issues - critical_issues)) -gt 0 ] && log_message "${YELLOW}[WARN] Medium: $((issues - critical_issues)) service(s) down${NC}"
+	fi
+
+	((high_issues += critical_issues))
+	((medium_issues += $((issues - critical_issues))))
+
+	module_health_score["services"]=$health_score
+	module_health_level["services"]=$health_level
+	detailed_report["services"]="Health: $health_level ($health_score/100) - $issues issue(s)"
+
+	[ $issues -gt 0 ] && return 1 || return 0
+}
+
+check_php_status() {
+	log_message "${BLUE}=== PHP Status ===${NC}"
+	local php_versions=()
+	local issues=0
+	local total_processes=0
+	local stuck_processes=0
+
+	for fpm_conf in /etc/php/*/fpm/php-fpm.conf; do
+		[ -f "$fpm_conf" ] || continue
+		version=$(echo "$fpm_conf" | awk -F'/' '{print $4}')
+		php_versions+=("$version")
+
+		if systemctl is-active --quiet "php${version}-fpm" 2> /dev/null; then
+			log_message "${GREEN}[OK] PHP $version - Running${NC}"
+
+			local pool_conf="/etc/php/${version}/fpm/pool.d/www.conf"
+			if [ -f "$pool_conf" ]; then
+				local max_children=$(grep "^pm.max_children" "$pool_conf" 2> /dev/null | awk '{print $3}' | head -1)
+				local active_processes=$(run_with_timeout 3 "pgrep -c 'php-fpm: pool www' || echo '0'")
+
+				if [ -n "$max_children" ] && [ -n "$active_processes" ]; then
+					max_children=$(echo "$max_children" | tr -d '\n\r ' | grep -oE '^[0-9]+$' || echo "0")
+					active_processes=$(echo "$active_processes" | tr -d '\n\r ' | grep -oE '^[0-9]+$' || echo "0")
+
+					if [ "$max_children" -gt 0 ] 2> /dev/null && [ "$active_processes" -gt 0 ] 2> /dev/null; then
+						local usage_percent=$((active_processes * 100 / max_children))
+						if [ "$usage_percent" -gt 90 ] 2> /dev/null; then
+							log_message "${YELLOW}[WARN] PHP $version processes: $active_processes/$max_children (${usage_percent}% - High)${NC}"
+						elif [ "$usage_percent" -gt 75 ] 2> /dev/null; then
+							log_message "${YELLOW}[WARN] PHP $version processes: $active_processes/$max_children (${usage_percent}%)${NC}"
+						fi
+					fi
+				fi
+			fi
+
+			local crashed=$(run_with_timeout 2 "ps aux | grep '[p]hp${version}-fpm' | awk '\$8 ~ /Z/ {count++} END {print count+0}' || echo '0'")
+			crashed=$(echo "$crashed" | tr -d '\n\r ' | grep -oE '^[0-9]+$' || echo "0")
+			[ -z "$crashed" ] && crashed=0
+			if [ "$crashed" -gt 0 ] 2> /dev/null; then
+				log_message "${RED}[FAIL] PHP $version has $crashed crashed/zombie process(es)${NC}"
+				((issues++))
+			fi
+
+			local processes=0
+			if command -v pgrep > /dev/null 2>&1; then
+				processes=$(pgrep -c "php${version}-fpm" 2> /dev/null || echo "0")
+			else
+				processes=$(ps aux | grep -c "[p]hp${version}-fpm" || echo "0")
+			fi
+			processes=$(echo "$processes" | tr -d '\n\r ' | grep -oE '^[0-9]+$' || echo "0")
+			[ -z "$processes" ] && processes=0
+			total_processes=$((total_processes + processes))
+		else
+			log_message "${RED}[FAIL] PHP $version - NOT RUNNING${NC}"
+			((issues++))
+		fi
+	done
+
+	if [ ${#php_versions[@]} -eq 0 ]; then
+		log_message "${RED}[FAIL] No PHP versions found${NC}"
+		((issues++))
+	else
+		log_message "${GREEN}[OK] PHP versions installed: $(
+			IFS=', '
+			echo "${php_versions[*]}"
+		)${NC}"
+		if [ "$total_processes" -eq 0 ] 2> /dev/null; then
+			if command -v pgrep > /dev/null 2>&1; then
+				total_processes=$(pgrep -c 'php-fpm' 2> /dev/null || echo "0")
+			else
+				total_processes=$(ps aux | grep -c '[p]hp-fpm' || echo "0")
+			fi
+			total_processes=$(echo "$total_processes" | tr -d '\n\r ' | grep -oE '^[0-9]+$' || echo "0")
+			[ -z "$total_processes" ] && total_processes=0
+		fi
+		log_message "${GREEN}[OK] PHP processes running: $total_processes${NC}"
+	fi
+
+	if [ $issues -gt 0 ]; then
+		((medium_issues += issues))
+		module_health_score["php"]=70
+		module_health_level["php"]="FAIR"
+		detailed_report["php"]="Issues detected: $issues PHP service(s) not running"
+		return 1
+	else
+		module_health_score["php"]=100
+		module_health_level["php"]="EXCELLENT"
+		detailed_report["php"]="All PHP versions running: $(
+			IFS=', '
+			echo "${php_versions[*]}"
+		), $total_processes processes"
+		return 0
+	fi
+}
+
+check_mysql_status() {
+	log_message "${BLUE}=== MySQL/MariaDB Status ===${NC}"
+	local issues=0
+	local warnings=0
+
+	if systemctl is-active --quiet "mariadb" 2> /dev/null || systemctl is-active --quiet "mysql" 2> /dev/null; then
+		log_message "${GREEN}[OK] MariaDB/MySQL service is running${NC}"
+
+		if command -v mariadb > /dev/null 2>&1; then
+			DB_CMD="mariadb"
+		elif command -v mysql > /dev/null 2>&1; then
+			DB_CMD="mysql"
+		else
+			DB_CMD=""
+		fi
+
+		if [ -n "$DB_CMD" ]; then
+			local version=$(run_with_timeout 5 "$DB_CMD --version 2>/dev/null | head -1")
+			log_message "${GREEN}[OK] Version: $version${NC}"
+
+			local db_count=$(run_with_timeout 5 "$DB_CMD -N -e \"SELECT COUNT(*) FROM information_schema.SCHEMATA WHERE SCHEMA_NAME NOT IN ('information_schema','performance_schema','mysql','sys');\" 2>/dev/null")
+			db_count=$(echo "$db_count" | tr -d '\n\r ' | grep -oE '^[0-9]+$' || echo "0")
+			log_message "${GREEN}[OK] Databases: $db_count${NC}"
+
+			local error_log="/var/log/mysql/error.log"
+			[ ! -f "$error_log" ] && error_log="/var/log/mysql.err"
+			[ ! -f "$error_log" ] && error_log="/var/log/mariadb/mariadb.log"
+
+			if [ -f "$error_log" ]; then
+				local today=$(date +%Y-%m-%d)
+				local errors_today=$(grep "$today" "$error_log" 2> /dev/null | grep -ciE "(error|crash|corrupt|failed)" | head -1 || echo "0")
+				errors_today=$(echo "$errors_today" | tr -d '\n\r ' | grep -oE '^[0-9]+$' || echo "0")
+
+				if [ "$errors_today" -gt 50 ] 2> /dev/null; then
+					log_message "${YELLOW}[WARN] Errors in MySQL log today: $errors_today (High)${NC}"
+					((warnings++))
+				elif [ "$errors_today" -gt 10 ] 2> /dev/null; then
+					log_message "${YELLOW}[WARN] Errors in MySQL log today: $errors_today${NC}"
+				fi
+
+				local crash_count=$(tail -1000 "$error_log" 2> /dev/null | grep -ci "crashed\|table.*marked as crashed" || echo "0")
+				crash_count=$(echo "$crash_count" | tr -d '\n\r ' | grep -oE '^[0-9]+$' || echo "0")
+				[ -z "$crash_count" ] && crash_count=0
+				if [ "$crash_count" -gt 0 ] 2> /dev/null; then
+					local recent_crashes=$(grep "$today" "$error_log" 2> /dev/null | grep -ci "crashed\|table.*marked as crashed" || echo "0")
+					recent_crashes=$(echo "$recent_crashes" | tr -d '\n\r ' | grep -oE '^[0-9]+$' || echo "0")
+					[ -z "$recent_crashes" ] && recent_crashes=0
+					if [ "$recent_crashes" -gt 0 ] 2> /dev/null; then
+						log_message "${RED}[FAIL] Table crashes detected today: $recent_crashes${NC}"
+						((issues++))
+					else
+						log_message "${YELLOW}[WARN] Old table crashes found in logs (not today): $crash_count${NC}"
+					fi
+				fi
+			fi
+
+			local slow_queries=$(run_with_timeout 5 "$DB_CMD -N -e \"SHOW GLOBAL STATUS LIKE 'Slow_queries';\" 2>/dev/null" | awk '{print $2}' | head -1)
+			slow_queries=$(echo "$slow_queries" | tr -d '\n\r ' | grep -oE '^[0-9]+$' || echo "0")
+			if [ "$slow_queries" -gt 1000 ] 2> /dev/null; then
+				log_message "${YELLOW}[WARN] Slow queries count: $slow_queries (High)${NC}"
+				((warnings++))
+			fi
+		fi
+	else
+		log_message "${RED}[FAIL] MariaDB/MySQL service is NOT RUNNING${NC}"
+		((issues++))
+		((high_issues++))
+	fi
+
+	if [ $issues -gt 0 ]; then
+		module_health_score["mysql"]=30
+		module_health_level["mysql"]="CRITICAL"
+		detailed_report["mysql"]="MariaDB/MySQL service not running or table crashes detected"
+		return 1
+	elif [ $warnings -gt 0 ]; then
+		module_health_score["mysql"]=85
+		module_health_level["mysql"]="GOOD"
+		detailed_report["mysql"]="MariaDB/MySQL running with warnings"
+		return 0
+	else
+		module_health_score["mysql"]=100
+		module_health_level["mysql"]="EXCELLENT"
+		detailed_report["mysql"]="MariaDB/MySQL running normally"
+		return 0
+	fi
+}
+
+check_clamav_status() {
+	log_message "${BLUE}=== ClamAV Status ===${NC}"
+	local issues=0
+
+	if systemctl is-active --quiet "clamav-daemon" 2> /dev/null; then
+		log_message "${GREEN}[OK] ClamAV daemon is running${NC}"
+
+		local db_age=$(find /var/lib/clamav -name "*.cvd" -mtime +7 2> /dev/null | wc -l)
+		if [ "$db_age" -gt 0 ]; then
+			log_message "${YELLOW}[WARN] ClamAV database older than 7 days${NC}"
+			((issues++))
+		else
+			log_message "${GREEN}[OK] ClamAV database is up to date${NC}"
+		fi
+
+		local scans_today=0
+		if [ -f "/var/log/clamav/clamav.log" ]; then
+			scans_today=$(grep "$(date +%Y-%m-%d)" /var/log/clamav/clamav.log 2> /dev/null | grep -c "Infected files: 0" 2> /dev/null || echo "0")
+		fi
+		scans_today=$(echo "$scans_today" | tr -d '\n\r ' | sed 's/^0*//' | grep -oE '^[0-9]+$' || echo "0")
+		[ -z "$scans_today" ] && scans_today=0
+		log_message "${GREEN}[OK] Scans today: $scans_today${NC}"
+	else
+		log_message "${RED}[FAIL] ClamAV daemon is NOT RUNNING${NC}"
+		((issues++))
+	fi
+
+	if [ $issues -gt 0 ]; then
+		((medium_issues += issues))
+		module_health_score["clamav"]=70
+		module_health_level["clamav"]="FAIR"
+		detailed_report["clamav"]="Issues detected with ClamAV"
+		return 1
+	else
+		module_health_score["clamav"]=100
+		module_health_level["clamav"]="EXCELLENT"
+		detailed_report["clamav"]="ClamAV running normally"
+		return 0
+	fi
+}
+
+check_fail2ban_status() {
+	log_message "${BLUE}=== Fail2Ban Status ===${NC}"
+	local issues=0
+	local warnings=0
+
+	if systemctl is-active --quiet "fail2ban" 2> /dev/null; then
+		log_message "${GREEN}[OK] Fail2Ban service is running${NC}"
+
+		local today=$(date +%Y-%m-%d)
+		local bans_today=0
+		local unbans_today=0
+		local currently_banned=0
+		local total_banned=0
+		local jail_stats=""
+
+		local log_files=("/var/log/fail2ban.log")
+		[ -f "/var/log/fail2ban/fail2ban.log" ] && log_files+=("/var/log/fail2ban/fail2ban.log")
+
+		for log_file in "${log_files[@]}"; do
+			[ ! -f "$log_file" ] && continue
+
+			local file_bans=$(grep -a "^$today" "$log_file" 2> /dev/null | grep "NOTICE" | grep -E "\[.*\] Ban [0-9]" | grep -v "already banned" | wc -l 2> /dev/null | tr -d ' ' | grep -oE '^[0-9]+$' || echo "0")
+			[ -z "$file_bans" ] && file_bans=0
+			bans_today=$((bans_today + file_bans))
+
+			local file_unbans=$(grep -a "^$today" "$log_file" 2> /dev/null | grep "NOTICE" | grep -E "\[.*\] Unban [0-9]" | wc -l 2> /dev/null | tr -d ' ' | grep -oE '^[0-9]+$' || echo "0")
+			[ -z "$file_unbans" ] && file_unbans=0
+			unbans_today=$((unbans_today + file_unbans))
+		done
+		bans_today=$(echo "$bans_today" | tr -d '\n\r\t ' | grep -oE '^[0-9]+$' || echo "0")
+		unbans_today=$(echo "$unbans_today" | tr -d '\n\r\t ' | grep -oE '^[0-9]+$' || echo "0")
+		[ -z "$bans_today" ] && bans_today=0
+		[ -z "$unbans_today" ] && unbans_today=0
+
+		local fail2ban_status=$(run_with_timeout 5 "fail2ban-client status 2>/dev/null")
+		local jail_list=""
+		local total_jail_banned=0
+
+		if [ -n "$fail2ban_status" ]; then
+			jail_list=$(echo "$fail2ban_status" | grep "Jail list:" | sed 's/.*Jail list:\s*//' | tr ',' ' ')
+
+			if [ -n "$jail_list" ]; then
+				log_message "${GREEN}[OK] Active jails: $(echo $jail_list | tr ' ' ', ')${NC}"
+
+				for jail in $jail_list; do
+					jail=$(echo "$jail" | xargs)
+					[ -z "$jail" ] && continue
+
+					local jail_status=$(run_with_timeout 3 "fail2ban-client status $jail 2>/dev/null" || echo "")
+					if [ -n "$jail_status" ]; then
+						local jail_banned=0
+						local ip_section_start=$(echo "$jail_status" | grep -n "Banned IP list:" | cut -d: -f1)
+						if [ -n "$ip_section_start" ]; then
+							local lines_after=$(echo "$jail_status" | tail -n +$ip_section_start | head -20)
+							local all_ips=$(echo "$lines_after" | grep -oE '([0-9]{1,3}\.){3}[0-9]{1,3}' || echo "")
+							if [ -n "$all_ips" ]; then
+								jail_banned=$(echo "$all_ips" | wc -l 2> /dev/null | tr -d ' ' | grep -oE '^[0-9]+$' || echo "0")
+							fi
+						fi
+						[ -z "$jail_banned" ] && jail_banned=0
+
+						if [ "$jail_banned" -eq 0 ] 2> /dev/null; then
+							local currently_banned_line=$(echo "$jail_status" | grep -i "Currently banned:" | head -1)
+							if [ -n "$currently_banned_line" ]; then
+								jail_banned=$(echo "$currently_banned_line" | awk '{print $NF}' | head -1)
+								jail_banned=$(echo "$jail_banned" | tr -d '\n\r\t ' | grep -oE '^[0-9]+$' || echo "0")
+							fi
+						fi
+						[ -z "$jail_banned" ] && jail_banned=0
+
+						total_jail_banned=$((total_jail_banned + jail_banned))
+
+						local jail_total_banned=$(echo "$jail_status" | grep -i "Total banned:" | awk '{print $NF}' | head -1 2> /dev/null || echo "0")
+						if [ "$jail_total_banned" = "0" ] || [ -z "$jail_total_banned" ]; then
+							jail_total_banned=$(echo "$jail_status" | grep -i "Total banned" | grep -oE '[0-9]+' | head -1 2> /dev/null || echo "0")
+						fi
+						jail_total_banned=$(echo "$jail_total_banned" | tr -d '\n\r\t ' | grep -oE '^[0-9]+$' || echo "0")
+						[ -z "$jail_total_banned" ] && jail_total_banned=0
+						total_banned=$((total_banned + jail_total_banned))
+
+						local jail_file_count=$(echo "$jail_status" | grep -i "Total failed:" | awk '{print $NF}' | head -1 2> /dev/null || echo "0")
+						if [ "$jail_file_count" = "0" ] || [ -z "$jail_file_count" ]; then
+							jail_file_count=$(echo "$jail_status" | grep -i "Total failed" | grep -oE '[0-9]+' | head -1 2> /dev/null || echo "0")
+						fi
+						jail_file_count=$(echo "$jail_file_count" | tr -d '\n\r\t ' | grep -oE '^[0-9]+$' || echo "0")
+						[ -z "$jail_file_count" ] && jail_file_count=0
+
+						log_message "${GREEN}[OK] Jail $jail: $jail_banned banned IP(s), $jail_file_count failed attempts${NC}"
+
+						if [ "$jail_banned" -gt 0 ] 2> /dev/null; then
+							jail_stats="${jail_stats}$jail:$jail_banned "
+						fi
+					fi
+				done
+			fi
+		fi
+
+		currently_banned=$total_jail_banned
+
+		log_message "${GREEN}[OK] Bans today: $bans_today${NC}"
+		log_message "${GREEN}[OK] Unbans today: $unbans_today${NC}"
+		log_message "${GREEN}[OK] Currently banned: $currently_banned IP(s) (counted from jails)${NC}"
+		[ "$total_banned" -gt 0 ] 2> /dev/null && log_message "${GREEN}[OK] Total banned (all time): $total_banned IP(s)${NC}"
+
+		if [ "$bans_today" -gt 100 ] 2> /dev/null; then
+			log_message "${YELLOW}[WARN] High ban rate today: $bans_today${NC}"
+			((warnings++))
+		fi
+
+		if [ "$currently_banned" -gt 1000 ] 2> /dev/null; then
+			log_message "${YELLOW}[WARN] High number of currently banned IPs: $currently_banned${NC}"
+			((warnings++))
+		fi
+	else
+		log_message "${RED}[FAIL] Fail2Ban service is NOT RUNNING${NC}"
+		((issues++))
+	fi
+
+	if [ $issues -gt 0 ]; then
+		((medium_issues += issues))
+		module_health_score["fail2ban"]=50
+		module_health_level["fail2ban"]="POOR"
+		detailed_report["fail2ban"]="Fail2Ban service not running"
+		return 1
+	elif [ $warnings -gt 0 ]; then
+		module_health_score["fail2ban"]=85
+		module_health_level["fail2ban"]="GOOD"
+		detailed_report["fail2ban"]="Fail2Ban running: $bans_today bans today, $currently_banned currently banned (high activity), Jails: $(echo $jail_list | tr ' ' ',' | cut -c1-50)"
+		return 0
+	else
+		module_health_score["fail2ban"]=100
+		module_health_level["fail2ban"]="EXCELLENT"
+		if [ -n "$jail_stats" ]; then
+			detailed_report["fail2ban"]="Fail2Ban running: $bans_today bans today, $currently_banned currently banned, $total_banned total"
+		else
+			detailed_report["fail2ban"]="Fail2Ban running: $bans_today bans today, $currently_banned currently banned"
+		fi
+		return 0
+	fi
+}
+
+check_exim4_status() {
+	log_message "${BLUE}=== Exim4 Mail Status ===${NC}"
+	local issues=0
+	local queue_size=0
+	local frozen=0
+	local delivered_today=0
+	local failed_today=0
+	local rejected_today=0
+	local tls_errors=0
+	local deferred_count=0
+
+	if systemctl is-active --quiet "exim4" 2> /dev/null; then
+		log_message "${GREEN}[OK] Exim4 service is running${NC}"
+
+		queue_size=$(run_with_timeout 5 "exim -bpc 2>/dev/null || echo '0'")
+		queue_size=$(echo "$queue_size" | tr -d '\n\r ' | sed 's/^0*//' | grep -oE '^[0-9]+$' || echo "0")
+		[ -z "$queue_size" ] && queue_size=0
+
+		if [ "$queue_size" -gt 100 ] 2> /dev/null; then
+			log_message "${YELLOW}[WARN] Mail queue size: $queue_size (High)${NC}"
+			((issues++))
+		elif [ "$queue_size" -gt 50 ] 2> /dev/null; then
+			log_message "${YELLOW}[WARN] Mail queue size: $queue_size (Medium)${NC}"
+		else
+			log_message "${GREEN}[OK] Mail queue size: $queue_size${NC}"
+		fi
+
+		frozen=$(run_with_timeout 5 "exim -bpr 2>/dev/null | grep -c 'frozen' || echo '0'")
+		frozen=$(echo "$frozen" | tr -d '\n\r ' | sed 's/^0*//' | grep -oE '^[0-9]+$' || echo "0")
+		[ -z "$frozen" ] && frozen=0
+
+		if [ "$frozen" -gt 0 ] 2> /dev/null; then
+			log_message "${YELLOW}[WARN] Frozen emails: $frozen${NC}"
+			((issues++))
+		else
+			log_message "${GREEN}[OK] No frozen emails${NC}"
+		fi
+
+		deferred_count=$(run_with_timeout 5 "exim -bp 2>/dev/null | grep -c '^[0-9]' || echo '0'")
+		deferred_count=$(echo "$deferred_count" | tr -d '\n\r ' | sed 's/^0*//' | grep -oE '^[0-9]+$' || echo "0")
+		[ -z "$deferred_count" ] && deferred_count=0
+		if [ "$deferred_count" -gt 10 ] 2> /dev/null; then
+			log_message "${YELLOW}[WARN] Deferred emails: $deferred_count${NC}"
+		fi
+
+		local today=$(date +%Y-%m-%d)
+
+		if [ -f "/var/log/exim4/rejectlog" ]; then
+			rejected_today=$(grep -c "^$today" /var/log/exim4/rejectlog 2> /dev/null || echo "0")
+			rejected_today=$(echo "$rejected_today" | tr -d '\n\r ' | sed 's/^0*//' | grep -oE '^[0-9]+$' || echo "0")
+			[ -z "$rejected_today" ] && rejected_today=0
+
+			if [ "$rejected_today" -gt 500 ] 2> /dev/null; then
+				log_message "${YELLOW}[WARN] Rejected emails today: $rejected_today (High)${NC}"
+				failed_today=$rejected_today
+			elif [ "$rejected_today" -gt 100 ] 2> /dev/null; then
+				log_message "${YELLOW}[WARN] Rejected emails today: $rejected_today${NC}"
+			elif [ "$rejected_today" -gt 0 ] 2> /dev/null; then
+				log_message "${GREEN}[OK] Rejected emails today: $rejected_today${NC}"
+			else
+				log_message "${GREEN}[OK] No rejected emails today${NC}"
+			fi
+		fi
+
+		if [ -f "/var/log/exim4/mainlog" ]; then
+			local recent_tls_errors=$(tail -1000 /var/log/exim4/mainlog 2> /dev/null | grep -c "TLS error" || echo "0")
+			recent_tls_errors=$(echo "$recent_tls_errors" | tr -d '\n\r ' | sed 's/^0*//' | grep -oE '^[0-9]+$' || echo "0")
+			if [ -n "$recent_tls_errors" ] && [ "$recent_tls_errors" -gt 100 ] 2> /dev/null; then
+				log_message "${YELLOW}[WARN] TLS errors detected in logs (last 1000 lines): $recent_tls_errors${NC}"
+			fi
+		fi
+	else
+		log_message "${RED}[FAIL] Exim4 service is NOT RUNNING${NC}"
+		((issues++))
+		((high_issues++))
+	fi
+
+	if [ $issues -gt 0 ]; then
+		[ $issues -eq 1 ] && ((medium_issues++)) || ((high_issues++))
+		if [ $issues -ge 2 ] || [ "$queue_size" -gt 200 ] 2> /dev/null || [ "$frozen" -gt 10 ] 2> /dev/null; then
+			module_health_score["exim4"]=50
+			module_health_level["exim4"]="POOR"
+		else
+			module_health_score["exim4"]=70
+			module_health_level["exim4"]="FAIR"
+		fi
+		if [ -n "$failed_today" ] && [ "$failed_today" -gt 0 ] 2> /dev/null; then
+			detailed_report["exim4"]="Issues: queue=$queue_size, frozen=$frozen, rejected=$failed_today, deferred=$deferred_count"
+		else
+			detailed_report["exim4"]="Issues: queue=$queue_size, frozen=$frozen, deferred=$deferred_count"
+		fi
+		return 1
+	else
+		module_health_score["exim4"]=100
+		module_health_level["exim4"]="EXCELLENT"
+		detailed_report["exim4"]="Exim4 running normally: queue=$queue_size, rejected=$rejected_today, deferred=$deferred_count"
+		return 0
+	fi
+}
+
+check_ssl_status() {
+	log_message "${BLUE}=== SSL Certificates Status ===${NC}"
+	local issues=0
+	local valid_certs=0
+	local expiring_soon=0
+	local expired_certs=0
+
+	local cert_files=()
+	local seen_certs=()
+
+	[ -f "/usr/local/hestia/ssl/certificate.crt" ] && cert_files+=("/usr/local/hestia/ssl/certificate.crt")
+
+	for user_home in /home/*/; do
+		[ -d "$user_home" ] || continue
+
+		if [ -d "$user_home/conf/web" ]; then
+			for domain_dir in "$user_home/conf/web"/*/; do
+				[ -d "$domain_dir" ] || continue
+
+				if [ -d "$domain_dir/ssl" ]; then
+					for cert_file in "$domain_dir/ssl"/*.crt "$domain_dir/ssl"/*.pem; do
+						if [ -f "$cert_file" ] && [[ ! "$cert_file" =~ \.key$ ]]; then
+							local cert_hash=$(md5sum "$cert_file" 2> /dev/null | cut -d' ' -f1)
+							if [[ ! " ${seen_certs[@]} " =~ " ${cert_hash} " ]]; then
+								cert_files+=("$cert_file")
+								seen_certs+=("$cert_hash")
+							fi
+						fi
+					done
+				fi
+
+				for cert_file in "$domain_dir"*.crt "$domain_dir"*.pem; do
+					if [ -f "$cert_file" ] && [[ ! "$cert_file" =~ \.key$ ]] && [[ ! "$cert_file" =~ \.pub$ ]]; then
+						local cert_hash=$(md5sum "$cert_file" 2> /dev/null | cut -d' ' -f1)
+						if [[ ! " ${seen_certs[@]} " =~ " ${cert_hash} " ]]; then
+							cert_files+=("$cert_file")
+							seen_certs+=("$cert_hash")
+						fi
+					fi
+				done
+			done
+		fi
+	done
+
+	if [ ${#cert_files[@]} -eq 0 ]; then
+		log_message "${YELLOW}[WARN] No SSL certificates found${NC}"
+		((low_issues++))
+		module_health_score["ssl"]=80
+		module_health_level["ssl"]="GOOD"
+		detailed_report["ssl"]="No SSL certificates found"
+		return 0
+	fi
+
+	for cert_file in "${cert_files[@]}"; do
+		local cert_name=$(basename "$cert_file")
+		local expiry_date=$(run_with_timeout 3 "openssl x509 -in \"$cert_file\" -noout -enddate 2>/dev/null | cut -d= -f2")
+
+		if [ -n "$expiry_date" ]; then
+			local expiry_ts=$(date -d "$expiry_date" +%s 2> /dev/null)
+			local current_ts=$(date +%s)
+			local days_until_expiry=$(((expiry_ts - current_ts) / 86400))
+
+			local cert_valid=$(run_with_timeout 3 "openssl x509 -in \"$cert_file\" -noout -checkend 0 2>&1")
+			local is_valid=1
+			if echo "$cert_valid" | grep -q "Certificate will not expire"; then
+				is_valid=0
+			fi
+
+			if [ "$days_until_expiry" -lt 0 ] || [ "$is_valid" -eq 1 ]; then
+				log_message "${RED}[FAIL] Certificate expired: $cert_name${NC}"
+				((issues++))
+				((expired_certs++))
+			elif [ "$days_until_expiry" -lt 30 ]; then
+				log_message "${YELLOW}[WARN] Certificate expiring in $days_until_expiry days: $cert_name${NC}"
+				((expiring_soon++))
+			else
+				((valid_certs++))
+			fi
+		fi
+	done
+
+	log_message "${GREEN}[OK] Total certificates checked: ${#cert_files[@]}${NC}"
+	log_message "${GREEN}[OK] Valid certificates: $valid_certs${NC}"
+
+	if [ $expired_certs -gt 0 ]; then
+		log_message "${RED}[FAIL] Expired certificates: $expired_certs${NC}"
+	fi
+
+	if [ $expiring_soon -gt 0 ]; then
+		log_message "${YELLOW}[WARN] Certificates expiring soon: $expiring_soon${NC}"
+		((low_issues += expiring_soon))
+	fi
+
+	if [ $issues -gt 0 ]; then
+		((high_issues += issues))
+		module_health_score["ssl"]=50
+		module_health_level["ssl"]="POOR"
+		detailed_report["ssl"]="SSL: ${#cert_files[@]} total, $valid_certs valid, $expired_certs expired, $expiring_soon expiring soon"
+		return 1
+	else
+		module_health_score["ssl"]=100
+		module_health_level["ssl"]="EXCELLENT"
+		detailed_report["ssl"]="SSL: ${#cert_files[@]} total, $valid_certs valid, $expiring_soon expiring soon"
+		return 0
+	fi
+}
+
+check_backup_status() {
+	log_message "${BLUE}=== Backup Status ===${NC}"
+	local backup_log="/var/log/hestia/backup.log"
+	local issues=0
+	local days_since=999
+	local failed_count=0
+	local success_count=0
+	local backup_date=""
+	local last_backup_timestamp=""
+
+	local log_files=()
+	[ -f "$backup_log" ] && log_files+=("$backup_log")
+
+	for log_file in /var/log/v-system-report/*-v-backup-users-custom.log; do
+		[ -f "$log_file" ] && log_files+=("$log_file")
+	done
+
+	for log_file in /var/log/hestia/*backup*.log; do
+		[ -f "$log_file" ] && log_files+=("$log_file")
+	done
+
+	if [ ${#log_files[@]} -eq 0 ]; then
+		log_message "${YELLOW}[WARN] Backup log not found${NC}"
+		((low_issues++))
+		module_health_score["backup"]=80
+		module_health_level["backup"]="GOOD"
+		detailed_report["backup"]="Backup log not found"
+		return 0
+	fi
+
+	local last_backup_line=""
+	local log_to_check=""
+	local latest_timestamp=0
+
+	for log_file in "${log_files[@]}"; do
+		local file_timestamp=$(stat -c %Y "$log_file" 2> /dev/null || echo "0")
+		if [ "$file_timestamp" -gt "$latest_timestamp" ]; then
+			latest_timestamp=$file_timestamp
+			log_to_check="$log_file"
+		fi
+	done
+
+	if [ -n "$log_to_check" ] && [ -f "$log_to_check" ]; then
+		last_backup_line=$(grep -E "HestiaCP Backup Process Started|v-backup-users|Backup Process Started" "$log_to_check" 2> /dev/null | tail -1)
+
+		if [ -z "$last_backup_line" ]; then
+			last_backup_line=$(tail -50 "$log_to_check" 2> /dev/null | grep -E "Backup|backup" | tail -1)
+		fi
+	fi
+
+	if [ -z "$last_backup_line" ]; then
+		log_message "${YELLOW}[WARN] No backup entries found in log${NC}"
+		((low_issues++))
+		module_health_score["backup"]=70
+		module_health_level["backup"]="FAIR"
+		detailed_report["backup"]="No recent backup entries"
+		return 0
+	fi
+
+	backup_date=$(echo "$last_backup_line" | grep -oE "Date: [^]]*" | head -1 | sed 's/Date: //' | xargs)
+
+	if [ -z "$backup_date" ]; then
+		backup_date=$(echo "$last_backup_line" | grep -oE "\[.*Date:.*\]" | head -1 | sed 's/\[.*Date: //' | sed 's/\].*//' | xargs)
+	fi
+
+	if [ -z "$backup_date" ]; then
+		backup_date=$(echo "$last_backup_line" | grep -oE "[A-Z][a-z]{2} [A-Z][a-z]{2} [0-9]+ [0-9:]+ [A-Z]+ [0-9]+" | head -1)
+	fi
+
+	if [ -z "$backup_date" ] && [ -n "$log_to_check" ]; then
+		local file_date=$(stat -c %y "$log_to_check" 2> /dev/null | cut -d' ' -f1-2 | cut -d'.' -f1)
+		if [ -n "$file_date" ]; then
+			backup_date="$file_date"
+		fi
+	fi
+
+	if [ -n "$backup_date" ]; then
+		local backup_ts=$(date -d "$backup_date" +%s 2> /dev/null)
+		if [ -z "$backup_ts" ]; then
+			backup_ts=$(stat -c %Y "$log_to_check" 2> /dev/null || echo "0")
+		fi
+		local current_ts=$(date +%s)
+		local hours_since=$(((current_ts - backup_ts) / 3600))
+		days_since=$((hours_since / 24))
+
+		log_message "${GREEN}[OK] Last backup: $backup_date (${days_since} day(s) ago)${NC}"
+
+		if [ -n "$days_since" ] && [ "$days_since" -gt 7 ] 2> /dev/null; then
+			log_message "${YELLOW}[WARN] Last backup was $days_since days ago${NC}"
+			((low_issues++))
+		fi
+
+		if [ -f "$log_to_check" ]; then
+			local recent_log=$(tail -1000 "$log_to_check" 2> /dev/null)
+			success_count=$(echo "$recent_log" | grep -cE "Backup completed|✓ Backup completed" 2> /dev/null || echo "0")
+			failed_count=$(echo "$recent_log" | grep -cE "Backup failed|✗ Backup failed" 2> /dev/null || echo "0")
+
+			if [ "$success_count" -eq 0 ] && [ "$failed_count" -eq 0 ]; then
+				success_count=$(echo "$recent_log" | grep -c "SUCCESS" 2> /dev/null || echo "0")
+				failed_count=$(echo "$recent_log" | grep -c "FAIL" 2> /dev/null || echo "0")
+			fi
+
+			success_count=$(echo "$success_count" | tr -d '\n\r ' | sed 's/^0*//' | grep -oE '^[0-9]+$' || echo "0")
+			failed_count=$(echo "$failed_count" | tr -d '\n\r ' | sed 's/^0*//' | grep -oE '^[0-9]+$' || echo "0")
+			[ -z "$success_count" ] && success_count=0
+			[ -z "$failed_count" ] && failed_count=0
+		fi
+
+		log_message "${GREEN}[OK] Successful: $success_count, Failed: $failed_count${NC}"
+
+		if [ -n "$failed_count" ] && [ "$failed_count" -gt 0 ] 2> /dev/null; then
+			log_message "${YELLOW}[WARN] Some backups failed: $failed_count${NC}"
+			((medium_issues++))
+		fi
+
+		local backup_dir="/backup"
+		if [ -d "$backup_dir" ]; then
+			local backup_files=0
+			local symlink_backups=0
+
+			backup_files=$(find "$backup_dir" -maxdepth 4 -name "*.tar" -type f 2> /dev/null | wc -l | tr -d ' ' | grep -oE '^[0-9]+$' || echo "0")
+			[ -z "$backup_files" ] && backup_files=0
+
+			symlink_backups=$(find "$backup_dir" -maxdepth 1 -name "*.tar" -type l 2> /dev/null | wc -l | tr -d ' ' | grep -oE '^[0-9]+$' || echo "0")
+			[ -z "$symlink_backups" ] && symlink_backups=0
+
+			local total_backups=$((backup_files + symlink_backups))
+
+			local backup_size=$(du -sh "$backup_dir" 2> /dev/null | awk '{print $1}' || echo "0")
+			[ -z "$backup_size" ] && backup_size="0"
+
+			if [ "$total_backups" -gt 0 ] 2> /dev/null; then
+				log_message "${GREEN}[OK] Backup files: $total_backups ($backup_files files + $symlink_backups symlinks), Total size: $backup_size${NC}"
+			else
+				log_message "${GREEN}[OK] Backup files: 0, Total size: $backup_size${NC}"
+			fi
+		fi
+	else
+		log_message "${YELLOW}[WARN] Could not determine backup date${NC}"
+		((low_issues++))
+	fi
+
+	if [ $issues -eq 0 ] && [ -n "$days_since" ] && [ "$days_since" -le 7 ] 2> /dev/null && [ -n "$failed_count" ] && [ "$failed_count" -eq 0 ] 2> /dev/null; then
+		module_health_score["backup"]=100
+		module_health_level["backup"]="EXCELLENT"
+		detailed_report["backup"]="Last backup: $backup_date, Success: $success_count, Failed: $failed_count"
+	else
+		module_health_score["backup"]=70
+		module_health_level["backup"]="FAIR"
+		if [ -n "$backup_date" ]; then
+			detailed_report["backup"]="Last backup: $backup_date (${days_since}d ago), Success: $success_count, Failed: $failed_count"
+		else
+			detailed_report["backup"]="No recent backup found"
+		fi
+	fi
+
+	return 0
+}
+
+check_users_domains() {
+	log_message "${BLUE}=== Users and Domains Status ===${NC}"
+	local total_users=0
+	local total_domains=0
+	local total_databases=0
+	local total_mail_accounts=0
+	local issues=0
+
+	for user_dir in /usr/local/hestia/data/users/*/; do
+		[ -d "$user_dir" ] || continue
+		local user=$(basename "$user_dir")
+		[ "$user" = "default" ] && continue
+
+		if [ -f "$user_dir/user.conf" ]; then
+			((total_users++))
+			local user_role=$(grep "^ROLE=" "$user_dir/user.conf" 2> /dev/null | cut -d"'" -f2)
+			local user_status=$(grep "^SUSPENDED=" "$user_dir/user.conf" 2> /dev/null | cut -d"'" -f2)
+
+			if [ "$user_status" = "yes" ]; then
+				log_message "${YELLOW}[WARN] User $user is SUSPENDED${NC}"
+				((issues++))
+			fi
+
+			local user_domains=0
+			local user_dbs=0
+			local user_mail=0
+
+			if [ -f "$user_dir/web.conf" ]; then
+				user_domains=$(grep -c "^DOMAIN=" "$user_dir/web.conf" 2> /dev/null || echo "0")
+				user_domains=$(echo "$user_domains" | tr -d '\n\r' | grep -oE '[0-9]+' | head -1 || echo "0")
+				[ -z "$user_domains" ] && user_domains=0
+				total_domains=$((total_domains + user_domains))
+			fi
+
+			if [ -f "$user_dir/db.conf" ]; then
+				user_dbs=$(grep -c "^DB=" "$user_dir/db.conf" 2> /dev/null)
+				user_dbs=$(echo "$user_dbs" | tr -d '\n\r ' | sed 's/^0*//')
+				if [ -z "$user_dbs" ] || ! [[ "$user_dbs" =~ ^[0-9]+$ ]]; then
+					user_dbs=0
+				fi
+				total_databases=$((total_databases + user_dbs))
+			fi
+
+			if [ -f "$user_dir/mail.conf" ]; then
+				local mail_domains=$(grep "^DOMAIN=" "$user_dir/mail.conf" 2> /dev/null | cut -d"'" -f2)
+				for mail_domain in $mail_domains; do
+					if [ -n "$mail_domain" ] && [ -f "$user_dir/mail/$mail_domain.conf" ]; then
+						local domain_accounts=$(grep -c "^ACCOUNT=" "$user_dir/mail/$mail_domain.conf" 2> /dev/null)
+						domain_accounts=$(echo "$domain_accounts" | tr -d '\n\r ' | sed 's/^0*//')
+						if [ -z "$domain_accounts" ] || ! [[ "$domain_accounts" =~ ^[0-9]+$ ]]; then
+							domain_accounts=0
+						fi
+						user_mail=$((user_mail + domain_accounts))
+						total_mail_accounts=$((total_mail_accounts + domain_accounts))
+					fi
+				done
+			fi
+
+			if [ "$user_role" = "admin" ]; then
+				log_message "${GREEN}[OK] User: $user (ADMIN) - Domains: $user_domains, DBs: $user_dbs, Mail: $user_mail${NC}"
+			else
+				log_message "${GREEN}[OK] User: $user - Domains: $user_domains, DBs: $user_dbs, Mail: $user_mail${NC}"
+			fi
+		fi
+	done
+
+	log_message "${GREEN}[OK] Total users: $total_users${NC}"
+	log_message "${GREEN}[OK] Total domains: $total_domains${NC}"
+	log_message "${GREEN}[OK] Total databases: $total_databases${NC}"
+	log_message "${GREEN}[OK] Total mail accounts: $total_mail_accounts${NC}"
+
+	if [ $issues -gt 0 ]; then
+		((medium_issues += issues))
+		module_health_score["users_domains"]=85
+		module_health_level["users_domains"]="GOOD"
+		detailed_report["users_domains"]="Users: $total_users, Domains: $total_domains, DBs: $total_databases, Mail: $total_mail_accounts, $issues suspended"
+		return 1
+	else
+		module_health_score["users_domains"]=100
+		module_health_level["users_domains"]="EXCELLENT"
+		detailed_report["users_domains"]="Users: $total_users, Domains: $total_domains, DBs: $total_databases, Mail: $total_mail_accounts"
+		return 0
+	fi
+}
+
+check_php_errors() {
+	log_message "${BLUE}=== PHP Errors Status ===${NC}"
+	local issues=0
+	local php_errors_today=0
+	local php_fatal_errors=0
+	local crashed_processes=0
+	local site_php_errors=0
+
+	local today=$(date +%Y-%m-%d)
+
+	# Dynamically detect installed PHP versions (future-proof)
+	local found_php_versions=()
+	for fpm_conf in /etc/php/*/fpm/php-fpm.conf; do
+		[ -f "$fpm_conf" ] || continue
+		local pv
+		pv=$(echo "$fpm_conf" | awk -F'/' '{print $4}')
+		found_php_versions+=("$pv")
+	done
+	# Fallback: scan /var/log for php*-fpm.log files
+	if [ ${#found_php_versions[@]} -eq 0 ]; then
+		for plog in /var/log/php*-fpm.log; do
+			[ -f "$plog" ] || continue
+			local pv
+			pv=$(basename "$plog" | sed 's/^php//;s/-fpm.log$//')
+			found_php_versions+=("$pv")
+		done
+	fi
+
+	for php_version in "${found_php_versions[@]}"; do
+		local php_error_log="/var/log/php${php_version}-fpm.log"
+		[ -f "$php_error_log" ] || continue
+
+		local errors=$(grep "$today" "$php_error_log" 2> /dev/null | grep -cE "error|warning|fatal" || echo "0")
+		local fatal=$(grep "$today" "$php_error_log" 2> /dev/null | grep -c "Fatal error" || echo "0")
+
+		errors=$(echo "$errors" | tr -d '\n\r ' | sed 's/^0*//')
+		fatal=$(echo "$fatal" | tr -d '\n\r ' | sed 's/^0*//')
+		[ -z "$errors" ] || ! [[ "$errors" =~ ^[0-9]+$ ]] && errors=0
+		[ -z "$fatal" ] || ! [[ "$fatal" =~ ^[0-9]+$ ]] && fatal=0
+
+		php_errors_today=$((php_errors_today + errors))
+		php_fatal_errors=$((php_fatal_errors + fatal))
+
+		if [ "$fatal" -gt 0 ] 2> /dev/null; then
+			log_message "${RED}[FAIL] PHP $php_version: $fatal fatal error(s) today${NC}"
+			((issues++))
+		fi
+	done
+
+	for user_home in /home/*/; do
+		[ -d "$user_home" ] || continue
+		for domain_dir in "$user_home/web"/*/ "$user_home/conf/web"/*/; do
+			[ -d "$domain_dir" ] || continue
+			local error_log="$domain_dir/public_html/error_log"
+			[ -f "$error_log" ] || error_log="$domain_dir/error_log"
+			[ -f "$error_log" ] || continue
+
+			local domain_errors=$(grep "$today" "$error_log" 2> /dev/null | grep -cE "PHP (Fatal|Parse|Warning)" || echo "0")
+			domain_errors=$(echo "$domain_errors" | tr -d '\n\r ' | sed 's/^0*//')
+			[ -z "$domain_errors" ] || ! [[ "$domain_errors" =~ ^[0-9]+$ ]] && domain_errors=0
+			site_php_errors=$((site_php_errors + domain_errors))
+		done
+	done
+
+	if [ "$site_php_errors" -gt 0 ] 2> /dev/null; then
+		log_message "${YELLOW}[WARN] PHP errors in websites today: $site_php_errors${NC}"
+		[ "$site_php_errors" -gt 50 ] && ((issues++))
+	fi
+
+	local php_processes=0
+	if command -v pgrep > /dev/null 2>&1; then
+		php_processes=$(pgrep -c 'php-fpm' 2> /dev/null || echo "0")
+	else
+		php_processes=$(ps aux | grep -c "[p]hp-fpm" || echo "0")
+	fi
+	php_processes=$(echo "$php_processes" | tr -d '\n\r ' | grep -oE '^[0-9]+$' || echo "0")
+	[ -z "$php_processes" ] && php_processes=0
+
+	local php_processes_zombie=0
+	if command -v pgrep > /dev/null 2>&1; then
+		for pid in $(pgrep 'php-fpm' 2> /dev/null); do
+			if ps -o stat= -p "$pid" 2> /dev/null | grep -q 'Z'; then
+				php_processes_zombie=$((php_processes_zombie + 1))
+			fi
+		done
+	else
+		php_processes_zombie=$(ps aux | grep "[p]hp-fpm" | awk '$8 ~ /Z/ {count++} END {print count+0}' || echo "0")
+	fi
+	php_processes_zombie=$(echo "$php_processes_zombie" | tr -d '\n\r ' | grep -oE '^[0-9]+$' || echo "0")
+	[ -z "$php_processes_zombie" ] && php_processes_zombie=0
+	crashed_processes=$php_processes_zombie
+
+	if [ "$php_errors_today" -gt 0 ] 2> /dev/null; then
+		log_message "${YELLOW}[WARN] Total PHP errors today: $php_errors_today${NC}"
+		[ "$php_errors_today" -gt 100 ] && ((issues++))
+	else
+		log_message "${GREEN}[OK] No PHP errors today${NC}"
+	fi
+
+	if [ "$php_fatal_errors" -gt 0 ] 2> /dev/null; then
+		log_message "${RED}[FAIL] PHP fatal errors today: $php_fatal_errors${NC}"
+		((high_issues++))
+	fi
+
+	if [ "$crashed_processes" -gt 0 ] 2> /dev/null; then
+		log_message "${RED}[FAIL] Crashed PHP processes: $crashed_processes${NC}"
+		((high_issues++))
+	else
+		log_message "${GREEN}[OK] PHP processes running: $php_processes${NC}"
+	fi
+
+	php_fatal_errors=$(echo "$php_fatal_errors" | tr -d '\n\r ' | sed 's/^0*//')
+	[ -z "$php_fatal_errors" ] || ! [[ "$php_fatal_errors" =~ ^[0-9]+$ ]] && php_fatal_errors=0
+	crashed_processes=$(echo "$crashed_processes" | tr -d '\n\r ' | sed 's/^0*//')
+	[ -z "$crashed_processes" ] || ! [[ "$crashed_processes" =~ ^[0-9]+$ ]] && crashed_processes=0
+
+	if [ "$issues" -gt 0 ] 2> /dev/null || [ "$php_fatal_errors" -gt 0 ] 2> /dev/null || [ "$crashed_processes" -gt 0 ] 2> /dev/null; then
+		((medium_issues += issues))
+		module_health_score["php_errors"]=70
+		module_health_level["php_errors"]="FAIR"
+		detailed_report["php_errors"]="FPM errors: $php_errors_today, Fatal: $php_fatal_errors, Site errors: $site_php_errors, Crashed: $crashed_processes"
+		return 1
+	else
+		module_health_score["php_errors"]=100
+		module_health_level["php_errors"]="EXCELLENT"
+		detailed_report["php_errors"]="No PHP errors detected"
+		return 0
+	fi
+}
+
+check_web_errors() {
+	log_message "${BLUE}=== Web Server Errors Status ===${NC}"
+	local issues=0
+	local nginx_errors=0
+	local apache_errors=0
+	local critical_errors=0
+
+	local today=$(date +%Y-%m-%d)
+
+	if [ -f "/var/log/nginx/error.log" ]; then
+		nginx_errors=$(grep "$today" /var/log/nginx/error.log 2> /dev/null | grep -cE "error|critical|emergency" || echo "0")
+		critical_errors=$(grep "$today" /var/log/nginx/error.log 2> /dev/null | grep -cE "crit|emerg" || echo "0")
+
+		nginx_errors=$(echo "$nginx_errors" | tr -d '\n\r ' | sed 's/^0*//')
+		critical_errors=$(echo "$critical_errors" | tr -d '\n\r ' | sed 's/^0*//')
+		[ -z "$nginx_errors" ] || ! [[ "$nginx_errors" =~ ^[0-9]+$ ]] && nginx_errors=0
+		[ -z "$critical_errors" ] || ! [[ "$critical_errors" =~ ^[0-9]+$ ]] && critical_errors=0
+
+		if [ "$critical_errors" -gt 0 ] 2> /dev/null; then
+			log_message "${RED}[FAIL] Nginx critical errors today: $critical_errors${NC}"
+			((high_issues++))
+		elif [ "$nginx_errors" -gt 0 ] 2> /dev/null; then
+			log_message "${YELLOW}[WARN] Nginx errors today: $nginx_errors${NC}"
+			((issues++))
+		else
+			log_message "${GREEN}[OK] No Nginx errors today${NC}"
+		fi
+	fi
+
+	if [ -f "/var/log/apache2/error.log" ]; then
+		apache_errors=$(grep "$today" /var/log/apache2/error.log 2> /dev/null | grep -cE "error|critical|emergency" || echo "0")
+		apache_errors=$(echo "$apache_errors" | tr -d '\n\r ' | sed 's/^0*//')
+		[ -z "$apache_errors" ] || ! [[ "$apache_errors" =~ ^[0-9]+$ ]] && apache_errors=0
+
+		if [ "$apache_errors" -gt 0 ] 2> /dev/null; then
+			log_message "${YELLOW}[WARN] Apache errors today: $apache_errors${NC}"
+			((issues++))
+		else
+			log_message "${GREEN}[OK] No Apache errors today${NC}"
+		fi
+	fi
+
+	if [ $issues -gt 0 ] || [ "$critical_errors" -gt 0 ]; then
+		((medium_issues += issues))
+		module_health_score["web_errors"]=70
+		module_health_level["web_errors"]="FAIR"
+		detailed_report["web_errors"]="Nginx: $nginx_errors errors ($critical_errors critical), Apache: $apache_errors errors"
+		return 1
+	else
+		module_health_score["web_errors"]=100
+		module_health_level["web_errors"]="EXCELLENT"
+		detailed_report["web_errors"]="No web server errors detected"
+		return 0
+	fi
+}
+
+check_email_blacklist() {
+	log_message "${BLUE}=== Email Blacklist Status ===${NC}"
+	local issues=0
+	local blacklisted=0
+	local server_ip=$(curl -s --max-time 5 -4 ifconfig.me 2> /dev/null || curl -s --max-time 5 -4 icanhazip.com 2> /dev/null || curl -s --max-time 5 ifconfig.me 2> /dev/null | grep -oE '^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$' || echo "")
+
+	if [ -z "$server_ip" ]; then
+		log_message "${YELLOW}[WARN] Could not determine server IP${NC}"
+		module_health_score["email_blacklist"]=80
+		module_health_level["email_blacklist"]="GOOD"
+		detailed_report["email_blacklist"]="Could not check blacklist status"
+		return 0
+	fi
+
+	if [[ "$server_ip" =~ : ]]; then
+		log_message "${YELLOW}[WARN] Server has IPv6 address, blacklist check skipped (requires IPv4)${NC}"
+		module_health_score["email_blacklist"]=80
+		module_health_level["email_blacklist"]="GOOD"
+		detailed_report["email_blacklist"]="IPv6 detected, blacklist check requires IPv4"
+		return 0
+	fi
+
+	log_message "${GREEN}[OK] Server IP: $server_ip${NC}"
+
+	local blacklists=("zen.spamhaus.org" "bl.spamcop.net" "b.barracudacentral.org" "dnsbl.sorbs.net")
+	local blacklist_results=()
+
+	for blacklist in "${blacklists[@]}"; do
+		local lookup_result=$(timeout 5 host -t A "$server_ip.$blacklist" 2> /dev/null)
+		local has_address=$(echo "$lookup_result" | grep -c "has address" || echo "0")
+		has_address=$(echo "$has_address" | tr -d '\n\r ' | sed 's/^0*//')
+		[ -z "$has_address" ] || ! [[ "$has_address" =~ ^[0-9]+$ ]] && has_address=0
+
+		if [ "$has_address" -gt 0 ] 2> /dev/null; then
+			local return_code=$(echo "$lookup_result" | grep "has address" | awk '{print $NF}' | head -1)
+
+			if [ "$blacklist" = "zen.spamhaus.org" ]; then
+				case "$return_code" in
+					127.0.0.2 | 127.0.0.3)
+						log_message "${RED}[FAIL] Listed on $blacklist (SBL - Spam)${NC}"
+						blacklist_results+=("$blacklist (SBL)")
+						((blacklisted++))
+						((high_issues++))
+						;;
+					127.0.0.4)
+						log_message "${RED}[FAIL] Listed on $blacklist (XBL - Malware/Botnet)${NC}"
+						blacklist_results+=("$blacklist (XBL)")
+						((blacklisted++))
+						((high_issues++))
+						;;
+					127.0.0.5 | 127.0.0.6 | 127.0.0.7 | 127.0.0.9 | 127.0.0.10 | 127.0.0.11)
+						log_message "${YELLOW}[WARN] Listed on $blacklist (PBL - Policy Block, may be false positive)${NC}"
+						blacklist_results+=("$blacklist (PBL)")
+						((blacklisted++))
+						((low_issues++))
+						;;
+					127.255.255.254)
+						log_message "${GREEN}[OK] $blacklist DNS lookup returned test record (127.255.255.254) — IP not listed${NC}"
+						;;
+					*)
+						log_message "${YELLOW}[WARN] Listed on $blacklist (Code: $return_code)${NC}"
+						blacklist_results+=("$blacklist (Code: $return_code)")
+						((blacklisted++))
+						((medium_issues++))
+						;;
+				esac
+			else
+				log_message "${RED}[FAIL] Listed on $blacklist${NC}"
+				blacklist_results+=("$blacklist")
+				((blacklisted++))
+				((high_issues++))
+			fi
+		else
+			log_message "${GREEN}[OK] Not listed on $blacklist${NC}"
+		fi
+	done
+
+	blacklisted=$(echo "$blacklisted" | tr -d '\n\r ' | sed 's/^0*//')
+	[ -z "$blacklisted" ] || ! [[ "$blacklisted" =~ ^[0-9]+$ ]] && blacklisted=0
+
+	if [ "$blacklisted" -gt 0 ] 2> /dev/null; then
+		local critical_listings=$(echo "${blacklist_results[@]}" | grep -cE "SBL|XBL" || echo "0")
+		critical_listings=$(echo "$critical_listings" | tr -d '\n\r ' | sed 's/^0*//')
+		[ -z "$critical_listings" ] || ! [[ "$critical_listings" =~ ^[0-9]+$ ]] && critical_listings=0
+
+		if [ "$critical_listings" -gt 0 ] 2> /dev/null; then
+			module_health_score["email_blacklist"]=30
+			module_health_level["email_blacklist"]="CRITICAL"
+			detailed_report["email_blacklist"]="CRITICAL: Listed on ${blacklisted} blacklist(s): $(
+				IFS=', '
+				echo "${blacklist_results[*]}"
+			)"
+			return 1
+		else
+			module_health_score["email_blacklist"]=70
+			module_health_level["email_blacklist"]="FAIR"
+			detailed_report["email_blacklist"]="Listed on ${blacklisted} blacklist(s) (non-critical): $(
+				IFS=', '
+				echo "${blacklist_results[*]}"
+			)"
+			return 1
+		fi
+	else
+		module_health_score["email_blacklist"]=100
+		module_health_level["email_blacklist"]="EXCELLENT"
+		detailed_report["email_blacklist"]="Not listed on any checked blacklists"
+		return 0
+	fi
+}
+
+check_system_logs() {
+	log_message "${BLUE}=== System Logs Status ===${NC}"
+	local issues=0
+	local critical_errors=0
+	local kernel_errors=0
+	local failed_logins=0
+	local warnings=0
+
+	local today=$(date +%Y-%m-%d)
+
+	if [ -f "/var/log/syslog" ]; then
+		critical_errors=$(grep "$today" /var/log/syslog 2> /dev/null | grep -cE "CRITICAL|EMERGENCY|panic|Oops|segfault|segmentation fault" || echo "0")
+		kernel_errors=$(grep "$today" /var/log/syslog 2> /dev/null | grep -cE "kernel:.*error|kernel:.*fail" || echo "0")
+
+		critical_errors=$(echo "$critical_errors" | tr -d '\n\r ' | sed 's/^0*//')
+		kernel_errors=$(echo "$kernel_errors" | tr -d '\n\r ' | sed 's/^0*//')
+		[ -z "$critical_errors" ] || ! [[ "$critical_errors" =~ ^[0-9]+$ ]] && critical_errors=0
+		[ -z "$kernel_errors" ] || ! [[ "$kernel_errors" =~ ^[0-9]+$ ]] && kernel_errors=0
+
+		if [ "$critical_errors" -gt 0 ] 2> /dev/null; then
+			log_message "${RED}[FAIL] Critical system errors today: $critical_errors${NC}"
+			((high_issues++))
+		fi
+
+		if [ "$kernel_errors" -gt 100 ] 2> /dev/null; then
+			log_message "${YELLOW}[WARN] High kernel errors today: $kernel_errors${NC}"
+			((warnings++))
+		elif [ "$kernel_errors" -gt 50 ] 2> /dev/null; then
+			log_message "${YELLOW}[WARN] Kernel errors today: $kernel_errors${NC}"
+		fi
+
+		local oom_kills=$(grep "$today" /var/log/syslog 2> /dev/null | grep -c "Out of memory" || echo "0")
+		oom_kills=$(echo "$oom_kills" | tr -d '\n\r ' | sed 's/^0*//')
+		[ -z "$oom_kills" ] || ! [[ "$oom_kills" =~ ^[0-9]+$ ]] && oom_kills=0
+		if [ "$oom_kills" -gt 0 ] 2> /dev/null; then
+			log_message "${RED}[FAIL] Out of memory kills today: $oom_kills${NC}"
+			((critical_errors++))
+			((high_issues++))
+		fi
+	fi
+
+	if [ -f "/var/log/auth.log" ]; then
+		failed_logins=$(grep "$today" /var/log/auth.log 2> /dev/null | grep -cE "Failed password|authentication failure" || echo "0")
+		failed_logins=$(echo "$failed_logins" | tr -d '\n\r ' | sed 's/^0*//')
+		[ -z "$failed_logins" ] || ! [[ "$failed_logins" =~ ^[0-9]+$ ]] && failed_logins=0
+
+		if [ "$failed_logins" -gt 2000 ] 2> /dev/null; then
+			log_message "${YELLOW}[WARN] Very high failed login attempts: $failed_logins (possible brute force)${NC}"
+			((warnings++))
+			((issues++))
+		elif [ "$failed_logins" -gt 500 ] 2> /dev/null; then
+			log_message "${YELLOW}[WARN] High failed login attempts: $failed_logins${NC}"
+			((warnings++))
+		elif [ "$failed_logins" -gt 0 ] 2> /dev/null; then
+			log_message "${GREEN}[OK] Failed login attempts today: $failed_logins${NC}"
+		else
+			log_message "${GREEN}[OK] No failed login attempts today${NC}"
+		fi
+
+		local invalid_users=$(grep "$today" /var/log/auth.log 2> /dev/null | grep -c "Invalid user" || echo "0")
+		invalid_users=$(echo "$invalid_users" | tr -d '\n\r ' | sed 's/^0*//')
+		[ -z "$invalid_users" ] || ! [[ "$invalid_users" =~ ^[0-9]+$ ]] && invalid_users=0
+		if [ "$invalid_users" -gt 50 ] 2> /dev/null; then
+			log_message "${YELLOW}[WARN] Invalid user login attempts: $invalid_users${NC}"
+			((warnings++))
+		fi
+	fi
+
+	issues=$(echo "$issues" | tr -d '\n\r ' | sed 's/^0*//')
+	critical_errors=$(echo "$critical_errors" | tr -d '\n\r ' | sed 's/^0*//')
+	[ -z "$issues" ] || ! [[ "$issues" =~ ^[0-9]+$ ]] && issues=0
+	[ -z "$critical_errors" ] || ! [[ "$critical_errors" =~ ^[0-9]+$ ]] && critical_errors=0
+
+	if [ "$critical_errors" -gt 0 ] 2> /dev/null; then
+		((medium_issues += issues))
+		module_health_score["system_logs"]=40
+		module_health_level["system_logs"]="POOR"
+		detailed_report["system_logs"]="CRITICAL: $critical_errors errors, Kernel: $kernel_errors, Failed logins: $failed_logins"
+		return 1
+	elif [ "$issues" -gt 0 ] 2> /dev/null || [ "$warnings" -gt 0 ] 2> /dev/null; then
+		((medium_issues += issues))
+		module_health_score["system_logs"]=75
+		module_health_level["system_logs"]="FAIR"
+		detailed_report["system_logs"]="Kernel: $kernel_errors errors, Failed logins: $failed_logins"
+		return 1
+	else
+		module_health_score["system_logs"]=100
+		module_health_level["system_logs"]="EXCELLENT"
+		detailed_report["system_logs"]="No critical system errors detected"
+		return 0
+	fi
+}
+
+check_disk_usage() {
+	log_message "${BLUE}=== Disk Usage by User ===${NC}"
+	local issues=0
+	local high_usage_users=0
+	local total_users=0
+	local total_size=0
+
+	for user_home in /home/*/; do
+		[ -d "$user_home" ] || continue
+		local user=$(basename "$user_home")
+		[ "$user" = "root" ] && continue
+
+		local user_size_raw=$(du -sm "$user_home" 2> /dev/null | awk '{print $1}' || echo "0")
+		local user_size=$(echo "$user_size_raw" | grep -oE '^[0-9]+$' || echo "0")
+		[ -z "$user_size" ] && user_size=0
+
+		if [ "$user_size" -gt 0 ] 2> /dev/null; then
+			((total_users++))
+			total_size=$((total_size + user_size))
+
+			if [ "$user_size" -gt 5000 ] 2> /dev/null; then
+				local user_size_gb=$(echo "$user_size 1024" | awk '{printf "%.1f", $1 / $2}')
+				log_message "${YELLOW}[WARN] User $user: ${user_size_gb}GB (${user_size}MB)${NC}"
+				((high_usage_users++))
+				((issues++))
+			fi
+		fi
+	done
+
+	if [ "$total_users" -gt 0 ] 2> /dev/null; then
+		local total_size_gb=$(echo "$total_size 1024" | awk '{printf "%.2f", $1 / $2}')
+		log_message "${GREEN}[OK] Total users: $total_users, Total size: ${total_size_gb}GB (${total_size}MB)${NC}"
+	fi
+
+	local backup_size_raw=$(du -sm /backup 2> /dev/null | awk '{print $1}' || echo "0")
+	local backup_size=$(echo "$backup_size_raw" | grep -oE '^[0-9]+$' || echo "0")
+	[ -z "$backup_size" ] && backup_size=0
+
+	if [ "$backup_size" -gt 10000 ] 2> /dev/null; then
+		local backup_size_gb=$(echo "$backup_size 1024" | awk '{printf "%.2f", $1 / $2}')
+		log_message "${YELLOW}[WARN] Backup directory: ${backup_size_gb}GB (${backup_size}MB)${NC}"
+		((issues++))
+	else
+		if [ "$backup_size" -gt 1024 ] 2> /dev/null; then
+			local backup_size_gb=$(echo "$backup_size 1024" | awk '{printf "%.2f", $1 / $2}')
+			log_message "${GREEN}[OK] Backup directory size: ${backup_size_gb}GB (${backup_size}MB)${NC}"
+		else
+			log_message "${GREEN}[OK] Backup directory size: ${backup_size}MB${NC}"
+		fi
+	fi
+
+	if [ $issues -gt 0 ]; then
+		((low_issues += issues))
+		module_health_score["disk_usage"]=80
+		module_health_level["disk_usage"]="GOOD"
+		detailed_report["disk_usage"]="Users: $total_users (${total_size}MB total), High usage: $high_usage_users, Backup: ${backup_size}MB"
+		return 1
+	else
+		module_health_score["disk_usage"]=100
+		module_health_level["disk_usage"]="EXCELLENT"
+		detailed_report["disk_usage"]="Users: $total_users (${total_size}MB total), Backup: ${backup_size}MB, All within limits"
+		return 0
+	fi
+}
+
+check_domain_status() {
+	log_message "${BLUE}=== Domain Status ===${NC}"
+	local issues=0
+	local total_domains=0
+	local suspended_domains=0
+	local domains_no_ssl=0
+
+	for user_dir in /usr/local/hestia/data/users/*/; do
+		[ -d "$user_dir" ] || continue
+		local user=$(basename "$user_dir")
+		[ "$user" = "default" ] && continue
+
+		if [ -f "$user_dir/web.conf" ]; then
+			while IFS= read -r line; do
+				[[ "$line" =~ ^DOMAIN= ]] || continue
+				local domain=$(echo "$line" | cut -d"'" -f2)
+				[ -z "$domain" ] && continue
+
+				((total_domains++))
+
+				local domain_config="$user_dir/web/$domain.conf"
+				if [ -f "$domain_config" ]; then
+					local suspended=$(grep "^SUSPENDED=" "$domain_config" 2> /dev/null | cut -d"'" -f2)
+					if [ "$suspended" = "yes" ]; then
+						((suspended_domains++))
+					fi
+
+					local ssl=$(grep "^SSL=" "$domain_config" 2> /dev/null | cut -d"'" -f2)
+					if [ "$ssl" != "yes" ] && [ "$ssl" != "letsencrypt" ]; then
+						((domains_no_ssl++))
+					fi
+				fi
+			done < "$user_dir/web.conf"
+		fi
+	done
+
+	log_message "${GREEN}[OK] Total domains: $total_domains${NC}"
+
+	if [ "$suspended_domains" -gt 0 ] 2> /dev/null; then
+		log_message "${YELLOW}[WARN] Suspended domains: $suspended_domains${NC}"
+		((issues++))
+	fi
+
+	if [ "$domains_no_ssl" -gt 0 ] 2> /dev/null; then
+		log_message "${YELLOW}[WARN] Domains without SSL: $domains_no_ssl${NC}"
+		((low_issues++))
+	fi
+
+	if [ $issues -gt 0 ]; then
+		((low_issues += issues))
+		module_health_score["domain_status"]=85
+		module_health_level["domain_status"]="GOOD"
+		detailed_report["domain_status"]="Total: $total_domains, Suspended: $suspended_domains, No SSL: $domains_no_ssl"
+		return 1
+	else
+		module_health_score["domain_status"]=100
+		module_health_level["domain_status"]="EXCELLENT"
+		detailed_report["domain_status"]="All $total_domains domains active and configured"
+		return 0
+	fi
+}
+
+check_database_health() {
+	log_message "${BLUE}=== Database Health ===${NC}"
+	local issues=0
+	local corrupted_tables=0
+	local large_tables=0
+
+	if command -v mariadb > /dev/null 2>&1; then
+		DB_CMD="mariadb"
+	elif command -v mysql > /dev/null 2>&1; then
+		DB_CMD="mysql"
+	else
+		log_message "${YELLOW}[WARN] MariaDB/MySQL client not found${NC}"
+		module_health_score["database_health"]=80
+		module_health_level["database_health"]="GOOD"
+		detailed_report["database_health"]="Could not check database health"
+		return 0
+	fi
+
+	local databases=$($DB_CMD -N -e "SELECT SCHEMA_NAME FROM information_schema.SCHEMATA WHERE SCHEMA_NAME NOT IN ('information_schema','performance_schema','mysql','sys');" 2> /dev/null)
+
+	for db in $databases; do
+		[ -z "$db" ] && continue
+
+		local tables=$($DB_CMD -N -e "SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA='$db' AND ENGINE='MyISAM';" 2> /dev/null)
+		for table in $tables; do
+			[ -z "$table" ] && continue
+			local check_result=$($DB_CMD -N -e "CHECK TABLE \`$db\`.\`$table\`;" 2> /dev/null | grep -c "corrupt\|error" || echo "0")
+			if [ "$check_result" -gt 0 ] 2> /dev/null; then
+				((corrupted_tables++))
+			fi
+		done
+
+		local large_table_count=$($DB_CMD -N -e "SELECT COUNT(*) FROM information_schema.TABLES WHERE TABLE_SCHEMA='$db' AND DATA_LENGTH > 1073741824;" 2> /dev/null || echo "0")
+		large_table_count=$(echo "$large_table_count" | tr -d '\n\r ' | sed 's/^0*//')
+		[ -z "$large_table_count" ] || ! [[ "$large_table_count" =~ ^[0-9]+$ ]] && large_table_count=0
+		large_tables=$((large_tables + large_table_count))
+	done
+
+	if [ "$corrupted_tables" -gt 0 ] 2> /dev/null; then
+		log_message "${RED}[FAIL] Corrupted database tables: $corrupted_tables${NC}"
+		((high_issues++))
+		((issues++))
+	else
+		log_message "${GREEN}[OK] No corrupted tables found${NC}"
+	fi
+
+	if [ "$large_tables" -gt 0 ] 2> /dev/null; then
+		log_message "${YELLOW}[WARN] Large tables (>1GB): $large_tables${NC}"
+		((low_issues++))
+	fi
+
+	local total_dbs=$(echo "$databases" | wc -l)
+	log_message "${GREEN}[OK] Databases checked: $total_dbs${NC}"
+
+	if [ $issues -gt 0 ]; then
+		module_health_score["database_health"]=50
+		module_health_level["database_health"]="POOR"
+		detailed_report["database_health"]="Corrupted: $corrupted_tables, Large tables: $large_tables"
+		return 1
+	else
+		module_health_score["database_health"]=100
+		module_health_level["database_health"]="EXCELLENT"
+		detailed_report["database_health"]="All databases healthy, Large tables: $large_tables"
+		return 0
+	fi
+}
+
+check_cron_jobs() {
+	log_message "${BLUE}=== Cron Jobs Status ===${NC}"
+	local issues=0
+	local total_crons=0
+	local failed_crons=0
+
+	for user_dir in /usr/local/hestia/data/users/*/; do
+		[ -d "$user_dir" ] || continue
+		local user=$(basename "$user_dir")
+		[ "$user" = "default" ] && continue
+
+		if [ -f "$user_dir/cron.conf" ]; then
+			local user_crons=$(grep -c "^JOB=" "$user_dir/cron.conf" 2> /dev/null || echo "0")
+			user_crons=$(echo "$user_crons" | tr -d '\n\r ' | sed 's/^0*//')
+			[ -z "$user_crons" ] || ! [[ "$user_crons" =~ ^[0-9]+$ ]] && user_crons=0
+			total_crons=$((total_crons + user_crons))
+		fi
+	done
+
+	local system_crons=$(crontab -l 2> /dev/null | grep -v "^#" | grep -v "^$" | wc -l || echo "0")
+	system_crons=$(echo "$system_crons" | tr -d '\n\r ' | sed 's/^0*//')
+	[ -z "$system_crons" ] || ! [[ "$system_crons" =~ ^[0-9]+$ ]] && system_crons=0
+
+	if [ -f "/var/log/syslog" ]; then
+		local today=$(date +%Y-%m-%d)
+		failed_crons=$(grep "$today" /var/log/syslog 2> /dev/null | grep -cE "CRON.*error|CRON.*failed" || echo "0")
+		failed_crons=$(echo "$failed_crons" | tr -d '\n\r ' | sed 's/^0*//')
+		[ -z "$failed_crons" ] || ! [[ "$failed_crons" =~ ^[0-9]+$ ]] && failed_crons=0
+	fi
+
+	log_message "${GREEN}[OK] User cron jobs: $total_crons${NC}"
+	log_message "${GREEN}[OK] System cron jobs: $system_crons${NC}"
+
+	if [ "$failed_crons" -gt 0 ] 2> /dev/null; then
+		log_message "${YELLOW}[WARN] Failed cron jobs today: $failed_crons${NC}"
+		((issues++))
+		((low_issues++))
+	else
+		log_message "${GREEN}[OK] No failed cron jobs today${NC}"
+	fi
+
+	if [ $issues -gt 0 ]; then
+		module_health_score["cron_jobs"]=85
+		module_health_level["cron_jobs"]="GOOD"
+		detailed_report["cron_jobs"]="User: $total_crons, System: $system_crons, Failed: $failed_crons"
+		return 1
+	else
+		module_health_score["cron_jobs"]=100
+		module_health_level["cron_jobs"]="EXCELLENT"
+		detailed_report["cron_jobs"]="User: $total_crons, System: $system_crons, All running"
+		return 0
+	fi
+}
+
+check_system_updates() {
+	log_message "${BLUE}=== System Updates Status ===${NC}"
+	local updates_available=0
+	local security_updates=0
+
+	if command -v apt-get > /dev/null 2>&1; then
+		local cache_age=0
+		if [ -f "/var/lib/apt/periodic/update-success-stamp" ]; then
+			local cache_stamp=$(stat -c %Y /var/lib/apt/periodic/update-success-stamp 2> /dev/null || echo "0")
+			local current_time=$(date +%s)
+			cache_age=$(((current_time - cache_stamp) / 3600))
+		fi
+
+		if [ "$cache_age" -gt 24 ] 2> /dev/null; then
+			log_message "${YELLOW}[INFO] Package cache is ${cache_age}h old, updating...${NC}"
+			run_with_timeout 60 "apt-get update -qq 2>/dev/null" > /dev/null 2>&1
+		fi
+
+		local update_output=$(run_with_timeout 30 "apt-get -s upgrade 2>/dev/null | grep -E '^Inst|^Conf|^Remv'" || echo "")
+
+		if [ -n "$update_output" ]; then
+			updates_available=$(echo "$update_output" | grep -c "^Inst" || echo "0")
+			local removals=$(echo "$update_output" | grep -c "^Remv" || echo "0")
+
+			security_updates=$(echo "$update_output" | grep -cE "Inst.*security|Inst.*Security|Inst.*\(.*security.*\)" || echo "0")
+
+			updates_available=$(echo "$updates_available" | tr -d '\n\r ' | grep -oE '^[0-9]+$' || echo "0")
+			security_updates=$(echo "$security_updates" | tr -d '\n\r ' | grep -oE '^[0-9]+$' || echo "0")
+			removals=$(echo "$removals" | tr -d '\n\r ' | grep -oE '^[0-9]+$' || echo "0")
+			[ -z "$updates_available" ] && updates_available=0
+			[ -z "$security_updates" ] && security_updates=0
+			[ -z "$removals" ] && removals=0
+
+			if [ "$security_updates" -gt 0 ] 2> /dev/null; then
+				log_message "${RED}[FAIL] Security updates available: $security_updates${NC}"
+				if [ "$updates_available" -gt "$security_updates" ] 2> /dev/null; then
+					log_message "${YELLOW}[WARN] Total updates available: $updates_available${NC}"
+				fi
+				((high_issues++))
+				module_health_score["system_updates"]=60
+				module_health_level["system_updates"]="POOR"
+				detailed_report["system_updates"]="CRITICAL: $security_updates security updates, $updates_available total"
+				return 1
+			elif [ "$updates_available" -gt 0 ] 2> /dev/null; then
+				log_message "${YELLOW}[WARN] Updates available: $updates_available${NC}"
+				if [ "$removals" -gt 0 ] 2> /dev/null; then
+					log_message "${YELLOW}[INFO] Packages to remove: $removals${NC}"
+				fi
+				((low_issues++))
+				module_health_score["system_updates"]=85
+				module_health_level["system_updates"]="GOOD"
+				detailed_report["system_updates"]="$updates_available updates available ($removals to remove)"
+				return 1
+			else
+				log_message "${GREEN}[OK] System is up to date${NC}"
+				module_health_score["system_updates"]=100
+				module_health_level["system_updates"]="EXCELLENT"
+				detailed_report["system_updates"]="System up to date"
+				return 0
+			fi
+		else
+			local apt_check=$(run_with_timeout 5 "apt-get -s upgrade 2>&1 | head -5" || echo "")
+			if echo "$apt_check" | grep -qiE "error|failed|cannot"; then
+				log_message "${YELLOW}[WARN] Could not check for updates (apt-get error)${NC}"
+			else
+				log_message "${GREEN}[OK] System appears up to date (no updates found)${NC}"
+			fi
+			module_health_score["system_updates"]=90
+			module_health_level["system_updates"]="EXCELLENT"
+			detailed_report["system_updates"]="Update check completed (no updates)"
+			return 0
+		fi
+	else
+		log_message "${YELLOW}[WARN] apt-get not available${NC}"
+		module_health_score["system_updates"]=80
+		module_health_level["system_updates"]="GOOD"
+		detailed_report["system_updates"]="Update check unavailable (apt-get not found)"
+		return 0
+	fi
+}
+
+check_inodes() {
+	log_message "${BLUE}=== Inode Usage Status ===${NC}"
+	local issues=0
+	local inode_usage=$(df -i / 2> /dev/null | tail -1 | awk '{print $5}' | sed 's/%//')
+	inode_usage=$(echo "$inode_usage" | tr -d '\n\r ' | grep -oE '^[0-9]+$' || echo "0")
+	[ -z "$inode_usage" ] && inode_usage=0
+
+	if [ "$inode_usage" -gt 90 ] 2> /dev/null; then
+		log_message "${RED}[FAIL] Inode usage: ${inode_usage}% (Critical)${NC}"
+		((high_issues++))
+		module_health_score["inodes"]=30
+		module_health_level["inodes"]="CRITICAL"
+		detailed_report["inodes"]="CRITICAL: ${inode_usage}% inode usage"
+		return 1
+	elif [ "$inode_usage" -gt 80 ] 2> /dev/null; then
+		log_message "${YELLOW}[WARN] Inode usage: ${inode_usage}% (High)${NC}"
+		((medium_issues++))
+		module_health_score["inodes"]=70
+		module_health_level["inodes"]="FAIR"
+		detailed_report["inodes"]="High: ${inode_usage}% inode usage"
+		return 1
+	else
+		log_message "${GREEN}[OK] Inode usage: ${inode_usage}%${NC}"
+		module_health_score["inodes"]=100
+		module_health_level["inodes"]="EXCELLENT"
+		detailed_report["inodes"]="Inode usage: ${inode_usage}%"
+		return 0
+	fi
+}
+
+check_high_resource_processes() {
+	log_message "${BLUE}=== High Resource Processes ===${NC}"
+	local issues=0
+	local high_cpu=0
+	local high_memory=0
+
+	high_cpu=$(ps aux --sort=-%cpu 2> /dev/null | awk 'NR>1 && $3 > 80 {count++} END {print count+0}' || echo "0")
+	high_cpu=$(echo "$high_cpu" | tr -d '\n\r ' | grep -oE '^[0-9]+$' || echo "0")
+	[ -z "$high_cpu" ] && high_cpu=0
+
+	high_memory=$(ps aux --sort=-%mem 2> /dev/null | awk 'NR>1 && $4 > 80 {count++} END {print count+0}' || echo "0")
+	high_memory=$(echo "$high_memory" | tr -d '\n\r ' | grep -oE '^[0-9]+$' || echo "0")
+	[ -z "$high_memory" ] && high_memory=0
+
+	if [ "$high_cpu" -gt 0 ] 2> /dev/null; then
+		log_message "${YELLOW}[WARN] Processes with high CPU usage (>80%): $high_cpu${NC}"
+		local top_cpu=$(ps aux --sort=-%cpu 2> /dev/null | awk 'NR>1 && $3 > 80 {print $2":"$3":"$11} END {}' | head -3)
+		if [ -n "$top_cpu" ]; then
+			echo "$top_cpu" | while IFS=: read -r pid cpu cmd; do
+				[ -n "$pid" ] && log_message "${YELLOW}[INFO]   PID $pid: ${cpu}% CPU - $(basename "$cmd")${NC}"
+			done
+		fi
+		((issues++))
+	else
+		log_message "${GREEN}[OK] No processes with high CPU usage${NC}"
+	fi
+
+	if [ "$high_memory" -gt 0 ] 2> /dev/null; then
+		log_message "${YELLOW}[WARN] Processes with high memory usage (>80%): $high_memory${NC}"
+		local top_mem=$(ps aux --sort=-%mem 2> /dev/null | awk 'NR>1 && $4 > 80 {print $2":"$4":"$11} END {}' | head -3)
+		if [ -n "$top_mem" ]; then
+			echo "$top_mem" | while IFS=: read -r pid mem cmd; do
+				[ -n "$pid" ] && log_message "${YELLOW}[INFO]   PID $pid: ${mem}% MEM - $(basename "$cmd")${NC}"
+			done
+		fi
+		((issues++))
+	else
+		log_message "${GREEN}[OK] No processes with high memory usage${NC}"
+	fi
+
+	if [ $issues -gt 0 ]; then
+		((low_issues += issues))
+		module_health_score["resource_processes"]=85
+		module_health_level["resource_processes"]="GOOD"
+		detailed_report["resource_processes"]="High CPU: $high_cpu, High Memory: $high_memory"
+		return 1
+	else
+		module_health_score["resource_processes"]=100
+		module_health_level["resource_processes"]="EXCELLENT"
+		detailed_report["resource_processes"]="All processes within normal limits"
+		return 0
+	fi
+}
+
+check_swap_usage() {
+	log_message "${BLUE}=== Swap Usage Status ===${NC}"
+	local swap_total=$(free -m 2> /dev/null | grep "^Swap:" | awk '{print $2}' || echo "0")
+	local swap_used=$(free -m 2> /dev/null | grep "^Swap:" | awk '{print $3}' || echo "0")
+
+	swap_total=$(echo "$swap_total" | tr -d '\n\r ' | grep -oE '^[0-9]+$' || echo "0")
+	swap_used=$(echo "$swap_used" | tr -d '\n\r ' | grep -oE '^[0-9]+$' || echo "0")
+	[ -z "$swap_total" ] && swap_total=0
+	[ -z "$swap_used" ] && swap_used=0
+
+	if [ "$swap_total" -gt 0 ] 2> /dev/null; then
+		local swap_percent=$((swap_used * 100 / swap_total))
+		local swap_free=$((swap_total - swap_used))
+
+		if [ "$swap_percent" -gt 90 ] 2> /dev/null; then
+			log_message "${RED}[FAIL] Swap usage: ${swap_percent}% (${swap_used}MB / ${swap_total}MB used)${NC}"
+			module_health_score["swap"]=40
+			module_health_level["swap"]="POOR"
+			detailed_report["swap"]="CRITICAL: ${swap_percent}% swap usage (${swap_used}MB/${swap_total}MB)"
+			((high_issues++))
+			return 1
+		elif [ "$swap_percent" -gt 75 ] 2> /dev/null; then
+			log_message "${YELLOW}[WARN] Swap usage: ${swap_percent}% (${swap_used}MB / ${swap_total}MB used)${NC}"
+			module_health_score["swap"]=70
+			module_health_level["swap"]="FAIR"
+			detailed_report["swap"]="High swap usage: ${swap_percent}% (${swap_used}MB/${swap_total}MB)"
+			((medium_issues++))
+			return 1
+		else
+			log_message "${GREEN}[OK] Swap usage: ${swap_percent}% (${swap_free}MB free / ${swap_total}MB total)${NC}"
+			module_health_score["swap"]=100
+			module_health_level["swap"]="EXCELLENT"
+			detailed_report["swap"]="Swap: ${swap_percent}% (${swap_free}MB free)"
+			return 0
+		fi
+	else
+		log_message "${GREEN}[OK] No swap configured${NC}"
+		module_health_score["swap"]=100
+		module_health_level["swap"]="EXCELLENT"
+		detailed_report["swap"]="No swap configured"
+		return 0
+	fi
+}
+
+check_system_uptime() {
+	log_message "${BLUE}=== System Uptime ===${NC}"
+	local uptime_seconds=$(cat /proc/uptime 2> /dev/null | awk '{print int($1)}' || echo "0")
+
+	if [ "$uptime_seconds" -gt 0 ] 2> /dev/null; then
+		local days=$((uptime_seconds / 86400))
+		local hours=$(((uptime_seconds % 86400) / 3600))
+		local minutes=$(((uptime_seconds % 3600) / 60))
+
+		if [ "$days" -gt 0 ] 2> /dev/null; then
+			log_message "${GREEN}[OK] System uptime: ${days} day(s), ${hours} hour(s), ${minutes} minute(s)${NC}"
+		elif [ "$hours" -gt 0 ] 2> /dev/null; then
+			log_message "${GREEN}[OK] System uptime: ${hours} hour(s), ${minutes} minute(s)${NC}"
+		else
+			log_message "${GREEN}[OK] System uptime: ${minutes} minute(s)${NC}"
+		fi
+
+		if [ "$days" -lt 1 ] 2> /dev/null; then
+			log_message "${YELLOW}[WARN] System uptime is less than 1 day (recent reboot)${NC}"
+			((low_issues++))
+			module_health_score["uptime"]=90
+			module_health_level["uptime"]="EXCELLENT"
+			detailed_report["uptime"]="Uptime: ${days}d ${hours}h ${minutes}m (recent reboot)"
+			return 1
+		else
+			module_health_score["uptime"]=100
+			module_health_level["uptime"]="EXCELLENT"
+			detailed_report["uptime"]="Uptime: ${days}d ${hours}h ${minutes}m"
+			return 0
+		fi
+	else
+		log_message "${YELLOW}[WARN] Could not determine system uptime${NC}"
+		module_health_score["uptime"]=80
+		module_health_level["uptime"]="GOOD"
+		detailed_report["uptime"]="Uptime check unavailable"
+		return 0
+	fi
+}
+
+send_html_email() {
+	local admin_email="$1"
+	[ -z "$admin_email" ] && return 1
+
+	local hostname=$(hostname -f 2> /dev/null || hostname 2> /dev/null || echo "HestiaCP Server")
+	local timestamp=$(date +"%Y-%m-%d %H:%M:%S")
+	local mail_from
+	local mail_from_name="${MAIL_FROM_NAME:-HestiaCP System Report}"
+	mail_from=$(get_mail_from_address "$hostname")
+
+	local total_issues=$((high_issues + medium_issues + low_issues))
+
+	if [ $high_issues -gt 0 ]; then
+		local status_color="#F44336"
+		local status_text="[FAIL] CRITICAL ISSUES"
+		local subject="HestiaCP System Report - $hostname - CRITICAL"
+	elif [ $medium_issues -gt 0 ]; then
+		local status_color="#FF9800"
+		local status_text="[WARN] WARNINGS"
+		local subject="HestiaCP System Report - $hostname - WARNINGS"
+	else
+		local status_color="#4CAF50"
+		local status_text="[OK] ALL SYSTEMS OK"
+		local subject="HestiaCP System Report - $hostname - OK"
+	fi
+
+	local modules_list=""
+	for module in "${!detailed_report[@]}"; do
+		local health_level="${module_health_level[$module]}"
+		local health_score="${module_health_score[$module]}"
+		local details="${detailed_report[$module]}"
+
+		local module_color="#4CAF50"
+		[ "$health_level" = "CRITICAL" ] && module_color="#F44336"
+		[ "$health_level" = "POOR" ] && module_color="#FF9800"
+		[ "$health_level" = "FAIR" ] && module_color="#FFC107"
+
+		modules_list="${modules_list}<tr><td style=\"padding:8px 12px; border-bottom:1px solid #555; color:#E0E0E0;\"><b style=\"color:${module_color};\">$module</b> <span style=\"color:#666; font-size:11px;\">($health_score/100)</span></td><td style=\"padding:8px 12px; border-bottom:1px solid #555; color:#A0A0A0;\">$details</td></tr>"
+	done
+
+	local critical_info=""
+	if [ -n "${detailed_report[services]}" ]; then
+		critical_info="${critical_info}<p style=\"margin:10px 0; padding:10px; background:#2C2C2C; border-left:3px solid ${status_color}; color:#E0E0E0;\"><b>Services:</b> ${detailed_report[services]}</p>"
+	fi
+	if [ -n "${detailed_report[fail2ban]}" ]; then
+		critical_info="${critical_info}<p style=\"margin:10px 0; padding:10px; background:#2C2C2C; border-left:3px solid ${status_color}; color:#E0E0E0;\"><b>Fail2Ban:</b> ${detailed_report[fail2ban]}</p>"
+	fi
+	if [ -n "${detailed_report[system_resources]}" ]; then
+		critical_info="${critical_info}<p style=\"margin:10px 0; padding:10px; background:#2C2C2C; border-left:3px solid ${status_color}; color:#E0E0E0;\"><b>Resources:</b> ${detailed_report[system_resources]}</p>"
+	fi
+
+	local html_body="<!DOCTYPE html>
+<html lang=\"en\">
+<head>
+<meta charset=\"UTF-8\">
+<title>HestiaCP System Report</title>
+</head>
+<body style=\"font-family:Arial,sans-serif; background:#222222; margin:0; padding:20px; color:#E0E0E0;\">
+<div style=\"max-width:800px; margin:0 auto; background:#3A3A3A; border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,.5); overflow:hidden; border:1px solid #555;\">
+  <div style=\"background:${status_color}; color:#fff; padding:16px; text-align:center; border-bottom:2px solid rgba(255,255,255,.1);\">
+    <h1 style=\"margin:0; font-size:20px; font-weight:bold;\">HestiaCP System Report</h1>
+    <p style=\"margin:4px 0 0 0; font-size:12px; opacity:0.9;\">${hostname}</p>
+  </div>
+  <div style=\"padding:20px;\">
+    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:100%; border-collapse:collapse; margin-bottom:20px; background:#2C2C2C; border:1px solid #555;\">
+      <tr>
+        <td style=\"padding:10px; border-right:1px solid #555; text-align:center; width:25%;\">
+          <div style=\"font-size:11px; color:#A0A0A0; margin-bottom:4px;\">Status</div>
+          <div style=\"font-size:14px; color:${status_color}; font-weight:bold;\">${status_text}</div>
+        </td>
+        <td style=\"padding:10px; border-right:1px solid #555; text-align:center; width:25%;\">
+          <div style=\"font-size:11px; color:#A0A0A0; margin-bottom:4px;\">Critical</div>
+          <div style=\"font-size:14px; color:#F44336; font-weight:bold;\">${high_issues}</div>
+        </td>
+        <td style=\"padding:10px; border-right:1px solid #555; text-align:center; width:25%;\">
+          <div style=\"font-size:11px; color:#A0A0A0; margin-bottom:4px;\">Warnings</div>
+          <div style=\"font-size:14px; color:#FF9800; font-weight:bold;\">${medium_issues}</div>
+        </td>
+        <td style=\"padding:10px; text-align:center; width:25%;\">
+          <div style=\"font-size:11px; color:#A0A0A0; margin-bottom:4px;\">Minor</div>
+          <div style=\"font-size:14px; color:#FFC107; font-weight:bold;\">${low_issues}</div>
+        </td>
+      </tr>
+    </table>
+    
+    ${critical_info}
+    
+    <h3 style=\"margin:20px 0 12px 0; color:#FFFFFF; font-size:16px; font-weight:bold;\">System Modules Status</h3>
+    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:100%; border-collapse:collapse; background:#2C2C2C; border:1px solid #555;\">
+      <thead>
+        <tr style=\"background:#1A1A1A;\">
+          <th style=\"padding:10px 12px; text-align:left; color:#E0E0E0; border-bottom:2px solid #555;\">Module</th>
+          <th style=\"padding:10px 12px; text-align:left; color:#E0E0E0; border-bottom:2px solid #555;\">Details</th>
+        </tr>
+      </thead>
+      <tbody>
+      ${modules_list}
+      </tbody>
+    </table>
+    
+    <p style=\"margin-top:20px; font-size:12px; color:#A0A0A0;\">Full detailed report log is attached to this email.</p>
+    <p style=\"margin-top:10px; font-size:11px; color:#666;\">Report generated on: ${timestamp}</p>
+  </div>
+  <div style=\"background:#2C2C2C; padding:12px; text-align:center; font-size:11px; color:#A0A0A0; border-top:1px solid #555;\">
+    ${hostname} - ${timestamp}
+  </div>
+</div>
+</body>
+</html>"
+
+	local temp_html="/tmp/system_report_email_$$.html"
+	echo "$html_body" > "$temp_html"
+
+	local SENDMAIL="$HESTIA/web/inc/mail-wrapper.php"
+	[ ! -f "$SENDMAIL" ] && SENDMAIL="/usr/local/hestia/web/inc/mail-wrapper.php"
+
+	if [ -f "$SENDMAIL" ] && [ -f "$LOG_FILE" ]; then
+		if [ -f "$HESTIA/web/inc/vendor/phpmailer/phpmailer/src/PHPMailer.php" ]; then
+			local temp_php="/tmp/send_report_email_$$.php"
+			local php_subject
+			local php_mail_from
+			local php_mail_from_name
+			php_subject=$(echo "$subject" | sed "s/'/\\\'/g")
+			php_mail_from=$(echo "$mail_from" | sed "s/'/\\\'/g")
+			php_mail_from_name=$(echo "$mail_from_name" | sed "s/'/\\\'/g")
+			cat > "$temp_php" << EOFPHP
+<?php
+require_once '$HESTIA/web/inc/vendor/phpmailer/phpmailer/src/PHPMailer.php';
+require_once '$HESTIA/web/inc/vendor/phpmailer/phpmailer/src/SMTP.php';
+require_once '$HESTIA/web/inc/vendor/phpmailer/phpmailer/src/Exception.php';
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+\$mail = new PHPMailer(true);
+try {
+    \$mail->isMail();
+    \$mail->setFrom('$php_mail_from', '$php_mail_from_name');
+    \$mail->Sender = '$php_mail_from';
+    \$mail->addAddress('$admin_email');
+    \$mail->Subject = '$php_subject';
+    \$mail->msgHTML(file_get_contents('$temp_html'));
+    \$mail->AltBody = strip_tags(file_get_contents('$temp_html'));
+    \$mail->addAttachment('$LOG_FILE', 'system_report.log');
+    \$mail->send();
+    echo "OK";
+} catch (Exception \$e) {
+    echo "ERROR: " . \$mail->ErrorInfo;
+}
+?>
+EOFPHP
+			php "$temp_php" 2> /dev/null
+			rm -f "$temp_php" 2> /dev/null
+		else
+			cat "$temp_html" | $SENDMAIL -s "$subject" "$admin_email" "yes" 2> /dev/null
+		fi
+	else
+		if [ -f "$LOG_FILE" ]; then
+			(
+				echo "Subject: $subject"
+				echo "MIME-Version: 1.0"
+				echo "From: $mail_from_name <$mail_from>"
+				echo "Reply-To: $mail_from"
+				echo "To: $admin_email"
+				echo "Content-Type: multipart/mixed; boundary=\"BOUNDARY123\""
+				echo
+				echo "--BOUNDARY123"
+				echo "Content-Type: text/html; charset=UTF-8"
+				echo "Content-Transfer-Encoding: 7bit"
+				echo
+				cat "$temp_html"
+				echo
+				echo "--BOUNDARY123"
+				echo "Content-Type: text/plain; name=\"system_report.log\""
+				echo "Content-Disposition: attachment; filename=\"system_report.log\""
+				echo "Content-Transfer-Encoding: base64"
+				echo
+				base64 < "$LOG_FILE" 2> /dev/null || cat "$LOG_FILE"
+				echo
+				echo "--BOUNDARY123--"
+			) | /usr/sbin/sendmail -f "$mail_from" -t 2> /dev/null
+		else
+			(
+				echo "To: $admin_email"
+				echo "From: $mail_from_name <$mail_from>"
+				echo "Reply-To: $mail_from"
+				echo "Subject: $subject"
+				echo "MIME-Version: 1.0"
+				echo "Content-Type: text/html; charset=UTF-8"
+				echo
+				cat "$temp_html"
+			) | /usr/sbin/sendmail -f "$mail_from" -t 2> /dev/null
+		fi
+	fi
+
+	rm -f "$temp_html" 2> /dev/null
+	return 0
+}
+
+echo ""
+echo "=========================================="
+echo "HestiaCP System Report Started"
+echo "Date: $(date)"
+echo "=========================================="
+echo ""
+
+setup_logging
+
+log_message "${BLUE}Starting HestiaCP System Check...${NC}"
+log_message ""
+
+if [ "$CHECK_SYSTEM_RESOURCES" = "TRUE" ] || [ "$CHECK_SYSTEM_RESOURCES" = "true" ]; then
+	check_resources
+	log_message ""
+fi
+
+if [ "$CHECK_HESTIACP_SERVICES" = "TRUE" ] || [ "$CHECK_HESTIACP_SERVICES" = "true" ]; then
+	check_hestiacp_services
+	log_message ""
+fi
+
+if [ "$CHECK_PHP" = "TRUE" ] || [ "$CHECK_PHP" = "true" ]; then
+	check_php_status
+	log_message ""
+fi
+
+if [ "$CHECK_MYSQL" = "TRUE" ] || [ "$CHECK_MYSQL" = "true" ]; then
+	check_mysql_status
+	log_message ""
+fi
+
+if [ "$CHECK_CLAMAV" = "TRUE" ] || [ "$CHECK_CLAMAV" = "true" ]; then
+	check_clamav_status
+	log_message ""
+fi
+
+if [ "$CHECK_FAIL2BAN" = "TRUE" ] || [ "$CHECK_FAIL2BAN" = "true" ]; then
+	check_fail2ban_status
+	log_message ""
+fi
+
+if [ "$CHECK_EXIM4" = "TRUE" ] || [ "$CHECK_EXIM4" = "true" ]; then
+	check_exim4_status
+	log_message ""
+fi
+
+if [ "$CHECK_SSL" = "TRUE" ] || [ "$CHECK_SSL" = "true" ]; then
+	check_ssl_status
+	log_message ""
+fi
+
+if [ "$CHECK_BACKUP" = "TRUE" ] || [ "$CHECK_BACKUP" = "true" ]; then
+	check_backup_status
+	log_message ""
+fi
+
+if [ "$CHECK_USERS_DOMAINS" = "TRUE" ] || [ "$CHECK_USERS_DOMAINS" = "true" ]; then
+	check_users_domains
+	log_message ""
+fi
+
+if [ "$CHECK_PHP_ERRORS" = "TRUE" ] || [ "$CHECK_PHP_ERRORS" = "true" ]; then
+	check_php_errors
+	log_message ""
+fi
+
+if [ "$CHECK_WEB_ERRORS" = "TRUE" ] || [ "$CHECK_WEB_ERRORS" = "true" ]; then
+	check_web_errors
+	log_message ""
+fi
+
+if [ "$CHECK_EMAIL_BLACKLIST" = "TRUE" ] || [ "$CHECK_EMAIL_BLACKLIST" = "true" ]; then
+	check_email_blacklist
+	log_message ""
+fi
+
+if [ "$CHECK_SYSTEM_LOGS" = "TRUE" ] || [ "$CHECK_SYSTEM_LOGS" = "true" ]; then
+	check_system_logs
+	log_message ""
+fi
+
+if [ "$CHECK_DISK_USAGE" = "TRUE" ] || [ "$CHECK_DISK_USAGE" = "true" ]; then
+	check_disk_usage
+	log_message ""
+fi
+
+if [ "$CHECK_DOMAIN_STATUS" = "TRUE" ] || [ "$CHECK_DOMAIN_STATUS" = "true" ]; then
+	check_domain_status
+	log_message ""
+fi
+
+if [ "$CHECK_DATABASE_HEALTH" = "TRUE" ] || [ "$CHECK_DATABASE_HEALTH" = "true" ]; then
+	check_database_health
+	log_message ""
+fi
+
+if [ "$CHECK_CRON_JOBS" = "TRUE" ] || [ "$CHECK_CRON_JOBS" = "true" ]; then
+	check_cron_jobs
+	log_message ""
+fi
+
+if [ "$CHECK_SYSTEM_UPDATES" = "TRUE" ] || [ "$CHECK_SYSTEM_UPDATES" = "true" ]; then
+	check_system_updates
+	log_message ""
+fi
+
+if [ "$CHECK_INODES" = "TRUE" ] || [ "$CHECK_INODES" = "true" ]; then
+	check_inodes
+	log_message ""
+fi
+
+if [ "$CHECK_HIGH_RESOURCE_PROCESSES" = "TRUE" ] || [ "$CHECK_HIGH_RESOURCE_PROCESSES" = "true" ]; then
+	check_high_resource_processes
+	log_message ""
+fi
+
+if [ "$CHECK_SWAP_USAGE" = "TRUE" ] || [ "$CHECK_SWAP_USAGE" = "true" ]; then
+	check_swap_usage
+	log_message ""
+fi
+
+if [ "$CHECK_SYSTEM_UPTIME" = "TRUE" ] || [ "$CHECK_SYSTEM_UPTIME" = "true" ]; then
+	check_system_uptime
+	log_message ""
+fi
+
+total_issues=$((high_issues + medium_issues + low_issues))
+status=""
+status_color=""
+
+if [ $high_issues -gt 0 ]; then
+	status="CRITICAL"
+	status_color="${RED}"
+elif [ $medium_issues -gt 0 ]; then
+	status="WARNINGS"
+	status_color="${YELLOW}"
+else
+	status="OK"
+	status_color="${GREEN}"
+fi
+
+echo "=========================================="
+log_message "${status_color}Overall System Status: $status${NC}"
+log_message "Critical Issues: $high_issues"
+log_message "Warnings: $medium_issues"
+log_message "Minor Issues: $low_issues"
+log_message "Total Issues: $total_issues"
+echo "=========================================="
+
+if [ "$status" = "CRITICAL" ]; then
+	log_event "$E_UPDATE" "System Report Generated - CRITICAL Issues Found: $high_issues"
+elif [ "$status" = "WARNINGS" ]; then
+	log_event "$OK" "System Report Generated - Warnings Found: $medium_issues"
+else
+	log_event "$OK" "System Report Generated - All Systems OK"
+fi
+
+log_message ""
+
+if [ "$SEND_EMAIL_REPORT" = "TRUE" ] || [ "$SEND_EMAIL_REPORT" = "true" ]; then
+	if [ -n "$ADMIN_EMAIL" ]; then
+		log_message "Sending email report to $ADMIN_EMAIL..."
+		if send_html_email "$ADMIN_EMAIL"; then
+			log_message "${GREEN}[OK] Email sent successfully${NC}"
+		else
+			log_message "${RED}[FAIL] Failed to send email${NC}"
+		fi
+	else
+		log_message "${YELLOW}[WARN] No admin email configured, skipping email report${NC}"
+	fi
+fi
+
+log_message ""
+log_message "Report log saved to: $LOG_FILE"
+log_message ""
+
+exit

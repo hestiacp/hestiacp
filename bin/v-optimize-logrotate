@@ -1,0 +1,244 @@
+#!/bin/bash
+# =============================================================================
+# v-optimize-logrotate — HestiaCP Log Rotation Optimizer
+#
+# Upgrades Apache and Nginx logrotate from weekly to daily rotation.
+#
+# WHY: HestiaCP defaults to weekly rotation. For servers with active ad
+# campaigns (Facebook/Instagram), a single domain log can exceed 100MB
+# in days due to enormous UTM/fbclid referer strings (~630 bytes/line vs
+# ~200 bytes for normal traffic). Daily rotation with compression keeps
+# each file small and prevents /var/log from growing unchecked.
+#
+# SAFETY: HestiaCP does NOT overwrite /etc/logrotate.d/apache2 or nginx
+# during upgrades (last touched in v1.1.0 and v1.7.0 for minor fixes).
+# The daily auto-update (v-update-sys-hestia-all) does not touch logrotate.
+# This change is safe and persistent across HestiaCP updates.
+#
+# WHAT IT DOES:
+#   1. Backs up current logrotate configs
+#   2. Replaces weekly rotation with daily
+#   3. Sets rotate count to 14 (14 days of history)
+#   4. Optionally forces an immediate rotation to reclaim space
+#
+# USAGE:
+#   v-optimize-logrotate              # Apply + force immediate rotation
+#   v-optimize-logrotate --dry-run    # Show what would change without applying
+#   v-optimize-logrotate --no-force   # Apply but don't force immediate rotation
+#
+# Part of: https://github.com/webxtekstudio/hestiacp-useful-tools
+# =============================================================================
+
+set -euo pipefail
+
+# --- Defaults ----------------------------------------------------------------
+ROTATE_COUNT=14
+ROTATE_FREQ="daily"
+DRY_RUN=false
+FORCE_ROTATE=true
+BACKUP_DIR="/etc/logrotate.d/.backups"
+
+# --- Parse arguments ---------------------------------------------------------
+for arg in "$@"; do
+	case "$arg" in
+		--dry-run) DRY_RUN=true ;;
+		--no-force) FORCE_ROTATE=false ;;
+		--help | -h)
+			echo "Usage: v-optimize-logrotate [--dry-run] [--no-force]"
+			echo ""
+			echo "  --dry-run    Show what would change without applying"
+			echo "  --no-force   Apply config but don't force immediate rotation"
+			echo ""
+			echo "Upgrades Apache & Nginx logrotate from weekly to daily (14 days)."
+			exit 0
+			;;
+	esac
+done
+
+# --- Root check --------------------------------------------------------------
+if [ "$(id -u)" -ne 0 ]; then
+	echo "ERROR: This script must be run as root."
+	exit 1
+fi
+
+# --- Functions ---------------------------------------------------------------
+
+get_log_size() {
+	du -sm /var/log 2> /dev/null | awk '{print $1}'
+}
+
+show_current_state() {
+	echo "=== Current State ==="
+	echo ""
+
+	for conf in /etc/logrotate.d/apache2 /etc/logrotate.d/nginx; do
+		if [ -f "$conf" ]; then
+			freq=$(grep -oE '(daily|weekly|monthly)' "$conf" | head -1)
+			count=$(grep -oP 'rotate\s+\K\d+' "$conf" | head -1)
+			echo "  $conf: ${freq:-unknown} / rotate ${count:-unknown}"
+		else
+			echo "  $conf: NOT FOUND"
+		fi
+	done
+
+	echo ""
+	echo "  /var/log total: $(get_log_size) MB"
+
+	# Show top domain logs by size
+	if [ -d /var/log/apache2/domains ]; then
+		echo ""
+		echo "  Top 5 Apache domain logs:"
+		du -sh /var/log/apache2/domains/*.log 2> /dev/null | sort -rh | head -5 | while read -r size file; do
+			echo "    $size  $(basename "$file")"
+		done
+	fi
+	echo ""
+}
+
+backup_config() {
+	local conf="$1"
+	if [ ! -f "$conf" ]; then return; fi
+
+	mkdir -p "$BACKUP_DIR"
+	local basename
+	basename=$(basename "$conf")
+	local backup_file="$BACKUP_DIR/${basename}.bak.$(date +%Y%m%d-%H%M%S)"
+	cp "$conf" "$backup_file"
+	echo "  -> [BACKUP] $conf -> $backup_file"
+}
+
+write_apache_config() {
+	cat > /etc/logrotate.d/apache2 << 'APACHE_EOF'
+/var/log/apache2/*.log /var/log/apache2/domains/*log {
+    rotate 14
+    daily
+    missingok
+    notifempty
+    compress
+    delaycompress
+    create 640
+    sharedscripts
+    postrotate
+        /etc/init.d/apache2 reload > /dev/null || true
+        [ ! -f /run/nginx.pid ] || kill -USR1 `cat /run/nginx.pid`
+        endscript
+    prerotate
+        if [ -d /etc/logrotate.d/httpd-prerotate ]; then \
+        run-parts /etc/logrotate.d/httpd-prerotate; \
+        fi; \
+        endscript
+}
+APACHE_EOF
+}
+
+write_nginx_config() {
+	cat > /etc/logrotate.d/nginx << 'NGINX_EOF'
+/var/log/nginx/*log /var/log/nginx/domains/*log {
+    rotate 14
+    daily
+    missingok
+    notifempty
+    compress
+    delaycompress
+    create 640
+    sharedscripts
+    postrotate
+        [ -f /run/nginx.pid ] && kill -USR1 `cat /run/nginx.pid`
+        endscript
+}
+NGINX_EOF
+}
+
+# --- Main --------------------------------------------------------------------
+
+echo ""
+echo "╔══════════════════════════════════════════════════╗"
+echo "║  v-optimize-logrotate — Log Rotation Optimizer   ║"
+echo "╚══════════════════════════════════════════════════╝"
+echo ""
+
+show_current_state
+
+if $DRY_RUN; then
+	echo "=== Dry Run — Would Apply ==="
+	echo ""
+	echo "  /etc/logrotate.d/apache2: weekly -> $ROTATE_FREQ / rotate $ROTATE_COUNT"
+	echo "  /etc/logrotate.d/nginx:   weekly -> $ROTATE_FREQ / rotate $ROTATE_COUNT"
+	echo ""
+	echo "No changes made (--dry-run)."
+	exit 0
+fi
+
+echo "=== Applying Changes ==="
+echo ""
+
+# Backup existing configs
+for conf in /etc/logrotate.d/apache2 /etc/logrotate.d/nginx; do
+	backup_config "$conf"
+done
+
+# Write new configs
+if [ -f /etc/logrotate.d/apache2 ] || command -v apache2 &> /dev/null; then
+	write_apache_config
+	echo "  -> [OK] Apache logrotate: $ROTATE_FREQ / rotate $ROTATE_COUNT"
+fi
+
+if [ -f /etc/logrotate.d/nginx ] || command -v nginx &> /dev/null; then
+	write_nginx_config
+	echo "  -> [OK] Nginx logrotate:  $ROTATE_FREQ / rotate $ROTATE_COUNT"
+fi
+
+echo ""
+
+# Validate configs
+echo "=== Validating ==="
+errors=0
+for conf in /etc/logrotate.d/apache2 /etc/logrotate.d/nginx; do
+	if [ -f "$conf" ]; then
+		if logrotate -d "$conf" 2>&1 | grep -qi "error"; then
+			echo "  -> [ERROR] $conf has syntax errors!"
+			errors=$((errors + 1))
+		else
+			echo "  -> [OK] $conf is valid"
+		fi
+	fi
+done
+
+if [ "$errors" -gt 0 ]; then
+	echo ""
+	echo "ERROR: Config validation failed. Restoring backups..."
+	for conf in /etc/logrotate.d/apache2 /etc/logrotate.d/nginx; do
+		latest_backup=$(ls -t "$BACKUP_DIR/$(basename "$conf").bak."* 2> /dev/null | head -1)
+		if [ -n "$latest_backup" ]; then
+			cp "$latest_backup" "$conf"
+			echo "  -> [RESTORED] $conf"
+		fi
+	done
+	exit 1
+fi
+
+echo ""
+
+# Force immediate rotation
+if $FORCE_ROTATE; then
+	echo "=== Forcing Immediate Rotation ==="
+	before_size=$(get_log_size)
+
+	for conf in /etc/logrotate.d/apache2 /etc/logrotate.d/nginx; do
+		if [ -f "$conf" ]; then
+			logrotate -f "$conf" 2>&1 || true
+			echo "  -> [OK] Forced rotation: $conf"
+		fi
+	done
+
+	after_size=$(get_log_size)
+	freed=$((before_size - after_size))
+	echo ""
+	echo "  /var/log: ${before_size} MB -> ${after_size} MB (freed ~${freed} MB)"
+fi
+
+echo ""
+echo "=== Result ==="
+show_current_state
+echo "Done! Logs will now rotate daily, keeping $ROTATE_COUNT days of compressed history."
+echo ""

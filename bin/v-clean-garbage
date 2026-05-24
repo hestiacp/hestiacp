@@ -1,0 +1,927 @@
+#!/bin/bash
+set -o pipefail
+
+#==========================================
+# HESTIACP SYSTEM CLEANUP SCRIPT
+# Only cleans system logs and system-level garbage
+# Does NOT modify user data, databases, or user files
+#==========================================
+# CONFIGURATION - Edit these as needed
+#==========================================
+
+# Default Configuration (can be overridden by /etc/hestiacp-clean-garbage.conf)
+
+# Email notification (leave empty to auto-detect from admin user)
+ADMIN_EMAIL_OVERRIDE=""
+
+#------------------------------------------
+# RETENTION PERIODS (days)
+#------------------------------------------
+JOURNALCTL_RETENTION_DAYS=7
+SERVICE_LOGS_RETENTION_DAYS=30
+PHP_SESSIONS_RETENTION_DAYS=1
+CORE_DUMPS_RETENTION_DAYS=1
+LOCK_FILES_RETENTION_DAYS=1
+
+#------------------------------------------
+# MAIL RETENTION PERIODS
+# Options: 1M (1 month), 1Y (1 year), 5Y (5 years)
+#------------------------------------------
+MAIL_QUEUE_RETENTION="5Y"
+SPAM_MAIL_RETENTION="1Y"
+USER_TRASH_RETENTION="1Y"
+
+#------------------------------------------
+# SYSTEM CLEANUPS (TRUE/FALSE)
+#------------------------------------------
+CLEAN_JOURNALCTL="TRUE"
+CLEAN_APT_CACHE="TRUE"
+CLEAN_OLD_KERNELS="TRUE"
+CLEAN_PHP_SESSIONS="TRUE"
+CLEAN_CORE_DUMPS="TRUE"
+CLEAN_LOCK_FILES="TRUE"
+
+#------------------------------------------
+# SERVICE LOGS CLEANUP (TRUE/FALSE)
+#------------------------------------------
+CLEAN_NGINX_LOGS="TRUE"
+CLEAN_APACHE_LOGS="TRUE"
+CLEAN_EXIM_LOGS="TRUE"
+CLEAN_DOVECOT_LOGS="TRUE"
+CLEAN_CLAMAV_LOGS="TRUE"
+CLEAN_ROUNDCUBE_LOGS="TRUE"
+CLEAN_FAIL2BAN_LOGS="TRUE"
+CLEAN_HESTIA_LOGS="TRUE"
+CLEAN_PHP_FPM_LOGS="TRUE"
+CLEAN_MYSQL_LOGS="TRUE"
+CLEAN_VSFTPD_LOGS="TRUE"
+CLEAN_APT_LOGS="TRUE"
+CLEAN_CLOUD_INIT_LOGS="TRUE"
+CLEAN_UNATTENDED_UPGRADES_LOGS="TRUE"
+CLEAN_BTMP_WTMP="TRUE"
+CLEAN_ROTATED_LOGS="TRUE"
+CLEAN_MYSQL_SLOW_LOGS="TRUE"
+
+#------------------------------------------
+# MAIL CLEANUP (TRUE/FALSE)
+#------------------------------------------
+CLEAN_MAIL_QUEUE="TRUE"
+CLEAN_SPAM_MAIL="TRUE"
+
+#------------------------------------------
+# USER CLEANUP (TRUE/FALSE)
+#------------------------------------------
+CLEAN_USER_TRASH="TRUE"
+
+#------------------------------------------
+# SSD TRIM (only enable if you have SSD)
+#------------------------------------------
+RUN_SSD_TRIM="TRUE"
+
+#==========================================
+# LOAD EXTERNAL CONFIGURATION
+#==========================================
+if [ -f "/etc/hestiacp-clean-garbage.conf" ]; then
+	source /etc/hestiacp-clean-garbage.conf
+fi
+#==========================================
+
+# Single-instance guard using flock (atomic, race-condition free)
+LOCK_FILE="/var/run/v-clean-garbage.lock"
+exec 9> "$LOCK_FILE"
+if ! flock -n 9; then
+	echo "[$(date)] : v-clean-garbage is already running. Exiting."
+	exit 1
+fi
+
+source /etc/profile
+HESTIA=/usr/local/hestia
+source $HESTIA/func/main.sh 2> /dev/null
+source $HESTIA/conf/hestia.conf 2> /dev/null
+
+ADMIN_EMAIL=""
+if [ -n "$ADMIN_EMAIL_OVERRIDE" ]; then
+	ADMIN_EMAIL="$ADMIN_EMAIL_OVERRIDE"
+else
+	for user_conf in "$HESTIA/data/users"/*/user.conf; do
+		[ -f "$user_conf" ] || continue
+		if grep -q "ROLE='admin'" "$user_conf" 2> /dev/null; then
+			ADMIN_EMAIL=$(grep "^CONTACT=" "$user_conf" 2> /dev/null | cut -d"'" -f2)
+			break
+		fi
+	done
+fi
+
+if [ -z "$ADMIN_EMAIL" ]; then
+	ADMIN_EMAIL=$(grep "^CONTACT=" "$HESTIA/conf/hestia.conf" 2> /dev/null | cut -d"'" -f2)
+fi
+
+# Email notification on unexpected fatal crash (trap)
+_send_fatal_email_garbage() {
+	local exit_code="$1"
+	local line="$2"
+	[ -z "$ADMIN_EMAIL" ] && return 0
+	local hostname
+	hostname=$(hostname -f 2> /dev/null || echo "HestiaCP Server")
+	local subject="[FATAL] v-clean-garbage crashed on $hostname"
+	local body="Script v-clean-garbage terminated unexpectedly.\nExit code: $exit_code at line $line.\nCheck system logs for details."
+	local SENDMAIL="$HESTIA/web/inc/mail-wrapper.php"
+	if [ -f "$SENDMAIL" ]; then
+		echo "$body" | "$SENDMAIL" -s "$subject" "$ADMIN_EMAIL" 2> /dev/null
+	else
+		{
+			echo "Subject: $subject"
+			echo
+			echo "$body"
+		} | /usr/sbin/sendmail "$ADMIN_EMAIL" 2> /dev/null
+	fi
+}
+trap '_send_fatal_email_garbage "$?" "$LINENO"' INT TERM ABRT
+
+FINAL_STATUS='SUCCESS'
+TASKS_SUCCESS=()
+TASKS_FAILED=()
+TASKS_SKIPPED=()
+TOTAL_CLEANED_KB=0
+
+convert_space() {
+	local space_kb=$1
+	if [ -z "$space_kb" ] || [ "$space_kb" -eq 0 ] 2> /dev/null; then
+		echo "0 MB"
+		return
+	fi
+
+	if command -v bc > /dev/null 2>&1; then
+		local space_mb=$(bc <<< "scale=2; $space_kb/1024" 2> /dev/null)
+		local space_gb=$(bc <<< "scale=2; $space_mb/1024" 2> /dev/null)
+
+		if (($(echo "$space_mb < 1024" | bc -l 2> /dev/null))); then
+			printf "%.2f MB" $space_mb
+		else
+			printf "%.2f GB" $space_gb
+		fi
+	else
+		local space_mb=$((space_kb / 1024))
+		if [ "$space_mb" -lt 1024 ]; then
+			echo "${space_mb} MB"
+		else
+			local space_gb=$((space_mb / 1024))
+			echo "${space_gb} GB"
+		fi
+	fi
+}
+
+measure_cleanup() {
+	local path="$1"
+	local size_kb=0
+
+	if [ -e "$path" ]; then
+		if [ -d "$path" ]; then
+			local du_output=$(du -sk "$path" 2> /dev/null | cut -f1)
+			if [ -n "$du_output" ] && [ "$du_output" -gt 0 ] 2> /dev/null; then
+				size_kb=$du_output
+			fi
+		elif [ -f "$path" ]; then
+			local file_size=$(stat -c%s "$path" 2> /dev/null || echo 0)
+			if [ -n "$file_size" ] && [ "$file_size" -gt 0 ] 2> /dev/null; then
+				size_kb=$((file_size / 1024))
+				[ "$size_kb" -eq 0 ] && [ "$file_size" -gt 0 ] && size_kb=1
+			fi
+		fi
+	fi
+
+	echo "$size_kb"
+}
+
+add_cleaned_space() {
+	local cleaned_kb=$1
+	cleaned_kb=${cleaned_kb:-0}
+	cleaned_kb=$(echo "$cleaned_kb" | sed 's/[^0-9-]//g')
+	if [ -n "$cleaned_kb" ] && [ "$cleaned_kb" != "" ] && [ "$cleaned_kb" -gt 0 ] 2> /dev/null; then
+		TOTAL_CLEANED_KB=$((TOTAL_CLEANED_KB + cleaned_kb))
+	fi
+}
+
+convert_retention_to_days() {
+	local retention="$1"
+	local days=0
+
+	if [ -z "$retention" ]; then
+		echo "365"
+		return
+	fi
+
+	retention=$(echo "$retention" | tr '[:lower:]' '[:upper:]')
+
+	if echo "$retention" | grep -qE '^[0-9]+[MY]$'; then
+		local number=$(echo "$retention" | sed 's/[^0-9]//g')
+		local unit=$(echo "$retention" | sed 's/[^MY]//g')
+
+		if [ "$unit" = "M" ]; then
+			days=$((number * 30))
+		elif [ "$unit" = "Y" ]; then
+			days=$((number * 365))
+		fi
+	elif echo "$retention" | grep -qE '^[0-9]+$'; then
+		days=$retention
+	else
+		days=365
+	fi
+
+	echo "$days"
+}
+
+run_task() {
+	local task_name="$1"
+	local task_command="$2"
+	local enabled="$3"
+
+	if [ "$enabled" != "TRUE" ] && [ "$enabled" != "true" ]; then
+		TASKS_SKIPPED+=("$task_name")
+		return 0
+	fi
+
+	echo -n "[$(date)] : $task_name... "
+	if eval "$task_command" > /dev/null 2>&1; then
+		echo "OK"
+		TASKS_SUCCESS+=("$task_name")
+		return 0
+	else
+		echo "FAIL"
+		TASKS_FAILED+=("$task_name")
+		FINAL_STATUS='FAILED'
+		return 1
+	fi
+}
+
+clean_rotated_logs() {
+	local log_dir="$1"
+	local days="$2"
+	local cleaned_kb=0
+
+	[ -d "$log_dir" ] || {
+		echo "0"
+		return 0
+	}
+
+	local before_kb=$(measure_cleanup "$log_dir")
+	before_kb=${before_kb:-0}
+
+	local truncated_size_kb=0
+	while IFS= read -r -d '' logfile; do
+		if [ -f "$logfile" ]; then
+			local log_size=$(stat -c%s "$logfile" 2> /dev/null || echo 0)
+			if [ -n "$log_size" ] && [ "$log_size" -gt 104857600 ] 2> /dev/null; then
+				if ! lsof "$logfile" > /dev/null 2>&1; then
+					local log_size_kb=$((log_size / 1024))
+					truncated_size_kb=$((truncated_size_kb + log_size_kb))
+				fi
+			fi
+		fi
+	done < <(find "$log_dir" -maxdepth 1 -type f -name "*.log" -size +100M -print0 2> /dev/null)
+
+	find "$log_dir" -maxdepth 1 -type f \( -name "*.log.[0-9]*" -o -name "*.log.*.gz" -o -name "*.[0-9].gz" \) -mtime +${days} -delete 2> /dev/null
+	find "$log_dir" -maxdepth 1 -type f -name "*.log" -size +100M ! -exec lsof {} \; -exec truncate -s 0 {} \; 2> /dev/null
+
+	local after_kb=$(measure_cleanup "$log_dir")
+	after_kb=${after_kb:-0}
+
+	if [ "$before_kb" -gt "$after_kb" ] 2> /dev/null; then
+		cleaned_kb=$((before_kb - after_kb))
+	fi
+
+	if [ "$truncated_size_kb" -gt 0 ] 2> /dev/null; then
+		cleaned_kb=$((cleaned_kb + truncated_size_kb))
+	fi
+
+	echo "${cleaned_kb:-0}"
+}
+
+if command -v mariadb > /dev/null 2>&1; then
+	DB_CMD="mariadb"
+elif command -v mysql > /dev/null 2>&1; then
+	DB_CMD="mysql"
+else
+	DB_CMD=""
+fi
+
+initial_space_kb=$(df / | tail -1 | awk '{ print $4 }')
+initial_space_formatted=$(convert_space $initial_space_kb)
+
+echo "=========================================="
+echo "HestiaCP Garbage Cleanup Started"
+log_event "$OK" "System Cleanup Process Started"
+echo "Date: $(date)"
+echo "Initial Available Space: $initial_space_formatted"
+echo "=========================================="
+echo ""
+echo "--- SYSTEM CLEANUP ---"
+
+if [ "$CLEAN_JOURNALCTL" = "TRUE" ] || [ "$CLEAN_JOURNALCTL" = "true" ]; then
+	echo -n "[$(date)] : Journalctl logs (>${JOURNALCTL_RETENTION_DAYS}d)... "
+	journalctl_output=$(journalctl --vacuum-time=${JOURNALCTL_RETENTION_DAYS}d 2>&1)
+	if [ $? -eq 0 ]; then
+		freed_line=$(echo "$journalctl_output" | grep -i "freed" | head -1)
+		if [ -n "$freed_line" ]; then
+			freed_space=$(echo "$freed_line" | grep -oE '[0-9]+\.?[0-9]*' | head -1)
+			freed_unit=$(echo "$freed_line" | grep -oE '[KMGT]?B' | head -1 | tr '[:lower:]' '[:upper:]')
+			if [ -n "$freed_space" ] && [ -n "$freed_unit" ]; then
+				if [ "$freed_unit" = "MB" ]; then
+					if command -v bc > /dev/null 2>&1; then
+						freed_kb=$(echo "$freed_space * 1024" | bc | cut -d. -f1)
+					else
+						freed_kb=$(awk "BEGIN {printf \"%.0f\", $freed_space * 1024}")
+					fi
+				elif [ "$freed_unit" = "GB" ]; then
+					if command -v bc > /dev/null 2>&1; then
+						freed_kb=$(echo "$freed_space * 1024 * 1024" | bc | cut -d. -f1)
+					else
+						freed_kb=$(awk "BEGIN {printf \"%.0f\", $freed_space * 1024 * 1024}")
+					fi
+				elif [ "$freed_unit" = "KB" ] || [ "$freed_unit" = "K" ]; then
+					freed_kb=$(echo "$freed_space" | cut -d. -f1)
+				else
+					freed_kb=0
+				fi
+				if [ -n "$freed_kb" ] && [ "$freed_kb" -gt 0 ] 2> /dev/null; then
+					add_cleaned_space "$freed_kb"
+					echo "OK (freed: ${freed_space} ${freed_unit})"
+				else
+					echo "OK"
+				fi
+			else
+				echo "OK"
+			fi
+		else
+			echo "OK"
+		fi
+		TASKS_SUCCESS+=("Journalctl logs")
+	else
+		echo "FAIL"
+		TASKS_FAILED+=("Journalctl logs")
+		FINAL_STATUS='FAILED'
+	fi
+fi
+
+if [ "$CLEAN_APT_CACHE" = "TRUE" ] || [ "$CLEAN_APT_CACHE" = "true" ]; then
+	echo -n "[$(date)] : APT cache... "
+	apt_cache_dirs="/var/cache/apt/archives /var/cache/apt/archives/partial"
+	before_kb=0
+	for dir in $apt_cache_dirs; do
+		if [ -d "$dir" ]; then
+			dir_size=$(du -sk "$dir" 2> /dev/null | cut -f1)
+			[ -n "$dir_size" ] && before_kb=$((before_kb + dir_size))
+		fi
+	done
+	if apt-get clean > /dev/null 2>&1; then
+		after_kb=0
+		for dir in $apt_cache_dirs; do
+			if [ -d "$dir" ]; then
+				dir_size=$(du -sk "$dir" 2> /dev/null | cut -f1)
+				[ -n "$dir_size" ] && after_kb=$((after_kb + dir_size))
+			fi
+		done
+		cleaned_kb=$((before_kb - after_kb))
+		if [ "$cleaned_kb" -gt 0 ]; then
+			add_cleaned_space "$cleaned_kb"
+			cleaned_formatted=$(convert_space $cleaned_kb)
+			echo "OK (freed: $cleaned_formatted)"
+		else
+			echo "OK"
+		fi
+		TASKS_SUCCESS+=("APT cache")
+	else
+		echo "FAIL"
+		TASKS_FAILED+=("APT cache")
+		FINAL_STATUS='FAILED'
+	fi
+fi
+
+if [ "$CLEAN_OLD_KERNELS" = "TRUE" ] || [ "$CLEAN_OLD_KERNELS" = "true" ]; then
+	echo -n "[$(date)] : Old kernel packages... "
+	before_kb=$(measure_cleanup /boot)
+	kernel_pkgs=$(dpkg -l | grep -E '^ii.*linux-(image|headers)-[0-9]' | awk '{print $2}' | wc -l)
+	if DEBIAN_FRONTEND=noninteractive apt-get autoremove -y > /dev/null 2>&1; then
+		after_kb=$(measure_cleanup /boot)
+		cleaned_kb=$((before_kb - after_kb))
+		[ "$cleaned_kb" -lt 0 ] && cleaned_kb=0
+		if [ "$cleaned_kb" -gt 0 ] 2> /dev/null; then
+			add_cleaned_space "$cleaned_kb"
+			cleaned_formatted=$(convert_space $cleaned_kb)
+			echo "OK (freed: $cleaned_formatted)"
+		else
+			echo "OK"
+		fi
+		TASKS_SUCCESS+=("Old kernel packages")
+	else
+		echo "FAIL"
+		TASKS_FAILED+=("Old kernel packages")
+		FINAL_STATUS='FAILED'
+	fi
+fi
+
+if [ "$CLEAN_PHP_SESSIONS" = "TRUE" ] || [ "$CLEAN_PHP_SESSIONS" = "true" ]; then
+	echo -n "[$(date)] : PHP sessions (>${PHP_SESSIONS_RETENTION_DAYS}d)... "
+	if [ -d "/var/lib/php/sessions" ]; then
+		before_kb=$(measure_cleanup "/var/lib/php/sessions")
+		find /var/lib/php/sessions -type f -mtime +${PHP_SESSIONS_RETENTION_DAYS} -delete 2> /dev/null
+		after_kb=$(measure_cleanup "/var/lib/php/sessions")
+		cleaned_kb=$((before_kb - after_kb))
+		if [ "$cleaned_kb" -gt 0 ]; then
+			add_cleaned_space "$cleaned_kb"
+			cleaned_formatted=$(convert_space $cleaned_kb)
+			echo "OK (freed: $cleaned_formatted)"
+		else
+			echo "OK"
+		fi
+	else
+		echo "OK (no sessions dir)"
+	fi
+	TASKS_SUCCESS+=("PHP sessions")
+fi
+
+echo ""
+echo "--- SERVICE LOGS CLEANUP (>${SERVICE_LOGS_RETENTION_DAYS}d) ---"
+
+if [ "$CLEAN_NGINX_LOGS" = "TRUE" ] || [ "$CLEAN_NGINX_LOGS" = "true" ]; then
+	echo -n "[$(date)] : Nginx logs... "
+	cleaned_kb=$(clean_rotated_logs /var/log/nginx ${SERVICE_LOGS_RETENTION_DAYS})
+	cleaned_kb=${cleaned_kb:-0}
+	if [ "$cleaned_kb" -gt 0 ] 2> /dev/null; then
+		add_cleaned_space "$cleaned_kb"
+		cleaned_formatted=$(convert_space $cleaned_kb)
+		echo "OK (freed: $cleaned_formatted)"
+	else
+		echo "OK"
+	fi
+	TASKS_SUCCESS+=("Nginx logs")
+fi
+
+if [ "$CLEAN_APACHE_LOGS" = "TRUE" ] || [ "$CLEAN_APACHE_LOGS" = "true" ]; then
+	echo -n "[$(date)] : Apache logs... "
+	cleaned_kb=$(clean_rotated_logs /var/log/apache2 ${SERVICE_LOGS_RETENTION_DAYS})
+	cleaned_kb=${cleaned_kb:-0}
+	if [ "$cleaned_kb" -gt 0 ] 2> /dev/null; then
+		add_cleaned_space "$cleaned_kb"
+		cleaned_formatted=$(convert_space $cleaned_kb)
+		echo "OK (freed: $cleaned_formatted)"
+	else
+		echo "OK"
+	fi
+	TASKS_SUCCESS+=("Apache logs")
+fi
+
+if [ "$CLEAN_EXIM_LOGS" = "TRUE" ] || [ "$CLEAN_EXIM_LOGS" = "true" ]; then
+	echo -n "[$(date)] : Exim4 logs... "
+	cleaned_kb=$(clean_rotated_logs /var/log/exim4 ${SERVICE_LOGS_RETENTION_DAYS})
+	cleaned_kb=${cleaned_kb:-0}
+	if [ "$cleaned_kb" -gt 0 ] 2> /dev/null; then
+		add_cleaned_space "$cleaned_kb"
+		cleaned_formatted=$(convert_space $cleaned_kb)
+		echo "OK (freed: $cleaned_formatted)"
+	else
+		echo "OK"
+	fi
+	TASKS_SUCCESS+=("Exim4 logs")
+fi
+
+run_task "Dovecot logs" \
+	"find /var/log -maxdepth 1 -name 'dovecot*' -type f -mtime +${SERVICE_LOGS_RETENTION_DAYS} -delete 2>/dev/null; true" \
+	"$CLEAN_DOVECOT_LOGS"
+
+if [ "$CLEAN_CLAMAV_LOGS" = "TRUE" ] || [ "$CLEAN_CLAMAV_LOGS" = "true" ]; then
+	echo -n "[$(date)] : ClamAV logs... "
+	cleaned_kb=$(clean_rotated_logs /var/log/clamav ${SERVICE_LOGS_RETENTION_DAYS})
+	cleaned_kb=${cleaned_kb:-0}
+	if [ "$cleaned_kb" -gt 0 ] 2> /dev/null; then
+		add_cleaned_space "$cleaned_kb"
+		cleaned_formatted=$(convert_space $cleaned_kb)
+		echo "OK (freed: $cleaned_formatted)"
+	else
+		echo "OK"
+	fi
+	TASKS_SUCCESS+=("ClamAV logs")
+fi
+
+if [ "$CLEAN_ROUNDCUBE_LOGS" = "TRUE" ] || [ "$CLEAN_ROUNDCUBE_LOGS" = "true" ]; then
+	echo -n "[$(date)] : Roundcube logs... "
+	cleaned_kb=$(clean_rotated_logs /var/log/roundcube ${SERVICE_LOGS_RETENTION_DAYS})
+	cleaned_kb=${cleaned_kb:-0}
+	if [ "$cleaned_kb" -gt 0 ] 2> /dev/null; then
+		add_cleaned_space "$cleaned_kb"
+		cleaned_formatted=$(convert_space $cleaned_kb)
+		echo "OK (freed: $cleaned_formatted)"
+	else
+		echo "OK"
+	fi
+	TASKS_SUCCESS+=("Roundcube logs")
+fi
+
+run_task "Fail2ban logs" \
+	"find /var/log -maxdepth 1 -name 'fail2ban*' -type f -mtime +${SERVICE_LOGS_RETENTION_DAYS} -delete 2>/dev/null; true" \
+	"$CLEAN_FAIL2BAN_LOGS"
+
+if [ "$CLEAN_HESTIA_LOGS" = "TRUE" ] || [ "$CLEAN_HESTIA_LOGS" = "true" ]; then
+	echo -n "[$(date)] : HestiaCP logs... "
+	cleaned_kb=$(clean_rotated_logs /var/log/hestia ${SERVICE_LOGS_RETENTION_DAYS})
+	cleaned_kb=${cleaned_kb:-0}
+	if [ "$cleaned_kb" -gt 0 ] 2> /dev/null; then
+		add_cleaned_space "$cleaned_kb"
+		cleaned_formatted=$(convert_space $cleaned_kb)
+		echo "OK (freed: $cleaned_formatted)"
+	else
+		echo "OK"
+	fi
+	TASKS_SUCCESS+=("HestiaCP logs")
+fi
+
+run_task "PHP-FPM logs" \
+	"find /var/log -maxdepth 1 -name 'php*-fpm*' -type f -mtime +${SERVICE_LOGS_RETENTION_DAYS} -delete 2>/dev/null; true" \
+	"$CLEAN_PHP_FPM_LOGS"
+
+if [ "$CLEAN_MYSQL_LOGS" = "TRUE" ] || [ "$CLEAN_MYSQL_LOGS" = "true" ]; then
+	echo -n "[$(date)] : MySQL/MariaDB logs... "
+	cleaned_kb=$(clean_rotated_logs /var/log/mysql ${SERVICE_LOGS_RETENTION_DAYS})
+	cleaned_kb=${cleaned_kb:-0}
+	if [ "$cleaned_kb" -gt 0 ] 2> /dev/null; then
+		add_cleaned_space "$cleaned_kb"
+		cleaned_formatted=$(convert_space $cleaned_kb)
+		echo "OK (freed: $cleaned_formatted)"
+	else
+		echo "OK"
+	fi
+	TASKS_SUCCESS+=("MySQL/MariaDB logs")
+fi
+
+run_task "vsftpd logs" \
+	"find /var/log -maxdepth 1 -name 'vsftpd*' -o -name 'xferlog*' -type f -mtime +${SERVICE_LOGS_RETENTION_DAYS} -delete 2>/dev/null; true" \
+	"$CLEAN_VSFTPD_LOGS"
+
+run_task "APT logs" \
+	"find /var/log/apt -type f -mtime +${SERVICE_LOGS_RETENTION_DAYS} -delete 2>/dev/null; true" \
+	"$CLEAN_APT_LOGS"
+
+run_task "cloud-init logs" \
+	"find /var/log -maxdepth 1 -name 'cloud-init*' -type f -mtime +${SERVICE_LOGS_RETENTION_DAYS} -delete 2>/dev/null; true" \
+	"$CLEAN_CLOUD_INIT_LOGS"
+
+run_task "unattended-upgrades logs" \
+	"find /var/log/unattended-upgrades -type f -mtime +${SERVICE_LOGS_RETENTION_DAYS} -delete 2>/dev/null; true" \
+	"$CLEAN_UNATTENDED_UPGRADES_LOGS"
+
+if [ "$CLEAN_BTMP_WTMP" = "TRUE" ] || [ "$CLEAN_BTMP_WTMP" = "true" ]; then
+	echo -n "[$(date)] : btmp/wtmp (truncate if >10MB)... "
+	btmp_size=$(stat -c%s /var/log/btmp 2> /dev/null || echo 0)
+	wtmp_size=$(stat -c%s /var/log/wtmp 2> /dev/null || echo 0)
+	truncated=0
+	if [ "$btmp_size" -gt 10485760 ]; then
+		: > /var/log/btmp 2> /dev/null && truncated=$((truncated + 1))
+	fi
+	if [ "$wtmp_size" -gt 10485760 ]; then
+		: > /var/log/wtmp 2> /dev/null && truncated=$((truncated + 1))
+	fi
+	echo "OK ($truncated truncated)"
+	TASKS_SUCCESS+=("btmp/wtmp cleanup")
+fi
+
+if [ "$CLEAN_ROTATED_LOGS" = "TRUE" ] || [ "$CLEAN_ROTATED_LOGS" = "true" ]; then
+	echo -n "[$(date)] : Rotated logs in /var/log (>${SERVICE_LOGS_RETENTION_DAYS}d)... "
+	rotated_deleted=$(find /var/log -maxdepth 1 -type f \( -name "*.log.[0-9]*" -o -name "*.log.*.gz" -o -name "*.[0-9].gz" \) -mtime +${SERVICE_LOGS_RETENTION_DAYS} -delete -print 2> /dev/null | wc -l)
+	echo "OK ($rotated_deleted files)"
+	TASKS_SUCCESS+=("Rotated logs cleanup")
+fi
+
+echo -n "[$(date)] : Large system logs (truncate >100MB)... "
+truncated_logs=0
+truncated_size_kb=0
+for large_log in /var/log/syslog /var/log/auth.log /var/log/kern.log /var/log/mail.log /var/log/cron.log /var/log/user.log; do
+	if [ -f "$large_log" ]; then
+		log_size=$(stat -c%s "$large_log" 2> /dev/null || echo 0)
+		if [ "$log_size" -gt 104857600 ]; then
+			log_size_kb=$((log_size / 1024))
+			if : > "$large_log" 2> /dev/null; then
+				truncated_logs=$((truncated_logs + 1))
+				truncated_size_kb=$((truncated_size_kb + log_size_kb))
+			fi
+		fi
+	fi
+done
+if [ "$truncated_size_kb" -gt 0 ]; then
+	add_cleaned_space "$truncated_size_kb"
+	truncated_formatted=$(convert_space $truncated_size_kb)
+	echo "OK ($truncated_logs truncated, freed: $truncated_formatted)"
+else
+	echo "OK ($truncated_logs truncated)"
+fi
+TASKS_SUCCESS+=("Large system logs")
+
+if [ "$CLEAN_CORE_DUMPS" = "TRUE" ] || [ "$CLEAN_CORE_DUMPS" = "true" ]; then
+	echo -n "[$(date)] : Core dumps (>${CORE_DUMPS_RETENTION_DAYS}d)... "
+	core_count=0
+	for core_dir in /var/crash /var/tmp /tmp /usr/src; do
+		if [ -d "$core_dir" ]; then
+			count=$(find "$core_dir" \( -name "core" -o -name "core.*" \) -type f -mtime +${CORE_DUMPS_RETENTION_DAYS} -delete -print 2> /dev/null | wc -l)
+			core_count=$((core_count + count))
+		fi
+	done
+	echo "OK ($core_count deleted)"
+	TASKS_SUCCESS+=("Core dumps cleanup")
+fi
+
+if [ "$CLEAN_LOCK_FILES" = "TRUE" ] || [ "$CLEAN_LOCK_FILES" = "true" ]; then
+	echo -n "[$(date)] : Old lock files (>${LOCK_FILES_RETENTION_DAYS}d)... "
+	lock_count=0
+	for lock_dir in /var/lock /var/run /tmp /var/tmp; do
+		if [ -d "$lock_dir" ]; then
+			count=$(find "$lock_dir" -name "*.lock" -type f -mtime +${LOCK_FILES_RETENTION_DAYS} -delete -print 2> /dev/null | wc -l)
+			lock_count=$((lock_count + count))
+		fi
+	done
+	echo "OK ($lock_count deleted)"
+	TASKS_SUCCESS+=("Lock files cleanup")
+fi
+
+if [ -n "$DB_CMD" ]; then
+	if [ "$CLEAN_MYSQL_SLOW_LOGS" = "TRUE" ] || [ "$CLEAN_MYSQL_SLOW_LOGS" = "true" ]; then
+		echo -n "[$(date)] : MySQL slow query logs (>${SERVICE_LOGS_RETENTION_DAYS}d)... "
+		slow_logs_deleted=0
+		slow_log_path=$($DB_CMD -N -e "SHOW VARIABLES LIKE 'slow_query_log_file';" 2> /dev/null | awk '{print $2}')
+		if [ -n "$slow_log_path" ] && [ "$slow_log_path" != "NULL" ] && [ -f "$slow_log_path" ]; then
+			slow_log_size=$(stat -c%s "$slow_log_path" 2> /dev/null || echo 0)
+			if [ "$slow_log_size" -gt 10485760 ]; then
+				: > "$slow_log_path" 2> /dev/null && slow_logs_deleted=1
+			fi
+		fi
+		find /var/log -name "*slow*" -type f -mtime +${SERVICE_LOGS_RETENTION_DAYS} -delete 2> /dev/null
+		echo "OK ($slow_logs_deleted truncated)"
+		TASKS_SUCCESS+=("MySQL slow logs")
+	fi
+else
+	[ "$CLEAN_MYSQL_SLOW_LOGS" = "TRUE" ] && TASKS_SKIPPED+=("MySQL slow logs")
+fi
+
+echo ""
+echo "--- MAIL CLEANUP ---"
+
+MAIL_QUEUE_RETENTION_DAYS=$(convert_retention_to_days "$MAIL_QUEUE_RETENTION")
+SPAM_MAIL_RETENTION_DAYS=$(convert_retention_to_days "$SPAM_MAIL_RETENTION")
+
+if [ "$CLEAN_MAIL_QUEUE" = "TRUE" ] || [ "$CLEAN_MAIL_QUEUE" = "true" ]; then
+	echo -n "[$(date)] : Mail queue frozen/old (>${MAIL_QUEUE_RETENTION_DAYS}d)... "
+	if command -v exim > /dev/null 2>&1; then
+		frozen_count=$(exim -bpr 2> /dev/null | grep frozen | wc -l)
+		if [ "$frozen_count" -gt 0 ]; then
+			exim -bpr 2> /dev/null | grep frozen | awk '{print $3}' | xargs -r exim -Mrm 2> /dev/null
+		fi
+		find /var/spool/exim4/input -type f -mtime +${MAIL_QUEUE_RETENTION_DAYS} -delete 2> /dev/null
+		find /var/spool/exim4/msglog -type f -mtime +${MAIL_QUEUE_RETENTION_DAYS} -delete 2> /dev/null
+		echo "OK (removed $frozen_count frozen)"
+		TASKS_SUCCESS+=("Mail queue cleanup")
+	else
+		echo "SKIP (exim not found)"
+		TASKS_SKIPPED+=("Mail queue cleanup")
+	fi
+fi
+
+if [ "$CLEAN_SPAM_MAIL" = "TRUE" ] || [ "$CLEAN_SPAM_MAIL" = "true" ]; then
+	echo -n "[$(date)] : Spam/Junk emails (>${SPAM_MAIL_RETENTION_DAYS}d)... "
+	spam_deleted=0
+	for mail_dir in /home/*/mail/*/*; do
+		[ -d "$mail_dir" ] || continue
+		for spam_folder in "$mail_dir/.Junk/cur" "$mail_dir/.Spam/cur" "$mail_dir/.Junk/new" "$mail_dir/.Spam/new"; do
+			if [ -d "$spam_folder" ]; then
+				count=$(find "$spam_folder" -type f -mtime +${SPAM_MAIL_RETENTION_DAYS} -delete -print 2> /dev/null | wc -l)
+				spam_deleted=$((spam_deleted + count))
+			fi
+		done
+	done
+	echo "OK ($spam_deleted emails)"
+	TASKS_SUCCESS+=("Spam mail cleanup")
+fi
+
+echo ""
+echo "--- USER CLEANUP ---"
+
+USER_TRASH_RETENTION_DAYS=$(convert_retention_to_days "$USER_TRASH_RETENTION")
+
+if [ "$CLEAN_USER_TRASH" = "TRUE" ] || [ "$CLEAN_USER_TRASH" = "true" ]; then
+	echo -n "[$(date)] : User trash (>${USER_TRASH_RETENTION_DAYS}d)... "
+	trash_cleaned=0
+	trash_size_kb=0
+	for trash_dir in /home/*/.local/share/Trash /root/.local/share/Trash; do
+		if [ -d "$trash_dir/files" ]; then
+			size_before=$(du -sk "$trash_dir" 2> /dev/null | cut -f1)
+			find "$trash_dir/files" -type f -mtime +${USER_TRASH_RETENTION_DAYS} -delete 2> /dev/null
+			find "$trash_dir/info" -type f -mtime +${USER_TRASH_RETENTION_DAYS} -delete 2> /dev/null
+			find "$trash_dir" -type d -empty -delete 2> /dev/null
+			size_after=$(du -sk "$trash_dir" 2> /dev/null | cut -f1)
+			if [ -n "$size_before" ] && [ -n "$size_after" ] && [ "$size_before" -gt "$size_after" ] 2> /dev/null; then
+				trash_size_kb=$((trash_size_kb + size_before - size_after))
+			fi
+			trash_cleaned=$((trash_cleaned + 1))
+		fi
+	done
+	if [ "$trash_size_kb" -gt 0 ]; then
+		add_cleaned_space "$trash_size_kb"
+		trash_formatted=$(convert_space $trash_size_kb)
+		echo "OK ($trash_cleaned users, freed: $trash_formatted)"
+	else
+		echo "OK ($trash_cleaned users)"
+	fi
+	TASKS_SUCCESS+=("User trash cleanup")
+fi
+
+echo ""
+echo "--- FINALIZATION ---"
+
+run_task "SSD TRIM" \
+	"fstrim -av" \
+	"$RUN_SSD_TRIM"
+
+final_space_kb=$(df / | tail -1 | awk '{ print $4 }')
+final_space_formatted=$(convert_space $final_space_kb)
+
+df_cleaned_space_kb=$((final_space_kb - initial_space_kb))
+if [ "$df_cleaned_space_kb" -lt 0 ]; then
+	df_cleaned_space_kb=0
+fi
+df_cleaned_space_formatted=$(convert_space $df_cleaned_space_kb)
+
+if [ "$TOTAL_CLEANED_KB" -gt 0 ] 2> /dev/null; then
+	cleaned_space_formatted=$(convert_space $TOTAL_CLEANED_KB)
+	cleaned_space_kb=$TOTAL_CLEANED_KB
+else
+	cleaned_space_formatted=$df_cleaned_space_formatted
+	cleaned_space_kb=$df_cleaned_space_kb
+	TOTAL_CLEANED_KB=$df_cleaned_space_kb
+fi
+
+echo ""
+echo "=========================================="
+echo "Cleanup completed: $FINAL_STATUS"
+echo "Initial Available: $initial_space_formatted"
+echo "Final Available: $final_space_formatted"
+echo "Space Cleaned (measured): $cleaned_space_formatted"
+if [ "$cleaned_space_kb" -gt 0 ] 2> /dev/null && [ "$df_cleaned_space_kb" -gt 0 ] 2> /dev/null && [ "$cleaned_space_kb" != "$df_cleaned_space_kb" ] 2> /dev/null; then
+	echo "Space Cleaned (df diff): $df_cleaned_space_formatted"
+fi
+echo "Tasks: ${#TASKS_SUCCESS[@]} OK, ${#TASKS_FAILED[@]} FAIL, ${#TASKS_SKIPPED[@]} SKIP"
+echo "=========================================="
+
+if [ "$FINAL_STATUS" = "SUCCESS" ]; then
+	log_event "$OK" "System Cleanup Completed - Cleaned: $cleaned_space_formatted"
+else
+	log_event "$E_UPDATE" "System Cleanup Completed with Failures - Cleaned: $cleaned_space_formatted"
+fi
+
+send_html_email() {
+	local status="$1"
+	local admin_email="$2"
+	[ -z "$admin_email" ] && return 1
+
+	local hostname=$(hostname -f 2> /dev/null || hostname 2> /dev/null || echo "HestiaCP Server")
+	local timestamp=$(date +"%Y-%m-%d %H:%M:%S")
+
+	local email_cleaned_formatted=$(convert_space $TOTAL_CLEANED_KB)
+
+	if [ "$status" = "SUCCESS" ]; then
+		local subject="Clean Garbage Report - $hostname - SUCCESS"
+		local status_color="#4CAF50"
+		local status_text="[OK] SUCCESS"
+	else
+		local subject="Clean Garbage Report - $hostname - FAILED"
+		local status_color="#F44336"
+		local status_text="[FAIL] CONTAINS ERRORS"
+	fi
+
+	local success_count=${#TASKS_SUCCESS[@]}
+	local failed_count=${#TASKS_FAILED[@]}
+	local skipped_count=${#TASKS_SKIPPED[@]}
+
+	local success_list=""
+	for task in "${TASKS_SUCCESS[@]}"; do
+		success_list="${success_list}<tr><td style=\"padding:6px 12px; border-bottom:1px solid #555;\"><span style=\"color:#4CAF50; font-weight:bold;\">[OK]</span> <span style=\"color:#E0E0E0;\">$task</span></td></tr>"
+	done
+	[ -z "$success_list" ] && success_list="<tr><td style=\"padding:6px 12px; color:#A0A0A0;\">None</td></tr>"
+
+	local failed_list=""
+	for task in "${TASKS_FAILED[@]}"; do
+		failed_list="${failed_list}<tr><td style=\"padding:6px 12px; border-bottom:1px solid #555;\"><span style=\"color:#F44336; font-weight:bold;\">[FAIL]</span> <span style=\"color:#E0E0E0;\">$task</span></td></tr>"
+	done
+	[ -z "$failed_list" ] && failed_list="<tr><td style=\"padding:6px 12px; color:#A0A0A0;\">None</td></tr>"
+
+	local skipped_list=""
+	for task in "${TASKS_SKIPPED[@]}"; do
+		skipped_list="${skipped_list}<tr><td style=\"padding:6px 12px; border-bottom:1px solid #555;\"><span style=\"color:#FF9800; font-weight:bold;\">[SKIP]</span> <span style=\"color:#E0E0E0;\">$task</span></td></tr>"
+	done
+	[ -z "$skipped_list" ] && skipped_list="<tr><td style=\"padding:6px 12px; color:#A0A0A0;\">None</td></tr>"
+
+	local html_body="<!DOCTYPE html>
+<html lang=\"en\">
+<head>
+<meta charset=\"UTF-8\">
+<title>Clean Garbage Report</title>
+</head>
+<body style=\"font-family:Arial,sans-serif; background:#222222; margin:0; padding:20px; color:#E0E0E0;\">
+<div style=\"max-width:700px; margin:0 auto; background:#3A3A3A; border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,.5); overflow:hidden; border:1px solid #555;\">
+  <div style=\"background:${status_color}; color:#fff; padding:16px; text-align:center; border-bottom:2px solid rgba(255,255,255,.1);\">
+    <h1 style=\"margin:0; font-size:18px; font-weight:bold;\">HestiaCP Garbage Cleanup Report</h1>
+    <p style=\"margin:4px 0 0 0; font-size:12px; opacity:0.9;\">${hostname}</p>
+  </div>
+  <div style=\"padding:20px;\">
+    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:100%; border-collapse:collapse; margin-bottom:16px; background:#2C2C2C; border:1px solid #555;\">
+      <tr>
+        <td style=\"padding:10px; border-right:1px solid #555; text-align:center; width:25%;\">
+          <div style=\"font-size:11px; color:#A0A0A0; margin-bottom:4px;\">Status</div>
+          <div style=\"font-size:14px; color:${status_color}; font-weight:bold;\">${status_text}</div>
+        </td>
+        <td style=\"padding:10px; border-right:1px solid #555; text-align:center; width:25%;\">
+          <div style=\"font-size:11px; color:#A0A0A0; margin-bottom:4px;\">Initial</div>
+          <div style=\"font-size:14px; color:#E0E0E0; font-weight:bold;\">${initial_space_formatted}</div>
+        </td>
+        <td style=\"padding:10px; border-right:1px solid #555; text-align:center; width:25%;\">
+          <div style=\"font-size:11px; color:#A0A0A0; margin-bottom:4px;\">Final</div>
+          <div style=\"font-size:14px; color:#E0E0E0; font-weight:bold;\">${final_space_formatted}</div>
+        </td>
+        <td style=\"padding:10px; text-align:center; width:25%;\">
+          <div style=\"font-size:11px; color:#A0A0A0; margin-bottom:4px;\">Cleaned</div>
+          <div style=\"font-size:14px; color:#4CAF50; font-weight:bold;\">${email_cleaned_formatted}</div>
+        </td>
+      </tr>
+    </table>
+    
+    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:100%; border-collapse:collapse; margin-bottom:16px; background:#2C2C2C; border:1px solid #555;\">
+      <tr>
+        <td style=\"padding:8px 12px; border-right:1px solid #555; text-align:center;\">
+          <span style=\"color:#4CAF50; font-weight:bold; font-size:16px;\">${success_count}</span> <span style=\"font-size:12px; color:#A0A0A0;\">OK</span>
+        </td>
+        <td style=\"padding:8px 12px; border-right:1px solid #555; text-align:center;\">
+          <span style=\"color:#F44336; font-weight:bold; font-size:16px;\">${failed_count}</span> <span style=\"font-size:12px; color:#A0A0A0;\">FAIL</span>
+        </td>
+        <td style=\"padding:8px 12px; text-align:center;\">
+          <span style=\"color:#FF9800; font-weight:bold; font-size:16px;\">${skipped_count}</span> <span style=\"font-size:12px; color:#A0A0A0;\">SKIP</span>
+        </td>
+      </tr>
+    </table>
+    
+    <details style=\"margin-bottom:10px;\">
+      <summary style=\"cursor:pointer; padding:10px; background:#2C2C2C; border:1px solid #555; border-radius:4px; font-weight:bold; color:#FFFFFF;\">Successful Tasks (${success_count})</summary>
+      <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:100%; border-collapse:collapse; font-size:13px; background:#2C2C2C; border:1px solid #555; margin-top:4px;\">
+        ${success_list}
+      </table>
+    </details>
+    
+    <details style=\"margin-bottom:10px;\">
+      <summary style=\"cursor:pointer; padding:10px; background:#2C2C2C; border:1px solid #555; border-radius:4px; font-weight:bold; color:#FFFFFF;\">Failed Tasks (${failed_count})</summary>
+      <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:100%; border-collapse:collapse; font-size:13px; background:#2C2C2C; border:1px solid #555; margin-top:4px;\">
+        ${failed_list}
+      </table>
+    </details>
+    
+    <details style=\"margin-bottom:10px;\">
+      <summary style=\"cursor:pointer; padding:10px; background:#2C2C2C; border:1px solid #555; border-radius:4px; font-weight:bold; color:#FFFFFF;\">Skipped Tasks (${skipped_count})</summary>
+      <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:100%; border-collapse:collapse; font-size:13px; background:#2C2C2C; border:1px solid #555; margin-top:4px;\">
+        ${skipped_list}
+      </table>
+    </details>
+  </div>
+  <div style=\"background:#2C2C2C; padding:12px; text-align:center; font-size:11px; color:#A0A0A0; border-top:1px solid #555;\">
+    ${hostname} - ${timestamp}
+  </div>
+</div>
+</body>
+</html>"
+
+	local temp_html="/tmp/garbage_email_$$.html"
+	echo "$html_body" > "$temp_html"
+
+	local SENDMAIL="$HESTIA/web/inc/mail-wrapper.php"
+	[ ! -f "$SENDMAIL" ] && SENDMAIL="/usr/local/hestia/web/inc/mail-wrapper.php"
+
+	if [ -f "$SENDMAIL" ]; then
+		cat "$temp_html" | $SENDMAIL -s "$subject" "$admin_email" "yes" 2> /dev/null
+	else
+		(
+			echo "Subject: $subject"
+			echo "MIME-Version: 1.0"
+			echo "Content-Type: text/html; charset=UTF-8"
+			echo
+			cat "$temp_html"
+		) | /usr/sbin/sendmail "$admin_email" 2> /dev/null
+	fi
+
+	rm -f "$temp_html" 2> /dev/null
+	return 0
+}
+
+if [ -n "$ADMIN_EMAIL" ]; then
+	echo ""
+	echo -n "[$(date)] : Sending email to $ADMIN_EMAIL... "
+	if send_html_email "$FINAL_STATUS" "$ADMIN_EMAIL"; then
+		echo "OK"
+	else
+		echo "FAIL"
+	fi
+fi
+
+exit 0

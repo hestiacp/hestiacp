@@ -1,0 +1,172 @@
+#!/bin/bash
+# HestiaCP Exim Limit Installer - SAFE VERSION
+# Blocks emails >25MB and notifies admin
+
+# Initialize HestiaCP environment
+source /etc/profile
+export HESTIA="/usr/local/hestia"
+source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
+
+# Set variables
+CONFIG_FILE="/etc/exim4/exim4.conf.template"
+BACKUP_FILE="$CONFIG_FILE.bak.$(date +%s)"
+
+# Get admin email from Hestia users, then fall back to system contact/root.
+ADMIN_EMAIL=""
+for user_conf in "$HESTIA/data/users"/*/user.conf; do
+	[ -f "$user_conf" ] || continue
+	if grep -q "ROLE='admin'" "$user_conf" 2> /dev/null; then
+		ADMIN_EMAIL=$(grep "^CONTACT=" "$user_conf" 2> /dev/null | cut -d"'" -f2)
+		[ -n "$ADMIN_EMAIL" ] && break
+	fi
+done
+if [ -z "$ADMIN_EMAIL" ]; then
+	ADMIN_EMAIL=$(grep "^CONTACT=" "$HESTIA/conf/hestia.conf" 2> /dev/null | cut -d"'" -f2)
+fi
+[ -z "$ADMIN_EMAIL" ] && ADMIN_EMAIL="root"
+
+SENDMAIL="$HESTIA/web/inc/mail-wrapper.php"
+
+# Logging function wrapper
+log_wrapper() {
+	local message="$1"
+	local type="${2:-INFO}"
+
+	echo "$message"
+	if [ "$type" == "ERROR" ]; then
+		# Log to Hestia system log (Error)
+		log_event "$E_UPDATE" "$message"
+
+		# Send email notification
+		if [ -n "$ADMIN_EMAIL" ] && [ -f "$SENDMAIL" ]; then
+			echo "Error Details: $message" | $SENDMAIL -s "[HestiaCP] Exim Limit Script Error" "$ADMIN_EMAIL" "yes"
+		fi
+	else
+		# Log to Hestia system log (Info)
+		log_event "$OK" "$message"
+	fi
+}
+
+# Error handler
+handle_error() {
+	local message="$1"
+	log_wrapper "$message" "ERROR"
+	exit 1
+}
+
+log_wrapper "Starting Exim Limit Monitor installation..."
+
+# 1. Install Monitor Script
+log_wrapper "Copying monitor script..."
+cp "$(dirname "$0")/monitor_large_emails.py" /usr/local/bin/monitor_large_emails.py
+chmod +x /usr/local/bin/monitor_large_emails.py
+
+log_wrapper "Monitor notifications will use /etc/hestiacp-exim-limit.conf or the Hestia admin contact."
+
+# 2. Configuration
+# Default Settings
+LIMIT_OUTGOING_ONLY="TRUE"
+
+# Load external configuration if exists
+if [ -f "/etc/hestiacp-exim-limit.conf" ]; then
+	source /etc/hestiacp-exim-limit.conf
+fi
+
+# 3. Safety Check
+log_wrapper "Checking Exim configuration..."
+if [ ! -f "$CONFIG_FILE" ]; then
+	handle_error "Config file $CONFIG_FILE not found. Aborting."
+fi
+
+if ! grep -q "acl_check_data:" "$CONFIG_FILE"; then
+	handle_error "Could not find 'acl_check_data:' anchor in config. Aborting to avoid breaking Exim."
+fi
+
+# 4. Apply Patch with Backup & Rollback
+if grep -q "Message size exceeds the limit of 25MB" "$CONFIG_FILE"; then
+	# Patch exists, checking if it matches the desired configuration
+	HAS_AUTH_LIMIT=$(grep -c "authenticated *= *" "$CONFIG_FILE")
+
+	if [ "$LIMIT_OUTGOING_ONLY" == "TRUE" ]; then
+		if [ "$HAS_AUTH_LIMIT" -eq 0 ]; then
+			log_wrapper "Updating patch: Adding 'authenticated = *' to limit ONLY outgoing mails..."
+			sed -i '/condition      = ${if >{$message_size}{25M}}/a \         authenticated  = *' "$CONFIG_FILE"
+			sed -i 's/# Deny messages larger than 25MB with custom error message/# Deny messages larger than 25MB with custom error message (ONLY for authenticated users)/' "$CONFIG_FILE"
+			UPDATE_NEEDED=1
+		else
+			log_wrapper "Configuration correct: Limiting ONLY outgoing mails."
+		fi
+	else
+		# LIMIT_OUTGOING_ONLY = FALSE (Limit ALL)
+		if [ "$HAS_AUTH_LIMIT" -gt 0 ]; then
+			log_wrapper "Updating patch: Removing 'authenticated = *' to limit ALL mails (incoming & outgoing)..."
+			sed -i '/authenticated  = */d' "$CONFIG_FILE"
+			UPDATE_NEEDED=1
+		else
+			log_wrapper "Configuration correct: Limiting ALL mails."
+		fi
+	fi
+
+	if [ "$UPDATE_NEEDED" == "1" ]; then
+		log_wrapper "Verifying updated configuration..."
+		if ! update-exim4.conf; then
+			# Attempt to rollback the sed changes is tricky here without a backup of the patched state
+			# Since this is an in-place update of an existing patch, a full restore might revert other changes.
+			# User intervention is safer here.
+			handle_error "Update failed. Please check config manually."
+		fi
+
+		# Double check with Exim binary
+		if ! /usr/sbin/exim4 -bV > /dev/null 2>&1; then
+			handle_error "CRITICAL ERROR: Exim configuration check failed after update. Please check $CONFIG_FILE manually."
+		fi
+
+		service exim4 restart
+		log_wrapper "Update applied successfully!"
+	fi
+else
+	# New Installation
+	log_wrapper "Backing up config to $BACKUP_FILE..."
+	cp "$CONFIG_FILE" "$BACKUP_FILE"
+
+	log_wrapper "Applying patch..."
+
+	AUTH_LINE=""
+	if [ "$LIMIT_OUTGOING_ONLY" == "TRUE" ]; then
+		AUTH_LINE="\n         authenticated  = *"
+	fi
+
+	sed -i "s/acl_check_data:/acl_check_data:\n  # Warn admin about large message before rejecting\n  warn   condition      = \${if >{\$message_size}{25M}}${AUTH_LINE}\n         log_message    = Large message rejected: from \$sender_address to \$recipients size \$message_size\n         continue       =\n\n  # Deny messages larger than 25MB with custom error message (ONLY for authenticated users)\n  deny   message        = Message size exceeds the limit of 25MB. Please use Google Drive, WeTransfer, Dropbox, OneDrive or similar services to share large files.\n         condition      = \${if >{\$message_size}{25M}}${AUTH_LINE}\n/" "$CONFIG_FILE"
+
+	sed -i 's/^message_size_limit = 25M/# message_size_limit = 25M/' "$CONFIG_FILE"
+
+	log_wrapper "Verifying configuration..."
+	if ! update-exim4.conf; then
+		echo "CRITICAL ERROR: update-exim4.conf failed. Restoring backup..."
+		cp "$BACKUP_FILE" "$CONFIG_FILE"
+		echo "Rollback completed. Exim configuration restored to previous state."
+		handle_error "update-exim4.conf failed. Backup restored."
+	fi
+
+	# Check config validity with Exim binary
+	if ! /usr/sbin/exim4 -bV > /dev/null 2>&1; then
+		echo "CRITICAL ERROR: Exim configuration check failed. Restoring backup..."
+		cp "$BACKUP_FILE" "$CONFIG_FILE"
+		update-exim4.conf
+		echo "Rollback completed. Exim configuration restored to previous state."
+		handle_error "Exim configuration check failed. Backup restored."
+	fi
+
+	log_wrapper "Configuration valid. Restarting Exim..."
+	service exim4 restart
+	log_wrapper "Patch applied successfully!"
+fi
+
+# 4. Setup Cron Job
+if [ ! -f /etc/cron.d/exim-large-monitor ]; then
+	echo "0 * * * * root /usr/local/bin/monitor_large_emails.py" > /etc/cron.d/exim-large-monitor
+	log_wrapper "Cron job installed."
+fi
+
+log_wrapper "Installation Complete."

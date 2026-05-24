@@ -1,0 +1,317 @@
+#!/bin/bash
+set -o pipefail
+
+CONFIG_FILE="${CONFIG_FILE:-/etc/hestiacp-backup-retention.conf}"
+HESTIA="${HESTIA:-/usr/local/hestia}"
+
+RETENTION_ENABLED="FALSE"
+RETENTION_DRY_RUN="TRUE"
+RETENTION_BACKENDS="local,b2,rclone"
+RETENTION_LOCAL_ROOT="/backup"
+KEEP_DAILY_FOR_DAYS=14
+KEEP_WEEKLY_FOR_WEEKS=8
+KEEP_MONTHLY_FOR_MONTHS=12
+KEEP_YEARLY_FOR_YEARS=0
+RETENTION_WEEK_FORMAT="%G-W%V"
+RETENTION_DELETE_RELATED_LOGS="TRUE"
+
+for arg in "$@"; do
+	case "$arg" in
+		--config=*) CONFIG_FILE="${arg#*=}" ;;
+	esac
+done
+
+[ -f "$CONFIG_FILE" ] && source "$CONFIG_FILE"
+
+usage() {
+	cat << EOF
+Usage: v-prune-backups [--dry-run|--apply] [--backend local,b2,rclone] [--local-root PATH] [--config PATH] [--help]
+
+Default behavior is safe: disabled unless RETENTION_ENABLED=TRUE, and dry-run unless --apply is used.
+EOF
+}
+
+for arg in "$@"; do
+	case "$arg" in
+		--dry-run)
+			RETENTION_DRY_RUN="TRUE"
+			RETENTION_ENABLED="TRUE"
+			;;
+		--apply)
+			RETENTION_DRY_RUN="FALSE"
+			RETENTION_ENABLED="TRUE"
+			;;
+		--backend=*)
+			RETENTION_BACKENDS="${arg#*=}"
+			;;
+		--local-root=*)
+			RETENTION_LOCAL_ROOT="${arg#*=}"
+			;;
+		--config=*) ;;
+		--help | -h)
+			usage
+			exit 0
+			;;
+		*)
+			echo "Unknown option: $arg"
+			usage
+			exit 1
+			;;
+	esac
+done
+
+is_true() {
+	case "$1" in
+		TRUE | true | YES | yes | 1) return 0 ;;
+		*) return 1 ;;
+	esac
+}
+
+if ! is_true "$RETENTION_ENABLED"; then
+	echo "Backup retention is disabled. Set RETENTION_ENABLED=TRUE or run with --dry-run/--apply."
+	exit 0
+fi
+
+NOW_EPOCH=$(date +%s)
+WEEKLY_WINDOW_DAYS=$((KEEP_DAILY_FOR_DAYS + KEEP_WEEKLY_FOR_WEEKS * 7))
+
+tmp_records=$(mktemp /tmp/v-prune-backups.records.XXXXXX)
+tmp_decisions=$(mktemp /tmp/v-prune-backups.decisions.XXXXXX)
+trap 'rm -f "$tmp_records" "$tmp_decisions"' EXIT
+
+archive_regex='^(.+)\.([0-9]{4}-[0-9]{2}-[0-9]{2})_([0-9]{2}-[0-9]{2}-[0-9]{2})\.tar$'
+
+add_record() {
+	local backend="$1"
+	local path="$2"
+	local id="${3:-}"
+	local file
+	local user
+	local date_part
+	local time_part
+	local ts
+	local epoch
+
+	file="${path##*/}"
+	if [[ ! "$file" =~ $archive_regex ]]; then
+		return 0
+	fi
+
+	user="${BASH_REMATCH[1]}"
+	date_part="${BASH_REMATCH[2]}"
+	time_part="${BASH_REMATCH[3]//-/:}"
+	ts="${date_part} ${time_part}"
+	epoch=$(date -d "$ts" +%s 2> /dev/null) || return 0
+
+	printf '%s|%s|%s|%s|%s\n' "$user" "$epoch" "$backend" "$path" "$id" >> "$tmp_records"
+}
+
+list_local() {
+	[ -d "$RETENTION_LOCAL_ROOT" ] || return 0
+	find "$RETENTION_LOCAL_ROOT" -type f -name '*.tar' -print 2> /dev/null | while read -r path; do
+		add_record "local" "$path" ""
+	done
+}
+
+list_b2() {
+	local conf="$HESTIA/conf/b2.backup.conf"
+	[ -f "$conf" ] || return 0
+	command -v b2 > /dev/null 2>&1 || return 0
+
+	# shellcheck disable=SC1090
+	source "$conf" 2> /dev/null || return 0
+	[ -n "$BUCKET" ] || return 0
+	[ -n "$B2_KEYID" ] || return 0
+	[ -n "$B2_KEY" ] || return 0
+
+	b2 clear-account > /dev/null 2>&1 || true
+	b2 authorize-account "$B2_KEYID" "$B2_KEY" > /dev/null 2>&1 || return 0
+
+	b2 ls "$BUCKET" --recursive --long 2> /dev/null | while read -r file_id _action _date _time _size path; do
+		[ -n "$file_id" ] && [ -n "$path" ] || continue
+		add_record "b2" "$path" "$file_id"
+	done
+}
+
+list_rclone() {
+	local conf="$HESTIA/conf/rclone.backup.conf"
+	local remote
+	local delete_prefix
+
+	[ -f "$conf" ] || return 0
+	command -v rclone > /dev/null 2>&1 || return 0
+
+	# shellcheck disable=SC1090
+	source "$conf" 2> /dev/null || return 0
+	[ -n "$HOST" ] || return 0
+
+	if [ -n "$BPATH" ]; then
+		remote="${HOST}:${BPATH%/}"
+		delete_prefix="$remote"
+	else
+		remote="${HOST}:"
+		delete_prefix="${HOST}:"
+	fi
+
+	rclone lsf -R --files-only "$remote" 2> /dev/null | while read -r path; do
+		[ -n "$path" ] || continue
+		add_record "rclone" "$path" "${delete_prefix}/${path}"
+	done
+}
+
+delete_local() {
+	local path="$1"
+	rm -f "$path"
+	if is_true "$RETENTION_DELETE_RELATED_LOGS"; then
+		rm -f "${path%.tar}.log"
+	fi
+}
+
+delete_b2() {
+	local id="$1"
+	[ -n "$id" ] || return 1
+	b2 delete-file-version "$id" > /dev/null 2>&1
+}
+
+delete_rclone() {
+	local target="$1"
+	[ -n "$target" ] || return 1
+	rclone deletefile "$target" > /dev/null 2>&1
+}
+
+keep_seen=""
+monthly_seen=""
+yearly_seen=""
+
+mark_seen() {
+	local key="$1"
+	keep_seen="${keep_seen}
+${key}"
+}
+
+has_seen() {
+	local key="$1"
+	printf '%s\n' "$keep_seen" | grep -Fxq "$key"
+}
+
+period_count_seen() {
+	local scope="$1"
+	case "$scope" in
+		monthly) printf '%s\n' "$monthly_seen" | sed '/^$/d' | wc -l ;;
+		yearly) printf '%s\n' "$yearly_seen" | sed '/^$/d' | wc -l ;;
+	esac
+}
+
+mark_period_keys() {
+	local date_key="$1"
+	local week_key="$2"
+	local month_key="$3"
+	local year_key="$4"
+
+	mark_seen "daily:$date_key"
+	mark_seen "weekly:$week_key"
+
+	if ! has_seen "monthly:$month_key"; then
+		mark_seen "monthly:$month_key"
+		monthly_seen="${monthly_seen}
+${month_key}"
+	fi
+
+	if ! has_seen "yearly:$year_key"; then
+		mark_seen "yearly:$year_key"
+		yearly_seen="${yearly_seen}
+${year_key}"
+	fi
+}
+
+decide_scope() {
+	local scope_backend="$1"
+	local user="$2"
+	local newest_kept="FALSE"
+	keep_seen=""
+	monthly_seen=""
+	yearly_seen=""
+
+	awk -F'|' -v b="$scope_backend" -v u="$user" '$1 == u && $3 == b' "$tmp_records" | sort -t'|' -k2,2nr | while IFS='|' read -r rec_user epoch backend path id; do
+		local age_days
+		local date_key
+		local week_key
+		local month_key
+		local year_key
+		local keep_reason=""
+
+		age_days=$(((NOW_EPOCH - epoch) / 86400))
+		[ "$age_days" -lt 0 ] && age_days=0
+
+		date_key=$(date -d "@$epoch" +%F)
+		week_key=$(date -d "@$epoch" +"$RETENTION_WEEK_FORMAT")
+		month_key=$(date -d "@$epoch" +%Y-%m)
+		year_key=$(date -d "@$epoch" +%Y)
+
+		if [ "$newest_kept" = "FALSE" ]; then
+			keep_reason="newest"
+			newest_kept="TRUE"
+		elif [ "$age_days" -lt "$KEEP_DAILY_FOR_DAYS" ]; then
+			if ! has_seen "daily:$date_key"; then
+				keep_reason="daily:$date_key"
+			fi
+		elif [ "$age_days" -lt "$WEEKLY_WINDOW_DAYS" ]; then
+			if ! has_seen "weekly:$week_key"; then
+				keep_reason="weekly:$week_key"
+			fi
+		elif [ "$KEEP_MONTHLY_FOR_MONTHS" -gt 0 ] && ! has_seen "monthly:$month_key" && [ "$(period_count_seen monthly)" -lt "$KEEP_MONTHLY_FOR_MONTHS" ]; then
+			keep_reason="monthly:$month_key"
+		elif [ "$KEEP_YEARLY_FOR_YEARS" -gt 0 ] && ! has_seen "yearly:$year_key" && [ "$(period_count_seen yearly)" -lt "$KEEP_YEARLY_FOR_YEARS" ]; then
+			keep_reason="yearly:$year_key"
+		fi
+
+		if [ -n "$keep_reason" ]; then
+			mark_period_keys "$date_key" "$week_key" "$month_key" "$year_key"
+			mark_seen "$keep_reason"
+			printf 'KEEP|%s|%s|%s|%s|%s\n' "$keep_reason" "$backend" "$rec_user" "$path" "$id" >> "$tmp_decisions"
+		else
+			printf 'DELETE|expired|%s|%s|%s|%s\n' "$backend" "$rec_user" "$path" "$id" >> "$tmp_decisions"
+		fi
+	done
+}
+
+IFS=',' read -r -a backends <<< "$RETENTION_BACKENDS"
+for backend in "${backends[@]}"; do
+	backend="${backend// /}"
+	case "$backend" in
+		local) list_local ;;
+		b2) list_b2 ;;
+		rclone) list_rclone ;;
+		"") ;;
+		*)
+			echo "WARN: backend '$backend' is not implemented yet; skipped."
+			;;
+	esac
+done
+
+if [ ! -s "$tmp_records" ]; then
+	echo "No backup archives found for configured backend(s): $RETENTION_BACKENDS"
+	exit 0
+fi
+
+awk -F'|' '{ print $3 "|" $1 }' "$tmp_records" | sort -u | while IFS='|' read -r backend user; do
+	decide_scope "$backend" "$user"
+done
+
+mode="DRY-RUN"
+is_true "$RETENTION_DRY_RUN" || mode="APPLY"
+echo "Backup retention mode: $mode"
+echo "Backends: $RETENTION_BACKENDS"
+echo ""
+
+sort -t'|' -k4,4 "$tmp_decisions" | while IFS='|' read -r action reason backend user path id; do
+	printf '%-6s %-18s %-6s %-18s %s\n' "$action" "$reason" "$backend" "$user" "$path"
+
+	if [ "$action" = "DELETE" ] && ! is_true "$RETENTION_DRY_RUN"; then
+		case "$backend" in
+			local) delete_local "$path" ;;
+			b2) delete_b2 "$id" || echo "WARN: failed to delete B2 object: $path" ;;
+			rclone) delete_rclone "$id" || echo "WARN: failed to delete rclone object: $path" ;;
+		esac
+	fi
+done

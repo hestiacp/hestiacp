@@ -28,9 +28,9 @@
 		"floating-vue": "^5.2.2",
 		"nanoid": "^5.1.6",
 		"normalize.css": "^8.0.1",
-		"xterm": "^5.3.0",
-		"xterm-addon-canvas": "^0.5.0",
-		"xterm-addon-webgl": "^0.16.0"
+		"@xterm/xterm": "^5.5.0",
+		"@xterm/addon-canvas": "^0.7.0",
+		"@xterm/addon-webgl": "^0.18.0"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "2.3.13",
@@ -43,7 +43,7 @@
 		"jsdom": "^27.4.0",
 		"lightningcss": "^1.31.1",
 		"lint-staged": "^16.2.7",
-		"markdownlint-cli2": "^0.20.0",
+		"markdownlint-cli2": "^0.22.1",
 		"prettier": "^3.8.3",
 		"prettier-plugin-nginx": "^1.0.3",
 		"prettier-plugin-sh": "^0.18.0",

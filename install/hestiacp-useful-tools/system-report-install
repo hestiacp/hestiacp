@@ -1,0 +1,23 @@
+#!/bin/bash
+# Installer for System Report module
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+HESTIA_BIN="/usr/local/hestia/bin"
+
+echo "--- Installing v-system-report ---"
+
+# Script
+target_bin="$HESTIA_BIN/v-system-report"
+[ -f "$target_bin" ] && cp "$target_bin" "${target_bin}.bak.$(date +%Y%m%d-%H%M%S)"
+cp "$SCRIPT_DIR/v-system-report" "$target_bin"
+chmod +x "$target_bin"
+echo "  -> [OK] Installed script: $target_bin"
+
+# Config
+if [ ! -f "/etc/hestiacp-system-report.conf" ]; then
+	cp "$SCRIPT_DIR/system-report.conf.sample" "/etc/hestiacp-system-report.conf"
+	chmod 600 "/etc/hestiacp-system-report.conf"
+	echo "  -> [OK] Installed config: /etc/hestiacp-system-report.conf"
+else
+	echo "  -> [INFO] Config exists (skipped): /etc/hestiacp-system-report.conf"
+fi

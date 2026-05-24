@@ -72,9 +72,9 @@ done
 if [[ -n "$ANTISPAM_SYSTEM" ]]; then
 	installed_services="$(systemctl list-units --type=service 2>&1)"
 	if [[ $installed_services == *spamassassin.service* ]]; then
-		write_config_value "ANTISPAM_SYSTEM" "spamassassin"
+		"$BIN/v-change-sys-config-value" "ANTISPAM_SYSTEM" "spamassassin"
 	elif [[ $installed_services == *spamd.service* ]]; then
-		write_config_value "ANTISPAM_SYSTEM" "spamd"
+		"$BIN/v-change-sys-config-value" "ANTISPAM_SYSTEM" "spamd"
 	fi
 fi
 

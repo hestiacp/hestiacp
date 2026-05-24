@@ -111,7 +111,7 @@ Password: D0ung4naLOptuaa
 Secret key: admin_f0e5a5aa
 ```
 
-You can access the admin panel by navigating to https://webmail.domain.tld/?admin_f0e5a5aa, where admin_f0e5a5aa is the secret key, and log in using the username and password you found in the file. Once it’s no longer needed, remove the file for security reasons.
+You can access the admin panel by navigating to `https://webmail.domain.tld/?admin_f0e5a5aa`, where admin_f0e5a5aa is the secret key, and log in using the username and password you found in the file. Once it’s no longer needed, remove the file for security reasons.
 
 ## Can I use Cloudflare Proxy with email
 

@@ -75,9 +75,9 @@ done
 if [[ -n "$ANTISPAM_SYSTEM" ]]; then
 	installed_services="$(systemctl list-units --type=service 2>&1)"
 	if [[ $installed_services == *spamassassin.service* ]]; then
-		write_config_value "ANTISPAM_SYSTEM" "spamassassin"
+		"$BIN/v-change-sys-config-value" "ANTISPAM_SYSTEM" "spamassassin"
 	elif [[ $installed_services == *spamd.service* ]]; then
-		write_config_value "ANTISPAM_SYSTEM" "spamd"
+		"$BIN/v-change-sys-config-value" "ANTISPAM_SYSTEM" "spamd"
 	fi
 fi
 
@@ -91,3 +91,28 @@ for user in $("$HESTIA"/bin/v-list-users list); do
 		"$HESTIA"/bin/v-update-user-quota "$user"
 	fi
 done
+
+# Fix: migrate SnappyMail data directory /etc/snappymail/data to /var/lib/snappymail/data
+SNAPPYMAIL_ETC_DIR="/etc/snappymail"
+SNAPPYMAIL_ETC_DATA="/etc/snappymail/data"
+SNAPPYMAIL_VAR_DATA="/var/lib/snappymail/data"
+if [[ -d "$SNAPPYMAIL_ETC_DATA" ]] && ! [[ -L "$SNAPPYMAIL_ETC_DATA" ]]; then
+	echo "[ * ] Migrating SnappyMail data directory to '$SNAPPYMAIL_VAR_DATA'"
+	if [ -L "$SNAPPYMAIL_VAR_DATA" ]; then
+		echo "[ * ] Removing existing symlink at '$SNAPPYMAIL_VAR_DATA'"
+		rm -f "$SNAPPYMAIL_VAR_DATA"
+		echo "[ * ] Moving '$SNAPPYMAIL_ETC_DATA' to '$SNAPPYMAIL_VAR_DATA'"
+		if ! mv "$SNAPPYMAIL_ETC_DATA" "$SNAPPYMAIL_VAR_DATA"; then
+			echo "[ ! ] Failed to move '$SNAPPYMAIL_ETC_DATA' to '$SNAPPYMAIL_VAR_DATA'. Skipping cleanup."
+		else
+			echo "[ * ] Removing '$SNAPPYMAIL_ETC_DIR' directory"
+			if ! rm -rf "$SNAPPYMAIL_ETC_DIR"; then
+				echo "[ ! ] Failed to remove '$SNAPPYMAIL_ETC_DIR'."
+			else
+				echo "[ * ] SnappyMail data directory migration completed successfully"
+			fi
+		fi
+	else
+		echo "[ * ] '$SNAPPYMAIL_VAR_DATA' is not a symlink. Skipping SnappyMail data migration."
+	fi
+fi

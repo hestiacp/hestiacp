@@ -55,8 +55,8 @@ fi
 if [ -d /etc/rainloop/ ]; then
 	sed -i "/hestia_host/c\hestia_host = \"$domain\"" /etc/rainloop/data/_data_/_default_/configs/plugin-hestia-change-password.ini
 fi
-if [ -d /etc/snappymail/ ]; then
-	sed -i "/\"hestia_host\":/c\\\"hestia_host\": \"$domain\"," /etc/snappymail/data/_data_/_default_/configs/plugin-change-password.json
+if [ -d /var/lib/snappymail/ ]; then
+	sed -i "/\"hestia_host\":/c\\        \"hestia_host\": \"$domain\"," /var/lib/snappymail/data/_data_/_default_/configs/plugin-change-password.json
 fi
 
 # Update /etc/hosts

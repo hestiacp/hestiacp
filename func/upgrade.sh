@@ -327,7 +327,7 @@ upgrade_init_backup() {
 	if [ -d "/etc/roundcube/" ]; then
 		mkdir -p $HESTIA_BACKUP/conf/roundcube/
 	fi
-	if [ -d "/etc/snappymail/" ]; then
+	if [ -d "/var/lib/snappymail/" ]; then
 		mkdir -p $HESTIA_BACKUP/conf/snappymail/
 	fi
 	if [ -d "/etc/phpmyadmin/" ]; then
@@ -471,11 +471,11 @@ upgrade_start_backup() {
 		fi
 		cp -fr /etc/roundcube/* $HESTIA_BACKUP/conf/roundcube
 	fi
-	if [ -d "/etc/snappymail" ]; then
+	if [ -d "/var/lib/snappymail" ]; then
 		if [ "$DEBUG_MODE" = "true" ]; then
 			echo "      ---- SnappyMail"
 		fi
-		cp -fr /etc/snappymail/* $HESTIA_BACKUP/conf/snappymail
+		cp -fr /var/lib/snappymail/* $HESTIA_BACKUP/conf/snappymail
 	fi
 	if [ -d "/etc/phpmyadmin" ]; then
 		if [ "$DEBUG_MODE" = "true" ]; then

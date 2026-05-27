@@ -42,7 +42,7 @@
 		"eslint-plugin-editorconfig": "^4.0.3",
 		"eslint-plugin-import": "^2.31.0",
 		"husky": "^9.1.7",
-		"jsdom": "^27.4.0",
+		"jsdom": "^29.1.1",
 		"lightningcss": "^1.31.1",
 		"lint-staged": "^17.0.5",
 		"markdownlint-cli2": "^0.20.0",

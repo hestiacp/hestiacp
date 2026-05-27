@@ -8,8 +8,8 @@
 #
 # Currently Supported Operating Systems:
 #
-# Debian 11, 12
-# Ubuntu 20.04, 22.04, 24.04 LTS
+# Debian 11, 12, 13
+# Ubuntu 22.04, 24.04 LTS
 #
 # ======================================================== #
 
@@ -67,7 +67,7 @@ no_support_message() {
 	echo "Your operating system (OS) is not supported by"
 	echo "Hestia Control Panel. Officially supported releases:"
 	echo "****************************************************"
-	echo "  Debian 11, 12"
+	echo "  Debian 11, 12, 13"
 	echo "  Ubuntu 22.04, 24.04 LTS"
 	echo ""
 	exit 1
@@ -82,7 +82,7 @@ check_wget_curl() {
 	if [ -e '/usr/bin/wget' ]; then
 		wget -q https://raw.githubusercontent.com/hestiacp/hestiacp/release/install/hst-install-$type.sh -O hst-install-$type.sh
 		if [ "$?" -eq '0' ]; then
-			bash hst-install-$type.sh $*
+			bash hst-install-$type.sh "$@"
 			exit
 		else
 			echo "Error: hst-install-$type.sh download failed."
@@ -95,7 +95,7 @@ check_wget_curl() {
 	if [ -e '/usr/bin/curl' ]; then
 		curl -s -O https://raw.githubusercontent.com/hestiacp/hestiacp/release/install/hst-install-$type.sh
 		if [ "$?" -eq '0' ]; then
-			bash hst-install-$type.sh $*
+			bash hst-install-$type.sh "$@"
 			exit
 		else
 			echo "Error: hst-install-$type.sh download failed."
@@ -107,8 +107,8 @@ check_wget_curl() {
 
 # Check for supported operating system before proceeding with download
 # of OS-specific installer, and throw error message if unsupported OS detected.
-if [[ "$release" =~ ^(11|12|22.04|24.04)$ ]]; then
-	check_wget_curl $*
+if [[ "$release" =~ ^(11|12|13|22.04|24.04)$ ]]; then
+	check_wget_curl "$@"
 else
 	no_support_message
 fi

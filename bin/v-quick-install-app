@@ -15,6 +15,8 @@ use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Output\ConsoleOutput;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 
 
 use Hestiacp\quoteshellarg\quoteshellarg;
@@ -44,7 +46,7 @@ $application -> register('install')
 	-> addArgument('domain', InputArgument::REQUIRED, 'Domain')
 	-> addArgument('app', InputArgument::REQUIRED, 'App Name')
 	-> addArgument('options', InputArgument::IS_ARRAY, 'Options')
-	-> setCode(function($input, $output){
+	-> setCode(function(InputInterface $input, OutputInterface $output): int {
 		$user = $input -> getArgument('user');
 		$_SESSION['user'] = $user;
 		$v_domain = $input -> getArgument('domain');
@@ -104,7 +106,7 @@ $application -> register('install')
 
 $application -> register('apps')
 	->setDescription('List availble apps')
-	-> setCode(function($input, $output){
+	-> setCode(function(InputInterface $input, OutputInterface $output): int {
 	$appInstallers = glob(__DIR__ . "/../web/src/app/WebApp/Installers/*/*.php");
 	$output -> writeln('Available Apps');
 	$output -> writeln('---------------------------------');
@@ -131,7 +133,7 @@ $application -> register('options')
 	-> addArgument('user', InputArgument::REQUIRED, 'Hestia User')
 	-> addArgument('domain', InputArgument::REQUIRED, 'Domain')
 	-> addArgument('app', InputArgument::REQUIRED, 'App Name')
-	-> setCode(function($input, $output){
+	-> setCode(function(InputInterface $input, OutputInterface $output): int {
 		$user = $input -> getArgument('user');
 		$_SESSION['user'] = $user;
 		$v_domain = $input -> getArgument('domain');

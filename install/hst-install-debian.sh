@@ -865,7 +865,7 @@ fi
 
 # Installing HestiaCP repo
 echo "[ * ] Hestia Control Panel"
-echo "#deb [arch=$ARCH signed-by=/usr/share/keyrings/hestia-keyring.gpg] https://$RHOST/ $codename main" > $apt/hestia.list
+echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/hestia-keyring.gpg] https://$RHOST/ $codename main" > $apt/hestia.list
 gpg --no-default-keyring --keyring /usr/share/keyrings/hestia-keyring.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys A189E93654F0B0E5 > /dev/null 2>&1
 
 # Installing Node.js repo
@@ -889,25 +889,22 @@ echo
 # Updating system
 echo -ne "Updating currently installed packages, please wait... "
 apt-get -qq update
-apt-get -y upgrade
-
-# For now don't hide the out put
-#>> $LOG &
-#BACK_PID=$!
+apt-get -y upgrade >> $LOG &
+BACK_PID=$!
 
 # Check if package installation is done, print a spinner
-#spin_i=1
-#while kill -0 $BACK_PID > /dev/null 2>&1; do
-#	printf "\b${spinner:spin_i++%${#spinner}:1}"
-#	sleep 0.5
-#done
+spin_i=1
+while kill -0 $BACK_PID > /dev/null 2>&1; do
+	printf "\b${spinner:spin_i++%${#spinner}:1}"
+	sleep 0.5
+done
 
 # Do a blank echo to get the \n back
-echo "Jaap"
+echo
 
 # Check Installation result
-#wait $BACK_PID
-#check_result $? 'apt-get upgrade failed'
+wait $BACK_PID
+check_result $? 'apt-get upgrade failed'
 
 #----------------------------------------------------------#
 #                         Backup                           #
@@ -1104,23 +1101,22 @@ chmod a+x /usr/sbin/policy-rc.d
 echo "The installer is now downloading and installing all required packages."
 echo -ne "NOTE: This process may take 10 to 15 minutes to complete, please wait... "
 echo
-apt-get -y install $software
-#> $LOG
-#BACK_PID=$!
+apt-get -y install $software > $LOG
+BACK_PID=$!
 
 # Check if package installation is done, print a spinner
-#spin_i=1
-#while kill -0 $BACK_PID > /dev/null 2>&1; do
-#	printf "\b${spinner:spin_i++%${#spinner}:1}"
-#	sleep 0.5
-#done
+spin_i=1
+while kill -0 $BACK_PID > /dev/null 2>&1; do
+	printf "\b${spinner:spin_i++%${#spinner}:1}"
+	sleep 0.5
+done
 
 # Do a blank echo to get the \n back
 echo
 
 # Check Installation result
-#wait $BACK_PID
-#check_result $? "apt-get install failed"
+wait $BACK_PID
+check_result $? "apt-get install failed"
 
 echo
 echo "========================================================================"
@@ -2015,28 +2011,30 @@ fi
 #----------------------------------------------------------#
 
 if [ "$dovecot" = 'yes' ]; then
+	dovecot_version="$(dovecot --version | cut -f -2 -d .)"
 	echo "[ * ] Configuring Dovecot POP/IMAP mail server..."
 	gpasswd -a dovecot mail > /dev/null 2>&1
-	if [ $release = "13" ]; then
-		# Debian Trixie uses 2.4.1
-		cp -rf $HESTIA_COMMON_DIR/dovecot/2.4.1 /etc/dovecot/
+	mkdir -p /etc/dovecot/conf.d/
+	if [[ "$dovecot_version" = "2.4" ]]; then
+		cp -f $HESTIA_COMMON_DIR/dovecot-24/dovecot.conf /etc/dovecot/
+		cp -f $HESTIA_COMMON_DIR/dovecot-24/conf.d/* /etc/dovecot/conf.d/
 	else
-		cp -rf $HESTIA_COMMON_DIR/dovecot/2.3 /etc/dovecot/
+		cp -f $HESTIA_COMMON_DIR/dovecot/dovecot.conf /etc/dovecot/
+		cp -f $HESTIA_COMMON_DIR/dovecot/conf.d/* /etc/dovecot/conf.d/
+		rm -f /etc/dovecot/conf.d/15-mailboxes.conf
 	fi
 	cp -f $HESTIA_INSTALL_DIR/logrotate/dovecot /etc/logrotate.d/
-	rm -f /etc/dovecot/conf.d/15-mailboxes.conf
 	chown -R root:root /etc/dovecot*
 	touch /var/log/dovecot.log
 	chown -R dovecot:mail /var/log/dovecot.log
 	chmod 660 /var/log/dovecot.log
 	# Alter config for 2.2
-	if [ "$version" = "2.2" ]; then
+	if [ "$dovecot_version" = "2.2" ]; then
 		echo "[ * ] Downgrade dovecot config to sync with 2.2 settings"
 		sed -i 's|#ssl_dh_parameters_length = 4096|ssl_dh_parameters_length = 4096|g' /etc/dovecot/conf.d/10-ssl.conf
 		sed -i 's|ssl_dh = </etc/ssl/dhparam.pem|#ssl_dh = </etc/ssl/dhparam.pem|g' /etc/dovecot/conf.d/10-ssl.conf
 		sed -i 's|ssl_min_protocol = TLSv1.2|ssl_protocols = !SSLv3 !TLSv1 !TLSv1.1|g' /etc/dovecot/conf.d/10-ssl.conf
 	fi
-
 	update-rc.d dovecot defaults
 	systemctl start dovecot >> $LOG
 	check_result $? "dovecot start failed"
@@ -2183,21 +2181,38 @@ if [ "$sieve" = 'yes' ]; then
 
 	echo "[ * ] Installing Sieve Mail Filter..."
 
-	# dovecot.conf install
-	sed -i "s/namespace/service stats \{\n  unix_listener stats-writer \{\n    group = mail\n    mode = 0660\n    user = dovecot\n  \}\n\}\n\nnamespace/g" /etc/dovecot/dovecot.conf
+	dovecot_version="$(dovecot --version | cut -f -2 -d .)"
+	if [[ "$dovecot_version" = "2.4" ]]; then
+		# dovecot conf files
+		# dovecot.conf install
+		sed -i -E 's/protocols = imap/protocols = sieve imap/' /etc/dovecot/dovecot.conf
+		#  10-master.conf
+		sed -i -E -z 's/    user = dovecot\n  \}\n\}/    user = dovecot\n  \}\n\n  unix_listener auth-master {\n    group = mail\n    mode = 0660\n    user = dovecot\n  }\n\}/' /etc/dovecot/conf.d/10-master.conf
+		#  15-lda.conf
+		sed -i '/^protocol lda {$/a\  mail_plugins = mail_compress quota sieve' /etc/dovecot/conf.d/15-lda.conf
+		#  20-imap.conf
+		sed -i "s/quota imap_quota/quota imap_quota imap_sieve/g" /etc/dovecot/conf.d/20-imap.conf
+		# replace dovecot-sieve config files
+		cp -f "$HESTIA_COMMON_DIR"/dovecot-24/sieve/* /etc/dovecot/conf.d
 
-	# Dovecot conf files
-	#  10-master.conf
-	sed -i -E -z "s/  }\n  user = dovecot\n}/  \}\n  unix_listener auth-master \{\n    group = mail\n    mode = 0660\n    user = dovecot\n  \}\n  user = dovecot\n\}/g" /etc/dovecot/conf.d/10-master.conf
-	#  15-lda.conf
-	sed -i "s/\#mail_plugins = \\\$mail_plugins/mail_plugins = \$mail_plugins quota sieve\n  auth_socket_path = \/var\/run\/dovecot\/auth-master/g" /etc/dovecot/conf.d/15-lda.conf
-	#  20-imap.conf
-	sed -i "s/mail_plugins = quota imap_quota/mail_plugins = quota imap_quota imap_sieve/g" /etc/dovecot/conf.d/20-imap.conf
+	else
+		# dovecot.conf install
+		sed -i "s/namespace/service stats \{\n  unix_listener stats-writer \{\n    group = mail\n    mode = 0660\n    user = dovecot\n  \}\n\}\n\nnamespace/g" /etc/dovecot/dovecot.conf
 
-	# Replace dovecot-sieve config files
-	cp -f $HESTIA_COMMON_DIR/dovecot/sieve/* /etc/dovecot/conf.d
+		# Dovecot conf files
+		#  10-master.conf
+		sed -i -E -z "s/  }\n  user = dovecot\n}/  \}\n  unix_listener auth-master \{\n    group = mail\n    mode = 0660\n    user = dovecot\n  \}\n  user = dovecot\n\}/g" /etc/dovecot/conf.d/10-master.conf
+		#  15-lda.conf
+		sed -i "s/\#mail_plugins = \\\$mail_plugins/mail_plugins = \$mail_plugins quota sieve\n  auth_socket_path = \/var\/run\/dovecot\/auth-master/g" /etc/dovecot/conf.d/15-lda.conf
+		#  20-imap.conf
+		sed -i "s/mail_plugins = quota imap_quota/mail_plugins = quota imap_quota imap_sieve/g" /etc/dovecot/conf.d/20-imap.conf
+
+		# Replace dovecot-sieve config files
+		cp -f $HESTIA_COMMON_DIR/dovecot/sieve/* /etc/dovecot/conf.d
+	fi
 
 	# Dovecot default file install
+	mkdir -p /etc/dovecot/sieve/
 	echo -e "require [\"fileinto\"];\n# rule:[SPAM]\nif header :contains \"X-Spam-Flag\" \"YES\" {\n    fileinto \"INBOX.Spam\";\n}\n" > /etc/dovecot/sieve/default
 
 	# exim4 install

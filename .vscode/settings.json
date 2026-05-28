@@ -9,8 +9,5 @@
 		"*.js": "${capture}.js.map",
 		"package.json": ".editorconfig, .biome*, .lintstaged*, .markdownlint-cli2*, .prettier*, jsconfig.json, package-lock.json, renovate.json",
 		"readme*": "changelog*, contributing*, license*, security*"
-	},
-	"conventionalCommits.scopes": [
-		"webapp"
-	]
+	}
 }

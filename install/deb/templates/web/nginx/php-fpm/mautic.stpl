@@ -15,8 +15,9 @@ server {
 
 	ssl_certificate     %ssl_pem%;
 	ssl_certificate_key %ssl_key%;
-	ssl_stapling        on;
-	ssl_stapling_verify on;
+	#Commented out ssl_stapling directives due to Lets Encrypt ending OCSP support in 2025
+	#ssl_stapling        on;
+	#ssl_stapling_verify on;
 
 	# TLS 1.3 0-RTT anti-replay
 	if ($anti_replay = 307) { return 307 https://$host$request_uri; }
@@ -38,6 +39,14 @@ server {
 
 		# Uncomment to enable naxsi on this location
 		# include /etc/nginx/naxsi.rules
+
+		location = /mtc.js {
+			try_files $uri /index.php$is_args$args;
+		}
+
+		location = /mtracking.gif {
+			try_files $uri /index.php$is_args$args;
+		}
 
 		location ~* ^.+\.(jpeg|jpg|png|gif|bmp|ico|svg|css|js)$ {
 			expires max;

@@ -65,7 +65,7 @@ rm -fr $tmpdir
 
 # Update user counters
 $BIN/v-update-user-counters $user
-$BIN/v-update-user-counters admin
+$BIN/v-update-user-counters "$ROOT_USER"
 $BIN/v-update-sys-ip-counters
 
 sed -i "/v-restore-file-restic '$user' '$snapshot' '$file' /d" $HESTIA/data/queue/backup.pipe

@@ -113,7 +113,7 @@ is_type_format_valid() {
 #----------------------------------------------------------#
 
 check_args '1' "$#" 'TYPE [FORMAT]'
-is_common_format_valid $type "type"
+is_common_format_valid "$type" "type"
 
 #----------------------------------------------------------#
 #                       Action                             #

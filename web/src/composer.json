@@ -4,6 +4,11 @@
             "Hestia\\": "app/"
         }
     },
+    "require": {
+        "symfony/console": "^8.0.13",
+        "composer": "*",
+        "symfony/process": "^8.0.13"
+    },
     "require-dev": {
         "filp/whoops": "2.17.0"
     },

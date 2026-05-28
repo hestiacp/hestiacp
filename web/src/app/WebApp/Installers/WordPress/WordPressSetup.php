@@ -15,14 +15,8 @@ class WordpressSetup extends BaseSetup {
 		"thumbnail" => "wp-thumb.png",
 	];
 
-	protected $appname = "wordpress";
 	protected $config = [
 		"form" => [
-			//'protocol' => [
-			//  'type' => 'select',
-			//  'options' => ['http','https'],
-			//],
-
 			"site_name" => ["type" => "text", "value" => "WordPress Blog"],
 			"username" => ["value" => "wpadmin"],
 			"email" => "text",
@@ -63,7 +57,7 @@ class WordpressSetup extends BaseSetup {
 				"template" => "wordpress",
 			],
 			"php" => [
-				"supported" => ["7.4", "8.0", "8.1", "8.2", "8.3"],
+				"supported" => ["7.4", "8.0", "8.1", "8.2", "8.3", "8.4", "8.5"],
 			],
 		],
 	];
@@ -177,35 +171,6 @@ class WordpressSetup extends BaseSetup {
 					$tmp_configpath .
 					" to:" .
 					$this->getDocRoot("wp-config.php") .
-					$result->text,
-			);
-		}
-
-		$this->appcontext->downloadUrl(
-			"https://raw.githubusercontent.com/roots/wp-password-bcrypt/master/wp-password-bcrypt.php",
-			null,
-			$plugin_output,
-		);
-		$this->appcontext->runUser(
-			"v-add-fs-directory",
-			[$this->getDocRoot("wp-content/mu-plugins/")],
-			$result,
-		);
-		if (
-			!$this->appcontext->runUser(
-				"v-copy-fs-file",
-				[
-					$plugin_output->file,
-					$this->getDocRoot("wp-content/mu-plugins/wp-password-bcrypt.php"),
-				],
-				$result,
-			)
-		) {
-			throw new \Exception(
-				"Error installing wp-password-bcrypt file in: " .
-					$plugin_output->file .
-					" to:" .
-					$this->getDocRoot("wp-content/mu-plugins/wp-password-bcrypt.php") .
 					$result->text,
 			);
 		}

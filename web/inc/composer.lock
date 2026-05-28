@@ -4,8 +4,45 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a7bd895410aaaa8ee9f9208d122f814e",
+    "content-hash": "acfab595f43a737fe1ccde00f93f7a85",
     "packages": [
+        {
+            "name": "divinity76/cloudflare-ip-validator",
+            "version": "v1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/divinity76/cloudflare-ip-validator.git",
+                "reference": "557a95ef8db59192a6688a30316440e73403644f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/divinity76/cloudflare-ip-validator/zipball/557a95ef8db59192a6688a30316440e73403644f",
+                "reference": "557a95ef8db59192a6688a30316440e73403644f",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.0"
+            },
+            "suggest": {
+                "ext-filter": "Used for additional input validation in your application stack"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Divinity76\\CloudflareIpValidator\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Unlicense"
+            ],
+            "description": "Fast Cloudflare IP validator for PHP",
+            "support": {
+                "issues": "https://github.com/divinity76/cloudflare-ip-validator/issues",
+                "source": "https://github.com/divinity76/cloudflare-ip-validator/tree/v1.0.0"
+            },
+            "time": "2026-03-23T21:11:01+00:00"
+        },
         {
             "name": "hestiacp/phpquoteshellarg",
             "version": "v1.1.0",
@@ -127,16 +164,16 @@
         },
         {
             "name": "robthree/twofactorauth",
-            "version": "v3.0.2",
+            "version": "v3.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/RobThree/TwoFactorAuth.git",
-                "reference": "6d70f9ca8e25568f163a7b3b3ff77bd8ea743978"
+                "reference": "85408c4e775dba7c0802f2d928efd921d530bc5b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/RobThree/TwoFactorAuth/zipball/6d70f9ca8e25568f163a7b3b3ff77bd8ea743978",
-                "reference": "6d70f9ca8e25568f163a7b3b3ff77bd8ea743978",
+                "url": "https://api.github.com/repos/RobThree/TwoFactorAuth/zipball/85408c4e775dba7c0802f2d928efd921d530bc5b",
+                "reference": "85408c4e775dba7c0802f2d928efd921d530bc5b",
                 "shasum": ""
             },
             "require": {
@@ -204,7 +241,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-10-24T15:14:25+00:00"
+            "time": "2026-01-05T13:17:41+00:00"
         }
     ],
     "packages-dev": [],
@@ -215,5 +252,5 @@
     "prefer-lowest": false,
     "platform": {},
     "platform-dev": {},
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.9.0"
 }

@@ -17,12 +17,7 @@ exec(HESTIA_CMD . "v-delete-user-auth-log " . $user, $output, $return_var);
 check_return_code($return_var, $output);
 unset($output);
 
-$ip = $_SERVER["REMOTE_ADDR"];
-if (isset($_SERVER["HTTP_CF_CONNECTING_IP"])) {
-	if (!empty($_SERVER["HTTP_CF_CONNECTING_IP"])) {
-		$ip = $_SERVER["HTTP_CF_CONNECTING_IP"];
-	}
-}
+$ip = get_real_user_ip();
 $v_ip = quoteshellarg($ip);
 $user_agent = $_SERVER["HTTP_USER_AGENT"];
 $v_user_agent = quoteshellarg($user_agent);

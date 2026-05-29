@@ -27,7 +27,7 @@ class HestiaAuth implements Service, AuthInterface {
 	protected $hestia_user = "";
 
 	public function init(array $config = []) {
-		$v_user = $_SESSION["user"] ?? $_SESSION["USER"] ?? "";
+		$v_user = $_SESSION["user"] ?? ($_SESSION["USER"] ?? "");
 		if (!empty($_SESSION["look"])) {
 			if (isset($_SESSION["look"]) && $_SESSION["userContext"] === "admin") {
 				$v_user = $_SESSION["look"];

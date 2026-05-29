@@ -164,7 +164,7 @@ $dist_config["services"]["Filegator\Services\Storage\Filesystem"]["config"][
 	} else {
 		echo '<meta http-equiv="refresh" content="0; url=/">';
 	}
-	$v_user = $_SESSION["user"] ?? $_SESSION["USER"] ?? "";
+	$v_user = $_SESSION["user"] ?? ($_SESSION["USER"] ?? "");
 	if (!empty($_SESSION["look"])) {
 		if (isset($_SESSION["look"]) && $_SESSION["userContext"] === "admin") {
 			$v_user = $_SESSION["look"];

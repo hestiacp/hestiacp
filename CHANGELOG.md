@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ### Bug fixes
 
+- Fix: Webmail DNS record with alias inconsistencies (#5074)
 - Fix: Rebuilding mail domains removes webmail SSL config (#5354)
 - Bump Roundcube to version 1.6.16 (#5357)
 

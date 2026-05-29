@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.9.6] - Service Release
+
+### Bug fixes
+
+- Fix: Rebuilding mail domains removes webmail SSL config (#5354)
+- Bump Roundcube to version 1.6.16 (#5357)
+
 ## [1.9.5] - Service Release
 
 ### Features

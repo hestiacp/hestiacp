@@ -41,7 +41,7 @@ After modifying an existing template, you need to rebuild the user configuration
 
 ### Moodle templates
 
-Moodle 5.1 and later use a `public` directory for web server requests. Use the `moodle` template for Moodle 5.1 and later, and use `moodle_pre_5_1` for Moodle versions before 5.1.
+Moodle 5.1 and later use a `public` directory for web server requests. Use the `moodle` template for Moodle 5.1 and later, and use `moodle_until_5_0` for Moodle versions up to 5.0.
 
 ### Available variables
 

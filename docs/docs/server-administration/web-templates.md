@@ -39,6 +39,10 @@ When you are done editing your template, enable it for the desired domain from t
 
 After modifying an existing template, you need to rebuild the user configuration. This can be done using the [v-rebuild-user](../reference/cli#v-rebuild-user) command or the bulk operation in the web interface..
 
+### Moodle templates
+
+Moodle 5.1 and later use a `public` directory for web server requests. Use the `moodle` template for Moodle 5.1 and later, and use `moodle_pre_5_1` for Moodle versions before 5.1.
+
 ### Available variables
 
 | Name                 | Description                                           | Example                                    |

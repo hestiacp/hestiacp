@@ -73,6 +73,22 @@ $v_ssl_home = $data[$v_domain]["SSL_HOME"] ?? "";
 $v_backend_template = $data[$v_domain]["BACKEND"] ?? "";
 $v_nginx_cache = $data[$v_domain]["FASTCGI_CACHE"] ?? "";
 $v_nginx_cache_duration = $data[$v_domain]["FASTCGI_DURATION"] ?? "";
+$v_laravel_app = false;
+exec(
+	HESTIA_CMD . "v-list-laravel-app " . $user . " " . quoteshellarg($v_domain) . " json",
+	$output,
+	$return_var,
+);
+if ($return_var === 0) {
+	$v_laravel_app = true;
+} else {
+	$v_laravel_path = "/home/" . $user_plain . "/web/" . $v_domain . "/public_html";
+	$v_laravel_app =
+		file_exists($v_laravel_path . "/artisan") &&
+		file_exists($v_laravel_path . "/composer.json") &&
+		file_exists($v_laravel_path . "/public/index.php");
+}
+unset($output);
 $v_nginx_cache_check = "";
 if (empty($v_nginx_cache_duration)) {
 	$v_nginx_cache_duration = "2m";

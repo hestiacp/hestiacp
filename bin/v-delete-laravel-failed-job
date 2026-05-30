@@ -1,0 +1,29 @@
+#!/bin/bash
+# info: delete Laravel failed job
+# options: USER DOMAIN JOB_ID|all
+#
+# example: v-delete-laravel-failed-job admin example.com all
+#
+# This function deletes Laravel failed queue jobs.
+
+user=$1
+domain=$2
+job_id=$3
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+source_conf "$HESTIA/conf/hestia.conf"
+
+check_args '3' "$#" 'USER DOMAIN JOB_ID|all'
+is_format_valid 'user' 'domain'
+is_object_valid 'user' 'USER' "$user"
+
+if [ "$job_id" = "all" ]; then
+	$BIN/v-run-laravel-artisan "$user" "$domain" queue:flush --force
+else
+	$BIN/v-run-laravel-artisan "$user" "$domain" queue:forget "$job_id"
+fi
+exit $?

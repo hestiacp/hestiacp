@@ -39,5 +39,11 @@ class LaravelSetup extends BaseSetup
             $target->getDocRoot('.htaccess'),
             file_get_contents(__DIR__ . '/.htaccess'),
         );
+
+        $this->appcontext->registerLaravelApp(
+            $target->domain->domainName,
+            $target->getDocRoot(),
+            $options['php_version'],
+        );
     }
 }

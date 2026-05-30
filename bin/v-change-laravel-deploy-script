@@ -1,0 +1,40 @@
+#!/bin/bash
+# info: change Laravel deployment script
+# options: USER DOMAIN SCRIPT_FILE
+#
+# example: v-change-laravel-deploy-script admin example.com /tmp/deploy
+#
+# This function replaces the deployment script for a registered Laravel app.
+
+user=$1
+domain=$2
+script_source=$3
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/laravel.sh
+source $HESTIA/func/laravel.sh
+source_conf "$HESTIA/conf/hestia.conf"
+
+check_args '3' "$#" 'USER DOMAIN SCRIPT_FILE'
+is_format_valid 'user' 'domain'
+is_object_valid 'user' 'USER' "$user"
+laravel_require_app "$domain"
+
+if [[ "$script_source" != /tmp/* ]] || [ ! -f "$script_source" ]; then
+	check_result "$E_FORBIDEN" "Laravel deployment script source must be a temporary file"
+fi
+
+deploy_dir="$HOMEDIR/$user/web/$domain/private/laravel"
+mkdir -p "$deploy_dir"
+cp -f "$script_source" "$deploy_dir/deploy.sh"
+chown -R "$user:$user" "$deploy_dir"
+chmod 750 "$deploy_dir"
+chmod 750 "$deploy_dir/deploy.sh"
+
+$BIN/v-log-action "$user" "Info" "Web" "Laravel deployment script updated (Domain: $domain)."
+log_event "$OK" "$ARGUMENTS"
+exit

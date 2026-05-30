@@ -1,0 +1,32 @@
+#!/bin/bash
+# info: open Laravel environment file
+# options: USER DOMAIN
+#
+# example: v-open-laravel-env admin example.com
+#
+# This function prints a registered Laravel app .env file.
+
+user=$1
+domain=$2
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/laravel.sh
+source $HESTIA/func/laravel.sh
+source_conf "$HESTIA/conf/hestia.conf"
+
+check_args '2' "$#" 'USER DOMAIN'
+is_format_valid 'user' 'domain'
+is_object_valid 'user' 'USER' "$user"
+laravel_require_app "$domain"
+
+env_file="$APP_ROOT/.env"
+if [ ! -f "$env_file" ]; then
+	check_result "$E_NOTEXIST" "Laravel .env file does not exist"
+fi
+
+cat "$env_file"
+exit

@@ -1,0 +1,93 @@
+#!/bin/bash
+# info: add Laravel app registration
+# options: USER DOMAIN APP_ROOT PHP_VERSION [SOURCE_TYPE] [REPO_URL] [BRANCH]
+#
+# example: v-add-laravel-app admin example.com /home/admin/web/example.com/public_html 8.3 local
+#
+# This function registers a Laravel application for a web domain.
+
+user=$1
+domain=$2
+app_root=$3
+php_version=$4
+source_type=${5-local}
+repo_url=${6-}
+branch=${7-}
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/laravel.sh
+source $HESTIA/func/laravel.sh
+source_conf "$HESTIA/conf/hestia.conf"
+
+check_args '4' "$#" 'USER DOMAIN APP_ROOT PHP_VERSION [SOURCE_TYPE] [REPO_URL] [BRANCH]'
+is_format_valid 'user' 'domain'
+is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
+is_object_valid 'web' 'DOMAIN' "$domain"
+is_object_unsuspended 'web' 'DOMAIN' "$domain"
+
+case "$source_type" in
+	local | git | skeleton) ;;
+	*) check_result "$E_INVALID" "Invalid Laravel source type" ;;
+esac
+
+case "$app_root" in
+	"$HOMEDIR/$user/web/$domain" | "$HOMEDIR/$user/web/$domain"/*) ;;
+	*) check_result "$E_FORBIDEN" "Laravel application path must be inside $HOMEDIR/$user/web/$domain" ;;
+esac
+
+case "$app_root" in
+	*".."*) check_result "$E_FORBIDEN" "Laravel application path must not contain parent-directory segments" ;;
+esac
+
+laravel_validate_conf_value "$app_root"
+laravel_validate_conf_value "$source_type"
+laravel_validate_conf_value "$repo_url"
+laravel_validate_conf_value "$branch"
+
+if [ "$source_type" = "git" ] && [ -z "$branch" ]; then
+	branch="main"
+fi
+
+if [ "$source_type" = "git" ] && [ -n "$repo_url" ]; then
+	if [ ! -d "$app_root/.git" ]; then
+		parent_dir="$(dirname "$app_root")"
+		mkdir -p "$parent_dir"
+		real_parent_dir="$(laravel_realpath_existing "$parent_dir")"
+		real_domain_root="$(laravel_realpath_existing "$HOMEDIR/$user/web/$domain")"
+		if [[ "$real_parent_dir" != "$real_domain_root" && "$real_parent_dir" != "$real_domain_root/"* ]]; then
+			check_result "$E_FORBIDEN" "Laravel application path must be inside $HOMEDIR/$user/web/$domain"
+		fi
+		chown "$user:$user" "$parent_dir"
+		runuser -u "$user" -- git clone --branch "$branch" "$repo_url" "$app_root"
+		check_result $? "Failed to clone Laravel repository"
+	else
+		runuser -u "$user" -- git -C "$app_root" fetch --all --prune
+		check_result $? "Failed to fetch Laravel repository"
+		if [ -n "$branch" ]; then
+			runuser -u "$user" -- git -C "$app_root" checkout "$branch"
+			check_result $? "Failed to checkout Laravel branch"
+		fi
+	fi
+fi
+
+app_root="$(laravel_validate_app_root "$app_root")"
+if ! laravel_is_app_root "$app_root"; then
+	check_result "$E_NOTEXIST" "Laravel application files not found in $app_root"
+fi
+
+laravel_add_app_record "$domain" "$app_root" "$php_version" "$source_type" "$repo_url" "$branch"
+
+$BIN/v-change-web-domain-tpl "$user" "$domain" laravel no
+check_result $? "Failed to change web template to laravel"
+
+$BIN/v-rebuild-web-domain "$user" "$domain" yes
+check_result $? "Failed to rebuild web domain"
+
+$BIN/v-log-action "$user" "Info" "Web" "Laravel app registered (Domain: $domain)."
+log_event "$OK" "$ARGUMENTS"
+exit

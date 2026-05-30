@@ -32,6 +32,14 @@
 	/* Charts */
 	--chart-label-color: #cdcdcd;
 	--chart-grid-color: #434343;
+
+	/* Laravel Toolkit */
+	--laravel-surface: #353535;
+	--laravel-surface-muted: #404040;
+	--laravel-border-color: #505050;
+	--laravel-console-bg: #171717;
+	--laravel-console-color: #e8e8e8;
+	--laravel-muted-color: #aaa;
 }
 
 /* Top bar

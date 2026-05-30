@@ -1,0 +1,83 @@
+#!/bin/bash
+# info: list Laravel apps
+# options: USER [FORMAT]
+#
+# example: v-list-laravel-apps admin json
+#
+# This function lists Laravel Toolkit registrations for a user.
+
+user=$1
+format=${2-shell}
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/laravel.sh
+source $HESTIA/func/laravel.sh
+source_conf "$HESTIA/conf/hestia.conf"
+
+json_escape() {
+	printf '%s' "$1" | sed 's/\\/\\\\/g; s/"/\\"/g'
+}
+
+check_args '1' "$#" 'USER [FORMAT]'
+is_format_valid 'user' 'format'
+is_object_valid 'user' 'USER' "$user"
+laravel_ensure_conf
+
+case "$format" in
+	json)
+		echo '{'
+		first=1
+		while read -r line; do
+			[ -z "$line" ] && continue
+			parse_object_kv_list "$line"
+			if [ "$first" -eq 0 ]; then
+				echo ','
+			fi
+			first=0
+			echo -n '    "'"$(json_escape "$DOMAIN")"'": {'
+			echo -n '"APP_ROOT": "'"$(json_escape "$APP_ROOT")"'", '
+			echo -n '"PHP_VERSION": "'"$(json_escape "$PHP_VERSION")"'", '
+			echo -n '"SOURCE_TYPE": "'"$(json_escape "$SOURCE_TYPE")"'", '
+			echo -n '"SCHEDULER": "'"$(json_escape "$SCHEDULER")"'", '
+			echo -n '"QUEUE": "'"$(json_escape "$QUEUE")"'", '
+			echo -n '"WEBHOOK_SECRET": "'"$(json_escape "$WEBHOOK_SECRET")"'"'
+			echo -n '}'
+		done < "$(laravel_conf_file)"
+		echo
+		echo '}'
+		;;
+	plain)
+		while read -r line; do
+			[ -z "$line" ] && continue
+			parse_object_kv_list "$line"
+			echo -e "$DOMAIN\t$APP_ROOT\t$PHP_VERSION\t$SOURCE_TYPE\t$SCHEDULER\t$QUEUE"
+		done < "$(laravel_conf_file)"
+		;;
+	csv)
+		echo "DOMAIN,APP_ROOT,PHP_VERSION,SOURCE_TYPE,SCHEDULER,QUEUE"
+		while read -r line; do
+			[ -z "$line" ] && continue
+			parse_object_kv_list "$line"
+			echo "\"$DOMAIN\",\"$APP_ROOT\",\"$PHP_VERSION\",\"$SOURCE_TYPE\",\"$SCHEDULER\",\"$QUEUE\""
+		done < "$(laravel_conf_file)"
+		;;
+	shell)
+		while read -r line; do
+			[ -z "$line" ] && continue
+			parse_object_kv_list "$line"
+			echo "DOMAIN:      $DOMAIN"
+			echo "APP_ROOT:    $APP_ROOT"
+			echo "PHP_VERSION: $PHP_VERSION"
+			echo "SOURCE_TYPE: $SOURCE_TYPE"
+			echo "SCHEDULER:   $SCHEDULER"
+			echo "QUEUE:       $QUEUE"
+			echo
+		done < "$(laravel_conf_file)"
+		;;
+esac
+
+exit

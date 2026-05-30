@@ -15,6 +15,11 @@
 					<i class="fas fa-magic icon-blue"></i><?= tohtml( _("Quick Install App")) ?>
 				</a>
 			<?php } ?>
+			<?php if (!empty($v_laravel_app)) { ?>
+				<a href="/edit/laravel/?<?= tohtml(http_build_query(["domain" => $v_domain])) ?>" class="button button-secondary">
+					<i class="fab fa-laravel icon-red"></i><?= tohtml( _("Laravel")) ?>
+				</a>
+			<?php } ?>
 			<button type="submit" class="button" form="main-form">
 				<i class="fas fa-floppy-disk icon-purple"></i><?= tohtml( _("Save")) ?>
 			</button>

@@ -22,3 +22,16 @@ upgrade_config_set_value 'UPGRADE_UPDATE_DNS_TEMPLATES' 'false'
 upgrade_config_set_value 'UPGRADE_UPDATE_MAIL_TEMPLATES' 'false'
 upgrade_config_set_value 'UPGRADE_REBUILD_USERS' 'false'
 upgrade_config_set_value 'UPGRADE_UPDATE_FILEMANAGER_CONFIG' 'false'
+
+touch $HESTIA/data/queue/laravel.pipe
+chmod 660 $HESTIA/data/queue/laravel.pipe
+
+if [ "$(id -u)" -eq 0 ] && command -v crontab > /dev/null 2>&1; then
+	tmp_cron=$(mktemp)
+	crontab -u hestiaweb -l > "$tmp_cron" 2> /dev/null || true
+	if ! grep -q "v-update-sys-queue laravel" "$tmp_cron" 2> /dev/null; then
+		echo "* * * * * sudo /usr/local/hestia/bin/v-update-sys-queue laravel" >> "$tmp_cron"
+		crontab -u hestiaweb "$tmp_cron"
+	fi
+	rm -f "$tmp_cron"
+fi

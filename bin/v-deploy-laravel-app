@@ -1,0 +1,87 @@
+#!/bin/bash
+# info: deploy Laravel app
+# options: USER DOMAIN [manual|webhook]
+#
+# example: v-deploy-laravel-app admin example.com manual
+#
+# This function deploys a registered Laravel app or queues a webhook deployment.
+
+user=$1
+domain=$2
+mode=${3-manual}
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/laravel.sh
+source $HESTIA/func/laravel.sh
+source_conf "$HESTIA/conf/hestia.conf"
+
+check_args '2' "$#" 'USER DOMAIN [manual|webhook]'
+is_format_valid 'user' 'domain'
+is_object_valid 'user' 'USER' "$user"
+laravel_require_app "$domain"
+
+queue_file="$HESTIA/data/queue/laravel.pipe"
+queue_cmd="$BIN/v-deploy-laravel-app $user $domain manual >> $HESTIA/log/laravel.log 2>&1"
+
+if [ -f "$HESTIA/data/queue/laravel.pipe" ]; then
+	tmp_queue="$(mktemp)"
+	grep -Fv "$queue_cmd" "$queue_file" > "$tmp_queue" || true
+	mv -f "$tmp_queue" "$queue_file"
+	chmod 660 "$queue_file"
+fi
+
+case "$mode" in
+	webhook)
+		touch "$queue_file"
+		chmod 660 "$queue_file"
+		if ! grep -Fq "$queue_cmd" "$queue_file"; then
+			echo "$queue_cmd" >> "$queue_file"
+		fi
+		echo "Laravel deployment has been queued."
+		log_event "$OK" "$ARGUMENTS"
+		exit
+		;;
+	manual) ;;
+	*) check_result "$E_INVALID" "Invalid Laravel deployment mode" ;;
+esac
+
+deploy_script="$HOMEDIR/$user/web/$domain/private/laravel/deploy.sh"
+php_bin="$(laravel_php_bin "$PHP_VERSION")"
+
+if [ -x "$deploy_script" ]; then
+	runuser -u "$user" -- bash -c 'cd "$1" && exec "$2"' _ "$APP_ROOT" "$deploy_script"
+	exit_code=$?
+else
+	if [ -d "$APP_ROOT/.git" ]; then
+		runuser -u "$user" -- git -C "$APP_ROOT" pull --ff-only
+		check_result $? "Laravel git pull failed"
+	fi
+
+	$BIN/v-run-laravel-composer "$user" "$domain" install --no-interaction --prefer-dist --no-dev --optimize-autoloader
+	check_result $? "Laravel composer install failed"
+
+	if [ -f "$APP_ROOT/package.json" ]; then
+		if command -v npm > /dev/null 2>&1; then
+			$BIN/v-run-laravel-node "$user" "$domain" npm install
+			check_result $? "Laravel npm install failed"
+			$BIN/v-run-laravel-node "$user" "$domain" npm run build
+			check_result $? "Laravel npm build failed"
+		fi
+	fi
+
+	runuser -u "$user" -- bash -c 'cd "$1" && shift && "$@"' _ "$APP_ROOT" "$php_bin" artisan migrate --force
+	check_result $? "Laravel migrations failed"
+	runuser -u "$user" -- bash -c 'cd "$1" && shift && "$@"' _ "$APP_ROOT" "$php_bin" artisan config:cache
+	runuser -u "$user" -- bash -c 'cd "$1" && shift && "$@"' _ "$APP_ROOT" "$php_bin" artisan route:cache
+	runuser -u "$user" -- bash -c 'cd "$1" && shift && "$@"' _ "$APP_ROOT" "$php_bin" artisan view:cache
+	runuser -u "$user" -- bash -c 'cd "$1" && shift && "$@"' _ "$APP_ROOT" "$php_bin" artisan queue:restart
+	exit_code=0
+fi
+
+$BIN/v-log-action "$user" "Info" "Web" "Laravel app deployed (Domain: $domain)."
+log_event "$exit_code" "$ARGUMENTS"
+exit "$exit_code"

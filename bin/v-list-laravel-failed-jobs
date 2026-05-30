@@ -1,0 +1,28 @@
+#!/bin/bash
+# info: list Laravel failed jobs
+# options: USER DOMAIN [FORMAT]
+#
+# example: v-list-laravel-failed-jobs admin example.com
+#
+# This function lists failed Laravel queue jobs.
+
+user=$1
+domain=$2
+format=${3-shell}
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/laravel.sh
+source $HESTIA/func/laravel.sh
+source_conf "$HESTIA/conf/hestia.conf"
+
+check_args '2' "$#" 'USER DOMAIN [FORMAT]'
+is_format_valid 'user' 'domain' 'format'
+is_object_valid 'user' 'USER' "$user"
+laravel_require_app "$domain"
+
+$BIN/v-run-laravel-artisan "$user" "$domain" queue:failed
+exit $?

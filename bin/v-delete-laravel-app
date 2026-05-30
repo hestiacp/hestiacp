@@ -1,0 +1,34 @@
+#!/bin/bash
+# info: delete Laravel app registration
+# options: USER DOMAIN
+#
+# example: v-delete-laravel-app admin example.com
+#
+# This function removes Laravel Toolkit registration for a web domain.
+
+user=$1
+domain=$2
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/laravel.sh
+source $HESTIA/func/laravel.sh
+source_conf "$HESTIA/conf/hestia.conf"
+
+check_args '2' "$#" 'USER DOMAIN'
+is_format_valid 'user' 'domain'
+is_object_valid 'user' 'USER' "$user"
+is_object_valid 'web' 'DOMAIN' "$domain"
+laravel_require_app "$domain"
+
+$BIN/v-change-laravel-scheduler "$user" "$domain" no
+$BIN/v-change-laravel-queue "$user" "$domain" no
+
+laravel_delete_app_record "$domain"
+
+$BIN/v-log-action "$user" "Info" "Web" "Laravel app registration removed (Domain: $domain)."
+log_event "$OK" "$ARGUMENTS"
+exit

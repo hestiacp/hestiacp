@@ -1,0 +1,100 @@
+#!/bin/bash
+# info: list Laravel app parameters
+# options: USER DOMAIN [FORMAT]
+#
+# example: v-list-laravel-app admin example.com json
+#
+# This function obtains Laravel Toolkit parameters for a domain.
+
+user=$1
+domain=$2
+format=${3-shell}
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/laravel.sh
+source $HESTIA/func/laravel.sh
+source_conf "$HESTIA/conf/hestia.conf"
+
+json_escape() {
+	printf '%s' "$1" | sed 's/\\/\\\\/g; s/"/\\"/g'
+}
+
+check_args '2' "$#" 'USER DOMAIN [FORMAT]'
+is_format_valid 'user' 'domain' 'format'
+is_object_valid 'user' 'USER' "$user"
+laravel_require_app "$domain"
+
+MAINTENANCE="no"
+GIT_BRANCH="$BRANCH"
+GIT_COMMIT=""
+
+if [ -f "$APP_ROOT/storage/framework/down" ]; then
+	MAINTENANCE="yes"
+fi
+
+if [ -d "$APP_ROOT/.git" ] && command -v git > /dev/null 2>&1; then
+	git_branch="$(runuser -u "$user" -- git -C "$APP_ROOT" rev-parse --abbrev-ref HEAD 2> /dev/null || true)"
+	git_commit="$(runuser -u "$user" -- git -C "$APP_ROOT" rev-parse --short HEAD 2> /dev/null || true)"
+	if [ -n "$git_branch" ]; then
+		GIT_BRANCH="$git_branch"
+	fi
+	if [ -n "$git_commit" ]; then
+		GIT_COMMIT="$git_commit"
+	fi
+fi
+
+case "$format" in
+	json)
+		echo '{'
+		echo '    "'"$(json_escape "$DOMAIN")"'": {'
+		echo '        "APP_ROOT": "'"$(json_escape "$APP_ROOT")"'",'
+		echo '        "PHP_VERSION": "'"$(json_escape "$PHP_VERSION")"'",'
+		echo '        "SOURCE_TYPE": "'"$(json_escape "$SOURCE_TYPE")"'",'
+		echo '        "REPO_URL": "'"$(json_escape "$REPO_URL")"'",'
+		echo '        "BRANCH": "'"$(json_escape "$BRANCH")"'",'
+		echo '        "GIT_BRANCH": "'"$(json_escape "$GIT_BRANCH")"'",'
+		echo '        "GIT_COMMIT": "'"$(json_escape "$GIT_COMMIT")"'",'
+		echo '        "MAINTENANCE": "'"$(json_escape "$MAINTENANCE")"'",'
+		echo '        "SCHEDULER": "'"$(json_escape "$SCHEDULER")"'",'
+		echo '        "QUEUE": "'"$(json_escape "$QUEUE")"'",'
+		echo '        "QUEUE_CONNECTION": "'"$(json_escape "$QUEUE_CONNECTION")"'",'
+		echo '        "QUEUE_TIMEOUT": "'"$(json_escape "$QUEUE_TIMEOUT")"'",'
+		echo '        "QUEUE_MAX_JOBS": "'"$(json_escape "$QUEUE_MAX_JOBS")"'",'
+		echo '        "QUEUE_MAX_TIME": "'"$(json_escape "$QUEUE_MAX_TIME")"'",'
+		echo '        "QUEUE_STOP_WHEN_EMPTY": "'"$(json_escape "$QUEUE_STOP_WHEN_EMPTY")"'",'
+		echo '        "WEBHOOK_SECRET": "'"$(json_escape "$WEBHOOK_SECRET")"'",'
+		echo '        "TIME": "'"$(json_escape "$TIME")"'",'
+		echo '        "DATE": "'"$(json_escape "$DATE")"'"'
+		echo '    }'
+		echo '}'
+		;;
+	plain)
+		echo -e "$DOMAIN\t$APP_ROOT\t$PHP_VERSION\t$SOURCE_TYPE\t$REPO_URL\t$BRANCH\t$GIT_BRANCH\t$GIT_COMMIT\t$MAINTENANCE\t$SCHEDULER\t$QUEUE"
+		;;
+	csv)
+		echo "DOMAIN,APP_ROOT,PHP_VERSION,SOURCE_TYPE,REPO_URL,BRANCH,GIT_BRANCH,GIT_COMMIT,MAINTENANCE,SCHEDULER,QUEUE"
+		echo "\"$DOMAIN\",\"$APP_ROOT\",\"$PHP_VERSION\",\"$SOURCE_TYPE\",\"$REPO_URL\",\"$BRANCH\",\"$GIT_BRANCH\",\"$GIT_COMMIT\",\"$MAINTENANCE\",\"$SCHEDULER\",\"$QUEUE\""
+		;;
+	shell)
+		echo "DOMAIN:           $DOMAIN"
+		echo "APP_ROOT:         $APP_ROOT"
+		echo "PHP_VERSION:      $PHP_VERSION"
+		echo "SOURCE_TYPE:      $SOURCE_TYPE"
+		echo "REPO_URL:         $REPO_URL"
+		echo "BRANCH:           $BRANCH"
+		echo "GIT_BRANCH:       $GIT_BRANCH"
+		echo "GIT_COMMIT:       $GIT_COMMIT"
+		echo "MAINTENANCE:      $MAINTENANCE"
+		echo "SCHEDULER:        $SCHEDULER"
+		echo "QUEUE:            $QUEUE"
+		echo "QUEUE_CONNECTION: $QUEUE_CONNECTION"
+		echo "TIME:             $TIME"
+		echo "DATE:             $DATE"
+		;;
+esac
+
+exit

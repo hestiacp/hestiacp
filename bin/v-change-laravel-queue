@@ -1,0 +1,98 @@
+#!/bin/bash
+# info: change Laravel queue worker
+# options: USER DOMAIN yes|no [CONNECTION] [TIMEOUT] [MAX_JOBS] [MAX_TIME] [STOP_WHEN_EMPTY]
+#
+# example: v-change-laravel-queue admin example.com yes database 60 0 0 no
+#
+# This function enables or disables a managed Laravel queue worker systemd service.
+
+user=$1
+domain=$2
+state=$3
+connection=${4-database}
+timeout=${5-60}
+max_jobs=${6-0}
+max_time=${7-0}
+stop_when_empty=${8-no}
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/laravel.sh
+source $HESTIA/func/laravel.sh
+source_conf "$HESTIA/conf/hestia.conf"
+
+check_args '3' "$#" 'USER DOMAIN yes|no [CONNECTION] [TIMEOUT] [MAX_JOBS] [MAX_TIME] [STOP_WHEN_EMPTY]'
+is_format_valid 'user' 'domain'
+is_object_valid 'user' 'USER' "$user"
+laravel_require_app "$domain"
+
+laravel_validate_conf_value "$connection"
+if ! [[ "$connection" =~ ^[A-Za-z0-9_-]{1,64}$ ]]; then
+	check_result "$E_INVALID" "Invalid Laravel queue connection"
+fi
+if ! [[ "$timeout" =~ ^[0-9]{1,6}$ ]] || ! [[ "$max_jobs" =~ ^[0-9]{1,6}$ ]] || ! [[ "$max_time" =~ ^[0-9]{1,6}$ ]]; then
+	check_result "$E_INVALID" "Invalid Laravel queue numeric setting"
+fi
+case "$stop_when_empty" in
+	yes | no) ;;
+	*) check_result "$E_INVALID" "Invalid Laravel queue stop_when_empty setting" ;;
+esac
+
+unit_name="$(laravel_systemd_unit_name)"
+unit_path="/etc/systemd/system/$unit_name"
+php_bin="$(laravel_php_bin "$PHP_VERSION")"
+queue_args="queue:work $connection --sleep=3 --tries=3 --timeout=$timeout"
+
+if [ "$max_jobs" != "0" ]; then
+	queue_args="$queue_args --max-jobs=$max_jobs"
+fi
+if [ "$max_time" != "0" ]; then
+	queue_args="$queue_args --max-time=$max_time"
+fi
+if [ "$stop_when_empty" = "yes" ]; then
+	queue_args="$queue_args --stop-when-empty"
+fi
+
+case "$state" in
+	yes)
+		cat > "$unit_path" << EOT
+[Unit]
+Description=Hestia Laravel queue worker for $user/$domain
+After=network.target
+
+[Service]
+User=$user
+Group=$user
+WorkingDirectory=$APP_ROOT
+ExecStart=$php_bin artisan $queue_args
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+EOT
+		systemctl daemon-reload
+		systemctl enable --now "$unit_name"
+		check_result $? "Failed to start Laravel queue worker"
+		update_object_value 'laravel' 'DOMAIN' "$domain" '$QUEUE' 'yes'
+		update_object_value 'laravel' 'DOMAIN' "$domain" '$QUEUE_CONNECTION' "$connection"
+		update_object_value 'laravel' 'DOMAIN' "$domain" '$QUEUE_TIMEOUT' "$timeout"
+		update_object_value 'laravel' 'DOMAIN' "$domain" '$QUEUE_MAX_JOBS' "$max_jobs"
+		update_object_value 'laravel' 'DOMAIN' "$domain" '$QUEUE_MAX_TIME' "$max_time"
+		update_object_value 'laravel' 'DOMAIN' "$domain" '$QUEUE_STOP_WHEN_EMPTY' "$stop_when_empty"
+		;;
+	no)
+		systemctl disable --now "$unit_name" > /dev/null 2>&1 || true
+		rm -f "$unit_path"
+		systemctl daemon-reload
+		update_object_value 'laravel' 'DOMAIN' "$domain" '$QUEUE' 'no'
+		;;
+	*) check_result "$E_INVALID" "Invalid Laravel queue state" ;;
+esac
+
+$BIN/v-log-action "$user" "Info" "Web" "Laravel queue changed (Domain: $domain, State: $state)."
+log_event "$OK" "$ARGUMENTS"
+exit

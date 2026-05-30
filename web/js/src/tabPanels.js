@@ -1,33 +1,43 @@
 // Tabs behavior (used on cron pages)
 export default function handleTabPanels() {
-	const tabs = document.querySelector('.js-tabs');
+	const tabGroups = document.querySelectorAll('.js-tabs');
 
-	if (!tabs) {
+	if (!tabGroups.length) {
 		return;
 	}
 
-	const tabItems = tabs.querySelectorAll('.tabs-item');
-	const panels = tabs.querySelectorAll('.tabs-panel');
-	tabItems.forEach((tab) => {
-		tab.addEventListener('click', (event) => {
-			// Reset state
-			panels.forEach((panel) => {
-				panel.hidden = true;
-			});
-			tabItems.forEach((tab) => {
-				tab.setAttribute('aria-selected', false);
-				tab.setAttribute('tabindex', -1);
-			});
+	tabGroups.forEach((tabs) => {
+		const tabItems = tabs.querySelectorAll('.tabs-item');
+		const panels = tabs.querySelectorAll('.tabs-panel');
+		tabItems.forEach((tab) => {
+			tab.addEventListener('click', (event) => {
+				const selectedTab = event.target.closest('.tabs-item');
+				if (!selectedTab) {
+					return;
+				}
 
-			// Show the selected panel
-			const tabId = event.target.getAttribute('id');
-			const panel = document.querySelector(`[aria-labelledby="${tabId}"]`);
-			panel.hidden = false;
+				// Reset state
+				panels.forEach((panel) => {
+					panel.hidden = true;
+				});
+				tabItems.forEach((tab) => {
+					tab.setAttribute('aria-selected', false);
+					tab.setAttribute('tabindex', -1);
+				});
 
-			// Mark the selected tab as active
-			event.target.setAttribute('aria-selected', true);
-			event.target.setAttribute('tabindex', 0);
-			event.target.focus();
+				// Show the selected panel
+				const tabId = selectedTab.getAttribute('id');
+				const panel = tabs.querySelector(`[aria-labelledby="${tabId}"]`);
+				if (!panel) {
+					return;
+				}
+				panel.hidden = false;
+
+				// Mark the selected tab as active
+				selectedTab.setAttribute('aria-selected', true);
+				selectedTab.setAttribute('tabindex', 0);
+				selectedTab.focus();
+			});
 		});
 	});
 }

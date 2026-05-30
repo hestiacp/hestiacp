@@ -1,0 +1,41 @@
+#!/bin/bash
+# info: run Laravel Node/package-manager command
+# options: USER DOMAIN PACKAGE_MANAGER COMMAND [ARG...]
+#
+# example: v-run-laravel-node admin example.com npm run build
+#
+# This function runs an installed package manager inside a registered Laravel app.
+
+user=$1
+domain=$2
+package_manager=$3
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/laravel.sh
+source $HESTIA/func/laravel.sh
+source_conf "$HESTIA/conf/hestia.conf"
+
+check_args '4' "$#" 'USER DOMAIN PACKAGE_MANAGER COMMAND [ARG...]'
+is_format_valid 'user' 'domain'
+is_object_valid 'user' 'USER' "$user"
+laravel_require_app "$domain"
+
+case "$package_manager" in
+	npm | yarn | pnpm) ;;
+	*) check_result "$E_FORBIDEN" "Package manager is not enabled" ;;
+esac
+
+package_manager_bin="$(command -v "$package_manager")"
+if [ -z "$package_manager_bin" ]; then
+	check_result "$E_NOTEXIST" "$package_manager is not installed"
+fi
+
+shift 3
+runuser -u "$user" -- bash -c 'cd "$1" && shift && exec "$@"' _ "$APP_ROOT" "$package_manager_bin" "$@"
+exit_code=$?
+log_event "$exit_code" "$ARGUMENTS"
+exit "$exit_code"

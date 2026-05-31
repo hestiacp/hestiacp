@@ -13,6 +13,7 @@
 - [Databases](/docs/user-guide/databases)
 - [DNS](/docs/user-guide/dns)
 - [File manager](/docs/user-guide/file-manager)
+- [Laravel Toolkit](/docs/user-guide/laravel-toolkit)
 - [Mail domains](/docs/user-guide/mail-domains)
 - [Notifications](/docs/user-guide/notifications)
 - [Packages](/docs/user-guide/packages)

@@ -132,7 +132,7 @@
 							?>
 						</select>
 					</div>
-					<div class="u-mb10">
+					<div class="u-mb10" x-show="selectedType !== 'redis'">
 						<label for="v_charset" class="form-label"><?= tohtml( _("Charset")) ?></label>
 						<select class="form-select" name="v_charset" id="v_charset">
 							<option value=big5 <?php if ((!empty($v_charset)) && ( $v_charset == 'big5')) echo 'selected'; ?>>big5</option>

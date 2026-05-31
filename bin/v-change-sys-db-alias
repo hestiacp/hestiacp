@@ -97,6 +97,17 @@ if [ "$type" = "pga" ] || [ "$type" = "PGA" ] || [ "$type" = "phppgadmin" ]; the
 	fi
 fi
 
+# Detect common allowed entries for phpRedisAdmin
+if [ "$type" = "pra" ] || [ "$type" = "PRA" ] || [ "$type" = "phpredisadmin" ]; then
+	db_editor="phpRedisAdmin"
+	$BIN/v-change-sys-config-value 'DB_PRA_ALIAS' "$alias"
+
+	if [ -e "/etc/nginx/conf.d/phpredisadmin.inc" ]; then
+		sed -i "s|location /[^/[:space:]]*/ {|location /$alias/ {|g; s|location ~ \\^/[^/]*/|location ~ ^/$alias/|g" /etc/nginx/conf.d/phpredisadmin.inc
+		$BIN/v-restart-service nginx
+	fi
+fi
+
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#

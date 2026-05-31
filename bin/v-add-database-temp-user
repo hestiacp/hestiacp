@@ -64,19 +64,26 @@ get_database_values
 dbpass=$(generate_password)
 dbuser="hestia_sso_$(generate_password)"
 
-add_mysql_database_temp_user
+case $type in
+	mysql) add_mysql_database_temp_user ;;
+	redis) add_redis_database_temp_user ;;
+	*) check_result "$E_INVALID" "unsupported temporary database user type" ;;
+esac
 if [ $? -ne 0 ]; then
 	echo "Error: Unable to create temp user"
 	exit 2
 fi
 
 if [[ "$ttl" -gt 0 ]]; then
-	echo "$BIN/v-delete-database-temp-user $user $database $dbuser mysql $HOST $PORT" | at "now +${ttl} minute" > /dev/null 2>&1
+	echo "$BIN/v-delete-database-temp-user $user $database $dbuser $type $HOST $PORT" | at "now +${ttl} minute" > /dev/null 2>&1
 fi
 echo '{
     "login": {
         "user": "'$dbuser'",
-        "password": "'$dbpass'"
+        "password": "'$dbpass'",
+        "host": "'$HOST'",
+        "port": "'$PORT'",
+        "prefix": "'$PREFIX'"
     }
 }'
 

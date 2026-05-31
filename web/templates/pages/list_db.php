@@ -2,12 +2,17 @@
 [$http_host, $port] = explode(":", $_SERVER["HTTP_HOST"] . ":");
 $db_myadmin_link = "//" . $http_host . "/phpmyadmin/";
 $db_pgadmin_link = "//" . $http_host . "/phppgadmin/";
+$db_redisadmin_link = "//" . $http_host . "/phpredisadmin/";
+$db_systems = explode(",", $_SESSION["DB_SYSTEM"] ?? "");
 
 if (!empty($_SESSION["DB_PMA_ALIAS"])) {
 	$db_myadmin_link = "//" . $http_host . "/" . $_SESSION["DB_PMA_ALIAS"] . "/";
 }
 if (!empty($_SESSION["DB_PGA_ALIAS"])) {
 	$db_pgadmin_link = "//" . $http_host . "/" . $_SESSION["DB_PGA_ALIAS"] . "/";
+}
+if (!empty($_SESSION["DB_PRA_ALIAS"])) {
+	$db_redisadmin_link = "//" . $http_host . "/" . $_SESSION["DB_PRA_ALIAS"] . "/";
 }
 ?>
 
@@ -19,14 +24,19 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
 				<a href="/add/db/" class="button button-secondary js-button-create">
 					<i class="fas fa-circle-plus icon-green"></i><?= tohtml( _("Add Database")) ?>
 				</a>
-				<?php if ($_SESSION["DB_SYSTEM"] === "mysql" || $_SESSION["DB_SYSTEM"] === "mysql,pgsql" || $_SESSION["DB_SYSTEM"] === "pgsql,mysql") { ?>
+				<?php if (in_array("mysql", $db_systems, true)) { ?>
 					<a class="button button-secondary <?= tohtml(ipUsed() ? "button-suspended" : "") ?>" href="<?= tohtml($db_myadmin_link) ?>" target="_blank">
 						<i class="fas fa-database icon-orange"></i>phpMyAdmin
 					</a>
 				<?php } ?>
-				<?php if ($_SESSION["DB_SYSTEM"] === "pgsql" || $_SESSION["DB_SYSTEM"] === "mysql,pgsql" || $_SESSION["DB_SYSTEM"] === "pgsql,mysql") { ?>
+				<?php if (in_array("pgsql", $db_systems, true)) { ?>
 					<a class="button button-secondary <?= tohtml(ipUsed() ? "button-suspended" : "") ?>" href="<?= tohtml($db_pgadmin_link) ?>" target="_blank">
 						<i class="fas fa-database icon-orange"></i>phpPgAdmin
+					</a>
+				<?php } ?>
+				<?php if (in_array("redis", $db_systems, true)) { ?>
+					<a class="button button-secondary <?= tohtml(ipUsed() ? "button-suspended" : "") ?>" href="<?= tohtml($db_redisadmin_link) ?>" target="_blank">
+						<i class="fas fa-database icon-orange"></i>phpRedisAdmin
 					</a>
 				<?php } ?>
 				<?php if (ipUsed()) { ?>
@@ -138,15 +148,18 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
 				}
 				$db_endpoint = $data[$key]['ENDPOINT'] ?? $data[$key]['HOST'];
 				if (!isset($data[$key]["PORT"])) {
-					$data[$key]["PORT"] = $data[$key]["TYPE"] == "mysql" ? "3306" : "5432";
+					$data[$key]["PORT"] = $data[$key]["TYPE"] == "mysql" ? "3306" : ($data[$key]["TYPE"] == "redis" ? "6379" : "5432");
 				}
 				if ($data[$key]['HOST'] != 'localhost' && $data[$key]['HOST'] != '127.0.0.1') $http_host = $data[$key]['HOST'];
 				if ($data[$key]['TYPE'] == 'mysql') $db_admin = "phpMyAdmin";
 				if ($data[$key]['TYPE'] == 'mysql') $db_admin_link = "https://".$http_host."/phpmyadmin/";
-				if (($data[$key]['TYPE'] == 'mysql') && (!empty($_SESSION['DB_PMA_ALIAS']))) $db_admin_link = $_SESSION['DB_PMA_ALIAS'];
+				if (($data[$key]['TYPE'] == 'mysql') && (!empty($_SESSION['DB_PMA_ALIAS']))) $db_admin_link = "https://".$http_host."/".$_SESSION['DB_PMA_ALIAS']."/";
 				if ($data[$key]['TYPE'] == 'pgsql') $db_admin = "phpPgAdmin";
 				if ($data[$key]['TYPE'] == 'pgsql') $db_admin_link = "https://".$http_host."/phppgadmin/";
-				if (($data[$key]['TYPE'] == 'pgsql') && (!empty($_SESSION['DB_PGA_ALIAS']))) $db_admin_link = $_SESSION['DB_PGA_ALIAS'];
+				if (($data[$key]['TYPE'] == 'pgsql') && (!empty($_SESSION['DB_PGA_ALIAS']))) $db_admin_link = "https://".$http_host."/".$_SESSION['DB_PGA_ALIAS']."/";
+				if ($data[$key]['TYPE'] == 'redis') $db_admin = "phpRedisAdmin";
+				if ($data[$key]['TYPE'] == 'redis') $db_admin_link = "https://".$http_host."/phpredisadmin/";
+				if (($data[$key]['TYPE'] == 'redis') && (!empty($_SESSION['DB_PRA_ALIAS']))) $db_admin_link = "https://".$http_host."/".$_SESSION['DB_PRA_ALIAS']."/";
 			?>
 			<div class="units-table-row <?php if ($data[$key]['SUSPENDED'] == 'yes') echo 'disabled'; ?> js-unit"
 				data-sort-date="<?= tohtml(strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])) ?>"
@@ -212,6 +225,33 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
 									</a>
 								</li>
 							<?php } ?>
+								<?php if ($data[$key]['TYPE'] == 'redis' && isset($_SESSION['PHPREDISADMIN_KEY']) && $_SESSION['PHPREDISADMIN_KEY'] != '' && !ipUsed()) { $time = time(); ?>
+									<?php
+										$hestia_sso_token = password_hash(
+											$key . $user_plain . $_SESSION['user_combined_ip'] . $time . $data[$key]["HOST"] . $data[$key]["PORT"] . $data[$key]["PREFIX"] . $_SESSION['PHPREDISADMIN_KEY'],
+											PASSWORD_DEFAULT,
+										);
+										$hestia_sso_url = $db_redisadmin_link . "hestia-sso.php?" . http_build_query([
+											"database" => $key,
+											"user" => $user_plain,
+											"host" => $data[$key]["HOST"],
+											"port" => $data[$key]["PORT"],
+											"prefix" => $data[$key]["PREFIX"],
+											"exp" => $time,
+											"hestia_token" => $hestia_sso_token,
+										]);
+									?>
+									<li class="units-table-row-action shortcut-enter" data-key-action="href">
+										<a
+											class="units-table-row-action-link"
+											href="<?= tohtml($hestia_sso_url) ?>"
+											title="phpRedisAdmin" target="_blank"
+										>
+										<i class="fas fa-right-to-bracket icon-orange"></i>
+										<span class="u-hide-desktop">phpRedisAdmin</span>
+									</a>
+								</li>
+							<?php } ?>
 							<li class="units-table-row-action shortcut-enter" data-key-action="href">
 								<a
 									class="units-table-row-action-link"
@@ -272,7 +312,7 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
 				</div>
 				<div class="units-table-cell u-text-center-desktop">
 					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Charset")) ?>:</span>
-					<?= tohtml($data[$key]["CHARSET"]) ?>
+					<?= tohtml($data[$key]["TYPE"] === "redis" ? ($data[$key]["PREFIX"] ?? "") : $data[$key]["CHARSET"]) ?>
 				</div>
 			</div>
 		<?php } ?>

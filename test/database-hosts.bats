@@ -16,13 +16,25 @@ function setup() {
 
 	tmp_mysql_conf="$(mktemp)"
 	cp "$HESTIA/conf/mysql.conf" "$tmp_mysql_conf"
+	tmp_hestia_conf="$(mktemp)"
+	cp "$HESTIA/conf/hestia.conf" "$tmp_hestia_conf"
+	tmp_redis_conf="$(mktemp)"
+	if [ -e "$HESTIA/conf/redis.conf" ]; then
+		cp "$HESTIA/conf/redis.conf" "$tmp_redis_conf"
+	else
+		: > "$tmp_redis_conf"
+	fi
 	tmp_user_data="$(mktemp -d)"
 	tmp_pma_conf="$(mktemp -d)"
 }
 
 function teardown() {
 	cp "$tmp_mysql_conf" "$HESTIA/conf/mysql.conf"
+	cp "$tmp_hestia_conf" "$HESTIA/conf/hestia.conf"
+	cp "$tmp_redis_conf" "$HESTIA/conf/redis.conf"
 	rm -f "$tmp_mysql_conf"
+	rm -f "$tmp_hestia_conf"
+	rm -f "$tmp_redis_conf"
 	rm -rf "$tmp_user_data"
 	rm -rf "$tmp_pma_conf"
 }
@@ -38,6 +50,13 @@ function write_pma_mysql_hosts() {
 	cat > "$HESTIA/conf/mysql.conf" <<-EOF
 	HOST='localhost' USER='root' PASSWORD='testpass' CHARSETS='UTF8,UTF8MB4' MAX_DB='500' U_SYS_USERS='' U_DB_BASES='0' SUSPENDED='no' TIME='00:00:00' DATE='2026-05-30' PORT='3306'
 	HOST='127.0.0.1' USER='root' PASSWORD='testpass' CHARSETS='UTF8,UTF8MB4' MAX_DB='500' U_SYS_USERS='' U_DB_BASES='0' SUSPENDED='no' TIME='00:00:00' DATE='2026-05-30' PORT='3307'
+	EOF
+}
+
+function write_redis_hosts() {
+	cat > "$HESTIA/conf/redis.conf" <<-EOF
+	HOST='localhost' USER='hestia' PASSWORD='testpass' MAX_DB='500' U_SYS_USERS='' U_DB_BASES='0' SUSPENDED='no' TIME='00:00:00' DATE='2026-05-30' PORT='6379'
+	HOST='127.0.0.1' USER='hestia' PASSWORD='testpass' MAX_DB='500' U_SYS_USERS='' U_DB_BASES='1' SUSPENDED='no' TIME='00:00:00' DATE='2026-05-30' PORT='6380'
 	EOF
 }
 
@@ -73,6 +92,20 @@ function write_pma_mysql_hosts() {
 	assert_success
 	assert_output "1"
 	run grep "PORT='3306'" "$HESTIA/conf/mysql.conf"
+	assert_success
+}
+
+@test "database host delete removes type from DB_SYSTEM when no endpoints remain" {
+	cat > "$HESTIA/conf/redis.conf" <<-EOF
+	HOST='localhost' USER='hestia' PASSWORD='testpass' MAX_DB='500' U_SYS_USERS='' U_DB_BASES='0' SUSPENDED='no' TIME='00:00:00' DATE='2026-05-30' PORT='6379'
+	EOF
+	printf "DB_SYSTEM='mysql,redis'\n" > "$HESTIA/conf/hestia.conf"
+
+	run env DB_SYSTEM='mysql,redis' v-delete-database-host redis localhost 6379
+	assert_success
+	run grep -F "redis" "$HESTIA/conf/hestia.conf"
+	assert_failure
+	run grep -F "DB_SYSTEM=" "$HESTIA/conf/hestia.conf"
 	assert_success
 }
 
@@ -339,4 +372,127 @@ function write_pma_mysql_hosts() {
 	run grep -F 'v-list-sys-services json' web/list/server/index.php
 	assert_success
 	refute_output --partial 'v-list-database-hosts json'
+}
+
+@test "redis endpoint support defines default port and host lookup" {
+	write_redis_hosts
+
+	run database_get_default_port redis
+	assert_success
+	assert_output "6379"
+
+	run v-list-database-host redis localhost json 6379
+	assert_success
+	assert_output --partial '"TYPE": "redis"'
+	assert_output --partial '"PORT": "6379"'
+	assert_output --partial '"ENDPOINT": "localhost:6379"'
+}
+
+@test "redis database rows use ACL prefix metadata" {
+	run grep -F 'PREFIX=' bin/v-add-database
+	assert_success
+	run grep -F 'DB_INDEX=' bin/v-add-database
+	assert_success
+	run grep -F 'hestia:${user}:${database}:' func/db.sh
+	assert_success
+	run grep -F 'redis_apply_acl_user "$dbuser" "$dbpass" "$redis_prefix" "on"' func/db.sh
+	assert_success
+	run grep -F '~$acl_prefix*' func/db.sh
+	assert_success
+}
+
+@test "redis database lifecycle uses ACL users" {
+	run grep -F 'redis) add_redis_database ;;' bin/v-add-database
+	assert_success
+	run grep -F 'redis) delete_redis_database ;;' bin/v-delete-database
+	assert_success
+	run grep -F 'redis) change_redis_password ;;' bin/v-change-database-password
+	assert_success
+	run grep -F 'redis) suspend_redis_database ;;' bin/v-suspend-database
+	assert_success
+	run grep -F 'redis) unsuspend_redis_database ;;' bin/v-unsuspend-database
+	assert_success
+	run grep -F 'redis_save_acl' func/db.sh
+	assert_success
+	run grep -F 'ACL SAVE' bin/v-add-database-host
+	assert_success
+	run grep -F 'ttl=0' func/db.sh
+	assert_success
+	run grep -F "perl -0pe 's/\\n\\z//'" func/db.sh
+	assert_success
+	run grep -F 'redis_query DEL "$key"' func/rebuild.sh
+	assert_success
+	run grep -F -- '-x RESTORE "$key" "$ttl"' func/rebuild.sh
+	assert_success
+	run grep -F 'Redis restore failed' func/rebuild.sh
+	assert_success
+}
+
+@test "redis temp users and phpRedisAdmin SSO are wired" {
+	run test -f bin/v-add-sys-phpredisadmin
+	assert_success
+	run test -f bin/v-delete-sys-phpredisadmin
+	assert_success
+	run test -f bin/v-add-sys-pra-sso
+	assert_success
+	run test -f install/deb/phpredisadmin/hestia-sso.php
+	assert_success
+	run grep -F '"arg3" => "redis"' install/deb/phpredisadmin/hestia-sso.php
+	assert_success
+	run grep -F '"prefix" => $data[$key]["PREFIX"]' web/templates/pages/list_db.php
+	assert_success
+	run grep -F 'redis_query ACL SETUSER "$dbuser" +SCAN' func/db.sh
+	assert_success
+	run grep -F -- '-RANDOMKEY' func/db.sh
+	assert_success
+	run grep -F "'login_as_acl_auth' => true" bin/v-add-sys-pra-sso
+	assert_success
+	run grep -F "\$_SERVER['PHP_AUTH_USER'] = \$_SESSION['HestiaRedisAdmin_user']" bin/v-add-sys-pra-sso
+	assert_success
+	run grep -F "\$_GET['filter'] = \$forcedFilter" bin/v-add-sys-pra-sso
+	assert_success
+	run grep -F 'hestia-sso.php?logout=1' bin/v-add-sys-pra-sso
+	assert_success
+	run grep -F 'composer install --no-dev' bin/v-add-sys-phpredisadmin
+	assert_success
+	run grep -F 'logout.php.hestia-backup' bin/v-delete-sys-pra-sso
+	assert_success
+	run grep -F "'servers' => []" bin/v-delete-sys-pra-sso
+	assert_success
+}
+
+@test "redis UI hides sql-only fields and exposes admin alias" {
+	run grep -F "selectedType === 'redis'" web/templates/pages/add_db_host.php
+	assert_success
+	run grep -F "selectedType !== 'redis'" web/templates/pages/add_db.php
+	assert_success
+	run grep -F 'phpRedisAdmin' web/templates/pages/list_db.php
+	assert_success
+	run grep -F 'DB_PRA_ALIAS' web/templates/pages/edit_server.php
+	assert_success
+	run grep -F 'systemctl list-unit-files "$service.service"' bin/v-list-sys-services
+	assert_success
+	run grep -F '6379' web/templates/pages/list_db_host.php
+	assert_success
+	run grep -F "this.\$refs.dbuser.value === 'postgres') this.\$refs.dbuser.value = 'hestia'" web/templates/pages/add_db_host.php
+	assert_success
+}
+
+@test "redis installer flags are optional and default disabled" {
+	run grep -F -- '--redis' install/hst-install-ubuntu.sh
+	assert_success
+	run grep -F "set_default_value 'redis' 'no'" install/hst-install-ubuntu.sh
+	assert_success
+	run grep -F -- '--redis' install/hst-install-debian.sh
+	assert_success
+	run grep -F "set_default_value 'redis' 'no'" install/hst-install-debian.sh
+	assert_success
+	run grep -F 'aclfile /etc/redis/users.acl' install/hst-install-ubuntu.sh
+	assert_success
+	run grep -F 'aclfile /etc/redis/users.acl' install/hst-install-debian.sh
+	assert_success
+	run grep -F 'composer' install/hst-install-ubuntu.sh
+	assert_success
+	run grep -F 'composer' install/hst-install-debian.sh
+	assert_success
 }

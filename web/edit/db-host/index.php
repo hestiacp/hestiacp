@@ -38,7 +38,10 @@ $host_data = is_array($data) ? reset($data) : [];
 unset($output);
 
 $v_endpoint =
-	$host_data["ENDPOINT"] ?? $v_host . ":" . ($v_port ?: ($v_type === "pgsql" ? "5432" : "3306"));
+	$host_data["ENDPOINT"] ??
+	$v_host .
+		":" .
+		($v_port ?: ($v_type === "pgsql" ? "5432" : ($v_type === "redis" ? "6379" : "3306")));
 $v_port = $host_data["PORT"] ?? $v_port;
 $v_dbuser = $host_data["USER"] ?? "root";
 $v_max_db = $host_data["MAX_DB"] ?? "500";

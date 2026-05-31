@@ -922,3 +922,36 @@ import_pgsql_database() {
 
 	psql -h $HOST -U $USER -p $PORT $DB < $1 > /dev/null 2>&1
 }
+
+# Rebuild Redis ACL database
+rebuild_redis_database() {
+	redis_connect "$HOST" "$PORT"
+	redis_get_prefix
+	dbpass="restored-$(generate_password 24)"
+	redis_apply_acl_user "$DBUSER" "$dbpass" "$redis_prefix" "$([ "$SUSPENDED" = "yes" ] && echo off || echo on)"
+	redis_save_acl
+	redis_get_acl_hash
+}
+
+# Import Redis RESTORE_BASE64 dump
+import_redis_database() {
+	redis_connect "$HOST" "$PORT"
+	while IFS= read -r line; do
+		[ -z "$line" ] && continue
+		key=$(echo "$line" | cut -f 2 -d \')
+		ttl=$(echo "$line" | cut -f 4 -d \')
+		payload=$(echo "$line" | cut -f 6 -d \')
+		[ -z "$key" ] && continue
+		raw=$(mktemp)
+		echo "$payload" | base64 -d > "$raw"
+		redis_query DEL "$key" > /dev/null
+		redis-cli "${redis_auth_args[@]}" -x RESTORE "$key" "$ttl" < "$raw" > /dev/null
+		if [ "$?" -ne 0 ]; then
+			rm -f "$raw"
+			echo "Error: Redis restore failed for $key"
+			log_event "$E_DB" "$ARGUMENTS"
+			exit "$E_DB"
+		fi
+		rm -f "$raw"
+	done < "$1"
+}

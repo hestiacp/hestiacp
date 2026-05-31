@@ -66,6 +66,7 @@ check_hestia_demo_mode
 case $TYPE in
 	mysql) import_mysql_database "$dump" ;;
 	pgsql) import_pgsql_database "$dump" ;;
+	redis) import_redis_database "$dump" ;;
 esac
 
 #----------------------------------------------------------#

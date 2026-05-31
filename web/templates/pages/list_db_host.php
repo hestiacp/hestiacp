@@ -36,7 +36,7 @@
 		<?php
 			foreach ($data as $key => $value) {
 				++$i;
-				$value["PORT"] = $value["PORT"] ?? ($value["TYPE"] === "pgsql" ? "5432" : "3306");
+				$value["PORT"] = $value["PORT"] ?? ($value["TYPE"] === "pgsql" ? "5432" : ($value["TYPE"] === "redis" ? "6379" : "3306"));
 				$value["ENDPOINT"] = $value["ENDPOINT"] ?? $value["HOST"] . ":" . $value["PORT"];
 				$status = $value["SUSPENDED"] === "yes" ? "suspended" : "active";
 				$spnd_title = $value["SUSPENDED"] === "yes" ? _("Unsuspend") : _("Suspend");

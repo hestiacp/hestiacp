@@ -59,7 +59,11 @@ check_hestia_demo_mode
 # Get database values
 get_database_values
 
-delete_mysql_database_temp_user
+case $type in
+	mysql) delete_mysql_database_temp_user ;;
+	redis) delete_redis_database_temp_user ;;
+	*) check_result "$E_INVALID" "unsupported temporary database user type" ;;
+esac
 
 #----------------------------------------------------------#
 #                       Hestia                             #

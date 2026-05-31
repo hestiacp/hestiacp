@@ -93,6 +93,7 @@ grants="$tmpdir/$database.$TYPE.$DBUSER"
 case $TYPE in
 	mysql) dump_mysql_database ;;
 	pgsql) dump_pgsql_database ;;
+	redis) dump_redis_database ;;
 esac
 
 # Import configuration
@@ -110,6 +111,7 @@ $BIN/v-rebuild-databases "$user"
 case $TYPE in
 	mysql) import_mysql_database "$dump" ;;
 	pgsql) import_pgsql_database "$dump" ;;
+	redis) import_redis_database "$dump" ;;
 esac
 
 # Deleting tmpdir

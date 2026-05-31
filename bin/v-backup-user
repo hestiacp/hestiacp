@@ -589,6 +589,7 @@ if [ -n "$DB_SYSTEM" ] && [ "$DB" != '*' ]; then
 			case $TYPE in
 				mysql) dump_mysql_database ;;
 				pgsql) dump_pgsql_database ;;
+				redis) dump_redis_database ;;
 			esac
 
 			# Compress dump

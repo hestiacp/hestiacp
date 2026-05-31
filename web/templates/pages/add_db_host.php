@@ -23,9 +23,14 @@
 			syncDefaults() {
 				if (this.selectedType === 'pgsql') {
 					if (!this.$refs.port.value || this.$refs.port.value === '3306') this.$refs.port.value = '5432';
+					if (!this.$refs.dbuser.value || this.$refs.dbuser.value === 'root' || this.$refs.dbuser.value === 'hestia') this.$refs.dbuser.value = 'postgres';
 					if (!this.$refs.template.value) this.$refs.template.value = 'template1';
+				} else if (this.selectedType === 'redis') {
+					if (!this.$refs.port.value || this.$refs.port.value === '3306' || this.$refs.port.value === '5432') this.$refs.port.value = '6379';
+					if (!this.$refs.dbuser.value || this.$refs.dbuser.value === 'root' || this.$refs.dbuser.value === 'postgres') this.$refs.dbuser.value = 'hestia';
 				} else {
-					if (!this.$refs.port.value || this.$refs.port.value === '5432') this.$refs.port.value = '3306';
+					if (!this.$refs.port.value || this.$refs.port.value === '5432' || this.$refs.port.value === '6379') this.$refs.port.value = '3306';
+					if (!this.$refs.dbuser.value || this.$refs.dbuser.value === 'hestia' || this.$refs.dbuser.value === 'postgres') this.$refs.dbuser.value = 'root';
 				}
 			}
 		}"
@@ -60,7 +65,7 @@
 			</div>
 			<div class="u-mb10">
 				<label for="v_dbuser" class="form-label"><?= tohtml( _("Username")) ?></label>
-				<input type="text" class="form-control" name="v_dbuser" id="v_dbuser" value="<?= tohtml($v_dbuser) ?>">
+				<input type="text" class="form-control" name="v_dbuser" id="v_dbuser" x-ref="dbuser" value="<?= tohtml($v_dbuser) ?>">
 			</div>
 			<div class="u-mb10">
 				<label for="v_password" class="form-label"><?= tohtml( _("Password")) ?></label>

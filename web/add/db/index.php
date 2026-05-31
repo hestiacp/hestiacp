@@ -82,7 +82,7 @@ if (!empty($_POST["ok"])) {
 	if (empty($_POST["v_host"])) {
 		$errors[] = _("Host");
 	}
-	if (empty($_POST["v_charset"])) {
+	if ($_POST["v_type"] !== "redis" && empty($_POST["v_charset"])) {
 		$errors[] = _("Charset");
 	}
 	if (!empty($errors[0])) {
@@ -114,7 +114,7 @@ if (!empty($_POST["ok"])) {
 	$v_database = quoteshellarg($_POST["v_database"]);
 	$v_dbuser = quoteshellarg($_POST["v_dbuser"]);
 	$v_type = $_POST["v_type"];
-	$v_charset = $_POST["v_charset"];
+	$v_charset = $_POST["v_type"] === "redis" ? "" : $_POST["v_charset"];
 	$v_host = $_POST["v_host"];
 	[$v_host_name, $v_host_port] = parse_database_endpoint($_POST["v_host"]);
 	$v_db_email = $_POST["v_db_email"];
@@ -131,7 +131,7 @@ if (!empty($_POST["ok"])) {
 	// Add database
 	if (empty($_SESSION["error_msg"])) {
 		$v_type = quoteshellarg($_POST["v_type"]);
-		$v_charset = quoteshellarg($_POST["v_charset"]);
+		$v_charset = quoteshellarg($_POST["v_type"] === "redis" ? "" : $_POST["v_charset"]);
 		[$v_host_name, $v_host_port] = parse_database_endpoint($_POST["v_host"]);
 		$v_host_arg = quoteshellarg($v_host_name);
 		$v_port_arg = quoteshellarg($v_host_port);
@@ -166,7 +166,7 @@ if (!empty($_POST["ok"])) {
 		$v_password = quoteshellarg($_POST["v_password"]);
 		$v_type = $_POST["v_type"];
 		$v_host = $_POST["v_host"];
-		$v_charset = $_POST["v_charset"];
+		$v_charset = $_POST["v_type"] === "redis" ? "" : $_POST["v_charset"];
 	}
 
 	// Get database manager url
@@ -193,6 +193,13 @@ if (!empty($_POST["ok"])) {
 		}
 		if ($_POST["v_type"] == "pgsql" && !empty($_SESSION["DB_PGA_ALIAS"])) {
 			$db_admin_link = "https://" . $http_host . "/" . $_SESSION["DB_PGA_ALIAS"];
+		}
+		if ($_POST["v_type"] == "redis") {
+			$db_admin = "phpRedisAdmin";
+			$db_admin_link = "https://" . $http_host . "/phpredisadmin/";
+		}
+		if ($_POST["v_type"] == "redis" && !empty($_SESSION["DB_PRA_ALIAS"])) {
+			$db_admin_link = "https://" . $http_host . "/" . $_SESSION["DB_PRA_ALIAS"];
 		}
 	}
 

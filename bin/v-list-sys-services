@@ -281,6 +281,13 @@ if [ -n "$DB_SYSTEM" ] && [ "$DB_SYSTEM" != 'remote' ]; then
 				proc_name='postgres'
 			fi
 		fi
+		if [ "$service" == 'redis' ]; then
+			service='redis-server'
+			proc_name='redis-server'
+			if ! systemctl list-unit-files "$service.service" > /dev/null 2>&1 && [ ! -e "/etc/init.d/$service" ]; then
+				continue
+			fi
+		fi
 		get_srv_state "$service" "$proc_name"
 		data="$data\nNAME='$service' SYSTEM='database server' STATE='$state'"
 		data="$data CPU='$cpu' MEM='$mem' RTIME='$rtime'"

@@ -36,6 +36,8 @@ json_list() {
         "ENDPOINT": "'$ENDPOINT'",
         "TYPE": "'$TYPE'",
         "CHARSET": "'$CHARSET'",
+        "PREFIX": "'$PREFIX'",
+        "DB_INDEX": "'$DB_INDEX'",
         "U_DISK": "'$U_DISK'",
         "SUSPENDED": "'$SUSPENDED'",
         "TIME": "'$TIME'",
@@ -53,6 +55,8 @@ shell_list() {
 	echo "ENDPOINT:       $ENDPOINT"
 	echo "TYPE:           $TYPE"
 	echo "CHARSET:        $CHARSET"
+	echo "PREFIX:         $PREFIX"
+	echo "DB INDEX:       $DB_INDEX"
 	echo "DISK:           $U_DISK"
 	echo "SUSPENDED:      $SUSPENDED"
 	echo "TIME:           $TIME"

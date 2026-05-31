@@ -3,7 +3,7 @@
 ## How to setup a remote database server
 
 1. It is assumed you already have your second server up and running.
-2. On your Hestia server run the following command (`mysql` may be replaced by `postgresql`):
+2. On your Hestia server run the following command (`mysql` may be replaced by `postgresql` or `redis`):
 
 ```bash
 v-add-database-host mysql new-server.com root password
@@ -14,6 +14,52 @@ To make sure the host has been added, run the following command:
 ```bash
 v-list-database-hosts
 ```
+
+## Redis database servers
+
+Redis support is optional and disabled by default during installation. To
+install a local Redis server during setup, pass:
+
+```bash
+./hst-install.sh --redis yes
+```
+
+Hestia configures local Redis on `localhost:6379`, binds it to loopback,
+enables protected mode, configures `/etc/redis/users.acl` for persistent ACL
+users, creates a Hestia Redis ACL admin user, and registers the endpoint as a
+Database Server.
+
+Redis databases in Hestia are Redis ACL users scoped to a key prefix, not
+numbered Redis logical databases. The prefix format is:
+
+```text
+hestia:<user>:<database>:
+```
+
+For example, a Redis database named `admin_cache` can only access keys under
+`hestia:admin:admin_cache:*`. This model works with Redis ACLs and avoids
+using numbered logical databases, which are not available in Redis Cluster.
+
+To add a remote Redis endpoint:
+
+```bash
+v-add-database-host redis redis.example.com hestia_admin strongpassword 500 "" template1 6379
+```
+
+The Hestia server must have `redis-cli` available. The Redis admin user must
+be able to run `PING`, `ACL WHOAMI`, `ACL LIST`, and `ACL SAVE`; Hestia rejects
+Redis endpoints that can create ACL users only in memory without persisting
+them.
+
+To create Redis credentials for a user:
+
+```bash
+v-add-database admin cache cache_user strongpassword redis localhost "" 6379
+```
+
+phpRedisAdmin is available at `https://host.domain.tld/phpredisadmin/` when
+installed. Hestia SSO creates a short-lived temporary Redis ACL user scoped to
+the same key prefix.
 
 ## Why I can’t use `http://ip/phpmyadmin/`
 
@@ -107,7 +153,7 @@ Automated can sometimes cause issues. Login via SSH and open `/var/log/{webserve
 
 ## Remote databases
 
-If needed you can simply host Mysql or Postgresql on a remote server.
+If needed you can simply host Mysql, Postgresql, or Redis on a remote server.
 
 To add a remote database:
 

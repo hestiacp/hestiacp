@@ -12,16 +12,28 @@ if ($_SESSION["userContext"] !== "admin") {
 	exit();
 }
 
-$db_types = array_values(array_filter(explode(",", $_SESSION["DB_SYSTEM"] ?? "")));
-if (empty($db_types)) {
-	$db_types = ["mysql", "pgsql"];
-}
+$db_types = array_values(
+	array_unique(
+		array_filter(
+			array_merge(explode(",", $_SESSION["DB_SYSTEM"] ?? ""), ["mysql", "pgsql", "redis"]),
+		),
+	),
+);
 
 function get_db_host_default_port(string $type): string {
-	return $type === "pgsql" ? "5432" : "3306";
+	if ($type === "pgsql") {
+		return "5432";
+	}
+	if ($type === "redis") {
+		return "6379";
+	}
+	return "3306";
 }
 
 function get_db_host_default_charsets(string $type): string {
+	if ($type === "redis") {
+		return "";
+	}
 	return $type === "pgsql" ? "UTF8" : "UTF8,LATIN1,WIN1250,WIN1251,WIN1252,WIN1256,WIN1258,KOI8";
 }
 

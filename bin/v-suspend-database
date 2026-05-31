@@ -50,6 +50,7 @@ get_database_values
 case $TYPE in
 	mysql) suspend_mysql_database ;;
 	pgsql) suspend_pgsql_database ;;
+	redis) suspend_redis_database ;;
 esac
 
 #----------------------------------------------------------#

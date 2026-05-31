@@ -45,6 +45,7 @@ get_database_values
 case $TYPE in
 	mysql) get_mysql_disk_usage ;;
 	pgsql) get_pgsql_disk_usage ;;
+	redis) get_redis_disk_usage ;;
 esac
 
 #----------------------------------------------------------#

@@ -162,14 +162,18 @@ add new database server
 
 ```bash
 v-add-database-host mysql localhost alice p@$$wOrd
+v-add-database-host redis localhost hestia p@$$wOrd 500 "" template1 6379
 ```
 
 This function add new database server to the server pool. It supports local
 and remote database servers, which is useful for clusters. By adding a host
 you can set limit for number of databases on a host. Template parameter is
 used only for PostgreSQL and has an default value "template1". You can read
-more about templates in official PostgreSQL documentation. The same host can
-be added more than once when each entry uses a different port.
+more about templates in official PostgreSQL documentation. Redis endpoints use
+ACL users and key prefixes instead of numbered logical databases. The same host
+can be added more than once when each entry uses a different port. Redis host
+validation requires `redis-cli` and an ACL admin user that can persist ACL
+changes with `ACL SAVE`.
 
 ## v-add-database-temp-user
 
@@ -796,6 +800,26 @@ enables support for single sign on phpMyAdmin
 **Options**: `[MODE]`
 
 This function enables support for SSO to phpMyAdmin
+
+## v-add-sys-phpredisadmin
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-sys-phpredisadmin)
+
+install phpRedisAdmin
+
+**Options**: `[MODE]`
+
+This function installs phpRedisAdmin and enables Hestia Redis SSO.
+
+## v-add-sys-pra-sso
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-sys-pra-sso)
+
+enables support for single sign on phpRedisAdmin
+
+**Options**: `[MODE]`
+
+This function enables support for SSO to phpRedisAdmin.
 
 ## v-add-sys-quota
 
@@ -1798,10 +1822,32 @@ v-change-sys-db-alias pma phpmyadmin
 # Sets phpMyAdmin alias to phpmyadmin
 v-change-sys-db-alias pga phppgadmin
 # Sets phpPgAdmin alias to phppgadmin
+v-change-sys-db-alias pra phpredisadmin
+# Sets phpRedisAdmin alias to phpredisadmin
 ```
 
 This function changes the database editor url in
 apache2 or nginx configuration.
+
+## v-delete-sys-phpredisadmin
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-sys-phpredisadmin)
+
+remove phpRedisAdmin
+
+**Options**: `[MODE]`
+
+This function removes phpRedisAdmin.
+
+## v-delete-sys-pra-sso
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-sys-pra-sso)
+
+disables support for single sign on phpRedisAdmin
+
+**Options**: `[MODE]`
+
+This function disables support for SSO to phpRedisAdmin.
 
 ## v-change-sys-demo-mode
 

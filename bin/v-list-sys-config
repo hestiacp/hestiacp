@@ -42,6 +42,7 @@ json_list() {
 			"CRON_SYSTEM": "'$CRON_SYSTEM'",
 			"DB_PGA_ALIAS": "'$DB_PGA_ALIAS'",
 			"DB_PMA_ALIAS": "'$DB_PMA_ALIAS'",
+			"DB_PRA_ALIAS": "'$DB_PRA_ALIAS'",
 			"DB_SYSTEM": "'$DB_SYSTEM'",
 			"DEBUG_MODE": "'$DEBUG_MODE'",
 			"DEMO_MODE": "'$DEMO_MODE'",
@@ -165,6 +166,9 @@ shell_list() {
 		fi
 		if [ -n "$DB_PGA_ALIAS" ]; then
 			echo "phpPgAdmin Alias:                 $DB_PGA_ALIAS"
+		fi
+		if [ -n "$DB_PRA_ALIAS" ]; then
+			echo "phpRedisAdmin Alias:              $DB_PRA_ALIAS"
 		fi
 	fi
 	if [ -n "$DNS_SYSTEM" ]; then

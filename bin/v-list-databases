@@ -43,6 +43,8 @@ json_list() {
         "ENDPOINT": "'$ENDPOINT'",
         "TYPE": "'$TYPE'",
         "CHARSET": "'$CHARSET'",
+        "PREFIX": "'$PREFIX'",
+        "DB_INDEX": "'$DB_INDEX'",
         "U_DISK": "'$U_DISK'",
         "SUSPENDED": "'$SUSPENDED'",
         "TIME": "'$TIME'",

@@ -671,6 +671,74 @@
 								</div>
 							</div>
 						<?php }} ?>
+						<!-- Redis Options-->
+						<?php if ($v_redis == "yes") { ?>
+							<div class="u-mb10">
+								<p>
+									<?= tohtml( _("Redis Support")) ?>:
+									<span class="u-ml5">
+										<?= tohtml($v_redis == "yes" ? _("Yes") : _("No")) ?>
+									</span>
+									<a href="/list/db-host/" class="u-ml5">
+										<i class="fas fa-pencil icon-orange"></i>
+									</a>
+								</p>
+							</div>
+							<div class="u-mb20">
+								<label for="v_redis_url" class="form-label">
+									<?= tohtml( _("phpRedisAdmin Alias")) ?>
+								</label>
+								<input type="text" class="form-control" name="v_redis_url" id="v_redis_url" value="<?= tohtml($_SESSION["DB_PRA_ALIAS"] ?? "phpredisadmin") ?>">
+							</div>
+							<div class="u-mb10">
+								<label for="v_phpredisadmin_key" class="form-label">
+									<?= tohtml( _("phpRedisAdmin Single Sign On")) ?>
+								</label>
+								<select
+									class="form-select"
+									name="v_phpredisadmin_key"
+									id="v_phpredisadmin_key"
+									<?php $_SESSION["API"] != "yes" ? "disabled" : ""; ?>
+								>
+									<option value="no">
+										<?= tohtml( _("Disabled")) ?>
+									</option>
+									<option value="yes" <?= tohtml(($_SESSION["PHPREDISADMIN_KEY"] ?? "") != "" ? "selected" : "") ?>>
+										<?= tohtml( _("Enabled")) ?>
+									</option>
+								</select>
+							</div>
+						<?php } ?>
+						<?php if ($v_redis == "yes") {
+							$i = 0;
+							foreach ($v_redis_hosts as $value) {
+								$i++;
+								$redis_endpoint = $value["ENDPOINT"] ?? $value["HOST"] . ":" . ($value["PORT"] ?? "6379");
+								$redis_endpoint_id = preg_replace('/[^A-Za-z0-9_.-]/', '_', $redis_endpoint) . "_" . substr(md5($redis_endpoint), 0, 8);
+							?>
+							<div class="u-pl30">
+								<div class="u-mb10">
+									<label for="v_redis_host_<?= tohtml($redis_endpoint_id) ?>" class="form-label"><?= tohtml( _("Host") . " #" . $i) ?></label>
+									<input type="text" class="form-control" id="v_redis_host_<?= tohtml($redis_endpoint_id) ?>" value="<?= tohtml($value["ENDPOINT"] ?? $value["HOST"]) ?>" disabled>
+								</div>
+								<div class="u-mb10">
+									<label for="v_redis_port_<?= tohtml($redis_endpoint_id) ?>" class="form-label"><?= tohtml( _("Port")) ?></label>
+									<input type="text" class="form-control" id="v_redis_port_<?= tohtml($redis_endpoint_id) ?>" value="<?= tohtml($value["PORT"] ?? "6379") ?>" disabled>
+								</div>
+								<div class="u-mb10">
+									<label for="v_redis_max_<?= tohtml($redis_endpoint_id) ?>" class="form-label">
+										<?= tohtml( _("Maximum Number of Databases")) ?>
+									</label>
+									<input type="text" class="form-control" id="v_redis_max_<?= tohtml($redis_endpoint_id) ?>" value="<?= tohtml($value["MAX_DB"]) ?>" disabled>
+								</div>
+								<div class="u-mb10">
+									<label for="v_redis_current_<?= tohtml($redis_endpoint_id) ?>" class="form-label">
+										<?= tohtml( _("Current Number of Databases")) ?>
+									</label>
+									<input type="text" class="form-control" id="v_redis_current_<?= tohtml($redis_endpoint_id) ?>" value="<?= tohtml($value["U_DB_BASES"]) ?>" disabled>
+								</div>
+							</div>
+						<?php }} ?>
 					</div>
 				</details>
 			<?php } ?>

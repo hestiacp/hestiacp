@@ -53,7 +53,7 @@ if [ -z "$db_data" ]; then
 	exit "$E_NOTEXIST"
 fi
 
-parse_object_kv_list "$db_data"
+get_database_values
 
 # Creating temporary directory
 tmpdir=$(mktemp -p $BACKUP -d "tmp.$database.XXXXXXXXXX")

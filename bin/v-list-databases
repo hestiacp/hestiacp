@@ -19,6 +19,8 @@ format=${2-shell}
 source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/db.sh
+source $HESTIA/func/db.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
@@ -29,11 +31,16 @@ json_list() {
 	objects=$(grep "DB=" $USER_DATA/db.conf | wc -l)
 	echo "{"
 	while read str; do
+		unset PORT
 		parse_object_kv_list "$str"
+		if [ -z "$PORT" ]; then PORT=$(database_get_default_port "$TYPE"); fi
+		ENDPOINT=$(database_get_endpoint "$HOST" "$PORT")
 		echo -n '    "'$DB'": {
         "DATABASE": "'$DB'",
         "DBUSER": "'$DBUSER'",
         "HOST": "'$HOST'",
+        "PORT": "'$PORT'",
+        "ENDPOINT": "'$ENDPOINT'",
         "TYPE": "'$TYPE'",
         "CHARSET": "'$CHARSET'",
         "U_DISK": "'$U_DISK'",
@@ -57,6 +64,7 @@ shell_list() {
 	echo "DATABASE   USER   HOST   TYPE   DISK   SPND   DATE"
 	echo "--------   ----   ----   ----   ----   ----   ----"
 	while read str; do
+		unset PORT
 		parse_object_kv_list "$str"
 		echo "$DB $DBUSER $HOST $TYPE $U_DISK $SUSPENDED $DATE"
 	done < <(cat $USER_DATA/db.conf)
@@ -66,6 +74,7 @@ shell_list() {
 plain_list() {
 	IFS=$'\n'
 	while read str; do
+		unset PORT
 		parse_object_kv_list "$str"
 		echo -ne "$DB\t$DBUSER\t$HOST\t$TYPE\t$CHARSET\t$U_DISK\t"
 		echo -e "$SUSPENDED\t$TIME\t$DATE"
@@ -77,6 +86,7 @@ csv_list() {
 	IFS=$'\n'
 	echo "DATABASE,DBUSER,HOST,TYPE,CHARSET,U_DISK,SUSPENDED,TIME,DATE"
 	while read str; do
+		unset PORT
 		parse_object_kv_list "$str"
 		echo "$DB,$DBUSER,$HOST,$TYPE,$CHARSET,$U_DISK,$SUSPENDED,$TIME,$DATE"
 	done < <(cat $USER_DATA/db.conf)

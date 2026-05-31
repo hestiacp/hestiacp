@@ -72,6 +72,9 @@ for db in $DB; do
 			parse_object_kv_list $(cat "$tmpdir/db.conf")
 			# @todo add support for renaming user
 			str="DB='$DB' DBUSER='$DBUSER' MD5='$MD5' HOST='$HOST'"
+			if [ -n "$PORT" ]; then
+				str="$str PORT='$PORT'"
+			fi
 			str="$str TYPE='$TYPE' CHARSET='$CHARSET' U_DISK='$U_DISK'"
 			str="$str SUSPENDED='no' TIME='$(date +%T)' DATE='$(date +%F)'"
 			echo "$str" >> $USER_DATA/db.conf

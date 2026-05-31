@@ -738,7 +738,7 @@ if [ "$db" != 'no' ] && [ -n "$DB_SYSTEM" ]; then
 		echo -e "$(date "+%F %T") $database" | tee -a $tmpdir/restore.log
 
 		# Cleanup previous config keys
-		unset -v DB DBUSER MD5 HOST TYPE CHARSET U_DISK
+		unset -v DB DBUSER MD5 HOST PORT TYPE CHARSET U_DISK
 
 		# Checking database existence
 		check_config=$(grep "DB='$database'" $USER_DATA/db.conf)
@@ -767,6 +767,9 @@ if [ "$db" != 'no' ] && [ -n "$DB_SYSTEM" ]; then
 			DBUSER=$(echo "$DBUSER" | sed -e "s/${old_user}_//")
 			DBUSER="${user}_${DBUSER}"
 			str="DB='$DB' DBUSER='$DBUSER' MD5='$MD5' HOST='$HOST'"
+			if [ -n "$PORT" ]; then
+				str="$str PORT='$PORT'"
+			fi
 			str="$str TYPE='$TYPE' CHARSET='$CHARSET' U_DISK='$U_DISK'"
 			str="$str SUSPENDED='no' TIME='$(date +%T)' DATE='$(date +%F)'"
 			echo $str >> $USER_DATA/db.conf

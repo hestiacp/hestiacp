@@ -160,7 +160,7 @@ cat uni_u_db | while read db userdb; do
 		# you will need remove && [ "$userdb" != "$sk_cp_user" ] to restore main user, but
 		# this will cause database duplication in db.conf and will interfer with hestiacp backups
 		if [ "$userdb" == "$user" ] && [ "$userdb" != "$new_user" ]; then
-			echo "DB='$db' DBUSER='$userdb' MD5='$end_user_pass' HOST='localhost' TYPE='mysql' CHARSET='UTF8' U_DISK='0' SUSPENDED='no' TIME='$time' DATE='$data'" >> /usr/local/hestia/data/users/$new_user/db.conf
+			echo "DB='$db' DBUSER='$userdb' MD5='$end_user_pass' HOST='localhost' TYPE='mysql' CHARSET='UTF8' U_DISK='0' SUSPENDED='no' TIME='$time' DATE='$data' PORT='3306'" >> /usr/local/hestia/data/users/$new_user/db.conf
 		fi
 	done
 done

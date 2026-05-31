@@ -47,7 +47,7 @@ fi
 # Check db existence
 db_data=$(grep "DB='$database'" $HESTIA/data/users/$user/db.conf)
 
-parse_object_kv_list "$db_data"
+get_database_values
 #Fix issue #1084 with "Upper case not allowed with PGSQL"
 if [ "$TYPE" == "pgsql" ]; then
 	usersmall=$(echo "$user" | tr '[:upper:]' '[:lower:]')

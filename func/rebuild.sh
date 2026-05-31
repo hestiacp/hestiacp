@@ -789,7 +789,7 @@ rebuild_mail_domain_conf() {
 
 # Rebuild MySQL
 rebuild_mysql_database() {
-	mysql_connect $HOST
+	mysql_connect "$HOST" "$PORT"
 	mysql_query "CREATE DATABASE \`$DB\` CHARACTER SET $CHARSET" > /dev/null
 	if [ "$mysql_fork" = "mysql" ]; then
 		# mysql
@@ -845,9 +845,7 @@ rebuild_mysql_database() {
 # Rebuild PostgreSQL
 rebuild_pgsql_database() {
 
-	unset PORT
-	host_str=$(grep "HOST='$HOST'" $HESTIA/conf/pgsql.conf)
-	parse_object_kv_list "$host_str"
+	database_get_host_values "pgsql" "$HOST" "$PORT"
 	export PGPASSWORD="$PASSWORD"
 
 	if [ -z "$PORT" ]; then PORT=5432; fi
@@ -896,17 +894,16 @@ rebuild_pgsql_database() {
 # Import MySQL dump
 import_mysql_database() {
 
-	host_str=$(grep "HOST='$HOST'" $HESTIA/conf/mysql.conf)
-	parse_object_kv_list "$host_str"
+	database_get_host_values "mysql" "$HOST" "$PORT"
 	if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ]; then
 		echo "Error: mysql config parsing failed"
 		log_event "$E_PARSING" "$ARGUMENTS"
 		exit "$E_PARSING"
 	fi
 	if [ -f '/usr/bin/mariadb' ]; then
-		mariadb -h $HOST -u $USER -p$PASSWORD $DB < $1 > /dev/null 2>&1
+		mariadb -h $HOST -P $PORT -u $USER -p$PASSWORD $DB < $1 > /dev/null 2>&1
 	else
-		mysql -h $HOST -u $USER -p$PASSWORD $DB < $1 > /dev/null 2>&1
+		mysql -h $HOST -P $PORT -u $USER -p$PASSWORD $DB < $1 > /dev/null 2>&1
 	fi
 
 }
@@ -914,12 +911,9 @@ import_mysql_database() {
 # Import PostgreSQL dump
 import_pgsql_database() {
 
-	unset PORT
-	host_str=$(grep "HOST='$HOST'" $HESTIA/conf/pgsql.conf)
-	parse_object_kv_list "$host_str"
+	database_get_host_values "pgsql" "$HOST" "$PORT"
 	export PGPASSWORD="$PASSWORD"
 
-	if [ -z "$PORT" ]; then PORT=5432; fi
 	if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ] || [ -z $TPL ]; then
 		echo "Error: postgresql config parsing failed"
 		log_event "$E_PARSING" "$ARGUMENTS"

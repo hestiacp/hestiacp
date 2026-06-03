@@ -1,5 +1,5 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { render, fireEvent, screen, cleanup, waitFor } from '@testing-library/vue';
+import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/vue';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import CopyToClipboardInput from './CopyToClipboardInput.vue';
 
 // Mock the clipboard API

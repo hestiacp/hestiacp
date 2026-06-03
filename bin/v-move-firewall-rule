@@ -19,7 +19,7 @@
 
 # Argument definition
 source_rule=$1
-direction=$(echo $2 | tr '[:lower:]' '[:upper:]')
+direction=$(echo "$2" | tr '[:lower:]' '[:upper:]')
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf

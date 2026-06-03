@@ -3,13 +3,13 @@
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
 			<a class="button button-secondary button-back js-button-back" href="/list/db/">
-				<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
+				<i class="fas fa-arrow-left icon-blue"></i><?= tohtml( _("Back")) ?>
 			</a>
 		</div>
 		<div class="toolbar-buttons">
 			<?php if (($_SESSION["role"] == "admin" && $accept === "true") || $_SESSION["role"] !== "admin") { ?>
 				<button type="submit" class="button" form="main-form">
-					<i class="fas fa-floppy-disk icon-purple"></i><?= _("Save") ?>
+					<i class="fas fa-floppy-disk icon-purple"></i><?= tohtml( _("Save")) ?>
 				</button>
 			<?php } ?>
 		</div>
@@ -21,41 +21,45 @@
 
 	<form
 		x-data="{
-			showAdvanced: <?= empty($v_adv) ? "false" : "true" ?>
+			showAdvanced: <?= tohtml(empty($v_adv) ? "false" : "true") ?>
 		}"
 		id="main-form"
 		name="v_add_db"
 		method="post"
 	>
-		<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
+		<input type="hidden" name="token" value="<?= tohtml($_SESSION["token"]) ?>">
 		<input type="hidden" name="ok" value="Add">
 
 		<div class="form-container">
-			<h1 class="u-mb20"><?= _("Add Database") ?></h1>
+			<h1 class="u-mb20"><?= tohtml( _("Add Database")) ?></h1>
 			<?php show_alert_message($_SESSION); ?>
 			<?php if ($_SESSION["role"] == "admin" && $accept !== "true") { ?>
 				<div class="alert alert-danger" role="alert">
 					<i class="fas fa-exclamation"></i>
-					<p><?= htmlify_trans(sprintf(_("It is strongly advised to {create a standard user account} before adding %s to the server due to the increased privileges the admin account possesses and potential security risks."), _('a database')), '</a>', '<a href="/add/user/">'); ?></p>
+					<p><?= htmlify_trans(sprintf(_("It is strongly advised to {create a standard user account} before adding %s to the server due to the increased privileges the admin account possesses and potential security risks."), _('a database')), '</a>', '<a href="/add/user/">') ?></p>
 				</div>
 			<?php } ?>
 			<?php if ($_SESSION["role"] == "admin" && empty($accept)) { ?>
 				<div class="u-side-by-side u-mt20">
-					<a href="/add/user/" class="button u-width-full u-mr10"><?= _("Add User") ?></a>
-					<a href="/add/db/?accept=true" class="button button-danger u-width-full u-ml10"><?= _("Continue") ?></a>
+					<a href="/add/user/" class="button u-width-full u-mr10"><?= tohtml( _("Add User")) ?></a>
+					<a href="/add/db/?<?= tohtml(http_build_query(["accept" => 'true'])) ?>" class="button button-danger u-width-full u-ml10"><?= tohtml( _("Continue")) ?></a>
 				</div>
 			<?php } ?>
 			<?php if (($_SESSION["role"] == "admin" && $accept === "true") || $_SESSION["role"] !== "admin") { ?>
-				<p class="hint u-mb20">
-					<?= sprintf(_("Prefix %s will be automatically added to database name and database user"), "<span class=\"u-text-bold\">" . $user_plain . "_</span>") ?>
-				</p>
+					<p class="hint u-mb20">
+						<?php
+							$prefix_hint = tohtml(_("Prefix %s will be automatically added to database name and database user"));
+							$prefix_hint_html = '<span class="u-text-bold">' . tohtml($user_plain) . '_</span>';
+							printf($prefix_hint, $prefix_hint_html);
+						?>
+					</p>
 				<div class="u-mb10">
-					<label for="v_database" class="form-label"><?= _("Database") ?></label>
-					<input type="text" class="form-control js-db-hint-database-name" name="v_database" id="v_database" value="<?= htmlentities(trim($v_database, "'")) ?>">
+					<label for="v_database" class="form-label"><?= tohtml( _("Database")) ?></label>
+					<input type="text" class="form-control js-db-hint-database-name" name="v_database" id="v_database" value="<?= tohtml(trim($v_database, "'")) ?>">
 					<small class="hint"></small>
 				</div>
 				<div class="u-mb10">
-					<label for="v_type" class="form-label"><?= _("Type") ?></label>
+					<label for="v_type" class="form-label"><?= tohtml( _("Type")) ?></label>
 					<select class="form-select" name="v_type" id="v_type">
 						<?php
 							foreach ($db_types as $key => $value) {
@@ -68,16 +72,16 @@
 				</div>
 				<div class="u-mb10">
 					<label for="v_dbuser" class="form-label u-side-by-side">
-						<?= _("Username") ?>
-						<em><small>(<?= sprintf(_("Maximum %s characters length, including prefix"), 32) ?>)</small></em>
+						<?= tohtml( _("Username")) ?>
+						<em><small>(<?= tohtml(sprintf(_("Maximum %s characters length, including prefix"), 32)) ?>)</small></em>
 					</label>
-					<input type="text" class="form-control js-db-hint-username" name="v_dbuser" id="v_dbuser" value="<?= htmlentities(trim($v_dbuser, "'")) ?>">
+					<input type="text" class="form-control js-db-hint-username" name="v_dbuser" id="v_dbuser" value="<?= tohtml(trim($v_dbuser, "'")) ?>">
 					<small class="hint"></small>
 				</div>
 				<div class="u-mb10">
 					<label for="v_password" class="form-label">
-						<?= _("Password") ?>
-						<button type="button" title="<?= _("Generate") ?>" class="u-unstyled-button u-ml5 js-generate-password">
+						<?= tohtml( _("Password")) ?>
+						<button type="button" title="<?= tohtml( _("Generate")) ?>" class="u-unstyled-button u-ml5 js-generate-password">
 							<i class="fas fa-arrows-rotate icon-green"></i>
 						</button>
 					</label>
@@ -91,18 +95,18 @@
 				<?php require $_SERVER["HESTIA"] . "/web/templates/includes/password-requirements.php"; ?>
 				<div class="u-mb20">
 					<label for="v_db_email" class="form-label">
-						<?= _("Email login credentials to:") ?>
+						<?= tohtml( _("Email login credentials to:")) ?>
 					</label>
-					<input type="email" class="form-control" name="v_db_email" id="v_db_email" value="<?= htmlentities(trim($v_db_email, "'")) ?>">
+					<input type="email" class="form-control" name="v_db_email" id="v_db_email" value="<?= tohtml(trim($v_db_email, "'")) ?>">
 				</div>
 				<div class="u-mb20">
 					<button x-on:click="showAdvanced = !showAdvanced" type="button" class="button button-secondary">
-						<?= _("Advanced Options") ?>
+						<?= tohtml( _("Advanced Options")) ?>
 					</button>
 				</div>
 				<div x-cloak x-show="showAdvanced">
 					<div class="u-mb10">
-						<label for="v_host" class="form-label"><?= _("Host") ?></label>
+						<label for="v_host" class="form-label"><?= tohtml( _("Host")) ?></label>
 						<select class="form-select" name="v_host" id="v_host">
 							<?php
 								foreach ($db_hosts as $value) {
@@ -114,7 +118,7 @@
 						</select>
 					</div>
 					<div class="u-mb10">
-						<label for="v_charset" class="form-label"><?= _("Charset") ?></label>
+						<label for="v_charset" class="form-label"><?= tohtml( _("Charset")) ?></label>
 						<select class="form-select" name="v_charset" id="v_charset">
 							<option value=big5 <?php if ((!empty($v_charset)) && ( $v_charset == 'big5')) echo 'selected'; ?>>big5</option>
 							<option value=dec8 <?php if ((!empty($v_charset)) && ( $v_charset == 'dec8')) echo 'selected'; ?>>dec8</option>

@@ -129,9 +129,9 @@ export default function handleShortcuts() {
 			{ key: 'A', ctrlKey: true, shiftKey: true },
 			(_evt) => {
 				const checked = document.querySelector('.js-unit-checkbox:eq(0)').checked;
-				document
-					.querySelectorAll('.js-unit')
-					.forEach((el) => el.classList.toggle('selected'), !checked);
+				document.querySelectorAll('.js-unit').forEach((el) => {
+					el.classList.toggle('selected', !checked);
+				});
 				document.querySelectorAll('.js-unit-checkbox').forEach((el) => {
 					el.checked = !checked;
 				});
@@ -313,7 +313,9 @@ export default function handleShortcuts() {
 			if (openDialog) {
 				openDialog.close();
 			}
-			document.querySelectorAll('input, checkbox, textarea, select').forEach((el) => el.blur());
+			document.querySelectorAll('input, checkbox, textarea, select').forEach((el) => {
+				el.blur();
+			});
 		})
 		.register(
 			{ code: 'ArrowLeft' },

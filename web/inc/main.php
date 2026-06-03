@@ -37,30 +37,7 @@ function destroy_sessions() {
 $i = 0;
 
 // Saving user IPs to the session for preventing session hijacking
-$user_combined_ip = "";
-if (isset($_SERVER["REMOTE_ADDR"])) {
-	$user_combined_ip = $_SERVER["REMOTE_ADDR"];
-}
-if (isset($_SERVER["HTTP_CLIENT_IP"])) {
-	$user_combined_ip .= "|" . $_SERVER["HTTP_CLIENT_IP"];
-}
-if (isset($_SERVER["HTTP_X_FORWARDED_FOR"])) {
-	$user_combined_ip .= "|" . $_SERVER["HTTP_X_FORWARDED_FOR"];
-}
-if (isset($_SERVER["HTTP_FORWARDED_FOR"])) {
-	$user_combined_ip .= "|" . $_SERVER["HTTP_FORWARDED_FOR"];
-}
-if (isset($_SERVER["HTTP_X_FORWARDED"])) {
-	$user_combined_ip .= "|" . $_SERVER["HTTP_X_FORWARDED"];
-}
-if (isset($_SERVER["HTTP_FORWARDED"])) {
-	$user_combined_ip .= "|" . $_SERVER["HTTP_FORWARDED"];
-}
-if (isset($_SERVER["HTTP_CF_CONNECTING_IP"])) {
-	if (!empty($_SERVER["HTTP_CF_CONNECTING_IP"])) {
-		$user_combined_ip = $_SERVER["HTTP_CF_CONNECTING_IP"];
-	}
-}
+$user_combined_ip = get_real_user_ip();
 
 if (!isset($_SESSION["user_combined_ip"])) {
 	$_SESSION["user_combined_ip"] = $user_combined_ip;
@@ -101,7 +78,7 @@ if (isset($_SESSION["user"])) {
 		$_SESSION["token"] = $token;
 	}
 	$username = $_SESSION["user"];
-	if ($_SESSION["look"] != "") {
+	if (!empty($_SESSION["look"])) {
 		$username = $_SESSION["look"];
 	}
 
@@ -160,7 +137,7 @@ if (isset($_SESSION["look"]) && $_SESSION["look"] != "" && $_SESSION["userContex
 if (empty($user_plain)) {
 	$user_plain = "";
 }
-if (empty($_SESSION["look"])) {
+if (!isset($_SESSION["look"])) {
 	$_SESSION["look"] = "";
 }
 
@@ -575,6 +552,14 @@ function backendtpl_with_webdomains() {
 			if (!empty($domain_details["BACKEND"])) {
 				$backend = $domain_details["BACKEND"];
 				$backend_list[$backend][$user][] = $domain;
+
+				// Also count custom backend template names like YOURNAME-PHP-8_4 under PHP-8_4
+				if (preg_match('/(PHP-\d+_\d+)$/', $backend, $m)) {
+					// Avoid duplicates when backend already is the base template
+					if ($backend !== $m[1]) {
+						$backend_list[$m[1]][$user][] = $domain;
+					}
+				}
 			}
 		}
 	}

@@ -12,7 +12,7 @@
 
 # Argument definition
 domain=$1
-domain=$(echo $domain | sed -e 's/\.*$//g' -e 's/^\.*//g')
+domain=$(echo "$domain" | sed -e 's/\.*$//g' -e 's/^\.*//g')
 domain_alias=$domain
 email=$2
 country=$3
@@ -75,10 +75,10 @@ fi
 args_usage='DOMAIN EMAIL COUNTRY STATE CITY ORG UNIT [ALIASES] [FORMAT]'
 check_args '7' "$#" "$args_usage"
 is_format_valid 'domain' 'aliases' 'format' 'email'
-is_common_format_valid $country "country"
-is_common_format_valid $state "state"
-is_common_format_valid $org "org"
-is_common_format_valid $unit "unit"
+is_common_format_valid "$country" "country"
+is_common_format_spaces_valid "$state" "state"
+is_common_format_spaces_valid "$org" "org"
+is_common_format_spaces_valid "$unit" "unit"
 
 release="$(lsb_release -s -r)"
 

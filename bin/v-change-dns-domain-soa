@@ -15,7 +15,7 @@
 user=$1
 domain=$2
 domain_idn=$2
-soa=$(echo $3 | sed -e 's/\.*$//g' -e 's/^\.*//g')
+soa=$(echo "$3" | sed -e 's/\.*$//g' -e 's/^\.*//g')
 restart=$4
 
 # Includes

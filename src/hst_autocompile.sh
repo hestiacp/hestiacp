@@ -217,9 +217,9 @@ fi
 echo "Build version $BUILD_VER, with Nginx version $NGINX_V, PHP version $PHP_V and Web Terminal version $WEB_TERMINAL_V"
 
 HESTIA_V="${BUILD_VER}_${BUILD_ARCH}"
-OPENSSL_V='3.4.0'
-PCRE_V='10.44'
-ZLIB_V='1.3.1'
+OPENSSL_V='3.4.4'
+PCRE_V='10.47'
+ZLIB_V='1.3.2'
 
 # Create build directories
 if [ "$KEEPBUILD" != 'true' ]; then
@@ -603,7 +603,9 @@ if [ "$WEB_TERMINAL_B" = true ]; then
 	get_branch_file 'src/deb/web-terminal/package.json' "${BUILD_DIR_HESTIA_TERMINAL}/usr/local/hestia/web-terminal/package.json"
 	get_branch_file 'src/deb/web-terminal/package-lock.json' "${BUILD_DIR_HESTIA_TERMINAL}/usr/local/hestia/web-terminal/package-lock.json"
 	get_branch_file 'src/deb/web-terminal/server.js' "${BUILD_DIR_HESTIA_TERMINAL}/usr/local/hestia/web-terminal/server.js"
+	get_branch_file 'src/deb/web-terminal/web-terminal-session-auth.php' "${BUILD_DIR_HESTIA_TERMINAL}/usr/local/hestia/web-terminal/web-terminal-session-auth.php"
 	chmod +x "${BUILD_DIR_HESTIA_TERMINAL}/usr/local/hestia/web-terminal/server.js"
+	chmod +x "${BUILD_DIR_HESTIA_TERMINAL}/usr/local/hestia/web-terminal/web-terminal-session-auth.php"
 
 	cd $BUILD_DIR_HESTIA_TERMINAL/usr/local/hestia/web-terminal
 	npm ci --omit=dev

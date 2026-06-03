@@ -48,6 +48,11 @@ server {
 				try_files $uri $uri/ /index.php?$query_string;
 		}
 
+		location ~* ^/livewire-[^/]+/.*\.(js|css)$ {
+				expires off;
+				try_files $uri $uri/ /index.php?$query_string;
+		}
+
 		location ~ [^/]\.php(/|$) {
 			try_files $uri =404;
 

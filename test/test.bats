@@ -514,7 +514,7 @@ function check_ip_not_banned(){
   assert_output --partial "1,\"Test message\",\"Message\",yes"
 }
 @test "User: Delete user notification" {
-  run v-delete-user-notification admin 1
+  run v-delete-user-notification $user 1
   assert_success
   refute_output
 }
@@ -1412,13 +1412,13 @@ function check_ip_not_banned(){
 
 @test "DNS: Add domain record SRV" {
     run v-delete-dns-record $user $domain 50
-    run v-add-dns-record $user $domain '_test_domain' SRV mx.hestiacp.com  '' 50
+    run v-add-dns-record $user $domain '_test_domain' SRV '10 5 443 mx.hestiacp.com'  '' 50
     assert_success
     refute_output
 
     assert_file_contains "$HOMEDIR/$user/conf/dns/${domain}.db" "mx.hestiacp.com."
 
-    run v-change-dns-record $user $domain 50 '_test.domain' SRV mx.hestia.com
+    run v-change-dns-record $user $domain 50 '_test.domain' SRV '10 5 443 mx.hestia.com'
     assert_success
     refute_output
 
@@ -1728,10 +1728,6 @@ function check_ip_not_banned(){
     assert_success
     refute_output
 
-    run grep "RECORD='_domainkey'" "${HESTIA}/data/users/${user}/dns/${domain}.conf"
-    assert_failure
-    refute_output
-
     run grep "RECORD='mail._domainkey'" "${HESTIA}/data/users/${user}/dns/${domain}.conf"
     assert_failure
     refute_output
@@ -1741,10 +1737,6 @@ function check_ip_not_banned(){
     run v-add-mail-domain-dkim $user $domain
     assert_success
     refute_output
-
-    run grep "RECORD='_domainkey'" "${HESTIA}/data/users/${user}/dns/${domain}.conf"
-    assert_success
-    assert_output --partial "RECORD='_domainkey' TYPE='TXT'"
 
     run grep "RECORD='mail._domainkey'" "${HESTIA}/data/users/${user}/dns/${domain}.conf"
     assert_success

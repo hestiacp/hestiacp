@@ -33,7 +33,7 @@ VERBOSE='no'
 # Define software versions
 HESTIA_INSTALL_VER='1.10.0~alpha'
 # Supported PHP versions
-multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0" "8.1" "8.2" "8.3" "8.4")
+multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0" "8.1" "8.2" "8.3" "8.4" "8.5")
 # One of the following PHP versions is required for Roundcube / phpmyadmin
 multiphp_required=("7.3" "7.4" "8.0" "8.1" "8.2" "8.3")
 # Default PHP version if none supplied
@@ -50,7 +50,7 @@ software="acl apache2 apache2.2-common apache2-suexec-custom apache2-utils appar
   idn2 imagemagick ipset jq libapache2-mod-fcgid libapache2-mod-php$fpm_v libapache2-mod-rpaf libonig5 libzip4 lsb-release
   lsof mariadb-client mariadb-common mariadb-server mc mysql-client mysql-common mysql-server nginx nodejs openssh-server
   php$fpm_v php$fpm_v-apcu php$fpm_v-bz2 php$fpm_v-cgi php$fpm_v-cli php$fpm_v-common php$fpm_v-curl php$fpm_v-gd
-  php$fpm_v-imagick php$fpm_v-imap php$fpm_v-intl php$fpm_v-ldap php$fpm_v-mbstring php$fpm_v-mysql php$fpm_v-opcache
+  php$fpm_v-imagick php$fpm_v-imap php$fpm_v-intl php$fpm_v-ldap php$fpm_v-mbstring php$fpm_v-mysql
   php$fpm_v-pgsql php$fpm_v-pspell php$fpm_v-readline php$fpm_v-xml php$fpm_v-zip postgresql postgresql-contrib
   proftpd-core proftpd-mod-crypto quota rrdtool rsyslog util-linux spamassassin
   sysstat unzip vim-common vsftpd whois zip zstd bubblewrap restic"
@@ -1379,7 +1379,12 @@ if [ "$exim" = 'yes' ]; then
 		write_config_value "ANTIVIRUS_SYSTEM" "clamav-daemon"
 	fi
 	if [ "$spamd" = 'yes' ]; then
-		write_config_value "ANTISPAM_SYSTEM" "spamassassin"
+		release_short="$(cut -d '.' -f1 <<< "$release")"
+		if [[ -n "$release_short" ]] && [[ $release_short -lt 24 ]]; then
+			write_config_value "ANTISPAM_SYSTEM" "spamassassin"
+		else
+			write_config_value "ANTISPAM_SYSTEM" "spamd"
+		fi
 	fi
 	if [ "$dovecot" = 'yes' ]; then
 		write_config_value "IMAP_SYSTEM" "dovecot"
@@ -1517,9 +1522,18 @@ $HESTIA/bin/v-generate-ssl-cert $(hostname) '' 'US' 'California' \
 	'San Francisco' 'Hestia Control Panel' 'IT' > /tmp/hst.pem
 
 # Parsing certificate file
-crt_end=$(grep -n "END CERTIFICATE-" /tmp/hst.pem | cut -f 1 -d:)
-key_start=$(grep -n "BEGIN PRIVATE KEY" /tmp/hst.pem | cut -f 1 -d:)
-key_end=$(grep -n "END PRIVATE KEY" /tmp/hst.pem | cut -f 1 -d:)
+crt_end=$(grep -n "END CERTIFICATE-" /tmp/hst.pem | head -n1 | cut -f 1 -d:)
+# Newer OpenSSL may emit BEGIN PRIVATE KEY while older flows emit BEGIN RSA PRIVATE KEY.
+key_start=$(grep -nE "BEGIN (RSA |EC |ENCRYPTED )?PRIVATE KEY" /tmp/hst.pem | head -n1 | cut -f 1 -d:)
+key_end=$(grep -nE "END (RSA |EC |ENCRYPTED )?PRIVATE KEY" /tmp/hst.pem | head -n1 | cut -f 1 -d:)
+if [ -z "$key_start" ] || [ -z "$key_end" ]; then
+	key_start=$(grep -n "BEGIN RSA" /tmp/hst.pem | head -n1 | cut -f 1 -d:)
+	key_end=$(grep -n "END RSA" /tmp/hst.pem | head -n1 | cut -f 1 -d:)
+fi
+check_result $(
+	[ -n "$crt_end" ] && [ -n "$key_start" ] && [ -n "$key_end" ]
+	echo $?
+) "failed to parse generated SSL certificate"
 
 # Adding SSL certificate
 echo "[ * ] Adding SSL certificate to Hestia Control Panel..."
@@ -2370,6 +2384,7 @@ $HESTIA/bin/v-update-sys-rrd
 
 # Enabling file system quota
 if [ "$quota" = 'yes' ]; then
+	echo "[ * ] Configuring quota..."
 	$HESTIA/bin/v-add-sys-quota
 fi
 
@@ -2408,10 +2423,15 @@ BIN="$HESTIA/bin"
 source $HESTIA/func/syshealth.sh
 syshealth_repair_system_config
 
-# Add /usr/local/hestia/bin/ to path variable
-echo 'if [ "${PATH#*/usr/local/hestia/bin*}" = "$PATH" ]; then
+# Add /usr/local/hestia/bin/ to PATH variable in .bashrc if it exists
+[[ -f /root/.bashrc ]] && echo 'if [ "${PATH#*/usr/local/hestia/bin*}" = "$PATH" ]; then
     . /etc/profile.d/hestia.sh
 fi' >> /root/.bashrc
+
+# Add /usr/local/hestia/bin/ to PATH variable in .zshrc if it exists
+[[ -f /root/.zshrc ]] && echo 'if [ "${PATH#*/usr/local/hestia/bin*}" = "$PATH" ]; then
+    . /etc/profile.d/hestia.sh
+fi' >> /root/.zshrc
 
 #----------------------------------------------------------#
 #                   Hestia Access Info                     #

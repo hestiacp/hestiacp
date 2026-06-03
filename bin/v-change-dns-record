@@ -101,20 +101,28 @@ fi
 if [ "$rtype" != "CAA" ]; then
 	dvalue=${dvalue//\"/}
 
-	if [ "$rtype" != 'SRV' ] && [[ "$dvalue" =~ [\;[:space:]] ]]; then
-		dvalue='"'"$dvalue"'"'
-	fi
+	case "$rtype" in
+		SRV | DNSKEY | DS | TLSA | KEY | IPSECKEY) ;;
+		*)
+			if [[ "$dvalue" =~ [\;[:space:]] ]]; then
+				dvalue='"'"$dvalue"'"'
+			fi
+			;;
+	esac
 fi
 
 #RTYPE wasn't checked make sure to do it now correctly
 is_format_valid 'user' 'domain' 'id' 'record' 'rtype' 'dvalue'
 
 # Additional verifications
-is_dns_fqnd "$TYPE" "$dvalue"
-is_dns_nameserver_valid "$domain" "$TYPE" "$dvalue"
+is_dns_fqnd "$rtype" "$dvalue"
+is_dns_nameserver_valid "$domain" "$rtype" "$dvalue"
+
+current_value_canon=${VALUE//\'/%quote%}
+new_value_canon=${dvalue//\'/%quote%}
 
 if [[ "$RECORD" == "$record" ]] && [[ "$TYPE" == "$rtype" ]] && [[ "$PRIORITY" -eq "$priority" ]] \
-	&& [[ "$VALUE" == "$dvalue" ]] && [[ "$SUSPENDED" == 'no' ]] && [[ "$TTL" -eq "$ttl" ]]; then
+	&& [[ "$current_value_canon" == "$new_value_canon" ]] && [[ "$SUSPENDED" == 'no' ]] && [[ "$TTL" -eq "$ttl" ]]; then
 	echo "No pending changes in DNS entry."
 	exit "$E_EXISTS"
 fi
@@ -123,6 +131,9 @@ fi
 time_n_date=$(date +'%T %F')
 time=$(echo "$time_n_date" | cut -f 1 -d \ )
 date=$(echo "$time_n_date" | cut -f 2 -d \ )
+
+log_value="$dvalue"
+dvalue="$new_value_canon"
 
 # Adding record
 dns_rec="ID='$id' RECORD='$record' TYPE='$rtype' PRIORITY='$priority'"
@@ -162,7 +173,7 @@ $BIN/v-restart-dns "$restart"
 check_result $? "DNS restart failed" > /dev/null
 
 # Logging
-$BIN/v-log-action "$user" "Info" "DNS" "DNS record value changed (Type: $rtype, Record: $record, Value: $dvalue, Domain: $domain)."
+$BIN/v-log-action "$user" "Info" "DNS" "DNS record value changed (Type: $rtype, Record: $record, Value: $log_value, Domain: $domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

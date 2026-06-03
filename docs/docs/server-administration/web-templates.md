@@ -148,14 +148,14 @@ To write custom caching templates, use the following naming scheme:
 
 `caching-yourname.tpl`, `caching-yourname.stpl` and `caching-yourname.sh`
 
-### Does Hestia support Web socket support
+### Does Hestia support WebSockets?
 
-Yes, Hestia works fine with Web sockets how ever our default templates include on default:
+Yes, Hestia works fine with WebSockets; however, our default templates include by default:
 
 ```bash
 proxy_hide_header Upgrade
 ```
 
-This resolved an issue with Safari from loading websites.
+This resolves an issue with Safari preventing websites from loading.
 
-To allow the use of Web sockets remove this line. Other wise Web sockets will not work
+To allow the use of WebSockets, remove this line. Otherwise, WebSockets will not work.

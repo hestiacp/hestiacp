@@ -1,5 +1,5 @@
 {
-	"$schema": "https://biomejs.dev/schemas/2.1.4/schema.json",
+	"$schema": "https://biomejs.dev/schemas/2.3.13/schema.json",
 	"vcs": {
 		"enabled": false,
 		"clientKind": "git",
@@ -9,15 +9,16 @@
 		"ignoreUnknown": false,
 		"includes": [
 			"**",
-			"!**/dist/**",
+			"!**/dist",
+			"!**/vendor",
+			"!**/node_modules",
+			"!**/test-results",
+			"!**/.vitepress/cache",
+			"!**/test/test_helper",
+			"!**/email/examples/*.html",
 			"!**/*.bats",
 			"!**/*.min.css",
-			"!**/*.min.js",
-			"!**/vendor/**",
-			"!**/node_modules/**",
-			"!**/test-results/**",
-			"!**/.vitepress/cache/**",
-			"!**/test/test_helper/**"
+			"!**/*.min.js"
 		]
 	},
 	"formatter": {
@@ -40,7 +41,11 @@
 				"noEmptyBlock": "off",
 				"noShorthandPropertyOverrides": "off",
 				"noDuplicateProperties": "off",
-				"noDoubleEquals": "off"
+				"noDoubleEquals": "off",
+				"noUnknownAtRules": "off"
+			},
+			"complexity": {
+				"noImportantStyles": "off"
 			}
 		}
 	},

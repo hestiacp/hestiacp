@@ -129,8 +129,8 @@ if [ ! -f "${IPSET_PATH}/${IPSET_FILE}.iplist" ] || [ "$refresh" = "yes" ]; then
 	fi
 
 	# Validate iplist file size
-	iplist_size=$(sed -r -e '/^#|^$/d' "$iplist_tempfile" | wc -l)
-	[[ "$iplist_size" -lt "$IPSET_MIN_SIZE" ]] && check_result "$E_INVALID" "IP list file too small (<${IPSET_MIN_SIZE}), ignoring"
+	iplist_size="$(grep -cEv '^(#|$)' "$iplist_tempfile")"
+	[[ "$iplist_size" -lt "$IPSET_MIN_SIZE" ]] && check_result "$E_INVALID" "IP list ${IPSET_FILE} is too small (<${IPSET_MIN_SIZE}), ignoring"
 	mv -f "$iplist_tempfile" "${IPSET_PATH}/${IPSET_FILE}.iplist"
 
 fi
@@ -139,14 +139,47 @@ fi
 inet_ver="inet"
 [ "$ip_version" == "v6" ] && inet_ver="inet6"
 
-$IPSET_BIN -quiet create -exist "$ip_name" hash:net family $inet_ver
+# Set default value if $iplist_size is not defined or empty
+if [[ -z $iplist_size ]]; then
+	if [[ -f "${IPSET_PATH}/${IPSET_FILE}.iplist" ]]; then
+		iplist_size="$(grep -cEv '^(#|$)' < "${IPSET_PATH}/${IPSET_FILE}.iplist")"
+		[[ "$iplist_size" -lt "$IPSET_MIN_SIZE" ]] && check_result "$E_INVALID" "IP list file ${IPSET_PATH}/${IPSET_FILE}.iplist is too small (<${IPSET_MIN_SIZE}), ignoring"
+	else
+		check_result "$E_NOTEXIST" "iplist file not found: ${IPSET_PATH}/${IPSET_FILE}.iplist"
+	fi
+fi
+
+# Ensure iplist_size is a valid positive integer
+if ! [[ "$iplist_size" =~ ^[0-9]+$ ]] || [[ "$iplist_size" -le 0 ]]; then
+	check_result "$E_INVALID" "Invalid or empty iplist: iplist_size=$iplist_size"
+fi
+
+# Set maxelem equal to the number of entries
+maxelem="$iplist_size"
+
+# Calculate hashsize as a power of 2 based on iplist_size/4
+# This balances memory usage and lookup performance
+min_buckets=$((iplist_size / 4))
+[[ "$min_buckets" -lt 64 ]] && min_buckets=64
+
+hashsize=64
+while [[ "$hashsize" -lt "$min_buckets" ]]; do
+	hashsize=$((hashsize * 2))
+done
+
+# Create the main set with calculated parameters (if it doesn't exist)
+$IPSET_BIN -quiet create -exist "$ip_name" hash:net family "$inet_ver" maxelem "$maxelem" hashsize "$hashsize"
+
+# Recreate the temporary set with the same parameters
 $IPSET_BIN -quiet destroy "${ip_name}-tmp"
-$IPSET_BIN create "${ip_name}-tmp" -exist hash:net family $inet_ver maxelem 1048576
-$IPSET_BIN flush "${ip_name}-tmp"
+$IPSET_BIN -quiet create "${ip_name}-tmp" hash:net family "$inet_ver" maxelem "$maxelem" hashsize "$hashsize"
+$IPSET_BIN -quiet flush "${ip_name}-tmp"
 
+# Populate the temporary set from the iplist file
 sed -rn -e '/^#|^$/d' -e "s/^(.*)/add ${ip_name}-tmp \\1/p" "${IPSET_PATH}/${IPSET_FILE}.iplist" | $IPSET_BIN -quiet restore
-check_result $? "Populating ipset table"
+check_result $? "Populating ipset table ${ip_name}"
 
+# Atomically swap the temporary set with the main set
 $IPSET_BIN swap "${ip_name}-tmp" "${ip_name}"
 $IPSET_BIN -quiet destroy "${ip_name}-tmp"
 

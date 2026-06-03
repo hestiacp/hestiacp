@@ -28,7 +28,9 @@ export default function handleListUnitSelect() {
 		checkboxes.forEach((checkbox) => {
 			checkbox.checked = isChecked;
 		});
-		units.forEach((unit) => updateUnitSelection(unit, isChecked));
+		units.forEach((unit) => {
+			updateUnitSelection(unit, isChecked);
+		});
 	});
 }
 

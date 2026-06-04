@@ -26,3 +26,16 @@ upgrade_config_set_value 'UPGRADE_REBUILD_USERS' 'false'
 # fix/file manager ignores user language
 echo "[ * ] Fix File Manager ignoring user language"
 cp -f "$HESTIA"/install/deb/filemanager/filegator/configuration.php "$HESTIA"/web/fm/configuration.php
+
+# Apply SSH config if running on Debian 13
+source /etc/os-release
+if [[ "$ID" == "debian" && "$VERSION_ID" == "13" ]]; then
+	_KEX_CONF="/etc/ssh/sshd_config.d/hestia-kex.conf"
+	_KEX_LINE="KexAlgorithms +diffie-hellman-group-exchange-sha256"
+
+	# Only create/modify the file if it doesn't already contain the correct config
+	if [[ ! -f "$_KEX_CONF" ]] || ! grep -qxF "$_KEX_LINE" "$_KEX_CONF"; then
+		echo "$_KEX_LINE" > "$_KEX_CONF"
+		"$BIN"/v-restart-service ssh
+	fi
+fi

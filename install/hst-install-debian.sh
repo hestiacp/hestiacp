@@ -6,7 +6,7 @@
 # https://www.hestiacp.com/
 #
 # Currently Supported Versions:
-# Debian 11 12
+# Debian 11 12 13
 #
 # ======================================================== #
 
@@ -39,9 +39,9 @@ multiphp_required=("7.3" "7.4" "8.0" "8.1" "8.2" "8.3")
 # Default PHP version if none supplied
 fpm_v="8.3"
 # MariaDB version
-mariadb_v="11.4"
+mariadb_v="11.8"
 # Node.js version
-node_v="20"
+node_v="24"
 
 # Defining software pack for all distros
 software="acl apache2 apache2-suexec-custom apache2-utils at awstats bc bind9 bsdmainutils bsdutils
@@ -1478,7 +1478,7 @@ echo "[ * ] Configuring OpenSSL to improve TLS performance..."
 tls13_ciphers="TLS_AES_128_GCM_SHA256:TLS_CHACHA20_POLY1305_SHA256:TLS_AES_256_GCM_SHA384"
 if [ "$release" = "11" ]; then
 	sed -i '/^system_default = system_default_sect$/a system_default = hestia_openssl_sect\n\n[hestia_openssl_sect]\nCiphersuites = '"$tls13_ciphers"'\nOptions = PrioritizeChaCha' /etc/ssl/openssl.cnf
-elif [ "$release" = "12" ]; then
+else
 	if ! grep -qw "^ssl_conf = ssl_sect$" /etc/ssl/openssl.cnf 2> /dev/null; then
 		sed -i '/providers = provider_sect$/a ssl_conf = ssl_sect' /etc/ssl/openssl.cnf
 	fi
@@ -1742,7 +1742,7 @@ if [ "$proftpd" = 'yes' ]; then
 		fi
 	fi
 
-	if [ "$release" -eq 12 ]; then
+	if [ "$release" -eq 12 ] || [ "$release" -eq 13 ]; then
 		systemctl disable --now proftpd.socket
 		systemctl enable --now proftpd.service
 	fi
@@ -1944,6 +1944,10 @@ if [ "$named" = 'yes' ]; then
 			systemctl restart apparmor >> $LOG
 		fi
 	fi
+	# Debian 13 removed the named.conf.default-zones file if doesn't exsists remove it from the config file
+	if [ ! -f /etc/bind/named.conf.default-zones ]; then
+		sed -i "/^include.*named.conf.default-zones/d" /etc/bind/named.conf
+	fi
 	update-rc.d bind9 defaults > /dev/null 2>&1
 	systemctl start bind9
 	check_result $? "bind9 start failed"
@@ -2011,24 +2015,30 @@ fi
 #----------------------------------------------------------#
 
 if [ "$dovecot" = 'yes' ]; then
+	dovecot_version="$(dovecot --version | cut -f -2 -d .)"
 	echo "[ * ] Configuring Dovecot POP/IMAP mail server..."
 	gpasswd -a dovecot mail > /dev/null 2>&1
-	cp -rf $HESTIA_COMMON_DIR/dovecot /etc/
+	mkdir -p /etc/dovecot/conf.d/
+	if [[ "$dovecot_version" = "2.4" ]]; then
+		cp -f $HESTIA_COMMON_DIR/dovecot-24/dovecot.conf /etc/dovecot/
+		cp -f $HESTIA_COMMON_DIR/dovecot-24/conf.d/* /etc/dovecot/conf.d/
+	else
+		cp -f $HESTIA_COMMON_DIR/dovecot/dovecot.conf /etc/dovecot/
+		cp -f $HESTIA_COMMON_DIR/dovecot/conf.d/* /etc/dovecot/conf.d/
+		rm -f /etc/dovecot/conf.d/15-mailboxes.conf
+	fi
 	cp -f $HESTIA_INSTALL_DIR/logrotate/dovecot /etc/logrotate.d/
-	rm -f /etc/dovecot/conf.d/15-mailboxes.conf
 	chown -R root:root /etc/dovecot*
 	touch /var/log/dovecot.log
 	chown -R dovecot:mail /var/log/dovecot.log
 	chmod 660 /var/log/dovecot.log
 	# Alter config for 2.2
-	version=$(dovecot --version | cut -f -2 -d .)
-	if [ "$version" = "2.2" ]; then
+	if [ "$dovecot_version" = "2.2" ]; then
 		echo "[ * ] Downgrade dovecot config to sync with 2.2 settings"
 		sed -i 's|#ssl_dh_parameters_length = 4096|ssl_dh_parameters_length = 4096|g' /etc/dovecot/conf.d/10-ssl.conf
 		sed -i 's|ssl_dh = </etc/ssl/dhparam.pem|#ssl_dh = </etc/ssl/dhparam.pem|g' /etc/dovecot/conf.d/10-ssl.conf
 		sed -i 's|ssl_min_protocol = TLSv1.2|ssl_protocols = !SSLv3 !TLSv1 !TLSv1.1|g' /etc/dovecot/conf.d/10-ssl.conf
 	fi
-
 	update-rc.d dovecot defaults
 	systemctl start dovecot >> $LOG
 	check_result $? "dovecot start failed"
@@ -2175,21 +2185,38 @@ if [ "$sieve" = 'yes' ]; then
 
 	echo "[ * ] Installing Sieve Mail Filter..."
 
-	# dovecot.conf install
-	sed -i "s/namespace/service stats \{\n  unix_listener stats-writer \{\n    group = mail\n    mode = 0660\n    user = dovecot\n  \}\n\}\n\nnamespace/g" /etc/dovecot/dovecot.conf
+	dovecot_version="$(dovecot --version | cut -f -2 -d .)"
+	if [[ "$dovecot_version" = "2.4" ]]; then
+		# dovecot conf files
+		# dovecot.conf install
+		sed -i -E 's/protocols = imap/protocols = sieve imap/' /etc/dovecot/dovecot.conf
+		#  10-master.conf
+		sed -i -E -z 's/    user = dovecot\n  \}\n\}/    user = dovecot\n  \}\n\n  unix_listener auth-master {\n    group = mail\n    mode = 0660\n    user = dovecot\n  }\n\}/' /etc/dovecot/conf.d/10-master.conf
+		#  15-lda.conf
+		sed -i '/^protocol lda {$/a\  mail_plugins = mail_compress quota sieve' /etc/dovecot/conf.d/15-lda.conf
+		#  20-imap.conf
+		sed -i "s/quota imap_quota/quota imap_quota imap_sieve/g" /etc/dovecot/conf.d/20-imap.conf
+		# replace dovecot-sieve config files
+		cp -f "$HESTIA_COMMON_DIR"/dovecot-24/sieve/* /etc/dovecot/conf.d
 
-	# Dovecot conf files
-	#  10-master.conf
-	sed -i -E -z "s/  }\n  user = dovecot\n}/  \}\n  unix_listener auth-master \{\n    group = mail\n    mode = 0660\n    user = dovecot\n  \}\n  user = dovecot\n\}/g" /etc/dovecot/conf.d/10-master.conf
-	#  15-lda.conf
-	sed -i "s/\#mail_plugins = \\\$mail_plugins/mail_plugins = \$mail_plugins quota sieve\n  auth_socket_path = \/var\/run\/dovecot\/auth-master/g" /etc/dovecot/conf.d/15-lda.conf
-	#  20-imap.conf
-	sed -i "s/mail_plugins = quota imap_quota/mail_plugins = quota imap_quota imap_sieve/g" /etc/dovecot/conf.d/20-imap.conf
+	else
+		# dovecot.conf install
+		sed -i "s/namespace/service stats \{\n  unix_listener stats-writer \{\n    group = mail\n    mode = 0660\n    user = dovecot\n  \}\n\}\n\nnamespace/g" /etc/dovecot/dovecot.conf
 
-	# Replace dovecot-sieve config files
-	cp -f $HESTIA_COMMON_DIR/dovecot/sieve/* /etc/dovecot/conf.d
+		# Dovecot conf files
+		#  10-master.conf
+		sed -i -E -z "s/  }\n  user = dovecot\n}/  \}\n  unix_listener auth-master \{\n    group = mail\n    mode = 0660\n    user = dovecot\n  \}\n  user = dovecot\n\}/g" /etc/dovecot/conf.d/10-master.conf
+		#  15-lda.conf
+		sed -i "s/\#mail_plugins = \\\$mail_plugins/mail_plugins = \$mail_plugins quota sieve\n  auth_socket_path = \/var\/run\/dovecot\/auth-master/g" /etc/dovecot/conf.d/15-lda.conf
+		#  20-imap.conf
+		sed -i "s/mail_plugins = quota imap_quota/mail_plugins = quota imap_quota imap_sieve/g" /etc/dovecot/conf.d/20-imap.conf
+
+		# Replace dovecot-sieve config files
+		cp -f $HESTIA_COMMON_DIR/dovecot/sieve/* /etc/dovecot/conf.d
+	fi
 
 	# Dovecot default file install
+	mkdir -p /etc/dovecot/sieve/
 	echo -e "require [\"fileinto\"];\n# rule:[SPAM]\nif header :contains \"X-Spam-Flag\" \"YES\" {\n    fileinto \"INBOX.Spam\";\n}\n" > /etc/dovecot/sieve/default
 
 	# exim4 install

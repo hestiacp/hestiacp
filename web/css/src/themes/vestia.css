@@ -21,6 +21,21 @@
 	/* Top Bar */
 	--top-bar-background: #5d5d5d;
 	--top-bar-box-shadow: none;
+
+	/* Laravel Toolkit */
+	--laravel-surface-muted: #f8f8f8;
+}
+
+/* Laravel Toolkit
+   ========================================================================== */
+
+.laravel-sidebar,
+.laravel-workbench,
+.laravel-panel,
+.laravel-app-card,
+.laravel-empty-state {
+	border-radius: 0;
+	box-shadow: none;
 }
 
 h1 {

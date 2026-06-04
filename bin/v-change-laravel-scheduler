@@ -1,0 +1,64 @@
+#!/bin/bash
+# info: change Laravel scheduler
+# options: USER DOMAIN yes|no
+#
+# example: v-change-laravel-scheduler admin example.com yes
+#
+# This function enables or disables the managed Laravel scheduler cron job.
+
+user=$1
+domain=$2
+state=$3
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/laravel.sh
+source $HESTIA/func/laravel.sh
+source_conf "$HESTIA/conf/hestia.conf"
+
+delete_scheduler_cron() {
+	local managed_command="$1"
+	local job_ids=""
+
+	while read -r line; do
+		[ -z "$line" ] && continue
+		parse_object_kv_list "$line"
+		if [ "$CMD" = "$managed_command" ]; then
+			job_ids="$job_ids $JOB"
+		fi
+	done < "$USER_DATA/cron.conf"
+
+	for job_id in $job_ids; do
+		$BIN/v-delete-cron-job "$user" "$job_id" no
+		check_result $? "Failed to delete Laravel scheduler cron job"
+	done
+}
+
+check_args '3' "$#" 'USER DOMAIN yes|no'
+is_format_valid 'user' 'domain'
+is_object_valid 'user' 'USER' "$user"
+laravel_require_app "$domain"
+
+php_bin="$(laravel_php_bin "$PHP_VERSION")"
+managed_command="cd $APP_ROOT && $php_bin artisan schedule:run"
+
+case "$state" in
+	yes)
+		delete_scheduler_cron "$managed_command"
+		$BIN/v-add-cron-job "$user" "*" "*" "*" "*" "*" "$managed_command" "" yes
+		check_result $? "Failed to add Laravel scheduler cron job"
+		update_object_value 'laravel' 'DOMAIN' "$domain" '$SCHEDULER' 'yes'
+		;;
+	no)
+		delete_scheduler_cron "$managed_command"
+		update_object_value 'laravel' 'DOMAIN' "$domain" '$SCHEDULER' 'no'
+		;;
+	*) check_result "$E_INVALID" "Invalid Laravel scheduler state" ;;
+esac
+
+$BIN/v-log-action "$user" "Info" "Web" "Laravel scheduler changed (Domain: $domain, State: $state)."
+log_event "$OK" "$ARGUMENTS"
+exit

@@ -14,6 +14,20 @@
 	/* Top Bar */
 	--top-bar-background: #5070a6;
 	--top-bar-box-shadow: none;
+
+	/* Laravel Toolkit */
+	--laravel-surface-muted: #f9f9f9;
+}
+
+/* Laravel Toolkit
+   ========================================================================== */
+
+.laravel-sidebar,
+.laravel-workbench,
+.laravel-panel,
+.laravel-app-card,
+.laravel-empty-state {
+	box-shadow: none;
 }
 
 /* Top bar

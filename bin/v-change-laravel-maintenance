@@ -1,0 +1,43 @@
+#!/bin/bash
+# info: change Laravel maintenance mode
+# options: USER DOMAIN yes|no [SECRET]
+#
+# example: v-change-laravel-maintenance admin example.com yes
+#
+# This function toggles maintenance mode for a registered Laravel app.
+
+user=$1
+domain=$2
+state=$3
+secret=${4-}
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/laravel.sh
+source $HESTIA/func/laravel.sh
+source_conf "$HESTIA/conf/hestia.conf"
+
+check_args '3' "$#" 'USER DOMAIN yes|no [SECRET]'
+is_format_valid 'user' 'domain'
+is_object_valid 'user' 'USER' "$user"
+laravel_require_app "$domain"
+
+case "$state" in
+	yes)
+		if [ -n "$secret" ]; then
+			$BIN/v-run-laravel-artisan "$user" "$domain" down "--secret=$secret"
+		else
+			$BIN/v-run-laravel-artisan "$user" "$domain" down
+		fi
+		;;
+	no) $BIN/v-run-laravel-artisan "$user" "$domain" up ;;
+	*) check_result "$E_INVALID" "Invalid Laravel maintenance state" ;;
+esac
+
+check_result $? "Failed to change Laravel maintenance mode"
+$BIN/v-log-action "$user" "Info" "Web" "Laravel maintenance mode changed (Domain: $domain, State: $state)."
+log_event "$OK" "$ARGUMENTS"
+exit

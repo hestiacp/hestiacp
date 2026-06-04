@@ -1,0 +1,39 @@
+#!/bin/bash
+# info: list Laravel logs
+# options: USER DOMAIN [LINES]
+#
+# example: v-list-laravel-log admin example.com 200
+#
+# This function tails Laravel log files inside the registered app root.
+
+user=$1
+domain=$2
+lines=${3-200}
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/laravel.sh
+source $HESTIA/func/laravel.sh
+source_conf "$HESTIA/conf/hestia.conf"
+
+check_args '2' "$#" 'USER DOMAIN [LINES]'
+is_format_valid 'user' 'domain'
+is_object_valid 'user' 'USER' "$user"
+laravel_require_app "$domain"
+
+if ! [[ "$lines" =~ ^[0-9]{1,4}$ ]]; then
+	check_result "$E_INVALID" "Invalid log line count"
+fi
+
+log_dir="$APP_ROOT/storage/logs"
+if [ ! -d "$log_dir" ]; then
+	exit
+fi
+
+find "$log_dir" -maxdepth 1 -type f -name 'laravel*.log' -print0 \
+	| xargs -0 --no-run-if-empty tail -n "$lines"
+
+exit

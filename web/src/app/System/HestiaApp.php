@@ -314,6 +314,28 @@ class HestiaApp
         }
     }
 
+    public function registerLaravelApp(
+        string $domain,
+        string $appRoot,
+        string $phpVersion,
+        string $sourceType = 'skeleton',
+        string $repositoryUrl = '',
+        string $branch = '',
+    ): void {
+        try {
+            $this->runUser('v-add-laravel-app', [
+                $domain,
+                $appRoot,
+                $phpVersion,
+                $sourceType,
+                $repositoryUrl,
+                $branch,
+            ]);
+        } catch (ProcessFailedException) {
+            throw new RuntimeException(sprintf('Failed to register Laravel app for "%s"', $domain));
+        }
+    }
+
     public function getSupportedPHPVersions(array $supportedPHP): array
     {
         try {

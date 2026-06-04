@@ -1,0 +1,32 @@
+#!/bin/bash
+# info: run Laravel artisan command
+# options: USER DOMAIN COMMAND [ARG...]
+#
+# example: v-run-laravel-artisan admin example.com migrate --force
+#
+# This function runs an Artisan command for a registered Laravel app.
+
+user=$1
+domain=$2
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/laravel.sh
+source $HESTIA/func/laravel.sh
+source_conf "$HESTIA/conf/hestia.conf"
+
+check_args '3' "$#" 'USER DOMAIN COMMAND [ARG...]'
+is_format_valid 'user' 'domain'
+is_object_valid 'user' 'USER' "$user"
+laravel_require_app "$domain"
+
+php_bin="$(laravel_php_bin "$PHP_VERSION")"
+shift 2
+
+runuser -u "$user" -- bash -c 'cd "$1" && shift && exec "$@"' _ "$APP_ROOT" "$php_bin" artisan "$@"
+exit_code=$?
+log_event "$exit_code" "$ARGUMENTS"
+exit "$exit_code"

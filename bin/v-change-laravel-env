@@ -1,0 +1,37 @@
+#!/bin/bash
+# info: change Laravel environment file
+# options: USER DOMAIN ENV_FILE
+#
+# example: v-change-laravel-env admin example.com /tmp/envfile
+#
+# This function replaces a registered Laravel app .env file from a temporary file.
+
+user=$1
+domain=$2
+env_source=$3
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/laravel.sh
+source $HESTIA/func/laravel.sh
+source_conf "$HESTIA/conf/hestia.conf"
+
+check_args '3' "$#" 'USER DOMAIN ENV_FILE'
+is_format_valid 'user' 'domain'
+is_object_valid 'user' 'USER' "$user"
+laravel_require_app "$domain"
+
+if [[ "$env_source" != /tmp/* ]] || [ ! -f "$env_source" ]; then
+	check_result "$E_FORBIDEN" "Laravel .env source file must be a temporary file"
+fi
+
+cp -f "$env_source" "$APP_ROOT/.env"
+chown "$user:$user" "$APP_ROOT/.env"
+chmod 640 "$APP_ROOT/.env"
+
+$BIN/v-log-action "$user" "Info" "Web" "Laravel .env updated (Domain: $domain)."
+log_event "$OK" "$ARGUMENTS"
+exit

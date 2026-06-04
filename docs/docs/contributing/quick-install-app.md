@@ -71,6 +71,8 @@ There are multiple ways to install and configure the web app after it is has bee
 To prevent any issues, make that all commands are executed as the user, instead of `root` or `admin`. All the commands that are supplied by HestiaCP do this by default.
 :::
 
+When an installer creates an app that has a matching Hestia manager or toolkit integration, register the app only after the source files have been created. For example, the Laravel Quick Install registers the completed Laravel skeleton with Laravel Toolkit so the panel can immediately show the app dashboard, command runner, deployment tools, logs, scheduler, and queue controls.
+
 ## Sharing
 
 Once you are done, you can [submit a Pull Request](https://github.com/hestiacp/hestiacp/pulls) and we will review the code. If it meets our standards, we will include in the next release.

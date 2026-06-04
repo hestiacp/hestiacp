@@ -22,6 +22,12 @@ To manage your web domains, navigate to the **Web <i class="fas fa-fw fa-globe-a
 Depending on the application you chose to install, this can take 30 seconds or longer. Do not reload or close the tab!
 :::
 
+## Managing Laravel applications
+
+When Laravel is installed through **Quick install App**, Hestia registers the application with [Laravel Toolkit](./laravel-toolkit). Open the web domain and click **Laravel** to manage Artisan commands, Composer, Node.js, deployment, `.env`, logs, scheduler, queues, and maintenance mode.
+
+Existing Laravel applications can be scanned or registered with Laravel Toolkit after the project files are placed in the web domain directory.
+
 ## Editing a web domain
 
 1. Click the domain name or the <i class="fas fa-fw fa-pencil-alt"><span class="visually-hidden">edit</span></i> icon that appears on hover.

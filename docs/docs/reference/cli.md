@@ -5638,6 +5638,319 @@ v-purge-nginx-cache user domain.tld
 
 This function purges nginx cache.
 
+## v-add-laravel-app
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-laravel-app)
+
+Register a Laravel application for a web domain.
+
+**Options**: `USER` `DOMAIN` `APP_ROOT` `PHP_VERSION` `[SOURCE_TYPE]` `[REPO_URL]` `[BRANCH]`
+
+**Examples**:
+
+```bash
+v-add-laravel-app admin example.com /home/admin/web/example.com/public_html 8.3 local
+```
+
+The app root must be inside the user’s web domain directory and contain `artisan`, `composer.json`, and `public/index.php`.
+
+## v-change-laravel-deploy-script
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-laravel-deploy-script)
+
+Update the deployment script used by Laravel Toolkit.
+
+**Options**: `USER` `DOMAIN` `SCRIPT_FILE`
+
+**Examples**:
+
+```bash
+v-change-laravel-deploy-script admin example.com /tmp/deploy.sh
+```
+
+The script is copied into the domain’s private Laravel Toolkit directory, outside the public document root.
+
+## v-change-laravel-env
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-laravel-env)
+
+Replace the registered Laravel application’s `.env` file.
+
+**Options**: `USER` `DOMAIN` `ENV_FILE`
+
+**Examples**:
+
+```bash
+v-change-laravel-env admin example.com /tmp/example.env
+```
+
+Use a temporary file owned by the requesting context. The target is always `<app_root>/.env`.
+
+## v-change-laravel-maintenance
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-laravel-maintenance)
+
+Enable or disable Laravel maintenance mode.
+
+**Options**: `USER` `DOMAIN` `yes|no` `[SECRET]`
+
+**Examples**:
+
+```bash
+v-change-laravel-maintenance admin example.com yes
+v-change-laravel-maintenance admin example.com no
+```
+
+When a secret is provided, Laravel can generate a maintenance bypass URL for the application.
+
+## v-change-laravel-queue
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-laravel-queue)
+
+Enable, disable, or update the managed Laravel queue worker.
+
+**Options**: `USER` `DOMAIN` `yes|no` `[CONNECTION]` `[TIMEOUT]` `[MAX_JOBS]` `[MAX_TIME]` `[STOP_WHEN_EMPTY]`
+
+**Examples**:
+
+```bash
+v-change-laravel-queue admin example.com yes database 60 0 0 no
+v-change-laravel-queue admin example.com no
+```
+
+Queue settings map to Laravel `queue:work` options and are applied to the app’s managed worker service.
+
+## v-change-laravel-scheduler
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-laravel-scheduler)
+
+Enable or disable the managed Laravel scheduler cron job.
+
+**Options**: `USER` `DOMAIN` `yes|no`
+
+**Examples**:
+
+```bash
+v-change-laravel-scheduler admin example.com yes
+v-change-laravel-scheduler admin example.com no
+```
+
+Hestia manages one scheduler entry per registered app.
+
+## v-delete-laravel-app
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-laravel-app)
+
+Remove a Laravel Toolkit registration for a domain.
+
+**Options**: `USER` `DOMAIN`
+
+**Examples**:
+
+```bash
+v-delete-laravel-app admin example.com
+```
+
+This removes the toolkit registration and managed Laravel settings. It does not delete the Laravel project files.
+
+## v-delete-laravel-failed-job
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-laravel-failed-job)
+
+Delete one failed Laravel queue job, or flush all failed jobs.
+
+**Options**: `USER` `DOMAIN` `JOB_ID|all`
+
+**Examples**:
+
+```bash
+v-delete-laravel-failed-job admin example.com 12
+v-delete-laravel-failed-job admin example.com all
+```
+
+The command uses Laravel’s native failed job commands in the registered app root.
+
+## v-deploy-laravel-app
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-deploy-laravel-app)
+
+Run the registered Laravel deployment script.
+
+**Options**: `USER` `DOMAIN` `[manual|webhook]`
+
+**Examples**:
+
+```bash
+v-deploy-laravel-app admin example.com manual
+```
+
+Deployments run as the domain owner from the registered app root.
+
+## v-list-laravel-app
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-laravel-app)
+
+Show one registered Laravel application.
+
+**Options**: `USER` `DOMAIN` `[FORMAT]`
+
+**Examples**:
+
+```bash
+v-list-laravel-app admin example.com json
+v-list-laravel-app admin example.com shell
+```
+
+Supported formats follow Hestia’s standard command output conventions.
+
+## v-list-laravel-apps
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-laravel-apps)
+
+List Laravel applications registered for a user.
+
+**Options**: `USER` `[FORMAT]`
+
+**Examples**:
+
+```bash
+v-list-laravel-apps admin json
+```
+
+Use this to discover domains managed by Laravel Toolkit.
+
+## v-list-laravel-failed-jobs
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-laravel-failed-jobs)
+
+List failed Laravel queue jobs.
+
+**Options**: `USER` `DOMAIN` `[FORMAT]`
+
+**Examples**:
+
+```bash
+v-list-laravel-failed-jobs admin example.com json
+```
+
+Failed jobs are read from Laravel’s configured failed job storage.
+
+## v-list-laravel-log
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-laravel-log)
+
+Show recent Laravel application log lines.
+
+**Options**: `USER` `DOMAIN` `[LINES]`
+
+**Examples**:
+
+```bash
+v-list-laravel-log admin example.com 200
+```
+
+Only `storage/logs/laravel*.log` files inside the registered app root are read.
+
+## v-open-laravel-env
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-open-laravel-env)
+
+Open the registered Laravel application’s `.env` file.
+
+**Options**: `USER` `DOMAIN`
+
+**Examples**:
+
+```bash
+v-open-laravel-env admin example.com
+```
+
+The output can include secrets such as database passwords and API keys.
+
+## v-retry-laravel-failed-job
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-retry-laravel-failed-job)
+
+Retry one failed Laravel queue job, or retry all failed jobs.
+
+**Options**: `USER` `DOMAIN` `JOB_ID|all`
+
+**Examples**:
+
+```bash
+v-retry-laravel-failed-job admin example.com 12
+v-retry-laravel-failed-job admin example.com all
+```
+
+The command runs Laravel’s native queue retry command inside the registered app root.
+
+## v-run-laravel-artisan
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-run-laravel-artisan)
+
+Run a Laravel Artisan command.
+
+**Options**: `USER` `DOMAIN` `COMMAND` `[ARG...]`
+
+**Examples**:
+
+```bash
+v-run-laravel-artisan admin example.com about
+v-run-laravel-artisan admin example.com migrate --force
+```
+
+Commands run as the domain owner in the registered app root.
+
+## v-run-laravel-composer
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-run-laravel-composer)
+
+Run Composer for a registered Laravel application.
+
+**Options**: `USER` `DOMAIN` `COMMAND` `[ARG...]`
+
+**Examples**:
+
+```bash
+v-run-laravel-composer admin example.com install --no-dev --optimize-autoloader
+v-run-laravel-composer admin example.com dump-autoload
+```
+
+Composer commands run as the domain owner in the registered app root.
+
+## v-run-laravel-node
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-run-laravel-node)
+
+Run a Node.js package manager command for a registered Laravel application.
+
+**Options**: `USER` `DOMAIN` `PACKAGE_MANAGER` `COMMAND` `[ARG...]`
+
+**Examples**:
+
+```bash
+v-run-laravel-node admin example.com npm install
+v-run-laravel-node admin example.com npm run build
+```
+
+Supported package managers depend on what is installed on the server.
+
+## v-scan-laravel-app
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-scan-laravel-app)
+
+Scan a domain path for a Laravel application.
+
+**Options**: `USER` `DOMAIN` `[PATH]` `[FORMAT]`
+
+**Examples**:
+
+```bash
+v-scan-laravel-app admin example.com /home/admin/web/example.com/public_html json
+```
+
+Detection requires `artisan`, `composer.json`, and `public/index.php` in the application root.
+
 ## v-quick-install-app
 
 [Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-quick-install-app)

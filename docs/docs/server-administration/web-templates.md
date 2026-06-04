@@ -39,6 +39,8 @@ When you are done editing your template, enable it for the desired domain from t
 
 After modifying an existing template, you need to rebuild the user configuration. This can be done using the [v-rebuild-user](../reference/cli#v-rebuild-user) command or the bulk operation in the web interface..
 
+For Laravel applications, use the Laravel web template together with [Laravel Toolkit](../user-guide/laravel-toolkit). The template serves requests from `<app_root>/public`, keeping the Laravel project root, `.env`, `storage`, and other application files outside the public document root.
+
 ### Available variables
 
 | Name                 | Description                                           | Example                                    |

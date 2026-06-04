@@ -100,6 +100,7 @@ function sidebarDocs() {
 				{ text: 'Databases', link: '/docs/user-guide/databases' },
 				{ text: 'DNS', link: '/docs/user-guide/dns' },
 				{ text: 'File manager', link: '/docs/user-guide/file-manager' },
+				{ text: 'Laravel Toolkit', link: '/docs/user-guide/laravel-toolkit' },
 				{ text: 'Mail domains', link: '/docs/user-guide/mail-domains' },
 				{ text: 'Notifications', link: '/docs/user-guide/notifications' },
 				{ text: 'Packages', link: '/docs/user-guide/packages' },

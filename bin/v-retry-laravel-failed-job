@@ -1,0 +1,25 @@
+#!/bin/bash
+# info: retry Laravel failed job
+# options: USER DOMAIN JOB_ID|all
+#
+# example: v-retry-laravel-failed-job admin example.com all
+#
+# This function retries Laravel failed queue jobs.
+
+user=$1
+domain=$2
+job_id=$3
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+source_conf "$HESTIA/conf/hestia.conf"
+
+check_args '3' "$#" 'USER DOMAIN JOB_ID|all'
+is_format_valid 'user' 'domain'
+is_object_valid 'user' 'USER' "$user"
+
+$BIN/v-run-laravel-artisan "$user" "$domain" queue:retry "$job_id"
+exit $?

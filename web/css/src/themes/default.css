@@ -57,6 +57,14 @@
 	--chart-line-1-color: var(--icon-color-blue);
 	--chart-line-2-color: var(--icon-color-maroon);
 	--chart-line-3-color: var(--icon-color-green);
+
+	/* Laravel Toolkit */
+	--laravel-surface: #fff;
+	--laravel-surface-muted: #f7f8fa;
+	--laravel-border-color: #dfe4ea;
+	--laravel-console-bg: #20242a;
+	--laravel-console-color: #ecf2f8;
+	--laravel-muted-color: #777;
 }
 
 /* App
@@ -1399,6 +1407,417 @@
 
 .form-container-wide {
 	max-width: 920px;
+}
+
+/* Laravel Toolkit
+   ========================================================================== */
+
+.laravel-page {
+	max-width: 1180px;
+	margin-right: auto;
+	margin-left: auto;
+	padding: 30px 20px;
+}
+
+.laravel-page-header {
+	margin-bottom: 20px;
+
+	& h1 {
+		margin-bottom: 5px;
+	}
+}
+
+.laravel-page-subtitle,
+.laravel-muted {
+	color: var(--laravel-muted-color);
+}
+
+.laravel-layout {
+	display: grid;
+	gap: 20px;
+
+	@media (--viewport-large) {
+		grid-template-columns: minmax(240px, 300px) minmax(0, 1fr);
+		align-items: start;
+	}
+}
+
+.laravel-sidebar,
+.laravel-workbench,
+.laravel-panel,
+.laravel-app-card,
+.laravel-empty-state {
+	border: 1px solid var(--laravel-border-color);
+	border-radius: var(--border-radius-base);
+	background-color: var(--laravel-surface);
+	box-shadow: 0 1px 4px rgb(0 0 0 / 12%);
+}
+
+.laravel-sidebar {
+	padding: 18px;
+}
+
+.laravel-brand {
+	display: flex;
+	gap: 12px;
+	align-items: center;
+	margin-bottom: 20px;
+
+	& .fab {
+		font-size: 2.8rem;
+	}
+
+	& strong,
+	& span {
+		display: block;
+	}
+}
+
+.laravel-sidebar-list {
+	margin-bottom: 18px;
+
+	& .values-list-value {
+		overflow-wrap: anywhere;
+	}
+}
+
+.laravel-badges,
+.laravel-presets,
+.laravel-sidebar-actions,
+.laravel-inline-actions,
+.laravel-app-actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+}
+
+.laravel-badge {
+	display: inline-flex;
+	align-items: center;
+	padding: 4px 8px;
+	border: 1px solid var(--laravel-border-color);
+	border-radius: 999px;
+	background-color: var(--laravel-surface-muted);
+	font-size: 0.85rem;
+	font-weight: 600;
+
+	&.is-ok {
+		color: var(--icon-color-green);
+	}
+
+	&.is-warning {
+		color: var(--icon-color-orange);
+	}
+}
+
+.laravel-sidebar-actions {
+	flex-direction: column;
+	margin-top: 20px;
+
+	& a {
+		display: inline-flex;
+		gap: 8px;
+		align-items: center;
+	}
+}
+
+.laravel-workbench {
+	min-width: 0;
+}
+
+.laravel-tabs {
+	border: 0;
+	box-shadow: none;
+	padding: 0;
+
+	& .tabs-items {
+		border-bottom: 1px solid var(--laravel-border-color);
+		padding: 0 12px;
+	}
+
+	& .tabs-item {
+		text-transform: none;
+	}
+
+	& .tabs-item[aria-selected="true"] {
+		box-shadow: inset 0 -3px 0 currentcolor;
+	}
+
+	& .tabs-panel {
+		padding: 18px;
+	}
+}
+
+.laravel-status-grid,
+.laravel-panel-grid,
+.laravel-app-grid {
+	display: grid;
+	gap: 12px;
+}
+
+.laravel-status-grid {
+	grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+	margin-bottom: 18px;
+}
+
+.laravel-panel-grid {
+	@media (--viewport-medium) {
+		grid-template-columns: minmax(0, 1fr) minmax(280px, 420px);
+	}
+}
+
+.laravel-status-card {
+	display: flex;
+	gap: 12px;
+	align-items: flex-start;
+	min-width: 0;
+	padding: 14px;
+	border: 1px solid var(--laravel-border-color);
+	border-radius: var(--border-radius-base);
+	background-color: var(--laravel-surface-muted);
+
+	& .fas {
+		margin-top: 3px;
+	}
+
+	& span,
+	& small,
+	& strong {
+		display: block;
+	}
+
+	& span,
+	& small {
+		color: var(--laravel-muted-color);
+	}
+
+	& strong {
+		overflow-wrap: anywhere;
+		color: var(--color-text-heading);
+		font-size: 1.05rem;
+	}
+
+	&.is-blue .fas {
+		color: var(--icon-color-blue);
+	}
+
+	&.is-purple .fas {
+		color: var(--icon-color-purple);
+	}
+
+	&.is-green .fas {
+		color: var(--icon-color-green);
+	}
+
+	&.is-orange .fas {
+		color: var(--icon-color-orange);
+	}
+
+	&.is-muted .fas {
+		color: var(--laravel-muted-color);
+	}
+}
+
+.laravel-panel {
+	min-width: 0;
+	padding: 18px;
+
+	& h2 {
+		margin-top: 0;
+		margin-bottom: 12px;
+		font-size: 1.25rem;
+	}
+
+	& h3 {
+		margin-top: 20px;
+	}
+}
+
+.laravel-panel-header,
+.laravel-app-card-header {
+	display: flex;
+	gap: 12px;
+	justify-content: space-between;
+	align-items: flex-start;
+	margin-bottom: 16px;
+}
+
+.laravel-check-list {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+
+	& li {
+		display: flex;
+		gap: 8px;
+		align-items: flex-start;
+		margin-bottom: 8px;
+	}
+}
+
+.laravel-secret,
+.laravel-command-row {
+	display: grid;
+	gap: 8px;
+
+	@media (--viewport-medium) {
+		grid-template-columns: minmax(0, 1fr) auto auto;
+		align-items: center;
+	}
+}
+
+.laravel-command-row {
+	@media (--viewport-medium) {
+		grid-template-columns: auto minmax(0, 1fr) auto;
+	}
+}
+
+.laravel-command-prefix {
+	padding: 8px 12px;
+	border: 1px solid var(--laravel-border-color);
+	border-radius: var(--border-radius-base);
+	background-color: var(--laravel-surface-muted);
+	color: var(--laravel-muted-color);
+	font-family: var(--font-family-monospace);
+	white-space: nowrap;
+}
+
+.laravel-command-form {
+	margin-bottom: 18px;
+}
+
+.laravel-presets {
+	margin-top: 10px;
+}
+
+.laravel-command-result {
+	margin-top: 18px;
+	padding-top: 12px;
+	border-top: 1px solid var(--laravel-border-color);
+
+	& > strong {
+		margin-right: 8px;
+	}
+
+	&.is-success > strong {
+		color: var(--icon-color-green);
+	}
+
+	&.is-failed > strong {
+		color: var(--icon-color-red);
+	}
+}
+
+.laravel-console {
+	overflow: auto;
+	max-width: 100%;
+	max-height: 360px;
+	padding: 12px;
+	border-radius: var(--border-radius-base);
+	background-color: var(--laravel-console-bg);
+	color: var(--laravel-console-color);
+	font-family: var(--font-family-monospace);
+	line-height: 1.35;
+	white-space: pre;
+}
+
+.laravel-log-console {
+	max-height: 520px;
+}
+
+.laravel-editor {
+	min-height: 340px;
+	resize: vertical;
+}
+
+.laravel-deploy-meta {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px 18px;
+	margin-bottom: 16px;
+	color: var(--laravel-muted-color);
+}
+
+.laravel-details {
+	margin-top: 18px;
+
+	& summary {
+		cursor: pointer;
+		font-weight: 700;
+		color: var(--color-text-link);
+	}
+}
+
+.laravel-toggle-form {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 14px;
+	align-items: center;
+}
+
+.laravel-queue-grid {
+	display: grid;
+	gap: 12px;
+
+	@media (--viewport-medium) {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+
+.laravel-queue-enable {
+	@media (--viewport-medium) {
+		grid-column: 1 / -1;
+	}
+}
+
+.laravel-package-manager {
+	width: 100%;
+
+	@media (--viewport-medium) {
+		width: 120px;
+	}
+}
+
+.laravel-empty-state {
+	padding: 40px 20px;
+	text-align: center;
+
+	& .fab {
+		margin-bottom: 12px;
+		font-size: 3.5rem;
+	}
+}
+
+.laravel-app-grid {
+	@media (--viewport-medium) {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+
+.laravel-app-card {
+	padding: 18px;
+
+	& h2 {
+		margin: 0 0 4px;
+		font-size: 1.25rem;
+	}
+
+	& p {
+		margin: 0;
+		overflow-wrap: anywhere;
+		color: var(--laravel-muted-color);
+	}
+
+	& .fab {
+		font-size: 2rem;
+	}
+}
+
+.laravel-app-meta {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	margin-bottom: 16px;
 }
 
 @media (--viewport-medium) {

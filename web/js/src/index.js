@@ -16,6 +16,7 @@ import handleFormSubmit from './formSubmit';
 import handleFtpAccountHints from './ftpAccountHints';
 import handleFtpAccounts from './ftpAccounts';
 import handleIpListDataSource from './ipListDataSource';
+import handleLaravelToolkit from './laravelToolkit';
 import handleListSorting from './listSorting';
 import handleListUnitSelect from './listUnitSelect';
 import handleNameServerInput from './nameServerInput';
@@ -63,6 +64,7 @@ document.addEventListener('alpine:init', () => {
 	handleErrorMessage();
 	handleFtpAccountHints();
 	handleIpListDataSource();
+	handleLaravelToolkit();
 	handleShortcuts();
 	handleUnlimitedInput();
 });

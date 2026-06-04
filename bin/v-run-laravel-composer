@@ -1,0 +1,36 @@
+#!/bin/bash
+# info: run Laravel composer command
+# options: USER DOMAIN COMMAND [ARG...]
+#
+# example: v-run-laravel-composer admin example.com install --no-dev
+#
+# This function runs Composer inside a registered Laravel app.
+
+user=$1
+domain=$2
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/laravel.sh
+source $HESTIA/func/laravel.sh
+source_conf "$HESTIA/conf/hestia.conf"
+
+check_args '3' "$#" 'USER DOMAIN COMMAND [ARG...]'
+is_format_valid 'user' 'domain'
+is_object_valid 'user' 'USER' "$user"
+laravel_require_app "$domain"
+
+$BIN/v-add-user-composer "$user" 2 yes
+check_result $? "Composer support is not available"
+
+php_bin="$(laravel_php_bin "$PHP_VERSION")"
+composer_bin="$HOMEDIR/$user/.composer/composer"
+shift 2
+
+runuser -u "$user" -- bash -c 'cd "$1" && shift && exec "$@"' _ "$APP_ROOT" "$php_bin" "$composer_bin" "$@"
+exit_code=$?
+log_event "$exit_code" "$ARGUMENTS"
+exit "$exit_code"

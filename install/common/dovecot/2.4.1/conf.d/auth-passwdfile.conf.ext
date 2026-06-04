@@ -1,0 +1,10 @@
+passdb passwd-file {
+  auth_username_format = %{user}
+	passwd_file_path = /etc/exim4/domains/%{domain}/passwd
+}
+
+userdb passwd-file {
+  driver = passwd-file
+  auth_username_format = %{$user}
+	passwd_file_path = /etc/exim4/domains/%{domain}/passwd
+}

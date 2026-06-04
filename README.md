@@ -4,7 +4,7 @@
 
 <h2 align="center">Lightweight and powerful control panel for the modern web</h2>
 
-<p align="center"><strong>Latest stable release:</strong> Version 1.9.4 | <a href="https://github.com/hestiacp/hestiacp/blob/release/CHANGELOG.md">View Changelog</a></p>
+<p align="center"><strong>Latest stable release:</strong> Version 1.9.6 | <a href="https://github.com/hestiacp/hestiacp/blob/release/CHANGELOG.md">View Changelog</a></p>
 
 <p align="center">
 	<a href="https://www.hestiacp.com/">HestiaCP.com</a> |
@@ -46,8 +46,8 @@ Smart Chain: 0xfF3Dd2c889bd0Ff73d8085B84A314FC7c88e5D51<br>
 
 ## Supported platforms and operating systems
 
-- **Debian:** 12, 11
-- **Ubuntu:** 24.04 LTS, 22.04 LTS, 20.04 LTS
+- **Debian:** 13, 12, 11
+- **Ubuntu:** 24.04 LTS, 22.04 LTS
 
 **NOTES:**
 

@@ -1,0 +1,97 @@
+#!/bin/bash
+# info: update phpMyAdmin database host configuration
+# options:
+#
+# example: v-update-sys-pma-hosts
+#
+# This function generates phpMyAdmin server configs for Hestia MySQL endpoints.
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/db.sh
+source $HESTIA/func/db.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+PMA_CONF_DIR=${PMA_CONF_DIR:-/etc/phpmyadmin/conf.d}
+PMA_FILE_PREFIX="20-hestia-dbhost-"
+
+escape_php_string() {
+	echo "$1" | sed -e "s/'/\\\\'/g"
+}
+
+write_pma_host_config() {
+	local endpoint endpoint_id file tmp_file php_host php_port php_endpoint
+
+	endpoint=$(database_get_endpoint "$HOST" "$PORT")
+	endpoint_id=$(database_get_endpoint_id "$HOST" "$PORT")
+	file="$PMA_CONF_DIR/$PMA_FILE_PREFIX$endpoint_id.php"
+	tmp_file="$file.$$"
+	php_host=$(escape_php_string "$HOST")
+	php_port=$(escape_php_string "$PORT")
+	php_endpoint=$(escape_php_string "$endpoint")
+
+	cat > "$tmp_file" <<- EOF
+		<?php
+		// This file is managed by Hestia. Manual changes will be overwritten.
+		\$cfg['Servers'][\$i]['host'] = '$php_host';
+		\$cfg['Servers'][\$i]['port'] = '$php_port';
+		\$cfg['Servers'][\$i]['verbose'] = '$php_endpoint';
+		\$cfg['Servers'][\$i]['hide_db'] = 'information_schema';
+	EOF
+
+	chmod 640 "$tmp_file"
+	if getent group hestiamail > /dev/null 2>&1; then
+		chown root:hestiamail "$tmp_file"
+	fi
+	mv -f "$tmp_file" "$file"
+}
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+if [ ! -d "$PMA_CONF_DIR" ]; then
+	exit
+fi
+
+if [ ! -e "$HESTIA/conf/mysql.conf" ]; then
+	exit
+fi
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+rm -f "$PMA_CONF_DIR/$PMA_FILE_PREFIX"*.php
+
+OLD_IFS="$IFS"
+IFS=$'\n'
+for host_str in $(cat "$HESTIA/conf/mysql.conf"); do
+	unset HOST PORT
+	parse_object_kv_list "$host_str"
+	if [ -z "$PORT" ]; then PORT=$(database_get_default_port "mysql"); fi
+
+	if [ "$HOST" = "localhost" ] && [ "$PORT" = "3306" ]; then
+		continue
+	fi
+
+	write_pma_host_config
+done
+IFS="$OLD_IFS"
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+exit

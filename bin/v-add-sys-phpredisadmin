@@ -1,0 +1,91 @@
+#!/bin/bash
+# info: install phpRedisAdmin
+# options: [mode]
+#
+# example: v-add-sys-phpredisadmin
+#
+# This function installs phpRedisAdmin for Redis database endpoints.
+
+MODE=$1
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+PRA_VERSION="1.26.0"
+PRA_INSTALL="/usr/share/phpredisadmin"
+PRA_CONFIG="/etc/phpredisadmin"
+PRA_ALIAS=${DB_PRA_ALIAS:-phpredisadmin}
+
+check_hestia_demo_mode
+
+if [ "x$(id -u)" != 'x0' ]; then
+	echo "Error: Script can be run executed only by root"
+	exit 10
+fi
+
+if [ -d "$PRA_INSTALL" ]; then
+	echo "Error: phpRedisAdmin is already installed"
+	exit 1
+fi
+
+if ! command -v composer > /dev/null 2>&1; then
+	echo "Error: composer is required to install phpRedisAdmin dependencies"
+	exit "$E_NOTEXIST"
+fi
+
+tmpdir=$(mktemp -d)
+archive="$tmpdir/phpredisadmin.tar.gz"
+wget --quiet --retry-connrefused "https://github.com/erikdubbelboer/phpRedisAdmin/archive/refs/tags/v$PRA_VERSION.tar.gz" -O "$archive"
+check_result $? "phpRedisAdmin download failed"
+
+mkdir -p "$PRA_INSTALL" "$PRA_CONFIG"
+tar xzf "$archive" -C "$tmpdir"
+cp -rf "$tmpdir/phpRedisAdmin-$PRA_VERSION/"* "$PRA_INSTALL/"
+rm -rf "$tmpdir"
+COMPOSER_ALLOW_SUPERUSER=1 composer install --no-dev --prefer-dist --no-interaction --no-progress --working-dir "$PRA_INSTALL" > /dev/null
+check_result $? "phpRedisAdmin dependency install failed"
+
+cat > "$PRA_CONFIG/config.inc.php" << EOF
+<?php
+\$config = [
+    'servers' => [],
+];
+EOF
+
+ln -s "$PRA_CONFIG/config.inc.php" "$PRA_INSTALL/includes/config.inc.php" 2> /dev/null || true
+chmod 640 "$PRA_CONFIG/config.inc.php"
+chown -R root:hestiamail "$PRA_CONFIG"
+chown -R root:root "$PRA_INSTALL"
+
+if [ -d /etc/nginx/conf.d ]; then
+	cat > /etc/nginx/conf.d/phpredisadmin.inc << EOF
+location /$PRA_ALIAS/ {
+    alias $PRA_INSTALL/;
+    index index.php;
+}
+
+location ~ ^/$PRA_ALIAS/(.+\\.php)$ {
+    alias $PRA_INSTALL/\$1;
+    include fastcgi_params;
+    fastcgi_param SCRIPT_FILENAME $PRA_INSTALL/\$1;
+    fastcgi_pass unix:/run/hestia-php.sock;
+}
+EOF
+fi
+
+$BIN/v-change-sys-config-value 'DB_PRA_ALIAS' "$PRA_ALIAS"
+$BIN/v-add-sys-pra-sso quiet
+
+if [ "$MODE" != "quiet" ]; then
+	echo "phpRedisAdmin has been successfully installed"
+fi
+
+$BIN/v-log-action "system" "Info" "Plugins" "phpRedisAdmin has been installed."
+log_event "$OK" "$ARGUMENTS"
+
+exit

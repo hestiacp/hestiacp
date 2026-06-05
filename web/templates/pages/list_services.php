@@ -5,6 +5,11 @@
 			<a href="/edit/server/" class="button button-secondary">
 				<i class="fas fa-gear icon-maroon"></i><?= tohtml( _("Configure")) ?>
 			</a>
+			<?php if (!empty($_SESSION["DB_SYSTEM"])) { ?>
+				<a href="/list/db-host/" class="button button-secondary">
+					<i class="fas fa-database icon-orange"></i><?= tohtml( _("Database Servers")) ?>
+				</a>
+			<?php } ?>
 			<a href="/list/rrd/" class="button button-secondary">
 				<i class="fas fa-chart-area icon-blue"></i><?= tohtml( _("Task Monitor")) ?>
 			</a>

@@ -18,6 +18,8 @@
 source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/db.sh
+source $HESTIA/func/db.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
@@ -40,16 +42,20 @@ for db in $(echo $DB_SYSTEM | tr ',' '\n'); do
 
 		# Checking server status
 		for host_str in $(cat $HESTIA/conf/$db.conf); do
+			unset HOST PORT
 			parse_object_kv_list "$host_str"
+			if [ -z "$PORT" ]; then PORT=$(database_get_default_port "$db"); fi
+			endpoint=$(database_get_endpoint "$HOST" "$PORT")
 
 			# Checking MySQL
 			if [ "$db" = 'mysql' ]; then
-				mycnf="$HESTIA/conf/.mysql.$HOST"
+				mycnf="$HESTIA/conf/.mysql.$(database_get_endpoint_id "$HOST" "$PORT")"
 				if [ ! -e "$mycnf" ]; then
 					echo "[client]" > $mycnf
 					echo "host='$HOST'" >> $mycnf
 					echo "user='$USER'" >> $mycnf
 					echo "password='$PASSWORD'" >> $mycnf
+					echo "port='$PORT'" >> $mycnf
 					chmod 600 $mycnf
 				else
 					mypw=$(grep password $mycnf | cut -f 2 -d \')
@@ -58,16 +64,17 @@ for db in $(echo $DB_SYSTEM | tr ',' '\n'); do
 						echo "host='$HOST'" >> $mycnf
 						echo "user='$USER'" >> $mycnf
 						echo "password='$PASSWORD'" >> $mycnf
+						echo "port='$PORT'" >> $mycnf
 						chmod 660 $mycnf
 					fi
 				fi
 				if [ -f '/usr/bin/mariadb-admin' ]; then
-					echo "MySQL $HOST status"
+					echo "MySQL $endpoint status"
 					mariadb-admin --defaults-file=$mycnf status | sed -e "s/  /\n/g"
 					echo
 					mariadb-admin --defaults-file=$mycnf processlist
 				else
-					echo "MySQL $HOST status"
+					echo "MySQL $endpoint status"
 					mysqladmin --defaults-file=$mycnf status | sed -e "s/  /\n/g"
 					echo
 					mysqladmin --defaults-file=$mycnf processlist
@@ -78,9 +85,16 @@ for db in $(echo $DB_SYSTEM | tr ',' '\n'); do
 
 			# Checking PostgreSQL
 			if [ "$db" = 'pgsql' ] && [ ! -z "$(which psql)" ]; then
-				echo "PostgreSQL $HOST status"
+				echo "PostgreSQL $endpoint status"
 				export PGPASSWORD="$PASSWORD"
-				psql -h $HOST -U $USER -c "SELECT * FROM pg_stat_activity"
+				psql -h $HOST -U $USER -p $PORT -c "SELECT * FROM pg_stat_activity"
+			fi
+
+			# Checking Redis
+			if [ "$db" = 'redis' ] && [ ! -z "$(which redis-cli)" ]; then
+				echo "Redis $endpoint status"
+				redis-cli -h "$HOST" -p "$PORT" --user "$USER" -a "$PASSWORD" --no-auth-warning INFO server
+				redis-cli -h "$HOST" -p "$PORT" --user "$USER" -a "$PASSWORD" --no-auth-warning INFO keyspace
 			fi
 		done
 	fi

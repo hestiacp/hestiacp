@@ -141,6 +141,12 @@ export const options = [
 		default: 'no',
 	},
 	{
+		flag: 'redis',
+		label: 'Redis',
+		description: 'In-memory data store with ACL-based database access',
+		default: 'no',
+	},
+	{
 		flag: 'exim',
 		label: 'Exim',
 		description: 'Allows sending emails from web-mail or via SMTP',

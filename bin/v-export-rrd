@@ -145,8 +145,8 @@ else
 fi
 end=$(date +%s)
 
-host=$(echo $chart | cut -d'_' -f2)
-chart=$(echo $chart | cut -d'_' -f1)
+host=${chart#*_}
+chart=${chart%%_*}
 
 case $chart in
 	"la")

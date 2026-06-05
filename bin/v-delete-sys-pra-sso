@@ -1,0 +1,62 @@
+#!/bin/bash
+# info: disables support for single sign on phpRedisAdmin
+# options: [mode]
+#
+# example: v-delete-sys-pra-sso
+#
+# Disables support for SSO to phpRedisAdmin.
+
+MODE=$1
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+PRA_INSTALL="/usr/share/phpredisadmin"
+
+check_hestia_demo_mode
+
+if [ "x$(id -u)" != 'x0' ]; then
+	echo "Error: Script can be run executed only by root"
+	exit 10
+fi
+
+if [ -e "$PRA_INSTALL/hestia-sso.php" ]; then
+	apikey=$(grep -Po "'API_KEY', '(.*)'" "$PRA_INSTALL/hestia-sso.php" | cut "-d'" -f4)
+	if [ -n "$apikey" ]; then
+		if [ -z "$(echo "$apikey" | grep ":")" ]; then
+			$BIN/v-revoke-api-key "$apikey"
+		else
+			$BIN/v-delete-access-key "$(echo "$apikey" | cut -d ":" -f1)"
+		fi
+	fi
+	rm -f "$PRA_INSTALL/hestia-sso.php"
+fi
+if [ -f "$PRA_INSTALL/logout.php.hestia-backup" ]; then
+	mv -f "$PRA_INSTALL/logout.php.hestia-backup" "$PRA_INSTALL/logout.php"
+fi
+if [ -d /etc/phpredisadmin ]; then
+	cat > /etc/phpredisadmin/config.inc.php << 'EOF'
+<?php
+$config = [
+    'servers' => [],
+];
+EOF
+	chmod 640 /etc/phpredisadmin/config.inc.php
+	chown root:hestiamail /etc/phpredisadmin/config.inc.php
+fi
+
+$BIN/v-change-sys-config-value 'PHPREDISADMIN_KEY' ""
+
+if [ "$MODE" != "quiet" ]; then
+	echo "phpRedisAdmin Hestia-SSO plugin has been successfully removed"
+fi
+
+$BIN/v-log-action "system" "Info" "Plugins" "phpRedisAdmin Single Sign-On (SSO) disabled."
+log_event "$OK" "$ARGUMENTS"
+
+exit

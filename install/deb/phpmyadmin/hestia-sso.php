@@ -39,7 +39,7 @@ class Hestia_API {
 	}
 
 	/* Creates an new temp user in mysql */
-	public function create_temp_user($database, $user, $host) {
+	public function create_temp_user($database, $user, $host, $port) {
 		$post_request = [
 			"hash" => $this->key,
 			"returncode" => "no",
@@ -48,6 +48,8 @@ class Hestia_API {
 			"arg2" => $database,
 			"arg3" => "mysql",
 			"arg4" => $host,
+			"arg5" => "60",
+			"arg6" => $port,
 		];
 		$request = $this->request($post_request);
 		$json = json_decode($request);
@@ -60,7 +62,7 @@ class Hestia_API {
 	}
 
 	/* Delete an new temp user in mysql */
-	public function delete_temp_user($database, $user, $dbuser, $host) {
+	public function delete_temp_user($database, $user, $dbuser, $host, $port) {
 		$post_request = [
 			"hash" => $this->key,
 			"returncode" => "yes",
@@ -70,6 +72,7 @@ class Hestia_API {
 			"arg3" => $dbuser,
 			"arg4" => "mysql",
 			"arg5" => $host,
+			"arg6" => $port,
 		];
 		$request = $this->request($post_request);
 		if (is_numeric($request) && $request == 0) {
@@ -117,19 +120,44 @@ class Hestia_API {
 	}
 }
 
-function verify_token($database, $user, $ip, $time, $token) {
-	if (!password_verify($database . $user . $ip . $time . PHPMYADMIN_KEY, $token)) {
+function verify_token($database, $user, $ip, $time, $token, $host, $port, $allow_legacy_token) {
+	if (
+		!password_verify($database . $user . $ip . $time . $host . $port . PHPMYADMIN_KEY, $token)
+	) {
 		if (
 			!password_verify(
-				$database . $user . $_SERVER["SERVER_ADDR"] . "|" . $ip . $time . PHPMYADMIN_KEY,
+				$database .
+					$user .
+					$_SERVER["SERVER_ADDR"] .
+					"|" .
+					$ip .
+					$time .
+					$host .
+					$port .
+					PHPMYADMIN_KEY,
 				$token,
 			)
 		) {
-			trigger_error(
-				"Access denied: There is a security token mismatch " . $time,
-				E_USER_WARNING,
-			);
-			session_invalid();
+			if (
+				!$allow_legacy_token ||
+				(!password_verify($database . $user . $ip . $time . PHPMYADMIN_KEY, $token) &&
+					!password_verify(
+						$database .
+							$user .
+							$_SERVER["SERVER_ADDR"] .
+							"|" .
+							$ip .
+							$time .
+							PHPMYADMIN_KEY,
+						$token,
+					))
+			) {
+				trigger_error(
+					"Access denied: There is a security token mismatch " . $time,
+					E_USER_WARNING,
+				);
+				session_invalid();
+			}
 		}
 	}
 	return;
@@ -157,7 +185,8 @@ if (!empty($_GET)) {
 			$_SESSION["HESTIA_sso_database"],
 			$_SESSION["HESTIA_sso_user"],
 			$_SESSION["PMA_single_signon_user"],
-			$_SESSION["HESTIA_sso_host"],
+			$_SESSION["HESTIA_sso_host"] ?? "localhost",
+			$_SESSION["HESTIA_sso_port"] ?? "3306",
 		);
 		//remove session
 		session_invalid();
@@ -165,7 +194,12 @@ if (!empty($_GET)) {
 		if (isset($_GET["user"]) && isset($_GET["hestia_token"])) {
 			$database = $_GET["database"];
 			$user = $_GET["user"];
-			$host = "localhost";
+			$host = $_GET["host"] ?? "localhost";
+			$port = $_GET["port"] ?? "3306";
+			$allow_legacy_token = !isset($_GET["host"]) && !isset($_GET["port"]);
+			if (!is_numeric($port)) {
+				$port = "3306";
+			}
 			$token = $_GET["hestia_token"];
 			if (is_numeric($_GET["exp"])) {
 				$time = $_GET["exp"];
@@ -176,18 +210,30 @@ if (!empty($_GET)) {
 			if ($time + 60 > time()) {
 				//note: Possible issues with cloudflare due to ip obfuscation
 				$ip = $api->get_user_ip();
-				verify_token($database, $user, $ip, $time, $token);
+				verify_token(
+					$database,
+					$user,
+					$ip,
+					$time,
+					$token,
+					$host,
+					$port,
+					$allow_legacy_token,
+				);
 				$id = session_id();
 				//create a new temp user
-				$data = $api->create_temp_user($database, $user, $host);
+				$data = $api->create_temp_user($database, $user, $host, $port);
 				if ($data) {
 					$_SESSION["PMA_single_signon_user"] = $data->login->user;
 					$_SESSION["PMA_single_signon_password"] = $data->login->password;
 					$_SESSION["PMA_single_signon_host"] = $host;
+					$_SESSION["PMA_single_signon_port"] = $port;
+					$_SESSION["PMA_single_signon_cfgupdate"] = ["verbose" => $host . ":" . $port];
 					//save database / username to be used for sending logout notification.
 					$_SESSION["HESTIA_sso_user"] = $user;
 					$_SESSION["HESTIA_sso_database"] = $database;
 					$_SESSION["HESTIA_sso_host"] = $host;
+					$_SESSION["HESTIA_sso_port"] = $port;
 
 					@session_write_close();
 					setcookie($session_name, $id, 0, "/");

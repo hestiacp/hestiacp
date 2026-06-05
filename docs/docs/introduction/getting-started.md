@@ -90,6 +90,7 @@ To choose what software gets installed, you can provide flags to the installatio
 -m, --mysql Install MariaDB [yes | no] default: yes
 -M, --mysql8 Install MySQL 8 [yes | no] default: no
 -g, --postgresql Install PostgreSQL [yes | no] default: no
+-R, --redis Install Redis [yes | no] default: no
 -x, --exim Install Exim [yes | no] default: yes
 -z, --dovecot Install Dovecot [yes | no] default: yes
 -Z, --sieve Install Sieve [yes | no] default: no

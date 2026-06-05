@@ -1,0 +1,99 @@
+#!/bin/bash
+# info: enables support for single sign on phpRedisAdmin
+# options: [mode]
+#
+# example: v-add-sys-pra-sso
+#
+# This function enables support for SSO to phpRedisAdmin.
+
+MODE=$1
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+PRA_INSTALL="/usr/share/phpredisadmin"
+
+check_hestia_demo_mode
+
+if [ "x$(id -u)" != 'x0' ]; then
+	echo "Error: Script can be run executed only by root"
+	exit 10
+fi
+
+if [ -n "$PHPREDISADMIN_KEY" ] && [ "$PHPREDISADMIN_KEY" != "" ]; then
+	echo "Error: SSO has been installed before to reenable it please run v-delete-sys-pra-sso first"
+	exit 1
+fi
+
+if [ ! -d "$PRA_INSTALL" ]; then
+	echo "Error: phpRedisAdmin is not installed"
+	exit 2
+fi
+
+phpredisadminkey=$(generate_password)
+apikey=$($BIN/v-add-access-key "$ROOT_USER" 'phpredisadmin-sso' 'phpRedisAdmin' 'plain')
+
+cp -f $HESTIA_INSTALL_DIR/phpredisadmin/hestia-sso.php $PRA_INSTALL/hestia-sso.php
+chmod 640 $PRA_INSTALL/hestia-sso.php
+chown root:hestiamail $PRA_INSTALL/hestia-sso.php
+
+sed -i "s/%PHPREDISADMIN_KEY%/$phpredisadminkey/g" $PRA_INSTALL/hestia-sso.php
+sed -i "s/%API_KEY%/$apikey/g" $PRA_INSTALL/hestia-sso.php
+sed -i "s/%API_HOST_NAME%/$(hostname)/g" $PRA_INSTALL/hestia-sso.php
+sed -i "s/%API_HESTIA_PORT%/$BACKEND_PORT/g" $PRA_INSTALL/hestia-sso.php
+
+if [ -f "$PRA_INSTALL/logout.php" ] && [ ! -f "$PRA_INSTALL/logout.php.hestia-backup" ]; then
+	cp -f "$PRA_INSTALL/logout.php" "$PRA_INSTALL/logout.php.hestia-backup"
+fi
+cat > "$PRA_INSTALL/logout.php" << 'EOF'
+<?php
+header("Location: hestia-sso.php?logout=1");
+exit;
+EOF
+
+cat > /etc/phpredisadmin/config.inc.php << 'EOF'
+<?php
+session_name("HestiaRedisAdmin");
+@session_start();
+$config = [
+    'servers' => [],
+    'login_as_acl_auth' => true,
+];
+
+if (!empty($_SESSION['HestiaRedisAdmin_host']) && !empty($_SESSION['HestiaRedisAdmin_user'])) {
+    $forcedFilter = $_SESSION['HestiaRedisAdmin_prefix'] . '*';
+    $_GET['filter'] = $forcedFilter;
+    $_REQUEST['filter'] = $forcedFilter;
+    $_SERVER['PHP_AUTH_USER'] = $_SESSION['HestiaRedisAdmin_user'];
+    $_SERVER['PHP_AUTH_PW'] = $_SESSION['HestiaRedisAdmin_password'];
+    $config['filter'] = $forcedFilter;
+    $config['servers'][] = [
+        'name' => $_SESSION['HestiaRedisAdmin_host'] . ':' . $_SESSION['HestiaRedisAdmin_port'],
+        'host' => $_SESSION['HestiaRedisAdmin_host'],
+        'port' => (int) $_SESSION['HestiaRedisAdmin_port'],
+        'filter' => $forcedFilter,
+        'scanmax' => 5000,
+    ];
+}
+EOF
+chmod 640 /etc/phpredisadmin/config.inc.php
+chown root:hestiamail /etc/phpredisadmin/config.inc.php
+
+$BIN/v-change-sys-config-value 'PHPREDISADMIN_KEY' "$phpredisadminkey"
+
+if [ -z "$(echo $API_ALLOWED_IP | grep 127.0.0.1)" ]; then
+	$BIN/v-add-sys-api-ip "127.0.0.1"
+fi
+
+if [ "$MODE" != "quiet" ]; then
+	echo "phpRedisAdmin Hestia-SSO plugin has been successfully installed"
+fi
+$BIN/v-log-action "system" "Info" "Plugins" "phpRedisAdmin Single Sign-On has been enabled."
+log_event "$OK" "$ARGUMENTS"
+
+exit

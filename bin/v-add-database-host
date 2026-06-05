@@ -91,6 +91,44 @@ is_pgsql_host_alive() {
 	fi
 }
 
+is_redis_host_alive() {
+	if ! command -v redis-cli > /dev/null 2>&1; then
+		echo "Error: redis-cli is not installed"
+		log_event "$E_NOTEXIST" "$ARGUMENTS"
+		exit "$E_NOTEXIST"
+	fi
+	redis_out=$(mktemp)
+	redis-cli -h "$host" -p "$port" --user "$dbuser" -a "$password" --no-auth-warning PING > "$redis_out" 2>&1
+	if [ "$?" -ne '0' ]; then
+		echo "Error: Redis connection to $host failed"
+		rm -f "$redis_out"
+		log_event "$E_CONNECT" "$ARGUMENTS"
+		exit "$E_CONNECT"
+	fi
+	redis-cli -h "$host" -p "$port" --user "$dbuser" -a "$password" --no-auth-warning ACL WHOAMI > "$redis_out" 2>&1
+	if [ "$?" -ne '0' ]; then
+		echo "Error: Redis connection to $host failed"
+		rm -f "$redis_out"
+		log_event "$E_CONNECT" "$ARGUMENTS"
+		exit "$E_CONNECT"
+	fi
+	redis-cli -h "$host" -p "$port" --user "$dbuser" -a "$password" --no-auth-warning ACL LIST > "$redis_out" 2>&1
+	if [ "$?" -ne '0' ]; then
+		echo "Error: Redis connection to $host failed. Unable to manage ACL users"
+		rm -f "$redis_out"
+		log_event "$E_CONNECT" "$ARGUMENTS"
+		exit "$E_CONNECT"
+	fi
+	redis-cli -h "$host" -p "$port" --user "$dbuser" -a "$password" --no-auth-warning ACL SAVE > "$redis_out" 2>&1
+	if [ "$?" -ne '0' ]; then
+		echo "Error: Redis connection to $host failed. Unable to persist ACL users"
+		rm -f "$redis_out"
+		log_event "$E_CONNECT" "$ARGUMENTS"
+		exit "$E_CONNECT"
+	fi
+	rm -f "$redis_out"
+}
+
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -104,8 +142,10 @@ if [ -z $template ]; then template="template1"; fi
 database_set_default_ports
 
 is_format_valid 'host' 'dbuser' 'max_db' 'charsets' 'template' 'port'
-is_system_enabled "$DB_SYSTEM" 'DB_SYSTEM'
-is_type_valid "$DB_SYSTEM" "$type"
+if [ -n "$DB_SYSTEM" ] && [ "$DB_SYSTEM" != "no" ]; then
+	is_system_enabled "$DB_SYSTEM" 'DB_SYSTEM'
+fi
+is_type_valid "mysql,pgsql,redis" "$type"
 is_dbhost_new
 is_password_valid
 dbpass="$password"
@@ -113,6 +153,7 @@ dbpass="$password"
 case $type in
 	mysql) is_mysql_host_alive ;;
 	pgsql) is_pgsql_host_alive ;;
+	redis) is_redis_host_alive ;;
 esac
 
 # Perform verification if read-only mode is enabled
@@ -140,6 +181,11 @@ case $type in
 		str="$str U_SYS_USERS='' U_DB_BASES='0' SUSPENDED='no'"
 		str="$str TIME='$time' DATE='$date' PORT='$port'"
 		;;
+	redis)
+		str="HOST='$host' USER='$dbuser' PASSWORD='$dbpass'"
+		str="$str MAX_DB='$max_db' U_SYS_USERS='' U_DB_BASES='0'"
+		str="$str SUSPENDED='no' TIME='$time' DATE='$date' PORT='$port'"
+		;;
 esac
 
 #----------------------------------------------------------#
@@ -157,9 +203,15 @@ else
 	db=$(echo "$DB_SYSTEM,$type" \
 		| sed "s/,/\n/g" \
 		| sort -r -u \
+		| sed "/^no$/d" \
+		| sed "/^remote$/d" \
 		| sed "/^$/d" \
 		| sed ':a;N;$!ba;s/\n/,/g')
 	sed -i "s/DB_SYSTEM=.*/DB_SYSTEM='$db'/g" $HESTIA/conf/hestia.conf
+fi
+
+if [ "$type" = "mysql" ]; then
+	$BIN/v-update-sys-pma-hosts
 fi
 
 # Logging

@@ -491,12 +491,15 @@
 			<?php if (!empty($_SESSION["DB_SYSTEM"])) { ?>
 				<details class="box-collapse u-mb10">
 					<summary class="box-collapse-header">
-						<i class="fas fa-database u-mr10"></i><?= tohtml( _("Databases")) ?>
+						<i class="fas fa-database u-mr10"></i><?= tohtml( _("Database Endpoints")) ?>
+						<a href="/list/db-host/" class="u-ml10">
+							<i class="fas fa-server icon-orange"></i><?= tohtml( _("Manage")) ?>
+						</a>
 					</summary>
 					<div class="box-collapse-content">
 						<div class="u-mb10">
 							<p>
-								<?= tohtml( _("MySQL Support")) ?>:
+								<?= tohtml( _("MySQL Endpoints")) ?>:
 								<span class="u-ml5">
 									<?= tohtml($v_mysql == "yes" ? _("Yes") : _("No")) ?>
 								</span>
@@ -549,56 +552,69 @@
 								$i = 0;
 								foreach ($v_mysql_hosts as $value) {
 									$i++;
+									$mysql_endpoint = $value["ENDPOINT"] ?? $value["HOST"] . ":" . ($value["PORT"] ?? "3306");
+									$mysql_endpoint_id = preg_replace('/[^A-Za-z0-9_.-]/', '_', $mysql_endpoint) . "_" . substr(md5($mysql_endpoint), 0, 8);
 							?>
 							<div class="u-pl30">
+								<input type="hidden" name="v_mysql_host[<?= tohtml($mysql_endpoint_id) ?>]" value="<?= tohtml($value["HOST"]) ?>">
+								<input type="hidden" name="v_mysql_port[<?= tohtml($mysql_endpoint_id) ?>]" value="<?= tohtml($value["PORT"] ?? "3306") ?>">
 								<div class="u-mb10">
-									<label for="v_mysql_host" class="form-label">
+									<label for="v_mysql_host_<?= tohtml($mysql_endpoint_id) ?>" class="form-label">
 										<?= tohtml( _("Host") . " #" . $i) ?>
 									</label>
 									<input
 										type="text"
 										class="form-control"
-										name="v_mysql_host"
-										id="v_mysql_host"
-										value="<?= tohtml($value["HOST"]) ?>"
+										id="v_mysql_host_<?= tohtml($mysql_endpoint_id) ?>"
+										value="<?= tohtml($value["ENDPOINT"] ?? $value["HOST"]) ?>"
 										disabled
 									>
 								</div>
 								<div class="u-mb10">
-									<label for="v_mysql_password" class="form-label">
+									<label for="v_mysql_port_<?= tohtml($mysql_endpoint_id) ?>" class="form-label">
+										<?= tohtml( _("Port")) ?>
+									</label>
+									<input
+										type="text"
+										class="form-control"
+										id="v_mysql_port_<?= tohtml($mysql_endpoint_id) ?>"
+										value="<?= tohtml($value["PORT"] ?? "3306") ?>"
+										disabled
+									>
+								</div>
+								<div class="u-mb10">
+									<label for="v_mysql_password_<?= tohtml($mysql_endpoint_id) ?>" class="form-label">
 										<?= tohtml( _("Password")) ?>
 									</label>
 									<div class="u-pos-relative">
 										<input
 											type="text"
 											class="form-control js-password-input"
-											name="v_mysql_password"
-											id="v_mysql_password"
+											name="v_mysql_password[<?= tohtml($mysql_endpoint_id) ?>]"
+											id="v_mysql_password_<?= tohtml($mysql_endpoint_id) ?>"
 										>
 									</div>
 								</div>
 								<div class="u-mb10">
-									<label for="v_mysql_max" class="form-label">
+									<label for="v_mysql_max_<?= tohtml($mysql_endpoint_id) ?>" class="form-label">
 										<?= tohtml( _("Maximum Number of Databases")) ?>
 									</label>
 									<input
 										type="text"
 										class="form-control"
-										name="v_mysql_max"
-										id="v_mysql_max"
+										id="v_mysql_max_<?= tohtml($mysql_endpoint_id) ?>"
 										value="<?= tohtml($value["MAX_DB"]) ?>"
 										disabled
 									>
 								</div>
 								<div class="u-mb10">
-									<label for="v_mysql_current" class="form-label">
+									<label for="v_mysql_current_<?= tohtml($mysql_endpoint_id) ?>" class="form-label">
 										<?= tohtml( _("Current Number of Databases")) ?>
 									</label>
 									<input
 										type="text"
 										class="form-control"
-										name="v_mysql_current"
-										id="v_mysql_current"
+										id="v_mysql_current_<?= tohtml($mysql_endpoint_id) ?>"
 										value="<?= tohtml($value["U_DB_BASES"]) ?>"
 										disabled
 									>
@@ -629,11 +645,17 @@
 							$i = 0;
 							foreach ($v_pgsql_hosts as $value) {
 								$i++;
+								$pgsql_endpoint = $value["ENDPOINT"] ?? $value["HOST"] . ":" . ($value["PORT"] ?? "5432");
+								$pgsql_endpoint_id = preg_replace('/[^A-Za-z0-9_.-]/', '_', $pgsql_endpoint) . "_" . substr(md5($pgsql_endpoint), 0, 8);
 							?>
 							<div class="u-pl30">
 								<div class="u-mb10">
-									<label for="v_pgsql_host" class="form-label"><?= tohtml( _("Host") . " #" . $i) ?></label>
-									<input type="text" class="form-control" name="v_pgsql_host" id="v_pgsql_host" value="<?= tohtml($value["HOST"]) ?>" disabled>
+									<label for="v_pgsql_host_<?= tohtml($pgsql_endpoint_id) ?>" class="form-label"><?= tohtml( _("Host") . " #" . $i) ?></label>
+									<input type="text" class="form-control" id="v_pgsql_host_<?= tohtml($pgsql_endpoint_id) ?>" value="<?= tohtml($value["ENDPOINT"] ?? $value["HOST"]) ?>" disabled>
+								</div>
+								<div class="u-mb10">
+									<label for="v_pgsql_port_<?= tohtml($pgsql_endpoint_id) ?>" class="form-label"><?= tohtml( _("Port")) ?></label>
+									<input type="text" class="form-control" id="v_pgsql_port_<?= tohtml($pgsql_endpoint_id) ?>" value="<?= tohtml($value["PORT"] ?? "5432") ?>" disabled>
 								</div>
 								<div class="u-mb10">
 									<label for="v_psql_max" class="form-label">
@@ -646,6 +668,74 @@
 										<?= tohtml( _("Current Number of Databases")) ?>
 									</label>
 									<input type="text" class="form-control" name="v_pgsql_max" id="v_pgsql_max" value="<?= tohtml($value["U_DB_BASES"]) ?>" disabled>
+								</div>
+							</div>
+						<?php }} ?>
+						<!-- Redis Options-->
+						<?php if ($v_redis == "yes") { ?>
+							<div class="u-mb10">
+								<p>
+									<?= tohtml( _("Redis Support")) ?>:
+									<span class="u-ml5">
+										<?= tohtml($v_redis == "yes" ? _("Yes") : _("No")) ?>
+									</span>
+									<a href="/list/db-host/" class="u-ml5">
+										<i class="fas fa-pencil icon-orange"></i>
+									</a>
+								</p>
+							</div>
+							<div class="u-mb20">
+								<label for="v_redis_url" class="form-label">
+									<?= tohtml( _("phpRedisAdmin Alias")) ?>
+								</label>
+								<input type="text" class="form-control" name="v_redis_url" id="v_redis_url" value="<?= tohtml($_SESSION["DB_PRA_ALIAS"] ?? "phpredisadmin") ?>">
+							</div>
+							<div class="u-mb10">
+								<label for="v_phpredisadmin_key" class="form-label">
+									<?= tohtml( _("phpRedisAdmin Single Sign On")) ?>
+								</label>
+								<select
+									class="form-select"
+									name="v_phpredisadmin_key"
+									id="v_phpredisadmin_key"
+									<?php $_SESSION["API"] != "yes" ? "disabled" : ""; ?>
+								>
+									<option value="no">
+										<?= tohtml( _("Disabled")) ?>
+									</option>
+									<option value="yes" <?= tohtml(($_SESSION["PHPREDISADMIN_KEY"] ?? "") != "" ? "selected" : "") ?>>
+										<?= tohtml( _("Enabled")) ?>
+									</option>
+								</select>
+							</div>
+						<?php } ?>
+						<?php if ($v_redis == "yes") {
+							$i = 0;
+							foreach ($v_redis_hosts as $value) {
+								$i++;
+								$redis_endpoint = $value["ENDPOINT"] ?? $value["HOST"] . ":" . ($value["PORT"] ?? "6379");
+								$redis_endpoint_id = preg_replace('/[^A-Za-z0-9_.-]/', '_', $redis_endpoint) . "_" . substr(md5($redis_endpoint), 0, 8);
+							?>
+							<div class="u-pl30">
+								<div class="u-mb10">
+									<label for="v_redis_host_<?= tohtml($redis_endpoint_id) ?>" class="form-label"><?= tohtml( _("Host") . " #" . $i) ?></label>
+									<input type="text" class="form-control" id="v_redis_host_<?= tohtml($redis_endpoint_id) ?>" value="<?= tohtml($value["ENDPOINT"] ?? $value["HOST"]) ?>" disabled>
+								</div>
+								<div class="u-mb10">
+									<label for="v_redis_port_<?= tohtml($redis_endpoint_id) ?>" class="form-label"><?= tohtml( _("Port")) ?></label>
+									<input type="text" class="form-control" id="v_redis_port_<?= tohtml($redis_endpoint_id) ?>" value="<?= tohtml($value["PORT"] ?? "6379") ?>" disabled>
+								</div>
+								<div class="u-mb10">
+									<label for="v_redis_max_<?= tohtml($redis_endpoint_id) ?>" class="form-label">
+										<?= tohtml( _("Maximum Number of Databases")) ?>
+									</label>
+									<input type="text" class="form-control" id="v_redis_max_<?= tohtml($redis_endpoint_id) ?>" value="<?= tohtml($value["MAX_DB"]) ?>" disabled>
+								</div>
+								<div class="u-mb10">
+									<label for="v_redis_current_<?= tohtml($redis_endpoint_id) ?>" class="form-label">
+										<?= tohtml( _("Current Number of Databases")) ?>
+									</label>
+									<input type="text" class="form-control" id="v_redis_current_<?= tohtml($redis_endpoint_id) ?>" value="<?= tohtml($value["U_DB_BASES"]) ?>" disabled>
 								</div>
 							</div>
 						<?php }} ?>

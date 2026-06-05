@@ -44,7 +44,7 @@ mariadb_v="11.8"
 node_v="24"
 
 # Defining software pack for all distros
-software="acl apache2 apache2.2-common apache2-suexec-custom apache2-utils apparmor-utils at awstats bc bind9 bsdmainutils bsdutils
+software="acl apache2 apache2.2-common apache2-suexec-custom apache2-utils apparmor-utils at awstats bc bind9 bsdmainutils bsdutils composer
   clamav-daemon cron curl dnsutils dovecot-imapd dovecot-managesieved dovecot-pop3d dovecot-sieve e2fslibs e2fsprogs
   exim4 exim4-daemon-heavy expect fail2ban flex ftp git hestia=${HESTIA_INSTALL_VER} hestia-nginx hestia-php hestia-web-terminal
   idn2 imagemagick ipset jq libapache2-mod-fcgid libapache2-mod-php$fpm_v libapache2-mod-rpaf libonig5 libzip4 lsb-release
@@ -52,7 +52,7 @@ software="acl apache2 apache2.2-common apache2-suexec-custom apache2-utils appar
   php$fpm_v php$fpm_v-apcu php$fpm_v-bz2 php$fpm_v-cgi php$fpm_v-cli php$fpm_v-common php$fpm_v-curl php$fpm_v-gd
   php$fpm_v-imagick php$fpm_v-imap php$fpm_v-intl php$fpm_v-ldap php$fpm_v-mbstring php$fpm_v-mysql
   php$fpm_v-pgsql php$fpm_v-pspell php$fpm_v-readline php$fpm_v-xml php$fpm_v-zip postgresql postgresql-contrib
-  proftpd-core proftpd-mod-crypto quota rrdtool rsyslog util-linux spamassassin
+  proftpd-core proftpd-mod-crypto quota redis-server rrdtool rsyslog util-linux spamassassin
   sysstat unzip vim-common vsftpd whois zip zstd bubblewrap restic"
 
 installer_dependencies="apt-transport-https ca-certificates curl dirmngr gnupg openssl software-properties-common wget sudo"
@@ -69,6 +69,7 @@ help() {
   -m, --mysql             Install MariaDB       [yes|no]  default: yes
   -M, --mysql8            Install MySQL 8       [yes|no]  default: no
   -g, --postgresql        Install PostgreSQL    [yes|no]  default: no
+  -R, --redis             Install Redis         [yes|no]  default: no
   -x, --exim              Install Exim          [yes|no]  default: yes
   -z, --dovecot           Install Dovecot       [yes|no]  default: yes
   -Z, --sieve             Install Sieve         [yes|no]  default: no
@@ -253,6 +254,7 @@ for arg; do
 		--mysql-classic) args="${args}-M " ;;
 		--mysql8) args="${args}-M " ;;
 		--postgresql) args="${args}-g " ;;
+		--redis) args="${args}-R " ;;
 		--exim) args="${args}-x " ;;
 		--dovecot) args="${args}-z " ;;
 		--sieve) args="${args}-Z " ;;
@@ -284,7 +286,7 @@ done
 eval set -- "$args"
 
 # Parsing arguments
-while getopts "a:w:v:j:k:m:M:g:d:x:z:Z:c:t:i:b:r:o:q:L:l:y:s:u:e:p:W:D:fh" Option; do
+while getopts "a:w:v:j:k:m:M:g:R:d:x:z:Z:c:t:i:b:r:o:q:L:l:y:s:u:e:p:W:D:fh" Option; do
 	case $Option in
 		a) apache=$OPTARG ;;        # Apache
 		w) phpfpm=$OPTARG ;;        # PHP-FPM
@@ -295,6 +297,7 @@ while getopts "a:w:v:j:k:m:M:g:d:x:z:Z:c:t:i:b:r:o:q:L:l:y:s:u:e:p:W:D:fh" Optio
 		m) mysql=$OPTARG ;;         # MariaDB
 		M) mysql8=$OPTARG ;;        # MySQL
 		g) postgresql=$OPTARG ;;    # PostgreSQL
+		R) redis=$OPTARG ;;         # Redis
 		x) exim=$OPTARG ;;          # Exim
 		z) dovecot=$OPTARG ;;       # Dovecot
 		Z) sieve=$OPTARG ;;         # Sieve
@@ -368,6 +371,7 @@ set_default_value 'named' 'yes'
 set_default_value 'mysql' 'yes'
 set_default_value 'mysql8' 'no'
 set_default_value 'postgresql' 'no'
+set_default_value 'redis' 'no'
 set_default_value 'exim' 'yes'
 set_default_value 'dovecot' 'yes'
 set_default_value 'sieve' 'no'
@@ -1038,6 +1042,10 @@ if [ "$postgresql" = 'no' ]; then
 	software=$(echo "$software" | sed -e "s/postgresql//")
 	software=$(echo "$software" | sed -e "s/php$fpm_v-pgsql//")
 fi
+if [ "$redis" = 'no' ]; then
+	software=$(echo "$software" | sed -e "s/redis-server//")
+	software=$(echo "$software" | sed -e "s/composer//")
+fi
 if [ "$fail2ban" = 'no' ]; then
 	software=$(echo "$software" | sed -e "s/fail2ban//")
 fi
@@ -1349,6 +1357,9 @@ if [ "$mysql" = 'yes' ] || [ "$mysql8" = 'yes' ]; then
 fi
 if [ "$postgresql" = 'yes' ]; then
 	installed_db_types="$installed_db_types,pgsql"
+fi
+if [ "$redis" = 'yes' ]; then
+	installed_db_types="$installed_db_types,redis"
 fi
 if [ -n "$installed_db_types" ]; then
 	db=$(echo "$installed_db_types" \
@@ -2143,6 +2154,29 @@ fi
 # Configuring PostgreSQL host
 if [ "$postgresql" = 'yes' ]; then
 	$HESTIA/bin/v-add-database-host pgsql localhost postgres $ppass
+fi
+
+# Configuring Redis host
+if [ "$redis" = 'yes' ]; then
+	rpass=$(gen_pass)
+	sed -i "s/^bind .*/bind 127.0.0.1 ::1/" /etc/redis/redis.conf
+	sed -i "s/^protected-mode .*/protected-mode yes/" /etc/redis/redis.conf
+	touch /etc/redis/users.acl
+	chown redis:redis /etc/redis/users.acl
+	chmod 640 /etc/redis/users.acl
+	if grep -q "^# *aclfile " /etc/redis/redis.conf; then
+		sed -i "s|^# *aclfile .*|aclfile /etc/redis/users.acl|" /etc/redis/redis.conf
+	elif ! grep -q "^aclfile " /etc/redis/redis.conf; then
+		echo "aclfile /etc/redis/users.acl" >> /etc/redis/redis.conf
+	fi
+	systemctl -q enable redis-server 2> /dev/null
+	systemctl restart redis-server >> $LOG
+	check_result $? "redis-server start failed"
+	redis-cli ACL SETUSER hestia on ">$rpass" allcommands allkeys allchannels > /dev/null
+	redis-cli ACL SETUSER default off > /dev/null
+	redis-cli ACL SAVE > /dev/null
+	$HESTIA/bin/v-add-database-host redis localhost hestia $rpass
+	$HESTIA/bin/v-add-sys-phpredisadmin quiet
 fi
 
 #----------------------------------------------------------#

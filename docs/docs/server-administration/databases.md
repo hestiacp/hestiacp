@@ -3,7 +3,7 @@
 ## How to setup a remote database server
 
 1. It is assumed you already have your second server up and running.
-2. On your Hestia server run the following command (`mysql` may be replaced by `postgresql`):
+2. On your Hestia server run the following command (`mysql` may be replaced by `postgresql` or `redis`):
 
 ```bash
 v-add-database-host mysql new-server.com root password
@@ -14,6 +14,52 @@ To make sure the host has been added, run the following command:
 ```bash
 v-list-database-hosts
 ```
+
+## Redis database servers
+
+Redis support is optional and disabled by default during installation. To
+install a local Redis server during setup, pass:
+
+```bash
+./hst-install.sh --redis yes
+```
+
+Hestia configures local Redis on `localhost:6379`, binds it to loopback,
+enables protected mode, configures `/etc/redis/users.acl` for persistent ACL
+users, creates a Hestia Redis ACL admin user, and registers the endpoint as a
+Database Server.
+
+Redis databases in Hestia are Redis ACL users scoped to a key prefix, not
+numbered Redis logical databases. The prefix format is:
+
+```text
+hestia:<user>:<database>:
+```
+
+For example, a Redis database named `admin_cache` can only access keys under
+`hestia:admin:admin_cache:*`. This model works with Redis ACLs and avoids
+using numbered logical databases, which are not available in Redis Cluster.
+
+To add a remote Redis endpoint:
+
+```bash
+v-add-database-host redis redis.example.com hestia_admin strongpassword 500 "" template1 6379
+```
+
+The Hestia server must have `redis-cli` available. The Redis admin user must
+be able to run `PING`, `ACL WHOAMI`, `ACL LIST`, and `ACL SAVE`; Hestia rejects
+Redis endpoints that can create ACL users only in memory without persisting
+them.
+
+To create Redis credentials for a user:
+
+```bash
+v-add-database admin cache cache_user strongpassword redis localhost "" 6379
+```
+
+phpRedisAdmin is available at `https://host.domain.tld/phpredisadmin/` when
+installed. Hestia SSO creates a short-lived temporary Redis ACL user scoped to
+the same key prefix.
 
 ## Why I can’t use `http://ip/phpmyadmin/`
 
@@ -107,7 +153,7 @@ Automated can sometimes cause issues. Login via SSH and open `/var/log/{webserve
 
 ## Remote databases
 
-If needed you can simply host Mysql or Postgresql on a remote server.
+If needed you can simply host Mysql, Postgresql, or Redis on a remote server.
 
 To add a remote database:
 
@@ -121,17 +167,44 @@ For example:
 v-add-database-host mysql db.hestiacp.com root mypassword 500
 ```
 
-If you want you can setup phpMyAdmin on the host server to allow to connect to the database. Create a copy of `01-localhost` file in `/etc/phpmyadmin/conf.d` and change:
+## Multiple local database endpoints
 
-```php
-$cfg["Servers"][$i]["host"] = "localhost";
-$cfg["Servers"][$i]["port"] = "3306";
-$cfg["Servers"][$i]["pmadb"] = "phpmyadmin";
-$cfg["Servers"][$i]["controluser"] = "pma";
-$cfg["Servers"][$i]["controlpass"] = "random password";
-$cfg["Servers"][$i]["bookmarktable"] = "pma__bookmark";
+Hestia can manage more than one database endpoint on the same host when each
+endpoint uses a different port. This is useful when you run an additional local
+MySQL or MariaDB instance yourself, for example on `127.0.0.1:3307`.
+
+Hestia does not install or maintain the second MySQL/MariaDB service. Configure
+the extra service with its own data directory, socket, and TCP port before
+adding it to Hestia.
+
+```bash
+v-add-database-host mysql 127.0.0.1 root mypassword 500 UTF8,UTF8MB4 template1 3307
 ```
 
-Please make sure to create aswell the phpmyadmin user and database.
+To create a database on a specific endpoint from the CLI, pass both the host
+and port:
 
-See `/usr/local/hestia/install/deb/phpmyadmin/pma.sh`
+```bash
+v-add-database admin app_db app_user strongpassword mysql 127.0.0.1 utf8mb4 3307
+```
+
+When more than one endpoint uses the same host, commands that target one
+database host need the port:
+
+```bash
+v-list-database-host mysql 127.0.0.1 json 3307
+v-suspend-database-host mysql 127.0.0.1 3307
+v-delete-database-host mysql 127.0.0.1 3307
+```
+
+For MySQL-family endpoints, Hestia refreshes phpMyAdmin server entries when a
+database host is added or removed. You can also refresh them manually:
+
+```bash
+v-update-sys-pma-hosts
+```
+
+The generated phpMyAdmin entries cover host and port selection. Advanced
+phpMyAdmin storage features such as `pmadb`, `controluser`, bookmarks, and
+designer tables are only configured for the default local phpMyAdmin setup
+unless you customize phpMyAdmin separately.

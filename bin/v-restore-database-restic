@@ -72,7 +72,15 @@ for db in $DB; do
 			parse_object_kv_list $(cat "$tmpdir/db.conf")
 			# @todo add support for renaming user
 			str="DB='$DB' DBUSER='$DBUSER' MD5='$MD5' HOST='$HOST'"
-			str="$str TYPE='$TYPE' CHARSET='$CHARSET' U_DISK='$U_DISK'"
+			if [ -n "$PORT" ]; then
+				str="$str PORT='$PORT'"
+			fi
+			if [ "$TYPE" = "redis" ]; then
+				if [ -z "$PREFIX" ]; then PREFIX="hestia:${user}:${DB}:"; fi
+				str="$str TYPE='$TYPE' PREFIX='$PREFIX' DB_INDEX='${DB_INDEX:-0}' U_DISK='$U_DISK'"
+			else
+				str="$str TYPE='$TYPE' CHARSET='$CHARSET' U_DISK='$U_DISK'"
+			fi
 			str="$str SUSPENDED='no' TIME='$(date +%T)' DATE='$(date +%F)'"
 			echo "$str" >> $USER_DATA/db.conf
 		else
@@ -107,6 +115,11 @@ for db in $DB; do
 				delete_pgsql_database
 				rebuild_pgsql_database
 				import_pgsql_database $database_dump
+				;;
+			redis)
+				delete_redis_database
+				rebuild_redis_database
+				import_redis_database $database_dump
 				;;
 		esac
 	fi

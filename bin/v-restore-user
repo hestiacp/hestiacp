@@ -747,7 +747,7 @@ if [ "$db" != 'no' ] && [ -n "$DB_SYSTEM" ]; then
 		echo -e "$(date "+%F %T") $database" | tee -a $tmpdir/restore.log
 
 		# Cleanup previous config keys
-		unset -v DB DBUSER MD5 HOST TYPE CHARSET U_DISK
+		unset -v DB DBUSER MD5 HOST PORT TYPE CHARSET U_DISK
 
 		# Checking database existence
 		check_config=$(grep "DB='$database'" $USER_DATA/db.conf)
@@ -776,7 +776,15 @@ if [ "$db" != 'no' ] && [ -n "$DB_SYSTEM" ]; then
 			DBUSER=$(echo "$DBUSER" | sed -e "s/${old_user}_//")
 			DBUSER="${user}_${DBUSER}"
 			str="DB='$DB' DBUSER='$DBUSER' MD5='$MD5' HOST='$HOST'"
-			str="$str TYPE='$TYPE' CHARSET='$CHARSET' U_DISK='$U_DISK'"
+			if [ -n "$PORT" ]; then
+				str="$str PORT='$PORT'"
+			fi
+			if [ "$TYPE" = "redis" ]; then
+				PREFIX="hestia:${user}:${DB}:"
+				str="$str TYPE='$TYPE' PREFIX='$PREFIX' DB_INDEX='${DB_INDEX:-0}' U_DISK='$U_DISK'"
+			else
+				str="$str TYPE='$TYPE' CHARSET='$CHARSET' U_DISK='$U_DISK'"
+			fi
 			str="$str SUSPENDED='no' TIME='$(date +%T)' DATE='$(date +%F)'"
 			echo $str >> $USER_DATA/db.conf
 		else
@@ -802,6 +810,11 @@ if [ "$db" != 'no' ] && [ -n "$DB_SYSTEM" ]; then
 				delete_pgsql_database
 				rebuild_pgsql_database
 				import_pgsql_database $database_dump
+				;;
+			redis)
+				delete_redis_database
+				rebuild_redis_database
+				import_redis_database $database_dump
 				;;
 		esac
 	done

@@ -9,9 +9,10 @@
 # Global
 database_set_default_ports() {
 
-	# Set default ports for MySQL and PostgreSQL
+	# Set default ports for MySQL, PostgreSQL, and Redis
 	mysql_default="3306"
 	pgsql_default="5432"
+	redis_default="6379"
 
 	# Handle missing values for both $PORT and $port
 	# however don't override both at once or custom ports will be overridden.
@@ -23,6 +24,9 @@ database_set_default_ports() {
 		if [ "$type" = 'pgsql' ]; then
 			PORT="$pgsql_default"
 		fi
+		if [ "$type" = 'redis' ]; then
+			PORT="$redis_default"
+		fi
 	fi
 	if [ -z "$port" ]; then
 		if [ "$type" = 'mysql' ]; then
@@ -31,21 +35,121 @@ database_set_default_ports() {
 		if [ "$type" = 'pgsql' ]; then
 			port="$pgsql_default"
 		fi
+		if [ "$type" = 'redis' ]; then
+			port="$redis_default"
+		fi
 	fi
+}
+
+database_get_default_port() {
+	case "$1" in
+		mysql) echo "3306" ;;
+		pgsql) echo "5432" ;;
+		redis) echo "6379" ;;
+	esac
+}
+
+database_get_endpoint() {
+	echo "$1:$2"
+}
+
+database_get_endpoint_id() {
+	echo "$1_$2" | sed -e "s/[^A-Za-z0-9_.-]/_/g"
+}
+
+database_count_host_matches() {
+	local search_type="$1"
+	local search_host="$2"
+	local search_port="$3"
+	local default_port row row_host row_port
+	local count=0
+
+	default_port=$(database_get_default_port "$search_type")
+	while IFS= read -r row; do
+		[ -z "$row" ] && continue
+		unset HOST PORT
+		parse_object_kv_list "$row"
+		row_host="$HOST"
+		row_port="${PORT:-$default_port}"
+		if [ "$row_host" = "$search_host" ]; then
+			if [ -z "$search_port" ] || [ "$row_port" = "$search_port" ]; then
+				count=$((count + 1))
+			fi
+		fi
+	done < "$HESTIA/conf/$search_type.conf"
+
+	echo "$count"
+}
+
+database_get_host_values() {
+	local search_type="$1"
+	local search_host="$2"
+	local search_port="$3"
+	local default_port row row_host row_port line
+	local count=0
+
+	default_port=$(database_get_default_port "$search_type")
+	line=0
+	DBHOST_LINE=""
+	DBHOST_ROW=""
+	DBHOST_ENDPOINT=""
+
+	while IFS= read -r row; do
+		line=$((line + 1))
+		[ -z "$row" ] && continue
+		unset HOST PORT
+		parse_object_kv_list "$row"
+		row_host="$HOST"
+		row_port="${PORT:-$default_port}"
+		if [ "$row_host" = "$search_host" ]; then
+			if [ -z "$search_port" ] || [ "$row_port" = "$search_port" ]; then
+				count=$((count + 1))
+				DBHOST_LINE="$line"
+				DBHOST_ROW="$row"
+			fi
+		fi
+	done < "$HESTIA/conf/$search_type.conf"
+
+	if [ "$count" -eq 0 ]; then
+		check_result "$E_NOTEXIST" "$search_type host $search_host doesn't exist"
+	fi
+	if [ "$count" -gt 1 ]; then
+		check_result "$E_INVALID" "multiple database hosts match $search_host; specify port"
+	fi
+
+	parse_object_kv_list "$DBHOST_ROW"
+	if [ -z "$PORT" ]; then
+		PORT="$default_port"
+	fi
+	DBHOST_ENDPOINT=$(database_get_endpoint "$HOST" "$PORT")
+}
+
+database_update_host_value() {
+	local search_type="$1"
+	local search_host="$2"
+	local search_port="$3"
+	local key="${4#\$}"
+	local new="$5"
+	local old
+
+	database_get_host_values "$search_type" "$search_host" "$search_port"
+	old="${!key}"
+	old=$(echo "$old" | sed -e 's/\\/\\\\/g' -e 's/&/\\&/g' -e 's/\//\\\//g')
+	new=$(echo "$new" | sed -e 's/\\/\\\\/g' -e 's/&/\\&/g' -e 's/\//\\\//g')
+	sed -i "$DBHOST_LINE s/${key}='${old//\*/\\*}'/${key}='${new//\*/\\*}'/g" \
+		"$HESTIA/conf/$search_type.conf"
 }
 
 # MySQL
 mysql_connect() {
 	unset PORT
-	host_str=$(grep "HOST='$1'" $HESTIA/conf/mysql.conf)
-	parse_object_kv_list "$host_str"
-	if [ -z $PORT ]; then PORT=3306; fi
+	database_get_host_values "mysql" "$1" "$2"
 	if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ]; then
 		echo "Error: mysql config parsing failed"
 		log_event "$E_PARSING" "$ARGUMENTS"
 		exit $E_PARSING
 	fi
-	mycnf="$HESTIA/conf/.mysql.$HOST"
+	mycnf="$HESTIA/conf/.mysql.$(database_get_endpoint_id "$HOST" "$PORT")"
 	if [ ! -e "$mycnf" ]; then
 		echo "[client]" > $mycnf
 		echo "host='$HOST'" >> $mycnf
@@ -132,10 +236,8 @@ mysql_dump() {
 # PostgreSQL
 psql_connect() {
 	unset PORT
-	host_str=$(grep "HOST='$1'" $HESTIA/conf/pgsql.conf)
-	parse_object_kv_list "$host_str"
+	database_get_host_values "pgsql" "$1" "$2"
 	export PGPASSWORD="$PASSWORD"
-	if [ -z $PORT ]; then PORT=5432; fi
 	if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ] || [ -z $TPL ]; then
 		echo "Error: postgresql config parsing failed"
 		log_event "$E_PARSING" "$ARGUMENTS"
@@ -179,11 +281,90 @@ psql_dump() {
 	fi
 }
 
+# Redis
+redis_connect() {
+	if ! command -v redis-cli > /dev/null 2>&1; then
+		echo "Error: redis-cli is not installed"
+		log_event "$E_NOTEXIST" "$ARGUMENTS"
+		exit "$E_NOTEXIST"
+	fi
+	unset PORT
+	database_get_host_values "redis" "$1" "$2"
+	if [ -z "$HOST" ] || [ -z "$USER" ] || [ -z "$PASSWORD" ]; then
+		echo "Error: redis config parsing failed"
+		log_event "$E_PARSING" "$ARGUMENTS"
+		exit $E_PARSING
+	fi
+
+	redis_auth_args=(-h "$HOST" -p "$PORT" --user "$USER" -a "$PASSWORD" --no-auth-warning)
+	redis_out=$(mktemp)
+	redis-cli "${redis_auth_args[@]}" PING > "$redis_out" 2>&1
+	if [ '0' -ne "$?" ]; then
+		if [ "$notify" != 'no' ]; then
+			email=$(grep CONTACT "$HESTIA/data/users/$ROOT_USER/user.conf" | cut -f 2 -d \')
+			subj="Redis connection error on $(hostname)"
+			echo -e "Can't connect to Redis $HOST:$PORT\n$(cat "$redis_out")" \
+				| $SENDMAIL -s "$subj" $email
+		fi
+		rm -f "$redis_out"
+		echo "Error: Connection to $HOST failed"
+		log_event "$E_CONNECT" "$ARGUMENTS"
+		exit "$E_CONNECT"
+	fi
+	rm -f "$redis_out"
+}
+
+redis_query() {
+	redis-cli "${redis_auth_args[@]}" "$@"
+}
+
+redis_save_acl() {
+	acl_out=$(mktemp)
+	redis_query ACL SAVE > "$acl_out" 2>&1
+	if [ "$?" -ne 0 ]; then
+		echo "Error: Redis ACL changes could not be saved"
+		cat "$acl_out"
+		rm -f "$acl_out"
+		log_event "$E_DB" "$ARGUMENTS"
+		exit "$E_DB"
+	fi
+	rm -f "$acl_out"
+}
+
+redis_get_prefix() {
+	if [ -n "$PREFIX" ]; then
+		redis_prefix="$PREFIX"
+	else
+		redis_prefix="hestia:${user}:${database}:"
+	fi
+}
+
+redis_get_acl_hash() {
+	md5=$(redis_query ACL LIST | grep "^user $DBUSER " || true)
+	if [ -z "$md5" ]; then
+		md5=$(redis_query ACL LIST | grep "^user $dbuser " || true)
+	fi
+}
+
+redis_apply_acl_user() {
+	local acl_user="$1"
+	local acl_pass="$2"
+	local acl_prefix="$3"
+	local acl_state="${4-on}"
+
+	redis_query ACL SETUSER "$acl_user" reset "$acl_state" ">$acl_pass" \
+		"~$acl_prefix*" "&$acl_prefix*" \
+		+@read +@write +@keyspace +@string +@list +@set +@sortedset \
+		+@hash +@stream +@pubsub +@transaction +@connection \
+		-@admin -@dangerous -ACL -CONFIG -FLUSHALL -FLUSHDB -KEYS -SCAN -RANDOMKEY > /dev/null
+}
+
 # Get database host
 get_next_dbhost() {
 	if [ -z "$host" ] || [ "$host" == 'default' ]; then
 		IFS=$'\n'
 		host='EMPTY_DB_HOST'
+		port=''
 		config="$HESTIA/conf/$type.conf"
 		host_str=$(grep "SUSPENDED='no'" $config)
 		check_row=$(echo "$host_str" | wc -l)
@@ -191,30 +372,42 @@ get_next_dbhost() {
 		if [ 0 -lt "$check_row" ]; then
 			if [ 1 -eq "$check_row" ]; then
 				for db in $host_str; do
+					unset HOST PORT
 					parse_object_kv_list "$db"
+					if [ -z "$PORT" ]; then PORT=$(database_get_default_port "$type"); fi
 					if [ "$MAX_DB" -gt "$U_DB_BASES" ]; then
 						host=$HOST
+						port=$PORT
 					fi
 				done
 			else
 				old_weight='100'
 				for db in $host_str; do
+					unset HOST PORT
 					parse_object_kv_list "$db"
-					let weight="$U_DB_BASES * 100 / $MAX_DB" > /dev/null 2>&1
+					if [ -z "$PORT" ]; then PORT=$(database_get_default_port "$type"); fi
+					if [ "$MAX_DB" -le "$U_DB_BASES" ]; then
+						continue
+					fi
+					weight=$((U_DB_BASES * 100 / MAX_DB))
 					if [ "$old_weight" -gt "$weight" ]; then
 						host="$HOST"
+						port="$PORT"
 						old_weight="$weight"
 					fi
 				done
 			fi
 		fi
+	else
+		database_get_host_values "$type" "$host" "$port"
+		host="$HOST"
+		port="$PORT"
 	fi
 }
 
 # Database charset validation
 is_charset_valid() {
-	host_str=$(grep "HOST='$host'" $HESTIA/conf/$type.conf)
-	parse_object_kv_list "$host_str"
+	database_get_host_values "$type" "$host" "$port"
 
 	if [ -z "$(echo $CHARSETS | grep -wi $charset)" ]; then
 		echo "Error: charset $charset not exist"
@@ -225,49 +418,38 @@ is_charset_valid() {
 
 # Increase database host value
 increase_dbhost_values() {
-	host_str=$(grep "HOST='$host'" $HESTIA/conf/$type.conf)
-	parse_object_kv_list "$host_str"
+	database_get_host_values "$type" "$host" "$port"
 
-	old_dbbases="U_DB_BASES='$U_DB_BASES'"
-	new_dbbases="U_DB_BASES='$((U_DB_BASES + 1))'"
 	if [ -z "$U_SYS_USERS" ]; then
-		old_users="U_SYS_USERS=''"
-		new_users="U_SYS_USERS='$user'"
+		new_users="$user"
 	else
-		old_users="U_SYS_USERS='$U_SYS_USERS'"
-		new_users="U_SYS_USERS='$U_SYS_USERS'"
+		new_users="$U_SYS_USERS"
 		if [ -z "$(echo $U_SYS_USERS | sed "s/,/\n/g" | grep -w $user)" ]; then
-			old_users="U_SYS_USERS='$U_SYS_USERS'"
-			new_users="U_SYS_USERS='$U_SYS_USERS,$user'"
+			new_users="$U_SYS_USERS,$user"
 		fi
 	fi
 
-	sed -i "s/$old_dbbases/$new_dbbases/g" $HESTIA/conf/$type.conf
-	sed -i "s/$old_users/$new_users/g" $HESTIA/conf/$type.conf
+	database_update_host_value "$type" "$host" "$port" '$U_DB_BASES' "$((U_DB_BASES + 1))"
+	database_update_host_value "$type" "$host" "$port" '$U_SYS_USERS' "$new_users"
 }
 
 # Decrease database host value
 decrease_dbhost_values() {
-	host_str=$(grep "HOST='$HOST'" $HESTIA/conf/$TYPE.conf)
-	parse_object_kv_list "$host_str"
+	database_get_host_values "$TYPE" "$HOST" "$PORT"
 
-	old_dbbases="U_DB_BASES='$U_DB_BASES'"
-	new_dbbases="U_DB_BASES='$((U_DB_BASES - 1))'"
-	old_users="U_SYS_USERS='$U_SYS_USERS'"
 	U_SYS_USERS=$(echo "$U_SYS_USERS" \
 		| sed "s/,/\n/g" \
 		| sed "s/^$user$//g" \
 		| sed "/^$/d" \
 		| sed ':a;N;$!ba;s/\n/,/g')
-	new_users="U_SYS_USERS='$U_SYS_USERS'"
 
-	sed -i "s/$old_dbbases/$new_dbbases/g" $HESTIA/conf/$TYPE.conf
-	sed -i "s/$old_users/$new_users/g" $HESTIA/conf/$TYPE.conf
+	database_update_host_value "$TYPE" "$HOST" "$PORT" '$U_DB_BASES' "$((U_DB_BASES - 1))"
+	database_update_host_value "$TYPE" "$HOST" "$PORT" '$U_SYS_USERS' "$U_SYS_USERS"
 }
 
 # Create MySQL database
 add_mysql_database() {
-	mysql_connect $host
+	mysql_connect "$host" "$port"
 
 	mysql_ver_sub=$(echo $mysql_ver | cut -d '.' -f1)
 	mysql_ver_sub_sub=$(echo $mysql_ver | cut -d '.' -f2)
@@ -335,7 +517,7 @@ add_mysql_database() {
 
 # Create PostgreSQL database
 add_pgsql_database() {
-	psql_connect $host
+	psql_connect "$host" "$port"
 
 	query="CREATE ROLE $dbuser WITH LOGIN PASSWORD '$dbpass'"
 	psql_query "$query" > /dev/null
@@ -358,39 +540,79 @@ add_pgsql_database() {
 	md5=$(psql_query "$query" | grep md5 | cut -f 2 -d \ )
 }
 
+# Create Redis ACL database
+add_redis_database() {
+	redis_connect "$host" "$port"
+	redis_prefix="hestia:${user}:${database}:"
+	redis_apply_acl_user "$dbuser" "$dbpass" "$redis_prefix" "on"
+	redis_save_acl
+	DBUSER="$dbuser"
+	redis_get_acl_hash
+	PREFIX="$redis_prefix"
+	DB_INDEX="0"
+}
+
 add_mysql_database_temp_user() {
-	mysql_connect $host
+	mysql_connect "$HOST" "$PORT"
 
 	mysql_ver_sub=$(echo $mysql_ver | cut -d '.' -f1)
 	mysql_ver_sub_sub=$(echo $mysql_ver | cut -d '.' -f2)
 
 	if [ "$mysql_fork" = "mysql" ] && [ "$mysql_ver_sub" -ge 8 ]; then
+		query="CREATE USER \`$dbuser\`@\`%\`
+			IDENTIFIED BY '$dbpass'"
+		mysql_query "$query" > /dev/null
+
 		query="CREATE USER \`$dbuser\`@localhost
 			IDENTIFIED BY '$dbpass'"
+		mysql_query "$query" > /dev/null
+
+		query="GRANT ALL ON \`$database\`.* TO \`$dbuser\`@\`%\`"
 		mysql_query "$query" > /dev/null
 
 		query="GRANT ALL ON \`$database\`.* TO \`$dbuser\`@localhost"
 		mysql_query "$query" > /dev/null
 	else
+		query="GRANT ALL ON \`$database\`.* TO \`$dbuser\`@\`%\`
+			IDENTIFIED BY '$dbpass'"
+		mysql_query "$query" > /dev/null
+
 		query="GRANT ALL ON \`$database\`.* TO \`$dbuser\`@localhost
-    		IDENTIFIED BY '$dbpass'"
+			IDENTIFIED BY '$dbpass'"
 		mysql_query "$query" > /dev/null
 	fi
 }
 
 delete_mysql_database_temp_user() {
-	mysql_connect $host
+	mysql_connect "$HOST" "$PORT"
+	query="REVOKE ALL ON \`$database\`.* FROM \`$dbuser\`@\`%\`"
+	mysql_query "$query" > /dev/null
 	query="REVOKE ALL ON \`$database\`.* FROM \`$dbuser\`@localhost"
+	mysql_query "$query" > /dev/null
+	query="DROP USER '$dbuser'@'%'"
 	mysql_query "$query" > /dev/null
 	query="DROP USER '$dbuser'@'localhost'"
 	mysql_query "$query" > /dev/null
 }
 
+add_redis_database_temp_user() {
+	redis_connect "$HOST" "$PORT"
+	redis_get_prefix
+	redis_apply_acl_user "$dbuser" "$dbpass" "$redis_prefix" "on"
+	redis_query ACL SETUSER "$dbuser" +SCAN > /dev/null
+}
+
+delete_redis_database_temp_user() {
+	redis_connect "$HOST" "$PORT"
+	redis_query ACL DELUSER "$dbuser" > /dev/null
+	redis_save_acl
+}
+
 # Check if database host do not exist in config
 is_dbhost_new() {
 	if [ -e "$HESTIA/conf/$type.conf" ]; then
-		check_host=$(grep "HOST='$host'" $HESTIA/conf/$type.conf)
-		if [ "$check_host" ]; then
+		check_host=$(database_count_host_matches "$type" "$host" "$port")
+		if [ "$check_host" -gt 0 ]; then
 			echo "Error: db host exist"
 			log_event "$E_EXISTS" "$ARGUMENTS"
 			exit $E_EXISTS
@@ -400,12 +622,19 @@ is_dbhost_new() {
 
 # Get database values
 get_database_values() {
-	parse_object_kv_list $(grep "DB='$database'" $USER_DATA/db.conf)
+	local db_row
+
+	unset PORT
+	db_row=$(grep "DB='$database'" "$USER_DATA/db.conf")
+	parse_object_kv_list "$db_row"
+	if [ -z "$PORT" ]; then
+		PORT=$(database_get_default_port "$TYPE")
+	fi
 }
 
 # Change MySQL database password
 change_mysql_password() {
-	mysql_connect $HOST
+	mysql_connect "$HOST" "$PORT"
 
 	mysql_ver_sub=$(echo $mysql_ver | cut -d '.' -f1)
 	mysql_ver_sub_sub=$(echo $mysql_ver | cut -d '.' -f2)
@@ -474,7 +703,7 @@ change_mysql_password() {
 
 # Change PostgreSQL database password
 change_pgsql_password() {
-	psql_connect $HOST
+	psql_connect "$HOST" "$PORT"
 	query="ALTER ROLE $DBUSER WITH LOGIN PASSWORD '$dbpass'"
 	psql_query "$query" > /dev/null
 
@@ -482,9 +711,18 @@ change_pgsql_password() {
 	md5=$(psql_query "$query" | grep md5 | cut -f 2 -d \ )
 }
 
+# Change Redis ACL database password
+change_redis_password() {
+	redis_connect "$HOST" "$PORT"
+	redis_get_prefix
+	redis_apply_acl_user "$DBUSER" "$dbpass" "$redis_prefix" "on"
+	redis_save_acl
+	redis_get_acl_hash
+}
+
 # Delete MySQL database
 delete_mysql_database() {
-	mysql_connect $HOST
+	mysql_connect "$HOST" "$PORT"
 
 	query="DROP DATABASE \`$database\`"
 	mysql_query "$query"
@@ -506,7 +744,7 @@ delete_mysql_database() {
 
 # Delete PostgreSQL database
 delete_pgsql_database() {
-	psql_connect $HOST
+	psql_connect "$HOST" "$PORT"
 
 	query="REVOKE ALL PRIVILEGES ON DATABASE $database FROM $DBUSER"
 	psql_query "$query" > /dev/null
@@ -522,9 +760,21 @@ delete_pgsql_database() {
 	fi
 }
 
+# Delete Redis ACL database
+delete_redis_database() {
+	redis_connect "$HOST" "$PORT"
+	redis_get_prefix
+	while IFS= read -r key; do
+		[ -z "$key" ] && continue
+		redis_query UNLINK "$key" > /dev/null
+	done < <(redis_query --scan --pattern "$redis_prefix*")
+	redis_query ACL DELUSER "$DBUSER" > /dev/null
+	redis_save_acl
+}
+
 # Dump MySQL database
 dump_mysql_database() {
-	mysql_connect $HOST
+	mysql_connect "$HOST" "$PORT"
 
 	mysql_dump $dump $database
 
@@ -537,7 +787,7 @@ dump_mysql_database() {
 
 # Dump PostgreSQL database
 dump_pgsql_database() {
-	psql_connect $HOST
+	psql_connect "$HOST" "$PORT"
 
 	psql_dump $dump $database
 
@@ -548,10 +798,27 @@ dump_pgsql_database() {
 	echo -e "$pw_str\n$gr_str" >> $grants
 }
 
+# Dump Redis prefixed keys as RESTORE commands
+dump_redis_database() {
+	redis_connect "$HOST" "$PORT"
+	redis_get_prefix
+	: > "$dump"
+	while IFS= read -r key; do
+		[ -z "$key" ] && continue
+		ttl=$(redis_query PTTL "$key")
+		if [ "$ttl" -lt 0 ]; then
+			ttl=0
+		fi
+		payload=$(redis_query --raw DUMP "$key" | perl -0pe 's/\n\z//' | base64 -w 0)
+		echo "RESTORE_BASE64 '$key' '$ttl' '$payload'" >> "$dump"
+	done < <(redis_query --scan --pattern "$redis_prefix*")
+	redis_get_acl_hash
+	echo "$md5" > "$grants"
+}
+
 # Check if database server is in use
 is_dbhost_free() {
-	host_str=$(grep "HOST='$host'" $HESTIA/conf/$type.conf)
-	parse_object_kv_list "$host_str"
+	database_get_host_values "$type" "$host" "$port"
 	if [ 0 -ne "$U_DB_BASES" ]; then
 		echo "Error: host $HOST is used"
 		log_event "$E_INUSE" "$ARGUMENTS"
@@ -561,7 +828,7 @@ is_dbhost_free() {
 
 # Suspend MySQL database
 suspend_mysql_database() {
-	mysql_connect $HOST
+	mysql_connect "$HOST" "$PORT"
 	query="REVOKE ALL ON \`$database\`.* FROM \`$DBUSER\`@\`%\`"
 	mysql_query "$query" > /dev/null
 	query="REVOKE ALL ON \`$database\`.* FROM \`$DBUSER\`@localhost"
@@ -570,14 +837,21 @@ suspend_mysql_database() {
 
 # Suspend PostgreSQL database
 suspend_pgsql_database() {
-	psql_connect $HOST
+	psql_connect "$HOST" "$PORT"
 	query="REVOKE ALL PRIVILEGES ON $database FROM $DBUSER"
 	psql_query "$query" > /dev/null
 }
 
+# Suspend Redis ACL database
+suspend_redis_database() {
+	redis_connect "$HOST" "$PORT"
+	redis_query ACL SETUSER "$DBUSER" off > /dev/null
+	redis_save_acl
+}
+
 # Unsuspend MySQL database
 unsuspend_mysql_database() {
-	mysql_connect $HOST
+	mysql_connect "$HOST" "$PORT"
 	query="GRANT ALL ON \`$database\`.* TO \`$DBUSER\`@\`%\`"
 	mysql_query "$query" > /dev/null
 	query="GRANT ALL ON \`$database\`.* TO \`$DBUSER\`@localhost"
@@ -586,14 +860,21 @@ unsuspend_mysql_database() {
 
 # Unsuspend PostgreSQL database
 unsuspend_pgsql_database() {
-	psql_connect $HOST
+	psql_connect "$HOST" "$PORT"
 	query="GRANT ALL PRIVILEGES ON DATABASE $database TO $DBUSER"
 	psql_query "$query" > /dev/null
 }
 
+# Unsuspend Redis ACL database
+unsuspend_redis_database() {
+	redis_connect "$HOST" "$PORT"
+	redis_query ACL SETUSER "$DBUSER" on > /dev/null
+	redis_save_acl
+}
+
 # Get MySQL disk usage
 get_mysql_disk_usage() {
-	mysql_connect $HOST
+	mysql_connect "$HOST" "$PORT"
 	query="SELECT SUM( data_length + index_length ) / 1024 / 1024 'Size'
         FROM information_schema.TABLES WHERE table_schema='$database'"
 	usage=$(mysql_query "$query" | tail -n1)
@@ -606,7 +887,7 @@ get_mysql_disk_usage() {
 
 # Get PostgreSQL disk usage
 get_pgsql_disk_usage() {
-	psql_connect $HOST
+	psql_connect "$HOST" "$PORT"
 
 	query="SELECT pg_database_size('$database');"
 	usage=$(psql_query "$query")
@@ -621,9 +902,25 @@ get_pgsql_disk_usage() {
 	fi
 }
 
+# Get Redis prefixed key memory usage
+get_redis_disk_usage() {
+	redis_connect "$HOST" "$PORT"
+	redis_get_prefix
+	usage=0
+	while IFS= read -r key; do
+		[ -z "$key" ] && continue
+		key_usage=$(redis_query MEMORY USAGE "$key" 2> /dev/null || echo 0)
+		usage=$((usage + key_usage))
+	done < <(redis_query --scan --pattern "$redis_prefix*")
+	usage=$((usage / 1048576))
+	if [ "$usage" -eq '0' ]; then
+		usage=1
+	fi
+}
+
 # Delete MySQL user
 delete_mysql_user() {
-	mysql_connect $HOST
+	mysql_connect "$HOST" "$PORT"
 
 	query="REVOKE ALL ON \`$database\`.* FROM \`$old_dbuser\`@\`%\`"
 	mysql_query "$query" > /dev/null
@@ -640,7 +937,7 @@ delete_mysql_user() {
 
 # Delete PostgreSQL user
 delete_pgsql_user() {
-	psql_connect $HOST
+	psql_connect "$HOST" "$PORT"
 
 	query="REVOKE ALL PRIVILEGES ON DATABASE $database FROM $old_dbuser"
 	psql_query "$query" > /dev/null

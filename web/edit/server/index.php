@@ -165,6 +165,12 @@ $v_pgsql_hosts = array_values(
 	}),
 );
 $v_pgsql = count($v_pgsql_hosts) ? "yes" : "no";
+$v_redis_hosts = array_values(
+	array_filter($db_hosts, function ($host) {
+		return $host["TYPE"] === "redis";
+	}),
+);
+$v_redis = count($v_redis_hosts) ? "yes" : "no";
 unset($db_hosts);
 
 // List backup settings
@@ -211,6 +217,30 @@ foreach ($backup_types as $backup_type) {
 			$v_rclone_host = $v_remote_backup[$backup_type]["HOST"];
 			$v_rclone_path = $v_remote_backup[$backup_type]["BPATH"];
 			$v_backup_remote_adv = "yes";
+		}
+	}
+
+	// Set phpRedisAdmin SSO key
+	if (empty($_SESSION["error_msg"])) {
+		if (!empty($_POST["v_phpredisadmin_key"])) {
+			if ($_POST["v_phpredisadmin_key"] == "yes" && $_SESSION["PHPREDISADMIN_KEY"] == "") {
+				exec(HESTIA_CMD . "v-add-sys-pra-sso quiet", $output, $return_var);
+				check_return_code($return_var, $output);
+				unset($output);
+				if (empty($_SESSION["error_msg"])) {
+					$_SESSION["PHPREDISADMIN_KEY"] != "";
+				}
+			} elseif (
+				$_POST["v_phpredisadmin_key"] == "no" &&
+				$_SESSION["PHPREDISADMIN_KEY"] != ""
+			) {
+				exec(HESTIA_CMD . "v-delete-sys-pra-sso quiet", $output, $return_var);
+				check_return_code($return_var, $output);
+				unset($output);
+				if (empty($_SESSION["error_msg"])) {
+					$_SESSION["PHPREDISADMIN_KEY"] = "";
+				}
+			}
 		}
 	}
 }
@@ -308,6 +338,23 @@ if (!empty($_POST["save"])) {
 		check_return_code($return_var, $output);
 		unset($output);
 		$v_hostname = $_POST["v_hostname"];
+	}
+
+	// Update phpRedisAdmin url
+	if (empty($_SESSION["error_msg"])) {
+		if (empty($_POST["v_redis_url"])) {
+			$_POST["v_redis_url"] = "";
+		}
+		if ($_POST["v_redis_url"] != $_SESSION["DB_PRA_ALIAS"]) {
+			exec(
+				HESTIA_CMD . "v-change-sys-db-alias pra " . quoteshellarg($_POST["v_redis_url"]),
+				$output,
+				$return_var,
+			);
+			check_return_code($return_var, $output);
+			unset($output);
+			$v_db_adv = "yes";
+		}
 	}
 
 	if ($_SESSION["WEB_BACKEND"] == "php-fpm") {
@@ -661,17 +708,35 @@ if (!empty($_POST["save"])) {
 
 	// Update mysql pasword
 	if (empty($_SESSION["error_msg"])) {
-		if (!empty($_POST["v_mysql_password"])) {
-			exec(
-				HESTIA_CMD .
-					"v-change-database-host-password mysql localhost root " .
-					quoteshellarg($_POST["v_mysql_password"]),
-				$output,
-				$return_var,
-			);
-			check_return_code($return_var, $output);
-			unset($output);
-			$v_db_adv = "yes";
+		if (!empty($_POST["v_mysql_password"]) && is_array($_POST["v_mysql_password"])) {
+			foreach ($_POST["v_mysql_password"] as $endpoint_id => $mysql_password) {
+				if (empty($mysql_password)) {
+					continue;
+				}
+				$mysql_host = $_POST["v_mysql_host"][$endpoint_id] ?? "";
+				$mysql_port = $_POST["v_mysql_port"][$endpoint_id] ?? "3306";
+				if (empty($mysql_host)) {
+					$_SESSION["error_msg"] = _("Database host can not be blank.");
+					break;
+				}
+				exec(
+					HESTIA_CMD .
+						"v-change-database-host-password mysql " .
+						quoteshellarg($mysql_host) .
+						" root " .
+						quoteshellarg($mysql_password) .
+						" " .
+						quoteshellarg($mysql_port),
+					$output,
+					$return_var,
+				);
+				check_return_code($return_var, $output);
+				unset($output);
+				$v_db_adv = "yes";
+				if (!empty($_SESSION["error_msg"])) {
+					break;
+				}
+			}
 		}
 	}
 	if (!empty($_SESSION["MAIL_SYSTEM"])) {

@@ -1,0 +1,41 @@
+#!/bin/bash
+# info: remove phpRedisAdmin
+# options: [mode]
+#
+# example: v-delete-sys-phpredisadmin
+#
+# This function removes phpRedisAdmin.
+
+MODE=$1
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+PRA_INSTALL="/usr/share/phpredisadmin"
+PRA_CONFIG="/etc/phpredisadmin"
+
+check_hestia_demo_mode
+
+if [ "x$(id -u)" != 'x0' ]; then
+	echo "Error: Script can be run executed only by root"
+	exit 10
+fi
+
+$BIN/v-delete-sys-pra-sso quiet > /dev/null 2>&1 || true
+rm -rf "$PRA_INSTALL" "$PRA_CONFIG"
+rm -f /etc/nginx/conf.d/phpredisadmin.inc
+$BIN/v-change-sys-config-value 'DB_PRA_ALIAS' ""
+
+if [ "$MODE" != "quiet" ]; then
+	echo "phpRedisAdmin has been successfully removed"
+fi
+
+$BIN/v-log-action "system" "Info" "Plugins" "phpRedisAdmin has been removed."
+log_event "$OK" "$ARGUMENTS"
+
+exit

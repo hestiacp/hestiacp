@@ -58,6 +58,7 @@ for database in $(search_objects 'db' 'SUSPENDED' "no" 'DB'); do
 	case $TYPE in
 		mysql) rebuild_mysql_database ;;
 		pgsql) rebuild_pgsql_database ;;
+		redis) rebuild_redis_database ;;
 	esac
 
 	U_DISK_DB=$((U_DISK_DB + U_DISK))

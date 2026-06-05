@@ -797,7 +797,7 @@ rebuild_mail_domain_conf() {
 
 # Rebuild MySQL
 rebuild_mysql_database() {
-	mysql_connect $HOST
+	mysql_connect "$HOST" "$PORT"
 	mysql_query "CREATE DATABASE \`$DB\` CHARACTER SET $CHARSET" > /dev/null
 	if [ "$mysql_fork" = "mysql" ]; then
 		# mysql
@@ -853,9 +853,7 @@ rebuild_mysql_database() {
 # Rebuild PostgreSQL
 rebuild_pgsql_database() {
 
-	unset PORT
-	host_str=$(grep "HOST='$HOST'" $HESTIA/conf/pgsql.conf)
-	parse_object_kv_list "$host_str"
+	database_get_host_values "pgsql" "$HOST" "$PORT"
 	export PGPASSWORD="$PASSWORD"
 
 	if [ -z "$PORT" ]; then PORT=5432; fi
@@ -904,17 +902,16 @@ rebuild_pgsql_database() {
 # Import MySQL dump
 import_mysql_database() {
 
-	host_str=$(grep "HOST='$HOST'" $HESTIA/conf/mysql.conf)
-	parse_object_kv_list "$host_str"
+	database_get_host_values "mysql" "$HOST" "$PORT"
 	if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ]; then
 		echo "Error: mysql config parsing failed"
 		log_event "$E_PARSING" "$ARGUMENTS"
 		exit "$E_PARSING"
 	fi
 	if [ -f '/usr/bin/mariadb' ]; then
-		mariadb -h $HOST -u $USER -p$PASSWORD $DB < $1 > /dev/null 2>&1
+		mariadb -h $HOST -P $PORT -u $USER -p$PASSWORD $DB < $1 > /dev/null 2>&1
 	else
-		mysql -h $HOST -u $USER -p$PASSWORD $DB < $1 > /dev/null 2>&1
+		mysql -h $HOST -P $PORT -u $USER -p$PASSWORD $DB < $1 > /dev/null 2>&1
 	fi
 
 }
@@ -922,12 +919,9 @@ import_mysql_database() {
 # Import PostgreSQL dump
 import_pgsql_database() {
 
-	unset PORT
-	host_str=$(grep "HOST='$HOST'" $HESTIA/conf/pgsql.conf)
-	parse_object_kv_list "$host_str"
+	database_get_host_values "pgsql" "$HOST" "$PORT"
 	export PGPASSWORD="$PASSWORD"
 
-	if [ -z "$PORT" ]; then PORT=5432; fi
 	if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ] || [ -z $TPL ]; then
 		echo "Error: postgresql config parsing failed"
 		log_event "$E_PARSING" "$ARGUMENTS"
@@ -935,4 +929,37 @@ import_pgsql_database() {
 	fi
 
 	psql -h $HOST -U $USER -p $PORT $DB < $1 > /dev/null 2>&1
+}
+
+# Rebuild Redis ACL database
+rebuild_redis_database() {
+	redis_connect "$HOST" "$PORT"
+	redis_get_prefix
+	dbpass="restored-$(generate_password 24)"
+	redis_apply_acl_user "$DBUSER" "$dbpass" "$redis_prefix" "$([ "$SUSPENDED" = "yes" ] && echo off || echo on)"
+	redis_save_acl
+	redis_get_acl_hash
+}
+
+# Import Redis RESTORE_BASE64 dump
+import_redis_database() {
+	redis_connect "$HOST" "$PORT"
+	while IFS= read -r line; do
+		[ -z "$line" ] && continue
+		key=$(echo "$line" | cut -f 2 -d \')
+		ttl=$(echo "$line" | cut -f 4 -d \')
+		payload=$(echo "$line" | cut -f 6 -d \')
+		[ -z "$key" ] && continue
+		raw=$(mktemp)
+		echo "$payload" | base64 -d > "$raw"
+		redis_query DEL "$key" > /dev/null
+		redis-cli "${redis_auth_args[@]}" -x RESTORE "$key" "$ttl" < "$raw" > /dev/null
+		if [ "$?" -ne 0 ]; then
+			rm -f "$raw"
+			echo "Error: Redis restore failed for $key"
+			log_event "$E_DB" "$ARGUMENTS"
+			exit "$E_DB"
+		fi
+		rm -f "$raw"
+	done < "$1"
 }

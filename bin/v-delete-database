@@ -51,6 +51,7 @@ suspended=$SUSPENDED
 case $TYPE in
 	mysql) delete_mysql_database ;;
 	pgsql) delete_pgsql_database ;;
+	redis) delete_redis_database ;;
 esac
 
 #----------------------------------------------------------#

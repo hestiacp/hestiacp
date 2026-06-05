@@ -27,8 +27,11 @@ upgrade_config_set_value 'UPGRADE_REBUILD_USERS' 'false'
 echo "[ * ] Fix File Manager ignoring user language"
 cp -f "$HESTIA"/install/deb/filemanager/filegator/configuration.php "$HESTIA"/web/fm/configuration.php
 
+if [ -f /etc/os-release ]; then
+	source /etc/os-release
+fi
+
 # Apply SSH config if running on Debian 13
-source /etc/os-release
 if [[ "$ID" == "debian" && "$VERSION_ID" == "13" ]]; then
 	_KEX_CONF="/etc/ssh/sshd_config.d/hestia-kex.conf"
 	_KEX_LINE="KexAlgorithms +diffie-hellman-group-exchange-sha256"
@@ -37,5 +40,32 @@ if [[ "$ID" == "debian" && "$VERSION_ID" == "13" ]]; then
 	if [[ ! -f "$_KEX_CONF" ]] || ! grep -qxF "$_KEX_LINE" "$_KEX_CONF"; then
 		echo "$_KEX_LINE" > "$_KEX_CONF"
 		"$BIN"/v-restart-service ssh
+	fi
+fi
+
+# If Dovecot is version 2.4 and Debian is Trixie (13), replace Dovecot's configuration and rebuild users
+dovecot_version="$(dovecot --version | cut -f -2 -d .)"
+if [[ "$ID" == "debian" && "$VERSION_ID" == "13" && "$dovecot_version" = "2.4" ]]; then
+	if ! grep -q 'modified by Hestia' /etc/dovecot/dovecot.conf \
+		&& ! grep -q 'ssl_server_cert_file = /usr/local/hestia' /etc/dovecot/conf.d/10-ssl.conf; then
+		cp -f "$HESTIA_COMMON_DIR"/dovecot/2.4/dovecot.conf /etc/dovecot/
+		cp -f "$HESTIA_COMMON_DIR"/dovecot/2.4/conf.d/* /etc/dovecot/conf.d/
+		# rebuild users to apply new dovecot conf
+		upgrade_config_set_value 'UPGRADE_REBUILD_USERS' 'true'
+		# if sieve is installed, replace dovecot conf files
+		HAS_DOVECOT_SIEVE_INSTALLED=$(dpkg --get-selections dovecot-managesieved | grep -c dovecot-managesieved)
+		if [ "$HAS_DOVECOT_SIEVE_INSTALLED" = "1" ]; then
+			# dovecot.conf install
+			sed -i -E 's/protocols = imap/protocols = sieve imap/' /etc/dovecot/dovecot.conf
+			#  10-master.conf
+			sed -i -E -z 's/    user = dovecot\n  \}\n\}/    user = dovecot\n  \}\n\n  unix_listener auth-master {\n    group = mail\n    mode = 0660\n    user = dovecot\n  }\n\}/' /etc/dovecot/conf.d/10-master.conf
+			#  15-lda.conf
+			sed -i '/^protocol lda {$/a\  mail_plugins = mail_compress quota sieve' /etc/dovecot/conf.d/15-lda.conf
+			#  20-imap.conf
+			sed -i "s/quota imap_quota/quota imap_quota imap_sieve/g" /etc/dovecot/conf.d/20-imap.conf
+			# replace dovecot-sieve config files
+			cp -f "$HESTIA_COMMON_DIR"/dovecot/2.4/sieve/* /etc/dovecot/conf.d
+		fi
+		chown -R root:root /etc/dovecot/
 	fi
 fi

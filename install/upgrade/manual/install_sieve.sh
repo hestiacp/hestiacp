@@ -57,7 +57,7 @@ if [ "$HAS_DOVECOT_SIEVE_INSTALLED" = "0" ]; then
 		#  20-imap.conf
 		sed -i "s/quota imap_quota/quota imap_quota imap_sieve/g" /etc/dovecot/conf.d/20-imap.conf
 		# replace dovecot-sieve config files
-		cp -f "$HESTIA_COMMON_DIR"/dovecot-24/sieve/* /etc/dovecot/conf.d
+		cp -f "$HESTIA_COMMON_DIR"/dovecot/2.4/sieve/* /etc/dovecot/conf.d
 	else
 		# dovecot.conf install
 		sed -i "s/namespace/service stats \{\n  unix_listener stats-writer \{\n    group = mail\n    mode = 0660\n    user = dovecot\n  \}\n\}\n\nnamespace/g" /etc/dovecot/dovecot.conf
@@ -69,7 +69,7 @@ if [ "$HAS_DOVECOT_SIEVE_INSTALLED" = "0" ]; then
 		#  20-imap.conf
 		sed -i "s/mail_plugins = quota imap_quota/mail_plugins = quota imap_quota imap_sieve/g" /etc/dovecot/conf.d/20-imap.conf
 		# replace dovecot-sieve config files
-		cp -f "$HESTIA_COMMON_DIR"/dovecot/sieve/* /etc/dovecot/conf.d
+		cp -f "$HESTIA_COMMON_DIR"/dovecot/2.3/sieve/* /etc/dovecot/conf.d
 	fi
 
 	# dovecot default file install

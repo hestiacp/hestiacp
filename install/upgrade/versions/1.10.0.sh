@@ -38,6 +38,7 @@ if [[ "$ID" == "debian" && "$VERSION_ID" == "13" ]]; then
 
 	# Only create/modify the file if it doesn't already contain the correct config
 	if [[ ! -f "$_KEX_CONF" ]] || ! grep -qxF "$_KEX_LINE" "$_KEX_CONF"; then
+		echo "[ * ] Creating $_KEX_CONF"
 		echo "$_KEX_LINE" > "$_KEX_CONF"
 		"$BIN"/v-restart-service ssh
 	fi
@@ -48,6 +49,7 @@ dovecot_version="$(dovecot --version | cut -f -2 -d .)"
 if [[ "$ID" == "debian" && "$VERSION_ID" == "13" && "$dovecot_version" = "2.4" ]]; then
 	if ! grep -q 'modified by Hestia' /etc/dovecot/dovecot.conf \
 		&& ! grep -q 'ssl_server_cert_file = /usr/local/hestia' /etc/dovecot/conf.d/10-ssl.conf; then
+		echo "[ * ] Updating Dovecot $dovecot_version configuration"
 		cp -f "$HESTIA_COMMON_DIR"/dovecot/2.4/dovecot.conf /etc/dovecot/
 		cp -f "$HESTIA_COMMON_DIR"/dovecot/2.4/conf.d/* /etc/dovecot/conf.d/
 		# rebuild users to apply new dovecot conf
@@ -55,6 +57,7 @@ if [[ "$ID" == "debian" && "$VERSION_ID" == "13" && "$dovecot_version" = "2.4" ]
 		# if sieve is installed, replace dovecot conf files
 		HAS_DOVECOT_SIEVE_INSTALLED=$(dpkg --get-selections dovecot-managesieved | grep -c dovecot-managesieved)
 		if [ "$HAS_DOVECOT_SIEVE_INSTALLED" = "1" ]; then
+			echo "[ * ] Updating Sieve $dovecot_version configuration"
 			# dovecot.conf install
 			sed -i -E 's/protocols = imap/protocols = sieve imap/' /etc/dovecot/dovecot.conf
 			#  10-master.conf

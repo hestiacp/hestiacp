@@ -72,3 +72,37 @@ if [[ "$ID" == "debian" && "$VERSION_ID" == "13" && "$dovecot_version" = "2.4" ]
 		chown -R root:root /etc/dovecot/
 	fi
 fi
+
+# Configure Bind for Debian 13
+if [[ "$ID" == "debian" && "$VERSION_ID" == "13" && "$dovecot_version" = "2.4" ]]; then
+	if [ "$named" = 'yes' ]; then
+		echo "[ * ] Configuring Bind DNS server for Debian 13"
+		cp -f "$HESTIA_INSTALL_DIR"/bind/named.conf /etc/bind/
+		cp -f "$HESTIA_INSTALL_DIR"/bind/named.conf.options /etc/bind/
+		chown root:bind /etc/bind/named.conf
+		chown root:bind /etc/bind/named.conf.options
+		chown bind:bind /var/cache/bind
+		chmod 640 /etc/bind/named.conf
+		chmod 640 /etc/bind/named.conf.options
+		aa-complain /usr/sbin/named 2> /dev/null
+		if [ "$apparmor" = 'yes' ]; then
+			echo "/home/** rwm," >> /etc/apparmor.d/local/usr.sbin.named 2> /dev/null
+			systemctl status apparmor > /dev/null 2>&1
+			if [ $? -ne 0 ]; then
+				systemctl restart apparmor >> $LOG
+			fi
+		fi
+		# Debian 13 removed the named.conf.default-zones file if doesn't exsists remove it from the config file
+		if [ ! -f /etc/bind/named.conf.default-zones ]; then
+			sed -i "/^include.*named.conf.default-zones/d" /etc/bind/named.conf
+		fi
+		update-rc.d bind9 defaults > /dev/null 2>&1
+		systemctl start bind9
+		check_result $? "bind9 start failed"
+
+		# Workaround for OpenVZ/Virtuozzo
+		if [ -e "/proc/vz/veinfo" ] && [ -e "/etc/rc.local" ]; then
+			sed -i "s/^exit 0/service bind9 restart\nexit 0/" /etc/rc.local
+		fi
+	fi
+fi

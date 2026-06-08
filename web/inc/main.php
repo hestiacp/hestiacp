@@ -404,7 +404,7 @@ function humanize_usage_measure($usage) {
 }
 
 function get_percentage($used, $total) {
-	if ($total = "unlimited") {
+	if ($total == "unlimited") {
 		//return 0 if unlimited
 		return 0;
 	}

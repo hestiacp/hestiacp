@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a3bf8e446b97441818fc15cb52907dd6",
+    "content-hash": "9e389f36a9e31289ac5f77d4b6ab69de",
     "packages": [
         {
             "name": "psr/container",
@@ -61,23 +61,29 @@
         },
         {
             "name": "symfony/console",
-            "version": "v8.0.13",
+            "version": "v8.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "f200be111431cff4aeae8d086b91180bc4d7efd7"
+                "reference": "f5a856c6ecb56b3c21ed94a5b7bf940d857d110a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/f200be111431cff4aeae8d086b91180bc4d7efd7",
-                "reference": "f200be111431cff4aeae8d086b91180bc4d7efd7",
+                "url": "https://api.github.com/repos/symfony/console/zipball/f5a856c6ecb56b3c21ed94a5b7bf940d857d110a",
+                "reference": "f5a856c6ecb56b3c21ed94a5b7bf940d857d110a",
                 "shasum": ""
             },
             "require": {
-                "php": ">=8.4",
+                "php": ">=8.4.1",
+                "symfony/deprecation-contracts": "^2.5|^3",
                 "symfony/polyfill-mbstring": "^1.0",
+                "symfony/polyfill-php85": "^1.32",
                 "symfony/service-contracts": "^2.5|^3",
-                "symfony/string": "^7.4|^8.0"
+                "symfony/string": "^7.4.6|^8.0.6"
+            },
+            "conflict": {
+                "symfony/dependency-injection": "<8.1",
+                "symfony/event-dispatcher": "<8.1"
             },
             "provide": {
                 "psr/log-implementation": "1.0|2.0|3.0"
@@ -85,14 +91,18 @@
             "require-dev": {
                 "psr/log": "^1|^2|^3",
                 "symfony/config": "^7.4|^8.0",
-                "symfony/dependency-injection": "^7.4|^8.0",
-                "symfony/event-dispatcher": "^7.4|^8.0",
+                "symfony/dependency-injection": "^8.1",
+                "symfony/event-dispatcher": "^8.1",
+                "symfony/filesystem": "^7.4|^8.0",
                 "symfony/http-foundation": "^7.4|^8.0",
                 "symfony/http-kernel": "^7.4|^8.0",
                 "symfony/lock": "^7.4|^8.0",
                 "symfony/messenger": "^7.4|^8.0",
+                "symfony/mime": "^7.4|^8.0",
                 "symfony/process": "^7.4|^8.0",
                 "symfony/stopwatch": "^7.4|^8.0",
+                "symfony/uid": "^7.4|^8.0",
+                "symfony/validator": "^7.4|^8.0",
                 "symfony/var-dumper": "^7.4|^8.0"
             },
             "type": "library",
@@ -127,7 +137,7 @@
                 "terminal"
             ],
             "support": {
-                "source": "https://github.com/symfony/console/tree/v8.0.13"
+                "source": "https://github.com/symfony/console/tree/v8.1.0"
             },
             "funding": [
                 {
@@ -147,7 +157,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-05-24T08:59:15+00:00"
+            "time": "2026-05-29T05:06:50+00:00"
         },
         {
             "name": "symfony/deprecation-contracts",
@@ -552,21 +562,101 @@
             "time": "2026-04-10T17:25:58+00:00"
         },
         {
-            "name": "symfony/process",
-            "version": "v8.0.13",
+            "name": "symfony/polyfill-php85",
+            "version": "v1.38.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/symfony/process.git",
-                "reference": "4f23d9c7637ead9ed19f697fe93cb87fd9b379d4"
+                "url": "https://github.com/symfony/polyfill-php85.git",
+                "reference": "ba2ba04f3352cfa2dcbbcb90aee13ed967f505b1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/process/zipball/4f23d9c7637ead9ed19f697fe93cb87fd9b379d4",
-                "reference": "4f23d9c7637ead9ed19f697fe93cb87fd9b379d4",
+                "url": "https://api.github.com/repos/symfony/polyfill-php85/zipball/ba2ba04f3352cfa2dcbbcb90aee13ed967f505b1",
+                "reference": "ba2ba04f3352cfa2dcbbcb90aee13ed967f505b1",
                 "shasum": ""
             },
             "require": {
-                "php": ">=8.4"
+                "php": ">=7.2"
+            },
+            "type": "library",
+            "extra": {
+                "thanks": {
+                    "url": "https://github.com/symfony/polyfill",
+                    "name": "symfony/polyfill"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "bootstrap.php"
+                ],
+                "psr-4": {
+                    "Symfony\\Polyfill\\Php85\\": ""
+                },
+                "classmap": [
+                    "Resources/stubs"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nicolas Grekas",
+                    "email": "p@tchwork.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony polyfill backporting some PHP 8.5+ features to lower PHP versions",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "compatibility",
+                "polyfill",
+                "portable",
+                "shim"
+            ],
+            "support": {
+                "source": "https://github.com/symfony/polyfill-php85/tree/v1.38.1"
+            },
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://github.com/nicolas-grekas",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2026-05-26T02:25:22+00:00"
+        },
+        {
+            "name": "symfony/process",
+            "version": "v8.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/process.git",
+                "reference": "c4a9e58f235a6bf7f97ffbfedae2687353ac79e5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/process/zipball/c4a9e58f235a6bf7f97ffbfedae2687353ac79e5",
+                "reference": "c4a9e58f235a6bf7f97ffbfedae2687353ac79e5",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.4.1"
             },
             "type": "library",
             "autoload": {
@@ -594,7 +684,7 @@
             "description": "Executes commands in sub-processes",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/process/tree/v8.0.13"
+                "source": "https://github.com/symfony/process/tree/v8.1.0"
             },
             "funding": [
                 {
@@ -614,7 +704,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-05-23T18:05:53+00:00"
+            "time": "2026-05-29T05:06:50+00:00"
         },
         {
             "name": "symfony/service-contracts",

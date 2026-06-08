@@ -126,7 +126,7 @@ fi
 if [[ -f "$apt/nodejs.list" ]]; then
 	echo "[ * ] Modifying Node.js repo to version $node_v"
 	echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/nodejs.gpg] https://deb.nodesource.com/node_$node_v.x nodistro main" > "$apt"/nodejs.list
-	curl -s https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor | tee /usr/share/keyrings/nodejs.gpg > /dev/null 2>&1
+	curl -fsSLm60 https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor | tee /usr/share/keyrings/nodejs.gpg > /dev/null 2>&1
 fi
 
 # Fixing Subsystem sftp config for old installations

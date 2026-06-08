@@ -128,3 +128,15 @@ if [[ -f "$apt/nodejs.list" ]]; then
 	echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/nodejs.gpg] https://deb.nodesource.com/node_$node_v.x nodistro main" > "$apt"/nodejs.list
 	curl -s https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor | tee /usr/share/keyrings/nodejs.gpg > /dev/null 2>&1
 fi
+
+# Fixing Subsystem sftp config for old installations
+echo "[ * ] Fixing Subsystem sftp config"
+if grep -q "^Subsystem.*internal-sftp-.*" /etc/ssh/sshd_config; then
+	sed -i 's/Subsystem sftp internal-sftp-.*/Subsystem sftp internal-sftp/' /etc/ssh/sshd_config
+	systemctl reload ssh
+fi
+
+if grep -q "^Subsystem.*/usr/lib/sftp-server-" /etc/ssh/sshd_config; then
+	sed -i 's/^Subsystem sftp \/usr\/lib\/sftp-server-.*/Subsystem sftp \/usr\/lib\/sftp-server/' /etc/ssh/sshd_config
+	systemctl reload ssh
+fi

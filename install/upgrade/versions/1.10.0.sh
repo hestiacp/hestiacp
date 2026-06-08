@@ -74,8 +74,9 @@ if [[ "$ID" == "debian" && "$VERSION_ID" == "13" && "$dovecot_version" = "2.4" ]
 fi
 
 # Configure Bind for Debian 13
-if [[ "$ID" == "debian" && "$VERSION_ID" == "13" && "$dovecot_version" = "2.4" ]]; then
-	if [ "$named" = 'yes' ]; then
+if [[ "$ID" == "debian" && "$VERSION_ID" == "13" ]]; then
+	source "$HESTIA"/conf/hestia.conf
+	if [[ "$DNS_SYSTEM" =~ named|bind ]]; then
 		echo "[ * ] Configuring Bind DNS server for Debian 13"
 		cp -f "$HESTIA_INSTALL_DIR"/bind/named.conf /etc/bind/
 		cp -f "$HESTIA_INSTALL_DIR"/bind/named.conf.options /etc/bind/
@@ -85,7 +86,12 @@ if [[ "$ID" == "debian" && "$VERSION_ID" == "13" && "$dovecot_version" = "2.4" ]
 		chmod 640 /etc/bind/named.conf
 		chmod 640 /etc/bind/named.conf.options
 		aa-complain /usr/sbin/named 2> /dev/null
-		if [ "$apparmor" = 'yes' ]; then
+		if [[ $(dpkg-query -W -f='${Status}' apparmor 2> /dev/null | grep -c "ok installed") -eq 0 ]]; then
+			apparmor="no"
+		else
+			apparmor="yes"
+		fi
+		if [[ "$apparmor" = 'yes' ]]; then
 			echo "/home/** rwm," >> /etc/apparmor.d/local/usr.sbin.named 2> /dev/null
 			systemctl status apparmor > /dev/null 2>&1
 			if [ $? -ne 0 ]; then

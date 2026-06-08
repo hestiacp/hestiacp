@@ -112,3 +112,13 @@ if [[ "$ID" == "debian" && "$VERSION_ID" == "13" ]]; then
 		fi
 	fi
 fi
+
+# Fix old source.list for Node.js and bump to version 24
+node_v=24
+apt="/etc/apt/sources.list.d"
+
+if [[ -f "$apt/nodejs.list" ]]; then
+	echo "[ * ] Upgrading Node.js $node_v"
+	echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/nodejs.gpg] https://deb.nodesource.com/node_$node_v.x nodistro main" > "$apt"/nodejs.list
+	curl -s https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor | tee /usr/share/keyrings/nodejs.gpg > /dev/null 2>&1
+fi

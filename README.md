@@ -11,9 +11,6 @@
 	<a href="https://docs.hestiacp.com/">Documentation</a> |
 	<a href="https://forum.hestiacp.com/">Forum</a>
 	<br/><br/>
-	<a href="https://drone.hestiacp.com/hestiacp/hestiacp">
-		<img src="https://drone.hestiacp.com/api/badges/hestiacp/hestiacp/status.svg?ref=refs/heads/main" alt="Drone Status"/>
-	</a>
 	<a href="https://github.com/hestiacp/hestiacp/actions/workflows/lint.yml">
 		<img src="https://github.com/hestiacp/hestiacp/actions/workflows/lint.yml/badge.svg" alt="Lint Status"/>
 	</a>
@@ -46,7 +43,7 @@ Smart Chain: 0xfF3Dd2c889bd0Ff73d8085B84A314FC7c88e5D51<br>
 
 ## Supported platforms and operating systems
 
-- **Debian:** 13, 12, 11
+- **Debian:** 12, 11
 - **Ubuntu:** 24.04 LTS, 22.04 LTS
 
 **NOTES:**

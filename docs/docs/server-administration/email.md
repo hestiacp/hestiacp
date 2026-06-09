@@ -106,12 +106,12 @@ v-add-sys-snappymail
 In the root folder, there is a file called `.snappymail` containing the username and password:
 
 ```bash
-Username: admin_f0e5a5aa
+Username: admin_ce115495
 Password: D0ung4naLOptuaa
 Secret key: admin_f0e5a5aa
 ```
 
-You can access the admin by navigating to `https://webmail.domain.tld/?admin_f0e5a5aa`, and login by using the data you found in the file. Once it’s not needed anymore, remove the file, for security reasons.
+You can access the admin panel by navigating to `https://webmail.domain.tld/?admin_f0e5a5aa`, where admin_f0e5a5aa is the secret key, and log in using the username and password you found in the file. Once it’s no longer needed, remove the file for security reasons.
 
 ## Can I use Cloudflare Proxy with email
 
@@ -142,7 +142,7 @@ Open port 4190 in the firewall. [Read the firewall documentation](./firewall).
 
 ## How can I enable ManageSieve for Snappymail?
 
-Edit `/etc/snappymail/data/_data_/_default_/domains/default.json` and modify the following settings:
+Edit `/var/lib/snappymail/data/_data_/_default_/domains/default.json` and modify the following settings:
 
 ```json
 "Sieve": {

@@ -2020,11 +2020,11 @@ if [ "$dovecot" = 'yes' ]; then
 	gpasswd -a dovecot mail > /dev/null 2>&1
 	mkdir -p /etc/dovecot/conf.d/
 	if [[ "$dovecot_version" = "2.4" ]]; then
-		cp -f $HESTIA_COMMON_DIR/dovecot-24/dovecot.conf /etc/dovecot/
-		cp -f $HESTIA_COMMON_DIR/dovecot-24/conf.d/* /etc/dovecot/conf.d/
+		cp -f $HESTIA_COMMON_DIR/dovecot/2.4/dovecot.conf /etc/dovecot/
+		cp -f $HESTIA_COMMON_DIR/dovecot/2.4/conf.d/* /etc/dovecot/conf.d/
 	else
-		cp -f $HESTIA_COMMON_DIR/dovecot/dovecot.conf /etc/dovecot/
-		cp -f $HESTIA_COMMON_DIR/dovecot/conf.d/* /etc/dovecot/conf.d/
+		cp -f $HESTIA_COMMON_DIR/dovecot/2.3/dovecot.conf /etc/dovecot/
+		cp -f $HESTIA_COMMON_DIR/dovecot/2.3/conf.d/* /etc/dovecot/conf.d/
 		rm -f /etc/dovecot/conf.d/15-mailboxes.conf
 	fi
 	cp -f $HESTIA_INSTALL_DIR/logrotate/dovecot /etc/logrotate.d/
@@ -2197,7 +2197,7 @@ if [ "$sieve" = 'yes' ]; then
 		#  20-imap.conf
 		sed -i "s/quota imap_quota/quota imap_quota imap_sieve/g" /etc/dovecot/conf.d/20-imap.conf
 		# replace dovecot-sieve config files
-		cp -f "$HESTIA_COMMON_DIR"/dovecot-24/sieve/* /etc/dovecot/conf.d
+		cp -f "$HESTIA_COMMON_DIR"/dovecot/2.4/sieve/* /etc/dovecot/conf.d
 
 	else
 		# dovecot.conf install
@@ -2212,7 +2212,7 @@ if [ "$sieve" = 'yes' ]; then
 		sed -i "s/mail_plugins = quota imap_quota/mail_plugins = quota imap_quota imap_sieve/g" /etc/dovecot/conf.d/20-imap.conf
 
 		# Replace dovecot-sieve config files
-		cp -f $HESTIA_COMMON_DIR/dovecot/sieve/* /etc/dovecot/conf.d
+		cp -f $HESTIA_COMMON_DIR/dovecot/2.3/sieve/* /etc/dovecot/conf.d
 	fi
 
 	# Dovecot default file install

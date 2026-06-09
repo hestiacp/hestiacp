@@ -217,7 +217,7 @@ fi
 echo "Build version $BUILD_VER, with Nginx version $NGINX_V, PHP version $PHP_V and Web Terminal version $WEB_TERMINAL_V"
 
 HESTIA_V="${BUILD_VER}_${BUILD_ARCH}"
-OPENSSL_V='3.4.4'
+OPENSSL_V='3.4.5'
 PCRE_V='10.47'
 ZLIB_V='1.3.2'
 

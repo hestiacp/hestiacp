@@ -109,7 +109,7 @@ usage() {
 
 # Set compiling directory
 REPO='hestiacp/hestiacp'
-BUILD_DIR='/tmp/hestiacp-src'
+BUILD_DIR="${BUILD_DIR:-/tmp/hestiacp-src}"
 INSTALL_DIR='/usr/local/hestia'
 SRC_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 ARCHIVE_DIR="$SRC_DIR/src/archive/"

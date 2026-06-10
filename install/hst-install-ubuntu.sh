@@ -517,7 +517,16 @@ if [ -d /etc/netplan ] && [ -z "$force" ]; then
 		echo
 		echo '!!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!!'
 		echo
-		check_result 1 "Unable to detect netplan configuration."
+		#check_result 1 "Unable to detect netplan configuration."
+
+		echo "Unable to detect netplan configuration."
+
+			read -rp "Do you still want to continue without netplan? [Y/n]: " confirm
+
+			case "${confirm,,}" in
+			    ""|y|yes) ;;
+			    *) exit 1 ;;
+			esac
 	fi
 fi
 

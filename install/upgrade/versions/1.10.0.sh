@@ -165,3 +165,18 @@ if grep -q "^Subsystem.*/usr/lib/sftp-server-" /etc/ssh/sshd_config; then
 	sed -i 's/^Subsystem sftp \/usr\/lib\/sftp-server-.*/Subsystem sftp \/usr\/lib\/sftp-server/' /etc/ssh/sshd_config
 	systemctl reload ssh
 fi
+
+# Move phpMyAdmin tmp dir to /var/lib/phpmyadmin/tmp
+phpmyadmin_conf="/etc/phpmyadmin/conf.d/01-localhost.php"
+phpmyadmin_tempdir_conf="/etc/phpmyadmin/conf.d/02-tempdir.php"
+
+if [[ -f "$phpmyadmin_conf" ]]; then
+	mkdir -p /var/lib/phpmyadmin/tmp/
+	chown -R hestiamail:www-data /var/lib/phpmyadmin/tmp/
+	if [[ ! -f "$phpmyadmin_tempdir_conf" ]]; then
+		cat > "$phpmyadmin_tempdir_conf" << 'EOF'
+<?php
+$cfg['TempDir'] = '/var/lib/phpmyadmin/tmp';
+EOF
+	fi
+fi

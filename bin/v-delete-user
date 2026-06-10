@@ -103,11 +103,11 @@ fi
 
 # Deleting user directories
 chattr -i $HOMEDIR/$user/conf > /dev/null 2>&1
-rm -rf $HOMEDIR/$user
+rm -rf "$HOMEDIR/$user"
 rm -f /var/spool/mail/$user
 rm -f /var/spool/cron/$user
 rm -f /var/spool/cron/crontabs/$user
-rm -rf $USER_DATA
+rm -rf "$USER_DATA"
 
 # Updating admin counter
 if [ "$user" != "$ROOT_USER" ]; then

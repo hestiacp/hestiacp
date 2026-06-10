@@ -111,7 +111,7 @@ if [ "$type" = 'ftp' ]; then
 	ftp_result=$(ftpc "mkdir $ftmpdir" "rm $ftmpdir" | grep -v Trying)
 	if [ -n "$ftp_result" ]; then
 		echo "$ftp_result"
-		rm -rf $tmpdir
+		rm -rf "$tmpdir"
 		echo "Error: can't create $ftmpdir folder on the ftp"
 		log_event "$E_FTP" "$ARGUMENTS"
 		exit "$E_FTP"

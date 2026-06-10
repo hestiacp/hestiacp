@@ -139,7 +139,7 @@ BUILD_VER=$(curl -s https://raw.githubusercontent.com/$fork/hestiacp/$branch/src
 HESTIA_V="${BUILD_VER}_${BUILD_ARCH}"
 
 # Create build directories
-rm -rf $BUILD_DIR
+rm -rf "$BUILD_DIR"
 mkdir -p $DEB_DIR
 mkdir -p $ARCHIVE_DIR
 
@@ -174,7 +174,7 @@ install_build() {
 	done
 	unset $answer
 	# Remove temporary files
-	rm -rf $BUILD_DIR
+	rm -rf "$BUILD_DIR"
 }
 
 # Set install flags
@@ -263,7 +263,7 @@ if [ "$KEEPBUILD" != 'true' ] || [ ! -d "$BUILD_DIR_HESTIA" ]; then
 fi
 
 cd $BUILD_DIR
-rm -rf $BUILD_DIR/hestiacp-$branch_dash
+rm -rf "$BUILD_DIR/hestiacp-$branch_dash"
 # Download and unpack source files
 if [ "$use_src_folder" == 'true' ]; then
 	[ "$HESTIA_DEBUG" ] && echo DEBUG: cp -rf "$SRC_DIR/" $BUILD_DIR/hestiacp-$branch_dash
@@ -330,7 +330,7 @@ else
 	else
 		echo "Installation of development build aborted."
 		echo "Removing temporary files..."
-		rm -rf $BUILD_DIR
+		rm -rf "$BUILD_DIR"
 		unset "$answer"
 		echo ""
 	fi

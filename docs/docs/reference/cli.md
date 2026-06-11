@@ -95,7 +95,7 @@ is mailed to user's email if parameter REPORTS is set to 'yes'.
 
 add cron job for Let's Encrypt certificates
 
-**Options**: –
+**Options**: -
 
 This function adds a new cron job for Let's Encrypt.
 
@@ -132,7 +132,7 @@ This function for enabling restart cron tasks
 
 add database
 
-**Options**: `USER` `DATABASE` `DBUSER` `DBPASS` `[TYPE]` `[HOST]` `[CHARSET]`
+**Options**: `USER` `DATABASE` `DBUSER` `DBPASS` `[TYPE]` `[HOST]` `[CHARSET]` `[PORT]`
 
 **Examples**:
 
@@ -147,6 +147,8 @@ then the host will be defined by one of three algorithms. "First" will choose
 the first host in the list. "Random" will chose the host by a chance.
 "Weight" will distribute new database through hosts evenly. Algorithm and
 types of supported databases is designated in the main configuration file.
+When multiple database endpoints use the same host, pass the port to select
+the correct endpoint.
 
 ## v-add-database-host
 
@@ -166,7 +168,8 @@ This function add new database server to the server pool. It supports local
 and remote database servers, which is useful for clusters. By adding a host
 you can set limit for number of databases on a host. Template parameter is
 used only for PostgreSQL and has an default value "template1". You can read
-more about templates in official PostgreSQL documentation.
+more about templates in official PostgreSQL documentation. The same host can
+be added more than once when each entry uses a different port.
 
 ## v-add-database-temp-user
 
@@ -174,7 +177,7 @@ more about templates in official PostgreSQL documentation.
 
 add temp database user
 
-**Options**: `USER` `DATABASE` `[TYPE]` `[HOST]` `[TTL]`
+**Options**: `USER` `DATABASE` `[TYPE]` `[HOST]` `[TTL]` `[PORT]`
 
 **Examples**:
 
@@ -1371,7 +1374,7 @@ parameters with new one but with same id.
 
 change database server password
 
-**Options**: `TYPE` `HOST` `USER` `PASSWORD`
+**Options**: `TYPE` `HOST` `USER` `PASSWORD` `[PORT]`
 
 **Examples**:
 
@@ -2760,7 +2763,7 @@ another database, he will not be deleted.
 
 delete database server
 
-**Options**: `TYPE` `HOST`
+**Options**: `TYPE` `HOST` `[PORT]`
 
 **Examples**:
 
@@ -2777,7 +2780,7 @@ be deleted if there are no databases created on it only.
 
 deletes temp database user
 
-**Options**: `USER` `DBUSER` `[TYPE]` `[HOST]`
+**Options**: `USER` `DATABASE` `DBUSER` `[TYPE]` `[HOST]` `[PORT]`
 
 **Examples**:
 
@@ -4391,7 +4394,7 @@ This function for obtaining of all database's parameters.
 
 list database host
 
-**Options**: `TYPE` `HOST` `[FORMAT]`
+**Options**: `TYPE` `HOST` `[FORMAT]` `[PORT]`
 
 **Examples**:
 
@@ -4399,7 +4402,8 @@ list database host
 v-list-database-host mysql localhost
 ```
 
-This function for obtaining database host parameters.
+This function for obtaining database host parameters. If more than one
+endpoint uses the same host, provide the port.
 
 ## v-list-database-hosts
 
@@ -4416,6 +4420,7 @@ v-list-database-hosts json
 ```
 
 This function for obtaining the list of all configured database hosts.
+JSON output includes an `ENDPOINT` field in `host:port` format.
 
 ## v-list-database-types
 
@@ -6520,7 +6525,7 @@ This function for suspending a certain user database.
 
 suspend database server
 
-**Options**: `TYPE` `HOST`
+**Options**: `TYPE` `HOST` `[PORT]`
 
 **Examples**:
 
@@ -6820,7 +6825,7 @@ This function for unsuspending database.
 
 unsuspend database server
 
-**Options**: `TYPE` `HOST`
+**Options**: `TYPE` `HOST` `[PORT]`
 
 **Examples**:
 
@@ -7213,6 +7218,23 @@ example: v-update-sys-defaults user
 ```
 
 This function updates the known key/value pair database
+
+## v-update-sys-pma-hosts
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-sys-pma-hosts)
+
+update phpMyAdmin database host configuration
+
+**Options**: –
+
+**Examples**:
+
+```bash
+v-update-sys-pma-hosts
+```
+
+This function generates phpMyAdmin server configuration files for Hestia MySQL
+endpoints. It is safe to run repeatedly.
 
 ## v-update-sys-hestia
 

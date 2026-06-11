@@ -223,7 +223,7 @@ function run_da_db() {
 						echo "udb: $db_user"
 						echo "Password: ${md5}"
 
-						echo "DB='$db' DBUSER='$db_user' MD5='$md5' HOST='localhost' TYPE='mysql' CHARSET='UTF8' U_DISK='0' SUSPENDED='no' TIME='$time' DATE='$date'" >> /usr/local/hestia/data/users/"$directadmin_user"/db.conf
+						echo "DB='$db' DBUSER='$db_user' MD5='$md5' HOST='localhost' TYPE='mysql' CHARSET='UTF8' U_DISK='0' SUSPENDED='no' TIME='$time' DATE='$date' PORT='3306'" >> /usr/local/hestia/data/users/"$directadmin_user"/db.conf
 					fi
 				done < "backup/${da_db}"
 

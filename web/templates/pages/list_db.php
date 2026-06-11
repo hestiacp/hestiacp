@@ -120,6 +120,7 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
 			list($http_host, $port) = explode(':', $_SERVER["HTTP_HOST"].":");
 			foreach ($data as $key => $value) {
 				++$i;
+				list($http_host, $port) = explode(':', $_SERVER["HTTP_HOST"].":");
 				if ($data[$key]['SUSPENDED'] == 'yes') {
 					$status = 'suspended';
 					$spnd_action = 'unsuspend';
@@ -135,7 +136,11 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
 					$spnd_icon_class = 'icon-highlight';
 					$spnd_confirmation = _('Are you sure you want to suspend database %s?') ;
 				}
-				if ($data[$key]['HOST'] != 'localhost' ) $http_host = $data[$key]['HOST'];
+				$db_endpoint = $data[$key]['ENDPOINT'] ?? $data[$key]['HOST'];
+				if (!isset($data[$key]["PORT"])) {
+					$data[$key]["PORT"] = $data[$key]["TYPE"] == "mysql" ? "3306" : "5432";
+				}
+				if ($data[$key]['HOST'] != 'localhost' && $data[$key]['HOST'] != '127.0.0.1') $http_host = $data[$key]['HOST'];
 				if ($data[$key]['TYPE'] == 'mysql') $db_admin = "phpMyAdmin";
 				if ($data[$key]['TYPE'] == 'mysql') $db_admin_link = "https://".$http_host."/phpmyadmin/";
 				if (($data[$key]['TYPE'] == 'mysql') && (!empty($_SESSION['DB_PMA_ALIAS']))) $db_admin_link = $_SESSION['DB_PMA_ALIAS'];
@@ -148,7 +153,7 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
 				data-sort-name="<?= tohtml($key) ?>"
 				data-sort-disk="<?= tohtml($data[$key]["U_DISK"]) ?>"
 				data-sort-user="<?= tohtml($data[$key]["DBUSER"]) ?>"
-				data-sort-server="<?= tohtml($data[$key]["HOST"]) ?>"
+				data-sort-server="<?= tohtml($db_endpoint) ?>"
 				data-sort-charset="<?= tohtml($data[$key]["CHARSET"]) ?>">
 				<div class="units-table-cell">
 					<div>
@@ -184,12 +189,14 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
 								<?php if ($data[$key]['TYPE'] == 'mysql' && isset($_SESSION['PHPMYADMIN_KEY']) && $_SESSION['PHPMYADMIN_KEY'] != '' && !ipUsed()) { $time = time(); ?>
 									<?php
 										$hestia_sso_token = password_hash(
-											$key . $user_plain . $_SESSION['user_combined_ip'] . $time . $_SESSION['PHPMYADMIN_KEY'],
+											$key . $user_plain . $_SESSION['user_combined_ip'] . $time . $data[$key]["HOST"] . $data[$key]["PORT"] . $_SESSION['PHPMYADMIN_KEY'],
 											PASSWORD_DEFAULT,
 										);
 										$hestia_sso_url = $db_myadmin_link . "hestia-sso.php?" . http_build_query([
 											"database" => $key,
 											"user" => $user_plain,
+											"host" => $data[$key]["HOST"],
+											"port" => $data[$key]["PORT"],
 											"exp" => $time,
 											"hestia_token" => $hestia_sso_token,
 										]);
@@ -261,7 +268,7 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
 				</div>
 				<div class="units-table-cell u-text-bold u-text-center-desktop">
 					<span class="u-hide-desktop"><?= tohtml( _("Hostname")) ?>:</span>
-					<?= tohtml($data[$key]["HOST"]) ?>
+					<?= tohtml($db_endpoint) ?>
 				</div>
 				<div class="units-table-cell u-text-center-desktop">
 					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Charset")) ?>:</span>

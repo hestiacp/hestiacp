@@ -59,22 +59,36 @@ fi
 
 # Parsing db hosts
 conf="$HESTIA/conf/mysql.conf"
-hosts=$(grep HOST "$conf" | awk '{print $1}' | cut -f 2 -d \')
-check_row=$(echo "$hosts" | wc -l)
+hosts=$(grep HOST "$conf")
+check_row=$(echo "$hosts" | grep -c HOST)
 if [ 0 -eq "$check_row" ]; then
 	exit
 fi
 
-# Parsing excludes
-for exclude in $(echo ${RRD_MYSQL_EXCLUDE//,/ }); do
-	hosts=$(echo "$hosts" | grep -vw "$exclude")
-done
+OLD_IFS="$IFS"
+IFS=$'\n'
+for host_str in $hosts; do
+	unset HOST PORT
+	parse_object_kv_list "$host_str"
+	if [ -z "$PORT" ]; then PORT=$(database_get_default_port "mysql"); fi
+	host="$HOST"
+	port="$PORT"
+	endpoint=$(database_get_endpoint "$host" "$port")
+	endpoint_id=$(database_get_endpoint_id "$host" "$port")
+	skip_host="no"
+	for exclude in $(echo ${RRD_MYSQL_EXCLUDE//,/ }); do
+		if [ "$exclude" = "$host" ] || [ "$exclude" = "$endpoint" ]; then
+			skip_host="yes"
+		fi
+	done
+	if [ "$skip_host" = "yes" ]; then
+		continue
+	fi
 
-for host in $hosts; do
 	# Checking database
-	if [ ! -e "$RRD/db/mysql_$host.rrd" ]; then
+	if [ ! -e "$RRD/db/mysql_$endpoint_id.rrd" ]; then
 		# Adding database
-		rrdtool create $RRD/db/mysql_$host.rrd --step $RRD_STEP \
+		rrdtool create $RRD/db/mysql_$endpoint_id.rrd --step $RRD_STEP \
 			DS:A:COUNTER:600:U:U \
 			DS:S:COUNTER:600:U:U \
 			RRA:AVERAGE:0.5:1:600 \
@@ -88,7 +102,7 @@ for host in $hosts; do
 	fi
 
 	if [ "$period" = 'daily' ]; then
-		mysql_connect "$host"
+		mysql_connect "$host" "$port"
 		query='SHOW GLOBAL STATUS'
 		status=$(mysql_query "$query" 2> /dev/null)
 		if [ $? -ne 0 ]; then
@@ -100,11 +114,11 @@ for host in $hosts; do
 		fi
 
 		# Updating rrd
-		rrdtool update $RRD/db/mysql_$host.rrd N:$active:$slow
+		rrdtool update $RRD/db/mysql_$endpoint_id.rrd N:$active:$slow
 	fi
 
 	# Updating daily graph
-	rrdtool graph $RRD/db/$period-mysql_$host.png \
+	rrdtool graph $RRD/db/$period-mysql_$endpoint_id.png \
 		--imgformat PNG \
 		--height="150" \
 		--width="670" \
@@ -121,8 +135,8 @@ for host in $hosts; do
 		-c "MGRID#AAAAAA" \
 		-c "FRAME#302c2d" \
 		-c "ARROW#FFFFFF" \
-		DEF:a=$RRD/db/mysql_$host.rrd:A:AVERAGE \
-		DEF:s=$RRD/db/mysql_$host.rrd:S:AVERAGE \
+		DEF:a=$RRD/db/mysql_$endpoint_id.rrd:A:AVERAGE \
+		DEF:s=$RRD/db/mysql_$endpoint_id.rrd:S:AVERAGE \
 		COMMENT:'\r' \
 		LINE1:a#fefda0:"Queries" \
 		GPRINT:a:'LAST: Current\:''%8.0lf' \
@@ -139,6 +153,7 @@ for host in $hosts; do
 	fi
 
 done
+IFS="$OLD_IFS"
 
 #----------------------------------------------------------#
 #                       Hestia                             #

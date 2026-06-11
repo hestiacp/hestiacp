@@ -7,6 +7,60 @@ $TAB = "DB";
 // Main include
 include $_SERVER["DOCUMENT_ROOT"] . "/inc/main.php";
 
+function parse_database_endpoint(string $endpoint): array {
+	if (preg_match('/^(.+):([0-9]+)$/', $endpoint, $matches)) {
+		return [$matches[1], $matches[2]];
+	}
+
+	return [$endpoint, ""];
+}
+
+function database_endpoint_exists(array $hosts, string $type, string $endpoint): bool {
+	[$endpoint_host, $endpoint_port] = parse_database_endpoint($endpoint);
+	$host_matches = 0;
+
+	foreach ($hosts as $host) {
+		if ($host["type"] === $type && $host["value"] === $endpoint) {
+			return true;
+		}
+		if ($endpoint_port === "" && $host["type"] === $type && $host["host"] === $endpoint_host) {
+			$host_matches++;
+		}
+	}
+
+	return $host_matches === 1;
+}
+
+// List available database types
+$db_types = explode(",", $_SESSION["DB_SYSTEM"]);
+
+// List available database servers
+exec(HESTIA_CMD . "v-list-database-hosts json", $output, $return_var);
+$db_hosts_tmp1 = json_decode(implode("", $output), true);
+$db_hosts_tmp1 = is_array($db_hosts_tmp1) ? $db_hosts_tmp1 : [];
+$db_hosts_tmp2 = array_map(function ($host) {
+	return [
+		"value" => $host["ENDPOINT"] ?? $host["HOST"],
+		"label" => $host["ENDPOINT"] ?? $host["HOST"],
+		"type" => $host["TYPE"],
+		"host" => $host["HOST"],
+		"port" => $host["PORT"] ?? "",
+	];
+}, $db_hosts_tmp1);
+$db_hosts = array_values(
+	array_reduce(
+		$db_hosts_tmp2,
+		function ($hosts, $host) {
+			$hosts[$host["type"] . ":" . $host["value"]] = $host;
+			return $hosts;
+		},
+		[],
+	),
+);
+unset($output);
+unset($db_hosts_tmp1);
+unset($db_hosts_tmp2);
+
 // Check POST request
 if (!empty($_POST["ok"])) {
 	// Check token
@@ -62,13 +116,25 @@ if (!empty($_POST["ok"])) {
 	$v_type = $_POST["v_type"];
 	$v_charset = $_POST["v_charset"];
 	$v_host = $_POST["v_host"];
+	[$v_host_name, $v_host_port] = parse_database_endpoint($_POST["v_host"]);
 	$v_db_email = $_POST["v_db_email"];
+
+	if (
+		empty($_SESSION["error_msg"]) &&
+		!database_endpoint_exists($db_hosts, $_POST["v_type"], $_POST["v_host"])
+	) {
+		$_SESSION["error_msg"] = _(
+			"Selected database host does not support the selected database type.",
+		);
+	}
 
 	// Add database
 	if (empty($_SESSION["error_msg"])) {
 		$v_type = quoteshellarg($_POST["v_type"]);
 		$v_charset = quoteshellarg($_POST["v_charset"]);
-		$v_host = quoteshellarg($_POST["v_host"]);
+		[$v_host_name, $v_host_port] = parse_database_endpoint($_POST["v_host"]);
+		$v_host_arg = quoteshellarg($v_host_name);
+		$v_port_arg = quoteshellarg($v_host_port);
 		$v_password = tempnam("/tmp", "vst");
 		$fp = fopen($v_password, "w");
 		fwrite($fp, $_POST["v_password"] . "\n");
@@ -86,9 +152,11 @@ if (!empty($_POST["ok"])) {
 				" " .
 				$v_type .
 				" " .
-				$v_host .
+				$v_host_arg .
 				" " .
-				$v_charset,
+				$v_charset .
+				" " .
+				$v_port_arg,
 			$output,
 			$return_var,
 		);
@@ -104,8 +172,9 @@ if (!empty($_POST["ok"])) {
 	// Get database manager url
 	if (empty($_SESSION["error_msg"])) {
 		[$http_host, $port] = explode(":", $_SERVER["HTTP_HOST"] . ":");
-		if ($_POST["v_host"] != "localhost") {
-			$http_host = $_POST["v_host"];
+		[$db_host_name] = parse_database_endpoint($_POST["v_host"]);
+		if ($db_host_name != "localhost" && $db_host_name != "127.0.0.1") {
+			$http_host = $db_host_name;
 		}
 		if ($_POST["v_type"] == "mysql") {
 			$db_admin = "phpMyAdmin";
@@ -224,20 +293,6 @@ if (empty($v_database)) {
 if (empty($v_dbuser)) {
 	$v_dbuser = "";
 }
-
-// List avaiable database types
-$db_types = explode(",", $_SESSION["DB_SYSTEM"]);
-
-// List available database servers
-exec(HESTIA_CMD . "v-list-database-hosts json", $output, $return_var);
-$db_hosts_tmp1 = json_decode(implode("", $output), true);
-$db_hosts_tmp2 = array_map(function ($host) {
-	return $host["HOST"];
-}, $db_hosts_tmp1);
-$db_hosts = array_values(array_unique($db_hosts_tmp2));
-unset($output);
-unset($db_hosts_tmp1);
-unset($db_hosts_tmp2);
 
 $accept = $_GET["accept"] ?? "";
 

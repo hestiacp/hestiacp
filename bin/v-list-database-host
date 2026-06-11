@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: list database host
-# options: TYPE HOST [FORMAT]
+# options: TYPE HOST [FORMAT] [PORT]
 #
 # example: v-list-database-host mysql localhost
 #
@@ -14,6 +14,12 @@
 type=$1
 host=$2
 format=${3-shell}
+port=$4
+
+if [[ "$format" =~ ^[0-9]+$ ]] && [ -z "$port" ]; then
+	port="$format"
+	format="shell"
+fi
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -31,7 +37,9 @@ json_list() {
 	echo '    "'$HOST'": {
         "HOST": "'$HOST'",
         "PORT": "'$PORT'",
+        "ENDPOINT": "'$DBHOST_ENDPOINT'",
         "TYPE": "'$type'",
+        "USER": "'$USER'",
         "CHARSETS": "'$CHARSETS'",
         "MAX_DB": "'$MAX_DB'",
         "U_SYS_USERS": "'$U_SYS_USERS'",
@@ -48,6 +56,7 @@ json_list() {
 shell_list() {
 	echo "HOST:           $HOST"
 	echo "PORT:           $PORT"
+	echo "ENDPOINT:       $DBHOST_ENDPOINT"
 	echo "TYPE:           $type"
 	echo "CHARSETS:       $CHARSETS"
 	echo "MAX_DB:         $MAX_DB"
@@ -85,20 +94,17 @@ is_type_format_valid() {
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'TYPE HOST [FORMAT]'
+check_args '2' "$#" 'TYPE HOST [FORMAT] [PORT]'
 is_format_valid 'host'
+if [ -n "$port" ]; then
+	is_format_valid 'port'
+fi
 is_type_format_valid "$type"
-is_object_valid "../../../conf/$type" 'HOST' "$host"
-
-# Set default port values if they don't exist in host configuration file
-database_set_default_ports
+database_get_host_values "$type" "$host" "$port"
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
-
-# Parsing hosts
-parse_object_kv_list $(grep "HOST='$host'" $HESTIA/conf/$type.conf)
 
 # Listing data
 case $format in

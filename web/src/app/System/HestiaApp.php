@@ -10,7 +10,6 @@ use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 
 use function _;
-use function array_column;
 use function array_filter;
 use function basename;
 use function chmod;
@@ -254,7 +253,10 @@ class HestiaApp
             fn(array $host) => $host['TYPE'] === $type,
         );
 
-        return array_column($hostOfType, 'HOST');
+        return array_map(
+            fn(array $host) => $host['ENDPOINT'] ?? $host['HOST'],
+            $hostOfType,
+        );
     }
 
     public function checkDatabaseLimit(): bool
@@ -279,6 +281,7 @@ class HestiaApp
         string $type = 'mysql',
         string $charset = 'utf8mb4',
     ): void {
+        [$databaseHost, $databasePort] = $this->parseDatabaseEndpoint($host);
         $passwordFile = tempnam('/tmp', 'hst');
 
         $fp = fopen($passwordFile, 'w');
@@ -286,12 +289,24 @@ class HestiaApp
         fclose($fp);
 
         try {
-            $this->runUser('v-add-database', [$name, $user, $passwordFile, $type, $host, $charset]);
+            $this->runUser('v-add-database', [$name, $user, $passwordFile, $type, $databaseHost, $charset, $databasePort]);
         } catch (ProcessFailedException) {
             throw new RuntimeException(_('Unable to add database!'));
         } finally {
             unlink($passwordFile);
         }
+    }
+
+    /**
+     * @return array{0: string, 1: string}
+     */
+    private function parseDatabaseEndpoint(string $endpoint): array
+    {
+        if (preg_match('/^(.+):([0-9]+)$/', $endpoint, $matches)) {
+            return [$matches[1], $matches[2]];
+        }
+
+        return [$endpoint, ''];
     }
 
     public function changeWebTemplate(string $domain, string $template): void

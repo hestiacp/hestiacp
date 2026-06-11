@@ -21,8 +21,20 @@
 
 	<form
 		x-data="{
-			showAdvanced: <?= tohtml(empty($v_adv) ? "false" : "true") ?>
+			showAdvanced: <?= tohtml(empty($v_adv) ? "false" : "true") ?>,
+			selectedType: '<?= tohtml(!empty($v_type) ? trim($v_type, "'") : ($db_types[0] ?? "")) ?>',
+			syncHost() {
+				this.$nextTick(() => {
+					const select = this.$refs.hostSelect;
+					if (!select) return;
+					const current = select.selectedOptions[0];
+					if (current && current.dataset.type === this.selectedType) return;
+					const option = Array.from(select.options).find((item) => item.dataset.type === this.selectedType);
+					if (option) select.value = option.value;
+				});
+			}
 		}"
+		x-init="syncHost()"
 		id="main-form"
 		name="v_add_db"
 		method="post"
@@ -60,7 +72,7 @@
 				</div>
 				<div class="u-mb10">
 					<label for="v_type" class="form-label"><?= tohtml( _("Type")) ?></label>
-					<select class="form-select" name="v_type" id="v_type">
+					<select class="form-select" name="v_type" id="v_type" x-model="selectedType" x-on:change="syncHost()">
 						<?php
 							foreach ($db_types as $key => $value) {
 								echo "\n\t\t\t\t\t\t\t\t\t\t<option value=\"".htmlentities($value)."\"";
@@ -107,12 +119,15 @@
 				<div x-cloak x-show="showAdvanced">
 					<div class="u-mb10">
 						<label for="v_host" class="form-label"><?= tohtml( _("Host")) ?></label>
-						<select class="form-select" name="v_host" id="v_host">
+						<select class="form-select" name="v_host" id="v_host" x-ref="hostSelect">
 							<?php
-								foreach ($db_hosts as $value) {
-									echo "\n\t\t\t\t\t\t\t\t\t\t<option value=\"".htmlentities($value)."\"";
-									if ((!empty($v_host)) && ( $value == $v_host )) echo ' selected';
-									echo ">".htmlentities($value)."</option>";
+								foreach ($db_hosts as $host) {
+									echo "\n\t\t\t\t\t\t\t\t\t\t<option value=\"".htmlentities($host["value"])."\"";
+									echo " data-type=\"".htmlentities($host["type"])."\"";
+									echo " x-show=\"selectedType === '".htmlentities($host["type"])."'\"";
+									echo " x-bind:disabled=\"selectedType !== '".htmlentities($host["type"])."'\"";
+									if ((!empty($v_host)) && ( $host["value"] == $v_host )) echo ' selected';
+									echo ">".htmlentities($host["label"])."</option>";
 								}
 							?>
 						</select>

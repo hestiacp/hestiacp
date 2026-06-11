@@ -661,17 +661,35 @@ if (!empty($_POST["save"])) {
 
 	// Update mysql pasword
 	if (empty($_SESSION["error_msg"])) {
-		if (!empty($_POST["v_mysql_password"])) {
-			exec(
-				HESTIA_CMD .
-					"v-change-database-host-password mysql localhost root " .
-					quoteshellarg($_POST["v_mysql_password"]),
-				$output,
-				$return_var,
-			);
-			check_return_code($return_var, $output);
-			unset($output);
-			$v_db_adv = "yes";
+		if (!empty($_POST["v_mysql_password"]) && is_array($_POST["v_mysql_password"])) {
+			foreach ($_POST["v_mysql_password"] as $endpoint_id => $mysql_password) {
+				if (empty($mysql_password)) {
+					continue;
+				}
+				$mysql_host = $_POST["v_mysql_host"][$endpoint_id] ?? "";
+				$mysql_port = $_POST["v_mysql_port"][$endpoint_id] ?? "3306";
+				if (empty($mysql_host)) {
+					$_SESSION["error_msg"] = _("Database host can not be blank.");
+					break;
+				}
+				exec(
+					HESTIA_CMD .
+						"v-change-database-host-password mysql " .
+						quoteshellarg($mysql_host) .
+						" root " .
+						quoteshellarg($mysql_password) .
+						" " .
+						quoteshellarg($mysql_port),
+					$output,
+					$return_var,
+				);
+				check_return_code($return_var, $output);
+				unset($output);
+				$v_db_adv = "yes";
+				if (!empty($_SESSION["error_msg"])) {
+					break;
+				}
+			}
 		}
 	}
 	if (!empty($_SESSION["MAIL_SYSTEM"])) {

@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: deletes temp database user
-# options: USER DBUSER [TYPE] [HOST]
+# options: USER DATABASE DBUSER [TYPE] [HOST] [PORT]
 #
 # example: v-delete-database-temp-user wordpress hestia_sso_user mysql
 #
@@ -17,6 +17,7 @@ database=$2
 dbuser=$3
 type=${4-mysql}
 host=$5
+port=$6
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -32,14 +33,16 @@ source_conf "$HESTIA/conf/hestia.conf"
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '3' "$#" 'USER DATABASE DBUSER [TYPE] [HOST]'
+check_args '3' "$#" 'USER DATABASE DBUSER [TYPE] [HOST] [PORT]'
 is_format_valid 'user' 'database' 'dbuser'
+if [ -n "$port" ]; then
+	is_format_valid 'port'
+fi
 is_system_enabled "$DB_SYSTEM" 'DB_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'db' 'DB' "$database"
 is_object_unsuspended 'db' 'DB' "$database"
-get_next_dbhost
 
 if [[ $dbuser != *"hestia_sso"* ]]; then
 	echo "DBUSER is invalid SSO user"

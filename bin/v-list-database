@@ -20,6 +20,8 @@ format=${3-shell}
 source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/db.sh
+source $HESTIA/func/db.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
@@ -30,6 +32,8 @@ json_list() {
         "DATABASE": "'$DB'",
         "DBUSER": "'$DBUSER'",
         "HOST": "'$HOST'",
+        "PORT": "'$PORT'",
+        "ENDPOINT": "'$ENDPOINT'",
         "TYPE": "'$TYPE'",
         "CHARSET": "'$CHARSET'",
         "U_DISK": "'$U_DISK'",
@@ -45,6 +49,8 @@ shell_list() {
 	echo "DATABASE:       $DB"
 	echo "DB USER:        $DBUSER"
 	echo "HOST:           $HOST"
+	echo "PORT:           $PORT"
+	echo "ENDPOINT:       $ENDPOINT"
 	echo "TYPE:           $TYPE"
 	echo "CHARSET:        $CHARSET"
 	echo "DISK:           $U_DISK"
@@ -79,7 +85,10 @@ is_object_valid 'db' 'DB' "$database"
 #----------------------------------------------------------#
 
 # Parsing database
+unset PORT
 parse_object_kv_list $(grep "DB='$database'" $USER_DATA/db.conf)
+if [ -z "$PORT" ]; then PORT=$(database_get_default_port "$TYPE"); fi
+ENDPOINT=$(database_get_endpoint "$HOST" "$PORT")
 
 # Listing data
 case $format in

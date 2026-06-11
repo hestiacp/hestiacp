@@ -65,13 +65,13 @@ if [ -e "$USER_DATA/ssl/le.conf" ]; then
 fi
 KEY="$USER_DATA/ssl/user.key"
 if [ -e "$KEY" ] && [ -n "$MODULUS" ]; then
-        current_modulus=$(openssl rsa -in "$KEY" -modulus -noout \
-            | sed -e 's/^Modulus=//' | xxd -r -p | encode_base64)
-        if [ "$current_modulus" != "$MODULUS" ]; then
-            echo "Key mismatch detected, regenerating user key..."
-            rm -f "$KEY"
-            unset KID MODULUS EXPONENT THUMB
-        fi
+	current_modulus=$(openssl rsa -in "$KEY" -modulus -noout \
+		| sed -e 's/^Modulus=//' | xxd -r -p | encode_base64)
+	if [ "$current_modulus" != "$MODULUS" ]; then
+		echo "Key mismatch detected, regenerating user key..."
+		rm -f "$KEY"
+		unset KID MODULUS EXPONENT THUMB
+	fi
 fi
 if [ -n "$KID" ]; then
 	exit

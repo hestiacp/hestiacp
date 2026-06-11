@@ -275,7 +275,7 @@ for arg; do
 		--with-debs) args="${args}-D " ;;
 		--help) args="${args}-h " ;;
 		*)
-			[[ "${arg:0:1}" == "-" ]] || delim="\""
+			[[ "${arg:0:1}" == "-" ]] || delim="'"
 			args="${args}${delim}${arg}${delim} "
 			;;
 	esac

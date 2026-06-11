@@ -530,14 +530,14 @@ if [ -d /etc/netplan ] && [ -z "$force" ]; then
 		echo
 		#check_result 1 "Unable to detect netplan configuration."
 
-        echo "Unable to detect netplan configuration."
-        echo
+		echo "Unable to detect netplan configuration."
+		echo
 
-        read -p 'Would you like to continue without netplan? [y/N]: ' answer
+		read -p 'Would you like to continue without netplan? [Y/n]: ' answer
 
-        if [ "$answer" != 'y' ] && [ "$answer" != 'Y' ] && [ "$answer" != '' ]; then
-            exit 1
-        fi
+		if [ "$answer" != 'y' ] && [ "$answer" != 'Y' ] && [ "$answer" != '' ]; then
+			exit 1
+		fi
 	fi
 fi
 

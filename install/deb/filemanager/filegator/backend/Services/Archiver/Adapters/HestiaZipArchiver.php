@@ -26,11 +26,10 @@ class HestiaZipArchiver extends ZipArchiver implements Service, ArchiverInterfac
 			return;
 		}
 
-		if (strpos($source, "/home") === false) {
+		if (!str_starts_with($source, "/home")) {
 			$source = "/home/$v_user/" . $source;
 		}
-
-		if (strpos($destination, "/home") === false) {
+		if (!str_starts_with($destination, "/home")) {
 			$destination = "/home/$v_user/" . $destination;
 		}
 

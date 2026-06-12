@@ -861,15 +861,15 @@ if [ "$udir" != 'no' ]; then
 			user_dirs=$(echo "$backup_dirs" | egrep -x -f $tmpdir/selected.txt)
 		fi
 
-		echo "$user_dirs" | while IFS= read -r user_dir; do
+		while IFS= read -r user_dir; do
 			echo -e "$(date "+%F %T") $user_dir" | tee -a $tmpdir/restore.log
-			if [ $backup_mode = 'zstd' ]; then
+			if [ "$backup_mode" = 'zstd' ]; then
 				tar xf "$BACKUP/$backup" -C "$tmpdir" --no-wildcards "./user_dir/$user_dir.tar.zst"
 			else
 				tar xf "$BACKUP/$backup" -C "$tmpdir" --no-wildcards "./user_dir/$user_dir.tar.gz"
 			fi
-			if [ "$?" -ne 0 ]; then
-				rm -rf $tmpdir
+			if [ $? -ne 0 ]; then
+				rm -rf "$tmpdir"
 				error="Can't unpack $user_dir user dir container"
 				echo "$error" | $SENDMAIL -s "$subj" $email $notify
 				sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
@@ -879,27 +879,27 @@ if [ "$udir" != 'no' ]; then
 			chown "$user" "$tmpdir/user_dir"
 			chown "$user" "$HOMEDIR/$user"
 			[ -e "$HOMEDIR/$user/$user_dir" ] && chown "$user" "$HOMEDIR/$user/$user_dir"
-			if [ $backup_mode = 'zstd' ]; then
-				$BIN/v-extract-fs-archive "$user" "$tmpdir/user_dir/$user_dir.tar.zst" "$HOMEDIR/$user"
+			if [ "$backup_mode" = 'zstd' ]; then
+				"$BIN"/v-extract-fs-archive "$user" "$tmpdir/user_dir/$user_dir.tar.zst" "$HOMEDIR/$user"
 			else
-				$BIN/v-extract-fs-archive "$user" "$tmpdir/user_dir/$user_dir.tar.gz" "$HOMEDIR/$user"
+				"$BIN"/v-extract-fs-archive "$user" "$tmpdir/user_dir/$user_dir.tar.gz" "$HOMEDIR/$user"
 			fi
 			cmdstatus="$?"
 			chown root:root "$HOMEDIR/$user"
 			if [ "$cmdstatus" -ne 0 ]; then
-				rm -rf $tmpdir
+				rm -rf "$tmpdir"
 				error="Can't unpack $user_dir user dir container"
-				echo "$error" | $SENDMAIL -s "$subj" $email $notify
-				sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
+				echo "$error" | "$SENDMAIL" -s "$subj" "$email" "$notify"
+				sed -i "/ $user /d" "$HESTIA"/data/queue/backup.pipe
 				check_result "$E_PARSING" "$error"
 			fi
 
 			# Re-chowning files if uid differs
 			if [ "$old_uid" -ne "$new_uid" ]; then
-				find $HOMEDIR/$user/$user_dir -user $old_uid \
-					-exec chown -h $user:$user {} \;
+				find "$HOMEDIR/$user/$user_dir" -user "$old_uid" \
+					-exec chown -h "$user:$user" {} \;
 			fi
-		done
+		done <<< "$user_dirs"
 	fi
 fi
 

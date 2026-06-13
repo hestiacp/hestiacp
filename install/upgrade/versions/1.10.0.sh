@@ -70,7 +70,11 @@ if [[ -d "$SNAPPYMAIL_ETC_DATA" ]] && ! [[ -L "$SNAPPYMAIL_ETC_DATA" ]]; then
 fi
 
 # If Dovecot is version 2.4 and Debian is Trixie (13), replace Dovecot's configuration and rebuild users
-dovecot_version="$(dovecot --version | cut -f -2 -d .)"
+if command -v dovecot &> /dev/null; then
+	dovecot_version="$(dovecot --version | cut -f -2 -d .)"
+else
+	dovecot_version=false
+fi
 if [[ "$ID" == "debian" && "$VERSION_ID" == "13" && "$dovecot_version" = "2.4" ]]; then
 	if ! grep -q 'modified by Hestia' /etc/dovecot/dovecot.conf \
 		&& ! grep -q 'ssl_server_cert_file = /usr/local/hestia' /etc/dovecot/conf.d/10-ssl.conf; then

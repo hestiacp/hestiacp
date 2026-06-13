@@ -63,6 +63,7 @@ $v_login_disabled = $data[$v_username]["LOGIN_DISABLED"];
 $v_login_use_iplist = $data[$v_username]["LOGIN_USE_IPLIST"];
 $v_login_allowed_ips = $data[$v_username]["LOGIN_ALLOW_IPS"];
 $v_ns = $data[$v_username]["NS"];
+$v_extended_backup = $data[$v_username]["EXTENDED_BACKUP"] ?? 'no';
 $nameservers = explode(",", $v_ns);
 if (empty($nameservers[0])) {
 	$v_ns1 = "";
@@ -365,6 +366,28 @@ if (!empty($_POST["save"])) {
 				$v_role = $_POST["v_role"];
 			}
 		}
+
+		// Change extended_backup (admin only)
+		if (empty($_SESSION["error_msg"])) {
+			if (empty($_POST["v_extended_backup"])) {
+				$_POST["v_extended_backup"] = "no";
+			}
+			if ($_POST["v_extended_backup"] != $v_extended_backup) {
+				exec(
+					HESTIA_CMD .
+						"v-change-user-config-value " .
+						quoteshellarg($v_username) .
+						" EXTENDED_BACKUP " .
+						quoteshellarg($_POST["v_extended_backup"]),
+					$output,
+					$return_var,
+				);
+				check_return_code($return_var, $output);
+				$v_extended_backup = $_POST["v_extended_backup"];
+				unset($output);
+			}
+		}
+
 		// Change shell (admin only)
 		if (!empty($_POST["v_shell"])) {
 			if (

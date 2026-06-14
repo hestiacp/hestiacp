@@ -70,18 +70,25 @@ if [[ -d "$SNAPPYMAIL_ETC_DATA" ]] && ! [[ -L "$SNAPPYMAIL_ETC_DATA" ]]; then
 fi
 
 # If Dovecot is version 2.4 and Debian is Trixie (13), replace Dovecot's configuration and rebuild users
-dovecot_version="$(dovecot --version | cut -f -2 -d .)"
+if command -v dovecot &> /dev/null; then
+	dovecot_version="$(dovecot --version | cut -f -2 -d .)"
+else
+	dovecot_version=false
+fi
+
 if [[ "$ID" == "debian" && "$VERSION_ID" == "13" && "$dovecot_version" = "2.4" ]]; then
 	if ! grep -q 'modified by Hestia' /etc/dovecot/dovecot.conf \
-		&& ! grep -q 'ssl_server_cert_file = /usr/local/hestia' /etc/dovecot/conf.d/10-ssl.conf; then
+		|| ! grep -q 'ssl_server_cert_file = /usr/local/hestia' /etc/dovecot/conf.d/10-ssl.conf; then
 		echo "[ * ] Updating Dovecot $dovecot_version configuration"
 		cp -f "$HESTIA_COMMON_DIR"/dovecot/2.4/dovecot.conf /etc/dovecot/
 		cp -f "$HESTIA_COMMON_DIR"/dovecot/2.4/conf.d/* /etc/dovecot/conf.d/
+
 		# rebuild users to apply new dovecot conf
 		upgrade_config_set_value 'UPGRADE_REBUILD_USERS' 'true'
+
 		# if sieve is installed, replace dovecot conf files
-		HAS_DOVECOT_SIEVE_INSTALLED=$(dpkg --get-selections dovecot-managesieved | grep -c dovecot-managesieved)
-		if [ "$HAS_DOVECOT_SIEVE_INSTALLED" = "1" ]; then
+		HAS_DOVECOT_SIEVE_INSTALLED=$(dpkg --get-selections dovecot-managesieved 2> /dev/null | grep -c dovecot-managesieved)
+		if [[ "$HAS_DOVECOT_SIEVE_INSTALLED" = "1" ]]; then
 			echo "[ * ] Updating Sieve $dovecot_version configuration"
 			# dovecot.conf install
 			sed -i -E 's/protocols = imap/protocols = sieve imap/' /etc/dovecot/dovecot.conf
@@ -102,38 +109,18 @@ fi
 if [[ "$ID" == "debian" && "$VERSION_ID" == "13" ]]; then
 	source "$HESTIA"/conf/hestia.conf
 	if [[ "$DNS_SYSTEM" =~ named|bind ]]; then
-		echo "[ * ] Configuring Bind DNS server for Debian 13"
-		cp -f "$HESTIA_INSTALL_DIR"/bind/named.conf /etc/bind/
-		cp -f "$HESTIA_INSTALL_DIR"/bind/named.conf.options /etc/bind/
-		chown root:bind /etc/bind/named.conf
-		chown root:bind /etc/bind/named.conf.options
-		chown bind:bind /var/cache/bind
-		chmod 640 /etc/bind/named.conf
-		chmod 640 /etc/bind/named.conf.options
-		aa-complain /usr/sbin/named 2> /dev/null
-		if [[ $(dpkg-query -W -f='${Status}' apparmor 2> /dev/null | grep -c "ok installed") -eq 0 ]]; then
-			apparmor="no"
-		else
-			apparmor="yes"
-		fi
-		if [[ "$apparmor" = 'yes' ]]; then
-			echo "/home/** rwm," >> /etc/apparmor.d/local/usr.sbin.named 2> /dev/null
-			systemctl status apparmor > /dev/null 2>&1
-			if [ $? -ne 0 ]; then
-				systemctl restart apparmor >> $LOG
-			fi
-		fi
-		# Debian 13 removed the named.conf.default-zones file if doesn't exsists remove it from the config file
-		if [ ! -f /etc/bind/named.conf.default-zones ]; then
+		# named.conf.default-zones was removed in Debian 13
+		if [[ ! -f /etc/bind/named.conf.default-zones ]] \
+			&& grep -q "include.*named.conf.default-zones" /etc/bind/named.conf 2> /dev/null; then
+			echo "[ + ] Removing the default-zones include from named.conf"
 			sed -i "/^include.*named.conf.default-zones/d" /etc/bind/named.conf
 		fi
-		update-rc.d bind9 defaults > /dev/null 2>&1
-		systemctl start bind9
-		check_result $? "bind9 start failed"
 
-		# Workaround for OpenVZ/Virtuozzo
-		if [ -e "/proc/vz/veinfo" ] && [ -e "/etc/rc.local" ]; then
-			sed -i "s/^exit 0/service bind9 restart\nexit 0/" /etc/rc.local
+		# Add root-hints include after named.conf.local if missing
+		if [[ -f /etc/bind/named.conf.root-hints ]] \
+			&& ! grep -q 'include.*named.conf.root-hints' /etc/bind/named.conf 2> /dev/null; then
+			echo "[ + ] Adding the root-hints include to named.conf"
+			sed -i '/include.*named\.conf\.local/a include "\/etc\/bind\/named.conf.root-hints";' /etc/bind/named.conf
 		fi
 	fi
 fi

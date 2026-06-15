@@ -78,7 +78,8 @@ chown "hestiaweb": "${PRVKEY_FILE}"
 if command -v setfacl > /dev/null 2>&1; then
 	setfacl -m u:hestiaweb:--x "${SSH_DIR}" > /dev/null 2>&1
 else
-	chmod o+x "${SSH_DIR}"
+	echo "Error: 'setfacl' is not available."
+	exit 1
 fi
 
 #----------------------------------------------------------#

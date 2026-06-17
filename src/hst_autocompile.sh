@@ -97,6 +97,18 @@ usage() {
 	echo "    --keepbuild     Don't delete downloaded source and build folders"
 	echo "    --cross         Compile hestia package for both AMD64 and ARM64"
 	echo "    --debug         Debug mode"
+	echo "    --pkgrev <n>    Set the package revision number (default: 1)."
+	echo "                    Replaces the '-1' in the version suffix"
+	echo "                    (e.g. --pkgrev 2 → 1.0.0-2+deb12)."
+	echo "    --release <id>  Set a release identifier appended to the package version"
+	echo "                    as '~<id>' (e.g. --release myci1 → 1.0.0-1+deb12~myci1)."
+	echo "                    Useful to distinguish custom or CI builds from official ones."
+	echo "                    If the hestia control file's Version already has a '~<tag>'"
+	echo "                    suffix (e.g. 1.1.0~alpha) and --release is NOT given, that"
+	echo "                    detected tag (e.g. 'alpha') is used automatically as the"
+	echo "                    release identifier for ALL packages. If --release IS given,"
+	echo "                    it overrides/replaces the detected '~<tag>' suffix instead."
+	echo "                    Can be combined: --pkgrev 2 --release myci1 → 1.0.0-2+deb12~myci1."
 	echo ""
 	echo "For automated builds and installations, you may specify the branch"
 	echo "after one of the above flags. To install the packages, specify 'Y'"
@@ -105,6 +117,54 @@ usage() {
 	echo "Example: bash hst_autocompile.sh --hestia develop Y"
 	echo "This would install a Hestia Control Panel package compiled with the"
 	echo "develop branch code."
+}
+
+get_distro_suffix() {
+	local distro_id distro_num
+	distro_id=$(lsb_release -is | tr '[:upper:]' '[:lower:]')
+	distro_num=$(lsb_release -rs)
+
+	if [ "$distro_id" = "debian" ]; then
+		echo "deb${distro_num}"
+	elif [ "$distro_id" = "ubuntu" ]; then
+		echo "ubuntu${distro_num}"
+	else
+		echo "unknown"
+	fi
+}
+
+apply_distro_version() {
+	local control_file="$1"
+	local distro_suffix
+	distro_suffix=$(get_distro_suffix)
+
+	local current_version
+	current_version=$(grep "^Version:" "$control_file" | awk '{print $2}')
+
+	# Strip any existing '~<tag>' pre-release suffix (e.g. ~alpha, ~beta, ~rc1) from the
+	# base version before reconstructing it below. The tag itself (if present) was already
+	# captured globally as BUILD_RELEASE (see BUILD_VER handling), unless the user passed
+	# --release explicitly, in which case BUILD_RELEASE holds the user-specified value.
+	local base_version="$current_version"
+	if echo "$current_version" | grep -qE '~'; then
+		base_version=$(echo "$current_version" | sed -E 's/~.*$//')
+	fi
+
+	# Build the release suffix:
+	#   - Default pkgrev is 1; override with --pkgrev <n>
+	#   - Without a release id : -<pkgrev>+<distro_suffix>                (e.g. -1+deb12)
+	#   - With    a release id : -<pkgrev>+<distro_suffix>~<BUILD_RELEASE> (e.g. -1+deb12~myci1)
+	# BUILD_RELEASE here may come from:
+	#   1) the --release command line option (explicit user choice), or
+	#   2) the '~<tag>' suffix auto-detected from the hestia control file's Version,
+	#      when --release was NOT specified (see detection right after BUILD_VER is read).
+	local pkg_rev="${BUILD_PKG_REV:-1}"
+	local release_suffix="-${pkg_rev}+${distro_suffix}"
+	if [ -n "$BUILD_RELEASE" ]; then
+		release_suffix="${release_suffix}~${BUILD_RELEASE}"
+	fi
+
+	sed -i "s/^Version: \(.*\)/Version: ${base_version}${release_suffix}/" "$control_file"
 }
 
 # Set compiling directory
@@ -164,8 +224,27 @@ for i in $*; do
 		--dontinstalldeps)
 			dontinstalldeps='true'
 			;;
+		--release)
+			# Handled below via shift-style positional parsing; value captured next iteration
+			_next_is_release='true'
+			;;
+		--pkgrev)
+			# Handled below; value captured next iteration
+			_next_is_pkgrev='true'
+			;;
 		*)
-			branch="$i"
+			if [ "$_next_is_release" = 'true' ]; then
+				# Capture the value that follows --release
+				BUILD_RELEASE="$i"
+				RELEASE_EXPLICIT='true'
+				unset _next_is_release
+			elif [ "$_next_is_pkgrev" = 'true' ]; then
+				# Capture the value that follows --pkgrev
+				BUILD_PKG_REV="$i"
+				unset _next_is_pkgrev
+			else
+				branch="$i"
+			fi
 			;;
 	esac
 done
@@ -214,7 +293,23 @@ if [ -z "$BUILD_VER" ]; then
 	exit 1
 fi
 
-echo "Build version $BUILD_VER, with Nginx version $NGINX_V, PHP version $PHP_V and Web Terminal version $WEB_TERMINAL_V"
+# Auto-detect a '~<tag>' pre-release suffix (e.g. ~alpha, ~beta, ~rc1) from the hestia
+# control file's Version. If the user did NOT explicitly pass --release on the command
+# line, this detected tag becomes BUILD_RELEASE and will be propagated to ALL packages
+# (nginx, php, web-terminal, hestia), even though those individual package versions
+# don't carry the '~tag' themselves. If --release WAS explicitly given, it takes
+# precedence and the detected tag is discarded (replaced) instead.
+if echo "$BUILD_VER" | grep -qE '~'; then
+	DETECTED_PRERELEASE_TAG=$(echo "$BUILD_VER" | sed -E 's/^[^~]*~//')
+	if [ "$RELEASE_EXPLICIT" != 'true' ] && [ -n "$DETECTED_PRERELEASE_TAG" ]; then
+		BUILD_RELEASE="$DETECTED_PRERELEASE_TAG"
+	fi
+fi
+
+if [[ -n "$BUILD_RELEASE" ]]; then
+	_build_release=" ($BUILD_RELEASE)"
+fi
+echo "Build version ${BUILD_VER}${_build_release}, with Nginx version $NGINX_V, PHP version $PHP_V and Web Terminal version $WEB_TERMINAL_V"
 
 HESTIA_V="${BUILD_VER}_${BUILD_ARCH}"
 OPENSSL_V='3.5.7'
@@ -285,6 +380,7 @@ if [ "$HESTIA_DEBUG" ]; then
 	echo "Architecture     : $BUILD_ARCH"
 	echo "Debug mode       : $HESTIA_DEBUG"
 	echo "Source directory : $SRC_DIR"
+	echo "Build release    : $BUILD_RELEASE"
 fi
 
 # Generate Links for sourcecode
@@ -406,6 +502,7 @@ if [ "$NGINX_B" = true ]; then
 	if [ "$BUILD_ARCH" != "amd64" ]; then
 		sed -i "s/amd64/${BUILD_ARCH}/g" "$BUILD_DIR_HESTIANGINX/DEBIAN/control"
 	fi
+	apply_distro_version "$BUILD_DIR_HESTIANGINX/DEBIAN/control"
 	get_branch_file 'src/deb/nginx/copyright' "$BUILD_DIR_HESTIANGINX/DEBIAN/copyright"
 	get_branch_file 'src/deb/nginx/postinst' "$BUILD_DIR_HESTIANGINX/DEBIAN/postinst"
 	get_branch_file 'src/deb/nginx/postrm' "$BUILD_DIR_HESTIANGINX/DEBIAN/portrm"
@@ -524,7 +621,7 @@ if [ "$PHP_B" = true ]; then
 	if [ "$BUILD_ARCH" != "amd64" ]; then
 		sed -i "s/amd64/${BUILD_ARCH}/g" "$BUILD_DIR_HESTIAPHP/DEBIAN/control"
 	fi
-
+	apply_distro_version "$BUILD_DIR_HESTIAPHP/DEBIAN/control"
 	get_branch_file 'src/deb/php/copyright' "$BUILD_DIR_HESTIAPHP/DEBIAN/copyright"
 	get_branch_file 'src/deb/php/postinst' "$BUILD_DIR_HESTIAPHP/DEBIAN/postinst"
 	chmod +x $BUILD_DIR_HESTIAPHP/DEBIAN/postinst
@@ -581,7 +678,7 @@ if [ "$WEB_TERMINAL_B" = true ]; then
 	if [ "$BUILD_ARCH" != "amd64" ]; then
 		sed -i "s/amd64/${BUILD_ARCH}/g" "$BUILD_DIR_HESTIA_TERMINAL/DEBIAN/control"
 	fi
-
+	apply_distro_version "$BUILD_DIR_HESTIA_TERMINAL/DEBIAN/control"
 	get_branch_file 'src/deb/web-terminal/copyright' "$BUILD_DIR_HESTIA_TERMINAL/DEBIAN/copyright"
 	get_branch_file 'src/deb/web-terminal/postinst' "$BUILD_DIR_HESTIA_TERMINAL/DEBIAN/postinst"
 	chmod +x $BUILD_DIR_HESTIA_TERMINAL/DEBIAN/postinst
@@ -682,6 +779,7 @@ if [ "$HESTIA_B" = true ]; then
 		if [ "$BUILD_ARCH" != "amd64" ]; then
 			sed -i "s/amd64/${BUILD_ARCH}/g" "$BUILD_DIR_HESTIA/DEBIAN/control"
 		fi
+		apply_distro_version "$BUILD_DIR_HESTIA/DEBIAN/control"
 		get_branch_file 'src/deb/hestia/copyright' "$BUILD_DIR_HESTIA/DEBIAN/copyright"
 		get_branch_file 'src/deb/hestia/preinst' "$BUILD_DIR_HESTIA/DEBIAN/preinst"
 		get_branch_file 'src/deb/hestia/postinst' "$BUILD_DIR_HESTIA/DEBIAN/postinst"

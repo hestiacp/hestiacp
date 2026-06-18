@@ -370,7 +370,7 @@ if [ "$dontinstalldeps" != 'true' ]; then
 	echo "Installing dependencies for compilation..."
 	apt-get -qq install -y $SOFTWARE > /dev/null 2>&1
 
-	# Installing Node.js 20.x repo
+	# Installing Node.js 24.x repo
 	apt="/etc/apt/sources.list.d"
 	codename="$(lsb_release -s -c)"
 
@@ -379,8 +379,8 @@ if [ "$dontinstalldeps" != 'true' ]; then
 	fi
 
 	echo "Installing Node.js..."
-	apt-get -qq update > /dev/null 2>&1
-	apt -qq install -y nodejs > /dev/null 2>&1
+	apt-get -qq update > /dev/null
+	apt -qq install -y nodejs > /dev/null
 
 	nodejs_version=$(/usr/bin/node -v | cut -f1 -d'.' | sed 's/v//g')
 

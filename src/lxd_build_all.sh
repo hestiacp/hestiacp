@@ -14,9 +14,9 @@
 
 # Configs:
 # Use focal and jammy instead of "20.04 an 22.04"
-oslist=('debian=10,11' 'ubuntu=18.04,focal,jammy')
-branch='main'
-
+oslist=('debian=11,12,13' 'ubuntu=focal,jammy,noble')
+branch=$(git -C "${__DIR__}" rev-parse --abbrev-ref HEAD 2> /dev/null || echo main)
+echo "Branch: $branch"
 function setup_container() {
 	if [ "$osname" = 'ubuntu' ]; then
 		lxc init $osname:$osver "${containername}"

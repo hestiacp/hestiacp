@@ -194,7 +194,7 @@ run_cross_build() {
 	# OS release's package of the same name/version/arch.
 	local deb_dir_export=""
 	if [ "$ALL_OS" = "true" ]; then
-		local target_deb_dir="$BUILD_DIR/deb/$distro-$release"
+		local target_deb_dir="$BUILD_DIR/deb/$release"
 		mkdir -p "$target_deb_dir"
 		deb_dir_export="export DEB_DIR='$target_deb_dir'; "
 	fi

@@ -111,7 +111,7 @@ The combination matching the host's own OS/release/architecture is built directl
 Since a package can share the same name/version/arch across OS releases, `--all-os` writes each release's packages to their own subdirectory instead of the usual flat `deb/`:
 
 ```text
-/tmp/hestiacp-src/deb/<distro>-<release>/<package>_<version>_<arch>.deb
+/tmp/hestiacp-src/deb/<release>/<package>_<version>_<arch>.deb
 # e.g.
 /tmp/hestiacp-src/deb/debian-bookworm/hestia-nginx_1.2.3_amd64.deb
 /tmp/hestiacp-src/deb/ubuntu-noble/hestia-nginx_1.2.3_arm64.deb

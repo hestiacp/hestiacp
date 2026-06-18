@@ -83,6 +83,99 @@ get_branch_file() {
 	fi
 }
 
+# Cross-arch build support (Debian/Ubuntu only): run a native build for the
+# "other" architecture inside a QEMU-emulated chroot on the same host, so that
+# ./configure and make see real (emulated) target binaries instead of needing
+# a fragile --host= cross-compile toolchain.
+CHROOT_BASE_DIR='/var/lib/hestiacp-build-chroot'
+ACTIVE_CHROOTS=()
+
+qemu_static_name() {
+	case "$1" in
+		arm64) echo "qemu-aarch64-static" ;;
+		amd64) echo "qemu-x86_64-static" ;;
+	esac
+}
+
+cleanup_chroots() {
+	local chroot_dir
+	for chroot_dir in "${ACTIVE_CHROOTS[@]}"; do
+		mountpoint -q "$chroot_dir$SRC_DIR" && umount "$chroot_dir$SRC_DIR"
+		mountpoint -q "$chroot_dir$BUILD_DIR" && umount "$chroot_dir$BUILD_DIR"
+		mountpoint -q "$chroot_dir/dev/pts" && umount "$chroot_dir/dev/pts"
+		mountpoint -q "$chroot_dir/sys" && umount "$chroot_dir/sys"
+		mountpoint -q "$chroot_dir/proc" && umount "$chroot_dir/proc"
+		mountpoint -q "$chroot_dir/dev" && umount "$chroot_dir/dev"
+	done
+}
+trap cleanup_chroots EXIT
+
+prepare_chroot() {
+	local target_arch=$1
+	local chroot_dir="$CHROOT_BASE_DIR/$target_arch"
+	local qemu_bin
+	qemu_bin=$(qemu_static_name "$target_arch")
+
+	if [ ! -x "/usr/bin/$qemu_bin" ]; then
+		echo >&2 "Installing qemu-user-static for cross builds..."
+		apt-get -qq update > /dev/null 2>&1
+		apt-get -qq install -y qemu-user-static binfmt-support debootstrap > /dev/null 2>&1
+		systemctl restart systemd-binfmt > /dev/null 2>&1
+	fi
+
+	if [ ! -d "$chroot_dir/usr" ]; then
+		echo >&2 "Bootstrapping $target_arch chroot at $chroot_dir (first run only, this can take a while)..."
+		mkdir -p "$chroot_dir"
+		local codename
+		codename=$(lsb_release -s -c)
+		local mirror
+		if [ "$(lsb_release -is)" = "Ubuntu" ]; then
+			if [ "$target_arch" = "amd64" ]; then
+				mirror="http://archive.ubuntu.com/ubuntu"
+			else
+				mirror="http://ports.ubuntu.com/ubuntu-ports"
+			fi
+		else
+			mirror="http://deb.debian.org/debian"
+		fi
+		debootstrap --arch="$target_arch" "$codename" "$chroot_dir" "$mirror" >&2
+		if [ $? -ne 0 ]; then
+			echo >&2 "[!] Failed to bootstrap $target_arch chroot"
+			exit 1
+		fi
+	fi
+
+	mkdir -p "$chroot_dir/usr/bin"
+	cp -f "/usr/bin/$qemu_bin" "$chroot_dir/usr/bin/"
+
+	mkdir -p "$chroot_dir/dev" "$chroot_dir/proc" "$chroot_dir/sys" "$chroot_dir/dev/pts"
+	mountpoint -q "$chroot_dir/dev" || mount --bind /dev "$chroot_dir/dev"
+	mountpoint -q "$chroot_dir/dev/pts" || mount --bind /dev/pts "$chroot_dir/dev/pts"
+	mountpoint -q "$chroot_dir/proc" || mount --bind /proc "$chroot_dir/proc"
+	mountpoint -q "$chroot_dir/sys" || mount --bind /sys "$chroot_dir/sys"
+
+	mkdir -p "$chroot_dir$BUILD_DIR" "$chroot_dir$SRC_DIR"
+	mountpoint -q "$chroot_dir$BUILD_DIR" || mount --bind "$BUILD_DIR" "$chroot_dir$BUILD_DIR"
+	mountpoint -q "$chroot_dir$SRC_DIR" || mount --bind "$SRC_DIR" "$chroot_dir$SRC_DIR"
+
+	ACTIVE_CHROOTS+=("$chroot_dir")
+	echo "$chroot_dir"
+}
+
+run_cross_build() {
+	local target_arch=$1
+	shift
+	local chroot_dir
+	chroot_dir=$(prepare_chroot "$target_arch")
+
+	echo "Cross-building for $target_arch inside $chroot_dir..."
+	chroot "$chroot_dir" /bin/bash -c "cd '$SRC_DIR/src' && DEBIAN_FRONTEND=noninteractive ./hst_autocompile.sh $* --noinstall --keepbuild"
+	if [ $? -ne 0 ]; then
+		echo >&2 "[!] Cross build for $target_arch failed"
+		exit 1
+	fi
+}
+
 usage() {
 	echo "Usage:"
 	echo "    $0 (--all|--hestia|--nginx|--php|--web-terminal) [options] [branch] [Y]"
@@ -95,7 +188,9 @@ usage() {
 	echo "  Options:"
 	echo "    --install       Install generated packages"
 	echo "    --keepbuild     Don't delete downloaded source and build folders"
-	echo "    --cross         Compile hestia package for both AMD64 and ARM64"
+	echo "    --cross         Also build for the other architecture (AMD64<->ARM64)."
+	echo "                    For hestia-nginx/hestia-php/hestia-web-terminal on"
+	echo "                    Debian/Ubuntu this uses a QEMU-emulated chroot;"
 	echo "    --debug         Debug mode"
 	echo ""
 	echo "For automated builds and installations, you may specify the branch"
@@ -119,6 +214,11 @@ if [ $architecture == 'aarch64' ]; then
 else
 	BUILD_ARCH='amd64'
 fi
+
+# BUILD_ARCH gets reassigned by the hestia build loop below, so keep the
+# host's actual architecture around for the cross-build step at the end.
+HOST_ARCH="$BUILD_ARCH"
+
 DEB_DIR="$BUILD_DIR/deb"
 
 # Set packages to compile
@@ -238,7 +338,6 @@ if [ "$dontinstalldeps" != 'true' ]; then
 	# Install needed software
 	# Set package dependencies for compiling
 	SOFTWARE='wget tar git curl build-essential libxml2-dev libz-dev libzip-dev libgmp-dev libcurl4-gnutls-dev unzip openssl libssl-dev pkg-config libsqlite3-dev libonig-dev rpm lsb-release'
-
 	echo "Updating system APT repositories..."
 	apt-get -qq update > /dev/null 2>&1
 	echo "Installing dependencies for compilation..."
@@ -315,12 +414,6 @@ branch_dash=$(echo "$branch" | sed 's/\//-/g')
 #################################################################################
 
 if [ "$NGINX_B" = true ]; then
-	echo "Building hestia-nginx package..."
-	if [ "$CROSS" = "true" ]; then
-		echo "Cross compile not supported for hestia-nginx, hestia-php or hestia-web-terminal"
-		exit 1
-	fi
-
 	# Change to build directory
 	cd $BUILD_DIR
 
@@ -443,11 +536,6 @@ fi
 #################################################################################
 
 if [ "$PHP_B" = true ]; then
-	if [ "$CROSS" = "true" ]; then
-		echo "Cross compile not supported for hestia-nginx, hestia-php or hestia-web-terminal"
-		exit 1
-	fi
-
 	echo "Building hestia-php package..."
 
 	BUILD_DIR_HESTIAPHP=$BUILD_DIR/hestia-php_$PHP_V
@@ -556,10 +644,6 @@ fi
 #################################################################################
 
 if [ "$WEB_TERMINAL_B" = true ]; then
-	if [ "$CROSS" = "true" ]; then
-		echo "Cross compile not supported for hestia-nginx, hestia-php or hestia-web-terminal"
-		exit 1
-	fi
 
 	echo "Building hestia-web-terminal package..."
 
@@ -698,6 +782,34 @@ if [ "$HESTIA_B" = true ]; then
 		fi
 		cd $BUILD_DIR/hestiacp-$branch_dash
 	done
+fi
+
+#################################################################################
+#
+# Cross-architecture build (nginx/php/web-terminal) via QEMU chroot
+#
+#################################################################################
+
+if [ "$CROSS" = "true" ] && [ "$OSTYPE" = "debian" ] && { [ "$NGINX_B" = "true" ] || [ "$PHP_B" = "true" ] || [ "$WEB_TERMINAL_B" = "true" ]; }; then
+	if [ "$HOST_ARCH" = "amd64" ]; then
+		OTHER_ARCH='arm64'
+	else
+		OTHER_ARCH='amd64'
+	fi
+
+	CROSS_FLAGS=""
+	[ "$NGINX_B" = "true" ] && CROSS_FLAGS="$CROSS_FLAGS --nginx"
+	[ "$PHP_B" = "true" ] && CROSS_FLAGS="$CROSS_FLAGS --php"
+	[ "$WEB_TERMINAL_B" = "true" ] && CROSS_FLAGS="$CROSS_FLAGS --web-terminal"
+	[ "$HESTIA_DEBUG" = "true" ] && CROSS_FLAGS="$CROSS_FLAGS --debug"
+
+	if [ "$use_src_folder" = "true" ]; then
+		CROSS_BRANCH="~$branch"
+	else
+		CROSS_BRANCH="$branch"
+	fi
+
+	run_cross_build "$OTHER_ARCH" $CROSS_FLAGS "$CROSS_BRANCH"
 fi
 
 #################################################################################

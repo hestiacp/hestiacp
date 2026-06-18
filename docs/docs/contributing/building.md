@@ -32,6 +32,17 @@ bash hst-install-{os}.sh --with-debs /tmp/hestiacp-src/deb/
 
 Any option can be appended to the installer command. [See the complete list](../introduction/getting-started#list-of-installation-options).
 
+## Building for both AMD64 and ARM64
+
+Pass `--cross` to also build packages for the other architecture on the same machine, in addition to the host's native architecture:
+
+```bash
+./hst_autocompile.sh --all --noinstall --keepbuild --cross '~localsrc'
+```
+
+- For the `hestia` package (architecture-independent), both architectures are built directly.
+- For `hestia-nginx`, `hestia-php` and `hestia-web-terminal` (which contain compiled native code), the other architecture is built inside a QEMU-emulated chroot. The first run downloads/bootstraps a minimal root filesystem under `/var/lib/hestiacp-build-chroot/<arch>` and installs `qemu-user-static`; subsequent runs reuse it, so only the first cross build is slow.
+
 ## Build packages only
 
 ```bash

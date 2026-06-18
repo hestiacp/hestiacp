@@ -21,7 +21,10 @@ source_conf "$HESTIA/conf/hestia.conf"
 #             Set new version numbers for packages            #
 ###############################################################
 # Hestia Control Panel
-new_version=$(dpkg -l | awk '$2=="hestia" { print $3 }')
+# Added the sed command to strip deb package revision suffixes:
+# 1.10.0-1+deb13 becomes 1.10.0
+# 1.10.0-1+deb13~alpha becomes 1.10.0~alpha
+new_version="$(dpkg -l | awk '$2=="hestia" { print $3 }' | sed -E 's/-[0-9]{1,}\+[a-z0-9]{1,}//')"
 
 ###############################################################
 #               Begin standard upgrade routines               #

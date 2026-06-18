@@ -126,7 +126,7 @@ if [ "$type" = 'sftp' ]; then
 	USERNAME=$user
 	PASSWORD=$password
 	HOST=$host
-    PRIVATEKEY=$privatekey
+	PRIVATEKEY=$privatekey
 
 	if [ -z $path ]; then
 		sftmpdir="vst.bK76A9SUkt"

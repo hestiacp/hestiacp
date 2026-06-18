@@ -96,7 +96,7 @@ ALLOS_DISTRO_RELEASES=(
 	"debian trixie"
 	"ubuntu jammy"
 	"ubuntu noble"
-	"ubuntu quark"
+	"ubuntu resolute"
 )
 
 qemu_static_name() {
@@ -189,8 +189,18 @@ run_cross_build() {
 	local chroot_dir
 	chroot_dir=$(prepare_chroot "$distro" "$release" "$target_arch")
 
+	# With --all-os, give this OS its own deb output subdirectory (see the
+	# matching override above) so its packages don't collide with another
+	# OS release's package of the same name/version/arch.
+	local deb_dir_export=""
+	if [ "$ALL_OS" = "true" ]; then
+		local target_deb_dir="$BUILD_DIR/deb/$distro-$release"
+		mkdir -p "$target_deb_dir"
+		deb_dir_export="export DEB_DIR='$target_deb_dir'; "
+	fi
+
 	echo "Cross-building $distro/$release/$target_arch inside $chroot_dir..."
-	chroot "$chroot_dir" /bin/bash -c "cd '$SRC_DIR/src' && DEBIAN_FRONTEND=noninteractive ./hst_autocompile.sh $* --noinstall --keepbuild"
+	chroot "$chroot_dir" /bin/bash -c "${deb_dir_export}cd '$SRC_DIR/src' && DEBIAN_FRONTEND=noninteractive ./hst_autocompile.sh $* --noinstall --keepbuild"
 	if [ $? -ne 0 ]; then
 		echo >&2 "[!] Cross build for $distro/$release/$target_arch failed"
 		exit 1
@@ -243,7 +253,7 @@ fi
 # host's actual architecture around for the cross-build step at the end.
 HOST_ARCH="$BUILD_ARCH"
 
-DEB_DIR="$BUILD_DIR/deb"
+DEB_DIR="${DEB_DIR:-$BUILD_DIR/deb}"
 
 # Set packages to compile
 for i in $*; do
@@ -395,6 +405,14 @@ if [ "$dontinstalldeps" != 'true' ]; then
 			ln -s /usr/include/x86_64-linux-gnu/curl /usr/local/include/curl
 		fi
 	fi
+fi
+
+# With --all-os, packages for different OS releases can share the same
+# name/version/arch, so each OS gets its own deb output subdirectory to
+# avoid one release's package overwriting another's.
+if [ "$ALL_OS" = "true" ]; then
+	DEB_DIR="$BUILD_DIR/deb/$(lsb_release -is | tr '[:upper:]' '[:lower:]')-$(lsb_release -sc)"
+	mkdir -p "$DEB_DIR"
 fi
 
 # Get system cpu cores

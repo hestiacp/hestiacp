@@ -107,3 +107,12 @@ Pass `--all-os` to build for every supported OS release (Debian 12/13, Ubuntu 22
 ```
 
 The combination matching the host's own OS/release/architecture is built directly; every other combination is built inside a QEMU-emulated chroot, same as `--cross`. `--all-os` always covers both architectures, so combining it with `--cross` has no extra effect.
+
+Since a package can share the same name/version/arch across OS releases, `--all-os` writes each release's packages to their own subdirectory instead of the usual flat `deb/`:
+
+```text
+/tmp/hestiacp-src/deb/<distro>-<release>/<package>_<version>_<arch>.deb
+# e.g.
+/tmp/hestiacp-src/deb/debian-bookworm/hestia-nginx_1.2.3_amd64.deb
+/tmp/hestiacp-src/deb/ubuntu-noble/hestia-nginx_1.2.3_arm64.deb
+```

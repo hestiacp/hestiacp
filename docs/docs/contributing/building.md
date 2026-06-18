@@ -32,17 +32,6 @@ bash hst-install-{os}.sh --with-debs /tmp/hestiacp-src/deb/
 
 Any option can be appended to the installer command. [See the complete list](../introduction/getting-started#list-of-installation-options).
 
-## Building for both AMD64 and ARM64
-
-Pass `--cross` to also build packages for the other architecture on the same machine, in addition to the host's native architecture:
-
-```bash
-./hst_autocompile.sh --all --noinstall --keepbuild --cross '~localsrc'
-```
-
-- For the `hestia` package (architecture-independent), both architectures are built directly.
-- For `hestia-nginx`, `hestia-php` and `hestia-web-terminal` (which contain compiled native code), the other architecture is built inside a QEMU-emulated chroot. The first run downloads/bootstraps a minimal root filesystem under `/var/lib/hestiacp-build-chroot/<arch>` and installs `qemu-user-static`; subsequent runs reuse it, so only the first cross build is slow.
-
 ## Build packages only
 
 ```bash
@@ -97,3 +86,24 @@ To solve this issue, run:
 ```bash
 apt install -f
 ```
+
+## Building for both AMD64 and ARM64
+
+Pass `--cross` to also build packages for the other architecture on the same machine, in addition to the host's native architecture:
+
+```bash
+./hst_autocompile.sh --all --noinstall --keepbuild --cross '~localsrc'
+```
+
+- For the `hestia` package (architecture-independent), both architectures are built directly.
+- For `hestia-nginx`, `hestia-php` and `hestia-web-terminal` (which contain compiled native code), the other architecture is built inside a QEMU-emulated chroot. The first run downloads/bootstraps a minimal root filesystem under `/var/lib/hestiacp-build-chroot/<distro>-<release>-<arch>` and installs `qemu-user-static`; subsequent runs reuse it, so only the first cross build is slow.
+
+## Building for every supported OS and architecture
+
+Pass `--all-os` to build for every supported OS release (Debian 12/13, Ubuntu 22.04/24.04/26.04) on both architectures — up to 10 combinations from one invocation:
+
+```bash
+./hst_autocompile.sh --all --noinstall --keepbuild --all-os '~localsrc'
+```
+
+The combination matching the host's own OS/release/architecture is built directly; every other combination is built inside a QEMU-emulated chroot, same as `--cross`. `--all-os` always covers both architectures, so combining it with `--cross` has no extra effect.

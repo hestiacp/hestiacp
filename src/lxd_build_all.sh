@@ -14,7 +14,7 @@
 
 # Configs:
 # Use focal and jammy instead of "20.04 an 22.04"
-oslist=('debian=11,12,13' 'ubuntu=focal,jammy,noble')
+oslist=('debian=12,13' 'ubuntu=jammy,noble,racoon')
 branch=$(git -C "${__DIR__}" rev-parse --abbrev-ref HEAD 2> /dev/null || echo main)
 echo "Branch: $branch"
 function setup_container() {

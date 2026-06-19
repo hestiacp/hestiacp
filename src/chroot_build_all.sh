@@ -73,15 +73,23 @@ qemu_static_name() {
 	esac
 }
 
+# Unmount everything prepare_chroot may have bind-mounted under a given
+# chroot dir. Order matters: children (dev/pts, the bind mounts) before
+# their parents (dev).
+unmount_chroot_dir() {
+	local chroot_dir=$1
+	mountpoint -q "$chroot_dir$REPO_DIR" && umount "$chroot_dir$REPO_DIR"
+	mountpoint -q "$chroot_dir$BUILD_DIR" && umount "$chroot_dir$BUILD_DIR"
+	mountpoint -q "$chroot_dir/dev/pts" && umount "$chroot_dir/dev/pts"
+	mountpoint -q "$chroot_dir/sys" && umount "$chroot_dir/sys"
+	mountpoint -q "$chroot_dir/proc" && umount "$chroot_dir/proc"
+	mountpoint -q "$chroot_dir/dev" && umount "$chroot_dir/dev"
+}
+
 cleanup_chroots() {
 	local chroot_dir
 	for chroot_dir in "${ACTIVE_CHROOTS[@]}"; do
-		mountpoint -q "$chroot_dir$REPO_DIR" && umount "$chroot_dir$REPO_DIR"
-		mountpoint -q "$chroot_dir$BUILD_DIR" && umount "$chroot_dir$BUILD_DIR"
-		mountpoint -q "$chroot_dir/dev/pts" && umount "$chroot_dir/dev/pts"
-		mountpoint -q "$chroot_dir/sys" && umount "$chroot_dir/sys"
-		mountpoint -q "$chroot_dir/proc" && umount "$chroot_dir/proc"
-		mountpoint -q "$chroot_dir/dev" && umount "$chroot_dir/dev"
+		unmount_chroot_dir "$chroot_dir"
 	done
 }
 trap cleanup_chroots EXIT
@@ -115,6 +123,10 @@ prepare_chroot() {
 	# run already has /usr populated but is not actually usable.
 	if [ ! -f "$chroot_dir/.hestiacp-chroot-ready" ]; then
 		echo >&2 "Bootstrapping $distro/$release/$target_arch chroot at $chroot_dir (first run only, this can take a while)..."
+		# A previous run may have left this mounted (e.g. an interrupted
+		# build, or an older version of this script); rm -rf can't remove
+		# anything under an active mountpoint.
+		unmount_chroot_dir "$chroot_dir"
 		rm -rf "$chroot_dir"
 		mkdir -p "$chroot_dir"
 		local mirror

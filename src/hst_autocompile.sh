@@ -242,7 +242,7 @@ timestamp() {
 if [ "$dontinstalldeps" != 'true' ]; then
 	# Install needed software
 	# Set package dependencies for compiling
-	SOFTWARE='wget tar git curl build-essential libxml2-dev libz-dev libzip-dev libgmp-dev libcurl4-gnutls-dev unzip openssl libssl-dev pkg-config libsqlite3-dev libonig-dev rpm lsb-release'
+	SOFTWARE='wget tar git curl ca-certificates build-essential libxml2-dev libz-dev libzip-dev libgmp-dev libcurl4-gnutls-dev unzip openssl libssl-dev pkg-config libsqlite3-dev libonig-dev rpm lsb-release'
 	echo "Updating system APT repositories..."
 	apt-get -qq update > /dev/null 2>&1
 	echo "Installing dependencies for compilation..."
@@ -258,7 +258,16 @@ if [ "$dontinstalldeps" != 'true' ]; then
 
 	echo "Installing Node.js..."
 	apt-get -qq update > /dev/null
-	apt -qq install -y nodejs > /dev/null
+	# NodeSource's nodejs package bundles npm; Debian/Ubuntu's own nodejs
+	# package does not, so ask for both explicitly in case the NodeSource
+	# repo above failed to register (e.g. no network) and apt falls back
+	# to the distro's own nodejs package.
+	apt-get -qq install -y nodejs npm > /dev/null 2>&1
+
+	if [ -z "$(which "node")" ] || [ -z "$(which "npm")" ]; then
+		echo "Failed to install Node.js/npm"
+		exit 1
+	fi
 
 	nodejs_version=$(/usr/bin/node -v | cut -f1 -d'.' | sed 's/v//g')
 

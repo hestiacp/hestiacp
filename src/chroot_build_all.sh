@@ -100,8 +100,42 @@ ensure_cross_build_deps() {
 	echo >&2 "Installing debootstrap/qemu-user-static for cross/multi-OS builds..."
 	apt-get -qq update > /dev/null 2>&1
 	apt-get -qq install -y debootstrap qemu-user-static binfmt-support > /dev/null 2>&1
-	systemctl restart systemd-binfmt > /dev/null 2>&1
 	CROSS_DEPS_READY='true'
+}
+
+# Make sure binaries for $target_arch actually get routed through QEMU.
+# "systemctl restart systemd-binfmt" (the usual way qemu-user-static's
+# registration gets activated) silently does nothing on hosts without
+# systemd as PID 1, e.g. inside a container — so register directly via
+# update-binfmt and verify it actually took, instead of finding out much
+# later via a cryptic "Exec format error" deep inside debootstrap.
+register_binfmt() {
+	local target_arch=$1
+	[ "$target_arch" = "$HOST_ARCH" ] && return
+
+	local binfmt_name
+	case "$target_arch" in
+		arm64) binfmt_name="qemu-aarch64" ;;
+		amd64) binfmt_name="qemu-x86_64" ;;
+	esac
+
+	if [ ! -d /proc/sys/fs/binfmt_misc ]; then
+		mount binfmt_misc -t binfmt_misc /proc/sys/fs/binfmt_misc > /dev/null 2>&1
+	fi
+
+	if [ ! -e "/proc/sys/fs/binfmt_misc/$binfmt_name" ]; then
+		update-binfmt --enable "$binfmt_name" > /dev/null 2>&1
+	fi
+
+	if [ ! -e "/proc/sys/fs/binfmt_misc/$binfmt_name" ]; then
+		echo >&2 "[!] Could not register binfmt_misc handler '$binfmt_name' for $target_arch."
+		echo >&2 "    This host/container can't run foreign-architecture binaries via"
+		echo >&2 "    QEMU. If you're inside Docker/LXC, this typically needs the"
+		echo >&2 "    container to run privileged (or with access to a host-mounted,"
+		echo >&2 "    writable /proc/sys/fs/binfmt_misc) and binfmt_misc support in the"
+		echo >&2 "    host kernel."
+		exit 1
+	fi
 }
 
 # Sets the global PREPARED_CHROOT_DIR instead of echoing the path back,
@@ -117,6 +151,7 @@ prepare_chroot() {
 	PREPARED_CHROOT_DIR="$chroot_dir"
 
 	ensure_cross_build_deps
+	register_binfmt "$target_arch"
 
 	# Use our own marker rather than e.g. "-d $chroot_dir/usr" to decide
 	# whether bootstrapping is done: a chroot left behind by a failed stage-2

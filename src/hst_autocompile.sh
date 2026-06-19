@@ -248,6 +248,13 @@ if [ "$dontinstalldeps" != 'true' ]; then
 	echo "Installing dependencies for compilation..."
 	apt-get -qq install -y $SOFTWARE > /dev/null 2>&1
 
+	# In a minimal/freshly-debootstrapped chroot, dpkg trigger processing
+	# (which normally re-runs ldconfig after installing shared libs) can be
+	# deferred or skipped, leaving the dynamic linker's cache stale even
+	# though e.g. libzip.so.5 is genuinely on disk. Refresh it explicitly so
+	# binaries built against these libs (php, nginx, ...) can actually run.
+	ldconfig
+
 	# Installing Node.js 24.x repo
 	apt="/etc/apt/sources.list.d"
 	codename="$(lsb_release -s -c)"

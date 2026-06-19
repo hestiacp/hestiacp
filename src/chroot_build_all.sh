@@ -120,20 +120,22 @@ register_binfmt() {
 	esac
 
 	if [ ! -d /proc/sys/fs/binfmt_misc ]; then
-		mount binfmt_misc -t binfmt_misc /proc/sys/fs/binfmt_misc > /dev/null 2>&1
+		mount binfmt_misc -t binfmt_misc /proc/sys/fs/binfmt_misc >&2
 	fi
 
 	if [ ! -e "/proc/sys/fs/binfmt_misc/$binfmt_name" ]; then
-		update-binfmt --enable "$binfmt_name" > /dev/null 2>&1
+		update-binfmt --enable "$binfmt_name" >&2
 	fi
 
 	if [ ! -e "/proc/sys/fs/binfmt_misc/$binfmt_name" ]; then
 		echo >&2 "[!] Could not register binfmt_misc handler '$binfmt_name' for $target_arch."
 		echo >&2 "    This host/container can't run foreign-architecture binaries via"
-		echo >&2 "    QEMU. If you're inside Docker/LXC, this typically needs the"
-		echo >&2 "    container to run privileged (or with access to a host-mounted,"
-		echo >&2 "    writable /proc/sys/fs/binfmt_misc) and binfmt_misc support in the"
-		echo >&2 "    host kernel."
+		echo >&2 "    QEMU. If you're inside an LXC container (e.g. on Proxmox), this is"
+		echo >&2 "    a host-level kernel facility that unprivileged containers normally"
+		echo >&2 "    can't register themselves — either make the container privileged,"
+		echo >&2 "    register '$binfmt_name' on the Proxmox host instead (it'll then be"
+		echo >&2 "    inherited by containers automatically), or run this in a VM instead"
+		echo >&2 "    of an LXC container."
 		exit 1
 	fi
 }

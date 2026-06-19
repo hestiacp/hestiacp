@@ -258,11 +258,17 @@ if [ "$dontinstalldeps" != 'true' ]; then
 
 	echo "Installing Node.js..."
 	apt-get -qq update > /dev/null
-	# NodeSource's nodejs package bundles npm; Debian/Ubuntu's own nodejs
-	# package does not, so ask for both explicitly in case the NodeSource
-	# repo above failed to register (e.g. no network) and apt falls back
-	# to the distro's own nodejs package.
-	apt-get -qq install -y nodejs npm > /dev/null 2>&1
+	apt-get -qq install -y nodejs > /dev/null 2>&1
+
+	# NodeSource's nodejs package bundles npm, but Debian/Ubuntu's own nodejs
+	# package doesn't (used if the NodeSource repo above failed to register,
+	# e.g. no network). Only fall back to the distro's separate npm package
+	# when npm is actually missing — requesting it unconditionally alongside
+	# nodejs in one apt-get call conflicts with NodeSource's bundled npm and
+	# fails the whole install.
+	if [ -z "$(which "npm")" ]; then
+		apt-get -qq install -y npm > /dev/null 2>&1
+	fi
 
 	if [ -z "$(which "node")" ] || [ -z "$(which "npm")" ]; then
 		echo "Failed to install Node.js/npm"

@@ -96,16 +96,26 @@ ensure_cross_build_deps() {
 	CROSS_DEPS_READY='true'
 }
 
+# Sets the global PREPARED_CHROOT_DIR instead of echoing the path back,
+# since callers must NOT invoke this via "x=$(prepare_chroot ...)" — that
+# forks a subshell, which would (a) swallow this function's "exit 1" on
+# failure instead of stopping the script, and (b) silently drop the
+# ACTIVE_CHROOTS append below, since it'd only exist in the subshell's copy.
 prepare_chroot() {
 	local distro=$1
 	local release=$2
 	local target_arch=$3
 	local chroot_dir="$CHROOT_BASE_DIR/$distro-$release-$target_arch"
+	PREPARED_CHROOT_DIR="$chroot_dir"
 
 	ensure_cross_build_deps
 
-	if [ ! -d "$chroot_dir/usr" ]; then
+	# Use our own marker rather than e.g. "-d $chroot_dir/usr" to decide
+	# whether bootstrapping is done: a chroot left behind by a failed stage-2
+	# run already has /usr populated but is not actually usable.
+	if [ ! -f "$chroot_dir/.hestiacp-chroot-ready" ]; then
 		echo >&2 "Bootstrapping $distro/$release/$target_arch chroot at $chroot_dir (first run only, this can take a while)..."
+		rm -rf "$chroot_dir"
 		mkdir -p "$chroot_dir"
 		local mirror
 		case "$distro" in
@@ -120,11 +130,38 @@ prepare_chroot() {
 				mirror="http://deb.debian.org/debian"
 				;;
 		esac
-		debootstrap --arch="$target_arch" "$release" "$chroot_dir" "$mirror" >&2
-		if [ $? -ne 0 ]; then
-			echo >&2 "[!] Failed to bootstrap $distro/$release/$target_arch chroot"
-			exit 1
+
+		if [ "$target_arch" != "$HOST_ARCH" ]; then
+			# Foreign arch: debootstrap's second stage execs target-arch
+			# binaries (dpkg, postinsts, ...) to finish unpacking, which only
+			# works once the qemu interpreter is in place inside the chroot.
+			# So do this as two stages: unpack packages (--foreign), drop in
+			# qemu-*-static, then run the second stage via chroot.
+			debootstrap --foreign --arch="$target_arch" "$release" "$chroot_dir" "$mirror" >&2
+			if [ $? -ne 0 ]; then
+				echo >&2 "[!] Failed to bootstrap (stage 1) $distro/$release/$target_arch chroot"
+				exit 1
+			fi
+
+			local qemu_bin
+			qemu_bin=$(qemu_static_name "$target_arch")
+			mkdir -p "$chroot_dir/usr/bin"
+			cp -f "/usr/bin/$qemu_bin" "$chroot_dir/usr/bin/"
+
+			chroot "$chroot_dir" /debootstrap/debootstrap --second-stage >&2
+			if [ $? -ne 0 ]; then
+				echo >&2 "[!] Failed to bootstrap (stage 2) $distro/$release/$target_arch chroot"
+				exit 1
+			fi
+		else
+			debootstrap --arch="$target_arch" "$release" "$chroot_dir" "$mirror" >&2
+			if [ $? -ne 0 ]; then
+				echo >&2 "[!] Failed to bootstrap $distro/$release/$target_arch chroot"
+				exit 1
+			fi
 		fi
+
+		touch "$chroot_dir/.hestiacp-chroot-ready"
 	fi
 
 	if [ "$target_arch" != "$HOST_ARCH" ]; then
@@ -145,7 +182,6 @@ prepare_chroot() {
 	mountpoint -q "$chroot_dir$REPO_DIR" || mount --bind "$REPO_DIR" "$chroot_dir$REPO_DIR"
 
 	ACTIVE_CHROOTS+=("$chroot_dir")
-	echo "$chroot_dir"
 }
 
 run_cross_build() {
@@ -153,8 +189,8 @@ run_cross_build() {
 	local release=$2
 	local target_arch=$3
 	shift 3
-	local chroot_dir
-	chroot_dir=$(prepare_chroot "$distro" "$release" "$target_arch")
+	prepare_chroot "$distro" "$release" "$target_arch"
+	local chroot_dir="$PREPARED_CHROOT_DIR"
 
 	# With --all-os, give this OS its own deb output subdirectory, since
 	# packages for different OS releases can share the same name/version/arch.

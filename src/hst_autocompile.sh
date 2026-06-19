@@ -83,130 +83,6 @@ get_branch_file() {
 	fi
 }
 
-# Cross-arch / multi-OS build support: run a native build for another
-# (distro, release, arch) combination inside a QEMU-emulated chroot on the
-# same host, so that ./configure and make see real (emulated) target
-# binaries instead of needing a fragile --host= cross-compile toolchain.
-CHROOT_BASE_DIR='/var/lib/hestiacp-build-chroot'
-ACTIVE_CHROOTS=()
-
-# Supported OS releases for --all-os, as "distro codename" pairs.
-ALLOS_DISTRO_RELEASES=(
-	"debian bookworm"
-	"debian trixie"
-	"ubuntu jammy"
-	"ubuntu noble"
-	"ubuntu resolute"
-)
-
-qemu_static_name() {
-	case "$1" in
-		arm64) echo "qemu-aarch64-static" ;;
-		amd64) echo "qemu-x86_64-static" ;;
-	esac
-}
-
-cleanup_chroots() {
-	local chroot_dir
-	for chroot_dir in "${ACTIVE_CHROOTS[@]}"; do
-		mountpoint -q "$chroot_dir$SRC_DIR" && umount "$chroot_dir$SRC_DIR"
-		mountpoint -q "$chroot_dir$BUILD_DIR" && umount "$chroot_dir$BUILD_DIR"
-		mountpoint -q "$chroot_dir/dev/pts" && umount "$chroot_dir/dev/pts"
-		mountpoint -q "$chroot_dir/sys" && umount "$chroot_dir/sys"
-		mountpoint -q "$chroot_dir/proc" && umount "$chroot_dir/proc"
-		mountpoint -q "$chroot_dir/dev" && umount "$chroot_dir/dev"
-	done
-}
-trap cleanup_chroots EXIT
-
-# One-time setup of the host tools needed for any chroot build.
-ensure_cross_build_deps() {
-	[ "$CROSS_DEPS_READY" = "true" ] && return
-	echo >&2 "Installing debootstrap/qemu-user-static for cross/multi-OS builds..."
-	apt-get -qq update > /dev/null 2>&1
-	apt-get -qq install -y debootstrap qemu-user-static binfmt-support > /dev/null 2>&1
-	systemctl restart systemd-binfmt > /dev/null 2>&1
-	CROSS_DEPS_READY='true'
-}
-
-prepare_chroot() {
-	local distro=$1
-	local release=$2
-	local target_arch=$3
-	local chroot_dir="$CHROOT_BASE_DIR/$distro-$release-$target_arch"
-
-	ensure_cross_build_deps
-
-	if [ ! -d "$chroot_dir/usr" ]; then
-		echo >&2 "Bootstrapping $distro/$release/$target_arch chroot at $chroot_dir (first run only, this can take a while)..."
-		mkdir -p "$chroot_dir"
-		local mirror
-		case "$distro" in
-			ubuntu)
-				if [ "$target_arch" = "amd64" ]; then
-					mirror="http://archive.ubuntu.com/ubuntu"
-				else
-					mirror="http://ports.ubuntu.com/ubuntu-ports"
-				fi
-				;;
-			*)
-				mirror="http://deb.debian.org/debian"
-				;;
-		esac
-		debootstrap --arch="$target_arch" "$release" "$chroot_dir" "$mirror" >&2
-		if [ $? -ne 0 ]; then
-			echo >&2 "[!] Failed to bootstrap $distro/$release/$target_arch chroot"
-			exit 1
-		fi
-	fi
-
-	if [ "$target_arch" != "$HOST_ARCH" ]; then
-		local qemu_bin
-		qemu_bin=$(qemu_static_name "$target_arch")
-		mkdir -p "$chroot_dir/usr/bin"
-		cp -f "/usr/bin/$qemu_bin" "$chroot_dir/usr/bin/"
-	fi
-
-	mkdir -p "$chroot_dir/dev" "$chroot_dir/proc" "$chroot_dir/sys" "$chroot_dir/dev/pts"
-	mountpoint -q "$chroot_dir/dev" || mount --bind /dev "$chroot_dir/dev"
-	mountpoint -q "$chroot_dir/dev/pts" || mount --bind /dev/pts "$chroot_dir/dev/pts"
-	mountpoint -q "$chroot_dir/proc" || mount --bind /proc "$chroot_dir/proc"
-	mountpoint -q "$chroot_dir/sys" || mount --bind /sys "$chroot_dir/sys"
-
-	mkdir -p "$chroot_dir$BUILD_DIR" "$chroot_dir$SRC_DIR"
-	mountpoint -q "$chroot_dir$BUILD_DIR" || mount --bind "$BUILD_DIR" "$chroot_dir$BUILD_DIR"
-	mountpoint -q "$chroot_dir$SRC_DIR" || mount --bind "$SRC_DIR" "$chroot_dir$SRC_DIR"
-
-	ACTIVE_CHROOTS+=("$chroot_dir")
-	echo "$chroot_dir"
-}
-
-run_cross_build() {
-	local distro=$1
-	local release=$2
-	local target_arch=$3
-	shift 3
-	local chroot_dir
-	chroot_dir=$(prepare_chroot "$distro" "$release" "$target_arch")
-
-	# With --all-os, give this OS its own deb output subdirectory (see the
-	# matching override above) so its packages don't collide with another
-	# OS release's package of the same name/version/arch.
-	local deb_dir_export=""
-	if [ "$ALL_OS" = "true" ]; then
-		local target_deb_dir="$BUILD_DIR/deb/$release"
-		mkdir -p "$target_deb_dir"
-		deb_dir_export="export DEB_DIR='$target_deb_dir'; "
-	fi
-
-	echo "Cross-building $distro/$release/$target_arch inside $chroot_dir..."
-	chroot "$chroot_dir" /bin/bash -c "${deb_dir_export}cd '$SRC_DIR/src' && DEBIAN_FRONTEND=noninteractive ./hst_autocompile.sh $* --noinstall --keepbuild"
-	if [ $? -ne 0 ]; then
-		echo >&2 "[!] Cross build for $distro/$release/$target_arch failed"
-		exit 1
-	fi
-}
-
 usage() {
 	echo "Usage:"
 	echo "    $0 (--all|--hestia|--nginx|--php|--web-terminal) [options] [branch] [Y]"
@@ -219,12 +95,7 @@ usage() {
 	echo "  Options:"
 	echo "    --install       Install generated packages"
 	echo "    --keepbuild     Don't delete downloaded source and build folders"
-	echo "    --cross         Also build for the other architecture (AMD64<->ARM64),"
-	echo "                    using a QEMU-emulated chroot for the other arch."
-	echo "    --all-os        Build for every supported OS release (Debian 12/13,"
-	echo "                    Ubuntu 22.04/24.04/26.04) and both architectures, using a"
-	echo "                    QEMU-emulated chroot for every combination other than"
-	echo "                    the host's own. Implies --cross."
+	echo "    --cross         Compile hestia package for both AMD64 and ARM64"
 	echo "    --debug         Debug mode"
 	echo ""
 	echo "For automated builds and installations, you may specify the branch"
@@ -234,6 +105,10 @@ usage() {
 	echo "Example: bash hst_autocompile.sh --hestia develop Y"
 	echo "This would install a Hestia Control Panel package compiled with the"
 	echo "develop branch code."
+	echo ""
+	echo "To cross-build hestia-nginx/hestia-php/hestia-web-terminal for the other"
+	echo "architecture, or for other OS releases, on the same machine, use"
+	echo "./chroot_build_all.sh instead."
 }
 
 # Set compiling directory
@@ -248,10 +123,6 @@ if [ $architecture == 'aarch64' ]; then
 else
 	BUILD_ARCH='amd64'
 fi
-
-# BUILD_ARCH gets reassigned by the hestia build loop below, so keep the
-# host's actual architecture around for the cross-build step at the end.
-HOST_ARCH="$BUILD_ARCH"
 
 DEB_DIR="${DEB_DIR:-$BUILD_DIR/deb}"
 
@@ -290,9 +161,6 @@ for i in $*; do
 			;;
 		--cross)
 			CROSS='true'
-			;;
-		--all-os)
-			ALL_OS='true'
 			;;
 		--help | -h)
 			usage
@@ -405,14 +273,6 @@ if [ "$dontinstalldeps" != 'true' ]; then
 			ln -s /usr/include/x86_64-linux-gnu/curl /usr/local/include/curl
 		fi
 	fi
-fi
-
-# With --all-os, packages for different OS releases can share the same
-# name/version/arch, so each OS gets its own deb output subdirectory to
-# avoid one release's package overwriting another's.
-if [ "$ALL_OS" = "true" ]; then
-	DEB_DIR="$BUILD_DIR/deb/$(lsb_release -is | tr '[:upper:]' '[:lower:]')-$(lsb_release -sc)"
-	mkdir -p "$DEB_DIR"
 fi
 
 # Get system cpu cores
@@ -826,74 +686,6 @@ if [ "$HESTIA_B" = true ]; then
 			rm -rf hestiacp-$branch_dash
 		fi
 		cd $BUILD_DIR/hestiacp-$branch_dash
-	done
-fi
-
-#################################################################################
-#
-# Cross-architecture / multi-OS build via QEMU chroot
-#
-#################################################################################
-
-PKG_FLAGS=""
-NEEDS_CHROOT_BUILD='false'
-# hestia has no native code, so the per-arch loop above already builds it
-# for both architectures on plain --cross; only re-build it per-OS here
-# when --all-os is actually walking the full OS matrix.
-if [ "$HESTIA_B" = "true" ] && [ "$ALL_OS" = "true" ]; then
-	PKG_FLAGS="$PKG_FLAGS --hestia"
-	NEEDS_CHROOT_BUILD='true'
-fi
-if [ "$NGINX_B" = "true" ]; then
-	PKG_FLAGS="$PKG_FLAGS --nginx"
-	NEEDS_CHROOT_BUILD='true'
-fi
-if [ "$PHP_B" = "true" ]; then
-	PKG_FLAGS="$PKG_FLAGS --php"
-	NEEDS_CHROOT_BUILD='true'
-fi
-if [ "$WEB_TERMINAL_B" = "true" ]; then
-	PKG_FLAGS="$PKG_FLAGS --web-terminal"
-	NEEDS_CHROOT_BUILD='true'
-fi
-[ "$HESTIA_DEBUG" = "true" ] && PKG_FLAGS="$PKG_FLAGS --debug"
-
-if { [ "$ALL_OS" = "true" ] || [ "$CROSS" = "true" ]; } && [ "$NEEDS_CHROOT_BUILD" = "true" ]; then
-	if [ "$use_src_folder" = "true" ]; then
-		PKG_BRANCH="~$branch"
-	else
-		PKG_BRANCH="$branch"
-	fi
-
-	HOST_DISTRO=$(lsb_release -is | tr '[:upper:]' '[:lower:]')
-	HOST_RELEASE=$(lsb_release -sc)
-
-	TARGET_COMBOS=()
-	if [ "$ALL_OS" = "true" ]; then
-		for dr in "${ALLOS_DISTRO_RELEASES[@]}"; do
-			distro="${dr%% *}"
-			release="${dr#* }"
-			for a in amd64 arm64; do
-				if [ "$distro" = "$HOST_DISTRO" ] && [ "$release" = "$HOST_RELEASE" ] && [ "$a" = "$HOST_ARCH" ]; then
-					continue
-				fi
-				TARGET_COMBOS+=("$distro:$release:$a")
-			done
-		done
-	else
-		if [ "$HOST_ARCH" = "amd64" ]; then
-			TARGET_COMBOS=("$HOST_DISTRO:$HOST_RELEASE:arm64")
-		else
-			TARGET_COMBOS=("$HOST_DISTRO:$HOST_RELEASE:amd64")
-		fi
-	fi
-
-	for combo in "${TARGET_COMBOS[@]}"; do
-		distro="${combo%%:*}"
-		rest="${combo#*:}"
-		release="${rest%%:*}"
-		target_arch="${rest#*:}"
-		run_cross_build "$distro" "$release" "$target_arch" $PKG_FLAGS "$PKG_BRANCH"
 	done
 fi
 

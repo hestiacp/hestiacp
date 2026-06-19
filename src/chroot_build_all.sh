@@ -243,9 +243,10 @@ run_cross_build() {
 
 	# With --all-os, give this OS its own deb output subdirectory, since
 	# packages for different OS releases can share the same name/version/arch.
+	# Release codenames are unique across distros, so $release alone is enough.
 	local deb_dir_export=""
 	if [ "$ALL_OS" = "true" ]; then
-		local target_deb_dir="$BUILD_DIR/deb/$distro-$release"
+		local target_deb_dir="$BUILD_DIR/deb/$release"
 		mkdir -p "$target_deb_dir"
 		deb_dir_export="export DEB_DIR='$target_deb_dir'; "
 	fi
@@ -320,6 +321,18 @@ if [ -z "$branch" ]; then
 	read -r branch
 fi
 
+HOST_DISTRO=$(lsb_release -is | tr '[:upper:]' '[:lower:]')
+HOST_RELEASE=$(lsb_release -sc)
+
+# With --all-os, give every OS release its own deb output subdirectory
+# (release codenames don't collide across distros), including the host's
+# own, since packages can share the same name/version/arch across releases.
+NATIVE_DEB_DIR=""
+if [ "$ALL_OS" = "true" ]; then
+	NATIVE_DEB_DIR="$BUILD_DIR/deb/$HOST_RELEASE"
+	mkdir -p "$NATIVE_DEB_DIR"
+fi
+
 # Build for the host's own OS/release/architecture directly, no chroot needed.
 NATIVE_FLAGS=""
 [ "$HESTIA_B" = "true" ] && NATIVE_FLAGS="$NATIVE_FLAGS --hestia"
@@ -339,7 +352,11 @@ else
 	NATIVE_FLAGS="$NATIVE_FLAGS --noinstall"
 fi
 
-"$__DIR__/hst_autocompile.sh" $NATIVE_FLAGS "$branch"
+if [ -n "$NATIVE_DEB_DIR" ]; then
+	DEB_DIR="$NATIVE_DEB_DIR" "$__DIR__/hst_autocompile.sh" $NATIVE_FLAGS "$branch"
+else
+	"$__DIR__/hst_autocompile.sh" $NATIVE_FLAGS "$branch"
+fi
 if [ $? -ne 0 ]; then
 	echo >&2 "[!] Native build for the host's own OS/arch failed"
 	exit 1
@@ -367,9 +384,6 @@ fi
 [ "$HESTIA_DEBUG" = "true" ] && PKG_FLAGS="$PKG_FLAGS --debug"
 
 if [ "$NEEDS_CHROOT_BUILD" = "true" ]; then
-	HOST_DISTRO=$(lsb_release -is | tr '[:upper:]' '[:lower:]')
-	HOST_RELEASE=$(lsb_release -sc)
-
 	TARGET_COMBOS=()
 	if [ "$ALL_OS" = "true" ]; then
 		for dr in "${ALLOS_DISTRO_RELEASES[@]}"; do

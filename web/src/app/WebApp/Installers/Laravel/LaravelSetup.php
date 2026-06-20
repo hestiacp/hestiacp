@@ -62,5 +62,8 @@ class LaravelSetup extends BaseSetup {
             "migrate",
             "--force",
         ]);
+
+        // Delete the default SQLite database
+        $this->appcontext->deleteFile($target->getDocRoot("database/database.sqlite"));
     }
 }

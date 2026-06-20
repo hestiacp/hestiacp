@@ -42,24 +42,12 @@ class LaravelSetup extends BaseSetup {
         $envPath = $target->getDocRoot(".env");
         $env = $this->appcontext->readFile($envPath);
 
-        $env = preg_replace("/^DB_CONNECTION=.*/m", "DB_CONNECTION=mysql", $env);
-        $env = preg_replace("/^#?\s*DB_HOST=.*/m", "DB_HOST=" . $target->database->host, $env);
-        $env = preg_replace("/^#?\s*DB_PORT=.*/m", "DB_PORT=3306", $env);
-        $env = preg_replace(
-            "/^#?\s*DB_DATABASE=.*/m",
-            "DB_DATABASE=" . $target->database->name,
-            $env,
-        );
-        $env = preg_replace(
-            "/^#?\s*DB_USERNAME=.*/m",
-            "DB_USERNAME=" . $target->database->user,
-            $env,
-        );
-        $env = preg_replace(
-            "/^#?\s*DB_PASSWORD=.*/m",
-            "DB_PASSWORD=" . $target->database->password,
-            $env,
-        );
+        $env = str_replace("DB_CONNECTION=sqlite", "DB_CONNECTION=mysql", $env);
+        $env = str_replace("# DB_HOST=127.0.0.1", "DB_HOST=" . $target->database->host, $env);
+        $env = str_replace("# DB_PORT=3306", "DB_PORT=3306", $env);
+        $env = str_replace("# DB_DATABASE=laravel", "DB_DATABASE=" . $target->database->name, $env);
+        $env = str_replace("# DB_USERNAME=root", "DB_USERNAME=" . $target->database->user, $env);
+        $env = str_replace("# DB_PASSWORD=", "DB_PASSWORD=" . $target->database->password, $env);
 
         $this->appcontext->createFile($envPath, $env);
 

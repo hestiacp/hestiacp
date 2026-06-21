@@ -24,10 +24,11 @@ BUILD_DIR="${BUILD_DIR:-/tmp/hestiacp-src}"
 CHROOT_BASE_DIR='/var/lib/hestiacp-build-chroot'
 ACTIVE_CHROOTS=()
 
+# 	"debian bookworm"
+#	"debian trixie"
 # Supported OS releases for --all-os, as "distro codename" pairs.
 ALLOS_DISTRO_RELEASES=(
-	"debian bookworm"
-	"debian trixie"
+
 	"ubuntu jammy"
 	"ubuntu noble"
 	"ubuntu resolute"
@@ -68,7 +69,7 @@ usage() {
 
 qemu_static_name() {
 	case "$1" in
-		//arm64) echo "qemu-aarch64-static" ;;
+		arm64) echo "qemu-aarch64-static" ;;
 		amd64) echo "qemu-x86_64-static" ;;
 	esac
 }
@@ -226,8 +227,15 @@ prepare_chroot() {
 	mountpoint -q "$chroot_dir/proc" || mount --bind /proc "$chroot_dir/proc"
 	mountpoint -q "$chroot_dir/sys" || mount --bind /sys "$chroot_dir/sys"
 
-	mkdir -p "$chroot_dir$BUILD_DIR" "$chroot_dir$REPO_DIR"
-	mountpoint -q "$chroot_dir$BUILD_DIR" || mount --bind "$BUILD_DIR" "$chroot_dir$BUILD_DIR"
+	# Each combo gets its own host-side build directory bind-mounted onto the
+	# same in-chroot path ($BUILD_DIR, e.g. /tmp/hestiacp-src). They must NOT
+	# share one physical directory: with --keepbuild forced on every chroot
+	# leg, a later combo would otherwise reuse an earlier combo's configured
+	# source tree (e.g. PHP's) as-is, including its already-built, wrong-
+	# arch/OS binaries that the build process then tries to execute itself.
+	local host_build_dir="${BUILD_DIR}-${distro}-${release}-${target_arch}"
+	mkdir -p "$host_build_dir" "$chroot_dir$BUILD_DIR" "$chroot_dir$REPO_DIR"
+	mountpoint -q "$chroot_dir$BUILD_DIR" || mount --bind "$host_build_dir" "$chroot_dir$BUILD_DIR"
 	mountpoint -q "$chroot_dir$REPO_DIR" || mount --bind "$REPO_DIR" "$chroot_dir$REPO_DIR"
 
 	# debootstrap doesn't populate a resolver config, so without this DNS
@@ -250,15 +258,17 @@ run_cross_build() {
 	prepare_chroot "$distro" "$release" "$target_arch"
 	local chroot_dir="$PREPARED_CHROOT_DIR"
 
-	# With --all-os, give this OS its own deb output subdirectory, since
-	# packages for different OS releases can share the same name/version/arch.
-	# Release codenames are unique across distros, so $release alone is enough.
-	local deb_dir_export=""
-	if [ "$ALL_OS" = "true" ]; then
-		local target_deb_dir="$BUILD_DIR/deb/$release"
-		mkdir -p "$target_deb_dir"
-		deb_dir_export="export DEB_DIR='$target_deb_dir'; "
-	fi
+	# This combo's build artifacts live under their own host_build_dir (see
+	# prepare_chroot), not the shared $BUILD_DIR — so DEB_DIR must always be
+	# pointed back at the shared location explicitly, or it'd default to
+	# host_build_dir/deb instead. With --all-os, give each OS release its own
+	# subdirectory there too, since packages can share the same
+	# name/version/arch across releases (codenames are unique across distros,
+	# so $release alone is enough, no need for a distro prefix).
+	local target_deb_dir="$BUILD_DIR/deb"
+	[ "$ALL_OS" = "true" ] && target_deb_dir="$target_deb_dir/$release"
+	mkdir -p "$target_deb_dir"
+	local deb_dir_export="export DEB_DIR='$target_deb_dir'; "
 
 	echo "Cross-building $distro/$release/$target_arch inside $chroot_dir..."
 	chroot "$chroot_dir" /bin/bash -c "${deb_dir_export}cd '$REPO_DIR/src' && DEBIAN_FRONTEND=noninteractive ./hst_autocompile.sh $* --noinstall --keepbuild"

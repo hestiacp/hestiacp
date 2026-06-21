@@ -244,9 +244,9 @@ if [ "$dontinstalldeps" != 'true' ]; then
 	# Set package dependencies for compiling
 	SOFTWARE='wget tar git curl ca-certificates build-essential libxml2-dev libz-dev libzip-dev libgmp-dev libcurl4-gnutls-dev unzip openssl libssl-dev pkg-config libsqlite3-dev libonig-dev rpm lsb-release'
 	echo "Updating system APT repositories..."
-	apt-get -qq update > /dev/null 2>&1
+	apt-get -qq update
 	echo "Installing dependencies for compilation..."
-	apt-get -qq install -y $SOFTWARE > /dev/null 2>&1
+	apt-get -qq install -y $SOFTWARE
 
 	# In a minimal/freshly-debootstrapped chroot, dpkg trigger processing
 	# (which normally re-runs ldconfig after installing shared libs) can be
@@ -265,7 +265,7 @@ if [ "$dontinstalldeps" != 'true' ]; then
 
 	echo "Installing Node.js..."
 	apt-get -qq update > /dev/null
-	apt-get -qq install -y nodejs > /dev/null 2>&1
+	apt-get -qq install -y nodejs
 
 	# NodeSource's nodejs package bundles npm, but Debian/Ubuntu's own nodejs
 	# package doesn't (used if the NodeSource repo above failed to register,
@@ -274,7 +274,7 @@ if [ "$dontinstalldeps" != 'true' ]; then
 	# nodejs in one apt-get call conflicts with NodeSource's bundled npm and
 	# fails the whole install.
 	if [ -z "$(which "npm")" ]; then
-		apt-get -qq install -y npm > /dev/null 2>&1
+		apt-get -qq install -y npm
 	fi
 
 	if [ -z "$(which "node")" ] || [ -z "$(which "npm")" ]; then

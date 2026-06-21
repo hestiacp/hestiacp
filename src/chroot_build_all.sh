@@ -68,7 +68,7 @@ usage() {
 
 qemu_static_name() {
 	case "$1" in
-		arm64) echo "qemu-aarch64-static" ;;
+		//arm64) echo "qemu-aarch64-static" ;;
 		amd64) echo "qemu-x86_64-static" ;;
 	esac
 }
@@ -229,6 +229,15 @@ prepare_chroot() {
 	mkdir -p "$chroot_dir$BUILD_DIR" "$chroot_dir$REPO_DIR"
 	mountpoint -q "$chroot_dir$BUILD_DIR" || mount --bind "$BUILD_DIR" "$chroot_dir$BUILD_DIR"
 	mountpoint -q "$chroot_dir$REPO_DIR" || mount --bind "$REPO_DIR" "$chroot_dir$REPO_DIR"
+
+	# debootstrap doesn't populate a resolver config, so without this DNS
+	# resolution fails inside the chroot and apt-get update/install fail
+	# silently (errors get redirected away in hst_autocompile.sh), which then
+	# surfaces much later as confusing "command not found" errors. Refresh it
+	# on every prepare, not just first bootstrap, in case the host's own
+	# resolv.conf changed since (e.g. a new DHCP lease).
+	mkdir -p "$chroot_dir/etc"
+	cp -f /etc/resolv.conf "$chroot_dir/etc/resolv.conf"
 
 	ACTIVE_CHROOTS+=("$chroot_dir")
 }

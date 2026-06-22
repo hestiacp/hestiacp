@@ -278,6 +278,16 @@ run_cross_build() {
 	mkdir -p "$target_deb_dir"
 	local deb_dir_export="export DEB_DIR='$target_deb_dir'; "
 
+	# /proc is bind-mounted from the host (see prepare_chroot), so
+	# hst_autocompile.sh's own cpu-core detection would see the host's full
+	# core count. Under QEMU user-mode emulation each cc1 process uses far
+	# more memory than native, so building with that many parallel jobs
+	# reliably triggers the OOM killer ("Killed signal terminated program
+	# cc1"). Force single-job compiles for foreign-arch (emulated) builds.
+	if [ "$target_arch" != "$HOST_ARCH" ]; then
+		deb_dir_export="${deb_dir_export}export NUM_CPUS=1; "
+	fi
+
 	echo "Cross-building $distro/$release/$target_arch inside $chroot_dir..."
 	chroot "$chroot_dir" /bin/bash -c "${deb_dir_export}cd '$REPO_DIR/src' && DEBIAN_FRONTEND=noninteractive ./hst_autocompile.sh $* --noinstall --keepbuild"
 	if [ $? -ne 0 ]; then

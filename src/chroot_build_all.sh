@@ -168,6 +168,7 @@ prepare_chroot() {
 		rm -rf "$chroot_dir"
 		mkdir -p "$chroot_dir"
 		local mirror
+		local components_opt=""
 		case "$distro" in
 			ubuntu)
 				if [ "$target_arch" = "amd64" ]; then
@@ -175,6 +176,13 @@ prepare_chroot() {
 				else
 					mirror="http://ports.ubuntu.com/ubuntu-ports"
 				fi
+				# Unlike Debian, Ubuntu splits a lot of common -dev packages
+				# (e.g. libzip-dev) out of "main" into "universe". debootstrap
+				# only enables "main" by default, both for what it can pull
+				# during bootstrap and for the sources.list it writes out —
+				# so without this, later apt-get installs for those packages
+				# fail with "Unable to locate package".
+				components_opt="--components=main,universe,restricted,multiverse"
 				;;
 			*)
 				mirror="http://deb.debian.org/debian"
@@ -187,7 +195,7 @@ prepare_chroot() {
 			# works once the qemu interpreter is in place inside the chroot.
 			# So do this as two stages: unpack packages (--foreign), drop in
 			# qemu-*-static, then run the second stage via chroot.
-			debootstrap --foreign --arch="$target_arch" "$release" "$chroot_dir" "$mirror" >&2
+			debootstrap --foreign $components_opt --arch="$target_arch" "$release" "$chroot_dir" "$mirror" >&2
 			if [ $? -ne 0 ]; then
 				echo >&2 "[!] Failed to bootstrap (stage 1) $distro/$release/$target_arch chroot"
 				exit 1
@@ -204,7 +212,7 @@ prepare_chroot() {
 				exit 1
 			fi
 		else
-			debootstrap --arch="$target_arch" "$release" "$chroot_dir" "$mirror" >&2
+			debootstrap $components_opt --arch="$target_arch" "$release" "$chroot_dir" "$mirror" >&2
 			if [ $? -ne 0 ]; then
 				echo >&2 "[!] Failed to bootstrap $distro/$release/$target_arch chroot"
 				exit 1

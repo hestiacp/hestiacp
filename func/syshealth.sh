@@ -52,7 +52,7 @@ function syshealth_update_web_config_format() {
 	# WEB DOMAINS
 	# Create array of known keys in configuration file
 	system="web"
-	known_keys="DOMAIN IP IP6 CUSTOM_DOCROOT CUSTOM_PHPROOT FASTCGI_CACHE FASTCGI_DURATION ALIAS TPL SSL SSL_FORCE SSL_HSTS SSL_HOME LETSENCRYPT FTP_USER FTP_MD5 FTP_PATH BACKEND PROXY PROXY_EXT STATS STATS_USER STATS_CRYPT REDIRECT REDIRECT_CODE AUTH_USER AUTH_HASH SUSPENDED TIME DATE"
+	known_keys="DOMAIN IP IP6 CUSTOM_DOCROOT CUSTOM_PHPROOT FASTCGI_CACHE FASTCGI_DURATION ALIAS TPL SSL SSL_FORCE SSL_HSTS SSL_HOME LETSENCRYPT ACTALIS FTP_USER FTP_MD5 FTP_PATH BACKEND PROXY PROXY_EXT STATS STATS_USER STATS_CRYPT REDIRECT REDIRECT_CODE AUTH_USER AUTH_HASH SUSPENDED TIME DATE"
 	write_kv_config_file
 	unset system
 	unset known_keys
@@ -83,7 +83,7 @@ function syshealth_update_mail_config_format() {
 	# MAIL DOMAINS
 	# Create array of known keys in configuration file
 	system="mail"
-	known_keys="DOMAIN ANTIVIRUS ANTISPAM DKIM WEBMAIL SSL LETSENCRYPT CATCHALL ACCOUNTS RATE_LIMIT REJECT U_DISK SUSPENDED TIME DATE"
+	known_keys="DOMAIN ANTIVIRUS ANTISPAM DKIM WEBMAIL SSL LETSENCRYPT ACTALIS CATCHALL ACCOUNTS RATE_LIMIT REJECT U_DISK SUSPENDED TIME DATE"
 	write_kv_config_file
 	unset system
 	unset known_keys
@@ -593,6 +593,7 @@ function syshealth_repair_system_cronjobs() {
 	echo "20 00 * * * sudo /usr/local/hestia/bin/v-update-user-stats" >> /var/spool/cron/crontabs/hestiaweb
 	echo "*/5 * * * * sudo /usr/local/hestia/bin/v-update-sys-rrd" >> /var/spool/cron/crontabs/hestiaweb
 	echo "$min $hour * * * sudo /usr/local/hestia/bin/v-update-letsencrypt-ssl" >> /var/spool/cron/crontabs/hestiaweb
+	echo "$min $hour * * * sudo /usr/local/hestia/bin/v-update-actalis-ssl" >> /var/spool/cron/crontabs/hestiaweb
 	echo "41 4 * * * sudo /usr/local/hestia/bin/v-update-sys-hestia-all" >> /var/spool/cron/crontabs/hestiaweb
 }
 

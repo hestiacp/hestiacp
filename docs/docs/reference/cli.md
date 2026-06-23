@@ -27,6 +27,50 @@ v-add-access-key admin v-purge-nginx-cache,v-list-mail-accounts comment json
 The "PERMISSIONS" argument is optional for the admin user only.
 This function creates a key file in $HESTIA/data/access-keys/
 
+## v-add-actalis-domain
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-actalis-domain)
+
+check actalis domain
+
+**Options**: `USER` `DOMAIN` `[ALIASES]` `[MAIL]`
+
+**Examples**:
+
+```bash
+v-add-actalis-domain admin wonderland.com www.wonderland.com,demo.wonderland.com
+example: v-add-actalis-domain admin wonderland.com '' yes
+```
+
+This function check and validates domain with Actalis
+
+## v-add-actalis-host
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-actalis-host)
+
+add actalis for host and backend
+
+**Options**: –
+
+This function check and validates the backend certificate and generate
+a new actalis certificate.
+
+## v-add-actalis-user
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-actalis-user)
+
+register actalis user account
+
+**Options**: `USER`
+
+**Examples**:
+
+```bash
+v-add-actalis-user bob
+```
+
+This function creates and register Actalis account
+
 ## v-add-backup-host
 
 [Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-backup-host)
@@ -60,6 +104,16 @@ v-add-backup-host b2 bucketName keyID applicationKey
 ```
 
 Add a new remote backup location. Currently SFTP, FTP and Backblaze are supported
+
+## v-add-cron-actalis-job
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-cron-actalis-job)
+
+add cron job for Actalis certificates
+
+**Options**: –
+
+This function adds a new cron job for Actalis.
 
 ## v-add-cron-hestia-autoupdate
 
@@ -2652,6 +2706,22 @@ v-delete-access-key mykey
 
 This function removes a key from in $HESTIA/data/access-keys/
 
+## v-delete-actalis-domain
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-actalis-domain)
+
+deleting actalis ssl cetificate for domain
+
+**Options**: `USER` `DOMAIN` `[RESTART]` `[MAIL]`
+
+**Examples**:
+
+```bash
+v-delete-actalis-domain admin acme.com yes
+```
+
+This function turns off actalis SSL support for a domain.
+
 ## v-delete-backup-host
 
 [Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-backup-host)
@@ -4276,6 +4346,22 @@ list all API access keys
 ```bash
 v-list-access-keys json
 ```
+
+## v-list-actalis-user
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-actalis-user)
+
+list actalis key
+
+**Options**: `USER` `[FORMAT]`
+
+**Examples**:
+
+```bash
+v-list-actalis-user admin
+```
+
+This function for obtaining the actalis key thumbprint
 
 ## v-list-api
 
@@ -6245,6 +6331,22 @@ v-run-cli-cmd user composer require package
 
 This function runs a limited list of cli commands with dropped privileges as the specific hestia user
 
+## v-schedule-actalis-domain
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-schedule-actalis-domain)
+
+adding cronjob for actalis cetificate installation
+
+**Options**: `USER` `DOMAIN` `[ALIASES]`
+
+**Examples**:
+
+```bash
+v-schedule-actalis-domain admin example.com www.example.com
+```
+
+This function adds cronjob for actalis ssl certificate installation
+
 ## v-schedule-letsencrypt-domain
 
 [Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-schedule-letsencrypt-domain)
@@ -7047,6 +7149,26 @@ v-unsuspend-web-domains admin
 ```
 
 This function of unsuspending all user's sites.
+
+## v-update-actalis-eab
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-actalis-eab)
+
+update actalis eab
+
+**Options**: `USER` `EAB_KID` `EAB_HMAC`
+
+This function updates the Actalis External Account Binding (EAB) credentials used for ACME account registration.
+
+## v-update-actalis-ssl
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-update-actalis-ssl)
+
+update actalis ssl certificates
+
+**Options**: –
+
+This function for renew actalis expired ssl certificate for all users
 
 ## v-update-database-disk
 

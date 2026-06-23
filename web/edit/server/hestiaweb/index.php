@@ -7,13 +7,14 @@ $TAB = "SERVER";
 include $_SERVER["DOCUMENT_ROOT"] . "/inc/main.php";
 
 // Check user
-if ($_SESSION["userContext"] !== "admin" && $user_plain === "$ROOT_USER") {
+if ($_SESSION["userContext"] != "admin") {
 	header("Location: /list/user");
 	exit();
 }
 
 // Check POST request
 if (!empty($_POST["save"])) {
+	verify_csrf($_POST);
 	if (!empty($_POST["v_config"])) {
 		$fp = tmpfile();
 		$new_conf = stream_get_meta_data($fp)["uri"];

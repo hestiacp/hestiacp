@@ -1957,6 +1957,13 @@ if [ "$named" = 'yes' ]; then
 	if [ ! -f /etc/bind/named.conf.default-zones ]; then
 		sed -i "/^include.*named.conf.default-zones/d" /etc/bind/named.conf
 	fi
+
+	# Add root-hints include after named.conf.local if missing
+	if [[ -f /etc/bind/named.conf.root-hints ]] \
+		&& ! grep -q 'include.*named.conf.root-hints' /etc/bind/named.conf 2> /dev/null; then
+		sed -i '/include.*named\.conf\.local/a include "\/etc\/bind\/named.conf.root-hints";' /etc/bind/named.conf
+	fi
+
 	update-rc.d bind9 defaults > /dev/null 2>&1
 	systemctl start bind9
 	check_result $? "bind9 start failed"

@@ -129,8 +129,17 @@ $cfg["Servers"][$i]["port"] = "3306";
 $cfg["Servers"][$i]["pmadb"] = "phpmyadmin";
 $cfg["Servers"][$i]["controluser"] = "pma";
 $cfg["Servers"][$i]["controlpass"] = "random password";
-$cfg["Servers"][$i]["bookmarktable"] = "pma__bookmark";
 ```
+*(Replace `localhost` with the actual IP or hostname of your database server)*
+
+If your remote database server uses SSL, you also need to add the following lines to the phpMyAdmin configuration:
+
+```php
+$cfg['Servers'][$i]['ssl'] = true;
+$cfg['Servers'][$i]['ssl_ca'] = '/usr/local/hestia/ssl/db/localhost.crt';
+$cfg['Servers'][$i]['ssl_verify'] = false;
+```
+*(Replace `localhost` with the actual IP or hostname of your database server)*
 
 Please make sure to create aswell the phpmyadmin user and database.
 

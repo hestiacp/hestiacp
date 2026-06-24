@@ -9,7 +9,7 @@ use Hestia\WebApp\InstallationTarget\InstallationTarget;
 
 class ThirtyBeesSetup extends BaseSetup {
     protected array $info = [
-        "name" => "Thirty Bees",
+        "name" => "ThirtyBees",
         "group" => "ecommerce",
         "version" => "1.6.0",
         "thumbnail" => "thirtybees-thumb.png",

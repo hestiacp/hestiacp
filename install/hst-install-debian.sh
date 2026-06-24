@@ -2291,6 +2291,9 @@ fi
 
 echo "[ * ] Configuring File Manager..."
 $HESTIA/bin/v-add-sys-filemanager quiet
+if [[ $release -ge 13 ]]; then
+	echo 'KexAlgorithms +diffie-hellman-group-exchange-sha256' > /etc/ssh/sshd_config.d/hestia-kex.conf
+fi
 
 #----------------------------------------------------------#
 #                  Configure dependencies                  #

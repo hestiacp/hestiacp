@@ -143,6 +143,7 @@ if (!empty($_POST["ok"])) {
 			$sso_admin_link .=
 				"hestia-sso.php?" .
 				http_build_query([
+					"host" => $_POST["v_host"],
 					"database" => $db_fullname,
 					"user" => $user_plain,
 					"exp" => $time,

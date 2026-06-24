@@ -365,14 +365,14 @@ add_mysql_database_temp_user() {
 	mysql_ver_sub_sub=$(echo $mysql_ver | cut -d '.' -f2)
 
 	if [ "$mysql_fork" = "mysql" ] && [ "$mysql_ver_sub" -ge 8 ]; then
-		query="CREATE USER \`$dbuser\`@localhost
+		query="CREATE USER \`$dbuser\`@\`%\`
 			IDENTIFIED BY '$dbpass'"
 		mysql_query "$query" > /dev/null
 
-		query="GRANT ALL ON \`$database\`.* TO \`$dbuser\`@localhost"
+		query="GRANT ALL ON \`$database\`.* TO \`$dbuser\`@\`%\`"
 		mysql_query "$query" > /dev/null
 	else
-		query="GRANT ALL ON \`$database\`.* TO \`$dbuser\`@localhost
+		query="GRANT ALL ON \`$database\`.* TO \`$dbuser\`@\`%\`
     		IDENTIFIED BY '$dbpass'"
 		mysql_query "$query" > /dev/null
 	fi
@@ -380,9 +380,9 @@ add_mysql_database_temp_user() {
 
 delete_mysql_database_temp_user() {
 	mysql_connect $host
-	query="REVOKE ALL ON \`$database\`.* FROM \`$dbuser\`@localhost"
+	query="REVOKE ALL ON \`$database\`.* FROM \`$dbuser\`@\`%\`"
 	mysql_query "$query" > /dev/null
-	query="DROP USER '$dbuser'@'localhost'"
+	query="DROP USER '$dbuser'@'%'"
 	mysql_query "$query" > /dev/null
 }
 

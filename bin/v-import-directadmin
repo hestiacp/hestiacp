@@ -43,7 +43,7 @@ fi
 if [ -z "$BACKUP_TEMP" ]; then
 	BACKUP_TEMP=$BACKUP
 else
-	echo "File does not exists"
+	echo "File does not exist"
 	exit 1
 fi
 

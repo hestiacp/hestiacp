@@ -1,32 +1,39 @@
 <?php
 
+use function Hestiacp\quoteshellarg\quoteshellarg;
 $TAB = "SERVER";
 
 // Main include
 include $_SERVER["DOCUMENT_ROOT"] . "/inc/main.php";
 
 // Check user
-if ($_SESSION["userContext"] !== "admin" && $user_plain === "$ROOT_USER") {
+if ($_SESSION["userContext"] != "admin") {
 	header("Location: /list/user");
 	exit();
 }
 
 // Check POST request
 if (!empty($_POST["save"])) {
+	verify_csrf($_POST);
 	if (!empty($_POST["v_config"])) {
-		exec("mktemp", $mktemp_output, $return_var);
-		$new_conf = $mktemp_output[0];
-		$fp = fopen($new_conf, "w");
-		fwrite($fp, str_replace("\r\n", "\n", $_POST["v_config"]));
-		fclose($fp);
+		$fp = tmpfile();
+		$new_conf = stream_get_meta_data($fp)["uri"];
+		$config = str_replace("\r\n", "\n", $_POST["v_config"]);
+		if (!str_ends_with($config, "\n")) {
+			$config .= "\n";
+		}
+		fwrite($fp, $config);
 		exec(
-			HESTIA_CMD . "v-change-sys-service-config " . $new_conf . " hestiaweb yes",
+			HESTIA_CMD .
+				"v-change-sys-service-config " .
+				quoteshellarg($new_conf) .
+				" hestiaweb yes",
 			$output,
 			$return_var,
 		);
 		check_return_code($return_var, $output);
 		unset($output);
-		unlink($new_conf);
+		fclose($fp);
 	}
 }
 

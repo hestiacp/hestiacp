@@ -131,6 +131,15 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
 	echo "\$cfg['Servers'][\$i]['pdf_pages'] = 'pma__pdf_pages';" >> $pmapath
 	echo "\$cfg['Servers'][\$i]['designer_coords'] = 'pma__designer_coords';" >> $pmapath
 
+	# Create temporal dir in /var/lib/
+	phpmyadmin_tempdir_conf="/etc/phpmyadmin/conf.d/02-tempdir.php"
+	phpmyadmin_tmp="/var/lib/phpmyadmin/tmp"
+
+	mkdir -p "$phpmyadmin_tmp"
+	chown -R hestiamail:www-data "$phpmyadmin_tmp"
+	echo "<?php" > "$phpmyadmin_tempdir_conf"
+	echo "\$cfg['TempDir'] = '$phpmyadmin_tmp';" >> "$phpmyadmin_tempdir_conf"
+
 	#SOME WORK with DATABASE (table / user)
 	PMADB=phpmyadmin
 	PMAUSER=pma

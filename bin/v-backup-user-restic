@@ -89,8 +89,8 @@ fi
 if [[ -n "$KEEP_WEEKLY" && "$KEEP_WEEKLY" -ge 0 ]]; then
 	restic_prune="$restic_prune --keep-weekly $KEEP_WEEKLY"
 fi
-if [[ -n "$KEEP_MONTLY" && "$KEEP_MONTLY" -ge 0 ]]; then
-	restic_prune="$restic_prune --keep-monthly $KEEP_MONTLY"
+if [[ -n "$KEEP_MONTHLY" && "$KEEP_MONTHLY" -ge 0 ]]; then
+	restic_prune="$restic_prune --keep-monthly $KEEP_MONTHLY"
 fi
 if [[ -n "$KEEP_YEARLY" && "$KEEP_YEARLY" -ge 0 ]]; then
 	restic_prune="$restic_prune --keep-yearly $KEEP_YEARLY"

@@ -23,8 +23,8 @@ MODE=$1
 user="$ROOT_USER"
 
 FM_INSTALL_DIR="$HESTIA/web/fm"
-FM_FILE="filegator_latest"
-FM_URL="https://github.com/filegator/static/raw/master/builds/filegator_latest.zip"
+FM_FILE="filegator_v${fm_v}"
+FM_URL="https://github.com/filegator/static/raw/master/builds/${FM_FILE}.zip"
 COMPOSER_BIN="$HOMEDIR/$user/.composer/composer"
 
 #----------------------------------------------------------#
@@ -117,6 +117,19 @@ chown hestiaweb: "${FM_INSTALL_DIR}/private/logs"
 chown hestiaweb: "${FM_INSTALL_DIR}/repository"
 
 $BIN/v-change-sys-config-value 'FILE_MANAGER' 'true'
+
+# Apply SSH config if running on Debian 13
+source /etc/os-release
+if [[ "$ID" == "debian" && "$VERSION_ID" == "13" ]]; then
+	_KEX_CONF="/etc/ssh/sshd_config.d/hestia-kex.conf"
+	_KEX_LINE="KexAlgorithms +diffie-hellman-group-exchange-sha256"
+
+	# Only create/modify the file if it doesn't already contain the correct config
+	if [[ ! -f "$_KEX_CONF" ]] || ! grep -qxF "$_KEX_LINE" "$_KEX_CONF"; then
+		echo "$_KEX_LINE" > "$_KEX_CONF"
+		"$BIN"/v-restart-service ssh
+	fi
+fi
 
 #----------------------------------------------------------#
 #                       Logging                            #

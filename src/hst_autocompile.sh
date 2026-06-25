@@ -109,7 +109,7 @@ usage() {
 
 # Set compiling directory
 REPO='hestiacp/hestiacp'
-BUILD_DIR='/tmp/hestiacp-src'
+BUILD_DIR="${BUILD_DIR:-/tmp/hestiacp-src}"
 INSTALL_DIR='/usr/local/hestia'
 SRC_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 ARCHIVE_DIR="$SRC_DIR/src/archive/"
@@ -217,9 +217,9 @@ fi
 echo "Build version $BUILD_VER, with Nginx version $NGINX_V, PHP version $PHP_V and Web Terminal version $WEB_TERMINAL_V"
 
 HESTIA_V="${BUILD_VER}_${BUILD_ARCH}"
-OPENSSL_V='3.4.0'
-PCRE_V='10.44'
-ZLIB_V='1.3.1'
+OPENSSL_V='3.5.7'
+PCRE_V='10.47'
+ZLIB_V='1.3.2'
 
 # Create build directories
 if [ "$KEEPBUILD" != 'true' ]; then
@@ -249,7 +249,7 @@ if [ "$dontinstalldeps" != 'true' ]; then
 	codename="$(lsb_release -s -c)"
 
 	if [ -z $(which "node") ]; then
-		curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
+		curl -fsSL https://deb.nodesource.com/setup_24.x | bash -
 	fi
 
 	echo "Installing Node.js..."
@@ -525,17 +525,6 @@ if [ "$PHP_B" = true ]; then
 		sed -i "s/amd64/${BUILD_ARCH}/g" "$BUILD_DIR_HESTIAPHP/DEBIAN/control"
 	fi
 
-	os=$(lsb_release -is)
-	release=$(lsb_release -rs)
-	if [[ "$os" = "Ubuntu" ]] && [[ "$release" = "20.04" ]]; then
-		sed -i "/Conflicts: libzip5/d" "$BUILD_DIR_HESTIAPHP/DEBIAN/control"
-		sed -i "s/libzip4/libzip5/g" "$BUILD_DIR_HESTIAPHP/DEBIAN/control"
-	fi
-	if [[ "$os" = "Ubuntu" ]] && [[ "$release" = "24.04" ]]; then
-		sed -i "/Conflicts: libzip5/d" "$BUILD_DIR_HESTIAPHP/DEBIAN/control"
-		sed -i "s/libzip4/libzip4t64/g" "$BUILD_DIR_HESTIAPHP/DEBIAN/control"
-	fi
-
 	get_branch_file 'src/deb/php/copyright' "$BUILD_DIR_HESTIAPHP/DEBIAN/copyright"
 	get_branch_file 'src/deb/php/postinst' "$BUILD_DIR_HESTIAPHP/DEBIAN/postinst"
 	chmod +x $BUILD_DIR_HESTIAPHP/DEBIAN/postinst
@@ -603,7 +592,9 @@ if [ "$WEB_TERMINAL_B" = true ]; then
 	get_branch_file 'src/deb/web-terminal/package.json' "${BUILD_DIR_HESTIA_TERMINAL}/usr/local/hestia/web-terminal/package.json"
 	get_branch_file 'src/deb/web-terminal/package-lock.json' "${BUILD_DIR_HESTIA_TERMINAL}/usr/local/hestia/web-terminal/package-lock.json"
 	get_branch_file 'src/deb/web-terminal/server.js' "${BUILD_DIR_HESTIA_TERMINAL}/usr/local/hestia/web-terminal/server.js"
+	get_branch_file 'src/deb/web-terminal/web-terminal-session-auth.php' "${BUILD_DIR_HESTIA_TERMINAL}/usr/local/hestia/web-terminal/web-terminal-session-auth.php"
 	chmod +x "${BUILD_DIR_HESTIA_TERMINAL}/usr/local/hestia/web-terminal/server.js"
+	chmod +x "${BUILD_DIR_HESTIA_TERMINAL}/usr/local/hestia/web-terminal/web-terminal-session-auth.php"
 
 	cd $BUILD_DIR_HESTIA_TERMINAL/usr/local/hestia/web-terminal
 	npm ci --omit=dev

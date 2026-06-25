@@ -4,16 +4,13 @@
 
 <h2 align="center">Lightweight and powerful control panel for the modern web</h2>
 
-<p align="center"><strong>Latest stable release:</strong> Version 1.9.3 | <a href="https://github.com/hestiacp/hestiacp/blob/release/CHANGELOG.md">View Changelog</a></p>
+<p align="center"><strong>Latest stable release:</strong> Version 1.9.6 | <a href="https://github.com/hestiacp/hestiacp/blob/release/CHANGELOG.md">View Changelog</a></p>
 
 <p align="center">
 	<a href="https://www.hestiacp.com/">HestiaCP.com</a> |
 	<a href="https://docs.hestiacp.com/">Documentation</a> |
 	<a href="https://forum.hestiacp.com/">Forum</a>
 	<br/><br/>
-	<a href="https://drone.hestiacp.com/hestiacp/hestiacp">
-		<img src="https://drone.hestiacp.com/api/badges/hestiacp/hestiacp/status.svg?ref=refs/heads/main" alt="Drone Status"/>
-	</a>
 	<a href="https://github.com/hestiacp/hestiacp/actions/workflows/lint.yml">
 		<img src="https://github.com/hestiacp/hestiacp/actions/workflows/lint.yml/badge.svg" alt="Lint Status"/>
 	</a>
@@ -47,7 +44,7 @@ Smart Chain: 0xfF3Dd2c889bd0Ff73d8085B84A314FC7c88e5D51<br>
 ## Supported platforms and operating systems
 
 - **Debian:** 12, 11
-- **Ubuntu:** 24.04 LTS, 22.04 LTS, 20.04 LTS
+- **Ubuntu:** 24.04 LTS, 22.04 LTS
 
 **NOTES:**
 

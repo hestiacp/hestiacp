@@ -63,12 +63,12 @@ fi
 chains="$HESTIA/data/firewall/chains.conf"
 banlist="$HESTIA/data/firewall/banlist.conf"
 
-# Checking custom OpenSSH port (or ports)
-sshport="$($BIN/v-list-sys-sshd-port plain | sed ':a;N;$!ba;s/\n/,/g')"
-if echo "$sshport" | grep -E '^[0-9]+(,[0-9]+)*$' &> /dev/null; then
-	sed -i -E "s/(PORT=')[0-9]+(,[0-9]+)*('.*COMMENT='SSH')/\1$sshport\3/" "$rules"
-	if [ -f "$chains" ]; then
-		sed -i "/CHAIN='SSH'/c\CHAIN='SSH' PORT='$sshport' PROTOCOL='TCP'" "$chains"
+# Detect custom OpenSSH port(s) and update SSH chain
+sshport=$("$BIN/v-list-sys-sshd-port" plain | paste -sd ',' -)
+if [[ "$sshport" =~ ^[0-9]+(,[0-9]+)*$ ]]; then
+	sed -i -E "s/(PORT=')[0-9]+(,[0-9]+)*('.*COMMENT='SSH')/\1${sshport}\3/" "$rules"
+	if [[ -f "$chains" ]]; then
+		sed -i "/CHAIN='SSH'/c\\CHAIN='SSH' PORT='${sshport}' PROTOCOL='TCP'" "$chains"
 	else
 		"$BIN/v-add-firewall-chain" 'SSH' "$sshport" 'TCP'
 	fi
@@ -84,6 +84,13 @@ tmp="$(mktemp)"
 echo "$iptables -P INPUT ACCEPT" >> "$tmp"
 echo "$iptables -F INPUT" >> "$tmp"
 
+# Handling local traffic
+echo "$iptables -A INPUT -i lo -j ACCEPT" >> "$tmp"
+ips="$(ls $HESTIA/data/ips)"
+for ip in $ips; do
+	echo "$iptables -A INPUT -s $ip -j ACCEPT" >> "$tmp"
+done
+
 # Enabling stateful support
 if [ "$conntrack" != 'no' ] || grep --quiet container=lxc /proc/1/environ; then
 	str="$iptables -A INPUT -m state"
@@ -91,12 +98,31 @@ if [ "$conntrack" != 'no' ] || grep --quiet container=lxc /proc/1/environ; then
 	echo "$str" >> "$tmp"
 fi
 
-ips="$(ls $HESTIA/data/ips)"
-# Handling local traffic
-for ip in $ips; do
-	echo "$iptables -A INPUT -s $ip -j ACCEPT" >> "$tmp"
-done
-echo "$iptables -A INPUT -s 127.0.0.1 -j ACCEPT" >> "$tmp"
+# Checking fail2ban support
+if [ -n "$FIREWALL_EXTENSION" ]; then
+	if [ -f "$chains" ]; then
+		while IFS= read -r chain; do
+			parse_object_kv_list "$chain"
+			if [[ "$PORT" =~ ,|-|: ]]; then
+				port="-m multiport --dports $PORT"
+			else
+				port="--dport $PORT"
+			fi
+			echo "$iptables -N fail2ban-$CHAIN" >> "$tmp"
+			echo "$iptables -F fail2ban-$CHAIN" >> "$tmp"
+			echo "$iptables -A fail2ban-$CHAIN -s 0.0.0.0/0 -j RETURN" >> "$tmp"
+			echo "$iptables -A INPUT -p $PROTOCOL $port -j fail2ban-$CHAIN" >> "$tmp"
+		done < "$chains"
+	fi
+
+	if [ -f "$banlist" ]; then
+		while IFS= read -r ban; do
+			parse_object_kv_list "$ban"
+			echo -n "$iptables -I fail2ban-$CHAIN 1 -s $IP" >> "$tmp"
+			echo " -j DROP" >> "$tmp"
+		done < "$banlist"
+	fi
+fi
 
 # Pasring iptables rules
 IFS=$'\n'
@@ -110,7 +136,9 @@ for line in $(sort -r -n -k 2 -t \' $rules); do
 
 		if [[ "$IP" =~ ^ipset: ]]; then
 			ipset_name="${IP#ipset:}"
-			$("$BIN/v-list-firewall-ipset" plain | grep "^$ipset_name\s" > /dev/null) || log_event $E_NOTEXIST "IPset IP list ($ipset_name) not found"
+			if ! "$BIN/v-list-firewall-ipset" plain | grep "^$ipset_name\s" > /dev/null; then
+				log_event $E_NOTEXIST "IPset IP list ($ipset_name) not found"
+			fi
 			ip="-m set --match-set '${ipset_name}' src"
 		else
 			ip="-s $IP"
@@ -146,46 +174,14 @@ echo "$iptables -P INPUT DROP" >> "$tmp"
 
 # Adding hestia chain
 echo "$iptables -N hestia" >> "$tmp"
-
 # Applying rules
 bash "$tmp" 2> /dev/null
-
 # Deleting temporary file
 rm -f "$tmp"
 
 # Checking custom trigger
 if [ -x "$HESTIA/data/firewall/custom.sh" ]; then
 	bash "$HESTIA/data/firewall/custom.sh"
-fi
-
-# Checking fail2ban support
-if [ -n "$FIREWALL_EXTENSION" ]; then
-	if [ -f "$chains" ]; then
-		for chain in $(cat "$chains"); do
-			parse_object_kv_list "$chain"
-			if [[ "$PORT" =~ ,|-|: ]]; then
-				port="-m multiport --dports $PORT"
-			else
-				port="--dport $PORT"
-			fi
-			echo "$iptables -N fail2ban-$CHAIN" >> "$tmp"
-			echo "$iptables -F fail2ban-$CHAIN" >> "$tmp"
-			echo "$iptables -I fail2ban-$CHAIN -s 0.0.0.0/0 -j RETURN" >> "$tmp"
-			echo "$iptables -I INPUT -p $PROTOCOL $port -j fail2ban-$CHAIN" >> "$tmp"
-		done
-		bash "$tmp" 2> /dev/null
-		rm -f "$tmp"
-	fi
-
-	if [ -f "$banlist" ]; then
-		for ban in $(cat "$banlist"); do
-			parse_object_kv_list "$ban"
-			echo -n "$iptables -I fail2ban-$CHAIN 1 -s $IP" >> "$tmp"
-			echo " -j REJECT --reject-with icmp-port-unreachable" >> "$tmp"
-		done
-		bash "$tmp" 2> /dev/null
-		rm -f "$tmp"
-	fi
 fi
 
 # Clean up and saving rules to the master iptables file

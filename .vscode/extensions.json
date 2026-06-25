@@ -4,7 +4,6 @@
 		"esbenp.prettier-vscode",
 		"DavidAnson.vscode-markdownlint",
 		"biomejs.biome",
-		"stylelint.vscode-stylelint",
 		"timonwong.shellcheck",
 		"mrmlnc.vscode-apache",
 		"william-voyek.vscode-nginx",

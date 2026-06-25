@@ -109,7 +109,7 @@ else
 fi
 
 if [ ! -f "$tmpfile" ]; then
-	echo "$tmpfile does not exists"
+	echo "$tmpfile does not exist"
 	exit "$E_NOTEXIST"
 fi
 

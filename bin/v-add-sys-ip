@@ -93,7 +93,15 @@ if [ -z "$sys_ip_check" ]; then
 	fi
 
 	if [ "$netplan" = "true" ]; then
-		if [ -f "/etc/netplan/60-hestia.yaml" ]; then
+		netplan_file="/etc/netplan/60-hestia.yaml"
+		if [ -f "$netplan_file" ]; then
+			netplan_file_exists="true"
+		else
+			netplan_file_exists="false"
+			install -m 600 /dev/null "$netplan_file"
+		fi
+
+		if [ "$netplan_file_exists" = "true" ]; then
 			sys_ip="        - $ip/$cidr"
 		else
 			sys_ip="# Added by Hestia, please do not edit the file manually!"
@@ -106,7 +114,7 @@ if [ -z "$sys_ip_check" ]; then
 			sys_ip="$sys_ip\n        - $ip/$cidr"
 		fi
 		IFS='%'
-		echo -e "$sys_ip" >> /etc/netplan/60-hestia.yaml
+		echo -e "$sys_ip" >> "$netplan_file"
 		unset IFS
 	else
 		sys_ip="\n# Added by Hestia Control Panel"

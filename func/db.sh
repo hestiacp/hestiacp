@@ -472,6 +472,66 @@ change_mysql_password() {
 	fi
 }
 
+# Detect the correct MySQL or MariaDB binary
+detect_mysql_binary() {
+	if command -v mariadb &> /dev/null; then
+		MYSQL_CMD="mariadb"
+	elif command -v mysql &> /dev/null && ! mysql --version | grep -q "Deprecated program name"; then
+		MYSQL_CMD="mysql"
+	else
+		echo "Error: No MySQL or MariaDB client found."
+		exit 1
+	fi
+}
+
+create_mysql_user_with_secure_password() {
+	local err_file="/tmp/create_user.err"
+	rm -f "$err_file"
+
+	detect_mysql_binary # Detect MySQL or MariaDB binary
+
+	# Check if user already exists (regardless of host)
+	local user_exists
+	user_exists=$("$MYSQL_CMD" --defaults-extra-file="$mycnf" -N -e "SELECT COUNT(*) FROM mysql.user WHERE user='$DBUSER';")
+	if [ "$user_exists" -gt 0 ]; then
+		echo "User $DBUSER already exists. Skipping creation."
+		return 0
+	fi
+
+	# Generate a secure random password
+	dbpass=$(tr -dc 'A-Za-z0-9%^&*()-_=+[]{};:,.<>?/' < /dev/urandom | head -c 30)
+	echo "Generated secure password for $DBUSER: $dbpass"
+
+	# Try to create the user
+	local create_cmd
+	create_cmd="CREATE USER IF NOT EXISTS '$DBUSER'@'%' IDENTIFIED WITH mysql_native_password BY '$dbpass';"
+	"$MYSQL_CMD" --defaults-extra-file="$mycnf" -e "$create_cmd" 2> "$err_file"
+	create_cmd="CREATE USER IF NOT EXISTS '$DBUSER'@'localhost' IDENTIFIED WITH mysql_native_password BY '$dbpass';"
+	"$MYSQL_CMD" --defaults-extra-file="$mycnf" -e "$create_cmd" 2>> "$err_file"
+
+	# If error 1410 (lack of privileges to grant) is detected in any of the above commands, abort
+	if grep -q "ERROR 1410" "$err_file"; then
+		echo "Error: Insufficient privileges to create user $DBUSER with GRANT."
+		echo "Please ensure that the MySQL account used has the necessary privileges (CREATE USER, GRANT OPTION, etc.)."
+		rm -f "$err_file"
+		return 1
+	fi
+
+	# Grant all privileges on the database to the user
+	"$MYSQL_CMD" --defaults-extra-file="$mycnf" -e "GRANT ALL ON \`$DB\`.* TO '$DBUSER'@'%';" 2>> "$err_file"
+	"$MYSQL_CMD" --defaults-extra-file="$mycnf" -e "GRANT ALL ON \`$DB\`.* TO '$DBUSER'@'localhost';" 2>> "$err_file"
+	"$MYSQL_CMD" --defaults-extra-file="$mycnf" -e "FLUSH PRIVILEGES;" 2>> "$err_file"
+
+	if grep -q "ERROR 1410" "$err_file"; then
+		echo "Error: Insufficient privileges to grant privileges to $DBUSER."
+		rm -f "$err_file"
+		return 1
+	fi
+
+	rm -f "$err_file"
+	return 0
+}
+
 # Change PostgreSQL database password
 change_pgsql_password() {
 	psql_connect $HOST

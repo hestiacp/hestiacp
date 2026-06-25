@@ -2290,6 +2290,11 @@ fi
 
 echo "[ * ] Configuring File Manager..."
 $HESTIA/bin/v-add-sys-filemanager quiet
+# Configuring sudoers to remove unsupported requiretty option on Ubuntu 26.04
+ubuntu_major="${release%%.*}"
+if [[ "$ubuntu_major" -ge 26 ]]; then
+	echo 'KexAlgorithms +diffie-hellman-group-exchange-sha256' > /etc/ssh/sshd_config.d/hestia-kex.conf
+fi
 
 #----------------------------------------------------------#
 #              Configure Web terminal                      #

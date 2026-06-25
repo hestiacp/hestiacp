@@ -31,8 +31,25 @@ if [ -f /etc/os-release ]; then
 	source /etc/os-release
 fi
 
-# Apply SSH config if running on Debian 13
+# Set running OS
+IS_DEBIAN13=false
+IS_UBUNTU2604=false
+IS_DEBIAN13_OR_UBUNTU2604=false
+
 if [[ "$ID" == "debian" && "$VERSION_ID" == "13" ]]; then
+	IS_DEBIAN13=true
+fi
+
+if [[ "$ID" == "ubuntu" && "$VERSION_ID" == "26.04" ]]; then
+	IS_UBUNTU2604=true
+fi
+
+if $IS_DEBIAN13 || $IS_UBUNTU2604; then
+	IS_DEBIAN13_OR_UBUNTU2604=true
+fi
+
+# Apply SSH config if running on Debian 13 or Ubuntu 26.04
+if $IS_DEBIAN13_OR_UBUNTU2604; then
 	_KEX_CONF="/etc/ssh/sshd_config.d/hestia-kex.conf"
 	_KEX_LINE="KexAlgorithms +diffie-hellman-group-exchange-sha256"
 
@@ -69,14 +86,14 @@ if [[ -d "$SNAPPYMAIL_ETC_DATA" ]] && ! [[ -L "$SNAPPYMAIL_ETC_DATA" ]]; then
 	fi
 fi
 
-# If Dovecot is version 2.4 and Debian is Trixie (13), replace Dovecot's configuration and rebuild users
+# If Dovecot is version 2.4 and OS is Trixie (13) or Ubuntu 26.04, replace Dovecot's configuration and rebuild users
 if command -v dovecot &> /dev/null; then
 	dovecot_version="$(dovecot --version | cut -f -2 -d .)"
 else
 	dovecot_version=false
 fi
 
-if [[ "$ID" == "debian" && "$VERSION_ID" == "13" && "$dovecot_version" = "2.4" ]]; then
+if $IS_DEBIAN13_OR_UBUNTU2604 && [[ "$dovecot_version" = "2.4" ]]; then
 	if ! grep -q 'modified by Hestia' /etc/dovecot/dovecot.conf \
 		|| ! grep -q 'ssl_server_cert_file = /usr/local/hestia' /etc/dovecot/conf.d/10-ssl.conf; then
 		echo "[ * ] Updating Dovecot $dovecot_version configuration"
@@ -105,8 +122,8 @@ if [[ "$ID" == "debian" && "$VERSION_ID" == "13" && "$dovecot_version" = "2.4" ]
 	fi
 fi
 
-# Configure Bind for Debian 13
-if [[ "$ID" == "debian" && "$VERSION_ID" == "13" ]]; then
+# Configure Bind for Debian 13 or Ubuntu 26.04
+if $IS_DEBIAN13_OR_UBUNTU2604; then
 	source "$HESTIA"/conf/hestia.conf
 	if [[ "$DNS_SYSTEM" =~ named|bind ]]; then
 		# named.conf.default-zones was removed in Debian 13
@@ -165,5 +182,15 @@ if [[ -f "$phpmyadmin_conf" ]]; then
 <?php
 $cfg['TempDir'] = '/var/lib/phpmyadmin/tmp';
 EOF
+	fi
+fi
+
+# Configuring sudoers to remove unsupported requiretty option on Ubuntu 26.04
+if $IS_UBUNTU2604; then
+	if [[ -f /etc/sudoers.d/hestiaweb ]] && grep -q '^Defaults:root !requiretty$' /etc/sudoers.d/hestiaweb &> /dev/null; then
+		echo "[ + ] Configuring sudoers to remove unsupported requiretty option"
+		chmod 640 /etc/sudoers.d/hestiaweb
+		sed -i '/^Defaults:root !requiretty$/d' /etc/sudoers.d/hestiaweb
+		chmod 440 /etc/sudoers.d/hestiaweb
 	fi
 fi

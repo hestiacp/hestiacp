@@ -74,17 +74,33 @@ qemu_static_name() {
 	esac
 }
 
+# Best-effort unmount of a single path, falling back to a lazy unmount if a
+# plain umount fails (e.g. the mount is still busy). A path left mounted here
+# isn't just a leak: callers immediately rm -rf the chroot dir afterwards, and
+# files under a still-active bind mount of /proc, /sys or /dev can't be
+# unlinked at all (sysfs/procfs refuse it outright, even as root) -- so a
+# silently-failed umount turns into confusing "Operation not permitted" rm
+# errors instead.
+safe_umount() {
+	local path=$1
+	mountpoint -q "$path" || return 0
+	umount "$path" 2> /dev/null && return 0
+	umount -l "$path" 2> /dev/null
+	mountpoint -q "$path" && return 1
+	return 0
+}
+
 # Unmount everything prepare_chroot may have bind-mounted under a given
 # chroot dir. Order matters: children (dev/pts, the bind mounts) before
 # their parents (dev).
 unmount_chroot_dir() {
 	local chroot_dir=$1
-	mountpoint -q "$chroot_dir$REPO_DIR" && umount "$chroot_dir$REPO_DIR"
-	mountpoint -q "$chroot_dir$BUILD_DIR" && umount "$chroot_dir$BUILD_DIR"
-	mountpoint -q "$chroot_dir/dev/pts" && umount "$chroot_dir/dev/pts"
-	mountpoint -q "$chroot_dir/sys" && umount "$chroot_dir/sys"
-	mountpoint -q "$chroot_dir/proc" && umount "$chroot_dir/proc"
-	mountpoint -q "$chroot_dir/dev" && umount "$chroot_dir/dev"
+	safe_umount "$chroot_dir$REPO_DIR"
+	safe_umount "$chroot_dir$BUILD_DIR"
+	safe_umount "$chroot_dir/dev/pts"
+	safe_umount "$chroot_dir/sys"
+	safe_umount "$chroot_dir/proc"
+	safe_umount "$chroot_dir/dev"
 }
 
 cleanup_chroots() {
@@ -165,6 +181,13 @@ prepare_chroot() {
 		# build, or an older version of this script); rm -rf can't remove
 		# anything under an active mountpoint.
 		unmount_chroot_dir "$chroot_dir"
+		if mountpoint -q "$chroot_dir/dev" || mountpoint -q "$chroot_dir/proc" || mountpoint -q "$chroot_dir/sys"; then
+			echo >&2 "[!] Could not unmount stale bind mounts under $chroot_dir; refusing to"
+			echo >&2 "    delete it, since rm -rf would hit a live /dev, /proc or /sys and fail"
+			echo >&2 "    with confusing 'Operation not permitted' errors. Unmount it manually"
+			echo >&2 "    (e.g. umount -l $chroot_dir/sys) and re-run."
+			exit 1
+		fi
 		rm -rf "$chroot_dir"
 		mkdir -p "$chroot_dir"
 		local mirror

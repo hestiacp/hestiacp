@@ -50,6 +50,10 @@ for db in $(echo $DB_SYSTEM | tr ',' '\n'); do
 					echo "host='$HOST'" >> $mycnf
 					echo "user='$USER'" >> $mycnf
 					echo "password='$PASSWORD'" >> $mycnf
+					if [ -f "$HESTIA/ssl/db/$HOST.crt" ]; then
+						echo "ssl-ca=$HESTIA/ssl/db/$HOST.crt" >> $mycnf
+						echo "ssl-verify-server-cert=false" >> $mycnf
+					fi
 					chmod 600 $mycnf
 				else
 					mypw=$(grep password $mycnf | cut -f 2 -d \')
@@ -58,6 +62,10 @@ for db in $(echo $DB_SYSTEM | tr ',' '\n'); do
 						echo "host='$HOST'" >> $mycnf
 						echo "user='$USER'" >> $mycnf
 						echo "password='$PASSWORD'" >> $mycnf
+						if [ -f "$HESTIA/ssl/db/$HOST.crt" ]; then
+							echo "ssl-ca=$HESTIA/ssl/db/$HOST.crt" >> $mycnf
+							echo "ssl-verify-server-cert=false" >> $mycnf
+						fi
 						chmod 660 $mycnf
 					fi
 				fi

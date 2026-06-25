@@ -47,14 +47,48 @@ is_mysql_host_alive() {
 	mysql_out=$(mktemp)
 	if [ -f '/usr/bin/mariadb' ]; then
 		mariadb --defaults-file=$mycnf -e 'SELECT VERSION()' > $mysql_out 2>&1
+		status=$?
 	else
 		mysql --defaults-file=$mycnf -e 'SELECT VERSION()' > $mysql_out 2>&1
+		status=$?
 	fi
-	if [ "$?" -ne '0' ]; then
-		echo "Error: MySQL connection to $host failed"
-		rm $mycnf
-		log_event "$E_CONNECT" "$ARGUMENTS"
-		exit "$E_CONNECT"
+	if [ "$status" -ne '0' ]; then
+		if grep -q -i "ERROR 2026 (HY000): TLS/SSL error: self-signed certificate in certificate chain" $mysql_out && [ -t 1 ]; then
+			cert_out=$(mktemp)
+			echo -n | openssl s_client -showcerts -connect $host:$port -starttls mysql > $cert_out 2>/dev/null
+			if grep -q "BEGIN CERTIFICATE" $cert_out; then
+				subject=$(openssl x509 -in $cert_out -noout -subject 2>/dev/null)
+				issuer=$(openssl x509 -in $cert_out -noout -issuer 2>/dev/null)
+				fingerprint=$(openssl x509 -in $cert_out -noout -fingerprint -sha256 2>/dev/null)
+
+				echo "WARNING: The database server at $host uses an untrusted/self-signed certificate."
+				echo "$subject"
+				echo "$issuer"
+				echo "$fingerprint"
+				read -p "Do you want to trust this certificate and continue? (y/n): " trust
+				if [ "$trust" = "y" ] || [ "$trust" = "Y" ]; then
+					mkdir -p $HESTIA/ssl/db
+					sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' $cert_out > $HESTIA/ssl/db/$host.crt
+					echo "ssl-ca=$HESTIA/ssl/db/$host.crt" >> $mycnf
+					echo "ssl-verify-server-cert=false" >> $mycnf
+					if [ -f '/usr/bin/mariadb' ]; then
+						mariadb --defaults-file=$mycnf -e 'SELECT VERSION()' > $mysql_out 2>&1
+						status=$?
+					else
+						mysql --defaults-file=$mycnf -e 'SELECT VERSION()' > $mysql_out 2>&1
+						status=$?
+					fi
+				fi
+			fi
+			rm -f $cert_out
+		fi
+		if [ "$status" -ne '0' ]; then
+			echo "Error: MySQL connection to $host failed"
+			rm $mycnf
+			rm -f $mysql_out
+			log_event "$E_CONNECT" "$ARGUMENTS"
+			exit "$E_CONNECT"
+		fi
 	fi
 
 	if [ -f '/usr/bin/mariadb' ]; then

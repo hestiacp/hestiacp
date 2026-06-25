@@ -49,6 +49,16 @@ sed -i "/HOST='$host' /d" "$HESTIA/conf/$type.conf"
 rm -fr $HESTIA'/web/rrd/db/'$type'_'$host'.rrd'
 rm -fr $HESTIA'/web/rrd/db/'*-$type'_'$host'.*'
 
+# Delete custom DB certificate if present
+if [ -f "$HESTIA/ssl/db/$host.crt" ]; then
+	rm -f "$HESTIA/ssl/db/$host.crt"
+fi
+
+# Delete cached .my.cnf file if present
+if [ -f "$HESTIA/conf/.$type.$host" ]; then
+	rm -f "$HESTIA/conf/.$type.$host"
+fi
+
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#

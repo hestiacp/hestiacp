@@ -52,6 +52,10 @@ mysql_connect() {
 		echo "user='$USER'" >> $mycnf
 		echo "password='$PASSWORD'" >> $mycnf
 		echo "port='$PORT'" >> $mycnf
+		if [ -f "$HESTIA/ssl/db/$HOST.crt" ]; then
+			echo "ssl-ca=$HESTIA/ssl/db/$HOST.crt" >> $mycnf
+			echo "ssl-verify-server-cert=false" >> $mycnf
+		fi
 		chmod 600 $mycnf
 	else
 		mypw=$(grep password $mycnf | cut -f 2 -d \')
@@ -61,6 +65,10 @@ mysql_connect() {
 			echo "user='$USER'" >> $mycnf
 			echo "password='$PASSWORD'" >> $mycnf
 			echo "port='$PORT'" >> $mycnf
+			if [ -f "$HESTIA/ssl/db/$HOST.crt" ]; then
+				echo "ssl-ca=$HESTIA/ssl/db/$HOST.crt" >> $mycnf
+				echo "ssl-verify-server-cert=false" >> $mycnf
+			fi
 			chmod 660 $mycnf
 		fi
 	fi

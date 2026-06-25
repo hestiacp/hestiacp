@@ -251,7 +251,28 @@ generate_password() {
 	if [ -z "$length" ]; then
 		length=16
 	fi
-	head /dev/urandom | tr -dc $matrix | head -c$length
+
+	attempt=0
+	while [ $attempt -lt 100 ]; do
+		pass=$(head /dev/urandom | tr -dc "$matrix" | head -c "$length")
+		
+		valid=true
+		[[ "$matrix" == *"A-Z"* ]] && [[ ! "$pass" =~ [[:upper:]] ]] && valid=false
+		[[ "$matrix" == *"a-z"* ]] && [[ ! "$pass" =~ [[:lower:]] ]] && valid=false
+		[[ "$matrix" == *"0-9"* ]] && [[ ! "$pass" =~ [[:digit:]] ]] && valid=false
+		
+		if [[ "$matrix" =~ [^A-Za-z0-9-] ]]; then
+			[[ ! "$pass" =~ [^a-zA-Z0-9] ]] && valid=false
+		fi
+		
+		if [ "$valid" = true ]; then
+			printf "%s" "$pass"
+			return
+		fi
+		attempt=$((attempt + 1))
+	done
+	# Fallback if impossible
+	printf "%s" "$pass"
 }
 
 # Package existence check

@@ -1,0 +1,77 @@
+#!/bin/bash
+# info: add dnsbl entry
+# options: HOST [RESTART]
+#
+# example: v-add-sys-mail-dnsbl zen.spamhaus.org
+#
+# This function adds a new DNSBL server for Exim to check.
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Argument definition
+host=$1
+restart=${2:-yes}
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '1' "$#" 'HOST'
+if [[ ! "$host" =~ ^[a-zA-Z0-9.-]+(!=[0-9.,]+)?$ ]]; then
+	check_result "$E_INVALID" "invalid host format"
+fi
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Create custom config if it doesn't exist
+if [ ! -f "$HESTIA/conf/dnsbl.conf" ]; then
+	if [ -f "/etc/exim4/dnsbl.conf" ]; then
+		cp /etc/exim4/dnsbl.conf "$HESTIA/conf/dnsbl.conf"
+	else
+		touch "$HESTIA/conf/dnsbl.conf"
+	fi
+fi
+
+# Check for duplicate
+if grep -q -x "$host" "$HESTIA/conf/dnsbl.conf"; then
+	check_result "$E_EXISTS" "DNSBL $host already exists"
+fi
+
+# Append host
+echo "$host" >> "$HESTIA/conf/dnsbl.conf"
+
+# Check if it matches default
+if cmp -s <(sort "$HESTIA/conf/dnsbl.conf") <(sort "$HESTIA_INSTALL_DIR/exim/dnsbl.conf"); then
+	rm -f "$HESTIA/conf/dnsbl.conf"
+	cp -f "$HESTIA_INSTALL_DIR/exim/dnsbl.conf" /etc/exim4/dnsbl.conf
+else
+	cp -f "$HESTIA/conf/dnsbl.conf" /etc/exim4/dnsbl.conf
+fi
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Logging
+$BIN/v-log-action "system" "Info" "Mail" "Added DNSBL host (Host: $host)."
+log_event "$OK" "$ARGUMENTS"
+
+# Restart exim
+$BIN/v-restart-service "$MAIL_SYSTEM" "$restart"
+
+exit

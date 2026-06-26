@@ -48,7 +48,7 @@
 			<?php if (($_SESSION["role"] == "admin" && $accept === "true") || $_SESSION["role"] !== "admin") { ?>
 					<p class="hint u-mb20">
 						<?php
-							$prefix_hint = tohtml(_("Prefix %s will be automatically added to database name and database user"));
+							$prefix_hint = _("Prefix %s will be automatically added to database name and database user");
 							$prefix_hint_html = '<span class="u-text-bold">' . tohtml($user_plain) . '_</span>';
 							printf($prefix_hint, $prefix_hint_html);
 						?>

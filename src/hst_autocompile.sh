@@ -109,7 +109,7 @@ usage() {
 
 # Set compiling directory
 REPO='hestiacp/hestiacp'
-BUILD_DIR='/tmp/hestiacp-src'
+BUILD_DIR="${BUILD_DIR:-/tmp/hestiacp-src}"
 INSTALL_DIR='/usr/local/hestia'
 SRC_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 ARCHIVE_DIR="$SRC_DIR/src/archive/"
@@ -217,7 +217,7 @@ fi
 echo "Build version $BUILD_VER, with Nginx version $NGINX_V, PHP version $PHP_V and Web Terminal version $WEB_TERMINAL_V"
 
 HESTIA_V="${BUILD_VER}_${BUILD_ARCH}"
-OPENSSL_V='3.4.4'
+OPENSSL_V='3.5.7'
 PCRE_V='10.47'
 ZLIB_V='1.3.2'
 
@@ -249,7 +249,7 @@ if [ "$dontinstalldeps" != 'true' ]; then
 	codename="$(lsb_release -s -c)"
 
 	if [ -z $(which "node") ]; then
-		curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
+		curl -fsSL https://deb.nodesource.com/setup_24.x | bash -
 	fi
 
 	echo "Installing Node.js..."
@@ -523,17 +523,6 @@ if [ "$PHP_B" = true ]; then
 	get_branch_file 'src/deb/php/control' "$BUILD_DIR_HESTIAPHP/DEBIAN/control"
 	if [ "$BUILD_ARCH" != "amd64" ]; then
 		sed -i "s/amd64/${BUILD_ARCH}/g" "$BUILD_DIR_HESTIAPHP/DEBIAN/control"
-	fi
-
-	os=$(lsb_release -is)
-	release=$(lsb_release -rs)
-	if [[ "$os" = "Ubuntu" ]] && [[ "$release" = "20.04" ]]; then
-		sed -i "/Conflicts: libzip5/d" "$BUILD_DIR_HESTIAPHP/DEBIAN/control"
-		sed -i "s/libzip4/libzip5/g" "$BUILD_DIR_HESTIAPHP/DEBIAN/control"
-	fi
-	if [[ "$os" = "Ubuntu" ]] && [[ "$release" = "24.04" ]]; then
-		sed -i "/Conflicts: libzip5/d" "$BUILD_DIR_HESTIAPHP/DEBIAN/control"
-		sed -i "s/libzip4/libzip4t64/g" "$BUILD_DIR_HESTIAPHP/DEBIAN/control"
 	fi
 
 	get_branch_file 'src/deb/php/copyright' "$BUILD_DIR_HESTIAPHP/DEBIAN/copyright"

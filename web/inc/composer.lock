@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fad6bd8a45b9a059be7fc0bbdf1f1168",
+    "content-hash": "981eb7cf2a39aff1d15d053a0d53c1bc",
     "packages": [
         {
             "name": "divinity76/cloudflare-ip-validator",
@@ -83,16 +83,16 @@
         },
         {
             "name": "phpmailer/phpmailer",
-            "version": "v7.0.2",
+            "version": "v7.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPMailer/PHPMailer.git",
-                "reference": "ebf1655bd5b99b3f97e1a3ec0a69e5f4cd7ea088"
+                "reference": "1bc1716a507a65e039d4ac9d9adebbbd0d346e15"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPMailer/PHPMailer/zipball/ebf1655bd5b99b3f97e1a3ec0a69e5f4cd7ea088",
-                "reference": "ebf1655bd5b99b3f97e1a3ec0a69e5f4cd7ea088",
+                "url": "https://api.github.com/repos/PHPMailer/PHPMailer/zipball/1bc1716a507a65e039d4ac9d9adebbbd0d346e15",
+                "reference": "1bc1716a507a65e039d4ac9d9adebbbd0d346e15",
                 "shasum": ""
             },
             "require": {
@@ -153,7 +153,7 @@
             "description": "PHPMailer is a full-featured email creation and transfer class for PHP",
             "support": {
                 "issues": "https://github.com/PHPMailer/PHPMailer/issues",
-                "source": "https://github.com/PHPMailer/PHPMailer/tree/v7.0.2"
+                "source": "https://github.com/PHPMailer/PHPMailer/tree/v7.1.1"
             },
             "funding": [
                 {
@@ -161,7 +161,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-01-09T18:02:33+00:00"
+            "time": "2026-05-18T08:06:14+00:00"
         },
         {
             "name": "robthree/twofactorauth",

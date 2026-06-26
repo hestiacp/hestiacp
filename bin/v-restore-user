@@ -627,11 +627,20 @@ if [ "$mail" != 'no' ] && [ -n "$MAIL_SYSTEM" ]; then
 				rm -f /etc/dovecot/conf.d/domains/$domain.conf
 			fi
 
-			echo "" >> /etc/dovecot/conf.d/domains/$domain.conf
-			echo "local_name mail.$domain {" >> /etc/dovecot/conf.d/domains/$domain.conf
-			echo "  ssl_cert = <$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem" >> /etc/dovecot/conf.d/domains/$domain.conf
-			echo "  ssl_key = <$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.key" >> /etc/dovecot/conf.d/domains/$domain.conf
-			echo "}" >> /etc/dovecot/conf.d/domains/$domain.conf
+			dovecot_version="$(dovecot --version | cut -f -2 -d .)"
+			if [[ "$dovecot_version" = "2.4" ]]; then
+				echo "" >> /etc/dovecot/conf.d/domains/$domain.conf
+				echo "local_name mail.$domain {" >> /etc/dovecot/conf.d/domains/$domain.conf
+				echo "  sssl_server_cert_file = $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem" >> /etc/dovecot/conf.d/domains/$domain.conf
+				echo "  ssl_server_key_file = $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.key" >> /etc/dovecot/conf.d/domains/$domain.conf
+				echo "}" >> /etc/dovecot/conf.d/domains/$domain.conf
+			else
+				echo "" >> /etc/dovecot/conf.d/domains/$domain.conf
+				echo "local_name mail.$domain {" >> /etc/dovecot/conf.d/domains/$domain.conf
+				echo "  ssl_cert = <$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem" >> /etc/dovecot/conf.d/domains/$domain.conf
+				echo "  ssl_key = <$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.key" >> /etc/dovecot/conf.d/domains/$domain.conf
+				echo "}" >> /etc/dovecot/conf.d/domains/$domain.conf
+			fi
 
 			if [ ! -d /usr/local/hestia/ssl/mail ]; then
 				mkdir /usr/local/hestia/ssl/mail
@@ -861,15 +870,15 @@ if [ "$udir" != 'no' ]; then
 			user_dirs=$(echo "$backup_dirs" | egrep -x -f $tmpdir/selected.txt)
 		fi
 
-		for user_dir in $user_dirs; do
+		while IFS= read -r user_dir; do
 			echo -e "$(date "+%F %T") $user_dir" | tee -a $tmpdir/restore.log
-			if [ $backup_mode = 'zstd' ]; then
+			if [ "$backup_mode" = 'zstd' ]; then
 				tar xf "$BACKUP/$backup" -C "$tmpdir" --no-wildcards "./user_dir/$user_dir.tar.zst"
 			else
 				tar xf "$BACKUP/$backup" -C "$tmpdir" --no-wildcards "./user_dir/$user_dir.tar.gz"
 			fi
-			if [ "$?" -ne 0 ]; then
-				rm -rf $tmpdir
+			if [ $? -ne 0 ]; then
+				rm -rf "$tmpdir"
 				error="Can't unpack $user_dir user dir container"
 				echo "$error" | $SENDMAIL -s "$subj" $email $notify
 				sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
@@ -879,27 +888,27 @@ if [ "$udir" != 'no' ]; then
 			chown "$user" "$tmpdir/user_dir"
 			chown "$user" "$HOMEDIR/$user"
 			[ -e "$HOMEDIR/$user/$user_dir" ] && chown "$user" "$HOMEDIR/$user/$user_dir"
-			if [ $backup_mode = 'zstd' ]; then
-				$BIN/v-extract-fs-archive "$user" "$tmpdir/user_dir/$user_dir.tar.zst" "$HOMEDIR/$user"
+			if [ "$backup_mode" = 'zstd' ]; then
+				"$BIN"/v-extract-fs-archive "$user" "$tmpdir/user_dir/$user_dir.tar.zst" "$HOMEDIR/$user"
 			else
-				$BIN/v-extract-fs-archive "$user" "$tmpdir/user_dir/$user_dir.tar.gz" "$HOMEDIR/$user"
+				"$BIN"/v-extract-fs-archive "$user" "$tmpdir/user_dir/$user_dir.tar.gz" "$HOMEDIR/$user"
 			fi
 			cmdstatus="$?"
 			chown root:root "$HOMEDIR/$user"
 			if [ "$cmdstatus" -ne 0 ]; then
-				rm -rf $tmpdir
+				rm -rf "$tmpdir"
 				error="Can't unpack $user_dir user dir container"
-				echo "$error" | $SENDMAIL -s "$subj" $email $notify
-				sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
+				echo "$error" | "$SENDMAIL" -s "$subj" "$email" "$notify"
+				sed -i "/ $user /d" "$HESTIA"/data/queue/backup.pipe
 				check_result "$E_PARSING" "$error"
 			fi
 
 			# Re-chowning files if uid differs
 			if [ "$old_uid" -ne "$new_uid" ]; then
-				find $HOMEDIR/$user/$user_dir -user $old_uid \
-					-exec chown -h $user:$user {} \;
+				find "$HOMEDIR/$user/$user_dir" -user "$old_uid" \
+					-exec chown -h "$user:$user" {} \;
 			fi
-		done
+		done <<< "$user_dirs"
 	fi
 fi
 

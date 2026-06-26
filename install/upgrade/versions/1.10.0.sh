@@ -167,3 +167,9 @@ $cfg['TempDir'] = '/var/lib/phpmyadmin/tmp';
 EOF
 	fi
 fi
+
+# Patch Spamhaus DQS key leak in existing exim templates
+echo "[ * ] Patching Exim Spamhaus DQS configuration"
+if [ -f "/etc/exim4/exim4.conf.template" ]; then
+	sed -i 's|at $dnslist_domain\\n$dnslist_text|at ${if match{$dnslist_domain}{^[^.]+[.](.+dq[.]spamhaus.*)}{$1}{$dnslist_domain}}\\n$dnslist_text|g' /etc/exim4/exim4.conf.template
+fi

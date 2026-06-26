@@ -1,0 +1,90 @@
+#!/bin/bash
+# info: list dnsbl config parameters
+# options: [FORMAT]
+#
+# example: v-list-sys-mail-dnsbl
+#
+# This function lists the active DNSBL servers used by Exim.
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Argument definition
+format=${1-shell}
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+# JSON list function
+json_list() {
+	echo '{'
+	local i=1
+	local total
+	total=$(wc -l < "$config_path")
+	while read -r line; do
+		[ -z "$line" ] && continue
+		echo -n '    "'$line'": {
+        "HOST": "'$line'"
+    }'
+		if [ "$i" -lt "$total" ]; then
+			echo ','
+		else
+			echo ''
+		fi
+		((i++))
+	done < "$config_path"
+	echo '}'
+}
+
+# SHELL list function
+shell_list() {
+	echo "HOST"
+	echo "----"
+	cat "$config_path"
+}
+
+# PLAIN list function
+plain_list() {
+	cat "$config_path"
+}
+
+# CSV list function
+csv_list() {
+	echo "HOST"
+	cat "$config_path"
+}
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Defining config path
+if [ -f "$HESTIA/conf/dnsbl.conf" ]; then
+	config_path="$HESTIA/conf/dnsbl.conf"
+else
+	config_path="/etc/exim4/dnsbl.conf"
+fi
+
+if [ ! -f "$config_path" ]; then
+	exit
+fi
+
+# Listing data
+case $format in
+	json) json_list ;;
+	plain) plain_list ;;
+	csv) csv_list ;;
+	shell) shell_list ;;
+esac
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+exit

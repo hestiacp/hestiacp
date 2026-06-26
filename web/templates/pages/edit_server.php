@@ -1295,13 +1295,39 @@
 							</div>
 							<div class="u-mb10">
 								<label for="v_policy_user_edit_web_templates" class="form-label">
-									<?= tohtml( _("Allow users to change templates when editing web domains")) ?>
+									<?= tohtml( _("Allow users to change web templates when editing web domains")) ?>
 								</label>
 								<select class="form-select" name="v_policy_user_edit_web_templates" id="v_policy_user_edit_web_templates">
 									<option value="yes">
 										<?= tohtml( _("Yes")) ?>
 									</option>
 									<option value="no" <?= tohtml($_SESSION["POLICY_USER_EDIT_WEB_TEMPLATES"] == "no" ? "selected" : "") ?>>
+										<?= tohtml( _("No")) ?>
+									</option>
+								</select>
+							</div>
+							<div class="u-mb10">
+								<label for="v_policy_user_edit_backend_templates" class="form-label">
+									<?= tohtml( _("Allow users to change backend templates when editing web domains")) ?>
+								</label>
+								<select class="form-select" name="v_policy_user_edit_backend_templates" id="v_policy_user_edit_backend_templates">
+									<option value="yes">
+										<?= tohtml( _("Yes")) ?>
+									</option>
+									<option value="no" <?= tohtml($_SESSION["POLICY_USER_EDIT_BACKEND_TEMPLATES"] == "no" ? "selected" : "") ?>>
+										<?= tohtml( _("No")) ?>
+									</option>
+								</select>
+							</div>
+							<div class="u-mb10">
+								<label for="v_policy_user_edit_proxy_templates" class="form-label">
+									<?= tohtml( _("Allow users to change proxy templates when editing web domains")) ?>
+								</label>
+								<select class="form-select" name="v_policy_user_edit_proxy_templates" id="v_policy_user_edit_proxy_templates">
+									<option value="yes">
+										<?= tohtml( _("Yes")) ?>
+									</option>
+									<option value="no" <?= tohtml($_SESSION["POLICY_USER_EDIT_PROXY_TEMPLATES"] == "no" ? "selected" : "") ?>>
 										<?= tohtml( _("No")) ?>
 									</option>
 								</select>

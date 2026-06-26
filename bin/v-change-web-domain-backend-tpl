@@ -16,6 +16,7 @@ domain=$2
 domain_idn=$2
 template=$3
 restart=$4
+package=$5
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf

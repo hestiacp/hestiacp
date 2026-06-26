@@ -42,6 +42,8 @@ $v_ip = $data[$v_domain]["IP"];
 $v_template = $data[$v_domain]["TPL"];
 $v_aliases = str_replace(",", "\n", $data[$v_domain]["ALIAS"]);
 $valiases = explode(",", $data[$v_domain]["ALIAS"]);
+$v_package = $data[$user]["PACKAGE"];
+
 
 $v_ssl = $data[$v_domain]["SSL"];
 if (!empty($v_ssl)) {
@@ -434,7 +436,8 @@ if (!empty($_POST["save"])) {
 						quoteshellarg($v_proxy_template) .
 						" " .
 						quoteshellarg($ext) .
-						" 'no'",
+						" 'no'" .
+						quoteshellarg($v_package_name),
 					$output,
 					$return_var,
 				);

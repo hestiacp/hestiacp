@@ -11,6 +11,10 @@ session_write_close();
 
 $dist_config = require __DIR__ . "/configuration_sample.php";
 $dist_config["public_path"] = "/fm/";
+
+// Hestia uses FileGator as the panel file manager. Keep Hestia-specific
+// overrides here so administrators can find the supported integration settings.
+$dist_config["overwrite_on_upload"] = true;
 $dist_config["frontend_config"]["app_name"] = "File Manager - Hestia Control Panel";
 $dist_config["frontend_config"]["logo"] = "../images/logo.svg";
 $dist_config["frontend_config"]["editable"] = [

@@ -16,7 +16,6 @@ domain=$2
 domain_idn=$2
 template=$3
 restart=$4
-package=$5
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -71,11 +70,21 @@ for port in $ports; do
 	fi
 done
 
+# Get user package max_workers
+PACKAGE=$($BIN/v-list-user "$user" json | jq -r ".$user.PACKAGE")
+max_workers=$($BIN/v-list-user-package "$PACKAGE" json | jq -r --arg pkg "$PACKAGE" '.[$pkg].MAX_WORKERS')
+
+# Default to 8 workers if undefined
+if [ -z "$max_workers" ]; then
+	max_workers=8
+fi
+
 # Changing backend config
 cat $WEBTPL/$WEB_BACKEND/$template.tpl \
 	| sed -e "s|%backend_port%|$backend_port|" \
 		-e "s|%user%|$user|g" \
 		-e "s|%domain%|$domain|g" \
+		-e "s|%max_workers%|$max_workers|g" \
 		-e "s|%domain_idn%|$domain_idn|" \
 		-e "s|%backend%|$backend_type|g" \
 		-e "s|%backend_version%|$backend_version|g" > $pool/$backend_type.conf

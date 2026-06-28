@@ -100,6 +100,12 @@ if (!empty($_POST["ok"])) {
 		if (!isset($_POST["v_swap_limit"])) {
 			$errors[] = _("Swap Limit");
 		}
+		if (!isset($_POST["v_max_workers"])) {
+			$errors[] = _("Max Workers");
+		}
+		if (!isset($_POST["v_max_memory_per_worker"])) {
+			$errors[] = _("Max Memory Per Worker");
+		}
 	}
 
 	// Check if name server entries are blank if DNS server is installed
@@ -153,6 +159,10 @@ if (!empty($_POST["ok"])) {
 		$v_swap_limit =
 			$_SESSION["RESOURCES_LIMIT"] == "yes" ? quoteshellarg($_POST["v_swap_limit"]) : "";
 
+		$v_max_workers =
+			$_SESSION["RESOURCES_LIMIT"] == "yes" ? quoteshellarg($_POST["v_max_workers"]) : "";
+		$v_max_memory_per_worker =
+			$_SESSION["RESOURCES_LIMIT"] == "yes" ? quoteshellarg($_POST["v_max_memory_per_worker"]) : "";
 		$v_ns1 = !empty($_POST["v_ns1"]) ? trim($_POST["v_ns1"], ".") : "";
 		$v_ns2 = !empty($_POST["v_ns2"]) ? trim($_POST["v_ns2"], ".") : "";
 		$v_ns3 = !empty($_POST["v_ns3"]) ? trim($_POST["v_ns3"], ".") : "";
@@ -208,6 +218,8 @@ if (!empty($_POST["ok"])) {
 			$pkg .= "CPU_QUOTA_PERIOD=" . $v_cpu_quota_period . "\n";
 			$pkg .= "MEMORY_LIMIT=" . $v_memory_limit . "\n";
 			$pkg .= "SWAP_LIMIT=" . $v_swap_limit . "\n";
+			$pkg .= "MAX_WORKERS=" . $v_max_workers . "\n";
+			$pkg .= "MAX_MEMORY_PER_WORKER=" . $v_max_memory_per_worker . "\n";
 			$pkg .= "BANDWIDTH=" . $v_bandwidth . "\n";
 			$pkg .= "RATE_LIMIT=" . $v_ratelimit . "\n";
 			$pkg .= "NS=" . $v_ns . "\n";
@@ -342,6 +354,12 @@ if (empty($v_memory_limit)) {
 }
 if (empty($v_swap_limit)) {
 	$v_swap_limit = "'unlimited'";
+}
+if (empty($v_max_workers)) {
+	$v_max_workers = "'8'";
+}
+if (empty($v_max_memory_per_worker)) {
+	$v_max_memory_per_worker = "'128M'";
 }
 
 if (empty($v_ns1)) {

@@ -40,6 +40,8 @@ json_list() {
         "DISK_QUOTA": "'$DISK_QUOTA'",
         "CPU_QUOTA":"'$CPU_QUOTA'",
         "CPU_QUOTA_PERIOD":"'$CPU_QUOTA_PERIOD'",
+		"MAX_WORKERS":"'$MAX_WORKERS'",
+		"MAX_MEMORY_PER_WORKER":"'$MAX_MEMORY_PER_WORKER'",
         "MEMORY_LIMIT":"'$MEMORY_LIMIT'",
         "SWAP_LIMIT":"'$SWAP_LIMIT'",
         "BANDWIDTH": "'$BANDWIDTH'",

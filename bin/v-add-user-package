@@ -67,6 +67,12 @@ is_package_consistent() {
 	if [ "$SWAP_LIMIT" != 'unlimited' ] && [ "$RESOURCES_LIMIT" = 'yes' ]; then
 		is_valid_swap_size "$SWAP_LIMIT" 'SWAP_LIMIT'
 	fi
+	if [ "$MAX_WORKERS" != 'unlimited' ] && [ "$RESOURCES_LIMIT" = 'yes' ]; then
+		is_valid_max_workers "$MAX_WORKERS" 'MAX_WORKERS'
+	fi
+	if [ "$MAX_MEMORY_PER_WORKER" != 'unlimited' ] && [ "$RESOURCES_LIMIT" = 'yes' ]; then
+		is_valid_max_memory_per_worker "$MAX_MEMORY_PER_WORKER" 'MAX_MEMORY_PER_WORKER'
+	fi
 	if [ "$BANDWIDTH" != 'unlimited' ]; then
 		is_int_format_valid "$BANDWIDTH" 'BANDWIDTH'
 	fi
@@ -146,6 +152,8 @@ CPU_QUOTA='$CPU_QUOTA'
 CPU_QUOTA_PERIOD='$CPU_QUOTA_PERIOD'
 MEMORY_LIMIT='$MEMORY_LIMIT'
 SWAP_LIMIT='$SWAP_LIMIT'
+MAX_WORKERS='$MAX_WORKERS'
+MAX_MEMORY_PER_WORKER='$MAX_MEMORY_PER_WORKER'
 BANDWIDTH='$BANDWIDTH'
 NS='$NS'
 SHELL='$SHELL'

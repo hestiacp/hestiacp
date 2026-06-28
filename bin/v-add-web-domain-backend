@@ -63,9 +63,21 @@ for port in $ports; do
 	fi
 done
 
+# Get user package 
+PACKAGE=$($BIN/v-list-user "$user" json | jq -r ".$user.PACKAGE")
+
+# Get package max_workers
+max_workers=$($BIN/v-list-user-package "$PACKAGE" json | jq -r --arg pkg "$PACKAGE" '.[$pkg].MAX_WORKERS')
+
+# Default to 8 workers if undefined
+if [ -z "$max_workers" ]; then
+	max_workers=8
+fi
+
 # Adding backend config
 cat $WEBTPL/$WEB_BACKEND/$template.tpl \
 	| sed -e "s|%backend_port%|$backend_port|" \
+		-e "s|%max_workers%|$max_workers|" \
 		-e "s|%user%|$user|g" \
 		-e "s|%domain%|$domain|g" \
 		-e "s|%backend%|$backend_type|g" \

@@ -346,6 +346,29 @@
 							</div>
 							<small class="form-text text-muted"><?= tohtml( _("Takes a swap size in bytes. If the value is suffixed with K, M, G or T, the specified swap size is parsed as Kilobytes, Megabytes, Gigabytes, or Terabytes (with the base 1024), respectively")) ?></small>
 						</div>
+
+						<!-- PHP-FPM Max workers -->
+						<div class="u-mb10">
+							<label for="v_max_workers" class="form-label">
+								<?= tohtml( _("PHP-FPM Max workers")) ?>
+							</label>
+							<div class="u-pos-relative">
+								<input type="text" class="form-control" name="v_max_workers" id="v_max_workers" value="<?= tohtml(trim($v_max_workers, "'")) ?>">
+							</div>
+							<small class="form-text text-muted"><?= tohtml( _("The maximum number of parallel PHP processes that can run at any one time. Higher values allow more concurrent PHP requests, but use more memory.")) ?></small>
+						</div>
+
+						<!-- PHP-FPM Max memory per worker -->
+						<div class="u-mb10">
+							<label for="v_max_memory_per_worker" class="form-label">
+								<?= tohtml( _("PHP-FPM Max memory per worker")) ?>
+							</label>
+							<div class="u-pos-relative">
+								<input type="text" class="form-control" name="v_max_memory_per_worker" id="v_max_memory_per_worker" value="<?= tohtml(trim($v_max_memory_per_worker, "'")) ?>">
+							</div>
+							<small class="form-text text-muted"><?= tohtml( _("The maximum amount of memory that a single PHP worker process can use. If a worker process exceeds this limit, it will be automatically restarted to free up memory.")) ?></small>
+						</div>
+
 					</div>
 				</details>
 			<?php } ?>

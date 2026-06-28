@@ -1364,6 +1364,20 @@ is_valid_swap_size() {
 	fi
 }
 
+# Validate Max Workers
+is_valid_max_workers() {
+    if ! [[ "$1" =~ ^[0-9]+$ ]]; then
+        check_result "$E_INVALID" "Invalid Max Workers format :: $1"
+    fi
+}
+
+# Validate Max Memory Per Worker
+is_valid_max_memory_per_worker() {
+    if [[ ! "$1" =~ ^[0-9]+[KMGTK]?$ ]]; then
+        check_result "$E_INVALID" "Invalid Max Memory Per Worker format :: $1"
+    fi
+}
+
 is_object_name_format_valid() {
 	if ! [[ "$1" =~ ^[-|\ |\.|_[:alnum:]]{0,50}$ ]]; then
 		check_result "$E_INVALID" "invalid $2 format :: $1"

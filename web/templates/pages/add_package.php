@@ -339,6 +339,29 @@
 						</div>
 						<small class="form-text text-muted"><?= tohtml( _("Takes a swap size in bytes. If the value is suffixed with K, M, G or T, the specified swap size is parsed as Kilobytes, Megabytes, Gigabytes, or Terabytes (with the base 1024), respectively")) ?></small>
 					</div>
+
+					<div class="u-mb10">
+						<label for="max_workers" class="form-label">
+							<?= tohtml( _("Max Workers (Apache and PHP-FPM)")) ?>
+						</label>
+						<div class="u-pos-relative">
+							<input type="text" class="form-control" name="v_max_workers" id="v_max_workers" value="<?= tohtml(trim($v_max_workers, "'")) ?>">
+
+						</div>
+						<small class="form-text text-muted"><?= tohtml( _("Maximum number of Apache and PHP-FPM workers.")) ?></small>
+					</div>
+
+					<div class="u-mb10">
+						<label for="max_memory_per_worker" class="form-label">
+							<?= tohtml( _("Max Memory Per Worker (in bytes or with units like '2G')")) ?>
+						</label>
+						<div class="u-pos-relative">
+							<input type="text" class="form-control" name="v_max_memory_per_worker" id="v_max_memory_per_worker" value="<?= tohtml(trim($v_max_memory_per_worker, "'")) ?>">
+							
+						</div>
+						<small class="form-text text-muted"><?= tohtml( _("Maximum memory usage per worker. If the value is suffixed with K, M, G or T, the specified size is parsed as Kilobytes, Megabytes, Gigabytes, or Terabytes (with the base 1024), respectively")) ?></small>
+					</div>
+
 				</div>
 			</details>
 			<?php } ?>

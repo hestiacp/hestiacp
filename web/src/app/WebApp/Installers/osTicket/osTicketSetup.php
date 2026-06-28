@@ -34,7 +34,7 @@ class osTicketSetup extends BaseSetup {
         ],
         "server" => [
             "nginx" => [
-                "template" => "default",
+                "template" => "osticket",
             ],
             "php" => [
                 "supported" => ["8.2", "8.3", "8.4"],

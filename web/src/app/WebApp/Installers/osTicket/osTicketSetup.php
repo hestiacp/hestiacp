@@ -51,26 +51,23 @@ class osTicketSetup extends BaseSetup {
             $target->getDocRoot("include/ost-config.php"),
         );
 
-        $this->appcontext->sendPostRequest(
-            "http://" . $target->domain->domainName . "/setup/install.php",
-            [
-                "s" => "install",
-                "name" => $options["helpdesk_name"],
-                "email" => $options["email"],
-                "lang_id" => "en_US",
-                "fname" => $options["first_name"],
-                "lname" => $options["last_name"],
-                "admin_email" => $options["admin_email"],
-                "username" => $options["username"],
-                "passwd" => $options["password"],
-                "passwd2" => $options["password"],
-                "prefix" => "ost_",
-                "dbhost" => $target->database->host,
-                "dbname" => $target->database->name,
-                "dbuser" => $target->database->user,
-                "dbpass" => $target->database->password,
-            ],
-        );
+        $this->appcontext->sendPostRequest($target->getUrl() . "/setup/install.php", [
+            "s" => "install",
+            "name" => $options["helpdesk_name"],
+            "email" => $options["email"],
+            "lang_id" => "en_US",
+            "fname" => $options["first_name"],
+            "lname" => $options["last_name"],
+            "admin_email" => $options["admin_email"],
+            "username" => $options["username"],
+            "passwd" => $options["password"],
+            "passwd2" => $options["password"],
+            "prefix" => "ost_",
+            "dbhost" => $target->database->host,
+            "dbname" => $target->database->name,
+            "dbuser" => $target->database->user,
+            "dbpass" => $target->database->password,
+        ]);
 
         // Cleanup
         $this->appcontext->deleteDirectory($target->getDocRoot("upload"));

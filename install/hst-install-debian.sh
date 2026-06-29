@@ -422,6 +422,16 @@ if [ "x$(id -u)" != 'x0' ]; then
 	check_result 1 "Script can be run executed only by root"
 fi
 
+if [ -n "$force" ]; then
+	( deluser hestiamail; deluser hestiaweb; delgroup hestia-users; \
+	  rm -rf /usr/local/hestia ) > /dev/null 2>&1 || true
+
+	if [ -d "/home/$username" ]; then
+		find /home \( -type f -o -type d \) -exec chattr -i {} + 2>/dev/null || true
+		( cd /home; rm -rf $username ) > /dev/null 2>&1 || true
+	fi
+fi
+
 if [ -d "/usr/local/hestia" ]; then
 	check_result 1 "Hestia install detected. Unable to continue"
 fi

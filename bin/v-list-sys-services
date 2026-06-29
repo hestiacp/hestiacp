@@ -85,6 +85,59 @@ get_srv_state() {
 	cpu=0
 	rtime="0"
 
+	# PostgreSQL special handling (automatic version detection)
+	if [[ "$name" == *"postgres"* ]] || [[ "$srv" == *"postgres"* ]] || [[ "$srv" == "pgsql" ]]; then
+	    # Directly use the ps command to get the real RSS (KB -> MB)
+	    mem_kb=$(ps -C postgres -o rss= 2>/dev/null | awk '{sum+=$1} END {print sum}')
+	    if [ -n "$mem_kb" ] && [ "$mem_kb" -gt 0 ]; then
+	        mem=$(awk "BEGIN {printf \"%.0f\", $mem_kb / 1024}")
+	    else
+	        mem=0
+	    fi
+	    
+	    # Get CPU usage
+	    cpu=$(ps -C postgres -o %cpu= 2>/dev/null | awk '{sum+=$1} END {print sum}')
+	    [ -z "$cpu" ] && cpu=0
+	    
+	    # Intelligent search for PID files
+	    pid_file=""
+	    
+	    # Method 1: Obtain the data directory through the process command line
+	    pg_data=$(ps -C postgres -o cmd= 2>/dev/null | head -1 | grep -o '\-D [^ ]*' | cut -d' ' -f2)
+	    if [ -n "$pg_data" ] && [ -f "${pg_data}/postmaster.pid" ]; then
+	        pid_file="${pg_data}/postmaster.pid"
+	    fi
+	    
+	    # Method 2: Get version and status via pg_lsclusters
+	    if [ -z "$pid_file" ] && command -v pg_lsclusters >/dev/null 2>&1; then
+	        pg_version=$(pg_lsclusters | awk 'NR>1 {print $1}' | head -1)
+	        if [ -n "$pg_version" ] && [ -f "/var/run/postgresql/${pg_version}-main.pid" ]; then
+	            pid_file="/var/run/postgresql/${pg_version}-main.pid"
+	        fi
+	    fi
+	    
+	    # Method 3: Common PID File Locations
+	    if [ -z "$pid_file" ]; then
+	        for pf in /var/run/postgresql/*.pid /var/lib/postgresql/*/main/postmaster.pid /var/run/postgresql/.s.PGSQL.*; do
+	            if [ -f "$pf" ]; then
+	                pid_file="$pf"
+	                break
+	            fi
+	        done
+	    fi
+	    
+	    # Calculate runtime
+	    if [ -n "$pid_file" ] && [ -f "$pid_file" ]; then
+	        mtime=$(stat -c "%Y" "$pid_file" 2>/dev/null)
+	        rtime=$(( (ctime - mtime) / 60 ))
+	        [ "$rtime" -lt 0 ] && rtime=0
+	    else
+	        rtime=0
+	    fi
+	    
+	    return
+	fi
+
 	# Searching related pids
 	if [ -z $3 ]; then
 		pids=$(pidof $name | tr ' ' '|')
@@ -119,9 +172,14 @@ get_srv_state() {
 		# Calculating CPU usage
 		cpu=$(echo "$pids" | awk '{ sum += $2} END {print sum}')
 
-		# Calculating memory usage
-		mem=$(echo "$pids" | awk '{sum += $3} END {print sum/1024 }')
-		mem=$(echo "${mem%%.*}")
+		# Calculating memory usage (RSS in KB)
+		mem_kb=$(echo "$pids" | awk '{sum += $3} END {print sum}')
+		if [ ! -z "$mem_kb" ] && [ "$mem_kb" -gt 0 ]; then
+			# Convert to MB, keeping one decimal place
+			mem=$(awk "BEGIN {printf \"%.0f\", $mem_kb / 1024}")
+		else
+			mem=0
+		fi
 
 		# Searching pid file
 		pid_file=''
@@ -143,6 +201,10 @@ get_srv_state() {
 			mtime=$(stat -c "%Y" $pid_file)
 			rtime=$((ctime - mtime))
 			rtime=$((rtime / 60))
+			# Ensure that the runtime is not negative
+			if [ "$rtime" -lt 0 ]; then
+				rtime=0
+			fi
 		else
 			rtime=0
 		fi
@@ -153,14 +215,14 @@ get_srv_state() {
 		rtime="0"
 	fi
 }
-
+ 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
 # Saving current proccess list
 tmp_file=$(mktemp)
-ps -eo pid,pcpu,size > $tmp_file
+ps -eo pid,pcpu,rss > $tmp_file
 
 # Checking current time
 ctime=$(date +%s)
@@ -311,12 +373,26 @@ fi
 
 # Checking FIREWALL system
 if [ -n "$FIREWALL_SYSTEM" ] && [ "$FIREWALL_SYSTEM" != 'remote' ]; then
-	state="stopped"
-	if $(iptables -S INPUT | grep -qx '\-P INPUT DROP'); then
-		state="running"
-	fi
-	data="$data\nNAME='$FIREWALL_SYSTEM' SYSTEM='firewall'"
-	data="$data STATE='$state' CPU='0' MEM='0' RTIME='0'"
+    state="stopped"
+    
+    # Check if nftables has any rules
+    if nft list ruleset >/dev/null 2>&1; then
+        # If there are rules, it means the firewall is running
+        state="running"
+        
+        # Get the system uptime as the firewall's uptime
+        if [ -f "/proc/uptime" ]; then
+            uptime_seconds=$(awk '{print int($1)}' /proc/uptime)
+            rtime=$((uptime_seconds / 60))
+        fi
+    fi
+    
+    # Get firewall memory (actually 0)
+    mem=0
+    cpu=0
+    
+    data="$data\nNAME='$FIREWALL_SYSTEM' SYSTEM='firewall'"
+    data="$data STATE='$state' CPU='$cpu' MEM='$mem' RTIME='$rtime'"
 fi
 
 # Checking FIREWALL Fail2ban extention

@@ -125,7 +125,7 @@ get_distro_suffix() {
 	distro_num=$(lsb_release -rs)
 
 	if [ "$distro_id" = "debian" ]; then
-		echo "deb${distro_num}"
+		echo "debian${distro_num}"
 	elif [ "$distro_id" = "ubuntu" ]; then
 		echo "ubuntu${distro_num}"
 	else
@@ -152,8 +152,8 @@ apply_distro_version() {
 
 	# Build the release suffix:
 	#   - Default pkgrev is 1; override with --pkgrev <n>
-	#   - Without a release id : -<pkgrev>+<distro_suffix>                (e.g. -1+deb12)
-	#   - With    a release id : -<pkgrev>+<distro_suffix>~<BUILD_RELEASE> (e.g. -1+deb12~myci1)
+	#   - Without a release id : -<pkgrev>+<distro_suffix>                (e.g. -1+debian12)
+	#   - With    a release id : -<pkgrev>+<distro_suffix>~<BUILD_RELEASE> (e.g. -1+debian12~myci1)
 	# BUILD_RELEASE here may come from:
 	#   1) the --release command line option (explicit user choice), or
 	#   2) the '~<tag>' suffix auto-detected from the hestia control file's Version,

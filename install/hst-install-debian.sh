@@ -47,7 +47,7 @@ case "$os" in
 		os_id="ubuntu${release}"
 		;;
 	debian)
-		os_id="deb${release}"
+		os_id="debian${release}"
 		;;
 	*)
 		echo "Error: unsupported distribution for determining Hestia version ($os)"

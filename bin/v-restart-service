@@ -80,10 +80,9 @@ for service in $service_list; do
 		"$service" = "proftpd" -o \
 		"$service" = "ssh" -o \
 		"$service" = "fail2ban" ]; then
-		systemctl reload-or-restart "$service" >> $log 2>&1
+		service_action reload-or-restart "$service" "$log"
 	else
-		systemctl reset-failed "$service" >> $log 2>&1
-		systemctl restart "$service" >> $log 2>&1
+		service_action restart "$service" "$log"
 	fi
 
 	# Check the result of the service restart and report whether it failed.

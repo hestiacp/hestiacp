@@ -1797,6 +1797,41 @@ multiphp_versions() {
 	fi
 }
 
+# Service control abstraction - the single indirection point for starting,
+# stopping and restarting system services. Dispatches to the service manager
+# named by SERVICE_MANAGER in hestia.conf. systemd is the default and the only
+# officially supported backend; a generic SysV-style "service" backend is
+# provided for environments without systemd as PID 1 (e.g. containers), and the
+# case statement can be extended for other supervisors. Returns the backend
+# command's exit code.
+# Usage: service_action <start|stop|restart|reload-or-restart|reload> NAME [LOGFILE]
+service_action() {
+	local action="$1"
+	local name="$2"
+	local log="${3:-/dev/null}"
+
+	case "${SERVICE_MANAGER:-systemd}" in
+		sysv | service)
+			# Generic SysV-style backend: map systemd-only verbs onto the
+			# portable `service` equivalents.
+			[ "$action" = "reload-or-restart" ] && action="restart"
+			service "$name" "$action" >> "$log" 2>&1
+			;;
+		systemd | *)
+			# Default, officially supported backend (semantics unchanged).
+			case "$action" in
+				restart)
+					systemctl reset-failed "$name" >> "$log" 2>&1
+					systemctl restart "$name" >> "$log" 2>&1
+					;;
+				*)
+					systemctl "$action" "$name" >> "$log" 2>&1
+					;;
+			esac
+			;;
+	esac
+}
+
 multiphp_default_version() {
 	# Get system wide default php version (set by update-alternatives)
 	local sys_phpversion=$(php -r "echo substr(phpversion(),0,3);")

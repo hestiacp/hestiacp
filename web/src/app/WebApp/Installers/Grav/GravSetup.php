@@ -7,62 +7,69 @@ namespace Hestia\WebApp\Installers\Grav;
 use Hestia\WebApp\BaseSetup;
 use Hestia\WebApp\InstallationTarget\InstallationTarget;
 
-class GravSetup extends BaseSetup
-{
+class GravSetup extends BaseSetup {
     protected array $info = [
-        'name' => 'Grav',
-        'group' => 'cms',
-        'version' => 'latest',
-        'thumbnail' => 'grav-symbol.svg',
+        "name" => "Grav",
+        "group" => "cms",
+        "version" => "2.0.3",
+        "thumbnail" => "grav-symbol.svg",
     ];
 
     protected array $config = [
-        'form' => [
-            'admin' => ['type' => 'boolean', 'value' => false, 'label' => 'Create admin account'],
-            'username' => ['text' => 'admin'],
-            'password' => 'password',
-            'email' => 'text',
+        "form" => [
+            "full_name" => "text",
+            "username" => ["text" => "gravadmin"],
+            "password" => "password",
+            "email" => "text",
         ],
-        'database' => false,
-        'resources' => [
-            'composer' => ['src' => 'getgrav/grav', 'dst' => '/'],
-        ],
-        'server' => [
-            'nginx' => [
-                'template' => 'grav',
+        "database" => false,
+        "resources" => [
+            "archive" => [
+                "src" =>
+                    "https://github.com/getgrav/grav/releases/download/2.0.3/grav-admin-v2.0.3.zip",
             ],
-            'php' => [
-                'supported' => ['7.4', '8.0', '8.1' . '8.2', '8.3'],
+        ],
+        "server" => [
+            "nginx" => [
+                "template" => "grav",
+            ],
+            "php" => [
+                "supported" => ["8.3", "8.4", "8.5"],
             ],
         ],
     ];
 
-    protected function setupApplication(InstallationTarget $target, array $options): void
-    {
-        if ($options['admin'] == true) {
-            chdir($target->getDocRoot());
+    protected function setupApplication(InstallationTarget $target, array $options): void {
+        $this->appcontext->copyDirectory(
+            $target->getDocRoot("grav-admin/."),
+            $target->getDocRoot(),
+        );
 
-            $this->appcontext->runPHP($options['php_version'], $target->getDocRoot('/bin/gpm'), [
-                'install',
-                'admin',
-            ]);
+        // Create admin user configuration
+        $yaml =
+            "state: enabled\n" .
+            "email: " .
+            $options["email"] .
+            "\n" .
+            "fullname: \"" .
+            $options["full_name"] .
+            "\"\n" .
+            "title: Administrator\n" .
+            "access:\n" .
+            "  site:\n" .
+            "    login: true\n" .
+            "  api:\n" .
+            "    super: true\n" .
+            "hashed_password: '" .
+            password_hash($options["password"], PASSWORD_DEFAULT) .
+            "'\n";
 
-            $this->appcontext->runPHP($options['php_version'], $target->getDocRoot('/bin/plugin'), [
-                'login',
-                'new-user',
-                '-u',
-                $options['username'],
-                '-p',
-                $options['password'],
-                '-e',
-                $options['email'],
-                '-P',
-                'a',
-                '-N',
-                $options['username'],
-                '-l',
-                'en',
-            ]);
-        }
+        $this->appcontext->createFile(
+            $target->getDocRoot("user/accounts/" . $options["username"] . ".yaml"),
+            $yaml,
+        );
+
+        // Cleanup
+        $this->appcontext->deleteDirectory($target->getDocRoot("grav-admin"));
     }
 }

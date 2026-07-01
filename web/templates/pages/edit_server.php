@@ -624,6 +624,31 @@
 								</label>
 								<input type="text" class="form-control" name="v_pgsql_url" id="v_pgsql_url" value="<?= tohtml($_SESSION["DB_PGA_ALIAS"]) ?>">
 							</div>
+							<div class="u-mb10">
+								<label for="v_phppgadmin_key" class="form-label">
+									<?= tohtml( _("phpPgAdmin Single Sign On")) ?>
+									<span class="hint">
+										<a
+											href="https://hestiacp.com/docs/server-administration/databases.html"
+											target="_blank"
+										>
+											(<?= tohtml( _("More info")) ?>)
+										</a>
+									</span>
+								</label>
+								<select
+									class="form-select"
+									name="v_phppgadmin_key"
+									id="v_phppgadmin_key"
+								>
+									<option value="no">
+										<?= tohtml( _("Disabled")) ?>
+									</option>
+									<option value="yes" <?= tohtml(isset($_SESSION["PHPPGADMIN_KEY"]) && $_SESSION["PHPPGADMIN_KEY"] != "" ? "selected" : "") ?>>
+										<?= tohtml( _("Enabled")) ?>
+									</option>
+								</select>
+							</div>
 						<?php } ?>
 						<?php if ($v_pgsql == "yes") {
 							$i = 0;

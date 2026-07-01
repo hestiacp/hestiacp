@@ -386,6 +386,47 @@ delete_mysql_database_temp_user() {
 	mysql_query "$query" > /dev/null
 }
 
+add_pgsql_database_temp_user() {
+	psql_connect $host
+
+	query="CREATE ROLE \"$dbuser\" WITH LOGIN PASSWORD '$dbpass'"
+	psql_query "$query" > /dev/null
+
+	query="GRANT CONNECT ON DATABASE \"$database\" TO \"$dbuser\""
+	psql_query "$query" > /dev/null
+
+	query="GRANT ALL PRIVILEGES ON DATABASE \"$database\" TO \"$dbuser\""
+	psql_query "$query" > /dev/null
+
+	query="GRANT ALL ON SCHEMA public TO \"$dbuser\""
+	psql_query "$query" > /dev/null
+
+	query="GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO \"$dbuser\""
+	psql_query "$query" > /dev/null
+
+	query="GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO \"$dbuser\""
+	psql_query "$query" > /dev/null
+}
+
+delete_pgsql_database_temp_user() {
+	psql_connect $host
+
+	query="REVOKE ALL PRIVILEGES ON ALL TABLES IN SCHEMA public FROM \"$dbuser\""
+	psql_query "$query" > /dev/null
+
+	query="REVOKE ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public FROM \"$dbuser\""
+	psql_query "$query" > /dev/null
+
+	query="REVOKE ALL ON SCHEMA public FROM \"$dbuser\""
+	psql_query "$query" > /dev/null
+
+	query="REVOKE ALL PRIVILEGES ON DATABASE \"$database\" FROM \"$dbuser\""
+	psql_query "$query" > /dev/null
+
+	query="DROP ROLE IF EXISTS \"$dbuser\""
+	psql_query "$query" > /dev/null
+}
+
 # Check if database host do not exist in config
 is_dbhost_new() {
 	if [ -e "$HESTIA/conf/$type.conf" ]; then

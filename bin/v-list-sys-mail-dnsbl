@@ -1,10 +1,10 @@
 #!/bin/bash
-# info: list sshd port
+# info: list dnsbl config parameters
 # options: [FORMAT]
 #
-# example: v-list-sys-sshd-port
+# example: v-list-sys-mail-dnsbl
 #
-# This function for obtainings the port of sshd listens to
+# This function lists the active DNSBL servers used by Exim.
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #
@@ -17,57 +17,62 @@ format=${1-shell}
 # shellcheck source=/etc/hestiacp/hestia.conf
 source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
-source "$HESTIA"/func/main.sh
+source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
+# JSON list function
 json_list() {
-	sh_counter=$(echo "$ports" | wc -l)
-	i=1
-	echo '['
-	for port in $ports; do
-		if [ "$i" -lt "$sh_counter" ]; then
-			echo -e "\t\"$port\","
+	echo '{'
+	local i=1
+	local total
+	total=$(wc -l < "$config_path")
+	while read -r line; do
+		[ -z "$line" ] && continue
+		echo -n '    "'$line'": {
+        "HOST": "'$line'"
+    }'
+		if [ "$i" -lt "$total" ]; then
+			echo ','
 		else
-			echo -e "\t\"$port\""
+			echo ''
 		fi
-		((++i))
-	done
-	echo "]"
+		((i++))
+	done < "$config_path"
+	echo '}'
 }
 
 # SHELL list function
 shell_list() {
-	echo "PORT"
-	echo "-----"
-	for port in $ports; do
-		echo "$port"
-	done
+	echo "HOST"
+	echo "----"
+	cat "$config_path"
 }
 
 # PLAIN list function
 plain_list() {
-	for port in $ports; do
-		echo "$port"
-	done
+	cat "$config_path"
 }
 
 # CSV list function
 csv_list() {
-	echo "PORT"
-	for port in $ports; do
-		echo "$port"
-	done
+	echo "HOST"
+	cat "$config_path"
 }
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-version=$(lsb_release -s -r)
-
-if [[ "$version" = 9 || "$version" = 10 ]]; then
-	ports=$(sshd -T -C "user=root" | grep '^port' | cut -d ' ' -f2)
+# Defining config path
+if [ -f "$HESTIA/conf/dnsbl.conf" ]; then
+	config_path="$HESTIA/conf/dnsbl.conf"
 else
-	ports=$(sshd -T | grep '^port' | cut -d ' ' -f2)
+	config_path="/etc/exim4/dnsbl.conf"
+fi
+
+if [ ! -f "$config_path" ]; then
+	exit
 fi
 
 # Listing data

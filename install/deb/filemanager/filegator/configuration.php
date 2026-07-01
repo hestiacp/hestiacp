@@ -144,6 +144,10 @@ switch ($lang) {
 $dist_config["services"]["Filegator\Services\Storage\Filesystem"]["config"][
 	"adapter"
 ] = function () {
+	if (empty($_SESSION["user"])) {
+		echo '<meta http-equiv="refresh" content="0; url=/">';
+		exit();
+	}
 	if (!empty($_SESSION["INACTIVE_SESSION_TIMEOUT"])) {
 		if ($_SESSION["INACTIVE_SESSION_TIMEOUT"] * 60 + $_SESSION["LAST_ACTIVITY"] < time()) {
 			$v_user = quoteshellarg($_SESSION["user"]);
@@ -189,9 +193,6 @@ $dist_config["services"]["Filegator\Services\Storage\Filesystem"]["config"][
 			$output,
 			$return_var,
 		);
-		// filemanager also requires .ssh chmod o+x ... hopefully we can improve it to g+x or u+x someday
-		// current minimum for filemanager: chmod 0701 .ssh
-		shell_exec("sudo chmod o+x " . quoteshellarg("/home/" . basename($v_user) . "/.ssh"));
 	}
 
 	if (!isset($_SESSION["SFTP_PORT"])) {

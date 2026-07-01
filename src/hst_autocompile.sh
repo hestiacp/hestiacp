@@ -107,6 +107,40 @@ usage() {
 	echo "develop branch code."
 }
 
+# Detects the package that provides a shared library required by hestia-php
+detect_pkg_from_elf() {
+	local bin="$1"
+	local lib_pattern="$2"
+
+	local so_name
+	so_name=$(readelf -d "$bin" 2> /dev/null \
+		| awk '/NEEDED/ {gsub(/\[|\]/,"",$5); print $5}' \
+		| grep "$lib_pattern" \
+		| head -n1)
+
+	[[ -z "$so_name" ]] && return 0
+
+	# Try to resolve the real library path
+	local so_path=""
+	so_path=$(ldconfig -p 2> /dev/null \
+		| awk -v lib="$so_name" '$1 == lib {print $NF; exit}')
+
+	# Fallback if ldconfig does not return a result
+	if [[ -z "$so_path" ]]; then
+		so_path=$(find /lib /usr/lib -name "$so_name" 2> /dev/null | head -n1)
+	fi
+
+	[[ -z "$so_path" ]] && return 0
+
+	# Use basename because dpkg-query expects only the file name, not the full path
+	local pkg
+	pkg=$(dpkg-query -S "$(basename "$so_path")" 2> /dev/null \
+		| cut -d: -f1 \
+		| head -n1)
+
+	echo "$pkg"
+}
+
 # Set compiling directory
 REPO='hestiacp/hestiacp'
 BUILD_DIR="${BUILD_DIR:-/tmp/hestiacp-src}"
@@ -524,6 +558,15 @@ if [ "$PHP_B" = true ]; then
 	if [ "$BUILD_ARCH" != "amd64" ]; then
 		sed -i "s/amd64/${BUILD_ARCH}/g" "$BUILD_DIR_HESTIAPHP/DEBIAN/control"
 	fi
+
+	# Extract correct libs as depends
+	PHP_BIN="$BUILD_DIR_HESTIAPHP/usr/local/hestia/php/sbin/hestia-php"
+	LIBZIP_DEP=$(detect_pkg_from_elf "$PHP_BIN" "libzip")
+	ONIG_DEP=$(detect_pkg_from_elf "$PHP_BIN" "libonig")
+	sed -i \
+		-e "s/@LIBZIP_DEP@/${LIBZIP_DEP}/g" \
+		-e "s/@ONIG_DEP@/${ONIG_DEP}/g" \
+		"$BUILD_DIR_HESTIAPHP/DEBIAN/control"
 
 	get_branch_file 'src/deb/php/copyright' "$BUILD_DIR_HESTIAPHP/DEBIAN/copyright"
 	get_branch_file 'src/deb/php/postinst' "$BUILD_DIR_HESTIAPHP/DEBIAN/postinst"

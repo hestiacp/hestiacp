@@ -35,9 +35,9 @@ HESTIA_INSTALL_VER='1.10.0~alpha'
 # Supported PHP versions
 multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0" "8.1" "8.2" "8.3" "8.4" "8.5")
 # One of the following PHP versions is required for Roundcube / phpmyadmin
-multiphp_required=("7.3" "7.4" "8.0" "8.1" "8.2" "8.3")
+multiphp_required=("8.1" "8.2" "8.3" "8.4" "8.5")
 # Default PHP version if none supplied
-fpm_v="8.3"
+fpm_v="8.5"
 # MariaDB version
 mariadb_v="11.8"
 # Node.js version
@@ -1957,6 +1957,13 @@ if [ "$named" = 'yes' ]; then
 	if [ ! -f /etc/bind/named.conf.default-zones ]; then
 		sed -i "/^include.*named.conf.default-zones/d" /etc/bind/named.conf
 	fi
+
+	# Add root-hints include after named.conf.local if missing
+	if [[ -f /etc/bind/named.conf.root-hints ]] \
+		&& ! grep -q 'include.*named.conf.root-hints' /etc/bind/named.conf 2> /dev/null; then
+		sed -i '/include.*named\.conf\.local/a include "\/etc\/bind\/named.conf.root-hints";' /etc/bind/named.conf
+	fi
+
 	update-rc.d bind9 defaults > /dev/null 2>&1
 	systemctl start bind9
 	check_result $? "bind9 start failed"
@@ -2291,6 +2298,9 @@ fi
 
 echo "[ * ] Configuring File Manager..."
 $HESTIA/bin/v-add-sys-filemanager quiet
+if [[ $release -ge 13 ]]; then
+	echo 'KexAlgorithms +diffie-hellman-group-exchange-sha256' > /etc/ssh/sshd_config.d/hestia-kex.conf
+fi
 
 #----------------------------------------------------------#
 #                  Configure dependencies                  #

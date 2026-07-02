@@ -264,6 +264,16 @@
 										<span class="u-hide-desktop"><?= tohtml( _("Edit Domain")) ?></span>
 									</a>
 								</li>
+<li class="units-table-row-action shortcut-enter" data-key-action="href">
+									<a target="_blank"
+										class="units-table-row-action-link"
+										href="/siteprobuilder/?<?= tohtml(http_build_query(["domain" => $key, "token" => $_SESSION["token"]])) ?>"
+										title="<?= tohtml( _("Edit Domain")) ?>"
+									>
+										<i class="fas fa-pencil-ruler icon-orange"></i>
+										<span class="u-hide-desktop"><?= tohtml( _("Edit Domain")) ?></span>
+									</a>
+								</li>
 								<li class="units-table-row-action" data-key-action="href">
 									<a
 										class="units-table-row-action-link"
@@ -314,7 +324,16 @@
 				</div>
 				<div class="units-table-cell u-text-center-desktop">
 					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("IP Address")) ?>:</span>
-					<?= tohtml(empty($ips[$data[$key]["IP"]]["NAT"]) ? $data[$key]["IP"] : "{$ips[$data[$key]["IP"]]["NAT"]}") ?>
+					<?php
+												$domain_ip = $data[$key]["IP"];
+												$domain_ip6 = $data[$key]["IP6"] ?? "";
+												if (!empty($domain_ip)) {
+													echo tohtml(empty($ips[$domain_ip]["NAT"]) ? $domain_ip : $ips[$domain_ip]["NAT"]);
+													if (!empty($domain_ip6)) echo " / " . tohtml($domain_ip6);
+												} elseif (!empty($domain_ip6)) {
+													echo tohtml($domain_ip6);
+												}
+												?>
 				</div>
 				<div class="units-table-cell u-text-center-desktop">
 					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Disk")) ?>:</span>

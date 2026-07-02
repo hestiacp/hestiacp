@@ -234,7 +234,20 @@ rebuild_web_domain_conf() {
 
 	syshealth_repair_web_config
 	get_domain_values 'web'
-	is_ip_valid $IP
+	# Determine local_ip for %ip% template substitution:
+	# - IPv4-only or dual-stack: use IPv4 as primary (dual-stack listen is injected by add_web_config)
+	# - IPv6-only (IP empty): use bracketed IPv6 for VirtualHost/listen directives
+	if [ -n "$IP" ]; then
+		is_ip_valid $IP
+	elif [ -n "$IP6" ]; then
+		# IPv6-only domain — bracket the address for Apache/nginx syntax
+		local_ip="[$IP6]"
+		ip="$IP6"
+	else
+		# No IP assigned — fall back to first available user IP
+		get_user_ip
+	fi
+
 	prepare_web_domain_values
 
 	# Remove old web configuration files

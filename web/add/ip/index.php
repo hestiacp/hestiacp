@@ -22,8 +22,10 @@ if (!empty($_POST["ok"])) {
 	if (empty($_POST["v_ip"])) {
 		$errors[] = _("IP Address");
 	}
-	if (empty($_POST["v_netmask"])) {
-		$errors[] = _("Netmask");
+	// Netmask is required for IPv4; IPv6 can embed prefix length in the IP field (e.g. 2001:db8::1/64)
+	$is_ipv6 = strpos($_POST["v_ip"] ?? "", ":") !== false;
+	if (empty($_POST["v_netmask"]) && !$is_ipv6) {
+		$errors[] = _("Netmask / Prefix Length");
 	}
 	if (empty($_POST["v_interface"])) {
 		$errors[] = _("Interface");

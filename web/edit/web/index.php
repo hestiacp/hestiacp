@@ -38,7 +38,8 @@ $data = json_decode(implode("", $output), true);
 unset($output);
 
 // Parse domain
-$v_ip = $data[$v_domain]["IP"];
+$v_ip  = $data[$v_domain]["IP"];
+$v_ip6 = $data[$v_domain]["IP6"] ?? "";
 $v_template = $data[$v_domain]["TPL"];
 $v_aliases = str_replace(",", "\n", $data[$v_domain]["ALIAS"]);
 $valiases = explode(",", $data[$v_domain]["ALIAS"]);
@@ -124,9 +125,7 @@ if (
 
 $redirect_code_options = [301, 302];
 $v_redirect = $data[$v_domain]["REDIRECT"];
-$v_redirect_code = isset($data[$v_domain]["REDIRECT_CODE"])
-	? intval($data[$v_domain]["REDIRECT_CODE"])
-	: 302;
+$v_redirect_code = $data[$v_domain]["REDIRECT_CODE"];
 if (!in_array($v_redirect, ["www." . $v_domain, $v_domain])) {
 	$v_redirect_custom = $v_redirect;
 }
@@ -153,10 +152,13 @@ if ($v_suspended == "yes") {
 $v_time = $data[$v_domain]["TIME"];
 $v_date = $data[$v_domain]["DATE"];
 
-// List ip addresses
+// List IP addresses — split into IPv4 and IPv6 for separate dropdowns
 exec(HESTIA_CMD . "v-list-user-ips " . $user . " json", $output, $return_var);
 $ips = json_decode(implode("", $output), true);
 unset($output);
+// Split IPs by version using the KEY (IP address), not the value (metadata)
+$ips_v4 = array_filter($ips, fn($ip) => strpos($ip, ":") === false, ARRAY_FILTER_USE_KEY);
+$ips_v6 = array_filter($ips, fn($ip) => strpos($ip, ":") !== false, ARRAY_FILTER_USE_KEY);
 
 $v_ip_public = empty($ips[$v_ip]["NAT"]) ? $v_ip : $ips[$v_ip]["NAT"];
 
@@ -202,10 +204,37 @@ if (!empty($_POST["save"])) {
 		$v_newip_public = empty($ips[$v_newip]["NAT"]) ? $v_newip : $ips[$v_newip]["NAT"];
 	}
 
-	if ($v_ip != $_POST["v_ip"] && empty($_SESSION["error_msg"])) {
-		exec(
-			HESTIA_CMD .
-				"v-change-web-domain-ip " .
+	// Handle IPv6 assignment change (add, change, or remove)
+		$posted_ip6 = $_POST["v_ip6"] ?? "";
+		if ($posted_ip6 != $v_ip6 && empty($_SESSION["error_msg"])) {
+			if (!empty($posted_ip6)) {
+				// Assign or change IPv6
+				exec(
+					HESTIA_CMD . "v-change-web-domain-ipv6 " .
+					$user . " " .
+					quoteshellarg($v_domain) . " " .
+					quoteshellarg($posted_ip6),
+					$output, $return_var
+				);
+				check_return_code($return_var, $output);
+				unset($output);
+			} elseif (!empty($v_ip6)) {
+				// Remove IPv6 — pass empty string to clear IP6 field
+				exec(
+					HESTIA_CMD . "v-change-web-domain-ipv6 " .
+					$user . " " .
+					quoteshellarg($v_domain) . " " .
+					"''",
+					$output, $return_var
+				);
+				unset($output);
+			}
+		}
+
+		if ($v_ip != $_POST["v_ip"] && empty($_SESSION["error_msg"])) {
+			exec(
+				HESTIA_CMD .
+					"v-change-web-domain-ip " .
 				$user .
 				" " .
 				quoteshellarg($v_domain) .

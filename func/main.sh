@@ -983,6 +983,86 @@ is_netmask_format_valid() {
 	fi
 }
 
+# Detect IP version from an address string. Returns "4" for IPv4, "6" for IPv6, empty on error.
+# Accepts plain address or CIDR/prefix notation (e.g. 10.0.0.1/24 or 2001:db8::/32).
+# Exit status uses bit flags: bit0=invalid IPv4, bit1=bad prefix, bit2=invalid IPv6, bit3=bad prefix length.
+hst_detect_ip_version() {
+	local input_addr="${1}"
+	local status_bits=0
+	local detected_version=""
+
+	# Strip prefix/CIDR to get bare IP
+	local ip_without_prefix="${input_addr%/*}"
+
+	# ── IPv4 detection ─────────────────────────────────────────────────
+	local ipv4_octet='([1-9]?[0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])'
+	if [[ $ip_without_prefix =~ ^$ipv4_octet\.$ipv4_octet\.$ipv4_octet\.$ipv4_octet$ ]]; then
+		detected_version="4"
+	else
+		status_bits=1  # BIT 0: not a valid IPv4 address
+	fi
+
+	# If a prefix/CIDR was supplied, validate it is within IPv4 range (0-32)
+	if [ "$input_addr" != "$ip_without_prefix" ]; then
+		local prefix_len="${input_addr#${ip_without_prefix}/}"
+		detected_version=""  # reset until prefix validates
+		if [[ "$prefix_len" =~ ^[0-9]+$ ]] && [ "$prefix_len" -le 32 ]; then
+			detected_version="4"
+		else
+			status_bits=$(( status_bits | 2 ))  # BIT 1: bad prefix length
+		fi
+	fi
+
+	# Return early if already identified as IPv4
+	if [ -n "$detected_version" ]; then
+		echo "$detected_version"
+		return $status_bits
+	fi
+
+	# ── IPv6 detection ─────────────────────────────────────────────────
+	local ipv6_addr="${input_addr%%/*}"
+	local ipv6_prefix_len="${input_addr#*/}"
+	[ "$ipv6_prefix_len" = "$input_addr" ] && ipv6_prefix_len=""
+
+	# Build a single regex covering all valid IPv6 compressed/expanded forms
+	# Each group is joined with \| (grep alternation) — do NOT use array+IFS here
+	# as IFS only uses first character of a multi-char string as separator
+	local hex_grp='[0-9A-Fa-f]\{1,4\}'
+	local ipv6_regex
+	ipv6_regex="^${hex_grp}\(:${hex_grp}\)\{7\}$"
+	ipv6_regex="${ipv6_regex}\|^\(${hex_grp}:\)\{1,1\}\(:${hex_grp}\)\{1,6\}$"
+	ipv6_regex="${ipv6_regex}\|^\(${hex_grp}:\)\{1,2\}\(:${hex_grp}\)\{1,5\}$"
+	ipv6_regex="${ipv6_regex}\|^\(${hex_grp}:\)\{1,3\}\(:${hex_grp}\)\{1,4\}$"
+	ipv6_regex="${ipv6_regex}\|^\(${hex_grp}:\)\{1,4\}\(:${hex_grp}\)\{1,3\}$"
+	ipv6_regex="${ipv6_regex}\|^\(${hex_grp}:\)\{1,5\}\(:${hex_grp}\)\{1,2\}$"
+	ipv6_regex="${ipv6_regex}\|^\(${hex_grp}:\)\{1,6\}\(:${hex_grp}\)\{1,1\}$"
+	ipv6_regex="${ipv6_regex}\|^\(\(${hex_grp}:\)\{1,7\}\|:\):$"
+	ipv6_regex="${ipv6_regex}\|^:\(:${hex_grp}\)\{1,7\}$"
+
+	if ! echo "$ipv6_addr" | grep --silent "$ipv6_regex"; then
+		status_bits=$(( status_bits | 4 ))  # BIT 2: not a valid IPv6 address
+		echo ""
+		return $status_bits
+	fi
+
+	# Validate prefix length is within IPv6 range (0-128)
+	if [ -n "$ipv6_prefix_len" ]; then
+		if ! [[ "$ipv6_prefix_len" =~ ^[0-9]+$ ]] || \
+		   [ "$ipv6_prefix_len" -lt 0 ] || [ "$ipv6_prefix_len" -gt 128 ]; then
+			status_bits=$(( status_bits | 8 ))  # BIT 3: prefix out of range
+			echo ""
+			return $status_bits
+		fi
+	fi
+
+	detected_version="6"
+	echo "$detected_version"
+	return 0
+}
+
+# Backward-compatible alias
+get_ip_format() { hst_detect_ip_version "$@"; }
+
 # Proxy extention format validator
 is_extention_format_valid() {
 	exclude="[!|#|$|^|&|(|)|+|=|{|}|:|@|<|>|?|/|\|\"|'|;|%|\`| ]"

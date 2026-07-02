@@ -1,0 +1,431 @@
+#!/bin/bash
+# info: Sync DNS zone(s) to external registrars (OVH, GoDaddy)
+# options: [DOMAIN] [DRY-RUN]
+# label: DNS
+# example: v-sync-dns-registrars
+# example: v-sync-dns-registrars example.com
+# example: v-sync-dns-registrars example.com yes
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# shellcheck source=/dev/null
+source /etc/hestiacp/hestia.conf
+source "$HESTIA/func/main.sh"
+source "$HESTIA/func/domain.sh"
+
+domain=${1-}      # optional: specific domain to sync
+dry_run=${2-no}   # optional: yes = dry-run, no actual API calls
+
+CONFIG_FILE="/etc/dns-sync/config.conf"
+LOG_FILE="/var/log/hestia/dns-sync.log"
+SYNC_TYPES="A AAAA CNAME MX TXT SRV CAA"
+
+# Registrar credentials — overridden by CONFIG_FILE
+OVH_ENDPOINT="https://eu.api.ovh.com/1.0"
+OVH_APP_KEY=""
+OVH_APP_SECRET=""
+OVH_CONSUMER_KEY=""
+
+GD_API_KEY=""
+GD_API_SECRET=""
+GD_API_BASE="https://api.godaddy.com/v1"
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+is_system_enabled "$DNS_SYSTEM" 'dns'
+
+[[ -f "$CONFIG_FILE" ]] || check_result "$E_NOTEXIST" "Config not found: $CONFIG_FILE"
+
+source "$CONFIG_FILE"
+
+declare -p DOMAIN_REGISTRAR &>/dev/null 2>&1 || \
+    check_result "$E_NOTEXIST" "DOMAIN_REGISTRAR not declared in $CONFIG_FILE"
+
+[[ -z "$OVH_APP_KEY" && -z "$GD_API_KEY" ]] && \
+    check_result "$E_INVALID" "No registrar credentials configured in $CONFIG_FILE"
+
+command -v curl    >/dev/null 2>&1 || check_result "$E_NOTEXIST" "curl is required"
+command -v jq      >/dev/null 2>&1 || check_result "$E_NOTEXIST" "jq is required"
+command -v openssl >/dev/null 2>&1 || check_result "$E_NOTEXIST" "openssl is required"
+
+if [[ -n "$domain" ]]; then
+    is_format_valid 'domain'
+fi
+
+#----------------------------------------------------------#
+#                  Sync Logic                              #
+#----------------------------------------------------------#
+
+# DRY_RUN flag used by API functions
+[[ "$dry_run" == "yes" ]] && DRY_RUN=true || DRY_RUN=false
+
+# Logging — to stderr so stdout pipes stay clean
+slog()  { echo "[$(date '+%Y-%m-%d %H:%M:%S')] $*"        | tee -a "$LOG_FILE" >&2; }
+slogw() { echo "[$(date '+%Y-%m-%d %H:%M:%S')] WARN: $*"  | tee -a "$LOG_FILE" >&2; }
+
+mkdir -p "$(dirname "$LOG_FILE")"
+slog "=== v-sync-dns-registrars start (domain=${domain:-all} dry_run=$DRY_RUN) ==="
+
+# ---------------------------------------------------------------------------
+# Zone discovery
+# ---------------------------------------------------------------------------
+
+get_hestia_zones() {
+    local zones=()
+    for user_dir in /home/*/; do
+        local user
+        user=$(basename "$user_dir")
+        while IFS= read -r d; do
+            [[ "$d" =~ ^[a-zA-Z0-9._-]+\.[a-zA-Z]{2,}$ ]] && zones+=("$d")
+        done < <(v-list-dns-domains "$user" plain 2>/dev/null | awk '{print $1}' || true)
+    done
+
+    if [[ ${#zones[@]} -eq 0 ]]; then
+        slog "hestia CLI returned no zones — scanning zone files"
+        while IFS= read -r zfile; do
+            zones+=("$(basename "$zfile" .db)")
+        done < <(find /home -path "*/conf/dns/*.db" 2>/dev/null)
+    fi
+
+    printf '%s\n' "${zones[@]}" | sort -u
+}
+
+# ---------------------------------------------------------------------------
+# Zone file parser
+# Output: TYPE <TAB> NAME <TAB> TTL <TAB> RDATA
+# Apex name is always "@" — never empty — so bash read never collapses fields.
+# Comment stripping is quote-aware to preserve TXT values containing semicolons
+# (e.g. DKIM: "v=DKIM1; k=rsa; p=...").
+# ---------------------------------------------------------------------------
+
+parse_zone_file() {
+    local d="$1"
+    local zone_file=""
+
+    for candidate in \
+        "/home/admin/conf/dns/${d}.db" \
+        "/var/lib/hestia/data/users/admin/dns/${d}.db" \
+        "/etc/bind/db.${d}"; do
+        [[ -f "$candidate" ]] && { zone_file="$candidate"; break; }
+    done
+
+    [[ -z "$zone_file" ]] && \
+        zone_file=$(find /home -path "*/conf/dns/${d}.db" 2>/dev/null | head -1 || true)
+
+    [[ -z "$zone_file" ]] && { slogw "no zone file found for $d"; return; }
+
+    awk -v domain="$d" '
+    BEGIN { OFS="\t"; in_paren=0; current_ttl=3600; last_name="@" }
+
+    /^[[:space:]]*;/ { next }
+
+    {
+        out = ""; in_q = 0
+        for (i = 1; i <= length($0); i++) {
+            c = substr($0, i, 1)
+            if (c == "\"") { in_q = !in_q; out = out c }
+            else if (c == ";" && !in_q) break
+            else out = out c
+        }
+        $0 = out
+    }
+
+    /^[[:space:]]*$/ { next }
+
+    in_paren { if (/\)/) in_paren=0; next }
+
+    /^\$TTL/    { current_ttl = int($2); next }
+    /^\$ORIGIN/ { next }
+
+    {
+        name = $1
+        if (name ~ /^[[:space:]]*$/ || name == "") name = last_name
+        else last_name = name
+
+        ttl = current_ttl; idx = 2
+
+        if ($idx ~ /^[0-9]+[smhdwSMHDW]?$/) { ttl = int($idx); idx++ }
+        if ($idx ~ /^(IN|HESIOD|CHAOS)$/)    { idx++ }
+
+        rtype = $idx; idx++
+
+        if (rtype == "SOA") { if (/\(/ && !/\)/) in_paren=1; next }
+        if (rtype == "NS" && name == "@") next
+        if (rtype == "") next
+
+        rdata = ""
+        for (i = idx; i <= NF; i++) rdata = rdata (i > idx ? " " : "") $i
+
+        if (name != "@") gsub(/\.$/, "", name)
+        if (ttl <= 0) ttl = current_ttl
+
+        print rtype, name, ttl, rdata
+    }
+    ' "$zone_file"
+}
+
+# ---------------------------------------------------------------------------
+# OVH API
+# ---------------------------------------------------------------------------
+
+ovh_sign() {
+    local method="$1" url="$2" body="$3" ts="$4"
+    local pre="${OVH_APP_SECRET}+${OVH_CONSUMER_KEY}+${method}+${url}+${body}+${ts}"
+    echo -n "\$1\$$(printf '%s' "$pre" | openssl dgst -sha1 -hex | awk '{print $2}')"
+}
+
+ovh_request() {
+    local method="$1" path="$2" body="${3:-}"
+    local ts url sig resp
+
+    ts=$(curl -s "${OVH_ENDPOINT}/auth/time")
+    url="${OVH_ENDPOINT}${path}"
+    sig=$(ovh_sign "$method" "$url" "$body" "$ts")
+
+    local args=(-s -X "$method"
+        -H "Content-Type: application/json"
+        -H "X-Ovh-Application: ${OVH_APP_KEY}"
+        -H "X-Ovh-Consumer: ${OVH_CONSUMER_KEY}"
+        -H "X-Ovh-Timestamp: ${ts}"
+        -H "X-Ovh-Signature: ${sig}")
+    [[ -n "$body" ]] && args+=(-d "$body")
+    args+=("$url")
+
+    if $DRY_RUN; then slog "[DRY-RUN] OVH $method $path  body=${body}"; echo "{}"; return 0; fi
+
+    resp=$(curl "${args[@]}")
+    if echo "$resp" | jq -e 'type == "object" and has("errorCode")' >/dev/null 2>&1; then
+        slogw "OVH error on $method $path — $(echo "$resp" | jq -r '"[\(.httpCode // "?")] \(.message // "unknown") (\(.errorCode // ""))"')"
+        return 1
+    fi
+    echo "$resp"
+}
+
+ovh_list_record_ids() {
+    local d="$1" rtype="$2" name="$3"
+    local ovh_sub="${name/@/}"
+    local resp
+    resp=$(ovh_request GET "/domain/zone/${d}/record?fieldType=${rtype}&subDomain=${ovh_sub}") || return 0
+    echo "$resp" | jq -r '[.[]? | select(type == "number")] | .[]? | tostring' 2>/dev/null || true
+}
+
+ovh_delete_record() {
+    ovh_request DELETE "/domain/zone/${1}/record/${2}" >/dev/null || \
+        slogw "failed to delete OVH record $2 for $1"
+}
+
+ovh_create_record() {
+    local d="$1" rtype="$2" name="$3" ttl="$4" target="$5"
+    local ovh_sub="${name/@/}" body resp
+    body=$(jq -n --arg ft "$rtype" --arg sd "$ovh_sub" --argjson ttl "$ttl" --arg tgt "$target" \
+        '{"fieldType":$ft,"subDomain":$sd,"ttl":$ttl,"target":$tgt}')
+    resp=$(ovh_request POST "/domain/zone/${d}/record" "$body") || {
+        slogw "failed to create OVH $rtype $name for $d"; return 1
+    }
+    slog "      created record id=$(echo "$resp" | jq -r '.id // "?"')"
+}
+
+sync_domain_ovh() {
+    local d="$1"
+    slog "  [OVH] syncing $d"
+    [[ -z "$OVH_APP_KEY" || -z "$OVH_APP_SECRET" || -z "$OVH_CONSUMER_KEY" ]] && \
+        check_result "$E_INVALID" "OVH credentials not set in $CONFIG_FILE"
+
+    local ok=0 fail=0
+
+    while IFS=$'\t' read -r rtype name ttl rdata; do
+        [[ " $SYNC_TYPES " =~ " $rtype " ]] || continue
+        ttl=$(printf '%s' "$ttl" | grep -Eo '^[0-9]+' || true)
+        [[ -z "$ttl" ]] && ttl=3600
+
+        local target="$rdata"
+        if [[ "$rtype" == "TXT" ]]; then
+            target=$(printf '%s' "$target" | sed 's/"[ ]*"//g; s/^"//; s/"$//')
+            target="\"${target}\""
+        fi
+
+        slog "    $rtype $name $ttl -> $target"
+
+        if (
+            set +e
+            while IFS= read -r rid; do
+                [[ -n "$rid" ]] && ovh_delete_record "$d" "$rid"
+            done < <(ovh_list_record_ids "$d" "$rtype" "$name")
+            ovh_create_record "$d" "$rtype" "$name" "$ttl" "$target"
+        ); then
+            ok=$((ok + 1))
+        else
+            slogw "skipped $rtype $name (see error above)"
+            fail=$((fail + 1))
+        fi
+    done < <(parse_zone_file "$d")
+
+    ovh_request POST "/domain/zone/${d}/refresh" >/dev/null || slogw "failed to refresh OVH zone $d"
+    slog "  [OVH] done: $ok synced, $fail failed — zone refresh triggered"
+}
+
+# ---------------------------------------------------------------------------
+# GoDaddy API
+# ---------------------------------------------------------------------------
+
+gd_request() {
+    local method="$1" path="$2" body="${3:-}"
+    local curl_args=(-s -X "$method"
+        -H "Content-Type: application/json"
+        -H "Accept: application/json"
+        -H "Authorization: sso-key ${GD_API_KEY}:${GD_API_SECRET}")
+    [[ -n "$body" ]] && curl_args+=(-d "$body")
+    curl_args+=("${GD_API_BASE}${path}")
+
+    if $DRY_RUN; then slog "[DRY-RUN] GD $method $path  body=${body:0:200}"; echo "[]"; return 0; fi
+
+    local tmp_body http_code resp curl_exit
+    tmp_body=$(mktemp)
+    http_code=$(curl -s -o "$tmp_body" -w "%{http_code}" "${curl_args[@]}") || true
+    curl_exit=$?
+    resp=$(cat "$tmp_body" 2>/dev/null || true)
+    rm -f "$tmp_body"
+
+    if [[ $curl_exit -ne 0 ]] || ! [[ "$http_code" =~ ^[0-9]+$ ]]; then
+        slogw "GoDaddy curl error (exit=$curl_exit code='$http_code') on $method $path"
+        return 1
+    fi
+    if [[ "$http_code" -ge 400 ]]; then
+        slogw "GoDaddy HTTP $http_code on $method $path"
+        slogw "  request body: ${body:0:300}"
+        slogw "  response:     $resp"
+        return 1
+    fi
+    echo "$resp"
+}
+
+sync_domain_godaddy() {
+    local d="$1"
+    slog "  [GD] syncing $d"
+    [[ -z "$GD_API_KEY" || -z "$GD_API_SECRET" ]] && \
+        check_result "$E_INVALID" "GoDaddy credentials not set in $CONFIG_FILE"
+
+    declare -A type_records
+
+    while IFS=$'\t' read -r rtype name ttl rdata; do
+        [[ " $SYNC_TYPES " =~ " $rtype " ]] || continue
+        ttl=$(printf '%s' "$ttl" | grep -Eo '^[0-9]+' || true)
+        [[ -z "$ttl" ]] && ttl=3600
+
+        local entry=""
+
+        case "$rtype" in
+            MX)
+                local mx_prio mx_data
+                mx_prio=$(awk '{print $1}' <<< "$rdata")
+                mx_data=$(awk '{print $2}' <<< "$rdata")
+                mx_data="${mx_data%.}"
+                [[ "$mx_prio" -eq 0 ]] && mx_prio=10
+                entry=$(jq -n --arg n "$name" --arg d "$mx_data" \
+                    --argjson ttl "$ttl" --argjson p "$mx_prio" \
+                    '{"name":$n,"data":$d,"ttl":$ttl,"priority":$p}')
+                ;;
+            TXT)
+                local txt_data
+                txt_data=$(printf '%s' "$rdata" | sed 's/"[ ]*"//g; s/^"//; s/"$//')
+                entry=$(jq -n --arg n "$name" --arg d "$txt_data" --argjson ttl "$ttl" \
+                    '{"name":$n,"data":$d,"ttl":$ttl}')
+                ;;
+            SRV)
+                local srv_svc srv_proto srv_sub srv_prio srv_weight srv_port srv_target
+                srv_svc=$(cut -d. -f1 <<< "$name")
+                srv_proto=$(cut -d. -f2 <<< "$name")
+                srv_sub=$(echo "$name" | cut -d. -f3-)
+                [[ "$srv_sub" == "$name" || -z "$srv_sub" ]] && srv_sub="@"
+                srv_prio=$(awk '{print $1}' <<< "$rdata")
+                srv_weight=$(awk '{print $2}' <<< "$rdata")
+                srv_port=$(awk '{print $3}' <<< "$rdata")
+                srv_target=$(awk '{print $4}' <<< "$rdata")
+                srv_target="${srv_target%.}"
+                entry=$(jq -n \
+                    --arg svc "$srv_svc" --arg proto "$srv_proto" \
+                    --arg n "$srv_sub"   --arg d "$srv_target" \
+                    --argjson ttl "$ttl" --argjson prio "$srv_prio" \
+                    --argjson weight "$srv_weight" --argjson port "$srv_port" \
+                    '{"service":$svc,"protocol":$proto,"name":$n,"data":$d,"ttl":$ttl,"priority":$prio,"weight":$weight,"port":$port}')
+                ;;
+            CAA)
+                local caa_flags caa_tag caa_value
+                caa_flags=$(awk '{print $1}' <<< "$rdata")
+                caa_tag=$(awk '{print $2}' <<< "$rdata")
+                caa_value=$(awk '{print $3}' <<< "$rdata")
+                caa_value=$(printf '%s' "$caa_value" | sed 's/^"//;s/"$//')
+                entry=$(jq -n --arg n "$name" --arg d "$caa_value" --arg tag "$caa_tag" \
+                    --argjson ttl "$ttl" --argjson flags "$caa_flags" \
+                    '{"name":$n,"data":$d,"ttl":$ttl,"flags":$flags,"tag":$tag}')
+                ;;
+            *)
+                local gd_data="${rdata%.}"
+                entry=$(jq -n --arg n "$name" --arg d "$gd_data" --argjson ttl "$ttl" \
+                    '{"name":$n,"data":$d,"ttl":$ttl}')
+                ;;
+        esac
+
+        [[ -n "$entry" ]] && type_records[$rtype]+="${entry},"
+
+    done < <(parse_zone_file "$d")
+
+    local ok=0 fail=0
+    for rtype in "${!type_records[@]}"; do
+        local json_array="[${type_records[$rtype]%,}]"
+        slog "    PUT $rtype records"
+        if gd_request PUT "/domains/${d}/records/${rtype}" "$json_array" >/dev/null; then
+            ok=$((ok + 1))
+        else
+            slogw "failed to sync $rtype for $d"
+            fail=$((fail + 1))
+        fi
+    done
+    slog "  [GD] done: $ok type(s) synced, $fail failed"
+}
+
+# ---------------------------------------------------------------------------
+# Main sync loop
+# ---------------------------------------------------------------------------
+
+mapfile -t ALL_ZONES < <(get_hestia_zones)
+[[ ${#ALL_ZONES[@]} -eq 0 ]] && check_result "$E_NOTEXIST" "No DNS zones found"
+
+slog "Found ${#ALL_ZONES[@]} zone(s)"
+
+for z in "${ALL_ZONES[@]}"; do
+    [[ -n "$domain" && "$z" != "$domain" ]] && continue
+
+    registrar="${DOMAIN_REGISTRAR[$z]:-}"
+    if [[ -z "$registrar" ]]; then
+        slog "SKIP $z — not mapped to a registrar in $CONFIG_FILE"
+        continue
+    fi
+
+    slog "Processing $z (registrar=$registrar)"
+    case "${registrar,,}" in
+        ovh)     sync_domain_ovh     "$z" ;;
+        godaddy) sync_domain_godaddy "$z" ;;
+        *)       slogw "unknown registrar '$registrar' for $z" ;;
+    esac
+done
+
+slog "=== v-sync-dns-registrars complete ==="
+
+#----------------------------------------------------------#
+#                       Logging                            #
+#----------------------------------------------------------#
+
+if [[ -n "$domain" ]]; then
+    "$BIN/v-log-action" "admin" "Info" "DNS" "Synced DNS domain $domain to registrar (dry_run=$dry_run)"
+else
+    "$BIN/v-log-action" "admin" "Info" "DNS" "Synced all DNS domains to registrars (dry_run=$dry_run)"
+fi
+
+log_event "$OK" "$ARGUMENTS"
+
+exit

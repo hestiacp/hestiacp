@@ -234,20 +234,23 @@ rebuild_web_domain_conf() {
 
 	syshealth_repair_web_config
 	get_domain_values 'web'
+
 	# Determine local_ip for %ip% template substitution:
 	# - IPv4-only or dual-stack: use IPv4 as primary (dual-stack listen is injected by add_web_config)
 	# - IPv6-only (IP empty): use bracketed IPv6 for VirtualHost/listen directives
 	if [ -n "$IP" ]; then
 		is_ip_valid $IP
 	elif [ -n "$IP6" ]; then
-		# IPv6-only domain — bracket the address for Apache/nginx syntax
+		# IPv6-only domain — validate the address is in the pool before using it
+		if [ ! -e "$HESTIA/data/ips/$IP6" ]; then
+			check_result $E_NOTEXIST "IPv6 address $IP6 is not registered in the IP pool"
+		fi
 		local_ip="[$IP6]"
 		ip="$IP6"
 	else
 		# No IP assigned — fall back to first available user IP
 		get_user_ip
 	fi
-
 	prepare_web_domain_values
 
 	# Remove old web configuration files
@@ -354,6 +357,30 @@ rebuild_web_domain_conf() {
 			conf="$HOMEDIR/$user/conf/web/$domain/$PROXY_SYSTEM.ssl.conf"
 			add_web_config "$PROXY_SYSTEM" "$PROXY.stpl"
 		fi
+	fi
+
+	# Dual-stack IPv6 injection: always read IP6 from web.conf, never from environment.
+	# Runs AFTER all config files are generated to ensure accurate IP6 value.
+	local ipv6_addr
+	ipv6_addr=$(grep "DOMAIN='${domain}'" "$USER_DATA/web.conf" 2>/dev/null | grep -oP "IP6='\\K[^\']+")
+	if [ -n "$ipv6_addr" ] && [ -n "$local_ip" ]; then
+		local esc_ip="${local_ip//./\\.}"
+		# nginx proxy: add IPv6 listen lines
+		for pcf in "$HOMEDIR/$user/conf/web/$domain/$PROXY_SYSTEM.conf" 		           "$HOMEDIR/$user/conf/web/$domain/$PROXY_SYSTEM.ssl.conf"; do
+			[ -f "$pcf" ] || continue
+			[[ "$pcf" == *.ssl.conf ]] && lport="${PROXY_SSL_PORT:-443}" || lport="${PROXY_PORT:-80}"
+			if grep -qE "listen.*${esc_ip}:${lport}" "$pcf" 2>/dev/null && 			   ! grep -q "\\[${ipv6_addr}\\]" "$pcf" 2>/dev/null; then
+				sed -i "/listen.*${esc_ip}:${lport}/a\\\t\tlisten      [${ipv6_addr}]:${lport};" "$pcf"
+			fi
+		done
+		# Apache backend: expand VirtualHost to dual-stack
+		for acf in "$HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.conf" 		           "$HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.ssl.conf"; do
+			[ -f "$acf" ] || continue
+			if ! grep -q "\\[${ipv6_addr}\\]" "$acf" 2>/dev/null; then
+				vport=$(grep -oE "VirtualHost ${esc_ip}:[0-9]+" "$acf" 2>/dev/null | head -1 | grep -oE "[0-9]+$")
+				[ -n "$vport" ] && sed -i "s|<VirtualHost ${local_ip}:${vport}>|<VirtualHost ${local_ip}:${vport} [${ipv6_addr}]:${vport}>|g" "$acf"
+			fi
+		done
 	fi
 
 	# Adding web stats parser
@@ -717,18 +744,10 @@ rebuild_mail_domain_conf() {
 			if [ "$QUOTA" = 'unlimited' ]; then
 				QUOTA=0
 			fi
-			dovecot_version="$(dovecot --version | cut -f -2 -d .)"
-			if [[ "$dovecot_version" = "2.4" ]]; then
-				str="$account:$MD5:$user:mail::$HOMEDIR/$user/mail/$domain/$account:${QUOTA}:userdb_quota_storage_size=${QUOTA}M"
-				echo $str >> $HOMEDIR/$user/conf/mail/$domain/passwd
-				userstr="$account:$account:$user:mail:$HOMEDIR/$user/mail/$domain/$account"
-				echo $userstr >> $HOMEDIR/$user/conf/mail/$domain/accounts
-			else
-				str="$account:$MD5:$user:mail::$HOMEDIR/$user:${QUOTA}:userdb_quota_rule=*:storage=${QUOTA}M"
-				echo $str >> $HOMEDIR/$user/conf/mail/$domain/passwd
-				userstr="$account:$account:$user:mail:$HOMEDIR/$user"
-				echo $userstr >> $HOMEDIR/$user/conf/mail/$domain/accounts
-			fi
+			str="$account:$MD5:$user:mail::$HOMEDIR/$user:${QUOTA}:userdb_quota_rule=*:storage=${QUOTA}M"
+			echo $str >> $HOMEDIR/$user/conf/mail/$domain/passwd
+			userstr="$account:$account:$user:mail:$HOMEDIR/$user"
+			echo $userstr >> $HOMEDIR/$user/conf/mail/$domain/accounts
 			for malias in ${ALIAS//,/ }; do
 				echo "$malias@$domain_idn:$account@$domain_idn" >> $dom_aliases
 			done
@@ -866,12 +885,9 @@ rebuild_mysql_database() {
 # Rebuild PostgreSQL
 rebuild_pgsql_database() {
 
-	unset PORT
 	host_str=$(grep "HOST='$HOST'" $HESTIA/conf/pgsql.conf)
 	parse_object_kv_list "$host_str"
 	export PGPASSWORD="$PASSWORD"
-
-	if [ -z "$PORT" ]; then PORT=5432; fi
 	if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ] || [ -z $TPL ]; then
 		echo "Error: postgresql config parsing failed"
 		if [ -n "$SENDMAIL" ]; then
@@ -882,7 +898,7 @@ rebuild_pgsql_database() {
 	fi
 
 	query='SELECT VERSION()'
-	psql -h $HOST -U $USER -p $PORT -c "$query" > /dev/null 2>&1
+	psql -h $HOST -U $USER -c "$query" > /dev/null 2>&1
 	if [ '0' -ne "$?" ]; then
 		echo "Error: Connection failed"
 		if [ -n "$SENDMAIL" ]; then
@@ -894,10 +910,10 @@ rebuild_pgsql_database() {
 	fi
 
 	query="CREATE ROLE $DBUSER"
-	psql -h $HOST -U $USER -p $PORT -c "$query" > /dev/null 2>&1
+	psql -h $HOST -U $USER -c "$query" > /dev/null 2>&1
 
 	query="UPDATE pg_authid SET rolpassword='$MD5' WHERE rolname='$DBUSER'"
-	psql -h $HOST -U $USER -p $PORT -c "$query" > /dev/null 2>&1
+	psql -h $HOST -U $USER -c "$query" > /dev/null 2>&1
 
 	query="CREATE DATABASE $DB OWNER $DBUSER"
 	if [ "$TPL" = 'template0' ]; then
@@ -905,13 +921,13 @@ rebuild_pgsql_database() {
 	else
 		query="$query TEMPLATE $TPL"
 	fi
-	psql -h $HOST -U $USER -p $PORT -c "$query" > /dev/null 2>&1
+	psql -h $HOST -U $USER -c "$query" > /dev/null 2>&1
 
 	query="GRANT ALL PRIVILEGES ON DATABASE $DB TO $DBUSER"
-	psql -h $HOST -U $USER -p $PORT -c "$query" > /dev/null 2>&1
+	psql -h $HOST -U $USER -c "$query" > /dev/null 2>&1
 
 	query="GRANT CONNECT ON DATABASE template1 to $DBUSER"
-	psql -h $HOST -U $USER -p $PORT -c "$query" > /dev/null 2>&1
+	psql -h $HOST -U $USER -c "$query" > /dev/null 2>&1
 }
 
 # Import MySQL dump
@@ -935,17 +951,14 @@ import_mysql_database() {
 # Import PostgreSQL dump
 import_pgsql_database() {
 
-	unset PORT
 	host_str=$(grep "HOST='$HOST'" $HESTIA/conf/pgsql.conf)
 	parse_object_kv_list "$host_str"
 	export PGPASSWORD="$PASSWORD"
-
-	if [ -z "$PORT" ]; then PORT=5432; fi
 	if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ] || [ -z $TPL ]; then
 		echo "Error: postgresql config parsing failed"
 		log_event "$E_PARSING" "$ARGUMENTS"
 		exit "$E_PARSING"
 	fi
 
-	psql -h $HOST -U $USER -p $PORT $DB < $1 > /dev/null 2>&1
+	psql -h $HOST -U $USER $DB < $1 > /dev/null 2>&1
 }

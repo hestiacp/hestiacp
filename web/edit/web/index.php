@@ -160,7 +160,10 @@ unset($output);
 $ips_v4 = array_filter($ips, fn($ip) => strpos($ip, ":") === false, ARRAY_FILTER_USE_KEY);
 $ips_v6 = array_filter($ips, fn($ip) => strpos($ip, ":") !== false, ARRAY_FILTER_USE_KEY);
 
-$v_ip_public = empty($ips[$v_ip]["NAT"]) ? $v_ip : $ips[$v_ip]["NAT"];
+// Guard against empty v_ip (IPv6-only domain or None selected)
+$v_ip_public = (!empty($v_ip) && isset($ips[$v_ip])) 
+    ? (empty($ips[$v_ip]["NAT"]) ? $v_ip : $ips[$v_ip]["NAT"])
+    : $v_ip;
 
 // List web templates
 exec(HESTIA_CMD . "v-list-web-templates json", $output, $return_var);
@@ -227,6 +230,7 @@ if (!empty($_POST["save"])) {
 					"''",
 					$output, $return_var
 				);
+				check_return_code($return_var, $output);
 				unset($output);
 			}
 		}

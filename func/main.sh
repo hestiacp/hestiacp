@@ -88,7 +88,7 @@ detect_os() {
 			fi
 		elif [ "$get_os_type" = "debian" ]; then
 			OS_TYPE='Debian'
-			OS_VERSION=$(grep -o "[0-9]\{1,2\}" /etc/debian_version | head -n1)
+			OS_VERSION=$(cat /etc/debian_version | grep -o "[0-9]\{1,2\}" | head -n1)
 		fi
 	else
 		OS_TYPE="Unsupported OS"
@@ -524,6 +524,7 @@ parse_object_kv_list() {
 	_parse_object_kv_list_php "$@"
 }
 
+
 # Check if object is supended
 is_object_suspended() {
 	if [ "$2" = 'USER' ]; then
@@ -539,7 +540,7 @@ is_object_suspended() {
 # Check if object is unsupended
 is_object_unsuspended() {
 	if [ $2 = 'USER' ]; then
-		spnd=$(grep "SUSPENDED='yes'" "$USER_DATA/$1.conf")
+		spnd=$(cat $USER_DATA/$1.conf | grep "SUSPENDED='yes'")
 	else
 		spnd=$(grep "$2='$3'" $USER_DATA/$1.conf | grep "SUSPENDED='yes'")
 	fi
@@ -800,7 +801,7 @@ get_next_cronjob() {
 
 # Sort cron jobs by id
 sort_cron_jobs() {
-	sort -n -k 2 -t \' $USER_DATA/cron.conf > $USER_DATA/cron.tmp
+	cat $USER_DATA/cron.conf | sort -n -k 2 -t \' > $USER_DATA/cron.tmp
 	mv -f $USER_DATA/cron.tmp $USER_DATA/cron.conf
 }
 
@@ -828,7 +829,7 @@ sync_cron_jobs() {
 		echo 'MAILTO=""' > $crontab
 	fi
 
-	while IFS= read -r line; do
+	while read line; do
 		parse_object_kv_list "$line"
 		if [ "$SUSPENDED" = 'no' ]; then
 			echo "$MIN $HOUR $DAY $MONTH $WDAY $CMD" \
@@ -898,17 +899,8 @@ is_user_format_valid() {
 # Domain format validator
 is_domain_format_valid() {
 	object_name=${2-domain}
-	exclude='[][!@#$^&*()+={},<>?_/\\"|'\''`;%[:space:]]'
-	if [[ $1 =~ $exclude ]] \
-		|| [[ $1 =~ ^[0-9]+$ ]] \
-		|| [[ $1 =~ \.\. ]] \
-		|| [[ $1 =~ ^- ]] \
-		|| [[ $1 =~ -$ ]] \
-		|| [[ $1 =~ ^\. ]] \
-		|| [[ $1 =~ \.$ ]] \
-		|| [[ $1 =~ \.- ]] \
-		|| [[ $1 =~ -\. ]] \
-		|| [[ "$1" = "www" ]]; then
+	exclude="[!|@|#|$|^|&|*|(|)|+|=|{|}|:|,|<|>|?|_|/|\|\"|'|;|%|\`| ]"
+	if [[ $1 =~ $exclude ]] || [[ $1 =~ ^[0-9]+$ ]] || [[ $1 =~ \.\. ]] || [[ $1 =~ $(printf '\t') ]] || [[ "$1" = "www" ]]; then
 		check_result "$E_INVALID" "invalid $object_name format :: $1"
 	fi
 	is_no_new_line_format "$1"
@@ -917,15 +909,8 @@ is_domain_format_valid() {
 # Alias forman validator
 is_alias_format_valid() {
 	for object in ${1//,/ }; do
-		exclude='[][!@#$^&()+={},<>?_/\\"|'\''`;%[:space:]]'
-		if [[ $object =~ $exclude ]] \
-			|| [[ $object =~ \.\. ]] \
-			|| [[ $object =~ ^- ]] \
-			|| [[ $object =~ -$ ]] \
-			|| [[ $object =~ ^\. ]] \
-			|| [[ $object =~ \.$ ]] \
-			|| [[ $object =~ \.- ]] \
-			|| [[ $object =~ -\. ]]; then
+		exclude="[!|@|#|$|^|&|(|)|+|=|{|}|:|<|>|?|_|/|\|\"|'|;|%|\`| ]"
+		if [[ "$object" =~ $exclude ]]; then
 			check_result "$E_INVALID" "invalid alias format :: $object"
 		fi
 		if [[ "$object" =~ [*] ]] && ! [[ "$object" =~ ^[*]\..* ]]; then
@@ -934,23 +919,40 @@ is_alias_format_valid() {
 	done
 }
 
-# IP format validator
+# Validate an IP address format. Second argument: "ipv4" (default) or "ipv6".
+# Calls check_result and exits on invalid format.
 is_ip_format_valid() {
-	object_name=${2-ip}
-	valid=$($HESTIA_PHP -r '$ip=$argv[1]; echo (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) ? 0 : 1);' "$1")
-	if [ "$valid" -ne 0 ]; then
-		check_result "$E_INVALID" "invalid $object_name :: $1"
+	local target_ip="${1}"
+	local required_version="${2-ipv4}"
+	local detected_version
+	local status_bits
+
+	detected_version="$(hst_detect_ip_version "$target_ip")"
+	status_bits=$?
+
+	if [ "$required_version" = "ipv6" ]; then
+		[ "$detected_version" = "6" ] && return $(( status_bits & 12 ))
+		[ "$detected_version" = "4" ] && check_result "$E_INVALID" "Expected IPv6 but got IPv4 address: $target_ip"
+		check_result "$E_INVALID" "Invalid IPv6 address: $target_ip"
+	else
+		[ "$detected_version" = "4" ] && return $(( status_bits & 3 ))
+		[ "$detected_version" = "6" ] && check_result "$E_INVALID" "Expected IPv4 but got IPv6 address: $target_ip"
+		check_result "$E_INVALID" "Invalid IPv4 address: $target_ip"
 	fi
 }
 
-# IPv6 format validator
+# Validate that an address is a valid IPv6 address (not IPv4). Calls check_result on failure.
 is_ipv6_format_valid() {
-	object_name=${2-ipv6}
-	valid=$($HESTIA_PHP -r '$ip=$argv[1]; echo (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) ? 0 : 1);' "$1")
-	if [ "$valid" -ne 0 ]; then
-		check_result "$E_INVALID" "invalid $object_name :: $1"
-	fi
+	local target_ip="${1}"
+	local detected_version
+	detected_version="$(hst_detect_ip_version "$target_ip")"
+	[ "$detected_version" = "6" ] && return 0
+	[ "$detected_version" = "4" ] && check_result "$E_INVALID" "Expected IPv6 but got IPv4 address: $target_ip"
+	check_result "$E_INVALID" "Invalid IPv6 address: $target_ip"
 }
+
+
+# is_ipv6_format_valid: see hst_detect_ip_version above
 
 is_ip46_format_valid() {
 	valid=$($HESTIA_PHP -r '$ip=$argv[1]; echo (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_IPV6) ? 0 : 1);' "$1")
@@ -982,7 +984,6 @@ is_netmask_format_valid() {
 		check_result "$E_INVALID" "invalid $object_name :: $1"
 	fi
 }
-
 # Detect IP version from an address string. Returns "4" for IPv4, "6" for IPv6, empty on error.
 # Accepts plain address or CIDR/prefix notation (e.g. 10.0.0.1/24 or 2001:db8::/32).
 # Exit status uses bit flags: bit0=invalid IPv4, bit1=bad prefix, bit2=invalid IPv6, bit3=bad prefix length.
@@ -1002,14 +1003,19 @@ hst_detect_ip_version() {
 		status_bits=1  # BIT 0: not a valid IPv4 address
 	fi
 
-	# If a prefix/CIDR was supplied, validate it is within IPv4 range (0-32)
+	# If a prefix/CIDR was supplied, validate it AND re-check IPv4 address validity
 	if [ "$input_addr" != "$ip_without_prefix" ]; then
 		local prefix_len="${input_addr#${ip_without_prefix}/}"
-		detected_version=""  # reset until prefix validates
-		if [[ "$prefix_len" =~ ^[0-9]+$ ]] && [ "$prefix_len" -le 32 ]; then
-			detected_version="4"
+		detected_version=""  # reset until both address and prefix validate
+		# Re-validate the bare IPv4 address before accepting the CIDR form
+		if [[ $ip_without_prefix =~ ^$ipv4_octet\.$ipv4_octet\.$ipv4_octet\.$ipv4_octet$ ]]; then
+			if [[ "$prefix_len" =~ ^[0-9]+$ ]] && [ "$prefix_len" -le 32 ]; then
+				detected_version="4"
+			else
+				status_bits=$(( status_bits | 2 ))  # BIT 1: bad prefix length
+			fi
 		else
-			status_bits=$(( status_bits | 2 ))  # BIT 1: bad prefix length
+			status_bits=$(( status_bits | 1 ))  # BIT 0: invalid IPv4 address
 		fi
 	fi
 
@@ -1062,6 +1068,997 @@ hst_detect_ip_version() {
 
 # Backward-compatible alias
 get_ip_format() { hst_detect_ip_version "$@"; }
+
+is_ipv4_cidr_format_valid() {
+	object_name=${2-ip}
+	valid=$($HESTIA_PHP -r '$cidr="$argv[1]"; list($ip, $netmask) = [...explode("/", $cidr), 32]; echo ((filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) && $netmask <= 32) ? 0 : 1);' $1)
+	if [ "$valid" -ne 0 ]; then
+		check_result "$E_INVALID" "invalid $object_name :: $1"
+	fi
+}
+
+is_ipv6_cidr_format_valid() {
+	object_name=${2-ipv6}
+	valid=$($HESTIA_PHP -r '$cidr="$argv[1]"; list($ip, $netmask) = [...explode("/", $cidr), 128]; echo ((filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) && $netmask <= 128) ? 0 : 1);' $1)
+	if [ "$valid" -ne 0 ]; then
+		check_result "$E_INVALID" "invalid $object_name :: $1"
+	fi
+}
+
+is_netmask_format_valid() {
+	object_name=${2-netmask}
+	valid=$($HESTIA_PHP -r '$netmask="$argv[1]"; echo (preg_match("/^(128|192|224|240|248|252|254|255)\.(0|128|192|224|240|248|252|254|255)\.(0|128|192|224|240|248|252|254|255)\.(0|128|192|224|240|248|252|254|255)/", $netmask) ? 0 : 1);' $1)
+	if [ "$valid" -ne 0 ]; then
+		check_result "$E_INVALID" "invalid $object_name :: $1"
+	fi
+}
+
+# Proxy extention format validator
+is_extention_format_valid() {
+	exclude="[!|#|$|^|&|(|)|+|=|{|}|:|@|<|>|?|/|\|\"|'|;|%|\`| ]"
+	if [[ "$1" =~ $exclude ]]; then
+		check_result "$E_INVALID" "invalid proxy extention format :: $1"
+	fi
+	is_no_new_line_format "$1"
+}
+
+# Number format validator
+is_number_format_valid() {
+	object_name=${2-number}
+	if ! [[ "$1" =~ ^[0-9]+$ ]]; then
+		check_result "$E_INVALID" "invalid $object_name format :: $1"
+	fi
+}
+
+# Autoreply format validator
+is_autoreply_format_valid() {
+	if [ 10240 -le ${#1} ]; then
+		check_result "$E_INVALID" "invalid autoreply format :: $1"
+	fi
+}
+
+# Boolean format validator
+is_boolean_format_valid() {
+	if [ "$1" != 'yes' ] && [ "$1" != 'no' ]; then
+		check_result "$E_INVALID" "invalid $2 format :: $1"
+	fi
+}
+
+# Refresh IPset format validator
+is_refresh_ipset_format_valid() {
+	if [ "$1" != 'load' ] && [ "$1" != 'yes' ] && [ "$1" != 'no' ]; then
+		check_result "$E_INVALID" "invalid $2 format :: $1"
+	fi
+}
+
+# Common format validator
+is_common_format_valid() {
+	exclude="[!|#|$|^|&|(|)|+|=|{|}|:|<|>|?|/|\|\"|'|;|%|\`| ]"
+	if [[ "$1" =~ $exclude ]]; then
+		check_result "$E_INVALID" "invalid $2 format :: $1"
+	fi
+	if [ 400 -le ${#1} ]; then
+		check_result "$E_INVALID" "invalid $2 format :: $1"
+	fi
+	if [[ "$1" =~ @ ]] && [ ${#1} -gt 1 ]; then
+		check_result "$E_INVALID" "invalid $2 format :: $1"
+	fi
+	if [[ $1 =~ \* ]]; then
+		if [[ "$(echo $1 | grep -o '\*\.' | wc -l)" -eq 0 ]] && [[ $1 != '*' ]]; then
+			check_result "$E_INVALID" "invalid $2 format :: $1"
+		fi
+	fi
+	if [[ $(echo -n "$1" | tail -c 1) =~ [^a-zA-Z0-9_*@.] ]]; then
+		check_result "$E_INVALID" "invalid $2 format :: $1"
+	fi
+	if [[ $(echo -n "$1" | grep -c '\.\.') -gt 0 ]]; then
+		check_result "$E_INVALID" "invalid $2 format :: $1"
+	fi
+	if [[ $(echo -n "$1" | head -c 1) =~ [^a-zA-Z0-9_*@] ]]; then
+		check_result "$E_INVALID" "invalid $2 format :: $1"
+	fi
+	if [[ $(echo -n "$1" | grep -c '\-\-') -gt 0 ]]; then
+		check_result "$E_INVALID" "invalid $2 format :: $1"
+	fi
+	if [[ $(echo -n "$1" | grep -c '\_\_') -gt 0 ]]; then
+		check_result "$E_INVALID" "invalid $2 format :: $1"
+	fi
+	is_no_new_line_format "$1"
+}
+
+is_no_new_line_format() {
+	test=$(echo "$1" | head -n1)
+	if [[ "$test" != "$1" ]]; then
+		check_result "$E_INVALID" "invalid value :: $1"
+	fi
+}
+
+is_string_format_valid() {
+	exclude="[!|#|$|^|&|(|)|+|=|{|}|:|<|>|?|/|\|\"|'|;|%|\`]"
+	if [[ "$1" =~ $exclude ]]; then
+		check_result "$E_INVALID" "invalid $2 format :: $1"
+	fi
+	is_no_new_line_format "$1"
+}
+is_cron_command_valid_format() {
+	if [[ ! "$1" =~ ^[^\`]*?$ ]]; then
+		check_result "$E_INVALID" "Invalid cron command format"
+	fi
+}
+# Database format validator
+is_database_format_valid() {
+	exclude="[!|@|#|$|^|&|*|(|)|+|=|{|}|:|,|<|>|?|/|\|\"|'|;|%|\`| ]"
+	if [[ "$1" =~ $exclude ]] || [ 64 -le ${#1} ]; then
+		check_result "$E_INVALID" "invalid $2 format :: $1"
+	fi
+	is_no_new_line_format "$1"
+}
+
+# Date format validator
+is_date_format_valid() {
+	if ! [[ "$1" =~ ^[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]$ ]]; then
+		check_result "$E_INVALID" "invalid date format :: $1"
+	fi
+}
+
+# Database user validator
+is_dbuser_format_valid() {
+	exclude="[!|@|#|$|^|&|*|(|)|+|=|{|}|:|,|<|>|?|/|\|\"|'|;|%|\`| ]"
+	if [ 33 -le ${#1} ]; then
+		check_result "$E_INVALID" "mysql username can be up to 32 characters long"
+	fi
+	if [[ "$1" =~ $exclude ]]; then
+		check_result "$E_INVALID" "invalid $2 format :: $1"
+	fi
+	is_no_new_line_format "$1"
+}
+
+# DNS record type validator
+is_dns_type_format_valid() {
+	known_dnstype='A,AAAA,NS,CNAME,MX,TXT,SRV,DNSKEY,KEY,IPSECKEY,PTR,SPF,TLSA,CAA,DS'
+	if [ -z "$(echo $known_dnstype | grep -w $1)" ]; then
+		check_result "$E_INVALID" "invalid dns record type format :: $1"
+	fi
+}
+
+# DNS record validator
+is_dns_record_format_valid() {
+	if [ "$rtype" = 'A' ]; then
+		is_ip_format_valid "$1"
+	fi
+	if [ "$rtype" = 'NS' ]; then
+		is_domain_format_valid "${1::-1}" 'ns_record'
+	fi
+	if [ "$rtype" = 'MX' ]; then
+		is_domain_format_valid "${1::-1}" 'mx_record'
+		is_int_format_valid "$priority" 'priority_record'
+	fi
+	if [ "$rtype" = 'SRV' ]; then
+		format_no_quotes "$priority" 'priority_record'
+	fi
+
+	is_no_new_line_format "$1"
+}
+
+# Email format validator
+is_email_format_valid() {
+	if [[ ! "$1" =~ ^[A-Za-z0-9._%+-]+@[[:alnum:].-]+\.[A-Za-z]{2,63}$ ]]; then
+		if [[ ! "$1" =~ ^[A-Za-z0-9._%+-]+@[[:alnum:].-]+\.(xn--)[[:alnum:]]{2,63}$ ]]; then
+			check_result "$E_INVALID" "invalid email format :: $1"
+		fi
+	fi
+}
+
+# Firewall action validator
+is_fw_action_format_valid() {
+	if [ "$1" != "ACCEPT" ] && [ "$1" != 'DROP' ]; then
+		check_result "$E_INVALID" "invalid action format :: $1"
+	fi
+}
+
+# Firewall protocol validator
+is_fw_protocol_format_valid() {
+	if [ "$1" != "ICMP" ] && [ "$1" != 'UDP' ] && [ "$1" != 'TCP' ]; then
+		check_result "$E_INVALID" "invalid protocol format :: $1"
+	fi
+}
+
+# Firewall port validator
+is_fw_port_format_valid() {
+	if [ "${#1}" -eq 1 ]; then
+		if ! [[ "$1" =~ [0-9] ]]; then
+			check_result "$E_INVALID" "invalid port format :: $1"
+		fi
+	else
+		if ! [[ "$1" =~ ^[0-9][-|,|:|0-9]{0,76}[0-9]$ ]]; then
+			check_result "$E_INVALID" "invalid port format and/or more than 78 chars used :: $1"
+		fi
+	fi
+}
+
+# DNS record id validator
+is_id_format_valid() {
+	if ! echo "$1" | grep -qE '^[1-9][0-9]{0,}$'; then
+		check_result "$E_INVALID" "invalid $2 format :: $1"
+	fi
+}
+
+# Integer validator
+is_int_format_valid() {
+	if ! [[ "$1" =~ ^[0-9]+$ ]]; then
+		check_result "$E_INVALID" "invalid $2 format :: $1"
+	fi
+}
+
+# Interface validator
+is_interface_format_valid() {
+	nic_names="$(ip -d -j link show | jq -r '.[] | if .link_type == "loopback" then empty else .ifname, if .altnames then .altnames[] else empty end end')"
+	if [ -z "$(echo "$nic_names" | grep -x "$1")" ]; then
+		check_result "$E_INVALID" "invalid interface format :: $1"
+	fi
+}
+
+# IP status validator
+is_ip_status_format_valid() {
+	if [ -z "$(echo shared,dedicated | grep -w "$1")" ]; then
+		check_result "$E_INVALID" "invalid status format :: $1"
+	fi
+}
+
+# Cron validator
+is_cron_format_valid() {
+	limit=59
+	check_format=''
+	if [ "$2" = 'hour' ]; then
+		limit=23
+	fi
+
+	if [ "$2" = 'day' ]; then
+		limit=31
+	fi
+	if [ "$2" = 'month' ]; then
+		limit=12
+	fi
+	if [ "$2" = 'wday' ]; then
+		limit=7
+	fi
+	if [ "$1" = '*' ]; then
+		check_format='ok'
+	fi
+	if [[ "$1" =~ ^[\*]+[/]+[0-9] ]]; then
+		if [ "$(echo $1 | cut -f 2 -d /)" -lt $limit ]; then
+			check_format='ok'
+		fi
+	fi
+	if [[ "$1" =~ ^[0-9][-|,|0-9]{0,70}[\/][0-9]$ ]]; then
+		check_format='ok'
+		crn_values=${1//,/ }
+		crn_values=${crn_values//-/ }
+		crn_values=${crn_values//\// }
+		for crn_vl in $crn_values; do
+			if [ "$crn_vl" -gt $limit ]; then
+				check_format='invalid'
+			fi
+		done
+	fi
+	crn_values=$(echo $1 | tr "," " " | tr "-" " ")
+	for crn_vl in $crn_values; do
+		if [[ "$crn_vl" =~ ^[0-9]+$ ]] && [ "$crn_vl" -le $limit ]; then
+			check_format='ok'
+		fi
+	done
+	if [ "$check_format" != 'ok' ]; then
+		check_result "$E_INVALID" "invalid $2 format :: $1"
+	fi
+}
+
+# Validate CPU Quota:
+is_valid_cpu_quota() {
+	local cpu_quota="$1"
+	if [[ ! "$cpu_quota" =~ ^[1-9][0-9]*%$ ]]; then
+		check_result "$E_INVALID" "Invalid CPU Quota format: $cpu_quota"
+	fi
+}
+
+# Validate CPU Quota Period:
+is_valid_cpu_quota_period() {
+	if [[ ! "$1" =~ ^[0-9]+(ms|s)$ ]]; then
+		check_result "$E_INVALID" "Invalid CPU Quota Period format :: $1"
+	fi
+}
+
+# Validate Memory Size:
+is_valid_memory_size() {
+	if [[ ! "$1" =~ ^[0-9]+[KMGTK]?$ ]]; then
+		check_result "$E_INVALID" "Invalid Memory Size format :: $1"
+	fi
+}
+
+# Validate Swap Size:
+is_valid_swap_size() {
+	if [[ ! "$1" =~ ^[0-9]+[KMGTK]?$ ]]; then
+		check_result "$E_INVALID" "Invalid Swap Size format :: $1"
+	fi
+}
+
+is_object_name_format_valid() {
+	if ! [[ "$1" =~ ^[-|\ |\.|_[:alnum:]]{0,50}$ ]]; then
+		check_result "$E_INVALID" "invalid $2 format :: $1"
+	fi
+}
+# Name validator
+is_name_format_valid() {
+	exclude="['|\"|<|>]"
+	if [[ "$1" =~ $exclude ]]; then
+		check_result "$E_INVALID" "Invalid $2 contains qoutes (\" or ') :: $1"
+	fi
+	is_no_new_line_format "$1"
+}
+
+# Object validator
+is_object_format_valid() {
+	if ! [[ "$1" =~ ^[[:alnum:]][-|\.|_[:alnum:]]{0,64}[[:alnum:]]$ ]]; then
+		check_result "$E_INVALID" "invalid $2 format :: $1"
+	fi
+}
+
+# Role validator
+is_role_valid() {
+	if ! [[ "$1" =~ ^admin$|^user$|^dns-cluster$ ]]; then
+		check_result "$E_INVALID" "invalid $2 format :: $1"
+	fi
+}
+
+# Password validator
+is_password_format_valid() {
+	if [ "${#1}" -lt '6' ]; then
+		check_result "$E_INVALID" "invalid password format :: $1"
+	fi
+}
+# Missing function -
+# Before: validate_format_shell
+# After: is_format_valid_shell
+is_format_valid_shell() {
+	if [ -z "$(grep -w $1 /etc/shells)" ]; then
+		echo "Error: shell $1 is not valid"
+		log_event "$E_INVALID" "$EVENT"
+		exit $E_INVALID
+	fi
+}
+
+# Service name validator
+is_service_format_valid() {
+	if ! [[ "$1" =~ ^[[:alnum:]][-|\.|_[:alnum:]]{0,64}$ ]]; then
+		check_result "$E_INVALID" "invalid $2 format :: $1"
+	fi
+}
+
+is_hash_format_valid() {
+	if ! [[ "$1" =~ ^[[:alnum:]|\:|\=|_|-]{1,80}$ ]]; then
+		check_result "$E_INVALID" "invalid $2 format :: $1"
+	fi
+}
+
+# Format validation controller
+is_format_valid() {
+	for arg_name in $*; do
+		eval arg=\$$arg_name
+		if [ -n "$arg" ]; then
+			case $arg_name in
+				access_key_id) is_access_key_id_format_valid "$arg" "$arg_name" ;;
+				account) is_localpart_format_valid "$arg" "$arg_name" '64' ;;
+				action) is_fw_action_format_valid "$arg" ;;
+				active) is_boolean_format_valid "$arg" 'active' ;;
+				aliases) is_alias_format_valid "$arg" ;;
+				alias) is_alias_format_valid "$arg" ;;
+				antispam) is_boolean_format_valid "$arg" 'antispam' ;;
+				antivirus) is_boolean_format_valid "$arg" 'antivirus' ;;
+				autoreply) is_autoreply_format_valid "$arg" ;;
+				backup) is_object_format_valid "$arg" 'backup' ;;
+				charset) is_object_format_valid "$arg" "$arg_name" ;;
+				charsets) is_common_format_valid "$arg" 'charsets' ;;
+				chain) is_object_format_valid "$arg" 'chain' ;;
+				cidr) is_ip_format_valid "$arg" 'cidr' ;;
+				comment) is_object_format_valid "$arg" 'comment' ;;
+				cron_command) is_cron_command_valid_format "$arg" ;;
+				database) is_database_format_valid "$arg" 'database' ;;
+				day) is_cron_format_valid "$arg" $arg_name ;;
+				dbpass) is_password_format_valid "$arg" ;;
+				dbuser) is_dbuser_format_valid "$arg" 'dbuser' ;;
+				dkim) is_boolean_format_valid "$arg" 'dkim' ;;
+				dkim_size) is_int_format_valid "$arg" ;;
+				domain) is_domain_format_valid "$arg" ;;
+				dom_alias) is_alias_format_valid "$arg" ;;
+				dvalue) is_dns_record_format_valid "$arg" ;;
+				email) is_email_format_valid "$arg" ;;
+				email_forward) is_email_format_valid "$arg" ;;
+				exp) is_date_format_valid "$arg" ;;
+				extentions) is_common_format_valid "$arg" 'extentions' ;;
+				format) is_type_valid 'plain json shell csv' "$arg" ;;
+				ftp_password) is_password_format_valid "$arg" ;;
+				ftp_user) is_user_format_valid "$arg" "$arg_name" ;;
+				hash) is_hash_format_valid "$arg" "$arg_name" ;;
+				host) is_object_format_valid "$arg" "$arg_name" ;;
+				hour) is_cron_format_valid "$arg" $arg_name ;;
+				id) is_id_format_valid "$arg" 'id' ;;
+				iface) is_interface_format_valid "$arg" ;;
+				ip) is_ip_format_valid "$arg" ;;
+				ipv6) is_ipv6_format_valid "$arg" ;;
+				ip46) is_ip46_format_valid "$arg" ;;
+				ipv4_cidr) is_ipv4_cidr_format_valid "$arg" ;;
+				ipv6_cidr) is_ipv6_cidr_format_valid "$arg" ;;
+				ip_name) is_domain_format_valid "$arg" 'IP name' ;;
+				ip_status) is_ip_status_format_valid "$arg" ;;
+				job) is_int_format_valid "$arg" 'job' ;;
+				key) is_common_format_valid "$arg" "$arg_name" ;;
+				malias) is_localpart_format_valid "$arg" "$arg_name" '64' ;;
+				max_db) is_int_format_valid "$arg" 'max db' ;;
+				min) is_cron_format_valid "$arg" $arg_name ;;
+				month) is_cron_format_valid "$arg" $arg_name ;;
+				name) is_name_format_valid "$arg" "name" ;;
+				nat_ip) is_ip_format_valid "$arg" ;;
+				netmask) is_netmask_format_valid "$arg" 'netmask' ;;
+				newid) is_int_format_valid "$arg" 'id' ;;
+				ns1) is_domain_format_valid "$arg" 'ns1' ;;
+				ns2) is_domain_format_valid "$arg" 'ns2' ;;
+				ns3) is_domain_format_valid "$arg" 'ns3' ;;
+				ns4) is_domain_format_valid "$arg" 'ns4' ;;
+				ns5) is_domain_format_valid "$arg" 'ns5' ;;
+				ns6) is_domain_format_valid "$arg" 'ns6' ;;
+				ns7) is_domain_format_valid "$arg" 'ns7' ;;
+				ns8) is_domain_format_valid "$arg" 'ns8' ;;
+				object) is_object_name_format_valid "$arg" 'object' ;;
+				package) is_object_format_valid "$arg" "$arg_name" ;;
+				password) is_password_format_valid "$arg" ;;
+				prefix_length) is_ipv6_format_valid "$arg" 'prefix_length' ;;
+				priority) is_int_format_valid $arg ;;
+				port) is_int_format_valid "$arg" 'port' ;;
+				port_ext) is_fw_port_format_valid "$arg" ;;
+				protocol) is_fw_protocol_format_valid "$arg" ;;
+				proxy_ext) is_extention_format_valid "$arg" ;;
+				quota) is_int_format_valid "$arg" 'quota' ;;
+				rate) is_int_format_valid "$arg" 'rate' ;;
+				record) is_common_format_valid "$arg" 'record' ;;
+				reject) is_boolean_format_valid "$arg" 'reject' ;;
+				restart) is_restart_format_valid "$arg" 'restart' ;;
+				role) is_role_valid "$arg" 'role' ;;
+				rtype) is_dns_type_format_valid "$arg" ;;
+				rule) is_int_format_valid "$arg" "rule id" ;;
+				service) is_service_format_valid "$arg" "$arg_name" ;;
+				secret_access_key) is_secret_access_key_format_valid "$arg" "$arg_name" ;;
+				soa) is_domain_format_valid "$arg" 'SOA' ;;
+				#missing command: is_format_valid_shell
+				shell) is_format_valid_shell "$arg" ;;
+				ssl_dir) is_folder_exists "$arg" "$arg_name" ;;
+				stats_pass) is_password_format_valid "$arg" ;;
+				stats_user) is_user_format_valid "$arg" "$arg_name" ;;
+				template) is_object_format_valid "$arg" "$arg_name" ;;
+				theme) is_common_format_valid "$arg" "$arg_name" ;;
+				ttl) is_int_format_valid "$arg" 'ttl' ;;
+				user) is_user_format_valid "$arg" $arg_name ;;
+				wday) is_cron_format_valid "$arg" $arg_name ;;
+				value) is_common_format_valid "$arg" $arg_name ;;
+			esac
+		fi
+	done
+}
+
+is_folder_exists() {
+	if [ ! -d "$1" ]; then
+		check_result "$E_NOTEXIST" "folder $1 does not exist"
+	fi
+}
+
+is_command_valid_format() {
+	if [[ ! "$1" =~ ^v-[[:alnum:]][-|\.|_[:alnum:]]{0,64}[[:alnum:]]$ ]]; then
+		check_result "$E_INVALID" "Invalid command format"
+	fi
+	if [[ -n $(echo "$1" | grep -e '\-\-') ]]; then
+		check_result "$E_INVALID" "Invalid command format"
+	fi
+}
+# Check access_key_id name
+# Don't work with legacy key format
+is_access_key_id_format_valid() {
+	local hash="$1"
+
+	# ACCESS_KEY_ID format validation
+	if ! [[ "$hash" =~ ^[[:alnum:]]{20}$ ]]; then
+		check_result "$E_INVALID" "invalid $2 format :: $hash"
+	fi
+}
+
+# SECRET_ACCESS_KEY format validation
+is_secret_access_key_format_valid() {
+	local hash="$1"
+
+	if ! [[ "$hash" =~ ^[[:alnum:]|_|\.|\+|/|\^|~|=|%|\-]{40}$ ]]; then
+		check_result "$E_INVALID" "invalid $2 format"
+	fi
+}
+
+# Checks if the secret belongs to the access key
+check_access_key_secret() {
+	local access_key_id="$(basename "$1")"
+	local secret_access_key=$2
+	local -n key_user=$3
+
+	if [[ -z "$access_key_id" || ! -f "$HESTIA/data/access-keys/${access_key_id}" ]]; then
+		check_result "$E_PASSWORD" "Access key $access_key_id doesn't exist"
+	fi
+
+	if [[ -z "$secret_access_key" ]]; then
+		check_result "$E_PASSWORD" "Secret key not provided for key $access_key_id"
+	elif ! [[ "$secret_access_key" =~ ^[[:alnum:]|_|\.|\+|/|\^|~|=|%|\-]{40}$ ]]; then
+		check_result "$E_PASSWORD" "Invalid secret key for key $access_key_id"
+	else
+		SECRET_ACCESS_KEY=""
+		source_conf "$HESTIA/data/access-keys/${access_key_id}"
+
+		if [[ -z "$SECRET_ACCESS_KEY" || "$SECRET_ACCESS_KEY" != "$secret_access_key" ]]; then
+			check_result "$E_PASSWORD" "Invalid secret key for key $access_key_id"
+		fi
+	fi
+
+	key_user="$USER"
+}
+
+# Checks if the key belongs to the user
+check_access_key_user() {
+	local access_key_id="$(basename "$1")"
+	local user=$2
+
+	if [[ -z "$access_key_id" || ! -f "$HESTIA/data/access-keys/${access_key_id}" ]]; then
+		check_result "$E_FORBIDEN" "Access key $access_key_id doesn't exist"
+	fi
+
+	if [[ -z "$user" ]]; then
+		check_result "$E_FORBIDEN" "User not provided"
+	else
+		USER=""
+		source_conf "$HESTIA/data/access-keys/${access_key_id}"
+
+		if [[ -z "$USER" || "$USER" != "$user" ]]; then
+			check_result "$E_FORBIDEN" "key $access_key_id does not belong to the user $user"
+		fi
+	fi
+}
+
+# Checks if the key is allowed to run the command
+check_access_key_cmd() {
+	local access_key_id="$(basename "$1")"
+	local cmd=$2
+	local -n user_arg_position=$3
+
+	if [[ "$DEBUG_MODE" = "true" ]]; then
+		new_timestamp
+		echo "[$date:$time] $1 $2" >> /var/log/hestia/api.log
+	fi
+	if [[ -z "$access_key_id" || ! -f "$HESTIA/data/access-keys/${access_key_id}" ]]; then
+		check_result "$E_FORBIDEN" "Access key $access_key_id doesn't exist"
+	fi
+
+	if [[ -z "$cmd" ]]; then
+		check_result "$E_FORBIDEN" "Command not provided"
+	elif [[ "$cmd" = 'v-make-tmp-file' ]]; then
+		USER="" PERMISSIONS=""
+		source_conf "${HESTIA}/data/access-keys/${access_key_id}"
+		local allowed_commands
+		if [[ -n "$PERMISSIONS" ]]; then
+			allowed_commands="$(get_apis_commands "$PERMISSIONS")"
+			if [[ -z "$(echo ",${allowed_commands}," | grep ",${hst_command},")" ]]; then
+				check_result "$E_FORBIDEN" "Key $access_key_id don't have permission to run the command $hst_command"
+			fi
+		elif [[ -z "$PERMISSIONS" && "$USER" != "$ROOT_USER" ]]; then
+			check_result "$E_FORBIDEN" "Key $access_key_id don't have permission to run the command $hst_command"
+		fi
+		user_arg_position="0"
+	elif [[ ! -e "$BIN/$cmd" ]]; then
+		check_result "$E_FORBIDEN" "Command $cmd not found"
+	else
+		USER="" PERMISSIONS=""
+		source_conf "${HESTIA}/data/access-keys/${access_key_id}"
+
+		local allowed_commands
+		if [[ -n "$PERMISSIONS" ]]; then
+			allowed_commands="$(get_apis_commands "$PERMISSIONS")"
+			if [[ -z "$(echo ",${allowed_commands}," | grep ",${hst_command},")" ]]; then
+				check_result "$E_FORBIDEN" "Key $access_key_id don't have permission to run the command $hst_command"
+			fi
+		elif [[ -z "$PERMISSIONS" && "$USER" != "$ROOT_USER" ]]; then
+			check_result "$E_FORBIDEN" "Key $access_key_id don't have permission to run the command $hst_command"
+		fi
+
+		if [[ "$USER" == "$ROOT_USER" ]]; then
+			# Admin can run commands for any user
+			user_arg_position="0"
+		else
+			user_arg_position="$(search_command_arg_position "$hst_command" "USER")"
+			if ! [[ "$user_arg_position" =~ ^[0-9]+$ ]]; then
+				check_result "$E_FORBIDEN" "Command $hst_command not found"
+			fi
+		fi
+	fi
+}
+
+# Domain argument formatting
+format_domain() {
+	if [[ "$domain" = *[![:ascii:]]* ]]; then
+		if [[ "$domain" =~ [[:upper:]] ]]; then
+			domain=$(echo "$domain" | sed 's/[[:upper:]].*/\L&/')
+		fi
+	else
+		if [[ "$domain" =~ [[:upper:]] ]]; then
+			domain=$(echo "$domain" | tr '[:upper:]' '[:lower:]')
+		fi
+	fi
+	if [[ "$domain" =~ ^www\..* ]]; then
+		domain=$(echo "$domain" | sed -e "s/^www.//")
+	fi
+	if [[ "$domain" =~ .*\.$ ]]; then
+		domain=$(echo "$domain" | sed -e "s/[.]*$//g")
+	fi
+	if [[ "$domain" =~ ^\. ]]; then
+		domain=$(echo "$domain" | sed -e "s/^[.]*//")
+	fi
+	# Remove white spaces
+	domain=$(echo $domain | sed 's/^[ \t]*//;s/[ \t]*$//')
+}
+
+format_domain_idn() {
+	if [ -z "$domain_idn" ]; then
+		domain_idn=$domain
+	fi
+	if [[ "$domain_idn" = *[![:ascii:]]* ]]; then
+		domain_idn=$(idn2 --quiet $domain_idn)
+	fi
+}
+
+format_aliases() {
+	if [ -n "$aliases" ] && [ "$aliases" != 'none' ]; then
+		aliases=$(echo $aliases | tr '[:upper:]' '[:lower:]' | tr ',' '\n')
+		aliases=$(echo "$aliases" | sed -e "s/\.$//" | sort -u)
+		aliases=$(echo "$aliases" | tr -s '.')
+		aliases=$(echo "$aliases" | sed -e "s/[.]*$//g")
+		aliases=$(echo "$aliases" | sed -e "s/^[.]*//")
+		aliases=$(echo "$aliases" | sed -e "/^$/d")
+		aliases=$(echo "$aliases" | tr '\n' ',' | sed -e "s/,$//")
+	fi
+}
+
+is_restart_format_valid() {
+	if [ -n "$1" ]; then
+		if [ "$1" != 'yes' ] && [ "$1" != 'no' ] && [ "$1" != 'ssl' ] && [ "$1" != 'reload' ] && [ "$1" != 'updatessl' ] && [ "$1" != "scheduled" ]; then
+			check_result "$E_INVALID" "invalid $2 format :: $1"
+		fi
+	fi
+}
+
+check_backup_conditions() {
+	# Checking load average
+	la=$(cat /proc/loadavg | cut -f 1 -d ' ' | cut -f 1 -d '.')
+	# i=0
+	while [ "$la" -ge "$BACKUP_LA_LIMIT" ]; do
+		echo -e "$(date "+%F %T") Load Average $la"
+		sleep 60
+		la=$(cat /proc/loadavg | cut -f 1 -d ' ' | cut -f 1 -d '.')
+	done
+}
+
+# Define download function
+download_file() {
+	local url=$1
+	local destination=$2
+	local force=$3
+
+	# Default destination is the curent working directory
+	local dstopt=""
+
+	if [ -n "$(echo "$url" | grep -E "\.(gz|gzip|bz2|zip|xz)$")" ]; then
+		# When an archive file is downloaded it will be first saved localy
+		dstopt="--directory-prefix=$ARCHIVE_DIR"
+		local is_archive="true"
+		local filename="${url##*/}"
+		if [ -z "$filename" ]; then
+			echo >&2 "[!] No filename was found in url, exiting ($url)"
+			exit 1
+		fi
+		if [ -n "$force" ] && [ -f "$ARCHIVE_DIR/$filename" ]; then
+			rm -f $ARCHIVE_DIR/$filename
+		fi
+	elif [ -n "$destination" ]; then
+		# Plain files will be written to specified location
+		dstopt="-O $destination"
+	fi
+	# check for corrupted archive
+	if [ -f "$ARCHIVE_DIR/$filename" ] && [ "$is_archive" = "true" ]; then
+		tar -tzf "$ARCHIVE_DIR/$filename" > /dev/null 2>&1
+		if [ $? -ne 0 ]; then
+			echo >&2 "[!] Archive $ARCHIVE_DIR/$filename is corrupted, redownloading"
+			rm -f $ARCHIVE_DIR/$filename
+		fi
+	fi
+
+	if [ ! -f "$ARCHIVE_DIR/$filename" ]; then
+		wget $url -q $dstopt --show-progress --progress=bar:force --limit-rate=3m
+	fi
+
+	if [ -n "$destination" ] && [ "$is_archive" = "true" ]; then
+		if [ "$destination" = "-" ]; then
+			cat "$ARCHIVE_DIR/$filename"
+		elif [ -d "$(dirname $destination)" ]; then
+			cp "$ARCHIVE_DIR/$filename" "$destination"
+		fi
+	fi
+}
+
+check_hestia_demo_mode() {
+	demo_mode=$(grep DEMO_MODE /usr/local/hestia/conf/hestia.conf | cut -d '=' -f2 | sed "s|'||g")
+	if [ -n "$demo_mode" ] && [ "$demo_mode" = "yes" ]; then
+		echo "ERROR: Unable to perform operation due to security restrictions that are in place."
+		exit 1
+	fi
+}
+
+multiphp_count() {
+	$BIN/v-list-sys-php plain | wc -l
+}
+
+multiphp_versions() {
+	local -a php_versions_list
+	local php_ver
+	if [ "$(multiphp_count)" -gt 0 ]; then
+		for php_ver in $($BIN/v-list-sys-php plain); do
+			[ ! -d "/etc/php/$php_ver/fpm/pool.d/" ] && continue
+			php_versions_list+=($php_ver)
+		done
+		echo "${php_versions_list[@]}"
+	fi
+}
+
+multiphp_default_version() {
+	# Get system wide default php version (set by update-alternatives)
+	local sys_phpversion=$(php -r "echo substr(phpversion(),0,3);")
+
+	# Check if the system php also has php-fpm enabled, otherwise return
+	# the most recent php version which does have it installed.
+	if [ ! -d "/etc/php/$sys_phpversion/fpm/pool.d/" ]; then
+		local all_versions="$(multiphp_versions)"
+		if [ -n "$all_versions" ]; then
+			sys_phpversion="${all_versions##*\ }"
+		fi
+	fi
+
+	echo "$sys_phpversion"
+}
+
+is_hestia_package() {
+	check=false
+	for pkg in $1; do
+		if [ "$pkg" == "$2" ]; then
+			check="true"
+		fi
+	done
+	if [ "$check" != "true" ]; then
+		check_result $E_INVALID "$2 package is not controlled by hestiacp"
+	fi
+}
+
+# Run arbitrary cli commands with dropped privileges
+# Note: setpriv --init-groups is not available on debian9 (util-linux 2.29.2)
+# Input:
+#     - $user : Vaild hestia user
+user_exec() {
+	is_object_valid 'user' 'USER' "$user"
+
+	local user_groups=$(id -G "$user")
+	user_groups=${user_groups//\ /,}
+
+	setpriv --groups "$user_groups" --reuid "$user" --regid "$user" -- "${@}"
+}
+
+# Simple chmod wrapper that skips symlink files after glob expand
+no_symlink_chmod() {
+	local filemode=$1
+	shift
+
+	for i in "$@"; do
+		[[ -L ${i} ]] && continue
+
+		chmod "${filemode}" "${i}"
+	done
+}
+
+format_no_quotes() {
+	exclude="['|\"]"
+	if [[ "$1" =~ $exclude ]]; then
+		check_result "$E_INVALID" "Invalid $2 contains qoutes (\" or ' or | ) :: $1"
+	fi
+	is_no_new_line_format "$1"
+}
+
+is_username_format_valid() {
+	if [[ ! "$1" =~ ^[A-Za-z0-9._%+-]+@[[:alnum:].-]+\.[A-Za-z]{2,63}$ ]]; then
+		is_string_format_valid "$1" "$2"
+	fi
+}
+
+change_sys_value() {
+	check_ckey=$(grep "^$1='" "$HESTIA/conf/hestia.conf")
+	if [ -z "$check_ckey" ]; then
+		echo "$1='$2'" >> "$HESTIA/conf/hestia.conf"
+	else
+		sed -i "s|^$1=.*|$1='$2'|g" "$HESTIA/conf/hestia.conf"
+	fi
+}
+
+# Checks the format of APIs that will be allowed for the key
+is_key_permissions_format_valid() {
+	local permissions="$1"
+	local user="$2"
+
+	if [[ "$user" != "$ROOT_USER" && -z "$permissions" ]]; then
+		check_result "$E_INVALID" "Non-admin users need a permission list"
+	fi
+
+	while IFS=',' read -ra permissions_arr; do
+		for permission in "${permissions_arr[@]}"; do
+			permission="$(basename "$permission" | sed -E "s/^\s*|\s*$//g")"
+
+			#            if [[ -z "$(echo "$permission" | grep -E "^v-")" ]]; then
+			if [[ ! -e "$HESTIA/data/api/$permission" ]]; then
+				check_result "$E_NOTEXIST" "API $permission doesn't exist"
+			fi
+
+			source_conf "$HESTIA/data/api/$permission"
+			if [ "$ROLE" = "admin" ] && [ "$user" != "$ROOT_USER" ]; then
+				check_result "$E_INVALID" "Only the admin can run this API"
+			fi
+			#            elif [[ ! -e "$BIN/$permission" ]]; then
+			#                check_result "$E_NOTEXIST" "Command $permission doesn't exist"
+			#            fi
+		done
+	done <<< "$permissions"
+}
+
+# Remove whitespaces, and bin path from commands
+cleanup_key_permissions() {
+	local permissions="$1"
+
+	local final quote
+	while IFS=',' read -ra permissions_arr; do
+		for permission in "${permissions_arr[@]}"; do
+			permission="$(basename "$permission" | sed -E "s/^\s*|\s*$//g")"
+
+			# Avoid duplicate items
+			if [[ -z "$(echo ",${final}," | grep ",${permission},")" ]]; then
+				final+="${quote}${permission}"
+				quote=','
+			fi
+		done
+	done <<< "$permissions"
+
+	echo "$final"
+}
+
+# Extract all allowed commands from a permission list
+get_apis_commands() {
+	local permissions="$1"
+
+	local allowed_commands quote commands_to_add
+	while IFS=',' read -ra permissions_arr; do
+		for permission in "${permissions_arr[@]}"; do
+			permission="$(basename "$permission" | sed -E "s/^\s*|\s*$//g")"
+
+			commands_to_add=""
+			#            if [[ -n "$(echo "$permission" | grep -E "^v-")" ]]; then
+			#                commands_to_add="$permission"
+			#            el
+			if [[ -e "$HESTIA/data/api/$permission" ]]; then
+				source_conf "$HESTIA/data/api/$permission"
+				commands_to_add="$COMMANDS"
+			fi
+
+			if [[ -n "$commands_to_add" ]]; then
+				allowed_commands+="${quote}${commands_to_add}"
+				quote=','
+			fi
+		done
+	done <<< "$permissions"
+
+	cleanup_key_permissions "$allowed_commands"
+}
+
+# Get the position of an argument by name in a hestia command using the command's documentation comment.
+#
+# Return:
+# * 0:   It doesn't have the argument;
+# * 1-9: The position of the argument in the command.
+search_command_arg_position() {
+	local hst_command="$(basename "$1")"
+	local arg_name="$2"
+
+	local command_path="$BIN/$hst_command"
+	if [[ -z "$hst_command" || ! -e "$command_path" ]]; then
+		echo "-1"
+		return
+	fi
+
+	local position=0
+	local count=0
+	local command_options="$(sed -En 's/^# options: (.+)/\1/p' "$command_path")"
+	while IFS=' ' read -ra options_arr; do
+		for option in "${options_arr[@]}"; do
+			count=$((count + 1))
+
+			option_name="$(echo "  $option   " | sed -E 's/^(\s|\[)*|(\s|\])*$//g')"
+			if [[ "${option_name^^}" == "$arg_name" ]]; then
+				position=$count
+			fi
+		done
+	done <<< "$command_options"
+
+	echo "$position"
+}
+
+add_chroot_jail() {
+	local user=$1
+
+	mkdir -p /srv/jail/$user
+	chown 0:0 /srv /srv/jail /srv/jail/$user
+	chmod 755 /srv /srv/jail /srv/jail/$user
+	if [ ! -d /srv/jail/$user/home ]; then
+		mkdir -p /srv/jail/$user/home
+		chown 0:0 /srv/jail/$user/home
+		chmod 755 /srv/jail/$user/home
+	fi
+	if [ ! -d /srv/jail/$user/home/$user ]; then
+		mkdir -p /srv/jail/$user/home/$user
+		chown 0:0 /srv/jail/$user/home/$user
+		chmod 755 /srv/jail/$user/home/$user
+	fi
+
+	systemd=$(systemd-escape -p --suffix=mount "/srv/jail/$user/home/$user")
+	cat > "/etc/systemd/system/$systemd" << EOF
+[Unit]
+Description=Mount $user's home directory to the jail chroot
+Before=local-fs.target
+
+[Mount]
+What=$(getent passwd $user | cut -d : -f 6)
+Where=/srv/jail/$user/home/$user
+Type=none
+Options=bind
+LazyUnmount=yes
+
+[Install]
+RequiredBy=local-fs.target
+EOF
+
+	systemctl daemon-reload > /dev/null 2>&1
+	systemctl enable "$systemd" > /dev/null 2>&1
+	systemctl start "$systemd" > /dev/null 2>&1
+}
+
+delete_chroot_jail() {
+	local user=$1
+
+	# Backwards compatibility with old style home jail
+	systemd=$(systemd-escape -p --suffix=mount "/srv/jail/$user/home")
+	systemctl stop "$systemd" > /dev/null 2>&1
+	systemctl disable "$systemd" > /dev/null 2>&1
+	rm -f "/etc/systemd/system/$systemd"
+
+	# Remove the new style home jail
+	systemd=$(systemd-escape -p --suffix=mount "/srv/jail/$user/home/$user")
+	systemctl stop "$systemd" > /dev/null 2>&1
+	systemctl disable "$systemd" > /dev/null 2>&1
+	rm -f "/etc/systemd/system/$systemd"
+
+	systemctl daemon-reload > /dev/null 2>&1
+	rm -r /srv/jail/$user/ > /dev/null 2>&1
+	rmdir /srv/jail/$user > /dev/null 2>&1
+}
 
 # Proxy extention format validator
 is_extention_format_valid() {
@@ -1221,7 +2218,7 @@ is_string_format_valid() {
 	is_no_new_line_format "$1"
 }
 is_cron_command_valid_format() {
-	if [[ "$1" == *'`'* ]] || [[ "$1" != "${1//$'\n'/}" ]]; then
+	if [[ ! "$1" =~ ^[^\`]*?$ ]]; then
 		check_result "$E_INVALID" "Invalid cron command format"
 	fi
 }
@@ -1358,13 +2355,6 @@ is_interface_format_valid() {
 is_ip_status_format_valid() {
 	if [ -z "$(echo shared,dedicated | grep -w "$1")" ]; then
 		check_result "$E_INVALID" "invalid status format :: $1"
-	fi
-}
-
-# Comment validator
-is_comment_format_valid() {
-	if ! [[ "$1" =~ ^[[:alnum:]][[:alnum:][:space:]._-]{0,64}[[:alnum:]]$ ]]; then
-		check_result "$E_INVALID" "invalid $2 format :: $1"
 	fi
 }
 
@@ -1521,7 +2511,7 @@ is_format_valid() {
 				charset) is_object_format_valid "$arg" "$arg_name" ;;
 				charsets) is_common_format_valid "$arg" 'charsets' ;;
 				chain) is_object_format_valid "$arg" 'chain' ;;
-				comment) is_comment_format_valid "$arg" 'comment' ;;
+				comment) is_object_format_valid "$arg" 'comment' ;;
 				cron_command) is_cron_command_valid_format "$arg" ;;
 				database) is_database_format_valid "$arg" 'database' ;;
 				day) is_cron_format_valid "$arg" $arg_name ;;
@@ -1797,12 +2787,12 @@ is_restart_format_valid() {
 
 check_backup_conditions() {
 	# Checking load average
-	la=$(awk -F'[. ]' '{print $1}' /proc/loadavg)
+	la=$(cat /proc/loadavg | cut -f 1 -d ' ' | cut -f 1 -d '.')
 	# i=0
 	while [ "$la" -ge "$BACKUP_LA_LIMIT" ]; do
 		echo -e "$(date "+%F %T") Load Average $la"
 		sleep 60
-		la=$(awk -F'[. ]' '{print $1}' /proc/loadavg)
+		la=$(cat /proc/loadavg | cut -f 1 -d ' ' | cut -f 1 -d '.')
 	done
 }
 

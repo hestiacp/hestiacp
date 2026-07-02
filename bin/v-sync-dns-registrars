@@ -421,9 +421,9 @@ slog "=== v-sync-dns-registrars complete ==="
 #----------------------------------------------------------#
 
 if [[ -n "$domain" ]]; then
-    "$BIN/v-log-action" "admin" "Info" "DNS" "Synced DNS domain $domain to registrar (dry_run=$dry_run)"
+    "$BIN/v-log-action" "system" "Info" "DNS" "Synced DNS domain $domain to registrar (dry_run=$dry_run)"
 else
-    "$BIN/v-log-action" "admin" "Info" "DNS" "Synced all DNS domains to registrars (dry_run=$dry_run)"
+    "$BIN/v-log-action" "system" "Info" "DNS" "Synced all DNS domains to registrars (dry_run=$dry_run)"
 fi
 
 log_event "$OK" "$ARGUMENTS"

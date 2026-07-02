@@ -1,0 +1,62 @@
+#!/bin/bash
+# info: list IPv6 firewall ban list
+# options: [FORMAT]
+#
+# example: v-list-firewall-ban-ipv6 json
+
+format=${1-shell}
+
+source /etc/hestiacp/hestia.conf
+source $HESTIA/func/main.sh
+source_conf "$HESTIA/conf/hestia.conf"
+
+banlist="$HESTIA/data/firewall/banlist6.conf"
+[ -f "$banlist" ] || touch "$banlist"
+
+json_list() {
+    IFS=$'\n'
+    i=1
+    objects=$(grep IP "$banlist" 2>/dev/null | wc -l)
+    echo "{"
+    while read str; do
+        [[ -z "$str" ]] && continue
+        parse_object_kv_list "$str"
+        echo -n '    "'$IP'": {
+        "IP": "'$IP'",
+        "CHAIN": "'$CHAIN'",
+        "TIME": "'$TIME'",
+        "DATE": "'$DATE'"
+    }'
+        [[ "$i" -lt "$objects" ]] && echo ',' || echo
+        ((i++))
+    done < <(cat "$banlist" 2>/dev/null)
+    echo '}'
+}
+
+shell_list() {
+    IFS=$'\n'
+    echo "IP   CHAIN   TIME   DATE"
+    echo "--   -----   ----   ----"
+    while read str; do
+        [[ -z "$str" ]] && continue
+        parse_object_kv_list "$str"
+        echo "$IP $CHAIN $TIME $DATE"
+    done < <(cat "$banlist" 2>/dev/null)
+}
+
+plain_list() {
+    IFS=$'\n'
+    while read str; do
+        [[ -z "$str" ]] && continue
+        parse_object_kv_list "$str"
+        echo -e "$IP\t$CHAIN\t$TIME\t$DATE"
+    done < <(cat "$banlist" 2>/dev/null)
+}
+
+case $format in
+    json)  json_list ;;
+    plain) plain_list ;;
+    shell) shell_list | column -t ;;
+esac
+
+exit

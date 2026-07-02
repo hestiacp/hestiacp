@@ -1,0 +1,174 @@
+#!/bin/bash
+# info: add firewall ipset (IPv6)
+# options: NAME [SOURCE] [AUTOUPDATE] [REFRESH]
+#
+# example: v-add-firewall-ipset-ipv6 paisesban "https://raw.githubusercontent.com/ipverse/rir-ip/master/country/ru/ipv6-aggregated.txt"
+#
+# This function adds new IPv6 ipset to system firewall
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+ip_name=${1}
+data_source=${2}
+autoupdate=${3:-yes}
+refresh=${4:-no}
+ip_version='v6'
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '1' "$#" 'NAME [SOURCE] [AUTOUPDATE] [REFRESH]'
+is_format_valid 'ip_name'
+is_boolean_format_valid "$autoupdate" 'Automatically update IP list (yes/no)'
+is_boolean_format_valid "$refresh" 'Refresh IP list (yes/no)'
+is_system_enabled "$FIREWALL_SYSTEM" 'FIREWALL_SYSTEM'
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+# Define variables for ipset configuration
+ipset_hstobject='../../../data/firewall/ipset'
+IPSET_BIN="$(command -v ipset)"
+IPSET_PATH="$HESTIA/data/firewall/ipset"
+
+# Ensure ipset is installed
+if [ -z "$IPSET_BIN" ]; then
+	apt-get --quiet --yes install ipset > /dev/null
+	check_result $? "Installing IPset package"
+
+	IPSET_BIN="$(which ipset)"
+	check_result $? "IPset binary not found"
+fi
+
+# Ensure ipset configuration path and master file exist before attempting to parse
+mkdir -p "$IPSET_PATH"
+if [ ! -f "$HESTIA/data/firewall/ipset.conf" ]; then
+	touch $HESTIA/data/firewall/ipset.conf
+fi
+
+if [ -z "$data_source" ]; then
+	if [ ! -f "${IPSET_PATH}.conf" ] || [[ ! $(grep "LISTNAME='$ip_name'" "${IPSET_PATH}.conf") ]]; then
+		check_args '2' "$#" 'NAME SOURCE [AUTOUPDATE] [REFRESH]'
+	fi
+
+	data_source="$(get_object_value "$ipset_hstobject" 'LISTNAME' "$ip_name" '$SOURCE')"
+else
+	is_object_new "$ipset_hstobject" 'LISTNAME' "$ip_name"
+fi
+
+if ! echo "$data_source" | egrep -q '^(https?|script|file):'; then
+	check_result "$E_INVALID" "invalid ipset source, valid: (http[s]://|script:|file:)"
+fi
+
+IPSET_FILE="${ip_name}.v6"
+IPSET_MIN_SIZE=5
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Generate ip lists file if missing or required refresh
+if [ ! -f "${IPSET_PATH}/${IPSET_FILE}.iplist" ] || [ "$refresh" = "yes" ]; then
+
+	iplist_tempfile=$(mktemp)
+
+	if [[ "$data_source" =~ ^https?:// ]]; then
+
+		wget --tries=3 --timeout=15 --read-timeout=15 --waitretry=3 --no-dns-cache --quiet "$data_source" -O "$iplist_tempfile"
+		check_result $? "Downloading ip list"
+
+		# Advanced: execute script with the same basename for aditional pre-processing
+		if [ -x "${IPSET_PATH}/${IPSET_FILE}.sh" ]; then
+			preprocess_output="$(cat "$iplist_tempfile" | setpriv --clear-groups --reuid nobody --regid nogroup -- ${IPSET_PATH}/${IPSET_FILE}.sh "$ip_name" "$iplist_tempfile")"
+			check_result $? "Preprocessing script failed (${IPSET_FILE}.sh)"
+			[[ "$preprocess_output" ]] && echo "$preprocess_output" > "$iplist_tempfile"
+		fi
+
+	elif [[ "$data_source" =~ ^script:/ ]]; then
+
+		if [ -x "${data_source#script:}" ]; then
+			setpriv --clear-groups --reuid nobody --regid nogroup -- ${data_source#script:} "$ip_name" > "$iplist_tempfile"
+			check_result $? "Running custom ip list update script"
+		fi
+
+	elif [[ "$data_source" =~ ^file:/ ]]; then
+
+		[ -f "${data_source#file:}" ] && cp -f "${data_source#file:}" "$iplist_tempfile"
+	fi
+
+	# Cleanup ip list
+	sed -r -i -e 's/[;#].*$//' -e 's/[ \t]*$//' -e '/^$/d' "$iplist_tempfile"
+	sed -i -r -n -e '/^([0-9a-fA-F]{0,4}:){1,7}[0-9a-fA-F]{0,4}/p' "$iplist_tempfile"
+
+	# Validate iplist file size
+	iplist_size=$(sed -r -e '/^#|^$/d' "$iplist_tempfile" | wc -l)
+	[[ "$iplist_size" -lt "$IPSET_MIN_SIZE" ]] && check_result "$E_INVALID" "IP list file too small (<${IPSET_MIN_SIZE}), ignoring"
+	mv -f "$iplist_tempfile" "${IPSET_PATH}/${IPSET_FILE}.iplist"
+fi
+
+# Load ipset in kernel
+inet_ver="inet6"
+$IPSET_BIN -quiet create -exist "$ip_name" hash:net family $inet_ver
+$IPSET_BIN -quiet destroy "${ip_name}-tmp"
+$IPSET_BIN create "${ip_name}-tmp" -exist hash:net family $inet_ver maxelem 1048576
+$IPSET_BIN flush "${ip_name}-tmp"
+
+sed -rn -e '/^#|^$/d' -e "s/^(.*)/add ${ip_name}-tmp \\1/p" "${IPSET_PATH}/${IPSET_FILE}.iplist" | $IPSET_BIN -quiet restore
+check_result $? "Populating ipset table"
+
+$IPSET_BIN swap "${ip_name}-tmp" "${ip_name}"
+$IPSET_BIN -quiet destroy "${ip_name}-tmp"
+
+# Generating timestamp
+time_n_date=$(date +'%T %F')
+time=$(echo "$time_n_date" | cut -f 1 -d \ )
+date=$(echo "$time_n_date" | cut -f 2 -d \ )
+
+if [ ! -f "${IPSET_PATH}.conf" ] || [ -z "$(get_object_value "$ipset_hstobject" 'LISTNAME' "$ip_name" '$LISTNAME')" ]; then
+
+	# Concatenating rule
+	str="LISTNAME='$ip_name' IP_VERSION='v6' SOURCE='$data_source'"
+	str="$str AUTOUPDATE='$autoupdate' SUSPENDED='no'"
+	str="$str TIME='$time' DATE='$date'"
+	echo "$str" >> $HESTIA/data/firewall/ipset.conf
+	log_type="added"
+
+elif [ "$refresh" = "yes" ]; then
+
+	# Update iplist last regen time
+	update_object_value "$ipset_hstobject" 'LISTNAME' "$ip_name" '$TIME' "$time"
+	update_object_value "$ipset_hstobject" 'LISTNAME' "$ip_name" '$DATE' "$date"
+	log_type="refreshed"
+
+fi
+
+# Changing permissions
+chmod 660 $HESTIA/data/firewall/ipset.conf
+chmod 660 "${IPSET_PATH}/${IPSET_FILE}.iplist"
+
+# Install ipset daily cron updater (solo llama al v-update-firewall-ipset general, que se puede modificar para gestionar ambos)
+if ! grep --silent --no-messages "v-update-firewall-ipset" $HESTIA/data/queue/daily.pipe; then
+	cmd="$BIN/v-update-firewall-ipset yes"
+	echo "$cmd" >> $HESTIA/data/queue/daily.pipe
+fi
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Logging
+$BIN/v-log-action "system" "Info" "Firewall" "IPset IPv6 IP list ${log_type:-loaded} (Name: $ip_name, Autoupdate: $autoupdate)."
+log_event "$OK" "$ARGUMENTS"
+
+exit

@@ -1,0 +1,102 @@
+#!/bin/bash
+# info: add firewall blocking rule (IPv6)
+# options: IPV6_CIDR CHAIN
+#
+# example: v-add-firewall-ban-ipv6 2001:db8::bad:1 MAIL
+#
+# This function adds new blocking rule to system firewall (IPv6)
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Argument definition
+ipv6_cidr=$1
+chain=$(echo $2 | tr '[:lower:]' '[:upper:]')
+
+# Defining absolute path for ip6tables and modprobe
+ip6tables="/sbin/ip6tables"
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/firewall.sh
+source $HESTIA/func/firewall.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '2' "$#" 'IPV6_CIDR CHAIN'
+is_format_valid 'ip' 'chain'
+is_system_enabled "$FIREWALL_SYSTEM" 'FIREWALL_SYSTEM'
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+# Check for IPv6 format (simple)
+if ! echo "$ipv6_cidr" | grep -q ':'; then
+	echo "Error: '$ipv6_cidr' does not appear to be a valid IPv6 address."
+	exit 1
+fi
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Self heal ip6tables links (implementa si tienes función, si no, comenta)
+# heal_ip6tables_links
+
+# Checking server ip (evita banear IPs propias/localhost)
+if [ -e "$HESTIA/data/ips/$ipv6_cidr" ] || [ "$ipv6_cidr" = '::1' ]; then
+	exit
+fi
+
+# Checking ip exclusions
+excludes="$HESTIA/data/firewall/excludes6.conf"
+if [ -f "$excludes" ]; then
+	check_excludes=$(grep "^$ipv6_cidr$" $excludes 2> /dev/null)
+	if [ -n "$check_excludes" ]; then
+		exit
+	fi
+fi
+
+# Checking ip in banlist
+conf="$HESTIA/data/firewall/banlist6.conf"
+if [ -f "$conf" ]; then
+	check_ip=$(grep "IP='$ipv6_cidr' CHAIN='$chain'" $conf 2> /dev/null)
+	if [ -n "$check_ip" ]; then
+		exit
+	fi
+fi
+
+# Adding chain (asegura que la cadena existe)
+$BIN/v-add-firewall-chain-ipv6 $chain 0 TCP "Autocreate for ban"
+
+# Generating timestamp
+time_n_date=$(date +'%T %F')
+time=$(echo "$time_n_date" | cut -f 1 -d \ )
+date=$(echo "$time_n_date" | cut -f 2 -d \ )
+
+# Adding ip to banlist6.conf
+echo "IP='$ipv6_cidr' CHAIN='$chain' TIME='$time' DATE='$date'" >> $conf
+
+# Añadir la regla directamente al firewall (solo IPv6)
+$ip6tables -I fail2ban-$chain 1 -s "$ipv6_cidr" -j REJECT --reject-with icmp6-port-unreachable 2> /dev/null
+
+# Changing permissions
+chmod 660 $conf
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Logging
+$BIN/v-log-action "system" "Warning" "Firewall" "Banned IPv6 address $ipv6_cidr."
+log_event "$OK" "$ARGUMENTS"
+
+exit

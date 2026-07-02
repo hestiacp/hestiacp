@@ -83,6 +83,17 @@
 		<?php
 			foreach ($data as $key => $value) {
 				++$i;
+				// Determine move button visibility based on position in list
+				if ($i === 1) {
+					$move_up_enabled = false;
+					$move_down_enabled = true;
+				} elseif ($i == count($data)) {
+					$move_up_enabled = true;
+					$move_down_enabled = false;
+				} else {
+					$move_up_enabled = true;
+					$move_down_enabled = true;
+				}
 				if ($data[$key]['SUSPENDED'] == 'yes') {
 					$status = 'suspended';
 					$spnd_action = 'unsuspend';
@@ -133,7 +144,7 @@
 						</li>
 						<li class="units-table-row-action shortcut-down" data-key-action="js">
 							<a class="units-table-row-action-link data-controls js-confirm-action"
-								style="<?= tohtml($move_down_enabled ? "" : "display:block!important") ?>"
+								style="<?= tohtml($move_down_enabled ? "display:block!important" : "") ?>"
 								href="/move/firewall/?<?= tohtml(http_build_query(["rule" => $key, "direction" => 'down', "token" => $_SESSION["token"]])) ?>"
 								title="<?= tohtml( _("Move Firewall Rule Down")) ?>"
 								data-confirm-title="<?= tohtml( _("Move Down")) ?>"

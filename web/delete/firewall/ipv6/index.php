@@ -19,5 +19,10 @@ if (!empty($_GET["rule"])) {
 check_return_code($return_var, $output);
 unset($output);
 
+$back = $_SESSION["back"];
+if (!empty($back)) {
+	header("Location: " . $back);
+	exit();
+}
 header("Location: /list/firewall/ipv6/");
 exit();

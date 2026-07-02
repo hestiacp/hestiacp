@@ -389,6 +389,24 @@ sync_domain_godaddy() {
 }
 
 # ---------------------------------------------------------------------------
+# Auto-detect registrar via WHOIS (fallback when not in DOMAIN_REGISTRAR map)
+# ---------------------------------------------------------------------------
+
+detect_registrar() {
+    local domain="$1"
+    local whois_out
+    whois_out=$(whois "$domain" 2>/dev/null)
+
+    if echo "$whois_out" | grep -qi "OVH"; then
+        echo "ovh"
+    elif echo "$whois_out" | grep -qi "GoDaddy\|Key-Systems"; then
+        echo "godaddy"
+    else
+        echo ""
+    fi
+}
+
+# ---------------------------------------------------------------------------
 # Main sync loop
 # ---------------------------------------------------------------------------
 
@@ -401,9 +419,15 @@ for z in "${ALL_ZONES[@]}"; do
     [[ -n "$domain" && "$z" != "$domain" ]] && continue
 
     registrar="${DOMAIN_REGISTRAR[$z]:-}"
+
     if [[ -z "$registrar" ]]; then
-        slog "SKIP $z — not mapped to a registrar in $CONFIG_FILE"
-        continue
+        slog "  $z not in config — auto-detecting registrar via WHOIS..."
+        registrar=$(detect_registrar "$z")
+        if [[ -z "$registrar" ]]; then
+            slog "SKIP $z — registrar not detected (add manually to $CONFIG_FILE)"
+            continue
+        fi
+        slog "  detected registrar: $registrar"
     fi
 
     slog "Processing $z (registrar=$registrar)"

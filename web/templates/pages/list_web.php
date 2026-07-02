@@ -264,16 +264,6 @@
 										<span class="u-hide-desktop"><?= tohtml( _("Edit Domain")) ?></span>
 									</a>
 								</li>
-<li class="units-table-row-action shortcut-enter" data-key-action="href">
-									<a target="_blank"
-										class="units-table-row-action-link"
-										href="/siteprobuilder/?<?= tohtml(http_build_query(["domain" => $key, "token" => $_SESSION["token"]])) ?>"
-										title="<?= tohtml( _("Edit Domain")) ?>"
-									>
-										<i class="fas fa-pencil-ruler icon-orange"></i>
-										<span class="u-hide-desktop"><?= tohtml( _("Edit Domain")) ?></span>
-									</a>
-								</li>
 								<li class="units-table-row-action" data-key-action="href">
 									<a
 										class="units-table-row-action-link"

@@ -44,6 +44,13 @@ is_mysql_host_alive() {
 	echo "port='$port'" >> $mycnf
 
 	chmod 600 $mycnf
+	if [ -f '/usr/bin/mariadb' ]; then
+		echo "ssl=1" >> $mycnf
+		echo "ssl-verify-server-cert=0" >> $mycnf
+	else
+		echo "ssl-mode=REQUIRED" >> $mycnf
+	fi
+
 	mysql_out=$(mktemp)
 	if [ -f '/usr/bin/mariadb' ]; then
 		mariadb --defaults-file=$mycnf -e 'SELECT VERSION()' > $mysql_out 2>&1
@@ -52,37 +59,28 @@ is_mysql_host_alive() {
 		mysql --defaults-file=$mycnf -e 'SELECT VERSION()' > $mysql_out 2>&1
 		status=$?
 	fi
-	if [ "$status" -ne '0' ]; then
-		if grep -q -i "ERROR 2026 (HY000): TLS/SSL error: self-signed certificate in certificate chain" $mysql_out && [ -t 1 ]; then
-			cert_out=$(mktemp)
-			echo -n | openssl s_client -showcerts -connect $host:$port -starttls mysql > $cert_out 2>/dev/null
-			if grep -q "BEGIN CERTIFICATE" $cert_out; then
-				subject=$(openssl x509 -in $cert_out -noout -subject 2>/dev/null)
-				issuer=$(openssl x509 -in $cert_out -noout -issuer 2>/dev/null)
-				fingerprint=$(openssl x509 -in $cert_out -noout -fingerprint -sha256 2>/dev/null)
 
-				echo "WARNING: The database server at $host uses an untrusted/self-signed certificate."
-				echo "$subject"
-				echo "$issuer"
-				echo "$fingerprint"
-				read -p "Do you want to trust this certificate and continue? (y/n): " trust
-				if [ "$trust" = "y" ] || [ "$trust" = "Y" ]; then
-					mkdir -p $HESTIA/ssl/db
-					sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' $cert_out > $HESTIA/ssl/db/$host.crt
-					echo "ssl-ca=$HESTIA/ssl/db/$host.crt" >> $mycnf
-					echo "ssl-verify-server-cert=false" >> $mycnf
-					if [ -f '/usr/bin/mariadb' ]; then
-						mariadb --defaults-file=$mycnf -e 'SELECT VERSION()' > $mysql_out 2>&1
-						status=$?
-					else
-						mysql --defaults-file=$mycnf -e 'SELECT VERSION()' > $mysql_out 2>&1
-						status=$?
-					fi
-				fi
-			fi
-			rm -f $cert_out
+	if [ "$status" -eq '0' ]; then
+		ssl_enforced="yes"
+	else
+		sed -i '/ssl/d' $mycnf
+		if [ -f '/usr/bin/mariadb' ]; then
+			echo "ssl=0" >> $mycnf
+		else
+			echo "ssl-mode=DISABLED" >> $mycnf
 		fi
-		if [ "$status" -ne '0' ]; then
+
+		if [ -f '/usr/bin/mariadb' ]; then
+			mariadb --defaults-file=$mycnf -e 'SELECT VERSION()' > $mysql_out 2>&1
+			status=$?
+		else
+			mysql --defaults-file=$mycnf -e 'SELECT VERSION()' > $mysql_out 2>&1
+			status=$?
+		fi
+
+		if [ "$status" -eq '0' ]; then
+			ssl_enforced="no"
+		else
 			echo "Error: MySQL connection to $host failed"
 			rm $mycnf
 			rm -f $mysql_out
@@ -166,7 +164,7 @@ case $type in
 	mysql)
 		str="HOST='$host' USER='$dbuser' PASSWORD='$dbpass'"
 		str="$str CHARSETS='$charsets' MAX_DB='$max_db' U_SYS_USERS=''"
-		str="$str U_DB_BASES='0' SUSPENDED='no' TIME='$time' DATE='$date' PORT='$port'"
+		str="$str U_DB_BASES='0' SUSPENDED='no' TIME='$time' DATE='$date' PORT='$port' SSL='$ssl_enforced'"
 		;;
 	pgsql)
 		str="HOST='$host' USER='$dbuser' PASSWORD='$dbpass'"

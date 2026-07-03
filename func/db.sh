@@ -52,9 +52,19 @@ mysql_connect() {
 		echo "user='$USER'" >> $mycnf
 		echo "password='$PASSWORD'" >> $mycnf
 		echo "port='$PORT'" >> $mycnf
-		if [ -f "$HESTIA/ssl/db/$HOST.crt" ]; then
-			echo "ssl-ca=$HESTIA/ssl/db/$HOST.crt" >> $mycnf
-			echo "ssl-verify-server-cert=false" >> $mycnf
+		if [ "$SSL" = "yes" ]; then
+			if [ -f '/usr/bin/mariadb' ]; then
+				echo "ssl=1" >> $mycnf
+				echo "ssl-verify-server-cert=0" >> $mycnf
+			else
+				echo "ssl-mode=REQUIRED" >> $mycnf
+			fi
+		else
+			if [ -f '/usr/bin/mariadb' ]; then
+				echo "ssl=0" >> $mycnf
+			else
+				echo "ssl-mode=DISABLED" >> $mycnf
+			fi
 		fi
 		chmod 600 $mycnf
 	else
@@ -65,9 +75,19 @@ mysql_connect() {
 			echo "user='$USER'" >> $mycnf
 			echo "password='$PASSWORD'" >> $mycnf
 			echo "port='$PORT'" >> $mycnf
-			if [ -f "$HESTIA/ssl/db/$HOST.crt" ]; then
-				echo "ssl-ca=$HESTIA/ssl/db/$HOST.crt" >> $mycnf
-				echo "ssl-verify-server-cert=false" >> $mycnf
+			if [ "$SSL" = "yes" ]; then
+				if [ -f '/usr/bin/mariadb' ]; then
+					echo "ssl=1" >> $mycnf
+					echo "ssl-verify-server-cert=0" >> $mycnf
+				else
+					echo "ssl-mode=REQUIRED" >> $mycnf
+				fi
+			else
+				if [ -f '/usr/bin/mariadb' ]; then
+					echo "ssl=0" >> $mycnf
+				else
+					echo "ssl-mode=DISABLED" >> $mycnf
+				fi
 			fi
 			chmod 660 $mycnf
 		fi

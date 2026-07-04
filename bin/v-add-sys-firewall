@@ -42,8 +42,17 @@ fi
 # Updating FIREWAL_SYSTEM value
 $BIN/v-change-sys-config-value "FIREWALL_SYSTEM" "iptables"
 
-# Updating firewall rules
+# Updating firewall rules (IPv4)
 $BIN/v-update-firewall
+
+# Initialize IPv6 chains config mirroring IPv4 chains
+if [ ! -f $HESTIA/data/firewall/chains6.conf ]; then
+	[ -f $HESTIA/data/firewall/chains.conf ] && \
+		cp $HESTIA/data/firewall/chains.conf $HESTIA/data/firewall/chains6.conf
+fi
+
+# Updating firewall rules (IPv6)
+[ -x "$BIN/v-update-firewall-ipv6" ] && $BIN/v-update-firewall-ipv6
 
 #----------------------------------------------------------#
 #                       Hestia                             #

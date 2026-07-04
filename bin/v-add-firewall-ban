@@ -1,10 +1,20 @@
 #!/bin/bash
-# info: add firewall blocking rule
-# options: IPV4_CIDR CHAIN
+# info: add firewall blocking rule (IPv4 or IPv6)
+# options: IP_OR_CIDR CHAIN
 #
 # example: v-add-firewall-ban 37.120.129.20 MAIL
+# example: v-add-firewall-ban 2001:db8::bad MAIL
 #
-# This function adds new blocking rule to system firewall
+# This function adds a new blocking rule to the system firewall.
+#
+# IPv6 dual-stack behavior (non-invasive extension):
+#   The first argument can be an IPv4 address/CIDR or an IPv6 address.
+#   Detection is done by checking for a colon in the address (IPv6 always
+#   contains ":" while IPv4 never does). Based on the result:
+#     - IPv4 → creates/ensures the fail2ban-CHAIN chain in iptables (original)
+#     - IPv6 → creates/ensures the fail2ban-CHAIN chain in ip6tables (new)
+#   The ban entry itself is written to the shared banlist.conf regardless of
+#   IP version, so v-delete-firewall-ban works unchanged for both families.
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #
@@ -31,8 +41,12 @@ source_conf "$HESTIA/conf/hestia.conf"
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'IPV4_CIDR CHAIN'
-is_format_valid 'ipv4_cidr' 'chain'
+check_args '2' "$#" 'IP CHAIN'
+if [[ "$ipv4_cidr" =~ ":" ]]; then
+	is_format_valid 'ipv6' 'chain'
+else
+	is_format_valid 'ipv4_cidr' 'chain'
+fi
 is_system_enabled "$FIREWALL_SYSTEM" 'FIREWALL_SYSTEM'
 
 # Perform verification if read-only mode is enabled
@@ -64,8 +78,12 @@ if [ -n "$check_ip" ]; then
 	exit
 fi
 
-# Adding chain
-$BIN/v-add-firewall-chain $chain
+# Adding chain (IPv4 or IPv6)
+if [[ "$ipv4_cidr" =~ ":" ]]; then
+	$BIN/v-add-firewall-chain-ipv6 $chain
+else
+	$BIN/v-add-firewall-chain $chain
+fi
 
 # Generating timestamp
 time_n_date=$(date +'%T %F')
@@ -74,8 +92,11 @@ date=$(echo "$time_n_date" | cut -f 2 -d \ )
 
 # Adding ip to banlist
 echo "IP='$ipv4_cidr' CHAIN='$chain' TIME='$time' DATE='$date'" >> $conf
-$iptables -I fail2ban-$chain 1 -s $ipv4_cidr \
-	-j DROP 2> /dev/null
+if [[ "$ipv4_cidr" =~ ":" ]]; then
+	/sbin/ip6tables -I fail2ban-$chain 1 -s "$ipv4_cidr" -j REJECT 2> /dev/null
+else
+	$iptables -I fail2ban-$chain 1 -s $ipv4_cidr -j DROP 2> /dev/null
+fi
 
 # Changing permissions
 chmod 660 $conf

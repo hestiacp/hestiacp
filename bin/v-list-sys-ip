@@ -76,7 +76,11 @@ csv_list() {
 #----------------------------------------------------------#
 
 check_args '1' "$#" 'IP [FORMAT]'
-is_format_valid 'ip'
+if [ "$(hst_detect_ip_version "$ip")" = "6" ]; then
+	is_format_valid 'ipv6'
+else
+	is_format_valid 'ip'
+fi
 if [ ! -e "$HESTIA/data/ips/$ip" ]; then
 	check_result $E_NOTEXIST "IP $ip doesn't exist"
 fi

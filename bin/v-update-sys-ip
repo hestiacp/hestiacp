@@ -166,6 +166,14 @@ for ip in $ips; do
 	fi
 done
 
+# Adding system IPv6 addresses
+while read -r ipv6 mask iface; do
+	[ -z "$ipv6" ] && continue
+	if [ ! -e "$HESTIA/data/ips/$ipv6" ]; then
+		$BIN/v-add-sys-ip "$ipv6" "$mask" "$iface"
+	fi
+done < <($BIN/v-list-network plain 6)
+
 # Updating NAT
 pub_ipv4="$(curl -fsLm5 --retry 2 --ipv4 https://ip.hestiacp.com/)"
 if [ ! -e "$HESTIA/data/ips/$pub_ipv4" ]; then

@@ -165,6 +165,8 @@ apply_distro_version() {
 	fi
 
 	sed -i "s/^Version: \(.*\)/Version: ${base_version}${release_suffix}/" "$control_file"
+}
+
 # Detects the package that provides a shared library required by hestia-php
 detect_pkg_from_elf() {
 	local bin="$1"

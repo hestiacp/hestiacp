@@ -88,8 +88,20 @@ for service in $service_list; do
 
 	# Check the result of the service restart and report whether it failed.
 	if [ $? -ne 0 ]; then
-		check_result "$E_RESTART" "ERROR: Restart of $service failed."
-		$BIN/v-log-action "system" "Error" "System" "Service failed to restart (Name: $service)."
+		if [ -d /run/systemd/system ]; then
+			# systemd is the init system (the host was booted with systemd):
+			# a non-zero exit is an authoritative failure.
+			check_result "$E_RESTART" "ERROR: Restart of $service failed."
+			$BIN/v-log-action "system" "Error" "System" "Service failed to restart (Name: $service)."
+		else
+			# No systemd as PID 1 (e.g. running inside a container): systemctl
+			# cannot reliably manage or report on services, so a non-zero exit
+			# here is not authoritative and the service is frequently running
+			# regardless. Warn and continue instead of aborting the calling
+			# operation (e.g. v-add-web-domain). Behaviour on a normally-booted
+			# systemd host is unchanged.
+			$BIN/v-log-action "system" "Warning" "System" "Could not confirm restart of $service; init system does not report service status. Continuing."
+		fi
 	else
 		$BIN/v-log-action "system" "Info" "System" "Service restarted (Name: $service)."
 	fi

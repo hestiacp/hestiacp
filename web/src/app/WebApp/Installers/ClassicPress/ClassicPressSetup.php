@@ -19,7 +19,7 @@ class ClassicPressSetup extends BaseSetup {
     protected array $config = [
         "form" => [
             "site_name" => ["type" => "text", "value" => "ClassicPress Blog"],
-            "username" => ["value" => "wpadmin"],
+            "username" => ["value" => "cpadmin"],
             "email" => "text",
             "password" => "password",
             "language" => [
@@ -43,7 +43,7 @@ class ClassicPressSetup extends BaseSetup {
                 "type" => "select",
                 "options" => ["Allow", "Discourage"],
             ],
-            "disable_XML-RPC" => [
+            "disable_XML-RPC?" => [
                 "type" => "select",
                 "options" => ["Yes", "No"],
             ],
@@ -98,7 +98,7 @@ class ClassicPressSetup extends BaseSetup {
         ]);
 
         // Disable XML-RPC
-        if ($options["disable_XML-RPC"] === "Yes") {
+        if ($options["disable_XML-RPC?"] === "Yes") {
             $this->appcontext->runWp($options["php_version"], [
                 "option",
                 "update",

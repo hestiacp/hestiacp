@@ -828,7 +828,7 @@ sync_cron_jobs() {
 		echo 'MAILTO=""' > $crontab
 	fi
 
-	while read line; do
+	while IFS= read -r line; do
 		parse_object_kv_list "$line"
 		if [ "$SUSPENDED" = 'no' ]; then
 			echo "$MIN $HOUR $DAY $MONTH $WDAY $CMD" \
@@ -1141,7 +1141,7 @@ is_string_format_valid() {
 	is_no_new_line_format "$1"
 }
 is_cron_command_valid_format() {
-	if [[ ! "$1" =~ ^[^\`]*?$ ]]; then
+	if [[ "$1" == *'`'* ]] || [[ "$1" != "${1//$'\n'/}" ]]; then
 		check_result "$E_INVALID" "Invalid cron command format"
 	fi
 }

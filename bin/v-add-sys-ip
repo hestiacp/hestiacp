@@ -132,13 +132,14 @@ if [ -z "$iface" ]; then
 	exit 1
 fi
 
-# Extract IPv6 prefix number for validation (removes initial slash)
+# Validate IPv6 prefix length inline (is_format_valid uses indirect refs, incompatible with numeric names)
 if [[ "$prefix_length" =~ ^/([0-9]{1,3})$ ]]; then
 	prefix_length_num="${BASH_REMATCH[1]}"
-else
-	prefix_length_num=""
+	if [ "$prefix_length_num" -gt 128 ]; then
+		check_result 2 "any valid prefix is expected rather than \"$prefix_length_num\""
+	fi
 fi
-is_format_valid 'netmask' 'cidr' "$prefix_length_num" "$iface" "$user" "$ip_status"
+is_format_valid 'netmask' 'cidr' 'iface' 'user' 'ip_status'
 is_ip_free ${ip46}
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"

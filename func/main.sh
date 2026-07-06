@@ -1016,22 +1016,22 @@ hst_detect_ip_version() {
 	if [[ $ip_without_prefix =~ ^$ipv4_octet\.$ipv4_octet\.$ipv4_octet\.$ipv4_octet$ ]]; then
 		detected_version="4"
 	else
-		status_bits=1  # BIT 0: not a valid IPv4 address
+		status_bits=1 # BIT 0: not a valid IPv4 address
 	fi
 
 	# If a prefix/CIDR was supplied, validate it AND re-check IPv4 address validity
 	if [ "$input_addr" != "$ip_without_prefix" ]; then
 		local prefix_len="${input_addr#${ip_without_prefix}/}"
-		detected_version=""  # reset until both address and prefix validate
+		detected_version="" # reset until both address and prefix validate
 		# Re-validate the bare IPv4 address before accepting the CIDR form
 		if [[ $ip_without_prefix =~ ^$ipv4_octet\.$ipv4_octet\.$ipv4_octet\.$ipv4_octet$ ]]; then
 			if [[ "$prefix_len" =~ ^[0-9]+$ ]] && [ "$prefix_len" -le 32 ]; then
 				detected_version="4"
 			else
-				status_bits=$(( status_bits | 2 ))  # BIT 1: bad prefix length
+				status_bits=$((status_bits | 2)) # BIT 1: bad prefix length
 			fi
 		else
-			status_bits=$(( status_bits | 1 ))  # BIT 0: invalid IPv4 address
+			status_bits=$((status_bits | 1)) # BIT 0: invalid IPv4 address
 		fi
 	fi
 
@@ -1060,16 +1060,16 @@ hst_detect_ip_version() {
 	ipv6_regex="${ipv6_regex}\|^:\(:${hex_grp}\)\{1,7\}$"
 
 	if ! echo "$ipv6_addr" | grep --silent "$ipv6_regex"; then
-		status_bits=$(( status_bits | 4 ))  # BIT 2: not a valid IPv6 address
+		status_bits=$((status_bits | 4)) # BIT 2: not a valid IPv6 address
 		echo ""
 		return $status_bits
 	fi
 
 	# Validate prefix length is within IPv6 range (0-128)
 	if [ -n "$ipv6_prefix_len" ]; then
-		if ! [[ "$ipv6_prefix_len" =~ ^[0-9]+$ ]] || \
-		   [ "$ipv6_prefix_len" -lt 0 ] || [ "$ipv6_prefix_len" -gt 128 ]; then
-			status_bits=$(( status_bits | 8 ))  # BIT 3: prefix out of range
+		if ! [[ "$ipv6_prefix_len" =~ ^[0-9]+$ ]] \
+			|| [ "$ipv6_prefix_len" -lt 0 ] || [ "$ipv6_prefix_len" -gt 128 ]; then
+			status_bits=$((status_bits | 8)) # BIT 3: prefix out of range
 			echo ""
 			return $status_bits
 		fi

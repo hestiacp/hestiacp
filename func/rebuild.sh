@@ -431,7 +431,7 @@ rebuild_web_domain_conf() {
 	#   dual-stack pattern for Apache 2.4+.
 	# ---------------------------------------------------------------------------
 	local ipv6_addr
-	ipv6_addr=$(grep "DOMAIN='${domain}'" "$USER_DATA/web.conf" 2>/dev/null | grep -oP "IP6='\\K[^\']+")
+	ipv6_addr=$(grep "DOMAIN='${domain}'" "$USER_DATA/web.conf" 2> /dev/null | grep -oP "IP6='\\K[^\']+")
 	if [ -z "$ipv6_addr" ]; then
 		get_user_ipv6
 		ipv6_addr="$ipv6"
@@ -439,18 +439,18 @@ rebuild_web_domain_conf() {
 	if [ -n "$ipv6_addr" ] && [ -n "$local_ip" ]; then
 		local esc_ip="${local_ip//./\\.}"
 		# nginx proxy: add IPv6 listen lines
-		for pcf in "$HOMEDIR/$user/conf/web/$domain/$PROXY_SYSTEM.conf" 		           "$HOMEDIR/$user/conf/web/$domain/$PROXY_SYSTEM.ssl.conf"; do
+		for pcf in "$HOMEDIR/$user/conf/web/$domain/$PROXY_SYSTEM.conf" "$HOMEDIR/$user/conf/web/$domain/$PROXY_SYSTEM.ssl.conf"; do
 			[ -f "$pcf" ] || continue
 			[[ "$pcf" == *.ssl.conf ]] && lport="${PROXY_SSL_PORT:-443}" || lport="${PROXY_PORT:-80}"
-			if grep -qE "listen.*${esc_ip}:${lport}" "$pcf" 2>/dev/null && 			   ! grep -q "\\[${ipv6_addr}\\]" "$pcf" 2>/dev/null; then
+			if grep -qE "listen.*${esc_ip}:${lport}" "$pcf" 2> /dev/null && ! grep -q "\\[${ipv6_addr}\\]" "$pcf" 2> /dev/null; then
 				sed -i "/listen.*${esc_ip}:${lport}/a\\\t\tlisten      [${ipv6_addr}]:${lport};" "$pcf"
 			fi
 		done
 		# Apache backend: expand VirtualHost to dual-stack
-		for acf in "$HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.conf" 		           "$HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.ssl.conf"; do
+		for acf in "$HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.conf" "$HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.ssl.conf"; do
 			[ -f "$acf" ] || continue
-			if ! grep -q "\\[${ipv6_addr}\\]" "$acf" 2>/dev/null; then
-				vport=$(grep -oE "VirtualHost ${esc_ip}:[0-9]+" "$acf" 2>/dev/null | head -1 | grep -oE "[0-9]+$")
+			if ! grep -q "\\[${ipv6_addr}\\]" "$acf" 2> /dev/null; then
+				vport=$(grep -oE "VirtualHost ${esc_ip}:[0-9]+" "$acf" 2> /dev/null | head -1 | grep -oE "[0-9]+$")
 				[ -n "$vport" ] && sed -i "s|<VirtualHost ${local_ip}:${vport}>|<VirtualHost ${local_ip}:${vport} [${ipv6_addr}]:${vport}>|g" "$acf"
 			fi
 		done

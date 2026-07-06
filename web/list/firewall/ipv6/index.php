@@ -4,16 +4,16 @@ $TAB = "FIREWALL";
 include $_SERVER["DOCUMENT_ROOT"] . "/inc/main.php";
 
 if ($_SESSION["userContext"] != "admin") {
-    header("Location: /list/user");
-    exit();
+	header("Location: /list/user");
+	exit();
 }
 
 exec(HESTIA_CMD . "v-list-firewall-ipv6 json", $output, $return_var);
 $data = json_decode(implode("", $output), true);
 if ($_SESSION["userSortOrder"] == "name") {
-    ksort($data);
+	ksort($data);
 } else {
-    $data = array_reverse($data, true);
+	$data = array_reverse($data, true);
 }
 unset($output);
 

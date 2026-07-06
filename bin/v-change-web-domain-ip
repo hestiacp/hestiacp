@@ -87,7 +87,7 @@ if [ -n "$ip" ]; then
 	fi
 
 	# Check for webmail — only if mail domain exists
-	if [ -n "$IMAP_SYSTEM" ] && grep -q "DOMAIN='${domain}'" "$USER_DATA/mail.conf" 2>/dev/null; then
+	if [ -n "$IMAP_SYSTEM" ] && grep -q "DOMAIN='${domain}'" "$USER_DATA/mail.conf" 2> /dev/null; then
 		$BIN/v-rebuild-mail-domain "$user" "$domain"
 	fi
 else

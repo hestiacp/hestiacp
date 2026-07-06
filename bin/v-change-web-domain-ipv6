@@ -48,7 +48,6 @@ if [ -n "$ipv6" ]; then
 		interface="eth0" # Detect default interface
 		$BIN/v-add-sys-ip "$ipv6" "/128" "$interface" "$user" "dedicated"
 	fi
-	
 
 	is_ipv6_valid "$ipv6" "$user"
 fi
@@ -84,7 +83,7 @@ $BIN/v-rebuild-web-domain "$user" "$domain" 'no'
 [ -n "$old_ipv6" ] && decrease_ip_value "$old_ipv6"
 
 # Check for webmail — only rebuild if mail domain exists
-if [ -n "$IMAP_SYSTEM" ] && grep -q "DOMAIN='${domain}'" "$USER_DATA/mail.conf" 2>/dev/null; then
+if [ -n "$IMAP_SYSTEM" ] && grep -q "DOMAIN='${domain}'" "$USER_DATA/mail.conf" 2> /dev/null; then
 	$BIN/v-rebuild-mail-domain "$user" "$domain"
 fi
 

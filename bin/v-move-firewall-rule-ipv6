@@ -14,16 +14,18 @@ source_conf "$HESTIA/conf/hestia.conf"
 rules="$HESTIA/data/firewall/rules6.conf"
 
 get_rule_id() {
-    local old=$1
-    local dir=$2
-    if [[ "$dir" == "UP" ]]; then echo $((old - 1))
-    else echo $((old + 1))
-    fi
+	local old=$1
+	local dir=$2
+	if [[ "$dir" == "UP" ]]; then
+		echo $((old - 1))
+	else
+		echo $((old + 1))
+	fi
 }
 
 sort_fw_rules() {
-    sort -n -k 2 -t \' "$rules" > "${rules}.tmp"
-    mv -f "${rules}.tmp" "$rules"
+	sort -n -k 2 -t \' "$rules" > "${rules}.tmp"
+	mv -f "${rules}.tmp" "$rules"
 }
 
 #----------------------------------------------------------#
@@ -34,24 +36,24 @@ check_args '2' "$#" 'RULE DIRECTION'
 is_format_valid 'rule' "$source_rule"
 is_system_enabled "$FIREWALL_SYSTEM" 'FIREWALL_SYSTEM'
 
-if ! grep -q "RULE='$source_rule'" "$rules" 2>/dev/null; then
-    check_result $E_NOTEXIST "IPv6 rule $source_rule not found"
+if ! grep -q "RULE='$source_rule'" "$rules" 2> /dev/null; then
+	check_result $E_NOTEXIST "IPv6 rule $source_rule not found"
 fi
 
 if [[ "$direction" != "UP" && "$direction" != "DOWN" ]]; then
-    echo "Invalid direction. Use 'up' or 'down'."
-    exit 1
+	echo "Invalid direction. Use 'up' or 'down'."
+	exit 1
 fi
 
 if [[ "$direction" == "UP" && "$source_rule" -eq 1 ]]; then
-    echo "Cannot move rule up. It's already the first rule."
-    exit 1
+	echo "Cannot move rule up. It's already the first rule."
+	exit 1
 fi
 
 last_rule=$(tail -n 1 "$rules" | grep -o "RULE='[0-9]*'" | tr -d "RULE='")
 if [[ "$direction" == "DOWN" && "$source_rule" -eq "$last_rule" ]]; then
-    echo "Cannot move rule down. It's already the last rule."
-    exit 1
+	echo "Cannot move rule down. It's already the last rule."
+	exit 1
 fi
 
 check_hestia_demo_mode

@@ -2390,7 +2390,7 @@ fi
 # Get public IP
 pub_ipv4="$(curl -fsLm5 --retry 2 --ipv4 https://ip.hestiacp.com/)"
 # pub_ipv6: silent on IPv4-only servers (2>/dev/null || true prevents failure)
-pub_ipv6="$(curl -fsLm5 --retry 2 --ipv6 https://ip.hestiacp.com/ 2>/dev/null || true)"
+pub_ipv6="$(curl -fsLm5 --retry 2 --ipv6 https://ip.hestiacp.com/ 2> /dev/null || true)"
 if [ -n "$pub_ipv4" ] && [ "$pub_ipv4" != "$ip" ]; then
 	if [ -e /etc/rc.local ]; then
 		sed -i '/exit 0/d' /etc/rc.local

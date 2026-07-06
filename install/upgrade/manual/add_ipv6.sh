@@ -14,9 +14,10 @@ if [ ! -e "$HESTIA/data/firewallv6" ]; then
 fi
 
 # Mark existing IPv4 addresses with VERSION='4'
-for ip in $(ls "$HESTIA/data/ips/"); do
-	if ! grep -q "^VERSION=" "$HESTIA/data/ips/$ip"; then
-		echo "VERSION='4'" >> "$HESTIA/data/ips/$ip"
+for ip_file in "$HESTIA/data/ips/"*; do
+	[ -f "$ip_file" ] || continue
+	if ! grep -q "^VERSION=" "$ip_file"; then
+		echo "VERSION='4'" >> "$ip_file"
 	fi
 done
 
@@ -31,7 +32,8 @@ if [ -n "$ipv6" ] && [ "$ipv6" != "::1" ]; then
 fi
 
 # Update web and DNS configs for all users with IPv6
-for user in $(ls "$HESTIA/data/users/"); do
+for user_dir in "$HESTIA/data/users/"*/; do
+	user=$(basename "$user_dir")
 	USER_DATA="$HESTIA/data/users/$user"
 
 	# Update web domains

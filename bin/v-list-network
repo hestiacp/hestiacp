@@ -46,10 +46,10 @@ function list_network() {
 	esac
 	echo "$ip_raw_string" | while read -r ip_addr ip_mask ip_iface; do
 		case $ip_view in
-			list)   echo "${ip_addr}" ;;
-			plain)  echo "${ip_addr} ${ip_mask} ${ip_iface}" ;;
-			shell)  printf '%-45s%-5s%-8s\n' "${ip_addr}" "${ip_mask}" "${ip_iface}" ;;
-			csv)    echo "${ip_addr},${ip_mask},${ip_iface}" ;;
+			list) echo "${ip_addr}" ;;
+			plain) echo "${ip_addr} ${ip_mask} ${ip_iface}" ;;
+			shell) printf '%-45s%-5s%-8s\n' "${ip_addr}" "${ip_mask}" "${ip_iface}" ;;
+			csv) echo "${ip_addr},${ip_mask},${ip_iface}" ;;
 			json)
 				echo -n '    "'${ip_addr}'": {"MASK": "'${ip_mask}'","INTERFACE": "'${ip_iface}'"}'
 				[ "$ii" -lt "$ip_count" ] && echo ',' || echo

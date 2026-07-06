@@ -20,14 +20,14 @@ rules="$HESTIA/data/firewall/rules6.conf"
 [ -f "$rules" ] || touch "$rules"
 
 json_list() {
-    IFS=$'\n'
-    i=1
-    objects=$(grep RULE "$rules" 2>/dev/null | wc -l)
-    echo "{"
-    while read str; do
-        [[ -z "$str" ]] && continue
-        parse_object_kv_list "$str"
-        echo -n '    "'$RULE'": {
+	IFS=$'\n'
+	i=1
+	objects=$(grep RULE "$rules" 2> /dev/null | wc -l)
+	echo "{"
+	while read str; do
+		[[ -z "$str" ]] && continue
+		parse_object_kv_list "$str"
+		echo -n '    "'$RULE'": {
         "ACTION": "'$ACTION'",
         "PROTOCOL": "'$PROTOCOL'",
         "PORT": "'$PORT'",
@@ -37,46 +37,46 @@ json_list() {
         "TIME": "'$TIME'",
         "DATE": "'$DATE'"
     }'
-        if [ "$i" -lt "$objects" ]; then
-            echo ','
-        else
-            echo
-        fi
-        ((i++))
-    done < <(cat "$rules" 2>/dev/null)
-    echo '}'
+		if [ "$i" -lt "$objects" ]; then
+			echo ','
+		else
+			echo
+		fi
+		((i++))
+	done < <(cat "$rules" 2> /dev/null)
+	echo '}'
 }
 
 shell_list() {
-    IFS=$'\n'
-    echo "RULE^ACTION^PROTO^PORT^IPv6^SPND^DATE"
-    echo "----^------^-----^----^----^----^----"
-    while read str; do
-        [[ -z "$str" ]] && continue
-        parse_object_kv_list "$str"
-        echo "$RULE^$ACTION^$PROTOCOL^$PORT^$IP6^$SUSPENDED^$DATE"
-    done < <(cat "$rules" 2>/dev/null)
+	IFS=$'\n'
+	echo "RULE^ACTION^PROTO^PORT^IPv6^SPND^DATE"
+	echo "----^------^-----^----^----^----^----"
+	while read str; do
+		[[ -z "$str" ]] && continue
+		parse_object_kv_list "$str"
+		echo "$RULE^$ACTION^$PROTOCOL^$PORT^$IP6^$SUSPENDED^$DATE"
+	done < <(cat "$rules" 2> /dev/null)
 }
 
 plain_list() {
-    IFS=$'\n'
-    while read str; do
-        [[ -z "$str" ]] && continue
-        parse_object_kv_list "$str"
-        echo -ne "$RULE\t$ACTION\t$PROTOCOL\t$PORT\t$IP6\t$COMMENT\t"
-        echo -e "$SUSPENDED\t$TIME\t$DATE"
-    done < <(cat "$rules" 2>/dev/null)
+	IFS=$'\n'
+	while read str; do
+		[[ -z "$str" ]] && continue
+		parse_object_kv_list "$str"
+		echo -ne "$RULE\t$ACTION\t$PROTOCOL\t$PORT\t$IP6\t$COMMENT\t"
+		echo -e "$SUSPENDED\t$TIME\t$DATE"
+	done < <(cat "$rules" 2> /dev/null)
 }
 
 csv_list() {
-    IFS=$'\n'
-    echo "RULE,ACTION,PROTOCOL,PORT,IP6,COMMENT,SUSPENDED,TIME,DATE"
-    while read str; do
-        [[ -z "$str" ]] && continue
-        parse_object_kv_list "$str"
-        echo -n "$RULE,$ACTION,$PROTOCOL,$PORT,$IP6,\"$COMMENT\","
-        echo "$SUSPENDED,$TIME,$DATE"
-    done < <(cat "$rules" 2>/dev/null)
+	IFS=$'\n'
+	echo "RULE,ACTION,PROTOCOL,PORT,IP6,COMMENT,SUSPENDED,TIME,DATE"
+	while read str; do
+		[[ -z "$str" ]] && continue
+		parse_object_kv_list "$str"
+		echo -n "$RULE,$ACTION,$PROTOCOL,$PORT,$IP6,\"$COMMENT\","
+		echo "$SUSPENDED,$TIME,$DATE"
+	done < <(cat "$rules" 2> /dev/null)
 }
 
 #----------------------------------------------------------#
@@ -84,10 +84,10 @@ csv_list() {
 #----------------------------------------------------------#
 
 case $format in
-    json)  json_list ;;
-    plain) plain_list ;;
-    csv)   csv_list ;;
-    shell) shell_list | column -t -s '^' ;;
+	json) json_list ;;
+	plain) plain_list ;;
+	csv) csv_list ;;
+	shell) shell_list | column -t -s '^' ;;
 esac
 
 exit

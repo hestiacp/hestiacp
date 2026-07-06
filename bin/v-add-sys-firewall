@@ -47,8 +47,8 @@ $BIN/v-update-firewall
 
 # Initialize IPv6 chains config mirroring IPv4 chains
 if [ ! -f $HESTIA/data/firewall/chains6.conf ]; then
-	[ -f $HESTIA/data/firewall/chains.conf ] && \
-		cp $HESTIA/data/firewall/chains.conf $HESTIA/data/firewall/chains6.conf
+	[ -f $HESTIA/data/firewall/chains.conf ] \
+		&& cp $HESTIA/data/firewall/chains.conf $HESTIA/data/firewall/chains6.conf
 fi
 
 # Updating firewall rules (IPv6)

@@ -117,7 +117,7 @@ if [ -n "$ip_format" ]; then
 			[ -z "$prefix_length" ] && prefix_length="/64"
 		fi
 		is_ipv6_format_valid "${ipv6}" 'ipv6' # check for correct ipv6 format
-		broadcast=""                        # reset broadcast
+		broadcast=""                          # reset broadcast
 		full_ip46="$ipv6$prefix_length"
 		netmask_prelen="${prefix_length}"
 		formatted_ip="[${ipv6}]"
@@ -231,7 +231,7 @@ DATE='$date'
 VERSION='${ip_format}'" > $HESTIA/data/ips/${ip46}
 chmod 660 $HESTIA/data/ips/${ip46}
 
-server_hostname=$(hostname -f 2>/dev/null || hostname)
+server_hostname=$(hostname -f 2> /dev/null || hostname)
 
 # WEB support
 if [ -n "$WEB_SYSTEM" ]; then
@@ -248,7 +248,7 @@ if [ -n "$WEB_SYSTEM" ]; then
 		sed -i 's/directIP/'${ip46}'/g' ${web_conf}
 		sed -i 's/directPORT/'$WEB_PORT'/g' ${web_conf}
 		if [ "$ip_format" -eq 6 ]; then
-			server_hostname=$(hostname -f 2>/dev/null || hostname)
+			server_hostname=$(hostname -f 2> /dev/null || hostname)
 			sed -i 's/^\(\s*ServerName\s*\).*/\1'"${server_hostname}"'/' ${web_conf}
 		fi
 

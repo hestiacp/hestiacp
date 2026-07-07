@@ -102,7 +102,7 @@ if [ -n "$ip_format" ]; then
 		fi
 		is_ip_format_valid "${ip}" 'ipv4'       # check for correct ipv4 format
 		broadcast=$(get_broadcast $ip $netmask) # generate broadcast
-		full_ip46="$ip$cidr"
+		full_ip46="${ip}/${cidr#/}"
 		netmask_prelen="${netmask}"
 		formatted_ip="${ip}"
 	fi

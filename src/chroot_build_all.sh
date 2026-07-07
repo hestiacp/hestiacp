@@ -85,9 +85,9 @@ qemu_static_name() {
 # Best-effort unmount of a single path, falling back to a lazy unmount if a
 # plain umount fails (e.g. the mount is still busy). A path left mounted here
 # isn't just a leak: callers immediately rm -rf the chroot dir afterwards, and
-# files under a still-active bind mount of /proc, /sys or /dev can't be
-# unlinked at all (sysfs/procfs refuse it outright, even as root) -- so a
-# silently-failed umount turns into confusing "Operation not permitted" rm
+# files under a still-active mount of /proc, /sys or /dev can't be
+# unlinked at all (sysfs/procfs/tmpfs refuse it outright, even as root) -- so
+# a silently-failed umount turns into confusing "Operation not permitted" rm
 # errors instead.
 safe_umount() {
 	local path=$1
@@ -98,11 +98,34 @@ safe_umount() {
 	return 0
 }
 
-# Unmount everything prepare_chroot may have bind-mounted under a given
-# chroot dir. Order matters: children (dev/pts, the bind mounts) before
-# their parents (dev).
+# Terminate any processes still running with their root inside a chroot dir
+# (e.g. an interrupted qemu-emulated build after Ctrl-C, or a daemon left
+# behind by a package postinst) before unmounting it. Without this, a busy
+# mount just falls back to a lazy unmount in safe_umount, which only detaches
+# the mountpoint from view -- the process (and, for foreign-arch builds, the
+# RAM-heavy qemu-user interpreter emulating it) keeps running invisibly,
+# since `mount`/`ps` no longer associate it with the chroot.
+kill_chroot_processes() {
+	local chroot_dir
+	chroot_dir="$(cd "$1" 2> /dev/null && pwd -P)" || return 0
+	local pid root_link pids_to_kill=()
+	for pid_dir in /proc/[0-9]*; do
+		pid="${pid_dir#/proc/}"
+		root_link=$(readlink "$pid_dir/root" 2> /dev/null) || continue
+		[ "$root_link" = "$chroot_dir" ] && pids_to_kill+=("$pid")
+	done
+	[ ${#pids_to_kill[@]} -eq 0 ] && return 0
+	echo >&2 "Killing ${#pids_to_kill[@]} leftover process(es) still running inside $chroot_dir..."
+	kill "${pids_to_kill[@]}" 2> /dev/null
+	sleep 2
+	kill -9 "${pids_to_kill[@]}" 2> /dev/null
+}
+
+# Unmount everything prepare_chroot may have mounted under a given chroot
+# dir. Order matters: children (dev/pts) before their parents (dev).
 unmount_chroot_dir() {
 	local chroot_dir=$1
+	kill_chroot_processes "$chroot_dir"
 	safe_umount "$chroot_dir$REPO_DIR"
 	safe_umount "$chroot_dir$BUILD_DIR"
 	safe_umount "$chroot_dir/dev/pts"
@@ -190,7 +213,7 @@ prepare_chroot() {
 		# anything under an active mountpoint.
 		unmount_chroot_dir "$chroot_dir"
 		if mountpoint -q "$chroot_dir/dev" || mountpoint -q "$chroot_dir/proc" || mountpoint -q "$chroot_dir/sys"; then
-			echo >&2 "[!] Could not unmount stale bind mounts under $chroot_dir; refusing to"
+			echo >&2 "[!] Could not unmount stale mounts under $chroot_dir; refusing to"
 			echo >&2 "    delete it, since rm -rf would hit a live /dev, /proc or /sys and fail"
 			echo >&2 "    with confusing 'Operation not permitted' errors. Unmount it manually"
 			echo >&2 "    (e.g. umount -l $chroot_dir/sys) and re-run."
@@ -260,9 +283,34 @@ prepare_chroot() {
 		cp -f "/usr/bin/$qemu_bin" "$chroot_dir/usr/bin/"
 	fi
 
-	mkdir -p "$chroot_dir/dev" "$chroot_dir/proc" "$chroot_dir/sys" "$chroot_dir/dev/pts"
-	mountpoint -q "$chroot_dir/dev" || mount --bind /dev "$chroot_dir/dev"
-	mountpoint -q "$chroot_dir/dev/pts" || mount --bind /dev/pts "$chroot_dir/dev/pts"
+	mkdir -p "$chroot_dir/dev" "$chroot_dir/proc" "$chroot_dir/sys"
+
+	# Give the chroot its own private /dev instead of bind-mounting the host's.
+	# Package installs inside routinely run maintainer scripts (udev, systemd
+	# postinst hooks, tmpfiles-setup-dev, ...) that reconcile /dev/pts --
+	# unmounting/recreating it, pruning stale pty nodes, resetting perms. With
+	# a bind-mounted /dev those land on the HOST's real /dev/pts (same
+	# superblock), which can break pty allocation for the host's own SSH
+	# sessions. A private tmpfs + a "newinstance" devpts keeps every chroot's
+	# /dev fully isolated -- the same approach pbuilder/sbuild use.
+	if ! mountpoint -q "$chroot_dir/dev"; then
+		mount -t tmpfs -o mode=0755,nosuid tmpfs "$chroot_dir/dev"
+		mknod -m 666 "$chroot_dir/dev/null" c 1 3
+		mknod -m 666 "$chroot_dir/dev/zero" c 1 5
+		mknod -m 666 "$chroot_dir/dev/full" c 1 7
+		mknod -m 666 "$chroot_dir/dev/random" c 1 8
+		mknod -m 666 "$chroot_dir/dev/urandom" c 1 9
+		mknod -m 666 "$chroot_dir/dev/tty" c 5 0
+		mknod -m 600 "$chroot_dir/dev/console" c 5 1
+		ln -sf /proc/self/fd "$chroot_dir/dev/fd"
+		ln -sf /proc/self/fd/0 "$chroot_dir/dev/stdin"
+		ln -sf /proc/self/fd/1 "$chroot_dir/dev/stdout"
+		ln -sf /proc/self/fd/2 "$chroot_dir/dev/stderr"
+		mkdir -p "$chroot_dir/dev/pts" "$chroot_dir/dev/shm"
+		chmod 1777 "$chroot_dir/dev/shm"
+	fi
+	mountpoint -q "$chroot_dir/dev/pts" || mount -t devpts -o newinstance,ptmxmode=0666,mode=0620,gid=5 devpts "$chroot_dir/dev/pts"
+	ln -sf pts/ptmx "$chroot_dir/dev/ptmx"
 	mountpoint -q "$chroot_dir/proc" || mount --bind /proc "$chroot_dir/proc"
 	mountpoint -q "$chroot_dir/sys" || mount --bind /sys "$chroot_dir/sys"
 
@@ -305,7 +353,6 @@ run_cross_build() {
 	# name/version/arch across releases (codenames are unique across distros,
 	# so $release alone is enough, no need for a distro prefix).
 	local target_deb_dir="$BUILD_DIR/deb"
-	[ "$ALL_OS" = "true" ] && target_deb_dir="$target_deb_dir/$release"
 	mkdir -p "$target_deb_dir"
 	local deb_dir_export="export DEB_DIR='$target_deb_dir'; "
 
@@ -328,8 +375,9 @@ run_cross_build() {
 }
 
 # Set packages to compile
-for i in "$@"; do
-	case "$i" in
+ARGC=$#
+while [ $# -gt 0 ]; do
+	case "$1" in
 		--all)
 			NGINX_B='true'
 			PHP_B='true'
@@ -369,12 +417,13 @@ for i in "$@"; do
 			exit 1
 			;;
 		*)
-			branch="$i"
+			branch="$1"
 			;;
 	esac
+	shift
 done
 
-if [ $# -eq 0 ] || { [ "$CROSS" != "true" ] && [ "$ALL_OS" != "true" ]; }; then
+if [ "$ARGC" -eq 0 ] || { [ "$CROSS" != "true" ] && [ "$ALL_OS" != "true" ]; }; then
 	usage
 	exit 1
 fi
@@ -394,20 +443,6 @@ NATIVE_DEB_DIR=""
 if [ "$ALL_OS" = "true" ]; then
 	NATIVE_DEB_DIR="$BUILD_DIR/deb/"
 	mkdir -p "$NATIVE_DEB_DIR"
-fi
-
-# Build for the host's own OS/release/architecture directly, no chroot needed.
-NATIVE_FLAGS=""
-[ "$HESTIA_B" = "true" ] && NATIVE_FLAGS="$NATIVE_FLAGS --hestia"
-[ "$NGINX_B" = "true" ] && NATIVE_FLAGS="$NATIVE_FLAGS --nginx"
-[ "$PHP_B" = "true" ] && NATIVE_FLAGS="$NATIVE_FLAGS --php"
-[ "$WEB_TERMINAL_B" = "true" ] && NATIVE_FLAGS="$NATIVE_FLAGS --web-terminal"
-[ "$HESTIA_DEBUG" = "true" ] && NATIVE_FLAGS="$NATIVE_FLAGS --debug"
-[ "$KEEPBUILD" = "true" ] && NATIVE_FLAGS="$NATIVE_FLAGS --keepbuild"
-if [ "$install" = "true" ]; then
-	NATIVE_FLAGS="$NATIVE_FLAGS --install"
-else
-	NATIVE_FLAGS="$NATIVE_FLAGS --noinstall"
 fi
 
 # Build every other (distro, release, arch) combination via chroot.
@@ -430,6 +465,8 @@ if [ "$WEB_TERMINAL_B" = "true" ]; then
 	NEEDS_CHROOT_BUILD='true'
 fi
 [ "$HESTIA_DEBUG" = "true" ] && PKG_FLAGS="$PKG_FLAGS --debug"
+[ -n "$release_tag" ] && PKG_FLAGS="$PKG_FLAGS --release $release_tag"
+[ -n "$pkg_rev" ] && PKG_FLAGS="$PKG_FLAGS --pkgrev $pkg_rev"
 
 if [ "$NEEDS_CHROOT_BUILD" = "true" ]; then
 	TARGET_COMBOS=()
@@ -454,7 +491,7 @@ if [ "$NEEDS_CHROOT_BUILD" = "true" ]; then
 		rest="${combo#*:}"
 		release="${rest%%:*}"
 		target_arch="${rest#*:}"
-		run_cross_build "$distro" "$release" "$target_arch" $PKG_FLAGS $release_tag $pkg_rev "$branch"
+		run_cross_build "$distro" "$release" "$target_arch" "$PKG_FLAGS" --noinstall "$branch"
 	done
 fi
 
@@ -465,9 +502,10 @@ if [ "$ALL_OS" = "true" ]; then
 		release="${dr#* }"
 		for a in amd64 arm64; do
 			src_deb_dir="${BUILD_DIR}-${distro}-${release}-${a}/deb"
-			if [ -d "$src_deb_dir" ]; then
-				mv "$src_deb_dir"/* "$NATIVE_DEB_DIR"
+			if [ ! -d "$NATIVE_DEB_DIR/${release}/" ]; then
+				mkdir -p "$NATIVE_DEB_DIR/${release}/"
 			fi
+			mv "$src_deb_dir"/* "$NATIVE_DEB_DIR/${release}/"
 		done
 	done
 fi

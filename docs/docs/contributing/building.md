@@ -91,25 +91,10 @@ apt install -f
 
 `hst_autocompile.sh` only ever builds for the environment it's actually running in (its own `--cross` flag just makes the architecture-independent `hestia` package build for both AMD64 and ARM64 directly, with no emulation needed). To also build `hestia-nginx`, `hestia-php` or `hestia-web-terminal` (which contain compiled native code) for **other** architectures or OS releases on the same machine, use `chroot_build_all.sh` instead — it spins up the other environments and runs the unmodified `hst_autocompile.sh` inside each one.
 
-Pass `--cross` to also build for the other architecture (AMD64<->ARM64), same OS release as the host:
-
-```bash
-./chroot_build_all.sh --all --noinstall --keepbuild --cross '~localsrc'
-```
-
 Pass `--all-os` to build for every supported OS release (Debian 12/13, Ubuntu 22.04/24.04/26.04) on both architectures — up to 10 combinations from one invocation:
 
 ```bash
-./chroot_build_all.sh --all --noinstall --keepbuild --all-os '~localsrc'
+./chroot_build_all.sh --all --all-os '~localsrc'
 ```
 
-In both cases, the combination matching the host's own OS/release/architecture is built directly; every other combination is built inside a QEMU-emulated chroot (debootstrap + `qemu-user-static`). The first run downloads/bootstraps a minimal root filesystem per combination under `/var/lib/hestiacp-build-chroot/<distro>-<release>-<arch>`; subsequent runs reuse it, so only the first build of a given combination is slow. `--all-os` always covers both architectures, so combining it with `--cross` has no extra effect.
-
-Since a package can share the same name/version/arch across OS releases, `--all-os` writes each release's packages to their own subdirectory instead of the usual flat `deb/`:
-
-```text
-/tmp/hestiacp-src/deb/<release>/<package>_<version>_<arch>.deb
-# e.g.
-/tmp/hestiacp-src/deb/bookworm/hestia-nginx_1.2.3_amd64.deb
-/tmp/hestiacp-src/deb/noble/hestia-nginx_1.2.3_arm64.deb
-```
+Every combination is built inside a QEMU-emulated chroot (debootstrap + `qemu-user-static`). The first run downloads/bootstraps a minimal root filesystem per combination under `/var/lib/hestiacp-build-chroot/<distro>-<release>-<arch>`; subsequent runs reuse it, so only the first build of a given combination is slow. `--all-os` always covers both architectures.

@@ -24,8 +24,6 @@ BUILD_DIR="${BUILD_DIR:-/tmp/hestiacp-src}"
 CHROOT_BASE_DIR='/var/lib/hestiacp-build-chroot'
 ACTIVE_CHROOTS=()
 
-# 	"debian bookworm"
-#	"debian trixie"
 # Supported OS releases for --all-os, as "distro codename" pairs.
 ALLOS_DISTRO_RELEASES=(
 
@@ -53,18 +51,26 @@ usage() {
 	echo "    --php           Build only the backend php engine package"
 	echo "    --web-terminal  Build only the backend web terminal websocket package"
 	echo "  Options:"
-	echo "    --cross         Also build for the other architecture (AMD64<->ARM64),"
-	echo "                    same OS as the host. nginx/php/web-terminal are built"
-	echo "                    for the other arch inside a QEMU-emulated chroot."
 	echo "    --all-os        Build for every supported OS release (Debian 12/13,"
 	echo "                    Ubuntu 22.04/24.04/26.04) and both architectures, using"
 	echo "                    a QEMU-emulated chroot for every combination other than"
-	echo "                    the host's own. Implies --cross."
+	echo "                    the host's own."
 	echo "    --install       Install the packages built for the host's own OS/arch"
 	echo "    --noinstall     Don't install (default)"
 	echo "    --keepbuild     Don't delete downloaded source and build folders"
 	echo "    --debug         Debug mode"
-	echo "    --dontinstalldeps  Skip installing build dependencies"
+	echo "    --pkgrev <n>    Set the package revision number (default: 1)."
+	echo "                    Replaces the '-1' in the version suffix"
+	echo "                    (e.g. --pkgrev 2 → 1.0.0-2+deb12)."
+	echo "    --release <id>  Set a release identifier appended to the package version"
+	echo "                    as '~<id>' (e.g. --release myci1 → 1.0.0-1+deb12~myci1)."
+	echo "                    Useful to distinguish custom or CI builds from official ones."
+	echo "                    If the hestia control file's Version already has a '~<tag>'"
+	echo "                    suffix (e.g. 1.1.0~alpha) and --release is NOT given, that"
+	echo "                    detected tag (e.g. 'alpha') is used automatically as the"
+	echo "                    release identifier for ALL packages. If --release IS given,"
+	echo "                    it overrides/replaces the detected '~<tag>' suffix instead."
+	echo "                    Can be combined: --pkgrev 2 --release myci1 → 1.0.0-2+deb12~myci1."
 	echo ""
 	echo "Example: ./chroot_build_all.sh --all --all-os --noinstall --keepbuild '~localsrc'"
 }
@@ -345,24 +351,19 @@ for i in "$@"; do
 		--debug)
 			HESTIA_DEBUG='true'
 			;;
-		--install | Y)
-			install='true'
-			;;
-		--noinstall | N)
-			install='false'
-			;;
-		--keepbuild)
-			KEEPBUILD='true'
-			;;
-		--cross)
-			CROSS='true'
-			;;
 		--all-os)
 			ALL_OS='true'
 			;;
-		--dontinstalldeps)
-			dontinstalldeps='true'
+
+		--release)
+			shift
+			release_tag="$1"
 			;;
+		--pkgrev)
+			shift
+			pkg_rev="$1"
+			;;
+
 		--help | -h)
 			usage
 			exit 1
@@ -391,7 +392,7 @@ HOST_RELEASE=$(lsb_release -sc)
 # own, since packages can share the same name/version/arch across releases.
 NATIVE_DEB_DIR=""
 if [ "$ALL_OS" = "true" ]; then
-	NATIVE_DEB_DIR="$BUILD_DIR/deb/$HOST_RELEASE"
+	NATIVE_DEB_DIR="$BUILD_DIR/deb/"
 	mkdir -p "$NATIVE_DEB_DIR"
 fi
 
@@ -401,27 +402,12 @@ NATIVE_FLAGS=""
 [ "$NGINX_B" = "true" ] && NATIVE_FLAGS="$NATIVE_FLAGS --nginx"
 [ "$PHP_B" = "true" ] && NATIVE_FLAGS="$NATIVE_FLAGS --php"
 [ "$WEB_TERMINAL_B" = "true" ] && NATIVE_FLAGS="$NATIVE_FLAGS --web-terminal"
-# hestia has no native code, so it's cheap to let hst_autocompile.sh's own
-# --cross loop build it for both archs directly, without needing a chroot.
-# Skip that on --all-os though: each OS in the matrix rebuilds hestia itself.
-[ "$CROSS" = "true" ] && [ "$ALL_OS" != "true" ] && NATIVE_FLAGS="$NATIVE_FLAGS --cross"
 [ "$HESTIA_DEBUG" = "true" ] && NATIVE_FLAGS="$NATIVE_FLAGS --debug"
 [ "$KEEPBUILD" = "true" ] && NATIVE_FLAGS="$NATIVE_FLAGS --keepbuild"
-[ "$dontinstalldeps" = "true" ] && NATIVE_FLAGS="$NATIVE_FLAGS --dontinstalldeps"
 if [ "$install" = "true" ]; then
 	NATIVE_FLAGS="$NATIVE_FLAGS --install"
 else
 	NATIVE_FLAGS="$NATIVE_FLAGS --noinstall"
-fi
-
-if [ -n "$NATIVE_DEB_DIR" ]; then
-	DEB_DIR="$NATIVE_DEB_DIR" "$__DIR__/hst_autocompile.sh" $NATIVE_FLAGS "$branch"
-else
-	"$__DIR__/hst_autocompile.sh" $NATIVE_FLAGS "$branch"
-fi
-if [ $? -ne 0 ]; then
-	echo >&2 "[!] Native build for the host's own OS/arch failed"
-	exit 1
 fi
 
 # Build every other (distro, release, arch) combination via chroot.
@@ -452,9 +438,6 @@ if [ "$NEEDS_CHROOT_BUILD" = "true" ]; then
 			distro="${dr%% *}"
 			release="${dr#* }"
 			for a in amd64 arm64; do
-				if [ "$distro" = "$HOST_DISTRO" ] && [ "$release" = "$HOST_RELEASE" ] && [ "$a" = "$HOST_ARCH" ]; then
-					continue
-				fi
 				TARGET_COMBOS+=("$distro:$release:$a")
 			done
 		done
@@ -471,6 +454,20 @@ if [ "$NEEDS_CHROOT_BUILD" = "true" ]; then
 		rest="${combo#*:}"
 		release="${rest%%:*}"
 		target_arch="${rest#*:}"
-		run_cross_build "$distro" "$release" "$target_arch" $PKG_FLAGS "$branch"
+		run_cross_build "$distro" "$release" "$target_arch" $PKG_FLAGS $release_tag $pkg_rev "$branch"
+	done
+fi
+
+# When done move all build packages located in /tmp/hestiacp-src-{os}-{release}-{arch}/deb to /tmp/hestiacp-src/deb/ to have all packages in one place
+if [ "$ALL_OS" = "true" ]; then
+	for dr in "${ALLOS_DISTRO_RELEASES[@]}"; do
+		distro="${dr%% *}"
+		release="${dr#* }"
+		for a in amd64 arm64; do
+			src_deb_dir="${BUILD_DIR}-${distro}-${release}-${a}/deb"
+			if [ -d "$src_deb_dir" ]; then
+				mv "$src_deb_dir"/* "$NATIVE_DEB_DIR"
+			fi
+		done
 	done
 fi

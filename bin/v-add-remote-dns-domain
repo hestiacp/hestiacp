@@ -58,7 +58,16 @@ fi
 if [ "$DNS_CLUSTER_SYSTEM" = "hestia-zone" ]; then
 	str=$(echo "$str" | sed "s/SLAVE='no'/SLAVE='yes'/g")
 	str=$(echo "$str" | sed "s/SLAVE=''/SLAVE='yes'/g")
-	ip=$(ip addr | grep 'inet ' | grep global | head -n1 | awk '{print $2}' | cut -f1 -d/)
+	# Use Hestia's own configured system IP as the DNS master address.
+	# Enumerating interfaces is non-deterministic and can return a
+	# VPN/Docker/WireGuard address on servers with virtual interfaces,
+	# propagating a wrong MASTER and breaking AXFR/IXFR zone transfers to the
+	# slaves (#5469). Fall back to interface detection only when no system IP
+	# is configured.
+	ip=$(ls "$HESTIA/data/ips/" 2> /dev/null | head -n1)
+	if [ -z "$ip" ]; then
+		ip=$(ip addr | grep 'inet ' | grep global | head -n1 | awk '{print $2}' | cut -f1 -d/)
+	fi
 	source_conf $HESTIA/data/ips/$ip
 	if [ -z $NAT ]; then
 		str=$(echo "$str" | sed "s/MASTER=''/MASTER='$ip'/g")

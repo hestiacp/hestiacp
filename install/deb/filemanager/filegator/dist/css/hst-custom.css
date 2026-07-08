@@ -332,3 +332,15 @@ pre[class*="language-"]::selection,
 pre[class*="language-"] ::selection {
 	background: #3a3a3a !important;
 }
+
+/* ------------------------------ */
+
+/*        Upload popup         */
+
+/* ------------------------------ */
+
+@media (prefers-color-scheme: dark) {
+	.progress-box .box {
+		color: #fff !important;
+	}
+}

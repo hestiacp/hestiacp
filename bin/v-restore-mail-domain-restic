@@ -60,8 +60,7 @@ fi
 
 domains=""
 parse_object_kv_list $(cat "$tmpdir/backup.conf")
-read -a domains_array <<< "$mail"
-read -a domains <<< "$MAIL"
+IFS=',' read -a domains <<< "$MAIL"
 
 # Checking exim username for later chowning
 exim_user="exim"
@@ -70,8 +69,8 @@ if [ "$check_exim_username" -eq 1 ]; then
 	exim_user="Debian-exim"
 fi
 
-for domain in $domains; do
-	if [[ "${IFS}${domains_array[*]}${IFS}" =~ "${IFS}${domain}${IFS}" || "$mail" = '*' ]]; then
+for domain in "${domains[@]}"; do
+	if [[ ",$mail," == *",$domain,"* || "$mail" = '*' ]]; then
 		# Checking domain existance
 		check_config=$(grep "DOMAIN='$domain'" $USER_DATA/mail.conf)
 		if [ -z "$check_config" ]; then

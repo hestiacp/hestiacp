@@ -64,8 +64,13 @@ if [ "$DNS_CLUSTER_SYSTEM" = "hestia-zone" ]; then
 	# propagating a wrong MASTER and breaking AXFR/IXFR zone transfers to the
 	# slaves (#5469). Fall back to interface detection only when no system IP
 	# is configured.
-	ip=$(ls "$HESTIA/data/ips/" 2> /dev/null | head -n1)
-	if [ -z "$ip" ]; then
+	ip=""
+	LOCAL_IP=$(ip route get 1.1.1.1 2> /dev/null | grep -oP 'src \K\S+')
+	if [[ -n "$LOCAL_IP" && -e "${HESTIA}/data/ips/${LOCAL_IP}" ]]; then
+		ip="$LOCAL_IP"
+	fi
+	# Fallback if nothing was detected
+	if [[ -z "$ip" ]]; then
 		ip=$(ip addr | grep 'inet ' | grep global | head -n1 | awk '{print $2}' | cut -f1 -d/)
 	fi
 	source_conf $HESTIA/data/ips/$ip

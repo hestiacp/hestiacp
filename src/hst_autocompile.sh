@@ -474,6 +474,12 @@ branch_dash=$(echo "$branch" | sed 's/\//-/g')
 #################################################################################
 
 if [ "$NGINX_B" = true ]; then
+
+	echo "Building hestia-nginx package..."
+	if [ "$CROSS" = "true" ]; then
+		echo "Cross compile not supported for hestia-nginx, hestia-php or hestia-web-terminal"
+		exit 1
+	fi
 	# Change to build directory
 	cd $BUILD_DIR
 
@@ -598,6 +604,10 @@ fi
 
 if [ "$PHP_B" = true ]; then
 	echo "Building hestia-php package..."
+	if [ "$CROSS" = "true" ]; then
+		echo "Cross compile not supported for hestia-nginx, hestia-php or hestia-web-terminal"
+		exit 1
+	fi
 
 	BUILD_DIR_HESTIAPHP=$BUILD_DIR/hestia-php_$PHP_V
 
@@ -715,8 +725,11 @@ fi
 #################################################################################
 
 if [ "$WEB_TERMINAL_B" = true ]; then
-
 	echo "Building hestia-web-terminal package..."
+	if [ "$CROSS" = "true" ]; then
+		echo "Cross compile not supported for hestia-nginx, hestia-php or hestia-web-terminal"
+		exit 1
+	fi
 
 	BUILD_DIR_HESTIA_TERMINAL=$BUILD_DIR/hestia-web-terminal_$WEB_TERMINAL_V
 

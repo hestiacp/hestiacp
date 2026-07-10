@@ -57,12 +57,10 @@ fi
 
 parse_object_kv_list $(cat "$tmpdir/backup.conf")
 
-IFS=','
-read -a databases_array <<< "$database"
-read -a databases <<< "$DB"
+IFS=',' read -a databases <<< "$DB"
 
-for db in $DB; do
-	if [[ "${IFS}${databases_array[*]}${IFS}" =~ "${IFS}${db}${IFS}" || "$databases_array" = '*' ]]; then
+for db in "${databases[@]}"; do
+	if [[ ",$database," == *",$db,"* || "$database" = '*' ]]; then
 		check_config=$(grep "DB='$db'" $USER_DATA/db.conf)
 		if [ -z "$check_config" ]; then
 			restic --repo "${REPO%/}/$user" --password-file "$USER_DATA/restic.conf" --json dump "$snapshot" "/home/$user/backup/db/$db/hestia/db.conf" > "$tmpdir/db.conf"

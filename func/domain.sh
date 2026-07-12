@@ -524,6 +524,16 @@ update_domain_zone() {
 		RECORD=$(idn2 --quiet "$RECORD")
 		if [ "$TYPE" = 'CNAME' ] || [ "$TYPE" = 'MX' ]; then
 			VALUE=$(idn2 --quiet "$VALUE")
+		elif [ "$TYPE" = 'SRV' ]; then
+			# SRV value is "weight port target" (the priority is stored separately
+			# in the PRIORITY field). Only the trailing target is a host name, so
+			# parse the fields and convert just that, leaving the numeric
+			# weight/port and a "." target (service unavailable) untouched.
+			read -r srv_weight srv_port srv_target <<< "$VALUE"
+			if [ "$srv_target" != "." ]; then
+				srv_target=$(idn2 --quiet "$srv_target")
+			fi
+			VALUE="$srv_weight $srv_port $srv_target"
 		fi
 
 		if [ "$TYPE" = 'TXT' ]; then

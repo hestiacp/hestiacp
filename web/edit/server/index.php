@@ -587,6 +587,27 @@ if (!empty($_POST["save"])) {
 		}
 	}
 
+	// Set phpMyAdmin access restriction (Hestia SSO only, no direct login)
+	if (empty($_SESSION["error_msg"])) {
+		if (!empty($_POST["v_pma_restrict"])) {
+			if ($_POST["v_pma_restrict"] == "yes" && $_SESSION["PMA_RESTRICT_ACCESS"] != "yes") {
+				exec(HESTIA_CMD . "v-add-sys-pma-restrict quiet", $output, $return_var);
+				check_return_code($return_var, $output);
+				unset($output);
+				if (empty($_SESSION["error_msg"])) {
+					$_SESSION["PMA_RESTRICT_ACCESS"] = "yes";
+				}
+			} elseif ($_POST["v_pma_restrict"] == "no" && $_SESSION["PMA_RESTRICT_ACCESS"] == "yes") {
+				exec(HESTIA_CMD . "v-delete-sys-pma-restrict quiet", $output, $return_var);
+				check_return_code($return_var, $output);
+				unset($output);
+				if (empty($_SESSION["error_msg"])) {
+					$_SESSION["PMA_RESTRICT_ACCESS"] = "no";
+				}
+			}
+		}
+	}
+
 	// Set disk_quota support
 	if (empty($_SESSION["error_msg"])) {
 		if (!empty($_POST["v_quota"]) && $_SESSION["DISK_QUOTA"] != $_POST["v_quota"]) {

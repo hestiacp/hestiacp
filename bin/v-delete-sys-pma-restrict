@@ -1,0 +1,76 @@
+#!/bin/bash
+# info: undo phpMyAdmin access restriction, allow its normal login form again
+# options: [mode]
+#
+# example: v-delete-sys-pma-restrict
+#
+# Reverts v-add-sys-pma-restrict: phpMyAdmin falls back to its own login
+# form again when no valid Hestia SSO token or session is present.
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+MODE=$1
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+PMA_CONFIG="/etc/phpmyadmin"
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+# Checking root permissions
+if [ "x$(id -u)" != 'x0' ]; then
+	echo "Error: Script can be run executed only by root"
+	exit 10
+fi
+
+if [ ! -e "$PMA_CONFIG/hestia-sso.inc.php" ]; then
+	echo "Error: phpMyAdmin SSO is not enabled"
+	exit 2
+fi
+
+if [ "$PMA_RESTRICT_ACCESS" != "yes" ]; then
+	echo "Error: phpMyAdmin access is not currently restricted"
+	exit 1
+fi
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+echo "<?php
+if(isset(\$_GET['hestia_token']) || isset(\$_COOKIE['SignonSession'])){
+\$cfg['Servers'][\$i]['auth_type'] = 'signon';
+\$cfg['Servers'][\$i]['SignonSession'] = 'SignonSession';
+\$cfg['Servers'][\$i]['SignonURL'] = 'hestia-sso.php';
+\$cfg['Servers'][\$i]['LogoutURL'] = 'hestia-sso.php?logout=1';
+}
+?>" >$PMA_CONFIG/hestia-sso.inc.php
+
+$BIN/v-change-sys-config-value 'PMA_RESTRICT_ACCESS' "no"
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+if [ "$MODE" != "quiet" ]; then
+	echo "phpMyAdmin access restriction has been removed"
+fi
+
+# Logging
+$BIN/v-log-action "system" "Info" "Plugins" "phpMyAdmin access restriction removed."
+log_event "$OK" "$ARGUMENTS"
+
+exit

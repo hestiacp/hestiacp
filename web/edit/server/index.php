@@ -597,7 +597,10 @@ if (!empty($_POST["save"])) {
 				if (empty($_SESSION["error_msg"])) {
 					$_SESSION["PMA_RESTRICT_ACCESS"] = "yes";
 				}
-			} elseif ($_POST["v_pma_restrict"] == "no" && $_SESSION["PMA_RESTRICT_ACCESS"] == "yes") {
+			} elseif (
+				$_POST["v_pma_restrict"] == "no" &&
+				$_SESSION["PMA_RESTRICT_ACCESS"] == "yes"
+			) {
 				exec(HESTIA_CMD . "v-delete-sys-pma-restrict quiet", $output, $return_var);
 				check_return_code($return_var, $output);
 				unset($output);

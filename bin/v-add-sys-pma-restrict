@@ -59,11 +59,15 @@ if(isset(\$_GET['hestia_token']) || isset(\$_COOKIE['SignonSession'])){
 \$cfg['Servers'][\$i]['SignonURL'] = 'hestia-sso.php';
 \$cfg['Servers'][\$i]['LogoutURL'] = 'hestia-sso.php?logout=1';
 } else {
-\$pma_restrict_host = explode(':', \$_SERVER['HTTP_HOST'])[0];
-header('Location: https://' . \$pma_restrict_host . ':$BACKEND_PORT/login/');
+\$pma_restrict_host = explode(':', \$_SERVER['HTTP_HOST'] ?? '')[0];
+if (!preg_match('/^[a-zA-Z0-9.-]+\$/', \$pma_restrict_host)) {
+http_response_code(400);
+exit('Invalid host');
+}
+header('Location: https://' . \$pma_restrict_host . '/');
 exit;
 }
-?>" >$PMA_CONFIG/hestia-sso.inc.php
+?>" > $PMA_CONFIG/hestia-sso.inc.php
 
 $BIN/v-change-sys-config-value 'PMA_RESTRICT_ACCESS' "yes"
 

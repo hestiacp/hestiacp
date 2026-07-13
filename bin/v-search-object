@@ -32,14 +32,14 @@ json_list_search() {
 	echo '{'
 	fileds_count=$(echo $fields | wc -w)
 	while read line; do
-		eval $line
+		parse_object_kv_list_non_eval "$line"
 		if [ -n "$list_data" ]; then
 			echo -e '        },'
 		fi
 		i=1
 		IFS=' '
 		for field in $fields; do
-			eval value=\"$field\"
+			value="${!field}"
 			value=$(echo "$value" | sed -e 's/"/\\"/g' -e "s/%quote%/'/g")
 			if [ $i -eq 1 ]; then
 				((++i))
@@ -47,9 +47,9 @@ json_list_search() {
 			else
 				if [ $i -lt "$fileds_count" ]; then
 					((++i))
-					echo -e "\t\t\"${field//$/}\": \"${value//,/, }\","
+					echo -e "\t\t\"$field\": \"${value//,/, }\","
 				else
-					echo -e "\t\t\"${field//$/}\": \"${value//,/, }\""
+					echo -e "\t\t\"$field\": \"${value//,/, }\""
 					list_data=1
 				fi
 			fi
@@ -63,16 +63,25 @@ json_list_search() {
 
 # Shell list function
 shell_list_search() {
+	sep=${sep:-' '}
 	if [ -z "$nohead" ]; then
-		echo "${fields//$/}"
+		echo "$fields" | tr ' ' "$sep"
 		for a in $fields; do
 			echo -e "------ \c"
 		done
 		echo
 	fi
 	while read line; do
-		eval $line
-		eval echo "$fields" | sed "s/%quote%/'/g"
+		parse_object_kv_list_non_eval "$line"
+		row=''
+		for field in $fields; do
+			if [ -z "$row" ]; then
+				row="${!field}"
+			else
+				row="$row$sep${!field}"
+			fi
+		done
+		echo "$row" | sed "s/%quote%/'/g"
 	done < $conf
 }
 
@@ -118,7 +127,7 @@ for user in $("$BIN/v-list-users" list); do
 		# Parsing result
 		type=$(echo $row | cut -f 1 -d : | cut -f 8 -d /)
 		data=$(echo $row | cut -f 2,3,4,5 -d :)
-		eval "$data"
+		parse_object_kv_list_non_eval "$data"
 
 		# Check WEB domain
 		if [ "$type" = 'web.conf' ]; then
@@ -243,8 +252,7 @@ done
 IFS=$OLD_IFS
 
 # Defining fileds to select
-fields='$ID $USER $TYPE $KEY $RESULT $ALIAS $LINK $PARENT $SUSPENDED $TIME'
-fields="$fields \$DATE"
+fields='ID USER TYPE KEY RESULT ALIAS LINK PARENT SUSPENDED TIME DATE'
 
 # Listing domains
 case $format in
@@ -254,7 +262,8 @@ case $format in
 		shell_list_search
 		;;
 	shell)
-		fields='$USER~$TYPE~$KEY~$RESULT~$ALIAS'
+		fields='USER TYPE KEY RESULT ALIAS'
+		sep='~'
 		shell_list_search | column -t -s '~'
 		;;
 	*) check_args '1' '0' 'OBJECT [FORMAT]' ;;

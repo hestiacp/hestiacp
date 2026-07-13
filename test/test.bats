@@ -2046,6 +2046,39 @@ function check_ip_not_banned(){
   assert_file_not_exist /etc/exim4/smtp_relay.conf
 }
 
+@test "System: Add Mail DNSBL (Simple Syntax)" {
+  run v-add-sys-mail-dnsbl sbl.spamhaus.org
+  assert_success
+  refute_output
+  assert_file_exist $HESTIA/conf/dnsbl.conf
+  assert_file_exist /etc/exim4/dnsbl.conf
+  assert_file_contains $HESTIA/conf/dnsbl.conf "sbl.spamhaus.org"
+  assert_file_contains /etc/exim4/dnsbl.conf "sbl.spamhaus.org"
+}
+
+@test "System: Add Mail DNSBL (Complex Syntax)" {
+  run v-add-sys-mail-dnsbl zen.spamhaus.org!=127.255.255.252,127.255.255.254,127.255.255.255
+  assert_success
+  refute_output
+  assert_file_contains $HESTIA/conf/dnsbl.conf "zen.spamhaus.org!=127.255.255.252,127.255.255.254,127.255.255.255"
+  assert_file_contains /etc/exim4/dnsbl.conf "zen.spamhaus.org!=127.255.255.252,127.255.255.254,127.255.255.255"
+}
+
+@test "System: List Mail DNSBL" {
+  run v-list-sys-mail-dnsbl plain
+  assert_success
+  assert_output --partial "sbl.spamhaus.org"
+  assert_output --partial "zen.spamhaus.org!=127.255.255.252,127.255.255.254,127.255.255.255"
+}
+
+@test "System: Delete Mail DNSBL (Cleanup)" {
+  run v-delete-sys-mail-dnsbl sbl.spamhaus.org
+  assert_success
+  run v-delete-sys-mail-dnsbl zen.spamhaus.org!=127.255.255.252,127.255.255.254,127.255.255.255
+  assert_success
+}
+
+
 #----------------------------------------------------------#
 #                        Firewall                          #
 #----------------------------------------------------------#

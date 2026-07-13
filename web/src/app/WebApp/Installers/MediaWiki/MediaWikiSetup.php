@@ -7,63 +7,62 @@ namespace Hestia\WebApp\Installers\MediaWiki;
 use Hestia\WebApp\BaseSetup;
 use Hestia\WebApp\InstallationTarget\InstallationTarget;
 
-class MediaWikiSetup extends BaseSetup
-{
+class MediaWikiSetup extends BaseSetup {
     protected array $info = [
-        'name' => 'MediaWiki',
-        'group' => 'cms',
-        'version' => '1.43.6',
-        'thumbnail' => 'MediaWiki-2020-logo.svg', //Max size is 300px by 300px
+        "name" => "MediaWiki",
+        "group" => "cms",
+        "version" => "1.45.3",
+        "thumbnail" => "MediaWiki-2020-logo.svg", //Max size is 300px by 300px
     ];
 
     protected array $config = [
-        'form' => [
-            'admin_username' => ['type' => 'text', 'value' => 'admin'],
-            'admin_password' => 'password',
-            'language' => ['type' => 'text', 'value' => 'en'],
+        "form" => [
+            "wiki_name" => ["value" => "MediaWiki"],
+            "admin_username" => ["type" => "text", "value" => "wikiadmin"],
+            "admin_password" => "password",
+            "language" => ["type" => "text", "value" => "en"],
         ],
-        'database' => true,
-        'resources' => [
-            'archive' => [
-                'src' => 'https://releases.wikimedia.org/mediawiki/1.43/mediawiki-1.43.6.zip',
+        "database" => true,
+        "resources" => [
+            "archive" => [
+                "src" => "https://releases.wikimedia.org/mediawiki/1.45/mediawiki-1.45.3.zip",
             ],
         ],
-        'server' => [
-            'nginx' => [
-                'template' => 'default',
+        "server" => [
+            "nginx" => [
+                "template" => "default",
             ],
-            'php' => [
-                'supported' => ['8.1', '8.2', '8.3'],
+            "php" => [
+                "supported" => ["8.2", "8.3", "8.4", "8.5"],
             ],
         ],
     ];
 
-    protected function setupApplication(InstallationTarget $target, array $options): void
-    {
+    protected function setupApplication(InstallationTarget $target, array $options): void {
         $this->appcontext->copyDirectory(
-            $target->getDocRoot('/mediawiki-1.43.6/.'),
+            $target->getDocRoot("/mediawiki-1.45.3/."),
             $target->getDocRoot(),
         );
 
         $this->appcontext->runPHP(
-            $options['php_version'],
-            $target->getDocRoot('maintenance/install.php'),
+            $options["php_version"],
+            $target->getDocRoot("maintenance/install.php"),
             [
-                '--dbserver=' . $target->database->host,
-                '--dbname=' . $target->database->name,
-                '--installdbuser=' . $target->database->user,
-                '--installdbpass=' . $target->database->password,
-                '--dbuser=' . $target->database->name,
-                '--dbpass=' . $target->database->password,
-                '--server=' . $target->getUrl(),
-                '--scriptpath=', // must NOT be /
-                '--lang=' . $options['language'],
-                '--pass=' . $options['admin_password'],
-                'Media Wiki',
-                $options['admin_username'],
+                "--dbserver=" . $target->database->host,
+                "--dbname=" . $target->database->name,
+                "--installdbuser=" . $target->database->user,
+                "--installdbpass=" . $target->database->password,
+                "--dbuser=" . $target->database->name,
+                "--dbpass=" . $target->database->password,
+                "--server=" . $target->getUrl(),
+                "--scriptpath=", // must NOT be /
+                "--lang=" . $options["language"],
+                "--pass=" . $options["admin_password"],
+                $options["wiki_name"],
+                $options["admin_username"],
             ],
         );
 
-        $this->appcontext->deleteDirectory($target->getDocRoot('/mediawiki-1.43.6/'));
+        $this->appcontext->deleteDirectory($target->getDocRoot("/mediawiki-1.45.3/"));
     }
 }

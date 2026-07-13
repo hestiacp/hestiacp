@@ -49,7 +49,7 @@ source_conf $HESTIA/conf/restic.conf
 
 tmpdir=$(mktemp -p /home/$user/tmp/ -d)
 
-restic --repo "$REPO$user" --password-file "$USER_DATA/restic.conf" --json dump "$snapshot" "/home/$user/backup/cron/cron.conf" > "$tmpdir/cron.conf"
+restic --repo "${REPO%/}/$user" --password-file "$USER_DATA/restic.conf" --json dump "$snapshot" "/home/$user/backup/cron/cron.conf" > "$tmpdir/cron.conf"
 
 # Restoring cron jobs
 cp "$tmpdir/cron.conf" "$USER_DATA/cron.conf"

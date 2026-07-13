@@ -13,6 +13,7 @@ if ($_SESSION["userContext"] != "admin") {
 }
 
 if (!empty($_POST)) {
+	verify_csrf($_POST);
 	if (!empty($_POST["v_app_name"]) && $_SESSION["APP_NAME"] != $_POST["v_app_name"]) {
 		exec(
 			HESTIA_CMD .

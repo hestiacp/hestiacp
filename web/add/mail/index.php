@@ -382,7 +382,7 @@ if (!empty($_POST["ok_acc"])) {
 		unset($output);
 	}
 
-	// Add fwd_only flag
+	// Add rate limit to mail account
 	if (
 		!empty($_POST["v_rate"]) &&
 		empty($_SESSION["error_msg"]) &&

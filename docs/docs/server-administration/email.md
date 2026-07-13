@@ -58,14 +58,110 @@ If you are unable to receive emails, make sure you have setup your DNS properly.
 
 When you are done you can check the configuration via [MXToolBox](https://mxtoolbox.com/MXLookup.aspx).
 
+## Automatically purge old Trash and Spam messages
+
+Mail clients do not always empty Trash or Spam folders, so these folders can keep growing until they use a lot of disk space. You can either let Dovecot automatically remove old messages from these folders, or run a scheduled cleanup script.
+
+Before enabling automatic deletion, make sure the retention period matches your users' expectations. The examples below remove messages older than 30 days.
+
+### Recommended: use Dovecot autoexpunge
+
+Dovecot can automatically remove messages from configured mailboxes with `autoexpunge`. Edit `/etc/dovecot/dovecot.conf` and add `autoexpunge = 30d` to the existing Trash, Spam, and Junk mailbox blocks:
+
+```text
+mailbox Trash {
+    auto = subscribe
+    special_use = \Trash
+    autoexpunge = 30d
+}
+
+mailbox Spam {
+    auto = subscribe
+    special_use = \Junk
+    autoexpunge = 30d
+}
+
+mailbox Junk {
+    auto = no
+    special_use = \Junk
+    autoexpunge = 30d
+}
+```
+
+For busy mail servers, Dovecot recommends enabling `mailbox_list_index = yes` when using `autoexpunge`, so it can find mailboxes that need cleanup without opening every mailbox. If your mail storage uses Maildir or sdbox, also consider `mail_always_cache_fields = date.save`.
+
+Validate the Dovecot configuration and restart Dovecot:
+
+```bash
+doveconf -n > /dev/null
+systemctl restart dovecot
+```
+
+### Alternative: run a scheduled cleanup script
+
+If you prefer to run cleanup from cron, create a script such as `/usr/local/sbin/hestia-purge-mail-folders`:
+
+```bash
+#!/bin/bash
+
+set -euo pipefail
+
+HESTIA="/usr/local/hestia"
+RETENTION="30d"
+DRY_RUN="${DRY_RUN:-yes}"
+MAILBOXES=("Trash" "Spam" "Junk")
+
+"$HESTIA/bin/v-list-users" list | while read -r user; do
+	while read -r domain; do
+		while read -r account; do
+			address="${account}@${domain}"
+
+			for mailbox in "${MAILBOXES[@]}"; do
+				if doveadm mailbox list -u "$address" | grep -Fxq "$mailbox"; then
+					if [ "$DRY_RUN" = "yes" ]; then
+						echo "Would purge ${mailbox} for ${address}"
+					else
+						echo "Purging ${mailbox} for ${address}"
+						doveadm expunge -u "$address" mailbox "$mailbox" savedbefore "$RETENTION"
+					fi
+				fi
+			done
+		done < <("$HESTIA/bin/v-list-mail-accounts" "$user" "$domain" plain 2> /dev/null | cut -f1 || true)
+	done < <("$HESTIA/bin/v-list-mail-domains" "$user" plain 2> /dev/null | cut -f1 || true)
+done
+```
+
+Make the script executable:
+
+```bash
+chmod 750 /usr/local/sbin/hestia-purge-mail-folders
+```
+
+Run it manually first. By default, the script only prints what it would purge:
+
+```bash
+/usr/local/sbin/hestia-purge-mail-folders
+```
+
+Run the cleanup by setting `DRY_RUN=no`:
+
+```bash
+DRY_RUN=no /usr/local/sbin/hestia-purge-mail-folders
+```
+
+Then add a root cron job, for example to run daily at 03:30:
+
+```text
+30 3 * * * DRY_RUN=no /usr/local/sbin/hestia-purge-mail-folders >/var/log/hestia-purge-mail-folders.log 2>&1
+```
+
 ## Rejected because [ip] is in black list at zen.spamhaus.org. Error open resolver: `https://www.spamhaus.org/returnc/pub/65.1.174.102`
 
 1. Go to [Spamhaus free data query account](https://www.spamhaus.com/free-trial/sign-up-for-a-free-data-query-service-account/)
 1. Fill in the form and verify your email address by via the link in the email you recive.
 1. Once logged, go to Products → DQS and you will see your Query Key and below you will see the exactly fqdn that you will need to use Zen Spamhaus black list. Something like: `HereYourQueryKey.zen.dq.spamhaus.net`
-1. Edit /etc/exim4/dnsbl.conf and replace `zen.spamhaus.org` with `HereYourQueryKey.zen.dq.spamhaus.net`
-1. Also edit /etc/exim4/exim4.conf.template on the line: `deny    message       = Rejected because $sender_host_address is in a black list at $dnslist_domain\n$dnslist_text` to `deny    message       = Rejected because $sender_host_address is in a black list at ${if match{$dnslist_domain}{.*zen.dq.spamhaus.*}{zen.dq.spamhaus.net}{$dnslist_domain}}\n$dnslist_text` to prevent your Query key from leaking
-1. Restart exim4 with systemctl restart exim4
+1. Run `v-delete-sys-mail-dnsbl zen.spamhaus.org` to remove the default Spamhaus entry.
+1. Run `v-add-sys-mail-dnsbl HereYourQueryKey.zen.dq.spamhaus.net` to add your custom DQS key. (Note: HestiaCP automatically prevents your Spamhaus Query key from leaking in bounce messages).
 
 ## How do I disable internal lookup for email
 

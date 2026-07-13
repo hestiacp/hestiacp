@@ -784,6 +784,22 @@ this IP will automatically receive alias $domain.a1.myhosting.com. Of course
 you must have wildcard record \*.a1.myhosting.com pointed to IP. This feature
 is very handy when customer wants to test domain before dns migration.
 
+## v-add-sys-mail-dnsbl
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-sys-mail-dnsbl)
+
+add dnsbl entry
+
+**Options**: `HOST`
+
+**Examples**:
+
+```bash
+v-add-sys-mail-dnsbl zen.spamhaus.org
+```
+
+This function adds a new DNSBL server for Exim to check.
+
 ## v-add-sys-pma-sso
 
 [Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-sys-pma-sso)
@@ -3390,6 +3406,22 @@ v-delete-sys-ip 203.0.113.1
 This function for deleting a system IP. It does not allow to delete first IP
 on interface and do not allow to delete IP which is used by a web domain.
 
+## v-delete-sys-mail-dnsbl
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-sys-mail-dnsbl)
+
+delete dnsbl entry
+
+**Options**: `HOST`
+
+**Examples**:
+
+```bash
+v-delete-sys-mail-dnsbl zen.spamhaus.org
+```
+
+This function deletes a DNSBL server from Exim.
+
 ## v-delete-sys-mail-queue
 
 [Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-sys-mail-queue)
@@ -4963,6 +4995,22 @@ v-list-sys-languages json
 
 This function for obtaining the available languages for HestiaCP
 Output is always in the ISO language code
+
+## v-list-sys-mail-dnsbl
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-mail-dnsbl)
+
+list dnsbl config parameters
+
+**Options**: `[FORMAT]`
+
+**Examples**:
+
+```bash
+v-list-sys-mail-dnsbl
+```
+
+This function lists the active DNSBL servers used by Exim.
 
 ## v-list-sys-mail-status
 

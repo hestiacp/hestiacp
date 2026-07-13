@@ -31,8 +31,25 @@ if [ -f /etc/os-release ]; then
 	source /etc/os-release
 fi
 
-# Apply SSH config if running on Debian 13
+# Set running OS
+IS_DEBIAN13=false
+IS_UBUNTU2604=false
+IS_DEBIAN13_OR_UBUNTU2604=false
+
 if [[ "$ID" == "debian" && "$VERSION_ID" == "13" ]]; then
+	IS_DEBIAN13=true
+fi
+
+if [[ "$ID" == "ubuntu" && "$VERSION_ID" == "26.04" ]]; then
+	IS_UBUNTU2604=true
+fi
+
+if $IS_DEBIAN13 || $IS_UBUNTU2604; then
+	IS_DEBIAN13_OR_UBUNTU2604=true
+fi
+
+# Apply SSH config if running on Debian 13 or Ubuntu 26.04
+if $IS_DEBIAN13_OR_UBUNTU2604; then
 	_KEX_CONF="/etc/ssh/sshd_config.d/hestia-kex.conf"
 	_KEX_LINE="KexAlgorithms +diffie-hellman-group-exchange-sha256"
 
@@ -69,19 +86,26 @@ if [[ -d "$SNAPPYMAIL_ETC_DATA" ]] && ! [[ -L "$SNAPPYMAIL_ETC_DATA" ]]; then
 	fi
 fi
 
-# If Dovecot is version 2.4 and Debian is Trixie (13), replace Dovecot's configuration and rebuild users
-dovecot_version="$(dovecot --version | cut -f -2 -d .)"
-if [[ "$ID" == "debian" && "$VERSION_ID" == "13" && "$dovecot_version" = "2.4" ]]; then
+# If Dovecot is version 2.4 and OS is Trixie (13) or Ubuntu 26.04, replace Dovecot's configuration and rebuild users
+if command -v dovecot &> /dev/null; then
+	dovecot_version="$(dovecot --version | cut -f -2 -d .)"
+else
+	dovecot_version=false
+fi
+
+if $IS_DEBIAN13_OR_UBUNTU2604 && [[ "$dovecot_version" = "2.4" ]]; then
 	if ! grep -q 'modified by Hestia' /etc/dovecot/dovecot.conf \
-		&& ! grep -q 'ssl_server_cert_file = /usr/local/hestia' /etc/dovecot/conf.d/10-ssl.conf; then
+		|| ! grep -q 'ssl_server_cert_file = /usr/local/hestia' /etc/dovecot/conf.d/10-ssl.conf; then
 		echo "[ * ] Updating Dovecot $dovecot_version configuration"
 		cp -f "$HESTIA_COMMON_DIR"/dovecot/2.4/dovecot.conf /etc/dovecot/
 		cp -f "$HESTIA_COMMON_DIR"/dovecot/2.4/conf.d/* /etc/dovecot/conf.d/
+
 		# rebuild users to apply new dovecot conf
 		upgrade_config_set_value 'UPGRADE_REBUILD_USERS' 'true'
+
 		# if sieve is installed, replace dovecot conf files
-		HAS_DOVECOT_SIEVE_INSTALLED=$(dpkg --get-selections dovecot-managesieved | grep -c dovecot-managesieved)
-		if [ "$HAS_DOVECOT_SIEVE_INSTALLED" = "1" ]; then
+		HAS_DOVECOT_SIEVE_INSTALLED=$(dpkg --get-selections dovecot-managesieved 2> /dev/null | grep -c dovecot-managesieved)
+		if [[ "$HAS_DOVECOT_SIEVE_INSTALLED" = "1" ]]; then
 			echo "[ * ] Updating Sieve $dovecot_version configuration"
 			# dovecot.conf install
 			sed -i -E 's/protocols = imap/protocols = sieve imap/' /etc/dovecot/dovecot.conf
@@ -98,42 +122,22 @@ if [[ "$ID" == "debian" && "$VERSION_ID" == "13" && "$dovecot_version" = "2.4" ]
 	fi
 fi
 
-# Configure Bind for Debian 13
-if [[ "$ID" == "debian" && "$VERSION_ID" == "13" ]]; then
+# Configure Bind for Debian 13 or Ubuntu 26.04
+if $IS_DEBIAN13_OR_UBUNTU2604; then
 	source "$HESTIA"/conf/hestia.conf
 	if [[ "$DNS_SYSTEM" =~ named|bind ]]; then
-		echo "[ * ] Configuring Bind DNS server for Debian 13"
-		cp -f "$HESTIA_INSTALL_DIR"/bind/named.conf /etc/bind/
-		cp -f "$HESTIA_INSTALL_DIR"/bind/named.conf.options /etc/bind/
-		chown root:bind /etc/bind/named.conf
-		chown root:bind /etc/bind/named.conf.options
-		chown bind:bind /var/cache/bind
-		chmod 640 /etc/bind/named.conf
-		chmod 640 /etc/bind/named.conf.options
-		aa-complain /usr/sbin/named 2> /dev/null
-		if [[ $(dpkg-query -W -f='${Status}' apparmor 2> /dev/null | grep -c "ok installed") -eq 0 ]]; then
-			apparmor="no"
-		else
-			apparmor="yes"
-		fi
-		if [[ "$apparmor" = 'yes' ]]; then
-			echo "/home/** rwm," >> /etc/apparmor.d/local/usr.sbin.named 2> /dev/null
-			systemctl status apparmor > /dev/null 2>&1
-			if [ $? -ne 0 ]; then
-				systemctl restart apparmor >> $LOG
-			fi
-		fi
-		# Debian 13 removed the named.conf.default-zones file if doesn't exsists remove it from the config file
-		if [ ! -f /etc/bind/named.conf.default-zones ]; then
+		# named.conf.default-zones was removed in Debian 13
+		if [[ ! -f /etc/bind/named.conf.default-zones ]] \
+			&& grep -q "include.*named.conf.default-zones" /etc/bind/named.conf 2> /dev/null; then
+			echo "[ + ] Removing the default-zones include from named.conf"
 			sed -i "/^include.*named.conf.default-zones/d" /etc/bind/named.conf
 		fi
-		update-rc.d bind9 defaults > /dev/null 2>&1
-		systemctl start bind9
-		check_result $? "bind9 start failed"
 
-		# Workaround for OpenVZ/Virtuozzo
-		if [ -e "/proc/vz/veinfo" ] && [ -e "/etc/rc.local" ]; then
-			sed -i "s/^exit 0/service bind9 restart\nexit 0/" /etc/rc.local
+		# Add root-hints include after named.conf.local if missing
+		if [[ -f /etc/bind/named.conf.root-hints ]] \
+			&& ! grep -q 'include.*named.conf.root-hints' /etc/bind/named.conf 2> /dev/null; then
+			echo "[ + ] Adding the root-hints include to named.conf"
+			sed -i '/include.*named\.conf\.local/a include "\/etc\/bind\/named.conf.root-hints";' /etc/bind/named.conf
 		fi
 	fi
 fi
@@ -178,5 +182,21 @@ if [[ -f "$phpmyadmin_conf" ]]; then
 <?php
 $cfg['TempDir'] = '/var/lib/phpmyadmin/tmp';
 EOF
+	fi
+fi
+
+# Patch Spamhaus DQS key leak in existing exim templates
+echo "[ * ] Patching Exim Spamhaus DQS configuration"
+if [ -f "/etc/exim4/exim4.conf.template" ]; then
+	sed -i 's|at $dnslist_domain\\n$dnslist_text|at ${if match{$dnslist_domain}{^[^.]+[.](.+dq[.]spamhaus.*)}{$1}{$dnslist_domain}}\\n$dnslist_text|g' /etc/exim4/exim4.conf.template
+fi
+
+# Configuring sudoers to remove unsupported requiretty option on Ubuntu 26.04
+if $IS_UBUNTU2604; then
+	if [[ -f /etc/sudoers.d/hestiaweb ]] && grep -q '^Defaults:root !requiretty$' /etc/sudoers.d/hestiaweb &> /dev/null; then
+		echo "[ + ] Configuring sudoers to remove unsupported requiretty option"
+		chmod 640 /etc/sudoers.d/hestiaweb
+		sed -i '/^Defaults:root !requiretty$/d' /etc/sudoers.d/hestiaweb
+		chmod 440 /etc/sudoers.d/hestiaweb
 	fi
 fi

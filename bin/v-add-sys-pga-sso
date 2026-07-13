@@ -1,0 +1,91 @@
+#!/bin/bash
+# info: enables support for single sign on phpPgAdmin
+# options: [mode]
+#
+# example: v-add-sys-pga-sso
+#
+# This function enables support for SSO to phpPgAdmin
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+MODE=$1
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+PGA_INSTALL="/usr/share/phppgadmin"
+PGA_CONFIG="/etc/phppgadmin"
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+# Checking root permissions
+if [ "x$(id -u)" != 'x0' ]; then
+	echo "Error: Script can be run executed only by root"
+	exit 10
+fi
+
+if [ -n "$PHPPGADMIN_KEY" ] && [ "$PHPPGADMIN_KEY" != "" ]; then
+	echo "Error: SSO has been installed before to reenable it please run v-delete-sys-pga-sso first"
+	exit 1
+fi
+
+if [ -f "$PGA_INSTALL/hestia-sso.php" ]; then
+	echo "Error: hestia-sso.php is already installed"
+	exit 2
+fi
+
+if [ ! -f "/usr/local/hestia/web/api/index.php" ]; then
+	echo "Error: API script not installed"
+	exit 2
+fi
+
+if [ "$API_SYSTEM" = "0" ]; then
+	echo "Error: API is not enabled"
+	exit 2
+fi
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Generate the keys to secure everything
+phppgadminkey=$(generate_password)
+apikey=$($BIN/v-add-access-key "$ROOT_USER" 'phppgadmin-sso' 'phpPgAdmin' 'plain')
+
+# copy hestia-sso.php to /usr/share/phppgadmin/
+cp -f $HESTIA_INSTALL_DIR/pga/hestia-sso.php $PGA_INSTALL/hestia-sso.php
+chmod 640 $PGA_INSTALL/hestia-sso.php
+chown root:hestiamail $PGA_INSTALL/hestia-sso.php
+
+sed -i "s/%PHPPGADMIN_KEY%/$phppgadminkey/g" $PGA_INSTALL/hestia-sso.php
+sed -i "s/%API_KEY%/$apikey/g" $PGA_INSTALL/hestia-sso.php
+sed -i "s/%API_HOST_NAME%/$(hostname -f)/g" $PGA_INSTALL/hestia-sso.php
+sed -i "s/%API_HESTIA_PORT%/$BACKEND_PORT/g" $PGA_INSTALL/hestia-sso.php
+
+$BIN/v-change-sys-config-value 'PHPPGADMIN_KEY' "$phppgadminkey"
+
+if [ -z "$(echo $API_ALLOWED_IP | grep 127.0.0.1)" ]; then
+	$BIN/v-add-sys-api-ip "127.0.0.1"
+fi
+
+#----------------------------------------------------------#
+#                       Logging                            #
+#----------------------------------------------------------#
+
+if [ "$MODE" != "quiet" ]; then
+	echo "PGA Hestia-SSO plugin has been successfully installed"
+fi
+$BIN/v-log-action "system" "Info" "Plugins" "phpPgAdmin Single Sign-On has been enabled."
+log_event "$OK" "$ARGUMENTS"

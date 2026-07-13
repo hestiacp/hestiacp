@@ -587,6 +587,27 @@ if (!empty($_POST["save"])) {
 		}
 	}
 
+	// Set phpPgAdmin SSO key
+	if (empty($_SESSION["error_msg"])) {
+		if (!empty($_POST["v_phppgadmin_key"])) {
+			if ($_POST["v_phppgadmin_key"] == "yes" && empty($_SESSION["PHPPGADMIN_KEY"])) {
+				exec(HESTIA_CMD . "v-add-sys-pga-sso quiet", $output, $return_var);
+				check_return_code($return_var, $output);
+				unset($output);
+				if (empty($_SESSION["error_msg"])) {
+					load_hestia_config();
+				}
+			} elseif ($_POST["v_phppgadmin_key"] == "no" && !empty($_SESSION["PHPPGADMIN_KEY"])) {
+				exec(HESTIA_CMD . "v-delete-sys-pga-sso quiet", $output, $return_var);
+				check_return_code($return_var, $output);
+				unset($output);
+				if (empty($_SESSION["error_msg"])) {
+					$_SESSION["PHPPGADMIN_KEY"] = "";
+				}
+			}
+		}
+	}
+
 	// Set disk_quota support
 	if (empty($_SESSION["error_msg"])) {
 		if (!empty($_POST["v_quota"]) && $_SESSION["DISK_QUOTA"] != $_POST["v_quota"]) {

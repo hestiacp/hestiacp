@@ -29,60 +29,90 @@ check_hestia_demo_mode
 
 # Json list function
 json_list_search() {
+	local fields_clean line
+	local id_var id_value
+	local var value
+	local first_object first_field
+
+	fields_clean=$(printf '%s\n' "$fields" | tr '~' ' ' | sed 's/\$//g')
+
+	set -- $fields_clean
+	id_var="$1"
+	shift
+
+	first_object=1
+
 	echo '{'
-	fileds_count=$(echo $fields | wc -w)
-	while read line; do
+
+	while IFS= read -r line; do
 		parse_object_kv_list_non_eval "$line"
-		if [ -n "$list_data" ]; then
-			echo -e '        },'
+
+		id_value="${!id_var}"
+		id_value=$(printf '%s' "$id_value" | sed \
+			-e 's/\\/\\\\/g' \
+			-e 's/"/\\"/g' \
+			-e "s/%quote%/'/g")
+
+		if [ "$first_object" -eq 0 ]; then
+			echo ','
 		fi
-		i=1
-		IFS=' '
-		for field in $fields; do
-			value="${!field}"
-			value=$(echo "$value" | sed -e 's/"/\\"/g' -e "s/%quote%/'/g")
-			if [ $i -eq 1 ]; then
-				((++i))
-				echo -e "\t\"$value\": {"
-			else
-				if [ $i -lt "$fileds_count" ]; then
-					((++i))
-					echo -e "\t\t\"$field\": \"${value//,/, }\","
-				else
-					echo -e "\t\t\"$field\": \"${value//,/, }\""
-					list_data=1
-				fi
+		first_object=0
+
+		printf '\t"%s": {\n' "$id_value"
+
+		first_field=1
+		for var in "$@"; do
+			value="${!var}"
+			value=$(printf '%s' "$value" | sed \
+				-e 's/\\/\\\\/g' \
+				-e 's/"/\\"/g' \
+				-e "s/%quote%/'/g")
+
+			if [ "$first_field" -eq 0 ]; then
+				echo ','
 			fi
+			first_field=0
+
+			printf '\t\t"%s": "%s"' "$var" "${value//,/, }"
 		done
-	done < $conf
-	if [ -n "$list_data" ]; then
-		echo -e '        }'
-	fi
-	echo -e '}'
+
+		echo
+		printf '\t}'
+	done < "$conf"
+
+	echo
+	echo '}'
 }
 
 # Shell list function
 shell_list_search() {
+	local field var row fields_for_loop
 	sep=${sep:-' '}
+
+	fields_for_loop=$(echo "$fields" | tr '~' ' ' | sed 's/\$//g')
+
 	if [ -z "$nohead" ]; then
-		echo "$fields" | tr ' ' "$sep"
-		for a in $fields; do
-			echo -e "------ \c"
+		echo "$fields_for_loop" | tr ' ' "$sep"
+		for field in $fields_for_loop; do
+			printf -- "------%s" "$sep"
 		done
 		echo
 	fi
-	while read line; do
+
+	while read -r line; do
 		parse_object_kv_list_non_eval "$line"
+
 		row=''
-		for field in $fields; do
+		for field in $fields_for_loop; do
 			if [ -z "$row" ]; then
 				row="${!field}"
 			else
-				row="$row$sep${!field}"
+				row="${row}${sep}${!field}"
 			fi
 		done
+
 		echo "$row" | sed "s/%quote%/'/g"
-	done < $conf
+	done < "$conf"
 }
 
 #----------------------------------------------------------#
@@ -97,6 +127,7 @@ is_format_valid 'object'
 #----------------------------------------------------------#
 
 conf=$(mktemp)
+trap 'rm -f $conf' EXIT
 i=0
 OLD_IFS=$IFS
 IFS=$'\n'
@@ -259,17 +290,17 @@ case $format in
 	json) json_list_search ;;
 	plain)
 		nohead=1
-		shell_list_search
+		shell_list_search | tr -s ' '
 		;;
 	shell)
-		fields='USER TYPE KEY RESULT ALIAS'
+		fields='$USER~$TYPE~$KEY~$RESULT~$ALIAS'
 		sep='~'
 		shell_list_search | column -t -s '~'
 		;;
 	*) check_args '1' '0' 'OBJECT [FORMAT]' ;;
 esac
 
-rm $conf
+rm -f "$conf"
 
 #----------------------------------------------------------#
 #                       Hestia                             #

@@ -200,3 +200,10 @@ if $IS_UBUNTU2604; then
 		chmod 440 /etc/sudoers.d/hestiaweb
 	fi
 fi
+
+# Allow the phpMyAdmin SSO API key to also call the new "log in with access to
+# all databases" commands used by the generic phpMyAdmin button
+if [[ -f "$HESTIA/data/api/phpmyadmin-sso" ]] && ! grep -q 'v-add-database-temp-user-all' "$HESTIA/data/api/phpmyadmin-sso"; then
+	echo "[ * ] Updating phpMyAdmin SSO API permissions"
+	sed -i "s|COMMANDS='v-add-database-temp-user,v-delete-database-temp-user'|COMMANDS='v-add-database-temp-user,v-delete-database-temp-user,v-add-database-temp-user-all,v-delete-database-temp-user-all'|g" "$HESTIA/data/api/phpmyadmin-sso"
+fi

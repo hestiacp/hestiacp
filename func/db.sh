@@ -386,6 +386,52 @@ delete_mysql_database_temp_user() {
 	mysql_query "$query" > /dev/null
 }
 
+# Same as add_mysql_database_temp_user(), but grants access to every database
+# listed in the (space-separated) $databases variable instead of a single
+# $database. Every entry in $databases must already be a validated, existing
+# database name (never free-form input) -- callers are expected to build it
+# from v-list-databases, exactly like add_mysql_database_temp_user() relies
+# on $database already having been validated via is_object_valid.
+add_mysql_database_temp_user_all() {
+	mysql_connect $host
+
+	mysql_ver_sub=$(echo $mysql_ver | cut -d '.' -f1)
+	mysql_ver_sub_sub=$(echo $mysql_ver | cut -d '.' -f2)
+
+	if [ "$mysql_fork" = "mysql" ] && [ "$mysql_ver_sub" -ge 8 ]; then
+		query="CREATE USER \`$dbuser\`@localhost
+			IDENTIFIED BY '$dbpass'"
+		mysql_query "$query" > /dev/null
+
+		for database in $databases; do
+			query="GRANT ALL ON \`$database\`.* TO \`$dbuser\`@localhost"
+			mysql_query "$query" > /dev/null
+		done
+	else
+		first="yes"
+		for database in $databases; do
+			if [ "$first" = "yes" ]; then
+				query="GRANT ALL ON \`$database\`.* TO \`$dbuser\`@localhost
+	    			IDENTIFIED BY '$dbpass'"
+				first="no"
+			else
+				query="GRANT ALL ON \`$database\`.* TO \`$dbuser\`@localhost"
+			fi
+			mysql_query "$query" > /dev/null
+		done
+	fi
+}
+
+delete_mysql_database_temp_user_all() {
+	mysql_connect $host
+	for database in $databases; do
+		query="REVOKE ALL ON \`$database\`.* FROM \`$dbuser\`@localhost"
+		mysql_query "$query" > /dev/null
+	done
+	query="DROP USER '$dbuser'@'localhost'"
+	mysql_query "$query" > /dev/null
+}
+
 # Check if database host do not exist in config
 is_dbhost_new() {
 	if [ -e "$HESTIA/conf/$type.conf" ]; then

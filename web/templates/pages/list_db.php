@@ -20,7 +20,29 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
 					<i class="fas fa-circle-plus icon-green"></i><?= tohtml( _("Add Database")) ?>
 				</a>
 				<?php if ($_SESSION["DB_SYSTEM"] === "mysql" || $_SESSION["DB_SYSTEM"] === "mysql,pgsql" || $_SESSION["DB_SYSTEM"] === "pgsql,mysql") { ?>
-					<a class="button button-secondary <?= tohtml(ipUsed() ? "button-suspended" : "") ?>" href="<?= tohtml($db_myadmin_link) ?>" target="_blank">
+					<?php
+						// If SSO is enabled, log in with access to all of this
+						// user's databases at once instead of linking to
+						// phpMyAdmin's own (potentially restricted) login form
+						// -- see hestia-sso.php's "__all__" sentinel handling.
+						$db_myadmin_all_link = $db_myadmin_link;
+						if (!empty($_SESSION["PHPMYADMIN_KEY"])) {
+							$time = time();
+							$hestia_sso_token_all = password_hash(
+								"__all__" . $user_plain . $_SESSION["user_combined_ip"] . $time . $_SESSION["PHPMYADMIN_KEY"],
+								PASSWORD_DEFAULT,
+							);
+							$db_myadmin_all_link =
+								$db_myadmin_link .
+								"hestia-sso.php?" .
+								http_build_query([
+									"user" => $user_plain,
+									"exp" => $time,
+									"hestia_token" => $hestia_sso_token_all,
+								]);
+						}
+					?>
+					<a class="button button-secondary <?= tohtml(ipUsed() ? "button-suspended" : "") ?>" href="<?= tohtml($db_myadmin_all_link) ?>" target="_blank">
 						<i class="fas fa-database icon-orange"></i>phpMyAdmin
 					</a>
 				<?php } ?>

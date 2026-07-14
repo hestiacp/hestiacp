@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #
-# Orchestrates cross-architecture (--cross) and multi-OS (--all-os) builds of
+# Orchestrates cross-architecture multi-OS (--all-os) builds of
 # Hestia packages on a single machine. hst_autocompile.sh only ever builds for
 # the environment it's actually running in; this script is what spins up the
 # *other* environments needed for --cross/--all-os, using QEMU-emulated
@@ -11,11 +11,10 @@
 #
 # Usage:
 #   ./chroot_build_all.sh (--all|--hestia|--nginx|--php|--web-terminal) \
-#       (--cross|--all-os) [--install|--noinstall] [--keepbuild] [--debug] [branch]
+#   [--debug] [branch]
 #
 # Examples:
-#   ./chroot_build_all.sh --all --cross --noinstall --keepbuild '~localsrc'
-#   ./chroot_build_all.sh --all --all-os --noinstall --keepbuild '~localsrc'
+#   ./chroot_build_all.sh --all '~localsrc'
 #
 
 __DIR__="$(cd "$(dirname "${BASH_SOURCE[0]}")" > /dev/null 2>&1 && pwd)"
@@ -26,7 +25,7 @@ ACTIVE_CHROOTS=()
 
 # Supported OS releases for --all-os, as "distro codename" pairs.
 ALLOS_DISTRO_RELEASES=(
-
+	"debian bullseye"
 	"debian bookworm"
 	"debian trixie"
 	"ubuntu jammy"
@@ -43,7 +42,7 @@ fi
 
 usage() {
 	echo "Usage:"
-	echo "    $0 (--all|--hestia|--nginx|--php|--web-terminal) (--cross|--all-os) [options] [branch]"
+	echo "    $0 (--all|--hestia|--nginx|--php|--web-terminal) [--debug] [branch]"
 	echo ""
 	echo "    --all           Build all hestia packages."
 	echo "    --hestia        Build only the Control Panel package."
@@ -55,9 +54,6 @@ usage() {
 	echo "                    Ubuntu 22.04/24.04/26.04) and both architectures, using"
 	echo "                    a QEMU-emulated chroot for every combination other than"
 	echo "                    the host's own."
-	echo "    --install       Install the packages built for the host's own OS/arch"
-	echo "    --noinstall     Don't install (default)"
-	echo "    --keepbuild     Don't delete downloaded source and build folders"
 	echo "    --debug         Debug mode"
 	echo "    --pkgrev <n>    Set the package revision number (default: 1)."
 	echo "                    Replaces the '-1' in the version suffix"
@@ -72,7 +68,7 @@ usage() {
 	echo "                    it overrides/replaces the detected '~<tag>' suffix instead."
 	echo "                    Can be combined: --pkgrev 2 --release myci1 → 1.0.0-2+deb12~myci1."
 	echo ""
-	echo "Example: ./chroot_build_all.sh --all --all-os --noinstall --keepbuild '~localsrc'"
+	echo "Example: ./chroot_build_all.sh --all '~localsrc'"
 }
 
 qemu_static_name() {
@@ -348,7 +344,7 @@ run_cross_build() {
 	# This combo's build artifacts live under their own host_build_dir (see
 	# prepare_chroot), not the shared $BUILD_DIR — so DEB_DIR must always be
 	# pointed back at the shared location explicitly, or it'd default to
-	# host_build_dir/deb instead. With --all-os, give each OS release its own
+	# host_build_dir/deb instead. Give each OS release its own
 	# subdirectory there too, since packages can share the same
 	# name/version/arch across releases (codenames are unique across distros,
 	# so $release alone is enough, no need for a distro prefix).
@@ -372,6 +368,19 @@ run_cross_build() {
 		echo >&2 "[!] Cross build for $distro/$release/$target_arch failed"
 		exit 1
 	fi
+
+	# Unmount and drop this chroot's bind mounts as soon as its build is
+	# done, rather than leaving every combo mounted until the whole
+	# loop finishes: the private /dev tmpfs and (for foreign
+	# arches) the qemu-user interpreter emulating the target both hold real
+	# RAM, and that adds up fast across a dozen combos. The bootstrapped
+	# rootfs itself is left on disk (see .hestiacp-chroot-ready in
+	# prepare_chroot) so a later run can reuse it without re-debootstrapping.
+	unmount_chroot_dir "$chroot_dir"
+	local i
+	for i in "${!ACTIVE_CHROOTS[@]}"; do
+		[ "${ACTIVE_CHROOTS[$i]}" = "$chroot_dir" ] && unset 'ACTIVE_CHROOTS[i]'
+	done
 }
 
 # Set packages to compile
@@ -399,9 +408,6 @@ while [ $# -gt 0 ]; do
 		--debug)
 			HESTIA_DEBUG='true'
 			;;
-		--all-os)
-			ALL_OS='true'
-			;;
 
 		--release)
 			shift
@@ -423,11 +429,6 @@ while [ $# -gt 0 ]; do
 	shift
 done
 
-if [ "$ARGC" -eq 0 ] || { [ "$CROSS" != "true" ] && [ "$ALL_OS" != "true" ]; }; then
-	usage
-	exit 1
-fi
-
 if [ -z "$branch" ]; then
 	echo -n "Please enter the name of the branch to build from (e.g. main): "
 	read -r branch
@@ -448,7 +449,7 @@ fi
 # Build every other (distro, release, arch) combination via chroot.
 PKG_FLAGS=""
 NEEDS_CHROOT_BUILD='false'
-if [ "$HESTIA_B" = "true" ] && [ "$ALL_OS" = "true" ]; then
+if [ "$HESTIA_B" = "true" ]; then
 	PKG_FLAGS="$PKG_FLAGS --hestia"
 	NEEDS_CHROOT_BUILD='true'
 fi
@@ -470,21 +471,13 @@ fi
 
 if [ "$NEEDS_CHROOT_BUILD" = "true" ]; then
 	TARGET_COMBOS=()
-	if [ "$ALL_OS" = "true" ]; then
-		for dr in "${ALLOS_DISTRO_RELEASES[@]}"; do
-			distro="${dr%% *}"
-			release="${dr#* }"
-			for a in amd64 arm64; do
-				TARGET_COMBOS+=("$distro:$release:$a")
-			done
+	for dr in "${ALLOS_DISTRO_RELEASES[@]}"; do
+		distro="${dr%% *}"
+		release="${dr#* }"
+		for a in amd64 arm64; do
+			TARGET_COMBOS+=("$distro:$release:$a")
 		done
-	else
-		if [ "$HOST_ARCH" = "amd64" ]; then
-			TARGET_COMBOS=("$HOST_DISTRO:$HOST_RELEASE:arm64")
-		else
-			TARGET_COMBOS=("$HOST_DISTRO:$HOST_RELEASE:amd64")
-		fi
-	fi
+	done
 
 	for combo in "${TARGET_COMBOS[@]}"; do
 		distro="${combo%%:*}"
@@ -496,16 +489,15 @@ if [ "$NEEDS_CHROOT_BUILD" = "true" ]; then
 fi
 
 # When done move all build packages located in /tmp/hestiacp-src-{os}-{release}-{arch}/deb to /tmp/hestiacp-src/deb/ to have all packages in one place
-if [ "$ALL_OS" = "true" ]; then
-	for dr in "${ALLOS_DISTRO_RELEASES[@]}"; do
-		distro="${dr%% *}"
-		release="${dr#* }"
-		for a in amd64 arm64; do
-			src_deb_dir="${BUILD_DIR}-${distro}-${release}-${a}/deb"
-			if [ ! -d "$NATIVE_DEB_DIR/${release}/" ]; then
-				mkdir -p "$NATIVE_DEB_DIR/${release}/"
-			fi
-			mv "$src_deb_dir"/* "$NATIVE_DEB_DIR/${release}/"
-		done
+
+for dr in "${ALLOS_DISTRO_RELEASES[@]}"; do
+	distro="${dr%% *}"
+	release="${dr#* }"
+	for a in amd64 arm64; do
+		src_deb_dir="${BUILD_DIR}-${distro}-${release}-${a}/deb"
+		if [ ! -d "$NATIVE_DEB_DIR/${release}/" ]; then
+			mkdir -p "$NATIVE_DEB_DIR/${release}/"
+		fi
+		mv "$src_deb_dir"/* "$NATIVE_DEB_DIR/${release}/"
 	done
-fi
+done

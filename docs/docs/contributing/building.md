@@ -89,12 +89,10 @@ apt install -f
 
 ## Building for other architectures or OS releases on the same machine
 
-`hst_autocompile.sh` only ever builds for the environment it's actually running in (its own `--cross` flag just makes the architecture-independent `hestia` package build for both AMD64 and ARM64 directly, with no emulation needed). To also build `hestia-nginx`, `hestia-php` or `hestia-web-terminal` (which contain compiled native code) for **other** architectures or OS releases on the same machine, use `chroot_build_all.sh` instead — it spins up the other environments and runs the unmodified `hst_autocompile.sh` inside each one.
-
-Pass `--all-os` to build for every supported OS release (Debian 12/13, Ubuntu 22.04/24.04/26.04) on both architectures — up to 10 combinations from one invocation:
+`hst_autocompile.sh` only ever builds for the environment it's actually running in (its own `--cross` flag just makes the architecture-independent `hestia` package build for both AMD64 and ARM64 directly, with no emulation needed). To also build `hestia-nginx`, `hestia-php` or `hestia-web-terminal` (which contain compiled native code) for **other** architectures or OS releases on the same machine, use `chroot_build_all.sh` instead — it spins up and runs the unmodified `hst_autocompile.sh` inside each one.
 
 ```bash
-./chroot_build_all.sh --all --all-os '~localsrc'
+./chroot_build_all.sh --all '~localsrc'
 ```
 
-Every combination is built inside a QEMU-emulated chroot (debootstrap + `qemu-user-static`). The first run downloads/bootstraps a minimal root filesystem per combination under `/var/lib/hestiacp-build-chroot/<distro>-<release>-<arch>`; subsequent runs reuse it, so only the first build of a given combination is slow. `--all-os` always covers both architectures.
+Every combination is built inside a QEMU-emulated chroot (debootstrap + `qemu-user-static`). The first run downloads/bootstraps a minimal root filesystem per combination under `/var/lib/hestiacp-build-chroot/<distro>-<release>-<arch>`; subsequent runs reuse it, so only the first build of a given combination is slow.

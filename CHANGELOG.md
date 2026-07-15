@@ -37,6 +37,7 @@ All notable changes to this project will be documented in this file.
 - Make v-extract-fs-archive fully non-interactive during extraction (#5436)
 - Fix if statement in installer (#5440)
 - Docs: Add mail cleanup guidance (#5371)
+- Bump Roundcube to version 1.6.17 (#5492)
 
 ## [1.9.6] - Service Release
 

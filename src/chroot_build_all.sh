@@ -440,11 +440,8 @@ HOST_RELEASE=$(lsb_release -sc)
 # With --all-os, give every OS release its own deb output subdirectory
 # (release codenames don't collide across distros), including the host's
 # own, since packages can share the same name/version/arch across releases.
-NATIVE_DEB_DIR=""
-if [ "$ALL_OS" = "true" ]; then
-	NATIVE_DEB_DIR="$BUILD_DIR/deb/"
-	mkdir -p "$NATIVE_DEB_DIR"
-fi
+NATIVE_DEB_DIR="$BUILD_DIR/deb/"
+mkdir -p "$NATIVE_DEB_DIR"
 
 # Build every other (distro, release, arch) combination via chroot.
 PKG_FLAGS=""

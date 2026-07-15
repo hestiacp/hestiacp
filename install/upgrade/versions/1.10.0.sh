@@ -207,3 +207,7 @@ if [[ -f "$HESTIA/data/api/phpmyadmin-sso" ]] && ! grep -q 'v-add-database-temp-
 	echo "[ * ] Updating phpMyAdmin SSO API permissions"
 	sed -i "s|COMMANDS='v-add-database-temp-user,v-delete-database-temp-user'|COMMANDS='v-add-database-temp-user,v-delete-database-temp-user,v-add-database-temp-user-all,v-delete-database-temp-user-all'|g" "$HESTIA/data/api/phpmyadmin-sso"
 fi
+
+# Updating logrotate conf for Hestia
+echo "[ * ] Updating logrotate conf for Hestia"
+cp -f "$HESTIA"/install/deb/logrotate/hestia /etc/logrotate.d/hestia

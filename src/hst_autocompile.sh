@@ -117,6 +117,10 @@ usage() {
 	echo "Example: bash hst_autocompile.sh --hestia develop Y"
 	echo "This would install a Hestia Control Panel package compiled with the"
 	echo "develop branch code."
+	echo ""
+	echo "To cross-build hestia-nginx/hestia-php/hestia-web-terminal for the other"
+	echo "architecture, or for other OS releases, on the same machine, use"
+	echo "./chroot_build_all.sh instead."
 }
 
 get_distro_suffix() {
@@ -213,7 +217,8 @@ if [ $architecture == 'aarch64' ]; then
 else
 	BUILD_ARCH='amd64'
 fi
-DEB_DIR="$BUILD_DIR/deb"
+
+DEB_DIR="${DEB_DIR:-$BUILD_DIR/deb}"
 
 # Set packages to compile
 for i in $*; do
@@ -366,14 +371,20 @@ timestamp() {
 if [ "$dontinstalldeps" != 'true' ]; then
 	# Install needed software
 	# Set package dependencies for compiling
-	SOFTWARE='wget tar git curl build-essential libxml2-dev libz-dev libzip-dev libgmp-dev libcurl4-gnutls-dev unzip openssl libssl-dev pkg-config libsqlite3-dev libonig-dev rpm lsb-release'
-
+	SOFTWARE='wget tar git curl ca-certificates build-essential libxml2-dev libz-dev libzip-dev libgmp-dev libcurl4-gnutls-dev unzip openssl libssl-dev pkg-config libsqlite3-dev libonig-dev lsb-release'
 	echo "Updating system APT repositories..."
-	apt-get -qq update > /dev/null 2>&1
+	apt-get -qq update
 	echo "Installing dependencies for compilation..."
-	apt-get -qq install -y $SOFTWARE > /dev/null 2>&1
+	apt-get -qq install -y $SOFTWARE
 
-	# Installing Node.js 20.x repo
+	# In a minimal/freshly-debootstrapped chroot, dpkg trigger processing
+	# (which normally re-runs ldconfig after installing shared libs) can be
+	# deferred or skipped, leaving the dynamic linker's cache stale even
+	# though e.g. libzip.so.5 is genuinely on disk. Refresh it explicitly so
+	# binaries built against these libs (php, nginx, ...) can actually run.
+	ldconfig
+
+	# Installing Node.js 24.x repo
 	apt="/etc/apt/sources.list.d"
 	codename="$(lsb_release -s -c)"
 
@@ -382,8 +393,23 @@ if [ "$dontinstalldeps" != 'true' ]; then
 	fi
 
 	echo "Installing Node.js..."
-	apt-get -qq update > /dev/null 2>&1
-	apt -qq install -y nodejs > /dev/null 2>&1
+	apt-get -qq update > /dev/null
+	apt-get -qq install -y nodejs
+
+	# NodeSource's nodejs package bundles npm, but Debian/Ubuntu's own nodejs
+	# package doesn't (used if the NodeSource repo above failed to register,
+	# e.g. no network). Only fall back to the distro's separate npm package
+	# when npm is actually missing — requesting it unconditionally alongside
+	# nodejs in one apt-get call conflicts with NodeSource's bundled npm and
+	# fails the whole install.
+	if [ -z "$(which "npm")" ]; then
+		apt-get -qq install -y npm
+	fi
+
+	if [ -z "$(which "node")" ] || [ -z "$(which "npm")" ]; then
+		echo "Failed to install Node.js/npm"
+		exit 1
+	fi
 
 	nodejs_version=$(/usr/bin/node -v | cut -f1 -d'.' | sed 's/v//g')
 
@@ -400,8 +426,11 @@ if [ "$dontinstalldeps" != 'true' ]; then
 	fi
 fi
 
-# Get system cpu cores
-NUM_CPUS=$(grep "^cpu cores" /proc/cpuinfo | uniq | awk '{print $4}')
+# Get system cpu cores. Callers running this inside a QEMU-emulated chroot
+# (cross-arch builds) can pre-set NUM_CPUS to override this: /proc is
+# bind-mounted from the host, so the detected count would otherwise be the
+# host's real core count, not a safe parallelism level for emulated compiles.
+NUM_CPUS="${NUM_CPUS:-$(grep "^cpu cores" /proc/cpuinfo | uniq | awk '{print $4}')}"
 
 if [ "$HESTIA_DEBUG" ]; then
 	echo "OS type          : Debian / Ubuntu"
@@ -445,12 +474,12 @@ branch_dash=$(echo "$branch" | sed 's/\//-/g')
 #################################################################################
 
 if [ "$NGINX_B" = true ]; then
+
 	echo "Building hestia-nginx package..."
 	if [ "$CROSS" = "true" ]; then
 		echo "Cross compile not supported for hestia-nginx, hestia-php or hestia-web-terminal"
 		exit 1
 	fi
-
 	# Change to build directory
 	cd $BUILD_DIR
 
@@ -461,7 +490,7 @@ if [ "$NGINX_B" = true ]; then
 		BUILD_DIR_NGINX=$BUILD_DIR/nginx-$(echo $NGINX_V | cut -d"~" -f1)
 	fi
 
-	if [ "$KEEPBUILD" != 'true' ] || [ ! -d "$BUILD_DIR_HESTIANGINX" ]; then
+	if [ "$KEEPBUILD" != 'true' ] || [ ! -d "$BUILD_DIR_HESTIANGINX" ] || [ ! -f "$BUILD_DIR_NGINX/Makefile" ]; then
 		# Check if target directory exist
 		if [ -d "$BUILD_DIR_HESTIANGINX" ]; then
 			#mv $BUILD_DIR/hestia-nginx_$NGINX_V $BUILD_DIR/hestia-nginx_$NGINX_V-$(timestamp)
@@ -574,12 +603,11 @@ fi
 #################################################################################
 
 if [ "$PHP_B" = true ]; then
+	echo "Building hestia-php package..."
 	if [ "$CROSS" = "true" ]; then
 		echo "Cross compile not supported for hestia-nginx, hestia-php or hestia-web-terminal"
 		exit 1
 	fi
-
-	echo "Building hestia-php package..."
 
 	BUILD_DIR_HESTIAPHP=$BUILD_DIR/hestia-php_$PHP_V
 
@@ -591,7 +619,7 @@ if [ "$PHP_B" = true ]; then
 		BUILD_DIR_PHP=$BUILD_DIR/php-$(echo $PHP_V | cut -d"~" -f1)
 	fi
 
-	if [ "$KEEPBUILD" != 'true' ] || [ ! -d "$BUILD_DIR_HESTIAPHP" ]; then
+	if [ "$KEEPBUILD" != 'true' ] || [ ! -d "$BUILD_DIR_HESTIAPHP" ] || [ ! -f "$BUILD_DIR_PHP/Makefile" ]; then
 		# Check if target directory exist
 		if [ -d $BUILD_DIR_HESTIAPHP ]; then
 			rm -r $BUILD_DIR_HESTIAPHP
@@ -697,12 +725,11 @@ fi
 #################################################################################
 
 if [ "$WEB_TERMINAL_B" = true ]; then
+	echo "Building hestia-web-terminal package..."
 	if [ "$CROSS" = "true" ]; then
 		echo "Cross compile not supported for hestia-nginx, hestia-php or hestia-web-terminal"
 		exit 1
 	fi
-
-	echo "Building hestia-web-terminal package..."
 
 	BUILD_DIR_HESTIA_TERMINAL=$BUILD_DIR/hestia-web-terminal_$WEB_TERMINAL_V
 

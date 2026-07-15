@@ -86,3 +86,13 @@ To solve this issue, run:
 ```bash
 apt install -f
 ```
+
+## Building for other architectures or OS releases on the same machine
+
+`hst_autocompile.sh` only ever builds for the environment it's actually running in (its own `--cross` flag just makes the architecture-independent `hestia` package build for both AMD64 and ARM64 directly, with no emulation needed). To also build `hestia-nginx`, `hestia-php` or `hestia-web-terminal` (which contain compiled native code) for **other** architectures or OS releases on the same machine, use `chroot_build_all.sh` instead — it spins up and runs the unmodified `hst_autocompile.sh` inside each one.
+
+```bash
+./chroot_build_all.sh --all '~localsrc'
+```
+
+Every combination is built inside a QEMU-emulated chroot (debootstrap + `qemu-user-static`). The first run downloads/bootstraps a minimal root filesystem per combination under `/var/lib/hestiacp-build-chroot/<distro>-<release>-<arch>`; subsequent runs reuse it, so only the first build of a given combination is slow.

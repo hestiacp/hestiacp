@@ -97,6 +97,18 @@ usage() {
 	echo "    --keepbuild     Don't delete downloaded source and build folders"
 	echo "    --cross         Compile hestia package for both AMD64 and ARM64"
 	echo "    --debug         Debug mode"
+	echo "    --pkgrev <n>    Set the package revision number (default: 1)."
+	echo "                    Replaces the '-1' in the version suffix"
+	echo "                    (e.g. --pkgrev 2 → 1.0.0-2+deb12)."
+	echo "    --release <id>  Set a release identifier appended to the package version"
+	echo "                    as '~<id>' (e.g. --release myci1 → 1.0.0-1+deb12~myci1)."
+	echo "                    Useful to distinguish custom or CI builds from official ones."
+	echo "                    If the hestia control file's Version already has a '~<tag>'"
+	echo "                    suffix (e.g. 1.1.0~alpha) and --release is NOT given, that"
+	echo "                    detected tag (e.g. 'alpha') is used automatically as the"
+	echo "                    release identifier for ALL packages. If --release IS given,"
+	echo "                    it overrides/replaces the detected '~<tag>' suffix instead."
+	echo "                    Can be combined: --pkgrev 2 --release myci1 → 1.0.0-2+deb12~myci1."
 	echo ""
 	echo "For automated builds and installations, you may specify the branch"
 	echo "after one of the above flags. To install the packages, specify 'Y'"
@@ -105,6 +117,92 @@ usage() {
 	echo "Example: bash hst_autocompile.sh --hestia develop Y"
 	echo "This would install a Hestia Control Panel package compiled with the"
 	echo "develop branch code."
+	echo ""
+	echo "To cross-build hestia-nginx/hestia-php/hestia-web-terminal for the other"
+	echo "architecture, or for other OS releases, on the same machine, use"
+	echo "./chroot_build_all.sh instead."
+}
+
+get_distro_suffix() {
+	local distro_id distro_num
+	distro_id=$(lsb_release -is | tr '[:upper:]' '[:lower:]')
+	distro_num=$(lsb_release -rs)
+
+	if [ "$distro_id" = "debian" ]; then
+		echo "debian${distro_num}"
+	elif [ "$distro_id" = "ubuntu" ]; then
+		echo "ubuntu${distro_num}"
+	else
+		echo "unknown"
+	fi
+}
+
+apply_distro_version() {
+	local control_file="$1"
+	local distro_suffix
+	distro_suffix=$(get_distro_suffix)
+
+	local current_version
+	current_version=$(grep "^Version:" "$control_file" | awk '{print $2}')
+
+	# Strip any existing '~<tag>' pre-release suffix (e.g. ~alpha, ~beta, ~rc1) from the
+	# base version before reconstructing it below. The tag itself (if present) was already
+	# captured globally as BUILD_RELEASE (see BUILD_VER handling), unless the user passed
+	# --release explicitly, in which case BUILD_RELEASE holds the user-specified value.
+	local base_version="$current_version"
+	if echo "$current_version" | grep -qE '~'; then
+		base_version=$(echo "$current_version" | sed -E 's/~.*$//')
+	fi
+
+	# Build the release suffix:
+	#   - Default pkgrev is 1; override with --pkgrev <n>
+	#   - Without a release id : -<pkgrev>+<distro_suffix>                (e.g. -1+debian12)
+	#   - With    a release id : -<pkgrev>+<distro_suffix>~<BUILD_RELEASE> (e.g. -1+debian12~myci1)
+	# BUILD_RELEASE here may come from:
+	#   1) the --release command line option (explicit user choice), or
+	#   2) the '~<tag>' suffix auto-detected from the hestia control file's Version,
+	#      when --release was NOT specified (see detection right after BUILD_VER is read).
+	local pkg_rev="${BUILD_PKG_REV:-1}"
+	local release_suffix="-${pkg_rev}+${distro_suffix}"
+	if [ -n "$BUILD_RELEASE" ]; then
+		release_suffix="${release_suffix}~${BUILD_RELEASE}"
+	fi
+
+	sed -i "s/^Version: \(.*\)/Version: ${base_version}${release_suffix}/" "$control_file"
+}
+
+# Detects the package that provides a shared library required by hestia-php
+detect_pkg_from_elf() {
+	local bin="$1"
+	local lib_pattern="$2"
+
+	local so_name
+	so_name=$(readelf -d "$bin" 2> /dev/null \
+		| awk '/NEEDED/ {gsub(/\[|\]/,"",$5); print $5}' \
+		| grep "$lib_pattern" \
+		| head -n1)
+
+	[[ -z "$so_name" ]] && return 0
+
+	# Try to resolve the real library path
+	local so_path=""
+	so_path=$(ldconfig -p 2> /dev/null \
+		| awk -v lib="$so_name" '$1 == lib {print $NF; exit}')
+
+	# Fallback if ldconfig does not return a result
+	if [[ -z "$so_path" ]]; then
+		so_path=$(find /lib /usr/lib -name "$so_name" 2> /dev/null | head -n1)
+	fi
+
+	[[ -z "$so_path" ]] && return 0
+
+	# Use basename because dpkg-query expects only the file name, not the full path
+	local pkg
+	pkg=$(dpkg-query -S "$(basename "$so_path")" 2> /dev/null \
+		| cut -d: -f1 \
+		| head -n1)
+
+	echo "$pkg"
 }
 
 # Set compiling directory
@@ -119,7 +217,8 @@ if [ $architecture == 'aarch64' ]; then
 else
 	BUILD_ARCH='amd64'
 fi
-DEB_DIR="$BUILD_DIR/deb"
+
+DEB_DIR="${DEB_DIR:-$BUILD_DIR/deb}"
 
 # Set packages to compile
 for i in $*; do
@@ -164,8 +263,27 @@ for i in $*; do
 		--dontinstalldeps)
 			dontinstalldeps='true'
 			;;
+		--release)
+			# Handled below via shift-style positional parsing; value captured next iteration
+			_next_is_release='true'
+			;;
+		--pkgrev)
+			# Handled below; value captured next iteration
+			_next_is_pkgrev='true'
+			;;
 		*)
-			branch="$i"
+			if [ "$_next_is_release" = 'true' ]; then
+				# Capture the value that follows --release
+				BUILD_RELEASE="$i"
+				RELEASE_EXPLICIT='true'
+				unset _next_is_release
+			elif [ "$_next_is_pkgrev" = 'true' ]; then
+				# Capture the value that follows --pkgrev
+				BUILD_PKG_REV="$i"
+				unset _next_is_pkgrev
+			else
+				branch="$i"
+			fi
 			;;
 	esac
 done
@@ -214,7 +332,23 @@ if [ -z "$BUILD_VER" ]; then
 	exit 1
 fi
 
-echo "Build version $BUILD_VER, with Nginx version $NGINX_V, PHP version $PHP_V and Web Terminal version $WEB_TERMINAL_V"
+# Auto-detect a '~<tag>' pre-release suffix (e.g. ~alpha, ~beta, ~rc1) from the hestia
+# control file's Version. If the user did NOT explicitly pass --release on the command
+# line, this detected tag becomes BUILD_RELEASE and will be propagated to ALL packages
+# (nginx, php, web-terminal, hestia), even though those individual package versions
+# don't carry the '~tag' themselves. If --release WAS explicitly given, it takes
+# precedence and the detected tag is discarded (replaced) instead.
+if echo "$BUILD_VER" | grep -qE '~'; then
+	DETECTED_PRERELEASE_TAG=$(echo "$BUILD_VER" | sed -E 's/^[^~]*~//')
+	if [ "$RELEASE_EXPLICIT" != 'true' ] && [ -n "$DETECTED_PRERELEASE_TAG" ]; then
+		BUILD_RELEASE="$DETECTED_PRERELEASE_TAG"
+	fi
+fi
+
+if [[ -n "$BUILD_RELEASE" ]]; then
+	_build_release=" ($BUILD_RELEASE)"
+fi
+echo "Build version ${BUILD_VER}${_build_release}, with Nginx version $NGINX_V, PHP version $PHP_V and Web Terminal version $WEB_TERMINAL_V"
 
 HESTIA_V="${BUILD_VER}_${BUILD_ARCH}"
 OPENSSL_V='3.5.7'
@@ -237,14 +371,20 @@ timestamp() {
 if [ "$dontinstalldeps" != 'true' ]; then
 	# Install needed software
 	# Set package dependencies for compiling
-	SOFTWARE='wget tar git curl build-essential libxml2-dev libz-dev libzip-dev libgmp-dev libcurl4-gnutls-dev unzip openssl libssl-dev pkg-config libsqlite3-dev libonig-dev rpm lsb-release'
-
+	SOFTWARE='wget tar git curl ca-certificates build-essential libxml2-dev libz-dev libzip-dev libgmp-dev libcurl4-gnutls-dev unzip openssl libssl-dev pkg-config libsqlite3-dev libonig-dev lsb-release'
 	echo "Updating system APT repositories..."
-	apt-get -qq update > /dev/null 2>&1
+	apt-get -qq update
 	echo "Installing dependencies for compilation..."
-	apt-get -qq install -y $SOFTWARE > /dev/null 2>&1
+	apt-get -qq install -y $SOFTWARE
 
-	# Installing Node.js 20.x repo
+	# In a minimal/freshly-debootstrapped chroot, dpkg trigger processing
+	# (which normally re-runs ldconfig after installing shared libs) can be
+	# deferred or skipped, leaving the dynamic linker's cache stale even
+	# though e.g. libzip.so.5 is genuinely on disk. Refresh it explicitly so
+	# binaries built against these libs (php, nginx, ...) can actually run.
+	ldconfig
+
+	# Installing Node.js 24.x repo
 	apt="/etc/apt/sources.list.d"
 	codename="$(lsb_release -s -c)"
 
@@ -253,8 +393,23 @@ if [ "$dontinstalldeps" != 'true' ]; then
 	fi
 
 	echo "Installing Node.js..."
-	apt-get -qq update > /dev/null 2>&1
-	apt -qq install -y nodejs > /dev/null 2>&1
+	apt-get -qq update > /dev/null
+	apt-get -qq install -y nodejs
+
+	# NodeSource's nodejs package bundles npm, but Debian/Ubuntu's own nodejs
+	# package doesn't (used if the NodeSource repo above failed to register,
+	# e.g. no network). Only fall back to the distro's separate npm package
+	# when npm is actually missing — requesting it unconditionally alongside
+	# nodejs in one apt-get call conflicts with NodeSource's bundled npm and
+	# fails the whole install.
+	if [ -z "$(which "npm")" ]; then
+		apt-get -qq install -y npm
+	fi
+
+	if [ -z "$(which "node")" ] || [ -z "$(which "npm")" ]; then
+		echo "Failed to install Node.js/npm"
+		exit 1
+	fi
 
 	nodejs_version=$(/usr/bin/node -v | cut -f1 -d'.' | sed 's/v//g')
 
@@ -271,8 +426,11 @@ if [ "$dontinstalldeps" != 'true' ]; then
 	fi
 fi
 
-# Get system cpu cores
-NUM_CPUS=$(grep "^cpu cores" /proc/cpuinfo | uniq | awk '{print $4}')
+# Get system cpu cores. Callers running this inside a QEMU-emulated chroot
+# (cross-arch builds) can pre-set NUM_CPUS to override this: /proc is
+# bind-mounted from the host, so the detected count would otherwise be the
+# host's real core count, not a safe parallelism level for emulated compiles.
+NUM_CPUS="${NUM_CPUS:-$(grep "^cpu cores" /proc/cpuinfo | uniq | awk '{print $4}')}"
 
 if [ "$HESTIA_DEBUG" ]; then
 	echo "OS type          : Debian / Ubuntu"
@@ -285,6 +443,7 @@ if [ "$HESTIA_DEBUG" ]; then
 	echo "Architecture     : $BUILD_ARCH"
 	echo "Debug mode       : $HESTIA_DEBUG"
 	echo "Source directory : $SRC_DIR"
+	echo "Build release    : $BUILD_RELEASE"
 fi
 
 # Generate Links for sourcecode
@@ -315,12 +474,12 @@ branch_dash=$(echo "$branch" | sed 's/\//-/g')
 #################################################################################
 
 if [ "$NGINX_B" = true ]; then
+
 	echo "Building hestia-nginx package..."
 	if [ "$CROSS" = "true" ]; then
 		echo "Cross compile not supported for hestia-nginx, hestia-php or hestia-web-terminal"
 		exit 1
 	fi
-
 	# Change to build directory
 	cd $BUILD_DIR
 
@@ -331,7 +490,7 @@ if [ "$NGINX_B" = true ]; then
 		BUILD_DIR_NGINX=$BUILD_DIR/nginx-$(echo $NGINX_V | cut -d"~" -f1)
 	fi
 
-	if [ "$KEEPBUILD" != 'true' ] || [ ! -d "$BUILD_DIR_HESTIANGINX" ]; then
+	if [ "$KEEPBUILD" != 'true' ] || [ ! -d "$BUILD_DIR_HESTIANGINX" ] || [ ! -f "$BUILD_DIR_NGINX/Makefile" ]; then
 		# Check if target directory exist
 		if [ -d "$BUILD_DIR_HESTIANGINX" ]; then
 			#mv $BUILD_DIR/hestia-nginx_$NGINX_V $BUILD_DIR/hestia-nginx_$NGINX_V-$(timestamp)
@@ -406,6 +565,7 @@ if [ "$NGINX_B" = true ]; then
 	if [ "$BUILD_ARCH" != "amd64" ]; then
 		sed -i "s/amd64/${BUILD_ARCH}/g" "$BUILD_DIR_HESTIANGINX/DEBIAN/control"
 	fi
+	apply_distro_version "$BUILD_DIR_HESTIANGINX/DEBIAN/control"
 	get_branch_file 'src/deb/nginx/copyright' "$BUILD_DIR_HESTIANGINX/DEBIAN/copyright"
 	get_branch_file 'src/deb/nginx/postinst' "$BUILD_DIR_HESTIANGINX/DEBIAN/postinst"
 	get_branch_file 'src/deb/nginx/postrm' "$BUILD_DIR_HESTIANGINX/DEBIAN/portrm"
@@ -443,12 +603,11 @@ fi
 #################################################################################
 
 if [ "$PHP_B" = true ]; then
+	echo "Building hestia-php package..."
 	if [ "$CROSS" = "true" ]; then
 		echo "Cross compile not supported for hestia-nginx, hestia-php or hestia-web-terminal"
 		exit 1
 	fi
-
-	echo "Building hestia-php package..."
 
 	BUILD_DIR_HESTIAPHP=$BUILD_DIR/hestia-php_$PHP_V
 
@@ -460,7 +619,7 @@ if [ "$PHP_B" = true ]; then
 		BUILD_DIR_PHP=$BUILD_DIR/php-$(echo $PHP_V | cut -d"~" -f1)
 	fi
 
-	if [ "$KEEPBUILD" != 'true' ] || [ ! -d "$BUILD_DIR_HESTIAPHP" ]; then
+	if [ "$KEEPBUILD" != 'true' ] || [ ! -d "$BUILD_DIR_HESTIAPHP" ] || [ ! -f "$BUILD_DIR_PHP/Makefile" ]; then
 		# Check if target directory exist
 		if [ -d $BUILD_DIR_HESTIAPHP ]; then
 			rm -r $BUILD_DIR_HESTIAPHP
@@ -524,6 +683,16 @@ if [ "$PHP_B" = true ]; then
 	if [ "$BUILD_ARCH" != "amd64" ]; then
 		sed -i "s/amd64/${BUILD_ARCH}/g" "$BUILD_DIR_HESTIAPHP/DEBIAN/control"
 	fi
+	apply_distro_version "$BUILD_DIR_HESTIAPHP/DEBIAN/control"
+
+	# Extract correct libs as depends
+	PHP_BIN="$BUILD_DIR_HESTIAPHP/usr/local/hestia/php/sbin/hestia-php"
+	LIBZIP_DEP=$(detect_pkg_from_elf "$PHP_BIN" "libzip")
+	ONIG_DEP=$(detect_pkg_from_elf "$PHP_BIN" "libonig")
+	sed -i \
+		-e "s/@LIBZIP_DEP@/${LIBZIP_DEP}/g" \
+		-e "s/@ONIG_DEP@/${ONIG_DEP}/g" \
+		"$BUILD_DIR_HESTIAPHP/DEBIAN/control"
 
 	get_branch_file 'src/deb/php/copyright' "$BUILD_DIR_HESTIAPHP/DEBIAN/copyright"
 	get_branch_file 'src/deb/php/postinst' "$BUILD_DIR_HESTIAPHP/DEBIAN/postinst"
@@ -556,12 +725,11 @@ fi
 #################################################################################
 
 if [ "$WEB_TERMINAL_B" = true ]; then
+	echo "Building hestia-web-terminal package..."
 	if [ "$CROSS" = "true" ]; then
 		echo "Cross compile not supported for hestia-nginx, hestia-php or hestia-web-terminal"
 		exit 1
 	fi
-
-	echo "Building hestia-web-terminal package..."
 
 	BUILD_DIR_HESTIA_TERMINAL=$BUILD_DIR/hestia-web-terminal_$WEB_TERMINAL_V
 
@@ -581,7 +749,7 @@ if [ "$WEB_TERMINAL_B" = true ]; then
 	if [ "$BUILD_ARCH" != "amd64" ]; then
 		sed -i "s/amd64/${BUILD_ARCH}/g" "$BUILD_DIR_HESTIA_TERMINAL/DEBIAN/control"
 	fi
-
+	apply_distro_version "$BUILD_DIR_HESTIA_TERMINAL/DEBIAN/control"
 	get_branch_file 'src/deb/web-terminal/copyright' "$BUILD_DIR_HESTIA_TERMINAL/DEBIAN/copyright"
 	get_branch_file 'src/deb/web-terminal/postinst' "$BUILD_DIR_HESTIA_TERMINAL/DEBIAN/postinst"
 	chmod +x $BUILD_DIR_HESTIA_TERMINAL/DEBIAN/postinst
@@ -682,6 +850,7 @@ if [ "$HESTIA_B" = true ]; then
 		if [ "$BUILD_ARCH" != "amd64" ]; then
 			sed -i "s/amd64/${BUILD_ARCH}/g" "$BUILD_DIR_HESTIA/DEBIAN/control"
 		fi
+		apply_distro_version "$BUILD_DIR_HESTIA/DEBIAN/control"
 		get_branch_file 'src/deb/hestia/copyright' "$BUILD_DIR_HESTIA/DEBIAN/copyright"
 		get_branch_file 'src/deb/hestia/preinst' "$BUILD_DIR_HESTIA/DEBIAN/preinst"
 		get_branch_file 'src/deb/hestia/postinst' "$BUILD_DIR_HESTIA/DEBIAN/postinst"

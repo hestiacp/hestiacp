@@ -822,6 +822,11 @@ upgrade_replace_default_config() {
 	syshealth_update_dns_config_format
 	syshealth_update_db_config_format
 	syshealth_update_user_config_format
+
+	# Protect custom Exim DNSBL entries during package upgrades
+	if [ -f "$HESTIA/conf/dnsbl.conf" ]; then
+		cp -f "$HESTIA/conf/dnsbl.conf" /etc/exim4/dnsbl.conf
+	fi
 }
 
 upgrade_restart_services() {

@@ -545,6 +545,27 @@
 									</option>
 								</select>
 							</div>
+							<div class="u-mb10">
+								<label for="v_pma_restrict" class="form-label">
+									<?= tohtml( _("Restrict phpMyAdmin to Hestia login")) ?>
+									<span class="hint">
+										<?= tohtml( _("Blocks phpMyAdmin's own login form; only reachable via the phpMyAdmin link inside Hestia (requires SSO above).")) ?>
+									</span>
+								</label>
+								<select
+									class="form-select"
+									name="v_pma_restrict"
+									id="v_pma_restrict"
+									<?php echo $_SESSION["PHPMYADMIN_KEY"] == "" ? "disabled" : ""; ?>
+								>
+									<option value="no">
+										<?= tohtml( _("Disabled")) ?>
+									</option>
+									<option value="yes" <?= tohtml($_SESSION["PMA_RESTRICT_ACCESS"] == "yes" ? "selected" : "") ?>>
+										<?= tohtml( _("Enabled")) ?>
+									</option>
+								</select>
+							</div>
 							<?php
 								$i = 0;
 								foreach ($v_mysql_hosts as $value) {

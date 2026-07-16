@@ -54,5 +54,11 @@
 	},
 	"browserslist": [
 		"defaults"
-	]
+	],
+	"allowScripts": {
+		"esbuild@0.28.1": true,
+		"esbuild@0.25.12": true,
+		"esbuild@0.21.5": true,
+		"fsevents@2.3.3": true
+	}
 }

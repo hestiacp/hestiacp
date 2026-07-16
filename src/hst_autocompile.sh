@@ -17,6 +17,12 @@ download_file() {
 	local destination=$2
 	local force=$3
 
+	if [ -z "$(which "wget")" ]; then
+		echo "Installing wget..."
+		apt-get -qq update > /dev/null
+		apt-get -qq install -y wget
+	fi
+
 	[ "$HESTIA_DEBUG" ] && echo >&2 DEBUG: Downloading file "$url" to "$destination"
 
 	# Default destination is the current working directory
@@ -321,10 +327,10 @@ if [ -f "$SRC_DIR/src/deb/hestia/control" ] && [ "$use_src_folder" == 'true' ]; 
 	PHP_V=$(cat $SRC_DIR/src/deb/php/control | grep "Version:" | cut -d' ' -f2)
 	WEB_TERMINAL_V=$(cat $SRC_DIR/src/deb/web-terminal/control | grep "Version:" | cut -d' ' -f2)
 else
-	BUILD_VER=$(curl -s https://raw.githubusercontent.com/$REPO/$branch/src/deb/hestia/control | grep "Version:" | cut -d' ' -f2)
-	NGINX_V=$(curl -s https://raw.githubusercontent.com/$REPO/$branch/src/deb/nginx/control | grep "Version:" | cut -d' ' -f2)
-	PHP_V=$(curl -s https://raw.githubusercontent.com/$REPO/$branch/src/deb/php/control | grep "Version:" | cut -d' ' -f2)
-	WEB_TERMINAL_V=$(curl -s https://raw.githubusercontent.com/$REPO/$branch/src/deb/web-terminal/control | grep "Version:" | cut -d' ' -f2)
+	BUILD_VER=$(download_file https://raw.githubusercontent.com/$REPO/$branch/src/deb/hestia/control | grep "Version:" | cut -d' ' -f2)
+	NGINX_V=$(download_file https://raw.githubusercontent.com/$REPO/$branch/src/deb/nginx/control | grep "Version:" | cut -d' ' -f2)
+	PHP_V=$(download_file https://raw.githubusercontent.com/$REPO/$branch/src/deb/php/control | grep "Version:" | cut -d' ' -f2)
+	WEB_TERMINAL_V=$(download_file https://raw.githubusercontent.com/$REPO/$branch/src/deb/web-terminal/control | grep "Version:" | cut -d' ' -f2)
 fi
 
 if [ -z "$BUILD_VER" ]; then
@@ -454,7 +460,7 @@ else
 	NGINX='https://nginx.org/download/nginx-'$(echo $NGINX_V | cut -d"~" -f1)'.tar.gz'
 fi
 
-OPENSSL='https://www.openssl.org/source/openssl-'$OPENSSL_V'.tar.gz'
+OPENSSL='https://github.com/openssl/openssl/releases/download/openssl-'$OPENSSL_V'/openssl-'$OPENSSL_V'.tar.gz'
 PCRE='https://github.com/PCRE2Project/pcre2/releases/download/pcre2-'$PCRE_V'/pcre2-'$PCRE_V'.tar.gz'
 ZLIB='https://github.com/madler/zlib/archive/refs/tags/v'$ZLIB_V'.tar.gz'
 

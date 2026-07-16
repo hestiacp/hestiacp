@@ -19,8 +19,6 @@ All notable changes to this project will be documented in this file.
 ### Features
 
 - Add: JSON files can now be edited directly in the File Manager (#5342)
-- Add classicpress to Quick Install apps (#5355)
-- Add qloapps to Quick Install apps (#5417)
 
 ### Bug fixes
 

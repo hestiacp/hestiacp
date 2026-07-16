@@ -293,6 +293,25 @@
 	}
 }
 
+.toolbar-button-menu {
+	background-color: rgb(40 40 40 / 95%);
+	box-shadow: 0 2px 16px 0 rgb(20 20 20 / 65%);
+	border-color: rgb(90 90 90 / 100%);
+
+	& li {
+		border-bottom: 1px solid #454545;
+	}
+
+	& a {
+		color: #dadada;
+
+		&:hover {
+			color: #fff;
+			background-color: rgb(70 70 70 / 60%);
+		}
+	}
+}
+
 .toolbar-input-submit {
 	border-color: #454545;
 	background-color: #424242;

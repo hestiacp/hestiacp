@@ -927,6 +927,46 @@
 	}
 }
 
+/* Dropdown menu attached to a toolbar button, e.g. the host picker on the
+   generic phpMyAdmin button (list_db.php) when an account's databases span
+   more than one MySQL host. Modeled on .toolbar-sorting-menu; kept separate
+   since that one is styled for its own specific sort-option markup. Being
+   position: absolute, this takes no layout space at all while closed, so it
+   can't affect the width of sibling toolbar buttons the way an inline
+   <select> would. */
+.toolbar-button-menu {
+	position: absolute;
+	top: 100%;
+	left: 0;
+	z-index: 1;
+	margin-top: 4px;
+	min-width: 100%;
+	overflow: hidden;
+	border-radius: var(--border-radius-base);
+	border: 1px solid rgb(255 255 255 / 100%);
+	background-color: rgb(255 255 255 / 95%);
+	box-shadow: 0 2px 14px 0 rgb(20 20 20 / 35%);
+
+	& li {
+		border-bottom: 1px solid #ddd;
+
+		&:last-child {
+			border-bottom: none;
+		}
+	}
+
+	& a {
+		display: block;
+		padding: 8px 15px;
+		color: #2e2e2e;
+		white-space: nowrap;
+
+		&:hover {
+			background-color: #f0f0f0;
+		}
+	}
+}
+
 /* Units table
    ========================================================================== */
 

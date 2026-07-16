@@ -214,7 +214,12 @@ if (!empty($_GET)) {
 			// create_temp_user_all()/delete_temp_user_all().
 			$database = !empty($_GET["database"]) ? $_GET["database"] : "__all__";
 			$user = $_GET["user"];
-			$host = "localhost";
+			// v-add-database-temp-user-all already accepts a HOST argument
+			// (it filters v-list-databases by it) -- read it from the link
+			// instead of hardcoding "localhost", so the generic "all
+			// databases" button can target whichever single host actually
+			// holds the account's databases (see list_db.php).
+			$host = !empty($_GET["host"]) ? $_GET["host"] : "localhost";
 			$token = $_GET["hestia_token"];
 			if (is_numeric($_GET["exp"])) {
 				$time = $_GET["exp"];

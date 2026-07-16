@@ -439,23 +439,23 @@ add_mysql_database_temp_user_all() {
 	mysql_ver_sub_sub=$(echo $mysql_ver | cut -d '.' -f2)
 
 	if [ "$mysql_fork" = "mysql" ] && [ "$mysql_ver_sub" -ge 8 ]; then
-		query="CREATE USER \`$dbuser\`@localhost
+		query="CREATE USER \`$dbuser\`@\`%\`
 			IDENTIFIED BY '$dbpass'"
 		mysql_query "$query" > /dev/null
 
 		for database in $databases; do
-			query="GRANT ALL ON \`$database\`.* TO \`$dbuser\`@localhost"
+			query="GRANT ALL ON \`$database\`.* TO \`$dbuser\`@\`%\`"
 			mysql_query "$query" > /dev/null
 		done
 	else
 		first="yes"
 		for database in $databases; do
 			if [ "$first" = "yes" ]; then
-				query="GRANT ALL ON \`$database\`.* TO \`$dbuser\`@localhost
+				query="GRANT ALL ON \`$database\`.* TO \`$dbuser\`@\`%\`
 	    			IDENTIFIED BY '$dbpass'"
 				first="no"
 			else
-				query="GRANT ALL ON \`$database\`.* TO \`$dbuser\`@localhost"
+				query="GRANT ALL ON \`$database\`.* TO \`$dbuser\`@\`%\`"
 			fi
 			mysql_query "$query" > /dev/null
 		done
@@ -465,10 +465,10 @@ add_mysql_database_temp_user_all() {
 delete_mysql_database_temp_user_all() {
 	mysql_connect $host
 	for database in $databases; do
-		query="REVOKE ALL ON \`$database\`.* FROM \`$dbuser\`@localhost"
+		query="REVOKE ALL ON \`$database\`.* FROM \`$dbuser\`@\`%\`"
 		mysql_query "$query" > /dev/null
 	done
-	query="DROP USER '$dbuser'@'localhost'"
+	query="DROP USER '$dbuser'@'%'"
 	mysql_query "$query" > /dev/null
 }
 

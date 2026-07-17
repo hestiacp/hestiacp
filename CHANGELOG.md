@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 
 ## [1.9.7] - Service Release
 
+### Version name changes
+
+Due to the implementation for building ARM64 packages on X86-64 hardware the versions of hestia-nginx / hestia-php has been changed the format used for 1.10 and forward.
+
+- hestia-nginx-x.y.z-revision-os+release_architecture.deb
+- hestia-php-x.y.z-revision-os+release_architecture.deb
+
+It has no effect on the working. Both "hestia" package and "hestia-web-terminal" will follow in the future.
+
 ### Security
 
 - Unauthenticated Remote Code Execution via Session Deserialisation Mismatch in Web Terminal ([GHSA-gh6f-9gpr-x9m2](https://github.com/hestiacp/hestiacp/security/advisories/GHSA-gh6f-9gpr-x9m2))

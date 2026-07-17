@@ -11,6 +11,7 @@ $dist_config["frontend_config"]["editable"] = [
 	".txt",
 	".css",
 	".js",
+	".json",
 	".ts",
 	".html",
 	".php",

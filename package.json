@@ -1,7 +1,7 @@
 {
 	"name": "hestia",
 	"private": true,
-	"version": "1.9.6",
+	"version": "1.9.7",
 	"description": "An open-source Linux web server control panel.",
 	"repository": "https://github.com/hestiacp/hestiacp",
 	"license": "GPL-3.0-or-later",
@@ -58,5 +58,11 @@
 	},
 	"browserslist": [
 		"defaults"
-	]
+	],
+	"allowScripts": {
+		"esbuild@0.28.1": true,
+		"esbuild@0.25.12": true,
+		"esbuild@0.21.5": true,
+		"fsevents@2.3.3": true
+	}
 }

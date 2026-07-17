@@ -31,7 +31,7 @@ HESTIA_COMMON_DIR="$HESTIA/install/common"
 VERBOSE='no'
 
 # Define software versions
-HESTIA_INSTALL_VER='1.9.6'
+HESTIA_INSTALL_VER='1.9.7'
 # Supported PHP versions
 multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0" "8.1" "8.2" "8.3" "8.4" "8.5")
 # One of the following PHP versions is required for Roundcube / phpmyadmin
@@ -517,7 +517,16 @@ if [ -d /etc/netplan ] && [ -z "$force" ]; then
 		echo
 		echo '!!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!!'
 		echo
-		check_result 1 "Unable to detect netplan configuration."
+		#check_result 1 "Unable to detect netplan configuration."
+
+		echo "Unable to detect netplan configuration."
+		echo
+
+		read -p 'Would you like to continue without netplan? [Y/n]: ' answer
+
+		if [ "$answer" != 'y' ] && [ "$answer" != 'Y' ] && [ "$answer" != '' ]; then
+			exit 1
+		fi
 	fi
 fi
 

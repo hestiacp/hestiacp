@@ -115,7 +115,7 @@ if [[ "$quota" -eq '0' ]]; then
 	quota='unlimited'
 fi
 
-str="ACCOUNT='$account' ALIAS='' AUTOREPLY='no' FWD='' FWD_ONLY=''"
+str="ACCOUNT='$account' ALIAS='' AUTOREPLY='no' AUTOREPLY_START='' AUTOREPLY_END='' FWD='' FWD_ONLY=''"
 str="$str MD5='$md5' QUOTA='$quota' U_DISK='0' SUSPENDED='no'"
 str="$str TIME='$time' DATE='$date'"
 echo "$str" >> $USER_DATA/mail/$domain.conf

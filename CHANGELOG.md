@@ -28,6 +28,7 @@ It has no effect on the working. Both "hestia" package and "hestia-web-terminal"
 ### Features
 
 - Add: JSON files can now be edited directly in the File Manager (#5342)
+- Add: Optional start/end date schedule for mail account auto-reply messages, applied daily by the new v-update-mail-autoreplies job
 
 ### Bug fixes
 

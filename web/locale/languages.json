@@ -48,6 +48,8 @@
 	"ko": ["Korean"],
 	"ka_locale": ["\u10e5\u10d0\u10e0\u10d7\u10e3\u10da\u10d8 \u10d4\u10dc\u10d0"],
 	"ka": ["Georgian"],
+	"lo_locale": ["\u0e9e\u0eb2\u0eaa\u0eb2\u0ea5\u0eb2\u0ea7"],
+    "lo": ["Lao"],
 	"ja_locale": ["\u65e5\u672c\u8a9e"],
 	"ja": ["Japanese"],
 	"it_locale": ["Italiano"],

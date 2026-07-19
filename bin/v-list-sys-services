@@ -275,7 +275,7 @@ if [ -n "$DB_SYSTEM" ] && [ "$DB_SYSTEM" != 'remote' ]; then
 			fi
 		fi
 		if [ "$service" == 'pgsql' ]; then
-			if [ -z "$(ls -d /usr/lib/postgresql/*/bin/postgres 2>/dev/null)" ]; then
+			if [ -z "$(ls -d /usr/lib/postgresql/*/bin/postgres 2> /dev/null)" ]; then
 				continue
 			fi
 			service='postgresql'

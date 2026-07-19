@@ -6,7 +6,7 @@
 # https://www.hestiacp.com/
 #
 # Currently Supported Versions:
-# Ubuntu 22.04, 24.04 LTS
+# Ubuntu 22.04, 24.04, 26.04 LTS
 #
 # ======================================================== #
 
@@ -32,12 +32,37 @@ VERBOSE='no'
 
 # Define software versions
 HESTIA_INSTALL_VER='1.10.0~alpha'
+
+# Build the full Hestia version
+# Split base version (1.10.0) from channel suffix (~alpha / ~beta), if present
+HESTIA_BASE_VER="${HESTIA_INSTALL_VER%%~*}"
+if [[ "$HESTIA_INSTALL_VER" == *"~"* ]]; then
+	HESTIA_CHANNEL="~${HESTIA_INSTALL_VER#*~}"
+else
+	HESTIA_CHANNEL=""
+fi
+# Build the distro identifier
+case "$os" in
+	ubuntu)
+		os_id="ubuntu${release}"
+		;;
+	debian)
+		os_id="debian${release}"
+		;;
+	*)
+		echo "Error: unsupported distribution for determining Hestia version ($os)"
+		exit 1
+		;;
+esac
+# Final version string, e.g.: 1.10.0-1+deb13~alpha / 1.10.0-1+ubuntu26.04
+HESTIA_INSTALL_BUILD="${HESTIA_BASE_VER}-1+${os_id}${HESTIA_CHANNEL}"
+
 # Supported PHP versions
 multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0" "8.1" "8.2" "8.3" "8.4" "8.5")
 # One of the following PHP versions is required for Roundcube / phpmyadmin
-multiphp_required=("7.3" "7.4" "8.0" "8.1" "8.2" "8.3")
+multiphp_required=("8.1" "8.2" "8.3" "8.4" "8.5")
 # Default PHP version if none supplied
-fpm_v="8.3"
+fpm_v="8.5"
 # MariaDB version
 mariadb_v="11.8"
 # Node.js version
@@ -46,7 +71,7 @@ node_v="24"
 # Defining software pack for all distros
 software="acl apache2 apache2.2-common apache2-suexec-custom apache2-utils apparmor-utils at awstats bc bind9 bsdmainutils bsdutils
   clamav-daemon cron curl dnsutils dovecot-imapd dovecot-managesieved dovecot-pop3d dovecot-sieve e2fslibs e2fsprogs
-  exim4 exim4-daemon-heavy expect fail2ban flex ftp git hestia=${HESTIA_INSTALL_VER} hestia-nginx hestia-php hestia-web-terminal
+  exim4 exim4-daemon-heavy expect fail2ban flex ftp git hestia=${HESTIA_INSTALL_BUILD} hestia-nginx hestia-php hestia-web-terminal
   idn2 imagemagick ipset jq libapache2-mod-fcgid libapache2-mod-php$fpm_v libapache2-mod-rpaf libonig5 libzip4 lsb-release
   lsof mariadb-client mariadb-common mariadb-server mc mysql-client mysql-common mysql-server nginx nodejs openssh-server
   php$fpm_v php$fpm_v-apcu php$fpm_v-bz2 php$fpm_v-cgi php$fpm_v-cli php$fpm_v-common php$fpm_v-curl php$fpm_v-gd
@@ -828,14 +853,20 @@ curl -s https://nginx.org/keys/nginx_signing.key | gpg --dearmor | tee /usr/shar
 # Installing sury PHP repo
 # add-apt-repository does not yet support signed-by see: https://bugs.launchpad.net/ubuntu/+source/software-properties/+bug/1862764
 echo "[ * ] PHP"
-if [ "$release" = '24.04' ]; then
-	# Workaround for Ubuntu 24.04 due to weak key warning it sheduled to be fixed in 24.04.1
-	echo 'APT::Key::Assert-Pubkey-Algo "";' > /etc/apt/apt.conf.d/99weakkey-warning
+if [[ "$release" = "22.04" ]] || [[ "$release" = "24.04" ]]; then
+	if [ "$release" = '24.04' ]; then
+		# Workaround for Ubuntu 24.04 due to weak key warning it sheduled to be fixed in 24.04.1
+		echo 'APT::Key::Assert-Pubkey-Algo "";' > /etc/apt/apt.conf.d/99weakkey-warning
+	fi
+	LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php > /dev/null 2>&1
+else
+	# Ubuntu 26.04 and later use the Sury repository instead of a PPA
+	echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/sury-keyring.gpg] https://packages.sury.org/php/ $codename main" > $apt/php.list
+	curl -s https://packages.sury.org/php/apt.gpg | gpg --dearmor | tee /usr/share/keyrings/sury-keyring.gpg > /dev/null 2>&1
 fi
-LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php > /dev/null 2>&1
 
 # Installing sury Apache2 repo
-if [ "$apache" = 'yes' ] && [ "$release" != '24.04' ]; then
+if [ "$apache" = 'yes' ] && [ "$release" = '22.04' ]; then
 	echo "[ * ] Apache2"
 	echo "deb http://ppa.launchpad.net/ondrej/apache2/ubuntu $codename main" > $apt/apache2.list
 fi
@@ -1067,10 +1098,13 @@ if [ -d "$withdebs" ]; then
 	software=$(echo "$software" | sed -e "s/hestia-nginx//")
 	software=$(echo "$software" | sed -e "s/hestia-php//")
 	software=$(echo "$software" | sed -e "s/hestia-web-terminal//")
-	software=$(echo "$software" | sed -e "s/hestia=${HESTIA_INSTALL_VER}//")
+	software=$(echo "$software" | sed -e "s/hestia=${HESTIA_INSTALL_BUILD}//")
 fi
 if [ "$release" = '24.04' ]; then
 	software=$(echo "$software" | sed -e "s/libzip4/libzip4t64/")
+fi
+if [ "$release" = '26.04' ]; then
+	software=$(echo "$software" | sed -e "s/libzip4/libzip5/")
 fi
 
 #----------------------------------------------------------#
@@ -1223,9 +1257,12 @@ if [ -z "$(grep nologin /etc/shells)" ]; then
 fi
 
 # Configuring NTP
-sed -i 's/#NTP=/NTP=pool.ntp.org/' /etc/systemd/timesyncd.conf
-systemctl enable systemd-timesyncd
-systemctl start systemd-timesyncd
+# Ubuntu 26.04 doesn't install systemd-timesyncd, by default it uses Chrony
+if [[ "$release" = "22.04" ]] || [[ "$release" = "24.04" ]]; then
+	sed -i 's/#NTP=/NTP=pool.ntp.org/' /etc/systemd/timesyncd.conf
+	systemctl enable systemd-timesyncd
+	systemctl start systemd-timesyncd
+fi
 
 # Check iptables paths and add symlinks when necessary
 if [ ! -e "/sbin/iptables" ]; then
@@ -1284,6 +1321,10 @@ echo "[ * ] Configuring Hestia Control Panel..."
 # Installing sudo configuration
 mkdir -p /etc/sudoers.d
 cp -f $HESTIA_COMMON_DIR/sudo/hestiaweb /etc/sudoers.d/
+# Ubuntu 26.04 and the new rust implementation of sudo doesn't support !requiretty
+if [[ "$release" != "22.04" ]] && [[ "$release" != "24.04" ]]; then
+	sed -i '/^Defaults:root !requiretty$/d' /etc/sudoers.d/hestiaweb
+fi
 chmod 440 /etc/sudoers.d/hestiaweb
 
 # Add Hestia global config
@@ -1514,7 +1555,7 @@ echo "[ * ] Configuring OpenSSL to improve TLS performance..."
 tls13_ciphers="TLS_AES_128_GCM_SHA256:TLS_CHACHA20_POLY1305_SHA256:TLS_AES_256_GCM_SHA384"
 if [ "$release" = "22.04" ]; then
 	sed -i '/^system_default = system_default_sect$/a system_default = hestia_openssl_sect\n\n[hestia_openssl_sect]\nCiphersuites = '"$tls13_ciphers"'\nOptions = PrioritizeChaCha' /etc/ssl/openssl.cnf
-elif [ "$release" = "24.04" ]; then
+else
 	if ! grep -qw "^ssl_conf = ssl_sect$" /etc/ssl/openssl.cnf 2> /dev/null; then
 		sed -i '/providers = provider_sect$/a ssl_conf = ssl_sect' /etc/ssl/openssl.cnf
 	fi
@@ -1969,6 +2010,18 @@ if [ "$named" = 'yes' ]; then
 			systemctl restart apparmor >> $LOG
 		fi
 	fi
+
+	# Ubuntu 26.04 removed the named.conf.default-zones file if doesn't exsists remove it from the config file
+	if [ ! -f /etc/bind/named.conf.default-zones ]; then
+		sed -i "/^include.*named.conf.default-zones/d" /etc/bind/named.conf
+	fi
+
+	# Add root-hints include after named.conf.local if missing
+	if [[ -f /etc/bind/named.conf.root-hints ]] \
+		&& ! grep -q 'include.*named.conf.root-hints' /etc/bind/named.conf 2> /dev/null; then
+		sed -i '/include.*named\.conf\.local/a include "\/etc\/bind\/named.conf.root-hints";' /etc/bind/named.conf
+	fi
+
 	update-rc.d bind9 defaults > /dev/null 2>&1
 	systemctl start bind9
 	check_result $? "bind9 start failed"
@@ -2087,13 +2140,12 @@ fi
 #----------------------------------------------------------#
 #                  Configure SpamAssassin                  #
 #----------------------------------------------------------#
-
 if [ "$spamd" = 'yes' ]; then
 	# Set SpamAssassin Service Name
-	if [ "$release" = '24.04' ]; then
-		spamd_srvname="spamd"
-	else
+	if [ "$release" = '22.04' ]; then
 		spamd_srvname="spamassassin"
+	else
+		spamd_srvname="spamd"
 	fi
 	echo "[ * ] Configuring SpamAssassin..."
 	update-rc.d $spamd_srvname defaults > /dev/null 2>&1
@@ -2263,6 +2315,11 @@ fi
 
 echo "[ * ] Configuring File Manager..."
 $HESTIA/bin/v-add-sys-filemanager quiet
+# Configuring sudoers to remove unsupported requiretty option on Ubuntu 26.04
+ubuntu_major="${release%%.*}"
+if [[ "$ubuntu_major" -ge 26 ]]; then
+	echo 'KexAlgorithms +diffie-hellman-group-exchange-sha256' > /etc/ssh/sshd_config.d/hestia-kex.conf
+fi
 
 #----------------------------------------------------------#
 #              Configure Web terminal                      #

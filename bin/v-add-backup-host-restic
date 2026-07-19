@@ -82,6 +82,10 @@ if [[ $repo == "rclone:"* ]]; then
 	fi
 fi
 
+# Normalize repository path by removing any trailing slash so the
+# per-user repo path is always built as "$REPO/$user" (see #5100)
+repo="${repo%/}"
+
 echo "REPO='$repo'" > /usr/local/hestia/conf/restic.conf
 echo "SNAPSHOTS='$snapshots'" >> /usr/local/hestia/conf/restic.conf
 echo "KEEP_DAILY='$daily'" >> /usr/local/hestia/conf/restic.conf

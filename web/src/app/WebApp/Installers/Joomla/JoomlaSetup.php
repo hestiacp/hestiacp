@@ -4,77 +4,79 @@ declare(strict_types=1);
 
 namespace Hestia\WebApp\Installers\Joomla;
 
-use Hestia\System\Util;
 use Hestia\WebApp\BaseSetup;
 use Hestia\WebApp\InstallationTarget\InstallationTarget;
 
-class JoomlaSetup extends BaseSetup
-{
+class JoomlaSetup extends BaseSetup {
     protected array $info = [
-        'name' => 'Joomla',
-        'group' => 'cms',
-        'version' => '5.2.3',
-        'thumbnail' => 'joomla_thumb.png',
+        "name" => "Joomla",
+        "group" => "cms",
+        "version" => "6.1.2",
+        "thumbnail" => "joomla-logo.svg",
     ];
 
     protected array $config = [
-        'form' => [
-            'admin_username' => [
-                'type' => 'text',
-                'value' => 'admin',
-                'placeholder' => 'Admin Username',
+        "form" => [
+            "site_name" => [
+                "type" => "text",
+                "value" => "Joomla",
             ],
-            'admin_password' => [
-                'type' => 'password',
-                'value' => '',
-                'placeholder' => 'Admin Password',
+            "admin_user" => [
+                "type" => "text",
+                "value" => "",
             ],
-            'admin_email' => [
-                'type' => 'text',
-                'value' => '',
-                'placeholder' => 'Admin Email',
+            "admin_username" => [
+                "type" => "text",
+                "value" => "joomlaadmin",
             ],
-        ],
-        'database' => true,
-        'resources' => [
-            'archive' => [
-                'src' => 'https://downloads.joomla.org/cms/'
-                    . 'joomla5/5-2-3/Joomla_5-2-3-Stable-Full_Package.zip?format=zip',
+            "password" => [
+                "type" => "password",
+                "value" => "",
+            ],
+            "email" => [
+                "type" => "text",
+                "value" => "",
             ],
         ],
-        'server' => [
-            'nginx' => [
-                'template' => 'joomla',
+        "database" => true,
+        "resources" => [
+            "archive" => [
+                "src" =>
+                    "https://downloads.joomla.org/cms/joomla6/6-1-2/Joomla_6-1-2-Stable-Full_Package.zip?format=zip",
             ],
-            'php' => [
-                'supported' => ['7.4', '8.0', '8.1', '8.2', '8.3'],
+        ],
+        "server" => [
+            "nginx" => [
+                "template" => "joomla",
+            ],
+            "php" => [
+                "supported" => ["8.3", "8.4"],
             ],
         ],
     ];
 
-    protected function setupApplication(InstallationTarget $target, array $options): void
-    {
+    protected function setupApplication(InstallationTarget $target, array $options): void {
         $this->appcontext->moveFile(
-            $target->getDocRoot('htaccess.txt'),
-            $target->getDocRoot('.htaccess'),
+            $target->getDocRoot("htaccess.txt"),
+            $target->getDocRoot(".htaccess"),
         );
 
         $this->appcontext->runPHP(
-            $options['php_version'],
-            $target->getDocRoot('installation/joomla.php'),
+            $options["php_version"],
+            $target->getDocRoot("installation/joomla.php"),
             [
-                'install',
-                '--site-name=Joomla',
-                '--admin-user=' . $options['admin_username'],
-                '--admin-username=' . $options['admin_username'],
-                '--admin-password=' . $options['admin_password'],
-                '--admin-email=' . $options['admin_email'],
-                '--db-user=' . $target->database->user,
-                '--db-pass=' . $target->database->password,
-                '--db-name=' . $target->database->name,
-                '--db-host=' . $target->database->host,
-                '--db-type=mysqli',
-                '--no-interaction',
+                "install",
+                "--site-name=" . $options["site_name"],
+                "--admin-user=" . $options["admin_user"],
+                "--admin-username=" . $options["admin_username"],
+                "--admin-password=" . $options["password"],
+                "--admin-email=" . $options["email"],
+                "--db-user=" . $target->database->user,
+                "--db-pass=" . $target->database->password,
+                "--db-name=" . $target->database->name,
+                "--db-host=" . $target->database->host,
+                "--db-type=mysqli",
+                "--db-encryption=0",
             ],
         );
     }

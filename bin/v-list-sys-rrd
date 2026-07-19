@@ -52,7 +52,7 @@ json_list() {
 			if [ "$type" = 'db' ]; then
 				db_type=$(echo $rrd | cut -f 1 -d _ | sed -e 's/mysql/MySQL/g' \
 					-e 's/pgsql/PostgreSQL/g')
-				db_host=$(echo $rrd | cut -f 2 -d _)
+				db_host=$(echo $rrd | cut -f 2- -d _)
 				title="$db_type Usage on $db_host"
 			fi
 			echo -e "\t\"$i\": {"

@@ -19,14 +19,29 @@
 
 upgrade_config_set_value 'UPGRADE_UPDATE_WEB_TEMPLATES' 'false'
 upgrade_config_set_value 'UPGRADE_UPDATE_DNS_TEMPLATES' 'false'
-upgrade_config_set_value 'UPGRADE_UPDATE_MAIL_TEMPLATES' 'true'
-upgrade_config_set_value 'UPGRADE_REBUILD_USERS' 'no'
-upgrade_config_set_value 'UPGRADE_UPDATE_FILEMANAGER_CONFIG' 'true'
+upgrade_config_set_value 'UPGRADE_UPDATE_FILEMANAGER_CONFIG' 'false'
+upgrade_config_set_value 'UPGRADE_UPDATE_MAIL_TEMPLATES' 'false'
+upgrade_config_set_value 'UPGRADE_REBUILD_USERS' 'false'
 
-if grep -q "internal-sftp-server" /etc/ssh/sshd_config; then
+# Fixing Subsystem sftp config for current installations
+reload_ssh=false
+echo "[ * ] Fixing Subsystem sftp config"
+if grep -q "^Subsystem.*internal-sftp-.*" /etc/ssh/sshd_config; then
 	sed -i 's/Subsystem sftp internal-sftp-.*/Subsystem sftp internal-sftp/' /etc/ssh/sshd_config
+	reload_ssh=true
 fi
 
-if grep -q "Subsystem sftp /usr/lib/sftp-server-" /etc/ssh/sshd_config; then
-	sed -i 's/Subsystem sftp \/usr\/lib\/sftp-server-.*/Subsystem sftp \/usr\/lib\/sftp-server/' /etc/ssh/sshd_config
+if grep -q "^Subsystem.*/usr/lib/sftp-server-" /etc/ssh/sshd_config; then
+	sed -i 's/^Subsystem sftp \/usr\/lib\/sftp-server-.*/Subsystem sftp \/usr\/lib\/sftp-server/' /etc/ssh/sshd_config
+	reload_ssh=true
 fi
+[[ $reload_ssh == true ]] && systemctl reload ssh
+
+# Enhance - Update current composer installations
+echo "[ * ] Updating composer for users:"
+for huser in $("$HESTIA/bin/v-list-users" list); do
+	if [[ -f "/home/$huser/.composer/composer" ]]; then
+		echo "      - $huser..."
+		"$HESTIA/bin/v-add-user-composer" "$huser" 2 yes &> /dev/null
+	fi
+done

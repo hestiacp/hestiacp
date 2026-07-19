@@ -16,7 +16,7 @@ if( !defined("HESTIA_DIR_BIN") ){
 			echo "<h3 class=\"u-mb10\">Server Variables</h3>";
 			foreach ($_SERVER as $key => $val) {
 				if(is_string($val)){
-					echo "<span class=\"u-text-bold\">" . $key . "= </span> " . $val . " ";
+					echo "<span class=\"u-text-bold\">" . $key . "= </span> " . tohtml($val) . " ";
 				}
 			}
   	?>
@@ -24,12 +24,12 @@ if( !defined("HESTIA_DIR_BIN") ){
 			echo "<h3 class=\"u-mb10 u-mt10\">Session Variables</h3>";
 			foreach ($_SESSION as $key => $val) {
 				if(is_string($val)){
-					echo "<span class=\"u-text-bold\">" . $key . "= </span> " . $val . " ";
+					echo "<span class=\"u-text-bold\">" . $key . "= </span> " . tohtml($val) . " ";
 				}else if(is_array($val)){
 					array_walk_recursive($val, function (&$value) {
 							$value = htmlentities($value);
 					});
-					echo "<span class=\"u-text-bold\">" . $key . "= </span> "  .var_dump($val). " ";
+					echo "<span class=\"u-text-bold\">" . $key . "= </span> "  .tohtml(var_export($val, true)). " ";
 				}
 			}
   	?>
@@ -37,12 +37,12 @@ if( !defined("HESTIA_DIR_BIN") ){
 			echo "<h3 class=\"u-mb10 u-mt10\">POST Variables</h3>";
 			foreach ($_POST as $key => $val) {
 				if(is_string($val)){
-					echo "<span class=\"u-text-bold\">" . $key . "= </span> " . $val . " ";
+					echo "<span class=\"u-text-bold\">" . $key . "= </span> " . tohtml($val) . " ";
 				}else if(is_array($val)){
 					array_walk_recursive($val, function (&$value) {
 							$value = htmlentities($value);
 					});
-					echo "<span class=\"u-text-bold\">" . $key . "= </span> "  .var_dump($val). " ";
+					echo "<span class=\"u-text-bold\">" . $key . "= </span> "  .tohtml(var_export($val, true)). " ";
 				}
 			}
   	?>
@@ -50,12 +50,12 @@ if( !defined("HESTIA_DIR_BIN") ){
 			echo "<h3 class=\"u-mb10 u-mt10\">GET Variables</h3>";
 			foreach ($_GET as $key => $val) {
 				if(is_string($val)){
-					echo "<span class=\"u-text-bold\">" . $key . "= </span> " . $val . " ";
+					echo "<span class=\"u-text-bold\">" . $key . "= </span> " . tohtml($val) . " ";
 				}else if(is_array($val)){
 					array_walk_recursive($val, function (&$value) {
 							$value = htmlentities($value);
 					});
-					echo "<span class=\"u-text-bold\">" . $key . "= </span> "  .var_dump($val). " ";
+					echo "<span class=\"u-text-bold\">" . $key . "= </span> "  .tohtml(var_export($val, true)). " ";
 				}
 			}
   	?>

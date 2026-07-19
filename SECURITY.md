@@ -4,7 +4,7 @@ Welcome and thanks for taking interest in Hestia CP!
 
 We are mostly interested in reports by actual Hestia CP users but all high quality contributions are welcome.
 
-If you believe that you have have discovered a vulnerability in Hestia Control Panel, please let our development team know by submitng a [vulnrebility disclouse via Github](https://github.com/hestiacp/hestiacp/security/advisories/new).
+If you believe you have discovered a vulnerability in Hestia Control Panel, please notify our development team by submitting a [vulnerability disclosure via GitHub](https://github.com/hestiacp/hestiacp/security/advisories/new).
 
 We ask you to include a detailed description of the vulnerability, a list of services involved (e.g. exim, dovecot) and the versions which you've tested, full steps to reproduce the vulnerability, and include your findings and expected results.
 

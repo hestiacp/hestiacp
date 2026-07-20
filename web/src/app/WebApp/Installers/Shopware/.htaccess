@@ -1,0 +1,17 @@
+DirectoryIndex index.html index.php
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^(.*)$ public/$1 [QSA,L]
+</IfModule>
+<IfModule mod_negotiation.c>
+    Options -MultiViews
+</IfModule>
+<IfModule mod_alias.c>
+    # Restrict access to VCS directories
+    RedirectMatch 404 /\\.(svn|git|hg|bzr|cvs)(/|$)
+
+    # Restrict access to root folder files
+    RedirectMatch 404 /(composer\.(json|lock|phar)|README\.md|\.gitignore|.*\.dist|\.env.*)$
+</IfModule>
+

@@ -34,6 +34,16 @@ format_domain
 format_domain_idn
 # TODO: $domain_idn not used in this script - maybe $domain should be converted to $doman_idn ?
 
+# Normalize the new domain name the same way domains are normalized on creation
+# (strip leading www., lowercase, drop trailing dots). Without this a www.-prefixed
+# rename target is stored verbatim, but every other command runs format_domain and
+# strips the www., so the renamed domain can no longer be managed (see #4958).
+orig_domain="$domain"
+domain="$new_domain"
+format_domain
+new_domain="$domain"
+domain="$orig_domain"
+
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#

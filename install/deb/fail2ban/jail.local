@@ -1,3 +1,6 @@
+[DEFAULT]
+banaction_allports = hestia
+
 [ssh-iptables]
 enabled  = true
 filter   = sshd

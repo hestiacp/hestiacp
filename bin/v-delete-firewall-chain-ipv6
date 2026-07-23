@@ -1,0 +1,72 @@
+#!/bin/bash
+# info: delete firewall IPv6 chain
+# options: CHAIN
+#
+# example: v-delete-firewall-chain-ipv6 WEB
+#
+# This function deletes a chain from the IPv6 firewall
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+chain=$(echo "$1" | tr '[:lower:]' '[:upper:]')
+
+ip6tables='/sbin/ip6tables'
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source "$HESTIA/func/main.sh"
+# shellcheck source=/usr/local/hestia/func/firewall.sh
+source "$HESTIA/func/firewall.sh"
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '1' "$#" 'CHAIN'
+is_format_valid 'chain'
+is_system_enabled "$FIREWALL_SYSTEM" 'FIREWALL_SYSTEM'
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Self heal ip6tables links
+heal_ip6tables_links
+
+# Deleting chain
+chains="$HESTIA/data/firewallv6/chains.conf"
+banlist="$HESTIA/data/firewallv6/banlist.conf"
+chain_param=""
+[ -f "$chains" ] && chain_param=$(grep "CHAIN='$chain'" "$chains")
+if [ -n "$chain_param" ]; then
+	parse_object_kv_list "$chain_param"
+	sed -i "/CHAIN='$chain'/d" "$chains"
+	[ -f "$banlist" ] && sed -i "/CHAIN='$chain'/d" "$banlist"
+	$ip6tables -D INPUT -p $PROTOCOL \
+		--dport $PORT -j fail2ban-$CHAIN 2> /dev/null
+fi
+
+# Deleting ip6tables chain
+$ip6tables -F fail2ban-$CHAIN 2> /dev/null
+$ip6tables -X fail2ban-$CHAIN 2> /dev/null
+
+# Changing permissions
+[ -f "$chains" ] && chmod 660 "$chains"
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Logging
+log_event "$OK" "$ARGUMENTS"
+
+exit

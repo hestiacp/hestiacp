@@ -975,6 +975,114 @@ is_ipv6_cidr_format_valid() {
 	fi
 }
 
+# ---------------------------------------------------------------------------
+# hst_detect_ip_version() — pure-bash IP version detector
+#
+# Purpose:
+#   Determines whether an address string is IPv4 or IPv6 without spawning a
+#   PHP subprocess. Used by bin/ scripts that need to branch behavior based
+#   on IP version (e.g. choosing iptables vs ip6tables, routing to the right
+#   firewall chain, deciding whether to bracket an address in nginx configs).
+#
+# Input:  $1 — bare IP or CIDR notation (10.0.0.1, 10.0.0.1/24,
+#               2001:db8::1, 2001:db8::1/64)
+# Output: echoes "4" (IPv4), "6" (IPv6), or "" (invalid/unrecognized)
+#
+# Exit status bit-flags (for callers that need fine-grained error info):
+#   bit 0 (1) — address part is not a valid IPv4 quad
+#   bit 1 (2) — IPv4 prefix length out of range (>32)
+#   bit 2 (4) — address part is not a valid IPv6 string
+#   bit 3 (8) — IPv6 prefix length out of range (>128)
+#
+# Compatibility:
+#   Works on bash 4.x (Debian 10+). Does NOT require Python, PHP, or ipcalc.
+#   The existing PHP-based validators (is_ip_format_valid, is_ipv6_format_valid)
+#   remain the authoritative format validators; this function is for branching
+#   logic, not for validation that exits on failure.
+#
+# get_ip_format() is a backward-compatible alias kept for bin/ scripts that
+# were already calling it before this function was named hst_detect_ip_version.
+# ---------------------------------------------------------------------------
+hst_detect_ip_version() {
+	local input_addr="${1}"
+	local status_bits=0
+	local detected_version=""
+
+	# Strip prefix/CIDR to get bare IP
+	local ip_without_prefix="${input_addr%/*}"
+
+	# ── IPv4 detection ─────────────────────────────────────────────────
+	local ipv4_octet='([1-9]?[0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])'
+	if [[ $ip_without_prefix =~ ^$ipv4_octet\.$ipv4_octet\.$ipv4_octet\.$ipv4_octet$ ]]; then
+		detected_version="4"
+	else
+		status_bits=1 # BIT 0: not a valid IPv4 address
+	fi
+
+	# If a prefix/CIDR was supplied, validate it AND re-check IPv4 address validity
+	if [ "$input_addr" != "$ip_without_prefix" ]; then
+		local prefix_len="${input_addr#${ip_without_prefix}/}"
+		detected_version="" # reset until both address and prefix validate
+		# Re-validate the bare IPv4 address before accepting the CIDR form
+		if [[ $ip_without_prefix =~ ^$ipv4_octet\.$ipv4_octet\.$ipv4_octet\.$ipv4_octet$ ]]; then
+			if [[ "$prefix_len" =~ ^[0-9]+$ ]] && [ "$prefix_len" -le 32 ]; then
+				detected_version="4"
+			else
+				status_bits=$((status_bits | 2)) # BIT 1: bad prefix length
+			fi
+		else
+			status_bits=$((status_bits | 1)) # BIT 0: invalid IPv4 address
+		fi
+	fi
+
+	# Return early if already identified as IPv4
+	if [ -n "$detected_version" ]; then
+		echo "$detected_version"
+		return $status_bits
+	fi
+
+	# ── IPv6 detection ─────────────────────────────────────────────────
+	local ipv6_addr="${input_addr%%/*}"
+	local ipv6_prefix_len="${input_addr#*/}"
+	[ "$ipv6_prefix_len" = "$input_addr" ] && ipv6_prefix_len=""
+
+	# Build a single regex covering all valid IPv6 compressed/expanded forms
+	local hex_grp='[0-9A-Fa-f]\{1,4\}'
+	local ipv6_regex
+	ipv6_regex="^${hex_grp}\(:${hex_grp}\)\{7\}$"
+	ipv6_regex="${ipv6_regex}\|^\(${hex_grp}:\)\{1,1\}\(:${hex_grp}\)\{1,6\}$"
+	ipv6_regex="${ipv6_regex}\|^\(${hex_grp}:\)\{1,2\}\(:${hex_grp}\)\{1,5\}$"
+	ipv6_regex="${ipv6_regex}\|^\(${hex_grp}:\)\{1,3\}\(:${hex_grp}\)\{1,4\}$"
+	ipv6_regex="${ipv6_regex}\|^\(${hex_grp}:\)\{1,4\}\(:${hex_grp}\)\{1,3\}$"
+	ipv6_regex="${ipv6_regex}\|^\(${hex_grp}:\)\{1,5\}\(:${hex_grp}\)\{1,2\}$"
+	ipv6_regex="${ipv6_regex}\|^\(${hex_grp}:\)\{1,6\}\(:${hex_grp}\)\{1,1\}$"
+	ipv6_regex="${ipv6_regex}\|^\(\(${hex_grp}:\)\{1,7\}\|:\):$"
+	ipv6_regex="${ipv6_regex}\|^:\(:${hex_grp}\)\{1,7\}$"
+
+	if ! echo "$ipv6_addr" | grep --silent "$ipv6_regex"; then
+		status_bits=$((status_bits | 4)) # BIT 2: not a valid IPv6 address
+		echo ""
+		return $status_bits
+	fi
+
+	# Validate prefix length is within IPv6 range (0-128)
+	if [ -n "$ipv6_prefix_len" ]; then
+		if ! [[ "$ipv6_prefix_len" =~ ^[0-9]+$ ]] \
+			|| [ "$ipv6_prefix_len" -lt 0 ] || [ "$ipv6_prefix_len" -gt 128 ]; then
+			status_bits=$((status_bits | 8)) # BIT 3: prefix out of range
+			echo ""
+			return $status_bits
+		fi
+	fi
+
+	detected_version="6"
+	echo "$detected_version"
+	return 0
+}
+
+# Backward-compatible alias
+get_ip_format() { hst_detect_ip_version "$@"; }
+
 is_netmask_format_valid() {
 	object_name=${2-netmask}
 	valid=$($HESTIA_PHP -r '$netmask=$argv[1]; echo (preg_match("/^(128|192|224|240|248|252|254|255)\.(0|128|192|224|240|248|252|254|255)\.(0|128|192|224|240|248|252|254|255)\.(0|128|192|224|240|248|252|254|255)/", $netmask) ? 0 : 1);' "$1")
@@ -1495,6 +1603,7 @@ is_format_valid() {
 				priority) is_int_format_valid $arg ;;
 				port) is_int_format_valid "$arg" 'port' ;;
 				port_ext) is_fw_port_format_valid "$arg" ;;
+				prefix_length) is_ipv6_format_valid "$arg" 'prefix_length' ;;
 				protocol) is_fw_protocol_format_valid "$arg" ;;
 				proxy_ext) is_extention_format_valid "$arg" ;;
 				quota) is_int_format_valid "$arg" 'quota' ;;

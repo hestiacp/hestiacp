@@ -1,0 +1,59 @@
+#!/bin/bash
+# info: update firewall IPv6 ipset lists
+# options: [REFRESH]
+#
+# example: v-update-firewall-ipset-ipv6
+#
+# This function creates IPv6 ipset lists and updates them if expired or on-demand
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+refresh=${1:-no}
+
+# Includes
+source /etc/profile.d/hestia.sh
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+is_refresh_ipset_format_valid "$refresh" 'Refresh IP lists (load/yes/no)'
+is_system_enabled "$FIREWALL_SYSTEM" 'FIREWALL_SYSTEM'
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+ipset_hstobject='../../../data/firewallv6/ipset'
+
+for ipset_name in $(search_objects "$ipset_hstobject" 'SUSPENDED' 'no' 'LISTNAME' 2> /dev/null); do
+
+	ipset_time="$(get_object_value "$ipset_hstobject" 'LISTNAME' "$ipset_name" '$TIME')"
+	ipset_date="$(get_object_value "$ipset_hstobject" 'LISTNAME' "$ipset_name" '$DATE')"
+	ipset_au="$(get_object_value "$ipset_hstobject" 'LISTNAME' "$ipset_name" '$AUTOUPDATE')"
+
+	if [ "$ipset_au" = 'no' ] || [ "$refresh" = 'load' ]; then
+		$BIN/v-add-firewall-ipset-ipv6 "$ipset_name"
+		continue
+	fi
+
+	last_updated_ts=$(date -d "$ipset_date $ipset_time" +%s)
+	now=$(date +%s)
+	hours_since_update=$(((now - last_updated_ts) / (60 * 60)))
+
+	if [[ "$hours_since_update" -lt 24 ]] && [ "$refresh" = 'no' ]; then
+		$BIN/v-add-firewall-ipset-ipv6 "$ipset_name"
+		continue
+	fi
+
+	$BIN/v-add-firewall-ipset-ipv6 "$ipset_name" '' '' '' 'yes'
+done
+
+exit

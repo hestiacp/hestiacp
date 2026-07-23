@@ -1525,23 +1525,32 @@ cp -rf $HESTIA_COMMON_DIR/templates/web/skel/document_errors/* /var/www/document
 cp -rf $HESTIA_COMMON_DIR/firewall $HESTIA/data/
 rm -f $HESTIA/data/firewall/ipset/blacklist.sh $HESTIA/data/firewall/ipset/blacklist.ipv6.sh
 
+# Installing IPv6 firewall rules
+cp -f $HESTIA_COMMON_DIR/firewall/firewallv6/rules.conf $HESTIA/data/firewall/rules6.conf
+chmod 660 $HESTIA/data/firewall/rules6.conf
+
 # Delete rules for services that are not installed
 if [ "$vsftpd" = "no" ] && [ "$proftpd" = "no" ]; then
 	# Remove FTP
 	sed -i "/COMMENT='FTP'/d" $HESTIA/data/firewall/rules.conf
+	sed -i "/COMMENT='FTP'/d" $HESTIA/data/firewall/rules6.conf
 fi
 if [ "$exim" = "no" ]; then
 	# Remove SMTP
 	sed -i "/COMMENT='SMTP'/d" $HESTIA/data/firewall/rules.conf
+	sed -i "/COMMENT='SMTP'/d" $HESTIA/data/firewall/rules6.conf
 fi
 if [ "$dovecot" = "no" ]; then
 	# Remove IMAP / Dovecot
 	sed -i "/COMMENT='IMAP'/d" $HESTIA/data/firewall/rules.conf
 	sed -i "/COMMENT='POP3'/d" $HESTIA/data/firewall/rules.conf
+	sed -i "/COMMENT='IMAP'/d" $HESTIA/data/firewall/rules6.conf
+	sed -i "/COMMENT='POP3'/d" $HESTIA/data/firewall/rules6.conf
 fi
 if [ "$named" = "no" ]; then
-	# Remove IMAP / Dovecot
+	# Remove DNS
 	sed -i "/COMMENT='DNS'/d" $HESTIA/data/firewall/rules.conf
+	sed -i "/COMMENT='DNS'/d" $HESTIA/data/firewall/rules6.conf
 fi
 
 # Installing API
@@ -1622,8 +1631,14 @@ $HESTIA/bin/v-change-sys-config-value 'POLICY_SYSTEM_PROTECTED_ADMIN' 'yes'
 
 echo "[ * ] Configuring NGINX..."
 rm -f /etc/nginx/conf.d/*.conf
-cp -f $HESTIA_INSTALL_DIR/nginx/nginx.conf /etc/nginx/
-cp -f $HESTIA_INSTALL_DIR/nginx/status.conf /etc/nginx/conf.d/
+# Use IPv6-aware config if server has a global IPv6 address but no IPv4
+if ip -6 addr show scope global | grep -q inet6 && ! ip -4 addr show scope global | grep -q inet; then
+	cp -f $HESTIA_INSTALL_DIR/nginx/nginx-ipv6.conf /etc/nginx/nginx.conf
+	cp -f $HESTIA_INSTALL_DIR/nginx/status-ipv6.conf /etc/nginx/conf.d/status.conf
+else
+	cp -f $HESTIA_INSTALL_DIR/nginx/nginx.conf /etc/nginx/
+	cp -f $HESTIA_INSTALL_DIR/nginx/status.conf /etc/nginx/conf.d/
+fi
 cp -f $HESTIA_INSTALL_DIR/nginx/0rtt-anti-replay.conf /etc/nginx/conf.d/
 cp -f $HESTIA_INSTALL_DIR/nginx/agents.conf /etc/nginx/conf.d/
 # Copy over cloudflare.inc incase in the next step there are connection issues with CF
@@ -1688,7 +1703,11 @@ if [ "$apache" = 'yes' ]; then
 
 	# Copy configuration files
 	cp -f $HESTIA_INSTALL_DIR/apache2/apache2.conf /etc/apache2/
-	cp -f $HESTIA_INSTALL_DIR/apache2/status.conf /etc/apache2/mods-available/hestia-status.conf
+	if ip -6 addr show scope global | grep -q inet6 && ! ip -4 addr show scope global | grep -q inet; then
+		cp -f $HESTIA_INSTALL_DIR/apache2/status-ipv6.conf /etc/apache2/mods-available/hestia-status.conf
+	else
+		cp -f $HESTIA_INSTALL_DIR/apache2/status.conf /etc/apache2/mods-available/hestia-status.conf
+	fi
 	cp -f /etc/apache2/mods-available/status.load /etc/apache2/mods-available/hestia-status.load
 	cp -f $HESTIA_INSTALL_DIR/logrotate/apache2 /etc/logrotate.d/
 
@@ -1784,7 +1803,12 @@ chmod 755 /etc/cron.daily/php-session-cleanup
 
 if [ "$vsftpd" = 'yes' ]; then
 	echo "[ * ] Configuring Vsftpd server..."
-	cp -f $HESTIA_INSTALL_DIR/vsftpd/vsftpd.conf /etc/
+	# Use IPv6 config if server is IPv6-only
+	if ip -6 addr show scope global | grep -q inet6 && ! ip -4 addr show scope global | grep -q inet; then
+		cp -f $HESTIA_INSTALL_DIR/vsftpd/vsftpd-ipv6.conf /etc/vsftpd.conf
+	else
+		cp -f $HESTIA_INSTALL_DIR/vsftpd/vsftpd.conf /etc/
+	fi
 	touch /var/log/vsftpd.log
 	chown root:adm /var/log/vsftpd.log
 	chmod 640 /var/log/vsftpd.log
@@ -1997,6 +2021,9 @@ if [ "$named" = 'yes' ]; then
 	echo "[ * ] Configuring Bind DNS server..."
 	cp -f $HESTIA_INSTALL_DIR/bind/named.conf /etc/bind/
 	cp -f $HESTIA_INSTALL_DIR/bind/named.conf.options /etc/bind/
+	if [ -n "$primary_ipv6" ]; then
+		sed -i "s/allow-recursion/listen-on-v6 { any; };\n        allow-recursion/" /etc/bind/named.conf.options
+	fi
 	chown root:bind /etc/bind/named.conf
 	chown root:bind /etc/bind/named.conf.options
 	chown bind:bind /var/cache/bind
@@ -2355,11 +2382,31 @@ echo "[ * ] Configuring System IP..."
 $HESTIA/bin/v-update-sys-ip > /dev/null 2>&1
 
 # Get primary IP
+# ---------------------------------------------------------------------------
+# IPv6 dual-stack install detection (non-invasive):
+#   primary_ipv6 is probed from the default NIC using the same iproute2+jq
+#   pattern as primary_ipv4. On IPv4-only servers it will be empty and every
+#   IPv6 conditional below is skipped, so there is zero impact on existing
+#   single-stack installs.
+#
+#   pub_ipv6 is discovered via curl --ipv6 to ip.hestiacp.com for NAT/proxy
+#   setups where the NIC address differs from the public address (same logic
+#   as the existing pub_ipv4 NAT detection).
+#
+#   If primary_ipv6 is set:
+#     1. v-update-firewall-ipv6 initialises the ip6tables INPUT/OUTPUT chains
+#        (mirrors v-update-firewall for the IPv6 table).
+#     2. v-add-sys-ip registers the IPv6 address in $HESTIA/data/ips/ with
+#        VERSION='6' so v-list-user-ips, get_user_ip6s, and the web UI can
+#        expose it.
+#     3. The named.conf.options listen-on-v6 injection enables BIND to answer
+#        AAAA queries on all interfaces (only when IPv6 is confirmed present).
+# ---------------------------------------------------------------------------
 default_nic="$(ip -d -j route show | jq -r '.[] | if .dst == "default" then .dev else empty end')"
 # IPv4
 primary_ipv4="$(ip -4 -d -j addr show "$default_nic" | jq -r '.[] | select(length > 0) | .addr_info[] | if .scope == "global" then .local else empty end' | head -n1)"
 # IPv6
-#primary_ipv6="$(ip -6 -d -j addr show "$default_nic" | jq -r '.[] | select(length > 0) | .addr_info[] | if .scope == "global" then .local else empty end' | head -n1)"
+primary_ipv6="$(ip -6 -d -j addr show "$default_nic" | jq -r '.[] | select(length > 0) | .addr_info[] | if .scope == "global" then .local else empty end' | head -n1)"
 ip="$primary_ipv4"
 local_ip="$primary_ipv4"
 
@@ -2367,9 +2414,16 @@ local_ip="$primary_ipv4"
 if [ "$iptables" = 'yes' ]; then
 	$HESTIA/bin/v-update-firewall
 fi
+# Load IPv6 firewall rules only when server has a global IPv6 address.
+# On IPv4-only servers primary_ipv6 is empty and this block is skipped.
+if [ "$iptables" = 'yes' ] && [ -n "$primary_ipv6" ]; then
+	$HESTIA/bin/v-update-firewall-ipv6
+fi
 
 # Get public IP
 pub_ipv4="$(curl -fsLm5 --retry 2 --ipv4 https://ip.hestiacp.com/)"
+# pub_ipv6: silent on IPv4-only servers (2>/dev/null || true prevents failure)
+pub_ipv6="$(curl -fsLm5 --retry 2 --ipv6 https://ip.hestiacp.com/ 2> /dev/null || true)"
 if [ -n "$pub_ipv4" ] && [ "$pub_ipv4" != "$ip" ]; then
 	if [ -e /etc/rc.local ]; then
 		sed -i '/exit 0/d' /etc/rc.local
@@ -2414,6 +2468,13 @@ if [ "$apache" = 'yes' ] && [ "$nginx" = 'yes' ]; then
 	sed -i "s/LogFormat \"%h/LogFormat \"%a/g" /etc/apache2/apache2.conf
 	a2enmod remoteip >> $LOG
 	systemctl restart apache2
+fi
+
+# Register the primary IPv6 address in the Hestia IP pool (VERSION='6').
+# Skipped entirely on IPv4-only servers. The /128 prefix registers it as a
+# host address; v-add-sys-ip handles the iproute2 setup transparently.
+if [ -n "$primary_ipv6" ]; then
+	$HESTIA/bin/v-add-sys-ip "$primary_ipv6" "/128" "$default_nic" "$username" 'shared' 'IPv6' > /dev/null 2>&1
 fi
 
 # Adding default domain

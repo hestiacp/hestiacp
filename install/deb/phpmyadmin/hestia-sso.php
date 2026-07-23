@@ -59,6 +59,43 @@ class Hestia_API {
 		}
 	}
 
+	/* Creates a new temp user with access to all of a user's databases */
+	public function create_temp_user_all($user, $host) {
+		$post_request = [
+			"hash" => $this->key,
+			"returncode" => "no",
+			"cmd" => "v-add-database-temp-user-all",
+			"arg1" => $user,
+			"arg2" => $host,
+		];
+		$request = $this->request($post_request);
+		$json = json_decode($request);
+		if (json_last_error() == JSON_ERROR_NONE) {
+			return $json;
+		} else {
+			trigger_error("Unable to connect over API please check api connection", E_USER_WARNING);
+			return false;
+		}
+	}
+
+	/* Delete a temp user with access to all of a user's databases */
+	public function delete_temp_user_all($user, $dbuser, $host) {
+		$post_request = [
+			"hash" => $this->key,
+			"returncode" => "yes",
+			"cmd" => "v-delete-database-temp-user-all",
+			"arg1" => $user,
+			"arg2" => $dbuser,
+			"arg3" => $host,
+		];
+		$request = $this->request($post_request);
+		if (is_numeric($request) && $request == 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	/* Delete an new temp user in mysql */
 	public function delete_temp_user($database, $user, $dbuser, $host) {
 		$post_request = [
@@ -153,19 +190,36 @@ function session_invalid() {
 $api = new Hestia_API();
 if (!empty($_GET)) {
 	if (isset($_GET["logout"])) {
-		$api->delete_temp_user(
-			$_SESSION["HESTIA_sso_database"],
-			$_SESSION["HESTIA_sso_user"],
-			$_SESSION["PMA_single_signon_user"],
-			$_SESSION["HESTIA_sso_host"],
-		);
+		if ($_SESSION["HESTIA_sso_database"] === "__all__") {
+			$api->delete_temp_user_all(
+				$_SESSION["HESTIA_sso_user"],
+				$_SESSION["PMA_single_signon_user"],
+				$_SESSION["HESTIA_sso_host"],
+			);
+		} else {
+			$api->delete_temp_user(
+				$_SESSION["HESTIA_sso_database"],
+				$_SESSION["HESTIA_sso_user"],
+				$_SESSION["PMA_single_signon_user"],
+				$_SESSION["HESTIA_sso_host"],
+			);
+		}
 		//remove session
 		session_invalid();
 	} else {
 		if (isset($_GET["user"]) && isset($_GET["hestia_token"])) {
-			$database = $_GET["database"];
+			// A missing/empty "database" GET param means "generic" SSO: log
+			// in with access to all of this Hestia user's databases instead
+			// of a single one. See verify_token()'s callers and
+			// create_temp_user_all()/delete_temp_user_all().
+			$database = !empty($_GET["database"]) ? $_GET["database"] : "__all__";
 			$user = $_GET["user"];
-			$host = "localhost";
+			// v-add-database-temp-user-all already accepts a HOST argument
+			// (it filters v-list-databases by it) -- read it from the link
+			// instead of hardcoding "localhost", so the generic "all
+			// databases" button can target whichever single host actually
+			// holds the account's databases (see list_db.php).
+			$host = !empty($_GET["host"]) ? $_GET["host"] : "localhost";
 			$token = $_GET["hestia_token"];
 			if (is_numeric($_GET["exp"])) {
 				$time = $_GET["exp"];
@@ -179,7 +233,11 @@ if (!empty($_GET)) {
 				verify_token($database, $user, $ip, $time, $token);
 				$id = session_id();
 				//create a new temp user
-				$data = $api->create_temp_user($database, $user, $host);
+				if ($database === "__all__") {
+					$data = $api->create_temp_user_all($user, $host);
+				} else {
+					$data = $api->create_temp_user($database, $user, $host);
+				}
 				if ($data) {
 					$_SESSION["PMA_single_signon_user"] = $data->login->user;
 					$_SESSION["PMA_single_signon_password"] = $data->login->password;

@@ -1,0 +1,62 @@
+#!/bin/bash
+# info: deletes temp database user with access to all of a user's databases
+# options: USER DBUSER [HOST]
+#
+# example: v-delete-database-temp-user-all wordpress hestia_sso_user
+#
+# Revokes a "temp user" created by v-add-database-temp-user-all and removes it.
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+dbuser=$2
+host=${3-localhost}
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/db.sh
+source $HESTIA/func/db.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '2' "$#" 'USER DBUSER [HOST]'
+is_format_valid 'user' 'dbuser'
+is_system_enabled "$DB_SYSTEM" 'DB_SYSTEM'
+is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
+
+if [[ $dbuser != *"hestia_sso"* ]]; then
+	echo "DBUSER is invalid SSO user"
+	exit "$E_INVALID"
+fi
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+databases=$($BIN/v-list-databases "$user" plain | awk -F'\t' -v h="$host" '$3==h && $4=="mysql" {print $1}')
+
+delete_mysql_database_temp_user_all
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Logging
+$BIN/v-log-action "$user" "Info" "Database" "Revoked user access to all databases (User: $dbuser)."
+log_event "$OK" "$ARGUMENTS"
+
+exit

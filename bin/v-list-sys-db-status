@@ -50,6 +50,20 @@ for db in $(echo $DB_SYSTEM | tr ',' '\n'); do
 					echo "host='$HOST'" >> $mycnf
 					echo "user='$USER'" >> $mycnf
 					echo "password='$PASSWORD'" >> $mycnf
+					if [ "$SSL" = 'yes' ]; then
+						if [ -f '/usr/bin/mariadb-admin' ]; then
+							echo "ssl=1" >> $mycnf
+							echo "ssl-verify-server-cert=0" >> $mycnf
+						else
+							echo "ssl-mode=REQUIRED" >> $mycnf
+						fi
+					else
+						if [ -f '/usr/bin/mariadb-admin' ]; then
+							echo "ssl=0" >> $mycnf
+						else
+							echo "ssl-mode=DISABLED" >> $mycnf
+						fi
+					fi
 					chmod 600 $mycnf
 				else
 					mypw=$(grep password $mycnf | cut -f 2 -d \')
@@ -58,6 +72,20 @@ for db in $(echo $DB_SYSTEM | tr ',' '\n'); do
 						echo "host='$HOST'" >> $mycnf
 						echo "user='$USER'" >> $mycnf
 						echo "password='$PASSWORD'" >> $mycnf
+						if [ "$SSL" = 'yes' ]; then
+							if [ -f '/usr/bin/mariadb-admin' ]; then
+								echo "ssl=1" >> $mycnf
+								echo "ssl-verify-server-cert=0" >> $mycnf
+							else
+								echo "ssl-mode=REQUIRED" >> $mycnf
+							fi
+						else
+							if [ -f '/usr/bin/mariadb-admin' ]; then
+								echo "ssl=0" >> $mycnf
+							else
+								echo "ssl-mode=DISABLED" >> $mycnf
+							fi
+						fi
 						chmod 660 $mycnf
 					fi
 				fi

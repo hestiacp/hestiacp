@@ -1,10 +1,14 @@
 #!/bin/bash
 # info: add mail account autoreply message
-# options: USER DOMAIN ACCOUNT MESSAGE
+# options: USER DOMAIN ACCOUNT MESSAGE [START_DATE] [END_DATE]
 #
 # example: v-add-mail-account-autoreply admin example.com user Hello from e-mail!
+# example: v-add-mail-account-autoreply admin example.com user 'On vacation' 2026-08-01 2026-08-15
 #
-# This function add new email account.
+# This function adds an autoreply message to a mail account. Optional
+# START_DATE/END_DATE (YYYY-MM-DD) limit the period the autoreply is active.
+# The message file used by Exim is only present while the schedule is active;
+# a daily job (v-update-mail-autoreplies) keeps it in sync.
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #
@@ -16,6 +20,8 @@ domain=$2
 domain_idn=$2
 account=$3
 autoreply=$4
+autoreply_start=$5
+autoreply_end=$6
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -27,13 +33,6 @@ source $HESTIA/func/domain.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
-# Define mail user
-if [ "$MAIL_SYSTEM" = 'exim4' ]; then
-	MAIL_USER=Debian-exim
-else
-	MAIL_USER=exim
-fi
-
 # Additional argument formatting
 format_domain
 format_domain_idn
@@ -43,8 +42,8 @@ format_domain_idn
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '4' "$#" 'USER DOMAIN ACCOUNT MESSAGE'
-is_format_valid 'user' 'domain' 'account' 'autoreply'
+check_args '4' "$#" 'USER DOMAIN ACCOUNT MESSAGE [START_DATE] [END_DATE]'
+is_format_valid 'user' 'domain' 'account' 'autoreply' 'autoreply_start' 'autoreply_end'
 is_system_enabled "$MAIL_SYSTEM" 'MAIL_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
@@ -52,7 +51,11 @@ is_object_valid 'mail' 'DOMAIN' "$domain"
 is_object_unsuspended 'mail' 'DOMAIN' "$domain"
 is_object_valid "mail/$domain" 'ACCOUNT' "$account"
 is_object_unsuspended "mail/$domain" 'ACCOUNT' "$account"
-# is_object_value_empty "mail/$domain" 'ACCOUNT' "$account" '$AUTOREPLY'
+if [ -n "$autoreply_start" ] && [ -n "$autoreply_end" ]; then
+	if [[ "$autoreply_end" < "$autoreply_start" ]]; then
+		check_result "$E_INVALID" "autoreply start date $autoreply_start is after end date $autoreply_end"
+	fi
+fi
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
@@ -61,22 +64,35 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Adding exim autoreply
-if [[ "$MAIL_SYSTEM" =~ exim ]]; then
-	msg="$HOMEDIR/$user/conf/mail/$domain/autoreply.$account.msg"
-	echo -e "$autoreply" > $msg
-	chown $MAIL_USER:mail $msg
-	chmod 660 $msg
+# Saving autoreply message (source of truth for the Exim message file)
+echo -e "$autoreply" > $USER_DATA/mail/$account@$domain.msg
+chmod 660 $USER_DATA/mail/$account@$domain.msg
+
+# Saving autoreply flag and schedule
+update_object_value "mail/$domain" 'ACCOUNT' "$account" '$AUTOREPLY' 'yes'
+add_object_key "mail/$domain" 'ACCOUNT' "$account" 'AUTOREPLY_START' 'FWD'
+add_object_key "mail/$domain" 'ACCOUNT' "$account" 'AUTOREPLY_END' 'FWD'
+update_object_value "mail/$domain" 'ACCOUNT' "$account" '$AUTOREPLY_START' "$autoreply_start"
+update_object_value "mail/$domain" 'ACCOUNT' "$account" '$AUTOREPLY_END' "$autoreply_end"
+
+# Creating or removing the Exim message file according to the schedule.
+# The direct file write together with the "Define mail user" block
+# (Debian-exim for MAIL_SYSTEM=exim4, exim otherwise) formerly inlined here
+# moved unchanged into sync_mail_account_autoreply() in func/domain.sh,
+# because the same create-or-remove decision is now also made by
+# v-update-mail-autoreplies (daily) and rebuild_mail_domain_conf, and all
+# callers must apply identical ownership ($MAIL_USER:mail) and mode (660).
+sync_mail_account_autoreply "$user" "$domain" "$account"
+
+# Installing daily updater: applies schedule transitions and restores the
+# message file if it went missing, even if previous runs were skipped
+if ! grep --silent --no-messages "v-update-mail-autoreplies" $HESTIA/data/queue/daily.pipe; then
+	echo "$BIN/v-update-mail-autoreplies" >> $HESTIA/data/queue/daily.pipe
 fi
 
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
-
-# Adding autoreply message
-echo -e "$autoreply" > $USER_DATA/mail/$account@$domain.msg
-chmod 660 $USER_DATA/mail/$account@$domain.msg
-update_object_value "mail/$domain" 'ACCOUNT' "$account" '$AUTOREPLY' 'yes'
 
 # Logging
 $BIN/v-log-action "$user" "Info" "Mail" "Added auto-reply message for mail account $account@$domain."

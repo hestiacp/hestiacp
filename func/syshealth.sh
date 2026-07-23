@@ -92,7 +92,7 @@ function syshealth_update_mail_config_format() {
 function syshealth_update_mail_account_config_format() {
 	# MAIL ACCOUNTS
 	system="mail_accounts"
-	known_keys="ACCOUNT ALIAS AUTOREPLY FWD FWD_ONLY MD5 QUOTA RATE_LIMIT U_DISK SUSPENDED TIME DATE"
+	known_keys="ACCOUNT ALIAS AUTOREPLY AUTOREPLY_START AUTOREPLY_END FWD FWD_ONLY MD5 QUOTA RATE_LIMIT U_DISK SUSPENDED TIME DATE"
 	write_kv_config_file
 	unset system
 	unset known_keys

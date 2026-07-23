@@ -769,6 +769,74 @@ is_mail_new() {
 	fi
 }
 
+# Check if autoreply schedule is active on given date.
+# Args: START_DATE END_DATE [CHECK_DATE] (YYYY-MM-DD, empty date = no bound)
+is_autoreply_schedule_active() {
+	local start_date="$1"
+	local end_date="$2"
+	local check_date="${3:-$(date +%F)}"
+	if [ -n "$start_date" ] && [[ "$check_date" < "$start_date" ]]; then
+		return 1
+	fi
+	if [ -n "$end_date" ] && [[ "$check_date" > "$end_date" ]]; then
+		return 1
+	fi
+	return 0
+}
+
+# Materialize or remove the Exim autoreply message file based on the
+# account AUTOREPLY flag and AUTOREPLY_START/AUTOREPLY_END schedule.
+# The Hestia copy in $HESTIA/data/users/$user/mail is the source of truth.
+#
+# This consolidates the write logic formerly inlined in
+# v-add-mail-account-autoreply: the mail user selection (Debian-exim for
+# MAIL_SYSTEM=exim4, exim otherwise), the group (mail) and the mode (660)
+# are preserved 1:1. Shared by v-add-mail-account-autoreply,
+# v-update-mail-autoreplies and rebuild_mail_domain_conf so the file is
+# always created with the same ownership regardless of the caller.
+# Args: USER DOMAIN ACCOUNT [CHECK_DATE]
+sync_mail_account_autoreply() {
+	local user="$1"
+	local domain="$2"
+	local account="$3"
+	local check_date="${4:-$(date +%F)}"
+	local user_data="$HESTIA/data/users/$user"
+	local msg_src="$user_data/mail/$account@$domain.msg"
+	local msg_dst="$HOMEDIR/$user/conf/mail/$domain/autoreply.$account.msg"
+	local mail_user
+
+	if [[ ! "$MAIL_SYSTEM" =~ exim ]]; then
+		return 0
+	fi
+
+	# Define mail user
+	if [ "$MAIL_SYSTEM" = 'exim4' ]; then
+		mail_user="Debian-exim"
+	else
+		mail_user="exim"
+	fi
+
+	# Reset before parsing: schedule keys may be missing in older records
+	AUTOREPLY='no'
+	AUTOREPLY_START=''
+	AUTOREPLY_END=''
+	parse_object_kv_list "$(grep "ACCOUNT='$account'" "$user_data/mail/$domain.conf")"
+
+	if [ "$AUTOREPLY" = 'yes' ] && [ -e "$msg_src" ] \
+		&& is_autoreply_schedule_active "$AUTOREPLY_START" "$AUTOREPLY_END" "$check_date"; then
+		if ! cp -f "$msg_src" "$msg_dst" \
+			|| ! chown "$mail_user":mail "$msg_dst" \
+			|| ! chmod 660 "$msg_dst"; then
+			return 1
+		fi
+	else
+		if ! rm -f "$msg_dst"; then
+			return 1
+		fi
+	fi
+	return 0
+}
+
 # Add mail server SSL configuration
 add_mail_ssl_config() {
 	# Ensure that SSL certificate directories exists

@@ -1437,6 +1437,8 @@ is_format_valid() {
 				antispam) is_boolean_format_valid "$arg" 'antispam' ;;
 				antivirus) is_boolean_format_valid "$arg" 'antivirus' ;;
 				autoreply) is_autoreply_format_valid "$arg" ;;
+				autoreply_end) is_date_format_valid "$arg" ;;
+				autoreply_start) is_date_format_valid "$arg" ;;
 				backup) is_object_format_valid "$arg" 'backup' ;;
 				charset) is_object_format_valid "$arg" "$arg_name" ;;
 				charsets) is_common_format_valid "$arg" 'charsets' ;;

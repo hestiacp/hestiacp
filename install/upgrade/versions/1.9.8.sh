@@ -45,3 +45,23 @@ for huser in $("$HESTIA/bin/v-list-users" list); do
 		"$HESTIA/bin/v-add-user-composer" "$huser" 2 yes &> /dev/null
 	fi
 done
+
+# Fix SCRIPT_FILENAME in phpmyadmin.inc/phppgadmin.inc templates for Nginx
+# on current installations
+config="$("$BIN/v-list-sys-config" json 2> /dev/null)"
+
+if [[ -n $config ]]; then
+	if dba_pma="$(jq -r '.[].DB_PMA_ALIAS // empty' <<< "$config" 2> /dev/null)"; then
+		if [[ -n $dba_pma ]]; then
+			echo "[ + ] Fixing phpmyadmin.inc for Nginx"
+			"$BIN/v-change-sys-db-alias" pma "$dba_pma"
+		fi
+	fi
+
+	if dba_pga="$(jq -r '.[].DB_PGA_ALIAS // empty' <<< "$config" 2> /dev/null)"; then
+		if [[ -n $dba_pga ]]; then
+			echo "[ + ] Fixing phppgadmin.inc for Nginx"
+			"$BIN/v-change-sys-db-alias" pga "$dba_pga"
+		fi
+	fi
+fi

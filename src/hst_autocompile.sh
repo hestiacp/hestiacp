@@ -17,6 +17,12 @@ download_file() {
 	local destination=$2
 	local force=$3
 
+	if [ -z "$(which "wget")" ]; then
+		echo "Installing wget..."
+		apt-get -qq update > /dev/null
+		apt-get -qq install -y wget
+	fi
+
 	[ "$HESTIA_DEBUG" ] && echo >&2 DEBUG: Downloading file "$url" to "$destination"
 
 	# Default destination is the current working directory
@@ -117,6 +123,10 @@ usage() {
 	echo "Example: bash hst_autocompile.sh --hestia develop Y"
 	echo "This would install a Hestia Control Panel package compiled with the"
 	echo "develop branch code."
+	echo ""
+	echo "To cross-build hestia-nginx/hestia-php/hestia-web-terminal for the other"
+	echo "architecture, or for other OS releases, on the same machine, use"
+	echo "./chroot_build_all.sh instead."
 }
 
 get_distro_suffix() {
@@ -135,8 +145,10 @@ get_distro_suffix() {
 
 apply_distro_version() {
 	local control_file="$1"
-	local distro_suffix
-	distro_suffix=$(get_distro_suffix)
+	local distro_suffix="$2"
+	if [ -z "$distro_suffix" ]; then
+		distro_suffix=$(get_distro_suffix)
+	fi
 
 	local current_version
 	current_version=$(grep "^Version:" "$control_file" | awk '{print $2}')
@@ -213,7 +225,8 @@ if [ $architecture == 'aarch64' ]; then
 else
 	BUILD_ARCH='amd64'
 fi
-DEB_DIR="$BUILD_DIR/deb"
+
+DEB_DIR="${DEB_DIR:-$BUILD_DIR/deb}"
 
 # Set packages to compile
 for i in $*; do
@@ -316,10 +329,10 @@ if [ -f "$SRC_DIR/src/deb/hestia/control" ] && [ "$use_src_folder" == 'true' ]; 
 	PHP_V=$(cat $SRC_DIR/src/deb/php/control | grep "Version:" | cut -d' ' -f2)
 	WEB_TERMINAL_V=$(cat $SRC_DIR/src/deb/web-terminal/control | grep "Version:" | cut -d' ' -f2)
 else
-	BUILD_VER=$(curl -s https://raw.githubusercontent.com/$REPO/$branch/src/deb/hestia/control | grep "Version:" | cut -d' ' -f2)
-	NGINX_V=$(curl -s https://raw.githubusercontent.com/$REPO/$branch/src/deb/nginx/control | grep "Version:" | cut -d' ' -f2)
-	PHP_V=$(curl -s https://raw.githubusercontent.com/$REPO/$branch/src/deb/php/control | grep "Version:" | cut -d' ' -f2)
-	WEB_TERMINAL_V=$(curl -s https://raw.githubusercontent.com/$REPO/$branch/src/deb/web-terminal/control | grep "Version:" | cut -d' ' -f2)
+	BUILD_VER=$(download_file https://raw.githubusercontent.com/$REPO/$branch/src/deb/hestia/control | grep "Version:" | cut -d' ' -f2)
+	NGINX_V=$(download_file https://raw.githubusercontent.com/$REPO/$branch/src/deb/nginx/control | grep "Version:" | cut -d' ' -f2)
+	PHP_V=$(download_file https://raw.githubusercontent.com/$REPO/$branch/src/deb/php/control | grep "Version:" | cut -d' ' -f2)
+	WEB_TERMINAL_V=$(download_file https://raw.githubusercontent.com/$REPO/$branch/src/deb/web-terminal/control | grep "Version:" | cut -d' ' -f2)
 fi
 
 if [ -z "$BUILD_VER" ]; then
@@ -346,6 +359,8 @@ fi
 echo "Build version ${BUILD_VER}${_build_release}, with Nginx version $NGINX_V, PHP version $PHP_V and Web Terminal version $WEB_TERMINAL_V"
 
 HESTIA_V="${BUILD_VER}_${BUILD_ARCH}"
+# List of supported OS releases for Hestia used for crossbuilding.
+supported_os="debian11 debian12 debian13 ubuntu22.04 ubuntu24.04 ubuntu26.04"
 OPENSSL_V='3.5.7'
 PCRE_V='10.47'
 ZLIB_V='1.3.2'
@@ -366,14 +381,20 @@ timestamp() {
 if [ "$dontinstalldeps" != 'true' ]; then
 	# Install needed software
 	# Set package dependencies for compiling
-	SOFTWARE='wget tar git curl build-essential libxml2-dev libz-dev libzip-dev libgmp-dev libcurl4-gnutls-dev unzip openssl libssl-dev pkg-config libsqlite3-dev libonig-dev rpm lsb-release'
-
+	SOFTWARE='wget tar git curl ca-certificates build-essential libxml2-dev libz-dev libzip-dev libgmp-dev libcurl4-gnutls-dev unzip openssl libssl-dev pkg-config libsqlite3-dev libonig-dev lsb-release'
 	echo "Updating system APT repositories..."
-	apt-get -qq update > /dev/null 2>&1
+	apt-get -qq update
 	echo "Installing dependencies for compilation..."
-	apt-get -qq install -y $SOFTWARE > /dev/null 2>&1
+	apt-get -qq install -y $SOFTWARE
 
-	# Installing Node.js 20.x repo
+	# In a minimal/freshly-debootstrapped chroot, dpkg trigger processing
+	# (which normally re-runs ldconfig after installing shared libs) can be
+	# deferred or skipped, leaving the dynamic linker's cache stale even
+	# though e.g. libzip.so.5 is genuinely on disk. Refresh it explicitly so
+	# binaries built against these libs (php, nginx, ...) can actually run.
+	ldconfig
+
+	# Installing Node.js 24.x repo
 	apt="/etc/apt/sources.list.d"
 	codename="$(lsb_release -s -c)"
 
@@ -382,8 +403,23 @@ if [ "$dontinstalldeps" != 'true' ]; then
 	fi
 
 	echo "Installing Node.js..."
-	apt-get -qq update > /dev/null 2>&1
-	apt -qq install -y nodejs > /dev/null 2>&1
+	apt-get -qq update > /dev/null
+	apt-get -qq install -y nodejs
+
+	# NodeSource's nodejs package bundles npm, but Debian/Ubuntu's own nodejs
+	# package doesn't (used if the NodeSource repo above failed to register,
+	# e.g. no network). Only fall back to the distro's separate npm package
+	# when npm is actually missing — requesting it unconditionally alongside
+	# nodejs in one apt-get call conflicts with NodeSource's bundled npm and
+	# fails the whole install.
+	if [ -z "$(which "npm")" ]; then
+		apt-get -qq install -y npm
+	fi
+
+	if [ -z "$(which "node")" ] || [ -z "$(which "npm")" ]; then
+		echo "Failed to install Node.js/npm"
+		exit 1
+	fi
 
 	nodejs_version=$(/usr/bin/node -v | cut -f1 -d'.' | sed 's/v//g')
 
@@ -400,8 +436,11 @@ if [ "$dontinstalldeps" != 'true' ]; then
 	fi
 fi
 
-# Get system cpu cores
-NUM_CPUS=$(grep "^cpu cores" /proc/cpuinfo | uniq | awk '{print $4}')
+# Get system cpu cores. Callers running this inside a QEMU-emulated chroot
+# (cross-arch builds) can pre-set NUM_CPUS to override this: /proc is
+# bind-mounted from the host, so the detected count would otherwise be the
+# host's real core count, not a safe parallelism level for emulated compiles.
+NUM_CPUS="${NUM_CPUS:-$(grep "^cpu cores" /proc/cpuinfo | uniq | awk '{print $4}')}"
 
 if [ "$HESTIA_DEBUG" ]; then
 	echo "OS type          : Debian / Ubuntu"
@@ -425,7 +464,7 @@ else
 	NGINX='https://nginx.org/download/nginx-'$(echo $NGINX_V | cut -d"~" -f1)'.tar.gz'
 fi
 
-OPENSSL='https://www.openssl.org/source/openssl-'$OPENSSL_V'.tar.gz'
+OPENSSL='https://github.com/openssl/openssl/releases/download/openssl-'$OPENSSL_V'/openssl-'$OPENSSL_V'.tar.gz'
 PCRE='https://github.com/PCRE2Project/pcre2/releases/download/pcre2-'$PCRE_V'/pcre2-'$PCRE_V'.tar.gz'
 ZLIB='https://github.com/madler/zlib/archive/refs/tags/v'$ZLIB_V'.tar.gz'
 
@@ -445,12 +484,12 @@ branch_dash=$(echo "$branch" | sed 's/\//-/g')
 #################################################################################
 
 if [ "$NGINX_B" = true ]; then
+
 	echo "Building hestia-nginx package..."
 	if [ "$CROSS" = "true" ]; then
 		echo "Cross compile not supported for hestia-nginx, hestia-php or hestia-web-terminal"
 		exit 1
 	fi
-
 	# Change to build directory
 	cd $BUILD_DIR
 
@@ -461,7 +500,7 @@ if [ "$NGINX_B" = true ]; then
 		BUILD_DIR_NGINX=$BUILD_DIR/nginx-$(echo $NGINX_V | cut -d"~" -f1)
 	fi
 
-	if [ "$KEEPBUILD" != 'true' ] || [ ! -d "$BUILD_DIR_HESTIANGINX" ]; then
+	if [ "$KEEPBUILD" != 'true' ] || [ ! -d "$BUILD_DIR_HESTIANGINX" ] || [ ! -f "$BUILD_DIR_NGINX/Makefile" ]; then
 		# Check if target directory exist
 		if [ -d "$BUILD_DIR_HESTIANGINX" ]; then
 			#mv $BUILD_DIR/hestia-nginx_$NGINX_V $BUILD_DIR/hestia-nginx_$NGINX_V-$(timestamp)
@@ -574,12 +613,11 @@ fi
 #################################################################################
 
 if [ "$PHP_B" = true ]; then
+	echo "Building hestia-php package..."
 	if [ "$CROSS" = "true" ]; then
 		echo "Cross compile not supported for hestia-nginx, hestia-php or hestia-web-terminal"
 		exit 1
 	fi
-
-	echo "Building hestia-php package..."
 
 	BUILD_DIR_HESTIAPHP=$BUILD_DIR/hestia-php_$PHP_V
 
@@ -591,7 +629,7 @@ if [ "$PHP_B" = true ]; then
 		BUILD_DIR_PHP=$BUILD_DIR/php-$(echo $PHP_V | cut -d"~" -f1)
 	fi
 
-	if [ "$KEEPBUILD" != 'true' ] || [ ! -d "$BUILD_DIR_HESTIAPHP" ]; then
+	if [ "$KEEPBUILD" != 'true' ] || [ ! -d "$BUILD_DIR_HESTIAPHP" ] || [ ! -f "$BUILD_DIR_PHP/Makefile" ]; then
 		# Check if target directory exist
 		if [ -d $BUILD_DIR_HESTIAPHP ]; then
 			rm -r $BUILD_DIR_HESTIAPHP
@@ -697,12 +735,11 @@ fi
 #################################################################################
 
 if [ "$WEB_TERMINAL_B" = true ]; then
+	echo "Building hestia-web-terminal package..."
 	if [ "$CROSS" = "true" ]; then
 		echo "Cross compile not supported for hestia-nginx, hestia-php or hestia-web-terminal"
 		exit 1
 	fi
-
-	echo "Building hestia-web-terminal package..."
 
 	BUILD_DIR_HESTIA_TERMINAL=$BUILD_DIR/hestia-web-terminal_$WEB_TERMINAL_V
 
@@ -770,75 +807,82 @@ arch="$BUILD_ARCH"
 if [ "$HESTIA_B" = true ]; then
 	if [ "$CROSS" = "true" ]; then
 		arch="amd64 arm64"
+	else
+		arch="$BUILD_ARCH"
+		supported_os=$(get_distro_suffix)
 	fi
-	for BUILD_ARCH in $arch; do
-		echo "Building Hestia Control Panel package..."
 
-		BUILD_DIR_HESTIA=$BUILD_DIR/hestia_$HESTIA_V
+	echo "Building Hestia Control Panel package..."
 
-		# Change to build directory
-		cd $BUILD_DIR
+	BUILD_DIR_HESTIA=$BUILD_DIR/hestia_$HESTIA_V
 
-		if [ "$KEEPBUILD" != 'true' ] || [ ! -d "$BUILD_DIR_HESTIA" ]; then
-			# Check if target directory exist
-			if [ -d $BUILD_DIR_HESTIA ]; then
-				rm -r $BUILD_DIR_HESTIA
-			fi
+	# Change to build directory
+	cd $BUILD_DIR
 
-			# Create directory
-			mkdir -p $BUILD_DIR_HESTIA
-		fi
-
-		cd $BUILD_DIR
-		rm -rf $BUILD_DIR/hestiacp-$branch_dash
-		# Download and unpack source files
-		if [ "$use_src_folder" == 'true' ]; then
-			[ "$HESTIA_DEBUG" ] && echo DEBUG: cp -rf "$SRC_DIR/" $BUILD_DIR/hestiacp-$branch_dash
-			cp -rf "$SRC_DIR/" $BUILD_DIR/hestiacp-$branch_dash
-		elif [ -d $SRC_DIR ]; then
-			download_file $HESTIA_ARCHIVE_LINK '-' 'fresh' | tar xz
-		fi
-
-		mkdir -p $BUILD_DIR_HESTIA/usr/local/hestia
-
-		# Build web and move needed directories
-		cd $BUILD_DIR/hestiacp-$branch_dash
-		npm ci --ignore-scripts
-		npm run build
-		cp -rf bin func install web $BUILD_DIR_HESTIA/usr/local/hestia/
-
-		# Set permissions
-		find $BUILD_DIR_HESTIA/usr/local/hestia/ -type f -exec chmod -x {} \;
-
-		# Allow send email via /usr/local/hestia/web/inc/mail-wrapper.php via cli
-		chmod +x $BUILD_DIR_HESTIA/usr/local/hestia/web/inc/mail-wrapper.php
-		# Allow the executable to be executed
-		chmod +x $BUILD_DIR_HESTIA/usr/local/hestia/bin/*
-		find $BUILD_DIR_HESTIA/usr/local/hestia/install/ \( -name '*.sh' \) -exec chmod +x {} \;
-		chmod -x $BUILD_DIR_HESTIA/usr/local/hestia/install/*.sh
-		chown -R root:root $BUILD_DIR_HESTIA
-		# Get Debian package files
-		mkdir -p $BUILD_DIR_HESTIA/DEBIAN
-		get_branch_file 'src/deb/hestia/control' "$BUILD_DIR_HESTIA/DEBIAN/control"
-		if [ "$BUILD_ARCH" != "amd64" ]; then
-			sed -i "s/amd64/${BUILD_ARCH}/g" "$BUILD_DIR_HESTIA/DEBIAN/control"
-		fi
-		apply_distro_version "$BUILD_DIR_HESTIA/DEBIAN/control"
-		get_branch_file 'src/deb/hestia/copyright' "$BUILD_DIR_HESTIA/DEBIAN/copyright"
-		get_branch_file 'src/deb/hestia/preinst' "$BUILD_DIR_HESTIA/DEBIAN/preinst"
-		get_branch_file 'src/deb/hestia/postinst' "$BUILD_DIR_HESTIA/DEBIAN/postinst"
-		chmod +x $BUILD_DIR_HESTIA/DEBIAN/postinst
-		chmod +x $BUILD_DIR_HESTIA/DEBIAN/preinst
-
-		echo Building Hestia DEB
-		dpkg-deb -Zxz --build $BUILD_DIR_HESTIA $DEB_DIR
-
-		# clear up the source folder
-		if [ "$KEEPBUILD" != 'true' ]; then
+	if [ "$KEEPBUILD" != 'true' ] || [ ! -d "$BUILD_DIR_HESTIA" ]; then
+		# Check if target directory exist
+		if [ -d $BUILD_DIR_HESTIA ]; then
 			rm -r $BUILD_DIR_HESTIA
-			rm -rf hestiacp-$branch_dash
 		fi
-		cd $BUILD_DIR/hestiacp-$branch_dash
+
+		# Create directory
+		mkdir -p $BUILD_DIR_HESTIA
+	fi
+
+	cd $BUILD_DIR
+	rm -rf $BUILD_DIR/hestiacp-$branch_dash
+	# Download and unpack source files
+	if [ "$use_src_folder" == 'true' ]; then
+		[ "$HESTIA_DEBUG" ] && echo DEBUG: cp -rf "$SRC_DIR/" $BUILD_DIR/hestiacp-$branch_dash
+		cp -rf "$SRC_DIR/" $BUILD_DIR/hestiacp-$branch_dash
+	elif [ -d $SRC_DIR ]; then
+		download_file $HESTIA_ARCHIVE_LINK '-' 'fresh' | tar xz
+	fi
+
+	mkdir -p $BUILD_DIR_HESTIA/usr/local/hestia
+
+	# Build web and move needed directories
+	cd $BUILD_DIR/hestiacp-$branch_dash
+	npm ci --ignore-scripts
+	npm run build
+	for BUILD_ARCH in $arch; do
+		for os in $supported_os; do
+			mkdir -p $BUILD_DIR_HESTIA/usr/local/hestia
+			cp -rf bin func install web $BUILD_DIR_HESTIA/usr/local/hestia/
+
+			# Set permissions
+			find $BUILD_DIR_HESTIA/usr/local/hestia/ -type f -exec chmod -x {} \;
+
+			# Allow send email via /usr/local/hestia/web/inc/mail-wrapper.php via cli
+			chmod +x $BUILD_DIR_HESTIA/usr/local/hestia/web/inc/mail-wrapper.php
+			# Allow the executable to be executed
+			chmod +x $BUILD_DIR_HESTIA/usr/local/hestia/bin/*
+			find $BUILD_DIR_HESTIA/usr/local/hestia/install/ \( -name '*.sh' \) -exec chmod +x {} \;
+			chmod -x $BUILD_DIR_HESTIA/usr/local/hestia/install/*.sh
+			chown -R root:root $BUILD_DIR_HESTIA
+			# Get Debian package files
+			mkdir -p $BUILD_DIR_HESTIA/DEBIAN
+			get_branch_file 'src/deb/hestia/control' "$BUILD_DIR_HESTIA/DEBIAN/control"
+			if [ "$BUILD_ARCH" != "amd64" ]; then
+				sed -i "s/amd64/${BUILD_ARCH}/g" "$BUILD_DIR_HESTIA/DEBIAN/control"
+			fi
+			apply_distro_version "$BUILD_DIR_HESTIA/DEBIAN/control" "$os"
+			get_branch_file 'src/deb/hestia/copyright' "$BUILD_DIR_HESTIA/DEBIAN/copyright"
+			get_branch_file 'src/deb/hestia/preinst' "$BUILD_DIR_HESTIA/DEBIAN/preinst"
+			get_branch_file 'src/deb/hestia/postinst' "$BUILD_DIR_HESTIA/DEBIAN/postinst"
+			chmod +x $BUILD_DIR_HESTIA/DEBIAN/postinst
+			chmod +x $BUILD_DIR_HESTIA/DEBIAN/preinst
+
+			echo Building Hestia DEB
+			dpkg-deb -Zxz --build $BUILD_DIR_HESTIA $DEB_DIR
+
+			# clear up the source folder
+			if [ "$KEEPBUILD" != 'true' ]; then
+				rm -r $BUILD_DIR_HESTIA
+				rm -rf hestiacp-$branch_dash
+			fi
+			cd $BUILD_DIR/hestiacp-$branch_dash
+		done
 	done
 fi
 

@@ -2,6 +2,50 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.9.7] - Service Release
+
+### Version name changes
+
+Due to the implementation for building ARM64 packages on X86-64 hardware the versions of hestia-nginx / hestia-php has been changed the format used for 1.10 and forward.
+
+- hestia-nginx-x.y.z-revision-os+release_architecture.deb
+- hestia-php-x.y.z-revision-os+release_architecture.deb
+
+It has no effect on the working. Both "hestia" package and "hestia-web-terminal" will follow in the future.
+
+### Security
+
+- Unauthenticated Remote Code Execution via Session Deserialisation Mismatch in Web Terminal ([GHSA-gh6f-9gpr-x9m2](https://github.com/hestiacp/hestiacp/security/advisories/GHSA-gh6f-9gpr-x9m2))
+- IP Address Spoofing via `CF-Connecting-IP` Header ([GHSA-73p3-rqpv-59wx](https://github.com/hestiacp/hestiacp/security/advisories/GHSA-73p3-rqpv-59wx))
+- Cross-site Scripting (XSS) in Hestia Control Panel ([GHSA-fg7j-gpvw-2m73](https://github.com/hestiacp/hestiacp/security/advisories/GHSA-fg7j-gpvw-2m73))
+- Client to Root RCE via Newline Injection in v-add-cron-job and Eval Stdout Poisoning in parse_object_kv_list ([GHSA-5fpv-c8rg-x6r3](https://github.com/hestiacp/hestiacp/security/advisories/GHSA-5fpv-c8rg-x6r3))
+- Systematic Second-Order Command Injection in Queue System Leading to Root RCE ([GHSA-47mf-74xr-f8x9](https://github.com/hestiacp/hestiacp/security/advisories/GHSA-47mf-74xr-f8x9))
+- Root RCE via double eval() on user-controlled config data in parse_object_kv_list() (func/main.sh) ([GHSA-w3mx-xq85-8qqc](https://github.com/hestiacp/hestiacp/security/advisories/GHSA-w3mx-xq85-8qqc))
+- Low-privilege to root command execution via unescaped web.conf path fields evaluated by v-search-user-object ([GHSA-cr7q-frhq-xw4v](https://github.com/hestiacp/hestiacp/security/advisories/GHSA-cr7q-frhq-xw4v))
+- HestiaCP 1.9.6 — SQL Injection in Database Password (CWE-89) ([GHSA-8w7m-g9c2-9q9p](https://github.com/hestiacp/hestiacp/security/advisories/GHSA-8w7m-g9c2-9q9p))
+- HestiaCP <= 1.9.6 Authenticated Admin Takeover ([GHSA-fcq6-p8cj-xx3c](https://github.com/hestiacp/hestiacp/security/advisories/GHSA-fcq6-p8cj-xx3c))
+
+### Features
+
+- Add: JSON files can now be edited directly in the File Manager (#5342)
+
+### Bug fixes
+
+- Fix: Add validation for backup fields in v-schedule-user-restore (#5510)
+- Improve security by removing eval from search utilities (#5509)
+- Bump file manager to version 7.14.4 (#5508)
+- Secure database user creation / password change to prevent SQL injection (#5511)
+- Fix typo in $KEEP_MONTHLY on v-backup-user-restic (#5409)
+- Allow installation to continue when netplan config is missing (#5406)
+- Fix missing HESTIA variable by sourcing hestia.conf (#5433)
+- Check SFTP jail status before add/delete user jail operations (#5420)
+- Fix incorrect comment in web/add/mail/index.php (#5428)
+- Fix private key detection not being propagated to sftpc() (#5426)
+- Make v-extract-fs-archive fully non-interactive during extraction (#5436)
+- Fix if statement in installer (#5440)
+- Docs: Add mail cleanup guidance (#5371)
+- Bump Roundcube to version 1.6.17 (#5492)
+
 ## [1.9.6] - Service Release
 
 ### Bug fixes

@@ -200,3 +200,7 @@ if $IS_UBUNTU2604; then
 		chmod 440 /etc/sudoers.d/hestiaweb
 	fi
 fi
+
+# Updating logrotate conf for Hestia
+echo "[ * ] Updating logrotate conf for Hestia"
+cp -f "$HESTIA"/install/deb/logrotate/hestia /etc/logrotate.d/hestia

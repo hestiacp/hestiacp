@@ -17,6 +17,7 @@ if (empty($_GET["u"])) {
 if (empty($_GET["q"])) {
 	$_GET["q"] = "";
 }
+
 // Data
 $q = quoteshellarg($_GET["q"]);
 $u = quoteshellarg($_GET["u"]);
@@ -33,8 +34,11 @@ if ($_SESSION["userContext"] === "admin" && $_SESSION["look"] == "") {
 		exec(HESTIA_CMD . "v-search-object " . $q . " json", $output, $return_var);
 	}
 } else {
+	$user = quoteshellarg($_SESSION["user"]);
 	exec(HESTIA_CMD . "v-search-user-object " . $user . " " . $q . " json", $output, $return_var);
 }
+
+check_return_code($return_var, $output);
 
 $data = json_decode(implode("", $output), true);
 

@@ -70,13 +70,28 @@ for port in $ports; do
 	fi
 done
 
-# Get user package max_workers
+# Get user package 
 PACKAGE=$($BIN/v-list-user "$user" json | jq -r ".$user.PACKAGE")
-max_workers=$($BIN/v-list-user-package "$PACKAGE" json | jq -r --arg pkg "$PACKAGE" '.[$pkg].MAX_WORKERS')
+pkg_json=$($BIN/v-list-user-package "$PACKAGE" json)
 
-# Default to 8 workers if undefined
-if [ -z "$max_workers" ]; then
-	max_workers=8
+# Get package PHP-FPM options
+max_children=$(echo "$pkg_json" | jq -r --arg pkg "$PACKAGE" '.[$pkg].MAX_CHILDREN // empty')
+pm_max_requests=$(echo "$pkg_json" | jq -r --arg pkg "$PACKAGE" '.[$pkg].PM_MAX_REQUESTS // empty')
+pm_process_idle_timeout=$(echo "$pkg_json" | jq -r --arg pkg "$PACKAGE" '.[$pkg].PM_PROCESS_IDLE_TIMEOUT // empty')
+pm_request_terminate_timeout=$(echo "$pkg_json" | jq -r --arg pkg "$PACKAGE" '.[$pkg].PM_REQUEST_TERMINATE_TIMEOUT // empty')
+
+# Set defaults if undefined
+if [ -z "$max_children" ] || [ "$max_children" = "null" ]; then
+	max_children=8
+fi
+if [ -z "$pm_max_requests" ] || [ "$pm_max_requests" = "null" ]; then
+	pm_max_requests=4000
+fi
+if [ -z "$pm_process_idle_timeout" ] || [ "$pm_process_idle_timeout" = "null" ]; then
+	pm_process_idle_timeout=10s
+fi
+if [ -z "$pm_request_terminate_timeout" ] || [ "$pm_request_terminate_timeout" = "null" ]; then
+	pm_request_terminate_timeout=30s
 fi
 
 # Changing backend config
@@ -84,7 +99,10 @@ cat $WEBTPL/$WEB_BACKEND/$template.tpl \
 	| sed -e "s|%backend_port%|$backend_port|" \
 		-e "s|%user%|$user|g" \
 		-e "s|%domain%|$domain|g" \
-		-e "s|%max_workers%|$max_workers|g" \
+		-e "s|%max_children%|$max_children|g" \
+		-e "s|%pm_max_requests%|$pm_max_requests|g" \
+		-e "s|%pm_process_idle_timeout%|$pm_process_idle_timeout|g" \
+		-e "s|%pm_request_terminate_timeout%|$pm_request_terminate_timeout|g" \
 		-e "s|%domain_idn%|$domain_idn|" \
 		-e "s|%backend%|$backend_type|g" \
 		-e "s|%backend_version%|$backend_version|g" > $pool/$backend_type.conf

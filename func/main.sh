@@ -1365,17 +1365,31 @@ is_valid_swap_size() {
 }
 
 # Validate Max Workers
-is_valid_max_workers() {
+is_valid_max_children() {
     if ! [[ "$1" =~ ^[0-9]+$ ]]; then
         check_result "$E_INVALID" "Invalid Max Workers format :: $1"
     fi
 }
 
-# Validate Max Memory Per Worker
-is_valid_max_memory_per_worker() {
-    if [[ ! "$1" =~ ^[0-9]+[KMGTK]?$ ]]; then
-        check_result "$E_INVALID" "Invalid Max Memory Per Worker format :: $1"
-    fi
+# Validate PM Max Requests
+is_valid_pm_max_requests() {
+	if ! [[ "$1" =~ ^[0-9]+$ ]]; then
+		check_result "$E_INVALID" "Invalid PM Max Requests format :: $1"
+	fi
+}
+
+# Validate PM Process Idle Timeout
+is_valid_pm_process_idle_timeout() {
+	if ! [[ "$1" =~ ^[0-9]+[smh]?$ ]]; then
+		check_result "$E_INVALID" "Invalid PM Process Idle Timeout format :: $1"
+	fi
+}
+
+# Validate PM Request Terminate Timeout
+is_valid_pm_request_terminate_timeout() {
+	if ! [[ "$1" =~ ^[0-9]+[smh]?$ ]]; then
+		check_result "$E_INVALID" "Invalid PM Request Terminate Timeout format :: $1"
+	fi
 }
 
 is_object_name_format_valid() {

@@ -347,31 +347,61 @@
 							<small class="form-text text-muted"><?= tohtml( _("Takes a swap size in bytes. If the value is suffixed with K, M, G or T, the specified swap size is parsed as Kilobytes, Megabytes, Gigabytes, or Terabytes (with the base 1024), respectively")) ?></small>
 						</div>
 
-						<!-- PHP-FPM Max workers -->
-						<div class="u-mb10">
-							<label for="v_max_workers" class="form-label">
-								<?= tohtml( _("PHP-FPM Max workers")) ?>
-							</label>
-							<div class="u-pos-relative">
-								<input type="text" class="form-control" name="v_max_workers" id="v_max_workers" value="<?= tohtml(trim($v_max_workers, "'")) ?>">
-							</div>
-							<small class="form-text text-muted"><?= tohtml( _("The maximum number of parallel PHP processes that can run at any one time. Higher values allow more concurrent PHP requests, but use more memory.")) ?></small>
-						</div>
-
-						<!-- PHP-FPM Max memory per worker -->
-						<div class="u-mb10">
-							<label for="v_max_memory_per_worker" class="form-label">
-								<?= tohtml( _("PHP-FPM Max memory per worker")) ?>
-							</label>
-							<div class="u-pos-relative">
-								<input type="text" class="form-control" name="v_max_memory_per_worker" id="v_max_memory_per_worker" value="<?= tohtml(trim($v_max_memory_per_worker, "'")) ?>">
-							</div>
-							<small class="form-text text-muted"><?= tohtml( _("The maximum amount of memory that a single PHP worker process can use. If a worker process exceeds this limit, it will be automatically restarted to free up memory.")) ?></small>
-						</div>
-
 					</div>
 				</details>
 			<?php } ?>
+
+			<details class="collapse" id="php-fpm-options">
+				<summary class="collapse-header">
+					<?= tohtml( _("PHP-FPM")) ?>
+				</summary>
+				<div class="collapse-content">
+					<!-- PHP-FPM Max workers -->
+					<div class="u-mb10">
+						<label for="v_max_children" class="form-label">
+							<?= tohtml( _("PHP-FPM Max workers")) ?>
+						</label>
+						<div class="u-pos-relative">
+							<input type="text" class="form-control" name="v_max_children" id="v_max_children" value="<?= tohtml(trim($v_max_children, "'")) ?>">
+						</div>
+						<small class="form-text text-muted"><?= tohtml( _("The maximum number of parallel PHP processes that can run at any one time. Higher values allow more concurrent PHP requests, but use more memory.")) ?></small>
+					</div>
+
+					<!-- PHP-FPM Max requests -->
+					<div class="u-mb10">
+						<label for="v_pm_max_requests" class="form-label">
+							<?= tohtml( _("PHP-FPM Max requests")) ?>
+						</label>
+						<div class="u-pos-relative">
+							<input type="text" class="form-control" name="v_pm_max_requests" id="v_pm_max_requests" value="<?= tohtml(trim($v_pm_max_requests, "'")) ?>">
+						</div>
+						<small class="form-text text-muted"><?= tohtml( _("The number of requests each worker process executes before respawning. Helps prevent memory leaks.")) ?></small>
+					</div>
+
+					<!-- PHP-FPM Process idle timeout -->
+					<div class="u-mb10">
+						<label for="v_pm_process_idle_timeout" class="form-label">
+							<?= tohtml( _("PHP-FPM Process idle timeout")) ?>
+						</label>
+						<div class="u-pos-relative">
+							<input type="text" class="form-control" name="v_pm_process_idle_timeout" id="v_pm_process_idle_timeout" value="<?= tohtml(trim($v_pm_process_idle_timeout, "'")) ?>">
+						</div>
+						<small class="form-text text-muted"><?= tohtml( _("The time (e.g., 10s, 30s) after which an idle worker process will be killed.")) ?></small>
+					</div>
+
+					<!-- PHP-FPM Request terminate timeout -->
+					<div class="u-mb10">
+						<label for="v_pm_request_terminate_timeout" class="form-label">
+							<?= tohtml( _("PHP-FPM Request terminate timeout")) ?>
+						</label>
+						<div class="u-pos-relative">
+							<input type="text" class="form-control" name="v_pm_request_terminate_timeout" id="v_pm_request_terminate_timeout" value="<?= tohtml(trim($v_pm_request_terminate_timeout, "'")) ?>">
+						</div>
+						<small class="form-text text-muted"><?= tohtml( _("The timeout for serving a single request after which the worker process will be killed (e.g., 30s, 60s, 0). Prevents hung scripts.")) ?></small>
+					</div>
+
+				</div>
+			</details>
 
 		</div>
 

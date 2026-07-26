@@ -15,9 +15,10 @@ user = %user%
 group = %user%
 
 pm = ondemand
-pm.max_children = %max_workers%
-pm.max_requests = 4000
-pm.process_idle_timeout = 10s
+pm.max_children = %max_children%
+pm.max_requests = %pm_max_requests%
+pm.process_idle_timeout = %pm_process_idle_timeout%
+request_terminate_timeout = %pm_request_terminate_timeout%
 pm.status_path = /status
 
 php_admin_value[upload_tmp_dir] = /home/%user%/tmp

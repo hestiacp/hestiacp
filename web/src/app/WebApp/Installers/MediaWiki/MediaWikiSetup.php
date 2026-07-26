@@ -11,7 +11,7 @@ class MediaWikiSetup extends BaseSetup {
     protected array $info = [
         "name" => "MediaWiki",
         "group" => "cms",
-        "version" => "1.45.3",
+        "version" => "1.46.0",
         "thumbnail" => "MediaWiki-2020-logo.svg", //Max size is 300px by 300px
     ];
 
@@ -25,7 +25,7 @@ class MediaWikiSetup extends BaseSetup {
         "database" => true,
         "resources" => [
             "archive" => [
-                "src" => "https://releases.wikimedia.org/mediawiki/1.45/mediawiki-1.45.3.zip",
+                "src" => "https://releases.wikimedia.org/mediawiki/1.46/mediawiki-1.46.0.zip",
             ],
         ],
         "server" => [
@@ -40,7 +40,7 @@ class MediaWikiSetup extends BaseSetup {
 
     protected function setupApplication(InstallationTarget $target, array $options): void {
         $this->appcontext->copyDirectory(
-            $target->getDocRoot("/mediawiki-1.45.3/."),
+            $target->getDocRoot("/mediawiki-1.46.0/."),
             $target->getDocRoot(),
         );
 
@@ -63,6 +63,6 @@ class MediaWikiSetup extends BaseSetup {
             ],
         );
 
-        $this->appcontext->deleteDirectory($target->getDocRoot("/mediawiki-1.45.3/"));
+        $this->appcontext->deleteDirectory($target->getDocRoot("/mediawiki-1.46.0/"));
     }
 }

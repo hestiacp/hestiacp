@@ -536,13 +536,14 @@ EOPHP
 
 # Update domain zone
 update_domain_zone() {
+	local serial_base=3000000000
 	domain_param=$(grep "DOMAIN='$domain'" $USER_DATA/dns.conf)
 	parse_object_kv_list "$domain_param"
 	local zone_ttl="$TTL"
 	local value_for_zone
 	SOA=$(idn2 --quiet "$SOA")
 	if [ -z "$SERIAL" ]; then
-		SERIAL=$(date +'%Y%m%d01')
+		SERIAL=$serial_base
 	fi
 	if [[ "$domain" = *[![:ascii:]]* ]]; then
 		domain_idn=$(idn2 --quiet "$domain")
@@ -621,26 +622,33 @@ update_domain_zone() {
 
 # Update zone serial
 update_domain_serial() {
-	zn_conf="$HOMEDIR/$user/conf/dns/$domain.db"
-	if [ -e $zn_conf ]; then
-		zn_serial=$(head $zn_conf | grep 'SOA' -A1 | tail -n 1 | sed "s/ //g")
-		s_date=$(echo ${zn_serial:0:8})
-		c_date=$(date +'%Y%m%d')
-		if [ "$s_date" == "$c_date" ]; then
-			cur_value=$(echo ${zn_serial:8})
-			new_value=$(expr $cur_value + 1)
-			len_value=$(expr length $new_value)
-			if [ 1 -eq "$len_value" ]; then
-				new_value='0'$new_value
-			fi
-			serial="$c_date""$new_value"
-		else
-			serial="$(date +'%Y%m%d01')"
-		fi
-	else
-		serial="$(date +'%Y%m%d01')"
+	local serial_base=3000000000
+	local serial_max=4294967295
+	local zn_conf="$HOMEDIR/$user/conf/dns/$domain.db"
+	local zn_serial
+	local serial
+
+	if [[ -f "$zn_conf" ]]; then
+		zn_serial=$(head "$zn_conf" | grep -m1 'SOA' -A1 | tail -n1 | tr -d ' ')
 	fi
-	add_object_key "dns" 'DOMAIN' "$domain" 'SERIAL' 'RECORDS'
+
+	# Old format YYYYMMDDNN, years 2000-2029
+	local old_format_re='^20[0-2][0-9](0[1-9]|1[0-2])(0[1-9]|[12][0-9]|3[01])[0-9]{2}$'
+
+	if [[ -z "$zn_serial" ]] || [[ ! "$zn_serial" =~ ^[0-9]+$ ]] \
+		|| [[ "$zn_serial" =~ $old_format_re ]]; then
+		serial=$serial_base
+	else
+		serial=$((10#$zn_serial + 1))
+
+		if ((serial > serial_max)); then
+			serial=1
+		fi
+	fi
+
+	serial=$(printf '%010u' "$serial")
+
+	add_object_key 'dns' 'DOMAIN' "$domain" 'SERIAL' 'RECORDS'
 	update_object_value 'dns' 'DOMAIN' "$domain" '$SERIAL' "$serial"
 }
 

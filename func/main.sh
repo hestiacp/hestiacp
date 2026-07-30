@@ -1538,6 +1538,7 @@ is_format_valid() {
 				rule) is_int_format_valid "$arg" "rule id" ;;
 				service) is_service_format_valid "$arg" "$arg_name" ;;
 				secret_access_key) is_secret_access_key_format_valid "$arg" "$arg_name" ;;
+				snapshot) is_object_format_valid "$arg" 'snapshot' ;;
 				soa) is_domain_format_valid "$arg" 'SOA' ;;
 				#missing command: is_format_valid_shell
 				shell) is_format_valid_shell "$arg" ;;

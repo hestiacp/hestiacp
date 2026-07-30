@@ -1706,6 +1706,114 @@ function check_ip_not_banned(){
     assert_file_contains /etc/exim4/domains/$domain/limits "test@$domain:10"
 }
 
+@test "MAIL: Add account autoreply" {
+    run v-add-mail-account-autoreply $user $domain test "Test autoreply message"
+    assert_success
+    refute_output
+
+    assert_file_exist /etc/exim4/domains/$domain/autoreply.test.msg
+    assert_file_contains "${HESTIA}/data/users/${user}/mail/${domain}.conf" "AUTOREPLY='yes'"
+}
+
+@test "MAIL: Autoreply daily updater registered" {
+    run grep "v-update-mail-autoreplies" "${HESTIA}/data/queue/daily.pipe"
+    assert_success
+}
+
+@test "MAIL: Autoreply message file is restored if missing" {
+    rm -f /etc/exim4/domains/$domain/autoreply.test.msg
+    run v-update-mail-autoreplies
+    assert_success
+    refute_output
+
+    assert_file_exist /etc/exim4/domains/$domain/autoreply.test.msg
+}
+
+@test "MAIL: Add account autoreply with future schedule" {
+    run v-add-mail-account-autoreply $user $domain test "Vacation" 2044-01-10 2044-01-31
+    assert_success
+    refute_output
+
+    assert_file_not_exist /etc/exim4/domains/$domain/autoreply.test.msg
+    assert_file_contains "${HESTIA}/data/users/${user}/mail/${domain}.conf" "AUTOREPLY_START='2044-01-10'"
+    assert_file_contains "${HESTIA}/data/users/${user}/mail/${domain}.conf" "AUTOREPLY_END='2044-01-31'"
+}
+
+@test "MAIL: List account autoreply with schedule" {
+    run v-list-mail-account-autoreply $user $domain test json
+    assert_success
+    assert_output --partial '"START": "2044-01-10"'
+    assert_output --partial '"END": "2044-01-31"'
+}
+
+@test "MAIL: Autoreply schedule transitions" {
+    # inside the window: message file must be created
+    run v-update-mail-autoreplies 2044-01-15
+    assert_success
+    refute_output
+    assert_file_exist /etc/exim4/domains/$domain/autoreply.test.msg
+
+    # before the window: message file must be removed
+    run v-update-mail-autoreplies 2044-01-09
+    assert_success
+    refute_output
+    assert_file_not_exist /etc/exim4/domains/$domain/autoreply.test.msg
+
+    # after the window: message file must stay removed
+    run v-update-mail-autoreplies 2044-02-01
+    assert_success
+    refute_output
+    assert_file_not_exist /etc/exim4/domains/$domain/autoreply.test.msg
+}
+
+@test "MAIL: Autoreply schedule with end date only" {
+    run v-add-mail-account-autoreply $user $domain test "Vacation" '' 2044-01-31
+    assert_success
+    refute_output
+
+    # no start date: active immediately
+    assert_file_exist /etc/exim4/domains/$domain/autoreply.test.msg
+
+    # past the end date: no longer active
+    run v-update-mail-autoreplies 2044-02-01
+    assert_success
+    assert_file_not_exist /etc/exim4/domains/$domain/autoreply.test.msg
+}
+
+@test "MAIL: Autoreply schedule with start date only" {
+    run v-add-mail-account-autoreply $user $domain test "Vacation" 2044-01-10 ''
+    assert_success
+    refute_output
+
+    # before the start date: not active
+    assert_file_not_exist /etc/exim4/domains/$domain/autoreply.test.msg
+
+    # no end date: active indefinitely after the start date
+    run v-update-mail-autoreplies 2050-06-06
+    assert_success
+    assert_file_exist /etc/exim4/domains/$domain/autoreply.test.msg
+}
+
+@test "MAIL: Autoreply schedule invalid date format" {
+    run v-add-mail-account-autoreply $user $domain test "Vacation" 2044-1-1
+    assert_failure $E_INVALID
+}
+
+@test "MAIL: Autoreply start date after end date" {
+    run v-add-mail-account-autoreply $user $domain test "Vacation" 2044-02-01 2044-01-01
+    assert_failure $E_INVALID
+}
+
+@test "MAIL: Delete account autoreply" {
+    run v-delete-mail-account-autoreply $user $domain test
+    assert_success
+    refute_output
+
+    assert_file_not_exist /etc/exim4/domains/$domain/autoreply.test.msg
+    assert_file_not_exist "${HESTIA}/data/users/${user}/mail/test@${domain}.msg"
+    assert_file_contains "${HESTIA}/data/users/${user}/mail/${domain}.conf" "AUTOREPLY='no'"
+}
+
 @test "MAIL: Delete account" {
     run v-delete-mail-account $user $domain test
     assert_success

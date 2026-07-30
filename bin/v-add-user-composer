@@ -52,7 +52,7 @@ COMPOSER_BIN="$COMPOSER_DIR/composer"
 
 if [ -f "$COMPOSER_BIN" ]; then
 	if [ -f "$update" ]; then
-		user_exec $COMPOSER_BIN selfupdate
+		user_exec $COMPOSER_BIN self-update
 		exit
 	fi
 	echo "Composer already available"

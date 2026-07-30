@@ -204,3 +204,12 @@ fi
 # Updating logrotate conf for Hestia
 echo "[ * ] Updating logrotate conf for Hestia"
 cp -f "$HESTIA"/install/deb/logrotate/hestia /etc/logrotate.d/hestia
+
+# Enhance - Update current composer installations
+echo "[ * ] Updating composer for users:"
+for huser in $("$HESTIA/bin/v-list-users" list); do
+	if [[ -f "/home/$huser/.composer/composer" ]]; then
+		echo "      - $huser..."
+		"$HESTIA/bin/v-add-user-composer" "$huser" 2 yes &> /dev/null
+	fi
+done

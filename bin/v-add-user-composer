@@ -51,8 +51,8 @@ COMPOSER_DIR="$HOMEDIR/$user/.composer"
 COMPOSER_BIN="$COMPOSER_DIR/composer"
 
 if [ -f "$COMPOSER_BIN" ]; then
-	if [ -f "$update" ]; then
-		user_exec $COMPOSER_BIN self-update
+	if [[ "${update,,}" = "yes" ]]; then
+		COMPOSER_HOME="$HOMEDIR/$user/.config/composer" user_exec "$COMPOSER_BIN" --quiet self-update
 		exit
 	fi
 	echo "Composer already available"

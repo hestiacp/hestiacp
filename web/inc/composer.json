@@ -3,6 +3,7 @@
         "phpmailer/phpmailer": "6.9.3",
         "hestiacp/phpquoteshellarg": "1.1.0",
         "robthree/twofactorauth": "3.0.3",
-        "divinity76/cloudflare-ip-validator": "1.0.0"
+        "divinity76/cloudflare-ip-validator": "1.0.0",
+        "symfony/html-sanitizer": "^8.1"
     }
 }

@@ -65,7 +65,6 @@ for service in $service_list; do
 		"$service" = "dovecot" -o \
 		"$service" = "bind9" -o \
 		"$service" = "named" -o \
-		"$service" = "vsftpd" -o \
 		"$service" = "php5.6-fpm" -o \
 		"$service" = "php7.0-fpm" -o \
 		"$service" = "php7.1-fpm" -o \

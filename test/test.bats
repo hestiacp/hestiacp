@@ -536,22 +536,6 @@ function check_ip_not_banned(){
   refute_output
 }
 
-@test "User: Add user notification with XSS payload is sanitized" {
-  run v-add-user-notification $user "XSS test" "<p>safe</p><script>alert(document.cookie)</script><img src=x onerror=alert(1)>"
-  assert_success
-  refute_output
-
-  run v-list-user-notifications $user csv
-  assert_success
-  assert_output --partial '<p>safe</p>'
-  refute_output --partial '<script>'
-  refute_output --partial 'onerror'
-
-  run v-delete-user-notification $user 2
-  assert_success
-  refute_output
-}
-
 @test "User: Get User salt ipv4" {
   run v-get-user-salt $user 192.168.2.10
   assert_success

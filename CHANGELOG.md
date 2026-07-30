@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.9.8] - Service Release
+
+### Security
+
+- Restrict ROOT_USER account modifications to the ROOT_USER session (#5547) ([GHSA-c69h-jgpw-h9cj](https://github.com/hestiacp/hestiacp/security/advisories/GHSA-c69h-jgpw-h9cj))
+- Fix: Sanitize debug panel variable output / Delete button SSH key (#5550)
+- Add validation for v-add-user-notification to prevent XSS injection (#5548) ([GHSA-3g4r-pfpf-8697](https://github.com/hestiacp/hestiacp/security/advisories/GHSA-3g4r-pfpf-8697))
+- Validate value argument in v-schedule-user-restore-restic to prevent injection into backup queue file ([GHSA-2xw3-7h62-v4gf](https://github.com/hestiacp/hestiacp/security/advisories/GHSA-2xw3-7h62-v4gf))
+
+### Bug fixes
+
+- Fix invalid JSON output in v-list-mail-domain-ssl (#5524)
+- Fix: v-restart-ftp only reloads vsftpd; full restart needed to reload certs (#5005)
+- Fix bug in v-add-sys-sftp-jail when ssh jail is active (#4873)
+- Hide DB services if not installed (#5455)
+- Fix SCRIPT_FILENAME in phpmyadmin/phppgadmin templates (#5535)
+- Fix repo path lookup in v-schedule-user-restore-restic
+
 ## [1.9.7] - Service Release
 
 ### Version name changes

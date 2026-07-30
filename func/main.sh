@@ -1288,6 +1288,36 @@ is_comment_format_valid() {
 	fi
 }
 
+# User notification topic validator - plain text, single line only.
+# Rendered client-side with Alpine's x-text, but line breaks would still
+# corrupt the flat-file notifications.conf format, so they're rejected here.
+is_notification_topic_valid() {
+	local str="$1"
+
+	if [[ "$str" == *$'\n'* ]] || [[ "$str" == *$'\r'* ]]; then
+		check_result "$E_INVALID" "invalid topic format :: line breaks are not allowed"
+	fi
+	if [ ${#str} -gt 255 ]; then
+		check_result "$E_INVALID" "invalid topic format :: too long"
+	fi
+}
+
+# User notification body validator. NOTICE is rendered client-side with
+# Alpine's x-html (raw HTML), and its actual sanitization is done by
+# func/internal/sanitize_html.php (Symfony HtmlSanitizer allow-list) before
+# it's stored. This just guards the flat-file notifications.conf format,
+# which breaks if a value spans multiple lines or is unreasonably large.
+is_notification_notice_valid() {
+	local str="$1"
+
+	if [[ "$str" == *$'\n'* ]] || [[ "$str" == *$'\r'* ]]; then
+		check_result "$E_INVALID" "invalid notice format :: line breaks are not allowed"
+	fi
+	if [ ${#str} -gt 4000 ]; then
+		check_result "$E_INVALID" "invalid notice format :: too long"
+	fi
+}
+
 # Cron validator
 is_cron_format_valid() {
 	limit=59
@@ -1481,6 +1511,7 @@ is_format_valid() {
 				nat_ip) is_ip_format_valid "$arg" ;;
 				netmask) is_netmask_format_valid "$arg" 'netmask' ;;
 				newid) is_int_format_valid "$arg" 'id' ;;
+				notice) is_notification_notice_valid "$arg" ;;
 				ns1) is_domain_format_valid "$arg" 'ns1' ;;
 				ns2) is_domain_format_valid "$arg" 'ns2' ;;
 				ns3) is_domain_format_valid "$arg" 'ns3' ;;
@@ -1515,6 +1546,7 @@ is_format_valid() {
 				stats_user) is_user_format_valid "$arg" "$arg_name" ;;
 				template) is_object_format_valid "$arg" "$arg_name" ;;
 				theme) is_common_format_valid "$arg" "$arg_name" ;;
+				topic) is_notification_topic_valid "$arg" ;;
 				ttl) is_int_format_valid "$arg" 'ttl' ;;
 				user) is_user_format_valid "$arg" $arg_name ;;
 				wday) is_cron_format_valid "$arg" $arg_name ;;

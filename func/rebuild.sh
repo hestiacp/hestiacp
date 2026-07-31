@@ -69,7 +69,7 @@ rebuild_user_conf() {
 
 	# Rebuild user
 	shell=$(grep -w "$SHELL" /etc/shells | head -n1)
-	/usr/sbin/useradd "$user" -s "$shell" -c "$CONTACT" \
+	id "$user" &>/dev/null || /usr/sbin/useradd "$user" -s "$shell" -c "$CONTACT" \
 		-m -d "$HOMEDIR/$user" > /dev/null 2>&1
 
 	# Add a general group for normal users created by Hestia

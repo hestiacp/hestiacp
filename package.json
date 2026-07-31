@@ -28,9 +28,9 @@
 		"floating-vue": "^5.2.2",
 		"nanoid": "^5.1.16",
 		"normalize.css": "^8.0.1",
-		"xterm": "^5.3.0",
-		"xterm-addon-canvas": "^0.5.0",
-		"xterm-addon-webgl": "^0.16.0"
+		"@xterm/addon-canvas": "^0.7.0",
+		"@xterm/addon-webgl": "^0.19.0",
+		"@xterm/xterm": "^5.5.0"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "2.5.6",
@@ -54,5 +54,11 @@
 	},
 	"browserslist": [
 		"defaults"
-	]
+	],
+	"allowScripts": {
+		"esbuild@0.28.1": true,
+		"esbuild@0.25.12": true,
+		"esbuild@0.21.5": true,
+		"fsevents@2.3.3": true
+	}
 }

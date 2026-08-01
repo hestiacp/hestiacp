@@ -13,5 +13,8 @@
 	"devDependencies": {
 		"@types/ws": "^8.18.1",
 		"@types/node": "^24.13.3"
+	},
+	"allowScripts": {
+		"node-pty@1.1.0": true
 	}
 }

@@ -38,7 +38,7 @@ $BIN/v-change-sys-config-value "WEB_TERMINAL" "true"
 
 # Detect and install Node.js if necessary
 apt="/etc/apt/sources.list.d"
-node_v="20"
+node_v="24"
 
 if [ $(uname -m) = "x86_64" ]; then
 	ARCH=amd64

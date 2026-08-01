@@ -591,7 +591,7 @@ upgrade_cloudflare_ip() {
 upgrade_phppgadmin() {
 	if [ -n "$(echo $DB_SYSTEM | grep -w 'pgsql')" ]; then
 		pga_release=$(cat /usr/share/phppgadmin/libraries/lib.inc.php | grep appVersion | head -n1 | cut -f2 -d\' | cut -f1 -d-)
-		if version_ge "$pga_release" "pga_v"; then
+		if version_ge "$pga_release" "$pga_v"; then
 			echo "[ * ] phppgadmin is up to date ($pga_release)..."
 		else
 			# Display upgrade information

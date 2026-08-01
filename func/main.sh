@@ -628,13 +628,19 @@ update_object_value() {
 
 # Add object key
 add_object_key() {
-	row=$(grep -n "$2='$3'" $USER_DATA/$1.conf)
-	lnr=$(echo $row | cut -f 1 -d ':')
-	object=$(echo $row | sed "s/^$lnr://")
-	if [ -z "$(echo $object | grep $4=)" ]; then
+	row=$(grep -n "$2='$3'" "$USER_DATA/$1.conf")
+	lnr=$(echo "$row" | cut -f 1 -d ':')
+	object=$(echo "$row" | sed "s/^$lnr://")
+
+	# If lnr or $5 is empty, do not run sed
+	if [[ -z "$lnr" || -z "$5" ]]; then
+		return 1
+	fi
+
+	if [[ -z "$(echo "$object" | grep "$4=")" ]]; then
 		local varname="${4#\$}"
 		old="${!varname}"
-		sed -i "$lnr s/$5='/$4='' $5='/" $USER_DATA/$1.conf
+		sed -i "$lnr s/$5='/$4='' $5='/" "$USER_DATA/$1.conf"
 	fi
 }
 

@@ -186,6 +186,7 @@ function syshealth_repair_mail_account_config() {
 	system="mail_accounts"
 	sanitize_config_file "$system"
 	get_object_values "mail/$domain" 'ACCOUNT' "$account"
+	prev="ACCOUNT"
 	for key in $known_keys; do
 		if [ -z "${!key}" ]; then
 			add_object_key "mail/$domain" 'ACCOUNT' "$account" "$key" "$prev"

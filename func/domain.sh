@@ -608,7 +608,7 @@ update_domain_zone() {
 						txtlength=$(($txtlength - 2))
 						VALUE=${VALUE:1:txtlength}
 					fi
-					VALUE=$(echo $VALUE | fold -w 255 | xargs -I '$' echo -n '"$"')
+					VALUE=$(echo "$VALUE" | fold -w 255 | xargs -I '$' echo -n '"$"')
 				fi
 			fi
 		fi

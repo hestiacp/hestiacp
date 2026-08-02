@@ -7,9 +7,49 @@
 #===========================================================================#
 
 # Source conf function for correct variable initialisation
+#
+# lhs is never trusted: this is called on files that can carry
+# attacker-influenced content (e.g. backup exclusion lists), so before
+# ever reaching this point a hostile line could smuggle a bogus KEY to
+# declare. Two independent gates below stop that:
+#  - lhs must be a plain shell identifier (blocks flag-injection via a
+#    leading '-', array syntax, and any other non-identifier shape)
+#  - lhs must not be one of a fixed set of variables whose value the
+#    rest of the codebase (or bash itself) trusts implicitly:
+#     - PATH/CDPATH (command resolution), IFS (word splitting),
+#       ENV/BASH_ENV/PS4 (auto-executed on shell/xtrace events),
+#       LD_PRELOAD/LD_LIBRARY_PATH/LD_AUDIT (dynamic linker), TMPDIR
+#       (mktemp target), and BASH_FUNC_* (exported-function smuggling,
+#       the Shellshock vector)
+#     - Hestia's own path/binary-location globals (BIN, HOMEDIR,
+#       USER_DATA, SENDMAIL, ...): these are spliced unquoted into
+#       command invocations throughout bin/* (e.g. "$BIN/v-log-action"),
+#       so hijacking one is a more direct route to root RCE than PATH is
+#     - the E_*/OK return-code constants: silently remapping E_INVALID
+#       to 0 would turn a real validation failure into an apparent
+#       success for any caller that only checks the exit code
+#    ROOT_USER is deliberately not in this list: hestia.conf legitimately
+#    sets it, and it's how source_conf itself learns who ROOT_USER is.
+# This function can run before check_result/E_INVALID exist (it loads
+# hestia.conf during main.sh's own bootstrap), so it must fail closed on
+# its own rather than delegating to check_result.
 source_conf() {
+	local reserved=' PATH IFS CDPATH ENV BASH_ENV PS1 PS2 PS3 PS4 PROMPT_COMMAND LD_PRELOAD LD_LIBRARY_PATH LD_AUDIT TMPDIR SHELLOPTS BASHOPTS BASH_XTRACEFD GLOBIGNORE FIGNORE HISTFILE'
+	reserved+=' HESTIA BIN HOMEDIR BACKUP USER_DATA WEBTPL MAILTPL DNSTPL RRD SENDMAIL'
+	reserved+=' HESTIA_INSTALL_DIR HESTIA_COMMON_DIR HESTIA_BACKUP HESTIA_PHP HESTIA_GIT_REPO'
+	reserved+=' HESTIA_THEMES HESTIA_THEMES_CUSTOM SCRIPT CHECK_RESULT_CALLBACK user'
+	reserved+=' OK E_ARGS E_INVALID E_NOTEXIST E_EXISTS E_SUSPENDED E_UNSUSPENDED E_INUSE'
+	reserved+=' E_LIMIT E_PASSWORD E_FORBIDEN E_DISABLED E_PARSING E_DISK E_LA E_CONNECT'
+	reserved+=' E_FTP E_DB E_RRD E_UPDATE E_RESTART '
 	while IFS='= ' read -r lhs rhs; do
 		if [[ ! $lhs =~ ^\ *# && -n $lhs ]]; then
+			if [[ ! $lhs =~ ^[A-Za-z_][A-Za-z0-9_]*$ ]]; then
+				continue
+			fi
+			if [[ "$reserved" == *" $lhs "* ]] || [[ "$lhs" == BASH_FUNC_* ]]; then
+				continue
+			fi
+
 			rhs="${rhs%%^\#*}" # Del in line right comments
 			rhs="${rhs%%*( )}" # Del trailing spaces
 			rhs="${rhs%\'*}"   # Del opening string quotes

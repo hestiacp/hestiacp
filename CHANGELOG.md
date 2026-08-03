@@ -57,6 +57,7 @@ All notable changes to this project will be documented in this file.
 - added Contao configs (#5105)
 - Adds cross-architecture and multi-OS package building #5499
 - Allow overriding BUILD_DIR via environment in hst_autocompile.sh
+- Bump hestia-php to version 8.5.9 (#5564)
 - Configure Nginx to handle Livewire v3 asset requests (#5260)
 - Count custom backend templates (e.g. *-PHP-x_y) in PHP version usage screen (#5228)
 - feat(Firewall): Added the ability to order firewall rules, changing their precedence within the iptables (#5080)
@@ -76,6 +77,7 @@ All notable changes to this project will be documented in this file.
 - Prepare Debian 13 support merge (#5388)
 - run UTF-8 locale (#4704)
 - Update default and required PHP versions for Debian installation (#5461)
+- Update user composer installations during Hestia upgrade (#5553)
 
 ### Bug fixes
 
@@ -84,6 +86,7 @@ All notable changes to this project will be documented in this file.
 - Add error meesage instead of fallback to chmod
 - Allow continuing installation when netplan config is missing (#5406)
 - Allow slash when adding username to smtp relay (Fixes #4973) (#4974)
+- Avoid recreating existing webmail DNS records (#5567)
 - Change NGINX template to 'dokuwiki' (#5445)
 - Check SFTP jail status before add/delete user jail operations (#5420)
 - Class change for latest version of file manager. (#4871)
@@ -110,6 +113,8 @@ All notable changes to this project will be documented in this file.
 - Fix incorrect comment in web/add/mail/index.php (#5428)
 - Fix invalid JSON output in v-list-mail-domain-ssl (#5524)
 - Fix ipv4_cidr validation (#5044)
+- Fix issue where settings are not accessible via web (#5565)
+- Fix issues with web-terminal on NodeJS 24 (#5560)
 - Fix Json format (#5059)
 - Fix Let's Encrypt YR1 chain validation (#5397)
 - Fix letsencrypt user key mismatch #5294
@@ -130,6 +135,8 @@ All notable changes to this project will be documented in this file.
 - Fix SCRIPT_FILENAME in phpmyadmin/phppgadmin templates (#5535)
 - Fix SpamAssassin service name for Ubuntu 24.04 (#5162)
 - Fix the way Hestia validates chain certificate (#4887)
+- Fix upgrade_phppgadmin function (#5562)
+- Fix v-add-user-composer update (#5552)
 - fix user dir container with spaces in name #4917
 - fix v-list-database-host: correct path to configuration file (#5114)
 - Fix vstats link to use https when SSL enabled (#5183)
@@ -182,6 +189,7 @@ All notable changes to this project will be documented in this file.
 - fixing 4997 (#4998)
 - Func/db.sh: Fix missing port argument for psql & pg_dump (#5278)
 - Gather uniform installation target information before install (#4694)
+- Harden add_object_key against invalid sed execution (#5566)
 - hestia-nginx: Allow access to installer images under src/app/WebApp/Installers (#5480)
 - Hide MySQL/MariaDB and PostgreSQL services from system list when local servers are not installed
 - Hide quotaon warnings when enabling quotas (#5465)
@@ -193,6 +201,7 @@ All notable changes to this project will be documented in this file.
 - Remove _domainkey entries from DKIM DNS script (#5161)
 - Remove the apache2-suexec-pristine package from the Debian installer (#4988)
 - Reorganize firewall rule processing for improved efficiency (#5442)
+- Skip useradd unless needed to avoid syslog flood on upgrades (#5557)
 - SOA to comply with checks and RIPE (#5305)
 - Sort backup file list before retention check (Fixes #5017) (#5018)
 - The Database Creation tab doesn’t show which prefix will be added

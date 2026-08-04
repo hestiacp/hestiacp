@@ -67,7 +67,7 @@ source_conf() {
 		rhs="${rhs%%*( )}"
 
 		declare -g "$lhs=$rhs"
-	done < $1
+	done < "$1"
 }
 
 if [ -z "$user" ]; then

@@ -31,7 +31,7 @@ HESTIA_COMMON_DIR="$HESTIA/install/common"
 VERBOSE='no'
 
 # Define software versions
-HESTIA_INSTALL_VER='1.10.0~alpha'
+HESTIA_INSTALL_VER='1.10.0~beta'
 
 # Build the full Hestia version
 # Split base version (1.10.0) from channel suffix (~alpha / ~beta), if present

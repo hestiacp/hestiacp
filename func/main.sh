@@ -42,20 +42,31 @@ source_conf() {
 	reserved+=' E_LIMIT E_PASSWORD E_FORBIDEN E_DISABLED E_PARSING E_DISK E_LA E_CONNECT'
 	reserved+=' E_FTP E_DB E_RRD E_UPDATE E_RESTART '
 	while IFS='= ' read -r lhs rhs; do
-		if [[ ! $lhs =~ ^\ *# && -n $lhs ]]; then
-			if [[ ! $lhs =~ ^[A-Za-z_][A-Za-z0-9_]*$ ]]; then
-				continue
-			fi
-			if [[ "$reserved" == *" $lhs "* ]] || [[ "$lhs" == BASH_FUNC_* ]]; then
-				continue
-			fi
-
-			rhs="${rhs%%^\#*}" # Del in line right comments
-			rhs="${rhs%%*( )}" # Del trailing spaces
-			rhs="${rhs%\'*}"   # Del opening string quotes
-			rhs="${rhs#\'*}"   # Del closing string quotes
-			declare -g $lhs="$rhs"
+		if [[ ! $lhs =~ ^[A-Za-z_][A-Za-z0-9_]*$ ]]; then
+			continue
 		fi
+		if [[ "$reserved" == *" $lhs "* ]] || [[ "$lhs" == BASH_FUNC_* ]]; then
+			continue
+		fi
+
+		# Value cleanup (rhs)
+
+		# Remove control characters (tab, newline, null, etc.)
+		rhs="${rhs//[[:cntrl:]]/}"
+
+		# Remove inline comments and trailing spaces
+		rhs="${rhs%%^\#*}"
+		rhs="${rhs%%*( )}"
+
+		# Remove quotes
+		rhs="${rhs%\'*}"
+		rhs="${rhs#\'*}"
+
+		# Trim leading and trailing spaces (now that quotes are gone)
+		rhs="${rhs##*( )}"
+		rhs="${rhs%%*( )}"
+
+		declare -g "$lhs=$rhs"
 	done < $1
 }
 

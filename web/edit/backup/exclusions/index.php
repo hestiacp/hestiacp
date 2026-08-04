@@ -120,7 +120,9 @@ if (!empty($_POST["save"])) {
 	unset($output);
 
 	// Clean up temporary exception list
-	unlink($tmp);
+	if (!empty($tmp) && file_exists($tmp)) {
+		unlink($tmp);
+	}
 
 	// Set success message
 	if (empty($_SESSION["error_msg"])) {

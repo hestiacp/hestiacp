@@ -2422,6 +2422,10 @@ USER=''" > /tmp/backup_exclusions_cron
   run v-update-user-backup-exclusions $user /tmp/backup_exclusions_cron
   assert_success
   rm -f /tmp/backup_exclusions_cron
+
+  run v-list-user-backup-exclusions $user shell
+  assert_success
+  assert_output --partial "CRON:           *"
 }
 
 @test "Backup Exclusions: CRON non-wildcard value is rejected (no per-job exclusion exists)" {

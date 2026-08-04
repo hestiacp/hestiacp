@@ -2220,6 +2220,210 @@ echo   "1.2.3.4" >> $HESTIA/data/firewall/excludes.conf
 }
 
 #----------------------------------------------------------#
+#                  Backup exclusions                       #
+#----------------------------------------------------------#
+
+@test "Backup Exclusions: Domain with subpaths is allowed" {
+  echo "WEB='$domain:public_html/cache/:public_html/tmp/'
+DNS=''
+MAIL=''
+DB=''
+CRON=''
+USER=''" > /tmp/backup_exclusions_valid
+  run v-update-user-backup-exclusions $user /tmp/backup_exclusions_valid
+  assert_success
+  rm -f /tmp/backup_exclusions_valid
+
+  run v-list-user-backup-exclusions $user shell
+  assert_success
+  assert_output --partial "$domain:public_html/cache/:public_html/tmp/"
+}
+
+@test "Backup Exclusions: Wildcard for all is allowed" {
+  echo "WEB='*'
+DNS=''
+MAIL=''
+DB=''
+CRON=''
+USER=''" > /tmp/backup_exclusions_wildcard
+  run v-update-user-backup-exclusions $user /tmp/backup_exclusions_wildcard
+  assert_success
+  rm -f /tmp/backup_exclusions_wildcard
+
+  run v-list-user-backup-exclusions $user shell
+  assert_success
+  assert_output --partial "WEB:            *"
+}
+
+@test "Backup Exclusions: Mail domain with mailbox exclusions is allowed" {
+  echo "WEB=''
+DNS=''
+MAIL='$domain:info:support'
+DB=''
+CRON=''
+USER=''" > /tmp/backup_exclusions_mail
+  run v-update-user-backup-exclusions $user /tmp/backup_exclusions_mail
+  assert_success
+  rm -f /tmp/backup_exclusions_mail
+
+  run v-list-user-backup-exclusions $user shell
+  assert_success
+  assert_output --partial "$domain:info:support"
+}
+
+@test "Backup Exclusions: Database name is allowed" {
+  echo "WEB=''
+DNS=''
+MAIL=''
+DB='$database'
+CRON=''
+USER=''" > /tmp/backup_exclusions_db
+  run v-update-user-backup-exclusions $user /tmp/backup_exclusions_db
+  assert_success
+  rm -f /tmp/backup_exclusions_db
+
+  run v-list-user-backup-exclusions $user shell
+  assert_success
+  assert_output --partial "$database"
+}
+
+@test "Backup Exclusions: Database entry with domain-style colon is rejected" {
+  echo "WEB=''
+DNS=''
+MAIL=''
+DB='$database:cache'
+CRON=''
+USER=''" > /tmp/backup_exclusions_db_invalid
+  run v-update-user-backup-exclusions $user /tmp/backup_exclusions_db_invalid
+  assert_failure $E_INVALID
+  rm -f /tmp/backup_exclusions_db_invalid
+}
+
+@test "Backup Exclusions: User directory name is allowed" {
+  echo "WEB=''
+DNS=''
+MAIL=''
+DB=''
+CRON=''
+USER='backups/old'" > /tmp/backup_exclusions_userdir
+  run v-update-user-backup-exclusions $user /tmp/backup_exclusions_userdir
+  assert_success
+  rm -f /tmp/backup_exclusions_userdir
+
+  run v-list-user-backup-exclusions $user shell
+  assert_success
+  assert_output --partial "backups/old"
+}
+
+@test "Backup Exclusions: User directory with domain-style colon is rejected" {
+  echo "WEB=''
+DNS=''
+MAIL=''
+DB=''
+CRON=''
+USER='$domain:cache'" > /tmp/backup_exclusions_userdir_invalid
+  run v-update-user-backup-exclusions $user /tmp/backup_exclusions_userdir_invalid
+  assert_failure $E_INVALID
+  rm -f /tmp/backup_exclusions_userdir_invalid
+}
+
+@test "Backup Exclusions: DNS bare domain is allowed" {
+  echo "WEB=''
+DNS='$domain'
+MAIL=''
+DB=''
+CRON=''
+USER=''" > /tmp/backup_exclusions_dns
+  run v-update-user-backup-exclusions $user /tmp/backup_exclusions_dns
+  assert_success
+  rm -f /tmp/backup_exclusions_dns
+}
+
+@test "Backup Exclusions: DNS with colon segment is rejected (no record-level exclusion exists)" {
+  echo "WEB=''
+DNS='$domain:record1'
+MAIL=''
+DB=''
+CRON=''
+USER=''" > /tmp/backup_exclusions_dns_invalid
+  run v-update-user-backup-exclusions $user /tmp/backup_exclusions_dns_invalid
+  assert_failure $E_INVALID
+  rm -f /tmp/backup_exclusions_dns_invalid
+}
+
+@test "Backup Exclusions: CRON wildcard is allowed" {
+  echo "WEB=''
+DNS=''
+MAIL=''
+DB=''
+CRON='*'
+USER=''" > /tmp/backup_exclusions_cron
+  run v-update-user-backup-exclusions $user /tmp/backup_exclusions_cron
+  assert_success
+  rm -f /tmp/backup_exclusions_cron
+
+  run v-list-user-backup-exclusions $user shell
+  assert_success
+  assert_output --partial "CRON:           *"
+}
+
+@test "Backup Exclusions: CRON non-wildcard value is rejected (no per-job exclusion exists)" {
+  echo "WEB=''
+DNS=''
+MAIL=''
+DB=''
+CRON='some-job'
+USER=''" > /tmp/backup_exclusions_cron_invalid
+  run v-update-user-backup-exclusions $user /tmp/backup_exclusions_cron_invalid
+  assert_failure $E_INVALID
+  rm -f /tmp/backup_exclusions_cron_invalid
+}
+
+@test "Backup Exclusions: Embedded newline / PATH injection is rejected" {
+  printf "WEB='domain1.test\nPATH=/tmp/fakebin:/usr/local/hestia/bin\nMARKER_END'\n" > /tmp/backup_exclusions_path
+  run v-update-user-backup-exclusions $user /tmp/backup_exclusions_path
+  assert_failure $E_INVALID
+  rm -f /tmp/backup_exclusions_path
+}
+
+@test "Backup Exclusions: Path traversal is rejected" {
+  echo "WEB='$domain:public_html/../../../etc'
+DNS=''
+MAIL=''
+DB=''
+CRON=''
+USER=''" > /tmp/backup_exclusions_traversal
+  run v-update-user-backup-exclusions $user /tmp/backup_exclusions_traversal
+  assert_failure $E_INVALID
+  rm -f /tmp/backup_exclusions_traversal
+}
+
+@test "Backup Exclusions: Leading dash (tar flag injection) is rejected" {
+  echo "WEB='$domain:--checkpoint=1'
+DNS=''
+MAIL=''
+DB=''
+CRON=''
+USER=''" > /tmp/backup_exclusions_dash
+  run v-update-user-backup-exclusions $user /tmp/backup_exclusions_dash
+  assert_failure $E_INVALID
+  rm -f /tmp/backup_exclusions_dash
+}
+
+@test "Backup Exclusions: Unknown key is rejected" {
+  echo "WEB=''
+EVIL='x'" > /tmp/backup_exclusions_unknownkey
+  run v-update-user-backup-exclusions $user /tmp/backup_exclusions_unknownkey
+  assert_failure $E_INVALID
+  rm -f /tmp/backup_exclusions_unknownkey
+}
+
+@test "Backup Exclusions: Clean up" {
+  run v-delete-user-backup-exclusions $user
+  assert_success
+}
+
+#----------------------------------------------------------#
 #                  Change owner scripts                    #
 #----------------------------------------------------------#
 

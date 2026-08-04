@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.9.9] - Service Release
+
+### Security
+
+- Fix critical privilege escalation from low-privilege non-admin user to uid=0 root remote code execution via v-update-user-backup-exclusions ([GHSA-xffx-jj33-p2px](https://github.com/hestiacp/hestiacp/security/advisories/GHSA-xffx-jj33-p2px))
+
 ## [1.9.8] - Service Release
 
 ### Security

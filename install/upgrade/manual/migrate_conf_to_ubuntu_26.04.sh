@@ -1,5 +1,5 @@
 #!/bin/bash
-# info: Configure sudoers, SSH, Bind and Dovecot to work with Hestia on Ubuntu 26.04
+# info: Configure sudoers, SSH, Bind, Dovecot and Exim to work with Hestia on Ubuntu 26.04
 
 #----------------------------------------------------------#
 #                    Variables & Functions                 #
@@ -11,8 +11,8 @@
 }
 
 source /etc/hestiacp/hestia.conf
-source $HESTIA/conf/hestia.conf
-source $HESTIA/func/main.sh
+source "$HESTIA/conf/hestia.conf"
+source "$HESTIA/func/main.sh"
 
 [[ -f /etc/os-release ]] && source /etc/os-release
 
@@ -150,6 +150,43 @@ if [[ "$DNS_SYSTEM" =~ named|bind ]]; then
 else
 	echo "[ - ] Bind/named not in use (DNS_SYSTEM=$DNS_SYSTEM), skipping"
 fi
-echo
 
+#----------------------------------------------------------#
+#                    Exim configuration                    #
+#----------------------------------------------------------#
+
+echo "[ * ] Checking Exim configuration:"
+if [[ $MAIL_SYSTEM == exim4 ]] \
+	&& [[ $(dovecot --version) == 2.4* ]] \
+	&& [[ -f /etc/exim4/exim4.conf.template ]]; then
+	sed -i.bak '
+s#  directory = "${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}/mail/${lookup{$domain}dsearch{/etc/exim4/domains/}}/${lookup{$local_part}dsearch{${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}/mail/${lookup{$domain}dsearch{/etc/exim4/domains/}}}}"#  directory = "${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}"#
+
+s#  directory = "${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}/mail/${lookup{$domain}dsearch{/etc/exim4/domains/}}/${lookup{$local_part}dsearch{${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}/mail/${lookup{$domain}dsearch{/etc/exim4/domains/}}}}/.Spam"#  directory = "${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}/.Spam"#
+
+s#  quota_directory = "${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}/mail/${lookup{$domain}dsearch{/etc/exim4/domains/}}/${lookup{$local_part}dsearch{${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}/mail/${lookup{$domain}dsearch{/etc/exim4/domains/}}}}"#  quota_directory = "${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}"#
+' /etc/exim4/exim4.conf.template
+	if ! cmp -s /etc/exim4/exim4.conf.template{.bak,}; then
+		echo "[ + ] local delivery directives fixed in Exim configuration"
+	else
+		echo "[ * ] Exim configuration already up to date"
+	fi
+	if systemctl restart exim4 &> /dev/null; then
+		echo "[ + ] Exim successfully restarted"
+	else
+		echo "[ ! ] Error restarting Exim" >&2
+		systemctl status exim4 --no-pager -l >&2
+		echo "[ + ] Recovering configuration backup"
+		cp -f /etc/exim4/exim4.conf.template.bak /etc/exim4/exim4.conf.template
+		if systemctl restart exim4 &> /dev/null; then
+			echo "[ + ] Exim successfully restarted after recovery"
+		else
+			echo "[ ! ] Error restarting Exim after recovery" >&2
+			systemctl status exim4 --no-pager -l >&2
+		fi
+	fi
+
+fi
+
+echo
 echo "[ * ] Configuration finished!"

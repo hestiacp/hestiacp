@@ -591,7 +591,7 @@ upgrade_cloudflare_ip() {
 upgrade_phppgadmin() {
 	if [ -n "$(echo $DB_SYSTEM | grep -w 'pgsql')" ]; then
 		pga_release=$(cat /usr/share/phppgadmin/libraries/lib.inc.php | grep appVersion | head -n1 | cut -f2 -d\' | cut -f1 -d-)
-		if version_ge "$pga_release" "$pga_v"; then
+		if version_ge "$pga_release" "pga_v"; then
 			echo "[ * ] phppgadmin is up to date ($pga_release)..."
 		else
 			# Display upgrade information
@@ -714,17 +714,18 @@ upgrade_roundcube() {
 			echo "[ ! ] Roundcube: Updates are currently managed using the apt package manager"
 			echo "      To upgrade to the latest version of Roundcube directly from upstream, from please run the command migrate_roundcube.sh located in: /usr/local/hestia/install/upgrade/manual/"
 		else
-			rc_version=$(cat /var/lib/roundcube/index.php | grep -o -E '[0-9].[0-9].[0-9]+' | head -1)
-			if ! version_ge "$rc_version" "$rc_v"; then
-				echo "[ ! ] Upgrading Roundcube to version $rc_v..."
-				$BIN/v-add-sys-roundcube
-			else
-				echo "[ * ] Roundcube is up to date ($rc_v)..."
+			if [[ -f "/var/lib/roundcube/program/include/iniset.php" ]]; then
+				rc_version="$(grep RCMAIL_VERSION /var/lib/roundcube/program/include/iniset.php | cut -d "'" -f 4)"
+				if ! version_ge "$rc_version" "$rc_v"; then
+					echo "[ ! ] Upgrading Roundcube to version $rc_v..."
+					"$BIN"/v-add-sys-roundcube || echo "[ ! ] Error upgrading Roundcube $rc_v"
+				else
+					echo "[ * ] Roundcube is up to date ($rc_v)..."
+				fi
 			fi
 		fi
 	fi
 }
-
 upgrade_snappymail() {
 	if [ -n "$(echo "$WEBMAIL_SYSTEM" | grep -w 'snappymail')" ]; then
 		sm_version=$(cat /var/lib/snappymail/data/VERSION)

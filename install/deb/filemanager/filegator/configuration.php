@@ -39,7 +39,7 @@ $dist_config["frontend_config"]["editable"] = [
 	".tpl",
 	".yaml",
 ];
-$dist_config["frontend_config"]["date_format"] = "YY/MM/DD H:mm:ss";
+$dist_config["frontend_config"]["date_format"] = "DD/MM/YYYY H:mm:ss";
 $dist_config["frontend_config"]["guest_redirection"] = "/login/";
 $dist_config["frontend_config"]["upload_max_size"] = 1024 * 1024 * 1024;
 $dist_config["frontend_config"]["pagination"] = [100, 50, 25];

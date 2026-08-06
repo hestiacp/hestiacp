@@ -30,7 +30,7 @@ json_list() {
 	echo -e "\t\"HESTIA\": {"
 	echo "        \"CRT\": \"$crt\","
 	echo "        \"KEY\": \"$key\","
-	echo "        \"CA\": \"$(json_escape "$ca")\","
+	echo "        \"CA\": \"$ca\","
 	echo "        \"SUBJECT\": \"$(json_escape "$subj")\","
 	echo "        \"ALIASES\": \"$(json_escape "$alt_dns")\","
 	echo "        \"NOT_BEFORE\": \"$(json_escape "$before")\","
@@ -102,6 +102,9 @@ csv_list() {
 # Parsing SSL certificate
 crt=$(cat $HESTIA/ssl/certificate.crt | sed ':a;N;$!ba;s/\n/\\n/g')
 key=$(cat $HESTIA/ssl/certificate.key | sed ':a;N;$!ba;s/\n/\\n/g')
+if [ -e "$HESTIA/ssl/certificate.ca" ]; then
+	ca=$(cat $HESTIA/ssl/certificate.ca | sed ':a;N;$!ba;s/\n/\\n/g')
+fi
 
 # Parsing SSL certificate details without CA
 info=$(openssl x509 -text -in $HESTIA/ssl/certificate.crt)

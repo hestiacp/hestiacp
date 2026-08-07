@@ -45,6 +45,7 @@ async function buildExternalJS() {
 				bundle: true,
 				minify: true,
 				format: 'esm',
+				mainFields: ['main'],
 			});
 			console.log(`✅ Dependency build completed for ${pkg}`);
 		});

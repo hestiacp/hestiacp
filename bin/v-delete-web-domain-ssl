@@ -78,6 +78,9 @@ $BIN/v-delete-web-domain-ssl-force "$user" "$domain" 'no' 'yes'
 if [ -n "$LETSENCRYPT" ]; then
 	update_object_value 'web' 'DOMAIN' "$domain" '$LETSENCRYPT' 'no'
 fi
+if [ -n "$ACTALIS" ]; then
+	update_object_value 'web' 'DOMAIN' "$domain" '$ACTALIS' 'no'
+fi
 update_object_value 'web' 'DOMAIN' "$domain" '$SSL' 'no'
 
 # Decreasing domain value

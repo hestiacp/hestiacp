@@ -12,6 +12,7 @@
 
 # Defining absolute path for iptables and modprobe
 iptables="/sbin/iptables"
+ip6tables="/sbin/ip6tables"
 modprobe="/sbin/modprobe"
 sysctl="/sbin/sysctl"
 

@@ -31,7 +31,11 @@ source_conf "$HESTIA/conf/hestia.conf"
 #----------------------------------------------------------#
 
 check_args '1' "$#" 'IP'
-is_format_valid 'ip'
+if [ "$(hst_detect_ip_version "$ip")" = "6" ]; then
+	is_format_valid 'ipv6'
+else
+	is_format_valid 'ip'
+fi
 is_ip_valid "$ip"
 is_ip_key_empty '$U_WEB_DOMAINS'
 is_ip_key_empty '$U_SYS_USERS'

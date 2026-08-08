@@ -165,7 +165,7 @@ if (!empty($_GET)) {
 		if (isset($_GET["user"]) && isset($_GET["hestia_token"])) {
 			$database = $_GET["database"];
 			$user = $_GET["user"];
-			$host = "localhost";
+			$host = !empty($_GET["host"]) ? $_GET["host"] : "localhost";
 			$token = $_GET["hestia_token"];
 			if (is_numeric($_GET["exp"])) {
 				$time = $_GET["exp"];

@@ -188,6 +188,7 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
 											PASSWORD_DEFAULT,
 										);
 										$hestia_sso_url = $db_myadmin_link . "hestia-sso.php?" . http_build_query([
+											"host" => $data[$key]["HOST"],
 											"database" => $key,
 											"user" => $user_plain,
 											"exp" => $time,

@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: check letsencrypt domain
-# options: USER DOMAIN [ALIASES] [MAIL]
+# options: USER DOMAIN [ALIASES] [MAIL] [KEY_ALGO]
 #
 # example: v-add-letsencrypt-domain admin wonderland.com www.wonderland.com,demo.wonderland.com
 # example: v-add-letsencrypt-domain admin wonderland.com '' yes
@@ -16,6 +16,14 @@ user=$1
 domain=$2
 aliases=$3
 mail=${4// /}
+# Key algorithm: ecdsa-256 (default) | ecdsa-384 | rsa
+key_algo="${5:-ecdsa-256}"
+key_algo="${key_algo,,}"
+
+# Legacy compatibility
+if [ "$key_algo" = 'ecdsa' ]; then
+	key_algo='ecdsa-256'
+fi
 
 # Define variables to preserve redirect/force-ssl if renewal fails
 deleted_redirect=0
@@ -96,8 +104,9 @@ trap on_error_exit EXIT
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'USER DOMAIN [ALIASES] [MAIL]'
-is_format_valid 'user' 'domain' 'aliases'
+check_args '2' "$#" 'USER DOMAIN [ALIASES] [MAIL] [KEY_ALGO]'
+is_format_valid 'user' 'domain' 'aliases' 'key_algo'
+
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 if [ -n "$mail" ]; then
@@ -487,7 +496,7 @@ done
 
 # Generating new ssl certificate
 ssl_dir=$($BIN/v-generate-ssl-cert "$domain" "info@$domain" "US" "California" \
-	"San Francisco" "Hestia" "IT" "$aliases" | tail -n1 | awk '{print $2}')
+	"San Francisco" "Hestia" "IT" "$aliases" "shell" "$key_algo" | tail -n1 | awk '{print $2}')
 
 # Sending CSR to finalize order / STEP 6
 csr=$(openssl req -in $ssl_dir/$domain.csr -outform DER | encode_base64)
@@ -611,7 +620,7 @@ if [ "$?" -ne '0' ]; then
 fi
 
 # Adding LE autorenew cronjob
-if [ -z "$(grep $BIN/v-update-letsencrypt "/var/spool/cron/crontabs/hestiaweb")" ]; then
+if [ -z "$(grep $BIN/v-update-letsencrypt-ssl "/var/spool/cron/crontabs/hestiaweb")" ]; then
 	min=$(generate_password '012345' '2')
 	hour=$(generate_password '1234567' '1')
 	sed -i -e "\$a*/5 * * * * sudo $BIN/v-update-letsencrypt-ssl" "/var/spool/cron/crontabs/hestiaweb"
@@ -621,10 +630,16 @@ fi
 if [ -z "$mail" ]; then
 	if [ -z "$LETSENCRYPT" ]; then
 		add_object_key "web" 'DOMAIN' "$domain" 'LETSENCRYPT' 'FTP_USER'
+	fi
+	if [ -z "$LETSENCRYPT_FAIL_COUNT" ]; then
 		add_object_key "web" 'DOMAIN' "$domain" 'LETSENCRYPT_FAIL_COUNT' 'LETSENCRYPT'
+	fi
+	if [ -z "$SSL_KEY_ALGO" ]; then
+		add_object_key "web" 'DOMAIN' "$domain" 'SSL_KEY_ALGO' 'LETSENCRYPT'
 	fi
 	update_object_value 'web' 'DOMAIN' "$domain" '$LETSENCRYPT' 'yes'
 	update_object_value 'web' 'DOMAIN' "$domain" '$LETSENCRYPT_FAIL_COUNT' "0"
+	update_object_value 'web' 'DOMAIN' "$domain" '$SSL_KEY_ALGO' "$key_algo"
 
 	if [[ "$domain_forcessl" == 'yes' ]]; then
 		$BIN/v-add-web-domain-ssl-force $user $domain
@@ -638,10 +653,16 @@ if [ -z "$mail" ]; then
 else
 	if [ -z "$LETSENCRYPT" ]; then
 		add_object_key "mail" 'DOMAIN' "$root_domain" 'LETSENCRYPT'
+	fi
+	if [ -z "$LETSENCRYPT_FAIL_COUNT" ]; then
 		add_object_key "mail" 'DOMAIN' "$root_domain" 'LETSENCRYPT_FAIL_COUNT' 'LETSENCRYPT'
+	fi
+	if [ -z "$SSL_KEY_ALGO" ]; then
+		add_object_key "mail" 'DOMAIN' "$root_domain" 'SSL_KEY_ALGO' 'LETSENCRYPT'
 	fi
 	update_object_value 'mail' 'DOMAIN' "$root_domain" '$LETSENCRYPT' 'yes'
 	update_object_value 'mail' 'DOMAIN' "$root_domain" '$LETSENCRYPT_FAIL_COUNT' "0"
+	update_object_value 'mail' 'DOMAIN' "$root_domain" '$SSL_KEY_ALGO' "$key_algo"
 fi
 
 # LE Post-Hook

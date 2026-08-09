@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: generate self signed certificate and CSR request
-# options: DOMAIN EMAIL COUNTRY STATE CITY ORG UNIT [ALIASES] [FORMAT]
+# options: DOMAIN EMAIL COUNTRY STATE CITY ORG UNIT [ALIASES] [FORMAT] [KEY_ALGO]
 #
 # example: v-generate-ssl-cert example.com mail@yahoo.com USA California Monterey ACME.COM IT
 #
@@ -22,6 +22,22 @@ org=$6
 org_unit=$7
 aliases=$8
 format=${9-shell}
+# Key algorithm: ecdsa-256 (default) | ecdsa-384 | rsa
+key_algo="${10:-ecdsa-256}"
+key_algo="${key_algo,,}"
+
+# Legacy compatibility: normalize old 'ecdsa' to 'ecdsa-256'
+if [ "$key_algo" = 'ecdsa' ]; then
+	key_algo='ecdsa-256'
+fi
+
+# Set curve based on key_algo
+if [ "$key_algo" = 'ecdsa-256' ]; then
+	ec_curve='prime256v1'
+elif [ "$key_algo" = 'ecdsa-384' ]; then
+	ec_curve='secp384r1'
+fi
+
 KEY_SIZE=4096
 DAYS=365
 
@@ -35,28 +51,36 @@ source_conf "$HESTIA/conf/hestia.conf"
 
 # Json function
 json_list_ssl() {
-	i='1' # iterator
-	echo '{'
-	echo -e "\t\"$domain\": {"
-	echo "        \"CRT\": \"$crt\","
-	echo "        \"KEY\": \"$key\","
-	echo "        \"CSR\": \"$csr\","
-	echo "        \"DIR\": \"$workdir\""
-	echo -e "\t}\n}"
+	jq -n \
+		--arg domain "$domain" \
+		--arg crt "$crt" \
+		--arg key "$key" \
+		--arg csr "$csr" \
+		--arg dir "$workdir" \
+		'{
+            ($domain): {
+                CRT: $crt,
+                KEY: $key,
+                CSR: $csr,
+                DIR: $dir
+            }
+        }'
 }
-
 # Shell function
 shell_list_ssl() {
 	if [ -n "$crt" ]; then
-		echo -e "$crt"
+		printf '%s\n' "$crt"
 	fi
+
 	if [ -n "$key" ]; then
-		echo -e "\n$key"
+		printf '\n%s\n' "$key"
 	fi
+
 	if [ -n "$csr" ]; then
-		echo -e "\n$csr"
+		printf '\n%s\n' "$csr"
 	fi
-	echo -e "\nDirectory: $workdir"
+
+	printf '\nDirectory: %s\n' "$workdir"
 }
 
 # Additional argument formatting
@@ -72,9 +96,9 @@ fi
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-args_usage='DOMAIN EMAIL COUNTRY STATE CITY ORG UNIT [ALIASES] [FORMAT]'
+args_usage='DOMAIN EMAIL COUNTRY STATE CITY ORG UNIT [ALIASES] [FORMAT] [KEY_ALGO]'
 check_args '7' "$#" "$args_usage"
-is_format_valid 'domain' 'aliases' 'format' 'email'
+is_format_valid 'domain' 'aliases' 'format' 'email' 'key_algo'
 is_common_format_valid "$country" "country"
 is_common_format_spaces_valid "$state" "state"
 is_common_format_spaces_valid "$org" "org"
@@ -102,7 +126,11 @@ workdir=$(mktemp -d)
 cd $workdir
 
 # Generate private key
-openssl genrsa "$KEY_SIZE" > "$domain.key" 2> /dev/null
+if [[ "$key_algo" = "ecdsa-256" || "$key_algo" = "ecdsa-384" ]]; then
+	openssl ecparam -name "$ec_curve" -genkey -noout -out "$domain.key" 2> /dev/null
+else
+	openssl genrsa "$KEY_SIZE" > "$domain.key" 2> /dev/null
+fi
 
 subj=""
 # Generate the CSR
@@ -167,24 +195,20 @@ fi
 
 # Listing certificates
 if [ -e "$domain.crt" ]; then
-	crt=$(cat $domain.crt | sed ':a;N;$!ba;s/\n/\\n/g')
+	crt=$(< "$domain.crt")
 fi
 
 if [ -e "$domain.key" ]; then
-	key=$(cat $domain.key | sed ':a;N;$!ba;s/\n/\\n/g')
+	key=$(< "$domain.key")
 fi
 
 if [ -e "$domain.csr" ]; then
-	csr=$(cat $domain.csr | sed ':a;N;$!ba;s/\n/\\n/g')
+	csr=$(< "$domain.csr")
 fi
 
 case $format in
 	json) json_list_ssl ;;
-	plain)
-		nohead=1
-		shell_list_ssl
-		;;
-	shell) shell_list_ssl ;;
+	plain | shell) shell_list_ssl ;;
 	*) check_args '1' '0' '[FORMAT]' ;;
 esac
 

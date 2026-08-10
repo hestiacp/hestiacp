@@ -56,7 +56,10 @@
 		"defaults"
 	],
 	"overrides": {
-		"vite": "^6.4.3"
+		"vite": "^6.4.3",
+		"postcss": {
+			"nanoid": "^3.3.17"
+		}
 	},
 	"allowScripts": {
 		"esbuild@0.28.1": true,

@@ -23,7 +23,11 @@ and HestiaCP.
    v-restore-user username username.2020.01.01-00-00.tar
    ```
 
-User accounts that do not exist will be created.
+4. Custom templates are not restored but included to allow the user to restore them manually.
+
+
+5. User accounts that do not exist will be created.
+
 
 ## What kind of backups are able to be restored?
 

@@ -62,6 +62,7 @@ All notable changes to this project will be documented in this file.
 - Count custom backend templates (e.g. *-PHP-x_y) in PHP version usage screen (#5228)
 - feat(Firewall): Added the ability to order firewall rules, changing their precedence within the iptables (#5080)
 - feat(installer): add osticket to quick install apps (#5471)
+- feat(Installer): add shopware to quick install apps (#5529)
 - feat(Installers): bump versions of apps #5518
 - feat(mail): implement DNSBL management CLI for Exim (#5464)
 - feat(webapp): add castopod to quick install apps (#5439)
@@ -72,11 +73,15 @@ All notable changes to this project will be documented in this file.
 - feat: add option to restrict phpMyAdmin to Hestia SSO only #5504
 - feat: update public-suffix-list if older than 7 days (#5266)
 - Implement LE Pre- and Post Hooks. (#4925)
+- Improve Roundcube installation/upgrade process and bump to 1.7.3 (#5581, #5586, #5596)
 - Make JSON editable in File Manager (#5342)
 - PHP-8.5 support (#5157)
 - Prepare Debian 13 support merge (#5388)
 - run UTF-8 locale (#4704)
 - Update default and required PHP versions for Debian installation (#5461)
+- Update docs and CLI reference (#5597)
+- Update Exim config for Dovecot 2.4 (#5579)
+- Update locale files for Spanish, Estonian, Lao, and Ukrainian (#5598)
 - Update user composer installations during Hestia upgrade (#5553)
 
 ### Bug fixes
@@ -106,14 +111,17 @@ All notable changes to this project will be documented in this file.
 - Fix File Manager HTTP 500 when session user is empty (#5318) (#5441)
 - Fix File Manager ignoring user language (#5374)
 - Fix FileGator 7.13.4 session migrate incompatibility in Hestia (#5241)
+- Fix get correct home for numeric-only usernames when creating jail mount (#5126)
 - Fix get_percentage() returning 0 when total limit is unlimited (#5395)
 - Fix hestia logrotate (#5148)
 - Fix hestia-php deb dependencies for Debian 13 (libzip5)
 - Fix if statement (#5440)
 - Fix incorrect comment in web/add/mail/index.php (#5428)
+- Fix incorrect default for UPGRADE_UPDATE_* and UPGRADE_REBUILD_USERS (#5578)
 - Fix invalid JSON output in v-list-mail-domain-ssl (#5524)
 - Fix ipv4_cidr validation (#5044)
 - Fix issue where settings are not accessible via web (#5565)
+- Fix issue with webterminal (#5591)
 - Fix issues with web-terminal on NodeJS 24 (#5560)
 - Fix Json format (#5059)
 - Fix Let's Encrypt YR1 chain validation (#5397)
@@ -132,8 +140,11 @@ All notable changes to this project will be documented in this file.
 - Fix PR #5162 (#5343)
 - Fix PR #5254 (#5259)
 - Fix regex in postinst
+- Fix regression in upgrade_phppgadmin function (#5592)
 - Fix SCRIPT_FILENAME in phpmyadmin/phppgadmin templates (#5535)
 - Fix SpamAssassin service name for Ubuntu 24.04 (#5162)
+- Fix SSL panel breaking on certs with commas in Subject/Issuer DN (#5585)
+- Fix syshealth wrongly re-adding deleted config keys (#5584)
 - Fix the way Hestia validates chain certificate (#4887)
 - Fix upgrade_phppgadmin function (#5562)
 - Fix v-add-user-composer update (#5552)
@@ -147,6 +158,7 @@ All notable changes to this project will be documented in this file.
 - Fix(i18n): add locale fallback when en_US.UTF-8 is unavailable (#5386)
 - fix(installer): use single quotes to prevent password expansion (#5404)
 - fix(letsencrypt): detect user.key/KID mismatch in v-add-letsencrypt-user
+- fix(nginx): name the trusted header in the cloudflare.inc fallback (#5589)
 - fix(services): Hide DB services if not installed #5455
 - Fix: 421 error on all web and mail domains after Apache 2.4.64 update (#5058)
 - fix: Avoid crash during Hestia install (#5223)
@@ -209,6 +221,7 @@ All notable changes to this project will be documented in this file.
 - Update v-restore-user
 - Updated requested changes
 - Use RFC 1982-compliant monotonic DNS SOA serial numbers #5545
+- Use v-update-letsencrypt-ssl instead of v-update-letsencrypt (#5583)
 - v-restart-service: warn and continue when no init system reports status #5475
 - web-terminal: use php helper for session auth lookup (#5244)
 

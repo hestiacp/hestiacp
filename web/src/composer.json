@@ -10,6 +10,6 @@
         "symfony/process": "^8.1.0"
     },
     "require-dev": {
-        "squizlabs/php_codesniffer": "^4.0.1"
+        "squizlabs/php_codesniffer": "^4.0.4"
     }
 }

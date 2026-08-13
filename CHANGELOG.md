@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.10.1] - Service Release
+
+### Fixes
+
+- Set UPGRADE_REBUILD_USERS to true for mail templates rebuild
+
 ## [1.10.0] - Feature Release
 
 ### Security

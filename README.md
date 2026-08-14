@@ -34,7 +34,7 @@ Smart Chain: 0xfF3Dd2c889bd0Ff73d8085B84A314FC7c88e5D51<br>
 ## Features and Services
 
 - Apache2 and NGINX with PHP-FPM
-- Multiple PHP versions (5.6 - 8.4, 8.3 as default)
+- Multiple PHP versions (5.6 - 8.5, 8.5 as default)
 - DNS Server (Bind) with clustering capabilities
 - POP/IMAP/SMTP mail services with Anti-Virus, Anti-Spam, and Webmail (ClamAV, SpamAssassin, Sieve, Roundcube)
 - MariaDB/MySQL and/or PostgreSQL databases
@@ -43,8 +43,8 @@ Smart Chain: 0xfF3Dd2c889bd0Ff73d8085B84A314FC7c88e5D51<br>
 
 ## Supported platforms and operating systems
 
-- **Debian:** 12, 11
-- **Ubuntu:** 24.04 LTS, 22.04 LTS
+- **Debian:** 13, 12, 11
+- **Ubuntu:** 26.04 LTS, 24.04 LTS, 22.04 LTS
 
 **NOTES:**
 

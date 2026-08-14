@@ -568,7 +568,7 @@ update_domain_zone() {
                                             $SERIAL
                                             14400
                                             $refresh
-                                            3600000
+                                            1209600
                                             3600 )
 " > "$zn_conf"
 

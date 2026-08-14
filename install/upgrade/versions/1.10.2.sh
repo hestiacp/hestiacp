@@ -22,3 +22,7 @@ upgrade_config_set_value 'UPGRADE_UPDATE_DNS_TEMPLATES' 'false'
 upgrade_config_set_value 'UPGRADE_UPDATE_FILEMANAGER_CONFIG' 'false'
 upgrade_config_set_value 'UPGRADE_UPDATE_MAIL_TEMPLATES' 'false'
 upgrade_config_set_value 'UPGRADE_REBUILD_USERS' 'true'
+
+# Use hosted public key for Hestia repository (fixes issues in Debian 13 and Ubuntu 26.04)
+RHOST='apt.hestiacp.com'
+curl -s "https://$RHOST/pubkey.gpg" | gpg --dearmor | tee /usr/share/keyrings/hestia-keyring.gpg > /dev/null 2>&1

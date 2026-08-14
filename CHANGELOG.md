@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.10.2] - Service Release
+
+### Changes
+
+- Bump file manager to version 7.15.1 #5608
+
+### Fixes
+
+- Change SOA EXPIRE from 3600000 to 1209600 #5606
+- Fix accidently overwrite VERSION during upgrade #5610
+
 ## [1.10.1] - Service Release
 
 ### Fixes

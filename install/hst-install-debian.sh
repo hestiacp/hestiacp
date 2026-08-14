@@ -31,7 +31,7 @@ HESTIA_COMMON_DIR="$HESTIA/install/common"
 VERBOSE='no'
 
 # Define software versions
-HESTIA_INSTALL_VER='1.10.1'
+HESTIA_INSTALL_VER='1.10.2'
 
 # Build the full Hestia version
 # Split base version (1.10.0) from channel suffix (~alpha / ~beta), if present
@@ -903,7 +903,7 @@ fi
 # Installing HestiaCP repo
 echo "[ * ] Hestia Control Panel"
 echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/hestia-keyring.gpg] https://$RHOST/ $codename main" > $apt/hestia.list
-gpg --no-default-keyring --keyring /usr/share/keyrings/hestia-keyring.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys A189E93654F0B0E5 > /dev/null 2>&1
+curl -s "https://$RHOST/pubkey.gpg" | gpg --dearmor | tee /usr/share/keyrings/hestia-keyring.gpg > /dev/null 2>&1
 
 # Installing Node.js repo
 if [ "$webterminal" = 'yes' ]; then

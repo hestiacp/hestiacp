@@ -28,7 +28,12 @@ echo "[ * ] Fix File Manager ignoring user language"
 cp -f "$HESTIA"/install/deb/filemanager/filegator/configuration.php "$HESTIA"/web/fm/configuration.php
 
 if [ -f /etc/os-release ]; then
+	# /etc/os-release defines its own $VERSION, which would otherwise
+	# clobber Hestia's $VERSION since this script is sourced by the caller
+	_HESTIA_VERSION="$VERSION"
 	source /etc/os-release
+	VERSION="$_HESTIA_VERSION"
+	unset _HESTIA_VERSION
 fi
 
 # Set running OS

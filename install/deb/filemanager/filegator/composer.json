@@ -5,11 +5,11 @@
 	"type": "project",
 	"config": {
 		"platform": {
-			"php": "7.2.5"
+			"php": "8.5"
 		}
 	},
 	"require": {
-		"php": "^7.2",
+		"php": "^8.5",
 		"monolog/monolog": "^1.24",
 		"nikic/fast-route": "^1.3",
 		"symfony/security-csrf": "^4.4",
@@ -20,7 +20,8 @@
 		"league/flysystem": "^1.1",
 		"league/flysystem-ziparchive": "^1.0",
 		"league/flysystem-sftp": "^1.0",
-		"hestiacp/phpquoteshellarg": "^1.0"
+		"hestiacp/phpquoteshellarg": "^1.0",
+		"symfony/mime": "^8.1"
 	},
 	"authors": [
 		{
@@ -39,9 +40,9 @@
 		}
 	},
 	"require-dev": {
-		"phpunit/phpunit": "^8.0",
-		"symfony/var-dumper": "^4.4",
-		"league/flysystem-memory": "^1.0",
-		"phpstan/phpstan": "^0.11.8"
-	}
+        "phpunit/phpunit": "^8.0",
+        "symfony/var-dumper": "^4.4",
+        "league/flysystem-memory": "^1.0",
+        "phpstan/phpstan": "^2.0.3"
+    }
 }

@@ -104,18 +104,76 @@
 					</div>
 				<?php } ?>
 				<div x-cloak x-show="!loginDisabled" id="password-options">
-					<div class="form-check">
-						<input class="form-check-input" type="checkbox" name="v_twofa" id="v_twofa" <?php if (!empty($v_twofa)) echo 'checked' ?>>
-						<label for="v_twofa">
-							<?= tohtml( _("Enable two-factor authentication")) ?>
-						</label>
-					</div>
-					<?php if (!empty($v_twofa)) { ?>
-						<p class="u-mb10"><?= tohtml( _("Account Recovery Code") . ": " . $v_twofa) ?></p>
-						<p class="u-mb10"><?= tohtml( _("Please scan the code below in your 2FA application")) ?>:</p>
-						<div class="u-mb10">
-							<img class="qr-code" src="<?= tohtml($v_qrcode) ?>" alt="<?= tohtml( _("2FA QR Code")) ?>">
+					<?php if ($twofa_state === "off" && !$is_own_account) { ?>
+						<p class="u-mb10 form-label"><?= tohtml( _("Two-factor authentication has not been enabled by this user.")) ?></p>
+					<?php } elseif (!$is_own_account) { ?>
+						<div class="form-check">
+							<input class="form-check-input" type="checkbox" name="v_twofa" id="v_twofa" checked>
+							<label for="v_twofa">
+								<?= tohtml( _("Enable two-factor authentication")) ?>
+							</label>
 						</div>
+					<?php } else { ?>
+						<div
+							x-data="twofaSetup({
+								checked: <?= $twofa_state !== 'off' ? 'true' : 'false' ?>,
+								pending: <?= $twofa_state === 'pending' ? 'true' : 'false' ?>,
+								qrcode: <?= tohtml(json_encode($twofa_state === 'pending' ? $v_twofa_setup_qrcode : '')) ?>,
+								secret: <?= tohtml(json_encode($twofa_state === 'pending' ? $v_twofa_setup_secret : '')) ?>,
+							})"
+						>
+							<div class="form-check">
+								<input class="form-check-input" type="checkbox" name="v_twofa" id="v_twofa" x-model="checked" x-on:change="onToggle()">
+								<label for="v_twofa">
+									<?= tohtml( _("Enable two-factor authentication")) ?>
+								</label>
+							</div>
+
+							<p x-cloak x-show="checked && loading" class="u-mb10 u-mt10"><?= tohtml( _("Generating setup code…")) ?></p>
+							<p x-cloak x-show="checked && error" x-text="error" class="error u-mb10 u-mt10"></p>
+
+							<div x-cloak x-show="checked && pending" class="u-mb10 u-mt10">
+								<p class="u-mb10"><?= tohtml( _("Scan the code below in your authenticator app, or enter the setup key manually")) ?>:</p>
+								<div class="u-mb10">
+									<img class="qr-code" :src="qrcode" alt="<?= tohtml( _("2FA QR Code")) ?>">
+								</div>
+								<p class="u-mb10"><?= tohtml( _("Setup key")) ?>: <span x-text="secret"></span></p>
+								<div class="u-mb10">
+									<label for="v_twofa_device_name" class="form-label"><?= tohtml( _("Device name (optional)")) ?></label>
+									<input type="text" class="form-control" name="v_twofa_device_name" id="v_twofa_device_name" maxlength="64" placeholder="<?= tohtml( _("e.g. Phone")) ?>">
+								</div>
+								<label for="v_twofa_confirm" class="form-label"><?= tohtml( _("Confirmation code")) ?></label>
+								<input type="text" class="form-control" name="v_twofa_confirm" id="v_twofa_confirm" inputmode="numeric" pattern="[0-9]{6}" autocomplete="one-time-code" placeholder="123456">
+								<p class="u-mb10 u-mt10"><?= tohtml( _("Enter the code currently shown in your authenticator app, then save to confirm and activate two-factor authentication. Uncheck the box above and save to cancel.")) ?></p>
+							</div>
+						</div>
+
+						<?php if ($twofa_state === "on" && !empty($v_twofa_backup_codes)) { ?>
+							<dialog x-data x-init="$el.showModal()" class="modal">
+								<h2 class="modal-title"><?= tohtml( _("Save your backup codes now")) ?></h2>
+								<div class="modal-message">
+									<p class="u-mb10"><?= tohtml( _("These codes are shown only once. Each one can be used a single time to sign in if you lose access to your authenticator app. Store them somewhere safe.")) ?></p>
+									<textarea class="form-control js-copy-input u-mb10" rows="10" readonly><?= tohtml(implode("\n", $v_twofa_backup_codes)) ?></textarea>
+									<button type="button" class="button button-secondary js-copy-button"><?= tohtml( _("Copy codes")) ?></button>
+								</div>
+								<div class="modal-options">
+									<button type="button" class="button" x-on:click="$root.close()"><?= tohtml( _("I've saved my codes")) ?></button>
+								</div>
+							</dialog>
+						<?php } elseif ($twofa_state === "on") { ?>
+							<p class="u-mb10">
+								<?php if (!empty($v_twofa_device_name)) { ?>
+									<?= tohtml( sprintf(_("Authenticator: %s"), $v_twofa_device_name)) ?><br>
+								<?php } ?>
+								<?= tohtml( sprintf(_("Two-factor authentication is active. %d backup codes remaining."), (int) $v_twofa_backup_count)) ?>
+							</p>
+							<?php if ((int) $v_twofa_backup_count === 0) { ?>
+								<div class="inline-alert inline-alert-warning u-mb10" role="alert">
+									<i class="fas fa-triangle-exclamation"></i>
+									<p><?= tohtml( _("You have no backup codes left. If you lose access to your authenticator app, an administrator will need to disable two-factor authentication for you.")) ?></p>
+								</div>
+							<?php } ?>
+						<?php } ?>
 					<?php } ?>
 				</div>
 				<div x-cloak x-show="!loginDisabled" id="password-options-ip">

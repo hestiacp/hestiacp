@@ -34,6 +34,48 @@ export default function alpineInit() {
 			});
 		});
 
+	// Two-factor authentication setup: fetches a pending secret + QR code as
+	// soon as the checkbox is ticked, without a full page reload. The secret
+	// itself never round-trips through the browser on this call - it stays
+	// server-side in the session until the confirmation code is submitted.
+	Alpine.data('twofaSetup', (opts) => ({
+		checked: opts.pending || opts.checked,
+		pending: opts.pending,
+		qrcode: opts.qrcode,
+		secret: opts.secret,
+		loading: false,
+		error: '',
+		async onToggle() {
+			this.error = '';
+			if (this.checked && !this.pending) {
+				await this.generate();
+			}
+		},
+		async generate() {
+			this.loading = true;
+			const token = document.querySelector('#token').getAttribute('token');
+			const url = new URL(window.location.href);
+			url.searchParams.set('ajax', '1');
+			url.searchParams.set('twofa_action', 'generate');
+			url.searchParams.set('token', token);
+			try {
+				const res = await fetch(url, { method: 'POST' });
+				const data = await res.json();
+				if (!data.success) {
+					throw new Error(data.error || 'Failed to generate a setup code.');
+				}
+				this.qrcode = data.qrcode;
+				this.secret = data.secret;
+				this.pending = true;
+			} catch (e) {
+				this.error = e.message;
+				this.checked = false;
+			} finally {
+				this.loading = false;
+			}
+		},
+	}));
+
 	// Notifications methods called by the view code
 	Alpine.data('notifications', () => ({
 		initialized: false,

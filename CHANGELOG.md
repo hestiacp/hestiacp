@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.10.3] - Service Release
+
+### Changes
+
+- Reorder firewall rules #5623
+
+### Fixes
+
+- Adjust text wrapping behavior in `u-text-break` utility #5621
+- Fix missing symfony/mime dependency in FileManager and reinstall on upgrade #5616
+
 ## [1.10.2] - Service Release
 
 ### Changes

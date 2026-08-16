@@ -29,7 +29,7 @@ upgrade_config_set_value 'UPGRADE_REBUILD_USERS' 'false'
 if [[ "${FILE_MANAGER:-false}" == "true" ]] \
 	&& [[ -f "$HESTIA/web/fm/version" ]]; then
 
-	fm_v="${fm_v:-1.0.0}"
+	fm_v="$(grep '^fm_v=' "$HESTIA/install/upgrade/upgrade.conf" | cut -d"'" -f2)"
 	current_fm_v="$(< "$HESTIA/web/fm/version")"
 
 	if dpkg --compare-versions "$current_fm_v" eq "$fm_v"; then

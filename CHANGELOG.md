@@ -6,12 +6,13 @@ All notable changes to this project will be documented in this file.
 
 ### Changes
 
-- Reorder firewall rules #5623
+- Update locales.
 
 ### Fixes
 
 - Adjust text wrapping behavior in `u-text-break` utility #5621
 - Fix missing symfony/mime dependency in FileManager and reinstall on upgrade #5616
+- Reorder firewall rules after rule deleting preventing a bug with moving up / down causing duplicate lines #5623
 
 ## [1.10.2] - Service Release
 

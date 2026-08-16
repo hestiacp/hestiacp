@@ -158,7 +158,7 @@ Then add a root cron job, for example to run daily at 03:30:
 ## Rejected because [ip] is in black list at zen.spamhaus.org. Error open resolver: `https://www.spamhaus.org/returnc/pub/65.1.174.102`
 
 1. Go to [Spamhaus free data query account](https://www.spamhaus.com/free-trial/sign-up-for-a-free-data-query-service-account/)
-1. Fill in the form and verify your email address by via the link in the email you recive.
+1. Fill in the form and verify your email address by via the link in the email you receive.
 1. Once logged, go to Products → DQS and you will see your Query Key and below you will see the exactly fqdn that you will need to use Zen Spamhaus black list. Something like: `HereYourQueryKey.zen.dq.spamhaus.net`
 1. Run `v-delete-sys-mail-dnsbl zen.spamhaus.org` to remove the default Spamhaus entry.
 1. Run `v-add-sys-mail-dnsbl HereYourQueryKey.zen.dq.spamhaus.net` to add your custom DQS key. (Note: HestiaCP automatically prevents your Spamhaus Query key from leaking in bounce messages).

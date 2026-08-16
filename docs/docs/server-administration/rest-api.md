@@ -48,7 +48,7 @@ Method has been Deprecated
 To create an access key, follow [the guide in our documentation](../user-guide/account#api-access-keys).
 
 :::tip
-Or create it with the following commad. To create a acccess that requires administrator permissions create the api key via the initial admin user!
+Or create it with the following command. To create a access that requires administrator permissions create the api key via the initial admin user!
 :::
 
 ```bash
@@ -71,7 +71,7 @@ COMMANDS='v-list-web-domains,v-add-web-domain,v-list-web-domain'
 ```
 
 - Role: user or admin.
-- Commands: Comma seperated list with all the command you require.
+- Commands: Comma separated list with all the command you require.
 
 If the software you are using already supports the hash format, use `ACCESS_KEY:SECRET_KEY` instead of your old API key.
 

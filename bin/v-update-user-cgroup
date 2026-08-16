@@ -4,7 +4,7 @@
 #
 # example: v-update-user-cgroup admin
 #
-# The functions upates cgroup, cpu, ram ,... for specific user
+# The functions updates cgroup, cpu, ram ,... for specific user
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

@@ -88,7 +88,7 @@ mailbox Junk {
 }
 ```
 
-For busy mail servers, Dovecot recommends enabling `mailbox_list_index = yes` when using `autoexpunge`, so it can find mailboxes that need cleanup without opening every mailbox. If your mail storage uses Maildir or sdbox, also consider `mail_always_cache_fields = date.save`.
+For busy mail servers, [Dovecot recommends](https://doc.dovecot.org/2.3/configuration_manual/namespace/) enabling `mailbox_list_index = yes` when using `autoexpunge`, so it can find mailboxes that need cleanup without opening every mailbox. If your mail storage uses Maildir or sdbox, also consider `mail_always_cache_fields = date.save`.
 
 Validate the Dovecot configuration and restart Dovecot:
 
@@ -226,7 +226,7 @@ The DKIM key and SPF record can be found in the **Mail Domains** list ([document
 
 Make sure you have set up the correct RDNS, SPF records and DKIM records.
 
-If this doesn’t work, it’s be possible that your IP address is on one or more blacklists. You can try to unblock yourself, but often the easier method is to use SMTP and SMTP Relay with Amazon SES or another SMTP provider.
+If this doesn’t work, it’s be possible that your IP address is on one or more blacklists. You can check your IP using [Suped's Blocklist Checker](https://www.suped.com/tools/blocklist-checker). You can try to unblock yourself, but often the easier method is to use SMTP and SMTP Relay with Amazon SES or another SMTP provider.
 
 ## How can I enable ManageSieve?
 

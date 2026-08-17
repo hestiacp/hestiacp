@@ -20,9 +20,9 @@
 		"prepare": "husky"
 	},
 	"dependencies": {
-		"@alpinejs/collapse": "^3.15.12",
+		"@alpinejs/collapse": "^3.16.1",
 		"@fortawesome/fontawesome-free": "^7.3.1",
-		"alpinejs": "^3.15.12",
+		"alpinejs": "^3.16.1",
 		"chart.js": "^4.5.1",
 		"check-password-strength": "^3.0.0",
 		"floating-vue": "^5.2.2",
@@ -33,7 +33,7 @@
 		"@xterm/xterm": "^5.5.0"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "2.5.7",
+		"@biomejs/biome": "2.5.8",
 		"@prettier/plugin-php": "^0.25.0",
 		"@testing-library/vue": "^8.1.0",
 		"@vitejs/plugin-vue": "^6.0.8",
@@ -58,7 +58,7 @@
 	"overrides": {
 		"vite": "^6.4.3",
 		"postcss": {
-			"nanoid": "^3.3.17"
+			"nanoid": "^3.3.18"
 		}
 	},
 	"allowScripts": {

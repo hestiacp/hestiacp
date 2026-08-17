@@ -18,7 +18,9 @@
 			"!**/email/examples/*.html",
 			"!**/*.bats",
 			"!**/*.min.css",
-			"!**/*.min.js"
+			"!**/*.min.js",
+			"!web/images/*.svg",
+			"!web/src/app/WebApp/Installers/**/*.svg"
 		]
 	},
 	"formatter": {

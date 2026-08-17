@@ -53,6 +53,12 @@ COPY .github/docker/files/ssh.service.10-docker.conf /etc/systemd/system/ssh.ser
 # Ensure netplan exists in Ubuntu containers so v-add-sys-ip uses netplan path in tests.
 COPY .github/docker/files/netplan.01-docker.yaml /etc/netplan/01-docker.yaml
 
+# netplan.io's systemd generator auto-starts networkd/resolved at boot just because a
+# renderer: networkd config exists, which fights Docker's own --dns-based /etc/resolv.conf
+# and breaks DNS entirely. Mask both so netplan stays usable as a CLI/config for
+# v-add-sys-ip (bin/v-add-sys-ip) without ever taking over live networking in the container.
+RUN systemctl mask systemd-networkd systemd-networkd-wait-online systemd-resolved
+
 VOLUME ["/sys/fs/cgroup"]
 
 STOPSIGNAL SIGRTMIN+3

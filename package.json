@@ -28,9 +28,8 @@
 		"floating-vue": "^5.2.2",
 		"nanoid": "^5.1.16",
 		"normalize.css": "^8.0.1",
-		"@xterm/addon-canvas": "^0.7.0",
 		"@xterm/addon-webgl": "^0.19.0",
-		"@xterm/xterm": "^5.5.0"
+		"@xterm/xterm": "^6.0.0"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "2.5.8",

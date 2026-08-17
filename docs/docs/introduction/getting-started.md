@@ -113,7 +113,7 @@ To choose what software gets installed, you can provide flags to the installatio
 ```
 
 :::tip
-Option --multiphp (Multi PHP) also accepts a comma seperated list of PHP versions. For example: --multiphp 8.3,8.4 will install PHP8.3 and PHP8.4
+Option --multiphp (Multi PHP) also accepts a comma separated list of PHP versions. For example: --multiphp 8.3,8.4 will install PHP8.3 and PHP8.4
 :::
 
 #### Example

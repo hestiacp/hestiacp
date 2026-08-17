@@ -88,7 +88,7 @@ mailbox Junk {
 }
 ```
 
-For busy mail servers, Dovecot recommends enabling `mailbox_list_index = yes` when using `autoexpunge`, so it can find mailboxes that need cleanup without opening every mailbox. If your mail storage uses Maildir or sdbox, also consider `mail_always_cache_fields = date.save`.
+For busy mail servers, [Dovecot recommends](https://doc.dovecot.org/2.3/configuration_manual/namespace/) enabling `mailbox_list_index = yes` when using `autoexpunge`, so it can find mailboxes that need cleanup without opening every mailbox. If your mail storage uses Maildir or sdbox, also consider `mail_always_cache_fields = date.save`.
 
 Validate the Dovecot configuration and restart Dovecot:
 
@@ -158,7 +158,7 @@ Then add a root cron job, for example to run daily at 03:30:
 ## Rejected because [ip] is in black list at zen.spamhaus.org. Error open resolver: `https://www.spamhaus.org/returnc/pub/65.1.174.102`
 
 1. Go to [Spamhaus free data query account](https://www.spamhaus.com/free-trial/sign-up-for-a-free-data-query-service-account/)
-1. Fill in the form and verify your email address by via the link in the email you recive.
+1. Fill in the form and verify your email address by via the link in the email you receive.
 1. Once logged, go to Products → DQS and you will see your Query Key and below you will see the exactly fqdn that you will need to use Zen Spamhaus black list. Something like: `HereYourQueryKey.zen.dq.spamhaus.net`
 1. Run `v-delete-sys-mail-dnsbl zen.spamhaus.org` to remove the default Spamhaus entry.
 1. Run `v-add-sys-mail-dnsbl HereYourQueryKey.zen.dq.spamhaus.net` to add your custom DQS key. (Note: HestiaCP automatically prevents your Spamhaus Query key from leaking in bounce messages).
@@ -226,7 +226,7 @@ The DKIM key and SPF record can be found in the **Mail Domains** list ([document
 
 Make sure you have set up the correct RDNS, SPF records and DKIM records.
 
-If this doesn’t work, it’s be possible that your IP address is on one or more blacklists. You can try to unblock yourself, but often the easier method is to use SMTP and SMTP Relay with Amazon SES or another SMTP provider.
+If this doesn’t work, it’s be possible that your IP address is on one or more blacklists. You can check your IP using [Suped's Blocklist Checker](https://www.suped.com/tools/blocklist-checker). You can try to unblock yourself, but often the easier method is to use SMTP and SMTP Relay with Amazon SES or another SMTP provider.
 
 ## How can I enable ManageSieve?
 

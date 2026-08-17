@@ -132,6 +132,6 @@ $cfg["Servers"][$i]["controlpass"] = "random password";
 $cfg["Servers"][$i]["bookmarktable"] = "pma__bookmark";
 ```
 
-Please make sure to create aswell the phpmyadmin user and database.
+Please make sure to create as well the phpmyadmin user and database.
 
 See `/usr/local/hestia/install/deb/phpmyadmin/pma.sh`

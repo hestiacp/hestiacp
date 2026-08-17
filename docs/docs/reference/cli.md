@@ -1068,7 +1068,7 @@ v-add-web-domain admin wonderland.com 192.18.22.43 yes www.wonderland.com
 This function adds virtual host to a server. In cases when ip is
 undefined in the script, "default" template will be used. The alias of
 `www.domain.tld` type will be automatically assigned to the domain unless
-"none" is transmited as argument. If ip have associated dns name, this
+"none" is transmitted as argument. If ip have associated dns name, this
 domain will also get the alias domain-tpl.$ipname. An alias with the ip
 name is useful during the site testing while dns isn't moved to server yet.
 
@@ -1162,7 +1162,7 @@ This function is used for securing web domain with http auth
 
 add webdomain proxy support
 
-**Options**: `USER` `DOMAIN` `[TEMPLATE]` `[EXTENTIONS]` `[RESTART]`
+**Options**: `USER` `DOMAIN` `[TEMPLATE]` `[EXTENSIONS]` `[RESTART]`
 
 **Examples**:
 
@@ -1995,7 +1995,7 @@ update web templates
 
 This function for changing the release branch for the
 Hestia Control Panel. This allows the user to switch between
-stable and pre-release builds which will automaticlly update
+stable and pre-release builds which will automatically update
 based on the appropriate release schedule if auto-update is
 turned on.
 
@@ -2013,7 +2013,7 @@ change service config
 v-change-sys-service-config /home/admin/dovecot.conf dovecot yes
 ```
 
-This function for changing service confguration.
+This function for changing service configuration.
 
 ## v-change-sys-timezone
 
@@ -2200,7 +2200,7 @@ change user random key
 
 **Options**: `USER` `[HASH]`
 
-This function changes user's RKEY value thats has been used for security value to be used forgot password function only.
+This function changes user's RKEY value that has been used for security value to be used forgot password function only.
 
 ## v-change-user-role
 
@@ -2423,7 +2423,7 @@ This function is used for changing the domain name.
 
 change web domain proxy template
 
-**Options**: `USER` `DOMAIN` `TEMPLATE` `[EXTENTIONS]` `[RESTART]`
+**Options**: `USER` `DOMAIN` `TEMPLATE` `[EXTENSIONS]` `[RESTART]`
 
 **Examples**:
 
@@ -3046,7 +3046,7 @@ This function deletes file on the file system
 
 [Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-letsencrypt-domain)
 
-deleting letsencrypt ssl cetificate for domain
+deleting letsencrypt ssl certificate for domain
 
 **Options**: `USER` `DOMAIN` `[RESTART]` `[MAIL]`
 
@@ -3362,7 +3362,7 @@ This function synchronise dns with the remote server.
 
 [Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-sys-api-ip)
 
-delete ip adresss from allowed ip list api
+delete ip address from allowed ip list api
 
 **Options**: `IP`
 
@@ -3777,7 +3777,7 @@ v-delete-web-domain-alias admin example.com www.example.com
 ```
 
 This function of deleting the alias domain (parked domain). By this call
-default www aliase can be removed as well.
+default www alias can be removed as well.
 
 ## v-delete-web-domain-allow-users
 
@@ -4618,7 +4618,7 @@ This function for obtaining the list of all DNS templates available.
 
 list public dnssec key
 
-**Options**: `USER` `DOMAIN` `[FROMAT]`
+**Options**: `USER` `DOMAIN` `[FORMAT]`
 
 **Examples**:
 
@@ -6349,7 +6349,7 @@ This function runs a limited list of cli commands with dropped privileges as the
 
 [Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-schedule-letsencrypt-domain)
 
-adding cronjob for letsencrypt cetificate installation
+adding cronjob for letsencrypt certificate installation
 
 **Options**: `USER` `DOMAIN` `[ALIASES]`
 
@@ -7555,7 +7555,7 @@ update user disk quota
 v-update-user-cgroup admin
 ```
 
-The functions upates cgroup, cpu, ram ,... for specific user
+The functions updates cgroup, cpu, ram ,... for specific user
 
 ## v-update-user-counters
 
@@ -7619,7 +7619,7 @@ update user disk quota
 v-update-user-quota alice
 ```
 
-The functions upates disk quota for specific user
+The functions updates disk quota for specific user
 
 ## v-update-user-stats
 

@@ -89,7 +89,7 @@ if [[ "$dovecot_version" = "2.4" ]]; then
 				|| sed -i -E -z 's/    user = dovecot\n  \}\n\}/    user = dovecot\n  \}\n\n  unix_listener auth-master {\n    group = mail\n    mode = 0660\n    user = dovecot\n  }\n\}/' /etc/dovecot/conf.d/10-master.conf
 			grep -q 'mail_plugins.*sieve' /etc/dovecot/conf.d/15-lda.conf \
 				|| sed -i '/^protocol lda {$/a\  mail_plugins = mail_compress quota sieve' /etc/dovecot/conf.d/15-lda.conf
-			grep -q 'imap_sieve' /etc/dovecot/conf.d/20-imap.conf \
+			grep -q 'imap_quota imap_sieve' /etc/dovecot/conf.d/20-imap.conf \
 				|| sed -i "s/quota imap_quota/quota imap_quota imap_sieve/g" /etc/dovecot/conf.d/20-imap.conf
 			cp -f "$HESTIA_COMMON_DIR"/dovecot/2.4/sieve/* /etc/dovecot/conf.d
 		fi

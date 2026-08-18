@@ -50,9 +50,9 @@
 			<div class="u-mb20">
 				<label for="v_key_algo" class="form-label"><?= tohtml( _("Key Type")) ?></label>
 				<select class="form-select" name="v_key_algo" id="v_key_algo">
-					<option value="ecdsa-256" <?php if ($v_key_algo === "ecdsa-256") echo "selected"; ?>>ECDSA P-256 (<?= tohtml( _("recommended")) ?>)</option>
-					<option value="ecdsa-384" <?php if ($v_key_algo === "ecdsa-384") echo "selected"; ?>><?= tohtml("ECDSA P-384") ?></option>
-					<option value="rsa" <?php if ($v_key_algo === "rsa") echo "selected"; ?>><?= tohtml("RSA 4096") ?></option>
+					<option value="ecdsa-256" <?php if ($v_key_algo === "ecdsa-256") echo 'selected'; ?>>ECDSA P-256 (<?= tohtml(_("recommended")) ?>)</option>
+					<option value="ecdsa-384" <?php if ($v_key_algo === "ecdsa-384") echo 'selected'; ?>>ECDSA P-384</option>
+					<option value="rsa" <?php if ($v_key_algo === "rsa") echo 'selected'; ?>>RSA 4096</option>
 				</select>
 			</div>
 			<div>

@@ -38,11 +38,6 @@ if [[ "x$(id -u)" != 'x0' ]]; then
 	exit 10
 fi
 
-# Ensure that $HESTIA (/usr/local/hestia/) and other variables are valid.
-if [[ -z "$HESTIA" ]]; then
-	HESTIA="/usr/local/hestia"
-fi
-
 if [[ -z "$HOMEDIR" || -z "$HESTIA_INSTALL_DIR" ]]; then
 	echo "ERROR: Environment variables not present, installation aborted." >&2
 	"$BIN/v-log-action" "system" "Error" "Plugins" "File Manager installation failed: required environment variables are missing (Version: $fm_v)."
@@ -53,6 +48,7 @@ fi
 if [[ ! -f "$COMPOSER_BIN" ]]; then
 	"$BIN/v-add-user-composer" "$user"
 	if [[ $? -ne 0 ]]; then
+		echo "ERROR: Composer installation failed!" >&2
 		"$BIN/v-add-user-notification" "$ROOT_USER" 'Composer installation failed!' '<p class="u-text-bold">The File Manager will not work without Composer.</p><p>Please try running the installer manually from a shell session:<br><code>v-add-sys-filemanager</code></p><p>If this continues, <a href="https://github.com/hestiacp/hestiacp/issues" target="_blank">open an issue on GitHub</a>.</p>'
 		"$BIN/v-log-action" "system" "Error" "Plugins" "File Manager installation failed: Composer installation failed (Version: $fm_v)."
 		exit 1
@@ -78,6 +74,7 @@ wget "$FM_URL" --quiet -O "$FM_ZIP"
 # Check that the file exists and is not 0 bytes
 if [[ ! -s "$FM_ZIP" ]]; then
 	echo "ERROR: File Manager download failed or the downloaded file is empty!" >&2
+	"$BIN/v-add-user-notification" "$ROOT_USER" 'File Manager installation failed!' '<p>Package download failed or file is empty.</p>'
 	"$BIN/v-log-action" "system" "Error" "Plugins" "File Manager installation failed: package download failed or file is empty (Version: $fm_v)."
 	exit 1
 fi
@@ -85,6 +82,7 @@ fi
 # Check that it is actually a valid zip file (not just that it has the extension)
 if ! unzip -tqq "$FM_ZIP" > /dev/null 2>&1; then
 	echo "ERROR: Downloaded File Manager package is not a valid zip file!" >&2
+	"$BIN/v-add-user-notification" "$ROOT_USER" 'File Manager installation failed!' '<p>Downloaded package is not a valid ZIP file.</p>'
 	"$BIN/v-log-action" "system" "Error" "Plugins" "File Manager installation failed: downloaded package is not a valid ZIP file (Version: $fm_v)."
 	exit 1
 fi
@@ -95,17 +93,19 @@ mkdir -p "$FM_INSTALL_DIR"
 
 if ! unzip -qq "$FM_ZIP" -d "$FM_INSTALL_DIR"; then
 	echo "ERROR: Failed to extract File Manager package!" >&2
-	rm -rf "$FM_INSTALL_DIR"
+	"$BIN/v-add-user-notification" "$ROOT_USER" 'File Manager installation failed!' '<p>Package extraction failed.</p>'
 	"$BIN/v-change-sys-config-value" 'FILE_MANAGER' 'false'
 	"$BIN/v-log-action" "system" "Error" "Plugins" "File Manager installation failed: package extraction failed (Version: $fm_v)."
+	rm -rf "$FM_INSTALL_DIR"
 	exit 1
 fi
 
 if [[ ! -d "${FM_INSTALL_DIR}/filegator" ]]; then
 	echo "ERROR: Unexpected package structure, 'filegator' directory not found!" >&2
-	rm -rf "$FM_INSTALL_DIR"
+	"$BIN/v-add-user-notification" "$ROOT_USER" 'File Manager installation failed!' '<p>Unexpected package structure.</p>'
 	"$BIN/v-change-sys-config-value" 'FILE_MANAGER' 'false'
 	"$BIN/v-log-action" "system" "Error" "Plugins" "File Manager installation failed: unexpected package structure (Version: $fm_v)."
+	rm -rf "$FM_INSTALL_DIR"
 	exit 1
 fi
 
@@ -122,14 +122,12 @@ fi
 
 # Check if installation was successful, if not abort script and throw error message notification and clean-up
 if [[ $? -ne 0 ]]; then
-	echo "ERROR: File Manager installation failed!" >&2
-	echo "Please report this to our development team:" >&2
-	echo "https://github.com/hestiacp/hestiacp/issues" >&2
-	"$BIN/v-add-user-notification" "$ROOT_USER" 'File Manager installation failed!' '<p>Please <a href="https://github.com/hestiacp/hestiacp/issues" target="_blank">open an issue on GitHub</a> to report this to our development team.</p>'
+	echo "ERROR: Composer dependency installation failed!" >&2
+	"$BIN/v-add-user-notification" "$ROOT_USER" 'File Manager installation failed!' '<p>Composer dependency installation failed.</p>'
 	# Installation failed, clean up files
-	rm -rf "${FM_INSTALL_DIR}"
 	"$BIN/v-change-sys-config-value" 'FILE_MANAGER' 'false'
 	"$BIN/v-log-action" "system" "Error" "Plugins" "File Manager installation failed: Composer dependency installation failed (Version: $fm_v)."
+	rm -rf "${FM_INSTALL_DIR}"
 	exit 1
 fi
 

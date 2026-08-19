@@ -6,7 +6,7 @@
 # https://www.hestiacp.com/
 #
 # Currently Supported Versions:
-# Debian 11 12 13
+# Debian 12 13
 #
 # ======================================================== #
 
@@ -1390,11 +1390,7 @@ if [ "$exim" = 'yes' ]; then
 		write_config_value "ANTIVIRUS_SYSTEM" "clamav-daemon"
 	fi
 	if [ "$spamd" = 'yes' ]; then
-		if [ "$release" = '11' ]; then
-			write_config_value "ANTISPAM_SYSTEM" "spamassassin"
-		else
-			write_config_value "ANTISPAM_SYSTEM" "spamd"
-		fi
+		write_config_value "ANTISPAM_SYSTEM" "spamd"
 	fi
 	if [ "$dovecot" = 'yes' ]; then
 		write_config_value "IMAP_SYSTEM" "dovecot"
@@ -1513,17 +1509,13 @@ $HESTIA/bin/v-change-sys-hostname $servername > /dev/null 2>&1
 # Configuring global OpenSSL options
 echo "[ * ] Configuring OpenSSL to improve TLS performance..."
 tls13_ciphers="TLS_AES_128_GCM_SHA256:TLS_CHACHA20_POLY1305_SHA256:TLS_AES_256_GCM_SHA384"
-if [ "$release" = "11" ]; then
+if ! grep -qw "^ssl_conf = ssl_sect$" /etc/ssl/openssl.cnf 2> /dev/null; then
+	sed -i '/providers = provider_sect$/a ssl_conf = ssl_sect' /etc/ssl/openssl.cnf
+fi
+if ! grep -qw "^[ssl_sect]$" /etc/ssl/openssl.cnf 2> /dev/null; then
+	sed -i '$a \\n[ssl_sect]\nsystem_default = hestia_openssl_sect\n\n[hestia_openssl_sect]\nCiphersuites = '"$tls13_ciphers"'\nOptions = PrioritizeChaCha' /etc/ssl/openssl.cnf
+elif grep -qw "^system_default = system_default_sect$" /etc/ssl/openssl.cnf 2> /dev/null; then
 	sed -i '/^system_default = system_default_sect$/a system_default = hestia_openssl_sect\n\n[hestia_openssl_sect]\nCiphersuites = '"$tls13_ciphers"'\nOptions = PrioritizeChaCha' /etc/ssl/openssl.cnf
-else
-	if ! grep -qw "^ssl_conf = ssl_sect$" /etc/ssl/openssl.cnf 2> /dev/null; then
-		sed -i '/providers = provider_sect$/a ssl_conf = ssl_sect' /etc/ssl/openssl.cnf
-	fi
-	if ! grep -qw "^[ssl_sect]$" /etc/ssl/openssl.cnf 2> /dev/null; then
-		sed -i '$a \\n[ssl_sect]\nsystem_default = hestia_openssl_sect\n\n[hestia_openssl_sect]\nCiphersuites = '"$tls13_ciphers"'\nOptions = PrioritizeChaCha' /etc/ssl/openssl.cnf
-	elif grep -qw "^system_default = system_default_sect$" /etc/ssl/openssl.cnf 2> /dev/null; then
-		sed -i '/^system_default = system_default_sect$/a system_default = hestia_openssl_sect\n\n[hestia_openssl_sect]\nCiphersuites = '"$tls13_ciphers"'\nOptions = PrioritizeChaCha' /etc/ssl/openssl.cnf
-	fi
 fi
 
 # Generating SSL certificate
@@ -1772,17 +1764,8 @@ if [ "$proftpd" = 'yes' ]; then
 	systemctl start proftpd >> $LOG
 	check_result $? "proftpd start failed"
 
-	if [ "$release" -eq 11 ]; then
-		unit_files="$(systemctl list-unit-files | grep proftpd)"
-		if [[ "$unit_files" =~ "disabled" ]]; then
-			systemctl enable proftpd
-		fi
-	fi
-
-	if [ "$release" -eq 12 ] || [ "$release" -eq 13 ]; then
-		systemctl disable --now proftpd.socket
-		systemctl enable --now proftpd.service
-	fi
+	systemctl disable --now proftpd.socket
+	systemctl enable --now proftpd.service
 fi
 
 #----------------------------------------------------------#
@@ -2143,24 +2126,12 @@ fi
 if [ "$spamd" = 'yes' ]; then
 	echo "[ * ] Configuring SpamAssassin..."
 	update-rc.d spamassassin defaults > /dev/null 2>&1
-	if [ "$release" = "11" ]; then
-		update-rc.d spamassassin enable > /dev/null 2>&1
-		systemctl start spamassassin >> $LOG
-		check_result $? "spamassassin start failed"
-		unit_files="$(systemctl list-unit-files | grep spamassassin)"
-		if [[ "$unit_files" =~ "disabled" ]]; then
-			systemctl enable spamassassin > /dev/null 2>&1
-		fi
-		sed -i "s/#CRON=1/CRON=1/" /etc/default/spamassassin
-	else
-		# Deb 12+ renamed to spamd
-		update-rc.d spamd enable > /dev/null 2>&1
-		systemctl start spamd >> $LOG
-		unit_files="$(systemctl list-unit-files | grep spamd)"
-		if [[ "$unit_files" =~ "disabled" ]]; then
-			systemctl enable spamd > /dev/null 2>&1
-		fi
-
+	# Deb 12+ renamed to spamd
+	update-rc.d spamd enable > /dev/null 2>&1
+	systemctl start spamd >> $LOG
+	unit_files="$(systemctl list-unit-files | grep spamd)"
+	if [[ "$unit_files" =~ "disabled" ]]; then
+		systemctl enable spamd > /dev/null 2>&1
 	fi
 fi
 

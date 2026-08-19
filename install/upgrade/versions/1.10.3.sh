@@ -45,15 +45,3 @@ if [[ "${FILE_MANAGER:-false}" == "true" ]] \
 		fi
 	fi
 fi
-
-# Add TWOFA_BACKUP field to existing users' configuration (2FA backup codes)
-echo "[ * ] Adding 2FA backup code field to user configuration"
-for user in $("$HESTIA"/bin/v-list-users list); do
-	conf="$HESTIA/data/users/$user/user.conf"
-	if [[ -f "$conf" ]] && ! grep -q "^TWOFA_BACKUP=" "$conf"; then
-		sed -i "/^QRCODE=/a TWOFA_BACKUP=''" "$conf"
-	fi
-	if [[ -f "$conf" ]] && ! grep -q "^TWOFA_DEVICE_NAME=" "$conf"; then
-		sed -i "/^TWOFA_BACKUP=/a TWOFA_DEVICE_NAME=''" "$conf"
-	fi
-done

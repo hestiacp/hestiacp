@@ -718,8 +718,16 @@ update_user_value() {
 	key="${2//$/}"
 	lnr=$(grep -m 1 -n "^$key='" $HESTIA/data/users/$1/user.conf | cut -f 1 -d ':')
 	if [ -n "$lnr" ]; then
-		sed -i "$lnr d" $HESTIA/data/users/$1/user.conf
-		sed -i "$lnr i\\$key='${3}'" $HESTIA/data/users/$1/user.conf
+		# A single "change line" pass, not delete-then-insert-at-the-same-
+		# line-number: if the key were the last line, deleting it first
+		# would shift the line count so the follow-up insert's address no
+		# longer existed, silently dropping the value instead of updating it.
+		sed -i "$lnr c\\$key='${3}'" $HESTIA/data/users/$1/user.conf
+	else
+		# The key doesn't exist yet (e.g. a field introduced after this
+		# user was created) - append it instead of silently doing nothing,
+		# so callers can rely on the value actually being set.
+		echo "$key='${3}'" >> $HESTIA/data/users/$1/user.conf
 	fi
 }
 

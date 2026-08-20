@@ -35,20 +35,6 @@ export default function handleEditWebListeners() {
 		});
 	});
 
-	// Listen to "Use Lets Encrypt to obtain SSL certificate" checkbox to
-	// hide/show SSL textareas
-	const toggleLetsEncryptCheckbox = document.querySelector('.js-toggle-lets-encrypt');
-	const sslDetails = document.querySelector('.js-ssl-details');
-	if (toggleLetsEncryptCheckbox && sslDetails) {
-		toggleLetsEncryptCheckbox.addEventListener('change', () => {
-			if (toggleLetsEncryptCheckbox.checked) {
-				sslDetails.style.display = 'none';
-			} else {
-				sslDetails.style.display = 'block';
-			}
-		});
-	}
-
 	// Listen to "Advanced Options -> Proxy Template" select menu to
 	// show "Purge Nginx Cache" button if "caching" selected
 	const proxyTemplateSelect = document.querySelector('.js-proxy-template-select');

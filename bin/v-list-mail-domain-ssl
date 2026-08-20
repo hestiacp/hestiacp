@@ -23,6 +23,9 @@ source $HESTIA/func/main.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
 # Additional argument formatting
 format_domain
 format_domain_idn

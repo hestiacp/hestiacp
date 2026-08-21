@@ -1451,6 +1451,29 @@ is_valid_swap_size() {
 	fi
 }
 
+# Validate Max Children
+is_valid_max_children() {
+    if ! [[ "$1" =~ ^[0-9]+$ ]]; then
+        check_result "$E_INVALID" "Invalid Max Children format :: $1"
+    fi
+}
+
+# Validate Max Requests
+is_valid_max_requests() {
+    if ! [[ "$1" =~ ^[0-9]+$ ]]; then
+        check_result "$E_INVALID" "Invalid Max Requests format :: $1"
+    fi
+}
+
+# Validate Idle Timeout
+is_valid_idle_timeout() {
+    if ! [[ "$1" =~ ^[0-9]+$ ]]; then
+        check_result "$E_INVALID" "Invalid Idle Timeout format :: $1"
+    fi
+}
+
+
+
 is_object_name_format_valid() {
 	if ! [[ "$1" =~ ^[-|\ |\.|_[:alnum:]]{0,50}$ ]]; then
 		check_result "$E_INVALID" "invalid $2 format :: $1"

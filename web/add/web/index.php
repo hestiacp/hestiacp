@@ -7,6 +7,14 @@ $TAB = "WEB";
 // Main include
 include $_SERVER["DOCUMENT_ROOT"] . "/inc/main.php";
 
+// Get all user domains (also used to populate/validate the "subdomain of" picker)
+exec(HESTIA_CMD . "v-list-web-domains " . $user . " json", $output, $return_var);
+$user_domains_data = json_decode(implode("", $output), true);
+ksort($user_domains_data);
+$user_domains_data = group_domains_by_parent($user_domains_data);
+$user_domains = array_keys($user_domains_data);
+unset($output);
+
 // Check POST request
 if (!empty($_POST["ok"])) {
 	// Check token
@@ -29,6 +37,17 @@ if (!empty($_POST["ok"])) {
 			}
 		}
 		$_SESSION["error_msg"] = sprintf(_('Field "%s" can not be blank.'), $error_msg);
+	}
+
+	// If a parent domain was picked, only trust one that is really one of the
+	// user's own domains, then build the full domain from label + parent
+	if (!empty($_POST["v_parent_domain"])) {
+		if (!in_array($_POST["v_parent_domain"], $user_domains, true)) {
+			$_SESSION["error_msg"] = _("Invalid parent domain selected.");
+		} else {
+			$_POST["v_domain"] =
+				trim($_POST["v_domain"], ". \t\n\r\0\x0B") . "." . $_POST["v_parent_domain"];
+		}
 	}
 
 	// Set domain to lowercase and remove www prefix
@@ -172,13 +191,8 @@ exec(HESTIA_CMD . "v-list-user-ips " . $user . " json", $output, $return_var);
 $ips = json_decode(implode("", $output), true);
 unset($output);
 
-// Get all user domains
-exec(HESTIA_CMD . "v-list-web-domains " . $user . " json", $output, $return_var);
-$user_domains = json_decode(implode("", $output), true);
-$user_domains = array_keys($user_domains);
-unset($output);
-
 $accept = $_GET["accept"] ?? "";
+$add_mode = ($_POST["type"] ?? ($_GET["type"] ?? "")) === "subdomain" ? "subdomain" : "domain";
 
 $v_domain = $_POST["domain"] ?? "";
 

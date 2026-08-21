@@ -563,6 +563,89 @@ function backendtpl_with_webdomains() {
 	}
 	return $backend_list;
 }
+
+/**
+ * Annotate each domain with its parent domain and nesting depth, without changing order
+ *
+ * A domain is only ever treated as a subdomain of another domain in $domains
+ * when that exact, full parent domain is itself present as a key in the same
+ * array (e.g. test.example.com under example.com). Domains that merely share
+ * a label (e.g. test.abc.com and test.xyz.com) are never linked together,
+ * and a subdomain with no matching parent in $domains is left unannotated.
+ *
+ * @param array $domains Associative array keyed by domain name, as returned by v-list-web-domains json
+ * @return array Same entries in the same order, each with PARENT_DOMAIN and SUBDOMAIN_DEPTH added
+ */
+function annotate_domain_parents($domains) {
+	$names = array_keys($domains);
+
+	$parent_of = [];
+	foreach ($names as $name) {
+		$labels = explode(".", $name);
+		$parent_of[$name] = null;
+		for ($i = 1; $i < count($labels) - 1; $i++) {
+			$candidate = implode(".", array_slice($labels, $i));
+			if (isset($domains[$candidate])) {
+				$parent_of[$name] = $candidate;
+				break;
+			}
+		}
+	}
+
+	$depth_of = [];
+	$compute_depth = function ($name) use (&$compute_depth, &$depth_of, $parent_of) {
+		if (!isset($depth_of[$name])) {
+			$depth_of[$name] =
+				$parent_of[$name] === null ? 0 : $compute_depth($parent_of[$name]) + 1;
+		}
+		return $depth_of[$name];
+	};
+
+	foreach ($names as $name) {
+		$domains[$name]["PARENT_DOMAIN"] = $parent_of[$name];
+		$domains[$name]["SUBDOMAIN_DEPTH"] = $compute_depth($name);
+	}
+	return $domains;
+}
+
+/**
+ * Reorder domains so subdomains directly follow their real parent domain
+ *
+ * @param array $domains Associative array keyed by domain name, as returned by v-list-web-domains json
+ * @return array Same entries, reordered depth-first under their parent (see annotate_domain_parents())
+ */
+function group_domains_by_parent($domains) {
+	$domains = annotate_domain_parents($domains);
+
+	$children_of = [];
+	foreach ($domains as $name => $domain) {
+		if ($domain["PARENT_DOMAIN"] !== null) {
+			$children_of[$domain["PARENT_DOMAIN"]][] = $name;
+		}
+	}
+
+	$ordered = [];
+	$emit = function ($name) use (&$emit, &$ordered, $children_of) {
+		$ordered[] = $name;
+		if (!empty($children_of[$name])) {
+			foreach ($children_of[$name] as $child) {
+				$emit($child);
+			}
+		}
+	};
+	foreach ($domains as $name => $domain) {
+		if ($domain["PARENT_DOMAIN"] === null) {
+			$emit($name);
+		}
+	}
+
+	$result = [];
+	foreach ($ordered as $name) {
+		$result[$name] = $domains[$name];
+	}
+	return $result;
+}
+
 /**
  * Check if password is valid
  *

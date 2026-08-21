@@ -1,0 +1,91 @@
+#!/bin/bash
+# info: add temp database user with access to all of a user's databases
+# options: USER [HOST] [TTL]
+#
+# example: v-add-database-temp-user-all wordpress
+#
+# This function creates a temporary database user hestia_sso_XXXXXXXX and a
+# random password, granted access to every one of USER's existing MySQL
+# databases (enumerated by exact name via v-list-databases -- never a MySQL
+# wildcard pattern, see func/db.sh add_mysql_database_temp_user_all()). The
+# user has limited validity. Returns json to be read by the SSO script.
+#
+# Only databases on the given HOST (default: localhost) are included;
+# databases on a different/remote DB host are not covered by this generic
+# login and remain reachable via their individual per-database SSO link.
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+host=${2-localhost}
+ttl=$3
+
+if [ "$ttl" == '' ]; then
+	ttl=60
+fi
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/db.sh
+source $HESTIA/func/db.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '1' "$#" 'USER [HOST] [TTL]'
+is_format_valid 'user' 'ttl'
+is_system_enabled "$DB_SYSTEM" 'DB_SYSTEM'
+is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+databases=$($BIN/v-list-databases "$user" plain | awk -F'\t' -v h="$host" '$3==h && $4=="mysql" && $7=="no" {print $1}')
+
+if [ -z "$databases" ]; then
+	echo "Error: User $user has no active MySQL databases on host $host"
+	exit 3
+fi
+
+#generate password and unique user
+dbpass=$(generate_password)
+dbuser="hestia_sso_$(generate_password)"
+
+add_mysql_database_temp_user_all
+if [ $? -ne 0 ]; then
+	echo "Error: Unable to create temp user"
+	exit 2
+fi
+
+if [[ "$ttl" -gt 0 ]]; then
+	echo "$BIN/v-delete-database-temp-user-all $user $dbuser $host" | at "now +${ttl} minute" > /dev/null 2>&1
+fi
+echo '{
+    "login": {
+        "user": "'$dbuser'",
+        "password": "'$dbpass'"
+    }
+}'
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Logging
+$BIN/v-log-action "$user" "Info" "Databases" "Granted user $dbuser access to all databases."
+log_event "$OK" "$ARGUMENTS"
+exit

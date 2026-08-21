@@ -38,6 +38,12 @@ rebuild_user_conf() {
 	if [ -z "${QRCODE+x}" ]; then
 		sed -i "/TWOFA/a QRCODE=''" $USER_DATA/user.conf
 	fi
+	if [ -z "${TWOFA_BACKUP+x}" ]; then
+		sed -i "/^QRCODE=/a TWOFA_BACKUP=''" $USER_DATA/user.conf
+	fi
+	if [ -z "${TWOFA_DEVICE_NAME+x}" ]; then
+		sed -i "/^TWOFA_BACKUP=/a TWOFA_DEVICE_NAME=''" $USER_DATA/user.conf
+	fi
 	if [ -z "${PHPCLI+x}" ]; then
 		sed -i "/QRCODE/a PHPCLI=''" $USER_DATA/user.conf
 	fi

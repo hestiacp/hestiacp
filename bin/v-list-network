@@ -30,7 +30,12 @@ function list_network() {
 	ii=1
 	[ -n "$ip_type" ] && [ "$ip_type" -ne 4 -a "$ip_type" -ne 6 ] && ip_type=""
 	[ -n "$ip_type" ] && ip_filter=" -$ip_type"
-	ip_raw_string="$(/sbin/ip${ip_filter} addr show scope global | sed -ne '/^[0-9]*\:/{h;d};G;s/^\(.*\)\n[0-9]*:\(.*\)/\1 \2/;/inet/s/[ \t]*inet[6]* \([0-9A-Fa-f.:]*\)\/\([0-9]*\).* \([0-9a-z]*\):[ \t]<.*>.*/\1 \/\2 \3/p')"
+	# Parsed via `ip -j` + jq rather than text-scraping "ip addr" output: interface
+	# names on container platforms (Proxmox LXC, Docker, ...) are commonly reported
+	# as e.g. "eth0@if123", which broke the previous sed-based parser and silently
+	# dropped every address on such hosts.
+	ip_raw_string="$(ip${ip_filter} -j addr show scope global 2> /dev/null \
+		| jq -r '.[] as $i | ($i.addr_info // [])[] | "\(.local) /\(.prefixlen) \($i.ifname)"' 2> /dev/null)"
 	ip_count=$(echo "$ip_raw_string" | wc -l)
 	case $ip_view in
 		shell)

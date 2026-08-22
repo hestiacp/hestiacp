@@ -6,7 +6,7 @@
 				<a href="/add/web/" class="button button-secondary js-button-create">
 					<i class="fas fa-circle-plus icon-green"></i><?= tohtml( _("Add Web Domain")) ?>
 				</a>
-				<?php if (!empty($data)) { ?>
+				<?php if (is_subdomain_grouping_enabled() && !empty($data)) { ?>
 					<a href="/add/web/?type=subdomain" class="button button-secondary js-button-create">
 						<i class="fas fa-circle-plus icon-green"></i><?= tohtml( _("Add Subdomain")) ?>
 					</a>

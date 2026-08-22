@@ -284,6 +284,11 @@ function top_panel($user, $TAB) {
 		$_SESSION["userSortOrder"] = $panel[$user]["PREF_UI_SORT"];
 	}
 
+	// Set preferred subdomain grouping (still requires the server-wide setting to be on).
+	// Refreshed on every request (unlike userSortOrder above) so the value never goes
+	// stale between the edit-user form's own direct session write and a fresh page load.
+	$_SESSION["userSubdomainGrouping"] = $panel[$user]["PREF_SUBDOMAIN_GROUPING"] ?? "no";
+
 	// Set home location URLs
 	if ($_SESSION["userContext"] === "admin" && empty($_SESSION["look"])) {
 		// Display users list for administrators unless they are impersonating a user account
@@ -562,6 +567,19 @@ function backendtpl_with_webdomains() {
 		}
 	}
 	return $backend_list;
+}
+
+/**
+ * Whether subdomain grouping should be applied for the current request
+ *
+ * Requires both the server-wide setting (admin, off by default) and the
+ * signed-in user's own preference (also off by default) to be enabled.
+ *
+ * @return bool
+ */
+function is_subdomain_grouping_enabled() {
+	return ($_SESSION["SUBDOMAIN_GROUPING"] ?? "no") === "yes" &&
+		($_SESSION["userSubdomainGrouping"] ?? "no") === "yes";
 }
 
 /**

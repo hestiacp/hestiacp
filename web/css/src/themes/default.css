@@ -2267,15 +2267,6 @@
 	}
 }
 
-/* The account-recovery form has more fields than the other .login forms;
-   the fixed 15% bottom margin above (a percentage of the container's
-   width, not height, per spec) pushes it noticeably off-center once it
-   gets this tall. Scoped to this one form so the rest of the login pages
-   keep their existing look. */
-.login-reset2fa {
-	margin-bottom: 0;
-}
-
 .login-title {
 	color: #fff;
 	font-size: 1.05rem;

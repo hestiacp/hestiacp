@@ -52,6 +52,7 @@ $v_package = $data[$v_username]["PACKAGE"];
 $v_language = $data[$v_username]["LANGUAGE"];
 $v_user_theme = $data[$v_username]["THEME"];
 $v_sort_order = $data[$v_username]["PREF_UI_SORT"];
+$v_subdomain_grouping_pref = $data[$v_username]["PREF_SUBDOMAIN_GROUPING"] ?? "no";
 $v_name = $data[$v_username]["NAME"];
 $v_shell = $data[$v_username]["SHELL"];
 $v_twofa = $data[$v_username]["TWOFA"];
@@ -236,6 +237,27 @@ if (!empty($_POST["save"])) {
 		check_return_code($return_var, $output);
 		unset($_SESSION["userSortOrder"]);
 		$_SESSION["userSortOrder"] = $v_sort_order;
+		unset($output);
+	}
+
+	// Change subdomain grouping preference
+	if (
+		$v_subdomain_grouping_pref != $_POST["v_subdomain_grouping_pref"] &&
+		empty($_SESSION["error_msg"])
+	) {
+		$v_subdomain_grouping_pref = $_POST["v_subdomain_grouping_pref"];
+		exec(
+			HESTIA_CMD .
+				"v-change-user-config-value " .
+				quoteshellarg($v_username) .
+				" PREF_SUBDOMAIN_GROUPING " .
+				quoteshellarg($v_subdomain_grouping_pref),
+			$output,
+			$return_var,
+		);
+		check_return_code($return_var, $output);
+		unset($_SESSION["userSubdomainGrouping"]);
+		$_SESSION["userSubdomainGrouping"] = $v_subdomain_grouping_pref;
 		unset($output);
 	}
 

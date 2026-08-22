@@ -24,7 +24,7 @@
 		<input type="hidden" name="ok" value="Add">
 
 		<div class="form-container">
-			<h1 class="u-mb20"><?= tohtml( _("Add Web Domain")) ?></h1>
+			<h1 class="u-mb20"><?= $add_mode === 'subdomain' ? tohtml( _("Add Subdomain")) : tohtml( _("Add Web Domain")) ?></h1>
 			<?php show_alert_message($_SESSION); ?>
 			<?php if ($_SESSION["role"] == "admin" && $accept !== "true") { ?>
 				<div class="alert alert-danger" role="alert">
@@ -39,10 +39,38 @@
 				</div>
 			<?php } ?>
 			<?php if (($_SESSION["role"] == "admin" && $accept === "true") || $_SESSION["role"] !== "admin") { ?>
-				<div class="u-mb10">
-					<label for="v_domain" class="form-label"><?= tohtml( _("Domain")) ?></label>
-					<input type="text" class="form-control" name="v_domain" id="v_domain" value="<?= tohtml(trim($v_domain, "'")) ?>" required>
-				</div>
+				<?php if ($add_mode === 'subdomain' && !empty($user_domains)) { ?>
+					<input type="hidden" name="type" value="subdomain">
+					<div class="u-mb10">
+						<label for="v_parent_domain" class="form-label"><?= tohtml( _("Parent Domain")) ?></label>
+						<select class="form-select" name="v_parent_domain" id="v_parent_domain" required>
+							<?php foreach ($user_domains_data as $existing_domain => $existing_domain_data) {
+								$depth = (int) ($existing_domain_data['SUBDOMAIN_DEPTH'] ?? 0);
+								$prefix = $depth > 0 ? str_repeat('&nbsp;&nbsp;&nbsp;', $depth) . '&#8618; ' : '';
+								$selected = ($_POST['v_parent_domain'] ?? '') === $existing_domain ? ' selected' : '';
+							?>
+								<option value="<?= tohtml($existing_domain) ?>"<?= $selected ?>><?= $prefix . tohtml($existing_domain) ?></option>
+							<?php } ?>
+						</select>
+					</div>
+					<div class="u-mb10">
+						<label for="v_domain" class="form-label"><?= tohtml( _("Subdomain")) ?></label>
+						<input
+							type="text"
+							class="form-control"
+							name="v_domain"
+							id="v_domain"
+							value="<?= tohtml(trim($v_domain, "'")) ?>"
+							placeholder="<?= tohtml( _("e.g. shop")) ?>"
+							required
+						>
+					</div>
+				<?php } else { ?>
+					<div class="u-mb10">
+						<label for="v_domain" class="form-label"><?= tohtml( _("Domain")) ?></label>
+						<input type="text" class="form-control" name="v_domain" id="v_domain" value="<?= tohtml(trim($v_domain, "'")) ?>" required>
+					</div>
+				<?php } ?>
 				<div class="u-mb20">
 					<label for="v_ip" class="form-label"><?= tohtml( _("IP Address")) ?></label>
 					<select class="form-select" name="v_ip" id="v_ip">

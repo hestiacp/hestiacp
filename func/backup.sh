@@ -401,11 +401,15 @@ sftp_backup() {
 
 	# Checking retention (Only include .tar files)
 	if [ -z $BPATH ]; then
-		backup_list=$(sftpc "ls -l" | awk '{print $9}' | grep -E "^${user}\.[0-9]{4}-.+\.tar$" | sort)
+		backup_list=$(sftpc "ls -l" | tr -d '\r' | awk '{print $9}' | grep -E "^${user}\.[0-9]{4}-.+\.tar$" | sort)
 	else
-		backup_list=$(sftpc "cd $BPATH" "ls -l" | awk '{print $9}' | grep -E "^${user}\.[0-9]{4}-.+\.tar$" | sort)
+		backup_list=$(sftpc "cd $BPATH" "ls -l" | tr -d '\r' | awk '{print $9}' | grep -E "^${user}\.[0-9]{4}-.+\.tar$" | sort)
 	fi
-	backups_count=$(echo "$backup_list" | wc -l)
+	if [ -z "$backup_list" ]; then
+		backups_count=0
+	else
+		backups_count=$(echo "$backup_list" | wc -l)
+	fi
 	if [ "$backups_count" -ge "$BACKUPS" ]; then
 		backups_rm_number=$((backups_count - BACKUPS + 1))
 		for backup in $(echo "$backup_list" | head -n $backups_rm_number); do

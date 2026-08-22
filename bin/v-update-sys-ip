@@ -172,7 +172,7 @@ while read -r ipv6 mask iface; do
 	if [ ! -e "$HESTIA/data/ips/$ipv6" ]; then
 		$BIN/v-add-sys-ip "$ipv6" "$mask" "$iface"
 	fi
-done < <($BIN/v-list-network plain 6)
+done < <($BIN/v-list-network 6 plain)
 
 # Updating NAT
 pub_ipv4="$(curl -fsLm5 --retry 2 --ipv4 https://ip.hestiacp.com/)"

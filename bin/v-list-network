@@ -1,9 +1,9 @@
 #!/bin/bash
 # info: list system network interfaces
-# options: [FORMAT] [IP_VERSION]
+# options: [IP_VERSION] [FORMAT]
 #
 # example: v-list-network
-# example: v-list-network shell 6
+# example: v-list-network 6 shell
 #
 # This function lists system network interfaces and their IP addresses.
 

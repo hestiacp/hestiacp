@@ -71,6 +71,7 @@ for user in $("$BIN/v-list-users" list); do
 			aliases=$(echo "$aliases" | sed -e ':a;N;$!ba;s/\n/,/g')
 
 			# Parsing domain
+			unset SSL_KEY_ALGO
 			parse_object_kv_list $(grep "DOMAIN='$domain'" $USER_DATA/web.conf)
 
 			# Split aliases into array
@@ -93,7 +94,11 @@ for user in $("$BIN/v-list-users" list); do
 			# Write the filtered alias list to the default var
 			aliases=$f_aliases
 
-			msg=$($BIN/v-add-letsencrypt-domain "$user" "$domain" "$aliases")
+			# Preserve the key algorithm the domain was issued with.
+			# Domains created before SSL_KEY_ALGO existed fall back to
+			# rsa so renewals never silently switch an existing cert
+			# to ecdsa.
+			msg=$($BIN/v-add-letsencrypt-domain "$user" "$domain" "$aliases" "" "${SSL_KEY_ALGO:-rsa}")
 			if [ $? -ne 0 ]; then
 				echo "$msg"
 				log_event "$E_INVALID" "$domain $msg"
@@ -135,12 +140,18 @@ for user in $("$BIN/v-list-users" list); do
 		now=$(date +%s)
 		seconds_valid=$((expiration - now))
 		days_valid=$((seconds_valid / 86400))
-		if [[ "$days_valid" -lt 31 ]]; then
+		if [[ "$days_valid" -lt "$days_valid_setting" ]]; then
 			if [ $lecounter -gt 0 ]; then
 				sleep 10
 			fi
 			((lecounter++))
-			msg=$($BIN/v-add-letsencrypt-domain "$user" "$domain" "" "yes")
+
+			# Preserve the key algorithm the mail cert was issued
+			# with, defaulting to rsa for domains predating
+			# SSL_KEY_ALGO.
+			mail_key_algo="$(get_object_value 'mail' 'DOMAIN' "$domain" '$SSL_KEY_ALGO')"
+
+			msg=$($BIN/v-add-letsencrypt-domain "$user" "$domain" "" "yes" "${mail_key_algo:-rsa}")
 			if [ $? -ne 0 ]; then
 				echo "$msg"
 				$BIN/v-log-action "$user" "Error" "Web" "Let's Encrypt SSL certificate update failed (Domain: $domain)."
@@ -151,6 +162,10 @@ for user in $("$BIN/v-list-users" list); do
 				((fail_counter++))
 				update_object_value 'mail' 'DOMAIN' "$domain" '$LETSENCRYPT_FAIL_COUNT' "$fail_counter"
 			else
+				# Reset fail counter to 0
+				if [[ -n "$fail_counter" ]]; then
+					update_object_value 'web' 'DOMAIN' "$domain" '$LETSENCRYPT_FAIL_COUNT' '0'
+				fi
 				$BIN/v-log-action "$user" "Info" "Web" "Let's Encrypt SSL certificate renewed (Domain: $domain)."
 			fi
 		fi

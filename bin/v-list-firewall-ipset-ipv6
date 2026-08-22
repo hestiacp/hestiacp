@@ -1,0 +1,69 @@
+#!/bin/bash
+# info: List IPv6 firewall ipsets (reads from ipset.conf filtering IP_VERSION=v6)
+# options: [FORMAT]
+#
+# example: v-list-firewall-ipset-ipv6 json
+
+format=${1-shell}
+
+source /etc/hestiacp/hestia.conf
+source $HESTIA/func/main.sh
+source_conf "$HESTIA/conf/hestia.conf"
+
+is_system_enabled "$FIREWALL_SYSTEM" 'FIREWALL_SYSTEM'
+
+conf="$HESTIA/data/firewall/ipset.conf"
+[ -f "$conf" ] || touch "$conf"
+
+json_list() {
+	IFS=$'\n'
+	i=1
+	objects=$(grep "IP_VERSION='v6'" "$conf" 2> /dev/null | wc -l)
+	echo "{"
+	while read str; do
+		[[ -z "$str" ]] && continue
+		parse_object_kv_list "$str"
+		[[ "$IP_VERSION" != "v6" ]] && continue
+		echo -n '    "'$LISTNAME'": {
+        "IP_VERSION": "'$IP_VERSION'",
+        "AUTOUPDATE": "'$AUTOUPDATE'",
+        "SUSPENDED": "'$SUSPENDED'",
+        "SOURCE": "'$SOURCE'",
+        "TIME": "'$TIME'",
+        "DATE": "'$DATE'"
+    }'
+		[[ "$i" -lt "$objects" ]] && echo ',' || echo
+		((i++))
+	done < <(cat "$conf" 2> /dev/null)
+	echo '}'
+}
+
+shell_list() {
+	IFS=$'\n'
+	echo "LISTNAME^IP_VERSION^AUTOUPDATE^SUSPENDED^SOURCE^TIME^DATE"
+	echo "--------^----------^----------^---------^------^----^----"
+	while read str; do
+		[[ -z "$str" ]] && continue
+		parse_object_kv_list "$str"
+		[[ "$IP_VERSION" != "v6" ]] && continue
+		echo "$LISTNAME^$IP_VERSION^$AUTOUPDATE^$SUSPENDED^$SOURCE^$TIME^$DATE"
+	done < <(cat "$conf" 2> /dev/null)
+}
+
+plain_list() {
+	IFS=$'\n'
+	while read str; do
+		[[ -z "$str" ]] && continue
+		parse_object_kv_list "$str"
+		[[ "$IP_VERSION" != "v6" ]] && continue
+		echo -e "$LISTNAME\t$IP_VERSION\t$AUTOUPDATE\t$SUSPENDED\t$SOURCE\t$TIME\t$DATE"
+	done < <(cat "$conf" 2> /dev/null)
+}
+
+case $format in
+	json) json_list ;;
+	plain) plain_list ;;
+	shell) shell_list | column -t -s '^' ;;
+esac
+
+exit

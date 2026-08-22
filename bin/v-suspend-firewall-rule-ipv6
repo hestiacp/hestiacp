@@ -1,0 +1,28 @@
+#!/bin/bash
+# info: suspend IPv6 firewall rule
+# options: RULE
+
+rule=$1
+
+source /etc/hestiacp/hestia.conf
+source $HESTIA/func/main.sh
+source_conf "$HESTIA/conf/hestia.conf"
+
+check_args '1' "$#" 'RULE'
+is_format_valid 'rule'
+is_system_enabled "$FIREWALL_SYSTEM" 'FIREWALL_SYSTEM'
+
+rules="$HESTIA/data/firewall/rules6.conf"
+if ! grep -q "RULE='$rule'" "$rules" 2> /dev/null; then
+	check_result $E_NOTEXIST "IPv6 rule $rule not found"
+fi
+
+check_hestia_demo_mode
+
+sed -i "s/\(RULE='$rule' .*\)SUSPENDED='no'/\1SUSPENDED='yes'/" "$rules"
+
+$BIN/v-update-firewall-ipv6
+
+$BIN/v-log-action "system" "Info" "Firewall" "IPv6 firewall rule $rule suspended."
+log_event "$OK" "$ARGUMENTS"
+exit

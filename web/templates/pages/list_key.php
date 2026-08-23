@@ -6,6 +6,10 @@
 				<a href="/edit/user/?<?= tohtml(http_build_query(["user" => $_SESSION["look"], "token" => $_SESSION["token"]])) ?>" class="button button-secondary button-back js-button-back">
 					<i class="fas fa-arrow-left icon-blue"></i><?= tohtml( _("Back")) ?>
 				</a>
+			<?php } elseif ($_SESSION["userContext"] === "admin" && !empty($_GET["user"])) { ?>
+				<a href="/edit/user/?<?= tohtml(http_build_query(["user" => $_GET["user"], "token" => $_SESSION["token"]])) ?>" class="button button-secondary button-back js-button-back">
+					<i class="fas fa-arrow-left icon-blue"></i><?= tohtml( _("Back")) ?>
+				</a>
 			<?php } else { ?>
 				<a href="/edit/user/?<?= tohtml(http_build_query(["user" => $_SESSION["user"], "token" => $_SESSION["token"]])) ?>" class="button button-secondary button-back js-button-back">
 					<i class="fas fa-arrow-left icon-blue"></i><?= tohtml( _("Back")) ?>
@@ -62,7 +66,7 @@
 								<?php } ?>
 								title="<?= tohtml( _("Delete")) ?>"
 								data-confirm-title="<?= tohtml( _("Delete")) ?>"
-								data-confirm-message="<?= tohtml(sprintf(_("Are you sure you want to delete SSH key %s?"), $key)) ?>"
+								data-confirm-message="<?= tohtml(sprintf(_("Are you sure you want to delete SSH key %s?"), tohtml($key))) ?>"
 							>
 								<i class="fas fa-trash icon-red"></i>
 								<span class="u-hide-desktop"><?= tohtml( _("Delete")) ?></span>

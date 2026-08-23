@@ -5,21 +5,21 @@
 # This function installs the Roundcube webmail client.
 
 #----------------------------------------------------------#
-#                Variables & Functions                     #
+#                      Variables                           #
 #----------------------------------------------------------#
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
 source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
-source $HESTIA/func/main.sh
-source $HESTIA/func/db.sh
+source "$HESTIA/func/main.sh"
+source "$HESTIA/func/db.sh"
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 # upgrade config file
 source "$HESTIA/install/upgrade/upgrade.conf"
 
-MODE=$2
+MODE="$2"
 UPDATE="no"
 # Version and Download paths
 RC_FILE="roundcubemail-$rc_v-complete.tar.gz"
@@ -32,40 +32,44 @@ RC_INSTALL_DIR="/var/lib/roundcube"
 RC_CONFIG_DIR="/etc/roundcube"
 RC_LOG="/var/log/roundcube"
 
+# PHP Options
+PHP_CLI="/usr/bin/php"
+ENABLE_PHP_FUNCTIONS="-d disable_functions="
+
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
 
 # Checking root permissions
-if [ "x$(id -u)" != 'x0' ]; then
+if [[ "$(id -u)" != "0" ]]; then
 	echo "ERROR: v-add-sys-roundcube can be run executed only by root user"
 	exit 10
 fi
 
 # Ensure that $HESTIA (/usr/local/hestia/) and other variables are valid.
-if [ -z "$HESTIA" ]; then
+if [[ -z "$HESTIA" ]]; then
 	HESTIA="/usr/local/hestia"
 fi
 
-if [ -z "$HOMEDIR" ] || [ -z "$HESTIA_COMMON_DIR" ]; then
+if [[ -z "$HOMEDIR" ]] || [[ -z "$HESTIA_COMMON_DIR" ]]; then
 	echo "ERROR: Environment variables not present, installation aborted."
 	exit 2
 fi
 
-if [ -z "$(echo "$DB_SYSTEM" | grep -w 'mysql')" ]; then
+if ! grep -qw 'mysql' <<< "$DB_SYSTEM"; then
 	echo "ERROR: Mysql not available. Installation aborted"
 	exit 2
 fi
 
-if [ -d "/usr/share/roundcube" ]; then
+if [[ -d "/usr/share/roundcube" ]]; then
 	echo "ERROR: Install done from apt source, unable to continue"
 	exit 2
 fi
 
 # Get current version
-if [ -f "$RC_INSTALL_DIR/program/include/iniset.php" ]; then
+if [[ -f "$RC_INSTALL_DIR/program/include/iniset.php" ]]; then
 	version="$(grep RCMAIL_VERSION "$RC_INSTALL_DIR/program/include/iniset.php" | cut -d "'" -f 4)"
-	if [ "$version" == "$rc_v" ]; then
+	if [[ "$version" == "$rc_v" ]]; then
 		echo "Error: Installed version ($version) is equal to the available version ($rc_v)"
 		exit 2
 	else
@@ -83,150 +87,257 @@ if grep -q '^1\.7' <<< "$rc_v" &> /dev/null; then
 	fi
 fi
 
+# Check whether ROOT_USER has composer installed to update RC modules
+COMPOSER_ROOT_USER_BIN="$HOMEDIR/$ROOT_USER/.composer/composer"
+if [[ -x "$COMPOSER_ROOT_USER_BIN" ]] \
+	|| "$BIN"/v-add-user-composer "$ROOT_USER" &> /dev/null; then
+	composer_available=1
+else
+	composer_available=0
+fi
+
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
+
+#----------------------------------------------------------#
+#                      Functions                           #
+#----------------------------------------------------------#
+
+fail() {
+	local action="installation"
+	[[ "$UPDATE" == "yes" ]] && action="update"
+	echo "ERROR: $1" >&2
+	if [[ -x "$BIN/v-log-action" ]]; then
+		"$BIN/v-log-action" "system" "Error" "Plugins" \
+			"Roundcube $action failed (Version: $rc_v): $1"
+	fi
+	exit 1
+}
+
+download_rc() {
+	if [[ ! -f "$RC_INSTALL_DIR/$RC_FILE" ]]; then
+		if ! wget "$RC_URL" --retry-connrefused --quiet -O "$RC_INSTALL_DIR/$RC_FILE"; then
+			rm -f "${RC_INSTALL_DIR:?}/$RC_FILE"
+			fail "Failed to download $RC_URL"
+		fi
+	fi
+	# Empty file or HTML error page
+	if [[ ! -s "$RC_INSTALL_DIR/$RC_FILE" ]]; then
+		rm -f "${RC_INSTALL_DIR:?}/$RC_FILE"
+		fail "Downloaded archive is empty: $RC_FILE"
+	fi
+	if ! tar tzf "$RC_INSTALL_DIR/$RC_FILE" &> /dev/null; then
+		rm -f "${RC_INSTALL_DIR:?}/$RC_FILE"
+		fail "Downloaded archive is corrupted: $RC_FILE"
+	fi
+}
+
+update_rc_modules() {
+	[[ "$composer_available" -eq 1 ]] || return 0
+
+	# Use COMPOSER_ALLOW_SUPERUSER=1 to prevent composer from freezing
+	# when executed as root
+	export COMPOSER_ALLOW_SUPERUSER=1
+
+	if ! "$PHP_CLI" "$ENABLE_PHP_FUNCTIONS" "$COMPOSER_ROOT_USER_BIN" \
+		--working-dir="$RC_INSTALL_DIR" update --no-dev --no-interaction --optimize-autoloader &> /dev/null; then
+		echo "Warning: Failed to update Roundcube modules"
+		echo "To investigate the issue, run:"
+		echo "COMPOSER_ALLOW_SUPERUSER=1 \"$PHP_CLI\" \"$ENABLE_PHP_FUNCTIONS\" \"$COMPOSER_ROOT_USER_BIN\" --working-dir=\"$RC_INSTALL_DIR\" update --no-dev --no-interaction --optimize-autoloader"
+		return 1
+	fi
+	return 0
+}
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-if [ "$UPDATE" == "no" ]; then
-	rm -f -r $RC_INSTALL_DIR
-	rm -f -r $RC_CONFIG_DIR
+if [[ "$UPDATE" == "no" ]]; then
+	rm -rf "${RC_INSTALL_DIR:?}"
+	rm -rf "${RC_CONFIG_DIR:?}"
 
-	mkdir -p $RC_INSTALL_DIR/
-	mkdir -p $RC_CONFIG_DIR/
+	mkdir -p "$RC_INSTALL_DIR/" || fail "Cannot create $RC_INSTALL_DIR"
+	mkdir -p "$RC_CONFIG_DIR/" || fail "Cannot create $RC_CONFIG_DIR"
 
-	cd "$RC_INSTALL_DIR"
-	[ ! -f "${RC_INSTALL_DIR}/${RC_FILE}" ] && wget "$RC_URL" --retry-connrefused --quiet -O "${RC_INSTALL_DIR}/${RC_FILE}"
+	cd "$RC_INSTALL_DIR" || fail "Cannot enter $RC_INSTALL_DIR"
+	download_rc
 
-	tar xzf $RC_FILE
-	cp -rT $RC_EXTRACT $RC_INSTALL_DIR
+	tar xzf "$RC_FILE" || fail "Failed to extract $RC_FILE"
+	[[ -d "$RC_EXTRACT" ]] || fail "Extracted directory $RC_EXTRACT not found"
+	cp -rT "$RC_EXTRACT" "$RC_INSTALL_DIR" || fail "Failed to copy Roundcube files"
+	[[ -f "$RC_INSTALL_DIR/program/include/iniset.php" ]] \
+		|| fail "Roundcube core files missing after extraction"
 
 	# Delete old config folder
-	cp $RC_INSTALL_DIR/config/defaults.inc.php $RC_CONFIG_DIR/defaults.inc.php
-	rm -f -r $RC_INSTALL_DIR/config/
-	ln -s $RC_CONFIG_DIR/ ./config
-	# Replace with Hestia config
-	cp -f $HESTIA_COMMON_DIR/roundcube/main.inc.php $RC_CONFIG_DIR/config.inc.php
-	cp -f $HESTIA_COMMON_DIR/roundcube/mimetypes.php $RC_CONFIG_DIR/mimetypes.php
-	chmod 644 $RC_CONFIG_DIR/*.php
+	cp "$RC_INSTALL_DIR/config/defaults.inc.php" "$RC_CONFIG_DIR/defaults.inc.php" \
+		|| fail "Failed to copy defaults.inc.php"
+	rm -rf "${RC_INSTALL_DIR:?}/config/"
+	ln -s "$RC_CONFIG_DIR/" ./config || fail "Failed to create config symlink"
 
-	cp -f $HESTIA_COMMON_DIR/roundcube/hestia.php $RC_INSTALL_DIR/plugins/password/drivers/
-	mkdir -p $RC_CONFIG_DIR/plugins/password
-	mkdir -p $RC_CONFIG_DIR/plugins/newmail_notifier
-	mkdir -p $RC_CONFIG_DIR/plugins/zipdownload
+	# Replace with Hestia config
+	cp -f "$HESTIA_COMMON_DIR/roundcube/main.inc.php" "$RC_CONFIG_DIR/config.inc.php" \
+		|| fail "Failed to install Hestia Roundcube configuration"
+	cp -f "$HESTIA_COMMON_DIR/roundcube/mimetypes.php" "$RC_CONFIG_DIR/mimetypes.php" \
+		|| fail "Failed to install mimetypes.php"
+	chmod 644 "$RC_CONFIG_DIR"/*.php
+
+	cp -f "$HESTIA_COMMON_DIR/roundcube/hestia.php" "$RC_INSTALL_DIR/plugins/password/drivers/" \
+		|| fail "Failed to install Hestia password driver"
+	mkdir -p "$RC_CONFIG_DIR/plugins/password"
+	mkdir -p "$RC_CONFIG_DIR/plugins/newmail_notifier"
+	mkdir -p "$RC_CONFIG_DIR/plugins/zipdownload"
 
 	# Allow changes to the respective config / Create symlinks to /etc/roundcube/
-	cp -f $HESTIA_COMMON_DIR/roundcube/config.inc.php $RC_CONFIG_DIR/plugins/password/config.inc.php
-	ln -s $RC_CONFIG_DIR/plugins/password/config.inc.php ./plugins/password/config.inc.php
-	cp -f $HESTIA_COMMON_DIR/roundcube/plugins/config_newmail_notifier.inc.php $RC_CONFIG_DIR/plugins/newmail_notifier/config.inc.php
-	ln -s $RC_CONFIG_DIR/plugins/newmail_notifier/config.inc.php ./plugins/newmail_notifier/config.inc.php
-	cp -f $HESTIA_COMMON_DIR/roundcube/plugins/config_zipdownload.inc.php $RC_CONFIG_DIR/plugins/zipdownload/config.inc.php
-	ln -s $RC_CONFIG_DIR/plugins/zipdownload/config.inc.php ./plugins/zipdownload/config.inc.php
+	cp -f "$HESTIA_COMMON_DIR/roundcube/config.inc.php" "$RC_CONFIG_DIR/plugins/password/config.inc.php" \
+		|| fail "Failed to install password plugin configuration"
+	ln -s "$RC_CONFIG_DIR/plugins/password/config.inc.php" ./plugins/password/config.inc.php
+	cp -f "$HESTIA_COMMON_DIR/roundcube/plugins/config_newmail_notifier.inc.php" "$RC_CONFIG_DIR/plugins/newmail_notifier/config.inc.php" \
+		|| fail "Failed to install newmail_notifier plugin configuration"
+	ln -s "$RC_CONFIG_DIR/plugins/newmail_notifier/config.inc.php" ./plugins/newmail_notifier/config.inc.php
+	cp -f "$HESTIA_COMMON_DIR/roundcube/plugins/config_zipdownload.inc.php" "$RC_CONFIG_DIR/plugins/zipdownload/config.inc.php" \
+		|| fail "Failed to install zipdownload plugin configuration"
+	ln -s "$RC_CONFIG_DIR/plugins/zipdownload/config.inc.php" ./plugins/zipdownload/config.inc.php
 
 	# Set up correct permissions roundcube
-	chown -R hestiamail:www-data $RC_CONFIG_DIR/
-	chmod 751 -R $RC_CONFIG_DIR
-	chmod 640 $RC_CONFIG_DIR/config.inc.php
-	chmod 644 $RC_CONFIG_DIR/plugins/password/config.inc.php
-	chmod 644 $RC_CONFIG_DIR/plugins/newmail_notifier/config.inc.php
-	chmod 644 $RC_CONFIG_DIR/plugins/zipdownload/config.inc.php
+	chown -R hestiamail:www-data "$RC_CONFIG_DIR/"
+	chmod 751 -R "$RC_CONFIG_DIR"
+	chmod 640 "$RC_CONFIG_DIR/config.inc.php"
+	chmod 644 "$RC_CONFIG_DIR/plugins/password/config.inc.php"
+	chmod 644 "$RC_CONFIG_DIR/plugins/newmail_notifier/config.inc.php"
+	chmod 644 "$RC_CONFIG_DIR/plugins/zipdownload/config.inc.php"
 
 	# Add robots.txt
-	echo "User-agent: *" > /var/lib/roundcube/robots.txt
-	echo "Disallow: /" >> /var/lib/roundcube/robots.txt
+	echo "User-agent: *" > "$RC_INSTALL_DIR/robots.txt"
+	echo "Disallow: /" >> "$RC_INSTALL_DIR/robots.txt"
 
-	chown -R hestiamail:www-data $RC_INSTALL_DIR
+	# Update Roundcube modules
+	update_rc_modules
+
+	chown -R hestiamail:www-data "$RC_INSTALL_DIR"
 
 	# Log file
-	if [ ! -d $RC_LOG ]; then
-		mkdir $RC_LOG
+	if [[ ! -d "$RC_LOG" ]]; then
+		mkdir "$RC_LOG" || fail "Cannot create $RC_LOG"
 	fi
-	chown hestiamail:www-data $RC_LOG
-	chmod 751 $RC_LOG
+	chown hestiamail:www-data "$RC_LOG"
+	chmod 751 "$RC_LOG"
 
-	if [ ! -z "$(echo "$DB_SYSTEM" | grep -E 'mysql|pgsql')" ]; then
+	if grep -qE 'mysql|pgsql' <<< "$DB_SYSTEM"; then
 		host='localhost'
 		database='roundcube'
 		dbuser="$database"
-		dbpass=$(generate_password)
+		dbpass="$(generate_password)"
 		charset='UTF8'
-		sed -i "s/%password%/$dbpass/g" $RC_CONFIG_DIR/config.inc.php
+		sed -i "s/%password%/$dbpass/g" "$RC_CONFIG_DIR/config.inc.php"
 
-		if [ ! -z "$(echo "$DB_SYSTEM" | grep -w 'mysql')" ]; then
-			add_mysql_database
-			mysql_query "USE $database; $(< /var/lib/roundcube/SQL/mysql.initial.sql)"
+		if grep -qw 'mysql' <<< "$DB_SYSTEM"; then
+			add_mysql_database || fail "Failed to create MySQL database '$database'"
+			mysql_query "USE $database; $(< "$RC_INSTALL_DIR/SQL/mysql.initial.sql")" \
+				|| fail "Failed to import MySQL schema into '$database'"
 		else
-			add_pgsql_database
-			psql_query "USE $database; $(< /var/lib/roundcube/SQL/postgres.initial.sql)"
+			add_pgsql_database || fail "Failed to create PostgreSQL database '$database'"
+			psql_query "USE $database; $(< "$RC_INSTALL_DIR/SQL/postgres.initial.sql")" \
+				|| fail "Failed to import PostgreSQL schema into '$database'"
 		fi
 	fi
 
 	# TODO: Add support for PostgreSQL
 
 	rcDesKey="$(openssl rand -base64 30 | tr -d "/" | cut -c1-24)"
-	sed -i "s/%des_key%/$rcDesKey/g" $RC_CONFIG_DIR/config.inc.php
+	[[ -n "$rcDesKey" ]] || fail "Failed to generate des_key"
+	sed -i "s/%des_key%/$rcDesKey/g" "$RC_CONFIG_DIR/config.inc.php"
 	# Update server hostname in password change plugin
-	sed -i "s/localhost/$(hostname)/g" $RC_CONFIG_DIR/plugins/password/config.inc.php
+	sed -i "s/localhost/$(hostname)/g" "$RC_CONFIG_DIR/plugins/password/config.inc.php"
 	# Add roundcube configuration file to logrotate
-	if [[ -f "$HESTIA"/install/deb/logrotate/roundcube ]]; then
-		cp -f "$HESTIA"/install/deb/logrotate/roundcube /etc/logrotate.d/
+	if [[ -f "$HESTIA/install/deb/logrotate/roundcube" ]]; then
+		cp -f "$HESTIA/install/deb/logrotate/roundcube" /etc/logrotate.d/
 	fi
 
 	# Clean up
-	rm -f -r $RC_INSTALL_DIR/installer
-	rm -f -r $RC_INSTALL_DIR/$RC_FILE
-	rm -f -r $RC_INSTALL_DIR/$RC_EXTRACT
+	rm -rf "${RC_INSTALL_DIR:?}/installer"
+	rm -rf "${RC_INSTALL_DIR:?}/$RC_FILE"
+	rm -rf "${RC_INSTALL_DIR:?}/$RC_EXTRACT"
 
 	# Updating hestia.conf
-	if [ -z "$(grep WEBMAIL_SYSTEM $HESTIA/conf/hestia.conf)" ]; then
-		$BIN/v-change-sys-config-value 'WEBMAIL_SYSTEM' 'roundcube'
+	if ! grep -q WEBMAIL_SYSTEM "$HESTIA/conf/hestia.conf"; then
+		"$BIN/v-change-sys-config-value" 'WEBMAIL_SYSTEM' 'roundcube' \
+			|| fail "Failed to update WEBMAIL_SYSTEM in hestia.conf"
 	else
-		if [ -z "$(echo "$WEBMAIL_SYSTEM" | grep -w 'roundcube')" ]; then
-			if [ ! -z "$WEBMAIL_SYSTEM" ]; then
-				$BIN/v-change-sys-config-value 'WEBMAIL_SYSTEM' "roundcube,$WEBMAIL_SYSTEM"
+		if ! grep -qw 'roundcube' <<< "$WEBMAIL_SYSTEM"; then
+			if [[ -n "$WEBMAIL_SYSTEM" ]]; then
+				"$BIN/v-change-sys-config-value" 'WEBMAIL_SYSTEM' "roundcube,$WEBMAIL_SYSTEM" \
+					|| fail "Failed to update WEBMAIL_SYSTEM in hestia.conf"
 			else
-				$BIN/v-change-sys-config-value 'WEBMAIL_SYSTEM' "roundcube"
+				"$BIN/v-change-sys-config-value" 'WEBMAIL_SYSTEM' "roundcube" \
+					|| fail "Failed to update WEBMAIL_SYSTEM in hestia.conf"
 			fi
 		fi
 	fi
 
 	phpenmod mcrypt > /dev/null 2>&1
 else
-	cd "$RC_INSTALL_DIR"
-	[ ! -f "${RC_INSTALL_DIR}/${RC_FILE}" ] && wget "$RC_URL" --quiet -O "${RC_INSTALL_DIR}/${RC_FILE}"
+	cd "$RC_INSTALL_DIR" || fail "Cannot enter $RC_INSTALL_DIR"
+	download_rc
 
-	tar xzf $RC_FILE
+	tar xzf "$RC_FILE" || fail "Failed to extract $RC_FILE"
+	[[ -x "$RC_INSTALL_DIR/$RC_EXTRACT/bin/installto.sh" ]] \
+		|| fail "installto.sh not found in $RC_EXTRACT"
 
 	# Run Roundcube upgrade script
-	$RC_INSTALL_DIR/$RC_EXTRACT/bin/installto.sh -y $RC_INSTALL_DIR > /dev/null 2>&1
+	"$PHP_CLI" "$ENABLE_PHP_FUNCTIONS" "$RC_INSTALL_DIR/$RC_EXTRACT/bin/installto.sh" -y "$RC_INSTALL_DIR" > /dev/null 2>&1 \
+		|| fail "installto.sh failed (Roundcube $version -> $rc_v)"
+
 	# Use COMPOSER_ALLOW_SUPERUSER=1 to prevent update.sh script from freezing trying
 	# to execute composer as root to update roundcube dependencies
 	export COMPOSER_ALLOW_SUPERUSER=1
-	$RC_INSTALL_DIR/bin/update.sh --version "$version" > /dev/null 2>&1
-	$RC_INSTALL_DIR/bin/indexcontacts.sh > /dev/null 2>&1
-	chown -R hestiamail:www-data $RC_INSTALL_DIR
+	"$PHP_CLI" "$ENABLE_PHP_FUNCTIONS" "$RC_INSTALL_DIR/bin/update.sh" --version "$version" > /dev/null 2>&1 \
+		|| fail "update.sh failed (Roundcube $version -> $rc_v)"
+
+	# Non critical: only warn
+	"$PHP_CLI" "$ENABLE_PHP_FUNCTIONS" "$RC_INSTALL_DIR/bin/indexcontacts.sh" > /dev/null 2>&1 \
+		|| echo "Warning: indexcontacts.sh failed"
+
+	# Update Roundcube modules
+	update_rc_modules
+
+	chown -R hestiamail:www-data "$RC_INSTALL_DIR"
 	# Add roundcube configuration file to logrotate
 	if [[ -f "$HESTIA/install/deb/logrotate/roundcube" && ! -f /etc/logrotate.d/roundcube ]]; then
 		cp -f "$HESTIA/install/deb/logrotate/roundcube" /etc/logrotate.d/
 	fi
 
 	#clean up the mess
-	if [ -d "$RC_INSTALL_DIR/installer" ]; then
-		rm -f -r $RC_INSTALL_DIR/installer
+	if [[ -d "$RC_INSTALL_DIR/installer" ]]; then
+		rm -rf "${RC_INSTALL_DIR:?}/installer"
 	fi
-	rm -f -r $RC_INSTALL_DIR/$RC_FILE
-	rm -f -r $RC_INSTALL_DIR/$RC_EXTRACT
+	rm -rf "${RC_INSTALL_DIR:?}/$RC_FILE"
+	rm -rf "${RC_INSTALL_DIR:?}/$RC_EXTRACT"
 fi
+
+#----------------------------------------------------------#
+#                    Final validation                      #
+#----------------------------------------------------------#
+
+[[ -f "$RC_INSTALL_DIR/program/include/iniset.php" ]] \
+	|| fail "iniset.php missing after operation"
+
+installed_v="$(grep RCMAIL_VERSION "$RC_INSTALL_DIR/program/include/iniset.php" | cut -d "'" -f 4)"
+[[ "$installed_v" == "$rc_v" ]] \
+	|| fail "Version mismatch after operation (found: ${installed_v:-none}, expected: $rc_v)"
+
+[[ -f "$RC_CONFIG_DIR/config.inc.php" ]] \
+	|| fail "Configuration file $RC_CONFIG_DIR/config.inc.php is missing"
 
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
 
-if [ "$UPDATE" = "yes" ]; then
-	$BIN/v-log-action "system" "Info" "Plugins" "Roundcube updated (Version: $version)."
+if [[ "$UPDATE" == "yes" ]]; then
+	"$BIN/v-log-action" "system" "Info" "Plugins" "Roundcube updated (Version: $rc_v)."
 else
-	$BIN/v-log-action "system" "Info" "Plugins" "Roundcube enabled (Version: $version)."
+	"$BIN/v-log-action" "system" "Info" "Plugins" "Roundcube enabled (Version: $rc_v)."
 fi
 log_event "$OK" "$ARGUMENTS"
+
+exit 0

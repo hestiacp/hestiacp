@@ -320,14 +320,12 @@ function convert_datetime($date, $format = "Y-m-d H:i:s") {
 }
 
 function humanize_time($usage) {
-	if ($usage > 60) {
-		$usage = $usage / 60;
-		if ($usage > 24) {
-			$usage = $usage / 24;
-			$usage = number_format($usage);
+	if ($usage >= 60) {
+		$usage = round($usage / 60);
+		if ($usage >= 24) {
+			$usage = round($usage / 24);
 			return sprintf(ngettext("%d day", "%d days", $usage), $usage);
 		} else {
-			$usage = round($usage);
 			return sprintf(ngettext("%d hour", "%d hours", $usage), $usage);
 		}
 	} else {

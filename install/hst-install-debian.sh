@@ -31,13 +31,38 @@ HESTIA_COMMON_DIR="$HESTIA/install/common"
 VERBOSE='no'
 
 # Define software versions
-HESTIA_INSTALL_VER='1.10.0~alpha'
+HESTIA_INSTALL_VER='1.10.3'
+
+# Build the full Hestia version
+# Split base version (1.10.0) from channel suffix (~alpha / ~beta), if present
+HESTIA_BASE_VER="${HESTIA_INSTALL_VER%%~*}"
+if [[ "$HESTIA_INSTALL_VER" == *"~"* ]]; then
+	HESTIA_CHANNEL="~${HESTIA_INSTALL_VER#*~}"
+else
+	HESTIA_CHANNEL=""
+fi
+# Build the distro identifier
+case "$os" in
+	ubuntu)
+		os_id="ubuntu${release}"
+		;;
+	debian)
+		os_id="debian${release}"
+		;;
+	*)
+		echo "Error: unsupported distribution for determining Hestia version ($os)"
+		exit 1
+		;;
+esac
+# Final version string, e.g.: 1.10.0-1+deb13~alpha / 1.10.0-1+ubuntu26.04
+HESTIA_INSTALL_BUILD="${HESTIA_BASE_VER}-1+${os_id}${HESTIA_CHANNEL}"
+
 # Supported PHP versions
 multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0" "8.1" "8.2" "8.3" "8.4" "8.5")
 # One of the following PHP versions is required for Roundcube / phpmyadmin
-multiphp_required=("7.3" "7.4" "8.0" "8.1" "8.2" "8.3")
+multiphp_required=("8.1" "8.2" "8.3" "8.4" "8.5")
 # Default PHP version if none supplied
-fpm_v="8.3"
+fpm_v="8.5"
 # MariaDB version
 mariadb_v="11.8"
 # Node.js version
@@ -46,7 +71,7 @@ node_v="24"
 # Defining software pack for all distros
 software="acl apache2 apache2-suexec-custom apache2-utils at awstats bc bind9 bsdmainutils bsdutils
   clamav-daemon cron curl dnsutils dovecot-imapd dovecot-managesieved dovecot-pop3d dovecot-sieve e2fslibs e2fsprogs
-  exim4 exim4-daemon-heavy expect fail2ban flex ftp git hestia=${HESTIA_INSTALL_VER} hestia-nginx hestia-php hestia-web-terminal
+  exim4 exim4-daemon-heavy expect fail2ban flex ftp git hestia=${HESTIA_INSTALL_BUILD} hestia-nginx hestia-php hestia-web-terminal
   idn2 imagemagick ipset jq libapache2-mod-fcgid libapache2-mod-php$fpm_v libapache2-mpm-itk libmail-dkim-perl lsb-release
   lsof mariadb-client mariadb-common mariadb-server mc mysql-client mysql-common mysql-server net-tools nginx nodejs openssh-server
   php$fpm_v php$fpm_v-apcu php$fpm_v-bz2 php$fpm_v-cgi php$fpm_v-cli php$fpm_v-common php$fpm_v-curl php$fpm_v-gd
@@ -586,7 +611,7 @@ esac
 #----------------------------------------------------------#
 
 install_welcome_message() {
-	DISPLAY_VER=$(echo $HESTIA_INSTALL_VER | sed "s|~alpha||g" | sed "s|~beta||g")
+	DISPLAY_VER=$(echo $HESTIA_INSTALL_VER | sed "s|~alpha||g" | sed "s|~beta||g" | sed "s|~rc[0-9]*||g")
 	echo
 	echo '                _   _           _   _        ____ ____                  '
 	echo '               | | | | ___  ___| |_(_) __ _ / ___|  _ \                 '
@@ -595,6 +620,9 @@ install_welcome_message() {
 	echo '               |_| |_|\___||___/\__|_|\__,_|\____|_|                    '
 	echo "                                                                        "
 	echo "                          Hestia Control Panel                          "
+	if [[ "$HESTIA_INSTALL_VER" =~ "rc" ]]; then
+		echo "                             RELEASE CANDIDATE                      "
+	fi
 	if [[ "$HESTIA_INSTALL_VER" =~ "beta" ]]; then
 		echo "                              BETA RELEASE                          "
 	fi
@@ -875,7 +903,7 @@ fi
 # Installing HestiaCP repo
 echo "[ * ] Hestia Control Panel"
 echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/hestia-keyring.gpg] https://$RHOST/ $codename main" > $apt/hestia.list
-gpg --no-default-keyring --keyring /usr/share/keyrings/hestia-keyring.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys A189E93654F0B0E5 > /dev/null 2>&1
+curl -s "https://$RHOST/pubkey.gpg" | gpg --dearmor | tee /usr/share/keyrings/hestia-keyring.gpg > /dev/null 2>&1
 
 # Installing Node.js repo
 if [ "$webterminal" = 'yes' ]; then
@@ -1091,7 +1119,7 @@ if [ -d "$withdebs" ]; then
 	software=$(echo "$software" | sed -e "s/hestia-nginx//")
 	software=$(echo "$software" | sed -e "s/hestia-php//")
 	software=$(echo "$software" | sed -e "s/hestia-web-terminal//")
-	software=$(echo "$software" | sed -e "s/hestia=${HESTIA_INSTALL_VER}//")
+	software=$(echo "$software" | sed -e "s/hestia=${HESTIA_INSTALL_BUILD}//")
 fi
 
 #----------------------------------------------------------#
@@ -1957,6 +1985,13 @@ if [ "$named" = 'yes' ]; then
 	if [ ! -f /etc/bind/named.conf.default-zones ]; then
 		sed -i "/^include.*named.conf.default-zones/d" /etc/bind/named.conf
 	fi
+
+	# Add root-hints include after named.conf.local if missing
+	if [[ -f /etc/bind/named.conf.root-hints ]] \
+		&& ! grep -q 'include.*named.conf.root-hints' /etc/bind/named.conf 2> /dev/null; then
+		sed -i '/include.*named\.conf\.local/a include "\/etc\/bind\/named.conf.root-hints";' /etc/bind/named.conf
+	fi
+
 	update-rc.d bind9 defaults > /dev/null 2>&1
 	systemctl start bind9
 	check_result $? "bind9 start failed"
@@ -1985,6 +2020,18 @@ if [ "$exim" = 'yes' ]; then
 			cp -f $HESTIA_INSTALL_DIR/exim/exim4.conf.template /etc/exim4/
 		fi
 	fi
+	# If Dovecot 2.4, modify the local delivery directives"
+	if [[ $(dovecot --version) == 2.4* ]] \
+		&& [[ -f /etc/exim4/exim4.conf.template ]]; then
+		sed -i.bak '
+s#  directory = "${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}/mail/${lookup{$domain}dsearch{/etc/exim4/domains/}}/${lookup{$local_part}dsearch{${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}/mail/${lookup{$domain}dsearch{/etc/exim4/domains/}}}}"#  directory = "${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}"#
+
+s#  directory = "${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}/mail/${lookup{$domain}dsearch{/etc/exim4/domains/}}/${lookup{$local_part}dsearch{${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}/mail/${lookup{$domain}dsearch{/etc/exim4/domains/}}}}/.Spam"#  directory = "${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}/.Spam"#
+
+s#  quota_directory = "${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}/mail/${lookup{$domain}dsearch{/etc/exim4/domains/}}/${lookup{$local_part}dsearch{${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}/mail/${lookup{$domain}dsearch{/etc/exim4/domains/}}}}"#  quota_directory = "${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}"#
+' /etc/exim4/exim4.conf.template
+	fi
+
 	cp -f $HESTIA_INSTALL_DIR/exim/dnsbl.conf /etc/exim4/
 	cp -f $HESTIA_INSTALL_DIR/exim/spam-blocks.conf /etc/exim4/
 	cp -f $HESTIA_INSTALL_DIR/exim/limit.conf /etc/exim4/
@@ -2291,6 +2338,9 @@ fi
 
 echo "[ * ] Configuring File Manager..."
 $HESTIA/bin/v-add-sys-filemanager quiet
+if [[ $release -ge 13 ]]; then
+	echo 'KexAlgorithms +diffie-hellman-group-exchange-sha256' > /etc/ssh/sshd_config.d/hestia-kex.conf
+fi
 
 #----------------------------------------------------------#
 #                  Configure dependencies                  #

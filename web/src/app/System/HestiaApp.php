@@ -401,6 +401,8 @@ class HestiaApp
         $command = array_map(fn(string $argument) => str_replace(' ', '\\ ', $argument), $command);
 
         $process = new Process($command);
+        // Increase the timeout from the default 60 seconds to 5 minutes to handle long install processes
+        $process->setTimeout(300);
         $process->run();
 
         if (!$process->isSuccessful()) {

@@ -54,21 +54,19 @@ source_conf $HESTIA/conf/restic.conf
 
 tmpdir=$(mktemp -p /home/$user/tmp/ -d)
 if [ ! -f "$tmpdir/backup.conf" ]; then
-	restic --repo "$REPO$user" --password-file "$USER_DATA/restic.conf" dump "$snapshot" "/home/$user/backup/backup.conf" > "$tmpdir/backup.conf"
+	restic --repo "${REPO%/}/$user" --password-file "$USER_DATA/restic.conf" dump "$snapshot" "/home/$user/backup/backup.conf" > "$tmpdir/backup.conf"
 	if [ "$?" -ne 0 ]; then
 		check_result "$E_NOTEXIST" "Unable to download from snapshot"
 	fi
 fi
-restic --repo "$REPO$user" --password-file "$USER_DATA/restic.conf" dump "$snapshot" "/home/$user/backup/pam/passwd" > "$tmpdir/passwd"
+restic --repo "${REPO%/}/$user" --password-file "$USER_DATA/restic.conf" dump "$snapshot" "/home/$user/backup/pam/passwd" > "$tmpdir/passwd"
 old_uid=$(cut -f 3 -d : $tmpdir/passwd)
 
 domains=""
 parse_object_kv_list $(cat $tmpdir/backup.conf)
-IFS=','
-read -a domains_array <<< "$web"
-read -a domains <<< "$WEB"
-for domain in $domains; do
-	if [[ "${IFS}${domains_array[*]}${IFS}" =~ "${IFS}${domain}${IFS}" || "$web" = '*' ]]; then
+IFS=',' read -a domains <<< "$WEB"
+for domain in "${domains[@]}"; do
+	if [[ ",$web," == *",$domain,"* || "$web" = '*' ]]; then
 		# Cleanup previous domain keys
 		unset -v DOMAIN IP IP6 ALIAS TPL SSL SSL_HOME LETSENCRYPT FTP_USER FTP_MD5 BACKEND PROXY PROXY_EXT STATS STATS_USER STATS_CRYPT U_DISK CUSTOM_DOCROOT CUSTOM_PHPROOT
 
@@ -84,7 +82,7 @@ for domain in $domains; do
 				check_result "$E_PARSING" "$error"
 			fi
 		fi
-		restic --repo "$REPO$user" --password-file "$USER_DATA/restic.conf" restore "$snapshot" --include "/home/$user/backup/web/$domain" --target "$tmpdir"
+		restic --repo "${REPO%/}/$user" --password-file "$USER_DATA/restic.conf" restore "$snapshot" --include "/home/$user/backup/web/$domain" --target "$tmpdir"
 		if [ "$?" -ne 0 ]; then
 			check_result $E_NOTEXIST "Unable to download domain from snapshot"
 		fi
@@ -209,7 +207,7 @@ for domain in $domains; do
 
 		[[ -d $HOMEDIR/$user/web/$domain/stats ]] && chmod u+w "$HOMEDIR/$user/web/$domain/stats"
 
-		restic --repo "$REPO$user" --password-file "$USER_DATA/restic.conf" restore "$snapshot" --include "/home/$user/web/$domain" --target /
+		restic --repo "${REPO%/}/$user" --password-file "$USER_DATA/restic.conf" restore "$snapshot" --include "/home/$user/web/$domain" --target /
 		if [ "$?" -ne 0 ]; then
 			check_result "$E_NOTEXIST" "Unable to download user data"
 		fi

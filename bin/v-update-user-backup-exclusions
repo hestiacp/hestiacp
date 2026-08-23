@@ -29,10 +29,97 @@ is_file_available() {
 }
 
 is_file_valid() {
-	exclude="[!|#|$|^|&|(|)|{|}|<|>|?|\|\"|;|%|\`]"
-	if [[ "$(cat $vfile)" =~ $exclude ]]; then
-		check_result "$E_INVALID" "invalid characters in the exlusion list"
-	fi
+	local allowed_keys=' WEB DNS MAIL DB CRON USER '
+	# WEB subpaths may nest, e.g. public_html/cache/
+	local path_segment_re='^[a-zA-Z0-9_.][a-zA-Z0-9_./-]*$'
+	# MAIL account names are never nested paths
+	local mailbox_re='^[a-zA-Z0-9_.][a-zA-Z0-9_.-]*$'
+	# USER entries are bare directory names, no domain prefix
+	local dirname_re='^[a-zA-Z0-9_.][a-zA-Z0-9_./-]*$'
+	local line key value entry entries domain_part parts i seg
+
+	while IFS= read -r line || [ -n "$line" ]; do
+		[ -z "$line" ] && continue
+
+		# Each line must be a single KEY='...' declaration on one line;
+		# this also rejects embedded newlines smuggled inside a value.
+		if [[ ! "$line" =~ ^([A-Z]+)=\'(.*)\'$ ]]; then
+			check_result "$E_INVALID" "invalid exclusion list format"
+		fi
+		key="${BASH_REMATCH[1]}"
+		value="${BASH_REMATCH[2]}"
+
+		if [[ "$allowed_keys" != *" $key "* ]]; then
+			check_result "$E_INVALID" "invalid exclusion list key :: $key"
+		fi
+
+		[ -z "$value" ] && continue
+
+		# CRON has no per-job exclusion downstream (bin/v-backup-user only
+		# ever checks "$CRON" = '*'), so anything else would silently do
+		# nothing. Only the whole-field wildcard is accepted.
+		if [ "$key" = 'CRON' ] && [ "$value" != '*' ]; then
+			check_result "$E_INVALID" "cron exclusions only support * :: $value"
+		fi
+
+		IFS=',' read -ra entries <<< "$value"
+		for entry in "${entries[@]}"; do
+			[ -z "$entry" ] && continue
+
+			# Reject path traversal anywhere in the entry
+			if [[ "$entry" == *..* ]]; then
+				check_result "$E_INVALID" "invalid exclusion entry :: $entry"
+			fi
+
+			case "$key" in
+				WEB | MAIL)
+					# entry := (domain|*)[:segment]*
+					IFS=':' read -ra parts <<< "$entry"
+					domain_part="${parts[0]}"
+					if [ "$domain_part" != '*' ]; then
+						is_domain_format_valid "$domain_part" "exclusion domain"
+					fi
+
+					for ((i = 1; i < ${#parts[@]}; i++)); do
+						seg="${parts[$i]}"
+						[ -z "$seg" ] && continue
+						# No leading '-' (would be read as a tar/du flag downstream)
+						if [ "$key" = 'MAIL' ]; then
+							if [[ ! "$seg" =~ $mailbox_re ]]; then
+								check_result "$E_INVALID" "invalid exclusion entry :: $entry"
+							fi
+						else
+							if [[ ! "$seg" =~ $path_segment_re ]]; then
+								check_result "$E_INVALID" "invalid exclusion entry :: $entry"
+							fi
+						fi
+					done
+					;;
+				DNS)
+					# No record-level exclusion exists downstream, only a
+					# whole-domain match. entry := domain | *
+					if [ "$entry" != '*' ]; then
+						if [[ "$entry" == *:* ]]; then
+							check_result "$E_INVALID" "invalid exclusion entry :: $entry"
+						fi
+						is_domain_format_valid "$entry" "exclusion domain"
+					fi
+					;;
+				DB)
+					# entry := database-name | *
+					if [ "$entry" != '*' ]; then
+						is_database_format_valid "$entry" "exclusion database"
+					fi
+					;;
+				USER)
+					# entry := directory-name | *
+					if [ "$entry" != '*' ] && [[ ! "$entry" =~ $dirname_re ]]; then
+						check_result "$E_INVALID" "invalid exclusion entry :: $entry"
+					fi
+					;;
+			esac
+		done
+	done < "$vfile"
 }
 
 #----------------------------------------------------------#

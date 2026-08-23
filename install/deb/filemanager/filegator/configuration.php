@@ -144,6 +144,10 @@ switch ($lang) {
 $dist_config["services"]["Filegator\Services\Storage\Filesystem"]["config"][
 	"adapter"
 ] = function () {
+	if (empty($_SESSION["user"])) {
+		echo '<meta http-equiv="refresh" content="0; url=/">';
+		exit();
+	}
 	if (!empty($_SESSION["INACTIVE_SESSION_TIMEOUT"])) {
 		if ($_SESSION["INACTIVE_SESSION_TIMEOUT"] * 60 + $_SESSION["LAST_ACTIVITY"] < time()) {
 			$v_user = quoteshellarg($_SESSION["user"]);

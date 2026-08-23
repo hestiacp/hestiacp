@@ -29,7 +29,7 @@ source_conf "$HESTIA/conf/hestia.conf"
 #----------------------------------------------------------#
 
 check_args '2' "$#" 'USER SNAPSHOT OBJECT VALUE'
-is_format_valid 'user'
+is_format_valid 'user' 'snapshot' 'value'
 is_system_enabled "$BACKUP_SYSTEM" 'BACKUP_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_backup_scheduled 'restore'
@@ -37,11 +37,21 @@ is_backup_scheduled 'restore'
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
+source_conf $HESTIA/conf/restic.conf
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
 log=$HESTIA/log/restore.log
+
+#Verify if snapshot / repo exists
+tmpdir=$(mktemp -p /home/$user/tmp/ -d)
+# Check if snapshot exists
+restic --repo "${REPO%/}/$user" --password-file "$USER_DATA/restic.conf" dump "$snapshot" "/home/$user/backup/backup.conf" > "$tmpdir/backup.conf"
+if [ "$?" -ne 0 ]; then
+	check_result "$E_NOTEXIST" "Unable to download from snapshot"
+fi
+rm -fr "$tmpdir"
 
 if [ -z "$object" ]; then
 	echo "$BIN/v-restore-user-restic '$user' '$snapshot' '' '' '' '' '' '' 'yes' >> $log 2>&1" >> $HESTIA/data/queue/backup.pipe

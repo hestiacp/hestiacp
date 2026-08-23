@@ -47,7 +47,7 @@ check_hestia_demo_mode
 
 source_conf $HESTIA/conf/restic.conf
 
-restic --repo "$REPO$user" --password-file $USER_DATA/restic.conf --json ls $snapshot $folder
+restic --repo "${REPO%/}/$user" --password-file $USER_DATA/restic.conf --json ls $snapshot $folder
 
 #----------------------------------------------------------#
 #                       Hestia                             #

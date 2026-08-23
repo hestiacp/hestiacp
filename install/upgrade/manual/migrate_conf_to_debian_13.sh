@@ -1,5 +1,5 @@
 #!/bin/bash
-# info: Configure SSH, Bind and Dovecot to work with Hestia on Debian 13
+# info: Configure SSH, Bind, Dovecot and Exim to work with Hestia on Debian 13
 
 #----------------------------------------------------------#
 #                    Variables & Functions                 #
@@ -11,8 +11,8 @@
 }
 
 source /etc/hestiacp/hestia.conf
-source $HESTIA/conf/hestia.conf
-source $HESTIA/func/main.sh
+source "$HESTIA/conf/hestia.conf"
+source "$HESTIA/func/main.sh"
 
 [[ -f /etc/os-release ]] && source /etc/os-release
 
@@ -74,7 +74,7 @@ if [[ "$dovecot_version" = "2.4" ]]; then
 				|| sed -i -E -z 's/    user = dovecot\n  \}\n\}/    user = dovecot\n  \}\n\n  unix_listener auth-master {\n    group = mail\n    mode = 0660\n    user = dovecot\n  }\n\}/' /etc/dovecot/conf.d/10-master.conf
 			grep -q 'mail_plugins.*sieve' /etc/dovecot/conf.d/15-lda.conf \
 				|| sed -i '/^protocol lda {$/a\  mail_plugins = mail_compress quota sieve' /etc/dovecot/conf.d/15-lda.conf
-			grep -q 'imap_sieve' /etc/dovecot/conf.d/20-imap.conf \
+			grep -q 'imap_quota imap_sieve' /etc/dovecot/conf.d/20-imap.conf \
 				|| sed -i "s/quota imap_quota/quota imap_quota imap_sieve/g" /etc/dovecot/conf.d/20-imap.conf
 			cp -f "$HESTIA_COMMON_DIR"/dovecot/2.4/sieve/* /etc/dovecot/conf.d
 		fi
@@ -137,4 +137,42 @@ else
 fi
 echo
 
+#----------------------------------------------------------#
+#                    Exim configuration                    #
+#----------------------------------------------------------#
+
+echo "[ * ] Checking Exim configuration:"
+if [[ $MAIL_SYSTEM == exim4 ]] \
+	&& [[ $(dovecot --version) == 2.4* ]] \
+	&& [[ -f /etc/exim4/exim4.conf.template ]]; then
+	sed -i.bak '
+s#  directory = "${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}/mail/${lookup{$domain}dsearch{/etc/exim4/domains/}}/${lookup{$local_part}dsearch{${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}/mail/${lookup{$domain}dsearch{/etc/exim4/domains/}}}}"#  directory = "${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}"#
+
+s#  directory = "${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}/mail/${lookup{$domain}dsearch{/etc/exim4/domains/}}/${lookup{$local_part}dsearch{${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}/mail/${lookup{$domain}dsearch{/etc/exim4/domains/}}}}/.Spam"#  directory = "${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}/.Spam"#
+
+s#  quota_directory = "${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}/mail/${lookup{$domain}dsearch{/etc/exim4/domains/}}/${lookup{$local_part}dsearch{${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}/mail/${lookup{$domain}dsearch{/etc/exim4/domains/}}}}"#  quota_directory = "${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}"#
+' /etc/exim4/exim4.conf.template
+	if ! cmp -s /etc/exim4/exim4.conf.template{.bak,}; then
+		echo "[ + ] Local delivery directives fixed in Exim configuration"
+		if systemctl restart exim4 &> /dev/null; then
+			echo "[ + ] Exim successfully restarted"
+		else
+			echo "[ ! ] Error restarting Exim" >&2
+			systemctl status exim4 --no-pager -l >&2
+			echo "[ + ] Recovering configuration backup"
+			cp -f /etc/exim4/exim4.conf.template.bak /etc/exim4/exim4.conf.template
+			if systemctl restart exim4 &> /dev/null; then
+				echo "[ + ] Exim successfully restarted after recovery"
+			else
+				echo "[ ! ] Error restarting Exim after recovery" >&2
+				systemctl status exim4 --no-pager -l >&2
+			fi
+		fi
+	else
+		echo "[ * ] Exim configuration already up to date"
+	fi
+
+fi
+
+echo
 echo "[ * ] Configuration finished!"

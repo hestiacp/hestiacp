@@ -140,6 +140,6 @@ $cfg["Servers"][$i]["ssl"] = true;
 $cfg["Servers"][$i]["ssl_verify"] = false;
 ```
 
-Please make sure to create aswell the phpmyadmin user and database.
+Please make sure to create as well the phpmyadmin user and database.
 
 See `/usr/local/hestia/install/deb/phpmyadmin/pma.sh`

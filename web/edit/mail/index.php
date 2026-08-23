@@ -687,12 +687,16 @@ if (!empty($_POST["save"]) && !empty($_GET["domain"]) && empty($_GET["account"])
 				$v_smtp_relay = true;
 				$v_smtp_relay_host = quoteshellarg($_POST["v_smtp_relay_host"]);
 				$v_smtp_relay_user = quoteshellarg($_POST["v_smtp_relay_user"]);
-				$v_smtp_relay_pass = quoteshellarg($_POST["v_smtp_relay_pass"]);
 				if (!empty($_POST["v_smtp_relay_port"])) {
 					$v_smtp_relay_port = quoteshellarg($_POST["v_smtp_relay_port"]);
 				} else {
 					$v_smtp_relay_port = "587";
 				}
+				$v_smtp_relay_password = tempnam("/tmp", "vst");
+				$fp = fopen($v_smtp_relay_password, "w");
+				fwrite($fp, $_POST["v_smtp_relay_pass"] . "\n");
+				fclose($fp);
+
 				exec(
 					HESTIA_CMD .
 						"v-add-mail-domain-smtp-relay " .
@@ -704,7 +708,7 @@ if (!empty($_POST["save"]) && !empty($_GET["domain"]) && empty($_GET["account"])
 						" " .
 						$v_smtp_relay_user .
 						" " .
-						$v_smtp_relay_pass .
+						$v_smtp_relay_password .
 						" " .
 						$v_smtp_relay_port,
 					$output,

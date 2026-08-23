@@ -760,6 +760,7 @@ if (!empty($_POST["save"])) {
 				);
 				check_return_code($return_var, $output);
 				unset($output);
+				unlink($v_smtp_relay_pass);
 			}
 		}
 		if (!isset($_POST["v_smtp_relay"]) && $v_smtp_relay == true) {

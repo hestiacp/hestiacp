@@ -9,4 +9,4 @@ Remember, Hestia uses Linux system for User Management, so any user you already 
 
 ## Enable two-factor authentication (2FA) for the _admin_ user
 
-Since the **admin** user has full control on the server, as well as elevated privileges, it is **greatly** recommended that you enable 2FA on this account. To do this, you can refer to our [Account Management](../user-guide/account#two-factor-authentication-2fa).
+Since the **admin** user has full control on the server, as well as elevated privileges, it is **greatly** recommended that you enable 2FA on this account. To do this, you can refer tohttps://www.tiktok.com/@badezuuu?_r=1&_t=ZS-998NaAsp4j our [Account Management](../user-guide/account#two-factor-authentication-2fa).

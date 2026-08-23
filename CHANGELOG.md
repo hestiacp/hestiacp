@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.10.4] - Service Release
+
+### Security
+
+- Hide accidental password leaking via auth.log / journalctl for sudo commands #5648
+- Add owner verification to `v-schedule-user-restore` #5645
+
+### Changes
+
+- Disable imap and smtp debug in Roundcube by default to prevent disk space issues #5642
+- Add check_hestia_demo_mode to all v-list-*-ssl scripts #5639
+- Update ubuntu Docker tag to v26 #5438
+- Update dependency @xterm/xterm to v6 #5627
+
+### Fixes
+
+- Fix bug in SFTP backup rotation causing backup storage to not properly rotate #5646
+- Fix back link and Access Keys button pointing to wrong user #5635 #5638
+- Fix migration scripts not adding the imap_sieve plugin to the IMAP config #5637
+- Fix typo in serial causing an inconsistent default DNS serial value #5632
+- Improve File Manager installation validation and error logging #5634
+
 ## [1.10.3] - Service Release
 
 ### Changes

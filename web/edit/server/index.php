@@ -735,7 +735,11 @@ if (!empty($_POST["save"])) {
 				$v_smtp_relay = true;
 				$v_smtp_relay_host = quoteshellarg($_POST["v_smtp_relay_host"]);
 				$v_smtp_relay_user = quoteshellarg($_POST["v_smtp_relay_user"]);
-				$v_smtp_relay_pass = quoteshellarg($_POST["v_smtp_relay_pass"]);
+				// store password in a temporary file to avoid exposing it in the process list
+				$v_smtp_relay_pass = tempnam("/tmp", "vst");
+				$fp = fopen($v_smtp_relay_pass, "w");
+				fwrite($fp, $_POST["v_smtp_relay_pass"] . "\n");
+				fclose($fp);
 				if (!empty($_POST["v_smtp_relay_port"])) {
 					$v_smtp_relay_port = quoteshellarg($_POST["v_smtp_relay_port"]);
 				} else {

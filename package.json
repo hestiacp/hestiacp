@@ -20,9 +20,9 @@
 		"prepare": "husky"
 	},
 	"dependencies": {
-		"@alpinejs/collapse": "^3.16.1",
+		"@alpinejs/collapse": "^3.16.2",
 		"@fortawesome/fontawesome-free": "^7.3.1",
-		"alpinejs": "^3.16.1",
+		"alpinejs": "^3.16.2",
 		"chart.js": "^4.5.1",
 		"check-password-strength": "^3.0.0",
 		"floating-vue": "^5.2.2",
@@ -32,7 +32,7 @@
 		"@xterm/xterm": "^6.0.0"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "2.5.8",
+		"@biomejs/biome": "2.5.10",
 		"@prettier/plugin-php": "^0.25.0",
 		"@testing-library/vue": "^8.1.0",
 		"@vitejs/plugin-vue": "^6.0.8",
@@ -48,7 +48,7 @@
 		"prettier-plugin-sh": "^0.19.0",
 		"prettier-plugin-sql": "^0.20.0",
 		"vitepress": "^1.6.4",
-		"vitest": "^4.1.10",
+		"vitest": "^4.1.11",
 		"vue": "^3.5.41"
 	},
 	"browserslist": [

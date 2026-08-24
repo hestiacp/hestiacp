@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: add mail domain
-# options: USER DOMAIN [ANTISPAM] [ANTIVIRUS] [DKIM] [DKIM_SIZE] [RESTART] [REJECT_SPAM]
+# options: USER DOMAIN [ANTISPAM] [ANTIVIRUS] [DKIM] [DKIM_SIZE] [RESTART] [REJECT_SPAM] [DKIM_SELECTOR]
 #
 # example: v-add-mail-domain admin mydomain.tld
 #
@@ -16,9 +16,10 @@ domain=$2
 antispam=${3-yes}
 antivirus=${4-yes}
 dkim=${5-yes}
-dkim_size=${6-2048}
+dkim_size=${6:-2048}
 restart="$7"
 reject=${8-no}
+dkim_selector=${9:-mail}
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -50,8 +51,8 @@ domain_utf=$(idn2 --quiet -d "$domain_idn")
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'USER DOMAIN [ANTISPAM] [ANTIVIRUS] [DKIM] [DKIM_SIZE] [RESTART] [REJECT_SPAM]'
-is_format_valid 'user' 'domain' 'antispam' 'antivirus' 'dkim' 'dkim_size' 'restart' 'reject'
+check_args '2' "$#" 'USER DOMAIN [ANTISPAM] [ANTIVIRUS] [DKIM] [DKIM_SIZE] [RESTART] [REJECT_SPAM] [DKIM_SELECTOR]'
+is_format_valid 'user' 'domain' 'antispam' 'antivirus' 'dkim' 'dkim_size' 'restart' 'reject' 'dkim_selector'
 is_system_enabled "$MAIL_SYSTEM" 'MAIL_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
@@ -103,9 +104,9 @@ if [ -z "$ANTIVIRUS_SYSTEM" ]; then
 fi
 
 # Adding domain to mail.conf
-s="DOMAIN='$domain' ANTIVIRUS='$antivirus' ANTISPAM='$antispam' REJECT='$reject' DKIM='$dkim' WEBMAIL=''"
-s="$s SSL='no' LETSENCRYPT='no' CATCHALL='' ACCOUNTS='0' RATE_LIMIT='$RATE_LIMIT' U_DISK='0' SUSPENDED='no' TIME='$time'"
-s="$s DATE='$date'"
+s="DOMAIN='$domain' ANTIVIRUS='$antivirus' ANTISPAM='$antispam' REJECT='$reject' DKIM='$dkim' DKIM_SELECTOR='$dkim_selector'"
+s="$s WEBMAIL='' SSL='no' LETSENCRYPT='no' CATCHALL='' ACCOUNTS='0' RATE_LIMIT='$RATE_LIMIT' U_DISK='0' SUSPENDED='no'"
+s="$s TIME='$time' DATE='$date'"
 echo $s >> $USER_DATA/mail.conf
 touch $USER_DATA/mail/$domain.conf
 
@@ -160,6 +161,7 @@ if [[ "$MAIL_SYSTEM" =~ exim ]]; then
 	if [ "$dkim" = 'yes' ]; then
 		cp -f $USER_DATA/mail/$domain.pem \
 			$HOMEDIR/$user/conf/mail/$domain/dkim.pem
+		printf 'selector:%s\n' "$dkim_selector" > "$HOMEDIR/$user/conf/mail/$domain/selector"
 	fi
 
 	# Set permission
@@ -182,7 +184,7 @@ if [ -n "$DNS_SYSTEM" ] && [ "$dkim" = 'yes' ]; then
 	check_dns_domain=$(is_object_valid 'dns' 'DOMAIN' "$domain")
 	if [ "$?" -eq 0 ]; then
 		p=$(cat $USER_DATA/mail/$domain.pub | grep -v ' KEY---' | tr -d '\n')
-		record='mail._domainkey'
+		record="${dkim_selector}._domainkey"
 		selector="\"v=DKIM1\; k=rsa\; p=$p\""
 		$BIN/v-add-dns-record "$user" "$domain" "$record" TXT "$selector" '' '' 'yes' '' 'yes'
 	fi

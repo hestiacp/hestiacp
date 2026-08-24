@@ -517,7 +517,7 @@ This function adds fwd-only flag
 
 add mail domain
 
-**Options**: `USER` `DOMAIN` `[ANTISPAM]` `[ANTIVIRUS]` `[DKIM]` `[DKIM_SIZE]` `[RESTART]` `[REJECT_SPAM]`
+**Options**: `USER` `DOMAIN` `[ANTISPAM]` `[ANTIVIRUS]` `[DKIM]` `[DKIM_SIZE]` `[RESTART]` `[REJECT_SPAM]` `[DKIM_SELECTOR]`
 
 **Examples**:
 

@@ -582,6 +582,10 @@ rebuild_mail_domain_conf() {
 	syshealth_repair_mail_config
 
 	get_domain_values 'mail'
+	if [ -z "$DKIM_SELECTOR" ]; then
+		update_object_value 'mail' 'DOMAIN' "$domain" '$DKIM_SELECTOR' 'mail'
+		DKIM_SELECTOR='mail'
+	fi
 	if [[ "$domain" = *[![:ascii:]]* ]]; then
 		domain_idn=$(idn2 --quiet $domain)
 	else
@@ -653,6 +657,8 @@ rebuild_mail_domain_conf() {
 		if [ "$DKIM" = 'yes' ]; then
 			cp $USER_DATA/mail/$domain.pem \
 				$HOMEDIR/$user/conf/mail/$domain/dkim.pem
+			dkim_selector=${DKIM_SELECTOR:-mail}
+			printf 'selector:%s\n' "$dkim_selector" > "$HOMEDIR/$user/conf/mail/$domain/selector"
 		fi
 
 		# Rebuild SMTP Relay configuration

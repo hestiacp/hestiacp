@@ -29,6 +29,18 @@ jobs:
             -t hestia-ci:${{ github.sha }} \
             .
 
+      - name: Create IPv6-enabled network
+        run: |
+          # GitHub-hosted runners have no routable IPv6 egress, so this uses a
+          # ULA (fd00::/8) subnet purely to give the container a real, non-loopback
+          # IPv6 address on eth0 — enough to exercise Hestia's dual-stack detection
+          # and ip6tables paths without needing internet-routable IPv6.
+          docker network create \
+            --driver bridge \
+            --ipv6 \
+            --subnet fd00:dead:beef::/64 \
+            hestia-ci-net
+
       - name: Start CI container
         run: |
           docker run -d \
@@ -36,6 +48,7 @@ jobs:
             --hostname hestia-dev.local \
             --privileged \
             --cgroupns=host \
+            --network hestia-ci-net \
             --tmpfs /run \
             --tmpfs /run/lock \
             --tmpfs /tmp:exec,mode=1777 \
@@ -117,3 +130,4 @@ jobs:
         if: always()
         run: |
           docker rm -f hestia-ci || true
+          docker network rm hestia-ci-net || true

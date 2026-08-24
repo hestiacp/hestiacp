@@ -14,7 +14,7 @@ class GLPISetup extends BaseSetup
     protected array $info = [
         'name' => 'GLPI',
         'group' => 'ITSM',
-        'version' => '11.0.7',
+        'version' => '11.0.8',
         'thumbnail' => 'glpi-thumb.png',
     ];
 
@@ -30,13 +30,13 @@ class GLPISetup extends BaseSetup
                     'template' => 'glpi',
                 ],
                 'php' => [
-                    'supported' => ['8.1', '8.2', '8.3', '8.4'],
+                    'supported' => ['8.1', '8.2', '8.3', '8.4', '8.5'],
                     'extensions' => ['bcmath', 'curl', 'gd', 'intl', 'mbstring', 'mysqli', 'zlib', 'openssl'],
                 ],
             ],
             'resources' => [
                 'archive' => [
-                    'src' => 'https://github.com/glpi-project/glpi/releases/download/11.0.7/glpi-11.0.7.tgz',
+                    'src' => 'https://github.com/glpi-project/glpi/releases/download/11.0.8/glpi-11.0.8.tgz',
                 ],
             ],
         ];

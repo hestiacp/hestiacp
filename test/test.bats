@@ -86,6 +86,15 @@ function validate_web_domain() {
         cat "$HOMEDIR/$user/conf/web/$domain/nginx.conf" 2>&1
         echo "# listening sockets:"
         ss -tlnp
+        php_ver=$(v-list-sys-php plain 2>/dev/null | head -n1)
+        echo "# php${php_ver}-fpm systemd status:"
+        systemctl status "php${php_ver}-fpm" --no-pager -l
+        echo "# php${php_ver}-fpm journal (last 60 lines):"
+        journalctl -u "php${php_ver}-fpm" --no-pager -n 60
+        echo "# php-fpm socket directory (/run/php):"
+        ls -la /run/php/
+        echo "# pool config for this domain:"
+        cat "/etc/php/${php_ver}/fpm/pool.d/${domain}.conf" 2>&1
         echo "# ==== end diagnostics ===="
     fi
     assert_success

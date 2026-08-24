@@ -18,6 +18,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixes
 
+- Fix database temp user creation failing on MySQL HeatWave due to Medium Password Policy #5453
 - Fix bug in SFTP backup rotation causing backup storage to not properly rotate #5646
 - Fix back link and Access Keys button pointing to wrong user #5635 #5638
 - Fix migration scripts not adding the imap_sieve plugin to the IMAP config #5637

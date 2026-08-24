@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.9.10] - Security Release
+
+### Security
+
+- Hide accidental password leaking via auth.log / journalctl for sudo commands #5648
+- Add owner verification to `v-schedule-user-restore` #5645
+
 ## [1.9.9] - Service Release
 
 ### Security

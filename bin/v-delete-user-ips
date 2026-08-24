@@ -42,7 +42,9 @@ check_hestia_demo_mode
 #----------------------------------------------------------#
 
 # Parsing user ips
-ip_list=$(grep -H "OWNER='$user'" $HESTIA/data/ips/* | cut -f 1 -d:)
+# Use grep -l (list matching filenames) rather than -H | cut -d: — IPv6
+# addresses contain colons themselves, which broke the old cut-based parsing.
+ip_list=$(grep -l "OWNER='$user'" $HESTIA/data/ips/* 2> /dev/null)
 
 for ip in $ip_list; do
 	ip=$(basename "$ip")

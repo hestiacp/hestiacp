@@ -686,15 +686,20 @@ if (!empty($_POST["save"])) {
 	// Update mysql pasword
 	if (empty($_SESSION["error_msg"])) {
 		if (!empty($_POST["v_mysql_password"])) {
+			$v_mysql_pass = tempnam("/tmp", "vst");
+			$fp = fopen($v_mysql_pass, "w");
+			fwrite($fp, $_POST["v_mysql_password"] . "\n");
+			fclose($fp);
 			exec(
 				HESTIA_CMD .
 					"v-change-database-host-password mysql localhost root " .
-					quoteshellarg($_POST["v_mysql_password"]),
+					$v_mysql_pass,
 				$output,
 				$return_var,
 			);
 			check_return_code($return_var, $output);
 			unset($output);
+			unlink($v_mysql_pass);
 			$v_db_adv = "yes";
 		}
 	}
@@ -730,7 +735,11 @@ if (!empty($_POST["save"])) {
 				$v_smtp_relay = true;
 				$v_smtp_relay_host = quoteshellarg($_POST["v_smtp_relay_host"]);
 				$v_smtp_relay_user = quoteshellarg($_POST["v_smtp_relay_user"]);
-				$v_smtp_relay_pass = quoteshellarg($_POST["v_smtp_relay_pass"]);
+				// store password in a temporary file to avoid exposing it in the process list
+				$v_smtp_relay_pass = tempnam("/tmp", "vst");
+				$fp = fopen($v_smtp_relay_pass, "w");
+				fwrite($fp, $_POST["v_smtp_relay_pass"] . "\n");
+				fclose($fp);
 				if (!empty($_POST["v_smtp_relay_port"])) {
 					$v_smtp_relay_port = quoteshellarg($_POST["v_smtp_relay_port"]);
 				} else {
@@ -751,6 +760,7 @@ if (!empty($_POST["save"])) {
 				);
 				check_return_code($return_var, $output);
 				unset($output);
+				unlink($v_smtp_relay_pass);
 			}
 		}
 		if (!isset($_POST["v_smtp_relay"]) && $v_smtp_relay == true) {
@@ -963,7 +973,11 @@ if (!empty($_POST["save"])) {
 				$v_backup_port = quoteshellarg($_POST["v_backup_port"]);
 				$v_backup_type = quoteshellarg($_POST["v_backup_type"]);
 				$v_backup_username = quoteshellarg($_POST["v_backup_username"]);
-				$v_backup_password = quoteshellarg($_POST["v_backup_password"]);
+				$v_backup_password = $_POST["v_backup_password"];
+				$v_backup_pass = tempnam("/tmp", "vst");
+				$fp = fopen($v_backup_pass, "w");
+				fwrite($fp, $_POST["v_backup_password"] . "\n");
+				fclose($fp);
 				$v_backup_bpath = quoteshellarg($_POST["v_backup_bpath"]);
 				exec(
 					HESTIA_CMD .
@@ -974,7 +988,7 @@ if (!empty($_POST["save"])) {
 						" " .
 						$v_backup_username .
 						" " .
-						$v_backup_password .
+						$v_backup_pass .
 						" " .
 						$v_backup_bpath .
 						" " .
@@ -984,6 +998,7 @@ if (!empty($_POST["save"])) {
 				);
 				check_return_code($return_var, $output);
 				unset($output);
+				unlink($v_backup_pass);
 				if (empty($_SESSION["error_msg"])) {
 					$v_backup_host = $_POST["v_backup_host"];
 				}
@@ -1009,7 +1024,10 @@ if (!empty($_POST["save"])) {
 				$v_backup_type = quoteshellarg($_POST["v_backup_type"]);
 				$v_backup_bucket = quoteshellarg($_POST["v_backup_bucket"]);
 				$v_backup_application_id = quoteshellarg($_POST["v_backup_application_id"]);
-				$v_backup_application_key = quoteshellarg($_POST["v_backup_application_key"]);
+				$v_backup_pass = tempnam("/tmp", "vst");
+				$fp = fopen($v_backup_pass, "w");
+				fwrite($fp, $_POST["v_backup_application_key"] . "\n");
+				fclose($fp);
 				exec(
 					HESTIA_CMD .
 						"v-add-backup-host " .
@@ -1019,12 +1037,13 @@ if (!empty($_POST["save"])) {
 						" " .
 						$v_backup_application_id .
 						" " .
-						$v_backup_application_key,
+						$v_backup_pass,
 					$output,
 					$return_var,
 				);
 				check_return_code($return_var, $output);
 				unset($output);
+				unlink($v_backup_pass);
 				if (empty($_SESSION["error_msg"])) {
 					$v_backup_bucket = quoteshellarg($_POST["v_backup_bucket"]);
 				}
@@ -1084,7 +1103,11 @@ if (!empty($_POST["save"])) {
 				$v_backup_port = quoteshellarg($_POST["v_backup_port"]);
 				$v_backup_type = quoteshellarg($_POST["v_backup_type"]);
 				$v_backup_username = quoteshellarg($_POST["v_backup_username"]);
-				$v_backup_password = quoteshellarg($_POST["v_backup_password"]);
+				$v_backup_password = $_POST["v_backup_password"];
+				$v_backup_pass = tempnam("/tmp", "vst");
+				$fp = fopen($v_backup_pass, "w");
+				fwrite($fp, $_POST["v_backup_password"] . "\n");
+				fclose($fp);
 				$v_backup_bpath = quoteshellarg($_POST["v_backup_bpath"]);
 				exec(
 					HESTIA_CMD .
@@ -1095,7 +1118,7 @@ if (!empty($_POST["save"])) {
 						" " .
 						$v_backup_username .
 						" " .
-						$v_backup_password .
+						$v_backup_pass .
 						" " .
 						$v_backup_bpath .
 						" " .
@@ -1105,6 +1128,7 @@ if (!empty($_POST["save"])) {
 				);
 				check_return_code($return_var, $output);
 				unset($output);
+				unlink($v_backup_pass);
 				if (empty($_SESSION["error_msg"])) {
 					$v_backup_host = $_POST["v_backup_host"];
 				}
@@ -1128,7 +1152,10 @@ if (!empty($_POST["save"])) {
 			} elseif (in_array($_POST["v_backup_type"], ["b2"])) {
 				$v_backup_bucket = quoteshellarg($_POST["v_backup_bucket"]);
 				$v_backup_application_id = quoteshellarg($_POST["v_backup_application_id"]);
-				$v_backup_application_key = quoteshellarg($_POST["v_backup_application_key"]);
+				$v_backup_pass = tempnam("/tmp", "vst");
+				$fp = fopen($v_backup_pass, "w");
+				fwrite($fp, $_POST["v_backup_application_key"] . "\n");
+				fclose($fp);
 				exec(
 					HESTIA_CMD .
 						"v-add-backup-host " .
@@ -1138,12 +1165,13 @@ if (!empty($_POST["save"])) {
 						" " .
 						$v_backup_application_id .
 						" " .
-						$v_backup_application_key,
+						$v_backup_pass,
 					$output,
 					$return_var,
 				);
 				check_return_code($return_var, $output);
 				unset($output);
+				unlink($v_backup_pass);
 				$v_backup_type = quoteshellarg($_POST["v_backup_type"]);
 				if (empty($_SESSION["error_msg"])) {
 					$v_backup_bucket = quoteshellarg($_POST["v_backup_bucket"]);
@@ -1175,7 +1203,11 @@ if (!empty($_POST["save"])) {
 					$v_backup_port = quoteshellarg($_POST["v_backup_port"]);
 					$v_backup_type = quoteshellarg($_POST["v_backup_type"]);
 					$v_backup_username = quoteshellarg($_POST["v_backup_username"]);
-					$v_backup_password = quoteshellarg($_POST["v_backup_password"]);
+					$v_backup_password = $_POST["v_backup_password"];
+					$v_backup_pass = tempnam("/tmp", "vst");
+					$fp = fopen($v_backup_pass, "w");
+					fwrite($fp, $_POST["v_backup_password"] . "\n");
+					fclose($fp);
 					$v_backup_bpath = quoteshellarg($_POST["v_backup_bpath"]);
 					exec(
 						HESTIA_CMD .
@@ -1196,6 +1228,7 @@ if (!empty($_POST["save"])) {
 					);
 					check_return_code($return_var, $output);
 					unset($output);
+					unlink($v_backup_pass);
 					if (empty($_SESSION["error_msg"])) {
 						$v_backup_host = $_POST["v_backup_host"];
 					}
@@ -1226,7 +1259,10 @@ if (!empty($_POST["save"])) {
 					$v_backup_type = quoteshellarg($_POST["v_backup_type"]);
 					$v_backup_bucket = quoteshellarg($_POST["v_backup_bucket"]);
 					$v_backup_application_id = quoteshellarg($_POST["v_backup_application_id"]);
-					$v_backup_application_key = quoteshellarg($_POST["v_backup_application_key"]);
+					$v_backup_pass = tempnam("/tmp", "vst");
+					$fp = fopen($v_backup_pass, "w");
+					fwrite($fp, $_POST["v_backup_application_key"] . "\n");
+					fclose($fp);
 					exec(
 						HESTIA_CMD .
 							"v-add-backup-host " .
@@ -1236,12 +1272,13 @@ if (!empty($_POST["save"])) {
 							" " .
 							$v_backup_application_id .
 							" " .
-							$v_backup_application_key,
+							$v_backup_pass,
 						$output,
 						$return_var,
 					);
 					check_return_code($return_var, $output);
 					unset($output);
+					unlink($v_backup_pass);
 					if (empty($_SESSION["error_msg"])) {
 						$v_backup_bucket = quoteshellarg($_POST["v_backup_bucket"]);
 					}

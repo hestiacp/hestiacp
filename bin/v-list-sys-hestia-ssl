@@ -21,6 +21,9 @@ source $HESTIA/func/main.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
 # JSON list function
 json_list() {
 	json_escape() {

@@ -310,6 +310,53 @@ function check_ip_not_banned(){
 
 }
 
+@test "IPv6: hst_detect_ip_version detects IPv6" {
+    run hst_detect_ip_version "2001:db8::1"
+    assert_success
+    assert_output "6"
+}
+
+@test "IPv6: hst_detect_ip_version detects IPv6 CIDR" {
+    run hst_detect_ip_version "2001:db8::/32"
+    assert_success
+    assert_output "6"
+}
+
+@test "IPv6: hst_detect_ip_version detects IPv4" {
+    run hst_detect_ip_version "192.168.1.1"
+    assert_success
+    assert_output "4"
+}
+
+@test "IPv6: hst_detect_ip_version rejects invalid address" {
+    run hst_detect_ip_version "not:an:ip:address"
+    assert_failure
+    refute_output
+}
+
+@test "IPv6: hst_detect_ip_version rejects prefix out of range" {
+    run hst_detect_ip_version "2001:db8::1/129"
+    assert_failure
+    refute_output
+}
+
+@test "IPv6: is_ipv6_format_valid accepts valid address" {
+    run is_ipv6_format_valid "2001:db8::1"
+    assert_success
+    refute_output
+}
+
+@test "IPv6: is_ipv6_format_valid rejects invalid address" {
+    run is_ipv6_format_valid "2001:db8::zzzz"
+    assert_failure $E_INVALID
+    assert_output --partial 'invalid ipv6'
+}
+
+@test "IPv6: is_ipv6_format_valid rejects IPv4 address" {
+    run is_ipv6_format_valid "192.168.1.1"
+    assert_failure $E_INVALID
+}
+
 #----------------------------------------------------------#
 #                         User                             #
 #----------------------------------------------------------#
@@ -799,6 +846,47 @@ function check_ip_not_banned(){
     fi
 }
 
+@test "Ip: Add new ipv6" {
+    local ip="2001:db8:1::10"
+    run v-add-sys-ip $ip /64 $interface $user
+    assert_success
+    refute_output
+
+    assert_file_exist $HESTIA/data/ips/$ip
+    assert_file_contains $HESTIA/data/ips/$ip "OWNER='$user'"
+    assert_file_contains $HESTIA/data/ips/$ip "INTERFACE='$interface'"
+    assert_file_contains $HESTIA/data/ips/$ip "VERSION='6'"
+
+    if [ -n "$WEB_SYSTEM" ]; then
+        assert_file_exist /etc/$WEB_SYSTEM/conf.d/$ip.conf
+    fi
+    if [ -n "$PROXY_SYSTEM" ]; then
+        assert_file_exist /etc/$PROXY_SYSTEM/conf.d/$ip.conf
+    fi
+}
+
+@test "Ip: Add ipv6 (duplicate)" {
+    run v-add-sys-ip "2001:db8:1::10" /64 $interface $user
+    assert_failure $E_EXISTS
+}
+
+@test "Ip: Add ipv6 (invalid format)" {
+    run v-add-sys-ip "2001:db8:zzzz::1" /64 $interface $user
+    assert_failure $E_INVALID
+}
+
+@test "Ip: Delete the test ipv6" {
+    local ip="2001:db8:1::10"
+    run v-delete-sys-ip $ip
+    assert_success
+    refute_output
+
+    assert_file_not_exist $HESTIA/data/ips/$ip
+    if [ -n "$WEB_SYSTEM" ]; then
+        assert_file_not_exist /etc/$WEB_SYSTEM/conf.d/$ip.conf
+    fi
+}
+
 #----------------------------------------------------------#
 #                         WEB                              #
 #----------------------------------------------------------#
@@ -936,6 +1024,52 @@ function check_ip_not_banned(){
 
 @test "WEB: Use quick install app on web domain" {
     run v-quick-install-app install $user $domain Laravel
+    assert_success
+    refute_output
+}
+
+@test "WEB: Add web domain for ipv6 test" {
+    ipv6domain="ipv6.${domain}"
+    echo "ipv6domain=${ipv6domain}" >> /tmp/hestia-test-env.sh
+
+    run v-add-web-domain $user $ipv6domain 198.18.0.125
+    assert_success
+    refute_output
+}
+
+@test "WEB: Change web domain ipv6" {
+    run v-change-web-domain-ipv6 $user $ipv6domain "2001:db8:2::20" yes
+    assert_success
+    refute_output
+
+    run v-list-web-domain $user $ipv6domain
+    assert_success
+    assert_output --partial "2001:db8:2::20"
+}
+
+@test "WEB: Change web domain ipv6 (invalid format)" {
+    run v-change-web-domain-ipv6 $user $ipv6domain "2001:db8:zzzz::1" yes
+    assert_failure $E_INVALID
+}
+
+@test "MAIL: Add domain inherits web domain ipv6" {
+    run v-add-mail-domain $user $ipv6domain
+    assert_success
+    refute_output
+
+    assert_file_contains "$HOMEDIR/$user/conf/mail/$ipv6domain/ipv6" "2001:db8:2::20"
+}
+
+@test "WEB: Cleanup ipv6 test domain" {
+    run v-delete-mail-domain $user $ipv6domain
+    assert_success
+    refute_output
+
+    run v-delete-web-domain $user $ipv6domain
+    assert_success
+    refute_output
+
+    run v-delete-sys-ip "2001:db8:2::20"
     assert_success
     refute_output
 }
@@ -1461,6 +1595,49 @@ function check_ip_not_banned(){
     assert_file_contains "$HOMEDIR/$user/conf/dns/${domain}.db" "mx.hestia.com."
 
     run v-delete-dns-record $user $domain 50
+    assert_success
+    refute_output
+}
+
+@test "DNS: Add domain record AAAA" {
+    run v-delete-dns-record $user $domain 50
+    run v-add-dns-record $user $domain 'ipv6test' AAAA '2001:db8::1' '' 50
+    assert_success
+    refute_output
+
+    assert_file_contains "$HESTIA/data/users/$user/dns/${domain}.conf" "RECORD='ipv6test' TYPE='AAAA' PRIORITY='' VALUE='2001:db8::1'"
+
+    run v-change-dns-record $user $domain 50 'ipv6test' AAAA '2001:db8::2'
+    assert_success
+    refute_output
+
+    assert_file_contains "$HESTIA/data/users/$user/dns/${domain}.conf" "RECORD='ipv6test' TYPE='AAAA' PRIORITY='' VALUE='2001:db8::2'"
+
+    run v-delete-dns-record $user $domain 50
+    assert_success
+    refute_output
+}
+
+@test "DNS: Add domain record AAAA (invalid value)" {
+    run v-delete-dns-record $user $domain 50
+    run v-add-dns-record $user $domain 'ipv6test' AAAA 'not-an-ipv6' '' 50
+    assert_failure $E_INVALID
+}
+
+@test "DNS: Add domain with ipv6 generates AAAA records" {
+    ipv6dnsdomain="ipv6dnstest.com"
+    echo "ipv6dnsdomain=${ipv6dnsdomain}" >> /tmp/hestia-test-env.sh
+
+    run v-add-dns-domain $user $ipv6dnsdomain 198.18.0.125 '' '' '' '' '' '' '' '' '' '' '2001:db8:3::1'
+    assert_success
+    refute_output
+
+    assert_file_contains "$HESTIA/data/users/$user/dns/${ipv6dnsdomain}.conf" "RECORD='@' TYPE='AAAA' PRIORITY='' VALUE='2001:db8:3::1'"
+    assert_file_contains "$HESTIA/data/users/$user/dns/${ipv6dnsdomain}.conf" "RECORD='www' TYPE='AAAA' PRIORITY='' VALUE='2001:db8:3::1'"
+}
+
+@test "DNS: Cleanup ipv6 dns domain" {
+    run v-delete-dns-domain $user $ipv6dnsdomain
     assert_success
     refute_output
 }
@@ -2189,6 +2366,39 @@ echo   "1.2.3.4" >> $HESTIA/data/firewall/excludes.conf
 
 @test "Test delete ipset" {
   run v-delete-firewall-ipset "country-nl"
+  assert_success
+  refute_output
+}
+
+@test "Firewall: Add ipv6 to banlist" {
+  run v-add-firewall-ban '2001:db8::bad' 'HESTIA'
+  assert_success
+  refute_output
+
+  check_ip_banned '2001:db8::bad' 'HESTIA'
+}
+
+@test "Firewall: Delete ipv6 from banlist" {
+  run v-delete-firewall-ban '2001:db8::bad' 'HESTIA'
+  assert_success
+  refute_output
+  check_ip_not_banned '2001:db8::bad' 'HESTIA'
+}
+
+@test "Firewall: Add ipv6 firewall rule" {
+  run v-add-firewall-rule-ipv6 'DROP' '2001:db8::1' '2222' 'TCP' 'Test IPv6' '101'
+  assert_success
+  refute_output
+}
+
+@test "Firewall: List ipv6 firewall rules" {
+  run v-list-firewall-ipv6 csv
+  assert_success
+  assert_line --partial '101,DROP,TCP,2222,2001:db8::1,"Test IPv6"'
+}
+
+@test "Firewall: Delete ipv6 firewall rule" {
+  run v-delete-firewall-rule-ipv6 '101'
   assert_success
   refute_output
 }

@@ -67,6 +67,9 @@ check_args '1' "$#" 'IP [NETMASK] [INTERFACE] [USER] [STATUS] [NAME] [NATED_IP]'
 # Detect IP version: get_ip_format returns "4" for IPv4 or "6" for IPv6.
 # An empty result means the address is invalid.
 ip_format="$(get_ip_format ${ip46})"
+if [ -z "$ip_format" ]; then
+	check_result "$E_INVALID" "invalid IP address :: $ip46"
+fi
 if [ -n "$second_parameter" -a -n "$ip_format" ]; then
 	[ -n "$ip_cidr" ] && check_result 1 "cidr / prefix length double defined as IP address suffix and as separate argument!"                        # wrong parameters
 	netmask="$(echo ${second_parameter} | sed -nr ''/$REGEX_IPV4/p'')"                                                                              # extract netmask from second parameter if available
@@ -201,6 +204,7 @@ if [ -z "$sys_ip_check" ]; then
 		IFS='%'
 		echo -e "$sys_ip" >> /etc/netplan/60-hestia.yaml
 		unset IFS
+		chmod 600 /etc/netplan/60-hestia.yaml
 	else
 		sys_ip="\n# Added by Hestia Control Panel"
 		sys_ip="$sys_ip\nauto ${iface}"

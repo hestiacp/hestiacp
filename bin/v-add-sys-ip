@@ -204,6 +204,7 @@ if [ -z "$sys_ip_check" ]; then
 		IFS='%'
 		echo -e "$sys_ip" >> /etc/netplan/60-hestia.yaml
 		unset IFS
+		chmod 600 /etc/netplan/60-hestia.yaml
 	else
 		sys_ip="\n# Added by Hestia Control Panel"
 		sys_ip="$sys_ip\nauto ${iface}"

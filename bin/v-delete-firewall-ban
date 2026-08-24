@@ -1,8 +1,9 @@
 #!/bin/bash
-# info: delete firewall blocking rule
-# options: IPV4_CIDR CHAIN
+# info: delete firewall blocking rule (IPv4 or IPv6)
+# options: IP_OR_CIDR CHAIN
 #
 # example: v-delete-firewall-ban 198.11.130.250 MAIL
+# example: v-delete-firewall-ban 2001:db8::bad MAIL
 #
 # This function deletes blocking rule from system firewall
 
@@ -32,8 +33,12 @@ source_conf "$HESTIA/conf/hestia.conf"
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'IPV4_CIDR CHAIN'
-is_format_valid 'ipv4_cidr' 'chain'
+check_args '2' "$#" 'IP CHAIN'
+if [[ "$ipv4_cidr" =~ ":" ]]; then
+	is_format_valid 'ipv6' 'chain'
+else
+	is_format_valid 'ipv4_cidr' 'chain'
+fi
 is_system_enabled "$FIREWALL_SYSTEM" 'FIREWALL_SYSTEM'
 
 # Perform verification if read-only mode is enabled
@@ -45,6 +50,13 @@ check_hestia_demo_mode
 
 # Self heal iptables links
 heal_iptables_links
+
+# Use ip6tables for IPv6 bans, iptables for IPv4
+if [[ "$ipv4_cidr" =~ ":" ]]; then
+	fw_iptables="/sbin/ip6tables"
+else
+	fw_iptables="$iptables"
+fi
 
 conf="$HESTIA/data/firewall/banlist.conf"
 if [ "$chain" == "ALL" ]; then
@@ -58,8 +70,8 @@ if [ "$chain" == "ALL" ]; then
 		# Deleting ip from banlist
 		sip=$(echo "$IP" | sed "s|/|\\\/|g")
 		sed -i "/IP='$sip' CHAIN='$CHAIN'/d" $conf
-		b=$($iptables -L fail2ban-$CHAIN --line-number -n | grep -w $ipv4_cidr | awk '{print $1}')
-		$iptables -D fail2ban-$CHAIN $b 2> /dev/null
+		b=$($fw_iptables -L fail2ban-$CHAIN --line-number -n | grep -w $ipv4_cidr | awk '{print $1}')
+		$fw_iptables -D fail2ban-$CHAIN $b 2> /dev/null
 		for f2bjail in $("$f2bcli" status | grep -i 'Jail list:' | cut -d':' -f2- | sed -E 's/\s*//g' | tr ',' ' '); do
 			if "$f2bcli" get "$f2bjail" actions | grep -Eq "^hestia-$CHAIN" 2> /dev/null; then
 				"$f2bcli" set "$f2bjail" unbanip "$sip" &> /dev/null
@@ -76,8 +88,8 @@ else
 	# Deleting ip from banlist
 	sip=$(echo "$ipv4_cidr" | sed "s|/|\\\/|g")
 	sed -i "/IP='$sip' CHAIN='$chain'/d" $conf
-	b=$($iptables -L fail2ban-$chain --line-number -n | grep -w $ipv4_cidr | awk '{print $1}')
-	$iptables -D fail2ban-$chain $b 2> /dev/null
+	b=$($fw_iptables -L fail2ban-$chain --line-number -n | grep -w $ipv4_cidr | awk '{print $1}')
+	$fw_iptables -D fail2ban-$chain $b 2> /dev/null
 	for f2bjail in $("$f2bcli" status | grep -i 'Jail list:' | cut -d':' -f2- | sed -E 's/\s*//g' | tr ',' ' '); do
 		if "$f2bcli" get "$f2bjail" actions | grep -Eq "^hestia-$chain" 2> /dev/null; then
 			"$f2bcli" set "$f2bjail" unbanip "$sip" &> /dev/null

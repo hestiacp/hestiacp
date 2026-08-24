@@ -1605,13 +1605,13 @@ function check_ip_not_banned(){
     assert_success
     refute_output
 
-    assert_file_contains "$HOMEDIR/$user/conf/dns/${domain}.db" "VALUE='2001:db8::1'"
+    assert_file_contains "$HESTIA/data/users/$user/dns/${domain}.conf" "RECORD='ipv6test' TYPE='AAAA' PRIORITY='' VALUE='2001:db8::1'"
 
     run v-change-dns-record $user $domain 50 'ipv6test' AAAA '2001:db8::2'
     assert_success
     refute_output
 
-    assert_file_contains "$HOMEDIR/$user/conf/dns/${domain}.db" "VALUE='2001:db8::2'"
+    assert_file_contains "$HESTIA/data/users/$user/dns/${domain}.conf" "RECORD='ipv6test' TYPE='AAAA' PRIORITY='' VALUE='2001:db8::2'"
 
     run v-delete-dns-record $user $domain 50
     assert_success
@@ -1632,8 +1632,8 @@ function check_ip_not_banned(){
     assert_success
     refute_output
 
-    assert_file_contains "$HOMEDIR/$user/conf/dns/${ipv6dnsdomain}.db" "RECORD='@' TYPE='AAAA' PRIORITY='' VALUE='2001:db8:3::1'"
-    assert_file_contains "$HOMEDIR/$user/conf/dns/${ipv6dnsdomain}.db" "RECORD='www' TYPE='AAAA' PRIORITY='' VALUE='2001:db8:3::1'"
+    assert_file_contains "$HESTIA/data/users/$user/dns/${ipv6dnsdomain}.conf" "RECORD='@' TYPE='AAAA' PRIORITY='' VALUE='2001:db8:3::1'"
+    assert_file_contains "$HESTIA/data/users/$user/dns/${ipv6dnsdomain}.conf" "RECORD='www' TYPE='AAAA' PRIORITY='' VALUE='2001:db8:3::1'"
 }
 
 @test "DNS: Cleanup ipv6 dns domain" {

@@ -434,7 +434,9 @@ rebuild_web_domain_conf() {
 	ipv6_addr=$(grep "DOMAIN='${domain}'" "$USER_DATA/web.conf" 2> /dev/null | grep -oP "IP6='\\K[^\']+")
 	if [ -z "$ipv6_addr" ]; then
 		get_user_ipv6
-		ipv6_addr="$ipv6"
+		if [ -n "$ipv6" ]; then
+			ipv6_addr="$ipv6"
+		fi
 	fi
 	if [ -n "$ipv6_addr" ] && [ -n "$local_ip" ]; then
 		local esc_ip="${local_ip//./\\.}"

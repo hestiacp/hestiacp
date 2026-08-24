@@ -35,6 +35,12 @@ is_ip_owner() {
 	fi
 }
 
+# Check if ip address is already registered in the system (any version)
+is_ip_exists() {
+	local check_ip="${1:-$ip}"
+	[ -e "$HESTIA/data/ips/$check_ip" ]
+}
+
 # Check if ip address is free
 is_ip_free() {
 	local check_ip="${1:-$ip}"

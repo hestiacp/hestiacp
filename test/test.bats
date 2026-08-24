@@ -72,6 +72,22 @@ function validate_web_domain() {
     # Curl hates UTF domains so convert them to ascci.
     domain_idn=$(idn2 $domain)
     run curl --location --silent --show-error --insecure --resolve "${domain_idn}:80:${domain_ip}" "http://${domain_idn}/${webpath}"
+    if [ "$status" -ne 0 ] || [[ "$output" != *"$webproof"* ]]; then
+        echo "# ==== validate_web_domain diagnostics: $domain ($domain_ip) ===="
+        echo "# apachectl configtest:"
+        apachectl configtest
+        echo "# nginx -t:"
+        nginx -t
+        echo "# apache2 error log (last 40 lines):"
+        tail -n 40 "/var/log/apache2/domains/${domain}.error.log" 2>&1
+        echo "# generated apache vhost:"
+        cat "$HOMEDIR/$user/conf/web/$domain/apache2.conf" 2>&1
+        echo "# generated nginx vhost:"
+        cat "$HOMEDIR/$user/conf/web/$domain/nginx.conf" 2>&1
+        echo "# listening sockets:"
+        ss -tlnp
+        echo "# ==== end diagnostics ===="
+    fi
     assert_success
     assert_output --partial "$webproof"
 

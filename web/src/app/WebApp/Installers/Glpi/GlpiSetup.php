@@ -36,7 +36,7 @@ class GLPISetup extends BaseSetup
             ],
             'resources' => [
                 'archive' => [
-                    'src' => 'https://github.com/glpi-project/glpi/releases/download/11.0.8/glpi-11.0.8.tgz',
+                    'src' => sprintf('https://github.com/glpi-project/glpi/releases/download/%1$s/glpi-%1$s.tgz', $this->info['version']),
                 ],
             ],
         ];

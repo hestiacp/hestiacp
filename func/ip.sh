@@ -201,7 +201,9 @@ get_real_ip() {
 	else
 		nat=$(grep -H "^NAT='$1'" $HESTIA/data/ips/* | head -n1)
 		if [ -n "$nat" ]; then
-			echo "$nat" | cut -f 1 -d : | cut -f 7 -d /
+			# sed on the literal ":NAT=" boundary (not a bare ":" cut) so IPv6
+			# filenames, which themselves contain colons, aren't truncated.
+			echo "$nat" | sed "s/:NAT=.*//" | xargs -I{} basename {} 2> /dev/null
 		fi
 	fi
 }

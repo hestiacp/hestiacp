@@ -261,17 +261,15 @@ class HestiaApp
     {
         try {
             $result = $this->runUser('v-list-user', ['json']);
-    
             $userInfo = $result->getOutputJson()[$this->user()];
-    
-            // true = можно создать БД
+
             if ($userInfo['DATABASES'] === 'unlimited') {
                 return true;
             }
-    
+
             $limit = (int) $userInfo['DATABASES'];
             $used  = (int) $userInfo['U_DATABASES'];
-    
+
             return ($limit - $used) > 0;
         } catch (ProcessFailedException) {
             throw new RuntimeException('Unable to check database limit');

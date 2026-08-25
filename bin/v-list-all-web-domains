@@ -1,0 +1,47 @@
+#!/bin/bash
+# info: list all web domains
+# options: [FORMAT]
+#
+# example: v-list-all-web-domains json
+#
+# This function obtains all web domains and their owning users in one CLI or API
+# request, intended for bulk administration of large Hestia installations.
+# API access requires an admin key with the list-all-user-objects permission, or
+# an unrestricted admin key.
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Argument definition
+format=${1-shell}
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source "$HESTIA/func/main.sh"
+# shellcheck source=/usr/local/hestia/func/list.sh
+source "$HESTIA/func/list.sh"
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '0' "$#" '[FORMAT]'
+is_format_valid 'format'
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Listing data
+list_all_user_objects v-list-web-domains "$format"
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+exit

@@ -4350,6 +4350,78 @@ list all API access keys
 v-list-access-keys json
 ```
 
+## v-list-all-databases
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-all-databases)
+
+list all databases
+
+**Options**: `[FORMAT]`
+
+**Examples**:
+
+```bash
+v-list-all-databases json
+```
+
+This function obtains all databases and their owning users in one CLI or API request, intended for bulk administration of large Hestia installations.
+
+API access requires an admin key with the `list-all-user-objects` permission, or an unrestricted admin key.
+
+## v-list-all-dns-domains
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-all-dns-domains)
+
+list all dns domains
+
+**Options**: `[FORMAT]`
+
+**Examples**:
+
+```bash
+v-list-all-dns-domains json
+```
+
+This function obtains all DNS domains and their owning users in one CLI or API request, intended for bulk administration of large Hestia installations.
+
+API access requires an admin key with the `list-all-user-objects` permission, or an unrestricted admin key.
+
+## v-list-all-mail-domains
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-all-mail-domains)
+
+list all mail domains
+
+**Options**: `[FORMAT]`
+
+**Examples**:
+
+```bash
+v-list-all-mail-domains json
+```
+
+This function obtains all mail domains and their owning users in one CLI or API request, intended for bulk administration of large Hestia installations.
+
+API access requires an admin key with the `list-all-user-objects` permission, or an unrestricted admin key.
+
+## v-list-all-web-domains
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-all-web-domains)
+
+list all web domains
+
+**Options**: `[FORMAT]`
+
+**Examples**:
+
+```bash
+v-list-all-web-domains json
+```
+
+This function obtains all web domains and their owning users in one CLI or API request, intended for bulk administration of large Hestia installations.
+
+API access requires an admin key with the `list-all-user-objects` permission, or an unrestricted admin key.
+
 ## v-list-api
 
 [Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-api)

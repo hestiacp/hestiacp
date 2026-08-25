@@ -32,6 +32,23 @@ function setup() {
     assert_output --partial "admin"
 }
 
+@test "[Success][ Restricted access key ] List all web domains" {
+    run v-add-access-key "$ROOT_USER" list-all-user-objects 'List all user objects test' plain
+    assert_success
+
+    restricted_hash="$output"
+    restricted_id="${restricted_hash%%:*}"
+
+    run curl -k -s -X POST -H "Content-Type: application/x-www-form-urlencoded" -d "hash=$restricted_hash&returncode=no&cmd=v-list-all-web-domains&arg1=json" "https://$server:$port/api/index.php"
+    assert_success
+
+    run jq -e 'type == "object"' <<< "$output"
+    assert_success
+
+    run v-delete-access-key "$restricted_id"
+    assert_success
+}
+
 @test "[Fail][ APIV2 ] Create new user" {
     run curl -k -s -X POST -H "Content-Type: application/x-www-form-urlencoded" -d "hash=$accesskey&returncode=yes&cmd=v-add-user&arg1=hestiatest&arg2=strongpassword&arg3=info@hestiacp.com" "https://$server:$port/api/index.php"
     assert_success

@@ -1,0 +1,2 @@
+ROLE='admin'
+COMMANDS='v-list-all-web-domains,v-list-all-mail-domains,v-list-all-dns-domains,v-list-all-databases'

@@ -388,6 +388,12 @@ function check_ip_not_banned(){
     done
 }
 
+@test "List all user objects: Empty result exits successfully" {
+    run v-list-all-databases plain
+    assert_success
+    refute_output
+}
+
 @test "User: Add new user" {
     run v-add-user $user $user $user@hestiacp.com default "Super Test"
     assert_success

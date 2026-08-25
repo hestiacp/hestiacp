@@ -97,7 +97,9 @@ list_all_user_objects_table() {
 	status=$?
 	[ "$status" -eq 0 ] || return "$status"
 
-	[ -n "$result" ] && printf '%s\n' "$result"
+	if [ -n "$result" ]; then
+		printf '%s\n' "$result"
+	fi
 }
 
 list_all_user_objects() {
@@ -116,7 +118,9 @@ list_all_user_objects() {
 			status=$?
 			[ "$status" -eq 0 ] || return "$status"
 
-			[ -n "$result" ] && printf '%s\n' "$result"
+			if [ -n "$result" ]; then
+				printf '%s\n' "$result"
+			fi
 			;;
 	esac
 }

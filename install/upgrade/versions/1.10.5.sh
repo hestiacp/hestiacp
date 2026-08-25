@@ -33,4 +33,7 @@ if [[ -f "$pma_old_tempdir_conf" ]]; then
 fi
 
 # Add the list-all-user-objects API key permission.
+if [ -f "$HESTIA/data/api/list-all-user-objects" ]; then
+	rm "$HESTIA/data/api/list-all-user-objects"
+fi
 cp "$HESTIA/install/common/api/list-all-user-objects" "$HESTIA/data/api/list-all-user-objects"

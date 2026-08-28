@@ -78,7 +78,7 @@ shell_list() {
 
 # PLAIN list function
 plain_list() {
-	printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n' \
+	printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n' \
 		"$DOMAIN" \
 		"$ANTIVIRUS" \
 		"$ANTISPAM" \

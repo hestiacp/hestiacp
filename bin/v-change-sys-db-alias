@@ -35,6 +35,11 @@ check_args '2' "$#" 'type alias'
 
 is_common_format_valid "$alias" "Alias"
 
+# Check that the alias is not empty
+if [[ -z "$alias" ]]; then
+	check_result "$E_ARGS" "Alias cannot be empty"
+fi
+
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 

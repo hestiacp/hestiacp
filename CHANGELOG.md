@@ -2,6 +2,412 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.10.4] - Service Release
+
+### Security
+
+- Hide accidental password leaking via auth.log / journalctl for sudo commands #5648
+- Add owner verification to `v-schedule-user-restore` #5645
+
+### Changes
+
+- Disable imap and smtp debug in Roundcube by default to prevent disk space issues #5642
+- Add check_hestia_demo_mode to all v-list-*-ssl scripts #5639
+- Update ubuntu Docker tag to v26 #5438
+- Update dependency @xterm/xterm to v6 #5627
+
+### Fixes
+
+- Fix database temp user creation failing on MySQL HeatWave due to Medium Password Policy #5453
+- Fix bug in SFTP backup rotation causing backup storage to not properly rotate #5646
+- Fix back link and Access Keys button pointing to wrong user #5635 #5638
+- Fix migration scripts not adding the imap_sieve plugin to the IMAP config #5637
+- Fix typo in serial causing an inconsistent default DNS serial value #5632
+- Improve File Manager installation validation and error logging #5634
+
+## [1.10.3] - Service Release
+
+### Changes
+
+- Update locales.
+
+### Fixes
+
+- Adjust text wrapping behavior in `u-text-break` utility #5621
+- Fix missing symfony/mime dependency in FileManager and reinstall on upgrade #5616
+- Fix 1.10.3.sh script to reinstall FileManager #5622
+- Reorder firewall rules after rule deleting preventing a bug with moving up / down causing duplicate lines #5623
+
+## [1.10.2] - Service Release
+
+### Changes
+
+- Bump file manager to version 7.15.1 #5608
+
+### Fixes
+
+- Change SOA EXPIRE from 3600000 to 1209600 #5606
+- Fix accidently overwrite VERSION during upgrade #5610
+
+## [1.10.1] - Service Release
+
+### Fixes
+
+- Set UPGRADE_REBUILD_USERS to true for mail templates rebuild
+
+## [1.10.0] - Feature Release
+
+### Security
+
+- Add validation for v-add-user-notification to prevent xss injection #5548
+- Added missing check to see if user can access DNS templates or is admin
+- Added that local usernames can't be used in Hestia. (#5134)
+- another urlencode+htmlecode fix (#5261)
+- Block access to internal folders and sensitive files (#5446)
+- chore(deps): update dependency symfony/process to v8.0.5 [security] (#5217)
+- Cleanup argument handling and improve kv parsing (#5309)
+- Fix an issue where a long text could by by pass 2FA check (#5203)
+- fix: don't leak the panel port in the phpMyAdmin restrict redirect
+- Fix: Sanitize user notification HTML and validate content
+- Harden DNS record listing escaping (#5196)
+- harden dns record validation (#5197)
+- Harden HTML/URL encoding across templates and views (#5245–#5258)
+- Improve cron command validation and sync loop logic (#5444)
+- Improve logging of Spamhaus DQS lookups without exposing query key (#5011)
+- Improve security by removing eval (#5509)
+- Quotes variables for `is_common_format_valid` (#5218)
+- refactor(snappymail): move config to /var/lib/snappymail and support hardened PHP-FPM (#5344)
+- Restrict ROOT_USER account modifications to the ROOT_USER session (#5547)
+- Secure SSL settings (#5109)
+- Secure user creation / password change to prevent sql injection (#5511)
+- Stop trusting unauthenticated proxy headers (#5273)
+- Use ROOT_USER variable instead of hard‑coded admin in restic restore scripts (#5201)
+- validate ip before assign (#5282)
+- validate-backup-fields (#5510)
+
+### Features
+
+- Add Debian/Ubuntu package versioning with PKG revision, release tags and distro suffix support #5423
+- Add default checked state for DKIM checkbox (#5220)
+- Add dynamic maxelem and hashsize to v-add-firewall-ipset (#5198)
+- Add ESMTP to SMTP banner in Exim configuration templates (#5140)
+- Add ext4 native quota support and improve filesystem quota handling (#5200)
+- Add Fail2Ban unban support to firewall ban removal script (#5139)
+- Add HTTP_HOST param, cleanup headers, and add WordPress HTTP/3 templates (#5185)
+- Add KexAlgorithms during Debian 13 installation (#5457)
+- Add OS-aware Hestia install version build
+- Add PHP 8.5 support for Laravel Quick Install (#5463)
+- Add posibility to build hestia package without any chroot (#5531)
+- Add root-hints during Debian 13 install (#5460)
+- Add Roundcube logrotate configuration and adjust file permissions (#5142)
+- Add SAN support to v-generate-ssl-cert (#4937)
+- Add script migrate_conf_to_debian_13.sh (#5419)
+- Add support for more PHP versions based on [official support documentation](https://make.wordpress.org/core/handbook/references/php-compatibility-and-wordpress-versions/) (#5287)
+- Add support for Ubuntu 26.04 LTS (#5458)
+- Add support to roundcube 1.7 (#5129)
+- Add zsh support for Hestia PATH configuration (#5191)
+- Add: Show user and bandwidth quota in the dashboard (#5031)
+- added Contao configs (#5105)
+- Adds cross-architecture and multi-OS package building #5499
+- Allow overriding BUILD_DIR via environment in hst_autocompile.sh
+- Bump hestia-php to version 8.5.9 (#5564)
+- Configure Nginx to handle Livewire v3 asset requests (#5260)
+- Count custom backend templates (e.g. *-PHP-x_y) in PHP version usage screen (#5228)
+- feat(Firewall): Added the ability to order firewall rules, changing their precedence within the iptables (#5080)
+- feat(installer): add osticket to quick install apps (#5471)
+- feat(Installer): add shopware to quick install apps (#5529)
+- feat(Installers): bump versions of apps #5518
+- feat(mail): implement DNSBL management CLI for Exim (#5464)
+- feat(webapp): add castopod to quick install apps (#5439)
+- feat(webapp): add classicpress to quick install apps (#5355)
+- feat(webapp): add concrete cms to quick install apps (#5459)
+- feat(webapp): add qloapps to quick install apps (#5417)
+- feat(webapp): update setups to install the latest version of apps (#5431)
+- feat: add option to restrict phpMyAdmin to Hestia SSO only #5504
+- feat: update public-suffix-list if older than 7 days (#5266)
+- Implement LE Pre- and Post Hooks. (#4925)
+- Improve Roundcube installation/upgrade process and bump to 1.7.3 (#5581, #5586, #5596)
+- Make JSON editable in File Manager (#5342)
+- PHP-8.5 support (#5157)
+- Prepare Debian 13 support merge (#5388)
+- run UTF-8 locale (#4704)
+- Update default and required PHP versions for Debian installation (#5461)
+- Update docs and CLI reference (#5597)
+- Update Exim config for Dovecot 2.4 (#5579)
+- Update locale files for Spanish, Estonian, Lao, and Ukrainian (#5598)
+- Update user composer installations during Hestia upgrade (#5553)
+
+### Bug fixes
+
+- Accept invalid hostname for CNAME records (#5291)
+- Add -f flag to rm command in v-add-mail-domain-smtp-relay to avoid error if ip file does not exist (#5086)
+- Add error meesage instead of fallback to chmod
+- Allow continuing installation when netplan config is missing (#5406)
+- Allow slash when adding username to smtp relay (Fixes #4973) (#4974)
+- Avoid recreating existing webmail DNS records (#5567)
+- Change NGINX template to 'dokuwiki' (#5445)
+- Check SFTP jail status before add/delete user jail operations (#5420)
+- Class change for latest version of file manager. (#4871)
+- Comment out ssl_stapling directives due to Lets Encrypt ending OCSP support in 2025 (#5002)
+- Ensure composer alias uses the user-defined PHP CLI (#5155)
+- Ensure newline at end of hestiaweb user crontab (#4992)
+- Fix "does not exist" (#4938)
+- Fix 1.9.5: rebuilding mail domains removes webmail SSL config (#5354)
+- Fix backup list conflict with usernames and dots #4918
+- Fix bug HestiaZipArchiver.php #5411
+- Fix bug in PR #4937 (#4995)
+- Fix bug in v-add-sys-sftp-jail when ssh jail is active (#4873)
+- Fix conflict with usernames and dots
+- Fix domain alias replacement logic when changing web domain (Fixes #5015) (#5041)
+- Fix dovecot conf path in installer and minor fixes (#5391)
+- Fix editing Panel Cronjobs for hestiaweb (#4891)
+- Fix File Manager HTTP 500 when session user is empty (#5318) (#5441)
+- Fix File Manager ignoring user language (#5374)
+- Fix FileGator 7.13.4 session migrate incompatibility in Hestia (#5241)
+- Fix get correct home for numeric-only usernames when creating jail mount (#5126)
+- Fix get_percentage() returning 0 when total limit is unlimited (#5395)
+- Fix hestia logrotate (#5148)
+- Fix hestia-php deb dependencies for Debian 13 (libzip5)
+- Fix if statement (#5440)
+- Fix incorrect comment in web/add/mail/index.php (#5428)
+- Fix incorrect default for UPGRADE_UPDATE_* and UPGRADE_REBUILD_USERS (#5578)
+- Fix invalid JSON output in v-list-mail-domain-ssl (#5524)
+- Fix ipv4_cidr validation (#5044)
+- Fix issue where settings are not accessible via web (#5565)
+- Fix issue with webterminal (#5591)
+- Fix issues with web-terminal on NodeJS 24 (#5560)
+- Fix Json format (#5059)
+- Fix Let's Encrypt YR1 chain validation (#5397)
+- Fix letsencrypt user key mismatch #5294
+- Fix logic error in IP list size check (#4941)
+- Fix missing Arabic language (#5375)
+- Fix missing dependency proftpd-mod-crypto on Ubuntu (#4895)
+- Fix missing HESTIA variable by sourcing hestia.conf (#5433)
+- Fix netplan permissions. (#5159)
+- Fix nginx 403 error page (#5495)
+- Fix PHP environment in Jailbash (chroot) #5434
+- Fix PHP environment in Jailbash (chroot) for Laravel and Composer
+- Fix php-fpm template to allow dynamically generated tracking code (#5212)
+- Fix phpMyAdmin SSO hostname detection
+- Fix port logging in v-add-firewall-rule (#5176)
+- Fix PR #5162 (#5343)
+- Fix PR #5254 (#5259)
+- Fix regex in postinst
+- Fix regression in upgrade_phppgadmin function (#5592)
+- Fix SCRIPT_FILENAME in phpmyadmin/phppgadmin templates (#5535)
+- Fix SpamAssassin service name for Ubuntu 24.04 (#5162)
+- Fix SSL panel breaking on certs with commas in Subject/Issuer DN (#5585)
+- Fix syshealth wrongly re-adding deleted config keys (#5584)
+- Fix the way Hestia validates chain certificate (#4887)
+- Fix upgrade_phppgadmin function (#5562)
+- Fix v-add-user-composer update (#5552)
+- fix user dir container with spaces in name #4917
+- fix v-list-database-host: correct path to configuration file (#5114)
+- Fix vstats link to use https when SSL enabled (#5183)
+- Fix(#4979): Fixes domain redirects not being suspended (#4991)
+- fix(biome): add aria-hidden and focusable="false" to decorative SVGs (#5407)
+- fix(filemanager): avoid blocked sudo chmod and grant .ssh traversal for hestiaweb (#5242)
+- fix(HestiaApp.php): increase timeout to handle long processes (#5432)
+- Fix(i18n): add locale fallback when en_US.UTF-8 is unavailable (#5386)
+- fix(installer): use single quotes to prevent password expansion (#5404)
+- fix(letsencrypt): detect user.key/KID mismatch in v-add-letsencrypt-user
+- fix(nginx): name the trusted header in the cloudflare.inc fallback (#5589)
+- fix(services): Hide DB services if not installed #5455
+- Fix: 421 error on all web and mail domains after Apache 2.4.64 update (#5058)
+- fix: Avoid crash during Hestia install (#5223)
+- Fix: avoid spamd execution in Exim when reject_spam is off (#5076)
+- fix: build restic repo path as $REPO/$user in restic scripts (#5100)
+- Fix: convert SRV record targets to IDN #5505
+- fix: convert SRV record targets to IDN so umlaut DNS zones load (#4951)
+- fix: enhance domain and alias format validation rules (#5128)
+- fix: error adding self-signed cert using default options (#5483)
+- Fix: handle missing session gracefully in SessionStorage (#5254)
+- fix: keep IFS local in restic web restore so nginx conf is valid (#4986)
+- fix: prefer the default route system IP for DNS cluster master
+- Fix: Preserve SSL and redirect on cert renewal failure (#5149)
+- fix: prevent deb packages from being moved to filesystem root
+- fix: prevent empty user variable from affecting multiple scripts (Fixes #4926) (#4928)
+- Fix: prevent session conflict in File Manager configuration (#5286)
+- Fix: Prevent truncation of database hostnames with underscores in RRD charts #5488
+- fix: Propagate private key detection to sftpc() (#5426)
+- fix: quota fstab mount error on XFS filesystem (#5048)
+- fix: readable file manager upload popup in dark theme (#5095)
+- Fix: Remove /public document root from Moodle Nginx templates (#5363)
+- Fix: resolve undefined array key "look" warnings in main.php (#5285)
+- fix: resolve undefined firewall movement variables and button visibility (#5466)
+- fix: resource limits and disk quota detection in v-add-user (#5172)
+- fix: restore all domains/databases in restic mail, dns and db restores (#4987)
+- fix: round humanized time values (#5468)
+- Fix: Sanitize debug panel variable output (#5550)
+- Fix: Set default SOA retry value to 1800 for DENIC compliance (#5030)
+- fix: set writable phpMyAdmin tmp dir to avoid template cache error (#5398)
+- Fix: The Database Creation tab doesn’t show the prefix
+- fix: update Hestia logrotate configuration during upgrade (#5512)
+- fix: use configured system IP as DNS cluster master (#5469)
+- fix: use first option as default for CLI webapp installations (#5482)
+- Fix: use ROOT_USER session variable for admin check in edit_server.php (#5043)
+- Fix: v-restart-ftp only reloads vsftpd; full restart needed to reload certs (#5005)
+- Fix: Webmail DNS record with alias inconsistencies (#5074)
+- Fixed error of database not downloading from UI (#4876)
+- Fixed Type Conversion bug (#4981)
+- Fixes path for object validation (#5167)
+- fixing 4997 (#4998)
+- Func/db.sh: Fix missing port argument for psql & pg_dump (#5278)
+- Gather uniform installation target information before install (#4694)
+- Harden add_object_key against invalid sed execution (#5566)
+- hestia-nginx: Allow access to installer images under src/app/WebApp/Installers (#5480)
+- Hide MySQL/MariaDB and PostgreSQL services from system list when local servers are not installed
+- Hide quotaon warnings when enabling quotas (#5465)
+- limit conf grep results to one for U_DISK_DIRS
+- Make v-extract-fs-archive fully non-interactive during extraction (#5436)
+- Minor fix remove useless cat (#5060)
+- Normalize blacklist IP parsing and improve sorting (#5219)
+- Relax ACME challenge regex (#5165)
+- Remove _domainkey entries from DKIM DNS script (#5161)
+- Remove the apache2-suexec-pristine package from the Debian installer (#4988)
+- Reorganize firewall rule processing for improved efficiency (#5442)
+- Skip useradd unless needed to avoid syslog flood on upgrades (#5557)
+- SOA to comply with checks and RIPE (#5305)
+- Sort backup file list before retention check (Fixes #5017) (#5018)
+- The Database Creation tab doesn’t show which prefix will be added
+- Typo in $KEEP_MONTHLY on v-backup-user-restic (#5409)
+- Update v-restore-user
+- Updated requested changes
+- Use RFC 1982-compliant monotonic DNS SOA serial numbers #5545
+- Use v-update-letsencrypt-ssl instead of v-update-letsencrypt (#5583)
+- v-restart-service: warn and continue when no init system reports status #5475
+- web-terminal: use php helper for session auth lookup (#5244)
+
+## [1.9.9] - Service Release
+
+### Security
+
+- Fix critical privilege escalation from low-privilege non-admin user to uid=0 root remote code execution via v-update-user-backup-exclusions ([GHSA-xffx-jj33-p2px](https://github.com/hestiacp/hestiacp/security/advisories/GHSA-xffx-jj33-p2px))
+
+## [1.9.8] - Service Release
+
+### Security
+
+- Restrict ROOT_USER account modifications to the ROOT_USER session (#5547) ([GHSA-c69h-jgpw-h9cj](https://github.com/hestiacp/hestiacp/security/advisories/GHSA-c69h-jgpw-h9cj))
+- Fix: Sanitize debug panel variable output / Delete button SSH key (#5550)
+- Add validation for v-add-user-notification to prevent XSS injection (#5548) ([GHSA-3g4r-pfpf-8697](https://github.com/hestiacp/hestiacp/security/advisories/GHSA-3g4r-pfpf-8697))
+- Validate value argument in v-schedule-user-restore-restic to prevent injection into backup queue file ([GHSA-2xw3-7h62-v4gf](https://github.com/hestiacp/hestiacp/security/advisories/GHSA-2xw3-7h62-v4gf))
+
+### Bug fixes
+
+- Fix invalid JSON output in v-list-mail-domain-ssl (#5524)
+- Fix: v-restart-ftp only reloads vsftpd; full restart needed to reload certs (#5005)
+- Fix bug in v-add-sys-sftp-jail when ssh jail is active (#4873)
+- Hide DB services if not installed (#5455)
+- Fix SCRIPT_FILENAME in phpmyadmin/phppgadmin templates (#5535)
+- Fix repo path lookup in v-schedule-user-restore-restic
+
+## [1.9.7] - Service Release
+
+### Version name changes
+
+Due to the implementation for building ARM64 packages on X86-64 hardware the versions of hestia-nginx / hestia-php has been changed the format used for 1.10 and forward.
+
+- hestia-nginx-x.y.z-revision-os+release_architecture.deb
+- hestia-php-x.y.z-revision-os+release_architecture.deb
+
+It has no effect on the working. Both "hestia" package and "hestia-web-terminal" will follow in the future.
+
+### Security
+
+- Unauthenticated Remote Code Execution via Session Deserialisation Mismatch in Web Terminal ([GHSA-gh6f-9gpr-x9m2](https://github.com/hestiacp/hestiacp/security/advisories/GHSA-gh6f-9gpr-x9m2))
+- IP Address Spoofing via `CF-Connecting-IP` Header ([GHSA-73p3-rqpv-59wx](https://github.com/hestiacp/hestiacp/security/advisories/GHSA-73p3-rqpv-59wx))
+- Cross-site Scripting (XSS) in Hestia Control Panel ([GHSA-fg7j-gpvw-2m73](https://github.com/hestiacp/hestiacp/security/advisories/GHSA-fg7j-gpvw-2m73))
+- Client to Root RCE via Newline Injection in v-add-cron-job and Eval Stdout Poisoning in parse_object_kv_list ([GHSA-5fpv-c8rg-x6r3](https://github.com/hestiacp/hestiacp/security/advisories/GHSA-5fpv-c8rg-x6r3))
+- Systematic Second-Order Command Injection in Queue System Leading to Root RCE ([GHSA-47mf-74xr-f8x9](https://github.com/hestiacp/hestiacp/security/advisories/GHSA-47mf-74xr-f8x9))
+- Root RCE via double eval() on user-controlled config data in parse_object_kv_list() (func/main.sh) ([GHSA-w3mx-xq85-8qqc](https://github.com/hestiacp/hestiacp/security/advisories/GHSA-w3mx-xq85-8qqc))
+- Low-privilege to root command execution via unescaped web.conf path fields evaluated by v-search-user-object ([GHSA-cr7q-frhq-xw4v](https://github.com/hestiacp/hestiacp/security/advisories/GHSA-cr7q-frhq-xw4v))
+- HestiaCP 1.9.6 — SQL Injection in Database Password (CWE-89) ([GHSA-8w7m-g9c2-9q9p](https://github.com/hestiacp/hestiacp/security/advisories/GHSA-8w7m-g9c2-9q9p))
+- HestiaCP <= 1.9.6 Authenticated Admin Takeover ([GHSA-fcq6-p8cj-xx3c](https://github.com/hestiacp/hestiacp/security/advisories/GHSA-fcq6-p8cj-xx3c))
+
+### Features
+
+- Add: JSON files can now be edited directly in the File Manager (#5342)
+
+### Bug fixes
+
+- Fix: Add validation for backup fields in v-schedule-user-restore (#5510)
+- Improve security by removing eval from search utilities (#5509)
+- Bump file manager to version 7.14.4 (#5508)
+- Secure database user creation / password change to prevent SQL injection (#5511)
+- Fix typo in $KEEP_MONTHLY on v-backup-user-restic (#5409)
+- Allow installation to continue when netplan config is missing (#5406)
+- Fix missing HESTIA variable by sourcing hestia.conf (#5433)
+- Check SFTP jail status before add/delete user jail operations (#5420)
+- Fix incorrect comment in web/add/mail/index.php (#5428)
+- Fix private key detection not being propagated to sftpc() (#5426)
+- Make v-extract-fs-archive fully non-interactive during extraction (#5436)
+- Fix if statement in installer (#5440)
+- Docs: Add mail cleanup guidance (#5371)
+- Bump Roundcube to version 1.6.17 (#5492)
+
+## [1.9.6] - Service Release
+
+### Bug fixes
+
+- Fix: Webmail DNS record with alias inconsistencies (#5074)
+- Fix: Rebuilding mail domains removes webmail SSL config (#5354)
+- Bump Roundcube to version 1.6.16 (#5357)
+
+## [1.9.5] - Service Release
+
+### Features
+
+- Add support for PHP 8.4 in Quick Install apps
+- Improve security and performance optimizations
+
+### Bug fixes
+
+- Fix: Cleanup argument handling and improve kv parsing (#5309)
+- Fix: 421 error on all web and mail domains after Apache 2.4.64 update
+- Fix: Set default SOA retry value to 1800 for DENIC compliance
+- Fix domain alias replacement logic when changing web domain
+- Fix ipv4_cidr validation
+- Update magento.tpl / magento.stpl for healthcheck support
+- Add: Show user and bandwidth quota in the dashboard
+- Sort backup file list before retention check
+- Improve logging of Spamhaus DQS lookups without exposing query key
+- Bump Roundcube to version 1.6.11
+- Remove the apache2-suexec-pristine package from the Debian installer
+- Fix domain redirects not being suspended
+- Ensure newline at end of hestiaweb user crontab
+- Allow slash when adding username to smtp relay
+- Prevent empty user variable from affecting multiple scripts
+- Fix editing Panel Cronjobs for hestiaweb
+- Fix missing dependency proftpd-mod-crypto on Ubuntu
+- Fix the way Hestia validates chain certificate
+- Class change for latest version of file manager
+
+## [1.9.4] - Service release
+
+- Dropping support for Ubuntu 20.04 for new installs
+
+### Bug fixes
+
+- Fix: 421 error on all web and mail domains after Apache 2.4.64 update (#5058)
+- Fix: Set default SOA retry value to 1800 for DENIC compliance (#5030)
+- Fix domain alias replacement logic when changing web domain (Fixes #5015) (#5041)
+- Fix ipv4_cidr validation (#5044)
+- Update magento.tpl / magento.stpl for healthcheck support (#5036)
+- Add: Show user and bandwidth quota in the dashboard
+- Sort backup file list before retention check (Fixes #5017) (#5018)
+- Improve logging of Spamhaus DQS lookups without exposing query key (#5011)
+- Bump Roundcube to version 1.6.11
+- Remove the apache2-suexec-pristine package from the Debian installer
+- Fix(#4979): Fixes domain redirects not being suspended (#4991)
+- Ensure newline at end of hestiaweb user crontab (#4992)
+- Allow slash when adding username to smtp relay (Fixes #4973) (#4974)
+- fix: prevent empty user variable from affecting multiple scripts (Fixes #4926) (#4928)
+- Fix editing Panel Cronjobs for hestiaweb (#4891)
+- Fix missing dependency proftpd-mod-crypto on Ubuntu (#4895)
+- Fix the way Hestia validates chain certificate (#4887)
+- Class change for latest version of file manager. (#4871)
+
 ## [1.9.3] - Service release
 
 ### Bug fixes

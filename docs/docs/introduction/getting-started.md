@@ -13,12 +13,12 @@ Hestia must be installed on top of a fresh operating system installation to ensu
 See custom installation below for further details.
 :::
 
-|                      | Minimum                                    | Recommended                          |
-| -------------------- | ------------------------------------------ | ------------------------------------ |
-| **CPU**              | 1 core, 64-bit                             | 4 cores                              |
-| **Memory**           | 1 GB (no SpamAssassin and ClamAV)          | 4 GB                                 |
-| **Disk**             | 10 GB HDD                                  | 40 GB SSD                            |
-| **Operating System** | Debian 11 or 12<br>Ubuntu 22.04, 24.04 LTS | Latest Debian <br> Latest Ubuntu LTS |
+|                      | Minimum                                         | Recommended                        |
+| -------------------- | ----------------------------------------------- | ---------------------------------- |
+| **CPU**              | 1 core, 64-bit                                  | 4 cores                            |
+| **Memory**           | 1 GB (no SpamAssassin and ClamAV)               | 4 GB                               |
+| **Disk**             | 10 GB HDD                                       | 40 GB SSD                          |
+| **Operating System** | Debian 12, 13<br>Ubuntu 22.04, 24.04, 26.04 LTS | Latest Debian<br>Latest Ubuntu LTS |
 
 ::: warning
 Hestia only runs on AMD64 / x86_64 and ARM64 / aarch64 processors. It also requires a 64bit operating system!
@@ -27,8 +27,8 @@ We currently do not support i386 or ARM7-based processors.
 
 ### Supported operating systems
 
-- Debian 11 or 12
-- Ubuntu 22.04 or 24.04
+- Debian 12 or 13
+- Ubuntu 22.04, 24.04 or 26.04
 
 ::: warning
 Hestia does not support non-LTS Operating systems. If you install it on, for example, Ubuntu 23.10, you will not receive support from us.
@@ -113,7 +113,7 @@ To choose what software gets installed, you can provide flags to the installatio
 ```
 
 :::tip
-Option --multiphp (Multi PHP) also accepts a comma seperated list of PHP versions. For example: --multiphp 8.3,8.4 will install PHP8.3 and PHP8.4
+Option --multiphp (Multi PHP) also accepts a comma separated list of PHP versions. For example: --multiphp 8.3,8.4 will install PHP8.3 and PHP8.4
 :::
 
 #### Example

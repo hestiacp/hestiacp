@@ -26,21 +26,32 @@ class HestiaZipArchiver extends ZipArchiver implements Service, ArchiverInterfac
 			return;
 		}
 
-		if (strpos($source, "/home") === false) {
-			$source = "/home/$v_user/" . $source;
+		$base = "/home/$v_user";
+
+		if (!str_starts_with($source, "/home")) {
+			$source = "$base/" . $source;
+		}
+		if (!str_starts_with($destination, "/home")) {
+			$destination = "$base/" . $destination;
 		}
 
-		if (strpos($destination, "/home") === false) {
-			$destination = "/home/$v_user/" . $destination;
+		$real_source = realpath($source);
+		$real_dest = realpath($destination);
+
+		if ($real_source === false || !str_starts_with($real_source, $base)) {
+			return;
+		}
+		if ($real_dest === false || !str_starts_with($real_dest, $base)) {
+			return;
 		}
 
 		exec(
 			"sudo /usr/local/hestia/bin/v-extract-fs-archive " .
 				quoteshellarg($v_user) .
 				" " .
-				quoteshellarg($source) .
+				quoteshellarg($real_source) .
 				" " .
-				quoteshellarg($destination),
+				quoteshellarg($real_dest),
 			$output,
 			$return_var,
 		);

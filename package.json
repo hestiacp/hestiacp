@@ -1,12 +1,12 @@
 {
 	"name": "hestia",
 	"private": true,
-	"version": "1.10.0~alpha",
+	"version": "1.10.4",
 	"description": "An open-source Linux web server control panel.",
 	"repository": "https://github.com/hestiacp/hestiacp",
 	"license": "GPL-3.0-or-later",
 	"type": "module",
-	"packageManager": "npm@11.8.0",
+	"packageManager": "npm@11.19.0",
 	"scripts": {
 		"docs:dev": "vitepress dev docs",
 		"docs:build": "vitepress build docs",
@@ -20,39 +20,49 @@
 		"prepare": "husky"
 	},
 	"dependencies": {
-		"@alpinejs/collapse": "^3.15.5",
-		"@fortawesome/fontawesome-free": "^7.1.0",
-		"alpinejs": "^3.15.5",
+		"@alpinejs/collapse": "^3.16.2",
+		"@fortawesome/fontawesome-free": "^7.3.1",
+		"alpinejs": "^3.16.2",
 		"chart.js": "^4.5.1",
 		"check-password-strength": "^3.0.0",
 		"floating-vue": "^5.2.2",
-		"nanoid": "^5.1.6",
+		"nanoid": "^5.1.16",
 		"normalize.css": "^8.0.1",
-		"xterm": "^5.3.0",
-		"xterm-addon-canvas": "^0.5.0",
-		"xterm-addon-webgl": "^0.16.0"
+		"@xterm/addon-webgl": "^0.19.0",
+		"@xterm/xterm": "^6.0.0"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "2.3.13",
-		"@prettier/plugin-php": "^0.24.0",
+		"@biomejs/biome": "2.5.10",
+		"@prettier/plugin-php": "^0.25.0",
 		"@testing-library/vue": "^8.1.0",
-		"@vitejs/plugin-vue": "^6.0.3",
-		"browserslist": "^4.28.1",
-		"esbuild": "^0.27.2",
+		"@vitejs/plugin-vue": "^6.0.8",
+		"browserslist": "^4.28.8",
+		"esbuild": "^0.28.2",
 		"husky": "^9.1.7",
-		"jsdom": "^27.4.0",
-		"lightningcss": "^1.31.1",
-		"lint-staged": "^16.2.7",
-		"markdownlint-cli2": "^0.20.0",
-		"prettier": "^3.8.3",
+		"jsdom": "^30.0.1",
+		"lightningcss": "^1.33.0",
+		"lint-staged": "^17.3.0",
+		"markdownlint-cli2": "^0.23.2",
+		"prettier": "^3.9.6",
 		"prettier-plugin-nginx": "^1.0.3",
-		"prettier-plugin-sh": "^0.18.0",
-		"prettier-plugin-sql": "^0.19.2",
+		"prettier-plugin-sh": "^0.19.0",
+		"prettier-plugin-sql": "^0.20.0",
 		"vitepress": "^1.6.4",
-		"vitest": "^4.0.18",
-		"vue": "^3.5.27"
+		"vitest": "^4.1.11",
+		"vue": "^3.5.41"
 	},
 	"browserslist": [
 		"defaults"
-	]
+	],
+	"overrides": {
+		"vite": "^6.4.3",
+		"postcss": {
+			"nanoid": "^3.3.18"
+		}
+	},
+	"allowScripts": {
+		"fsevents@2.3.3": true,
+		"esbuild@0.25.12": true,
+		"esbuild@0.28.2": true
+	}
 }

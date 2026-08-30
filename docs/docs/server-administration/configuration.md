@@ -48,7 +48,7 @@ systemctl restart hestia
 
 ## What does the “Enforce subdomain ownership” policy mean?
 
-In Hestia <=1.3.5 and Vesta, it was possible for users to create subdomains from domains that were owned by other users. For example, user Bob could create `bob.alice.com`, even if `alice.com` is owned by Alice. This could cause security issues and therefor we have decided to add a policy to control this behaviour. By default, the policy is enabled.
+In Hestia <=1.3.5 and Vesta, it was possible for users to create subdomains from domains that were owned by other users. For example, user Bob could create `bob.alice.com`, even if `alice.com` is owned by Alice. This could cause security issues and therefore we have decided to add a policy to control this behaviour. By default, the policy is enabled.
 
 You can tweak the policy for a specific domain and user, for example for a domain that has been used for testing:
 

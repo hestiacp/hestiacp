@@ -503,6 +503,23 @@ function check_ip_not_banned(){
   assert_success
   refute_output
 }
+
+@test "User: Add user notification with XSS payload is sanitized" {
+  run v-add-user-notification $user "XSS test" "<p>safe</p><script>alert(document.cookie)</script><img src=x onerror=alert(1)>"
+  assert_success
+  refute_output
+
+  run v-list-user-notifications $user csv
+  assert_success
+  assert_output --partial '<p>safe</p>'
+  refute_output --partial '<script>'
+  refute_output --partial 'onerror'
+
+  run v-delete-user-notification $user 2
+  assert_success
+  refute_output
+}
+
 @test "User: Acknowledge user notification" {
   run v-acknowledge-user-notification $user 1
   assert_success
@@ -1510,6 +1527,28 @@ function check_ip_not_banned(){
     refute_output
 }
 
+@test "DNS: Check serial rollover from max 32-bit value to 1 (RFC 1982)" {
+	[ -z "$DNS_SYSTEM" ] && skip
+
+	USER_DATA=$HESTIA/data/users/$user
+	local zn_conf="$HOMEDIR/$user/conf/dns/${domain}.db"
+
+	# Seed the zone's current serial to the max unsigned 32-bit value so the
+	# next update has to wrap around per RFC 1982 (serial 0 is skipped, so it
+	# wraps to 1, not 0).
+	sed -i -E "0,/^[[:space:]]*[0-9]+[[:space:]]*\$/s//                                            4294967295/" "$zn_conf"
+	assert_file_contains "$zn_conf" "4294967295"
+
+	# Any DNS-mutating command runs update_domain_serial() as a side effect.
+	run v-change-dns-domain-ttl $user $domain 3600
+	assert_success
+	refute_output
+
+	run get_object_value 'dns' 'DOMAIN' "$domain" '$SERIAL'
+	assert_success
+	assert_output "0000000001"
+}
+
 @test "DNS: Change domain ip" {
     run v-change-dns-domain-ip $user $domain 127.0.0.1
     assert_success
@@ -2046,6 +2085,39 @@ function check_ip_not_banned(){
   assert_file_not_exist /etc/exim4/smtp_relay.conf
 }
 
+@test "System: Add Mail DNSBL (Simple Syntax)" {
+  run v-add-sys-mail-dnsbl sbl.spamhaus.org
+  assert_success
+  refute_output
+  assert_file_exist $HESTIA/conf/dnsbl.conf
+  assert_file_exist /etc/exim4/dnsbl.conf
+  assert_file_contains $HESTIA/conf/dnsbl.conf "sbl.spamhaus.org"
+  assert_file_contains /etc/exim4/dnsbl.conf "sbl.spamhaus.org"
+}
+
+@test "System: Add Mail DNSBL (Complex Syntax)" {
+  run v-add-sys-mail-dnsbl zen.spamhaus.org!=127.255.255.252,127.255.255.254,127.255.255.255
+  assert_success
+  refute_output
+  assert_file_contains $HESTIA/conf/dnsbl.conf "zen.spamhaus.org!=127.255.255.252,127.255.255.254,127.255.255.255"
+  assert_file_contains /etc/exim4/dnsbl.conf "zen.spamhaus.org!=127.255.255.252,127.255.255.254,127.255.255.255"
+}
+
+@test "System: List Mail DNSBL" {
+  run v-list-sys-mail-dnsbl plain
+  assert_success
+  assert_output --partial "sbl.spamhaus.org"
+  assert_output --partial "zen.spamhaus.org!=127.255.255.252,127.255.255.254,127.255.255.255"
+}
+
+@test "System: Delete Mail DNSBL (Cleanup)" {
+  run v-delete-sys-mail-dnsbl sbl.spamhaus.org
+  assert_success
+  run v-delete-sys-mail-dnsbl zen.spamhaus.org!=127.255.255.252,127.255.255.254,127.255.255.255
+  assert_success
+}
+
+
 #----------------------------------------------------------#
 #                        Firewall                          #
 #----------------------------------------------------------#
@@ -2206,6 +2278,210 @@ echo   "1.2.3.4" >> $HESTIA/data/firewall/excludes.conf
   run v-delete-user-backup $user $(v-list-user-backups $user plain | cut -f1)
   assert_success
   run rm /backup/$user.log
+}
+
+#----------------------------------------------------------#
+#                  Backup exclusions                       #
+#----------------------------------------------------------#
+
+@test "Backup Exclusions: Domain with subpaths is allowed" {
+  echo "WEB='$domain:public_html/cache/:public_html/tmp/'
+DNS=''
+MAIL=''
+DB=''
+CRON=''
+USER=''" > /tmp/backup_exclusions_valid
+  run v-update-user-backup-exclusions $user /tmp/backup_exclusions_valid
+  assert_success
+  rm -f /tmp/backup_exclusions_valid
+
+  run v-list-user-backup-exclusions $user shell
+  assert_success
+  assert_output --partial "$domain:public_html/cache/:public_html/tmp/"
+}
+
+@test "Backup Exclusions: Wildcard for all is allowed" {
+  echo "WEB='*'
+DNS=''
+MAIL=''
+DB=''
+CRON=''
+USER=''" > /tmp/backup_exclusions_wildcard
+  run v-update-user-backup-exclusions $user /tmp/backup_exclusions_wildcard
+  assert_success
+  rm -f /tmp/backup_exclusions_wildcard
+
+  run v-list-user-backup-exclusions $user shell
+  assert_success
+  assert_output --partial "WEB:            *"
+}
+
+@test "Backup Exclusions: Mail domain with mailbox exclusions is allowed" {
+  echo "WEB=''
+DNS=''
+MAIL='$domain:info:support'
+DB=''
+CRON=''
+USER=''" > /tmp/backup_exclusions_mail
+  run v-update-user-backup-exclusions $user /tmp/backup_exclusions_mail
+  assert_success
+  rm -f /tmp/backup_exclusions_mail
+
+  run v-list-user-backup-exclusions $user shell
+  assert_success
+  assert_output --partial "$domain:info:support"
+}
+
+@test "Backup Exclusions: Database name is allowed" {
+  echo "WEB=''
+DNS=''
+MAIL=''
+DB='$database'
+CRON=''
+USER=''" > /tmp/backup_exclusions_db
+  run v-update-user-backup-exclusions $user /tmp/backup_exclusions_db
+  assert_success
+  rm -f /tmp/backup_exclusions_db
+
+  run v-list-user-backup-exclusions $user shell
+  assert_success
+  assert_output --partial "$database"
+}
+
+@test "Backup Exclusions: Database entry with domain-style colon is rejected" {
+  echo "WEB=''
+DNS=''
+MAIL=''
+DB='$database:cache'
+CRON=''
+USER=''" > /tmp/backup_exclusions_db_invalid
+  run v-update-user-backup-exclusions $user /tmp/backup_exclusions_db_invalid
+  assert_failure $E_INVALID
+  rm -f /tmp/backup_exclusions_db_invalid
+}
+
+@test "Backup Exclusions: User directory name is allowed" {
+  echo "WEB=''
+DNS=''
+MAIL=''
+DB=''
+CRON=''
+USER='backups/old'" > /tmp/backup_exclusions_userdir
+  run v-update-user-backup-exclusions $user /tmp/backup_exclusions_userdir
+  assert_success
+  rm -f /tmp/backup_exclusions_userdir
+
+  run v-list-user-backup-exclusions $user shell
+  assert_success
+  assert_output --partial "backups/old"
+}
+
+@test "Backup Exclusions: User directory with domain-style colon is rejected" {
+  echo "WEB=''
+DNS=''
+MAIL=''
+DB=''
+CRON=''
+USER='$domain:cache'" > /tmp/backup_exclusions_userdir_invalid
+  run v-update-user-backup-exclusions $user /tmp/backup_exclusions_userdir_invalid
+  assert_failure $E_INVALID
+  rm -f /tmp/backup_exclusions_userdir_invalid
+}
+
+@test "Backup Exclusions: DNS bare domain is allowed" {
+  echo "WEB=''
+DNS='$domain'
+MAIL=''
+DB=''
+CRON=''
+USER=''" > /tmp/backup_exclusions_dns
+  run v-update-user-backup-exclusions $user /tmp/backup_exclusions_dns
+  assert_success
+  rm -f /tmp/backup_exclusions_dns
+}
+
+@test "Backup Exclusions: DNS with colon segment is rejected (no record-level exclusion exists)" {
+  echo "WEB=''
+DNS='$domain:record1'
+MAIL=''
+DB=''
+CRON=''
+USER=''" > /tmp/backup_exclusions_dns_invalid
+  run v-update-user-backup-exclusions $user /tmp/backup_exclusions_dns_invalid
+  assert_failure $E_INVALID
+  rm -f /tmp/backup_exclusions_dns_invalid
+}
+
+@test "Backup Exclusions: CRON wildcard is allowed" {
+  echo "WEB=''
+DNS=''
+MAIL=''
+DB=''
+CRON='*'
+USER=''" > /tmp/backup_exclusions_cron
+  run v-update-user-backup-exclusions $user /tmp/backup_exclusions_cron
+  assert_success
+  rm -f /tmp/backup_exclusions_cron
+
+  run v-list-user-backup-exclusions $user shell
+  assert_success
+  assert_output --partial "CRON:           *"
+}
+
+@test "Backup Exclusions: CRON non-wildcard value is rejected (no per-job exclusion exists)" {
+  echo "WEB=''
+DNS=''
+MAIL=''
+DB=''
+CRON='some-job'
+USER=''" > /tmp/backup_exclusions_cron_invalid
+  run v-update-user-backup-exclusions $user /tmp/backup_exclusions_cron_invalid
+  assert_failure $E_INVALID
+  rm -f /tmp/backup_exclusions_cron_invalid
+}
+
+@test "Backup Exclusions: Embedded newline / PATH injection is rejected" {
+  printf "WEB='domain1.test\nPATH=/tmp/fakebin:/usr/local/hestia/bin\nMARKER_END'\n" > /tmp/backup_exclusions_path
+  run v-update-user-backup-exclusions $user /tmp/backup_exclusions_path
+  assert_failure $E_INVALID
+  rm -f /tmp/backup_exclusions_path
+}
+
+@test "Backup Exclusions: Path traversal is rejected" {
+  echo "WEB='$domain:public_html/../../../etc'
+DNS=''
+MAIL=''
+DB=''
+CRON=''
+USER=''" > /tmp/backup_exclusions_traversal
+  run v-update-user-backup-exclusions $user /tmp/backup_exclusions_traversal
+  assert_failure $E_INVALID
+  rm -f /tmp/backup_exclusions_traversal
+}
+
+@test "Backup Exclusions: Leading dash (tar flag injection) is rejected" {
+  echo "WEB='$domain:--checkpoint=1'
+DNS=''
+MAIL=''
+DB=''
+CRON=''
+USER=''" > /tmp/backup_exclusions_dash
+  run v-update-user-backup-exclusions $user /tmp/backup_exclusions_dash
+  assert_failure $E_INVALID
+  rm -f /tmp/backup_exclusions_dash
+}
+
+@test "Backup Exclusions: Unknown key is rejected" {
+  echo "WEB=''
+EVIL='x'" > /tmp/backup_exclusions_unknownkey
+  run v-update-user-backup-exclusions $user /tmp/backup_exclusions_unknownkey
+  assert_failure $E_INVALID
+  rm -f /tmp/backup_exclusions_unknownkey
+}
+
+@test "Backup Exclusions: Clean up" {
+  run v-delete-user-backup-exclusions $user
+  assert_success
 }
 
 #----------------------------------------------------------#

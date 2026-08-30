@@ -106,7 +106,7 @@ fi
 if [ -n "$(echo $src_file | grep -i '.zst')" ] && [ -z "$x" ]; then
 	user_exec mkdir -p "$dst_dir" > /dev/null 2>&1
 	user_exec mv "$src_file" "$dst_dir" > /dev/null 2>&1
-	user_exec pzstd -d "$dst_dir/$(basename $src_file)" > /dev/null 2>&1
+	user_exec pzstd -d -f "$dst_dir/$(basename $src_file)" > /dev/null 2>&1
 	rc=$?
 fi
 
@@ -114,7 +114,7 @@ fi
 if [ -n "$(echo $src_file | grep -i '.gz')" ] && [ -z "$x" ]; then
 	user_exec mkdir -p "$dst_dir" > /dev/null 2>&1
 	user_exec mv "$src_file" "$dst_dir" > /dev/null 2>&1
-	user_exec gzip -d "$dst_dir/$(basename $src_file)" > /dev/null 2>&1
+	user_exec gzip -d -f "$dst_dir/$(basename $src_file)" > /dev/null 2>&1
 	rc=$?
 fi
 
@@ -122,14 +122,14 @@ fi
 if [ -n "$(echo $src_file | grep -i '.bz')" ] && [ -z "$x" ]; then
 	user_exec mkdir -p "$dst_dir" > /dev/null 2>&1
 	user_exec mv "$src_file" "$dst_dir" # >/dev/null 2>&1
-	user_exec bzip2 -d "$dst_dir/$(basename $src_file)" > /dev/null 2>&1
+	user_exec bzip2 -d -f "$dst_dir/$(basename $src_file)" > /dev/null 2>&1
 	rc=$?
 fi
 
 # Extracting ziped archive
 if [ -n "$(echo $src_file | grep -i '.zip')" ]; then
 	user_exec mkdir -p "$dst_dir" > /dev/null 2>&1
-	user_exec unzip "$src_file" -d "$dst_dir" > /dev/null 2>&1
+	user_exec unzip -o "$src_file" -d "$dst_dir" > /dev/null 2>&1
 	rc=$?
 fi
 
@@ -137,7 +137,7 @@ fi
 if [ -n "$(echo $src_file | grep -i '.7z')" ]; then
 	user_exec mkdir -p "$dst_dir" > /dev/null 2>&1
 	user_exec mv "$src_file" "$dst_dir" > /dev/null 2>&1
-	user_exec p7zip -d "$src_file" > /dev/null 2>&1
+	user_exec p7zip -d -f "$src_file" > /dev/null 2>&1
 	rc=$?
 fi
 
@@ -157,7 +157,7 @@ fi
 # Extracting rared archive
 if [ -n "$(echo $src_file | grep -i '.rar')" ]; then
 	user_exec mkdir -p "$dst_dir" > /dev/null 2>&1
-	user_exec unrar "$src_file" "$dst_dir" > /dev/null 2>&1
+	user_exec unrar -x -f "$src_file" "$dst_dir" > /dev/null 2>&1
 	rc=$?
 fi
 

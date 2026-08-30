@@ -536,13 +536,14 @@ EOPHP
 
 # Update domain zone
 update_domain_zone() {
+	local serial_base=3000000000
 	domain_param=$(grep "DOMAIN='$domain'" $USER_DATA/dns.conf)
 	parse_object_kv_list "$domain_param"
 	local zone_ttl="$TTL"
 	local value_for_zone
 	SOA=$(idn2 --quiet "$SOA")
 	if [ -z "$SERIAL" ]; then
-		SERIAL=$(date +'%Y%m%d01')
+		SERIAL=$serial_base
 	fi
 	if [[ "$domain" = *[![:ascii:]]* ]]; then
 		domain_idn=$(idn2 --quiet "$domain")
@@ -565,10 +566,10 @@ update_domain_zone() {
 	echo "\$TTL $zone_ttl
 @    IN    SOA    $SOA.    root.$domain_idn. (
                                             $SERIAL
-                                            7200
+                                            14400
                                             $refresh
                                             1209600
-                                            180 )
+                                            3600 )
 " > "$zn_conf"
 
 	while IFS= read -r line; do
@@ -581,6 +582,16 @@ update_domain_zone() {
 		RECORD=$(idn2 --quiet "$RECORD")
 		if [ "$TYPE" = 'CNAME' ] || [ "$TYPE" = 'MX' ]; then
 			VALUE=$(idn2 --quiet "$VALUE")
+		elif [ "$TYPE" = 'SRV' ]; then
+			# SRV value is "weight port target" (the priority is stored separately
+			# in the PRIORITY field). Only the trailing target is a host name, so
+			# parse the fields and convert just that, leaving the numeric
+			# weight/port and a "." target (service unavailable) untouched.
+			read -r srv_weight srv_port srv_target <<< "$VALUE"
+			if [ "$srv_target" != "." ]; then
+				srv_target=$(idn2 --quiet "$srv_target")
+			fi
+			VALUE="$srv_weight $srv_port $srv_target"
 		fi
 
 		if [ "$TYPE" = 'TXT' ]; then
@@ -597,7 +608,7 @@ update_domain_zone() {
 						txtlength=$(($txtlength - 2))
 						VALUE=${VALUE:1:txtlength}
 					fi
-					VALUE=$(echo $VALUE | fold -w 255 | xargs -I '$' echo -n '"$"')
+					VALUE=$(echo "$VALUE" | fold -w 255 | xargs -I '$' echo -n '"$"')
 				fi
 			fi
 		fi
@@ -611,26 +622,33 @@ update_domain_zone() {
 
 # Update zone serial
 update_domain_serial() {
-	zn_conf="$HOMEDIR/$user/conf/dns/$domain.db"
-	if [ -e $zn_conf ]; then
-		zn_serial=$(head $zn_conf | grep 'SOA' -A1 | tail -n 1 | sed "s/ //g")
-		s_date=$(echo ${zn_serial:0:8})
-		c_date=$(date +'%Y%m%d')
-		if [ "$s_date" == "$c_date" ]; then
-			cur_value=$(echo ${zn_serial:8})
-			new_value=$(expr $cur_value + 1)
-			len_value=$(expr length $new_value)
-			if [ 1 -eq "$len_value" ]; then
-				new_value='0'$new_value
-			fi
-			serial="$c_date""$new_value"
-		else
-			serial="$(date +'%Y%m%d01')"
-		fi
-	else
-		serial="$(date +'%Y%m%d01')"
+	local serial_base=3000000000
+	local serial_max=4294967295
+	local zn_conf="$HOMEDIR/$user/conf/dns/$domain.db"
+	local zn_serial
+	local serial
+
+	if [[ -f "$zn_conf" ]]; then
+		zn_serial=$(head "$zn_conf" | grep -m1 'SOA' -A1 | tail -n1 | tr -d ' ')
 	fi
-	add_object_key "dns" 'DOMAIN' "$domain" 'SERIAL' 'RECORDS'
+
+	# Old format YYYYMMDDNN, years 2000-2029
+	local old_format_re='^20[0-2][0-9](0[1-9]|1[0-2])(0[1-9]|[12][0-9]|3[01])[0-9]{2}$'
+
+	if [[ -z "$zn_serial" ]] || [[ ! "$zn_serial" =~ ^[0-9]+$ ]] \
+		|| [[ "$zn_serial" =~ $old_format_re ]]; then
+		serial=$serial_base
+	else
+		serial=$((10#$zn_serial + 1))
+
+		if ((serial > serial_max)); then
+			serial=1
+		fi
+	fi
+
+	serial=$(printf '%010u' "$serial")
+
+	add_object_key 'dns' 'DOMAIN' "$domain" 'SERIAL' 'RECORDS'
 	update_object_value 'dns' 'DOMAIN' "$domain" '$SERIAL' "$serial"
 }
 
@@ -804,26 +822,43 @@ add_mail_ssl_config() {
 	# Check if using custom / wildcard mail certificate
 	wildcard_domain="\\*.$(echo "$domain" | cut -f 1 -d . --complement)"
 	mail_cert_match=$($BIN/v-list-mail-domain-ssl $user $domain | awk '/SUBJECT|ALIASES/' | grep -wE " $domain| $wildcard_domain")
+	dovecot_version="$(dovecot --version | cut -f -2 -d .)"
 
 	if [ -n "$mail_cert_match" ]; then
-		# Add domain SSL configuration to dovecot
-		echo "" >> /etc/dovecot/conf.d/domains/$domain.conf
-		echo "local_name $domain {" >> /etc/dovecot/conf.d/domains/$domain.conf
-		echo "  ssl_cert = <$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem" >> /etc/dovecot/conf.d/domains/$domain.conf
-		echo "  ssl_key = <$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.key" >> /etc/dovecot/conf.d/domains/$domain.conf
-		echo "}" >> /etc/dovecot/conf.d/domains/$domain.conf
-
+		if [[ "$dovecot_version" = "2.4" ]]; then
+			# Add domain SSL configuration to dovecot
+			echo "" >> /etc/dovecot/conf.d/domains/$domain.conf
+			echo "local_name $domain {" >> /etc/dovecot/conf.d/domains/$domain.conf
+			echo "  ssl_server_cert_file = $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem" >> /etc/dovecot/conf.d/domains/$domain.conf
+			echo "  ssl_server_key_file = $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.key" >> /etc/dovecot/conf.d/domains/$domain.conf
+			echo "}" >> /etc/dovecot/conf.d/domains/$domain.conf
+		else
+			echo "" >> /etc/dovecot/conf.d/domains/$domain.conf
+			echo "local_name $domain {" >> /etc/dovecot/conf.d/domains/$domain.conf
+			echo "  ssl_cert = <$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem" >> /etc/dovecot/conf.d/domains/$domain.conf
+			echo "  ssl_key = <$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.key" >> /etc/dovecot/conf.d/domains/$domain.conf
+			echo "}" >> /etc/dovecot/conf.d/domains/$domain.conf
+		fi
 		# Add domain SSL configuration to exim4
 		ln -s $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem $HESTIA/ssl/mail/$domain.crt
 		ln -s $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.key $HESTIA/ssl/mail/$domain.key
 	fi
 
 	# Add domain SSL configuration to dovecot
-	echo "" >> /etc/dovecot/conf.d/domains/$domain.conf
-	echo "local_name mail.$domain {" >> /etc/dovecot/conf.d/domains/$domain.conf
-	echo "  ssl_cert = <$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem" >> /etc/dovecot/conf.d/domains/$domain.conf
-	echo "  ssl_key = <$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.key" >> /etc/dovecot/conf.d/domains/$domain.conf
-	echo "}" >> /etc/dovecot/conf.d/domains/$domain.conf
+	if [[ "$dovecot_version" = "2.4" ]]; then
+		# Add domain SSL configuration to dovecot
+		echo "" >> /etc/dovecot/conf.d/domains/$domain.conf
+		echo "local_name mail.$domain {" >> /etc/dovecot/conf.d/domains/$domain.conf
+		echo "  ssl_server_cert_file = $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem" >> /etc/dovecot/conf.d/domains/$domain.conf
+		echo "  ssl_server_key_file = $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.key" >> /etc/dovecot/conf.d/domains/$domain.conf
+		echo "}" >> /etc/dovecot/conf.d/domains/$domain.conf
+	else
+		echo "" >> /etc/dovecot/conf.d/domains/$domain.conf
+		echo "local_name mail.$domain {" >> /etc/dovecot/conf.d/domains/$domain.conf
+		echo "  ssl_cert = <$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem" >> /etc/dovecot/conf.d/domains/$domain.conf
+		echo "  ssl_key = <$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.key" >> /etc/dovecot/conf.d/domains/$domain.conf
+		echo "}" >> /etc/dovecot/conf.d/domains/$domain.conf
+	fi
 
 	# Add domain SSL configuration to exim4
 	ln -s $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem $HESTIA/ssl/mail/mail.$domain.crt
@@ -1026,25 +1061,61 @@ get_domain_values() {
 #----------------------------------------------------------#
 
 is_valid_extension() {
+	local psl
+	psl="https://publicsuffix.org/list/public_suffix_list.dat"
 	if [ ! -e "$HESTIA/data/extensions/public_suffix_list.dat" ]; then
-		mkdir $HESTIA/data/extensions/
-		chmod 750 $HESTIA/data/extensions/
-		/usr/bin/wget --tries=3 --timeout=15 --read-timeout=15 --waitretry=3 --no-dns-cache --quiet -O $HESTIA/data/extensions/public_suffix_list.dat https://raw.githubusercontent.com/publicsuffix/list/master/public_suffix_list.dat
+		mkdir -p "$HESTIA/data/extensions/"
+		chmod 750 "$HESTIA/data/extensions/"
+		if /usr/bin/wget --tries=3 --timeout=15 --read-timeout=15 --waitretry=3 --no-dns-cache --quiet -O "$HESTIA/data/extensions/public_suffix_list.dat.tmp" "$psl"; then
+			mv "$HESTIA/data/extensions/public_suffix_list.dat.tmp" "$HESTIA/data/extensions/public_suffix_list.dat"
+		else
+			rm -f "$HESTIA/data/extensions/public_suffix_list.dat.tmp"
+		fi
+	elif find "$HESTIA/data/extensions/public_suffix_list.dat" -mtime +7 2> /dev/null | grep -q .; then
+		mv "$HESTIA/data/extensions/public_suffix_list.dat" "$HESTIA/data/extensions/public_suffix_list.dat.save"
+		if /usr/bin/wget --tries=3 --timeout=15 --read-timeout=15 --waitretry=3 --no-dns-cache --quiet -O "$HESTIA/data/extensions/public_suffix_list.dat.tmp" "$psl"; then
+			mv "$HESTIA/data/extensions/public_suffix_list.dat.tmp" "$HESTIA/data/extensions/public_suffix_list.dat"
+			rm -f "$HESTIA/data/extensions/public_suffix_list.dat.save"
+		else
+			rm -f "$HESTIA/data/extensions/public_suffix_list.dat.tmp"
+			mv "$HESTIA/data/extensions/public_suffix_list.dat.save" "$HESTIA/data/extensions/public_suffix_list.dat"
+		fi
+	fi
+	if [ ! -e "$HESTIA/data/extensions/public_suffix_list.dat" ]; then
+		check_result "$E_NOTEXIST" "public_suffix_list.dat not found"
 	fi
 	test_domain=$(idn2 -d "$1")
-	extension=$(/bin/echo "${test_domain}" | /usr/bin/rev | /usr/bin/cut -d "." --output-delimiter="." -f 1 | /usr/bin/rev)
-	exten=$(grep "^$extension\$" $HESTIA/data/extensions/public_suffix_list.dat)
+	extension="${test_domain##*.}"
+	exten=$(grep -Fx "$extension" "$HESTIA/data/extensions/public_suffix_list.dat")
 }
 
 is_valid_2_part_extension() {
+	local psl
+	psl="https://publicsuffix.org/list/public_suffix_list.dat"
 	if [ ! -e "$HESTIA/data/extensions/public_suffix_list.dat" ]; then
-		mkdir $HESTIA/data/extensions/
-		chmod 750 $HESTIA/data/extensions/
-		/usr/bin/wget --tries=3 --timeout=15 --read-timeout=15 --waitretry=3 --no-dns-cache --quiet -O $HESTIA/data/extensions/public_suffix_list.dat https://raw.githubusercontent.com/publicsuffix/list/master/public_suffix_list.dat
+		mkdir -p "$HESTIA/data/extensions/"
+		chmod 750 "$HESTIA/data/extensions/"
+		if /usr/bin/wget --tries=3 --timeout=15 --read-timeout=15 --waitretry=3 --no-dns-cache --quiet -O "$HESTIA/data/extensions/public_suffix_list.dat.tmp" "$psl"; then
+			mv "$HESTIA/data/extensions/public_suffix_list.dat.tmp" "$HESTIA/data/extensions/public_suffix_list.dat"
+		else
+			rm -f "$HESTIA/data/extensions/public_suffix_list.dat.tmp"
+		fi
+	elif find "$HESTIA/data/extensions/public_suffix_list.dat" -mtime +7 2> /dev/null | grep -q .; then
+		mv "$HESTIA/data/extensions/public_suffix_list.dat" "$HESTIA/data/extensions/public_suffix_list.dat.save"
+		if /usr/bin/wget --tries=3 --timeout=15 --read-timeout=15 --waitretry=3 --no-dns-cache --quiet -O "$HESTIA/data/extensions/public_suffix_list.dat.tmp" "$psl"; then
+			mv "$HESTIA/data/extensions/public_suffix_list.dat.tmp" "$HESTIA/data/extensions/public_suffix_list.dat"
+			rm -f "$HESTIA/data/extensions/public_suffix_list.dat.save"
+		else
+			rm -f "$HESTIA/data/extensions/public_suffix_list.dat.tmp"
+			mv "$HESTIA/data/extensions/public_suffix_list.dat.save" "$HESTIA/data/extensions/public_suffix_list.dat"
+		fi
+	fi
+	if [ ! -e "$HESTIA/data/extensions/public_suffix_list.dat" ]; then
+		check_result "$E_NOTEXIST" "public_suffix_list.dat not found"
 	fi
 	test_domain=$(idn2 -d "$1")
-	extension=$(/bin/echo "${test_domain}" | /usr/bin/rev | /usr/bin/cut -d "." --output-delimiter="." -f 1-2 | /usr/bin/rev)
-	exten=$(grep "^$extension\$" $HESTIA/data/extensions/public_suffix_list.dat)
+	extension=$(/bin/echo "${test_domain}" | awk -F. '{print $(NF-1)"."$NF}')
+	exten=$(grep -Fx "$extension" "$HESTIA/data/extensions/public_suffix_list.dat")
 }
 
 get_base_domain() {

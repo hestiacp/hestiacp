@@ -13,18 +13,18 @@
 # shellcheck source=/etc/hestiacp/hestia.conf
 source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
-source $HESTIA/func/main.sh
+source "$HESTIA/func/main.sh"
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 # load config file
 source_conf "$HESTIA/install/upgrade/upgrade.conf"
 
-MODE=$1
+MODE="$1"
 user="$ROOT_USER"
 
 FM_INSTALL_DIR="$HESTIA/web/fm"
-FM_FILE="filegator_latest"
-FM_URL="https://github.com/filegator/static/raw/master/builds/filegator_latest.zip"
+FM_FILE="filegator_v${fm_v}"
+FM_URL="https://github.com/filegator/static/raw/master/builds/${FM_FILE}.zip"
 COMPOSER_BIN="$HOMEDIR/$user/.composer/composer"
 
 #----------------------------------------------------------#
@@ -32,26 +32,25 @@ COMPOSER_BIN="$HOMEDIR/$user/.composer/composer"
 #----------------------------------------------------------#
 
 # Checking root permissions
-if [ "x$(id -u)" != 'x0' ]; then
-	echo "ERROR: v-add-sys-filemanager can be run executed only by root user"
+if [[ "x$(id -u)" != 'x0' ]]; then
+	echo "ERROR: v-add-sys-filemanager can only be executed by the root user" >&2
+	"$BIN/v-log-action" "system" "Error" "Plugins" "File Manager installation failed: root privileges required (Version: $fm_v)."
 	exit 10
 fi
 
-# Ensure that $HESTIA (/usr/local/hestia/) and other variables are valid.
-if [ -z "$HESTIA" ]; then
-	HESTIA="/usr/local/hestia"
-fi
-
-if [ -z "$HOMEDIR" ] || [ -z "$HESTIA_INSTALL_DIR" ]; then
-	echo "ERROR: Environment variables not present, installation aborted."
+if [[ -z "$HOMEDIR" || -z "$HESTIA_INSTALL_DIR" ]]; then
+	echo "ERROR: Environment variables not present, installation aborted." >&2
+	"$BIN/v-log-action" "system" "Error" "Plugins" "File Manager installation failed: required environment variables are missing (Version: $fm_v)."
 	exit 2
 fi
 
 # Ensure that Composer is installed for the user before continuing as it is a dependency of the File Manager.
-if [ ! -f "$COMPOSER_BIN" ]; then
-	$BIN/v-add-user-composer "$user"
-	if [ $? -ne 0 ]; then
-		$BIN/v-add-user-notification "$ROOT_USER" 'Composer installation failed!' '<p class="u-text-bold">The File Manager will not work without Composer.</p><p>Please try running the installer manually from a shell session:<br><code>v-add-sys-filemanager</code></p><p>If this continues, <a href="https://github.com/hestiacp/hestiacp/issues" target="_blank">open an issue on GitHub</a>.</p>'
+if [[ ! -f "$COMPOSER_BIN" ]]; then
+	"$BIN/v-add-user-composer" "$user"
+	if [[ $? -ne 0 ]]; then
+		echo "ERROR: Composer installation failed!" >&2
+		"$BIN/v-add-user-notification" "$ROOT_USER" 'Composer installation failed!' '<p class="u-text-bold">The File Manager will not work without Composer.</p><p>Please try running the installer manually from a shell session:<br><code>v-add-sys-filemanager</code></p><p>If this continues, <a href="https://github.com/hestiacp/hestiacp/issues" target="_blank">open an issue on GitHub</a>.</p>'
+		"$BIN/v-log-action" "system" "Error" "Plugins" "File Manager installation failed: Composer installation failed (Version: $fm_v)."
 		exit 1
 	fi
 fi
@@ -65,42 +64,75 @@ check_hestia_demo_mode
 
 openssl_installed=$(/usr/local/hestia/php/bin/php -m | grep openssl)
 
-rm --recursive --force "$FM_INSTALL_DIR"
+# Download and verify package in a temporary directory, without touching FM_INSTALL_DIR yet
+FM_TMP_DIR=$(mktemp -d)
+trap 'rm -rf "$FM_TMP_DIR"' EXIT
+FM_ZIP="${FM_TMP_DIR}/${FM_FILE}.zip"
+
+wget "$FM_URL" --quiet -O "$FM_ZIP"
+
+# Check that the file exists and is not 0 bytes
+if [[ ! -s "$FM_ZIP" ]]; then
+	echo "ERROR: File Manager download failed or the downloaded file is empty!" >&2
+	"$BIN/v-add-user-notification" "$ROOT_USER" 'File Manager installation failed!' '<p>Package download failed or file is empty.</p>'
+	"$BIN/v-log-action" "system" "Error" "Plugins" "File Manager installation failed: package download failed or file is empty (Version: $fm_v)."
+	exit 1
+fi
+
+# Check that it is actually a valid zip file (not just that it has the extension)
+if ! unzip -tqq "$FM_ZIP" > /dev/null 2>&1; then
+	echo "ERROR: Downloaded File Manager package is not a valid zip file!" >&2
+	"$BIN/v-add-user-notification" "$ROOT_USER" 'File Manager installation failed!' '<p>Downloaded package is not a valid ZIP file.</p>'
+	"$BIN/v-log-action" "system" "Error" "Plugins" "File Manager installation failed: downloaded package is not a valid ZIP file (Version: $fm_v)."
+	exit 1
+fi
+
+# We only get here if the downloaded package is valid: now it's safe to clean up
+rm -rf "$FM_INSTALL_DIR"
 mkdir -p "$FM_INSTALL_DIR"
-cd "$FM_INSTALL_DIR"
 
-[ ! -f "${FM_INSTALL_DIR}/${FM_FILE}" ] && wget "$FM_URL" --quiet -O "${FM_INSTALL_DIR}/${FM_FILE}.zip"
+if ! unzip -qq "$FM_ZIP" -d "$FM_INSTALL_DIR"; then
+	echo "ERROR: Failed to extract File Manager package!" >&2
+	"$BIN/v-add-user-notification" "$ROOT_USER" 'File Manager installation failed!' '<p>Package extraction failed.</p>'
+	"$BIN/v-change-sys-config-value" 'FILE_MANAGER' 'false'
+	"$BIN/v-log-action" "system" "Error" "Plugins" "File Manager installation failed: package extraction failed (Version: $fm_v)."
+	rm -rf "$FM_INSTALL_DIR"
+	exit 1
+fi
 
-unzip -qq "${FM_INSTALL_DIR}/${FM_FILE}.zip"
-mv --force ${FM_INSTALL_DIR}/filegator/* "${FM_INSTALL_DIR}"
-rm --recursive --force ${FM_INSTALL_DIR}/${FM_FILE}
-[[ -f "${FM_INSTALL_DIR}/${FM_FILE}" ]] && rm "${FM_INSTALL_DIR}/${FM_FILE}"
+if [[ ! -d "${FM_INSTALL_DIR}/filegator" ]]; then
+	echo "ERROR: Unexpected package structure, 'filegator' directory not found!" >&2
+	"$BIN/v-add-user-notification" "$ROOT_USER" 'File Manager installation failed!' '<p>Unexpected package structure.</p>'
+	"$BIN/v-change-sys-config-value" 'FILE_MANAGER' 'false'
+	"$BIN/v-log-action" "system" "Error" "Plugins" "File Manager installation failed: unexpected package structure (Version: $fm_v)."
+	rm -rf "$FM_INSTALL_DIR"
+	exit 1
+fi
 
-cp --recursive --force ${HESTIA_INSTALL_DIR}/filemanager/filegator/* "${FM_INSTALL_DIR}"
+mv -f "${FM_INSTALL_DIR}"/filegator/* "${FM_INSTALL_DIR}"
+rm -rf "${FM_INSTALL_DIR}/filegator"
+cp -rf "${HESTIA_INSTALL_DIR}"/filemanager/filegator/* "${FM_INSTALL_DIR}"
+chown "$user": -R "${FM_INSTALL_DIR}"
 
-chown $user: -R "${FM_INSTALL_DIR}"
-
-if [ -z "$openssl_installed" ]; then
-	COMPOSER_HOME="$HOMEDIR/$user/.config/composer" user_exec /usr/bin/php $COMPOSER_BIN --quiet --no-dev install
+if [[ -z "$openssl_installed" ]]; then
+	COMPOSER_HOME="$HOMEDIR/$user/.config/composer" user_exec /usr/bin/php "$COMPOSER_BIN" --working-dir="$FM_INSTALL_DIR" --quiet --no-dev install
 else
-	COMPOSER_HOME="$HOMEDIR/$user/.config/composer" user_exec /usr/local/hestia/php/bin/php $COMPOSER_BIN --quiet --no-dev install
+	COMPOSER_HOME="$HOMEDIR/$user/.config/composer" user_exec /usr/local/hestia/php/bin/php "$COMPOSER_BIN" --working-dir="$FM_INSTALL_DIR" --quiet --no-dev install
 fi
 
 # Check if installation was successful, if not abort script and throw error message notification and clean-up
-if [ $? -ne 0 ]; then
-	echo "ERROR: File Manager installation failed!"
-	echo "Please report this to our development team:"
-	echo "https://github.com/hestiacp/hestiacp/issues"
-	$BIN/v-add-user-notification "$ROOT_USER" 'File Manager installation failed!' '<p>Please <a href="https://github.com/hestiacp/hestiacp/issues" target="_blank">open an issue on GitHub</a> to report this to our development team.</p>'
+if [[ $? -ne 0 ]]; then
+	echo "ERROR: Composer dependency installation failed!" >&2
+	"$BIN/v-add-user-notification" "$ROOT_USER" 'File Manager installation failed!' '<p>Composer dependency installation failed.</p>'
 	# Installation failed, clean up files
-	rm --recursive --force ${FM_INSTALL_DIR}
-	$BIN/v-change-sys-config-value 'FILE_MANAGER' 'false'
-	$BIN/v-log-action "system" "Error" "Plugins" "File Manager installation failed (Version: $fm_v)."
+	"$BIN/v-change-sys-config-value" 'FILE_MANAGER' 'false'
+	"$BIN/v-log-action" "system" "Error" "Plugins" "File Manager installation failed: Composer dependency installation failed (Version: $fm_v)."
+	rm -rf "${FM_INSTALL_DIR}"
 	exit 1
 fi
 
 # Add configuration file
-cp -f $HESTIA_INSTALL_DIR/filemanager/filegator/configuration.php $HESTIA/web/fm/configuration.php
+cp -f "$HESTIA_INSTALL_DIR/filemanager/filegator/configuration.php" "$HESTIA/web/fm/configuration.php"
 
 # Path to the file manager configuration file where the change will be made.
 config_file="$HESTIA/web/fm/configuration.php"
@@ -116,11 +148,24 @@ chown hestiaweb: "${FM_INSTALL_DIR}/private"
 chown hestiaweb: "${FM_INSTALL_DIR}/private/logs"
 chown hestiaweb: "${FM_INSTALL_DIR}/repository"
 
-$BIN/v-change-sys-config-value 'FILE_MANAGER' 'true'
+"$BIN/v-change-sys-config-value" 'FILE_MANAGER' 'true'
+
+# Apply SSH config if running on Debian 13
+source /etc/os-release
+if [[ "$ID" == "debian" && "$VERSION_ID" == "13" ]]; then
+	_KEX_CONF="/etc/ssh/sshd_config.d/hestia-kex.conf"
+	_KEX_LINE="KexAlgorithms +diffie-hellman-group-exchange-sha256"
+
+	# Only create/modify the file if it doesn't already contain the correct config
+	if [[ ! -f "$_KEX_CONF" ]] || ! grep -qxF "$_KEX_LINE" "$_KEX_CONF"; then
+		echo "$_KEX_LINE" > "$_KEX_CONF"
+		"$BIN/v-restart-service" ssh
+	fi
+fi
 
 #----------------------------------------------------------#
 #                       Logging                            #
 #----------------------------------------------------------#
 
-$BIN/v-log-action "system" "Info" "Plugins" "File Manager enabled (Version: $fm_v)."
+"$BIN/v-log-action" "system" "Info" "Plugins" "File Manager enabled (Version: $fm_v)."
 log_event "$OK" "$ARGUMENTS"

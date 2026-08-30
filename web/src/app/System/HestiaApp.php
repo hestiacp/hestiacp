@@ -261,11 +261,16 @@ class HestiaApp
     {
         try {
             $result = $this->runUser('v-list-user', ['json']);
-
             $userInfo = $result->getOutputJson()[$this->user()];
 
-            return $userInfo['DATABASES'] === 'unlimited' ||
-                $userInfo['DATABASES'] - $userInfo['U_DATABASES'] < 1;
+            if ($userInfo['DATABASES'] === 'unlimited') {
+                return true;
+            }
+
+            $limit = (int) $userInfo['DATABASES'];
+            $used  = (int) $userInfo['U_DATABASES'];
+
+            return ($limit - $used) > 0;
         } catch (ProcessFailedException) {
             throw new RuntimeException('Unable to check database limit');
         }
@@ -401,6 +406,8 @@ class HestiaApp
         $command = array_map(fn(string $argument) => str_replace(' ', '\\ ', $argument), $command);
 
         $process = new Process($command);
+        // Increase the timeout from the default 60 seconds to 5 minutes to handle long install processes
+        $process->setTimeout(300);
         $process->run();
 
         if (!$process->isSuccessful()) {

@@ -6,7 +6,7 @@
 # https://www.hestiacp.com/
 #
 # Currently Supported Versions:
-# Ubuntu 22.04, 24.04 LTS
+# Ubuntu 22.04, 24.04, 26.04 LTS
 #
 # ======================================================== #
 
@@ -31,26 +31,51 @@ HESTIA_COMMON_DIR="$HESTIA/install/common"
 VERBOSE='no'
 
 # Define software versions
-HESTIA_INSTALL_VER='1.10.0~alpha'
+HESTIA_INSTALL_VER='1.10.4'
+
+# Build the full Hestia version
+# Split base version (1.10.0) from channel suffix (~alpha / ~beta), if present
+HESTIA_BASE_VER="${HESTIA_INSTALL_VER%%~*}"
+if [[ "$HESTIA_INSTALL_VER" == *"~"* ]]; then
+	HESTIA_CHANNEL="~${HESTIA_INSTALL_VER#*~}"
+else
+	HESTIA_CHANNEL=""
+fi
+# Build the distro identifier
+case "$os" in
+	ubuntu)
+		os_id="ubuntu${release}"
+		;;
+	debian)
+		os_id="debian${release}"
+		;;
+	*)
+		echo "Error: unsupported distribution for determining Hestia version ($os)"
+		exit 1
+		;;
+esac
+# Final version string, e.g.: 1.10.0-1+deb13~alpha / 1.10.0-1+ubuntu26.04
+HESTIA_INSTALL_BUILD="${HESTIA_BASE_VER}-1+${os_id}${HESTIA_CHANNEL}"
+
 # Supported PHP versions
 multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0" "8.1" "8.2" "8.3" "8.4" "8.5")
 # One of the following PHP versions is required for Roundcube / phpmyadmin
-multiphp_required=("7.3" "7.4" "8.0" "8.1" "8.2" "8.3")
+multiphp_required=("8.1" "8.2" "8.3" "8.4" "8.5")
 # Default PHP version if none supplied
-fpm_v="8.3"
+fpm_v="8.5"
 # MariaDB version
-mariadb_v="11.4"
+mariadb_v="11.8"
 # Node.js version
-node_v="20"
+node_v="24"
 
 # Defining software pack for all distros
 software="acl apache2 apache2.2-common apache2-suexec-custom apache2-utils apparmor-utils at awstats bc bind9 bsdmainutils bsdutils
   clamav-daemon cron curl dnsutils dovecot-imapd dovecot-managesieved dovecot-pop3d dovecot-sieve e2fslibs e2fsprogs
-  exim4 exim4-daemon-heavy expect fail2ban flex ftp git hestia=${HESTIA_INSTALL_VER} hestia-nginx hestia-php hestia-web-terminal
+  exim4 exim4-daemon-heavy expect fail2ban flex ftp git hestia=${HESTIA_INSTALL_BUILD} hestia-nginx hestia-php hestia-web-terminal
   idn2 imagemagick ipset jq libapache2-mod-fcgid libapache2-mod-php$fpm_v libapache2-mod-rpaf libonig5 libzip4 lsb-release
   lsof mariadb-client mariadb-common mariadb-server mc mysql-client mysql-common mysql-server nginx nodejs openssh-server
   php$fpm_v php$fpm_v-apcu php$fpm_v-bz2 php$fpm_v-cgi php$fpm_v-cli php$fpm_v-common php$fpm_v-curl php$fpm_v-gd
-  php$fpm_v-imagick php$fpm_v-imap php$fpm_v-intl php$fpm_v-ldap php$fpm_v-mbstring php$fpm_v-mysql php$fpm_v-opcache
+  php$fpm_v-imagick php$fpm_v-imap php$fpm_v-intl php$fpm_v-ldap php$fpm_v-mbstring php$fpm_v-mysql
   php$fpm_v-pgsql php$fpm_v-pspell php$fpm_v-readline php$fpm_v-xml php$fpm_v-zip postgresql postgresql-contrib
   proftpd-core proftpd-mod-crypto quota rrdtool rsyslog util-linux spamassassin
   sysstat unzip vim-common vsftpd whois zip zstd bubblewrap restic"
@@ -276,7 +301,7 @@ for arg; do
 		--with-debs) args="${args}-D " ;;
 		--help) args="${args}-h " ;;
 		*)
-			[[ "${arg:0:1}" == "-" ]] || delim="\""
+			[[ "${arg:0:1}" == "-" ]] || delim="'"
 			args="${args}${delim}${arg}${delim} "
 			;;
 	esac
@@ -517,7 +542,16 @@ if [ -d /etc/netplan ] && [ -z "$force" ]; then
 		echo
 		echo '!!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!!'
 		echo
-		check_result 1 "Unable to detect netplan configuration."
+		#check_result 1 "Unable to detect netplan configuration."
+
+		echo "Unable to detect netplan configuration."
+		echo
+
+		read -p 'Would you like to continue without netplan? [Y/n]: ' answer
+
+		if [ "$answer" != 'y' ] && [ "$answer" != 'Y' ] && [ "$answer" != '' ]; then
+			exit 1
+		fi
 	fi
 fi
 
@@ -566,7 +600,7 @@ esac
 #----------------------------------------------------------#
 
 install_welcome_message() {
-	DISPLAY_VER=$(echo $HESTIA_INSTALL_VER | sed "s|~alpha||g" | sed "s|~beta||g")
+	DISPLAY_VER=$(echo $HESTIA_INSTALL_VER | sed "s|~alpha||g" | sed "s|~beta||g" | sed "s|~rc[0-9]*||g")
 	echo
 	echo '                _   _           _   _        ____ ____                  '
 	echo '               | | | | ___  ___| |_(_) __ _ / ___|  _ \                 '
@@ -575,6 +609,9 @@ install_welcome_message() {
 	echo '               |_| |_|\___||___/\__|_|\__,_|\____|_|                    '
 	echo "                                                                        "
 	echo "                          Hestia Control Panel                          "
+	if [[ "$HESTIA_INSTALL_VER" =~ "rc" ]]; then
+		echo "                             RELEASE CANDIDATE                      "
+	fi
 	if [[ "$HESTIA_INSTALL_VER" =~ "beta" ]]; then
 		echo "                              BETA RELEASE                          "
 	fi
@@ -819,14 +856,20 @@ curl -s https://nginx.org/keys/nginx_signing.key | gpg --dearmor | tee /usr/shar
 # Installing sury PHP repo
 # add-apt-repository does not yet support signed-by see: https://bugs.launchpad.net/ubuntu/+source/software-properties/+bug/1862764
 echo "[ * ] PHP"
-if [ "$release" = '24.04' ]; then
-	# Workaround for Ubuntu 24.04 due to weak key warning it sheduled to be fixed in 24.04.1
-	echo 'APT::Key::Assert-Pubkey-Algo "";' > /etc/apt/apt.conf.d/99weakkey-warning
+if [[ "$release" = "22.04" ]] || [[ "$release" = "24.04" ]]; then
+	if [ "$release" = '24.04' ]; then
+		# Workaround for Ubuntu 24.04 due to weak key warning it sheduled to be fixed in 24.04.1
+		echo 'APT::Key::Assert-Pubkey-Algo "";' > /etc/apt/apt.conf.d/99weakkey-warning
+	fi
+	LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php > /dev/null 2>&1
+else
+	# Ubuntu 26.04 and later use the Sury repository instead of a PPA
+	echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/sury-keyring.gpg] https://packages.sury.org/php/ $codename main" > $apt/php.list
+	curl -s https://packages.sury.org/php/apt.gpg | gpg --dearmor | tee /usr/share/keyrings/sury-keyring.gpg > /dev/null 2>&1
 fi
-LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php > /dev/null 2>&1
 
 # Installing sury Apache2 repo
-if [ "$apache" = 'yes' ] && [ "$release" != '24.04' ]; then
+if [ "$apache" = 'yes' ] && [ "$release" = '22.04' ]; then
 	echo "[ * ] Apache2"
 	echo "deb http://ppa.launchpad.net/ondrej/apache2/ubuntu $codename main" > $apt/apache2.list
 fi
@@ -841,7 +884,7 @@ fi
 # Installing HestiaCP repo
 echo "[ * ] Hestia Control Panel"
 echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/hestia-keyring.gpg] https://$RHOST/ $codename main" > $apt/hestia.list
-gpg --no-default-keyring --keyring /usr/share/keyrings/hestia-keyring.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys A189E93654F0B0E5 > /dev/null 2>&1
+curl -s "https://$RHOST/pubkey.gpg" | gpg --dearmor | tee /usr/share/keyrings/hestia-keyring.gpg > /dev/null 2>&1
 
 # Installing Node.js repo
 if [ "$webterminal" = 'yes' ]; then
@@ -1058,11 +1101,13 @@ if [ -d "$withdebs" ]; then
 	software=$(echo "$software" | sed -e "s/hestia-nginx//")
 	software=$(echo "$software" | sed -e "s/hestia-php//")
 	software=$(echo "$software" | sed -e "s/hestia-web-terminal//")
-	software=$(echo "$software" | sed -e "s/hestia=${HESTIA_INSTALL_VER}//")
+	software=$(echo "$software" | sed -e "s/hestia=${HESTIA_INSTALL_BUILD}//")
 fi
-
 if [ "$release" = '24.04' ]; then
 	software=$(echo "$software" | sed -e "s/libzip4/libzip4t64/")
+fi
+if [ "$release" = '26.04' ]; then
+	software=$(echo "$software" | sed -e "s/libzip4/libzip5/")
 fi
 
 #----------------------------------------------------------#
@@ -1215,9 +1260,12 @@ if [ -z "$(grep nologin /etc/shells)" ]; then
 fi
 
 # Configuring NTP
-sed -i 's/#NTP=/NTP=pool.ntp.org/' /etc/systemd/timesyncd.conf
-systemctl enable systemd-timesyncd
-systemctl start systemd-timesyncd
+# Ubuntu 26.04 doesn't install systemd-timesyncd, by default it uses Chrony
+if [[ "$release" = "22.04" ]] || [[ "$release" = "24.04" ]]; then
+	sed -i 's/#NTP=/NTP=pool.ntp.org/' /etc/systemd/timesyncd.conf
+	systemctl enable systemd-timesyncd
+	systemctl start systemd-timesyncd
+fi
 
 # Check iptables paths and add symlinks when necessary
 if [ ! -e "/sbin/iptables" ]; then
@@ -1276,6 +1324,10 @@ echo "[ * ] Configuring Hestia Control Panel..."
 # Installing sudo configuration
 mkdir -p /etc/sudoers.d
 cp -f $HESTIA_COMMON_DIR/sudo/hestiaweb /etc/sudoers.d/
+# Ubuntu 26.04 and the new rust implementation of sudo doesn't support !requiretty
+if [[ "$release" != "22.04" ]] && [[ "$release" != "24.04" ]]; then
+	sed -i '/^Defaults:root !requiretty$/d' /etc/sudoers.d/hestiaweb
+fi
 chmod 440 /etc/sudoers.d/hestiaweb
 
 # Add Hestia global config
@@ -1506,7 +1558,7 @@ echo "[ * ] Configuring OpenSSL to improve TLS performance..."
 tls13_ciphers="TLS_AES_128_GCM_SHA256:TLS_CHACHA20_POLY1305_SHA256:TLS_AES_256_GCM_SHA384"
 if [ "$release" = "22.04" ]; then
 	sed -i '/^system_default = system_default_sect$/a system_default = hestia_openssl_sect\n\n[hestia_openssl_sect]\nCiphersuites = '"$tls13_ciphers"'\nOptions = PrioritizeChaCha' /etc/ssl/openssl.cnf
-elif [ "$release" = "24.04" ]; then
+else
 	if ! grep -qw "^ssl_conf = ssl_sect$" /etc/ssl/openssl.cnf 2> /dev/null; then
 		sed -i '/providers = provider_sect$/a ssl_conf = ssl_sect' /etc/ssl/openssl.cnf
 	fi
@@ -1763,11 +1815,6 @@ if [ "$proftpd" = 'yes' ]; then
 	update-rc.d proftpd defaults > /dev/null 2>&1
 	systemctl start proftpd >> $LOG
 	check_result $? "proftpd start failed"
-
-	unit_files="$(systemctl list-unit-files | grep proftpd)"
-	if [[ "$unit_files" =~ "disabled" ]]; then
-		systemctl enable proftpd
-	fi
 fi
 
 #----------------------------------------------------------#
@@ -1966,6 +2013,18 @@ if [ "$named" = 'yes' ]; then
 			systemctl restart apparmor >> $LOG
 		fi
 	fi
+
+	# Ubuntu 26.04 removed the named.conf.default-zones file if doesn't exsists remove it from the config file
+	if [ ! -f /etc/bind/named.conf.default-zones ]; then
+		sed -i "/^include.*named.conf.default-zones/d" /etc/bind/named.conf
+	fi
+
+	# Add root-hints include after named.conf.local if missing
+	if [[ -f /etc/bind/named.conf.root-hints ]] \
+		&& ! grep -q 'include.*named.conf.root-hints' /etc/bind/named.conf 2> /dev/null; then
+		sed -i '/include.*named\.conf\.local/a include "\/etc\/bind\/named.conf.root-hints";' /etc/bind/named.conf
+	fi
+
 	update-rc.d bind9 defaults > /dev/null 2>&1
 	systemctl start bind9
 	check_result $? "bind9 start failed"
@@ -1991,6 +2050,18 @@ if [ "$exim" = 'yes' ]; then
 	else
 		cp -f $HESTIA_INSTALL_DIR/exim/exim4.conf.template /etc/exim4/
 	fi
+	# If Dovecot 2.4, modify the local delivery directives"
+	if [[ $(dovecot --version) == 2.4* ]] \
+		&& [[ -f /etc/exim4/exim4.conf.template ]]; then
+		sed -i.bak '
+s#  directory = "${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}/mail/${lookup{$domain}dsearch{/etc/exim4/domains/}}/${lookup{$local_part}dsearch{${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}/mail/${lookup{$domain}dsearch{/etc/exim4/domains/}}}}"#  directory = "${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}"#
+
+s#  directory = "${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}/mail/${lookup{$domain}dsearch{/etc/exim4/domains/}}/${lookup{$local_part}dsearch{${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}/mail/${lookup{$domain}dsearch{/etc/exim4/domains/}}}}/.Spam"#  directory = "${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}/.Spam"#
+
+s#  quota_directory = "${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}/mail/${lookup{$domain}dsearch{/etc/exim4/domains/}}/${lookup{$local_part}dsearch{${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}/mail/${lookup{$domain}dsearch{/etc/exim4/domains/}}}}"#  quota_directory = "${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}"#
+' /etc/exim4/exim4.conf.template
+	fi
+
 	cp -f $HESTIA_INSTALL_DIR/exim/dnsbl.conf /etc/exim4/
 	cp -f $HESTIA_INSTALL_DIR/exim/spam-blocks.conf /etc/exim4/
 	cp -f $HESTIA_INSTALL_DIR/exim/limit.conf /etc/exim4/
@@ -2030,25 +2101,30 @@ fi
 #----------------------------------------------------------#
 
 if [ "$dovecot" = 'yes' ]; then
+	dovecot_version="$(dovecot --version | cut -f -2 -d .)"
 	echo "[ * ] Configuring Dovecot POP/IMAP mail server..."
 	gpasswd -a dovecot mail > /dev/null 2>&1
-	cp -rf $HESTIA_COMMON_DIR/dovecot /etc/
+	mkdir -p /etc/dovecot/conf.d/
+	if [[ "$dovecot_version" = "2.4" ]]; then
+		cp -f $HESTIA_COMMON_DIR/dovecot/2.4/dovecot.conf /etc/dovecot/
+		cp -f $HESTIA_COMMON_DIR/dovecot/2.4/conf.d/* /etc/dovecot/conf.d/
+	else
+		cp -f $HESTIA_COMMON_DIR/dovecot/2.3/dovecot.conf /etc/dovecot/
+		cp -f $HESTIA_COMMON_DIR/dovecot/2.3/conf.d/* /etc/dovecot/conf.d/
+		rm -f /etc/dovecot/conf.d/15-mailboxes.conf
+	fi
 	cp -f $HESTIA_INSTALL_DIR/logrotate/dovecot /etc/logrotate.d/
-	rm -f /etc/dovecot/conf.d/15-mailboxes.conf
 	chown -R root:root /etc/dovecot*
 	touch /var/log/dovecot.log
 	chown -R dovecot:mail /var/log/dovecot.log
 	chmod 660 /var/log/dovecot.log
-
 	# Alter config for 2.2
-	version=$(dovecot --version | cut -f -2 -d .)
-	if [ "$version" = "2.2" ]; then
+	if [ "$dovecot_version" = "2.2" ]; then
 		echo "[ * ] Downgrade dovecot config to sync with 2.2 settings"
 		sed -i 's|#ssl_dh_parameters_length = 4096|ssl_dh_parameters_length = 4096|g' /etc/dovecot/conf.d/10-ssl.conf
 		sed -i 's|ssl_dh = </etc/ssl/dhparam.pem|#ssl_dh = </etc/ssl/dhparam.pem|g' /etc/dovecot/conf.d/10-ssl.conf
 		sed -i 's|ssl_min_protocol = TLSv1.2|ssl_protocols = !SSLv3 !TLSv1 !TLSv1.1|g' /etc/dovecot/conf.d/10-ssl.conf
 	fi
-
 	update-rc.d dovecot defaults
 	systemctl start dovecot >> $LOG
 	check_result $? "dovecot start failed"
@@ -2079,13 +2155,12 @@ fi
 #----------------------------------------------------------#
 #                  Configure SpamAssassin                  #
 #----------------------------------------------------------#
-
 if [ "$spamd" = 'yes' ]; then
 	# Set SpamAssassin Service Name
-	if [ "$release" = '24.04' ]; then
-		spamd_srvname="spamd"
-	else
+	if [ "$release" = '22.04' ]; then
 		spamd_srvname="spamassassin"
+	else
+		spamd_srvname="spamd"
 	fi
 	echo "[ * ] Configuring SpamAssassin..."
 	update-rc.d $spamd_srvname defaults > /dev/null 2>&1
@@ -2172,21 +2247,38 @@ if [ "$sieve" = 'yes' ]; then
 
 	echo "[ * ] Installing Sieve Mail Filter..."
 
-	# dovecot.conf install
-	sed -i "s/namespace/service stats \{\n  unix_listener stats-writer \{\n    group = mail\n    mode = 0660\n    user = dovecot\n  \}\n\}\n\nnamespace/g" /etc/dovecot/dovecot.conf
+	dovecot_version="$(dovecot --version | cut -f -2 -d .)"
+	if [[ "$dovecot_version" = "2.4" ]]; then
+		# dovecot conf files
+		# dovecot.conf install
+		sed -i -E 's/protocols = imap/protocols = sieve imap/' /etc/dovecot/dovecot.conf
+		#  10-master.conf
+		sed -i -E -z 's/    user = dovecot\n  \}\n\}/    user = dovecot\n  \}\n\n  unix_listener auth-master {\n    group = mail\n    mode = 0660\n    user = dovecot\n  }\n\}/' /etc/dovecot/conf.d/10-master.conf
+		#  15-lda.conf
+		sed -i '/^protocol lda {$/a\  mail_plugins = mail_compress quota sieve' /etc/dovecot/conf.d/15-lda.conf
+		#  20-imap.conf
+		sed -i "s/quota imap_quota/quota imap_quota imap_sieve/g" /etc/dovecot/conf.d/20-imap.conf
+		# replace dovecot-sieve config files
+		cp -f "$HESTIA_COMMON_DIR"/dovecot/2.4/sieve/* /etc/dovecot/conf.d
 
-	# Dovecot conf files
-	#  10-master.conf
-	sed -i -E -z "s/  }\n  user = dovecot\n}/  \}\n  unix_listener auth-master \{\n    group = mail\n    mode = 0660\n    user = dovecot\n  \}\n  user = dovecot\n\}/g" /etc/dovecot/conf.d/10-master.conf
-	#  15-lda.conf
-	sed -i "s/\#mail_plugins = \\\$mail_plugins/mail_plugins = \$mail_plugins quota sieve\n  auth_socket_path = \/var\/run\/dovecot\/auth-master/g" /etc/dovecot/conf.d/15-lda.conf
-	#  20-imap.conf
-	sed -i "s/mail_plugins = quota imap_quota/mail_plugins = quota imap_quota imap_sieve/g" /etc/dovecot/conf.d/20-imap.conf
+	else
+		# dovecot.conf install
+		sed -i "s/namespace/service stats \{\n  unix_listener stats-writer \{\n    group = mail\n    mode = 0660\n    user = dovecot\n  \}\n\}\n\nnamespace/g" /etc/dovecot/dovecot.conf
 
-	# Replace dovecot-sieve config files
-	cp -f $HESTIA_COMMON_DIR/dovecot/sieve/* /etc/dovecot/conf.d
+		# Dovecot conf files
+		#  10-master.conf
+		sed -i -E -z "s/  }\n  user = dovecot\n}/  \}\n  unix_listener auth-master \{\n    group = mail\n    mode = 0660\n    user = dovecot\n  \}\n  user = dovecot\n\}/g" /etc/dovecot/conf.d/10-master.conf
+		#  15-lda.conf
+		sed -i "s/\#mail_plugins = \\\$mail_plugins/mail_plugins = \$mail_plugins quota sieve\n  auth_socket_path = \/var\/run\/dovecot\/auth-master/g" /etc/dovecot/conf.d/15-lda.conf
+		#  20-imap.conf
+		sed -i "s/mail_plugins = quota imap_quota/mail_plugins = quota imap_quota imap_sieve/g" /etc/dovecot/conf.d/20-imap.conf
+
+		# Replace dovecot-sieve config files
+		cp -f $HESTIA_COMMON_DIR/dovecot/2.3/sieve/* /etc/dovecot/conf.d
+	fi
 
 	# Dovecot default file install
+	mkdir -p /etc/dovecot/sieve/
 	echo -e "require [\"fileinto\"];\n# rule:[SPAM]\nif header :contains \"X-Spam-Flag\" \"YES\" {\n    fileinto \"INBOX.Spam\";\n}\n" > /etc/dovecot/sieve/default
 
 	# exim4 install
@@ -2238,6 +2330,11 @@ fi
 
 echo "[ * ] Configuring File Manager..."
 $HESTIA/bin/v-add-sys-filemanager quiet
+# Configuring sudoers to remove unsupported requiretty option on Ubuntu 26.04
+ubuntu_major="${release%%.*}"
+if [[ "$ubuntu_major" -ge 26 ]]; then
+	echo 'KexAlgorithms +diffie-hellman-group-exchange-sha256' > /etc/ssh/sshd_config.d/hestia-kex.conf
+fi
 
 #----------------------------------------------------------#
 #              Configure Web terminal                      #

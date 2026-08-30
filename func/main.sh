@@ -7,16 +7,67 @@
 #===========================================================================#
 
 # Source conf function for correct variable initialisation
+#
+# lhs is never trusted: this is called on files that can carry
+# attacker-influenced content (e.g. backup exclusion lists), so before
+# ever reaching this point a hostile line could smuggle a bogus KEY to
+# declare. Two independent gates below stop that:
+#  - lhs must be a plain shell identifier (blocks flag-injection via a
+#    leading '-', array syntax, and any other non-identifier shape)
+#  - lhs must not be one of a fixed set of variables whose value the
+#    rest of the codebase (or bash itself) trusts implicitly:
+#     - PATH/CDPATH (command resolution), IFS (word splitting),
+#       ENV/BASH_ENV/PS4 (auto-executed on shell/xtrace events),
+#       LD_PRELOAD/LD_LIBRARY_PATH/LD_AUDIT (dynamic linker), TMPDIR
+#       (mktemp target), and BASH_FUNC_* (exported-function smuggling,
+#       the Shellshock vector)
+#     - Hestia's own path/binary-location globals (BIN, HOMEDIR,
+#       USER_DATA, SENDMAIL, ...): these are spliced unquoted into
+#       command invocations throughout bin/* (e.g. "$BIN/v-log-action"),
+#       so hijacking one is a more direct route to root RCE than PATH is
+#     - the E_*/OK return-code constants: silently remapping E_INVALID
+#       to 0 would turn a real validation failure into an apparent
+#       success for any caller that only checks the exit code
+#    ROOT_USER is deliberately not in this list: hestia.conf legitimately
+#    sets it, and it's how source_conf itself learns who ROOT_USER is.
+# This function can run before check_result/E_INVALID exist (it loads
+# hestia.conf during main.sh's own bootstrap), so it must fail closed on
+# its own rather than delegating to check_result.
 source_conf() {
+	local reserved=' PATH IFS CDPATH ENV BASH_ENV PS1 PS2 PS3 PS4 PROMPT_COMMAND LD_PRELOAD LD_LIBRARY_PATH LD_AUDIT TMPDIR SHELLOPTS BASHOPTS BASH_XTRACEFD GLOBIGNORE FIGNORE HISTFILE'
+	reserved+=' HESTIA BIN HOMEDIR BACKUP USER_DATA WEBTPL MAILTPL DNSTPL RRD SENDMAIL'
+	reserved+=' HESTIA_INSTALL_DIR HESTIA_COMMON_DIR HESTIA_BACKUP HESTIA_PHP HESTIA_GIT_REPO'
+	reserved+=' HESTIA_THEMES HESTIA_THEMES_CUSTOM SCRIPT CHECK_RESULT_CALLBACK user'
+	reserved+=' OK E_ARGS E_INVALID E_NOTEXIST E_EXISTS E_SUSPENDED E_UNSUSPENDED E_INUSE'
+	reserved+=' E_LIMIT E_PASSWORD E_FORBIDEN E_DISABLED E_PARSING E_DISK E_LA E_CONNECT'
+	reserved+=' E_FTP E_DB E_RRD E_UPDATE E_RESTART '
 	while IFS='= ' read -r lhs rhs; do
-		if [[ ! $lhs =~ ^\ *# && -n $lhs ]]; then
-			rhs="${rhs%%^\#*}" # Del in line right comments
-			rhs="${rhs%%*( )}" # Del trailing spaces
-			rhs="${rhs%\'*}"   # Del opening string quotes
-			rhs="${rhs#\'*}"   # Del closing string quotes
-			declare -g $lhs="$rhs"
+		if [[ ! $lhs =~ ^[A-Za-z_][A-Za-z0-9_]*$ ]]; then
+			continue
 		fi
-	done < $1
+		if [[ "$reserved" == *" $lhs "* ]] || [[ "$lhs" == BASH_FUNC_* ]]; then
+			continue
+		fi
+
+		# Value cleanup (rhs)
+
+		# Remove control characters (tab, newline, null, etc.)
+		rhs="${rhs//[[:cntrl:]]/}"
+
+		# Remove inline comments and trailing spaces
+		rhs="${rhs%%^\#*}"
+		rhs="${rhs%%*( )}"
+
+		# Remove quotes
+		rhs="${rhs%\'*}"
+		rhs="${rhs#\'*}"
+
+		# Trim leading and trailing spaces (now that quotes are gone)
+		rhs="${rhs##*( )}"
+		rhs="${rhs%%*( )}"
+
+		declare -g "$lhs=$rhs"
+	done < "$1"
 }
 
 if [ -z "$user" ]; then
@@ -251,7 +302,28 @@ generate_password() {
 	if [ -z "$length" ]; then
 		length=16
 	fi
-	head /dev/urandom | tr -dc $matrix | head -c$length
+
+	attempt=0
+	while [ $attempt -lt 100 ]; do
+		pass=$(head /dev/urandom | tr -dc "$matrix" | head -c "$length")
+
+		valid=true
+		[[ "$matrix" == *"A-Z"* ]] && [[ ! "$pass" =~ [[:upper:]] ]] && valid=false
+		[[ "$matrix" == *"a-z"* ]] && [[ ! "$pass" =~ [[:lower:]] ]] && valid=false
+		[[ "$matrix" == *"0-9"* ]] && [[ ! "$pass" =~ [[:digit:]] ]] && valid=false
+
+		if [[ "$matrix" =~ [^A-Za-z0-9-] ]]; then
+			[[ ! "$pass" =~ [^a-zA-Z0-9] ]] && valid=false
+		fi
+
+		if [ "$valid" = true ]; then
+			printf "%s" "$pass"
+			return
+		fi
+		attempt=$((attempt + 1))
+	done
+	# Fallback if impossible
+	printf "%s" "$pass"
 }
 
 # Package existence check
@@ -628,13 +700,19 @@ update_object_value() {
 
 # Add object key
 add_object_key() {
-	row=$(grep -n "$2='$3'" $USER_DATA/$1.conf)
-	lnr=$(echo $row | cut -f 1 -d ':')
-	object=$(echo $row | sed "s/^$lnr://")
-	if [ -z "$(echo $object | grep $4=)" ]; then
+	row=$(grep -n "$2='$3'" "$USER_DATA/$1.conf")
+	lnr=$(echo "$row" | cut -f 1 -d ':')
+	object=$(echo "$row" | sed "s/^$lnr://")
+
+	# If lnr or $5 is empty, do not run sed
+	if [[ -z "$lnr" || -z "$5" ]]; then
+		return 1
+	fi
+
+	if [[ -z "$(echo "$object" | grep "$4=")" ]]; then
 		local varname="${4#\$}"
 		old="${!varname}"
-		sed -i "$lnr s/$5='/$4='' $5='/" $USER_DATA/$1.conf
+		sed -i "$lnr s/$5='/$4='' $5='/" "$USER_DATA/$1.conf"
 	fi
 }
 
@@ -828,7 +906,7 @@ sync_cron_jobs() {
 		echo 'MAILTO=""' > $crontab
 	fi
 
-	while read line; do
+	while IFS= read -r line; do
 		parse_object_kv_list "$line"
 		if [ "$SUSPENDED" = 'no' ]; then
 			echo "$MIN $HOUR $DAY $MONTH $WDAY $CMD" \
@@ -868,7 +946,7 @@ is_localpart_format_valid() {
 # Username / ftp username format validator
 is_user_format_valid() {
 	if [ ${#1} -eq 1 ]; then
-		if ! [[ "$1" =~ ^^[[:alnum:]]$ ]]; then
+		if ! [[ "$1" =~ ^[[:alnum:]]$ ]]; then
 			check_result "$E_INVALID" "invalid $2 format :: $1"
 		fi
 	else
@@ -898,8 +976,17 @@ is_user_format_valid() {
 # Domain format validator
 is_domain_format_valid() {
 	object_name=${2-domain}
-	exclude="[!|@|#|$|^|&|*|(|)|+|=|{|}|:|,|<|>|?|_|/|\|\"|'|;|%|\`| ]"
-	if [[ $1 =~ $exclude ]] || [[ $1 =~ ^[0-9]+$ ]] || [[ $1 =~ \.\. ]] || [[ $1 =~ $(printf '\t') ]] || [[ "$1" = "www" ]]; then
+	exclude='[][!@#$^&*()+={},<>?_/\\"|'\''`;%[:space:]]'
+	if [[ $1 =~ $exclude ]] \
+		|| [[ $1 =~ ^[0-9]+$ ]] \
+		|| [[ $1 =~ \.\. ]] \
+		|| [[ $1 =~ ^- ]] \
+		|| [[ $1 =~ -$ ]] \
+		|| [[ $1 =~ ^\. ]] \
+		|| [[ $1 =~ \.$ ]] \
+		|| [[ $1 =~ \.- ]] \
+		|| [[ $1 =~ -\. ]] \
+		|| [[ "$1" = "www" ]]; then
 		check_result "$E_INVALID" "invalid $object_name format :: $1"
 	fi
 	is_no_new_line_format "$1"
@@ -908,8 +995,15 @@ is_domain_format_valid() {
 # Alias forman validator
 is_alias_format_valid() {
 	for object in ${1//,/ }; do
-		exclude="[!|@|#|$|^|&|(|)|+|=|{|}|:|<|>|?|_|/|\|\"|'|;|%|\`| ]"
-		if [[ "$object" =~ $exclude ]]; then
+		exclude='[][!@#$^&()+={},<>?_/\\"|'\''`;%[:space:]]'
+		if [[ $object =~ $exclude ]] \
+			|| [[ $object =~ \.\. ]] \
+			|| [[ $object =~ ^- ]] \
+			|| [[ $object =~ -$ ]] \
+			|| [[ $object =~ ^\. ]] \
+			|| [[ $object =~ \.$ ]] \
+			|| [[ $object =~ \.- ]] \
+			|| [[ $object =~ -\. ]]; then
 			check_result "$E_INVALID" "invalid alias format :: $object"
 		fi
 		if [[ "$object" =~ [*] ]] && ! [[ "$object" =~ ^[*]\..* ]]; then
@@ -1125,7 +1219,7 @@ is_string_format_valid() {
 	is_no_new_line_format "$1"
 }
 is_cron_command_valid_format() {
-	if [[ ! "$1" =~ ^[^\`]*?$ ]]; then
+	if [[ "$1" == *'`'* ]] || [[ "$1" != "${1//$'\n'/}" ]]; then
 		check_result "$E_INVALID" "Invalid cron command format"
 	fi
 }
@@ -1269,6 +1363,36 @@ is_ip_status_format_valid() {
 is_comment_format_valid() {
 	if ! [[ "$1" =~ ^[[:alnum:]][[:alnum:][:space:]._-]{0,64}[[:alnum:]]$ ]]; then
 		check_result "$E_INVALID" "invalid $2 format :: $1"
+	fi
+}
+
+# User notification topic validator - plain text, single line only.
+# Rendered client-side with Alpine's x-text, but line breaks would still
+# corrupt the flat-file notifications.conf format, so they're rejected here.
+is_notification_topic_valid() {
+	local str="$1"
+
+	if [[ "$str" == *$'\n'* ]] || [[ "$str" == *$'\r'* ]]; then
+		check_result "$E_INVALID" "invalid topic format :: line breaks are not allowed"
+	fi
+	if [ ${#str} -gt 255 ]; then
+		check_result "$E_INVALID" "invalid topic format :: too long"
+	fi
+}
+
+# User notification body validator. NOTICE is rendered client-side with
+# Alpine's x-html (raw HTML), and its actual sanitization is done by
+# func/internal/sanitize_html.php (Symfony HtmlSanitizer allow-list) before
+# it's stored. This just guards the flat-file notifications.conf format,
+# which breaks if a value spans multiple lines or is unreasonably large.
+is_notification_notice_valid() {
+	local str="$1"
+
+	if [[ "$str" == *$'\n'* ]] || [[ "$str" == *$'\r'* ]]; then
+		check_result "$E_INVALID" "invalid notice format :: line breaks are not allowed"
+	fi
+	if [ ${#str} -gt 4000 ]; then
+		check_result "$E_INVALID" "invalid notice format :: too long"
 	fi
 }
 
@@ -1465,6 +1589,7 @@ is_format_valid() {
 				nat_ip) is_ip_format_valid "$arg" ;;
 				netmask) is_netmask_format_valid "$arg" 'netmask' ;;
 				newid) is_int_format_valid "$arg" 'id' ;;
+				notice) is_notification_notice_valid "$arg" ;;
 				ns1) is_domain_format_valid "$arg" 'ns1' ;;
 				ns2) is_domain_format_valid "$arg" 'ns2' ;;
 				ns3) is_domain_format_valid "$arg" 'ns3' ;;
@@ -1491,6 +1616,7 @@ is_format_valid() {
 				rule) is_int_format_valid "$arg" "rule id" ;;
 				service) is_service_format_valid "$arg" "$arg_name" ;;
 				secret_access_key) is_secret_access_key_format_valid "$arg" "$arg_name" ;;
+				snapshot) is_object_format_valid "$arg" 'snapshot' ;;
 				soa) is_domain_format_valid "$arg" 'SOA' ;;
 				#missing command: is_format_valid_shell
 				shell) is_format_valid_shell "$arg" ;;
@@ -1499,6 +1625,7 @@ is_format_valid() {
 				stats_user) is_user_format_valid "$arg" "$arg_name" ;;
 				template) is_object_format_valid "$arg" "$arg_name" ;;
 				theme) is_common_format_valid "$arg" "$arg_name" ;;
+				topic) is_notification_topic_valid "$arg" ;;
 				ttl) is_int_format_valid "$arg" 'ttl' ;;
 				user) is_user_format_valid "$arg" $arg_name ;;
 				wday) is_cron_format_valid "$arg" $arg_name ;;
@@ -1991,7 +2118,7 @@ Description=Mount $user's home directory to the jail chroot
 Before=local-fs.target
 
 [Mount]
-What=$(getent passwd $user | cut -d : -f 6)
+What=$(getent passwd | awk -F: -v u="$user" '$1 == u {print $6}')
 Where=/srv/jail/$user/home/$user
 Type=none
 Options=bind

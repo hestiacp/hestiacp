@@ -1,8 +1,14 @@
 <?php
 use function Hestiacp\quoteshellarg\quoteshellarg;
-if (session_status() === PHP_SESSION_ACTIVE) {
-	session_write_close();
+
+if (session_status() === PHP_SESSION_NONE) {
+	session_start();
 }
+
+$lang = $_SESSION["language"] ?? ($_SESSION["LANGUAGE"] ?? "en");
+
+session_write_close();
+
 $dist_config = require __DIR__ . "/configuration_sample.php";
 $dist_config["public_path"] = "/fm/";
 $dist_config["frontend_config"]["app_name"] = "File Manager - Hestia Control Panel";
@@ -11,6 +17,7 @@ $dist_config["frontend_config"]["editable"] = [
 	".txt",
 	".css",
 	".js",
+	".json",
 	".ts",
 	".html",
 	".php",
@@ -36,13 +43,7 @@ $dist_config["frontend_config"]["date_format"] = "YY/MM/DD H:mm:ss";
 $dist_config["frontend_config"]["guest_redirection"] = "/login/";
 $dist_config["frontend_config"]["upload_max_size"] = 1024 * 1024 * 1024;
 $dist_config["frontend_config"]["pagination"] = [100, 50, 25];
-if (!empty($_SESSION["language"])) {
-	$lang = $_SESSION["language"];
-} elseif (!empty($_SESSION["LANGUAGE"])) {
-	$lang = $_SESSION["LANGUAGE"];
-} else {
-	$lang = "en";
-}
+
 // Update list of languages when new language is added on Hestia or Filegator side
 switch ($lang) {
 	case "es":
@@ -143,6 +144,10 @@ switch ($lang) {
 $dist_config["services"]["Filegator\Services\Storage\Filesystem"]["config"][
 	"adapter"
 ] = function () {
+	if (empty($_SESSION["user"])) {
+		echo '<meta http-equiv="refresh" content="0; url=/">';
+		exit();
+	}
 	if (!empty($_SESSION["INACTIVE_SESSION_TIMEOUT"])) {
 		if ($_SESSION["INACTIVE_SESSION_TIMEOUT"] * 60 + $_SESSION["LAST_ACTIVITY"] < time()) {
 			$v_user = quoteshellarg($_SESSION["user"]);
@@ -188,9 +193,6 @@ $dist_config["services"]["Filegator\Services\Storage\Filesystem"]["config"][
 			$output,
 			$return_var,
 		);
-		// filemanager also requires .ssh chmod o+x ... hopefully we can improve it to g+x or u+x someday
-		// current minimum for filemanager: chmod 0701 .ssh
-		shell_exec("sudo chmod o+x " . quoteshellarg("/home/" . basename($v_user) . "/.ssh"));
 	}
 
 	if (!isset($_SESSION["SFTP_PORT"])) {

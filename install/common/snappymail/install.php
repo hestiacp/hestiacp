@@ -37,7 +37,7 @@ if (!file_exists($sFile)) {
 					"driver_hestia_enabled" => true,
 					"driver_hestia_allowed_emails" => "*",
 					"hestia_host" => gethostname(),
-					"hestia_port" => $argv[4], // $BACKEND_PORT
+					"hestia_port" => (int) $argv[5], // $BACKEND_PORT
 				],
 			],
 			JSON_PRETTY_PRINT,
@@ -67,7 +67,7 @@ $oConfig->Save();
 
 $sFile = APP_PRIVATE_DATA . "domains/hestia.json";
 if (!file_exists($sFile)) {
-	$config = json_decode(APP_PRIVATE_DATA . "domains/default.json", true);
+	$config = json_decode(file_get_contents(APP_PRIVATE_DATA . "domains/default.json"), true);
 	$config["IMAP"]["shortLogin"] = true;
 	$config["SMTP"]["shortLogin"] = true;
 	file_put_contents($sFile, json_encode($config, JSON_PRETTY_PRINT));

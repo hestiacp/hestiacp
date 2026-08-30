@@ -71,7 +71,7 @@ chown root:hestiamail $PMA_INSTALL/hestia-sso.php
 
 sed -i "s/%PHPMYADMIN_KEY%/$phpmyadminkey/g" $PMA_INSTALL/hestia-sso.php
 sed -i "s/%API_KEY%/$apikey/g" $PMA_INSTALL/hestia-sso.php
-sed -i "s/%API_HOST_NAME%/$(hostname)/g" $PMA_INSTALL/hestia-sso.php
+sed -i "s/%API_HOST_NAME%/$(hostname -f)/g" $PMA_INSTALL/hestia-sso.php
 sed -i "s/%API_HESTIA_PORT%/$BACKEND_PORT/g" $PMA_INSTALL/hestia-sso.php
 
 # Check if config already contains the keys

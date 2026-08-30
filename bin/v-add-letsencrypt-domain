@@ -614,7 +614,7 @@ fi
 if [ -z "$(grep $BIN/v-update-letsencrypt "/var/spool/cron/crontabs/hestiaweb")" ]; then
 	min=$(generate_password '012345' '2')
 	hour=$(generate_password '1234567' '1')
-	sed -i -e "\$a*/5 * * * * sudo $BIN/v-update-letsencrypt" "/var/spool/cron/crontabs/hestiaweb"
+	sed -i -e "\$a*/5 * * * * sudo $BIN/v-update-letsencrypt-ssl" "/var/spool/cron/crontabs/hestiaweb"
 fi
 
 # Updating letsencrypt key

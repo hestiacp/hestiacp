@@ -15,9 +15,9 @@
 type=$1
 host=$2
 user=$3
+password=$4
 raw_password=$4
 HIDE=4
-password=$(perl -e 'print quotemeta shift(@ARGV)' "${raw_password}")
 path=${5-/backup}
 port=$6
 
@@ -126,6 +126,8 @@ if [ "$type" = 'sftp' ]; then
 	USERNAME=$user
 	PASSWORD=$password
 	HOST=$host
+	PRIVATEKEY=$privatekey
+
 	if [ -z $path ]; then
 		sftmpdir="vst.bK76A9SUkt"
 		sftpc "mkdir $sftmpdir" "rmdir $sftmpdir" > /dev/null 2>&1

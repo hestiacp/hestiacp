@@ -65,15 +65,15 @@ function nav() {
 			items: [
 				{
 					text: 'Changelog',
-					link: 'https://github.com/hestiacp/hestiacp/blob/main/CHANGELOG.md',
+					link: 'https://github.com/hestiacp/hestiacp/blob/release/CHANGELOG.md',
 				},
 				{
 					text: 'Contributing',
-					link: 'https://github.com/hestiacp/hestiacp/blob/main/CONTRIBUTING.md',
+					link: 'https://github.com/hestiacp/hestiacp/blob/release/CONTRIBUTING.md',
 				},
 				{
 					text: 'Security policy',
-					link: 'https://github.com/hestiacp/hestiacp/blob/main/SECURITY.md',
+					link: 'https://github.com/hestiacp/hestiacp/blob/release/SECURITY.md',
 				},
 			],
 		},

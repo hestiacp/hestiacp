@@ -19,9 +19,12 @@
 
 upgrade_config_set_value 'UPGRADE_UPDATE_WEB_TEMPLATES' 'true'
 upgrade_config_set_value 'UPGRADE_UPDATE_DNS_TEMPLATES' 'false'
-upgrade_config_set_value 'UPGRADE_UPDATE_MAIL_TEMPLATES' 'false'
-upgrade_config_set_value 'UPGRADE_REBUILD_USERS' 'no'
 upgrade_config_set_value 'UPGRADE_UPDATE_FILEMANAGER_CONFIG' 'false'
+# Set UPGRADE_UPDATE_MAIL_TEMPLATES and UPGRADE_REBUILD_USERS tp true to update mail
+# templates and rebuild mail domains to apply the new templates to add support to
+# Roundcube 1.7 (same templates work for Roundcube 1.6)
+upgrade_config_set_value 'UPGRADE_UPDATE_MAIL_TEMPLATES' 'true'
+upgrade_config_set_value 'UPGRADE_REBUILD_USERS' 'true'
 
 ensure_utf8_locale() {
 	local locale_file="/etc/default/locale"
@@ -72,9 +75,9 @@ done
 if [[ -n "$ANTISPAM_SYSTEM" ]]; then
 	installed_services="$(systemctl list-units --type=service 2>&1)"
 	if [[ $installed_services == *spamassassin.service* ]]; then
-		write_config_value "ANTISPAM_SYSTEM" "spamassassin"
+		"$BIN/v-change-sys-config-value" "ANTISPAM_SYSTEM" "spamassassin"
 	elif [[ $installed_services == *spamd.service* ]]; then
-		write_config_value "ANTISPAM_SYSTEM" "spamd"
+		"$BIN/v-change-sys-config-value" "ANTISPAM_SYSTEM" "spamd"
 	fi
 fi
 

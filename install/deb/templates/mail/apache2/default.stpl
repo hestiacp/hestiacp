@@ -1,7 +1,7 @@
 <VirtualHost %ip%:%web_ssl_port%>
     ServerName %domain_idn%
     ServerAlias %alias%
-    Alias / /var/lib/roundcube/
+    Alias / /var/lib/roundcube/public_html/
     Alias /error/ %home%/%user%/web/%root_domain%/document_errors/
     #SuexecUserGroup %user% %group%
 
@@ -11,13 +11,13 @@
     SSLCertificateKeyFile      %home%/%user%/conf/mail/%root_domain%/ssl/%root_domain%.key
 
     <Directory "/usr/share/tinymce/www/">
-      Options Indexes MultiViews FollowSymLinks
-      AllowOverride None
-      Order allow,deny
-      allow from all
+        Options Indexes MultiViews FollowSymLinks
+        AllowOverride None
+        Order allow,deny
+        allow from all
     </Directory>
 
-    <Directory /var/lib/roundcube/>
+    <Directory /var/lib/roundcube/public_html/>
         Options +FollowSymLinks
         # This is needed to parse /var/lib/roundcube/.htaccess. See its
         # content before setting AllowOverride to None.
@@ -27,21 +27,26 @@
     </Directory>
 
     # Protecting basic directories:
+    <Directory /var/lib/roundcube>
+        Options -FollowSymLinks
+        AllowOverride None
+    </Directory>
+
     <Directory /var/lib/roundcube/config>
-            Options -FollowSymLinks
-            AllowOverride None
+        Options -FollowSymLinks
+        AllowOverride None
     </Directory>
 
     <Directory /var/lib/roundcube/temp>
-            Options -FollowSymLinks
-            AllowOverride None
+        Options -FollowSymLinks
+        AllowOverride None
         Order allow,deny
         Deny from all
     </Directory>
 
     <Directory /var/lib/roundcube/logs>
-            Options -FollowSymLinks
-            AllowOverride None
+        Options -FollowSymLinks
+        AllowOverride None
         Order allow,deny
         Deny from all
     </Directory>

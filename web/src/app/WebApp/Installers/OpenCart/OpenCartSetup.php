@@ -12,22 +12,22 @@ class OpenCartSetup extends BaseSetup
     protected array $info = [
         'name' => 'OpenCart',
         'group' => 'ecommerce',
-        'version' => '4.0.2.2',
+        'version' => '4.1.0.3',
         'thumbnail' => 'opencart-thumb.png',
     ];
 
     protected array $config = [
         'form' => [
-            'opencart_account_username' => ['value' => 'ocadmin'],
-            'opencart_account_email' => 'text',
-            'opencart_account_password' => 'password',
+            'username' => ['value' => 'ocadmin'],
+            'email' => 'text',
+            'password' => 'password',
         ],
         'database' => true,
         'resources' => [
             'archive' => [
                 'src' =>
-                    'https://github.com/opencart/opencart/releases/download/4.0.2.2/opencart-4.0.2.2.zip',
-                'dst' => '/tmp-prestashop',
+                    'https://github.com/opencart/opencart/releases/download/4.1.0.3/opencart-4.1.0.3.zip',
+                'dst' => '/tmp-opencart',
             ],
         ],
         'server' => [
@@ -35,12 +35,12 @@ class OpenCartSetup extends BaseSetup
                 'template' => 'opencart',
             ],
             'php' => [
-                'supported' => ['7.4', '8.0', '8.1', '8.2', '8.3'],
+                'supported' => ['8.0', '8.1', '8.2', '8.3', '8.4', '8.5'],
             ],
         ],
     ];
 
-    protected function setupApplication(InstallationTarget $target, array $options = null): void
+    protected function setupApplication(InstallationTarget $target, array $options): void
     {
         $extractDirectory = $this->config['resources']['archive']['dst'];
 
@@ -69,22 +69,14 @@ class OpenCartSetup extends BaseSetup
             $target->getDocRoot('/install/cli_install.php'),
             [
                 'install',
-                '--db_hostname',
-                $target->database->host,
-                '--db_username',
-                $target->database->user,
-                '--db_password',
-                $target->database->password,
-                '--db_database',
-                $target->database->name,
-                '--username',
-                $options['opencart_account_username'],
-                '--password',
-                $options['opencart_account_password'],
-                '--email',
-                $options['opencart_account_email'],
-                '--http_server',
-                $target->getUrl() . '/',
+                '--db_hostname', $target->database->host,
+                '--db_username', $target->database->user,
+                '--db_password', $target->database->password,
+                '--db_database', $target->database->name,
+                '--username', $options['username'],
+                '--password', $options['password'],
+                '--email', $options['email'],
+                '--http_server', $target->getUrl() . '/',
             ],
         );
 

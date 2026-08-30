@@ -69,7 +69,7 @@ rebuild_mail_domain_conf
 # Rebuild webmail configuration
 if [ -n "$WEB_SYSTEM" ] || [ -n "$PROXY_SYSTEM" ]; then
 	if [ -n "$IMAP_SYSTEM" ]; then
-		WEBMAIL=$(get_object_value 'web' 'DOMAIN' "$domain" "$WEBMAIL")
+		WEBMAIL=$(get_object_value 'web' 'DOMAIN' "$domain" "WEBMAIL")
 		if [ -n "$WEBMAIL" ]; then
 			$BIN/v-delete-mail-domain-webmail "$user" "$domain" "$restart" 'yes'
 			$BIN/v-add-mail-domain-webmail "$user" "$domain" "$WEBMAIL" "$restart" 'yes'

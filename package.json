@@ -6,7 +6,7 @@
 	"repository": "https://github.com/hestiacp/hestiacp",
 	"license": "GPL-3.0-or-later",
 	"type": "module",
-	"packageManager": "npm@11.19.0",
+	"packageManager": "npm@11.19.1",
 	"scripts": {
 		"docs:dev": "vitepress dev docs",
 		"docs:build": "vitepress build docs",
@@ -20,9 +20,9 @@
 		"prepare": "husky"
 	},
 	"dependencies": {
-		"@alpinejs/collapse": "^3.16.2",
+		"@alpinejs/collapse": "^3.17.0",
 		"@fortawesome/fontawesome-free": "^7.3.1",
-		"alpinejs": "^3.16.2",
+		"alpinejs": "^3.17.0",
 		"chart.js": "^4.5.1",
 		"check-password-strength": "^3.0.0",
 		"floating-vue": "^5.2.2",
@@ -32,7 +32,7 @@
 		"@xterm/xterm": "^6.0.0"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "2.5.10",
+		"@biomejs/biome": "2.5.11",
 		"@prettier/plugin-php": "^0.25.0",
 		"@testing-library/vue": "^8.1.0",
 		"@vitejs/plugin-vue": "^6.0.8",
@@ -41,7 +41,7 @@
 		"husky": "^9.1.7",
 		"jsdom": "^30.0.1",
 		"lightningcss": "^1.33.0",
-		"lint-staged": "^17.3.0",
+		"lint-staged": "^17.4.1",
 		"markdownlint-cli2": "^0.23.2",
 		"prettier": "^3.9.6",
 		"prettier-plugin-nginx": "^1.0.3",
@@ -49,7 +49,7 @@
 		"prettier-plugin-sql": "^0.20.0",
 		"vitepress": "^1.6.4",
 		"vitest": "^4.1.11",
-		"vue": "^3.5.41"
+		"vue": "^3.5.42"
 	},
 	"browserslist": [
 		"defaults"

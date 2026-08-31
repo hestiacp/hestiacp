@@ -26,11 +26,6 @@ format=${9-shell}
 key_algo="${10:-ecdsa-256}"
 key_algo="${key_algo,,}"
 
-# Legacy compatibility: normalize old 'ecdsa' to 'ecdsa-256'
-if [ "$key_algo" = 'ecdsa' ]; then
-	key_algo='ecdsa-256'
-fi
-
 # Set curve based on key_algo
 if [ "$key_algo" = 'ecdsa-256' ]; then
 	ec_curve='prime256v1'

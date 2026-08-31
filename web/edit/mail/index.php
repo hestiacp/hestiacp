@@ -91,20 +91,12 @@ if (!empty($_GET["domain"]) && empty($_GET["account"])) {
 		$v_letsencrypt = "no";
 	}
 
-	// Key algorithm currently stored for this mail domain's Let's Encrypt
-	// certificate. Legacy values are normalized to ecdsa-256 or ecdsa-384.
 	$v_ssl_key_algo = strtolower($data[$v_domain]["SSL_KEY_ALGO"] ?? "");
 	if (
 		empty($v_ssl_key_algo) ||
-		$v_ssl_key_algo === "ecdsa" ||
-		$v_ssl_key_algo === "ecdsa:prime256v1"
+		!in_array($v_ssl_key_algo, ["ecdsa-256", "ecdsa-384", "rsa"], true)
 	) {
-		$v_ssl_key_algo = "ecdsa-256";
-	} elseif ($v_ssl_key_algo === "ecdsa:secp384r1") {
-		$v_ssl_key_algo = "ecdsa-384";
-	}
-	if (!in_array($v_ssl_key_algo, ["ecdsa-256", "ecdsa-384", "rsa"], true)) {
-		$v_ssl_key_algo = "ecdsa-256";
+		$v_ssl_key_algo = "rsa";
 	}
 }
 
@@ -187,19 +179,9 @@ if (!empty($_POST["save"]) && !empty($_GET["domain"]) && empty($_GET["account"])
 	// Check token
 	verify_csrf($_POST);
 
-	// Key algorithm selected in the form.
-	// Legacy values are normalized to ecdsa-256 or ecdsa-384.
 	$v_ssl_key_algo_post = "ecdsa-256";
 	if (!empty($_POST["v_ssl_key_algo"])) {
 		$v_ssl_key_algo_candidate = strtolower(trim($_POST["v_ssl_key_algo"]));
-		if (
-			$v_ssl_key_algo_candidate === "ecdsa" ||
-			$v_ssl_key_algo_candidate === "ecdsa:prime256v1"
-		) {
-			$v_ssl_key_algo_candidate = "ecdsa-256";
-		} elseif ($v_ssl_key_algo_candidate === "ecdsa:secp384r1") {
-			$v_ssl_key_algo_candidate = "ecdsa-384";
-		}
 		if (in_array($v_ssl_key_algo_candidate, ["ecdsa-256", "ecdsa-384", "rsa"], true)) {
 			$v_ssl_key_algo_post = $v_ssl_key_algo_candidate;
 		}

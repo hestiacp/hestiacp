@@ -20,11 +20,6 @@ mail=${4// /}
 key_algo="${5:-ecdsa-256}"
 key_algo="${key_algo,,}"
 
-# Legacy compatibility
-if [ "$key_algo" = 'ecdsa' ]; then
-	key_algo='ecdsa-256'
-fi
-
 # Define variables to preserve redirect/force-ssl if renewal fails
 deleted_redirect=0
 deleted_force_ssl=0

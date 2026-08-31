@@ -149,6 +149,7 @@ for user in $("$BIN/v-list-users" list); do
 			# Preserve the key algorithm the mail cert was issued
 			# with, defaulting to rsa for domains predating
 			# SSL_KEY_ALGO.
+			unset SSL_KEY_ALGO
 			mail_key_algo="$(get_object_value 'mail' 'DOMAIN' "$domain" '$SSL_KEY_ALGO')"
 
 			msg=$($BIN/v-add-letsencrypt-domain "$user" "$domain" "" "yes" "${mail_key_algo:-rsa}")

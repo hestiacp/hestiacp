@@ -59,13 +59,6 @@ $v_locality = $_POST["v_locality"];
 $v_org = $_POST["v_org"];
 $v_key_algo = $_POST["v_key_algo"] ?? "ecdsa-256";
 
-// Legacy compatibility
-if ($v_key_algo === "ecdsa" || $v_key_algo === "ecdsa:prime256v1") {
-	$v_key_algo = "ecdsa-256";
-} elseif ($v_key_algo === "ecdsa:secp384r1") {
-	$v_key_algo = "ecdsa-384";
-}
-
 $valid_key_algos = ["ecdsa-256", "ecdsa-384", "rsa"];
 if (!in_array($v_key_algo, $valid_key_algos, true)) {
 	$_SESSION["error_msg"] = _("Invalid key algorithm selected.");
@@ -135,12 +128,6 @@ $v_state = $_POST["v_state"];
 $v_locality = $_POST["v_locality"];
 $v_org = $_POST["v_org"];
 $v_key_algo = $_POST["v_key_algo"] ?? "ecdsa-256";
-
-if ($v_key_algo === "ecdsa" || $v_key_algo === "ecdsa:prime256v1") {
-	$v_key_algo = "ecdsa-256";
-} elseif ($v_key_algo === "ecdsa:secp384r1") {
-	$v_key_algo = "ecdsa-384";
-}
 
 // Check return code
 if ($return_var != 0) {

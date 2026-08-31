@@ -19,7 +19,7 @@ Due to changes in the code, the error message has been changed. The following li
 
 | Error         | Message                                                                                                                                              |
 | ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `rateLimited` | The rate limit of the maximum requests have been passed. Please check [https://crt.sh](https://crt.sh) to see how many active certificates you have. |
+| `rateLimited` | The rate limit of the maximum requests have been passed. Please check [https://crt.sh](https://crt.sh) or [CertObserver CT search](https://certobserver.com/ct-search) to see how many active certificates you have. |
 
 ### Let’s Encrypt validation status 400
 

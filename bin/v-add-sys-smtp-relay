@@ -30,6 +30,7 @@ source_conf "$HESTIA/conf/hestia.conf"
 #----------------------------------------------------------#
 
 check_args '1' "$#" 'HOST [USERNAME] [PASSWORD] [PORT]'
+is_password_valid
 is_format_valid 'port' 'host' 'password'
 is_username_format_valid "$username" 'username'
 format_no_quotes "$password" 'passowrd'

@@ -862,6 +862,31 @@ if (!empty($_POST["save"])) {
 		}
 		$restart_web = "yes";
 		$restart_proxy = "yes";
+
+		if ($v_letsencrypt == "yes") {
+			exec(
+				HESTIA_CMD .
+					"v-list-web-domain-ssl " .
+					$user .
+					" " .
+					quoteshellarg($v_domain) .
+					" json",
+				$output,
+				$return_var,
+			);
+			$ssl_str = json_decode(implode("", $output), true);
+			unset($output);
+			$v_ssl_crt = $ssl_str[$v_domain]["CRT"];
+			$v_ssl_key = $ssl_str[$v_domain]["KEY"];
+			$v_ssl_ca = $ssl_str[$v_domain]["CA"];
+			$v_ssl_subject = $ssl_str[$v_domain]["SUBJECT"];
+			$v_ssl_aliases = $ssl_str[$v_domain]["ALIASES"];
+			$v_ssl_not_before = $ssl_str[$v_domain]["NOT_BEFORE"];
+			$v_ssl_not_after = $ssl_str[$v_domain]["NOT_AFTER"];
+			$v_ssl_signature = $ssl_str[$v_domain]["SIGNATURE"];
+			$v_ssl_pub_key = $ssl_str[$v_domain]["PUB_KEY"];
+			$v_ssl_issuer = $ssl_str[$v_domain]["ISSUER"];
+		}
 	}
 
 	// Add SSL certificate

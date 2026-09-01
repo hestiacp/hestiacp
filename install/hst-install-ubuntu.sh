@@ -1027,7 +1027,6 @@ if [ "$vsftpd" = 'no' ]; then
 fi
 if [ "$proftpd" = 'no' ]; then
 	software=$(echo "$software" | sed -e "s/proftpd-core//")
-	software=$(echo "$software" | sed -e "s/proftpd-mod-vroot//")
 	software=$(echo "$software" | sed -e "s/proftpd-mod-crypto//")
 fi
 if [ "$named" = 'no' ]; then
@@ -1811,6 +1810,37 @@ if [ "$proftpd" = 'yes' ]; then
 	echo "127.0.0.1 $servername" >> /etc/hosts
 	cp -f $HESTIA_INSTALL_DIR/proftpd/proftpd.conf /etc/proftpd/
 	cp -f $HESTIA_INSTALL_DIR/proftpd/tls.conf /etc/proftpd/
+
+	# In Ubuntu 26.04 we need to:
+	#   1.- Add modules.conf to proftpd.conf so tls mod is loaded.
+	#   2.- Add rules to AppArmor to allow ProFTPD to read the certificates and create the socket.
+	ubuntu_major="${release%%.*}"
+	if [[ "$ubuntu_major" -ge 26 ]]; then
+		# Add modules.conf
+		if [[ -f /etc/proftpd/modules.conf ]] && grep -qF "Include /etc/proftpd/tls.conf" /etc/proftpd/proftpd.conf; then
+			if ! grep -qF "Include /etc/proftpd/modules.conf" /etc/proftpd/proftpd.conf; then
+				sed -i '\|Include /etc/proftpd/tls.conf|i Include /etc/proftpd/modules.conf' /etc/proftpd/proftpd.conf
+			fi
+		fi
+
+		# Add ruleset for AppArmor
+		mkdir -p /etc/apparmor.d/local
+		if [[ ! -f /etc/apparmor.d/local/proftpd ]]; then
+			cat > /etc/apparmor.d/local/proftpd << 'EOF'
+# Configuration added by Hestia
+/usr/local/hestia/ssl/certificate.crt r,
+/usr/local/hestia/ssl/certificate.key r,
+/run/proftpd.sock rw,
+EOF
+		elif ! grep -qF "# Configuration added by Hestia" /etc/apparmor.d/local/proftpd; then
+			cat >> /etc/apparmor.d/local/proftpd << 'EOF'
+# Configuration added by Hestia
+/usr/local/hestia/ssl/certificate.crt r,
+/usr/local/hestia/ssl/certificate.key r,
+/run/proftpd.sock rw,
+EOF
+		fi
+	fi
 
 	update-rc.d proftpd defaults > /dev/null 2>&1
 	systemctl start proftpd >> $LOG

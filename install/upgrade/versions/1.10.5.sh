@@ -23,6 +23,66 @@ upgrade_config_set_value 'UPGRADE_UPDATE_FILEMANAGER_CONFIG' 'false'
 upgrade_config_set_value 'UPGRADE_UPDATE_MAIL_TEMPLATES' 'false'
 upgrade_config_set_value 'UPGRADE_REBUILD_USERS' 'false'
 
+if [ -f /etc/os-release ]; then
+	# /etc/os-release defines its own $VERSION, which would otherwise
+	# clobber Hestia's $VERSION since this script is sourced by the caller
+	_HESTIA_VERSION="$VERSION"
+	source /etc/os-release
+	VERSION="$_HESTIA_VERSION"
+	unset _HESTIA_VERSION
+fi
+
+# Set running OS
+IS_DEBIAN13=false
+IS_UBUNTU2604=false
+IS_DEBIAN13_OR_UBUNTU2604=false
+
+if [[ "$ID" == "debian" && "$VERSION_ID" == "13" ]]; then
+	IS_DEBIAN13=true
+fi
+
+if [[ "$ID" == "ubuntu" && "$VERSION_ID" == "26.04" ]]; then
+	IS_UBUNTU2604=true
+fi
+
+if $IS_DEBIAN13 || $IS_UBUNTU2604; then
+	IS_DEBIAN13_OR_UBUNTU2604=true
+fi
+
+# Start fix ProFTPD
+# In Debiand 13 and Ubuntu 26.04 we need to:
+#   Add modules.conf to proftpd.conf so tls mod is loaded.
+if $IS_DEBIAN13_OR_UBUNTU2604; then
+	if [[ -f /etc/proftpd/modules.conf ]] && grep -qF "Include /etc/proftpd/tls.conf" /etc/proftpd/proftpd.conf; then
+		if ! grep -qF "Include /etc/proftpd/modules.conf" /etc/proftpd/proftpd.conf; then
+			sed -i '\|Include /etc/proftpd/tls.conf|i Include /etc/proftpd/modules.conf' /etc/proftpd/proftpd.conf
+		fi
+	fi
+fi
+
+# In Ubuntu 26.04 we also need to:
+#   Add rules to AppArmor to allow ProFTPD to read the certificates and create the socket.
+if $IS_UBUNTU2604; then
+	# Add ruleset for AppArmor
+	mkdir -p /etc/apparmor.d/local
+	if [[ ! -f /etc/apparmor.d/local/proftpd ]]; then
+		cat > /etc/apparmor.d/local/proftpd << 'EOF'
+# Configuration added by Hestia
+/usr/local/hestia/ssl/certificate.crt r,
+/usr/local/hestia/ssl/certificate.key r,
+/run/proftpd.sock rw,
+EOF
+	elif ! grep -qF "# Configuration added by Hestia" /etc/apparmor.d/local/proftpd; then
+		cat >> /etc/apparmor.d/local/proftpd << 'EOF'
+# Configuration added by Hestia
+/usr/local/hestia/ssl/certificate.crt r,
+/usr/local/hestia/ssl/certificate.key r,
+/run/proftpd.sock rw,
+EOF
+	fi
+fi
+# End fix ProFTPD
+
 # Load the phpMyAdmin tempdir configuration last, leaving lower-numbered
 # prefixes available for additional phpMyAdmin configuration files.
 pma_old_tempdir_conf="/etc/phpmyadmin/conf.d/02-tempdir.php"

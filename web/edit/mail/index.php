@@ -96,7 +96,7 @@ if (!empty($_GET["domain"]) && empty($_GET["account"])) {
 		empty($v_ssl_key_algo) ||
 		!in_array($v_ssl_key_algo, ["ecdsa-256", "ecdsa-384", "rsa"], true)
 	) {
-		$v_ssl_key_algo = "rsa";
+		$v_ssl_key_algo = $v_ssl == "yes" ? "rsa" : "ecdsa-256";
 	}
 }
 

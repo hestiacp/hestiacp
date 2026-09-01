@@ -72,7 +72,7 @@ if (empty($v_letsencrypt)) {
 
 $v_ssl_key_algo = strtolower($data[$v_domain]["SSL_KEY_ALGO"] ?? "");
 if (empty($v_ssl_key_algo) || !in_array($v_ssl_key_algo, ["ecdsa-256", "ecdsa-384", "rsa"], true)) {
-	$v_ssl_key_algo = "rsa";
+	$v_ssl_key_algo = $v_ssl == "yes" ? "rsa" : "ecdsa-256";
 }
 
 $v_ssl_home = $data[$v_domain]["SSL_HOME"] ?? "";

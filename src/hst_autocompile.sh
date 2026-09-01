@@ -362,7 +362,7 @@ HESTIA_V="${BUILD_VER}_${BUILD_ARCH}"
 # List of supported OS releases for Hestia used for crossbuilding.
 supported_os="debian11 debian12 debian13 ubuntu22.04 ubuntu24.04 ubuntu26.04"
 OPENSSL_V='3.5.8'
-PCRE_V='10.47'
+PCRE_V='10.48'
 ZLIB_V='1.3.2'
 
 # Create build directories

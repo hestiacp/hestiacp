@@ -105,16 +105,18 @@ EOF
 	fi
 fi
 
-if $restart_proftpd; then
-	echo "[ + ] Restarting ProFTPd service"
-	if systemctl restart proftpd &> /dev/null; then
-		echo "[ + ] ProFTPd successfully restarted"
+if $IS_DEBIAN13_OR_UBUNTU2604; then
+	if $restart_proftpd; then
+		echo "[ + ] Restarting ProFTPd service"
+		if systemctl restart proftpd &> /dev/null; then
+			echo "[ + ] ProFTPd successfully restarted"
+		else
+			echo "[ ! ] Error restarting ProFTPd" >&2
+			systemctl status proftpd --no-pager -l >&2
+		fi
 	else
-		echo "[ ! ] Error restarting ProFTPd" >&2
-		systemctl status proftpd --no-pager -l >&2
+		echo "[ + ] ProFTPd doesn't need to be fixed"
 	fi
-else
-	echo "[ + ] ProFTPd doesn't need to be fixed"
 fi
 
 # End fix ProFTPD

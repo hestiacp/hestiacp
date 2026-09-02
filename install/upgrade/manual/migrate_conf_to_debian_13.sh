@@ -161,6 +161,7 @@ s#  quota_directory = "${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/d
 			systemctl status exim4 --no-pager -l >&2
 			echo "[ + ] Recovering configuration backup"
 			cp -f /etc/exim4/exim4.conf.template.bak /etc/exim4/exim4.conf.template
+
 			if systemctl restart exim4 &> /dev/null; then
 				echo "[ + ] Exim successfully restarted after recovery"
 			else
@@ -172,6 +173,39 @@ s#  quota_directory = "${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/d
 		echo "[ * ] Exim configuration already up to date"
 	fi
 
+fi
+
+#----------------------------------------------------------#
+#                   ProFTPd configuration                    #
+#----------------------------------------------------------#
+
+if [[ "$FTP_SYSTEM" =~ proftpd ]]; then
+	echo "[ * ] Checking ProFTPd:"
+	if ! dpkg -s proftpd-mod-crypto &> /dev/null; then
+		echo "[ + ] Installing proftpd-mod-crypto:"
+		if apt-get install -y proftpd-mod-crypto &> /dev/null; then
+			echo "[ + ] proftpd-mod-crypto successfully installed"
+		else
+			echo "[ ! ] Error installing proftpd-mod-crypto" >&2
+		fi
+	else
+		echo "[ - ] proftpd-mod-crypto already installed, nothing to do"
+	fi
+	if [[ -f /etc/proftpd/modules.conf ]] && grep -qF "Include /etc/proftpd/tls.conf" /etc/proftpd/proftpd.conf; then
+		if ! grep -qF "Include /etc/proftpd/modules.conf" /etc/proftpd/proftpd.conf; then
+			echo "[ + ] Updating ProFTPd configuration:"
+			sed -i '\|Include /etc/proftpd/tls.conf|i Include /etc/proftpd/modules.conf' /etc/proftpd/proftpd.conf
+
+			if systemctl restart proftpd &> /dev/null; then
+				echo "[ + ] ProFTPd successfully restarted"
+			else
+				echo "[ ! ] Error restarting ProFTPd" >&2
+				systemctl status proftpd --no-pager -l >&2
+			fi
+		else
+			echo "[ - ] ProFTPd already configured, nothing to do"
+		fi
+	fi
 fi
 
 echo

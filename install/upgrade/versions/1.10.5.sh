@@ -52,10 +52,27 @@ fi
 # Start fix ProFTPD
 # In Debiand 13 and Ubuntu 26.04 we need to:
 #   Add modules.conf to proftpd.conf so tls mod is loaded.
+#   Ensure the xfer module is loaded so the UseSendfile directive doesn't produce an error.
+restart_proftpd=false
 if $IS_DEBIAN13_OR_UBUNTU2604; then
+	echo "[ + ] Checking whether ProFTPd needs to be fixed..."
+
+	if [[ -f /etc/proftpd/modules.conf.proftpd-new ]] && [[ -f /etc/proftpd/modules.conf ]] && ! grep -qE "^[[:space:]]*LoadModule[[:space:]]+mod_xfer\.c" /etc/proftpd/modules.conf; then
+		echo "[ + ] Fixing ProFTPd not loading module xfer"
+		if grep -qE "^[[:space:]]*LoadModule[[:space:]]+mod_xfer\.c" /etc/proftpd/modules.conf.proftpd-new; then
+			cp /etc/proftpd/modules.conf "/etc/proftpd/modules.conf.hestia-backup-$(date +%Y-%m-%d)"
+			cp /etc/proftpd/modules.conf.proftpd-new /etc/proftpd/modules.conf
+			restart_proftpd=true
+		else
+			echo "[ ! ] Error: mod_xfer.c is not enabled in either modules.conf or modules.conf.proftpd-new"
+		fi
+	fi
+
 	if [[ -f /etc/proftpd/modules.conf ]] && grep -qF "Include /etc/proftpd/tls.conf" /etc/proftpd/proftpd.conf; then
 		if ! grep -qF "Include /etc/proftpd/modules.conf" /etc/proftpd/proftpd.conf; then
+			echo "[ + ] Fixing ProFTPd not loading modules.conf"
 			sed -i '\|Include /etc/proftpd/tls.conf|i Include /etc/proftpd/modules.conf' /etc/proftpd/proftpd.conf
+			restart_proftpd=true
 		fi
 	fi
 fi
@@ -66,21 +83,38 @@ if $IS_UBUNTU2604; then
 	# Add ruleset for AppArmor
 	mkdir -p /etc/apparmor.d/local
 	if [[ ! -f /etc/apparmor.d/local/proftpd ]]; then
+		echo "[ + ] Fixing ProFTPd rules for AppArmor"
 		cat > /etc/apparmor.d/local/proftpd << 'EOF'
 # Configuration added by Hestia
 /usr/local/hestia/ssl/certificate.crt r,
 /usr/local/hestia/ssl/certificate.key r,
 /run/proftpd.sock rw,
 EOF
+		restart_proftpd=true
 	elif ! grep -qF "# Configuration added by Hestia" /etc/apparmor.d/local/proftpd; then
+		echo "[ + ] Fixing ProFTPd rules for AppArmor"
 		cat >> /etc/apparmor.d/local/proftpd << 'EOF'
 # Configuration added by Hestia
 /usr/local/hestia/ssl/certificate.crt r,
 /usr/local/hestia/ssl/certificate.key r,
 /run/proftpd.sock rw,
 EOF
+		restart_proftpd=true
 	fi
 fi
+
+if $restart_proftpd; then
+	echo "[ + ] Restarting ProFTPd service"
+	if systemctl restart proftpd &> /dev/null; then
+		echo "[ + ] ProFTPd successfully restarted"
+	else
+		echo "[ ! ] Error restarting ProFTPd" >&2
+		systemctl status proftpd --no-pager -l >&2
+	fi
+else
+	echo "[ + ] ProFTPd doens't need to be fixed"
+fi
+
 # End fix ProFTPD
 
 # Load the phpMyAdmin tempdir configuration last, leaving lower-numbered

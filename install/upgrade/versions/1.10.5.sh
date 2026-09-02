@@ -114,7 +114,7 @@ if $restart_proftpd; then
 		systemctl status proftpd --no-pager -l >&2
 	fi
 else
-	echo "[ + ] ProFTPd doens't need to be fixed"
+	echo "[ + ] ProFTPd doesn't need to be fixed"
 fi
 
 # End fix ProFTPD

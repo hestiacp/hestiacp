@@ -90,6 +90,7 @@ if $IS_UBUNTU2604; then
 /usr/local/hestia/ssl/certificate.key r,
 /run/proftpd.sock rw,
 EOF
+		apparmor_parser -r /etc/apparmor.d/proftpd 2> /dev/null
 		restart_proftpd=true
 	elif ! grep -qF "# Configuration added by Hestia" /etc/apparmor.d/local/proftpd; then
 		echo "[ + ] Fixing ProFTPd rules for AppArmor"
@@ -99,6 +100,7 @@ EOF
 /usr/local/hestia/ssl/certificate.key r,
 /run/proftpd.sock rw,
 EOF
+		apparmor_parser -r /etc/apparmor.d/proftpd 2> /dev/null
 		restart_proftpd=true
 	fi
 fi

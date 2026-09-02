@@ -1832,6 +1832,7 @@ if [ "$proftpd" = 'yes' ]; then
 /usr/local/hestia/ssl/certificate.key r,
 /run/proftpd.sock rw,
 EOF
+			apparmor_parser -r /etc/apparmor.d/proftpd 2> /dev/null
 		elif ! grep -qF "# Configuration added by Hestia" /etc/apparmor.d/local/proftpd; then
 			cat >> /etc/apparmor.d/local/proftpd << 'EOF'
 # Configuration added by Hestia
@@ -1839,6 +1840,7 @@ EOF
 /usr/local/hestia/ssl/certificate.key r,
 /run/proftpd.sock rw,
 EOF
+			apparmor_parser -r /etc/apparmor.d/proftpd 2> /dev/null
 		fi
 	fi
 

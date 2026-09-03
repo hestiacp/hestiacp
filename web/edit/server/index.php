@@ -120,6 +120,38 @@ if (empty($v_dns_cluster)) {
 }
 $v_release_branch = $_SESSION["RELEASE_BRANCH"];
 
+// List server smtp settings
+if (!empty($_SESSION["USE_SERVER_SMTP"])) {
+	$v_use_server_smtp = $_SESSION["USE_SERVER_SMTP"];
+} else {
+	$v_use_server_smtp = "";
+}
+if (!empty($_SESSION["SERVER_SMTP_HOST"])) {
+	$v_server_smtp_host = $_SESSION["SERVER_SMTP_HOST"];
+} else {
+	$v_server_smtp_host = "";
+}
+if (!empty($_SESSION["SERVER_SMTP_PORT"])) {
+	$v_server_smtp_port = $_SESSION["SERVER_SMTP_PORT"];
+} else {
+	$v_server_smtp_port = "";
+}
+if (!empty($_SESSION["SERVER_SMTP_SECURITY"])) {
+	$v_server_smtp_security = $_SESSION["SERVER_SMTP_SECURITY"];
+} else {
+	$v_server_smtp_security = "";
+}
+if (!empty($_SESSION["SERVER_SMTP_USER"])) {
+	$v_server_smtp_user = $_SESSION["SERVER_SMTP_USER"];
+} else {
+	$v_server_smtp_user = "";
+}
+if (!empty($_SESSION["SERVER_SMTP_ADDR"])) {
+	$v_server_smtp_addr = $_SESSION["SERVER_SMTP_ADDR"];
+} else {
+	$v_server_smtp_addr = "";
+}
+
 // List smtp relay settings
 if (!empty($_SESSION["SMTP_RELAY"])) {
 	$v_smtp_relay = $_SESSION["SMTP_RELAY"];
@@ -720,6 +752,93 @@ if (!empty($_POST["save"])) {
 					$v_mail_adv = "yes";
 				}
 			}
+		}
+	}
+
+	// Update server smtp settings
+	if (empty($_SESSION["error_msg"])) {
+		if (isset($_POST["v_use_server_smtp"]) && !empty($_POST["v_server_smtp_host"])) {
+			if (
+				$_POST["v_server_smtp_host"] != $v_server_smtp_host ||
+				$_POST["v_server_smtp_port"] != $v_server_smtp_port ||
+				$_POST["v_server_smtp_security"] != $v_server_smtp_security ||
+				$_POST["v_server_smtp_user"] != $v_server_smtp_user ||
+				$_POST["v_server_smtp_addr"] != $v_server_smtp_addr ||
+				!empty($_POST["v_server_smtp_passwd"])
+			) {
+				$v_server_smtp_host = $_POST["v_server_smtp_host"];
+				$v_server_smtp_port = $_POST["v_server_smtp_port"];
+				$v_server_smtp_security = $_POST["v_server_smtp_security"];
+				$v_server_smtp_user = $_POST["v_server_smtp_user"];
+				$v_server_smtp_addr = $_POST["v_server_smtp_addr"];
+
+				exec(
+					HESTIA_CMD . "v-change-sys-config-value USE_SERVER_SMTP true",
+					$output,
+					$return_var,
+				);
+				exec(
+					HESTIA_CMD .
+						"v-change-sys-config-value SERVER_SMTP_HOST " .
+						quoteshellarg($v_server_smtp_host),
+					$output,
+					$return_var,
+				);
+				exec(
+					HESTIA_CMD .
+						"v-change-sys-config-value SERVER_SMTP_PORT " .
+						quoteshellarg(!empty($v_server_smtp_port) ? $v_server_smtp_port : "587"),
+					$output,
+					$return_var,
+				);
+				exec(
+					HESTIA_CMD .
+						"v-change-sys-config-value SERVER_SMTP_SECURITY " .
+						quoteshellarg($v_server_smtp_security),
+					$output,
+					$return_var,
+				);
+				exec(
+					HESTIA_CMD .
+						"v-change-sys-config-value SERVER_SMTP_USER " .
+						quoteshellarg($v_server_smtp_user),
+					$output,
+					$return_var,
+				);
+				exec(
+					HESTIA_CMD .
+						"v-change-sys-config-value SERVER_SMTP_ADDR " .
+						quoteshellarg($v_server_smtp_addr),
+					$output,
+					$return_var,
+				);
+				if (!empty($_POST["v_server_smtp_passwd"])) {
+					exec(
+						HESTIA_CMD .
+							"v-change-sys-config-value SERVER_SMTP_PASSWD " .
+							quoteshellarg($_POST["v_server_smtp_passwd"]),
+						$output,
+						$return_var,
+					);
+				}
+			} elseif ($v_use_server_smtp != "true") {
+				exec(
+					HESTIA_CMD . "v-change-sys-config-value USE_SERVER_SMTP true",
+					$output,
+					$return_var,
+				);
+			}
+			$v_use_server_smtp = "true";
+		}
+		if (!isset($_POST["v_use_server_smtp"]) && $v_use_server_smtp == "true") {
+			$v_use_server_smtp = "false";
+			exec(
+				HESTIA_CMD . "v-change-sys-config-value USE_SERVER_SMTP false",
+				$output,
+				$return_var,
+			);
+			check_return_code($return_var, $output);
+			unset($output);
 		}
 	}
 
@@ -1957,13 +2076,65 @@ if (!empty($_POST["save"])) {
 		}
 	}
 
+	// Test Server SMTP connection
+	if (!empty($_POST["v_test_smtp"]) && empty($_SESSION["error_msg"])) {
+		$mail = new \PHPMailer\PHPMailer\PHPMailer(true);
+		try {
+			$mail->IsSMTP();
+			$mail->SMTPDebug = 0;
+			$mail->SMTPAuth = true;
+			$mail->SMTPSecure = $_POST["v_server_smtp_security"];
+			$mail->Port = !empty($_POST["v_server_smtp_port"])
+				? $_POST["v_server_smtp_port"]
+				: "587";
+			$mail->Host = $_POST["v_server_smtp_host"];
+			$mail->Username = $_POST["v_server_smtp_user"];
+			$mail->Password = !empty($_POST["v_server_smtp_passwd"])
+				? $_POST["v_server_smtp_passwd"]
+				: $_SESSION["SERVER_SMTP_PASSWD"];
+
+			$mail->setFrom($_POST["v_server_smtp_addr"], "HestiaCP");
+
+			// Get current user's email
+			$current_user = empty($_SESSION["look"]) ? $_SESSION["user"] : $_SESSION["look"];
+			exec(
+				HESTIA_CMD . "v-list-user " . quoteshellarg($current_user) . " json",
+				$output,
+				$return_var,
+			);
+			$user_data = json_decode(implode("", $output), true);
+			$test_email = $user_data[$current_user]["CONTACT"];
+			unset($output);
+
+			if (empty($test_email)) {
+				throw new \PHPMailer\PHPMailer\Exception(
+					sprintf(_("No contact email address configured for user %s."), $current_user),
+				);
+			}
+
+			$mail->addAddress($test_email);
+			$mail->Subject = "HestiaCP SMTP Test";
+			$mail->Body = "This is a test email to verify Server SMTP configuration.";
+			$mail->send();
+
+			$_SESSION["ok_msg"] = _("Test email sent successfully to ") . $test_email;
+		} catch (\PHPMailer\PHPMailer\Exception $e) {
+			$error_detail = !empty($e->getMessage()) ? $e->getMessage() : $mail->ErrorInfo;
+			$_SESSION["error_msg"] = _("SMTP Error: ") . $error_detail;
+		}
+	}
+
 	// Flush field values on success
 	if (empty($_SESSION["error_msg"])) {
-		$_SESSION["ok_msg"] = _("Changes have been saved.");
+		if (empty($_SESSION["ok_msg"])) {
+			$_SESSION["ok_msg"] = _("Changes have been saved.");
+		}
 	}
 	if ($require_refresh == true) {
 		$refresh = $_SERVER["REQUEST_URI"];
-		$_SESSION["ok_msg"] = _("Changes have been saved.");
+		if (empty($_SESSION["ok_msg"]) && empty($_SESSION["error_msg"])) {
+			$_SESSION["ok_msg"] = _("Changes have been saved.");
+		}
 		header("Location: $refresh");
 		die();
 	}

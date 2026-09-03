@@ -131,3 +131,9 @@ pma_new_tempdir_conf="/etc/phpmyadmin/conf.d/99-tempdir.php"
 if [[ -f "$pma_old_tempdir_conf" ]]; then
 	mv "$pma_old_tempdir_conf" "$pma_new_tempdir_conf"
 fi
+
+# Add the list-all-user-objects API key permission.
+if [ -f "$HESTIA/data/api/list-all-user-objects" ]; then
+	rm "$HESTIA/data/api/list-all-user-objects"
+fi
+cp "$HESTIA/install/common/api/list-all-user-objects" "$HESTIA/data/api/list-all-user-objects"

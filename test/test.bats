@@ -37,6 +37,58 @@ function setup() {
     source $HESTIA/func/main.sh
     source $HESTIA/conf/hestia.conf
     source $HESTIA/func/ip.sh
+    source $HESTIA/func/list.sh
+}
+
+function validate_all_domain_list() {
+    local command=$1
+    local user=$2
+    local domain=$3
+
+    run "$command" json
+    assert_success
+
+    run jq -e --arg user "$user" --arg domain "$domain" '.[$domain].USER == $user' <<< "$output"
+    assert_success
+
+    run "$command" plain
+    assert_success
+    assert_output --partial "$user"$'\t'"$domain"$'\t'
+
+    run "$command" csv
+    assert_success
+    assert_output --regexp '^USER,DOMAIN,'
+    assert_output --partial "$user,$domain,"
+
+    run "$command" shell
+    assert_success
+    assert_output --regexp '^USER[[:space:]]+DOMAIN'
+    assert_output --regexp "$user[[:space:]]+$domain"
+}
+
+function validate_all_database_list() {
+    local user=$1
+    local database=$2
+
+    run v-list-all-databases json
+    assert_success
+
+    run jq -e --arg user "$user" --arg database "$database" '.[$database].USER == $user' <<< "$output"
+    assert_success
+
+    run v-list-all-databases plain
+    assert_success
+    assert_output --partial "$user"$'\t'"$database"$'\t'
+
+    run v-list-all-databases csv
+    assert_success
+    assert_output --regexp '^USER,DATABASE,'
+    assert_output --partial "$user,$database,"
+
+    run v-list-all-databases shell
+    assert_success
+    assert_output --regexp '^USER[[:space:]]+DATABASE'
+    assert_output --regexp "$user[[:space:]]+$database"
 }
 
 function validate_web_domain() {
@@ -314,10 +366,44 @@ function check_ip_not_banned(){
 #                         User                             #
 #----------------------------------------------------------#
 
+@test "API: List all user objects permission" {
+    run v-list-apis json
+    assert_success
+
+    run jq -e '
+        ."list-all-user-objects".ROLE == "admin" and
+        (."list-all-user-objects".COMMANDS | index("v-list-all-web-domains") != null) and
+        (."list-all-user-objects".COMMANDS | index("v-list-all-mail-domains") != null) and
+        (."list-all-user-objects".COMMANDS | index("v-list-all-dns-domains") != null) and
+        (."list-all-user-objects".COMMANDS | index("v-list-all-databases") != null)
+    ' <<< "$output"
+    assert_success
+}
+
+@test "List all user objects: Propagate list command failures" {
+    for format in plain csv shell json; do
+        run list_all_user_objects v-list-command-does-not-exist "$format" 2>/dev/null
+        assert_failure
+        refute_output
+    done
+}
+
+@test "List all user objects: Empty result exits successfully" {
+    run v-list-all-databases plain
+    assert_success
+    refute_output
+}
+
 @test "User: Add new user" {
     run v-add-user $user $user $user@hestiacp.com default "Super Test"
     assert_success
     refute_output
+}
+
+@test "API: Non-admin cannot use list all user objects permission" {
+    run v-add-access-key "$user" list-all-user-objects '' json
+    assert_failure $E_INVALID
+    assert_output --partial 'Only the admin can run this API'
 }
 
 @test "User: Add new user Failed 1" {
@@ -811,6 +897,10 @@ function check_ip_not_banned(){
     echo -e "<?php\necho 'Hestia Test:'.(4*3);" > $HOMEDIR/$user/web/$domain/public_html/php-test.php
     validate_web_domain $user $domain 'Hestia Test:12' 'php-test.php'
     rm $HOMEDIR/$user/web/$domain/public_html/php-test.php
+}
+
+@test "WEB: List all web domains" {
+    validate_all_domain_list v-list-all-web-domains "$user" "$domain"
 }
 
 @test "WEB: Add web domain (duplicate)" {
@@ -1327,6 +1417,10 @@ function check_ip_not_banned(){
     refute_output
 }
 
+@test "DNS: List all DNS domains" {
+    validate_all_domain_list v-list-all-dns-domains "$user" "$domain"
+}
+
 @test "DNS: Add domain (duplicate)" {
     run v-add-dns-domain $user $domain 198.18.0.125
     assert_failure $E_EXISTS
@@ -1585,6 +1679,10 @@ function check_ip_not_banned(){
     validate_mail_domain $user $domain
 }
 
+@test "MAIL: List all mail domains" {
+    validate_all_domain_list v-list-all-mail-domains "$user" "$domain"
+}
+
 @test "MAIL: Add mail domain webmail client (Roundcube)" {
     run v-add-mail-domain-webmail $user $domain "roundcube" "yes"
     assert_success
@@ -1816,6 +1914,15 @@ function check_ip_not_banned(){
     assert_failure $E_EXISTS
 }
 
+@test "WEB: List all web domains for multiple users" {
+    run v-list-all-web-domains json
+    assert_success
+
+    run jq -e --arg user "$user" --arg domain "$domain" --arg user2 "$user2" --arg rootdomain "$rootdomain" \
+        '.[$domain].USER == $user and .[$rootdomain].USER == $user2' <<< "$output"
+    assert_success
+}
+
 @test "Allow Users: User can't add user.user2.com as alias" {
     run v-add-web-domain-alias $user $domain $subdomain
     assert_failure $E_EXISTS
@@ -1910,6 +2017,10 @@ function check_ip_not_banned(){
     refute_output
     # validate_database mysql database_name database_user password
     validate_database mysql $database $dbuser 1234
+}
+
+@test "MYSQL: List all databases" {
+    validate_all_database_list "$user" "$database"
 }
 
 @test "MYSQL: Add Database (Duplicate)" {

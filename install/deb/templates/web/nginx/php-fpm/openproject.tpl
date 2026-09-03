@@ -36,6 +36,10 @@ server {
 		include %home%/%user%/web/%domain%/stats/auth.conf*;
 	}
 
+	location ^~ /assets {
+                alias /opt/openproject/public/assets;
+        }
+
 	include /etc/nginx/conf.d/phpmyadmin.inc*;
 	include /etc/nginx/conf.d/phppgadmin.inc*;
 	include %home%/%user%/conf/web/%domain%/nginx.conf_*;

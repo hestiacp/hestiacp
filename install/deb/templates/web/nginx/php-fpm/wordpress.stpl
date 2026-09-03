@@ -13,6 +13,13 @@ server {
 	access_log  /var/log/nginx/domains/%domain%.bytes bytes;
 	error_log   /var/log/nginx/domains/%domain%.error.log error;
 
+
+        add_header X-Frame-Options "SAMEORIGIN" always;
+        add_header X-Content-Type-Options "nosniff" always;
+        add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+        add_header Permissions-Policy "geolocation=(), microphone=(), camera=()" always;
+        add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https:; style-src 'self' 'unsafe-inline' https:;" always;
+
 	ssl_certificate     %ssl_pem%;
 	ssl_certificate_key %ssl_key%;
 	#Commented out ssl_stapling directives due to Lets Encrypt ending OCSP support in 2025

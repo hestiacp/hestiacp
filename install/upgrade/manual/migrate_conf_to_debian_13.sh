@@ -161,6 +161,7 @@ s#  quota_directory = "${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/d
 			systemctl status exim4 --no-pager -l >&2
 			echo "[ + ] Recovering configuration backup"
 			cp -f /etc/exim4/exim4.conf.template.bak /etc/exim4/exim4.conf.template
+
 			if systemctl restart exim4 &> /dev/null; then
 				echo "[ + ] Exim successfully restarted after recovery"
 			else
@@ -170,6 +171,57 @@ s#  quota_directory = "${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/d
 		fi
 	else
 		echo "[ * ] Exim configuration already up to date"
+	fi
+
+fi
+echo
+
+#----------------------------------------------------------#
+#                   ProFTPd configuration                    #
+#----------------------------------------------------------#
+
+if [[ "$FTP_SYSTEM" =~ proftpd ]]; then
+	restart_proftpd=false
+	echo "[ * ] Checking ProFTPd:"
+	if ! dpkg -s proftpd-mod-crypto &> /dev/null; then
+		echo "[ + ] Installing proftpd-mod-crypto:"
+		if apt-get install -y proftpd-mod-crypto &> /dev/null; then
+			echo "[ + ] proftpd-mod-crypto successfully installed"
+		else
+			echo "[ ! ] Error installing proftpd-mod-crypto" >&2
+		fi
+	else
+		echo "[ - ] proftpd-mod-crypto already installed, nothing to do"
+	fi
+
+	if [[ -f /etc/proftpd/modules.conf.proftpd-new ]] && [[ -f /etc/proftpd/modules.conf ]] && ! grep -qE "^[[:space:]]*LoadModule[[:space:]]+mod_xfer\.c" /etc/proftpd/modules.conf; then
+		echo "[ + ] Ensuring xfer module is enabled"
+		if grep -qE "^[[:space:]]*LoadModule[[:space:]]+mod_xfer\.c" /etc/proftpd/modules.conf.proftpd-new; then
+			cp /etc/proftpd/modules.conf "/etc/proftpd/modules.conf.hestia-backup-$(date +%Y-%m-%d)"
+			cp /etc/proftpd/modules.conf.proftpd-new /etc/proftpd/modules.conf
+			restart_proftpd=true
+		else
+			echo "[ ! ] Error: mod_xfer.c is not enabled in modules.conf.proftpd-new either"
+		fi
+	fi
+
+	if [[ -f /etc/proftpd/modules.conf ]] && grep -qF "Include /etc/proftpd/tls.conf" /etc/proftpd/proftpd.conf; then
+		if ! grep -qF "Include /etc/proftpd/modules.conf" /etc/proftpd/proftpd.conf; then
+			echo "[ + ] Updating ProFTPd configuration:"
+			sed -i '\|Include /etc/proftpd/tls.conf|i Include /etc/proftpd/modules.conf' /etc/proftpd/proftpd.conf
+			restart_proftpd=true
+		else
+			echo "[ - ] ProFTPd already configured, nothing to do"
+		fi
+	fi
+
+	if $restart_proftpd; then
+		if systemctl restart proftpd &> /dev/null; then
+			echo "[ + ] ProFTPd successfully restarted"
+		else
+			echo "[ ! ] Error restarting ProFTPd" >&2
+			systemctl status proftpd --no-pager -l >&2
+		fi
 	fi
 
 fi

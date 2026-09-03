@@ -1,0 +1,71 @@
+#!/bin/bash
+# info: delete exim blacklist
+# options: none
+# example: v-delete-exim-blacklist
+#
+# Removes /etc/exim4/blacklist if present and removes the custom blacklist block
+# from /etc/exim4/exim4.conf.template. Restarts exim4 and logs the action.
+
+set -euo pipefail
+
+# Ensure 'user' is defined to avoid "unbound variable" when main.sh checks it
+user="${ROOT_USER:-root}"
+
+# Includes
+source $HESTIA/func/main.sh
+source_conf "$HESTIA/conf/hestia.conf"
+
+BLACKLIST_FILE="/etc/exim4/blacklist"
+TEMPLATE_FILE="/etc/exim4/exim4.conf.template"
+TMP_FILE="${TEMPLATE_FILE}.tmp"
+
+# Remove blacklist file if exists (no backup to avoid residual files)
+if [ -f "$BLACKLIST_FILE" ]; then
+    rm -f "$BLACKLIST_FILE"
+    echo "Removed $BLACKLIST_FILE"
+else
+    echo "$BLACKLIST_FILE not present, skipping file removal"
+fi
+
+if [ ! -f "$TEMPLATE_FILE" ]; then
+    echo "Error: Exim template not found: $TEMPLATE_FILE"
+    exit 1
+fi
+
+# If the custom block is present, remove it (idempotent)
+if grep -q "# CUSTOM BLACKLIST" "$TEMPLATE_FILE"; then
+    # Find start and end line numbers of the block (first occurrence)
+    start_line=$(grep -n "# CUSTOM BLACKLIST" "$TEMPLATE_FILE" | head -n1 | cut -d: -f1) || start_line=""
+    end_line=$(grep -n "# END CUSTOM BLACKLIST" "$TEMPLATE_FILE" | head -n1 | cut -d: -f1) || end_line=""
+    if [ -n "$start_line" ] && [ -n "$end_line" ] && [ "$end_line" -ge "$start_line" ]; then
+        head -n $((start_line-1)) "$TEMPLATE_FILE" > "$TMP_FILE"
+        tail -n +$((end_line+1)) "$TEMPLATE_FILE" >> "$TMP_FILE"
+        mv -f "$TMP_FILE" "$TEMPLATE_FILE"
+        chmod 640 "$TEMPLATE_FILE"
+        chown root:root "$TEMPLATE_FILE" || true
+        echo "Removed custom blacklist block from $TEMPLATE_FILE"
+    else
+        echo "Failed to parse custom blacklist block boundaries; leaving template unchanged"
+    fi
+else
+    echo "No custom blacklist block found in $TEMPLATE_FILE; nothing to remove"
+fi
+
+# Restart Exim
+if command -v systemctl >/dev/null 2>&1; then
+    systemctl restart exim4 || {
+        echo "Warning: failed to restart exim4, check logs"
+        exit 1
+    }
+else
+    echo "Warning: systemctl not available, please restart exim4 manually"
+fi
+
+# Log action
+if [ -x "$BIN/v-log-action" ]; then
+    $BIN/v-log-action "system" "Info" "Mail" "Removed Exim blacklist and cleaned exim4.conf.template"
+fi
+
+echo "Done."
+
+exit 0

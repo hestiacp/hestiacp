@@ -131,3 +131,10 @@ pma_new_tempdir_conf="/etc/phpmyadmin/conf.d/99-tempdir.php"
 if [[ -f "$pma_old_tempdir_conf" ]]; then
 	mv "$pma_old_tempdir_conf" "$pma_new_tempdir_conf"
 fi
+
+#Fix the “Rejected because” DNSBL message for existing Exim installations.
+exim_conf="/etc/exim4/exim4.conf.template"
+
+if [[ -f "$exim_conf" ]]; then
+	sed -i.before_fixing_dnsbl_message.bak 's#deny    message       = Rejected because $sender_hest_address is in a black list at $dnslist_domain\\n$dnslist_text#deny    message       = Rejected because $sender_host_address is in a black list at ${if match{$dnslist_domain}{^[^.]+[.](.+dq[.]spamhaus.*)}{$1}{$dnslist_domain}}\\n$dnslist_text#' "$exim_conf"
+fi

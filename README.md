@@ -31,6 +31,8 @@ Ethereum : 0xfF3Dd2c889bd0Ff73d8085B84A314FC7c88e5D51<br>
 Binance: bnb1l4ywvw5ejfmsgjdcx8jn5lxj7zsun8ktfu7rh8<br>
 Smart Chain: 0xfF3Dd2c889bd0Ff73d8085B84A314FC7c88e5D51<br>
 
+Project infrastructure is partly provided by [infrahost](https://infrahost.ch/en/).
+
 ## Features and Services
 
 - Apache2 and NGINX with PHP-FPM

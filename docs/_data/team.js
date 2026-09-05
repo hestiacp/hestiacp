@@ -28,9 +28,9 @@ export const projectManagers = [
 /** @type {import("vitepress").DefaultTheme.TeamMember[]} */
 export const teamMembers = [
 	{
-		avatar: 'https://www.github.com/sahsanum.png',
-		name: 'sahsanum',
-		links: [{ icon: 'github', link: 'https://github.com/sahsanum' }],
+		avatar: 'https://www.github.com/sahsanu.png',
+		name: 'sahsanu 🇪🇸',
+		links: [{ icon: 'github', link: 'https://github.com/sahsanu' }],
 	},
 	{
 		avatar: 'https://www.github.com/imjuniper.png',

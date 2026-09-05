@@ -420,7 +420,22 @@ remote_forwarded_smtp:
   interface = ${if exists{OUTGOING_IP}{${readfile{OUTGOING_IP}}}}
   # modify the envelope from, for mails that we forward
   max_rcpt = 1
-  return_path = ${srs_encode {SRS_SECRET} {$return_path} {$original_domain}}
+  return_path = ${srs_encode {SRS_SECRET} \
+	{${if and{ {def:return_path} {!eq{$return_path}{}} } \
+			{$return_path} \
+			{${if and{ {def:sender_address} {!eq{$sender_address}{}} } \
+				{$sender_address} \
+				{postmaster@$primary_hostname} \
+			}} \
+		}} \
+		{${if and{ {def:original_domain} {!eq{$original_domain}{}} } \
+			{$original_domain} \
+			{${if and{ {def:sender_address_domain} {!eq{$sender_address_domain}{}} } \
+				{$sender_address_domain} \
+				{$primary_hostname} \
+			}} \
+		}} \
+	}
 
 procmail:
   driver = pipe

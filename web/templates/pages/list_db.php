@@ -15,7 +15,7 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<?php if ($read_only !== "true") { ?>
+			<?php if ($read_only !== true) { ?>
 				<a href="/add/db/" class="button button-secondary js-button-create">
 					<i class="fas fa-circle-plus icon-green"></i><?= tohtml( _("Add Database")) ?>
 				</a>
@@ -65,7 +65,7 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
 						<span class="name"><?= tohtml( _("Username")) ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
 					</li>
 				</ul>
-				<?php if ($read_only !== "true") { ?>
+				<?php if ($read_only !== true) { ?>
 					<form x-data x-bind="BulkEdit" action="/bulk/db/" method="post">
 						<input type="hidden" name="token" value="<?= tohtml($_SESSION["token"]) ?>">
 						<select class="form-select" name="action">
@@ -158,7 +158,7 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
 				</div>
 				<div class="units-table-cell units-table-heading-cell u-text-bold">
 					<span class="u-hide-desktop"><?= tohtml( _("Name")) ?>:</span>
-					<?php if ($read_only === "true" || $data[$key]["SUSPENDED"] == "yes") { ?>
+					<?php if ($read_only === true || $data[$key]["SUSPENDED"] == "yes") { ?>
 						<?= tohtml($key) ?>
 					<?php } else { ?>
 						<a href="/edit/db/?<?= tohtml(http_build_query(["database" => $key, "token" => $_SESSION["token"]])) ?>" title="<?= tohtml( _("Edit Database")) ?>: <?= tohtml($key) ?>">

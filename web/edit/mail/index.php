@@ -167,7 +167,12 @@ if (!empty($_GET["domain"]) && !empty($_GET["account"])) {
 }
 
 // Check POST request for mail domain
-if (!empty($_POST["save"]) && !empty($_GET["domain"]) && empty($_GET["account"])) {
+if (
+	!empty($_POST["save"]) &&
+	!empty($_GET["domain"]) &&
+	empty($_GET["account"]) &&
+	$read_only !== true
+) {
 	// Check token
 	verify_csrf($_POST);
 
@@ -742,7 +747,12 @@ if (!empty($_POST["save"]) && !empty($_GET["domain"]) && empty($_GET["account"])
 }
 
 // Check POST request for mail account
-if (!empty($_POST["save"]) && !empty($_GET["domain"]) && !empty($_GET["account"])) {
+if (
+	!empty($_POST["save"]) &&
+	!empty($_GET["domain"]) &&
+	!empty($_GET["account"]) &&
+	$read_only !== true
+) {
 	// Check token
 	verify_csrf($_POST);
 

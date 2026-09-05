@@ -3,12 +3,12 @@
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
 			<a class="button button-secondary button-back js-button-back" href="/list/backup/incremental/"><i class="fas fa-arrow-left icon-blue"></i><?= tohtml( _("Back")) ?></a>
-			<?php if ($read_only !== "true") { ?>
+			<?php if ($read_only !== true) { ?>
 			<a href="/schedule/restore/incremental/?<?= tohtml(http_build_query(array("token" => $_SESSION["token"], "snapshot" => $_GET["snapshot"]))) ?>" class="button button-secondary"><i class="fas fa-arrow-rotate-left icon-green"></i><?= tohtml( _("Restore All")) ?></a>
 			<?php } ?>
 		</div>
 		<div class="toolbar-right">
-			<?php if ($read_only !== "true") { ?>
+			<?php if ($read_only !== true) { ?>
 				<form x-data x-bind="BulkEdit" action="/bulk/restore/incremental/" method="post">
 					<input type="hidden" name="token" value="<?= tohtml($_SESSION["token"]) ?>">
 					<input type="hidden" name="snapshot" value="<?= tohtml($_GET["snapshot"]) ?>">

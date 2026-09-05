@@ -4,6 +4,11 @@ use function Hestiacp\quoteshellarg\quoteshellarg;
 ob_start();
 include $_SERVER["DOCUMENT_ROOT"] . "/inc/main.php";
 
+if ($read_only === true) {
+	header("Location: /list/backup/");
+	exit();
+}
+
 if (empty($_POST["backup"])) {
 	header("Location: /list/backup/");
 	exit();

@@ -15,6 +15,11 @@ if ($_SESSION["userContext"] != "admin") {
 	exit();
 }
 
+if ($read_only === true) {
+	header("Location: /list/user/");
+	exit();
+}
+
 if (!empty($_GET["user"])) {
 	$v_username = quoteshellarg($_GET["user"]);
 	exec(HESTIA_CMD . "v-unsuspend-user " . $v_username, $output, $return_var);

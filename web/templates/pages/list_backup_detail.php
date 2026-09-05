@@ -5,14 +5,14 @@
 				<a class="button button-secondary button-back js-button-back" href="/list/backup/">
 					<i class="fas fa-arrow-left icon-blue"></i><?= tohtml( _("Back")) ?>
 				</a>
-				<?php if ($read_only !== "true") { ?>
+				<?php if ($read_only !== true) { ?>
 					<a href="/schedule/restore/?<?= tohtml(http_build_query(array("token" => $_SESSION["token"], "backup" => $_GET["backup"]))) ?>" class="button button-secondary">
 						<i class="fas fa-arrow-rotate-left icon-green"></i><?= tohtml( _("Restore All")) ?>
 					</a>
 				<?php } ?>
 			</div>
 			<div class="toolbar-right">
-				<?php if ($read_only !== "true") { ?>
+				<?php if ($read_only !== true) { ?>
 					<form x-data x-bind="BulkEdit" action="/bulk/restore/" method="post">
 						<input type="hidden" name="token" value="<?= tohtml($_SESSION["token"]) ?>">
 						<input type="hidden" name="backup" value="<?= tohtml($_GET["backup"]) ?>">

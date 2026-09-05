@@ -8,7 +8,7 @@ $TAB = "CRON";
 include $_SERVER["DOCUMENT_ROOT"] . "/inc/main.php";
 
 // Check POST request
-if (!empty($_POST["ok"])) {
+if (!empty($_POST["ok"]) && $read_only != true) {
 	// Check token
 	verify_csrf($_POST);
 

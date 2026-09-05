@@ -8,6 +8,11 @@ include $_SERVER["DOCUMENT_ROOT"] . "/inc/main.php";
 // Check token
 verify_csrf($_POST);
 
+if ($read_only === true) {
+	header("Location: /list/backup/incremental/");
+	exit();
+}
+
 $action = $_POST["action"];
 $snapshot = quoteshellarg($_POST["snapshot"]);
 
@@ -128,6 +133,4 @@ if ($return_var == 0) {
 } else {
 	$_SESSION["error_msg"] = implode("<br>", $output);
 }
-var_dump($_POST);
-var_dump($output);
 header("Location: /list/backup/incremental/?snapshot=" . $_POST["snapshot"]);

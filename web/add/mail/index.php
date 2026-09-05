@@ -30,7 +30,7 @@ if (!empty($v_domain)) {
 }
 
 // Check POST request for mail domain
-if (!empty($_POST["ok"])) {
+if (!empty($_POST["ok"]) && $read_only !== true) {
 	// Check token
 	verify_csrf($_POST);
 
@@ -201,7 +201,7 @@ if (!empty($_POST["ok"])) {
 }
 
 // Check POST request for mail account
-if (!empty($_POST["ok_acc"])) {
+if (!empty($_POST["ok_acc"]) && $read_only !== true) {
 	// Check token
 	if (!isset($_POST["token"]) || $_SESSION["token"] != $_POST["token"]) {
 		header("location: /login/");

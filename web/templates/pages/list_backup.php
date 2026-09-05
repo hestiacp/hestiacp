@@ -2,7 +2,7 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<?php if ($read_only !== "true") { ?>
+			<?php if ($read_only !== true) { ?>
 				<a href="/schedule/backup/?<?= tohtml(http_build_query(["token" => $_SESSION["token"]])) ?>" class="button button-secondary"><i class="fas fa-circle-plus icon-green"></i><?= tohtml( _("Create Backup")) ?></a>
 				<a href="/list/backup/exclusions/" class="button button-secondary"><i class="fas fa-folder-minus icon-orange"></i><?= tohtml( _("Backup Exclusions")) ?></a>
 			<?php } ?>
@@ -11,7 +11,7 @@
 			<?php } ?>
 		</div>
 		<div class="toolbar-right">
-			<?php if ($read_only !== "true") { ?>
+			<?php if ($read_only !== true) { ?>
 				<form x-data x-bind="BulkEdit" action="/bulk/backup/" method="post">
 					<input type="hidden" name="token" value="<?= tohtml($_SESSION["token"]) ?>">
 					<select class="form-select" name="action">
@@ -81,7 +81,7 @@
 				</div>
 				<div class="units-table-cell units-table-heading-cell u-text-bold">
 					<span class="u-hide-desktop"><?= tohtml( _("File Name")) ?>:</span>
-					<?php if ($read_only === "true") { ?>
+					<?php if ($read_only === true) { ?>
 						<?= tohtml($key) ?>
 					<?php } else { ?>
 						<a href="/list/backup/?<?= tohtml(http_build_query(["backup" => $key, "token" => $_SESSION["token"]])) ?>" title="<?= tohtml( _("Restore")) ?>">
@@ -90,7 +90,7 @@
 					<?php } ?>
 				</div>
 				<div class="units-table-cell">
-					<?php if (!($_SESSION["userContext"] === "admin" && $_SESSION["look"] === "admin" && $read_only === "true")) { ?>
+					<?php if (!($_SESSION["userContext"] === "admin" && $_SESSION["look"] === "admin" && $read_only === true)) { ?>
 						<ul class="units-table-row-actions">
 							<li class="units-table-row-action shortcut-d" data-key-action="href">
 								<a
@@ -102,7 +102,7 @@
 									<span class="u-hide-desktop"><?= tohtml( _("Download")) ?></span>
 								</a>
 							</li>
-							<?php if ($read_only !== "true") { ?>
+							<?php if ($read_only !== true) { ?>
 								<li class="units-table-row-action shortcut-enter" data-key-action="href">
 									<a
 										class="units-table-row-action-link data-controls"

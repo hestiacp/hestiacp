@@ -92,7 +92,12 @@ if (!empty($_GET["domain"]) && !empty($_GET["record_id"])) {
 }
 
 // Check POST request for dns domain
-if (!empty($_POST["save"]) && !empty($_GET["domain"]) && empty($_GET["record_id"])) {
+if (
+	!empty($_POST["save"]) &&
+	!empty($_GET["domain"]) &&
+	empty($_GET["record_id"]) &&
+	$read_only !== true
+) {
 	$v_domain = quoteshellarg($_POST["v_domain"]);
 
 	// Check token
@@ -247,7 +252,12 @@ if (!empty($_POST["save"]) && !empty($_GET["domain"]) && empty($_GET["record_id"
 }
 
 // Check POST request for dns record
-if (!empty($_POST["save"]) && !empty($_GET["domain"]) && !empty($_GET["record_id"])) {
+if (
+	!empty($_POST["save"]) &&
+	!empty($_GET["domain"]) &&
+	!empty($_GET["record_id"]) &&
+	$read_only !== true
+) {
 	// Check token
 	verify_csrf($_POST);
 

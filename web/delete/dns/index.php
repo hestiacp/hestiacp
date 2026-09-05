@@ -12,6 +12,11 @@ if ($_SESSION["userContext"] === "admin" && !empty($_GET["user"])) {
 // Check token
 verify_csrf($_GET);
 
+if ($read_only === true) {
+	header("Location: /list/dns/");
+	exit();
+}
+
 // DNS domain
 if (!empty($_GET["domain"]) && empty($_GET["record_id"])) {
 	$v_domain = quoteshellarg($_GET["domain"]);

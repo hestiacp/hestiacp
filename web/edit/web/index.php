@@ -69,6 +69,12 @@ $v_letsencrypt = $data[$v_domain]["LETSENCRYPT"];
 if (empty($v_letsencrypt)) {
 	$v_letsencrypt = "no";
 }
+
+$v_ssl_key_algo = strtolower($data[$v_domain]["SSL_KEY_ALGO"] ?? "");
+if (empty($v_ssl_key_algo) || !in_array($v_ssl_key_algo, ["ecdsa-256", "ecdsa-384", "rsa"], true)) {
+	$v_ssl_key_algo = $v_ssl == "yes" ? "rsa" : "ecdsa-256";
+}
+
 $v_ssl_home = $data[$v_domain]["SSL_HOME"] ?? "";
 $v_backend_template = $data[$v_domain]["BACKEND"] ?? "";
 $v_nginx_cache = $data[$v_domain]["FASTCGI_CACHE"] ?? "";
@@ -192,6 +198,14 @@ if (!empty($_POST["save"])) {
 	}
 	// Check token
 	verify_csrf($_POST);
+
+	$v_ssl_key_algo_post = "ecdsa-256";
+	if (!empty($_POST["v_ssl_key_algo"])) {
+		$v_ssl_key_algo_candidate = strtolower(trim($_POST["v_ssl_key_algo"]));
+		if (in_array($v_ssl_key_algo_candidate, ["ecdsa-256", "ecdsa-384", "rsa"], true)) {
+			$v_ssl_key_algo_post = $v_ssl_key_algo_candidate;
+		}
+	}
 
 	// Change web domain IP
 	$v_newip = "";
@@ -583,16 +597,22 @@ if (!empty($_POST["save"])) {
 			}
 		}
 
-		// Regenerate LE if aliases are different
+		// Regenerate LE if aliases or key algorithm are different
 		if (
 			!empty($_POST["v_ssl"]) &&
 			$v_letsencrypt == "yes" &&
 			!empty($_POST["v_letsencrypt"]) &&
 			empty($_SESSION["error_msg"])
 		) {
-			// If aliases are different from stored aliases
-			if (array_diff($valiases, $aliases) || array_diff($aliases, $valiases)) {
-				// Add certificate with new aliases
+			// If aliases changed from stored aliases, OR the key
+			// algorithm the user picked differs from the one
+			// currently stored for this domain
+			if (
+				array_diff($valiases, $aliases) ||
+				array_diff($aliases, $valiases) ||
+				$v_ssl_key_algo_post != $v_ssl_key_algo
+			) {
+				// Add certificate with new aliases / key algorithm
 				$l_aliases = str_replace("\n", ",", $v_aliases);
 				exec(
 					HESTIA_CMD .
@@ -602,7 +622,8 @@ if (!empty($_POST["save"])) {
 						quoteshellarg($v_domain) .
 						" " .
 						quoteshellarg($l_aliases) .
-						" ''",
+						" '' " .
+						quoteshellarg($v_ssl_key_algo_post),
 					$output,
 					$return_var,
 				);
@@ -610,6 +631,7 @@ if (!empty($_POST["save"])) {
 				unset($output);
 				$v_letsencrypt = "yes";
 				$v_ssl = "yes";
+				$v_ssl_key_algo = $v_ssl_key_algo_post;
 				$restart_web = "yes";
 				$restart_proxy = "yes";
 
@@ -819,7 +841,8 @@ if (!empty($_POST["save"])) {
 				quoteshellarg($v_domain) .
 				" " .
 				quoteshellarg($l_aliases) .
-				" ''",
+				" '' " .
+				quoteshellarg($v_ssl_key_algo_post),
 			$output,
 			$return_var,
 		);
@@ -829,6 +852,7 @@ if (!empty($_POST["save"])) {
 			$v_letsencrypt = "no";
 		} else {
 			$v_letsencrypt = "yes";
+			$v_ssl_key_algo = $v_ssl_key_algo_post;
 		}
 		$v_ssl = "yes";
 		if ($_POST["v_ssl_forcessl"] == "on") {
@@ -838,6 +862,31 @@ if (!empty($_POST["save"])) {
 		}
 		$restart_web = "yes";
 		$restart_proxy = "yes";
+
+		if ($v_letsencrypt == "yes") {
+			exec(
+				HESTIA_CMD .
+					"v-list-web-domain-ssl " .
+					$user .
+					" " .
+					quoteshellarg($v_domain) .
+					" json",
+				$output,
+				$return_var,
+			);
+			$ssl_str = json_decode(implode("", $output), true);
+			unset($output);
+			$v_ssl_crt = $ssl_str[$v_domain]["CRT"];
+			$v_ssl_key = $ssl_str[$v_domain]["KEY"];
+			$v_ssl_ca = $ssl_str[$v_domain]["CA"];
+			$v_ssl_subject = $ssl_str[$v_domain]["SUBJECT"];
+			$v_ssl_aliases = $ssl_str[$v_domain]["ALIASES"];
+			$v_ssl_not_before = $ssl_str[$v_domain]["NOT_BEFORE"];
+			$v_ssl_not_after = $ssl_str[$v_domain]["NOT_AFTER"];
+			$v_ssl_signature = $ssl_str[$v_domain]["SIGNATURE"];
+			$v_ssl_pub_key = $ssl_str[$v_domain]["PUB_KEY"];
+			$v_ssl_issuer = $ssl_str[$v_domain]["ISSUER"];
+		}
 	}
 
 	// Add SSL certificate

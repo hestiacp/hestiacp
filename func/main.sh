@@ -104,6 +104,7 @@ HESTIA_THEMES="$HESTIA/web/css/themes"
 HESTIA_THEMES_CUSTOM="$HESTIA/web/css/themes/custom"
 SCRIPT="$(basename $0)"
 CHECK_RESULT_CALLBACK=""
+LE_STAGING='no'
 
 # Return codes
 OK=0
@@ -1530,6 +1531,13 @@ is_hash_format_valid() {
 	fi
 }
 
+# Certificates Key Algorithm validator
+is_key_algo_format_valid() {
+	if ! [[ "$1" =~ ^(rsa|ecdsa-256|ecdsa-384)$ ]]; then
+		check_result "$E_INVALID" "invalid key_algo format :: $1"
+	fi
+}
+
 # Format validation controller
 is_format_valid() {
 	for arg_name in $*; do
@@ -1581,6 +1589,7 @@ is_format_valid() {
 				ip_status) is_ip_status_format_valid "$arg" ;;
 				job) is_int_format_valid "$arg" 'job' ;;
 				key) is_common_format_valid "$arg" "$arg_name" ;;
+				key_algo) is_key_algo_format_valid "$arg" ;;
 				malias) is_localpart_format_valid "$arg" "$arg_name" '64' ;;
 				max_db) is_int_format_valid "$arg" 'max db' ;;
 				min) is_cron_format_valid "$arg" $arg_name ;;

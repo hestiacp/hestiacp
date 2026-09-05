@@ -90,6 +90,14 @@ if (!empty($_GET["domain"]) && empty($_GET["account"])) {
 	if (empty($v_letsencrypt)) {
 		$v_letsencrypt = "no";
 	}
+
+	$v_ssl_key_algo = strtolower($data[$v_domain]["SSL_KEY_ALGO"] ?? "");
+	if (
+		empty($v_ssl_key_algo) ||
+		!in_array($v_ssl_key_algo, ["ecdsa-256", "ecdsa-384", "rsa"], true)
+	) {
+		$v_ssl_key_algo = $v_ssl == "yes" ? "rsa" : "ecdsa-256";
+	}
 }
 
 // List mail account
@@ -170,6 +178,14 @@ if (!empty($_GET["domain"]) && !empty($_GET["account"])) {
 if (!empty($_POST["save"]) && !empty($_GET["domain"]) && empty($_GET["account"])) {
 	// Check token
 	verify_csrf($_POST);
+
+	$v_ssl_key_algo_post = "ecdsa-256";
+	if (!empty($_POST["v_ssl_key_algo"])) {
+		$v_ssl_key_algo_candidate = strtolower(trim($_POST["v_ssl_key_algo"]));
+		if (in_array($v_ssl_key_algo_candidate, ["ecdsa-256", "ecdsa-384", "rsa"], true)) {
+			$v_ssl_key_algo_post = $v_ssl_key_algo_candidate;
+		}
+	}
 
 	exec(
 		HESTIA_CMD . "v-list-mail-domain " . $user . " " . quoteshellarg($v_domain) . " json",
@@ -507,6 +523,56 @@ if (!empty($_POST["save"]) && !empty($_GET["domain"]) && empty($_GET["account"])
 		}
 	}
 
+	// Regenerate LE certificate if the key algorithm changed (aliases
+	// are not user-editable for mail domains, unlike web domains, so
+	// this only needs to watch for algorithm changes)
+	if (
+		!empty($_POST["v_ssl"]) &&
+		$v_letsencrypt == "yes" &&
+		!empty($_POST["v_letsencrypt"]) &&
+		empty($_SESSION["error_msg"]) &&
+		$v_ssl_key_algo_post != $v_ssl_key_algo
+	) {
+		exec(
+			HESTIA_CMD .
+				"v-add-letsencrypt-domain " .
+				$user .
+				" " .
+				quoteshellarg($v_domain) .
+				" ' ' 'yes' " .
+				quoteshellarg($v_ssl_key_algo_post),
+			$output,
+			$return_var,
+		);
+		check_return_code($return_var, $output);
+		unset($output);
+		$v_ssl_key_algo = $v_ssl_key_algo_post;
+		$restart_mail = "yes";
+
+		exec(
+			HESTIA_CMD .
+				"v-list-mail-domain-ssl " .
+				$user .
+				" " .
+				quoteshellarg($v_domain) .
+				" json",
+			$output,
+			$return_var,
+		);
+		$ssl_str = json_decode(implode("", $output), true);
+		unset($output);
+		$v_ssl_crt = $ssl_str[$v_domain]["CRT"];
+		$v_ssl_key = $ssl_str[$v_domain]["KEY"];
+		$v_ssl_ca = $ssl_str[$v_domain]["CA"];
+		$v_ssl_subject = $ssl_str[$v_domain]["SUBJECT"];
+		$v_ssl_aliases = $ssl_str[$v_domain]["ALIASES"];
+		$v_ssl_not_before = $ssl_str[$v_domain]["NOT_BEFORE"];
+		$v_ssl_not_after = $ssl_str[$v_domain]["NOT_AFTER"];
+		$v_ssl_signature = $ssl_str[$v_domain]["SIGNATURE"];
+		$v_ssl_pub_key = $ssl_str[$v_domain]["PUB_KEY"];
+		$v_ssl_issuer = $ssl_str[$v_domain]["ISSUER"];
+	}
+
 	// Delete Lets Encrypt support
 	if (
 		$v_letsencrypt == "yes" &&
@@ -563,7 +629,8 @@ if (!empty($_POST["save"]) && !empty($_GET["domain"]) && empty($_GET["account"])
 				$user .
 				" " .
 				quoteshellarg($v_domain) .
-				" ' ' 'yes'",
+				" ' ' 'yes' " .
+				quoteshellarg($v_ssl_key_algo_post),
 			$output,
 			$return_var,
 		);
@@ -571,7 +638,31 @@ if (!empty($_POST["save"]) && !empty($_GET["domain"]) && empty($_GET["account"])
 		unset($output);
 		$v_letsencrypt = "yes";
 		$v_ssl = "yes";
+		$v_ssl_key_algo = $v_ssl_key_algo_post;
 		$restart_mail = "yes";
+
+		exec(
+			HESTIA_CMD .
+				"v-list-mail-domain-ssl " .
+				$user .
+				" " .
+				quoteshellarg($v_domain) .
+				" json",
+			$output,
+			$return_var,
+		);
+		$ssl_str = json_decode(implode("", $output), true);
+		unset($output);
+		$v_ssl_crt = $ssl_str[$v_domain]["CRT"];
+		$v_ssl_key = $ssl_str[$v_domain]["KEY"];
+		$v_ssl_ca = $ssl_str[$v_domain]["CA"];
+		$v_ssl_subject = $ssl_str[$v_domain]["SUBJECT"];
+		$v_ssl_aliases = $ssl_str[$v_domain]["ALIASES"];
+		$v_ssl_not_before = $ssl_str[$v_domain]["NOT_BEFORE"];
+		$v_ssl_not_after = $ssl_str[$v_domain]["NOT_AFTER"];
+		$v_ssl_signature = $ssl_str[$v_domain]["SIGNATURE"];
+		$v_ssl_pub_key = $ssl_str[$v_domain]["PUB_KEY"];
+		$v_ssl_issuer = $ssl_str[$v_domain]["ISSUER"];
 	}
 
 	// Add SSL certificate

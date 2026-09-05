@@ -1493,6 +1493,25 @@ if (!empty($_POST["save"])) {
 		}
 	}
 
+	// Change SUBDOMAIN_GROUPING
+	if (empty($_SESSION["error_msg"])) {
+		if ($_POST["v_subdomain_grouping"] != $_SESSION["SUBDOMAIN_GROUPING"]) {
+			exec(
+				HESTIA_CMD .
+					"v-change-sys-config-value SUBDOMAIN_GROUPING " .
+					quoteshellarg($_POST["v_subdomain_grouping"]),
+				$output,
+				$return_var,
+			);
+			check_return_code($return_var, $output);
+			unset($output);
+			if (empty($_SESSION["error_msg"])) {
+				$v_subdomain_grouping = $_POST["v_subdomain_grouping"];
+			}
+			$v_security_adv = "yes";
+		}
+	}
+
 	// Change POLICY_USER_EDIT_DETAILS
 	if (empty($_SESSION["error_msg"])) {
 		if ($_POST["v_policy_user_edit_details"] != $_SESSION["POLICY_USER_EDIT_DETAILS"]) {

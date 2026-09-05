@@ -265,22 +265,56 @@ function authenticate_user($user, $password, $twofa = "") {
 						$_SESSION["login"]["password"] = $password;
 						return false;
 					} else {
-						if (strlen($twofa) < 10) {
-							$v_twofa = quoteshellarg($twofa);
+						// Users often copy backup codes with spaces or dashes
+						$normalized_twofa = strtoupper(str_replace([" ", "-"], "", $twofa));
+						$is_totp_format = (bool) preg_match('/^[0-9]{6}$/', $normalized_twofa);
+						$is_backup_code_format = (bool) preg_match(
+							'/^[A-Z0-9]{10}$/',
+							$normalized_twofa,
+						);
+
+						$twofa_ok = false;
+						$backup_codes_remaining = null;
+
+						if ($is_totp_format) {
+							$v_twofa = quoteshellarg($normalized_twofa);
 							exec(
 								HESTIA_CMD . "v-check-user-2fa " . $v_user . " " . $v_twofa,
 								$output,
 								$return_var,
 							);
 							unset($output);
-							if ($return_var !== 0) {
-								sleep(2);
-								$error = _("Invalid or missing 2FA token");
-								$_SESSION["login"]["username"] = $user;
-								$_SESSION["login"]["password"] = $password;
-								$v_session_id = quoteshellarg($_POST["token"]);
+							$twofa_ok = $return_var === 0;
+						} elseif ($is_backup_code_format) {
+							$v_twofa = quoteshellarg($normalized_twofa);
+							exec(
+								HESTIA_CMD .
+									"v-check-user-2fa-backup-code " .
+									$v_user .
+									" " .
+									$v_twofa,
+								$output,
+								$return_var,
+							);
+							$twofa_ok = $return_var === 0;
+							if ($twofa_ok) {
+								$backup_codes_remaining = (int) trim(implode("", $output));
+							}
+							unset($output);
+						} else {
+							$return_var = 1;
+						}
+
+						if (!$twofa_ok) {
+							sleep(2);
+							$error = _("Invalid or missing 2FA token");
+							$_SESSION["login"]["username"] = $user;
+							$_SESSION["login"]["password"] = $password;
+							$v_session_id = quoteshellarg($_POST["token"]);
+							if ($is_totp_format) {
+								// Allow a few failed TOTP attempts (mistyped/expired
+								// codes are common) before logging kicks in.
 								if (isset($_SESSION["failed_twofa"])) {
-									//allow a few failed attemps before start of logging.
 									if ($_SESSION["failed_twofa"] > 2) {
 										exec(
 											HESTIA_CMD .
@@ -301,16 +335,53 @@ function authenticate_user($user, $password, $twofa = "") {
 								} else {
 									$_SESSION["failed_twofa"] = 1;
 								}
-								unset($_POST["twofa"]);
-								return $error;
+							} else {
+								// A copied backup code (or garbage input) that doesn't
+								// match is a much stronger signal than a mistyped TOTP
+								// code - log from the very first failed attempt.
+								exec(
+									HESTIA_CMD .
+										"v-log-user-login " .
+										$v_user .
+										" " .
+										$v_ip .
+										" failed " .
+										$v_session_id .
+										" " .
+										$v_user_agent .
+										' yes "Invalid 2FA backup code"',
+									$output,
+									$return_var,
+								);
 							}
-						} else {
-							sleep(2);
-							$error = _("Invalid or missing 2FA token");
-							$_SESSION["login"]["username"] = $user;
-							$_SESSION["login"]["password"] = $password;
-							$v_session_id = quoteshellarg($_POST["token"]);
+							unset($_POST["twofa"]);
 							return $error;
+						}
+
+						if ($is_backup_code_format) {
+							$_SESSION["ok_msg"] = sprintf(
+								_("You signed in with a backup code. %d backup codes remaining."),
+								$backup_codes_remaining,
+							);
+							exec(
+								HESTIA_CMD .
+									"v-add-user-notification " .
+									$v_user .
+									" " .
+									quoteshellarg(_("2FA backup code used")) .
+									" " .
+									quoteshellarg(
+										sprintf(
+											_(
+												"A two-factor authentication backup code was used to sign in. %d backup codes remaining.",
+											),
+											$backup_codes_remaining,
+										),
+									),
+								$output,
+								$return_var,
+							);
+							unset($output);
 						}
 					}
 				}

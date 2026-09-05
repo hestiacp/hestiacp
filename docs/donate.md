@@ -7,6 +7,32 @@ lastUpdated: false
 
 By donating to Hestia, you help maintain server costs, development time, and more!
 
+<div class="project-infrastructure">
+  <div class="project-infrastructure__icon" aria-hidden="true">
+    <svg viewBox="0 0 64 64" width="58" height="58">
+      <path d="M20 43h25c8 0 13-5 13-12 0-7-5-12-12-12h-1C43 11 37 7 30 7c-9 0-16 7-17 16C7 24 3 29 3 35c0 5 4 8 9 8h8Z"
+            fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      <rect x="20" y="39" width="29" height="8" rx="2"
+            fill="none" stroke="currentColor" stroke-width="3"/>
+      <rect x="20" y="50" width="29" height="8" rx="2"
+            fill="none" stroke="currentColor" stroke-width="3"/>
+      <circle cx="26" cy="43" r="1.5" fill="currentColor"/>
+      <circle cx="26" cy="54" r="1.5" fill="currentColor"/>
+    </svg>
+  </div>
+
+  <div class="project-infrastructure__content">
+    <strong>Project Infrastructure</strong>
+    <p>
+      Parts of the Hestia Control Panel project infrastructure are provided by
+      <a href="https://infrahost.ch/en/" target="_blank" rel="noopener">infrahost</a>.
+    </p>
+    <p>
+      A Swiss provider of white-label cloud infrastructure and managed services for IT providers.
+    </p>
+  </div>
+</div>
+
 Here are our official donation platforms:
 
 - [PayPal](https://www.paypal.com/donate/?cmd=_s-xclick&hosted_button_id=ST87LQH2CHGLA)

@@ -87,6 +87,7 @@ json_list() {
         "LOGIN_USE_IPLIST": "'$LOGIN_USE_IPLIST'",
         "LOGIN_ALLOW_IPS": "'$LOGIN_ALLOW_IPS'",
         "PHPCLI": "'$PHPCLI'",
+        "EXTENDED_BACKUP": "'$EXTENDED_BACKUP'",
         "TIME": "'$TIME'",
         "DATE": "'$DATE'"
         }

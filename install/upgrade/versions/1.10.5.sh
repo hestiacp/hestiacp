@@ -138,3 +138,9 @@ exim_conf="/etc/exim4/exim4.conf.template"
 if [[ -f "$exim_conf" ]]; then
 	sed -i.before_fixing_dnsbl_message.bak 's#deny    message       = Rejected because $sender_hest_address is in a black list at $dnslist_domain\\n$dnslist_text#deny    message       = Rejected because $sender_host_address is in a black list at ${if match{$dnslist_domain}{^[^.]+[.](.+dq[.]spamhaus.*)}{$1}{$dnslist_domain}}\\n$dnslist_text#' "$exim_conf"
 fi
+
+# Fix Apache2 logrotate when webstats fails because of the domain is suspended
+if [[ -f /etc/logrotate.d/httpd-prerotate/awstats ]]; then
+	echo "[ + ] Update Awstats logrotate for Apache2..."
+	cp -f "$HESTIA_INSTALL_DIR"/logrotate/httpd-prerotate/awstats /etc/logrotate.d/httpd-prerotate/
+fi

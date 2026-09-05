@@ -25,7 +25,7 @@
 						<span class="name"><?= tohtml( _("IP Address")) ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
 					</li>
 					<li data-entity="sort-netmask">
-						<span class="name"><?= tohtml( _("Netmask")) ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
+						<span class="name"><?= tohtml( _("Netmask / Prefix")) ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
 					</li>
 					<li data-entity="sort-interface">
 						<span class="name"><?= tohtml( _("Interface")) ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
@@ -63,7 +63,7 @@
 			<div class="units-table-cell">
 				<input type="checkbox" class="js-toggle-all-checkbox" title="<?= tohtml( _("Select all")) ?>">
 			</div>
-			<div class="units-table-cell"><?= tohtml( _("IP Address")) ?></div>
+			<div class="units-table-cell"><?= tohtml( _("IP Address")) ?> <span style="font-size:0.8em;opacity:0.7">(IPv4/IPv6)</span></div>
 			<div class="units-table-cell"></div>
 			<div class="units-table-cell u-text-center"><?= tohtml( _("Netmask")) ?></div>
 			<div class="units-table-cell u-text-center"><?= tohtml( _("Interface")) ?></div>

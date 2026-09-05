@@ -1,0 +1,71 @@
+#!/bin/bash
+# info: delete firewall IPv6 ipset
+# options: NAME
+#
+# example: v-delete-firewall-ipset-ipv6 country-nl
+#
+# This function removes an IPv6 ipset from the system and from hestia
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+ip_name=${1}
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '1' "$#" 'NAME'
+is_format_valid 'ip_name'
+is_system_enabled "$FIREWALL_SYSTEM" 'FIREWALL_SYSTEM'
+
+ipset_hstobject='../../../data/firewallv6/ipset'
+is_object_valid "$ipset_hstobject" 'LISTNAME' "$ip_name"
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+IPSET_BIN="$(command -v ipset)"
+IPSET_PATH="$HESTIA/data/firewallv6/ipset"
+
+if [ -z "$IPSET_BIN" ]; then
+	apt-get --quiet --yes install ipset > /dev/null
+	check_result $? "Installing IPset package"
+	IPSET_BIN="$(which ipset)"
+	check_result $? "IPset binary not found"
+fi
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+if $IPSET_BIN -quiet list "${ip_name}-tmp" > /dev/null; then
+	$IPSET_BIN -quiet destroy "${ip_name}-tmp"
+fi
+
+if $IPSET_BIN -quiet list "${ip_name}" > /dev/null; then
+	$IPSET_BIN -quiet destroy "${ip_name}"
+	check_result $? "ipset ${ip_name} still used by ip6tables. Cannot remove"
+fi
+
+sed -i "/LISTNAME='$ip_name'/d" "${IPSET_PATH}.conf"
+rm -f "${IPSET_PATH}/${ip_name}.iplist"
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Logging
+$BIN/v-log-action "system" "Info" "Firewall" "IPv6 IPset list deleted (Name: $ip_name)."
+log_event "$OK" "$ARGUMENTS"
+
+exit

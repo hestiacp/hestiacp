@@ -1,0 +1,76 @@
+#!/bin/bash
+# info: list system network interfaces
+# options: [IP_VERSION] [FORMAT]
+#
+# example: v-list-network
+# example: v-list-network 6 shell
+#
+# This function lists system network interfaces and their IP addresses.
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+function list_network() {
+	ip_view=${1-shell}
+	ip_type=${2}
+	ip_filter=""
+	ii=1
+	[ -n "$ip_type" ] && [ "$ip_type" -ne 4 -a "$ip_type" -ne 6 ] && ip_type=""
+	[ -n "$ip_type" ] && ip_filter=" -$ip_type"
+	# Parsed via `ip -j` + jq rather than text-scraping "ip addr" output: interface
+	# names on container platforms (Proxmox LXC, Docker, ...) are commonly reported
+	# as e.g. "eth0@if123", which broke the previous sed-based parser and silently
+	# dropped every address on such hosts.
+	ip_raw_string="$(ip${ip_filter} -j addr show scope global 2> /dev/null \
+		| jq -r '.[] as $i | ($i.addr_info // [])[] | "\(.local) /\(.prefixlen) \($i.ifname)"' 2> /dev/null)"
+	ip_count=$(echo "$ip_raw_string" | wc -l)
+	case $ip_view in
+		shell)
+			printf '%-45s%-5s%-8s\n' 'IP address' 'Mask' 'Interface'
+			echo "-------------------------------------------- ---- ---------"
+			;;
+		csv)
+			echo 'IP,MASK,INTERFACE'
+			;;
+		json)
+			echo '{'
+			;;
+	esac
+	echo "$ip_raw_string" | while read -r ip_addr ip_mask ip_iface; do
+		case $ip_view in
+			list) echo "${ip_addr}" ;;
+			plain) echo "${ip_addr} ${ip_mask} ${ip_iface}" ;;
+			shell) printf '%-45s%-5s%-8s\n' "${ip_addr}" "${ip_mask}" "${ip_iface}" ;;
+			csv) echo "${ip_addr},${ip_mask},${ip_iface}" ;;
+			json)
+				echo -n '    "'${ip_addr}'": {"MASK": "'${ip_mask}'","INTERFACE": "'${ip_iface}'"}'
+				[ "$ii" -lt "$ip_count" ] && echo ',' || echo
+				;;
+		esac
+		((ii++))
+	done
+	case $ip_view in
+		json) echo '}' ;;
+	esac
+}
+
+list_network "$1" "$2"
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+exit

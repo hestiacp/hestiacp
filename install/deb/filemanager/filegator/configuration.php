@@ -1,6 +1,26 @@
 <?php
 use function Hestiacp\quoteshellarg\quoteshellarg;
 
+// The frontend's AJAX calls (e.g. loading a file into the editor) expect a
+// JSON body with a non-2xx status on error, wrapped the same way as
+// FileGator's own Kernel\Response::json() does (see AuthController /
+// ErrorController: response->json('Not Allowed', 401) becomes
+// {"data": "Not Allowed"}) - otherwise the raw response gets rendered as if
+// it were the requested content. Full page navigations (e.g. a direct
+// /download link) instead need a real redirect, since there is no caller
+// left to interpret a JSON error body.
+function fm_session_expired_response() {
+	$accept = $_SERVER["HTTP_ACCEPT"] ?? "";
+	if (str_contains($accept, "application/json")) {
+		http_response_code(401);
+		header("Content-Type: application/json");
+		echo json_encode(["data" => "Session expired. Please log in again."]);
+	} else {
+		header("Location: /");
+	}
+	exit();
+}
+
 if (session_status() === PHP_SESSION_NONE) {
 	session_start();
 }
@@ -144,9 +164,21 @@ switch ($lang) {
 $dist_config["services"]["Filegator\Services\Storage\Filesystem"]["config"][
 	"adapter"
 ] = function () {
+	// Filesystem::init() calls this adapter factory for every single request,
+	// not just file operations, because FileGator eagerly initializes all
+	// configured services up front. Routes that FileGator's own routes.php
+	// marks accessible to the "guest" role (no session required) must keep
+	// working without a valid Hestia session - e.g. /getuser is how the
+	// frontend detects "not logged in" and must not itself fail with an
+	// error. Give those a no-op adapter instead of enforcing the session
+	// check meant for actual file access.
+	$guest_routes = ["/getuser", "/getconfig"];
+	if (in_array($_GET["r"] ?? "", $guest_routes, true)) {
+		return new \League\Flysystem\Adapter\NullAdapter();
+	}
+
 	if (empty($_SESSION["user"])) {
-		echo '<meta http-equiv="refresh" content="0; url=/">';
-		exit();
+		fm_session_expired_response();
 	}
 	if (!empty($_SESSION["INACTIVE_SESSION_TIMEOUT"])) {
 		if ($_SESSION["INACTIVE_SESSION_TIMEOUT"] * 60 + $_SESSION["LAST_ACTIVITY"] < time()) {
@@ -161,13 +193,12 @@ $dist_config["services"]["Filegator\Services\Storage\Filesystem"]["config"][
 			session_unset();
 			session_destroy();
 			session_start();
-			echo '<meta http-equiv="refresh" content="0; url=/">';
-			exit();
+			fm_session_expired_response();
 		} else {
 			$_SESSION["LAST_ACTIVITY"] = time();
 		}
 	} else {
-		echo '<meta http-equiv="refresh" content="0; url=/">';
+		fm_session_expired_response();
 	}
 	if (isset($_SESSION["user"])) {
 		$v_user = $_SESSION["user"];

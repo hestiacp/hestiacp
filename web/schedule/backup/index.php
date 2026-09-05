@@ -6,6 +6,11 @@ include $_SERVER["DOCUMENT_ROOT"] . "/inc/main.php";
 // Check token
 verify_csrf($_GET);
 
+if ($read_only === true) {
+	header("Location: /list/backup/");
+	exit();
+}
+
 exec(HESTIA_CMD . "v-schedule-user-backup " . $user, $output, $return_var);
 if ($return_var == 0) {
 	$_SESSION["error_msg"] = _(

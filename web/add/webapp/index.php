@@ -65,7 +65,7 @@ if (!empty($_GET["app"])) {
 }
 
 // Check POST request
-if (!empty($_POST["ok"]) && !empty($app)) {
+if (!empty($_POST["ok"]) && !empty($app) && $read_only !== true) {
 	// Check token
 	verify_csrf($_POST);
 

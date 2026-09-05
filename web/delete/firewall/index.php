@@ -14,6 +14,11 @@ if ($_SESSION["userContext"] != "admin") {
 // Check token
 verify_csrf($_GET);
 
+if ($read_only === true) {
+	header("Location: /list/firewall/");
+	exit();
+}
+
 if (!empty($_GET["rule"])) {
 	$v_rule = quoteshellarg($_GET["rule"]);
 	exec(HESTIA_CMD . "v-delete-firewall-rule " . $v_rule, $output, $return_var);

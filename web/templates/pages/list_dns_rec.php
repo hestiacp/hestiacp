@@ -5,7 +5,7 @@
 				<a class="button button-secondary button-back js-button-back" href="/list/dns/">
 					<i class="fas fa-arrow-left icon-blue"></i><?= tohtml( _("Back")) ?>
 				</a>
-				<?php if ($read_only !== "true") { ?>
+				<?php if ($read_only !== true) { ?>
 					<a href="/add/dns/?<?= tohtml(http_build_query(array("domain" => $_GET["domain"]))) ?>" class="button button-secondary js-button-create">
 						<i class="fas fa-circle-plus icon-green"></i><?= tohtml( _("Add Record")) ?>
 					</a>
@@ -40,7 +40,7 @@
 						<span class="name"><?= tohtml( _("Type")) ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
 					</li>
 				</ul>
-				<?php if ($read_only !== "true") { ?>
+				<?php if ($read_only !== true) { ?>
 					<form x-data x-bind="BulkEdit" action="/bulk/dns/" method="post">
 						<input type="hidden" name="domain" value="<?= tohtml($_GET["domain"]) ?>">
 						<input type="hidden" name="token" value="<?= tohtml($_SESSION["token"]) ?>">
@@ -120,9 +120,9 @@
 							<?php } ?>
 						</div>
 					<div class="units-table-cell">
-						<?php if ($read_only !== "true") { ?>
+						<?php if ($read_only !== true) { ?>
 						<ul class="units-table-row-actions">
-							<?php if ($read_only !== "true") { ?>
+							<?php if ($read_only !== true) { ?>
 									<?php if ($data[$key]["SUSPENDED"] == "no") { ?>
 										<li class="units-table-row-action shortcut-enter" data-key-action="href">
 											<a

@@ -49,6 +49,7 @@ json_list() {
         "SSL": "'$SSL'",
         "SSL_HOME": "'$SSL_HOME'",
         "LETSENCRYPT": "'$LETSENCRYPT'",
+        "ACTALIS": "'$ACTALIS'",
         "FTP_USER": "'$FTP_USER'",
         "FTP_PATH": "'$FTP_PATH'",
         "AUTH_USER": "'$AUTH_USER'",
@@ -93,7 +94,7 @@ plain_list() {
 		fi
 		echo -ne "$DOMAIN\t$IP\t$IP6\t$DOCROOT\t$U_DISK\t$U_BANDWIDTH\t$TPL\t"
 		echo -ne "$ALIAS\t$STATS\t$STATS_USER\t$SSL\t$SSL_HOME\t$LETSENCRYPT\t"
-		echo -ne "$FTP_USER\t$FTP_PATH\t$AUTH_USER\t$BACKEND\t$PROXY\t"
+		echo -ne "$ACTALIS\t$FTP_USER\t$FTP_PATH\t$AUTH_USER\t$BACKEND\t$PROXY\t"
 		echo -e "$PROXY_EXT\t$SUSPENDED\t$TIME\t$DATE"
 	done < <(cat $USER_DATA/web.conf)
 }
@@ -102,7 +103,7 @@ plain_list() {
 csv_list() {
 	IFS=$'\n'
 	echo -n "DOMAIN,IP,IP6,DOCROOT,U_DISK,U_BANDWIDTH,TPL,ALIAS,STATS,STATS_USER,"
-	echo -n "SSL,SSL_HOME,LETSENCRYPT,FTP_USER,FTP_PATH,AUTH_USER,BACKEND,PROXY,"
+	echo -n "SSL,SSL_HOME,LETSENCRYPT,ACTALIS,FTP_USER,FTP_PATH,AUTH_USER,BACKEND,PROXY,"
 	echo "PROXY_EXT,SUSPENDED,TIME,DATE"
 	while read str; do
 		parse_object_kv_list "$str"
@@ -114,7 +115,7 @@ csv_list() {
 		fi
 		echo -n "$DOMAIN,$IP,$IP6,$DOCROOT,$U_DISK,$U_BANDWIDTH,$TPL,"
 		echo -n "\"$ALIAS\",$STATS,\"$STATS_USER\",$SSL,$SSL_HOME,$LETSENCRYPT,"
-		echo -n "\"$FTP_USER\",\"$FTP_PATH\",\"$AUTH_USER\",$BACKEND,$PROXY,"
+		echo -n "$ACTALIS,\"$FTP_USER\",\"$FTP_PATH\",\"$AUTH_USER\",$BACKEND,$PROXY,"
 		echo "\"$PROXY_EXT\",$SUSPENDED,$TIME,$DATE"
 	done < <(cat $USER_DATA/web.conf)
 }

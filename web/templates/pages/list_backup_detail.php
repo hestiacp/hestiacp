@@ -73,7 +73,7 @@
 					</div>
 				<div class="units-table-cell units-table-heading-cell">
 					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Type")) ?>:</span>
-					<?= tohtml( _("Web Domain")) ?>
+					<i class="fas fa-earth-americas u-mr5"></i><?= tohtml( _("Web Domain")) ?>
 				</div>
 				<div class="units-table-cell u-text-bold">
 					<span class="u-hide-desktop"><?= tohtml( _("Details")) ?>:</span>
@@ -116,7 +116,7 @@
 					</div>
 				<div class="units-table-cell units-table-heading-cell">
 					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Type")) ?>:</span>
-					<?= tohtml( _("Mail Domain")) ?>
+					<i class="fas fa-envelopes-bulk u-mr5"></i><?= tohtml( _("Mail Domain")) ?>
 				</div>
 				<div class="units-table-cell u-text-bold">
 					<span class="u-hide-desktop"><?= tohtml( _("Details")) ?>:</span>
@@ -159,7 +159,7 @@
 					</div>
 				<div class="units-table-cell units-table-heading-cell">
 					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Type")) ?>:</span>
-					<?= tohtml( _("DNS Zone")) ?>
+					<i class="fas fa-book-atlas u-mr5"></i><?= tohtml( _("DNS Zone")) ?>
 				</div>
 				<div class="units-table-cell u-text-bold">
 					<span class="u-hide-desktop"><?= tohtml( _("Details")) ?>:</span>
@@ -202,7 +202,7 @@
 					</div>
 				<div class="units-table-cell units-table-heading-cell">
 					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Type")) ?>:</span>
-					<?= tohtml( _("Database")) ?>
+					<i class="fas fa-database u-mr5"></i><?= tohtml( _("Database")) ?>
 				</div>
 				<div class="units-table-cell u-text-bold">
 					<span class="u-hide-desktop"><?= tohtml( _("Details")) ?>:</span>
@@ -243,7 +243,7 @@
 					</div>
 				<div class="units-table-cell units-table-heading-cell">
 					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Type")) ?>:</span>
-					<?= tohtml( _("Cron Jobs")) ?>
+					<i class="fas fa-clock u-mr5"></i><?= tohtml( _("Cron Jobs")) ?>
 				</div>
 				<div class="units-table-cell u-text-bold">
 					<span class="u-hide-desktop"><?= tohtml( _("Details")) ?>:</span>
@@ -286,7 +286,7 @@
 					</div>
 				<div class="units-table-cell units-table-heading-cell">
 					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Type")) ?>:</span>
-					<?= tohtml( _("User Directory")) ?>
+					<i class="fas fa-folder-open u-mr5"></i><?= tohtml( _("User Directory")) ?>
 				</div>
 				<div class="units-table-cell u-text-bold">
 					<span class="u-hide-desktop"><?= tohtml( _("Details")) ?>:</span>

@@ -63,7 +63,7 @@
 
 				<!-- Notifications -->
 				<?php
-    $impersonatingAdmin = $_SESSION["userContext"] === "admin" && ($_SESSION["look"] !== "" && $user == "admin");
+    $impersonatingAdmin = $_SESSION["userContext"] === "admin" && ($_SESSION["look"] !== "" && $user == $_SESSION["ROOT_USER"]) && $_SESSION["POLICY_SYSTEM_PROTECTED_ADMIN"] === "yes";
     // Do not show notifications panel when impersonating 'admin' user
     if (!$impersonatingAdmin) { ?>
 					<div x-data="notifications" class="top-bar-notifications">

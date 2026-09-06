@@ -14,7 +14,7 @@ if ($read_only === true) {
 }
 
 if ($read_only === true) {
-	header("Location: /list/access-key/");
+	header("Location: /list/dns/");
 	exit();
 }
 

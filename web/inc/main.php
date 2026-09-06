@@ -142,6 +142,9 @@ if (!isset($_SESSION["look"])) {
 }
 
 require_once dirname(__FILE__) . "/i18n.php";
+
+$read_only = false;
+//accessing main.php via CLI doesn't set $_SESSION["userContext"], so we need to check if it's set before including policies.php
 if (isset($_SESSION["userContext"])) {
 	require_once dirname(__FILE__) . "/policies.php";
 }

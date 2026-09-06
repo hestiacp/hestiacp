@@ -9,7 +9,7 @@ export default defineConfig({
 	sitemap: {
 		hostname: 'https://hestiacp.com',
 	},
-	
+
 	lastUpdated: true,
 	cleanUrls: false,
 

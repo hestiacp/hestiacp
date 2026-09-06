@@ -6,6 +6,10 @@ export default defineConfig({
 	title: 'Hestia Control Panel',
 	description: 'Open-source web server control panel.',
 
+	sitemap: {
+		hostname: 'https://hestiacp.com',
+	},
+
 	lastUpdated: true,
 	cleanUrls: false,
 

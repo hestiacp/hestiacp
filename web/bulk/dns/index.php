@@ -13,11 +13,6 @@ if ($read_only === true) {
 	exit();
 }
 
-if ($read_only === true) {
-	header("Location: /list/dns/");
-	exit();
-}
-
 if (empty($_POST["domain"])) {
 	header("Location: /list/dns/");
 	exit();

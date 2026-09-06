@@ -63,7 +63,7 @@ class DolibarrSetup extends BaseSetup {
 		$sslEnabled = $status->json[$this->domain]["SSL"] == "no" ? false : true;
 		$webDomain = ($sslEnabled ? "https://" : "http://") . $this->domain;
 
-		$language = $options["language"] ?? "en_EN";
+		$language = rawurlencode($options["language"]) ?? "en_EN";
 		$username = rawurlencode($options["dolibarr_account_username"]);
 		$password = rawurlencode($options["dolibarr_account_password"]);
 		$databaseUser = rawurlencode($this->appcontext->user() . "_" . $options["database_user"]);

@@ -148,7 +148,7 @@
 					?>
 				</select>
 			</div>
-			<?php if ($v_username != "admin" && $_SESSION["userContext"] === "admin" && $_SESSION["user"] != $v_username): ?>
+			<?php if ($v_username != $_SESSION["ROOT_USER"] && $_SESSION["userContext"] === "admin" && $_SESSION["user"] != $v_username): ?>
 				<div class="u-mb10">
 					<label for="v_role" class="form-label"><?= tohtml( _("Role")) ?></label>
 					<select class="form-select" name="v_role" id="v_role" required>

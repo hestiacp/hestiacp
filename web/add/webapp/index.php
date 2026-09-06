@@ -15,12 +15,13 @@ if (empty($_GET["domain"])) {
 }
 
 // Edit as someone else?
-if ($_SESSION["user"] == "admin" && !empty($_GET["user"])) {
+if ($_SESSION["user"] == $_SESSION["ROOT_USER"] && !empty($_GET["user"])) {
 	$user = quoteshellarg($_GET["user"]);
 }
 
 // Check if domain belongs to the user
 $v_domain = $_GET["domain"];
+$user = isset($user) ? $user : quoteshellarg($_SESSION["user"]);
 exec(
 	HESTIA_CMD . "v-list-web-domain " . $user . " " . quoteshellarg($v_domain) . " json",
 	$output,

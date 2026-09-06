@@ -133,7 +133,7 @@
 					$spnd_confirmation = _('Are you sure you want to suspend user %s?');
 				}
 			?>
-			<div class="units-table-row <?php if ($status == 'suspended') echo 'disabled'; ?> js-unit <?php if (($_SESSION['POLICY_SYSTEM_HIDE_ADMIN'] === 'yes') && ($_SESSION['user'] !== $_SESSION['ROOT_USER']) && ($key === 'admin')) { echo 'u-hidden'; } ?>"
+			<div class="units-table-row <?php if ($status == 'suspended') echo 'disabled'; ?> js-unit <?php if (($_SESSION['POLICY_SYSTEM_HIDE_ADMIN'] === 'yes') && ($_SESSION['user'] !== $_SESSION['ROOT_USER']) && ($key === $_SESSION['ROOT_USER'])) { echo 'u-hidden'; } ?>"
 				data-sort-date="<?= tohtml(strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])) ?>"
 				data-sort-name="<?= tohtml(strtolower($key)) ?>"
 				data-sort-package="<?= tohtml(strtolower($data[$key]['PACKAGE'])) ?>"

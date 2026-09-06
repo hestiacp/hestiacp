@@ -180,7 +180,7 @@ class HestiaApp
         }
     }
 
-    public function sendPostRequest($url, array $formData, array $headers = []): void
+    public function sendPostRequest($url, array $formData, array $headers = [], string $resolve = ''): void
     {
         $ch = curl_init($url);
 
@@ -192,6 +192,10 @@ class HestiaApp
 
         if ($headers !== []) {
             curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        }
+        # When behind a NAT the server might not be able to resolve the domain name to the correct IP address.
+        if ($resolve) {
+            curl_setopt($ch, CURLOPT_RESOLVE, [$resolve]);
         }
 
         curl_exec($ch);

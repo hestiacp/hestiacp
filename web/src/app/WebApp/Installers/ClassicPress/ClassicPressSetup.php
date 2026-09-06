@@ -95,7 +95,9 @@ class ClassicPressSetup extends BaseSetup {
             "admin_email" => $options["email"],
             "blog_public" => $options["search_engine_indexing"] === "Allow" ? 1 : 0,
             "language" => $options["language"],
-        ]);
+        ],
+        [],
+        $target->getResolveUrl());
 
         // Disable XML-RPC
         if ($options["disable_XML-RPC?"] === "Yes") {

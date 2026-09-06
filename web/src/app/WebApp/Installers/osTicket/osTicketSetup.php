@@ -67,7 +67,10 @@ class osTicketSetup extends BaseSetup {
             "dbname" => $target->database->name,
             "dbuser" => $target->database->user,
             "dbpass" => $target->database->password,
-        ]);
+        ],
+        [],
+        $target->getResolveUrl()
+        );
 
         // Cleanup
         $this->appcontext->deleteDirectory($target->getDocRoot("upload"));

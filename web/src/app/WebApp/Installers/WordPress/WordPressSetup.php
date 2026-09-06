@@ -90,6 +90,8 @@ class WordPressSetup extends BaseSetup {
                 "admin_password2" => $options["password"],
                 "admin_email" => $options["email"],
             ],
+            [],
+            $target->getResolveUrl()
         );
     }
 }

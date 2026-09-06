@@ -117,7 +117,9 @@ class DolibarrSetup extends BaseSetup {
             "pass_verif" => $options["password"],
             "installlock" => "1",
             "selectlang" => $language,
-        ]);
+        ],
+        [],
+        $target->getResolveUrl());
 
         $this->appcontext->changeFilePermissions(
             $target->getDocRoot("htdocs/conf/conf.php"),

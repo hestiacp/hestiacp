@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.9.11] - Service Release
+
+### Security
+
+- Validate and sanitize the `language` parameter in the Dolibarr installer to prevent command injection
+
+### Bug fixes
+
+- Bump Roundcube to version 1.6.19
+
 ## [1.9.10] - Security Release
 
 ### Security

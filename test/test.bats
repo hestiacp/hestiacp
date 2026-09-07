@@ -39,6 +39,123 @@ function setup() {
     source $HESTIA/func/ip.sh
 }
 
+function validate_all_list_equivalence() {
+    local objects=$1
+    local user=$2
+    local format expected
+
+    # Compare against the installed commands so changes to their schemas fail CI.
+    for format in plain csv shell json; do
+        run "v-list-$objects" "$user" "$format"
+        assert_success
+        expected=$output
+
+        case $format in
+            json)
+                run jq -S . <<< "$expected"
+                assert_success
+                expected=$output
+                ;;
+            shell)
+                # Adding an owner changes column widths, but not field contents.
+                run awk '{$1=$1; print}' <<< "$expected"
+                assert_success
+                expected=$output
+                ;;
+            csv)
+                if [ "$objects" = mail-domains ]; then
+                    # all-* intentionally omits legacy mail CSV separator lines.
+                    run sed '/^$/d' <<< "$expected"
+                    assert_success
+                    expected=$output
+                fi
+                ;;
+        esac
+
+        run "v-list-all-$objects" "$format"
+        assert_success
+
+        case $format in
+            json)
+                # USER is the Hestia owner; DBUSER must remain in database objects.
+                run jq -S --arg user "$user" \
+                    'with_entries(select(.value.USER == $user) | .value |= del(.USER))' <<< "$output"
+                ;;
+            plain)
+                run awk -F '\t' -v user="$user" \
+                    '$1 == user { sub(/^[^\t]*\t/, ""); print }' <<< "$output"
+                ;;
+            csv)
+                run awk -F ',' -v user="$user" \
+                    'NR == 1 && $1 != "USER" { exit 1 }
+                     NR == 1 || $1 == user { sub(/^[^,]*,/, ""); print }' <<< "$output"
+                ;;
+            shell)
+                run awk -v user="$user" \
+                    'NR == 1 && $1 != "USER" { exit 1 }
+                     NR == 2 && $1 != "----" { exit 1 }
+                     NR <= 2 || $1 == user {
+                         sub(/^[^[:space:]]+[[:space:]]+/, "")
+                         $1=$1; print
+                     }' <<< "$output"
+                ;;
+        esac
+        assert_success
+        assert_output "$expected"
+    done
+}
+
+function validate_all_domain_list() {
+    local command=$1
+    local user=$2
+    local domain=$3
+
+    run "$command" json
+    assert_success
+
+    run jq -e --arg user "$user" --arg domain "$domain" '.[$domain].USER == $user' <<< "$output"
+    assert_success
+
+    run "$command" plain
+    assert_success
+    assert_output --partial "$user"$'\t'"$domain"$'\t'
+
+    run "$command" csv
+    assert_success
+    assert_output --regexp '^USER,DOMAIN,'
+    assert_output --partial "$user,$domain,"
+
+    run "$command" shell
+    assert_success
+    assert_output --regexp '^USER[[:space:]]+DOMAIN'
+    assert_output --regexp "${user}[[:space:]]+$domain"
+}
+
+function validate_all_database_list() {
+    local user=$1
+    local database=$2
+
+    run v-list-all-databases json
+    assert_success
+
+    run jq -e --arg user "$user" --arg database "$database" '.[$database].USER == $user' <<< "$output"
+    assert_success
+
+    run v-list-all-databases plain
+    assert_success
+    assert_output --partial "$user"$'\t'"$database"$'\t'
+
+    run v-list-all-databases csv
+    assert_success
+    assert_output --regexp '^USER,DATABASE,'
+    assert_output --partial "$user,$database,"
+
+    run v-list-all-databases shell
+    assert_success
+    assert_output --regexp '^USER[[:space:]]+DATABASE'
+    assert_output --regexp "${user}[[:space:]]+$database"
+}
+
 function validate_web_domain() {
     local user=$1
     local domain=$2
@@ -313,6 +430,12 @@ function check_ip_not_banned(){
 #----------------------------------------------------------#
 #                         User                             #
 #----------------------------------------------------------#
+
+@test "List all user objects: Empty result exits successfully" {
+    run v-list-all-databases plain
+    assert_success
+    refute_output
+}
 
 @test "User: Add new user" {
     run v-add-user $user $user $user@hestiacp.com default "Super Test"
@@ -811,6 +934,11 @@ function check_ip_not_banned(){
     echo -e "<?php\necho 'Hestia Test:'.(4*3);" > $HOMEDIR/$user/web/$domain/public_html/php-test.php
     validate_web_domain $user $domain 'Hestia Test:12' 'php-test.php'
     rm $HOMEDIR/$user/web/$domain/public_html/php-test.php
+}
+
+@test "WEB: List all web domains" {
+    validate_all_domain_list v-list-all-web-domains "$user" "$domain"
+    validate_all_list_equivalence web-domains "$user"
 }
 
 @test "WEB: Add web domain (duplicate)" {
@@ -1327,6 +1455,11 @@ function check_ip_not_banned(){
     refute_output
 }
 
+@test "DNS: List all DNS domains" {
+    validate_all_domain_list v-list-all-dns-domains "$user" "$domain"
+    validate_all_list_equivalence dns-domains "$user"
+}
+
 @test "DNS: Add domain (duplicate)" {
     run v-add-dns-domain $user $domain 198.18.0.125
     assert_failure $E_EXISTS
@@ -1585,6 +1718,11 @@ function check_ip_not_banned(){
     validate_mail_domain $user $domain
 }
 
+@test "MAIL: List all mail domains" {
+    validate_all_domain_list v-list-all-mail-domains "$user" "$domain"
+    validate_all_list_equivalence mail-domains "$user"
+}
+
 @test "MAIL: Add mail domain webmail client (Roundcube)" {
     run v-add-mail-domain-webmail $user $domain "roundcube" "yes"
     assert_success
@@ -1816,6 +1954,18 @@ function check_ip_not_banned(){
     assert_failure $E_EXISTS
 }
 
+@test "WEB: List all web domains for multiple users" {
+    run v-list-all-web-domains json
+    assert_success
+
+    run jq -e --arg user "$user" --arg domain "$domain" --arg user2 "$user2" --arg rootdomain "$rootdomain" \
+        '.[$domain].USER == $user and .[$rootdomain].USER == $user2' <<< "$output"
+    assert_success
+
+    validate_all_list_equivalence web-domains "$user"
+    validate_all_list_equivalence web-domains "$user2"
+}
+
 @test "Allow Users: User can't add user.user2.com as alias" {
     run v-add-web-domain-alias $user $domain $subdomain
     assert_failure $E_EXISTS
@@ -1910,6 +2060,11 @@ function check_ip_not_banned(){
     refute_output
     # validate_database mysql database_name database_user password
     validate_database mysql $database $dbuser 1234
+}
+
+@test "MYSQL: List all databases" {
+    validate_all_database_list "$user" "$database"
+    validate_all_list_equivalence databases "$user"
 }
 
 @test "MYSQL: Add Database (Duplicate)" {

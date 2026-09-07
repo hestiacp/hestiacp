@@ -12,6 +12,24 @@ permissions:
   contents: read
 
 jobs:
+  inventory-fixtures:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          submodules: recursive
+
+      - name: Install fixture dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y jq bsdextrautils
+
+      - name: Run inventory fixtures without Hestia
+        run: test/test_helper/bats-core/bin/bats test/list-all-user-objects.bats
+
   docker-bats:
     runs-on: ubuntu-24.04
     timeout-minutes: 120
@@ -103,6 +121,7 @@ jobs:
             if ! command -v bats >/dev/null 2>&1; then
               test/test_helper/bats-core/install.sh /usr/local
             fi
+            bats test/list-all-user-objects.bats
             bats test/test.bats
           '
 

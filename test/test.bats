@@ -45,6 +45,8 @@ function validate_all_list_equivalence() {
     local format expected
 
     # Compare against the installed commands so changes to their schemas fail CI.
+    # Missing-field isolation differences intentionally fail here; only shell
+    # alignment and legacy mail CSV blank lines are normalized below.
     for format in plain csv shell json; do
         run "v-list-$objects" "$user" "$format"
         assert_success

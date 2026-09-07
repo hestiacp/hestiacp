@@ -2,7 +2,7 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<?php if ($_SESSION["userContext"] === "admin" && $_SESSION["look"] === $_SESSION["ROOT_USER"]) { ?>
+			<?php if ($_SESSION["userContext"] === "admin") { ?>
 				<a href="/list/user/" class="button button-secondary button-back js-button-back">
 					<i class="fas fa-arrow-left icon-blue"></i><?= tohtml( _("Back")) ?>
 				</a>
@@ -11,33 +11,15 @@
 					<i class="fas fa-arrow-left icon-blue"></i><?= tohtml( _("Back")) ?>
 				</a>
 			<?php } else { ?>
-				<?php if ($_SESSION["userContext"] === "admin" && $_SESSION['look'] !== '') { ?>
-					<a href="/edit/user/?<?= tohtml(http_build_query(["user" => $_SESSION["look"], "token" => $_SESSION["token"]])) ?>" class="button button-secondary button-back js-button-back">
+					<a href="/edit/user/?<?= tohtml(http_build_query(["token" => $_SESSION["token"]])) ?>" class="button button-secondary button-back js-button-back">
 						<i class="fas fa-arrow-left icon-blue"></i><?= tohtml( _("Back")) ?>
 					</a>
-				<?php } elseif ($_SESSION["userContext"] === "admin" && !empty($_GET["user"])) { ?>
-					<a href="/edit/user/?<?= tohtml(http_build_query(["user" => $_GET["user"], "token" => $_SESSION["token"]])) ?>" class="button button-secondary button-back js-button-back">
-						<i class="fas fa-arrow-left icon-blue"></i><?= tohtml( _("Back")) ?>
-					</a>
-				<?php } else { ?>
-					<a href="/edit/user/?<?= tohtml(http_build_query(["user" => $_SESSION["user"], "token" => $_SESSION["token"]])) ?>" class="button button-secondary button-back js-button-back">
-						<i class="fas fa-arrow-left icon-blue"></i><?= tohtml( _("Back")) ?>
-					</a>
-				<?php } ?>
 			<?php } ?>
 			<?php if ($_SESSION['DEMO_MODE'] != "yes"){
 			if (($_SESSION['userContext'] === 'admin') && (htmlentities($_GET['user']) !== $_SESSION['ROOT_USER'])) { ?>
-					<?php if (($_SESSION['userContext'] === 'admin') && ($_GET['user'] != '') && (htmlentities($_GET['user']) !== $_SESSION['ROOT_USER'])) { ?>
-						<?php if (htmlentities($_GET['user']) !== 'system') { ?>
-							<a href="/list/log/auth/?<?= tohtml(http_build_query(["user" => $_GET['user'], "token" => $_SESSION['token']])) ?>" class="button button-secondary button-back js-button-back" title="<?= tohtml( _("Login History")) ?>">
-								<i class="fas fa-binoculars icon-green"></i><?= tohtml( _("Login History")) ?>
-							</a>
-						<?php } ?>
-					<?php } else { ?>
-					<a href="/list/log/auth/" class="button button-secondary button-back js-button-back" title="<?= tohtml( _("Login History")) ?>">
-						<i class="fas fa-binoculars icon-green"></i><?= tohtml( _("Login History")) ?>
-					</a>
-				<?php } ?>
+				<a href="/list/log/auth/" class="button button-secondary button-back js-button-back" title="<?= tohtml( _("Login History")) ?>">
+					<i class="fas fa-binoculars icon-green"></i><?= tohtml( _("Login History")) ?>
+				</a>
 			<?php } ?>
 			<?php if ($_SESSION["userContext"] === "user") { ?>
 				<a href="/list/log/auth/" class="button button-secondary button-back js-button-back" title="<?= tohtml( _("Login History")) ?>">

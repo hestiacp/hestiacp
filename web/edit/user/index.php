@@ -7,20 +7,18 @@ $TAB = "USER";
 // Main include
 include $_SERVER["DOCUMENT_ROOT"] . "/inc/main.php";
 
-// Check user argument
-if (empty($_GET["user"])) {
-	header("Location: /list/user/");
+if (empty($_SESSION["user"])) {
+	header("Location: /login/");
 	exit();
 }
 
-// Edit as someone else?
-if ($_SESSION["userContext"] === "admin" && !empty($_GET["user"])) {
-	$user = $_GET["user"];
-	$v_username = $_GET["user"];
+if ($_SESSION["userContext"] === "admin" && $_SESSION["look"] !== "") {
+	$user = $_SESSION["look"];
 } else {
 	$user = $_SESSION["user"];
-	$v_username = $_SESSION["user"];
 }
+
+$v_username = $user;
 
 // Prevent other users with admin privileges from editing properties of the ROOT_USER account.
 // Only a session whose real logged-in user IS the ROOT_USER may edit it,

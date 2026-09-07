@@ -44,11 +44,7 @@
 						<li class="units-table-row-action shortcut-delete" data-key-action="js">
 							<a
 								class="units-table-row-action-link data-controls js-confirm-action"
-								<?php if ($_SESSION["userContext"] === "admin" && isset($_GET["user"]) && $_GET["user"] !== $_SESSION['ROOT_USER']) { ?>
-									href="/delete/key/?<?= tohtml(http_build_query(["user" => $_GET["user"], "key" => $key, "token" => $_SESSION["token"]])) ?>"
-								<?php } else { ?>
-									href="/delete/key/?<?= tohtml(http_build_query(["key" => $key, "token" => $_SESSION["token"]])) ?>"
-								<?php } ?>
+								href="/delete/key/?<?= tohtml(http_build_query(["key" => $key, "token" => $_SESSION["token"]])) ?>"
 								title="<?= tohtml( _("Delete")) ?>"
 								data-confirm-title="<?= tohtml( _("Delete")) ?>"
 								data-confirm-message="<?= tohtml(sprintf(_("Are you sure you want to delete SSH key %s?"), tohtml($key))) ?>"

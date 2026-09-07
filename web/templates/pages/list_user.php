@@ -190,7 +190,7 @@
 							<li class="units-table-row-action shortcut-enter" data-key-action="href">
 								<a
 									class="units-table-row-action-link"
-									href="/login/?<?= tohtml(http_build_query(["loginas" => $key, "token" => $_SESSION["token"], "edit_link" => "/edit/user/"])) ?>"
+									href="/login/?<?= tohtml(http_build_query(["loginas" => $key, "token" => $_SESSION["token"], "edit_link" => "/edit/user"])) ?>"
 									title="<?= tohtml( _("Edit User")) ?>"
 								>
 									<i class="fas fa-pencil icon-orange"></i>

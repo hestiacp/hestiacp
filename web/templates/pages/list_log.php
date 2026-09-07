@@ -26,14 +26,14 @@
 				<?php } ?>
 			<?php } ?>
 			<?php if ($_SESSION['DEMO_MODE'] != "yes"){
-			if (($_SESSION['userContext'] === 'admin') && (htmlentities($_GET['user']) !== 'admin')) { ?>
-				<?php if (($_SESSION['userContext'] === 'admin') && ($_GET['user'] != '') && (htmlentities($_GET['user']) !== 'admin')) { ?>
-					<?php if (htmlentities($_GET['user']) !== 'system') { ?>
-						<a href="/list/log/auth/?<?= tohtml(http_build_query(["user" => $_GET['user'], "token" => $_SESSION['token']])) ?>" class="button button-secondary button-back js-button-back" title="<?= tohtml( _("Login History")) ?>">
-							<i class="fas fa-binoculars icon-green"></i><?= tohtml( _("Login History")) ?>
-						</a>
-					<?php } ?>
-				<?php } else { ?>
+			if (($_SESSION['userContext'] === 'admin') && (htmlentities($_GET['user']) !== $_SESSION['ROOT_USER'])) { ?>
+					<?php if (($_SESSION['userContext'] === 'admin') && ($_GET['user'] != '') && (htmlentities($_GET['user']) !== $_SESSION['ROOT_USER'])) { ?>
+						<?php if (htmlentities($_GET['user']) !== 'system') { ?>
+							<a href="/list/log/auth/?<?= tohtml(http_build_query(["user" => $_GET['user'], "token" => $_SESSION['token']])) ?>" class="button button-secondary button-back js-button-back" title="<?= tohtml( _("Login History")) ?>">
+								<i class="fas fa-binoculars icon-green"></i><?= tohtml( _("Login History")) ?>
+							</a>
+						<?php } ?>
+					<?php } else { ?>
 					<a href="/list/log/auth/" class="button button-secondary button-back js-button-back" title="<?= tohtml( _("Login History")) ?>">
 						<i class="fas fa-binoculars icon-green"></i><?= tohtml( _("Login History")) ?>
 					</a>

@@ -90,7 +90,7 @@
 					<?php } ?>
 				</div>
 				<div class="units-table-cell">
-					<?php if (!($_SESSION["userContext"] === "admin" && $_SESSION["look"] === "admin" && $read_only === true)) { ?>
+					<?php if (!($_SESSION["userContext"] === "admin" && $_SESSION["look"] === $_SESSION['ROOT_USER'] && $read_only === true)) { ?>
 						<ul class="units-table-row-actions">
 							<li class="units-table-row-action shortcut-d" data-key-action="href">
 								<a

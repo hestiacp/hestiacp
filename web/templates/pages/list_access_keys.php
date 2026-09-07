@@ -73,7 +73,7 @@
 		<?php
 			foreach ($data as $key => $value) {
 				++$i;
-				$key_user = !empty($value['USER']) ? $value['USER'] : 'admin';
+				$key_user = !empty($value['USER']) ? $value['USER'] : $_SESSION["ROOT_USER"];
 				$key_comment = !empty($value['COMMENT']) ? $value['COMMENT'] : '-';
 				//$key_permissions = !empty($value['PERMISSIONS']) ? $value['PERMISSIONS'] : '-';
 				//$key_permissions = implode(' ', $key_permissions);

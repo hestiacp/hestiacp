@@ -7,7 +7,7 @@
     "require": {
         "symfony/console": "^8.1.6",
         "composer": "*",
-        "symfony/process": "^8.1.5"
+        "symfony/process": "^8.1.6"
     },
     "require-dev": {
         "squizlabs/php_codesniffer": "^4.0.4"

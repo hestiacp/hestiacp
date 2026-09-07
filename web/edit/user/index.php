@@ -12,8 +12,13 @@ if (empty($_SESSION["user"])) {
 	exit();
 }
 
-$user = $_SESSION["user"];
-$v_username = $_SESSION["user"];
+if ($_SESSION["userContext"] === "admin" && $_SESSION["look"] !== "") {
+	$user = $_SESSION["look"];
+} else {
+	$user = $_SESSION["user"];
+}
+
+$v_username = $user;
 
 // Prevent other users with admin privileges from editing properties of the ROOT_USER account.
 // Only a session whose real logged-in user IS the ROOT_USER may edit it,

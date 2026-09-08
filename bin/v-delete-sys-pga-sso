@@ -1,73 +1,70 @@
 #!/bin/bash
-# info: deletes temp database user
-# options: USER DBUSER [TYPE] [HOST]
+# info: disables support for single sign on phpPgAdmin
+# options: [mode]
 #
-# example: v-delete-database-temp-user wordpress hestia_sso_user mysql
+# example: v-delete-sys-pga-sso
 #
-# Revokes "temp user" access to a database and removes the user
-# To be used in combination with v-add-database-temp-user
+# Disables support for SSO to phpPgAdmin
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #
 #----------------------------------------------------------#
 
-# Argument definition
-user=$1
-database=$2
-dbuser=$3
-type=${4-mysql}
-host=$5
+MODE=$1
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
 source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/func/db.sh
-source $HESTIA/func/db.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
+
+PGA_INSTALL="/usr/share/phppgadmin"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '3' "$#" 'USER DATABASE DBUSER [TYPE] [HOST]'
-is_format_valid 'user' 'database' 'dbuser'
-is_system_enabled "$DB_SYSTEM" 'DB_SYSTEM'
-is_object_valid 'user' 'USER' "$user"
-is_object_unsuspended 'user' 'USER' "$user"
-is_object_valid 'db' 'DB' "$database"
-is_object_unsuspended 'db' 'DB' "$database"
-get_next_dbhost
-
-if [[ $dbuser != *"hestia_sso"* ]]; then
-	echo "DBUSER is invalid SSO user"
-	exit "$E_INVALID"
-fi
-
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
+
+if [ "x$(id -u)" != 'x0' ]; then
+	echo "Error: Script can be run executed only by root"
+	exit 10
+fi
+
+if [ ! -e "$PGA_INSTALL/hestia-sso.php" ]; then
+	echo 'Error: PGA Single Sign On already disabled'
+	exit 1
+fi
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Get database values
-get_database_values
+apikey=$(grep -Po 'define\("API_KEY", "\K[^"]+' $PGA_INSTALL/hestia-sso.php | cut -d: -f1)
 
-if [ "$type" = "pgsql" ]; then
-	delete_pgsql_database_temp_user
-else
-	delete_mysql_database_temp_user
+if [ -n "$apikey" ]; then
+	$BIN/v-delete-access-key "$apikey"
 fi
+
+# remove SSO file
+rm $PGA_INSTALL/hestia-sso.php
+
+# disable key
+$BIN/v-change-sys-config-value 'PHPPGADMIN_KEY' ""
 
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
 
+if [ "$MODE" != "quiet" ]; then
+	echo "PGA Hestia-SSO plugin has been successfully removed/disabled"
+fi
+
 # Logging
-$BIN/v-log-action "$user" "Info" "Database" "Revoked user access (Database: $database, User: $dbuser)."
+$BIN/v-log-action "system" "Info" "Plugins" "phpPgAdmin Single Sign-On (SSO) disabled."
 log_event "$OK" "$ARGUMENTS"
 
 exit

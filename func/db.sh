@@ -52,6 +52,20 @@ mysql_connect() {
 		echo "user='$USER'" >> $mycnf
 		echo "password='$PASSWORD'" >> $mycnf
 		echo "port='$PORT'" >> $mycnf
+		if [ "$SSL" = "yes" ]; then
+			if [ -f '/usr/bin/mariadb' ]; then
+				echo "ssl=1" >> $mycnf
+				echo "ssl-verify-server-cert=0" >> $mycnf
+			else
+				echo "ssl-mode=REQUIRED" >> $mycnf
+			fi
+		else
+			if [ -f '/usr/bin/mariadb' ]; then
+				echo "ssl=0" >> $mycnf
+			else
+				echo "ssl-mode=DISABLED" >> $mycnf
+			fi
+		fi
 		chmod 600 $mycnf
 	else
 		mypw=$(grep password $mycnf | cut -f 2 -d \')
@@ -61,6 +75,20 @@ mysql_connect() {
 			echo "user='$USER'" >> $mycnf
 			echo "password='$PASSWORD'" >> $mycnf
 			echo "port='$PORT'" >> $mycnf
+			if [ "$SSL" = "yes" ]; then
+				if [ -f '/usr/bin/mariadb' ]; then
+					echo "ssl=1" >> $mycnf
+					echo "ssl-verify-server-cert=0" >> $mycnf
+				else
+					echo "ssl-mode=REQUIRED" >> $mycnf
+				fi
+			else
+				if [ -f '/usr/bin/mariadb' ]; then
+					echo "ssl=0" >> $mycnf
+				else
+					echo "ssl-mode=DISABLED" >> $mycnf
+				fi
+			fi
 			chmod 660 $mycnf
 		fi
 	fi

@@ -30,7 +30,9 @@ json_list() {
 	msg=$(echo "$msg" | sed -e "s|${TO_ESCAPE}|${TO_ESCAPE}${TO_ESCAPE}|g" -e 's/"/\\"/g' -e "s/%quote%/'/g")
 	echo '{'
 	echo -e "\t\"$account\": {"
-	echo "            \"MSG\": \"$msg\""
+	echo "            \"MSG\": \"$msg\","
+	echo "            \"START\": \"$autoreply_start\","
+	echo "            \"END\": \"$autoreply_end\""
 	echo -e "\t}\n}"
 }
 
@@ -46,8 +48,8 @@ plain_list() {
 
 # CSV list function
 csv_list() {
-	echo "MSG"
-	echo "$msg"
+	echo "MSG,START,END"
+	echo "$msg,$autoreply_start,$autoreply_end"
 }
 
 #----------------------------------------------------------#
@@ -70,6 +72,10 @@ if [ -e "$USER_DATA/mail/$account@$domain.msg" ]; then
 	msg=$(cat $USER_DATA/mail/$account@$domain.msg \
 		| sed ':a;N;$!ba;s/\n/\\n/g')
 fi
+
+# Reading autoreply schedule
+autoreply_start=$(get_object_value "mail/$domain" 'ACCOUNT' "$account" '$AUTOREPLY_START')
+autoreply_end=$(get_object_value "mail/$domain" 'ACCOUNT' "$account" '$AUTOREPLY_END')
 
 # Listing data
 case $format in

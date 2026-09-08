@@ -22,6 +22,46 @@ if ($_SESSION["userContext"] === "admin" && !empty($_GET["user"])) {
 	$v_username = $_SESSION["user"];
 }
 
+// 2FA setup (as opposed to disabling it) is restricted to the account owner:
+// only the person who can prove they hold a valid token should be able to
+// activate 2FA for that account.
+$is_own_account = $v_username === $_SESSION["user"];
+
+// AJAX: generate a pending 2FA secret without a full page reload, so the
+// QR code can appear as soon as the checkbox is ticked. Follows the same
+// pattern as /list/notifications/ (manual token check, no verify_csrf()
+// redirect, since a fetch() call needs a clean JSON response either way).
+if (($_REQUEST["ajax"] ?? null) == 1 && ($_REQUEST["twofa_action"] ?? null) === "generate") {
+	header("Content-Type: application/json");
+	if (!$is_own_account || ($_REQUEST["token"] ?? null) !== ($_SESSION["token"] ?? null)) {
+		http_response_code(403);
+		echo json_encode(["success" => false, "error" => _("Invalid request.")]);
+		exit();
+	}
+	exec(
+		HESTIA_CMD . "v-generate-user-2fa-secret " . quoteshellarg($v_username),
+		$output,
+		$return_var,
+	);
+	if ($return_var !== 0) {
+		echo json_encode(["success" => false, "error" => implode("<br>", $output)]);
+		exit();
+	}
+	$secret_data = json_decode(implode("", $output), true);
+	$_SESSION["twofa_setup"] = [
+		"secret" => $secret_data["SECRET"],
+		"qrcode" => $secret_data["QRCODE"],
+		"created" => time(),
+		"attempts" => 0,
+	];
+	echo json_encode([
+		"success" => true,
+		"secret" => $secret_data["SECRET"],
+		"qrcode" => $secret_data["QRCODE"],
+	]);
+	exit();
+}
+
 // Prevent other users with admin privileges from editing properties of the ROOT_USER account.
 // Only a session whose real logged-in user IS the ROOT_USER may edit it,
 // regardless of impersonation state ($_SESSION["look"] is always set by main.php).
@@ -56,6 +96,8 @@ $v_name = $data[$v_username]["NAME"];
 $v_shell = $data[$v_username]["SHELL"];
 $v_twofa = $data[$v_username]["TWOFA"];
 $v_qrcode = $data[$v_username]["QRCODE"];
+$v_twofa_backup_count = $data[$v_username]["TWOFA_BACKUP_COUNT"] ?? 0;
+$v_twofa_device_name = $data[$v_username]["TWOFA_DEVICE_NAME"] ?? "";
 $v_phpcli = $data[$v_username]["PHPCLI"];
 $v_role = $data[$v_username]["ROLE"];
 $v_login_disabled = $data[$v_username]["LOGIN_DISABLED"];
@@ -115,6 +157,13 @@ $v_date = $data[$v_username]["DATE"];
 
 if (empty($v_phpcli)) {
 	$v_phpcli = substr(DEFAULT_PHP_VERSION, 4);
+}
+
+// A pending (unconfirmed) 2FA secret lives only in the session, never in
+// user.conf, until the owner proves they can generate a valid token from
+// it. Expire it after 10 minutes so a stale QR code can't be confirmed.
+if (!empty($_SESSION["twofa_setup"]) && time() - $_SESSION["twofa_setup"]["created"] > 600) {
+	unset($_SESSION["twofa_setup"]);
 }
 
 // List packages
@@ -191,34 +240,97 @@ if (!empty($_POST["save"])) {
 		}
 	}
 
-	// Enable twofa
-	if (!empty($_POST["v_twofa"]) && empty($v_twofa) && empty($_SESSION["error_msg"])) {
-		exec(HESTIA_CMD . "v-add-user-2fa " . quoteshellarg($v_username), $output, $return_var);
-		check_return_code($return_var, $output);
-		unset($output);
+	// Two-factor authentication setup is a 3-step flow, restricted to the
+	// account owner (an admin editing someone else can only disable it).
+	if ($is_own_account && empty($_SESSION["error_msg"])) {
+		if (!empty($_POST["v_twofa_confirm"]) && !empty($_SESSION["twofa_setup"]["secret"])) {
+			// Step 2: confirm the pending secret with a currently valid token.
+			// Only now is anything written to user.conf.
+			$pending_secret = $_SESSION["twofa_setup"]["secret"];
+			$device_name = trim($_POST["v_twofa_device_name"] ?? "");
+			exec(
+				HESTIA_CMD .
+					"v-add-user-2fa " .
+					quoteshellarg($v_username) .
+					" " .
+					quoteshellarg($pending_secret) .
+					" " .
+					quoteshellarg($_POST["v_twofa_confirm"]) .
+					" " .
+					quoteshellarg($device_name),
+				$output,
+				$return_var,
+			);
+			if ($return_var == 0) {
+				// $output now holds the one-time backup codes
+				$_SESSION["twofa_backup_codes"] = $output;
+				unset($output);
+				unset($_SESSION["twofa_setup"]);
 
-		// List user
-		exec(
-			HESTIA_CMD . "v-list-user " . quoteshellarg($v_username) . " json",
-			$output,
-			$return_var,
-		);
-		check_return_code($return_var, $output);
-		$data = json_decode(implode("", $output), true);
-		unset($output);
+				// List user
+				exec(
+					HESTIA_CMD . "v-list-user " . quoteshellarg($v_username) . " json",
+					$output,
+					$return_var,
+				);
+				check_return_code($return_var, $output);
+				$data = json_decode(implode("", $output), true);
+				unset($output);
 
-		// Parse user twofa
-		$v_twofa = $data[$v_username]["TWOFA"];
-		$v_qrcode = $data[$v_username]["QRCODE"];
+				$v_twofa = $data[$v_username]["TWOFA"];
+				$v_twofa_backup_count = $data[$v_username]["TWOFA_BACKUP_COUNT"] ?? 0;
+				$v_twofa_device_name = $data[$v_username]["TWOFA_DEVICE_NAME"] ?? "";
+			} else {
+				unset($output);
+				sleep(2);
+				$_SESSION["twofa_setup"]["attempts"] =
+					($_SESSION["twofa_setup"]["attempts"] ?? 0) + 1;
+				if ($_SESSION["twofa_setup"]["attempts"] >= 5) {
+					unset($_SESSION["twofa_setup"]);
+					$_SESSION["error_msg"] = _(
+						"Too many failed attempts. Please start the setup again.",
+					);
+				} else {
+					$_SESSION["error_msg"] = _(
+						"The code you entered is not valid. Please try again.",
+					);
+				}
+			}
+		} elseif (!empty($_POST["v_twofa"]) && empty($v_twofa) && empty($_SESSION["twofa_setup"])) {
+			// Step 1: generate a secret, but do not activate it yet
+			exec(
+				HESTIA_CMD . "v-generate-user-2fa-secret " . quoteshellarg($v_username),
+				$output,
+				$return_var,
+			);
+			check_return_code($return_var, $output);
+			if ($return_var == 0) {
+				$secret_data = json_decode(implode("", $output), true);
+				$_SESSION["twofa_setup"] = [
+					"secret" => $secret_data["SECRET"],
+					"qrcode" => $secret_data["QRCODE"],
+					"created" => time(),
+					"attempts" => 0,
+				];
+			}
+			unset($output);
+		} elseif (empty($_POST["v_twofa"]) && empty($v_twofa) && !empty($_SESSION["twofa_setup"])) {
+			// Step 3: setup was cancelled before confirmation
+			unset($_SESSION["twofa_setup"]);
+		}
 	}
 
-	// Disable twofa
+	// Disable twofa (the account owner, or an admin editing someone else)
 	if (empty($_POST["v_twofa"]) && !empty($v_twofa) && empty($_SESSION["error_msg"])) {
 		exec(HESTIA_CMD . "v-delete-user-2fa " . quoteshellarg($v_username), $output, $return_var);
 		check_return_code($return_var, $output);
 		unset($output);
 		$v_twofa = "";
 		$v_qrcode = "";
+		$v_twofa_backup_count = 0;
+		$v_twofa_device_name = "";
+		unset($_SESSION["twofa_setup"]);
+		unset($_SESSION["twofa_backup_codes"]);
 	}
 
 	// Change default sort order
@@ -572,8 +684,23 @@ if (!empty($_POST["save"])) {
 	}
 }
 
+// Determine 2FA display state for the template
+if (!empty($v_twofa)) {
+	$twofa_state = "on";
+} elseif ($is_own_account && !empty($_SESSION["twofa_setup"]["secret"])) {
+	$twofa_state = "pending";
+	$v_twofa_setup_secret = $_SESSION["twofa_setup"]["secret"];
+	$v_twofa_setup_qrcode = $_SESSION["twofa_setup"]["qrcode"];
+} else {
+	$twofa_state = "off";
+}
+$v_twofa_backup_codes = $_SESSION["twofa_backup_codes"] ?? null;
+
 // Render page
 render_page($user, $TAB, "edit_user");
+
+// Backup codes are shown exactly once, right after they were generated
+unset($_SESSION["twofa_backup_codes"]);
 
 // Flush session messages
 unset($_SESSION["error_msg"]);

@@ -50,6 +50,8 @@ json_list() {
         "RKEY": "'$RKEY'",
         "TWOFA": "'$TWOFA'",
         "QRCODE": "'$QRCODE'",
+        "TWOFA_BACKUP_COUNT": "'$TWOFA_BACKUP_COUNT'",
+        "TWOFA_DEVICE_NAME": "'$TWOFA_DEVICE_NAME'",
         "ROLE": "'$ROLE'",
         "SUSPENDED": "'$SUSPENDED'",
         "SUSPENDED_USERS": "'$SUSPENDED_USERS'",
@@ -180,6 +182,11 @@ is_object_valid 'user' 'USER' "$user"
 USER=$user
 HOME=$HOMEDIR/$user
 source_conf "$HESTIA/data/users/$user/user.conf"
+if [ -z "$TWOFA_BACKUP" ]; then
+	TWOFA_BACKUP_COUNT='0'
+else
+	TWOFA_BACKUP_COUNT=$(awk -F',' '{print NF}' <<< "$TWOFA_BACKUP")
+fi
 U_USERS=$(awk -F"'" '/^U_USERS=/ {print $2}' "$HESTIA/data/users/$ROOT_USER/user.conf")
 SUSPENDED_USERS=$(awk -F"'" '/^SUSPENDED_USERS=/ {print $2}' "$HESTIA/data/users/$ROOT_USER/user.conf")
 

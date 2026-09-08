@@ -48,6 +48,8 @@ fi
 # Remove 2FA from user config
 update_user_value "$user" '$TWOFA' ""
 update_user_value "$user" '$QRCODE' ""
+update_user_value "$user" '$TWOFA_BACKUP' ""
+update_user_value "$user" '$TWOFA_DEVICE_NAME' ""
 
 #----------------------------------------------------------#
 #                       Hestia                             #

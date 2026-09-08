@@ -12,12 +12,13 @@
 		<?php } ?>
 		<div class="u-mb20">
 			<label for="twofa" class="form-label u-side-by-side">
-				<?= tohtml( _("2FA Token")) ?>
+				<?= tohtml( _("Authentication Code")) ?>
 				<a class="login-form-link" href="/reset2fa/">
-					<?= tohtml( _("Forgot Token")) ?>
+					<?= tohtml( _("Lost your device?")) ?>
 				</a>
 			</label>
 			<input type="text" class="form-control" name="twofa" id="twofa" autocomplete="one-time-code" required autofocus>
+			<p class="u-mt5"><?= tohtml( _("Enter the 6-digit code from your authenticator app, or one of your backup codes.")) ?></p>
 		</div>
 		<div class="u-side-by-side">
 			<button type="submit" class="button">

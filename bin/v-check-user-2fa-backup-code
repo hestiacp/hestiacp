@@ -1,0 +1,99 @@
+#!/bin/bash
+# info: check and consume a user's 2fa backup code
+# options: USER CODE
+#
+# example: v-check-user-2fa-backup-code admin AB12CD34EF
+#
+# This function verifies a 2fa backup code against the user's remaining
+# backup codes. On success the code is removed from the list (single use)
+# and the number of remaining codes is printed.
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+backup_code=$2
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '2' "$#" 'USER CODE'
+is_format_valid 'user' 'backup_code'
+is_object_valid 'user' 'USER' "$user"
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Serialize read-modify-write against concurrent logins using the same code
+lockfile="$USER_DATA/twofa.lock"
+exec 200> "$lockfile"
+if ! flock -x -w 5 200; then
+	echo "Error: could not acquire lock on 2FA data, try again"
+	exit "$E_LA"
+fi
+
+# Reading user values
+source $USER_DATA/user.conf
+
+# Check if 2FA is enabled
+if [ -z "$TWOFA" ]; then
+	echo "Error: two-factor authentication is not enabled"
+	exit "$E_NOTEXIST"
+fi
+
+if [ -z "$TWOFA_BACKUP" ]; then
+	echo "Error: no backup codes available"
+	exit "$E_NOTEXIST"
+fi
+
+# Walk the full list without breaking early on a match
+match='no'
+new_list=""
+IFS=',' read -ra codes <<< "$TWOFA_BACKUP"
+for c in "${codes[@]}"; do
+	if [ "$c" = "$backup_code" ]; then
+		match='yes'
+	elif [ -z "$new_list" ]; then
+		new_list="$c"
+	else
+		new_list="$new_list,$c"
+	fi
+done
+
+if [ "$match" != 'yes' ]; then
+	echo "Error: invalid or already used backup code"
+	exit "$E_PASSWORD"
+fi
+
+# Remove the used code
+update_user_value "$user" '$TWOFA_BACKUP' "$new_list"
+
+if [ -z "$new_list" ]; then
+	remaining=0
+else
+	remaining=$(awk -F',' '{print NF}' <<< "$new_list")
+fi
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Logging
+$BIN/v-log-action "system" "Warning" "System" "Two-factor backup code used (User: $user, $remaining remaining)."
+$BIN/v-log-action "$user" "Warning" "System" "Two-factor backup code used ($remaining remaining)."
+
+echo "$remaining"
+
+exit

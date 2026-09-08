@@ -33,14 +33,21 @@
 # This function can run before check_result/E_INVALID exist (it loads
 # hestia.conf during main.sh's own bootstrap), so it must fail closed on
 # its own rather than delegating to check_result.
+# Reserved names that must never be assigned from user-controlled config.
+if [[ -z "${HESTIA_RESERVED_CONF_KEYS+x}" ]]; then
+	# Keep this list in sync with the $reserved array in the PHP block function _parse_object_kv_list_php()
+	HESTIA_RESERVED_CONF_KEYS=' PATH IFS CDPATH ENV BASH_ENV PS1 PS2 PS3 PS4 PROMPT_COMMAND LD_PRELOAD LD_LIBRARY_PATH LD_AUDIT TMPDIR SHELLOPTS BASHOPTS BASH_XTRACEFD GLOBIGNORE FIGNORE HISTFILE'
+	HESTIA_RESERVED_CONF_KEYS+=' HESTIA BIN HOMEDIR BACKUP USER_DATA WEBTPL MAILTPL DNSTPL RRD SENDMAIL'
+	HESTIA_RESERVED_CONF_KEYS+=' HESTIA_INSTALL_DIR HESTIA_COMMON_DIR HESTIA_BACKUP HESTIA_PHP HESTIA_GIT_REPO'
+	HESTIA_RESERVED_CONF_KEYS+=' HESTIA_THEMES HESTIA_THEMES_CUSTOM SCRIPT CHECK_RESULT_CALLBACK user'
+	HESTIA_RESERVED_CONF_KEYS+=' OK E_ARGS E_INVALID E_NOTEXIST E_EXISTS E_SUSPENDED E_UNSUSPENDED E_INUSE'
+	HESTIA_RESERVED_CONF_KEYS+=' E_LIMIT E_PASSWORD E_FORBIDEN E_DISABLED E_PARSING E_DISK E_LA E_CONNECT'
+	HESTIA_RESERVED_CONF_KEYS+=' E_FTP E_DB E_RRD E_UPDATE E_RESTART HESTIA_RESERVED_CONF_KEYS '
+	readonly HESTIA_RESERVED_CONF_KEYS
+fi
+
 source_conf() {
-	local reserved=' PATH IFS CDPATH ENV BASH_ENV PS1 PS2 PS3 PS4 PROMPT_COMMAND LD_PRELOAD LD_LIBRARY_PATH LD_AUDIT TMPDIR SHELLOPTS BASHOPTS BASH_XTRACEFD GLOBIGNORE FIGNORE HISTFILE'
-	reserved+=' HESTIA BIN HOMEDIR BACKUP USER_DATA WEBTPL MAILTPL DNSTPL RRD SENDMAIL'
-	reserved+=' HESTIA_INSTALL_DIR HESTIA_COMMON_DIR HESTIA_BACKUP HESTIA_PHP HESTIA_GIT_REPO'
-	reserved+=' HESTIA_THEMES HESTIA_THEMES_CUSTOM SCRIPT CHECK_RESULT_CALLBACK user'
-	reserved+=' OK E_ARGS E_INVALID E_NOTEXIST E_EXISTS E_SUSPENDED E_UNSUSPENDED E_INUSE'
-	reserved+=' E_LIMIT E_PASSWORD E_FORBIDEN E_DISABLED E_PARSING E_DISK E_LA E_CONNECT'
-	reserved+=' E_FTP E_DB E_RRD E_UPDATE E_RESTART '
+	local reserved="$HESTIA_RESERVED_CONF_KEYS"
 	while IFS='= ' read -r lhs rhs; do
 		if [[ ! $lhs =~ ^[A-Za-z_][A-Za-z0-9_]*$ ]]; then
 			continue
@@ -437,7 +444,13 @@ parse_object_kv_list_non_eval() {
 
 		obj_key=${objkv%%=*} # strip everything after first  '=' char
 		obj_val=${objkv#*=}  # strip everything before first '=' char
-		declare -g $obj_key="$obj_val"
+		if [[ ! "$obj_key" =~ ^[A-Za-z_][A-Za-z0-9_]*$ ]]; then
+			continue
+		fi
+		if [[ "$HESTIA_RESERVED_CONF_KEYS" == *" $obj_key "* ]] || [[ "$obj_key" == BASH_FUNC_* ]]; then
+			continue
+		fi
+		declare -g "$obj_key=$obj_val"
 
 	done
 	IFS="$OLD_IFS"
@@ -577,6 +590,24 @@ while ($unparsed !== '') {
         }
         fwrite(STDERR, $msg . PHP_EOL);
     }
+    // Keep this list in sync with HESTIA_RESERVED_CONF_KEYS at the beginning of the script
+    $reserved = [
+        'PATH', 'IFS', 'CDPATH', 'ENV', 'BASH_ENV', 'PS1', 'PS2', 'PS3', 'PS4',
+        'PROMPT_COMMAND', 'LD_PRELOAD', 'LD_LIBRARY_PATH', 'LD_AUDIT', 'TMPDIR',
+        'SHELLOPTS', 'BASHOPTS', 'BASH_XTRACEFD', 'GLOBIGNORE', 'FIGNORE', 'HISTFILE',
+        'HESTIA', 'BIN', 'HOMEDIR', 'BACKUP', 'USER_DATA', 'WEBTPL', 'MAILTPL', 'DNSTPL',
+        'RRD', 'SENDMAIL', 'HESTIA_INSTALL_DIR', 'HESTIA_COMMON_DIR', 'HESTIA_BACKUP',
+        'HESTIA_PHP', 'HESTIA_GIT_REPO', 'HESTIA_THEMES', 'HESTIA_THEMES_CUSTOM',
+        'SCRIPT', 'CHECK_RESULT_CALLBACK', 'user',
+        'OK', 'E_ARGS', 'E_INVALID', 'E_NOTEXIST', 'E_EXISTS', 'E_SUSPENDED',
+        'E_UNSUSPENDED', 'E_INUSE', 'E_LIMIT', 'E_PASSWORD', 'E_FORBIDEN',
+        'E_DISABLED', 'E_PARSING', 'E_DISK', 'E_LA', 'E_CONNECT', 'E_FTP',
+        'E_DB', 'E_RRD', 'E_UPDATE', 'E_RESTART',
+        'HESTIA_RESERVED_CONF_KEYS',
+    ];
+    if (in_array($key_name, $reserved, true) || str_starts_with($key_name, 'BASH_FUNC_')) {
+        continue;
+    }
     $result[$key_name] = $key_value;
 }
 $assignments = [];
@@ -686,16 +717,21 @@ get_object_values() {
 
 # Update object value
 update_object_value() {
-	row=$(grep -nF "$2='$3'" $USER_DATA/$1.conf)
-	lnr=$(echo $row | cut -f 1 -d ':')
-	object=$(echo $row | sed "s/^$lnr://")
+	local conf="$USER_DATA/$1.conf"
+	local row lnr object varname old new old_target new_target
+	row=$(grep -nF "$2='$3'" "$conf")
+	lnr=${row%%:*}
+	object=${row#*:}
 	parse_object_kv_list "$object"
-	local varname="${4#\$}"
+	varname="${4#\$}"
 	old="${!varname}"
-	old=$(echo "$old" | sed -e 's/\\/\\\\/g' -e 's/&/\\&/g' -e 's/\//\\\//g')
-	new=$(echo "$5" | sed -e 's/\\/\\\\/g' -e 's/&/\\&/g' -e 's/\//\\\//g')
-	sed -i "$lnr s/${4//$/}='${old//\*/\\*}'/${4//$/}='${new//\*/\\*}'/g" \
-		$USER_DATA/$1.conf
+	old="${old//[$'\n\r']/}"
+	new="${5//[$'\n\r']/}"
+	old_target=${old//\'/\'\\\'\'}
+	new_target=${new//\'/\'\\\'\'}
+	old=$(printf '%s' "$old_target" | sed -e 's/[][\\/^$.*]/\\&/g')
+	new=$(printf '%s' "$new_target" | sed -e 's/\\/\\\\/g' -e 's/[&/]/\\&/g')
+	sed -i "$lnr s/${4//$/}='${old}'/${4//$/}='${new}'/g" "$conf"
 }
 
 # Add object key

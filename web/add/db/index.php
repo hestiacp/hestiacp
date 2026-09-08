@@ -125,6 +125,31 @@ if (!empty($_POST["ok"])) {
 		if ($_POST["v_type"] == "pgsql" && !empty($_SESSION["DB_PGA_ALIAS"])) {
 			$db_admin_link = "https://" . $http_host . "/" . $_SESSION["DB_PGA_ALIAS"];
 		}
+
+		$sso_admin_link = $db_admin_link;
+		if (
+			$_POST["v_type"] == "mysql" &&
+			isset($_SESSION["PHPMYADMIN_KEY"]) &&
+			$_SESSION["PHPMYADMIN_KEY"] != "" &&
+			!ipUsed()
+		) {
+			$time = time();
+			$db_fullname = $user_plain . "_" . $_POST["v_database"];
+			$hestia_sso_token = password_hash(
+				$db_fullname . $user_plain . $_SESSION["user_combined_ip"] . $time . $_SESSION["PHPMYADMIN_KEY"],
+				PASSWORD_DEFAULT,
+			);
+			$sso_admin_link = rtrim($sso_admin_link, "/") . "/";
+			$sso_admin_link .=
+				"hestia-sso.php?" .
+				http_build_query([
+					"host" => $_POST["v_host"],
+					"database" => $db_fullname,
+					"user" => $user_plain,
+					"exp" => $time,
+					"hestia_token" => $hestia_sso_token,
+				]);
+		}
 	}
 
 	// Email login credentials
@@ -206,7 +231,7 @@ if (!empty($_POST["ok"])) {
 				"_" .
 				htmlentities($_POST["v_database"]) .
 				'">',
-			'<a href="' . $db_admin_link . '" target="_blank">',
+			'<a href="' . $sso_admin_link . '" target="_blank">',
 		);
 		unset($v_database);
 		unset($v_dbuser);

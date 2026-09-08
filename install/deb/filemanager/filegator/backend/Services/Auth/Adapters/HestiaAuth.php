@@ -27,9 +27,7 @@ class HestiaAuth implements Service, AuthInterface {
 	protected $hestia_user = "";
 
 	public function init(array $config = []) {
-		if (isset($_SESSION["user"])) {
-			$v_user = $_SESSION["user"];
-		}
+		$v_user = $_SESSION["user"] ?? "";
 		if (!empty($_SESSION["look"])) {
 			if (isset($_SESSION["look"]) && $_SESSION["userContext"] === "admin") {
 				$v_user = $_SESSION["look"];
@@ -51,6 +49,9 @@ class HestiaAuth implements Service, AuthInterface {
 	}
 
 	public function user(): ?User {
+		if (empty($this->hestia_user)) {
+			return $this->getGuest();
+		}
 		$cmd = "/usr/bin/sudo /usr/local/hestia/bin/v-list-user";
 		exec($cmd . " " . quoteshellarg($this->hestia_user) . " json", $output, $return_var);
 

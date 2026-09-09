@@ -12,7 +12,7 @@ class DolibarrSetup extends BaseSetup {
     protected array $info = [
         "name" => "Dolibarr",
         "group" => "crm",
-        "version" => "23.0.3",
+        "version" => "24.0.1",
         "thumbnail" => "dolibarr_logo.svg",
     ];
 
@@ -40,7 +40,7 @@ class DolibarrSetup extends BaseSetup {
 
         "resources" => [
             "archive" => [
-                "src" => "https://github.com/Dolibarr/dolibarr/archive/refs/tags/23.0.3.zip",
+                "src" => "https://github.com/Dolibarr/dolibarr/archive/refs/tags/24.0.1.zip",
             ],
         ],
 
@@ -109,17 +109,20 @@ class DolibarrSetup extends BaseSetup {
         sleep(10);
 
         // There's no step 3 and step 4 is an HTML form to ensure admin credentials
-        $this->appcontext->sendPostRequest($target->getUrl() . "/install/step5.php", [
-            "testpost" => "ok",
-            "action" => "set",
-            "login" => $options["username"],
-            "pass" => $options["password"],
-            "pass_verif" => $options["password"],
-            "installlock" => "1",
-            "selectlang" => $language,
-        ],
-        [],
-        $target->getResolveUrl());
+        $this->appcontext->sendPostRequest(
+            $target->getUrl() . "/install/step5.php",
+            [
+                "testpost" => "ok",
+                "action" => "set",
+                "login" => $options["username"],
+                "pass" => $options["password"],
+                "pass_verif" => $options["password"],
+                "installlock" => "1",
+                "selectlang" => $language,
+            ],
+            [],
+            $target->getResolveUrl(),
+        );
 
         $this->appcontext->changeFilePermissions(
             $target->getDocRoot("htdocs/conf/conf.php"),

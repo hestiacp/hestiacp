@@ -81,7 +81,10 @@ export const teamMembers = [
 	},
 	{
 		avatar: 'https://www.github.com/krismkenn.png',
-		name: 'Kristian Kennedy 🇨🇦',
-		links: [{ icon: 'github', link: 'https://github.com/krismkenn' }],
+		name: 'Kristan Kenney 🇨🇦',
+		links: [
+			{ icon: 'github', link: 'https://github.com/krismkenn' },
+			{ icon: globeIcon, link: 'https://www.secondcircuit.ca/' },
+		],
 	},
 ];

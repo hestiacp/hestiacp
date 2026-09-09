@@ -144,3 +144,38 @@ if [[ -f /etc/logrotate.d/httpd-prerotate/awstats ]]; then
 	echo "[ + ] Update Awstats logrotate for Apache2..."
 	cp -f "$HESTIA_INSTALL_DIR"/logrotate/httpd-prerotate/awstats /etc/logrotate.d/httpd-prerotate/
 fi
+
+# Replace Hestia actions for existing Fail2Ban configurations
+f2b_action="/etc/fail2ban/actions.d/hestia.conf"
+hestia_f2b_action="$HESTIA_INSTALL_DIR/fail2ban/action.d/hestia.conf"
+
+if [[ -f "$f2b_action" ]] && [[ -f "$hestia_f2b_action" ]] && ! grep -q 'flock -w 30' "$f2b_action"; then
+	echo "[ + ] Updating Hestia actions for Fail2Ban"
+
+	backup_action="$(mktemp)"
+
+	if ! cp -p "$f2b_action" "$backup_action"; then
+		echo "[ ! ] Failed to create temporary backup"
+		rm -f "$backup_action"
+	elif ! cp -f "$hestia_f2b_action" "$f2b_action"; then
+		echo "[ ! ] Failed to update Hestia Fail2Ban action"
+		rm -f "$backup_action"
+	elif fail2ban-client -t && systemctl restart fail2ban && systemctl is-active --quiet fail2ban; then
+		echo "[ + ] Service Fail2Ban restarted successfully"
+		rm -f "$backup_action"
+	else
+		echo "[ ! ] Error validating/restarting Fail2Ban, restoring previous action"
+
+		if cp -p "$backup_action" "$f2b_action" \
+			&& fail2ban-client -t \
+			&& systemctl restart fail2ban \
+			&& systemctl is-active --quiet fail2ban; then
+
+			echo "[ + ] Previous Fail2Ban action restored successfully"
+			rm -f "$backup_action"
+		else
+			echo "[ ! ] CRITICAL: Failed to restore previous Fail2Ban configuration"
+			echo "[ ! ] Temporary backup preserved at: $backup_action"
+		fi
+	fi
+fi

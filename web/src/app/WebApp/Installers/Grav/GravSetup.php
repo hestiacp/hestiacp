@@ -11,14 +11,16 @@ class GravSetup extends BaseSetup {
     protected array $info = [
         "name" => "Grav",
         "group" => "cms",
-        "version" => "2.0.11",
+        "version" => "2.0.24",
         "thumbnail" => "grav-symbol.svg",
     ];
 
     protected array $config = [
         "form" => [
             "full_name" => "text",
-            "username" => ["text" => "gravadmin"],
+            "username" => [
+                "value" => "gravadmin",
+            ],
             "password" => "password",
             "email" => "text",
         ],
@@ -26,7 +28,7 @@ class GravSetup extends BaseSetup {
         "resources" => [
             "archive" => [
                 "src" =>
-                    "https://github.com/getgrav/grav/releases/download/2.0.11/grav-admin-v2.0.11.zip",
+                    "https://github.com/getgrav/grav/releases/download/2.0.24/grav-admin-v2.0.24.zip",
             ],
         ],
         "server" => [

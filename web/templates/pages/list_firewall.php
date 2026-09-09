@@ -16,6 +16,9 @@
 			<a class="button button-secondary" href="/list/firewall/ipset/">
 				<i class="fas fa-list icon-blue"></i><?= tohtml(_("IPset IP Lists")) ?>
 			</a>
+			<a class="button button-secondary" href="/list/firewall/ipv6/">
+				<i class="fas fa-shield-halved icon-orange"></i><?= tohtml(_("IPv6 Firewall")) ?>
+			</a>
 		</div>
 		<div class="toolbar-right">
 			<div class="toolbar-sorting">

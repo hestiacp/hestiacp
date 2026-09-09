@@ -62,10 +62,15 @@ if [ -n "$WEB_SYSTEM" ]; then
 fi
 
 # Working on DNS domain
+# get_user_ipv6 sets $ipv6 to the user's first IPv6 address (empty on
+# IPv4-only servers). Passing it as the 14th argument to v-add-dns-domain
+# triggers automatic AAAA record creation alongside the A record.
+# On IPv4-only servers ipv6 is empty so v-add-dns-domain behaves as before.
 if [ -n "$DNS_SYSTEM" ]; then
 	check2=$(is_package_full 'DNS_DOMAINS')
 	if [ $? -eq 0 ]; then
-		$BIN/v-add-dns-domain "$user" "$domain" "$ip" "" "" "" "" "" "" "" "" "no"
+		get_user_ipv6
+		$BIN/v-add-dns-domain "$user" "$domain" "$ip" "" "" "" "" "" "" "" "" "no" "" "$ipv6"
 		check_result $? "can't add dns domain"
 	fi
 fi

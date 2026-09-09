@@ -32,12 +32,22 @@
 			<h1 class="u-mb20"><?= tohtml( _("Add IP Address")) ?></h1>
 			<?php show_alert_message($_SESSION); ?>
 			<div class="u-mb10">
-				<label for="v_ip" class="form-label"><?= tohtml( _("IP Address")) ?></label>
-				<input type="text" class="form-control" name="v_ip" id="v_ip" value="<?= tohtml(trim($v_ip, "'")) ?>">
+				<label for="v_ip" class="form-label">
+					<?= tohtml( _("IP Address")) ?>
+					<span class="optional">(<?= tohtml( _("IPv4 or IPv6")) ?>)</span>
+				</label>
+				<input type="text" class="form-control" name="v_ip" id="v_ip"
+					value="<?= tohtml(trim($v_ip, "'")) ?>"
+					placeholder="<?= tohtml( _("e.g. 192.0.2.1 or 2001:db8::1/64")) ?>">
 			</div>
 			<div class="u-mb10">
-				<label for="v_netmask" class="form-label"><?= tohtml( _("Netmask")) ?></label>
-				<input type="text" class="form-control" name="v_netmask" id="v_netmask" value="<?= tohtml(trim($v_netmask, "'")) ?>">
+				<label for="v_netmask" class="form-label">
+					<?= tohtml( _("Netmask / Prefix Length")) ?>
+					<span class="optional">(<?= tohtml( _("IPv4: 255.255.255.0 — IPv6: /64 or leave empty if included in IP")) ?>)</span>
+				</label>
+				<input type="text" class="form-control" name="v_netmask" id="v_netmask"
+					value="<?= tohtml(trim($v_netmask, "'")) ?>"
+					placeholder="<?= tohtml( _("e.g. 255.255.255.0 or /64")) ?>">
 			</div>
 			<div class="u-mb10">
 				<label for="v_interface" class="form-label"><?= tohtml( _("Interface")) ?></label>

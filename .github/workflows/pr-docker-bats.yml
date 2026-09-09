@@ -29,6 +29,18 @@ jobs:
             -t hestia-ci:${{ github.sha }} \
             .
 
+      - name: Create IPv6-enabled network
+        run: |
+          # GitHub-hosted runners have no routable IPv6 egress, so this uses a
+          # ULA (fd00::/8) subnet purely to give the container a real, non-loopback
+          # IPv6 address on eth0 — enough to exercise Hestia's dual-stack detection
+          # and ip6tables paths without needing internet-routable IPv6.
+          docker network create \
+            --driver bridge \
+            --ipv6 \
+            --subnet fd00:dead:beef::/64 \
+            hestia-ci-net
+
       - name: Start CI container
         run: |
           docker run -d \
@@ -36,6 +48,7 @@ jobs:
             --hostname hestia-dev.local \
             --privileged \
             --cgroupns=host \
+            --network hestia-ci-net \
             --tmpfs /run \
             --tmpfs /run/lock \
             --tmpfs /tmp:exec,mode=1777 \
@@ -112,8 +125,21 @@ jobs:
           docker exec hestia-ci bash -lc 'journalctl --no-pager -n 500' || true
           docker exec hestia-ci bash -lc 'ls -la /root/hst_install_backups || true' || true
           docker exec hestia-ci bash -lc 'tail -n 500 /root/hst_install_backups/hst_install-*.log || true' || true
+          echo "--- apache2/nginx/php-fpm unit logs (full run, not just the last 500 journal lines) ---"
+          docker exec hestia-ci bash -lc 'journalctl --no-pager -u apache2 -u nginx -u "php*-fpm*"' || true
+          echo "--- apache2/nginx service status ---"
+          docker exec hestia-ci bash -lc 'systemctl status apache2 nginx --no-pager -l' || true
+          echo "--- apachectl / nginx config test ---"
+          docker exec hestia-ci bash -lc 'apachectl configtest; nginx -t' || true
+          echo "--- per-domain apache/nginx error logs ---"
+          docker exec hestia-ci bash -lc 'tail -n 200 /var/log/apache2/domains/*.error.log /var/log/apache2/error.log 2>/dev/null' || true
+          echo "--- registered IPs (primary_ipv6 auto-registration included) ---"
+          docker exec hestia-ci bash -lc 'grep -r "" /usr/local/hestia/data/ips/ 2>/dev/null' || true
+          echo "--- generated vhost configs for any web domain ---"
+          docker exec hestia-ci bash -lc 'find /home -path "*/conf/web/*/apache2.conf" -o -path "*/conf/web/*/nginx.conf" | xargs -r -I{} sh -c "echo ===={}====; cat {}"' || true
 
       - name: Cleanup container
         if: always()
         run: |
           docker rm -f hestia-ci || true
+          docker network rm hestia-ci-net || true

@@ -32,6 +32,14 @@ source_conf "$HESTIA/conf/hestia.conf"
 
 is_system_enabled "$FIREWALL_SYSTEM" 'FIREWALL_SYSTEM'
 
+# Acquire firewall lock to serialize concurrent firewall state modifications
+# (fail2ban ban/unban, rule changes, etc.)
+if [ -z "${HESTIA_FIREWALL_LOCK_HELD:-}" ]; then
+	exec 9>/run/hestia-firewall.lock
+	flock -w 30 9
+	export HESTIA_FIREWALL_LOCK_HELD=1
+fi
+
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#

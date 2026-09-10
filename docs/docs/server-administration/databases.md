@@ -83,9 +83,9 @@ Add `index index.php;` after the `alias` line inside the `location /phpmyadmin {
 
 ```nginx
 location /phpmyadmin {
-    alias /usr/share/phpmyadmin/;
-    index index.php;
-    ...
+	alias /usr/share/phpmyadmin/;
+	index index.php;
+	...
 }
 ```
 

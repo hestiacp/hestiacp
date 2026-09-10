@@ -146,7 +146,7 @@ if [[ -f /etc/logrotate.d/httpd-prerotate/awstats ]]; then
 fi
 
 # Replace Hestia actions for existing Fail2Ban configurations
-f2b_action="/etc/fail2ban/actions.d/hestia.conf"
+f2b_action="/etc/fail2ban/action.d/hestia.conf"
 hestia_f2b_action="$HESTIA_INSTALL_DIR/fail2ban/action.d/hestia.conf"
 
 if [[ -f "$f2b_action" ]] && [[ -f "$hestia_f2b_action" ]] && ! grep -q 'flock -w 30' "$f2b_action"; then
@@ -160,7 +160,7 @@ if [[ -f "$f2b_action" ]] && [[ -f "$hestia_f2b_action" ]] && ! grep -q 'flock -
 	elif ! cp -f "$hestia_f2b_action" "$f2b_action"; then
 		echo "[ ! ] Failed to update Hestia Fail2Ban action"
 		rm -f "$backup_action"
-	elif fail2ban-client -t && systemctl restart fail2ban && systemctl is-active --quiet fail2ban; then
+	elif fail2ban-client -t &> /dev/null && systemctl restart fail2ban && systemctl is-active --quiet fail2ban; then
 		echo "[ + ] Service Fail2Ban restarted successfully"
 		rm -f "$backup_action"
 	else

@@ -80,7 +80,7 @@ if (isset($_SESSION["userContext"]) && $_SESSION["userContext"] === "admin") {
 		exit();
 	}
 }
-if (isset($_SESSION["ROLE"])) {
+if (isset($_SESSION["user"])) {
 	$panel = get_user_data($_SESSION["user"]);
 	$_SESSION["login_shell"] = $panel[$_SESSION["user"]]["SHELL"];
 	$_SESSION["role"] = $panel[$_SESSION["user"]]["ROLE"];

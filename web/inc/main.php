@@ -71,6 +71,16 @@ if (!isset($_SESSION["user"]) && !defined("NO_AUTH_REQUIRED")) {
 	exit();
 }
 
+if (isset($_SESSION["userContext"]) && $_SESSION["userContext"] === "admin") {
+	$panel = get_user_data($_SESSION["user"]);
+	//check if user is still admin if not destroy session and redirect to login
+	if ($panel[$_SESSION["user"]]["ROLE"] !== "admin") {
+		destroy_sessions();
+		header("Location: /login/");
+		exit();
+	}
+}
+
 // Generate CSRF Token and set user shell variable
 if (isset($_SESSION["user"])) {
 	if (!isset($_SESSION["token"])) {
@@ -81,13 +91,6 @@ if (isset($_SESSION["user"])) {
 	if (!empty($_SESSION["look"])) {
 		$username = $_SESSION["look"];
 	}
-
-	exec(HESTIA_CMD . "v-list-user " . quoteshellarg($username) . " json", $output, $return_var);
-	$data = json_decode(implode("", $output), true);
-	unset($output, $return_var);
-	$_SESSION["login_shell"] = $data[$username]["SHELL"];
-	$_SESSION["role"] = $data[$username]["ROLE"];
-	unset($data, $username);
 }
 
 if ($_SESSION["RELEASE_BRANCH"] == "release" && $_SESSION["DEBUG_MODE"] == "false") {
@@ -245,7 +248,12 @@ function show_alert_message($data) {
 	}
 }
 
-function top_panel($user, $TAB) {
+function get_user_data($user) {
+	static $cache = [];
+	if (array_key_exists($user, $cache)) {
+		return $cache[$user];
+	}
+
 	$command = HESTIA_CMD . "v-list-user " . $user . " 'json'";
 	exec($command, $output, $return_var);
 	if ($return_var > 0) {
@@ -254,8 +262,15 @@ function top_panel($user, $TAB) {
 		header("Location: /login/");
 		exit();
 	}
-	$panel = json_decode(implode("", $output), true);
+	$data = json_decode(implode("", $output), true);
 	unset($output);
+
+	$cache[$user] = $data;
+	return $data;
+}
+
+function top_panel($user, $TAB) {
+	$panel = get_user_data($user);
 
 	// Log out active sessions for suspended users
 	if ($panel[$user]["SUSPENDED"] === "yes" && $_SESSION["POLICY_USER_VIEW_SUSPENDED"] !== "yes") {
@@ -265,13 +280,6 @@ function top_panel($user, $TAB) {
 			header("Location: /login/");
 		}
 	}
-
-	// Reset user permissions if changed while logged in
-	if ($panel[$user]["ROLE"] !== $_SESSION["userContext"] && !isset($_SESSION["look"])) {
-		unset($_SESSION["userContext"]);
-		$_SESSION["userContext"] = $panel[$user]["ROLE"];
-	}
-
 	// Load user's selected theme and do not change it when impersonting user
 	if (isset($panel[$user]["THEME"]) && !isset($_SESSION["look"])) {
 		$_SESSION["userTheme"] = $panel[$user]["THEME"];

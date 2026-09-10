@@ -33,14 +33,27 @@
 # This function can run before check_result/E_INVALID exist (it loads
 # hestia.conf during main.sh's own bootstrap), so it must fail closed on
 # its own rather than delegating to check_result.
+# Reserved names that must never be assigned from user-controlled config.
+if [[ -z "${HESTIA_RESERVED_CONF_KEYS+x}" ]]; then
+	HESTIA_RESERVED_CONF_KEYS=' PATH IFS CDPATH ENV BASH_ENV PS1 PS2 PS3 PS4 PROMPT_COMMAND LD_PRELOAD LD_LIBRARY_PATH LD_AUDIT TMPDIR SHELLOPTS BASHOPTS BASH_XTRACEFD GLOBIGNORE FIGNORE HISTFILE'
+	HESTIA_RESERVED_CONF_KEYS+=' HESTIA BIN HOMEDIR BACKUP USER_DATA WEBTPL MAILTPL DNSTPL RRD SENDMAIL'
+	HESTIA_RESERVED_CONF_KEYS+=' HESTIA_INSTALL_DIR HESTIA_COMMON_DIR HESTIA_BACKUP HESTIA_PHP HESTIA_GIT_REPO'
+	HESTIA_RESERVED_CONF_KEYS+=' HESTIA_THEMES HESTIA_THEMES_CUSTOM SCRIPT CHECK_RESULT_CALLBACK user'
+	HESTIA_RESERVED_CONF_KEYS+=' OK E_ARGS E_INVALID E_NOTEXIST E_EXISTS E_SUSPENDED E_UNSUSPENDED E_INUSE'
+	HESTIA_RESERVED_CONF_KEYS+=' E_LIMIT E_PASSWORD E_FORBIDEN E_DISABLED E_PARSING E_DISK E_LA E_CONNECT'
+	HESTIA_RESERVED_CONF_KEYS+=' E_FTP E_DB E_RRD E_UPDATE E_RESTART HESTIA_RESERVED_CONF_KEYS HESTIA_OBJECT_KEY_EXCEPTIONS '
+	readonly HESTIA_RESERVED_CONF_KEYS
+fi
+# Object field names that collide with HESTIA_RESERVED_CONF_KEYS but are
+# legitimate in object lines (never via source_conf()).
+# BACKUP: backup filename field in data/users/<user>/backup.conf.
+if [[ -z "${HESTIA_OBJECT_KEY_EXCEPTIONS+x}" ]]; then
+	HESTIA_OBJECT_KEY_EXCEPTIONS=' BACKUP '
+	readonly HESTIA_OBJECT_KEY_EXCEPTIONS
+fi
+
 source_conf() {
-	local reserved=' PATH IFS CDPATH ENV BASH_ENV PS1 PS2 PS3 PS4 PROMPT_COMMAND LD_PRELOAD LD_LIBRARY_PATH LD_AUDIT TMPDIR SHELLOPTS BASHOPTS BASH_XTRACEFD GLOBIGNORE FIGNORE HISTFILE'
-	reserved+=' HESTIA BIN HOMEDIR BACKUP USER_DATA WEBTPL MAILTPL DNSTPL RRD SENDMAIL'
-	reserved+=' HESTIA_INSTALL_DIR HESTIA_COMMON_DIR HESTIA_BACKUP HESTIA_PHP HESTIA_GIT_REPO'
-	reserved+=' HESTIA_THEMES HESTIA_THEMES_CUSTOM SCRIPT CHECK_RESULT_CALLBACK user'
-	reserved+=' OK E_ARGS E_INVALID E_NOTEXIST E_EXISTS E_SUSPENDED E_UNSUSPENDED E_INUSE'
-	reserved+=' E_LIMIT E_PASSWORD E_FORBIDEN E_DISABLED E_PARSING E_DISK E_LA E_CONNECT'
-	reserved+=' E_FTP E_DB E_RRD E_UPDATE E_RESTART '
+	local reserved="$HESTIA_RESERVED_CONF_KEYS"
 	while IFS='= ' read -r lhs rhs; do
 		if [[ ! $lhs =~ ^[A-Za-z_][A-Za-z0-9_]*$ ]]; then
 			continue
@@ -437,7 +450,14 @@ parse_object_kv_list_non_eval() {
 
 		obj_key=${objkv%%=*} # strip everything after first  '=' char
 		obj_val=${objkv#*=}  # strip everything before first '=' char
-		declare -g $obj_key="$obj_val"
+		if [[ ! "$obj_key" =~ ^[A-Za-z_][A-Za-z0-9_]*$ ]]; then
+			continue
+		fi
+		if [[ "$HESTIA_OBJECT_KEY_EXCEPTIONS" != *" $obj_key "* ]] \
+			&& { [[ "$HESTIA_RESERVED_CONF_KEYS" == *" $obj_key "* ]] || [[ "$obj_key" == BASH_FUNC_* ]]; }; then
+			continue
+		fi
+		declare -g "$obj_key=$obj_val"
 
 	done
 	IFS="$OLD_IFS"
@@ -450,7 +470,7 @@ _parse_object_kv_list_php() {
 
 	str=${@//$'\n'/ }
 	validated_output=$(
-		"$HESTIA_PHP" -- "$str" << 'EOPHP'
+		"$HESTIA_PHP" -- "$str" "$HESTIA_RESERVED_CONF_KEYS" "$HESTIA_OBJECT_KEY_EXCEPTIONS" << 'EOPHP'
 <?php
 declare(strict_types=1);
 
@@ -481,6 +501,14 @@ if ($argc < 2) {
 }
 
 $unparsed = ($argv[1]);
+$reserved = preg_split('/\s+/', trim($argv[2] ?? ''), -1, PREG_SPLIT_NO_EMPTY);
+$exceptions = preg_split('/\s+/', trim($argv[3] ?? ''), -1, PREG_SPLIT_NO_EMPTY);
+if (!is_array($reserved)) {
+    $reserved = [];
+}
+if (!is_array($exceptions)) {
+    $exceptions = [];
+}
 $result = [];
 
 while ($unparsed !== '') {
@@ -498,6 +526,8 @@ while ($unparsed !== '') {
 
     $key_name = $m[1];
     $unparsed = substr($unparsed, strlen($m[0]));
+    $skip_reserved = !in_array($key_name, $exceptions, true)
+        && (in_array($key_name, $reserved, true) || strpos($key_name, 'BASH_FUNC_') === 0);
 
     $key_value = '';
     $is_in_quote = false;
@@ -563,6 +593,9 @@ while ($unparsed !== '') {
         // Matched whitespace: end of this key-value pair.
         $unparsed = ltrim($unparsed);
         break;
+    }
+    if ($skip_reserved) {
+        continue;
     }
     if (array_key_exists($key_name, $result)) {
         $msg = 'Warning: Duplicate key name: ' . $key_name . '. ';
@@ -686,16 +719,21 @@ get_object_values() {
 
 # Update object value
 update_object_value() {
-	row=$(grep -nF "$2='$3'" $USER_DATA/$1.conf)
-	lnr=$(echo $row | cut -f 1 -d ':')
-	object=$(echo $row | sed "s/^$lnr://")
+	local conf="$USER_DATA/$1.conf"
+	local row lnr object varname old new old_target new_target
+	row=$(grep -nF "$2='$3'" "$conf")
+	lnr=${row%%:*}
+	object=${row#*:}
 	parse_object_kv_list "$object"
-	local varname="${4#\$}"
+	varname="${4#\$}"
 	old="${!varname}"
-	old=$(echo "$old" | sed -e 's/\\/\\\\/g' -e 's/&/\\&/g' -e 's/\//\\\//g')
-	new=$(echo "$5" | sed -e 's/\\/\\\\/g' -e 's/&/\\&/g' -e 's/\//\\\//g')
-	sed -i "$lnr s/${4//$/}='${old//\*/\\*}'/${4//$/}='${new//\*/\\*}'/g" \
-		$USER_DATA/$1.conf
+	old="${old//[$'\n\r']/}"
+	new="${5//[$'\n\r']/}"
+	old_target=${old//\'/\'\\\'\'}
+	new_target=${new//\'/\'\\\'\'}
+	old=$(printf '%s' "$old_target" | sed -e 's/[][\\/^$.*]/\\&/g')
+	new=$(printf '%s' "$new_target" | sed -e 's/\\/\\\\/g' -e 's/[&/]/\\&/g')
+	sed -i "$lnr s/${4//$/}='${old}'/${4//$/}='${new}'/g" "$conf"
 }
 
 # Add object key

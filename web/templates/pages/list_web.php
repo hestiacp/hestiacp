@@ -6,6 +6,11 @@
 				<a href="/add/web/" class="button button-secondary js-button-create">
 					<i class="fas fa-circle-plus icon-green"></i><?= tohtml( _("Add Web Domain")) ?>
 				</a>
+				<?php if (is_subdomain_grouping_enabled() && !empty($data)) { ?>
+					<a href="/add/web/?type=subdomain" class="button button-secondary js-button-create">
+						<i class="fas fa-circle-plus icon-green"></i><?= tohtml( _("Add Subdomain")) ?>
+					</a>
+				<?php } ?>
 			<?php } ?>
 		</div>
 		<div class="toolbar-right">
@@ -187,21 +192,32 @@
 				}
 				$has_ssl = filter_var($data[$key]['SSL'], FILTER_VALIDATE_BOOL);
 				$vstats_scheme = $has_ssl ? 'https' : 'http';
+				// The list is always grouped into a parent/child tree (see
+				// group_domains_by_parent()), regardless of which column it's sorted by.
+				$subdomain_depth = (int) ($data[$key]['SUBDOMAIN_DEPTH'] ?? 0);
+				$indent_depth = $subdomain_depth;
 			?>
 			<div class="units-table-row <?php if ($data[$key]['SUSPENDED'] == 'yes') echo 'disabled'; ?> js-unit"
 				data-sort-ip="<?= tohtml(str_replace(".", "", $data[$key]["IP"])) ?>"
 				data-sort-date="<?= tohtml(strtotime($data[$key]["DATE"] . " " . $data[$key]["TIME"])) ?>"
 				data-sort-name="<?= tohtml($key) ?>"
 				data-sort-bandwidth="<?= tohtml($data[$key]["U_BANDWIDTH"]) ?>"
-				data-sort-disk="<?= tohtml($data[$key]["U_DISK"]) ?>">
+				data-sort-disk="<?= tohtml($data[$key]["U_DISK"]) ?>"
+				data-parent-domain="<?= tohtml($data[$key]['PARENT_DOMAIN'] ?? '') ?>">
 				<div class="units-table-cell">
 					<div>
 						<input id="check<?= tohtml($i) ?>" class="js-unit-checkbox" type="checkbox" title="<?= tohtml( _("Select")) ?>" name="domain[]" value="<?= tohtml($key) ?>"<?= $display_mode === "disabled" ? " disabled" : "" ?>>
 						<label for="check<?= tohtml($i) ?>" class="u-hide-desktop"><?= tohtml( _("Select")) ?></label>
 					</div>
 				</div>
-				<div class="units-table-cell units-table-heading-cell u-text-bold">
+				<div class="units-table-cell units-table-heading-cell u-text-bold js-subdomain-indent"
+					<?php if ($indent_depth > 0) { ?>
+						style="padding-left: <?= tohtml($indent_depth * 24) ?>px"
+					<?php } ?>>
 					<span class="u-hide-desktop"><?= tohtml( _("Name")) ?>:</span>
+					<?php if ($subdomain_depth > 0) { ?>
+						<span class="u-text-small hint js-subdomain-hint" title="<?= tohtml(sprintf(_("Subdomain of %s"), $data[$key]['PARENT_DOMAIN'] ?? '')) ?>">&#8618;</span>
+					<?php } ?>
 					<?php if ($read_only === "true") { ?>
 						<?= tohtml($key) ?>
 					<?php } else {

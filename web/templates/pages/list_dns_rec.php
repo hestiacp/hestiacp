@@ -111,7 +111,7 @@
 					</div>
 					<div class="units-table-cell units-table-heading-cell u-text-bold">
 						<span class="u-hide-desktop"><?= tohtml( _("Record")) ?>:</span>
-							<?php if (($read_only === 'true') || ($data[$key]['SUSPENDED'] == 'yes')) { ?>
+							<?php if (($read_only === true) || ($data[$key]['SUSPENDED'] == 'yes')) { ?>
 								<?= tohtml(substr($data[$key]['RECORD'], 0, 12)) ?><?php if (strlen($data[$key]['RECORD']) > 12 ) echo '...'; ?>
 							<?php } else { ?>
 								<a href="/edit/dns/?<?= tohtml(http_build_query(array("domain" => $_GET['domain'], "record_id" => $data[$key]['ID'], "token" => $_SESSION['token']))) ?>" title="<?= tohtml(_("Edit DNS Record") . ': '.$data[$key]['RECORD']) ?>">

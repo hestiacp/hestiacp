@@ -14,11 +14,6 @@ if (empty($_GET["domain"])) {
 	exit();
 }
 
-// Edit as someone else?
-if ($_SESSION["user"] == $_SESSION["ROOT_USER"] && !empty($_GET["user"])) {
-	$user = quoteshellarg($_GET["user"]);
-}
-
 // Check if domain belongs to the user
 $v_domain = $_GET["domain"];
 $user = isset($user) ? $user : quoteshellarg($_SESSION["user"]);

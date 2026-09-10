@@ -5,7 +5,7 @@
 			<a href="/edit/user/?<?= tohtml(http_build_query(["token" => $_SESSION["token"]])) ?>" class="button button-secondary button-back js-button-back">
 					<i class="fas fa-arrow-left icon-blue"></i><?= tohtml( _("Back")) ?>
 			</a>
-			<?php if($readonly) { ?>
+			<?php if($read_only !== true) { ?>
 				<a href="/add/key/" class="button button-secondary js-button-create">
 					<i class="fas fa-circle-plus icon-green"></i><?= tohtml( _("Add SSH Key")) ?>
 				</a>

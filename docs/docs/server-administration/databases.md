@@ -71,6 +71,30 @@ include     /etc/nginx/conf.d/phpmyadmin.inc*;
 include     /etc/nginx/conf.d/phppgadmin.inc*;
 ```
 
+### Note: If /phpmyadmin/ shows "Page Not Found" (404)
+
+If accessing `http://ip/phpmyadmin/` (without `index.php`) returns a 404 after applying the fix above, add an `index` directive to the phpmyadmin include:
+
+```bash
+nano /etc/nginx/conf.d/phpmyadmin.inc
+```
+
+Add `index index.php;` after the `alias` line inside the `location /phpmyadmin { ... }` block:
+
+```nginx
+location /phpmyadmin {
+	alias /usr/share/phpmyadmin/;
+	index index.php;
+	...
+}
+```
+
+Then test and reload:
+
+```bash
+nginx -t && systemctl reload nginx
+```
+
 ## How can I connect from a remote location to the database
 
 By default, connections to port 3306 are disabled in the firewall. Open

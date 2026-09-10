@@ -49,9 +49,12 @@ if (isset($_SESSION["user"])) {
 				unset($_SESSION["_sf2_meta"]);
 				if (!empty($_GET["edit_link"])) {
 					$edit_link = urldecode($_GET["edit_link"]);
-					$url = $edit_link . "&token=" . $_SESSION["token"];
-					header("Location: " . $url);
-					die();
+					// Prevent open redirect by allowing only internal links
+					if (preg_match("/^\//", $edit_link)) {
+						$url = $edit_link . "?token=" . $_SESSION["token"];
+						header("Location: " . $url);
+						die();
+					}
 				}
 				header("Location: /login/");
 			} else {

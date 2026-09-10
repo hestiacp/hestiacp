@@ -35,7 +35,7 @@ class HestiaAuth implements Service, AuthInterface {
 				$v_user = $_SESSION["look"];
 			}
 			if (
-				$_SESSION["look"] == "admin" &&
+				$_SESSION["look"] == $_SESSION["root"] &&
 				$_SESSION["POLICY_SYSTEM_PROTECTED_ADMIN"] == "yes"
 			) {
 				// Go away do not login

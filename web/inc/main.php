@@ -143,6 +143,12 @@ if (!isset($_SESSION["look"])) {
 
 require_once dirname(__FILE__) . "/i18n.php";
 
+$read_only = false;
+//accessing main.php via CLI doesn't set $_SESSION["userContext"], so we need to check if it's set before including policies.php
+if (isset($_SESSION["userContext"])) {
+	require_once dirname(__FILE__) . "/policies.php";
+}
+
 function check_error($return_var) {
 	if ($return_var > 0) {
 		header("Location: /error/");
@@ -188,9 +194,6 @@ function render_page($user, $TAB, $page) {
 
 	// Panel
 	$panel = top_panel(empty($_SESSION["look"]) ? $_SESSION["user"] : $_SESSION["look"], $TAB);
-
-	// Policies controller
-	@include_once dirname(__DIR__) . "/inc/policies.php";
 
 	// Body
 	include $__template_dir . "pages/" . $page . ".php";

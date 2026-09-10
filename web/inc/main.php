@@ -72,16 +72,18 @@ if (!isset($_SESSION["user"]) && !defined("NO_AUTH_REQUIRED")) {
 }
 
 if (isset($_SESSION["userContext"]) && $_SESSION["userContext"] === "admin") {
-	$panel = get_user_data(quoteshellarg($_SESSION["user"]));
+	$panel = get_user_data($_SESSION["user"]);
 	//check if user is still admin if not destroy session and redirect to login
-	if (
-		!isset($panel[quoteshellarg($_SESSION["user"])]) ||
-		$panel[quoteshellarg($_SESSION["user"])]["ROLE"] !== "admin"
-	) {
+	if (!isset($panel[$_SESSION["user"]]) || $panel[$_SESSION["user"]]["ROLE"] !== "admin") {
 		destroy_sessions();
 		header("Location: /login/");
 		exit();
 	}
+}
+if (isset($_SESSION["ROLE"])) {
+	$panel = get_user_data($_SESSION["user"]);
+	$_SESSION["login_shell"] = $panel[$_SESSION["user"]]["SHELL"];
+	$_SESSION["role"] = $panel[$_SESSION["user"]]["ROLE"];
 }
 
 // Generate CSRF Token and set user shell variable
@@ -257,7 +259,7 @@ function get_user_data($user) {
 		return $cache[$user];
 	}
 
-	$command = HESTIA_CMD . "v-list-user " . $user . " 'json'";
+	$command = HESTIA_CMD . "v-list-user " . quoteshellarg($user) . " 'json'";
 	exec($command, $output, $return_var);
 	if ($return_var > 0) {
 		destroy_sessions();
@@ -274,7 +276,6 @@ function get_user_data($user) {
 
 function top_panel($user, $TAB) {
 	$panel = get_user_data($user);
-
 	// Log out active sessions for suspended users
 	if ($panel[$user]["SUSPENDED"] === "yes" && $_SESSION["POLICY_USER_VIEW_SUSPENDED"] !== "yes") {
 		if (empty($_SESSION["look"])) {
@@ -283,9 +284,6 @@ function top_panel($user, $TAB) {
 			header("Location: /login/");
 		}
 	}
-
-	$_SESSION["userShell"] = $panel[$user]["SHELL"];
-	$_SESSION["role"] = $panel[$user]["ROLE"];
 
 	// Load user's selected theme and do not change it when impersonting user
 	if (isset($panel[$user]["THEME"]) && !isset($_SESSION["look"])) {

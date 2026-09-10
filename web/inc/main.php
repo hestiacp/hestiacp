@@ -72,9 +72,12 @@ if (!isset($_SESSION["user"]) && !defined("NO_AUTH_REQUIRED")) {
 }
 
 if (isset($_SESSION["userContext"]) && $_SESSION["userContext"] === "admin") {
-	$panel = get_user_data($_SESSION["user"]);
+	$panel = get_user_data(quoteshellarg($_SESSION["user"]));
 	//check if user is still admin if not destroy session and redirect to login
-	if ($panel[$_SESSION["user"]]["ROLE"] !== "admin") {
+	if (
+		!isset($panel[quoteshellarg($_SESSION["user"])]) ||
+		$panel[quoteshellarg($_SESSION["user"])]["ROLE"] !== "admin"
+	) {
 		destroy_sessions();
 		header("Location: /login/");
 		exit();
@@ -280,6 +283,10 @@ function top_panel($user, $TAB) {
 			header("Location: /login/");
 		}
 	}
+
+	$_SESSION["userShell"] = $panel[$user]["SHELL"];
+	$_SESSION["role"] = $panel[$user]["ROLE"];
+
 	// Load user's selected theme and do not change it when impersonting user
 	if (isset($panel[$user]["THEME"]) && !isset($_SESSION["look"])) {
 		$_SESSION["userTheme"] = $panel[$user]["THEME"];

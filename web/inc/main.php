@@ -71,10 +71,10 @@ if (!isset($_SESSION["user"]) && !defined("NO_AUTH_REQUIRED")) {
 	exit();
 }
 
+$user_data = get_user_data($_SESSION["user"]);
 if (isset($_SESSION["userContext"]) && $_SESSION["userContext"] === "admin") {
-	$panel = get_user_data($_SESSION["user"]);
 	//check if user is still admin if not destroy session and redirect to login
-	if (!isset($panel[$_SESSION["user"]]) || $panel[$_SESSION["user"]]["ROLE"] !== "admin") {
+	if (!isset($user_data) || $user_data["ROLE"] !== "admin") {
 		destroy_sessions();
 		header("Location: /login/");
 		exit();
@@ -82,18 +82,28 @@ if (isset($_SESSION["userContext"]) && $_SESSION["userContext"] === "admin") {
 }
 if (isset($_SESSION["user"])) {
 	// Log out active sessions for suspended users
-	$panel = get_user_data($_SESSION["user"]);
-	if (
-		$panel[$_SESSION["user"]]["SUSPENDED"] === "yes" &&
-		$_SESSION["POLICY_USER_VIEW_SUSPENDED"] !== "yes"
-	) {
+	if ($user_data["SUSPENDED"] === "yes" && $_SESSION["POLICY_USER_VIEW_SUSPENDED"] !== "yes") {
 		destroy_sessions();
 		$_SESSION["error_msg"] = _("You are logged out, please log in again.");
 		header("Location: /login/");
 		exit();
 	}
-	$_SESSION["login_shell"] = $panel[$_SESSION["user"]]["SHELL"];
-	$_SESSION["role"] = $panel[$_SESSION["user"]]["ROLE"];
+	//check if user is currently suspended
+	if ($user_data["SUSPENDED"] === "yes" && $_SESSION["POLICY_USER_VIEW_SUSPENDED"] !== "yes") {
+		destroy_sessions();
+		$_SESSION["error_msg"] = _("Your account has been suspended.");
+		header("Location: /login/");
+		exit();
+	}
+	$_SESSION["login_shell"] = $user_data["SHELL"];
+	$_SESSION["role"] = $user_data["ROLE"];
+}
+
+if (isset($_SESSION["look"]) && $_SESSION["look"] != "") {
+	//get user data for the looked user
+	$look_user_data = get_user_data($_SESSION["look"]);
+	$_SESSION["look_login_shell"] = $look_user_data["SHELL"];
+	$_SESSION["role"] = $look_user_data["ROLE"];
 }
 
 // Generate CSRF Token and set user shell variable

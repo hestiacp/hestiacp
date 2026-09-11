@@ -81,6 +81,14 @@ if (isset($_SESSION["userContext"]) && $_SESSION["userContext"] === "admin") {
 	}
 }
 if (isset($_SESSION["user"])) {
+	// Log out active sessions for suspended users
+	var_dump($_SESSION);
+	if ($panel[$user]["SUSPENDED"] === "yes" && $_SESSION["POLICY_USER_VIEW_SUSPENDED"] !== "yes") {
+		destroy_sessions();
+		$_SESSION["error_msg"] = _("You are logged out, please log in again.");
+		header("Location: /login/");
+		exit();
+	}
 	$panel = get_user_data($_SESSION["user"]);
 	$_SESSION["login_shell"] = $panel[$_SESSION["user"]]["SHELL"];
 	$_SESSION["role"] = $panel[$_SESSION["user"]]["ROLE"];
@@ -108,6 +116,7 @@ if (!defined("NO_AUTH_REQUIRED")) {
 	if (empty($_SESSION["LAST_ACTIVITY"]) || empty($_SESSION["INACTIVE_SESSION_TIMEOUT"])) {
 		destroy_sessions();
 		header("Location: /login/");
+		exit();
 	} elseif ($_SESSION["INACTIVE_SESSION_TIMEOUT"] * 60 + $_SESSION["LAST_ACTIVITY"] < time()) {
 		$v_user = quoteshellarg($_SESSION["user"]);
 		$v_session_id = quoteshellarg($_SESSION["token"]);
@@ -187,6 +196,7 @@ function check_return_code_redirect($return_var, $output, $location) {
 		}
 		$_SESSION["error_msg"] = $error;
 		header("Location:" . $location);
+		exit();
 	}
 }
 
@@ -276,15 +286,6 @@ function get_user_data($user) {
 
 function top_panel($user, $TAB) {
 	$panel = get_user_data($user);
-	// Log out active sessions for suspended users
-	if ($panel[$user]["SUSPENDED"] === "yes" && $_SESSION["POLICY_USER_VIEW_SUSPENDED"] !== "yes") {
-		if (empty($_SESSION["look"])) {
-			destroy_sessions();
-			$_SESSION["error_msg"] = _("You are logged out, please log in again.");
-			header("Location: /login/");
-		}
-	}
-
 	// Load user's selected theme and do not change it when impersonting user
 	if (isset($panel[$user]["THEME"]) && !isset($_SESSION["look"])) {
 		$_SESSION["userTheme"] = $panel[$user]["THEME"];

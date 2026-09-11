@@ -2485,6 +2485,70 @@ EVIL='x'" > /tmp/backup_exclusions_unknownkey
 }
 
 #----------------------------------------------------------#
+#                       Suspend user                       #
+#----------------------------------------------------------#
+
+# Needed for testing suspension of users and for changing ownership of databases
+@test "Suspended: Add database" {
+    run v-add-database $user database dbuser 1234 mysql
+    assert_success
+    refute_output
+    # validate_database mysql database_name database_user password
+    validate_database mysql $database $dbuser 1234
+}
+
+@test "Suspend: Suspend user" {
+    run v-suspend-user $user
+    assert_success
+}
+
+@test "Suspend: Check if login is disabled" {
+		run v-get-user-salt $user
+    assert_failure $E_SUSPENDED
+}
+
+@test "Suspend: Check if web domain is disabled" {
+    run v-get-web-domain $user $domain
+    assert_failure $E_SUSPENDED
+}
+
+@test "Suspend: Check if mail domain is disabled" {
+    run v-get-mail-domain $user $domain
+    assert_failure $E_SUSPENDED
+}
+
+@test "Suspend: Check if database is disabled" {
+    run v-get-database $user $database
+    assert_failure $E_SUSPENDED
+}
+
+@test "Unsuspend: Unsuspend user" {
+    run v-unsuspend-user $user
+    assert_success
+}
+
+@test "Unsuspend: Check if login is enabled" {
+    run v-get-user-salt $user
+    assert_success
+}
+
+@test "Unsuspend: Check if web domain is enabled" {
+    run v-get-web-domain $user $domain
+    assert_success
+}
+
+@test "Unsuspend: Check if mail domain is enabled" {
+    run v-get-mail-domain $user $domain
+    assert_success
+}
+
+@test "Unsuspend: Check if database is enabled" {
+    run v-get-database $user $database
+    assert_success
+}
+
+
+#----------------------------------------------------------#
 #                  Change owner scripts                    #
 #----------------------------------------------------------#
 
@@ -2495,14 +2559,6 @@ EVIL='x'" > /tmp/backup_exclusions_unknownkey
     run v-restart-web
     run v-restart-proxy
 
-}
-
-@test "Change: Add database" {
-    run v-add-database $user database dbuser 1234 mysql
-    assert_success
-    refute_output
-    # validate_database mysql database_name database_user password
-    validate_database mysql $database $dbuser 1234
 }
 
 @test "Change: Change database owner" {
@@ -2516,6 +2572,8 @@ EVIL='x'" > /tmp/backup_exclusions_unknownkey
     assert_success
     refute_output
 }
+
+
 
 #----------------------------------------------------------#
 #                         CLEANUP                          #

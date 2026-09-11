@@ -71,16 +71,20 @@ if (!isset($_SESSION["user"]) && !defined("NO_AUTH_REQUIRED")) {
 	exit();
 }
 
-$user_data = get_user_data($_SESSION["user"]);
-if (isset($_SESSION["userContext"]) && $_SESSION["userContext"] === "admin") {
-	//check if user is still admin if not destroy session and redirect to login
-	if (!isset($user_data) || $user_data["ROLE"] !== "admin") {
+if (isset($_SESSION["user"])) {
+	$user_data = get_user_data($_SESSION["user"]);
+	$user_data = $user_data[$_SESSION["user"]] ?? null;
+
+	// Check if user is still admin; if not destroy session and redirect to login
+	if (
+		$_SESSION["userContext"] === "admin" &&
+		(!isset($user_data) || $user_data["ROLE"] !== "admin")
+	) {
 		destroy_sessions();
 		header("Location: /login/");
 		exit();
 	}
-}
-if (isset($_SESSION["user"])) {
+
 	// Log out active sessions for suspended users
 	if ($user_data["SUSPENDED"] === "yes" && $_SESSION["POLICY_USER_VIEW_SUSPENDED"] !== "yes") {
 		destroy_sessions();
@@ -88,22 +92,19 @@ if (isset($_SESSION["user"])) {
 		header("Location: /login/");
 		exit();
 	}
-	//check if user is currently suspended
-	if ($user_data["SUSPENDED"] === "yes" && $_SESSION["POLICY_USER_VIEW_SUSPENDED"] !== "yes") {
-		destroy_sessions();
-		$_SESSION["error_msg"] = _("Your account has been suspended.");
-		header("Location: /login/");
-		exit();
-	}
+
 	$_SESSION["login_shell"] = $user_data["SHELL"];
 	$_SESSION["role"] = $user_data["ROLE"];
-}
 
-if (isset($_SESSION["look"]) && $_SESSION["look"] != "") {
-	//get user data for the looked user
-	$look_user_data = get_user_data($_SESSION["look"]);
-	$_SESSION["look_login_shell"] = $look_user_data["SHELL"];
-	$_SESSION["role"] = $look_user_data["ROLE"];
+	// When impersonating, reflect the looked user's shell/role
+	if (!empty($_SESSION["look"])) {
+		$look_user_data = get_user_data($_SESSION["look"]);
+		$look_user_data = $look_user_data[$_SESSION["look"]] ?? null;
+		if (isset($look_user_data)) {
+			$_SESSION["login_shell"] = $look_user_data["SHELL"];
+			$_SESSION["role"] = $look_user_data["ROLE"];
+		}
+	}
 }
 
 // Generate CSRF Token and set user shell variable

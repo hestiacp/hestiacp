@@ -75,11 +75,15 @@ if (isset($_SESSION["user"])) {
 	$user_data = get_user_data($_SESSION["user"]);
 	$user_data = $user_data[$_SESSION["user"]] ?? null;
 
+	// If the user no longer exists, destroy session and redirect to login
+	if (!isset($user_data)) {
+		destroy_sessions();
+		header("Location: /login/");
+		exit();
+	}
+
 	// Check if user is still admin; if not destroy session and redirect to login
-	if (
-		$_SESSION["userContext"] === "admin" &&
-		(!isset($user_data) || $user_data["ROLE"] !== "admin")
-	) {
+	if (($_SESSION["userContext"] ?? "") === "admin" && $user_data["ROLE"] !== "admin") {
 		destroy_sessions();
 		header("Location: /login/");
 		exit();

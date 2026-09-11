@@ -82,14 +82,16 @@ if (isset($_SESSION["userContext"]) && $_SESSION["userContext"] === "admin") {
 }
 if (isset($_SESSION["user"])) {
 	// Log out active sessions for suspended users
-	var_dump($_SESSION);
-	if ($panel[$user]["SUSPENDED"] === "yes" && $_SESSION["POLICY_USER_VIEW_SUSPENDED"] !== "yes") {
+	$panel = get_user_data($_SESSION["user"]);
+	if (
+		$panel[$_SESSION["user"]]["SUSPENDED"] === "yes" &&
+		$_SESSION["POLICY_USER_VIEW_SUSPENDED"] !== "yes"
+	) {
 		destroy_sessions();
 		$_SESSION["error_msg"] = _("You are logged out, please log in again.");
 		header("Location: /login/");
 		exit();
 	}
-	$panel = get_user_data($_SESSION["user"]);
 	$_SESSION["login_shell"] = $panel[$_SESSION["user"]]["SHELL"];
 	$_SESSION["role"] = $panel[$_SESSION["user"]]["ROLE"];
 }

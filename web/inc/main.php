@@ -71,6 +71,46 @@ if (!isset($_SESSION["user"]) && !defined("NO_AUTH_REQUIRED")) {
 	exit();
 }
 
+if (isset($_SESSION["user"])) {
+	$user_data = get_user_data($_SESSION["user"]);
+	$user_data = $user_data[$_SESSION["user"]] ?? null;
+
+	// If the user no longer exists, destroy session and redirect to login
+	if (!isset($user_data)) {
+		destroy_sessions();
+		header("Location: /login/");
+		exit();
+	}
+
+	// Check if user is still admin; if not destroy session and redirect to login
+	if (($_SESSION["userContext"] ?? "") === "admin" && $user_data["ROLE"] !== "admin") {
+		destroy_sessions();
+		header("Location: /login/");
+		exit();
+	}
+
+	// Log out active sessions for suspended users
+	if ($user_data["SUSPENDED"] === "yes" && $_SESSION["POLICY_USER_VIEW_SUSPENDED"] !== "yes") {
+		destroy_sessions();
+		$_SESSION["error_msg"] = _("You are logged out, please log in again.");
+		header("Location: /login/");
+		exit();
+	}
+
+	$_SESSION["login_shell"] = $user_data["SHELL"];
+	$_SESSION["role"] = $user_data["ROLE"];
+
+	// When impersonating, reflect the looked user's shell/role
+	if (!empty($_SESSION["look"])) {
+		$look_user_data = get_user_data($_SESSION["look"]);
+		$look_user_data = $look_user_data[$_SESSION["look"]] ?? null;
+		if (isset($look_user_data)) {
+			$_SESSION["login_shell"] = $look_user_data["SHELL"];
+			$_SESSION["role"] = $look_user_data["ROLE"];
+		}
+	}
+}
+
 // Generate CSRF Token and set user shell variable
 if (isset($_SESSION["user"])) {
 	if (!isset($_SESSION["token"])) {
@@ -81,13 +121,6 @@ if (isset($_SESSION["user"])) {
 	if (!empty($_SESSION["look"])) {
 		$username = $_SESSION["look"];
 	}
-
-	exec(HESTIA_CMD . "v-list-user " . quoteshellarg($username) . " json", $output, $return_var);
-	$data = json_decode(implode("", $output), true);
-	unset($output, $return_var);
-	$_SESSION["login_shell"] = $data[$username]["SHELL"];
-	$_SESSION["role"] = $data[$username]["ROLE"];
-	unset($data, $username);
 }
 
 if ($_SESSION["RELEASE_BRANCH"] == "release" && $_SESSION["DEBUG_MODE"] == "false") {
@@ -100,6 +133,7 @@ if (!defined("NO_AUTH_REQUIRED")) {
 	if (empty($_SESSION["LAST_ACTIVITY"]) || empty($_SESSION["INACTIVE_SESSION_TIMEOUT"])) {
 		destroy_sessions();
 		header("Location: /login/");
+		exit();
 	} elseif ($_SESSION["INACTIVE_SESSION_TIMEOUT"] * 60 + $_SESSION["LAST_ACTIVITY"] < time()) {
 		$v_user = quoteshellarg($_SESSION["user"]);
 		$v_session_id = quoteshellarg($_SESSION["token"]);
@@ -179,6 +213,7 @@ function check_return_code_redirect($return_var, $output, $location) {
 		}
 		$_SESSION["error_msg"] = $error;
 		header("Location:" . $location);
+		exit();
 	}
 }
 
@@ -245,8 +280,13 @@ function show_alert_message($data) {
 	}
 }
 
-function top_panel($user, $TAB) {
-	$command = HESTIA_CMD . "v-list-user " . $user . " 'json'";
+function get_user_data($user) {
+	static $cache = [];
+	if (array_key_exists($user, $cache)) {
+		return $cache[$user];
+	}
+
+	$command = HESTIA_CMD . "v-list-user " . quoteshellarg($user) . " 'json'";
 	exec($command, $output, $return_var);
 	if ($return_var > 0) {
 		destroy_sessions();
@@ -254,24 +294,15 @@ function top_panel($user, $TAB) {
 		header("Location: /login/");
 		exit();
 	}
-	$panel = json_decode(implode("", $output), true);
+	$data = json_decode(implode("", $output), true);
 	unset($output);
 
-	// Log out active sessions for suspended users
-	if ($panel[$user]["SUSPENDED"] === "yes" && $_SESSION["POLICY_USER_VIEW_SUSPENDED"] !== "yes") {
-		if (empty($_SESSION["look"])) {
-			destroy_sessions();
-			$_SESSION["error_msg"] = _("You are logged out, please log in again.");
-			header("Location: /login/");
-		}
-	}
+	$cache[$user] = $data;
+	return $data;
+}
 
-	// Reset user permissions if changed while logged in
-	if ($panel[$user]["ROLE"] !== $_SESSION["userContext"] && !isset($_SESSION["look"])) {
-		unset($_SESSION["userContext"]);
-		$_SESSION["userContext"] = $panel[$user]["ROLE"];
-	}
-
+function top_panel($user, $TAB) {
+	$panel = get_user_data($user);
 	// Load user's selected theme and do not change it when impersonting user
 	if (isset($panel[$user]["THEME"]) && !isset($_SESSION["look"])) {
 		$_SESSION["userTheme"] = $panel[$user]["THEME"];

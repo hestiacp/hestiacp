@@ -42,7 +42,7 @@ check_hestia_demo_mode
 #----------------------------------------------------------#
 
 # Do not restrict access to SFTP/FTP/SSH if POLICY_USER_VIEW_SUSPENDED is set to yes
-if [ -z "$POLICY_USER_VIEW_SUSPENDED" ] || [ "$POLICY_USER_VIEW_SUSPENDED" = 'no' ]; then
+if [ -z "$POLICY_USER_VIEW_SUSPENDED" ] || [ "$POLICY_USER_VIEW_SUSPENDED" != 'yes' ]; then
 	# Adding '!' in front of the password
 	/usr/sbin/usermod --lock "$user"
 

@@ -411,6 +411,7 @@ if (!empty($_POST["save"]) && $read_only !== true) {
 				$_SESSION["language"] = $_POST["v_language"];
 				$refresh = $_SERVER["REQUEST_URI"];
 				header("Location: $refresh");
+				exit();
 			}
 		}
 		unset($output);

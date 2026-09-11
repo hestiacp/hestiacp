@@ -63,9 +63,31 @@ for port in $ports; do
 	fi
 done
 
+# Get user package 
+PACKAGE=$($BIN/v-list-user "$user" json | jq -r ".$user.PACKAGE")
+
+# Get package max_children
+max_children=$($BIN/v-list-user-package "$PACKAGE" json | jq -r --arg pkg "$PACKAGE" '.[$pkg].MAX_CHILDREN')
+max_requests=$($BIN/v-list-user-package "$PACKAGE" json | jq -r --arg pkg "$PACKAGE" '.[$pkg].MAX_REQUESTS')
+idle_timeout=$($BIN/v-list-user-package "$PACKAGE" json | jq -r --arg pkg "$PACKAGE" '.[$pkg].IDLE_TIMEOUT')
+
+# Default to 8 children if undefined
+if [ -z "$max_children" ] || [ "$max_children" = "null" ]; then
+	max_children=8
+fi
+if [ -z "$max_requests" ] || [ "$max_requests" = "null" ]; then
+	max_requests=4000
+fi
+if [ -z "$idle_timeout" ] || [ "$idle_timeout" = "null" ]; then
+	idle_timeout=10
+fi
+
 # Adding backend config
 cat $WEBTPL/$WEB_BACKEND/$template.tpl \
 	| sed -e "s|%backend_port%|$backend_port|" \
+		-e "s|%max_children%|$max_children|" \
+		-e "s|%max_requests%|$max_requests|" \
+		-e "s|%idle_timeout%|$idle_timeout|" \
 		-e "s|%user%|$user|g" \
 		-e "s|%domain%|$domain|g" \
 		-e "s|%backend%|$backend_type|g" \

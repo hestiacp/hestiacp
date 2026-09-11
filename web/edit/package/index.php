@@ -55,6 +55,9 @@ $v_cpu_quota = $data[$v_package]["CPU_QUOTA"];
 $v_cpu_quota_period = $data[$v_package]["CPU_QUOTA_PERIOD"];
 $v_memory_limit = $data[$v_package]["MEMORY_LIMIT"];
 $v_swap_limit = $data[$v_package]["SWAP_LIMIT"];
+$v_max_children = $data[$v_package]["MAX_CHILDREN"];
+$v_max_requests = $data[$v_package]["MAX_REQUESTS"] ?? '4000';
+$v_idle_timeout = $data[$v_package]["IDLE_TIMEOUT"] ?? '10';
 $v_ns = $data[$v_package]["NS"];
 $nameservers = explode(",", $v_ns);
 if (empty($nameservers[0])) {
@@ -213,6 +216,17 @@ if (!empty($_POST["save"])) {
 		if (!isset($_POST["v_swap_limit"])) {
 			$errors[] = _("Swap Limit");
 		}
+
+	}
+
+	if (!isset($_POST["v_max_children"])) {
+		$errors[] = _("Max Children");
+	}
+	if (!isset($_POST["v_max_requests"])) {
+		$errors[] = _("Max Requests");
+	}
+	if (!isset($_POST["v_idle_timeout"])) {
+		$errors[] = _("Idle Timeout");
 	}
 
 	// Check if name server entries are blank if DNS server is installed
@@ -274,6 +288,10 @@ if (!empty($_POST["save"])) {
 		$_SESSION["RESOURCES_LIMIT"] == "yes" ? quoteshellarg($_POST["v_memory_limit"]) : "";
 	$v_swap_limit =
 		$_SESSION["RESOURCES_LIMIT"] == "yes" ? quoteshellarg($_POST["v_swap_limit"]) : "";
+	$v_max_children = quoteshellarg($_POST["v_max_children"]);
+	$v_max_requests = quoteshellarg($_POST["v_max_requests"]);
+	$v_idle_timeout = quoteshellarg($_POST["v_idle_timeout"]);
+
 
 	$v_ns1 = !empty($_POST["v_ns1"]) ? trim($_POST["v_ns1"], ".") : "";
 	$v_ns2 = !empty($_POST["v_ns2"]) ? trim($_POST["v_ns2"], ".") : "";
@@ -325,6 +343,9 @@ if (!empty($_POST["save"])) {
 	$pkg .= "CPU_QUOTA_PERIOD=" . $v_cpu_quota_period . "\n";
 	$pkg .= "MEMORY_LIMIT=" . $v_memory_limit . "\n";
 	$pkg .= "SWAP_LIMIT=" . $v_swap_limit . "\n";
+	$pkg .= "MAX_CHILDREN=" . $v_max_children . "\n";
+	$pkg .= "MAX_REQUESTS=" . $v_max_requests . "\n";
+	$pkg .= "IDLE_TIMEOUT=" . $v_idle_timeout . "\n";
 	$pkg .= "BANDWIDTH=" . $v_bandwidth . "\n";
 	$pkg .= "NS=" . $v_ns . "\n";
 	$pkg .= "SHELL=" . $v_shell . "\n";

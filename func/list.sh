@@ -48,7 +48,7 @@ list_all_user_objects() (
 
 	result=$(
 		set -o pipefail
-		HESTIA_LIST_HOMEDIR="$HOMEDIR" LC_ALL=C awk -v kind="$kind" -v format="$format" '
+		HESTIA_LIST_HOMEDIR="$HOMEDIR" HESTIA_LIST_WEBMAIL_ALIAS="${WEBMAIL_ALIAS-}" LC_ALL=C awk -v kind="$kind" -v format="$format" '
 			function fail() {
 				# Never include a configuration value (possibly a secret) in errors.
 				printf "Error: invalid configuration: %s:%d\n", FILENAME, FNR > "/dev/stderr"
@@ -148,6 +148,9 @@ list_all_user_objects() (
 			{
 				parse($0)
 				if (object[identity] == "") fail()
+				# Missing mail aliases inherit the global setting; explicit empty
+				# or per-domain values must not be replaced.
+				if (kind == "mail" && !("WEBMAIL_ALIAS" in object)) object["WEBMAIL_ALIAS"] = ENVIRON["HESTIA_LIST_WEBMAIL_ALIAS"]
 				owner = FILENAME
 				sub(/\/[^\/]*$/, "", owner)
 				sub(/^.*\//, "", owner)

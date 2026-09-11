@@ -8,6 +8,7 @@ bats_require_minimum_version 1.5.0
 setup() {
     HESTIA="$BATS_TEST_TMPDIR/hestia"
     HOMEDIR='/home'
+    WEBMAIL_ALIAS=''
     mkdir -p "$HESTIA/data/users"
     source "$BATS_TEST_DIRNAME/../func/list.sh"
 }
@@ -167,6 +168,51 @@ write_config() {
     assert_line --index 0 'USER,DOMAIN,ANTIVIRUS,ANTISPAM,DKIM,SSL,CATCHALL,ACCOUNTS,U_DISK,SUSPENDED,TIME,DATE,WEBMAIL_ALIAS,WEBMAIL'
     assert_line --index 1 "alice,mail.example,no,no,yes,yes,catch@example.com,2,'4,no,12:00:00,2026-09-07,webmail,roundcube"
     [ "${#lines[@]}" -eq 2 ]
+}
+
+@test "List all objects: Mail aliases use the global default only for missing keys" {
+    local format expected
+    for WEBMAIL_ALIAS in webmail inbox ''; do
+        write_config alice mail "DOMAIN='custom.example' WEBMAIL_ALIAS='custom' WEBMAIL='roundcube'"
+        printf '%s\n' \
+            "DOMAIN='missing.example' WEBMAIL='roundcube'" \
+            "DOMAIN='empty.example' WEBMAIL_ALIAS='' WEBMAIL='roundcube'" \
+            "DOMAIN='after-empty.example' WEBMAIL='roundcube'" >> "$HESTIA/data/users/alice/mail.conf"
+        write_config bob mail "DOMAIN='bob.example' WEBMAIL='roundcube'"
+        expected=$(printf '%s\t%s\t%s\n' \
+            custom.example custom roundcube \
+            missing.example "$WEBMAIL_ALIAS" roundcube \
+            empty.example '' roundcube \
+            after-empty.example "$WEBMAIL_ALIAS" roundcube \
+            bob.example "$WEBMAIL_ALIAS" roundcube)
+
+        for format in plain csv json; do
+            run list_all_user_objects mail "$format"
+            assert_success
+            case "$format" in
+                plain)
+                    run awk -F '\t' '{print $2 "\t" $(NF-1) "\t" $NF}' <<< "$output"
+                    ;;
+                csv)
+                    run awk -F ',' 'NR > 1 {print $2 "\t" $(NF-1) "\t" $NF}' <<< "$output"
+                    ;;
+                json)
+                    run jq -r 'to_entries[] | [.key, .value.WEBMAIL_ALIAS, .value.WEBMAIL] | @tsv' <<< "$output"
+                    ;;
+            esac
+            assert_success
+            assert_output "$expected"
+        done
+    done
+}
+
+@test "List all objects: An unset global mail alias remains empty" {
+    unset WEBMAIL_ALIAS
+    write_config alice mail "DOMAIN='mail.example' WEBMAIL='roundcube'"
+    run list_all_user_objects mail json
+    assert_success
+    run jq -e '.["mail.example"] | .WEBMAIL_ALIAS == "" and .WEBMAIL == "roundcube"' <<< "$output"
+    assert_success
 }
 
 @test "List all objects: Database ownership is distinct from the database user" {

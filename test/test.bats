@@ -2489,7 +2489,7 @@ EVIL='x'" > /tmp/backup_exclusions_unknownkey
 #----------------------------------------------------------#
 
 # Needed for testing suspension of users and for changing ownership of databases
-@test "Suspended: Add database" {
+@test "Suspend: Add database" {
     run v-add-database $user database dbuser 1234 mysql
     assert_success
     refute_output
@@ -2503,26 +2503,26 @@ EVIL='x'" > /tmp/backup_exclusions_unknownkey
 }
 
 @test "Suspend: Check if login is disabled" {
-		run v-get-user-salt $user
+    run v-get-user-salt $user
     assert_failure $E_SUSPENDED
 }
 
 @test "Suspend: Check if web domain is disabled" {
     run v-list-web-domain $user $domain
     assert_success
-    assert_output --partial "SUSPENDED:        yes"
+    assert_output --regexp "SUSPENDED:[[:space:]]+yes"
 }
 
 @test "Suspend: Check if mail domain is disabled" {
     run v-list-mail-domain $user $domain
     assert_success
-    assert_output --partial "SUSPENDED:          yes"
+    assert_output --regexp "SUSPENDED:[[:space:]]+yes"
 }
 
 @test "Suspend: Check if database is disabled" {
     run v-list-database $user $database
     assert_success
-    assert_output --partial "SUSPENDED:      yes"
+    assert_output --regexp "SUSPENDED:[[:space:]]+yes"
 }
 
 @test "Unsuspend: Unsuspend user" {
@@ -2538,19 +2538,19 @@ EVIL='x'" > /tmp/backup_exclusions_unknownkey
 @test "Unsuspend: Check if web domain is enabled" {
     run v-list-web-domain $user $domain
     assert_success
-    assert_output --partial "SUSPENDED:        no"
+    assert_output --regexp "SUSPENDED:[[:space:]]+no"
 }
 
 @test "Unsuspend: Check if mail domain is enabled" {
     run v-list-mail-domain $user $domain
     assert_success
-    assert_output --partial "SUSPENDED:          no"
+    assert_output --regexp "SUSPENDED:[[:space:]]+no"
 }
 
 @test "Unsuspend: Check if database is enabled" {
     run v-list-database $user $database
     assert_success
-    assert_output --partial "SUSPENDED:      no"
+    assert_output --regexp "SUSPENDED:[[:space:]]+no"
 }
 
 

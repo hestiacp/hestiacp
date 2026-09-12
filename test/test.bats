@@ -2508,18 +2508,21 @@ EVIL='x'" > /tmp/backup_exclusions_unknownkey
 }
 
 @test "Suspend: Check if web domain is disabled" {
-    run v-get-web-domain $user $domain
-    assert_failure $E_SUSPENDED
+    run v-list-web-domain $user $domain
+    assert_success
+    assert_output --partial "SUSPENDED:        yes"
 }
 
 @test "Suspend: Check if mail domain is disabled" {
-    run v-get-mail-domain $user $domain
-    assert_failure $E_SUSPENDED
+    run v-list-mail-domain $user $domain
+    assert_success
+    assert_output --partial "SUSPENDED:          yes"
 }
 
 @test "Suspend: Check if database is disabled" {
-    run v-get-database $user $database
-    assert_failure $E_SUSPENDED
+    run v-list-database $user $database
+    assert_success
+    assert_output --partial "SUSPENDED:      yes"
 }
 
 @test "Unsuspend: Unsuspend user" {
@@ -2533,18 +2536,21 @@ EVIL='x'" > /tmp/backup_exclusions_unknownkey
 }
 
 @test "Unsuspend: Check if web domain is enabled" {
-    run v-get-web-domain $user $domain
+    run v-list-web-domain $user $domain
     assert_success
+    assert_output --partial "SUSPENDED:        no"
 }
 
 @test "Unsuspend: Check if mail domain is enabled" {
-    run v-get-mail-domain $user $domain
+    run v-list-mail-domain $user $domain
     assert_success
+    assert_output --partial "SUSPENDED:          no"
 }
 
 @test "Unsuspend: Check if database is enabled" {
-    run v-get-database $user $database
+    run v-list-database $user $database
     assert_success
+    assert_output --partial "SUSPENDED:      no"
 }
 
 
@@ -2572,8 +2578,6 @@ EVIL='x'" > /tmp/backup_exclusions_unknownkey
     assert_success
     refute_output
 }
-
-
 
 #----------------------------------------------------------#
 #                         CLEANUP                          #
@@ -2608,8 +2612,6 @@ EVIL='x'" > /tmp/backup_exclusions_unknownkey
     assert_success
     refute_output
 }
-
-
 
 @test "Ip: Delete the test IP" {
     run v-delete-sys-ip 198.18.0.125

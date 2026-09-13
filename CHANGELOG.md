@@ -2,6 +2,45 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.10.5] - Service Release
+
+### Security
+
+- Verify user role/session has not been tampered with and fix suspended users not always having their login disabled #5706
+- Fix `v-unsuspend-user` using the wrong `POLICY_USER_VIEW_SUSPENDED` comparison, so unsuspending a user did not always unlock their account #5711
+- Improve read-only/demo mode enforcement, closing bypasses via direct URLs (e.g. `/add/cron/`), open redirects, and the admin login-as flow #5688
+- Improve conf parsing and reserved-key handling to prevent injection via crafted config values #5698
+
+### Changes
+
+- Remove support for Debian 11 (Bullseye) #5654
+- Bump Quick Install app versions: Dolibarr, Drupal, Grav, Joomla, OpenCart, PrestaShop #5700
+- Bump hestia-php to 8.5.10 #5678
+- Bump OpenSSL to 3.5.8 #5658
+- Update PCRE to 10.48 #5673
+- Update Roundcube to 1.7.4 #5690
+- Bump File Manager to 7.16.2 #5695
+- Enhance backup detail pages by adding icons to item types #5679
+- Update dependencies #5666 #5693 #5694
+- Add missing tests for suspending users #5710
+
+### Fixes
+
+- Fix inverted database limit check condition that could block users from creating databases within their quota #5640
+- Fix phpMyAdmin SSO for remote databases and redirects to the wrong server #5454
+- Rename phpMyAdmin tempdir configuration to load it last #5655
+- Fix restic full restore to restore all objects and correct cron binary name #5709
+- Fix backup host setup passing `$raw_password` instead of `$password` for Backblaze B2 credentials #5697
+- Fix issues when running behind a NAT / reverse proxy setup #5689
+- Implement locking mechanism for Fail2Ban actions and firewall state, and fix raw IP CIDR handling #5699
+- Fix ProFTPd on Debian 13 and Ubuntu 26.04 #5677
+- Omit CN for domains longer than 64 characters when generating SSL certificates #5676
+- Fix Global SMTP relay password validation #5665
+- Validate empty database alias #5663
+- Fix Apache2 logrotate when webstats fails because the domain is suspended #5685
+- Fix "Rejected because" DNSBL message for existing Exim installations #5683
+- Fix action button icons overlapping text on mobile view #5680
+
 ## [1.10.4] - Service Release
 
 ### Security

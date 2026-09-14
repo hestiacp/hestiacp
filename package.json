@@ -20,19 +20,19 @@
 		"prepare": "husky"
 	},
 	"dependencies": {
-		"@alpinejs/collapse": "^3.17.1",
+		"@alpinejs/collapse": "^3.17.2",
 		"@fortawesome/fontawesome-free": "^7.3.1",
-		"alpinejs": "^3.17.1",
+		"alpinejs": "^3.17.2",
 		"chart.js": "^4.5.1",
 		"check-password-strength": "^3.0.0",
-		"floating-vue": "^5.2.2",
+		"floating-vue": "^5.4.0",
 		"nanoid": "^6.0.1",
 		"normalize.css": "^8.0.1",
 		"@xterm/addon-webgl": "^0.19.0",
 		"@xterm/xterm": "^6.0.0"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "2.5.12",
+		"@biomejs/biome": "2.5.13",
 		"@prettier/plugin-php": "^0.25.0",
 		"@testing-library/vue": "^8.1.0",
 		"@vitejs/plugin-vue": "^6.0.8",
@@ -41,7 +41,7 @@
 		"husky": "^9.1.7",
 		"jsdom": "^30.0.1",
 		"lightningcss": "^1.33.0",
-		"lint-staged": "^17.5.0",
+		"lint-staged": "^17.5.1",
 		"markdownlint-cli2": "^0.23.2",
 		"prettier": "^3.9.6",
 		"prettier-plugin-nginx": "^1.0.3",

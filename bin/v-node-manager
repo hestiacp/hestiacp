@@ -1,0 +1,272 @@
+#!/bin/bash
+# info: Manage Node.js applications with PM2
+# options: ACTION USER [DOMAIN] [PORT] [APP_PATH] [ENTRY_FILE]
+#
+# example: v-node-manager list admin
+# example: v-node-manager add admin example.com 3000 /home/admin/web/example.com/public_html/app app.js
+#
+# This function manages Node.js PM2 applications for web domains.
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Argument definition
+action=$1
+user=$2
+domain=$3
+port=$4
+app_path=$5
+entry_file=$6
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
+source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '2' "$#" 'ACTION USER [DOMAIN] [PORT] [APP_PATH] [ENTRY_FILE]'
+is_format_valid 'user'
+is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
+
+# Check if Node.js and PM2 are installed on system
+if [ "$action" != "check_env" ]; then
+	if ! command -v node > /dev/null 2>&1 || ! command -v pm2 > /dev/null 2>&1; then
+		echo "Error: Node.js or PM2 is not installed"
+		exit $E_NOTEXIST
+	fi
+fi
+
+# Validate domain if passed
+if [ -n "$domain" ]; then
+	is_format_valid 'domain'
+	is_object_valid 'web' 'DOMAIN' "$domain"
+fi
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Helper to run commands under isolated user with bash shell and PM2_HOME
+node_run() {
+	local u="$1"
+	local cmd="$2"
+	runuser -s /bin/bash "$u" -c "export HOME='/home/$u'; export PM2_HOME='/home/$u/.pm2'; export PATH=\$PATH:/usr/local/bin:/usr/bin; cd '/home/$u' && $cmd"
+}
+
+case "$action" in
+	add)
+		if [ -z "$domain" ] || [ -z "$port" ] || [ -z "$app_path" ] || [ -z "$entry_file" ]; then
+			exit $E_ARGS
+		fi
+		is_object_unsuspended 'web' 'DOMAIN' "$domain"
+
+		# Validate port (numeric between 1024 and 65535)
+		if ! [[ "$port" =~ ^[0-9]+$ ]] || [ "$port" -lt 1024 ] || [ "$port" -gt 65535 ]; then
+			echo "Error: Invalid port (must be between 1024 and 65535)"
+			exit $E_INVALID
+		fi
+
+		# Validate app_path (must be within user home directory)
+		if [[ "$app_path" != "/home/$user/"* ]]; then
+			echo "Error: Application path must be within /home/$user/"
+			exit $E_INVALID
+		fi
+
+		# Validate entry_file (safe filename characters only)
+		if ! [[ "$entry_file" =~ ^[a-zA-Z0-9_\.\-\/]+$ ]]; then
+			echo "Error: Invalid entry file name"
+			exit $E_INVALID
+		fi
+
+		# Ensure target directory exists
+		if [ ! -d "$app_path" ]; then
+			echo "Error: Application directory $app_path does not exist"
+			exit $E_NOTEXIST
+		fi
+
+		# Ensure entry file exists
+		if [ ! -f "$app_path/$entry_file" ]; then
+			echo "Error: Entry file '$entry_file' not found in $app_path"
+			exit $E_NOTEXIST
+		fi
+
+		# Ensure .pm2 and app directory ownership
+		mkdir -p "/home/$user/.pm2"
+		chown -R "$user":"$user" "/home/$user/.pm2"
+		chown -R "$user":"$user" "$app_path"
+
+		# Clean any prior process with same name
+		node_run "$user" "pm2 delete '$domain' >/dev/null 2>&1 || true"
+
+		# Start App under isolated user and capture output
+		if [[ "$entry_file" == *"ecosystem"* ]] || [[ "$entry_file" == *".config.js"* ]] || [[ "$entry_file" == *".config.cjs"* ]]; then
+			pm2_out=$(node_run "$user" "cd '$app_path' && PORT=$port pm2 start '$entry_file' --env production --update-env" 2>&1)
+			pm2_res=$?
+		else
+			pm2_out=$(node_run "$user" "cd '$app_path' && PORT=$port pm2 start '$entry_file' --name '$domain' --update-env" 2>&1)
+			pm2_res=$?
+		fi
+		if [ $pm2_res -ne 0 ]; then
+			echo "PM2 error: $pm2_out"
+			exit $pm2_res
+		fi
+		node_run "$user" "pm2 save >/dev/null 2>&1 || true"
+
+		# Create isolated port include
+		mkdir -p /home/"$user"/conf/web/"$domain"
+		echo "proxy_pass http://127.0.0.1:$port;" > /home/"$user"/conf/web/"$domain"/node_port.conf
+		chown "$user":"$user" /home/"$user"/conf/web/"$domain"/node_port.conf
+		chmod 644 /home/"$user"/conf/web/"$domain"/node_port.conf
+
+		# Switch proxy template to node
+		$HESTIA/bin/v-change-web-domain-proxy-tpl "$user" "$domain" "node" "yes"
+		log_history "started Node.js app $domain on port $port"
+		log_event "$OK" "$ARGUMENTS"
+		exit $OK
+		;;
+
+	delete)
+		[ -z "$domain" ] && exit $E_ARGS
+
+		node_run "$user" "pm2 delete '$domain' >/dev/null 2>&1 || true"
+		node_run "$user" "pm2 save >/dev/null 2>&1 || true"
+		rm -f /home/"$user"/conf/web/"$domain"/node_port.conf
+		$HESTIA/bin/v-change-web-domain-proxy-tpl "$user" "$domain" "default" "yes"
+		log_history "deleted Node.js app $domain"
+		log_event "$OK" "$ARGUMENTS"
+		exit $OK
+		;;
+
+	restart)
+		[ -z "$domain" ] && exit $E_ARGS
+		is_object_unsuspended 'web' 'DOMAIN' "$domain"
+		node_run "$user" "pm2 restart '$domain'"
+		log_history "restarted Node.js app $domain"
+		log_event "$OK" "$ARGUMENTS"
+		exit $OK
+		;;
+
+	stop)
+		[ -z "$domain" ] && exit $E_ARGS
+		node_run "$user" "pm2 stop '$domain'"
+		log_history "stopped Node.js app $domain"
+		log_event "$OK" "$ARGUMENTS"
+		exit $OK
+		;;
+
+	list)
+		node_run "$user" "pm2 jlist"
+		exit $OK
+		;;
+
+	create_app)
+		[ -z "$domain" ] && exit $E_ARGS
+		mkdir -p /home/"$user"/web/"$domain"/public_html/app
+		chown -R "$user":"$user" /home/"$user"/web/"$domain"/public_html/app
+		exit $OK
+		;;
+
+	logs)
+		[ -z "$domain" ] && exit $E_ARGS
+		lines=${port:-100}
+		[[ "$lines" =~ ^[0-9]+$ ]] || lines=100
+		[ "$lines" -gt 1000 ] && lines=1000
+
+		log_type=${app_path:-all}
+		[ "$log_type" = "out" ] || [ "$log_type" = "err" ] || log_type="all"
+
+		out_log="/home/$user/.pm2/logs/${domain}-out.log"
+		err_log="/home/$user/.pm2/logs/${domain}-error.log"
+
+		if [ "$log_type" = "out" ]; then
+			if [ -f "$out_log" ]; then
+				tail -n "$lines" "$out_log"
+			else
+				echo "No output logs found for $domain"
+			fi
+		elif [ "$log_type" = "err" ]; then
+			if [ -f "$err_log" ]; then
+				tail -n "$lines" "$err_log"
+			else
+				echo "No error logs found for $domain"
+			fi
+		else
+			echo "=== Output Logs ($out_log) ==="
+			[ -f "$out_log" ] && tail -n "$lines" "$out_log" || echo "(Empty)"
+			echo ""
+			echo "=== Error Logs ($err_log) ==="
+			[ -f "$err_log" ] && tail -n "$lines" "$err_log" || echo "(Empty)"
+		fi
+		exit $OK
+		;;
+
+	npm_install)
+		[ -z "$domain" ] && exit $E_ARGS
+		target_path=${app_path:-"/home/$user/web/$domain/public_html/app"}
+		if [[ "$target_path" != "/home/$user/"* ]]; then
+			echo "Error: Application path must be within /home/$user/"
+			exit $E_INVALID
+		fi
+		if [ ! -d "$target_path" ]; then
+			echo "Directory $target_path does not exist"
+			exit $E_NOTEXIST
+		fi
+		node_run "$user" "cd '$target_path' && npm install 2>&1"
+		exit $?
+		;;
+
+	inspect_app)
+		[ -z "$domain" ] && exit $E_ARGS
+		target_path=${app_path:-"/home/$user/web/$domain/public_html/app"}
+		if [[ "$target_path" != "/home/$user/"* ]]; then
+			target_path="/home/$user/web/$domain/public_html/app"
+		fi
+		dir_exists=false
+		[ -d "$target_path" ] && dir_exists=true
+
+		if [ -f "$target_path/ecosystem.config.js" ]; then
+			echo "{\"dir_exists\":$dir_exists,\"exists\":true,\"main\":\"ecosystem.config.js\",\"type\":\"ecosystem\"}"
+		elif [ -f "$target_path/ecosystem.config.cjs" ]; then
+			echo "{\"dir_exists\":$dir_exists,\"exists\":true,\"main\":\"ecosystem.config.cjs\",\"type\":\"ecosystem\"}"
+		elif [ -f "$target_path/pm2.config.js" ]; then
+			echo "{\"dir_exists\":$dir_exists,\"exists\":true,\"main\":\"pm2.config.js\",\"type\":\"ecosystem\"}"
+		elif [ -f "$target_path/package.json" ]; then
+			pkg_content=$(cat "$target_path/package.json" 2>/dev/null)
+			# Extract main if present or return minimal json with dir_exists
+			echo "{\"dir_exists\":$dir_exists,\"exists\":true,\"pkg\":$pkg_content}"
+		else
+			echo "{\"dir_exists\":$dir_exists,\"exists\":false}"
+		fi
+		exit $OK
+		;;
+
+	check_env)
+		if command -v node > /dev/null 2>&1 && command -v pm2 > /dev/null 2>&1; then
+			node_v=$(node -v 2>/dev/null || echo "N/A")
+			npm_v=$(npm -v 2>/dev/null || echo "N/A")
+			pm2_v=$(pm2 -v 2>/dev/null | tail -n 1 | tr -d ' ' || echo "N/A")
+			echo "{\"installed\":true,\"node\":\"$node_v\",\"npm\":\"$npm_v\",\"pm2\":\"$pm2_v\"}"
+			exit $OK
+		else
+			echo '{"installed":false}'
+			exit $E_NOTEXIST
+		fi
+		;;
+
+	*)
+		exit $E_ARGS
+		;;
+esac

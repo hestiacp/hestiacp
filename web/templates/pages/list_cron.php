@@ -2,7 +2,7 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<?php if ($read_only !== "true") { ?>
+			<?php if ($read_only !== true) { ?>
 				<a href="/add/cron/" class="button button-secondary js-button-create">
 					<i class="fas fa-circle-plus icon-green"></i><?= tohtml( _("Add Cron Job")) ?>
 				</a>
@@ -34,7 +34,7 @@
 						<span class="name <?php if ($_SESSION['userSortOrder'] === 'date') { echo 'active'; } ?>"><?= tohtml( _("Date")) ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
 					</li>
 				</ul>
-				<?php if ($read_only !== "true") { ?>
+				<?php if ($read_only !== true) { ?>
 					<form x-data x-bind="BulkEdit" action="/bulk/cron/" method="post">
 						<input type="hidden" name="token" value="<?= tohtml($_SESSION["token"]) ?>">
 						<select class="form-select" name="action">
@@ -114,7 +114,7 @@
 				</div>
 				<div class="units-table-cell units-table-heading-cell u-text-bold">
 					<span class="u-hide-desktop"><?= tohtml( _("Command")) ?>:</span>
-					<?php if ($read_only === "true" || $data[$key]["SUSPENDED"] == "yes") { ?>
+					<?php if ($read_only === true || $data[$key]["SUSPENDED"] == "yes") { ?>
 						<?= tohtml($data[$key]["CMD"]) ?>
 					<?php } else { ?>
 						<a href="/edit/cron/?<?= tohtml(http_build_query(["job" => $data[$key]["JOB"], "token" => $_SESSION["token"]])) ?>" title="<?= tohtml( _("Edit Cron Job")) ?>: <?= tohtml($data[$key]["CMD"]) ?>">

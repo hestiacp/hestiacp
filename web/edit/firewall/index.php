@@ -61,7 +61,7 @@ foreach ($data as $key => $value) {
 $ipset_lists_json = json_encode($ipset_lists);
 
 // Check POST request
-if (!empty($_POST["save"])) {
+if (!empty($_POST["save"]) && $read_only !== true) {
 	// Check token
 	verify_csrf($_POST);
 

@@ -11,6 +11,11 @@ if ($_SESSION["userContext"] === "admin" && !empty($_GET["user"])) {
 // Check token
 verify_csrf($_GET);
 
+if ($read_only === true) {
+	header("Location: /list/backup/");
+	exit();
+}
+
 if (!empty($_GET["backup"])) {
 	$v_backup = quoteshellarg($_GET["backup"]);
 	exec(HESTIA_CMD . "v-delete-user-backup " . $user . " " . $v_backup, $output, $return_var);

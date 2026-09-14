@@ -185,7 +185,7 @@ $stats = json_decode(implode("", $output), true);
 unset($output);
 
 // Check POST request
-if (!empty($_POST["save"])) {
+if (!empty($_POST["save"]) && $read_only !== true) {
 	$v_domain = $_POST["v_domain"];
 	if (!in_array($v_domain, $user_domains)) {
 		check_return_code(3, ["Unknown domain"]);

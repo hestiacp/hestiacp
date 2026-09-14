@@ -56,6 +56,9 @@ class FlarumSetup extends BaseSetup
             'adminEmail' => $options['admin_email'],
             'adminPassword' => $options['admin_password'],
             'adminPasswordConfirmation' => $options['admin_password'],
-        ]);
+        ],
+        [],
+            $target->getResolveUrl()
+        );
     }
 }

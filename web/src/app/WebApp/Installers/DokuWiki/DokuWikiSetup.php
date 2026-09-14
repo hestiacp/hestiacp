@@ -85,6 +85,7 @@ class DokuWikiSetup extends BaseSetup
                 'submit' => '',
             ],
             ['Content-Type: application/x-www-form-urlencoded'],
+            $target->getResolveUrl()
         );
 
         $this->appcontext->deleteFile($target->getDocRoot('install.php'));

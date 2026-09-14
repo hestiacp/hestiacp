@@ -111,7 +111,14 @@ if [ -n "$email" ]; then
 fi
 
 subj="$subj/C=$country/ST=$state/L=$city/O=$org"
-subj="$subj/OU=$org_unit/CN=$domain_idn"
+subj="$subj/OU=$org_unit"
+
+# The CN (CommonName) has an ASN.1 limit of 64 characters in OpenSSL.
+# If the domain exceeds this limit, the CN is omitted and only the SAN
+# (subjectAltName) is trusted, which is what modern browsers validate.
+if [ ${#domain_idn} -le 64 ]; then
+	subj="$subj/CN=$domain_idn"
+fi
 
 if [ -e "/etc/ssl/openssl.cnf" ]; then
 	ssl_conf='/etc/ssl/openssl.cnf'

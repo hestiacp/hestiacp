@@ -2,7 +2,7 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<?php if ($read_only !== "true") { ?>
+			<?php if ($read_only !== true) { ?>
 				<a href="/add/dns/" class="button button-secondary js-button-create">
 					<i class="fas fa-circle-plus icon-green"></i><?= tohtml( _("Add DNS Domain")) ?>
 				</a>
@@ -34,7 +34,7 @@
 						<span class="name"><?= tohtml( _("Records")) ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
 					</li>
 				</ul>
-				<?php if ($read_only !== "true") { ?>
+				<?php if ($read_only !== true) { ?>
 					<form x-data x-bind="BulkEdit" action="/bulk/dns/" method="post">
 						<input type="hidden" name="token" value="<?= tohtml($_SESSION["token"]) ?>">
 						<select class="form-select" name="action">

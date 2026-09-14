@@ -133,7 +133,7 @@
 					$spnd_confirmation = _('Are you sure you want to suspend user %s?');
 				}
 			?>
-			<div class="units-table-row <?php if ($status == 'suspended') echo 'disabled'; ?> js-unit <?php if (($_SESSION['POLICY_SYSTEM_HIDE_ADMIN'] === 'yes') && ($_SESSION['user'] !== $_SESSION['ROOT_USER']) && ($key === 'admin')) { echo 'u-hidden'; } ?>"
+			<div class="units-table-row <?php if ($status == 'suspended') echo 'disabled'; ?> js-unit <?php if (($_SESSION['POLICY_SYSTEM_HIDE_ADMIN'] === 'yes') && ($_SESSION['user'] !== $_SESSION['ROOT_USER']) && ($key === $_SESSION['ROOT_USER'])) { echo 'u-hidden'; } ?>"
 				data-sort-date="<?= tohtml(strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])) ?>"
 				data-sort-name="<?= tohtml(strtolower($key)) ?>"
 				data-sort-package="<?= tohtml(strtolower($data[$key]['PACKAGE'])) ?>"
@@ -148,7 +148,7 @@
 				<div class="units-table-cell units-table-heading-cell">
 					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Name")) ?>:</span>
 					<?php if ($key == $user_plain) { ?>
-						<a href="/edit/user/?<?= tohtml(http_build_query(["user" => $key, "token" => $_SESSION["token"]])) ?>" title="<?= tohtml( _("Edit User")) ?>">
+						<a href="/edit/user/?<?= tohtml(http_build_query(["token" => $_SESSION["token"]])) ?>" title="<?= tohtml( _("Edit User")) ?>">
 							<span class="u-text-bold">
 								<?= tohtml($key) ?>
 							</span>
@@ -187,16 +187,29 @@
 							</li>
 						<?php } ?>
 						<?php if (!($_SESSION["userContext"] === "admin" && $key == $_SESSION['ROOT_USER'] && $_SESSION["user"] != $_SESSION['ROOT_USER'])) { ?>
+							<?php if ($key == $user_plain) { ?>
 							<li class="units-table-row-action shortcut-enter" data-key-action="href">
 								<a
 									class="units-table-row-action-link"
-									href="/edit/user/?<?= tohtml(http_build_query(["user" => $key, "token" => $_SESSION["token"]])) ?>"
+									href="/edit/user/?<?= tohtml(http_build_query(["token" => $_SESSION["token"]])) ?>"
 									title="<?= tohtml( _("Edit User")) ?>"
 								>
 									<i class="fas fa-pencil icon-orange"></i>
 									<span class="u-hide-desktop"><?= tohtml( _("Edit User")) ?></span>
 								</a>
 							</li>
+							<?php } else { ?>
+<li class="units-table-row-action shortcut-enter" data-key-action="href">
+								<a
+									class="units-table-row-action-link"
+									href="/login/?<?= tohtml(http_build_query(["loginas" => $key, "token" => $_SESSION["token"], "edit_link" => "/edit/user/"])) ?>"
+									title="<?= tohtml( _("Edit User")) ?>"
+								>
+									<i class="fas fa-pencil icon-orange"></i>
+									<span class="u-hide-desktop"><?= tohtml( _("Edit User")) ?></span>
+								</a>
+							</li>
+							<?php } ?>
 						<?php } ?>
 						<?php if (!($key == $_SESSION['ROOT_USER'] || $key == $user_plain)) { ?>
 							<li class="units-table-row-action shortcut-s" data-key-action="js">

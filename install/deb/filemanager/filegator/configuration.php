@@ -178,7 +178,7 @@ $dist_config["services"]["Filegator\Services\Storage\Filesystem"]["config"][
 		}
 		if (
 			isset($_SESSION["look"]) &&
-			$_SESSION["look"] == "admin" &&
+			$_SESSION["look"] == $_SESSION["ROOT_USER"] &&
 			$_SESSION["POLICY_SYSTEM_PROTECTED_ADMIN"] == "yes"
 		) {
 			header("Location: /");

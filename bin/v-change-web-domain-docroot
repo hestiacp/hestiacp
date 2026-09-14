@@ -86,6 +86,11 @@ else
 	# Check for existence of specified directory under target domain's public_html folder
 	target_domain_directory="$HOMEDIR/$user/web/$target_domain"
 	if [ -n "$target_directory" ]; then
+		# Avoid a target directory containing quotes
+		if [[ "$target_directory" == *"'"* || "$target_directory" == *'"'* ]]; then
+			check_result "$E_INVALID" "Directory '$target_directory' is not allowed."
+		fi
+
 		# Checking destination path
 		real_target_directory="$(readlink -e "${target_domain_directory}/public_html/$target_directory/")"
 		if [ ! -e "$real_target_directory" ]; then

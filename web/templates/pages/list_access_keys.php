@@ -2,19 +2,9 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<?php if ($_SESSION["userContext"] === "admin" && $_SESSION['look'] !== '' && $_GET["user"] !== "admin") { ?>
-				<a href="/edit/user/?<?= tohtml(http_build_query(["user" => $_SESSION["look"], "token" => $_SESSION["token"]])) ?>" class="button button-secondary button-back js-button-back">
-					<i class="fas fa-arrow-left icon-blue"></i><?= tohtml( _("Back")) ?>
-				</a>
-			<?php } elseif ($_SESSION["userContext"] === "admin" && !empty($_GET["user"])) { ?>
-				<a href="/edit/user/?<?= tohtml(http_build_query(["user" => $_GET["user"], "token" => $_SESSION["token"]])) ?>" class="button button-secondary button-back js-button-back">
-					<i class="fas fa-arrow-left icon-blue"></i><?= tohtml( _("Back")) ?>
-				</a>
-			<?php } else { ?>
-				<a href="/edit/user/?<?= tohtml(http_build_query(["user" => $_SESSION["user"], "token" => $_SESSION["token"]])) ?>" class="button button-secondary button-back js-button-back">
-					<i class="fas fa-arrow-left icon-blue"></i><?= tohtml( _("Back")) ?>
-				</a>
-			<?php } ?>
+			<a href="/edit/user/?<?= tohtml(http_build_query(["token" => $_SESSION["token"]])) ?>" class="button button-secondary button-back js-button-back">
+				<i class="fas fa-arrow-left icon-blue"></i><?= tohtml( _("Back")) ?>
+			</a>
 			<a href="/add/access-key/" class="button button-secondary js-button-create">
 				<i class="fas fa-circle-plus icon-green"></i><?= tohtml( _("Add Access Key")) ?>
 			</a>
@@ -73,7 +63,7 @@
 		<?php
 			foreach ($data as $key => $value) {
 				++$i;
-				$key_user = !empty($value['USER']) ? $value['USER'] : 'admin';
+				$key_user = !empty($value['USER']) ? $value['USER'] : $_SESSION["ROOT_USER"];
 				$key_comment = !empty($value['COMMENT']) ? $value['COMMENT'] : '-';
 				//$key_permissions = !empty($value['PERMISSIONS']) ? $value['PERMISSIONS'] : '-';
 				//$key_permissions = implode(' ', $key_permissions);

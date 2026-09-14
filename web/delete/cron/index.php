@@ -11,6 +11,11 @@ if ($_SESSION["userContext"] === "admin" && !empty($_GET["user"])) {
 // Check token
 verify_csrf($_GET);
 
+if ($read_only === true) {
+	header("Location: /list/cron/");
+	exit();
+}
+
 if (!empty($_GET["job"])) {
 	$v_username = quoteshellarg($user);
 	$v_job = quoteshellarg($_GET["job"]);

@@ -9,6 +9,11 @@ include $_SERVER["DOCUMENT_ROOT"] . "/inc/main.php";
 // Check token
 verify_csrf($_GET);
 
+if ($read_only === true) {
+	header("Location: /list/cron/");
+	exit();
+}
+
 if (!empty($_GET["job"])) {
 	$v_job = quoteshellarg($_GET["job"]);
 	exec(HESTIA_CMD . "v-unsuspend-cron-job " . $user . " " . $v_job, $output, $return_var);

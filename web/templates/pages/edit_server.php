@@ -32,6 +32,7 @@
 				"theme" => $_SESSION["THEME"],
 				"language" => $_SESSION["LANGUAGE"],
 				"hasSmtpRelay" => $v_smtp_relay == "true",
+				"useServerSmtp" => $v_use_server_smtp == "true",
 				"remoteBackupEnabled" => !empty($v_backup_remote_adv),
 				"incrementalBackups" => $v_backup_incremental ?? "",
 				"backupType" => !empty($v_backup_type) ? trim($v_backup_type, "'") : "",
@@ -185,6 +186,15 @@
 							</a>
 						</span>
 					</div>
+				</div>
+			</details>
+
+			<!-- Notifications section -->
+			<details class="box-collapse u-mb10">
+				<summary class="box-collapse-header">
+					<i class="fas fa-bell u-mr10"></i><?= tohtml( _("Notifications")) ?>
+				</summary>
+				<div class="box-collapse-content">
 					<div class="form-check">
 						<input
 							class="form-check-input"
@@ -208,6 +218,114 @@
 						<label for="v_upgrade_send_email_log">
 							<?= tohtml( _("Send update installation log by email")) ?>
 						</label>
+					</div>
+					<p class="u-mt20 u-mb10">
+						<?= tohtml( _("Server SMTP")) ?>
+					</p>
+					<div class="form-check">
+						<input
+							x-model="useServerSmtp"
+							class="form-check-input"
+							type="checkbox"
+							name="v_use_server_smtp"
+							id="v_use_server_smtp"
+						>
+						<label for="v_use_server_smtp">
+							<?= tohtml( _("Use Server SMTP")) ?>
+						</label>
+					</div>
+					<div
+						x-cloak
+						x-show="useServerSmtp"
+						class="u-pl30 u-mt20"
+					>
+						<div class="u-mb10">
+							<label for="v_server_smtp_host" class="form-label">
+								<?= tohtml( _("Host")) ?>
+							</label>
+							<input
+								type="text"
+								class="form-control"
+								name="v_server_smtp_host"
+								id="v_server_smtp_host"
+								value="<?= tohtml(trim($v_server_smtp_host, "'")) ?>"
+							>
+						</div>
+						<div class="u-mb10">
+							<label for="v_server_smtp_port" class="form-label">
+								<?= tohtml( _("Port")) ?>
+							</label>
+							<input
+								type="text"
+								class="form-control"
+								name="v_server_smtp_port"
+								id="v_server_smtp_port"
+								value="<?= tohtml(trim($v_server_smtp_port, "'")) ?>"
+							>
+						</div>
+						<div class="u-mb10">
+							<label for="v_server_smtp_security" class="form-label">
+								<?= tohtml( _("Security")) ?>
+							</label>
+							<select
+								class="form-select"
+								name="v_server_smtp_security"
+								id="v_server_smtp_security"
+							>
+								<option value="" <?= tohtml($v_server_smtp_security == "" ? "selected" : "") ?>><?= tohtml( _("None")) ?></option>
+								<option value="tls" <?= tohtml($v_server_smtp_security == "tls" ? "selected" : "") ?>>TLS</option>
+								<option value="ssl" <?= tohtml($v_server_smtp_security == "ssl" ? "selected" : "") ?>>SSL</option>
+								<option value="STARTTLS" <?= tohtml($v_server_smtp_security == "STARTTLS" ? "selected" : "") ?>>STARTTLS</option>
+							</select>
+						</div>
+						<div class="u-mb10">
+							<label for="v_server_smtp_user" class="form-label">
+								<?= tohtml( _("Username")) ?>
+							</label>
+							<input
+								type="text"
+								class="form-control"
+								name="v_server_smtp_user"
+								id="v_server_smtp_user"
+								value="<?= tohtml(trim($v_server_smtp_user, "'")) ?>"
+							>
+						</div>
+						<div class="u-mb10">
+							<label for="v_server_smtp_passwd" class="form-label">
+								<?= tohtml( _("Password")) ?>
+							</label>
+							<div class="u-pos-relative">
+								<input
+									type="text"
+									class="form-control js-password-input"
+									name="v_server_smtp_passwd"
+									id="v_server_smtp_passwd"
+								>
+							</div>
+						</div>
+						<div class="u-mb10">
+							<label for="v_server_smtp_addr" class="form-label">
+								<?= tohtml( _("Sender Email Address")) ?>
+							</label>
+							<input
+								type="text"
+								class="form-control"
+								name="v_server_smtp_addr"
+								id="v_server_smtp_addr"
+								value="<?= tohtml(trim($v_server_smtp_addr, "'")) ?>"
+							>
+						</div>
+						<div class="u-mt20">
+							<button type="submit" class="button button-secondary" onclick="
+								var hiddenInput = document.createElement('input');
+								hiddenInput.type = 'hidden';
+								hiddenInput.name = 'v_test_smtp';
+								hiddenInput.value = 'test';
+								this.form.appendChild(hiddenInput);
+							">
+								<?= tohtml( _("Test Email")) ?>
+							</button>
+						</div>
 					</div>
 				</div>
 			</details>

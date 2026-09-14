@@ -20,6 +20,7 @@ $v_state = "California";
 $v_locality = "San Francisco";
 $v_org = "MyCompany Inc";
 $v_org_unit = "IT";
+$v_key_algo = "ecdsa-256";
 
 // Back uri
 $_SESSION["back"] = "";
@@ -56,6 +57,15 @@ $v_country = $_POST["v_country"];
 $v_state = $_POST["v_state"];
 $v_locality = $_POST["v_locality"];
 $v_org = $_POST["v_org"];
+$v_key_algo = $_POST["v_key_algo"] ?? "ecdsa-256";
+
+$valid_key_algos = ["ecdsa-256", "ecdsa-384", "rsa"];
+if (!in_array($v_key_algo, $valid_key_algos, true)) {
+	$_SESSION["error_msg"] = _("Invalid key algorithm selected.");
+	render_page($user, $TAB, "generate_ssl");
+	unset($_SESSION["error_msg"]);
+	exit();
+}
 
 // Check for errors
 if (!empty($errors[0])) {
@@ -86,6 +96,7 @@ $v_country = quoteshellarg($_POST["v_country"]);
 $v_state = quoteshellarg($_POST["v_state"]);
 $v_locality = quoteshellarg($_POST["v_locality"]);
 $v_org = quoteshellarg($_POST["v_org"]);
+$v_key_algo = quoteshellarg($v_key_algo);
 
 exec(
 	HESTIA_CMD .
@@ -103,7 +114,8 @@ exec(
 		$v_org .
 		" IT " .
 		$v_aliases .
-		" json",
+		" json " .
+		$v_key_algo,
 	$output,
 	$return_var,
 );
@@ -115,6 +127,7 @@ $v_country = $_POST["v_country"];
 $v_state = $_POST["v_state"];
 $v_locality = $_POST["v_locality"];
 $v_org = $_POST["v_org"];
+$v_key_algo = $_POST["v_key_algo"] ?? "ecdsa-256";
 
 // Check return code
 if ($return_var != 0) {

@@ -1,244 +1,304 @@
 <?php
+use function Hestiacp\quoteshellarg\quoteshellarg;
+
 ob_start();
-include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
+$TAB = "WEB";
 
-if (empty($_SESSION['user'])) {
-    header("Location: /login/");
-    exit;
+// Main include
+include $_SERVER["DOCUMENT_ROOT"] . "/inc/main.php";
+
+// Set user
+$user_plain = $_SESSION["user"];
+if (!empty($_SESSION["look"])) {
+	$user_plain = $_SESSION["look"];
+}
+if ($_SESSION["userContext"] === "admin" && !empty($_GET["user"])) {
+	$user_plain = $_GET["user"];
+}
+if ($_SESSION["userContext"] === "admin" && !empty($_POST["v_user"])) {
+	$user_plain = $_POST["v_user"];
 }
 
-$user = !empty($_SESSION['look']) ? $_SESSION['look'] : $_SESSION['user'];
-$TAB = 'NODEJS';
-$msg = '';
-$error = '';
+// Check selected domain
+$v_domain = !empty($_GET["domain"]) ? trim($_GET["domain"]) : (!empty($_POST["v_domain"]) ? trim($_POST["v_domain"]) : "");
 
-// AJAX Endpoint for directory scaffolding
-if (!empty($_GET['ajax']) && $_GET['ajax'] === 'create_app') {
-    header('Content-Type: application/json');
-    $sel_domain = $_GET['domain'] ?? '';
-    if (empty($sel_domain)) {
-        echo json_encode(['success' => false]);
-        exit;
-    }
-    exec(HESTIA_CMD . "v-node-manager create_app " . escapeshellarg($user) . " " . escapeshellarg($sel_domain), $out, $res);
-    echo json_encode(['success' => ($res === 0), 'path' => "/home/$user/web/$sel_domain/public_html/app"]);
-    exit;
+// If admin and domain is given, auto-resolve owner user to ensure correct permissions
+if (!empty($v_domain) && $_SESSION["userContext"] === "admin") {
+	exec(HESTIA_CMD . "v-search-domain-owner " . quoteshellarg($v_domain) . " web", $owner_out, $owner_res);
+	if ($owner_res === 0 && !empty($owner_out[0])) {
+		$user_plain = trim($owner_out[0]);
+	}
 }
 
-// Multi-Language Strings
-$lang = $_SESSION['language'] ?? 'en';
-$i18n = [
-    'en' => [
-        'title' => 'Node.js Manager', 'user' => 'User', 'back' => 'Back', 'refresh' => 'Refresh',
-        'node_v' => 'Node.js Version', 'npm_v' => 'NPM Version', 'pm2_v' => 'PM2 Engine', 'active_apps' => 'Active Apps',
-        'app_name' => 'Application (Name)', 'status' => 'Status', 'cpu' => 'CPU', 'ram' => 'RAM', 'uptime' => 'Uptime',
-        'manage' => 'Manage', 'no_apps' => 'No active services found', 'add_new' => 'Connect New Service',
-        'select_domain' => 'Select Domain:', 'port' => 'Internal Port (Free):', 'app_path' => 'Project Path:',
-        'entry_file' => 'Main File (Entry):', 'btn_run' => 'Run & Reverse Proxy', 'btn_create' => '+ Create app folder',
-        'btn_fm' => 'File Manager', 'path_hint' => 'Leave empty or click "+ Create" to generate with correct permissions.',
-        'alert_domain' => 'Please select a domain first!', 'alert_created' => 'Folder /public_html/app created successfully!',
-        'err_token' => 'Invalid Security Token!', 'err_req' => 'Domain and port are required!', 'err_used' => 'Port is already in use!',
-        'msg_success' => 'Operation completed successfully!', 'confirm_del' => 'Are you sure you want to delete?'
-    ],
-    'ka' => [
-        'title' => 'Node.js მენეჯერი', 'user' => 'მომხმარებელი', 'back' => 'უკან', 'refresh' => 'განახლება',
-        'node_v' => 'Node.js ვერსია', 'npm_v' => 'NPM ვერსია', 'pm2_v' => 'PM2 ძრავი', 'active_apps' => 'აქტიური აპები',
-        'app_name' => 'აპლიკაცია (სახელი)', 'status' => 'სტატუსი', 'cpu' => 'CPU', 'ram' => 'RAM', 'uptime' => 'Uptime',
-        'manage' => 'მართვა', 'no_apps' => 'აქტიური სერვისები არ მოიძებნა', 'add_new' => 'ახალი სერვისის დაკავშირება',
-        'select_domain' => 'აირჩიეთ დომენი:', 'port' => 'შიდა პორტი (თავისუფალი):', 'app_path' => 'პროექტის გზა:',
-        'entry_file' => 'მთავარი ფაილი (Entry):', 'btn_run' => 'გაშვება და Reverse Proxy', 'btn_create' => '+ app შექმნა',
-        'btn_fm' => 'ფაილ მენეჯერი', 'path_hint' => 'დატოვეთ ცარიელი ან დააჭირეთ "+ app შექმნა"-ს ავტომატურად შესაქმნელად.',
-        'alert_domain' => 'გთხოვთ ჯერ აირჩიოთ დომენი!', 'alert_created' => 'საქაღალდე /public_html/app წარმატებით შეიქმნა!',
-        'err_token' => 'უსაფრთხოების ტოკენის შეცდომა!', 'err_req' => 'დომენი და პორტი სავალდებულოა!', 'err_used' => 'პორტი უკვე დაკავებულია!',
-        'msg_success' => 'ოპერაცია წარმატებით შესრულდა!', 'confirm_del' => 'დარწმუნებული ხართ, რომ გსურთ წაშლა?'
-    ]
-];
-$t = (strpos($lang, 'ka') !== false) ? $i18n['ka'] : $i18n['en'];
+$user = quoteshellarg($user_plain);
 
-function getFirstFreePort($start = 3000) {
-    for ($p = $start; $p <= 65535; $p++) {
-        $fp = @fsockopen('127.0.0.1', $p, $e, $es, 0.05);
-        if (!$fp) return $p;
-        fclose($fp);
-    }
-    return 3000;
+function parse_pm2_json_output($raw) {
+	if (empty($raw)) return [];
+	$str = is_array($raw) ? implode("\n", $raw) : $raw;
+	$decoded = json_decode($str, true);
+	if (is_array($decoded)) return $decoded;
+
+	if (preg_match('/(\[\s*\{.*\}\s*\]|\[\s*\])/s', $str, $matches)) {
+		$decoded = json_decode($matches[1], true);
+		if (is_array($decoded)) return $decoded;
+	}
+	return [];
 }
 
-$suggested_port = getFirstFreePort(3000);
-$node_v = trim(shell_exec('node -v 2>/dev/null') ?? 'N/A');
-$npm_v = trim(shell_exec('npm -v 2>/dev/null') ?? 'N/A');
-$pm2_v = preg_match('/([0-9]+\.[0-9]+\.[0-9]+)/', shell_exec('pm2 -v 2>/dev/null'), $m) ? $m[1] : 'Active';
+// AJAX Endpoints
+if (!empty($_GET["ajax"])) {
+	header("Content-Type: application/json");
+	$ajax_type = $_GET["ajax"];
 
-// Process Actions
-if (!empty($_GET['action']) && !empty($_GET['domain'])) {
-    if (empty($_SESSION['token']) || !hash_equals($_SESSION['token'], $_GET['token'] ?? '')) {
-        $error = $t['err_token'];
-    } else {
-        exec(HESTIA_CMD . "v-node-manager " . escapeshellarg($_GET['action']) . " " . escapeshellarg($user) . " " . escapeshellarg($_GET['domain']));
-        header("Location: /add/node/?done=1");
-        exit;
-    }
-}
-if (!empty($_GET['done'])) $msg = $t['msg_success'];
+	if ($ajax_type === "create_app") {
+		$sel_domain = $_GET["domain"] ?? "";
+		if (empty($sel_domain) || $read_only === true) {
+			echo json_encode(["success" => false]);
+			exit();
+		}
+		exec(HESTIA_CMD . "v-node-manager create_app " . $user . " " . quoteshellarg($sel_domain), $out, $res);
+		echo json_encode([
+			"success" => ($res === 0),
+			"path" => "/home/" . $user_plain . "/web/" . $sel_domain . "/public_html/app"
+		]);
+		exit();
+	}
 
-// Add New App
-if (!empty($_POST['btn_add'])) {
-    if (empty($_SESSION['token']) || !hash_equals($_SESSION['token'], $_POST['token'] ?? '')) {
-        $error = $t['err_token'];
-    } else {
-        $r_dom = trim($_POST['v_domain']);
-        $r_port = intval($_POST['v_port']);
-        $r_path = trim($_POST['v_path']);
-        $r_entry = trim($_POST['v_entry']);
-        $tgt = !empty($r_path) ? rtrim($r_path, '/') : "/home/$user/web/$r_dom/public_html/app";
+	if ($ajax_type === "get_stats") {
+		exec(HESTIA_CMD . "v-node-manager list " . $user, $pm2_raw);
+		$raw_apps = parse_pm2_json_output($pm2_raw);
+		$formatted = [];
+		if (is_array($raw_apps)) {
+			foreach ($raw_apps as $a) {
+				$uptime_min = isset($a["pm2_env"]["pm_uptime"]) ? round((time() - ($a["pm2_env"]["pm_uptime"] / 1000)) / 60) : 0;
+				$uptime_str = ($uptime_min >= 60) ? (round($uptime_min / 60, 1) . " hrs") : ($uptime_min . " min");
+				$formatted[] = [
+					"name" => $a["name"] ?? "",
+					"status" => $a["pm2_env"]["status"] ?? "unknown",
+					"cpu" => ($a["monit"]["cpu"] ?? 0) . "%",
+					"memory" => round(($a["monit"]["memory"] ?? 0) / 1024 / 1024, 1) . " MB",
+					"uptime" => $uptime_str,
+					"pid" => $a["pid"] ?? "-"
+				];
+			}
+		}
+		echo json_encode(["success" => true, "apps" => $formatted]);
+		exit();
+	}
 
-        if (empty($r_dom) || empty($r_port)) {
-            $error = $t['err_req'];
-        } elseif (is_resource(@fsockopen('127.0.0.1', $r_port, $e, $es, 0.1))) {
-            $error = $t['err_used'];
-        } else {
-            exec(HESTIA_CMD . "v-node-manager add " . escapeshellarg($user) . " " . escapeshellarg($r_dom) . " $r_port " . escapeshellarg($tgt) . " " . escapeshellarg($r_entry), $out, $res);
-            if ($res === 0) {
-                $msg = $t['msg_success'];
-                $suggested_port = getFirstFreePort($r_port + 1);
-            } else {
-                $error = implode(" ", $out);
-            }
-        }
-    }
-}
+	if ($ajax_type === "get_logs") {
+		$log_domain = $_GET["domain"] ?? "";
+		$lines = intval($_GET["lines"] ?? 100);
+		$type = in_array($_GET["type"] ?? "all", ["all", "out", "err"]) ? $_GET["type"] : "all";
+		if (empty($log_domain)) {
+			echo json_encode(["success" => false, "logs" => "Domain is required"]);
+			exit();
+		}
+		exec(HESTIA_CMD . "v-node-manager logs " . $user . " " . quoteshellarg($log_domain) . " " . quoteshellarg($lines) . " " . quoteshellarg($type), $out, $res);
+		echo json_encode(["success" => ($res === 0), "logs" => implode("\n", $out)]);
+		exit();
+	}
 
-exec(HESTIA_CMD . "v-node-manager list " . escapeshellarg($user), $pm2_raw);
-$pm2_apps = (!empty($pm2_raw)) ? json_decode(implode('', $pm2_raw), true) : [];
-exec(HESTIA_CMD . "v-list-web-domains " . escapeshellarg($user) . " json", $dom_raw);
-$domains = json_decode(implode('', $dom_raw), true);
+	if ($ajax_type === "ajax_action" && $read_only !== true) {
+		$token = $_GET["token"] ?? "";
+		if (empty($token) || $token !== $_SESSION["token"]) {
+			echo json_encode(["success" => false, "message" => _("Invalid security token.")]);
+			exit();
+		}
+		$action = $_GET["action"] ?? "";
+		$act_domain = $_GET["domain"] ?? "";
+		if (in_array($action, ["restart", "stop", "delete"])) {
+			exec(HESTIA_CMD . "v-node-manager " . quoteshellarg($action) . " " . $user . " " . quoteshellarg($act_domain), $out, $res);
+			echo json_encode([
+				"success" => ($res === 0),
+				"message" => ($res === 0) ? sprintf(_("Action '%s' completed successfully."), htmlspecialchars($action)) : implode(" ", $out)
+			]);
+			exit();
+		}
+		echo json_encode(["success" => false, "message" => _("Invalid action.")]);
+		exit();
+	}
 
-include($_SERVER['DOCUMENT_ROOT']."/templates/header.php");
-?>
+	if ($ajax_type === "npm_install" && $read_only !== true) {
+		$inst_domain = $_GET["domain"] ?? "";
+		$inst_path = $_GET["path"] ?? "";
+		if (empty($inst_domain)) {
+			echo json_encode(["success" => false, "output" => _("Domain is required.")]);
+			exit();
+		}
+		exec(HESTIA_CMD . "v-node-manager npm_install " . $user . " " . quoteshellarg($inst_domain) . " 0 " . quoteshellarg($inst_path), $out, $res);
+		echo json_encode([
+			"success" => ($res === 0),
+			"output" => !empty($out) ? implode("\n", $out) : "npm install completed."
+		]);
+		exit();
+	}
 
-<style>
-.node-dashboard { padding: 24px; max-width: 1400px; margin: 0 auto; }
-.node-header { display: flex; justify-content: space-between; margin-bottom: 24px; align-items: center; }
-.node-header-title { font-size: 22px; font-weight: 700; margin: 0; display: flex; align-items: center; gap: 12px; }
-.node-btn { display: inline-flex; align-items: center; gap: 8px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; padding: 8px 16px; border: none; text-decoration: none; transition: 0.2s; }
-.btn-outline { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); color: inherit; }
-.btn-outline:hover { background: rgba(255,255,255,0.15); color: #fff; }
-.node-stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin-bottom: 28px; }
-.node-stat-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 18px; display: flex; gap: 16px; align-items: center; }
-.node-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; margin-bottom: 28px; }
-.node-card-header { padding: 18px 22px; border-bottom: 1px solid rgba(255,255,255,0.08); font-weight: 600; font-size: 15px; }
-.node-table { width: 100%; border-collapse: collapse; text-align: left; }
-.node-table th { padding: 12px 20px; font-size: 12px; opacity: 0.6; border-bottom: 1px solid rgba(255,255,255,0.08); }
-.node-table td { padding: 14px 20px; font-size: 13px; border-bottom: 1px solid rgba(255,255,255,0.04); }
-.node-input-group label { display: block; font-size: 12px; font-weight: 600; opacity: 0.8; margin-bottom: 8px; }
-.node-input-group input, .node-input-group select { width: 100%; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); padding: 10px 14px; border-radius: 8px; color: inherit; box-sizing: border-box; }
-.btn-fm { background: rgba(46,204,113,0.15); color: #2ecc71; border: 1px solid #2ecc71; }
-.btn-fm:hover { background: #2ecc71; color: #fff; }
-.btn-create { background: rgba(52,152,219,0.15); color: #3498db; border: 1px solid #3498db; }
-.btn-create:hover { background: #3498db; color: #fff; }
-</style>
-
-<div class="app-content">
-    <div class="node-dashboard">
-        <div class="node-header">
-            <div style="display: flex; gap: 16px; align-items: center;">
-                <a href="/list/web/" class="node-btn btn-outline"><i class="fas fa-chevron-left"></i> <?= $t['back'] ?></a>
-                <h1 class="node-header-title"><i class="fab fa-node-js" style="color:#68a063;"></i> <?= $t['title'] ?> <span style="font-size:13px;opacity:0.6;font-weight:normal;">(<?= $t['user'] ?>: <?= htmlspecialchars($user) ?>)</span></h1>
-            </div>
-            <a href="/add/node/" class="node-btn btn-outline"><i class="fas fa-sync-alt"></i> <?= $t['refresh'] ?></a>
-        </div>
-
-        <div class="node-stats-grid">
-            <div class="node-stat-card"><div style="font-size:24px;color:#68a063;"><i class="fab fa-node-js"></i></div><div><div style="font-size:11px;opacity:0.6;"><?= $t['node_v'] ?></div><div style="font-size:18px;font-weight:bold;"><?= $node_v ?></div></div></div>
-            <div class="node-stat-card"><div style="font-size:24px;color:#cb3837;"><i class="fab fa-npm"></i></div><div><div style="font-size:11px;opacity:0.6;"><?= $t['npm_v'] ?></div><div style="font-size:18px;font-weight:bold;">v<?= $npm_v ?></div></div></div>
-            <div class="node-stat-card"><div style="font-size:24px;color:#3498db;"><i class="fas fa-microchip"></i></div><div><div style="font-size:11px;opacity:0.6;"><?= $t['pm2_v'] ?></div><div style="font-size:18px;font-weight:bold;">v<?= $pm2_v ?></div></div></div>
-            <div class="node-stat-card"><div style="font-size:24px;color:#2ecc71;"><i class="fas fa-cubes"></i></div><div><div style="font-size:11px;opacity:0.6;"><?= $t['active_apps'] ?></div><div style="font-size:18px;font-weight:bold;"><?= is_array($pm2_apps)?count($pm2_apps):0 ?></div></div></div>
-        </div>
-
-        <?php if($msg): ?><div style="color:#2ecc71; background:rgba(46,204,113,0.1); padding:12px 18px; border-radius:8px; margin-bottom:20px;"><i class="fas fa-check"></i> <?= $msg ?></div><?php endif; ?>
-        <?php if($error): ?><div style="color:#e74c3c; background:rgba(231,76,60,0.1); padding:12px 18px; border-radius:8px; margin-bottom:20px;"><i class="fas fa-exclamation-triangle"></i> <?= $error ?></div><?php endif; ?>
-
-        <div class="node-card">
-            <div class="node-card-header"><i class="fas fa-layer-group" style="color:#3498db;"></i> <?= $t['active_apps'] ?></div>
-            <table class="node-table">
-                <thead><tr><th><?= $t['app_name'] ?></th><th><?= $t['status'] ?></th><th><?= $t['cpu'] ?></th><th><?= $t['ram'] ?></th><th><?= $t['uptime'] ?></th><th style="text-align:right;"><?= $t['manage'] ?></th></tr></thead>
-                <tbody>
-                    <?php if(empty($pm2_apps)): ?><tr><td colspan="6" style="text-align:center;padding:30px;opacity:0.5;"><?= $t['no_apps'] ?></td></tr>
-                    <?php else: foreach($pm2_apps as $a): $n=$a['name']; $s=$a['pm2_env']['status']; ?>
-                    <tr>
-                        <td style="font-weight:bold;"><i class="fab fa-node-js" style="color:#68a063;"></i> <?= htmlspecialchars($n) ?></td>
-                        <td><span style="color:<?= $s==='online'?'#2ecc71':'#e74c3c' ?>;text-transform:uppercase;font-size:11px;font-weight:bold;"><?= $s ?></span></td>
-                        <td><?= $a['monit']['cpu'] ?? 0 ?>%</td>
-                        <td><?= round(($a['monit']['memory']??0)/1024/1024,1) ?> MB</td>
-                        <td><?= isset($a['pm2_env']['pm_uptime']) ? round((time() - ($a['pm2_env']['pm_uptime']/1000))/60).' min' : '-' ?></td>
-                        <td style="text-align:right;">
-                            <a href="?action=restart&domain=<?= urlencode($n) ?>&token=<?= $_SESSION['token'] ?>" style="color:#3498db;margin:0 8px;"><i class="fas fa-redo"></i></a>
-                            <a href="?action=stop&domain=<?= urlencode($n) ?>&token=<?= $_SESSION['token'] ?>" style="color:#f39c12;margin:0 8px;"><i class="fas fa-pause"></i></a>
-                            <a href="?action=delete&domain=<?= urlencode($n) ?>&token=<?= $_SESSION['token'] ?>" onclick="return confirm('<?= $t['confirm_del'] ?>')" style="color:#e74c3c;margin:0 8px;"><i class="fas fa-trash"></i></a>
-                        </td>
-                    </tr>
-                    <?php endforeach; endif; ?>
-                </tbody>
-            </table>
-        </div>
-
-        <div class="node-card" style="max-width:850px;">
-            <div class="node-card-header"><i class="fas fa-plus-circle" style="color:#2ecc71;"></i> <?= $t['add_new'] ?></div>
-            <div style="padding:22px;">
-                <form method="post" action="/add/node/">
-                    <input type="hidden" name="token" value="<?= $_SESSION['token'] ?>" />
-                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
-                        <div class="node-input-group">
-                            <label><?= $t['select_domain'] ?></label>
-                            <select name="v_domain" id="v_domain" required>
-                                <option value="">-- select --</option>
-                                <?php if(!empty($domains)) foreach($domains as $d => $v): ?><option value="<?= $d ?>"><?= $d ?></option><?php endforeach; ?>
-                            </select>
-                        </div>
-                        <div class="node-input-group"><label><?= $t['port'] ?></label><input type="number" name="v_port" value="<?= $suggested_port ?>" required></div>
-                    </div>
-
-                    <div class="node-input-group" style="margin-bottom:16px;">
-                        <label><?= $t['app_path'] ?></label>
-                        <div style="display:flex;gap:8px;">
-                            <input type="text" id="v_path" name="v_path" placeholder="/home/<?= htmlspecialchars($user) ?>/web/domain/public_html/app" style="flex:1;">
-                            <button type="button" onclick="createAppDir()" class="node-btn btn-create"><i class="fas fa-folder-plus"></i> <?= $t['btn_create'] ?></button>
-                            <button type="button" onclick="openFM()" class="node-btn btn-fm"><i class="fas fa-folder-open"></i> <?= $t['btn_fm'] ?></button>
-                        </div>
-                        <small style="opacity:0.6;margin-top:6px;display:block;"><?= $t['path_hint'] ?></small>
-                    </div>
-
-                    <div class="node-input-group" style="margin-bottom:24px;">
-                        <label><?= $t['entry_file'] ?></label>
-                        <input type="text" name="v_entry" value="app.js" required>
-                    </div>
-
-                    <button type="submit" name="btn_add" value="1" class="node-btn" style="background:#27ae60;color:#fff;font-size:14px;"><i class="fas fa-plug"></i> <?= $t['btn_run'] ?></button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script>
-function getDomain() { return document.getElementById('v_domain').value; }
-
-function createAppDir() {
-    const dom = getDomain();
-    if (!dom) return alert("<?= $t['alert_domain'] ?>");
-    fetch(`?ajax=create_app&domain=${encodeURIComponent(dom)}`).then(r=>r.json()).then(d=>{
-        if(d.success) {
-            document.getElementById('v_path').value = d.path;
-            alert("<?= $t['alert_created'] ?>");
-        }
-    });
+	if ($ajax_type === "inspect_app") {
+		$insp_domain = $_GET["domain"] ?? "";
+		$insp_path = $_GET["path"] ?? "";
+		if (empty($insp_domain)) {
+			echo json_encode(["exists" => false, "dir_exists" => false]);
+			exit();
+		}
+		exec(HESTIA_CMD . "v-node-manager inspect_app " . $user . " " . quoteshellarg($insp_domain) . " 0 " . quoteshellarg($insp_path), $out, $res);
+		$parsed = !empty($out) ? json_decode(implode("", $out), true) : ["exists" => false];
+		if (!is_array($parsed)) {
+			$parsed = ["exists" => false];
+		}
+		if (!isset($parsed["dir_exists"])) {
+			$check_p = $insp_path ?: "/home/" . $user_plain . "/web/" . $insp_domain . "/public_html/app";
+			$parsed["dir_exists"] = is_dir($check_p);
+		}
+		echo json_encode($parsed);
+		exit();
+	}
 }
 
-function openFM() {
-    const dom = getDomain();
-    const url = dom ? `/fm/?path=/web/${encodeURIComponent(dom)}/public_html/app` : `/fm/`;
-    window.open(url, '_blank');
-}
-</script>
+// Handle fallback application control actions (restart, stop, delete)
+if (!empty($_GET["action"]) && !empty($_GET["domain"]) && $read_only !== true) {
+	check_csrf_token();
+	$act_domain = $_GET["domain"];
+	$action = $_GET["action"];
 
-<?php include($_SERVER['DOCUMENT_ROOT']."/templates/footer.php"); ?>
+	if (in_array($action, ["restart", "stop", "delete"])) {
+		exec(HESTIA_CMD . "v-node-manager " . quoteshellarg($action) . " " . $user . " " . quoteshellarg($act_domain), $out, $res);
+		if ($res === 0) {
+			if ($action === "delete") {
+				$_SESSION["ok_msg"] = sprintf(_("Node.js application '%s' was deleted successfully."), htmlspecialchars($act_domain));
+			} elseif ($action === "restart") {
+				$_SESSION["ok_msg"] = sprintf(_("Node.js application '%s' was restarted successfully."), htmlspecialchars($act_domain));
+			} elseif ($action === "stop") {
+				$_SESSION["ok_msg"] = sprintf(_("Node.js application '%s' was stopped successfully."), htmlspecialchars($act_domain));
+			}
+		} else {
+			$_SESSION["error_msg"] = !empty($out) ? implode(" ", $out) : _("An error occurred executing the action.");
+		}
+	}
+	header("Location: /add/node/" . (!empty($v_domain) ? "?domain=" . urlencode($v_domain) : ""));
+	exit();
+}
+
+// Handle add application form submission
+if (($_SERVER["REQUEST_METHOD"] === "POST" || !empty($_POST["btn_add"])) && $read_only !== true) {
+	verify_csrf($_POST);
+
+	$v_domain = $_POST["v_domain"] ?? "";
+	$v_port = intval($_POST["v_port"] ?? 3000);
+	$v_path = trim($_POST["v_path"] ?? "");
+	$v_entry = trim($_POST["v_entry"] ?? "app.js");
+
+	if (empty($v_domain) || empty($v_port) || empty($v_path) || empty($v_entry)) {
+		$_SESSION["error_msg"] = _("All fields are required.");
+	} else {
+		exec(
+			HESTIA_CMD . "v-node-manager add " .
+			$user . " " .
+			quoteshellarg($v_domain) . " " .
+			quoteshellarg($v_port) . " " .
+			quoteshellarg($v_path) . " " .
+			quoteshellarg($v_entry),
+			$out,
+			$res
+		);
+
+		if ($res === 0) {
+			$_SESSION["ok_msg"] = sprintf(_("Node.js application '%s' deployed and started on port %s."), htmlspecialchars($v_domain), htmlspecialchars($v_port));
+			header("Location: /add/node/?domain=" . urlencode($v_domain));
+			exit();
+		} else {
+			$_SESSION["error_msg"] = !empty($out) ? implode(" ", $out) : _("Failed to start application.");
+		}
+	}
+}
+
+// Check Node.js and PM2 environment
+exec(HESTIA_CMD . "v-node-manager check_env " . $user, $check_out, $check_res);
+$node_installed = ($check_res === 0);
+$env_data = !empty($check_out) ? json_decode(implode("", $check_out), true) : [];
+
+// Get versions
+$node_v = $env_data["node"] ?? "N/A";
+$npm_v = $env_data["npm"] ?? "N/A";
+$pm2_v = $env_data["pm2"] ?? "N/A";
+
+// Clean up versions if needed
+if ($pm2_v !== "N/A" && preg_match('/(\d+\.\d+\.\d+)/', $pm2_v, $m)) {
+	$pm2_v = $m[1];
+}
+if ($node_v !== "N/A" && preg_match('/v?(\d+\.\d+\.\d+)/', $node_v, $m)) {
+	$node_v = 'v' . $m[1];
+}
+if ($npm_v !== "N/A" && preg_match('/(\d+\.\d+\.\d+)/', $npm_v, $m)) {
+	$npm_v = $m[1];
+}
+
+// Fallback if any version remained N/A but node is installed
+if ($node_installed && ($node_v === "N/A" || $pm2_v === "N/A" || $npm_v === "N/A")) {
+	if ($node_v === "N/A") {
+		$nv = @shell_exec("PATH=\$PATH:/usr/local/bin:/usr/bin node -v 2>/dev/null");
+		if ($nv && preg_match('/v?(\d+\.\d+\.\d+)/', $nv, $m)) $node_v = 'v' . $m[1];
+	}
+	if ($npm_v === "N/A") {
+		$npv = @shell_exec("PATH=\$PATH:/usr/local/bin:/usr/bin npm -v 2>/dev/null");
+		if ($npv && preg_match('/(\d+\.\d+\.\d+)/', $npv, $m)) $npm_v = $m[1];
+	}
+	if ($pm2_v === "N/A") {
+		$pv = @shell_exec("PATH=\$PATH:/usr/local/bin:/usr/bin pm2 -v 2>/dev/null");
+		if ($pv && preg_match('/(\d+\.\d+\.\d+)/', $pv, $m)) {
+			$pm2_v = $m[1];
+		} else {
+			// Try reading pm2 package.json directly
+			$pm2_pkg = @file_get_contents('/usr/lib/node_modules/pm2/package.json');
+			if (!$pm2_pkg) $pm2_pkg = @file_get_contents('/usr/local/lib/node_modules/pm2/package.json');
+			if ($pm2_pkg) {
+				$pkg_json = json_decode($pm2_pkg, true);
+				if (!empty($pkg_json['version'])) $pm2_v = $pkg_json['version'];
+			}
+		}
+	}
+}
+
+// Get user domains
+exec(HESTIA_CMD . "v-list-web-domains " . $user . " json", $dom_raw);
+$user_domains = !empty($dom_raw) ? json_decode(implode("", $dom_raw), true) : [];
+if (!empty($v_domain) && !isset($user_domains[$v_domain])) {
+	$user_domains[$v_domain] = ["DOMAIN" => $v_domain];
+}
+
+// Check if default app directory already exists
+$app_dir_exists = false;
+if (!empty($v_domain)) {
+	$default_app_dir = "/home/" . $user_plain . "/web/" . $v_domain . "/public_html/app";
+	$app_dir_exists = is_dir($default_app_dir);
+}
+
+// Get PM2 processes list
+$pm2_apps = [];
+if ($node_installed) {
+	exec(HESTIA_CMD . "v-node-manager list " . $user, $pm2_raw);
+	$pm2_apps = parse_pm2_json_output($pm2_raw);
+	if (!is_array($pm2_apps)) {
+		$pm2_apps = [];
+	}
+}
+
+// Suggested Port discovery (3000+)
+$used_ports = [];
+foreach ($pm2_apps as $app) {
+	if (isset($app["pm2_env"]["PORT"])) {
+		$used_ports[] = intval($app["pm2_env"]["PORT"]);
+	}
+}
+$suggested_port = 3000;
+while (in_array($suggested_port, $used_ports)) {
+	$suggested_port++;
+}
+
+// Render Page
+render_page($user, $TAB, "setup_node");
+
+// Flush session messages
+unset($_SESSION["error_msg"]);
+unset($_SESSION["ok_msg"]);
+

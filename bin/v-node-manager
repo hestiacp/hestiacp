@@ -1,0 +1,73 @@
+#!/bin/bash
+# ==============================================================================
+# Hestia Control Panel - Node.js Application Manager CLI
+# ==============================================================================
+
+action=$1
+user=$2
+domain=$3
+port=$4
+app_path=$5
+entry_file=$6
+
+# Source Hestia functions
+# shellcheck source=/usr/local/hestia/func/main.sh
+source /usr/local/hestia/func/main.sh
+
+case "$action" in
+    add)
+        [ -z "$user" ] || [ -z "$domain" ] || [ -z "$port" ] || [ -z "$app_path" ] || [ -z "$entry_file" ] && exit 1
+
+        # Start App under isolated user
+        runuser -l "$user" -c "cd '$app_path' && PORT=$port pm2 start '$entry_file' --name '$domain' --update-env"
+        runuser -l "$user" -c "pm2 save"
+
+        # Create isolated port include
+        mkdir -p /home/"$user"/conf/web/"$domain"
+        echo "proxy_pass http://127.0.0.1:$port;" > /home/"$user"/conf/web/"$domain"/node_port.conf
+        chown "$user":"$user" /home/"$user"/conf/web/"$domain"/node_port.conf
+        chmod 644 /home/"$user"/conf/web/"$domain"/node_port.conf
+
+        # Switch template
+        $HESTIA/bin/v-change-web-domain-proxy-tpl "$user" "$domain" "node" "yes"
+        exit 0
+        ;;
+
+    delete)
+        [ -z "$user" ] || [ -z "$domain" ] && exit 1
+        runuser -l "$user" -c "pm2 delete '$domain'"
+        runuser -l "$user" -c "pm2 save"
+        rm -f /home/"$user"/conf/web/"$domain"/node_port.conf
+        $HESTIA/bin/v-change-web-domain-proxy-tpl "$user" "$domain" "default" "yes"
+        exit 0
+        ;;
+
+    restart)
+        [ -z "$user" ] || [ -z "$domain" ] && exit 1
+        runuser -l "$user" -c "pm2 restart '$domain'"
+        exit 0
+        ;;
+
+    stop)
+        [ -z "$user" ] || [ -z "$domain" ] && exit 1
+        runuser -l "$user" -c "pm2 stop '$domain'"
+        exit 0
+        ;;
+
+    list)
+        [ -z "$user" ] && exit 1
+        runuser -l "$user" -c "pm2 jlist"
+        exit 0
+        ;;
+
+    create_app)
+        [ -z "$user" ] || [ -z "$domain" ] && exit 1
+        mkdir -p /home/"$user"/web/"$domain"/public_html/app
+        chown -R "$user":"$user" /home/"$user"/web/"$domain"/public_html/app
+        exit 0
+        ;;
+
+    *)
+        exit 1
+        ;;
+esac

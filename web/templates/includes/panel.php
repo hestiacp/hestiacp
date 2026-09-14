@@ -348,6 +348,24 @@
 					<?php } ?>
 				<?php } ?>
 
+<!-- Node.js tab -->
+                <?php if (isset($_SESSION["WEB_SYSTEM"]) && !empty($_SESSION["WEB_SYSTEM"])) { ?>
+                    <li class="main-menu-item">
+                        <a class="main-menu-item-link <?php if ($TAB == "NODEJS") { echo "active"; } ?>" href="/add/node/" title="<?= _("Node.js Applications") ?>">
+                            <p class="main-menu-item-label"><?= _("NODE.JS") ?><i class="fab fa-node-js" style="color: #68a063;"></i></p>
+                            <ul class="main-menu-stats">
+                                <li>
+                                    <?= _("Apps") ?>: <span class="u-text-bold"><?= _("Manage") ?></span>
+                                </li>
+                                <li>
+                                    <?= _("Engine") ?>: PM2
+                                </li>
+                            </ul>
+                        </a>
+                    </li>
+                <?php } ?>
+
+
 				<!-- DNS tab -->
 				<?php if (isset($_SESSION["DNS_SYSTEM"]) && !empty($_SESSION["DNS_SYSTEM"])) { ?>
 					<?php if ($panel[$user]["DNS_DOMAINS"] != "0") { ?>

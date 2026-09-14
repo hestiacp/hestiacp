@@ -43,7 +43,6 @@ export const teamMembers = [
 			{ icon: globeIcon, link: 'https://imjuniper.fyi' },
 		],
 	},
-
 	{
 		avatar:
 			'https://cdn.discordapp.com/avatars/737905427097845780/32452f630dd8684ed7c580806ccbee09.webp',

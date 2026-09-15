@@ -586,10 +586,23 @@ if [ -n "$DB_SYSTEM" ] && [ "$DB" != '*' ]; then
 				fi
 			done
 
+			user_extended_backup=$(grep "EXTENDED_BACKUP=" $USER_DATA/user.conf 2>/dev/null | cut -f 2 -d \')
+
 			case $TYPE in
-				mysql) dump_mysql_database ;;
+				mysql)
+					if [ "$user_extended_backup" = "yes" ]; then
+						dump_mysql_extended_database "$tmpdir/db/$database"
+						check_result "$?" "extended dump $database failed"
+						echo "$(date "+%F %T") Extended backup enabled for $database" | tee -a $BACKUP/$user.log
+					else
+						dump_mysql_database
+					fi
+					;;
 				pgsql) dump_pgsql_database ;;
 			esac
+			if [ ! -f "$dump" ]; then
+				check_result "$E_NOTEXIST" "database dump file $dump was not created"
+			fi
 
 			# Compress dump
 			if [ "$BACKUP_MODE" = 'zstd' ]; then

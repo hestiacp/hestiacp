@@ -146,9 +146,9 @@ mysql_dump() {
 	if [ -f '/usr/bin/mariadb-dump' ]; then
 		mysqldmp="/usr/bin/mariadb-dump"
 	fi
-	$mysqldmp --defaults-file=$mycnf --single-transaction --routines -r $1 $2 2> $err
+	$mysqldmp --defaults-file=$mycnf --single-transaction --routines --events -r $1 $2 2> $err
 	if [ '0' -ne "$?" ]; then
-		$mysqldmp --defaults-extra-file=$mycnf --single-transaction --routines -r $1 $2 2> $err
+		$mysqldmp --defaults-extra-file=$mycnf --single-transaction --routines --events -r $1 $2 2> $err
 		if [ '0' -ne "$?" ]; then
 			rm -rf $tmpdir
 			if [ "$notify" != 'no' ]; then
@@ -575,7 +575,7 @@ dump_mysql_database() {
 	mysql_query "$query" | grep -v "Grants for" > $grants
 
 	query="SHOW GRANTS FOR '$DBUSER'@'%'"
-	mysql_query "$query" | grep -v "Grants for" > $grants
+	mysql_query "$query" | grep -v "Grants for" >> $grants
 }
 
 # Dump MySQL database (extended)

@@ -596,9 +596,6 @@ cat "${DB}_1-views.sql" >> "$COMBINED_SQL"
 echo "  combining: stored routines"
 cat "${DB}_2-routines.sql" >> "$COMBINED_SQL"
 
-echo "  combining: triggers"
-cat "${DB}_3-triggers.sql" >> "$COMBINED_SQL"
-
 echo "  combining: small tables"
 cat "${DB}_zzz-small-tb-data.sql" >> "$COMBINED_SQL"
 
@@ -609,6 +606,12 @@ for large_data_file in $(ls "${DB}"_*-data.sql 2>/dev/null | grep -v "_zzz-small
     cat "$large_data_file" >> "$COMBINED_SQL"
   fi
 done
+
+# Triggers must be created AFTER the table data is loaded; otherwise the INSERTs
+# above fire them during restore. mysqldump emits triggers after data for the
+# same reason.
+echo "  combining: triggers"
+cat "${DB}_3-triggers.sql" >> "$COMBINED_SQL"
 
 echo "  combining: events"
 cat "${DB}_4-events.sql" >> "$COMBINED_SQL"

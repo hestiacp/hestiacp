@@ -600,8 +600,8 @@ if [ -n "$DB_SYSTEM" ] && [ "$DB" != '*' ]; then
 					;;
 				pgsql) dump_pgsql_database ;;
 			esac
-			if [ ! -f "$dump" ]; then
-				check_result "$E_NOTEXIST" "database dump file $dump was not created"
+			if [ ! -s "$dump" ]; then
+				check_result "$E_NOTEXIST" "database dump file $dump is missing or empty"
 			fi
 
 			# Compress dump

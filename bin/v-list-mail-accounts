@@ -29,7 +29,7 @@ json_list() {
 		"$USER_DATA/mail/$domain.conf" \
 		"$HESTIA/func/object-parser.php" \
 		"$HESTIA_RESERVED_CONF_KEYS" \
-		"$HESTIA_OBJECT_KEY_EXCEPTIONS" <<'EOPHP'
+		"$HESTIA_OBJECT_KEY_EXCEPTIONS" << 'EOPHP'
 <?php
 
 declare(strict_types=1);

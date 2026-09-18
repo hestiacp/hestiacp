@@ -30,7 +30,7 @@ json_list() {
 		"$HESTIA_RESERVED_CONF_KEYS" \
 		"$HESTIA_OBJECT_KEY_EXCEPTIONS" \
 		"$HOMEDIR" \
-		"$user" <<'EOPHP'
+		"$user" << 'EOPHP'
 <?php
 
 declare(strict_types=1);

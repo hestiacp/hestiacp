@@ -188,6 +188,51 @@ function parseObjectKvList(string $value): array
     ) ?: [];
 }
 
+
+function parseObjectKvFile(
+    string $file,
+    array $reserved,
+    array $exceptions
+): array {
+    $lines = file(
+        $file,
+        FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES
+    );
+
+    if ($lines === false) {
+        objectParserFail('Could not read file: ' . $file);
+    }
+
+    $records = [];
+
+    foreach ($lines as $line) {
+        $records[] = parseObjectKvLine(
+            $line,
+            $reserved,
+            $exceptions
+        );
+    }
+
+    return $records;
+}
+
+function objectParserEncodeJson(array $data): string
+{
+    try {
+        return json_encode(
+            (object) $data,
+            JSON_PRETTY_PRINT
+            | JSON_UNESCAPED_SLASHES
+            | JSON_UNESCAPED_UNICODE
+            | JSON_THROW_ON_ERROR
+        ) . PHP_EOL;
+    } catch (JsonException $exception) {
+        objectParserFail(
+            'Could not encode JSON: ' . $exception->getMessage()
+        );
+    }
+}
+
 if (
     PHP_SAPI === 'cli'
     && realpath($_SERVER['SCRIPT_FILENAME'] ?? '') === realpath(__FILE__)

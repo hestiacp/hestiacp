@@ -24,49 +24,83 @@ source_conf "$HESTIA/conf/hestia.conf"
 
 # JSON list function
 json_list() {
-	IFS=$'\n'
-	i=1
-	objects=$(grep DOMAIN $USER_DATA/web.conf | wc -l)
-	echo "{"
-	while read str; do
-		parse_object_kv_list "$str"
-		# Set correct document root path
-		if [ -n "$CUSTOM_DOCROOT" ]; then
-			DOCROOT="$CUSTOM_DOCROOT"
-		else
-			DOCROOT="$HOMEDIR/$user/web/$DOMAIN/public_html/"
-		fi
-		echo -n '    "'$DOMAIN'": {
-        "IP": "'$IP'",
-        "IP6": "'$IP6'",
-        "DOCUMENT_ROOT": "'$DOCROOT'",
-        "U_DISK": "'$U_DISK'",
-        "U_BANDWIDTH": "'$U_BANDWIDTH'",
-        "TPL": "'$TPL'",
-        "ALIAS": "'$ALIAS'",
-        "STATS": "'$STATS'",
-        "STATS_USER": "'$STATS_USER'",
-        "SSL": "'$SSL'",
-        "SSL_HOME": "'$SSL_HOME'",
-        "LETSENCRYPT": "'$LETSENCRYPT'",
-        "FTP_USER": "'$FTP_USER'",
-        "FTP_PATH": "'$FTP_PATH'",
-        "AUTH_USER": "'$AUTH_USER'",
-        "BACKEND": "'$BACKEND'",
-        "PROXY": "'$PROXY'",
-        "PROXY_EXT": "'$PROXY_EXT'",
-        "SUSPENDED": "'$SUSPENDED'",
-        "TIME": "'$TIME'",
-        "DATE": "'$DATE'"
-    }'
-		if [ "$i" -lt "$objects" ]; then
-			echo ','
-		else
-			echo
-		fi
-		((i++))
-	done < <(cat $USER_DATA/web.conf)
-	echo '}'
+	"$HESTIA_PHP" -- \
+		"$USER_DATA/web.conf" \
+		"$HESTIA/func/object-parser.php" \
+		"$HESTIA_RESERVED_CONF_KEYS" \
+		"$HESTIA_OBJECT_KEY_EXCEPTIONS" \
+		"$HOMEDIR" \
+		"$user" <<'EOPHP'
+<?php
+
+declare(strict_types=1);
+
+[
+    $script,
+    $file,
+    $parser,
+    $reservedString,
+    $exceptionsString,
+    $homedir,
+    $user,
+] = $argv;
+
+require $parser;
+
+$records = parseObjectKvFile(
+    $file,
+    parseObjectKvList($reservedString),
+    parseObjectKvList($exceptionsString)
+);
+
+$output = [];
+
+foreach ($records as $record) {
+    $domain = $record['DOMAIN']
+        ?? objectParserFail('Missing DOMAIN in: ' . $file);
+
+    $customDocroot = $record['CUSTOM_DOCROOT'] ?? '';
+
+    $docroot = $customDocroot !== ''
+        ? $customDocroot
+        : rtrim($homedir, '/')
+            . '/'
+            . $user
+            . '/web/'
+            . $domain
+            . '/public_html/';
+
+    $output[$domain] = [
+        'IP' => $record['IP'] ?? '',
+        'IP6' => $record['IP6'] ?? '',
+        'DOCUMENT_ROOT' => $docroot,
+        'U_DISK' => $record['U_DISK'] ?? '',
+        'U_BANDWIDTH' => $record['U_BANDWIDTH'] ?? '',
+        'TPL' => $record['TPL'] ?? '',
+        'ALIAS' => $record['ALIAS'] ?? '',
+        'STATS' => $record['STATS'] ?? '',
+        'STATS_USER' => $record['STATS_USER'] ?? '',
+        'SSL' => $record['SSL'] ?? '',
+        'SSL_HOME' => $record['SSL_HOME'] ?? '',
+        'LETSENCRYPT' => $record['LETSENCRYPT'] ?? '',
+        'FTP_USER' => $record['FTP_USER'] ?? '',
+        'FTP_PATH' => $record['FTP_PATH'] ?? '',
+        'AUTH_USER' => $record['AUTH_USER'] ?? '',
+        'BACKEND' => $record['BACKEND'] ?? '',
+        'PROXY' => $record['PROXY'] ?? '',
+        'PROXY_EXT' => $record['PROXY_EXT'] ?? '',
+        'SUSPENDED' => $record['SUSPENDED'] ?? '',
+        'TIME' => $record['TIME'] ?? '',
+        'DATE' => $record['DATE'] ?? '',
+    ];
+}
+
+echo objectParserEncodeJson($output);
+EOPHP
+
+	check_result "$?" \
+		"Invalid object format in file: $USER_DATA/web.conf" \
+		"$E_INVALID"
 }
 
 # SHELL list function

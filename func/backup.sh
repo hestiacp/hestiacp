@@ -473,14 +473,14 @@ b2_backup() {
 	fi
 
 	# Checking retention
-	backup_list=$(b2 ls --long $BUCKET $user | cut -f 1 -d ' ' 2> /dev/null)
+	backup_list=$(b2 ls --json "b2://$BUCKET/$user" 2> /dev/null | jq -r '.[].fileId' 2> /dev/null)
 	backups_count=$(echo "$backup_list" | wc -l)
 	if [ "$backups_count" -ge "$BACKUPS" ]; then
 		backups_rm_number=$(($backups_count - $BACKUPS))
 		for backup in $(echo "$backup_list" | head -n $backups_rm_number); do
-			backup_file_name=$(b2 get-file-info $backup | grep fileName | cut -f 4 -d '"' 2> /dev/null)
+			backup_file_name=$(b2 file info "b2id://$backup" 2> /dev/null | jq -r '.fileName' 2> /dev/null)
 			echo -e "$(date "+%F %T") Rotated b2 backup: $backup_file_name"
-			b2 delete-file-version $backup > /dev/null 2>&1
+			b2 rm "b2id://$backup" > /dev/null 2>&1
 		done
 	fi
 
@@ -508,7 +508,7 @@ b2_delete() {
 	b2 clear-account > /dev/null 2>&1
 	b2 authorize-account $B2_KEYID $B2_KEY > /dev/null 2>&1
 
-	b2 delete-file-version $1/$2 > /dev/null 2>&1
+	b2 rm b2://$BUCKET/$1/$2 > /dev/null 2>&1
 }
 
 rclone_backup() {

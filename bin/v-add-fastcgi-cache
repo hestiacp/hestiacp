@@ -1,12 +1,18 @@
 #!/bin/bash
 # info: Enable FastCGI cache for nginx
-# options: USER DOMAIN [DURATION] [RESTART]
+# options: USER DOMAIN [DURATION] [RESTART] [IGNORE_TRACKING]
 #
-# example: v-add-fastcgi-cache user domain.tld 30m
+# example: v-add-fastcgi-cache user domain.tld 30m no yes
 #
 # This function enables FastCGI cache for nginx
 # Acceptable values for duration is time in seconds (10s) minutes (10m) or days (10d)
-# Add "yes" as last parameter to restart nginx
+# Add "yes" as 4th parameter to restart nginx
+# Add "yes" as 5th parameter to ignore common tracking GET parameters
+# (utm_*, fbclid, gclid, msclkid, ...) in the cache key. Requests whose query
+# string consists ONLY of tracking parameters are served from the same cache
+# entry as the bare URL. Query strings containing any real parameter keep
+# their own cache entry, so dynamic pages are never served wrong content.
+
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #
@@ -17,6 +23,7 @@ user=$1
 domain=$2
 duration=${3-2m}
 restart=${4-no}
+ignore_tracking=${5-no}
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -30,7 +37,7 @@ source_conf "$HESTIA/conf/hestia.conf"
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'USER DOMAIN [DURATION] [RESTART]'
+check_args '2' "$#" 'USER DOMAIN [DURATION] [RESTART] [IGNORE_TRACKING]'
 is_format_valid 'user' 'domain' 'restart'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
@@ -44,6 +51,11 @@ fi
 
 if [[ "$duration" =~ ^[0].*[s|m|d]$ ]]; then
 	echo "Invalid duration"
+	exit 2
+fi
+
+if [ "$ignore_tracking" != 'yes' ] && [ "$ignore_tracking" != 'no' ]; then
+	echo "Invalid value for IGNORE_TRACKING (yes/no)"
 	exit 2
 fi
 
@@ -64,10 +76,37 @@ if [ "$WEB_SYSTEM" != 'nginx' ]; then
 fi
 
 fastcgi="$HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.fastcgi_cache.conf"
+
+# nginx runtime variables (kept literal in the generated config)
 no_cache='$no_cache'
+scheme='$scheme'
+request_method='$request_method'
+host='$host'
+request_uri='$request_uri'
+fcgi_cache_uri='$fcgi_cache_uri'
+fcgi_path='$fcgi_path'
+
+# Optional cache key override that ignores tracking-only query strings.
+# The key is identical to the stock http-level key except $request_uri is
+# replaced by $fcgi_cache_uri: the original request URI, reduced to its path
+# when the whole query string is made of tracking parameters. The "if" block
+# contains only "set", which is the documented safe use of "if" in nginx.
+# $request_uri is used as the base instead of $uri because $uri is mutated by
+# internal rewrites (try_files -> /index.php), which would collapse every
+# page of a site into a single cache entry.
+tracking_regexp='utm_[a-z0-9_]+|fbclid|gclid|dclid|gbraid|wbraid|msclkid|mc_cid|mc_eid|_ga|_gl|yclid|twclid|ttclid|igshid|srsltid'
+cache_key=''
+if [ "$ignore_tracking" = 'yes' ]; then
+	cache_key="    set $fcgi_cache_uri $request_uri;
+    if ($request_uri ~* \"^(?<fcgi_path>[^?]*)\\?(?:(?:$tracking_regexp)=[^&]*(?:&|\$))+\$\") {
+        set $fcgi_cache_uri $fcgi_path;
+    }
+    fastcgi_cache_key \"$scheme$request_method$host$fcgi_cache_uri\";"
+fi
 
 cat << EOF > $fastcgi
     fastcgi_cache $domain;
+$cache_key
     fastcgi_cache_valid 200 $duration;
     fastcgi_cache_valid 301 302 10m;
     fastcgi_cache_valid 404 10m;
@@ -75,6 +114,9 @@ cat << EOF > $fastcgi
     fastcgi_no_cache $no_cache;
     set $no_cache 0;
 EOF
+
+# Remove empty line left behind when cache key override is not used
+sed -i '/^$/d' $fastcgi
 
 chown root:$user $fastcgi
 chmod 640 $fastcgi
@@ -104,17 +146,21 @@ fi
 if [ -z "$FASTCGI_DURATION" ]; then
 	add_object_key "web" 'DOMAIN' "$domain" 'FASTCGI_DURATION' 'ALIAS'
 fi
+if [ -z "$FASTCGI_IGNORE_TRACKING" ]; then
+	add_object_key "web" 'DOMAIN' "$domain" 'FASTCGI_IGNORE_TRACKING' 'ALIAS'
+fi
 
 # Set FastCGI cache flag to enabled
 update_object_value 'web' 'DOMAIN' "$domain" '$FASTCGI_CACHE' 'yes'
 update_object_value 'web' 'DOMAIN' "$domain" '$FASTCGI_DURATION' "$duration"
+update_object_value 'web' 'DOMAIN' "$domain" '$FASTCGI_IGNORE_TRACKING' "$ignore_tracking"
 
 # Restart web server
 $BIN/v-restart-web "$restart"
 check_result $? "Web server restart failed" > /dev/null
 
 # Logging
-$BIN/v-log-action "$user" "Info" "Web" "FastCGI cache enabled (Domain: $domain)."
+$BIN/v-log-action "$user" "Info" "Web" "FastCGI cache enabled (Domain: $domain, Ignore tracking params: $ignore_tracking)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

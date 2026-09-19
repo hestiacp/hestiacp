@@ -175,9 +175,9 @@ if [ "$type" = 'b2' ]; then
 		exit 3
 	fi
 
-	b2 clear-account > /dev/null 2>&1
-	b2 authorize-account "$user" "$password" > /dev/null 2>&1
-	b2 ls --long "$host" "$user" > /dev/null 2>&1
+	b2 account clear > /dev/null 2>&1
+	b2 account authorize "$user" "$password" > /dev/null 2>&1
+	b2 ls --long "b2://$host/$user" > /dev/null 2>&1
 
 	if [ $? -ne 0 ]; then
 		check_result "$E_CONNECT" "b2 failed to verify connection"

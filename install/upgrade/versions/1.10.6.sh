@@ -50,3 +50,33 @@ if [[ -f "$exim_conf" ]] && grep -qF "$pattern" "$exim_conf"; then
 		fi
 	fi
 fi
+
+# Fix phpmyadmin
+pma_config="/etc/phpmyadmin"
+
+if [[ -f "$pma_config/hestia-sso.inc.php" && -f "$pma_config/config.inc.php" ]] \
+	&& ! grep -qF "if (isset(\$cfg['Servers'][\$i])) {" "$pma_config/config.inc.php"; then
+	echo "[ + ] Fixing PhpMyAdmin SSO config..."
+
+	# Save current blowfish secret
+	blowfish_secret=$(sed -nE 's/^[[:space:]]*\$cfg\["blowfish_secret"\][[:space:]]*=[[:space:]]*"([^"]*)".*/\1/p' "$pma_config/config.inc.php" | head -n1)
+
+	if cp -f "$HESTIA/install/deb/phpmyadmin/config.inc.php" "$pma_config/config.inc.php"; then
+		if grep -q "//Add Hestia SSO code here" "$pma_config/config.inc.php"; then
+			sed -i \
+				-e "s|//Add Hestia SSO code here|//Add Hestia SSO code here\n        if (isset(\$cfg['Servers'][\$i])) {\n                include ('$pma_config/hestia-sso.inc.php');|" \
+				-e "s|^\(\s*\)\$i++;|\1        \$i++;\n\1}|" \
+				"$pma_config/config.inc.php"
+
+			# Restore blowfish secret
+			if [[ -n "$blowfish_secret" ]]; then
+				blowfish_escaped=$(printf '%s' "$blowfish_secret" | sed -e 's/[\\&|]/\\&/g')
+				sed -i "s|%blowfish_secret%|$blowfish_escaped|g" "$pma_config/config.inc.php"
+			fi
+		else
+			echo "[ ! ] Info: SSO marker not found in $pma_config/config.inc.php, skipping patch" >&2
+		fi
+	else
+		echo "[ ! ] Error: failed to copy base config.inc.php to $pma_config" >&2
+	fi
+fi

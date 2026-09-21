@@ -244,7 +244,7 @@ case "$action" in
 		elif [ -f "$target_path/pm2.config.js" ]; then
 			echo "{\"dir_exists\":$dir_exists,\"exists\":true,\"main\":\"pm2.config.js\",\"type\":\"ecosystem\"}"
 		elif [ -f "$target_path/package.json" ]; then
-			pkg_content=$(cat "$target_path/package.json" 2>/dev/null)
+			pkg_content=$(cat "$target_path/package.json" 2> /dev/null)
 			# Extract main if present or return minimal json with dir_exists
 			echo "{\"dir_exists\":$dir_exists,\"exists\":true,\"pkg\":$pkg_content}"
 		else
@@ -255,9 +255,9 @@ case "$action" in
 
 	check_env)
 		if command -v node > /dev/null 2>&1 && command -v pm2 > /dev/null 2>&1; then
-			node_v=$(node -v 2>/dev/null || echo "N/A")
-			npm_v=$(npm -v 2>/dev/null || echo "N/A")
-			pm2_v=$(pm2 -v 2>/dev/null | tail -n 1 | tr -d ' ' || echo "N/A")
+			node_v=$(node -v 2> /dev/null || echo "N/A")
+			npm_v=$(npm -v 2> /dev/null || echo "N/A")
+			pm2_v=$(pm2 -v 2> /dev/null | tail -n 1 | tr -d ' ' || echo "N/A")
 			echo "{\"installed\":true,\"node\":\"$node_v\",\"npm\":\"$npm_v\",\"pm2\":\"$pm2_v\"}"
 			exit $OK
 		else

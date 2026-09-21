@@ -452,19 +452,19 @@ b2_backup() {
 	source_conf "$HESTIA/conf/b2.backup.conf"
 
 	# Recreate backblaze auth file ~/.b2_account_info (for situation when key was changed in b2.backup.conf)
-	b2 clear-account > /dev/null 2>&1
-	b2 authorize-account $B2_KEYID $B2_KEY > /dev/null 2>&1
+	b2 account clear > /dev/null 2>&1
+	b2 account authorize $B2_KEYID $B2_KEY > /dev/null 2>&1
 
 	# Uploading backup archive
 	echo -e "$(date "+%F %T") Upload to B2: $user/$user.$backup_new_date.tar"
 	if [ "$localbackup" = 'yes' ]; then
 		cd $BACKUP
-		b2 upload-file $BUCKET $user.$backup_new_date.tar $user/$user.$backup_new_date.tar > /dev/null 2>&1
+		b2 file upload $BUCKET $user.$backup_new_date.tar $user/$user.$backup_new_date.tar > /dev/null 2>&1
 	else
 		cd $tmpdir
 		tar -cf $BACKUP/$user.$backup_new_date.tar .
 		cd $BACKUP/
-		b2 upload-file $BUCKET $user.$backup_new_date.tar $user/$user.$backup_new_date.tar > /dev/null 2>&1
+		b2 file upload $BUCKET $user.$backup_new_date.tar $user/$user.$backup_new_date.tar > /dev/null 2>&1
 		rc=$?
 		rm -f $user.$backup_new_date.tar
 		if [ "$rc" -ne 0 ]; then
@@ -473,14 +473,14 @@ b2_backup() {
 	fi
 
 	# Checking retention
-	backup_list=$(b2 ls --long $BUCKET $user | cut -f 1 -d ' ' 2> /dev/null)
+	backup_list=$(b2 ls --json "b2://$BUCKET/$user" 2> /dev/null | jq -r '.[].fileId' 2> /dev/null)
 	backups_count=$(echo "$backup_list" | wc -l)
 	if [ "$backups_count" -ge "$BACKUPS" ]; then
 		backups_rm_number=$(($backups_count - $BACKUPS))
 		for backup in $(echo "$backup_list" | head -n $backups_rm_number); do
-			backup_file_name=$(b2 get-file-info $backup | grep fileName | cut -f 4 -d '"' 2> /dev/null)
+			backup_file_name=$(b2 file info "b2id://$backup" 2> /dev/null | jq -r '.fileName' 2> /dev/null)
 			echo -e "$(date "+%F %T") Rotated b2 backup: $backup_file_name"
-			b2 delete-file-version $backup > /dev/null 2>&1
+			b2 rm "b2id://$backup" > /dev/null 2>&1
 		done
 	fi
 
@@ -491,10 +491,10 @@ b2_download() {
 	source_conf "$HESTIA/conf/b2.backup.conf"
 
 	# Recreate backblaze auth file ~/.b2_account_info (for situation when key was changed in b2.backup.conf)
-	b2 clear-account > /dev/null 2>&1
-	b2 authorize-account $B2_KEYID $B2_KEY > /dev/null 2>&1
+	b2 account clear > /dev/null 2>&1
+	b2 account authorize $B2_KEYID $B2_KEY > /dev/null 2>&1
 	cd $BACKUP
-	b2 download-file-by-name $BUCKET $user/$1 $1 > /dev/null 2>&1
+	b2 file download "b2://$BUCKET/$user/$1" "$1" > /dev/null 2>&1
 	if [ "$?" -ne 0 ]; then
 		check_result "$E_CONNECT" "b2 failed to download $user.$1"
 	fi
@@ -505,10 +505,10 @@ b2_delete() {
 	source_conf "$HESTIA/conf/b2.backup.conf"
 
 	# Recreate backblaze auth file ~/.b2_account_info (for situation when key was changed in b2.backup.conf)
-	b2 clear-account > /dev/null 2>&1
-	b2 authorize-account $B2_KEYID $B2_KEY > /dev/null 2>&1
+	b2 account clear > /dev/null 2>&1
+	b2 account authorize $B2_KEYID $B2_KEY > /dev/null 2>&1
 
-	b2 delete-file-version $1/$2 > /dev/null 2>&1
+	b2 rm b2://$BUCKET/$1/$2 > /dev/null 2>&1
 }
 
 rclone_backup() {

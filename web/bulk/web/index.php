@@ -18,7 +18,7 @@ if (empty($_POST["domain"])) {
 	exit();
 }
 if (empty($_POST["action"])) {
-	header("Location: /list/web");
+	header("Location: /list/web/");
 	exit();
 }
 

@@ -9,11 +9,11 @@ include $_SERVER["DOCUMENT_ROOT"] . "/inc/main.php";
 verify_csrf($_POST);
 
 if (empty($_POST["package"])) {
-	header("Location: /list/package");
+	header("Location: /list/package/");
 	exit();
 }
 if (empty($_POST["action"])) {
-	header("Location: /list/package");
+	header("Location: /list/package/");
 	exit();
 }
 

@@ -5,5 +5,5 @@ $TAB = "SERVER";
 include $_SERVER["DOCUMENT_ROOT"] . "/inc/main.php";
 
 // Check user
-header("Location: /list/firewall");
+header("Location: /list/firewall/");
 exit();

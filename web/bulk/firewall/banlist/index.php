@@ -11,7 +11,7 @@ verify_csrf($_POST);
 
 // Check user
 if ($_SESSION["userContext"] != "admin") {
-	header("Location: /list/user");
+	header("Location: /list/user/");
 	exit();
 }
 
@@ -43,4 +43,4 @@ foreach ($ipchain as $value) {
 	exec(HESTIA_CMD . $cmd . " " . $v_ip . " " . $v_chain, $output, $return_var);
 }
 
-header("Location: /list/firewall/banlist");
+header("Location: /list/firewall/banlist/");

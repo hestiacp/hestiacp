@@ -279,6 +279,7 @@
 							?>
 						</select>
 					</div>
+				<?php } ?>
 					<?php if ($_SESSION["WEB_SYSTEM"] == "nginx") { ?>
 						<div class="form-check u-mb10">
 							<input x-model="nginxCacheEnabled" class="form-check-input" type="checkbox" name="v_nginx_cache_check" id="v_nginx_cache_check">
@@ -298,6 +299,7 @@
 							</div>
 						</div>
 					<?php } ?>
+				<?php if ($_SESSION["userContext"] === "admin" || ($_SESSION["userContext"] === "user" && $_SESSION["POLICY_USER_EDIT_BACKEND_TEMPLATES"] === "yes")) { ?>
 					<?php if (!empty($_SESSION["WEB_BACKEND"])) { ?>
 						<div class="u-mb10">
 								<label for="v_backend_template" class="form-label">
@@ -319,7 +321,9 @@
 								?>
 							</select>
 						</div>
-					<?php } ?>
+					<?php }?>
+				<?php } ?>
+				<?php if ($_SESSION["userContext"] === "admin" || ($_SESSION["userContext"] === "user" && $_SESSION["POLICY_USER_EDIT_PROXY_TEMPLATES"] === "yes")) { ?>
 					<?php if (!empty($_SESSION["PROXY_SYSTEM"])) { ?>
 						<div style="display: none;">
 							<div class="form-check u-mb10">

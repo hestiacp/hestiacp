@@ -103,6 +103,7 @@ help() {
   -q, --quota             Filesystem Quota      [yes|no]  default: no
   -L, --resourcelimit     Resource Limitation   [yes|no]  default: no
   -W, --webterminal       Web Terminal          [yes|no]  default: no
+  -N, --nodejs            NodeJS and PM2        [yes|no]  default: no
   -d, --api               Activate API          [yes|no]  default: yes
   -r, --port              Change Backend Port             default: 8083
   -l, --lang              Default language                default: en
@@ -288,6 +289,8 @@ for arg; do
 		--quota) args="${args}-q " ;;
 		--resourcelimit) args="${args}-L " ;;
 		--webterminal) args="${args}-W " ;;
+		--nodejs) args="${args}-N " ;;
+		--pm2) args="${args}-N " ;;
 		--port) args="${args}-r " ;;
 		--lang) args="${args}-l " ;;
 		--interactive) args="${args}-y " ;;
@@ -308,7 +311,7 @@ done
 eval set -- "$args"
 
 # Parsing arguments
-while getopts "a:w:v:j:k:m:M:g:d:x:z:Z:c:t:i:b:r:o:q:L:l:y:s:u:e:p:W:D:fh" Option; do
+while getopts "a:w:v:j:k:m:M:g:d:x:z:Z:c:t:i:b:r:o:q:L:l:y:s:u:e:p:W:N:D:fh" Option; do
 	case $Option in
 		a) apache=$OPTARG ;;        # Apache
 		w) phpfpm=$OPTARG ;;        # PHP-FPM
@@ -329,6 +332,7 @@ while getopts "a:w:v:j:k:m:M:g:d:x:z:Z:c:t:i:b:r:o:q:L:l:y:s:u:e:p:W:D:fh" Optio
 		q) quota=$OPTARG ;;         # FS Quota
 		L) resourcelimit=$OPTARG ;; # Resource Limitaiton
 		W) webterminal=$OPTARG ;;   # Web Terminal
+		N) nodejs=$OPTARG ;;        # NodeJS and PM2
 		r) port=$OPTARG ;;          # Backend Port
 		l) lang=$OPTARG ;;          # Language
 		d) api=$OPTARG ;;           # Activate API
@@ -410,6 +414,7 @@ set_default_value 'fail2ban' 'yes'
 set_default_value 'quota' 'no'
 set_default_value 'resourcelimit' 'no'
 set_default_value 'webterminal' 'no'
+set_default_value 'nodejs' 'no'
 set_default_value 'interactive' 'yes'
 set_default_value 'api' 'yes'
 set_default_port '8083'
@@ -471,6 +476,9 @@ echo "Welcome to the Hestia Control Panel installer!"
 echo
 echo "Please wait, the installer is now checking for missing dependencies..."
 echo
+
+# Clean up duplicate/conflicting nodejs repo files if present
+rm -f /etc/apt/sources.list.d/nodesource* /etc/apt/sources.list.d/nodejs*
 
 # Update apt repository
 apt-get -qq update
@@ -716,6 +724,10 @@ if [ "$webterminal" = 'yes' ]; then
 	echo '   - Web terminal'
 fi
 
+if [ "$nodejs" = 'yes' ]; then
+	echo '   - Node.js & PM2 Process Manager'
+fi
+
 # Firewall stack
 if [ "$iptables" = 'yes' ]; then
 	echo -n '   - Firewall (iptables)'
@@ -906,11 +918,16 @@ echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/hestia-keyring.gpg] https://
 curl -s "https://$RHOST/pubkey.gpg" | gpg --dearmor | tee /usr/share/keyrings/hestia-keyring.gpg > /dev/null 2>&1
 
 # Installing Node.js repo
-if [ "$webterminal" = 'yes' ]; then
+if [ "$webterminal" = 'yes' ] || [ "$nodejs" = 'yes' ]; then
 	echo "[ * ] Node.js $node_v"
+	rm -f $apt/nodesource.list $apt/nodesource.sources
 	echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/nodejs.gpg] https://deb.nodesource.com/node_$node_v.x nodistro main" > $apt/nodejs.list
 	curl -s https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor | tee /usr/share/keyrings/nodejs.gpg > /dev/null 2>&1
 	apt-get -y install nodejs >> $LOG
+	if [ "$nodejs" = 'yes' ]; then
+		echo "[ * ] PM2 Process Manager"
+		npm install -g pm2 >> $LOG 2>&1
+	fi
 fi
 
 # Installing PostgreSQL repo
@@ -1105,8 +1122,10 @@ if [ "$iptables" = 'no' ]; then
 	software=$(echo "$software" | sed -e "s/ipset//")
 	software=$(echo "$software" | sed -e "s/fail2ban//")
 fi
-if [ "$webterminal" = 'no' ]; then
+if [ "$webterminal" = 'no' ] && [ "$nodejs" = 'no' ]; then
 	software=$(echo "$software" | sed -e "s/nodejs//")
+fi
+if [ "$webterminal" = 'no' ]; then
 	software=$(echo "$software" | sed -e "s/hestia-web-terminal//")
 fi
 if [ "$phpfpm" = 'yes' ]; then

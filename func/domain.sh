@@ -308,6 +308,10 @@ add_web_config() {
 					rm -f "$f"
 					continue
 				fi
+				if [ "$CustomConfigName" = "_actalis" ]; then
+					rm -f "$f"
+					continue
+				fi
 				mv "$f" "$HOMEDIR/$user/conf/web/$domain/$ServerType.ssl.conf_old$CustomConfigName"
 			fi
 		done
@@ -321,6 +325,10 @@ add_web_config() {
 				ServerType="${BASH_REMATCH[1]}"
 				CustomConfigName="${BASH_REMATCH[2]}"
 				if [ "$CustomConfigName" = "_letsencrypt" ]; then
+					rm -f "$f"
+					continue
+				fi
+				if [ "$CustomConfigName" = "_actalis" ]; then
 					rm -f "$f"
 					continue
 				fi

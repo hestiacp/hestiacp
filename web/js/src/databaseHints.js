@@ -12,6 +12,14 @@ export default function handleDatabaseHints() {
 	removeUserPrefix(databaseNameInput);
 	attachUpdateHintListener(usernameInput);
 	attachUpdateHintListener(databaseNameInput);
+
+	const typeSelect = document.getElementById('v_type');
+	const hostSelect = document.getElementById('v_host');
+
+	if (typeSelect && hostSelect) {
+		filterHostOptions(typeSelect, hostSelect);
+		typeSelect.addEventListener('change', () => filterHostOptions(typeSelect, hostSelect));
+	}
 }
 
 // Remove prefix from "Database" input if it exists during initial load (for editing)
@@ -41,4 +49,33 @@ function updateHint(input) {
 	}
 
 	hintElement.textContent = Alpine.store('globals').USER_PREFIX + input.value;
+}
+
+function filterHostOptions(typeSelect, hostSelect) {
+	const selectedType = typeSelect.value;
+	let hasVisibleSelectedOption = false;
+
+	for (const option of hostSelect.options) {
+		const types = option.getAttribute('data-types');
+		if (types && types.split(',').includes(selectedType)) {
+			option.style.display = '';
+			option.disabled = false;
+			if (option.selected) {
+				hasVisibleSelectedOption = true;
+			}
+		} else {
+			option.style.display = 'none';
+			option.disabled = true;
+			option.selected = false;
+		}
+	}
+
+	if (!hasVisibleSelectedOption) {
+		for (const option of hostSelect.options) {
+			if (!option.disabled) {
+				option.selected = true;
+				break;
+			}
+		}
+	}
 }

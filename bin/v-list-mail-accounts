@@ -25,31 +25,56 @@ source_conf "$HESTIA/conf/hestia.conf"
 
 # JSON list function
 json_list() {
-	IFS=$'\n'
-	i=1
-	objects=$(grep ACCOUNT $USER_DATA/mail/$domain.conf | wc -l)
-	echo "{"
-	while read str; do
-		parse_object_kv_list "$str"
-		echo -n '    "'$ACCOUNT'": {
-        "ALIAS": "'$ALIAS'",
-        "FWD": "'$FWD'",
-        "FWD_ONLY": "'$FWD_ONLY'",
-        "AUTOREPLY": "'$AUTOREPLY'",
-        "QUOTA": "'$QUOTA'",
-        "U_DISK": "'$U_DISK'",
-        "SUSPENDED": "'$SUSPENDED'",
-        "TIME": "'$TIME'",
-        "DATE": "'$DATE'"
-    }'
-		if [ "$i" -lt "$objects" ]; then
-			echo ','
-		else
-			echo
-		fi
-		((i++))
-	done < <(cat $USER_DATA/mail/$domain.conf)
-	echo '}'
+	"$HESTIA_PHP" -- \
+		"$USER_DATA/mail/$domain.conf" \
+		"$HESTIA/func/object-parser.php" \
+		"$HESTIA_RESERVED_CONF_KEYS" \
+		"$HESTIA_OBJECT_KEY_EXCEPTIONS" << 'EOPHP'
+<?php
+
+declare(strict_types=1);
+
+[
+    $script,
+    $file,
+    $parser,
+    $reservedString,
+    $exceptionsString,
+] = $argv;
+
+require $parser;
+
+$records = parseObjectKvFile(
+    $file,
+    parseObjectKvList($reservedString),
+    parseObjectKvList($exceptionsString)
+);
+
+$output = [];
+
+foreach ($records as $record) {
+    $account = $record['ACCOUNT']
+        ?? objectParserFail('Missing ACCOUNT in: ' . $file);
+
+    $output[$account] = [
+        'ALIAS' => $record['ALIAS'] ?? '',
+        'FWD' => $record['FWD'] ?? '',
+        'FWD_ONLY' => $record['FWD_ONLY'] ?? '',
+        'AUTOREPLY' => $record['AUTOREPLY'] ?? '',
+        'QUOTA' => $record['QUOTA'] ?? '',
+        'U_DISK' => $record['U_DISK'] ?? '',
+        'SUSPENDED' => $record['SUSPENDED'] ?? '',
+        'TIME' => $record['TIME'] ?? '',
+        'DATE' => $record['DATE'] ?? '',
+    ];
+}
+
+echo objectParserEncodeJson($output);
+EOPHP
+
+	check_result "$?" \
+		"Invalid object format in file: $USER_DATA/mail/$domain.conf" \
+		"$E_INVALID"
 }
 
 # SHELL list function

@@ -469,159 +469,18 @@ _parse_object_kv_list_php() {
 	local IFS=$'\n'
 
 	str=${@//$'\n'/ }
+
 	validated_output=$(
-		"$HESTIA_PHP" -- "$str" "$HESTIA_RESERVED_CONF_KEYS" "$HESTIA_OBJECT_KEY_EXCEPTIONS" << 'EOPHP'
-<?php
-declare(strict_types=1);
-
-// Supported syntax:
-//   KEY1='value1' KEY2='value with spaces' KEY3=''
-//   KEY=value
-//   KEY=value\ with\ spaces
-//   KEY=ab\ c'de f'ghi
-//   KEY=
-//   KEY= KEY2=value
-//   KEY='abc'def
-//   KEY=abc''
-//   KEY=\'
-//   KEY=\\
-//
-// Notes:
-// - Key names must match: [a-zA-Z][a-zA-Z0-9_]*
-// - Inside single quotes, every character is literal except the closing single quote.
-// - Outside single quotes, backslash escapes the next character.
-function fail(string $message): never
-{
-    fwrite(STDERR, $message . PHP_EOL);
-    exit(2);
-}
-
-if ($argc < 2) {
-    fail('Usage: php '.$argv[0].' "KEY=\'value\' KEY2=value"');
-}
-
-$unparsed = ($argv[1]);
-$reserved = preg_split('/\s+/', trim($argv[2] ?? ''), -1, PREG_SPLIT_NO_EMPTY);
-$exceptions = preg_split('/\s+/', trim($argv[3] ?? ''), -1, PREG_SPLIT_NO_EMPTY);
-if (!is_array($reserved)) {
-    $reserved = [];
-}
-if (!is_array($exceptions)) {
-    $exceptions = [];
-}
-$result = [];
-
-while ($unparsed !== '') {
-    $unparsed = ltrim($unparsed);
-    if ($unparsed === '') {
-        break;
-    }
-
-    $key_name_extracted = preg_match('/^([a-zA-Z][a-zA-Z0-9_]*)=/', $unparsed, $m);
-
-    if ($key_name_extracted !== 1) {
-		// example: `eval(code)=123`
-        fail('Invalid key value format. Could not extract key name from: ' . $unparsed);
-    }
-
-    $key_name = $m[1];
-    $unparsed = substr($unparsed, strlen($m[0]));
-    $skip_reserved = !in_array($key_name, $exceptions, true)
-        && (in_array($key_name, $reserved, true) || strpos($key_name, 'BASH_FUNC_') === 0);
-
-    $key_value = '';
-    $is_in_quote = false;
-
-    while (true) {
-        if ($is_in_quote) {
-            // Inside single quotes, only a single quote is special.
-            $pos = strpos($unparsed, "'");
-
-            if ($pos === false) {
-				// example: `KEY='value` (missing closing quote)
-                fail('Invalid key value format. No closing quote for key: ' . $key_name . ' in: ' . $unparsed);
-            }
-
-            $key_value .= substr($unparsed, 0, $pos);
-            $unparsed = substr($unparsed, $pos + 1);
-            $is_in_quote = false;
-
-            if ($unparsed === '') {
-				// parsing complete
-                break;
-            }
-            continue;
-        }
-
-        // Outside single quotes, whitespace, single quote, and backslash are special.
-        $match = preg_match('/\s|\'|\\\\/u', $unparsed, $m, PREG_OFFSET_CAPTURE);
-        if ($match !== 1) {
-            // No more special chars; rest of string is the value.
-            $key_value .= $unparsed;
-            $unparsed = '';
-            break;
-        }
-
-        $matched_char = $m[0][0];
-        $pos = $m[0][1];
-
-        // Add everything before the matched special character.
-        $key_value .= substr($unparsed, 0, $pos);
-		$unparsed = substr($unparsed, $pos + strlen($matched_char));
-
-        if ($matched_char === "'") {
-            if ($unparsed === '') {
-				// example: `KEY='` - missing closing quote. nearest legal alternative is `KEY=''`
-                fail('Invalid key value format. No closing quote for key: ' . $key_name);
-            }
-            $is_in_quote = true;
-            continue;
-        }
-        if ($matched_char === '\\') {
-			if($unparsed === '') {
-				// example: `KEY=foo\`
-                fail('Invalid key value format. Escape character cannot be the last character in value for key: ' . $key_name . ' in: ' . $unparsed);
-            }
-
-            // Backslash escapes the next character verbatim
-			$next_char = mb_substr($unparsed, 0, 1, 'UTF-8'); // remember multi-byte unicode support, æøåÆØÅ
-			$key_value .= $next_char;
-			$unparsed = substr($unparsed, strlen($next_char));
-            continue;
-        }
-
-        // Matched whitespace: end of this key-value pair.
-        $unparsed = ltrim($unparsed);
-        break;
-    }
-    if ($skip_reserved) {
-        continue;
-    }
-    if (array_key_exists($key_name, $result)) {
-        $msg = 'Warning: Duplicate key name: ' . $key_name . '. ';
-
-        if ($result[$key_name] === $key_value) {
-            $msg .= 'value is identical.';
-        } else {
-            $msg .= var_export([
-                'old_value' => $result[$key_name],
-                'new_value' => $key_value,
-            ], true);
-        }
-        fwrite(STDERR, $msg . PHP_EOL);
-    }
-    $result[$key_name] = $key_value;
-}
-$assignments = [];
-foreach ($result as $k => $v) {
-    $v_quoted = "'" . strtr($v, ["'" => "'\\''"]) . "'";
-    $assignments[] = "$k=$v_quoted";
-}
-echo implode(' ', $assignments);
-EOPHP
+		"$HESTIA_PHP" "$HESTIA/func/object-parser.php" \
+			line-shell \
+			"$str" \
+			"$HESTIA_RESERVED_CONF_KEYS" \
+			"$HESTIA_OBJECT_KEY_EXCEPTIONS"
 	)
 	check_status=$?
+
 	check_result "$check_status" "Invalid object format: ${str}" "$E_INVALID"
+
 	eval "$validated_output"
 }
 

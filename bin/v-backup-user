@@ -586,7 +586,7 @@ if [ -n "$DB_SYSTEM" ] && [ "$DB" != '*' ]; then
 				fi
 			done
 
-			user_extended_backup=$(grep "EXTENDED_BACKUP=" $USER_DATA/user.conf 2>/dev/null | cut -f 2 -d \')
+			user_extended_backup=$(grep "EXTENDED_BACKUP=" $USER_DATA/user.conf 2> /dev/null | cut -f 2 -d \')
 
 			case $TYPE in
 				mysql)

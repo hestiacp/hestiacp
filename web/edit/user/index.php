@@ -62,7 +62,7 @@ $v_login_disabled = $data[$v_username]["LOGIN_DISABLED"];
 $v_login_use_iplist = $data[$v_username]["LOGIN_USE_IPLIST"];
 $v_login_allowed_ips = $data[$v_username]["LOGIN_ALLOW_IPS"];
 $v_ns = $data[$v_username]["NS"];
-$v_extended_backup = $data[$v_username]["EXTENDED_BACKUP"] ?? 'no';
+$v_extended_backup = $data[$v_username]["EXTENDED_BACKUP"] ?? "no";
 $nameservers = explode(",", $v_ns);
 if (empty($nameservers[0])) {
 	$v_ns1 = "";

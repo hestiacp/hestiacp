@@ -1,0 +1,61 @@
+#!/bin/bash
+# info: add exim blacklist entry
+# options: SENDER
+# example: v-add-exim-blacklist-entry user@example.com
+
+set -euo pipefail
+
+# Ensure 'user' is defined to avoid "unbound variable" when main.sh checks it
+user="${ROOT_USER:-root}"
+
+# Default paths if not already set by hestia.conf
+BIN="${BIN:-/usr/local/hestia/bin}"
+HESTIA="${HESTIA:-/usr/local/hestia}"
+
+if [ -z "$1" ]; then
+    echo "Error: sender argument required"
+    exit 1
+fi
+
+SENDER_RAW="$1"
+
+# Minimal: do not source Hestia helper scripts to avoid unbound-variable
+# issues in environments where `main.sh` expects many exported vars.
+# We only need `BIN` above for `v-log-action` invocation.
+
+# Sanitize sender: allow email, domain, basic chars
+sender_sanitized=$(echo "$SENDER_RAW" | tr -d '\\r\\n' | sed -E 's/[^[:alnum:]@._%+-]//g' | cut -c1-256)
+
+BLACKLIST_FILE="/etc/exim4/blacklist"
+
+if [ -z "$sender_sanitized" ]; then
+    echo "Error: sanitized sender empty"
+    exit 1
+fi
+
+# Ensure blacklist file exists
+if [ ! -f "$BLACKLIST_FILE" ]; then
+    echo "# Hestia managed Exim blacklist" > "$BLACKLIST_FILE"
+fi
+
+# Avoid duplicates
+if grep -Fxq "$sender_sanitized" "$BLACKLIST_FILE"; then
+    echo "Entry already present: $sender_sanitized"
+    exit 0
+fi
+
+echo "$sender_sanitized" >> "$BLACKLIST_FILE"
+chmod 640 "$BLACKLIST_FILE"
+chown root:root "$BLACKLIST_FILE" || true
+
+if command -v systemctl >/dev/null 2>&1; then
+    systemctl restart exim4 || echo "Warning: failed to restart exim4"
+fi
+
+if [ -x "$BIN/v-log-action" ]; then
+    $BIN/v-log-action "system" "Info" "Mail" "Added blacklist sender: $sender_sanitized"
+fi
+
+echo "Added: $sender_sanitized"
+
+exit 0

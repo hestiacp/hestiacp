@@ -230,14 +230,16 @@ $db_types = explode(",", $_SESSION["DB_SYSTEM"]);
 
 // List available database servers
 exec(HESTIA_CMD . "v-list-database-hosts json", $output, $return_var);
-$db_hosts_tmp1 = json_decode(implode("", $output), true);
-$db_hosts_tmp2 = array_map(function ($host) {
-	return $host["HOST"];
-}, $db_hosts_tmp1);
-$db_hosts = array_values(array_unique($db_hosts_tmp2));
+$db_hosts_tmp = json_decode(implode("", $output), true);
+$db_hosts = [];
+foreach ($db_hosts_tmp as $host) {
+	if (!isset($db_hosts[$host["HOST"]])) {
+		$db_hosts[$host["HOST"]] = [];
+	}
+	$db_hosts[$host["HOST"]][] = $host["TYPE"];
+}
 unset($output);
-unset($db_hosts_tmp1);
-unset($db_hosts_tmp2);
+unset($db_hosts_tmp);
 
 $accept = $_GET["accept"] ?? "";
 

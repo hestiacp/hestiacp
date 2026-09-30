@@ -1,0 +1,61 @@
+#!/bin/bash
+# info: update actalis eab
+# options: USER EAB_KID EAB_HMAC
+#
+# example: v-update-actalis-eab bob kid_123 hmac_abc123=
+#
+# This function updates the Actalis External Account Binding (EAB)
+# credentials used for ACME account registration.
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+eab_kid=$2
+eab_hmac=$3
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '3' "$#" 'USER EAB_KID EAB_HMAC'
+is_format_valid 'user'
+is_object_valid 'user' 'USER' "$user"
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+actalis_conf="$USER_DATA/ssl/actalis.conf"
+
+# Create Actalis configuration file if it doesn't exist
+if [ ! -e "$actalis_conf" ]; then
+	touch "$actalis_conf"
+	chmod 660 "$actalis_conf"
+fi
+
+# Remove existing EAB values
+sed -i '/^EAB_KID=/d' "$actalis_conf"
+sed -i '/^EAB_HMAC=/d' "$actalis_conf"
+sed -i '/^EAB_DATE=/d' "$actalis_conf"
+
+# Store updated EAB values
+echo "EAB_KID='$eab_kid'" >> "$actalis_conf"
+echo "EAB_HMAC='$eab_hmac'" >> "$actalis_conf"
+echo "EAB_DATE='$(date +%Y-%m-%d)'" >> "$actalis_conf"
+
+#----------------------------------------------------------#
+#                        Hestia                            #
+#----------------------------------------------------------#
+
+log_event "$OK" "$ARGUMENTS"
+
+exit

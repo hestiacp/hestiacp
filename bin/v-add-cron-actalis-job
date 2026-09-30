@@ -1,0 +1,46 @@
+#!/bin/bash
+# info: add cron job for Actalis certificates
+# options: NONE
+#
+# This function adds a new cron job for Actalis.
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+is_system_enabled "$CRON_SYSTEM" 'CRON_SYSTEM'
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Add cron job
+cmd="bin/v-update-sys-queue actalis"
+check_cron=$(grep "$cmd" "/var/spool/cron/crontabs/hestiaweb" 2> /dev/null)
+if [ -z "$check_cron" ] && [ -n "$CRON_SYSTEM" ]; then
+	sed -i -e "\$a*/5 * * * * sudo /usr/local/hestia/bin/v-update-sys-queue actalis" "/var/spool/cron/crontabs/hestiaweb"
+fi
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Logging
+log_event "$OK" "$ARGUMENTS"
+
+exit

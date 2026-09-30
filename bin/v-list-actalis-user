@@ -1,0 +1,95 @@
+#!/bin/bash
+# info: list actalis key
+# options: USER [FORMAT]
+#
+# example: v-list-actalis-user admin
+#
+# This function for obtaining the actalis key thumbprint
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+format=${2-shell}
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+# JSON list function
+json_list() {
+	echo '{'
+	echo '    "'$user'": {'
+	echo '        "EMAIL": "'$EMAIL'",'
+	echo '        "EXPONENT": "'$EXPONENT'",'
+	echo '        "MODULUS": "'$MODULUS'",'
+	echo '        "THUMB": "'$THUMB'",'
+	echo '        "KID": "'$KID'",'
+	echo '        "EAB_KID": "'$EAB_KID'",'
+	echo '        "EAB_HMAC": "'$EAB_HMAC'",'
+	echo '        "EAB_DATE": "'$EAB_DATE'"'
+	echo '    }'
+	echo '}'
+}
+
+# SHELL list function
+shell_list() {
+	echo "USER:           $user"
+	echo "EMAIL:          $EMAIL"
+	echo "THUMB:          $THUMB"
+	echo "EXPONENT:       $EXPONENT"
+	echo "MODULUS:        $MODULUS"
+	echo "KID:            $KID"
+	echo "EAB_KID:        $EAB_KID"
+	echo "EAB_HMAC:       $EAB_HMAC"
+	echo "EAB_DATE:       $EAB_DATE"
+}
+
+# PLAIN list function
+plain_list() {
+	echo -e "$user\t$EMAIL\t$EXPONENT\t$MODULUS\t$THUMB\t$KID\t$EAB_KID\t$EAB_HMAC\t$EAB_DATE"
+}
+
+# CSV list function
+csv_list() {
+	echo "USER,EMAIL,EXPONENT,MODULUS,THUMB,KID,EAB_KID,EAB_HMAC,EAB_DATE"
+	echo "$user,$EMAIL,$EXPONENT,$MODULUS,$THUMB,$KID,$EAB_KID,$EAB_HMAC,$EAB_DATE"
+}
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '1' "$#" 'USER [FORMAT]'
+is_format_valid 'user'
+is_object_valid 'user' 'USER' "$user"
+if [ ! -e "$USER_DATA/ssl/actalis.conf" ]; then
+	check_result "$E_NOTEXIST" "Actalis user account doesn't exist"
+fi
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# load config file
+source_conf "$USER_DATA/ssl/actalis.conf"
+
+# Listing data
+case $format in
+	json) json_list ;;
+	plain) plain_list ;;
+	csv) csv_list ;;
+	shell) shell_list ;;
+esac
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+exit

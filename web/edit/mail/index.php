@@ -161,8 +161,12 @@ if (!empty($_GET["domain"]) && !empty($_GET["account"])) {
 		unset($output);
 		$v_autoreply_message = $autoreply_str[$v_account]["MSG"];
 		$v_autoreply_message = str_replace("\\n", "\n", $v_autoreply_message);
+		$v_autoreply_start = $autoreply_str[$v_account]["START"] ?? "";
+		$v_autoreply_end = $autoreply_str[$v_account]["END"] ?? "";
 	} else {
 		$v_autoreply_message = "";
+		$v_autoreply_start = "";
+		$v_autoreply_end = "";
 	}
 }
 
@@ -1056,13 +1060,20 @@ if (
 		unset($output);
 		$v_autoreply = "no";
 		$v_autoreply_message = "";
+		$v_autoreply_start = "";
+		$v_autoreply_end = "";
 	}
 
 	// Add autoreply
 	if (!empty($_POST["v_autoreply"]) && empty($_SESSION["error_msg"])) {
-		if ($v_autoreply_message != str_replace("\r\n", "\n", $_POST["v_autoreply_message"])) {
-			$v_autoreply_message = str_replace("\r\n", "\n", $_POST["v_autoreply_message"]);
-			$v_autoreply_message = quoteshellarg($v_autoreply_message);
+		$new_autoreply_message = str_replace("\r\n", "\n", $_POST["v_autoreply_message"]);
+		$new_autoreply_start = trim($_POST["v_autoreply_start"] ?? "");
+		$new_autoreply_end = trim($_POST["v_autoreply_end"] ?? "");
+		if (
+			$v_autoreply_message != $new_autoreply_message ||
+			($v_autoreply_start ?? "") != $new_autoreply_start ||
+			($v_autoreply_end ?? "") != $new_autoreply_end
+		) {
 			exec(
 				HESTIA_CMD .
 					"v-add-mail-account-autoreply " .
@@ -1072,7 +1083,11 @@ if (
 					" " .
 					quoteshellarg($v_account) .
 					" " .
-					$v_autoreply_message,
+					quoteshellarg($new_autoreply_message) .
+					" " .
+					quoteshellarg($new_autoreply_start) .
+					" " .
+					quoteshellarg($new_autoreply_end),
 				$output,
 				$return_var,
 			);
@@ -1080,6 +1095,8 @@ if (
 			unset($output);
 			$v_autoreply = "yes";
 			$v_autoreply_message = $_POST["v_autoreply_message"];
+			$v_autoreply_start = $new_autoreply_start;
+			$v_autoreply_end = $new_autoreply_end;
 		}
 	}
 

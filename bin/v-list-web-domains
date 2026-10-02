@@ -29,6 +29,7 @@ json_list() {
 	objects=$(grep DOMAIN $USER_DATA/web.conf | wc -l)
 	echo "{"
 	while read str; do
+		DESCRIPTION=''
 		parse_object_kv_list "$str"
 		# Set correct document root path
 		if [ -n "$CUSTOM_DOCROOT" ]; then
@@ -55,6 +56,7 @@ json_list() {
         "BACKEND": "'$BACKEND'",
         "PROXY": "'$PROXY'",
         "PROXY_EXT": "'$PROXY_EXT'",
+        "DESCRIPTION": "'"$(decode_description "$DESCRIPTION")"'",
         "SUSPENDED": "'$SUSPENDED'",
         "TIME": "'$TIME'",
         "DATE": "'$DATE'"

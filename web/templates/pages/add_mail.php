@@ -57,6 +57,7 @@
 					<label for="v_domain" class="form-label"><?= tohtml( _("Domain")) ?></label>
 					<input type="text" class="form-control" name="v_domain" id="v_domain" value="<?= tohtml(trim($v_domain, "'")) ?>" required>
 				</div>
+				<?php require $_SERVER["HESTIA"] . "/web/templates/includes/description-field.php"; ?>
 				<?php if ($_SESSION["WEBMAIL_SYSTEM"]) { ?>
 					<div class="u-mb20">
 						<label for="v_webmail" class="form-label"><?= tohtml( _("Webmail Client")) ?></label>

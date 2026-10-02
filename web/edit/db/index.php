@@ -37,6 +37,7 @@ $v_password = "";
 $v_host = $data[$v_database]["HOST"];
 $v_type = $data[$v_database]["TYPE"];
 $v_charset = $data[$v_database]["CHARSET"];
+$v_description = $data[$v_database]["DESCRIPTION"] ?? "";
 $v_date = $data[$v_database]["DATE"];
 $v_time = $data[$v_database]["TIME"];
 $v_suspended = $data[$v_database]["SUSPENDED"];
@@ -94,6 +95,9 @@ if (!empty($_POST["save"]) && $read_only !== true) {
 			$v_password = quoteshellarg($_POST["v_password"]);
 		}
 	}
+
+	// Change description
+	save_object_description("v-change-database-description", [$user, quoteshellarg($v_database)], $v_description);
 
 	// Set success message
 	if (empty($_SESSION["error_msg"])) {

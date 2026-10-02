@@ -249,7 +249,8 @@ if [ "$web" != 'no' ] && [ -n "$WEB_SYSTEM" ]; then
 
 		# Restoring web.conf
 		if [ -z "$check_config" ]; then
-			parse_object_kv_list $(cat $tmpdir/web/$domain/$backup_system/web.conf)
+			DESCRIPTION=''
+			parse_object_kv_list "$(cat $tmpdir/web/$domain/$backup_system/web.conf)"
 
 			# Deleting conflicting aliases
 			for dom_alias in ${ALIAS//,/ }; do
@@ -331,9 +332,9 @@ if [ "$web" != 'no' ] && [ -n "$WEB_SYSTEM" ]; then
 			str="$str BACKEND='$BACKEND' PROXY='$PROXY'"
 			str="$str PROXY_EXT='$PROXY_EXT' STATS='$STATS'"
 			str="$str STATS_USER='$STATS_USER' STATS_CRYPT='$STATS_CRYPT'"
-			str="$str U_DISK='$U_DISK' U_BANDWIDTH='0' SUSPENDED='no'"
+			str="$str U_DISK='$U_DISK' U_BANDWIDTH='0' DESCRIPTION='$DESCRIPTION' SUSPENDED='no'"
 			str="$str TIME='$(date +%T)' DATE='$(date +%F)'"
-			echo $str >> $USER_DATA/web.conf
+			echo "$str" >> $USER_DATA/web.conf
 
 			# Rebuilding backend
 			if [ -n "$WEB_BACKEND" ]; then
@@ -458,7 +459,8 @@ if [ "$dns" != 'no' ] && [ -n "$DNS_SYSTEM" ]; then
 
 		# Restoring dns.conf
 		if [ -z "$check_config" ]; then
-			parse_object_kv_list $(cat $tmpdir/dns/$domain/$backup_system/dns.conf)
+			DESCRIPTION=''
+			parse_object_kv_list "$(cat $tmpdir/dns/$domain/$backup_system/dns.conf)"
 
 			# Checking IP address
 			check_ip=$(is_ip_valid $IP $user)
@@ -478,9 +480,9 @@ if [ "$dns" != 'no' ] && [ -n "$DNS_SYSTEM" ]; then
 			# Merging dns.conf keys
 			str="DOMAIN='$domain' IP='$IP' TPL='$TPL' TTL='$TTL' EXP='$EXP'"
 			str="$str SOA='$SOA' RECORDS='$RECORDS'  DNSSEC='$DNSSEC'"
-			str="$str KEY='$KEY' SLAVE='$SLAVE' MASTER='$MASTER' SUSPENDED='no'"
+			str="$str KEY='$KEY' SLAVE='$SLAVE' MASTER='$MASTER' DESCRIPTION='$DESCRIPTION' SUSPENDED='no'"
 			str="$str TIME='$(date +%T)' DATE='$(date +%F)'"
-			echo $str >> $USER_DATA/dns.conf
+			echo "$str" >> $USER_DATA/dns.conf
 		fi
 
 		if [ "$DNSSEC" = "yes" ]; then
@@ -764,7 +766,8 @@ if [ "$db" != 'no' ] && [ -n "$DB_SYSTEM" ]; then
 
 		# Restore database config
 		if [ -z "$check_config" ]; then
-			parse_object_kv_list $(cat $tmpdir/db/$database/$backup_system/db.conf)
+			DESCRIPTION=''
+			parse_object_kv_list "$(cat $tmpdir/db/$database/$backup_system/db.conf)"
 
 			if [ -z "$MD5" ]; then
 				echo "Warning!: Database ${DB} backup does not contain a password for user ${DBUSER}."
@@ -777,10 +780,10 @@ if [ "$db" != 'no' ] && [ -n "$DB_SYSTEM" ]; then
 			DBUSER="${user}_${DBUSER}"
 			str="DB='$DB' DBUSER='$DBUSER' MD5='$MD5' HOST='$HOST'"
 			str="$str TYPE='$TYPE' CHARSET='$CHARSET' U_DISK='$U_DISK'"
-			str="$str SUSPENDED='no' TIME='$(date +%T)' DATE='$(date +%F)'"
-			echo $str >> $USER_DATA/db.conf
+			str="$str DESCRIPTION='$DESCRIPTION' SUSPENDED='no' TIME='$(date +%T)' DATE='$(date +%F)'"
+			echo "$str" >> $USER_DATA/db.conf
 		else
-			parse_object_kv_list $(grep "DB='$database'" $USER_DATA/db.conf)
+			parse_object_kv_list "$(grep "DB='$database'" $USER_DATA/db.conf)"
 		fi
 
 		# Unzipping database dump

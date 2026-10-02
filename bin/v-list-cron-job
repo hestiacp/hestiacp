@@ -34,6 +34,7 @@ json_list() {
         "WDAY": "'$WDAY'",
         "CMD": "'$CMD'",
         "JOB": "'$JOB'",
+        "DESCRIPTION": "'"$(decode_description "$DESCRIPTION")"'",
         "SUSPENDED": "'$SUSPENDED'",
         "TIME": "'$TIME'",
         "DATE": "'$DATE'"
@@ -50,6 +51,7 @@ shell_list() {
 	echo "MONTH:          $MONTH"
 	echo "DAY OF WEEK:    $WDAY"
 	echo "COMMAND:        $CMD"
+	echo "DESCRIPTION:    $(decode_description "$DESCRIPTION")"
 	echo "SUSPENDED:      $SUSPENDED"
 	echo "TIME:           $TIME"
 	echo "DATE:           $DATE"

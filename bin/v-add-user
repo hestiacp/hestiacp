@@ -221,6 +221,7 @@ else
 fi
 
 echo "NAME='$name'
+DESCRIPTION=''
 PACKAGE='$package'
 $pkg_data
 CONTACT='$email'

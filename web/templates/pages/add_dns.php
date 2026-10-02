@@ -65,6 +65,7 @@
 						<input type="text" class="form-control list-editor" name="v_ip" id="v_ip" value="<?= tohtml(trim($v_ip, "'")) ?>">
 					</div>
 				</div>
+				<?php require $_SERVER["HESTIA"] . "/web/templates/includes/description-field.php"; ?>
 				<?php if ($_SESSION["userContext"] === "admin" || ($_SESSION["userContext"] === "user" && $_SESSION["POLICY_USER_EDIT_DNS_TEMPLATES"] === "yes")) { ?>
 					<div class="u-mb10">
 						<label for="v_template" class="form-label">

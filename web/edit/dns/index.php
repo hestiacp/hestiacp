@@ -44,6 +44,7 @@ if (!empty($_GET["domain"]) && empty($_GET["record_id"])) {
 	$v_ttl = $data[$v_domain]["TTL"];
 	$v_dnssec = $data[$v_domain]["DNSSEC"];
 	$v_exp = $data[$v_domain]["EXP"];
+	$v_description = $data[$v_domain]["DESCRIPTION"] ?? "";
 	$v_soa = $data[$v_domain]["SOA"];
 	$v_date = $data[$v_domain]["DATE"];
 	$v_time = $data[$v_domain]["TIME"];
@@ -238,6 +239,9 @@ if (
 		check_return_code($return_var, $output);
 		unset($output);
 	}
+
+	// Change description
+	save_object_description("v-change-dns-domain-description", [$user, $v_domain], $v_description);
 
 	// Set success message
 	if (empty($_SESSION["error_msg"])) {

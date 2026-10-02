@@ -63,6 +63,12 @@ if (!empty($_POST["ok"]) && $read_only !== true) {
 	$v_charset = $_POST["v_charset"];
 	$v_host = $_POST["v_host"];
 	$v_db_email = $_POST["v_db_email"];
+	$v_description = trim($_POST["v_description"] ?? "");
+
+	// Check description
+	if (empty($_SESSION["error_msg"])) {
+		validate_description($v_description);
+	}
 
 	// Add database
 	if (empty($_SESSION["error_msg"])) {
@@ -100,6 +106,12 @@ if (!empty($_POST["ok"]) && $read_only !== true) {
 		$v_host = $_POST["v_host"];
 		$v_charset = $_POST["v_charset"];
 	}
+
+	// Set description
+	save_object_description(
+		"v-change-database-description",
+		[$user, quoteshellarg($user_plain . "_" . $_POST["v_database"])],
+	);
 
 	// Get database manager url
 	if (empty($_SESSION["error_msg"])) {
@@ -213,6 +225,7 @@ if (!empty($_POST["ok"]) && $read_only !== true) {
 		unset($v_password);
 		unset($v_type);
 		unset($v_charset);
+		unset($v_description);
 	}
 }
 

@@ -29,6 +29,7 @@ json_list() {
 	objects=$(grep JOB $USER_DATA/cron.conf | wc -l)
 	echo "{"
 	while read str; do
+		DESCRIPTION=''
 		parse_object_kv_list "$str"
 		CMD=$(echo "$CMD" | sed -e 's/"/\\"/g' -e "s/%quote%/'/g")
 		echo -n '    "'$JOB'": {
@@ -39,6 +40,7 @@ json_list() {
         "WDAY": "'$WDAY'",
         "CMD": "'$CMD'",
         "JOB": "'$JOB'",
+        "DESCRIPTION": "'"$(decode_description "$DESCRIPTION")"'",
         "SUSPENDED": "'$SUSPENDED'",
         "TIME": "'$TIME'",
         "DATE": "'$DATE'"

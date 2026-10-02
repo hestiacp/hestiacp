@@ -137,6 +137,7 @@
 							<?= tohtml($key) ?>
 						</a>
 						<?= empty($data[$key]["SRC"]) ? "" : '<br>⇢ <span class="u-text-small">' . tohtml($data[$key]["SRC"]) . "</span>" ?>
+						<?php $description = $data[$key]["DESCRIPTION"] ?? ""; require $_SERVER["HESTIA"] . "/web/templates/includes/description-list.php"; ?>
 					</div>
 				<div class="units-table-cell">
 					<?php if (!$read_only) { ?>

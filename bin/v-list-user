@@ -26,6 +26,7 @@ json_list() {
 	echo '{
     "'$USER'": {
         "NAME": "'$NAME'",
+        "DESCRIPTION": "'"$(decode_description "$DESCRIPTION")"'",
         "PACKAGE": "'$PACKAGE'",
         "WEB_TEMPLATE": "'$WEB_TEMPLATE'",
         "BACKEND_TEMPLATE": "'$BACKEND_TEMPLATE'",
@@ -97,6 +98,7 @@ json_list() {
 shell_list() {
 	echo "USERNAME:      $USER"
 	echo "FULL NAME:     $NAME"
+	echo "DESCRIPTION:   $(decode_description "$DESCRIPTION")"
 	echo "EMAIL:         $CONTACT"
 	echo "LANGUAGE:      $LANGUAGE"
 	echo "THEME:         $THEME"

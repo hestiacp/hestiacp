@@ -32,9 +32,13 @@ json_list() {
 		if [ $i -gt 1 ]; then
 			echo ","
 		fi
+		# source_conf only assigns keys present in the file. Users created before
+		# descriptions were added do not have DESCRIPTION, so reset it per user.
+		DESCRIPTION=''
 		source_conf "$HESTIA/data/users/$USER/user.conf"
 		echo -n '    "'$USER'": {
         "NAME": "'$NAME'",
+        "DESCRIPTION": "'"$(decode_description "$DESCRIPTION")"'",
         "PACKAGE": "'$PACKAGE'",
         "WEB_TEMPLATE": "'$WEB_TEMPLATE'",
         "BACKEND_TEMPLATE": "'$BACKEND_TEMPLATE'",

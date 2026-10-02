@@ -64,6 +64,12 @@ if (!empty($_POST["ok"]) && $read_only !== true) {
 	$v_language = quoteshellarg($_POST["v_language"]);
 	$v_name = quoteshellarg($_POST["v_name"]);
 	$v_notify = $_POST["v_notify"];
+	$v_description = trim($_POST["v_description"] ?? "");
+
+	// Check description
+	if (empty($_SESSION["error_msg"])) {
+		validate_description($v_description);
+	}
 
 	// Add user
 	if (empty($_SESSION["error_msg"])) {
@@ -91,6 +97,9 @@ if (!empty($_POST["ok"]) && $read_only !== true) {
 		unlink($v_password);
 		$v_password = quoteshellarg($_POST["v_password"]);
 	}
+
+	// Set description
+	save_object_description("v-change-user-description", [$v_username]);
 
 	// Set language
 	if (empty($_SESSION["error_msg"])) {
@@ -239,6 +248,7 @@ if (!empty($_POST["ok"]) && $read_only !== true) {
 		unset($v_email);
 		unset($v_name);
 		unset($v_notify);
+		unset($v_description);
 	}
 }
 

@@ -90,6 +90,7 @@ json_list() {
         "U_BACKUPS": "'$U_BACKUPS'",
         "LANGUAGE": "'$LANGUAGE'",
         "TIME": "'$TIME'",
+        "EXTENDED_BACKUP": "'$EXTENDED_BACKUP'",
         "DATE": "'$DATE'"
         }'
 		((i++))

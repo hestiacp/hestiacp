@@ -67,6 +67,15 @@ is_package_consistent() {
 	if [ "$SWAP_LIMIT" != 'unlimited' ] && [ "$RESOURCES_LIMIT" = 'yes' ]; then
 		is_valid_swap_size "$SWAP_LIMIT" 'SWAP_LIMIT'
 	fi
+	if [ "$MAX_CHILDREN" != 'unlimited' ]; then
+		is_valid_max_children "$MAX_CHILDREN" 'MAX_CHILDREN'
+	fi
+	if [ "$MAX_REQUESTS" != 'unlimited' ] && [ -n "$MAX_REQUESTS" ]; then
+		is_valid_max_requests "$MAX_REQUESTS"
+	fi
+	if [ "$IDLE_TIMEOUT" != 'unlimited' ] && [ -n "$IDLE_TIMEOUT" ]; then
+		is_valid_idle_timeout "$IDLE_TIMEOUT"
+	fi
 	if [ "$BANDWIDTH" != 'unlimited' ]; then
 		is_int_format_valid "$BANDWIDTH" 'BANDWIDTH'
 	fi
@@ -146,6 +155,9 @@ CPU_QUOTA='$CPU_QUOTA'
 CPU_QUOTA_PERIOD='$CPU_QUOTA_PERIOD'
 MEMORY_LIMIT='$MEMORY_LIMIT'
 SWAP_LIMIT='$SWAP_LIMIT'
+MAX_CHILDREN='$MAX_CHILDREN'
+MAX_REQUESTS='$MAX_REQUESTS'
+IDLE_TIMEOUT='$IDLE_TIMEOUT'
 BANDWIDTH='$BANDWIDTH'
 NS='$NS'
 SHELL='$SHELL'

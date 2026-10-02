@@ -281,6 +281,41 @@
 					</div>
 				</div>
 			</details>
+			<details class="collapse" id="php-options">
+				<summary class="collapse-header">
+					<?= tohtml( _("PHP Settings")) ?>
+				</summary>
+				<div class="collapse-content">
+					<div class="u-mb10">
+						<label for="v_max_children" class="form-label">
+							<?= tohtml( _("PHP-FPM Max Children")) ?>
+						</label>
+						<div class="u-pos-relative">
+							<input type="text" class="form-control" name="v_max_children" id="v_max_children" value="<?= tohtml(trim($v_max_children, "'")) ?>">
+						</div>
+						<small class="form-text text-muted"><?= tohtml( _("The maximum number of parallel PHP processes that can run at any one time.")) ?></small>
+					</div>
+					<div class="u-mb10">
+						<label for="v_max_requests" class="form-label">
+							<?= tohtml( _("PHP-FPM Max Requests")) ?>
+						</label>
+						<div class="u-pos-relative">
+							<input type="text" class="form-control" name="v_max_requests" id="v_max_requests" value="<?= tohtml(trim($v_max_requests, "'")) ?>">
+						</div>
+						<small class="form-text text-muted"><?= tohtml( _("The number of requests each child process should execute before respawning.")) ?></small>
+					</div>
+					<div class="u-mb10">
+						<label for="v_idle_timeout" class="form-label">
+							<?= tohtml( _("PHP-FPM Idle Timeout")) ?> <span class="optional">(<?= tohtml( _("in seconds")) ?>)</span>
+						</label>
+						<div class="u-pos-relative">
+							<input type="text" class="form-control" name="v_idle_timeout" id="v_idle_timeout" value="<?= tohtml(trim($v_idle_timeout, "'")) ?>">
+						</div>
+						<small class="form-text text-muted"><?= tohtml( _("The number of seconds after which an idle process will be killed.")) ?></small>
+					</div>
+				</div>
+			</details>
+
 
 			<?php if ($_SESSION['RESOURCES_LIMIT'] == 'yes') { ?>
 				<details class="collapse" id="system-resources-options">

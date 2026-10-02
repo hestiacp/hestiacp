@@ -714,7 +714,7 @@ get_object_value() {
 }
 
 get_object_values() {
-	parse_object_kv_list $(grep "$2='$3'" $USER_DATA/$1.conf)
+	parse_object_kv_list "$(grep "$2='$3'" $USER_DATA/$1.conf)"
 }
 
 # Update object value
@@ -738,7 +738,7 @@ update_object_value() {
 
 # Add object key
 add_object_key() {
-	row=$(grep -n "$2='$3'" "$USER_DATA/$1.conf")
+	row=$(grep -nF "$2='$3'" "$USER_DATA/$1.conf")
 	lnr=$(echo "$row" | cut -f 1 -d ':')
 	object=$(echo "$row" | sed "s/^$lnr://")
 
@@ -1404,6 +1404,38 @@ is_comment_format_valid() {
 	fi
 }
 
+# Object description validator - free text, single line, max 255 characters.
+# The description is stored as KEY='value' in the object conf line and printed
+# unescaped in JSON output, so double quotes, backslashes and control chars are
+# rejected. Apostrophes are allowed and stored as %quote% (see encode_description).
+is_description_format_valid() {
+	local LC_ALL=C.UTF-8
+	if [[ "$1" =~ [[:cntrl:]] ]]; then
+		check_result "$E_INVALID" "invalid $2 format :: description must be a single line"
+	fi
+	if [[ "$1" == *[\"\\\`\<\>]* ]]; then
+		check_result "$E_INVALID" "invalid $2 format :: description cannot contain \" \\ \` < or >"
+	fi
+	if [ "${#1}" -gt 255 ]; then
+		check_result "$E_INVALID" "invalid $2 format :: description cannot exceed 255 characters"
+	fi
+}
+
+# Encode a description for storage. Escape percent signs as %25 first, then
+# replace apostrophes with %quote%, so literal %quote% text remains reversible.
+encode_description() {
+	local q="'" description
+	description=${1//%/%25}
+	printf '%s' "${description//$q/%quote%}"
+}
+
+# Decode a stored description for output in the reverse order of encoding.
+decode_description() {
+	local q="'" description
+	description=${1//%quote%/$q}
+	printf '%s' "${description//%25/%}"
+}
+
 # User notification topic validator - plain text, single line only.
 # Rendered client-side with Alpine's x-text, but line breaks would still
 # corrupt the flat-file notifications.conf format, so they're rejected here.
@@ -1592,6 +1624,7 @@ is_format_valid() {
 				database) is_database_format_valid "$arg" 'database' ;;
 				day) is_cron_format_valid "$arg" $arg_name ;;
 				dbpass) is_password_format_valid "$arg" ;;
+				description) is_description_format_valid "$arg" 'description' ;;
 				dbuser) is_dbuser_format_valid "$arg" 'dbuser' ;;
 				dkim) is_boolean_format_valid "$arg" 'dkim' ;;
 				dkim_size) is_int_format_valid "$arg" ;;

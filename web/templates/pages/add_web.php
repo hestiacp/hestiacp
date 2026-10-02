@@ -43,6 +43,7 @@
 					<label for="v_domain" class="form-label"><?= tohtml( _("Domain")) ?></label>
 					<input type="text" class="form-control" name="v_domain" id="v_domain" value="<?= tohtml(trim($v_domain, "'")) ?>" required>
 				</div>
+				<?php require $_SERVER["HESTIA"] . "/web/templates/includes/description-field.php"; ?>
 				<div class="u-mb20">
 					<label for="v_ip" class="form-label"><?= tohtml( _("IP Address")) ?></label>
 					<select class="form-select" name="v_ip" id="v_ip">

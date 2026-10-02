@@ -49,6 +49,8 @@ if (!empty($_POST["ok"]) && $read_only !== true) {
 	$v_month = quoteshellarg($_POST["v_month"]);
 	$v_wday = quoteshellarg($_POST["v_wday"]);
 	$v_cmd = quoteshellarg($_POST["v_cmd"]);
+	$v_description = trim($_POST["v_description"] ?? "");
+	validate_description($v_description);
 
 	// Add cron job
 	if (empty($_SESSION["error_msg"])) {
@@ -67,7 +69,9 @@ if (!empty($_POST["ok"]) && $read_only !== true) {
 				" " .
 				$v_wday .
 				" " .
-				$v_cmd,
+				$v_cmd .
+				" '' '' " .
+				quoteshellarg($v_description),
 			$output,
 			$return_var,
 		);
@@ -84,6 +88,7 @@ if (!empty($_POST["ok"]) && $read_only !== true) {
 		unset($v_month);
 		unset($v_wday);
 		unset($v_cmd);
+		unset($v_description);
 		unset($output);
 	}
 }

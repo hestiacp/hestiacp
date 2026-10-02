@@ -63,7 +63,7 @@ restic --repo "${REPO%/}/$user" --password-file "$USER_DATA/restic.conf" dump "$
 old_uid=$(cut -f 3 -d : $tmpdir/passwd)
 
 domains=""
-parse_object_kv_list $(cat $tmpdir/backup.conf)
+parse_object_kv_list "$(cat $tmpdir/backup.conf)"
 IFS=',' read -a domains <<< "$WEB"
 for domain in "${domains[@]}"; do
 	if [[ ",$web," == *",$domain,"* || "$web" = '*' ]]; then
@@ -89,7 +89,8 @@ for domain in "${domains[@]}"; do
 
 		# Restoring web.conf
 		if [ -z "$check_config" ]; then
-			parse_object_kv_list $(cat $tmpdir/home/$user/backup/web/$domain/hestia/web.conf)
+			DESCRIPTION=''
+			parse_object_kv_list "$(cat $tmpdir/home/$user/backup/web/$domain/hestia/web.conf)"
 
 			# Deleting conflicting aliases
 			for dom_alias in ${ALIAS//,/ }; do
@@ -170,9 +171,9 @@ for domain in "${domains[@]}"; do
 			str="$str BACKEND='$BACKEND' PROXY='$PROXY'"
 			str="$str PROXY_EXT='$PROXY_EXT' STATS='$STATS'"
 			str="$str STATS_USER='$STATS_USER' STATS_CRYPT='$STATS_CRYPT'"
-			str="$str U_DISK='$U_DISK' U_BANDWIDTH='0' SUSPENDED='no'"
+			str="$str U_DISK='$U_DISK' U_BANDWIDTH='0' DESCRIPTION='$DESCRIPTION' SUSPENDED='no'"
 			str="$str TIME='$(date +%T)' DATE='$(date +%F)'"
-			echo $str >> $USER_DATA/web.conf
+			echo "$str" >> $USER_DATA/web.conf
 
 			# Rebuilding backend
 			if [ -n "$WEB_BACKEND" ]; then

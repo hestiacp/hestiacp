@@ -36,6 +36,7 @@
 				<label for="v_cmd" class="form-label"><?= tohtml( _("Command")) ?></label>
 				<input type="text" class="form-control" name="v_cmd" id="v_cmd" value="<?= tohtml(trim($v_cmd, "'")) ?>">
 			</div>
+			<?php require $_SERVER["HESTIA"] . "/web/templates/includes/description-field.php"; ?>
 			<div class="sidebar-left-grid">
 				<div class="sidebar-left-grid-sidebar">
 					<div class="u-mb10">

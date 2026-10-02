@@ -32,6 +32,9 @@ rebuild_user_conf() {
 		sed -i "s/FNAME='$FNAME'/NAME='$NAME'/g" $USER_DATA/user.conf
 		sed -i "/LNAME='$LNAME'/d" $USER_DATA/user.conf
 	fi
+	if ! grep -q "^DESCRIPTION=" $USER_DATA/user.conf; then
+		sed -i "/^NAME=/a DESCRIPTION=''" $USER_DATA/user.conf
+	fi
 	if [ -z "${TWOFA+x}" ]; then
 		sed -i "/RKEY/a TWOFA=''" $USER_DATA/user.conf
 	fi

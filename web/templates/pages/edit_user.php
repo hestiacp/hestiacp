@@ -79,6 +79,7 @@
 					<input type="hidden" name="v_email" value="<?= tohtml(trim($v_email, "'")) ?>">
 				<?php } ?>
 			</div>
+			<?php require $_SERVER["HESTIA"] . "/web/templates/includes/description-field.php"; ?>
 			<div class="u-mb10">
 				<label for="v_password" class="form-label">
 					<?= tohtml( _("Password")) ?>

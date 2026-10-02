@@ -59,7 +59,7 @@ if [ ! -f "$tmpdir/backup.conf" ]; then
 fi
 
 domains=""
-parse_object_kv_list $(cat "$tmpdir/backup.conf")
+parse_object_kv_list "$(cat "$tmpdir/backup.conf")"
 IFS=',' read -a domains <<< "$MAIL"
 
 # Checking exim username for later chowning

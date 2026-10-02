@@ -78,6 +78,12 @@ if (!empty($_POST["ok"]) && $read_only !== true) {
 	$v_ns8 = quoteshellarg($_POST["v_ns8"]);
 	$v_dnssec = quoteshellarg($_POST["v_dnssec"]);
 
+	// Check description
+	$v_description = trim($_POST["v_description"] ?? "");
+	if (empty($_SESSION["error_msg"])) {
+		validate_description($v_description);
+	}
+
 	// Add dns domain
 	if (empty($_SESSION["error_msg"])) {
 		exec(
@@ -192,6 +198,9 @@ if (!empty($_POST["ok"]) && $read_only !== true) {
 		unset($output);
 	}
 
+	// Set description
+	save_object_description("v-change-dns-domain-description", [$user, $v_domain]);
+
 	// Flush field values on success
 	if (empty($_SESSION["error_msg"])) {
 		$_SESSION["ok_msg"] = htmlify_trans(
@@ -204,6 +213,7 @@ if (!empty($_POST["ok"]) && $read_only !== true) {
 		);
 
 		unset($v_domain);
+		unset($v_description);
 	}
 }
 

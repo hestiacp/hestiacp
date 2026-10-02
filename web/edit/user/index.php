@@ -51,6 +51,7 @@ $v_language = $data[$v_username]["LANGUAGE"];
 $v_user_theme = $data[$v_username]["THEME"];
 $v_sort_order = $data[$v_username]["PREF_UI_SORT"];
 $v_name = $data[$v_username]["NAME"];
+$v_description = $data[$v_username]["DESCRIPTION"] ?? "";
 $v_shell = $data[$v_username]["SHELL"];
 $v_twofa = $data[$v_username]["TWOFA"];
 $v_qrcode = $data[$v_username]["QRCODE"];
@@ -564,6 +565,9 @@ if (!empty($_POST["save"]) && $read_only !== true) {
 			}
 		}
 	}
+
+	// Change description
+	save_object_description("v-change-user-description", [$v_username], $v_description);
 
 	// Set success message
 	if (empty($_SESSION["error_msg"])) {

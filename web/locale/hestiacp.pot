@@ -2492,6 +2492,12 @@ msgstr ""
 msgid "Description"
 msgstr ""
 
+#: ../../web/inc/main.php:620
+msgid ""
+"Description must be a single line of up to 255 characters and cannot contain "
+"double quotes, backslashes, backticks, < or >."
+msgstr ""
+
 #: ../../web/templates/pages/list_updates.php:35
 #: ../../web/templates/pages/list_updates.php:62
 #: ../../web/templates/pages/list_webapps.php:27

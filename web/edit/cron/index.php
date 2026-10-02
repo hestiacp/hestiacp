@@ -34,6 +34,7 @@ $v_day = $data[$v_job]["DAY"];
 $v_month = $data[$v_job]["MONTH"];
 $v_wday = $data[$v_job]["WDAY"];
 $v_cmd = $data[$v_job]["CMD"];
+$v_description = $data[$v_job]["DESCRIPTION"] ?? "";
 $v_date = $data[$v_job]["DATE"];
 $v_time = $data[$v_job]["TIME"];
 $v_suspended = $data[$v_job]["SUSPENDED"];
@@ -56,31 +57,36 @@ if (!empty($_POST["save"]) && $read_only !== true) {
 	$v_month = quoteshellarg($_POST["v_month"]);
 	$v_wday = quoteshellarg($_POST["v_wday"]);
 	$v_cmd = quoteshellarg($_POST["v_cmd"]);
+	$v_description = trim($_POST["v_description"] ?? "");
 
 	// Save changes
-	exec(
-		HESTIA_CMD .
-			"v-change-cron-job " .
-			$user .
-			" " .
-			$v_job .
-			" " .
-			$v_min .
-			" " .
-			$v_hour .
-			" " .
-			$v_day .
-			" " .
-			$v_month .
-			" " .
-			$v_wday .
-			" " .
-			$v_cmd,
-		$output,
-		$return_var,
-	);
-	check_return_code($return_var, $output);
-	unset($output);
+	if (validate_description($v_description)) {
+		exec(
+			HESTIA_CMD .
+				"v-change-cron-job " .
+				$user .
+				" " .
+				$v_job .
+				" " .
+				$v_min .
+				" " .
+				$v_hour .
+				" " .
+				$v_day .
+				" " .
+				$v_month .
+				" " .
+				$v_wday .
+				" " .
+				$v_cmd .
+				" " .
+				quoteshellarg($v_description),
+			$output,
+			$return_var,
+		);
+		check_return_code($return_var, $output);
+		unset($output);
+	}
 
 	$v_cmd = $_POST["v_cmd"];
 

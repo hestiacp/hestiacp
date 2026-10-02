@@ -75,6 +75,12 @@ if (!empty($_POST["ok"]) && $read_only !== true) {
 	$v_domain = quoteshellarg($v_domain);
 	$v_domain = strtolower($v_domain);
 
+	// Check description
+	$v_description = trim($_POST["v_description"] ?? "");
+	if (empty($_SESSION["error_msg"])) {
+		validate_description($v_description);
+	}
+
 	// Add mail domain
 	if (empty($_SESSION["error_msg"])) {
 		exec(
@@ -186,6 +192,9 @@ if (!empty($_POST["ok"]) && $read_only !== true) {
 		}
 	}
 
+	// Set description
+	save_object_description("v-change-mail-domain-description", [$user, $v_domain]);
+
 	// Flush field values on success
 	if (empty($_SESSION["error_msg"])) {
 		$_SESSION["ok_msg"] = htmlify_trans(
@@ -196,7 +205,7 @@ if (!empty($_POST["ok"]) && $read_only !== true) {
 			"</a>",
 			'<a href="/list/mail/?domain=' . htmlentities($_POST["v_domain"]) . '">',
 		);
-		unset($v_domain, $v_webmail);
+		unset($v_domain, $v_webmail, $v_description);
 	}
 }
 

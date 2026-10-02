@@ -50,6 +50,7 @@ if (!empty($_GET["domain"]) && empty($_GET["account"])) {
 	$v_suspended = $data[$v_domain]["SUSPENDED"];
 	$v_webmail_alias = $data[$v_domain]["WEBMAIL_ALIAS"];
 	$v_webmail = $data[$v_domain]["WEBMAIL"];
+	$v_description = $data[$v_domain]["DESCRIPTION"] ?? "";
 	$v_smtp_relay = $data[$v_domain]["U_SMTP_RELAY"];
 	$v_smtp_relay_host = $data[$v_domain]["U_SMTP_RELAY_HOST"];
 	$v_smtp_relay_port = $data[$v_domain]["U_SMTP_RELAY_PORT"];
@@ -739,6 +740,9 @@ if (
 			unset($output);
 		}
 	}
+
+	// Change description
+	save_object_description("v-change-mail-domain-description", [$user, quoteshellarg($v_domain)], $v_description);
 
 	// Set success message
 	if (empty($_SESSION["error_msg"])) {

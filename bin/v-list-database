@@ -33,6 +33,7 @@ json_list() {
         "TYPE": "'$TYPE'",
         "CHARSET": "'$CHARSET'",
         "U_DISK": "'$U_DISK'",
+        "DESCRIPTION": "'"$(decode_description "$DESCRIPTION")"'",
         "SUSPENDED": "'$SUSPENDED'",
         "TIME": "'$TIME'",
         "DATE": "'$DATE'"
@@ -48,6 +49,7 @@ shell_list() {
 	echo "TYPE:           $TYPE"
 	echo "CHARSET:        $CHARSET"
 	echo "DISK:           $U_DISK"
+	echo "DESCRIPTION:    $(decode_description "$DESCRIPTION")"
 	echo "SUSPENDED:      $SUSPENDED"
 	echo "TIME:           $TIME"
 	echo "DATE:           $DATE"
@@ -79,7 +81,7 @@ is_object_valid 'db' 'DB' "$database"
 #----------------------------------------------------------#
 
 # Parsing database
-parse_object_kv_list $(grep "DB='$database'" $USER_DATA/db.conf)
+parse_object_kv_list "$(grep "DB='$database'" $USER_DATA/db.conf)"
 
 # Listing data
 case $format in

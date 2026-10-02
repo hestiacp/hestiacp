@@ -78,7 +78,7 @@ that can be downloaded from apt or git.
 
 add cron job
 
-**Options**: `USER` `MIN` `HOUR` `DAY` `MONTH` `WDAY` `CRON_COMMAND` `[JOB]` `[RESTART]`
+**Options**: `USER` `MIN` `HOUR` `DAY` `MONTH` `WDAY` `CRON_COMMAND` `[JOB]` `[RESTART]` `[DESCRIPTION]`
 
 **Examples**:
 
@@ -88,6 +88,8 @@ v-add-cron-job admin * * * * * sudo /usr/local/hestia/bin/v-backup-users
 
 This function adds a job to cron daemon. When executing commands, any output
 is mailed to user's email if parameter REPORTS is set to 'yes'.
+DESCRIPTION is optional administrative metadata and is not written to the
+system crontab.
 
 ## v-add-cron-letsencrypt-job
 
@@ -1383,7 +1385,7 @@ This function backups all system users.
 
 change cron job
 
-**Options**: `USER` `JOB` `MIN` `HOUR` `DAY` `MONTH` `WDAY` `CRON_COMMAND`
+**Options**: `USER` `JOB` `MIN` `HOUR` `DAY` `MONTH` `WDAY` `CRON_COMMAND` `[DESCRIPTION]`
 
 **Examples**:
 
@@ -1392,7 +1394,25 @@ v-change-cron-job admin 7 * * * * * /usr/bin/uptime
 ```
 
 This function is used for changing existing job. It fully replace job
-parameters with new one but with same id.
+parameters with new one but with same id. If DESCRIPTION is omitted, the
+existing description is preserved; pass an empty value to clear it.
+
+## v-change-database-description
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-database-description)
+
+change database description
+
+**Options**: `USER` `DATABASE` `[DESCRIPTION]`
+
+**Examples**:
+
+```bash
+v-change-database-description admin admin_wordpress 'Legacy site, do not remove until migration is complete'
+```
+
+Sets optional administrative metadata for a database. DESCRIPTION must be a
+single line of at most 255 characters; omit it to clear the description.
 
 ## v-change-database-host-password
 
@@ -1458,6 +1478,23 @@ v-change-database-user admin my_db joe_user
 ```
 
 This function for changing database user. It uses the
+
+## v-change-dns-domain-description
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-dns-domain-description)
+
+change dns domain description
+
+**Options**: `USER` `DOMAIN` `[DESCRIPTION]`
+
+**Examples**:
+
+```bash
+v-change-dns-domain-description admin example.com 'DNS hosted externally during migration'
+```
+
+Sets optional administrative metadata for a DNS domain. DESCRIPTION must be a
+single line of at most 255 characters; omit it to clear the description.
 
 ## v-change-dns-domain-dnssec
 
@@ -1669,6 +1706,23 @@ v-change-mail-account-quota admin mydomain.tld user01 unlimited
 ```
 
 This function changes email account disk quota.
+
+## v-change-mail-domain-description
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-mail-domain-description)
+
+change mail domain description
+
+**Options**: `USER` `DOMAIN` `[DESCRIPTION]`
+
+**Examples**:
+
+```bash
+v-change-mail-domain-description admin example.com 'MX handled by an external provider'
+```
+
+Sets optional administrative metadata for a mail domain. DESCRIPTION must be a
+single line of at most 255 characters; omit it to clear the description.
 
 ## v-change-mail-account-rate-limit
 
@@ -2095,6 +2149,23 @@ v-change-user-contact admin admin@yahoo.com
 
 This function for changing of e-mail associated with a certain user.
 
+## v-change-user-description
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-user-description)
+
+change user description
+
+**Options**: `USER` `[DESCRIPTION]`
+
+**Examples**:
+
+```bash
+v-change-user-description admin 'Customer since 2019; billing handled by finance'
+```
+
+Sets optional administrative metadata for a user. DESCRIPTION must be a single
+line of at most 255 characters; omit it to clear the description.
+
 ## v-change-user-language
 
 [Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-user-language)
@@ -2314,6 +2385,23 @@ v-change-web-domain-dirlist user demo.com on
 ```
 
 This function is used for changing the directory list mode.
+
+## v-change-web-domain-description
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-web-domain-description)
+
+change web domain description
+
+**Options**: `USER` `DOMAIN` `[DESCRIPTION]`
+
+**Examples**:
+
+```bash
+v-change-web-domain-description admin example.com 'Legacy site, do not remove until migration is complete'
+```
+
+Sets optional administrative metadata for a web domain. DESCRIPTION must be a
+single line of at most 255 characters; omit it to clear the description.
 
 ## v-change-web-domain-docroot
 

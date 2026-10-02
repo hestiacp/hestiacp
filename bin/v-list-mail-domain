@@ -25,7 +25,7 @@ source_conf "$HESTIA/conf/hestia.conf"
 
 # JSON list function
 json_list() {
-	parse_object_kv_list $(grep "DOMAIN='$domain'" $USER_DATA/mail.conf)
+	parse_object_kv_list "$(grep "DOMAIN='$domain'" $USER_DATA/mail.conf)"
 	echo '{'
 	echo '    "'$DOMAIN'": {
         "ANTIVIRUS": "'$ANTIVIRUS'",
@@ -38,6 +38,7 @@ json_list() {
         "U_DISK": "'$U_DISK'",
         "SSL": "'$SSL'",
         "LETSENCRYPT": "'$LETSENCRYPT'",
+        "DESCRIPTION": "'"$(decode_description "$DESCRIPTION")"'",
         "SUSPENDED": "'$SUSPENDED'",
         "TIME": "'$TIME'",
         "DATE": "'$DATE'",
@@ -64,6 +65,7 @@ shell_list() {
 	echo "RATE_LIMIT:         $RATE_LIMIT"
 	echo "REJECT:             $REJECT"
 	echo "LETSENCRYPT:        $LETSENCRYPT"
+	echo "DESCRIPTION:        $(decode_description "$DESCRIPTION")"
 	echo "SUSPENDED:          $SUSPENDED"
 	echo "TIME:               $TIME"
 	echo "DATE:               $DATE"
@@ -106,7 +108,7 @@ is_object_valid 'mail' 'DOMAIN' "$domain"
 #----------------------------------------------------------#
 
 # Parsing mail domain
-parse_object_kv_list $(grep "DOMAIN='$domain'" $USER_DATA/mail.conf)
+parse_object_kv_list "$(grep "DOMAIN='$domain'" $USER_DATA/mail.conf)"
 
 # Listing data
 case $format in

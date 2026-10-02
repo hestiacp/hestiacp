@@ -52,6 +52,7 @@ json_list() {
         "REDIRECT": "'$REDIRECT'",
         "REDIRECT_CODE": "'$REDIRECT_CODE'",
         "CUSTOM_DOCROOT": "'$CUSTOM_DOCROOT'",
+        "DESCRIPTION": "'"$(decode_description "$DESCRIPTION")"'",
         "SUSPENDED": "'$SUSPENDED'",
         "TIME": "'$TIME'",
         "DATE": "'$DATE'"
@@ -116,6 +117,7 @@ shell_list() {
 	fi
 	echo "DISK:             $U_DISK"
 	echo "BW:               $U_BANDWIDTH"
+	echo "DESCRIPTION:      $(decode_description "$DESCRIPTION")"
 	echo "SUSPENDED:        $SUSPENDED"
 	echo "TIME:             $TIME"
 	echo "DATE:             $DATE"
@@ -154,7 +156,7 @@ is_object_valid 'web' 'DOMAIN' "$domain"
 #----------------------------------------------------------#
 
 # Parsing domain
-parse_object_kv_list $(grep "DOMAIN='$domain'" $USER_DATA/web.conf)
+parse_object_kv_list "$(grep "DOMAIN='$domain'" $USER_DATA/web.conf)"
 
 if [ -n "$CUSTOM_DOCROOT" ]; then
 	DOCROOT="$CUSTOM_DOCROOT"

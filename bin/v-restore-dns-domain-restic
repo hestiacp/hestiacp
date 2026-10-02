@@ -55,7 +55,7 @@ if [ ! -f "$tmpdir/backup.conf" ]; then
 	fi
 fi
 
-parse_object_kv_list $(cat "$tmpdir/backup.conf")
+parse_object_kv_list "$(cat "$tmpdir/backup.conf")"
 domains=''
 IFS=',' read -a domains <<< "$DNS"
 for domain in "${domains[@]}"; do
@@ -81,7 +81,8 @@ for domain in "${domains[@]}"; do
 
 		# Restoring dns.conf
 		if [ -z "$check_config" ]; then
-			parse_object_kv_list $(cat $tmpdir/home/$user/backup/dns/$domain/hestia/dns.conf)
+			DESCRIPTION=''
+			parse_object_kv_list "$(cat $tmpdir/home/$user/backup/dns/$domain/hestia/dns.conf)"
 
 			# Checking IP address
 			check_ip=$(is_ip_valid $IP $user)
@@ -101,9 +102,9 @@ for domain in "${domains[@]}"; do
 			# Merging dns.conf keys
 			str="DOMAIN='$domain' IP='$IP' TPL='$TPL' TTL='$TTL' EXP='$EXP'"
 			str="$str SOA='$SOA' RECORDS='$RECORDS'  DNSSEC='$DNSSEC'"
-			str="$str KEY='$KEY' SLAVE='$SLAVE' MASTER='$MASTER' SUSPENDED='no'"
+			str="$str KEY='$KEY' SLAVE='$SLAVE' MASTER='$MASTER' DESCRIPTION='$DESCRIPTION' SUSPENDED='no'"
 			str="$str TIME='$(date +%T)' DATE='$(date +%F)'"
-			echo $str >> $USER_DATA/dns.conf
+			echo "$str" >> $USER_DATA/dns.conf
 		fi
 		if [ "$DNSSEC" = "yes" ]; then
 			format_domain_idn

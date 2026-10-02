@@ -86,6 +86,7 @@
 				<label for="v_ttl" class="form-label"><?= tohtml( _("TTL")) ?></label>
 				<input type="text" class="form-control" name="v_ttl" id="v_ttl" value="<?= tohtml(trim($v_ttl, "'")) ?>">
 			</div>
+			<?php require $_SERVER["HESTIA"] . "/web/templates/includes/description-field.php"; ?>
 		</div>
 
 	</form>

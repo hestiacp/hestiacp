@@ -410,6 +410,92 @@ function check_ip_not_banned(){
     refute_output
 }
 
+@test "User: Change user description" {
+    run v-change-user-description "$user" "Prefeitura de Goiânia - billing: https://example.com/a?b=1 (50%)"
+    assert_success
+    refute_output
+
+    run v-list-user "$user" json
+    assert_success
+    assert_output --partial '"DESCRIPTION": "Prefeitura de Goiânia - billing: https://example.com/a?b=1 (50%)"'
+}
+
+@test "User: Change user description with apostrophe" {
+    run v-change-user-description "$user" "Don't remove - caixa d'água"
+    assert_success
+    refute_output
+
+    run v-list-user "$user" json
+    assert_success
+    assert_output --partial "\"DESCRIPTION\": \"Don't remove - caixa d'água\""
+
+    run grep "^DESCRIPTION='Don%quote%t remove - caixa d%quote%água'$" "$HESTIA/data/users/$user/user.conf"
+	assert_success
+}
+
+@test "User: Change user description with literal quote marker" {
+	run v-change-user-description "$user" "Don't use %quote% marker"
+	assert_success
+	refute_output
+
+	run v-list-user "$user" json
+	assert_success
+	assert_output --partial "\"DESCRIPTION\": \"Don't use %quote% marker\""
+
+	run grep "^DESCRIPTION='Don%quote%t use %25quote%25 marker'$" "$HESTIA/data/users/$user/user.conf"
+	assert_success
+}
+
+@test "User: Change user description (invalid)" {
+    run v-change-user-description "$user" 'Invalid "double quote"'
+    assert_failure $E_INVALID
+
+    run v-change-user-description "$user" 'Line one
+Line two'
+    assert_failure $E_INVALID
+
+    run v-change-user-description "$user" "$(printf 'a%.0s' {1..256})"
+    assert_failure $E_INVALID
+
+    run v-change-user-description "$user" $'C1 control\u0085 character'
+    assert_failure $E_INVALID
+}
+
+@test "User: Clear user description" {
+	run v-change-user-description "$user"
+	assert_success
+	refute_output
+
+    run v-list-user "$user" json
+	assert_success
+	assert_output --partial '"DESCRIPTION": ""'
+}
+
+@test "User: List users does not inherit a missing description" {
+	run v-add-user hdescaa hdescaa hdescaa@hestiacp.com default "Description list A"
+	assert_success
+
+	run v-add-user hdescbb hdescbb hdescbb@hestiacp.com default "Description list B"
+	assert_success
+
+	run v-change-user-description hdescaa "List leak sentinel"
+	assert_success
+
+	# Simulate a user created before DESCRIPTION was introduced.
+	run sed -i "/^DESCRIPTION=/d" "$HESTIA/data/users/hdescbb/user.conf"
+	assert_success
+
+	run v-list-users json
+	assert_success
+	description_b=$(echo "$output" | jq -r '.hdescbb.DESCRIPTION')
+	assert_equal "$description_b" ""
+
+	run v-delete-user hdescaa
+	assert_success
+	run v-delete-user hdescbb
+	assert_success
+}
+
 @test "User: Change user shell" {
     run v-change-user-shell $user bash
     assert_success
@@ -639,6 +725,75 @@ function check_ip_not_banned(){
     assert_line --partial '2,2,2,2,2,"echo",no'
 }
 
+@test "Cron: Add cron job with description" {
+    run v-add-cron-job $user 3 3 3 3 3 echo 3 '' 'Nextcloud background job'
+    assert_success
+    refute_output
+
+    run v-list-cron-job $user 3 json
+    assert_success
+    assert_output --partial '"DESCRIPTION": "Nextcloud background job"'
+}
+
+@test "Cron: Description is not written to the crontab" {
+    run grep -r 'Nextcloud background job' /var/spool/cron/
+    assert_failure
+}
+
+@test "Cron: Change cron job keeps description" {
+    run v-change-cron-job $user 3 4 4 4 4 4 echo
+    assert_success
+    refute_output
+
+    run v-list-cron-job $user 3 json
+    assert_success
+    assert_output --partial '"MIN": "4"'
+    assert_output --partial '"DESCRIPTION": "Nextcloud background job"'
+}
+
+@test "Cron: Change cron job description" {
+    run v-change-cron-job $user 3 4 4 4 4 4 echo 'Updated description'
+    assert_success
+    refute_output
+
+    run v-list-cron-job $user 3 json
+    assert_success
+    assert_output --partial '"DESCRIPTION": "Updated description"'
+
+    run v-change-cron-job $user 3 4 4 4 4 4 echo ''
+    assert_success
+
+    run v-list-cron-job $user 3 json
+    assert_success
+    assert_output --partial '"DESCRIPTION": ""'
+}
+
+@test "Cron: Change cron job keeps description with apostrophe" {
+    run v-change-cron-job $user 3 4 4 4 4 4 echo "Don't touch"
+    assert_success
+
+    run v-change-cron-job $user 3 5 5 5 5 5 echo
+    assert_success
+
+    run v-list-cron-job $user 3 json
+    assert_success
+    assert_output --partial "\"DESCRIPTION\": \"Don't touch\""
+
+    run grep "DESCRIPTION='Don%quote%t touch'" "$HESTIA/data/users/$user/cron.conf"
+    assert_success
+}
+
+@test "Cron: Add cron job with description (invalid)" {
+    run v-add-cron-job $user 5 5 5 5 5 echo 5 '' 'Invalid <tag>'
+    assert_failure $E_INVALID
+}
+
+@test "Cron: Delete cron job with description" {
+    run v-delete-cron-job $user 3
+    assert_success
+    refute_output
+}
+
 @test "Cron: rebuild" {
     run v-rebuild-cron-jobs $user
     assert_success
@@ -816,6 +971,37 @@ function check_ip_not_banned(){
 @test "WEB: Add web domain (duplicate)" {
     run v-add-web-domain $user $domain 198.18.0.125
     assert_failure $E_EXISTS
+}
+
+@test "WEB: Change web domain description" {
+    run v-change-web-domain-description $user $domain 'Legacy site  *  keep until migration'
+    assert_success
+    refute_output
+
+    run v-list-web-domain $user $domain json
+    assert_success
+    assert_output --partial '"DESCRIPTION": "Legacy site  *  keep until migration"'
+
+    run v-list-web-domains $user json
+    assert_success
+    assert_output --partial '"DESCRIPTION": "Legacy site  *  keep until migration"'
+}
+
+@test "WEB: Web domain description is kept after rebuild" {
+    run v-rebuild-web-domain $user $domain
+    assert_success
+
+    run v-list-web-domain $user $domain json
+    assert_success
+    assert_output --partial '"DESCRIPTION": "Legacy site  *  keep until migration"'
+}
+
+@test "WEB: Change web domain description (invalid)" {
+    run v-change-web-domain-description $user $domain 'Invalid "quote"'
+    assert_failure $E_INVALID
+
+    run v-change-web-domain-description $user $domain '<script>'
+    assert_failure $E_INVALID
 }
 
 @test "WEB: Add web domain alias" {
@@ -1332,6 +1518,21 @@ function check_ip_not_banned(){
     assert_failure $E_EXISTS
 }
 
+@test "DNS: Change domain description" {
+    run v-change-dns-domain-description $user $domain 'Zone also hosted externally'
+    assert_success
+    refute_output
+
+    run v-list-dns-domain $user $domain json
+    assert_success
+    assert_output --partial '"DESCRIPTION": "Zone also hosted externally"'
+}
+
+@test "DNS: Change domain description (invalid)" {
+    run v-change-dns-domain-description $user $domain 'Invalid \ backslash'
+    assert_failure $E_INVALID
+}
+
 @test "DNS: Add domain record" {
     run v-add-dns-record $user $domain test A 198.18.0.125 '' 30
     assert_success
@@ -1583,6 +1784,21 @@ function check_ip_not_banned(){
     refute_output
 
     validate_mail_domain $user $domain
+}
+
+@test "MAIL: Change domain description" {
+    run v-change-mail-domain-description $user $domain 'MX points to an external provider'
+    assert_success
+    refute_output
+
+    run v-list-mail-domain $user $domain json
+    assert_success
+    assert_output --partial '"DESCRIPTION": "MX points to an external provider"'
+}
+
+@test "MAIL: Change domain description (invalid)" {
+    run v-change-mail-domain-description $user $domain 'Invalid `backtick`'
+    assert_failure $E_INVALID
 }
 
 @test "MAIL: Add mail domain webmail client (Roundcube)" {
@@ -1915,6 +2131,25 @@ function check_ip_not_banned(){
 @test "MYSQL: Add Database (Duplicate)" {
     run v-add-database $user database dbuser 1234 mysql
     assert_failure $E_EXISTS
+}
+
+@test "MYSQL: Change database description" {
+    run v-change-database-description $user $database 'Used by the reporting system'
+    assert_success
+    refute_output
+
+    run v-list-database $user $database json
+    assert_success
+    assert_output --partial '"DESCRIPTION": "Used by the reporting system"'
+
+    run v-list-databases $user json
+    assert_success
+    assert_output --partial '"DESCRIPTION": "Used by the reporting system"'
+}
+
+@test "MYSQL: Change database description (invalid)" {
+    run v-change-database-description $user $database 'Invalid "quote"'
+    assert_failure $E_INVALID
 }
 
 @test "MYSQL: Rebuild Database" {

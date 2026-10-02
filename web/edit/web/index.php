@@ -84,6 +84,7 @@ $v_proxy = $data[$v_domain]["PROXY"];
 $v_proxy_template = $data[$v_domain]["PROXY"];
 $v_proxy_ext = str_replace(",", ", ", $data[$v_domain]["PROXY_EXT"]);
 $v_stats = $data[$v_domain]["STATS"];
+$v_description = $data[$v_domain]["DESCRIPTION"] ?? "";
 $v_stats_user = $data[$v_domain]["STATS_USER"];
 $v_stats_password = "";
 
@@ -1620,6 +1621,9 @@ if (!empty($_POST["save"]) && $read_only !== true) {
 		check_return_code($return_var, $output);
 		unset($output);
 	}
+
+	// Change description
+	save_object_description("v-change-web-domain-description", [$user, quoteshellarg($v_domain)], $v_description);
 
 	// Set success message
 	if (empty($_SESSION["error_msg"])) {

@@ -1,0 +1,61 @@
+#!/bin/bash
+# info: change user description
+# options: USER [DESCRIPTION]
+#
+# example: v-change-user-description admin 'Customer since 2019, billing handled by the finance team'
+#
+# This function changes the description of a user.
+# The description is a single line of free text (max 255 characters) and has no
+# effect on the user account. Omit DESCRIPTION to clear it.
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+description=$2
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '1' "$#" 'USER [DESCRIPTION]'
+is_format_valid 'user' 'description'
+is_object_valid 'user' 'USER' "$user"
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Apostrophes are stored as %quote%
+description=$(encode_description "$description")
+
+# Add the DESCRIPTION key to users created before descriptions were supported
+if ! grep -q "^DESCRIPTION=" "$USER_DATA/user.conf"; then
+	sed -i "/^NAME=/a DESCRIPTION=''" "$USER_DATA/user.conf"
+fi
+
+# Changing description
+update_user_value "$user" '$DESCRIPTION' "$description"
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Logging
+$BIN/v-log-action "$user" "Info" "System" "User description updated."
+log_event "$OK" "$ARGUMENTS"
+
+exit

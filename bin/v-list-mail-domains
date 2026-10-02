@@ -29,6 +29,7 @@ json_list() {
 	objects=$(grep DOMAIN $USER_DATA/mail.conf | wc -l)
 	echo "{"
 	while read str; do
+		DESCRIPTION=''
 		parse_object_kv_list "$str"
 		echo -n '    "'$DOMAIN'": {
         "ANTIVIRUS": "'$ANTIVIRUS'",
@@ -40,6 +41,7 @@ json_list() {
         "ACCOUNTS": "'$ACCOUNTS'",
         "U_DISK": "'$U_DISK'",
         "SSL": "'$SSL'",
+        "DESCRIPTION": "'"$(decode_description "$DESCRIPTION")"'",
         "SUSPENDED": "'$SUSPENDED'",
         "TIME": "'$TIME'",
         "DATE": "'$DATE'",

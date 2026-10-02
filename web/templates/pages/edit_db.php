@@ -64,6 +64,7 @@
 				<label for="v_charset" class="form-label"><?= tohtml( _("Charset")) ?></label>
 				<input type="text" class="form-control" name="v_charset" id="v_charset" value="<?= tohtml(trim($v_charset, "'")) ?>" disabled>
 			</div>
+			<?php require $_SERVER["HESTIA"] . "/web/templates/includes/description-field.php"; ?>
 		</div>
 
 	</form>

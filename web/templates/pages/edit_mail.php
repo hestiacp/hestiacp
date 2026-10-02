@@ -123,7 +123,7 @@
 				<div class="alert alert-info u-mb20" role="alert">
 					<i class="fas fa-exclamation"></i>
 					<div>
-						<p><?php echo $v_webmail_alias; ?></p>
+						<p><?= tohtml($v_webmail_alias) ?></p>
 						<p><?= tohtml(sprintf(_("To enable Let's Encrypt SSL, ensure that DNS records exist for mail.%s and %s!"), $v_domain, $v_webmail_alias)) ?></p>
 					</div>
 				</div>

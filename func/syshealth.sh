@@ -598,8 +598,8 @@ function syshealth_repair_system_cronjobs() {
 # Adapt Port Listing in HESTIA NGINX Backend
 # Activates or deactivates port listing on IPV4 or/and IPV6 network interfaces
 function syshealth_adapt_hestia_nginx_listen_ports() {
-	# Detect "physical" NICs only (virtual NICs created by Docker, WireGuard etc. are excluded)
-	physical_nics="$(ip -d -j link show | jq -r '.[] | if .link_type == "loopback" // .linkinfo.info_kind then empty else .ifname end')"
+	# Detect "physical" NICs and bond interfaces only (virtual NICs created by Docker, WireGuard etc. are excluded)
+	physical_nics="$(ip -d -j link show | jq -r '.[] | if .link_type == "loopback" then empty elif .linkinfo.info_kind == "bond" then .ifname elif .linkinfo.info_kind then empty else .ifname end')"
 	if [ -z "$physical_nics" ]; then
 		physical_nics="$(ip -d -j link show | jq -r '.[] | if .link_type == "loopback" then empty else .ifname end')"
 	fi

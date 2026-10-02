@@ -209,7 +209,7 @@
 				<div class="units-table-cell u-text-bold">
 					<span class="u-hide-desktop"><?= tohtml(_("Comment")) ?>:</span>
 					<?php if (!empty($data[$key]["COMMENT"])) {
-     	echo $data[$key]["COMMENT"];
+     	echo tohtml($data[$key]["COMMENT"]);
      } ?>
 				</div>
 				<div class="units-table-cell u-text-center-desktop">

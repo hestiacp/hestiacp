@@ -29,31 +29,31 @@
 		<h1 class="u-mb20"><?= tohtml( _("View Public DNSSEC Key")) ?></h1>
 		<div class="u-mb10">
 			<label class="form-label"><?= tohtml( _("DNSKEY Record")) ?></label>
-			<input type="text" class="form-control" value="<?php echo $data[$domain]["RECORD"]; ?>" readonly>
+			<input type="text" class="form-control" value="<?= tohtml($data[$domain]["RECORD"]) ?>" readonly>
 		</div>
 		<div class="u-mb10">
 			<label class="form-label"><?= tohtml( _("DS Record")) ?></label>
-			<input type="text" class="form-control" value="<?php echo $data[$domain]["DS"]; ?>" readonly>
+			<input type="text" class="form-control" value="<?= tohtml($data[$domain]["DS"]) ?>" readonly>
 		</div>
 		<div class="u-mb10">
 			<label class="form-label"><?= tohtml( _("Public Key")) ?></label>
-			<input type="text" class="form-control" value="<?php echo $data[$domain]["KEY"]; ?>" readonly>
+			<input type="text" class="form-control" value="<?= tohtml($data[$domain]["KEY"]) ?>" readonly>
 		</div>
 		<div class="u-mb10">
 			<label class="form-label"><?= tohtml( _("Key Type / Flag")) ?></label>
-			<input type="text" class="form-control" value="<?php echo $flag; ?>" readonly>
+			<input type="text" class="form-control" value="<?= tohtml($flag) ?>" readonly>
 		</div>
 		<div class="u-mb10">
 			<label class="form-label"><?= tohtml( _("Key Tag")) ?></label>
-			<input type="text" class="form-control" value="<?php echo $data[$domain]["KEYTAG"]; ?>" readonly>
+			<input type="text" class="form-control" value="<?= tohtml($data[$domain]["KEYTAG"]) ?>" readonly>
 		</div>
 		<div class="u-mb10">
 			<label class="form-label"><?= tohtml( _("Flag")) ?></label>
-			<input type="text" class="form-control" value="<?php echo $data[$domain]["FLAG"]; ?>" readonly>
+			<input type="text" class="form-control" value="<?= tohtml($data[$domain]["FLAG"]) ?>" readonly>
 		</div>
 		<div class="u-mb10">
 			<label class="form-label"><?= tohtml( _("Algorithm")) ?></label>
-			<input type="text" class="form-control" value="<?php echo $algorithm; ?>" readonly>
+			<input type="text" class="form-control" value="<?= tohtml($algorithm) ?>" readonly>
 		</div>
 	</div>
 

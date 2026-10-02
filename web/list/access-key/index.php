@@ -8,7 +8,7 @@ include $_SERVER["DOCUMENT_ROOT"] . "/inc/main.php";
 
 if ($_SESSION["userContext"] === "admin" && !empty($_GET["user"])) {
 	$user = quoteshellarg($_GET["user"]);
-	$user_plain = $_GET["user"];
+	$user_plain = htmlentities($_GET["user"]);
 }
 
 // Checks if API access is enabled

@@ -390,9 +390,9 @@ if [ -n "$WEB_SYSTEM" ] && [ "$WEB" != '*' ]; then
 
 		# Backup files
 		if [ "$BACKUP_MODE" = 'zstd' ]; then
-			tar "${fargs[@]}" -cpf- . | pzstd -"$BACKUP_GZIP" - > $tmpdir/web/$domain/domain_data.tar.zst
+			tar "${fargs[@]}" -cpf- -- . | pzstd -"$BACKUP_GZIP" - > $tmpdir/web/$domain/domain_data.tar.zst
 		else
-			tar "${fargs[@]}" -cpf- . | gzip -"$BACKUP_GZIP" - > $tmpdir/web/$domain/domain_data.tar.gz
+			tar "${fargs[@]}" -cpf- -- . | gzip -"$BACKUP_GZIP" - > $tmpdir/web/$domain/domain_data.tar.gz
 		fi
 	done
 
@@ -507,7 +507,7 @@ if [ -n "$MAIL_SYSTEM" ] && [ "$MAIL" != '*' ]; then
 
 			# Checking exclusions
 			if [ -z "$exclusion" ] && [[ "$MAIL_SYSTEM" =~ exim ]]; then
-				accounts+=($account)
+				accounts+=("$account")
 			else
 				echo "$(date "+%F %T") excluding mail account $account" \
 					| tee -a $BACKUP/$user.log
@@ -516,9 +516,9 @@ if [ -n "$MAIL_SYSTEM" ] && [ "$MAIL" != '*' ]; then
 		# Compress archive
 		if [ ${#accounts[@]} -gt 0 ]; then
 			if [ "$BACKUP_MODE" = 'zstd' ]; then
-				tar -cpf- "${accounts[@]}" | pzstd -"$BACKUP_GZIP" - > $tmpdir/mail/$domain/accounts.tar.zst
+				tar -cpf- -- "${accounts[@]}" | pzstd -"$BACKUP_GZIP" - > $tmpdir/mail/$domain/accounts.tar.zst
 			else
-				tar -cpf- "${accounts[@]}" | gzip -"$BACKUP_GZIP" - > $tmpdir/mail/$domain/accounts.tar.gz
+				tar -cpf- -- "${accounts[@]}" | gzip -"$BACKUP_GZIP" - > $tmpdir/mail/$domain/accounts.tar.gz
 			fi
 		fi
 	done
@@ -674,9 +674,9 @@ if [ "$USER" != '*' ]; then
 
 			# Backup files and dirs
 			if [ "$BACKUP_MODE" = 'zstd' ]; then
-				tar --anchored -cpf- "${fargs[@]}" $udir | pzstd -"$BACKUP_GZIP" - > $tmpdir/user_dir/$udir.tar.zst
+				tar --anchored -cpf- "${fargs[@]}" -- "$udir" | pzstd -"$BACKUP_GZIP" - > $tmpdir/user_dir/$udir.tar.zst
 			else
-				tar --anchored -cpf- "${fargs[@]}" $udir | gzip -"$BACKUP_GZIP" - > $tmpdir/user_dir/$udir.tar.gz
+				tar --anchored -cpf- "${fargs[@]}" -- "$udir" | gzip -"$BACKUP_GZIP" - > $tmpdir/user_dir/$udir.tar.gz
 			fi
 
 		fi

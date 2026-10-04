@@ -7,6 +7,16 @@
 #===========================================================================#
 
 #----------------------------------------------------------#
+#                   GENERAL FUNCTIONS                      #
+#----------------------------------------------------------#
+
+# Prepares a string for safe use in sed.
+# Escapes backslashes, '|', and '&'.
+sed_escape_replacement() {
+	printf '%s' "$1" | sed -e 's/[\&|]/\\&/g'
+}
+
+#----------------------------------------------------------#
 #                        WEB                               #
 #----------------------------------------------------------#
 
@@ -259,6 +269,9 @@ add_web_config() {
 	#   -If possible custom templates should be automatically upgraded to use the new format
 	#   -Alternatively a depreciation period with proper notifications should be considered
 
+	docroot_escaped="$(sed_escape_replacement "$docroot")"
+	sdocroot_escaped="$(sed_escape_replacement "$sdocroot")"
+
 	cat "${WEBTPL_LOCATION}/$2" \
 		| sed -e "s|%ip%|$local_ip|g" \
 			-e "s|%domain%|$domain|g" \
@@ -280,8 +293,8 @@ add_web_config() {
 			-e "s|%user%|$user|g" \
 			-e "s|%group%|$user|g" \
 			-e "s|%home%|$HOMEDIR|g" \
-			-e "s|%docroot%|$docroot|g" \
-			-e "s|%sdocroot%|$sdocroot|g" \
+			-e "s|%docroot%|$docroot_escaped|g" \
+			-e "s|%sdocroot%|$sdocroot_escaped|g" \
 			-e "s|%ssl_crt%|$ssl_crt|g" \
 			-e "s|%ssl_key%|$ssl_key|g" \
 			-e "s|%ssl_pem%|$ssl_pem|g" \

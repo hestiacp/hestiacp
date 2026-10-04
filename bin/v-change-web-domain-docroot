@@ -86,8 +86,15 @@ else
 	# Check for existence of specified directory under target domain's public_html folder
 	target_domain_directory="$HOMEDIR/$user/web/$target_domain"
 	if [ -n "$target_directory" ]; then
-		# Avoid a target directory containing quotes
-		if [[ "$target_directory" == *"'"* || "$target_directory" == *'"'* ]]; then
+		# Avoid special shell/sed characters in the target directory.
+		# Blacklist (not whitelist) so Unicode directory names
+		# (accents, kanji, cyrillic, etc.) keep working.
+		if [[ "$target_directory" == *[\'\"\\\|\&\;\`\$\(\)\<\>\~\#\*\?\[\]\{\}\!]* ]]; then
+			check_result "$E_INVALID" "Directory '$target_directory' is not allowed."
+		fi
+
+		# Reject embedded control characters (newlines, etc.)
+		if [[ "$target_directory" =~ [[:cntrl:]] ]]; then
 			check_result "$E_INVALID" "Directory '$target_directory' is not allowed."
 		fi
 

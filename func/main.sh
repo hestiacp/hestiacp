@@ -1100,12 +1100,33 @@ is_netmask_format_valid() {
 	fi
 }
 
-# Proxy extention format validator
-is_extention_format_valid() {
-	exclude="[!|#|$|^|&|(|)|+|=|{|}|:|@|<|>|?|/|\|\"|'|;|%|\`| ]"
-	if [[ "$1" =~ $exclude ]]; then
-		check_result "$E_INVALID" "invalid proxy extention format :: $1"
+# Proxy extension format validator
+is_extension_format_valid() {
+	local ascii
+
+	# Reject invalid UTF-8 sequences.
+	if ! printf '%s' "$1" | iconv -f UTF-8 -t UTF-8 > /dev/null 2>&1; then
+		check_result "$E_INVALID" "invalid proxy extension format :: $1"
 	fi
+
+	# Allow Unicode characters; validate the remaining ASCII characters.
+	ascii=$(printf '%s' "$1" | LC_ALL=C tr -d '\200-\377')
+
+	# Allow only letters, numbers, underscore, dot, hyphen and comma.
+	if [[ ! "$ascii" =~ ^[A-Za-z0-9_.,-]*$ ]]; then
+		check_result "$E_INVALID" "invalid proxy extension format :: $1"
+	fi
+
+	# No leading, trailing, or consecutive commas.
+	if [[ "$1" == ,* || "$1" == *, || "$1" == *,,* ]]; then
+		check_result "$E_INVALID" "invalid proxy extension format :: $1"
+	fi
+
+	# No leading, trailing, or consecutive dots.
+	if [[ "$1" == .* || "$1" == *. || "$1" == *..* ]]; then
+		check_result "$E_INVALID" "invalid proxy extension format :: $1"
+	fi
+
 	is_no_new_line_format "$1"
 }
 
@@ -1609,7 +1630,7 @@ is_format_valid() {
 				email) is_email_format_valid "$arg" ;;
 				email_forward) is_email_format_valid "$arg" ;;
 				exp) is_date_format_valid "$arg" ;;
-				extentions) is_common_format_valid "$arg" 'extentions' ;;
+				extensions) is_extension_format_valid "$arg" ;;
 				format) is_type_valid 'plain json shell csv' "$arg" ;;
 				ftp_password) is_password_format_valid "$arg" ;;
 				ftp_user) is_user_format_valid "$arg" "$arg_name" ;;
@@ -1652,7 +1673,7 @@ is_format_valid() {
 				port) is_int_format_valid "$arg" 'port' ;;
 				port_ext) is_fw_port_format_valid "$arg" ;;
 				protocol) is_fw_protocol_format_valid "$arg" ;;
-				proxy_ext) is_extention_format_valid "$arg" ;;
+				proxy_ext) is_extension_format_valid "$arg" ;;
 				quota) is_int_format_valid "$arg" 'quota' ;;
 				rate) is_int_format_valid "$arg" 'rate' ;;
 				record) is_common_format_valid "$arg" 'record' ;;

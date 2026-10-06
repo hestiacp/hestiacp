@@ -228,6 +228,8 @@ Make sure you have set up the correct RDNS, SPF records and DKIM records.
 
 If this doesn’t work, it’s be possible that your IP address is on one or more blacklists. You can check your IP using [Suped's Blocklist Checker](https://www.suped.com/tools/blocklist-checker). You can try to unblock yourself, but often the easier method is to use SMTP and SMTP Relay with Amazon SES or another SMTP provider.
 
+To find out which of those it is, send a message to [Email Spam Tester](https://email-spam-tester.com/). It reports SPF, DKIM, DMARC and blocklist status for that message and names the folder it was filed under at several providers, which separates a records problem from an IP problem from a content problem.
+
 ## How can I enable ManageSieve?
 
 During Hestia’s installation, use the `--sieve` flag. If Hestia is already installed, there is a an upgrade script provided at the following path: `/usr/local/hestia/install/upgrade/manual/install_sieve.sh`

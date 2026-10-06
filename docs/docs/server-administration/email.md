@@ -228,7 +228,7 @@ Make sure you have set up the correct RDNS, SPF records and DKIM records.
 
 If this doesn’t work, it’s be possible that your IP address is on one or more blacklists. You can check your IP using [Suped's Blocklist Checker](https://www.suped.com/tools/blocklist-checker). You can try to unblock yourself, but often the easier method is to use SMTP and SMTP Relay with Amazon SES or another SMTP provider.
 
-To help narrow down the cause, send a test message to [Mail Tester](https://mail-ester.com/) and review the report for authentication, blocklist and message-content issues. The findings can help identify configuration or reputation problems, but they do not guarantee inbox placement at individual providers.
+To help narrow down the cause, send a test message to [Mail Tester](https://mail-tester.com/) and review the report for authentication, blocklist and message-content issues. The findings can help identify configuration or reputation problems, but they do not guarantee inbox placement at individual providers.
 
 ## How can I enable ManageSieve?
 

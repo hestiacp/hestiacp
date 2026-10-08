@@ -431,6 +431,16 @@ function syshealth_repair_system_config() {
 		echo "[ ! ] Adding missing variable to hestia.conf: POLICY_USER_EDIT_WEB_TEMPLATES ('yes')"
 		$BIN/v-change-sys-config-value "POLICY_USER_EDIT_WEB_TEMPLATES" "yes"
 	fi
+	# Allow users to edit proxy templates
+	if [[ -z $(check_key_exists 'POLICY_USER_EDIT_PROXY_TEMPLATES') ]]; then
+		echo "[ ! ] Adding missing variable to hestia.conf: POLICY_USER_EDIT_PROXY_TEMPLATES ('yes')"
+		$BIN/v-change-sys-config-value "POLICY_USER_EDIT_PROXY_TEMPLATES" "yes"
+	fi
+	# Allow users to edit backend templates
+	if [[ -z $(check_key_exists 'POLICY_USER_EDIT_BACKEND_TEMPLATES') ]]; then
+		echo "[ ! ] Adding missing variable to hestia.conf: POLICY_USER_EDIT_BACKEND_TEMPLATES ('yes')"
+		$BIN/v-change-sys-config-value "POLICY_USER_EDIT_BACKEND_TEMPLATES" "yes"
+	fi
 	# View user logs
 	if [[ -z $(check_key_exists 'POLICY_USER_VIEW_LOGS') ]]; then
 		echo "[ ! ] Adding missing variable to hestia.conf: POLICY_USER_VIEW_LOGS ('yes')"

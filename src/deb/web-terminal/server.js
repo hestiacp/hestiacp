@@ -144,6 +144,7 @@ wss.on('connection', (ws, req) => {
 		env: {
 			SHELL: shell,
 			TERM: 'xterm-color',
+			LANG: 'C.UTF-8',
 			USER: username,
 			HOME: homedir,
 			PWD: homedir,

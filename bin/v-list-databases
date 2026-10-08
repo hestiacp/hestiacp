@@ -29,6 +29,7 @@ json_list() {
 	objects=$(grep "DB=" $USER_DATA/db.conf | wc -l)
 	echo "{"
 	while read str; do
+		DESCRIPTION=''
 		parse_object_kv_list "$str"
 		echo -n '    "'$DB'": {
         "DATABASE": "'$DB'",
@@ -37,6 +38,7 @@ json_list() {
         "TYPE": "'$TYPE'",
         "CHARSET": "'$CHARSET'",
         "U_DISK": "'$U_DISK'",
+        "DESCRIPTION": "'"$(decode_description "$DESCRIPTION")"'",
         "SUSPENDED": "'$SUSPENDED'",
         "TIME": "'$TIME'",
         "DATE": "'$DATE'"

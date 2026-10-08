@@ -166,6 +166,7 @@
 						<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Email")) ?>:</span>
 						<span title="<?= tohtml($data[$key]["CONTACT"]) ?>"><?= tohtml($data[$key]["CONTACT"]) ?></span>
 					</p>
+					<?php $description = $data[$key]["DESCRIPTION"] ?? ""; require $_SERVER["HESTIA"] . "/web/templates/includes/description-list.php"; ?>
 				</div>
 				<div class="units-table-cell">
 					<ul class="units-table-row-actions">

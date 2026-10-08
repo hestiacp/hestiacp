@@ -123,6 +123,7 @@
 				</label>
 				<input type="email" class="form-control js-sync-email-output" name="v_notify" id="v_notify" value="<?= tohtml(trim($v_notify, "'")) ?>" tabindex="8">
 			</div>
+			<?php require $_SERVER["HESTIA"] . "/web/templates/includes/description-field.php"; ?>
 		</div>
 
 	</form>

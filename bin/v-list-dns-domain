@@ -36,6 +36,7 @@ json_list() {
         "DNSSEC": "'$DNSSEC'",
         "SRC": "'$SRC'",
         "RECORDS": "'$RECORDS'",
+        "DESCRIPTION": "'"$(decode_description "$DESCRIPTION")"'",
         "SUSPENDED": "'$SUSPENDED'",
         "TIME": "'$TIME'",
         "DATE": "'$DATE'"
@@ -54,6 +55,7 @@ shell_list() {
 	echo "SERIAL:         $SERIAL"
 	echo "DNSSEC:         $DNSSEC"
 	echo "RECORDS:        $RECORDS"
+	echo "DESCRIPTION:    $(decode_description "$DESCRIPTION")"
 	echo "SUSPENDED:      $SUSPENDED"
 	echo "TIME:           $TIME"
 	echo "DATE:           $DATE"
@@ -86,7 +88,7 @@ is_object_valid 'dns' 'DOMAIN' "$domain"
 #----------------------------------------------------------#
 
 # Parsing domain
-parse_object_kv_list $(grep "DOMAIN='$domain'" $USER_DATA/dns.conf)
+parse_object_kv_list "$(grep "DOMAIN='$domain'" $USER_DATA/dns.conf)"
 
 # Listing data
 case $format in

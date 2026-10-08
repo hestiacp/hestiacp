@@ -59,6 +59,7 @@
 				<label for="v_catchall" class="form-label"><?= tohtml( _("Catch-All Email")) ?></label>
 				<input type="email" class="form-control" name="v_catchall" id="v_catchall" value="<?= tohtml(trim($v_catchall, "'")) ?>">
 			</div>
+			<?php require $_SERVER["HESTIA"] . "/web/templates/includes/description-field.php"; ?>
 			<div class="u-mb20">
 				<label for="v_rate" class="form-label">
 					<?= tohtml( _("Rate Limit")) ?> <span class="optional">(<?= tohtml( _("email / hour / account")) ?>)</span>

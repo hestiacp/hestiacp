@@ -165,6 +165,7 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
 							<?= tohtml($key) ?>
 						</a>
 					<?php } ?>
+					<?php $description = $data[$key]["DESCRIPTION"] ?? ""; require $_SERVER["HESTIA"] . "/web/templates/includes/description-list.php"; ?>
 				</div>
 				<div class="units-table-cell">
 					<?php if (!$read_only) { ?>

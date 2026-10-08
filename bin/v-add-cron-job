@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: add cron job
-# options: USER MIN HOUR DAY MONTH WDAY CRON_COMMAND [JOB] [RESTART]
+# options: USER MIN HOUR DAY MONTH WDAY CRON_COMMAND [JOB] [RESTART] [DESCRIPTION]
 #
 # example: v-add-cron-job admin * * * * * sudo /usr/local/hestia/bin/v-backup-users
 #
@@ -21,6 +21,7 @@ wday=$6
 cron_command=$(echo "$7" | sed "s/'/%quote%/g")
 job=$8
 restart=$9
+description=${10}
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -36,8 +37,8 @@ HIDE=7
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '7' "$#" 'USER MIN HOUR DAY MONTH WDAY CRON_COMMAND [JOB] [RESTART]'
-is_format_valid 'user' 'min' 'hour' 'day' 'month' 'wday' 'cron_command'
+check_args '7' "$#" 'USER MIN HOUR DAY MONTH WDAY CRON_COMMAND [JOB] [RESTART] [DESCRIPTION]'
+is_format_valid 'user' 'min' 'hour' 'day' 'month' 'wday' 'cron_command' 'description'
 is_system_enabled "$CRON_SYSTEM" 'CRON_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
@@ -60,8 +61,10 @@ time=$(echo "$time_n_date" | cut -f 1 -d \ )
 date=$(echo "$time_n_date" | cut -f 2 -d \ )
 
 # Concatenating cron string
+description=$(encode_description "$description")
 str="JOB='$job' MIN='$min' HOUR='$hour' DAY='$day' MONTH='$month' WDAY='$wday'"
-str="$str CMD='$cron_command' SUSPENDED='no' TIME='$time' DATE='$date'"
+str="$str CMD='$cron_command' DESCRIPTION='$description' SUSPENDED='no'"
+str="$str TIME='$time' DATE='$date'"
 
 # Adding to crontab
 echo "$str" >> $HESTIA/data/users/$user/cron.conf

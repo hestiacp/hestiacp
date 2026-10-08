@@ -606,6 +606,50 @@ function validate_password($password) {
 	return preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(.){8,}$/', $password);
 }
 
+/**
+ * Check a description against the rules enforced by is_description_format_valid:
+ * a single line of at most 255 characters without " \ ` < or >.
+ * Apostrophes are allowed (the CLI stores them as %quote%).
+ * Sets the session error message when the description is invalid.
+ *
+ * @return bool true when valid
+ */
+function validate_description(string $description): bool {
+	if (mb_strlen($description) > 255 || preg_match('/[\x00-\x1F\x7F\x{0080}-\x{009F}"\\\\`<>]/u', $description)) {
+		$_SESSION["error_msg"] = _(
+			"Description must be a single line of up to 255 characters and cannot contain double quotes, backslashes, backticks, < or >.",
+		);
+		return false;
+	}
+	return true;
+}
+
+/**
+ * Save the description of an object when it was changed.
+ *
+ * @param string $command v-change-*-description command
+ * @param array $args Already shell-quoted arguments identifying the object (user, domain, ...)
+ * @param string $current Description currently stored for the object
+ */
+function save_object_description(string $command, array $args, string $current = ""): void {
+	if (!isset($_POST["v_description"])) {
+		return;
+	}
+	$description = trim($_POST["v_description"]);
+	if ($description === $current || !empty($_SESSION["error_msg"])) {
+		return;
+	}
+	if (!validate_description($description)) {
+		return;
+	}
+	exec(
+		HESTIA_CMD . $command . " " . implode(" ", $args) . " " . quoteshellarg($description),
+		$output,
+		$return_var,
+	);
+	check_return_code($return_var, $output);
+}
+
 function unset_alerts() {
 	if (!empty($_SESSION["unset_alerts"])) {
 		if (!empty($_SESSION["error_msg"])) {

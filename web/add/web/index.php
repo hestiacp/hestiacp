@@ -54,6 +54,12 @@ if (!empty($_POST["ok"]) && $read_only !== true) {
 		$v_public_ip = quoteshellarg($v_public_ip);
 	}
 
+	// Check description
+	$v_description = trim($_POST["v_description"] ?? "");
+	if (empty($_SESSION["error_msg"])) {
+		validate_description($v_description);
+	}
+
 	// Define domain aliases
 	$v_aliases = "";
 
@@ -86,6 +92,9 @@ if (!empty($_POST["ok"]) && $read_only !== true) {
 		unset($output);
 		$domain_added = empty($_SESSION["error_msg"]);
 	}
+
+	// Set description
+	save_object_description("v-change-web-domain-description", [$user, quoteshellarg($v_domain)]);
 
 	if (empty($_POST["v_dns"])) {
 		$_POST["v_dns"] = "no";
@@ -131,6 +140,7 @@ if (!empty($_POST["ok"]) && $read_only !== true) {
 		);
 		unset($v_domain);
 		unset($v_aliases);
+		unset($v_description);
 	}
 }
 // Define user variables

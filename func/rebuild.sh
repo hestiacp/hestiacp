@@ -740,6 +740,10 @@ rebuild_mail_domain_conf() {
 				sed -i "/^$account@$domain_idn:/ d" $HOMEDIR/$user/conf/mail/$domain/limits
 				echo "$account@$domain_idn:$system" >> $HOMEDIR/$user/conf/mail/$domain/limits
 			fi
+			# Restore autoreply message file according to schedule. Before the
+			# schedule feature rebuild never recreated autoreply.$account.msg;
+			# now it is derived from the $USER_DATA copy like on every daily run
+			sync_mail_account_autoreply "$user" "$domain" "$account"
 		fi
 	done
 

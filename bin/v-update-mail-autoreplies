@@ -1,0 +1,84 @@
+#!/bin/bash
+# info: update mail account autoreply message files according to schedule
+# options: [DATE]
+#
+# example: v-update-mail-autoreplies
+# example: v-update-mail-autoreplies 2026-08-05
+#
+# This function synchronizes the Exim autoreply message files of all mail
+# accounts with their AUTOREPLY_START/AUTOREPLY_END schedule. It is executed
+# daily from the system cron queue. The optional DATE argument (YYYY-MM-DD)
+# overrides "today" which allows testing schedule transitions.
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Importing system environment  as we run this script
+#       mostly by cron wich not read it by itself
+source /etc/profile.d/hestia.sh
+
+# Argument definition
+check_date=$1
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
+source $HESTIA/func/domain.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '0' "$#" '[DATE]'
+if [ -n "$check_date" ]; then
+	is_date_format_valid "$check_date"
+fi
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+if [[ ! "$MAIL_SYSTEM" =~ exim ]]; then
+	exit
+fi
+
+failed=''
+for user in $("$BIN/v-list-users" list); do
+	USER_DATA=$HESTIA/data/users/$user
+	if [ ! -f "$USER_DATA/mail.conf" ]; then
+		continue
+	fi
+	for domain in $(awk -F "DOMAIN='" '{print $2}' $USER_DATA/mail.conf | cut -f 1 -d "'"); do
+		if [ ! -f "$USER_DATA/mail/$domain.conf" ]; then
+			continue
+		fi
+		for account in $(search_objects "mail/$domain" 'AUTOREPLY' 'yes' 'ACCOUNT'); do
+			if ! sync_mail_account_autoreply "$user" "$domain" "$account" "$check_date"; then
+				failed="$failed $account@$domain"
+			fi
+		done
+	done
+done
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Notifying panel administrator about failures
+if [ -n "$failed" ]; then
+	$BIN/v-add-user-notification "$ROOT_USER" 'Mail auto-reply schedule update failed' \
+		"<p>The auto-reply message file could not be updated for:$failed</p><p>Check <code>$HESTIA/log/error.log</code> for details.</p>" \
+		'alert'
+	log_event "$E_UPDATE" "$ARGUMENTS"
+	exit "$E_UPDATE"
+fi
+
+log_event "$OK" "$ARGUMENTS"
+
+exit

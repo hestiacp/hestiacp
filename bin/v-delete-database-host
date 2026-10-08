@@ -49,6 +49,11 @@ sed -i "/HOST='$host' /d" "$HESTIA/conf/$type.conf"
 rm -fr $HESTIA'/web/rrd/db/'$type'_'$host'.rrd'
 rm -fr $HESTIA'/web/rrd/db/'*-$type'_'$host'.*'
 
+# Delete cached .my.cnf file if present
+if [ -f "$HESTIA/conf/.$type.$host" ]; then
+	rm -f "$HESTIA/conf/.$type.$host"
+fi
+
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#

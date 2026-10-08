@@ -117,6 +117,7 @@ function prevent_get_csrf() {
 					"/list/cron/index.php",
 					"/list/backup/index.php",
 					"/reset/index.php",
+					"/add/node/index.php",
 				])
 			) {
 				return true;

@@ -109,10 +109,11 @@
 						<label for="v_host" class="form-label"><?= tohtml( _("Host")) ?></label>
 						<select class="form-select" name="v_host" id="v_host">
 							<?php
-								foreach ($db_hosts as $value) {
-									echo "\n\t\t\t\t\t\t\t\t\t\t<option value=\"".htmlentities($value)."\"";
-									if ((!empty($v_host)) && ( $value == $v_host )) echo ' selected';
-									echo ">".htmlentities($value)."</option>";
+								foreach ($db_hosts as $host => $types) {
+									$types_str = implode(',', $types);
+									echo "\n\t\t\t\t\t\t\t\t\t\t<option value=\"".htmlentities($host)."\" data-types=\"".htmlentities($types_str)."\"";
+									if ((!empty($v_host)) && ( $host == $v_host )) echo ' selected';
+									echo ">".htmlentities($host)."</option>";
 								}
 							?>
 						</select>

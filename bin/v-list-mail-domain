@@ -31,6 +31,7 @@ json_list() {
         "ANTIVIRUS": "'$ANTIVIRUS'",
         "ANTISPAM": "'$ANTISPAM'",
         "DKIM": "'$DKIM'",
+        "DKIM_SELECTOR": "'$DKIM_SELECTOR'",
         "CATCHALL": "'$CATCHALL'",
         "ACCOUNTS": "'$ACCOUNTS'",
         "RATE_LIMIT": "'$RATE_LIMIT'",
@@ -58,6 +59,7 @@ shell_list() {
 	echo "ANTIVIRUS:             $ANTIVIRUS"
 	echo "ANTISPAM:              $ANTISPAM"
 	echo "DKIM:                  $DKIM"
+	echo "DKIM_SELECTOR:         $DKIM_SELECTOR"
 	echo "CATCHALL:              $CATCHALL"
 	echo "ACCOUNTS:              $ACCOUNTS"
 	echo "DISK:                  $U_DISK"
@@ -79,11 +81,12 @@ shell_list() {
 
 # PLAIN list function
 plain_list() {
-	printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n' \
+	printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n' \
 		"$DOMAIN" \
 		"$ANTIVIRUS" \
 		"$ANTISPAM" \
 		"$DKIM" \
+		"$DKIM_SELECTOR" \
 		"$CATCHALL" \
 		"$ACCOUNTS" \
 		"$U_DISK" \
@@ -104,7 +107,7 @@ plain_list() {
 # CSV list function
 csv_list() {
 	printf '%s\n' \
-		"DOMAIN,ANTIVIRUS,ANTISPAM,DKIM,CATCHALL,ACCOUNTS,U_DISK,SSL,SSL_KEY_ALGO,LETSENCRYPT,SUSPENDED,TIME,DATE,WEBMAIL_ALIAS,WEBMAIL,U_SMTP_RELAY,U_SMTP_RELAY_HOST,U_SMTP_RELAY_PORT,U_SMTP_RELAY_USERNAME"
+		"DOMAIN,ANTIVIRUS,ANTISPAM,DKIM,DKIM_SELECTOR,CATCHALL,ACCOUNTS,U_DISK,SSL,SSL_KEY_ALGO,LETSENCRYPT,SUSPENDED,TIME,DATE,WEBMAIL_ALIAS,WEBMAIL,U_SMTP_RELAY,U_SMTP_RELAY_HOST,U_SMTP_RELAY_PORT,U_SMTP_RELAY_USERNAME"
 
 	printf '%s\n' \
 		"$DOMAIN,$ANTIVIRUS,$ANTISPAM,$DKIM,$CATCHALL,$ACCOUNTS,$U_DISK,$SSL,$SSL_KEY_ALGO,$LETSENCRYPT,$SUSPENDED,$TIME,$DATE,$WEBMAIL_ALIAS.$domain,$WEBMAIL,$U_SMTP_RELAY,$U_SMTP_RELAY_HOST,$U_SMTP_RELAY_PORT,$U_SMTP_RELAY_USERNAME"

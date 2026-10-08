@@ -43,6 +43,10 @@ if (!empty($_GET["domain"]) && empty($_GET["account"])) {
 	$v_reject = $data[$v_domain]["REJECT"];
 	$v_antivirus = $data[$v_domain]["ANTIVIRUS"];
 	$v_dkim = $data[$v_domain]["DKIM"];
+	$v_dkim_selector = $data[$v_domain]["DKIM_SELECTOR"];
+	if (empty($v_dkim_selector)) {
+		$v_dkim_selector = "mail";
+	}
 	$v_catchall = $data[$v_domain]["CATCHALL"];
 	$v_rate = $data[$v_domain]["RATE_LIMIT"];
 	$v_date = $data[$v_domain]["DATE"];
@@ -265,6 +269,8 @@ if (
 		unset($output);
 	}
 
+	$posted_dkim_selector = !empty($_POST["v_dkim_selector"]) ? $_POST["v_dkim_selector"] : "mail";
+
 	// Delete DKIM
 	if ($v_dkim == "yes" && empty($_POST["v_dkim"]) && empty($_SESSION["error_msg"])) {
 		exec(
@@ -281,10 +287,38 @@ if (
 		unset($output);
 	}
 
+	// Change DKIM selector (regenerate keys and DNS)
+	if (
+		$v_dkim == "yes" &&
+		!empty($_POST["v_dkim"]) &&
+		$posted_dkim_selector !== $v_dkim_selector &&
+		empty($_SESSION["error_msg"])
+	) {
+		exec(
+			HESTIA_CMD .
+				"v-delete-mail-domain-dkim " .
+				$v_username .
+				" " .
+				quoteshellarg($v_domain),
+			$output,
+			$return_var,
+		);
+		check_return_code($return_var, $output);
+		$v_dkim = "no";
+		unset($output);
+	}
+
 	// Add DKIM
 	if ($v_dkim == "no" && !empty($_POST["v_dkim"]) && empty($_SESSION["error_msg"])) {
+		$v_dkim_selector = $posted_dkim_selector;
 		exec(
-			HESTIA_CMD . "v-add-mail-domain-dkim " . $v_username . " " . quoteshellarg($v_domain),
+			HESTIA_CMD .
+				"v-add-mail-domain-dkim " .
+				$v_username .
+				" " .
+				quoteshellarg($v_domain) .
+				" '' " .
+				quoteshellarg($v_dkim_selector),
 			$output,
 			$return_var,
 		);

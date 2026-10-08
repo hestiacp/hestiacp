@@ -21,7 +21,8 @@
 		x-data="{
 			sslEnabled: <?= tohtml($v_ssl == "yes" ? "true" : "false") ?>,
 			letsEncryptEnabled: <?= tohtml($v_letsencrypt == "yes" ? "true" : "false") ?>,
-			hasSmtpRelay: <?= tohtml($v_smtp_relay == "true" ? "true" : "false") ?>
+			hasSmtpRelay: <?= tohtml($v_smtp_relay == "true" ? "true" : "false") ?>,
+			dkimEnabled: <?= tohtml($v_dkim == "yes" ? "true" : "false") ?>
 		}"
 		id="main-form"
 		name="v_edit_mail"
@@ -88,10 +89,16 @@
 				</div>
 			<?php } ?>
 			<div class="form-check u-mb10">
-				<input class="form-check-input" type="checkbox" name="v_dkim" id="v_dkim" <?php if ($v_dkim == 'yes') echo 'checked'; ?>>
+				<input x-model="dkimEnabled" class="form-check-input" type="checkbox" name="v_dkim" id="v_dkim" <?php if ($v_dkim == 'yes') echo 'checked'; ?>>
 				<label for="v_dkim">
 					<?= tohtml( _("DKIM Support")) ?>
 				</label>
+			</div>
+			<div x-cloak x-show="dkimEnabled" class="u-pl30 u-mb10">
+				<label for="v_dkim_selector" class="form-label">
+					DKIM Selector <span class="optional">(<?= _("Use a-z, 0-9, hyphen; no leading, trailing or consecutive hyphens") ?>)</span>
+				</label>
+				<input type="text" class="form-control" name="v_dkim_selector" id="v_dkim_selector" value="<?= tohtml(empty($v_dkim_selector) ? "mail" : trim($v_dkim_selector, "'")) ?>">
 			</div>
 			<div class="form-check u-mb10">
 				<input x-model="sslEnabled" class="form-check-input" type="checkbox" name="v_ssl" id="v_ssl">

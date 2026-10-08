@@ -1597,6 +1597,21 @@ is_key_algo_format_valid() {
 	fi
 }
 
+# DKIM selector format validator
+is_dkim_selector_format_valid() {
+	object_name=${2-dkim selector}
+	#selector=${1,,}
+	selector=${1}
+
+	if [[ -z "$selector" ]] \
+		|| [[ ${#selector} -gt 63 ]] \
+		|| [[ ! "$selector" =~ ^[a-z0-9]([a-z0-9-]*[a-z0-9])?$ ]]; then
+		check_result "$E_INVALID" "invalid $object_name format :: $1"
+	fi
+
+	is_no_new_line_format "$selector"
+}
+
 # Format validation controller
 is_format_valid() {
 	for arg_name in $*; do
@@ -1623,6 +1638,7 @@ is_format_valid() {
 				dbpass) is_password_format_valid "$arg" ;;
 				dbuser) is_dbuser_format_valid "$arg" 'dbuser' ;;
 				dkim) is_boolean_format_valid "$arg" 'dkim' ;;
+				dkim_selector) is_dkim_selector_format_valid "$arg" ;;
 				dkim_size) is_int_format_valid "$arg" ;;
 				domain) is_domain_format_valid "$arg" ;;
 				dom_alias) is_alias_format_valid "$arg" ;;

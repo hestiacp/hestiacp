@@ -1612,6 +1612,49 @@ is_dkim_selector_format_valid() {
 	is_no_new_line_format "$selector"
 }
 
+# Strict directory path validation.
+# Accepts only a path with an optional leading "/" made of non-empty
+# segments separated by "/". Any UTF-8 character is allowed except
+# whitespace, control characters and shell/sed metacharacters.
+#
+# NOTE: this validator is intentionally more restrictive than Linux itself.
+#
+# Usage: is_dir_path_format_valid VALUE [NAME]
+is_dir_path_format_valid() {
+	local value="$1" name="${2:-dir_path}"
+	local err="invalid $name format :: $value"
+
+	# 1. Strict: reject control characters (\n, \r, \t, ...) and whitespace
+	if [[ "$value" =~ [[:cntrl:][:space:]] ]]; then
+		check_result "$E_INVALID" "$err"
+	fi
+
+	# 2. Strict: reject shell/sed metacharacters and the ":" separator
+	#    (valid on Linux, but restricted for security reasons)
+	case "$value" in
+		*[\\:\;\#\%\&\$\`\"\'\<\>\|\*\?\!\(\)\{\}\[\]\~\^\=]*)
+			check_result "$E_INVALID" "$err"
+			;;
+	esac
+
+	# 3. Strict structure: optional leading "/", non-empty segments,
+	#    optional trailing "/" (no empty segments such as "a//b")
+	local re='^/?([^/]+(/[^/]+)*/?)?$'
+	if [[ ! "$value" =~ $re ]]; then
+		check_result "$E_INVALID" "$err"
+	fi
+
+	# 4. Strict: reject "." and ".." segments to prevent path traversal
+	case "/$value/" in
+		*/../* | */./*) check_result "$E_INVALID" "$err" ;;
+	esac
+
+	# 5. Strict: input must be valid UTF-8 (rejects stray or overlong bytes)
+	if ! printf '%s' "$value" | LC_ALL=C.UTF-8 iconv -f UTF-8 -t UTF-8 > /dev/null 2>&1; then
+		check_result "$E_INVALID" "$err"
+	fi
+}
+
 # Format validation controller
 is_format_valid() {
 	for arg_name in $*; do
@@ -1649,6 +1692,7 @@ is_format_valid() {
 				extensions) is_extension_format_valid "$arg" ;;
 				format) is_type_valid 'plain json shell csv' "$arg" ;;
 				ftp_password) is_password_format_valid "$arg" ;;
+				ftp_path) is_dir_path_format_valid "$arg" "$arg_name" ;;
 				ftp_user) is_user_format_valid "$arg" "$arg_name" ;;
 				hash) is_hash_format_valid "$arg" "$arg_name" ;;
 				host) is_object_format_valid "$arg" "$arg_name" ;;

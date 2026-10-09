@@ -344,3 +344,31 @@ pre[class*="language-"] ::selection {
 		color: #fff !important;
 	}
 }
+
+/* Navbar dropdown dark fix - BEGIN */
+
+@media (prefers-color-scheme: dark) {
+.navbar-menu,
+.navbar-dropdown {
+background: #1d1d1d !important;
+box-shadow: 0 8px 16px #00000040 !important;
+}
+
+.navbar-item,
+.navbar-link {
+color: #fff !important;
+}
+
+a.navbar-item:hover,
+.navbar-link:hover {
+background: #303030 !important;
+color: #fff !important;
+}
+
+a.navbar-item.is-active {
+background: #172924 !important;
+color: #34b891 !important;
+}
+}
+
+/* Navbar dropdown dark fix - END */

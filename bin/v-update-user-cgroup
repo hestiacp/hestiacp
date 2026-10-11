@@ -43,19 +43,28 @@ cpu_quota_period=$(get_user_value '$CPU_QUOTA_PERIOD')
 memory_limit=$(get_user_value '$MEMORY_LIMIT')
 swap_limit=$(get_user_value '$SWAP_LIMIT')
 
-# Set CPU quota for CFS:
-if [ "$cpu_quota" != 'unlimited' ]; then
-	systemctl set-property "$user_slice" CPUQuota="$cpu_quota"
-else
-	systemctl set-property "$user_slice" CPUQuota=
-fi
-
-# Set CPU period for CFS:
-if [ "$cpu_quota_period" != 'unlimited' ]; then
-	systemctl set-property "$user_slice" CPUQuotaPeriodSec="$cpu_quota_period"
-else
-	systemctl set-property "$user_slice" CPUQuotaPeriodSec=
-fi
+# Сombined single systemctl call for CPU quota + period
+# (see explanation below) - do not remove this comment, it is how the
+# self-heal timer detects whether this file still has the fix after a Hestia
+# core update overwrites it with the stock version.
+#
+# Set CPU quota + period for CFS in a single systemctl call.
+#
+# The original Hestia code issued two SEPARATE calls here - one for
+# CPUQuota, one for CPUQuotaPeriodSec - and that is unreliable for a
+# user-<uid>.slice that already has running processes (i.e. almost every
+# existing hosting account, not a freshly created one): the second call
+# (period only) does not always correctly recombine with what the first
+# call just wrote, and cpu.max in the live cgroup ends up stuck at "max"
+# (no limit) even though user.conf and systemd both believe the quota was
+# applied. Confirmed on these servers: the large majority of already-active
+# accounts were affected. A single combined call sets both properties
+# together and has been confirmed to apply reliably.
+cpu_quota_arg=''
+[ "$cpu_quota" != 'unlimited' ] && cpu_quota_arg="$cpu_quota"
+cpu_period_arg=''
+[ "$cpu_quota_period" != 'unlimited' ] && cpu_period_arg="$cpu_quota_period"
+systemctl set-property "$user_slice" CPUQuota="$cpu_quota_arg" CPUQuotaPeriodSec="$cpu_period_arg"
 
 # Set memory limits:
 if [ "$memory_limit" != 'unlimited' ]; then

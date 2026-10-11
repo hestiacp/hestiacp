@@ -51,7 +51,7 @@ get_domain_values 'web'
 # Checking config
 config="$HOMEDIR/$user/conf/web/$domain/$STATS.conf"
 if [ ! -e "$config" ]; then
-	check_result $E_NOTEXISTS "$config doesn't exist"
+	check_result "$E_NOTEXIST" "$config doesn't exist"
 fi
 
 # Checking statistics directory

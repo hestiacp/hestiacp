@@ -141,6 +141,7 @@ E_DB=17
 E_RRD=18
 E_UPDATE=19
 E_RESTART=20
+E_BACKUP=21
 
 # Detect operating system
 detect_os() {

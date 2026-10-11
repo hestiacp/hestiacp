@@ -3743,6 +3743,24 @@ example: v-delete-user-stats admin overall
 
 This function deletes user statistics data.
 
+## v-delete-user-wp-cli
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-user-wp-cli)
+
+delete wp-cli for a user
+
+**Options**: `USER`
+
+**Examples**:
+
+```bash
+v-delete-user-wp-cli user
+```
+
+This function removes wp-cli support from the user account, added earlier
+by `v-add-user-wp-cli`. It removes `~/.wp-cli` and the matching
+`alias wp=...` line(s) from `.bash_aliases` together, atomically.
+
 ## v-delete-web-domain
 
 [Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-web-domain)

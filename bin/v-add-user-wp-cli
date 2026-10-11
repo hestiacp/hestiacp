@@ -61,7 +61,17 @@ chown $user:$user "$WPCLI_DIR"
 
 user_exec wget --tries=3 --timeout=15 --read-timeout=15 --waitretry=3 --no-dns-cache --quiet -O "$WPCLI_BIN" https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
 user_exec chmod +x "$WPCLI_BIN"
-echo "alias wp=/home/"$user"/.wp-cli/wp" >> /home/$user/.bash_aliases
+
+# Create .bash_aliases if it does not exist yet (same approach as v-change-user-php-cli),
+# and remove any previous "alias wp=" line before appending a new one, so running
+# this script again does not pile up duplicate aliases.
+ALIASES_FILE=/home/$user/.bash_aliases
+if [ ! -f "$ALIASES_FILE" ]; then
+	touch "$ALIASES_FILE"
+	chown $user:$user "$ALIASES_FILE"
+fi
+sed -i "/^alias wp=/d" "$ALIASES_FILE"
+echo "alias wp=/home/"$user"/.wp-cli/wp" >> "$ALIASES_FILE"
 
 #----------------------------------------------------------#
 #                       Hestia                             #

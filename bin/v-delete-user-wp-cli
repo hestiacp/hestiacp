@@ -1,0 +1,77 @@
+#!/bin/bash
+# info: delete wp-cli for a user
+# options: USER
+#
+# example: v-delete-user-wp-cli user
+#
+# This function removes wp-cli support from the user account, added earlier
+# by v-add-user-wp-cli. That script has no delete counterpart, so until now
+# removing wp-cli meant deleting the folder by hand and left the
+# "alias wp=..." line behind in .bash_aliases, piling up duplicates on
+# repeated install/remove cycles.
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+
+if [ -z "$HESTIA" ]; then
+	HESTIA="/usr/local/hestia"
+fi
+
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '1' "$#" 'USER'
+is_format_valid 'user'
+is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+WPCLI_DIR="/home/$user/.wp-cli"
+WPCLI_BIN="$WPCLI_DIR/wp"
+ALIASES_FILE="/home/$user/.bash_aliases"
+
+if [ ! -e "$WPCLI_DIR" ] && [ ! -L "$WPCLI_DIR" ]; then
+	check_result "$E_NOTEXIST" "For user name '$user' WP-CLI is not installed"
+	exit
+fi
+
+# Same home-dir confinement check as v-add-user-wp-cli, so a tampered symlink
+# can't make us rm -rf something outside the user's own homedir.
+[ -z "$(readlink -m "$WPCLI_DIR" | egrep "^$HOMEDIR/$user/")" ] && check_result "$E_FORBIDEN" "Path outside of user homedir (WP Cli dir)"
+
+user_exec rm -rf "$WPCLI_DIR"
+
+# Remove the "alias wp=..." line(s) from .bash_aliases. The /^alias wp=/d
+# pattern (not just the exact path) also mops up any duplicate lines left
+# behind by older v-add-user-wp-cli runs that appended without deduplicating.
+if [ -f "$ALIASES_FILE" ] && [ ! -L "$ALIASES_FILE" ]; then
+	sed -i "/^alias wp=/d" "$ALIASES_FILE"
+fi
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Logging
+$BIN/v-log-action "$user" "Info" "Plugins" "WP-CLI support disabled."
+log_event "$OK" "$ARGUMENTS"
+
+exit

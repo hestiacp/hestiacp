@@ -32,6 +32,16 @@ function setup() {
     assert_output --partial "admin"
 }
 
+@test "[Success][ Hash ] List all user objects" {
+    for command in v-list-all-web-domains v-list-all-mail-domains v-list-all-dns-domains v-list-all-databases; do
+        run curl -k -f -s -X POST -H "Content-Type: application/x-www-form-urlencoded" -d "hash=$apikey&returncode=no&cmd=$command&arg1=json" "https://$server:$port/api/index.php"
+        assert_success
+
+        run jq -e 'type == "object" and all(.[]; .USER | type == "string")' <<< "$output"
+        assert_success
+    done
+}
+
 @test "[Fail][ APIV2 ] Create new user" {
     run curl -k -s -X POST -H "Content-Type: application/x-www-form-urlencoded" -d "hash=$accesskey&returncode=yes&cmd=v-add-user&arg1=hestiatest&arg2=strongpassword&arg3=info@hestiacp.com" "https://$server:$port/api/index.php"
     assert_success

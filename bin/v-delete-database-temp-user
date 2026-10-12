@@ -56,7 +56,11 @@ check_hestia_demo_mode
 # Get database values
 get_database_values
 
-delete_mysql_database_temp_user
+if [ "$type" = "pgsql" ]; then
+	delete_pgsql_database_temp_user
+else
+	delete_mysql_database_temp_user
+fi
 
 #----------------------------------------------------------#
 #                       Hestia                             #

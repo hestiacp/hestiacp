@@ -57,21 +57,15 @@ check_hestia_demo_mode
 #----------------------------------------------------------#
 
 # Copy hostnames certificates from user dir
-cp /home/$user/conf/web/$hostname/ssl/$hostname.pem $HESTIA/ssl/certificate.crt
-cp /home/$user/conf/web/$hostname/ssl/$hostname.key $HESTIA/ssl/certificate.key
+cp "/home/$user/conf/web/$hostname/ssl/$hostname.pem" "$HESTIA/ssl/certificate.crt"
+cp "/home/$user/conf/web/$hostname/ssl/$hostname.key" "$HESTIA/ssl/certificate.key"
 
-# Enable fallback support for mail domains that do not support SSL
 if [[ "$MAIL_SYSTEM" =~ exim ]]; then
-	# Checking exim username for later chowning
-	exim_user="exim"
-	check_exim_username=$(grep -c '^Debian-exim:' /etc/passwd)
-	if [ "$check_exim_username" -eq 1 ]; then
-		exim_user="Debian-exim"
-	fi
-
-	# Assign exim permissions to certificate
-	chown $exim_user:mail $HESTIA/ssl/certificate.crt
-	chown $exim_user:mail $HESTIA/ssl/certificate.key
+	# Certificates readable by the mail group (exim is a member), owned by root
+	chown root:mail "$HESTIA/ssl/certificate.crt"
+	chown root:mail "$HESTIA/ssl/certificate.key"
+	chmod 640 "$HESTIA/ssl/certificate.crt"
+	chmod 640 "$HESTIA/ssl/certificate.key"
 fi
 
 # Add UPDATE_HOSTNAME_SSL if not exist

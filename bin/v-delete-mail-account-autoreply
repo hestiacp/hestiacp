@@ -60,11 +60,15 @@ fi
 #                       Hestia                             #
 #----------------------------------------------------------#
 
-# Deleting autoreply message
-rm -f $USER_DATA/mail/$domain/$account@$domain.msg
+# Deleting autoreply message. Path fix: v-add-mail-account-autoreply stores
+# the copy directly in $USER_DATA/mail/, the previously used
+# $USER_DATA/mail/$domain/ path never existed so the copy was never removed
+rm -f $USER_DATA/mail/$account@$domain.msg
 
 # Update config
 update_object_value "mail/$domain" 'ACCOUNT' "$account" '$AUTOREPLY' 'no'
+update_object_value "mail/$domain" 'ACCOUNT' "$account" '$AUTOREPLY_START' ''
+update_object_value "mail/$domain" 'ACCOUNT' "$account" '$AUTOREPLY_END' ''
 
 # Logging
 $BIN/v-log-action "$user" "Info" "Mail" "Mail account auto-reply removed (User: $account@$domain)."

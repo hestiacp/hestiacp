@@ -19,7 +19,15 @@
 
 	<form
 		x-data="{
-			hasAutoReply: <?= tohtml($v_autoreply == "yes" ? "true" : "false") ?>
+			hasAutoReply: <?= tohtml($v_autoreply == "yes" ? "true" : "false") ?>,
+			autoreplyStart: '<?= tohtml(trim($v_autoreply_start ?? "", "'")) ?>',
+			autoreplyEnd: '<?= tohtml(trim($v_autoreply_end ?? "", "'")) ?>',
+			autoreplyToday: '<?= date("Y-m-d") ?>',
+			autoreplyStatus() {
+				if (this.autoreplyStart && this.autoreplyToday < this.autoreplyStart) return 'scheduled';
+				if (this.autoreplyEnd && this.autoreplyToday > this.autoreplyEnd) return 'expired';
+				return 'active';
+			}
 		}"
 		id="main-form"
 		name="v_edit_mail_acc"
@@ -112,12 +120,35 @@
 							<label for="v_autoreply_message" class="form-label"><?= tohtml( _("Message")) ?></label>
 							<textarea class="form-control" name="v_autoreply_message" id="v_autoreply_message"><?= tohtml(trim($v_autoreply_message, "'")) ?></textarea>
 						</div>
+						<div class="u-mb10">
+							<label for="v_autoreply_start" class="form-label">
+								<?= tohtml( _("Start date")) ?> <span class="optional">(<?= tohtml( _("optional")) ?>)</span>
+							</label>
+							<input type="date" class="form-control" name="v_autoreply_start" id="v_autoreply_start" x-model="autoreplyStart" :max="autoreplyEnd || false">
+						</div>
+						<div class="u-mb10">
+							<label for="v_autoreply_end" class="form-label">
+								<?= tohtml( _("End date")) ?> <span class="optional">(<?= tohtml( _("optional")) ?>)</span>
+							</label>
+							<input type="date" class="form-control" name="v_autoreply_end" id="v_autoreply_end" x-model="autoreplyEnd" :min="autoreplyStart || false">
+						</div>
+						<div class="u-mb10">
+							<span x-show="autoreplyStatus() === 'active'">
+								<i class="fas fa-circle-check icon-green"></i> <?= tohtml( _("Active")) ?>
+							</span>
+							<span x-show="autoreplyStatus() === 'scheduled'">
+								<i class="fas fa-clock icon-orange"></i> <?= tohtml( _("Scheduled")) ?>
+							</span>
+							<span x-show="autoreplyStatus() === 'expired'">
+								<i class="fas fa-circle-xmark icon-red"></i> <?= tohtml( _("Expired")) ?>
+							</span>
+						</div>
 					</div>
 					<div class="u-mb20">
 						<label for="v_rate" class="form-label">
 							<?= tohtml( _("Rate Limit")) ?> <span class="optional">(<?= tohtml( _("email / hour")) ?>)</span>
 						</label>
-						<input type="text" class="form-control" name="v_rate" id="v_rate" value="<?= tohtml(trim($v_rate, "'")) ?>" <?php if ($_SESSION['userContext'] != "admin"){ echo "disabled"; }?>>
+						<input type="number" min="0" step="1" class="form-control" name="v_rate" id="v_rate" value="<?= tohtml(trim($v_rate, "'")) ?>" <?php if ($_SESSION['userContext'] != "admin"){ echo "disabled"; }?>>
 					</div>
 				</div>
 				<div class="sidebar-right-grid-sidebar">

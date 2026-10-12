@@ -89,6 +89,23 @@ sed -i "/ $user$/d" "$HESTIA/data/queue/traffic.pipe"
 # Deleting sftp jail
 $BIN/v-delete-user-sftp-jail "$user"
 
+# PATCH-MARKER-CLEANUP-LINGER: before removing the system user, turn off
+# linger and stop its slice.
+#
+# v-update-user-cgroup enables "loginctl enable-linger" for every account so
+# its user-<uid>.slice (and the cgroup limits on it) survive idle periods.
+# That setting is keyed by username, not uid, and "userdel" below does not
+# know anything about it - left alone, it leaves behind a stale
+# /var/lib/systemd/linger/<user> file pointing at a username that no longer
+# exists, and keeps user-<uid>.slice (and the persistent user@<uid>.service
+# instance behind it) running forever with no owner, since linger is
+# exactly what stops systemd from garbage-collecting it on its own.
+user_id_for_cleanup=$(id -u "$user" 2>/dev/null)
+loginctl disable-linger "$user" >/dev/null 2>&1
+if [ -n "$user_id_for_cleanup" ]; then
+	systemctl stop "user-${user_id_for_cleanup}.slice" >/dev/null 2>&1
+fi
+
 # Deleting system user
 /usr/sbin/userdel -f "$user" >> /dev/null 2>&1
 if [ $? -ne 0 ]; then

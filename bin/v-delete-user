@@ -100,7 +100,6 @@ $BIN/v-delete-user-sftp-jail "$user"
 # exists, and keeps user-<uid>.slice (and the persistent user@<uid>.service
 # instance behind it) running forever with no owner, since linger is
 # exactly what stops systemd from garbage-collecting it on its own.
-
 user_id_for_cleanup=$(id -u "$user" 2>/dev/null)
 loginctl disable-linger "$user" >/dev/null 2>&1
 if [ -n "$user_id_for_cleanup" ]; then

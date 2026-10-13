@@ -176,10 +176,10 @@ if [ "$create_user" = 'yes' ]; then
 	fi
 
 	# Restoring user.conf
-	mkdir $USER_DATA
-	cp $tmpdir/$backup_system/user.conf $USER_DATA/
-	cp -r $tmpdir/$backup_system/ssl $USER_DATA/ > /dev/null 2>&1
-	cp $tmpdir/$backup_system/backup-excludes.conf $USER_DATA/ > /dev/null 2>&1
+	mkdir "$USER_DATA"
+	cp "$tmpdir/$backup_system/user.conf" "$USER_DATA/"
+	cp -r "$tmpdir/$backup_system/ssl" "$USER_DATA/" > /dev/null 2>&1
+	cp "$tmpdir/$backup_system/backup-excludes.conf" "$USER_DATA/" > /dev/null 2>&1
 
 	# Rebuilding user
 	rebuild_user_conf
@@ -187,7 +187,7 @@ fi
 
 # Unpacking pam container
 chown "$user" "$tmpdir"
-tar xf $BACKUP/$backup -C $tmpdir ./pam
+tar xf "$BACKUP/$backup" -C "$tmpdir" ./pam
 if [ "$?" -ne 0 ]; then
 	rm -rf $tmpdir
 	echo "Can't unpack PAM container" | $SENDMAIL -s "$subj" $email $notify
@@ -200,10 +200,15 @@ new_uid=$(grep "^$user:" /etc/passwd | cut -f 3 -d :)
 
 # Restoring web domains
 if [ "$web" != 'no' ] && [ -n "$WEB_SYSTEM" ]; then
-	echo -e "\n-- WEB --" | tee -a $tmpdir/restore.log
+	echo -e "\n-- WEB --" | tee -a "$tmpdir/restore.log"
+
+	# Reject symlinks: a shell user owns $HOMEDIR/$user and could replace
+	# top-level directories before triggering a restore
+	is_dir_symlink "$HOMEDIR/$user/web"
+	is_dir_symlink "$HOMEDIR/$user/conf"
 
 	# Creating web domain restore list
-	backup_domains=$(tar -tf $BACKUP/$backup | grep "^./web")
+	backup_domains=$(tar -tf "$BACKUP/$backup" | grep "^./web")
 	if [ "$backup_mode" = "zstd" ]; then
 		backup_domains=$(echo "$backup_domains" | grep domain_data.tar.zst)
 	else
@@ -214,12 +219,12 @@ if [ "$web" != 'no' ] && [ -n "$WEB_SYSTEM" ]; then
 		domains="$backup_domains"
 	else
 		echo "$web" | tr ',' '\n' > $tmpdir/selected.txt
-		domains=$(echo "$backup_domains" | egrep -x -f $tmpdir/selected.txt)
+		domains=$(echo "$backup_domains" | egrep -x -f "$tmpdir/selected.txt")
 	fi
 
 	# Restoring web domain
 	for domain in $domains; do
-		echo -e "$(date "+%F %T") $domain" | tee -a $tmpdir/restore.log
+		echo -e "$(date "+%F %T") $domain" | tee -a "$tmpdir/restore.log"
 
 		# Cleanup previous domain keys
 		unset -v DOMAIN IP IP6 ALIAS TPL SSL SSL_HOME LETSENCRYPT FTP_USER FTP_MD5 BACKEND PROXY PROXY_EXT STATS STATS_USER STATS_CRYPT U_DISK CUSTOM_DOCROOT CUSTOM_PHPROOT
@@ -229,7 +234,7 @@ if [ "$web" != 'no' ] && [ -n "$WEB_SYSTEM" ]; then
 		if [ -z "$check_config" ]; then
 			check_new=$(is_domain_new 'web' $domain)
 			if [ -n "$check_new" ]; then
-				rm -rf $tmpdir
+				rm -rf "$tmpdir"
 				error="$domain belongs to another user"
 				echo "$error" | $SENDMAIL -s "$subj" $email $notify
 				sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
@@ -238,9 +243,9 @@ if [ "$web" != 'no' ] && [ -n "$WEB_SYSTEM" ]; then
 		fi
 
 		# Unpacking domain container
-		tar xf $BACKUP/$backup -C $tmpdir ./web/$domain
+		tar xf "$BACKUP/$backup" -C "$tmpdir" "./web/$domain"
 		if [ "$?" -ne 0 ]; then
-			rm -rf $tmpdir
+			rm -rf "$tmpdir"
 			error="Can't unpack $domain web container"
 			echo "$error" | $SENDMAIL -s "$subj" $email $notify
 			sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
@@ -344,9 +349,9 @@ if [ "$web" != 'no' ] && [ -n "$WEB_SYSTEM" ]; then
 		# Restoring custom user config
 		# Except certificates, .conf files
 		if [ ! -d "$HOMEDIR/$user/conf/web/$domain/" ]; then
-			mkdir -p $HOMEDIR/$user/conf/web/$domain/
+			mkdir -p "$HOMEDIR/$user/conf/web/$domain/"
 		fi
-		for file in $tmpdir/web/$domain/conf/*; do
+		for file in "$tmpdir/web/$domain/conf/"*; do
 			if [[ "$file" == *.ca ]] || [[ "$file" == *.crt ]] || [[ "$file" == *.key ]] || [[ "$file" == *.pem ]] || [[ "$file" == *.conf ]]; then
 				continue
 			fi
@@ -362,11 +367,17 @@ if [ "$web" != 'no' ] && [ -n "$WEB_SYSTEM" ]; then
 		rebuild_web_domain_conf
 
 		# Restoring web domain data
+		# Reject symlinks to avoid root following them outside the user home
+		is_dir_symlink "$HOMEDIR/$user/web/$domain"
+		is_dir_symlink "$HOMEDIR/$user/web/$domain/public_html"
 		if [ -d "$HOMEDIR/$user/web/$domain/public_html" ]; then
 			rm -rf $HOMEDIR/$user/web/$domain/public_html/*
 		fi
 		chmod u+w "$HOMEDIR/$user/web/$domain"
-		[[ -d $HOMEDIR/$user/web/$domain/stats ]] && chmod u+w "$HOMEDIR/$user/web/$domain/stats"
+		if [[ -d $HOMEDIR/$user/web/$domain/stats ]]; then
+			is_dir_symlink "$HOMEDIR/$user/web/$domain/stats"
+			chmod u+w "$HOMEDIR/$user/web/$domain/stats"
+		fi
 
 		if [ "$backup_mode" = "zstd" ]; then
 			user_exec tar -I pzstd -xpf $tmpdir/web/$domain/domain_data.tar.zst \
@@ -518,6 +529,11 @@ fi
 if [ "$mail" != 'no' ] && [ -n "$MAIL_SYSTEM" ]; then
 	echo -e "\n-- MAIL --" | tee -a $tmpdir/restore.log
 
+	# Reject symlinks: a shell user owns $HOMEDIR/$user and could replace
+	# top-level directories before triggering a restore
+	is_dir_symlink "$HOMEDIR/$user/mail"
+	is_dir_symlink "$HOMEDIR/$user/conf"
+
 	# Creating mail domain restore list
 	backup_domains=$(tar -tf $BACKUP/$backup | grep "^./mail")
 	backup_domains=$(echo "$backup_domains" | grep "mail.conf$")
@@ -654,8 +670,10 @@ if [ "$mail" != 'no' ] && [ -n "$MAIL_SYSTEM" ]; then
 			ln -s -f $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.key /usr/local/hestia/ssl/mail/mail.$domain.key
 
 			# Set correct permissions on certificates
+			# Reject symlinks to avoid root following them outside the user home
+			is_dir_symlink "$HOMEDIR/$user/conf/mail/$domain/ssl"
 			chmod 750 $HOMEDIR/$user/conf/mail/$domain/ssl
-			chown -R $MAIL_USER:mail $HOMEDIR/$user/conf/mail/$domain/ssl
+			chown -R --no-dereference $MAIL_USER:mail $HOMEDIR/$user/conf/mail/$domain/ssl
 			chmod 0644 $HOMEDIR/$user/conf/mail/$domain/ssl/*
 			chown -h $user:mail $HOMEDIR/$user/conf/mail/$domain/ssl/*
 			chmod -R 0644 /usr/local/hestia/ssl/mail/*
@@ -673,6 +691,8 @@ if [ "$mail" != 'no' ] && [ -n "$MAIL_SYSTEM" ]; then
 		fi
 
 		# Current Hestia store email in the $HOMEDIR/$user/mail/$domain_idn
+		# Reject symlinks to avoid root following them outside the user home
+		is_dir_symlink "$HOMEDIR/$user/mail/$domain_idn"
 		chmod u+w "$HOMEDIR/$user/mail/$domain_idn"
 		chown $user:$user "$HOMEDIR/$user/mail/$domain_idn"
 
@@ -913,12 +933,14 @@ if [ "$udir" != 'no' ]; then
 fi
 
 # Create tmp/
-mkdir -p $HOMEDIR/$user/tmp
-chmod 700 $HOMEDIR/$user/tmp
-chown -R $user:$user $HOMEDIR/$user/tmp
+# Reject symlinks to avoid root following them outside the user home
+is_dir_symlink "$HOMEDIR/$user/tmp"
+mkdir -p "$HOMEDIR/$user/tmp"
+chmod 700 "$HOMEDIR/$user/tmp"
+chown -R --no-dereference "$user:$user" "$HOMEDIR/$user/tmp"
 
 # Delete Hestia File manager key
-rm -f $HOMEDIR/$user/.ssh/hst-filemanager-key
+rm -f "$HOMEDIR/$user/.ssh/hst-filemanager-key"
 
 # Sending mail notification
 subj="$user → restore has been completed"

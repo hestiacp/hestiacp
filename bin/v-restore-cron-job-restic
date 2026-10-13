@@ -47,7 +47,9 @@ source_conf $HESTIA/conf/restic.conf
 #                       Action                             #
 #----------------------------------------------------------#
 
-tmpdir=$(mktemp -p /home/$user/tmp/ -d)
+# Reject symlinks to avoid root staging data outside the user home
+is_dir_symlink "/home/$user/tmp"
+tmpdir=$(mktemp -p "/home/$user/tmp/" -d)
 
 restic --repo "${REPO%/}/$user" --password-file "$USER_DATA/restic.conf" --json dump "$snapshot" "/home/$user/backup/cron/cron.conf" > "$tmpdir/cron.conf"
 

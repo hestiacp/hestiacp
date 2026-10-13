@@ -47,7 +47,9 @@ source_conf $HESTIA/conf/restic.conf
 #                       Action                             #
 #----------------------------------------------------------#
 
-tmpdir=$(mktemp -p /home/$user/tmp/ -d)
+# Reject symlinks to avoid root staging data outside the user home
+is_dir_symlink "/home/$user/tmp"
+tmpdir=$(mktemp -p "/home/$user/tmp/" -d)
 if [ ! -f "$tmpdir/backup.conf" ]; then
 	restic --repo "${REPO%/}/$user" --password-file "$USER_DATA/restic.conf" dump "$snapshot" "/home/$user/backup/backup.conf" > "$tmpdir/backup.conf"
 	if [ "$?" -ne 0 ]; then

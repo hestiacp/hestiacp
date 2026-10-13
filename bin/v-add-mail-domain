@@ -71,7 +71,7 @@ if [ -z "$(is_ip_format_valid $domain)" ]; then
 fi
 
 is_package_full 'MAIL_DOMAINS'
-is_dir_symlink $HOMEDIR/$user/mail
+is_dir_symlink "$HOMEDIR/$user/mail"
 
 is_base_domain_owner "$domain"
 

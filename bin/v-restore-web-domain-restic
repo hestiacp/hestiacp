@@ -54,10 +54,11 @@ source_conf $HESTIA/conf/restic.conf
 
 # Reject symlinks: a shell user owns $HOMEDIR/$user and could replace
 # top-level directories before triggering a restore
-is_dir_symlink "/home/$user/tmp"
 is_dir_symlink "$HOMEDIR/$user/web"
 is_dir_symlink "$HOMEDIR/$user/conf"
-tmpdir=$(mktemp -p "/home/$user/tmp/" -d)
+# Stage in root-owned $BACKUP, not the user's home, to avoid races
+# where the user swaps the tmp dir before root reads/writes it
+tmpdir=$(mktemp -p "${BACKUP_TEMP:-$BACKUP}" -d)
 if [ ! -f "$tmpdir/backup.conf" ]; then
 	restic --repo "${REPO%/}/$user" --password-file "$USER_DATA/restic.conf" dump "$snapshot" "/home/$user/backup/backup.conf" > "$tmpdir/backup.conf"
 	if [ "$?" -ne 0 ]; then
@@ -65,10 +66,10 @@ if [ ! -f "$tmpdir/backup.conf" ]; then
 	fi
 fi
 restic --repo "${REPO%/}/$user" --password-file "$USER_DATA/restic.conf" dump "$snapshot" "/home/$user/backup/pam/passwd" > "$tmpdir/passwd"
-old_uid=$(cut -f 3 -d : $tmpdir/passwd)
+old_uid=$(cut -f 3 -d : "$tmpdir/passwd")
 
 domains=""
-parse_object_kv_list $(cat $tmpdir/backup.conf)
+parse_object_kv_list $(cat "$tmpdir/backup.conf")
 IFS=',' read -a domains <<< "$WEB"
 for domain in "${domains[@]}"; do
 	if [[ ",$web," == *",$domain,"* || "$web" = '*' ]]; then
@@ -94,7 +95,7 @@ for domain in "${domains[@]}"; do
 
 		# Restoring web.conf
 		if [ -z "$check_config" ]; then
-			parse_object_kv_list $(cat $tmpdir/home/$user/backup/web/$domain/hestia/web.conf)
+			parse_object_kv_list $(cat "$tmpdir/home/$user/backup/web/$domain/hestia/web.conf")
 
 			# Deleting conflicting aliases
 			for dom_alias in ${ALIAS//,/ }; do
@@ -191,7 +192,7 @@ for domain in "${domains[@]}"; do
 		if [ ! -d "$HOMEDIR/$user/conf/web/$domain/" ]; then
 			mkdir -p "$HOMEDIR/$user/conf/web/$domain/"
 		fi
-		for file in $tmpdir/home/$user/backup/web/$domain/conf/*; do
+		for file in "$tmpdir"/home/"$user"/backup/web/"$domain"/conf/*; do
 			if [[ "$file" == *.ca ]] || [[ "$file" == *.crt ]] || [[ "$file" == *.key ]] || [[ "$file" == *.pem ]] || [[ "$file" == *.conf ]]; then
 				continue
 			fi
@@ -249,10 +250,10 @@ done
 if [ "$new_user" = "yes" ]; then
 	rebuild_user_conf
 fi
-rm -fr $tmpdir
+rm -fr "$tmpdir"
 
 # Update user counters
-$BIN/v-update-user-counters $user
+$BIN/v-update-user-counters "$user"
 $BIN/v-update-user-counters "$ROOT_USER"
 $BIN/v-update-sys-ip-counters
 

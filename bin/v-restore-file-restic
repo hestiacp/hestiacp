@@ -47,9 +47,9 @@ source_conf $HESTIA/conf/restic.conf
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Reject symlinks to avoid root staging data outside the user home
-is_dir_symlink "/home/$user/tmp"
-tmpdir=$(mktemp -p "/home/$user/tmp/" -d)
+# Stage in root-owned $BACKUP, not the user's home, to avoid races
+# where the user swaps the tmp dir before root reads/writes it
+tmpdir=$(mktemp -p "${BACKUP_TEMP:-$BACKUP}" -d)
 if [ ! -f "$tmpdir/backup.conf" ]; then
 	restic --repo "${REPO%/}/$user" --password-file "$USER_DATA/restic.conf" dump "$snapshot" "/home/$user/backup/backup.conf" > "$tmpdir/backup.conf"
 	if [ "$?" -ne 0 ]; then
@@ -66,7 +66,7 @@ restic --repo "${REPO%/}/$user" --password-file "$USER_DATA/restic.conf" restore
 rm -rf "$tmpdir"
 
 # Update user counters
-$BIN/v-update-user-counters $user
+$BIN/v-update-user-counters "$user"
 $BIN/v-update-user-counters "$ROOT_USER"
 $BIN/v-update-sys-ip-counters
 

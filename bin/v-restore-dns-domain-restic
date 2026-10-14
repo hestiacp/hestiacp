@@ -47,9 +47,9 @@ source_conf $HESTIA/conf/restic.conf
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Reject symlinks to avoid root staging data outside the user home
-is_dir_symlink "/home/$user/tmp"
-tmpdir=$(mktemp -p "/home/$user/tmp/" -d)
+# Stage in root-owned $BACKUP, not the user's home, to avoid races
+# where the user swaps the tmp dir before root reads/writes it
+tmpdir=$(mktemp -p "${BACKUP_TEMP:-$BACKUP}" -d)
 if [ ! -f "$tmpdir/backup.conf" ]; then
 	restic --repo "${REPO%/}/$user" --password-file "$USER_DATA/restic.conf" dump "$snapshot" "/home/$user/backup/backup.conf" > "$tmpdir/backup.conf"
 	if [ "$?" -ne 0 ]; then
@@ -69,7 +69,7 @@ for domain in "${domains[@]}"; do
 		if [ -z "$check_config" ]; then
 			check_new=$(is_domain_new 'dns' "$domain")
 			if [ "$check_new" = "yes" ]; then
-				rm -rf $tmpdir
+				rm -rf "$tmpdir"
 				error="$domain belongs to another user"
 				echo "$error" | $SENDMAIL -s "$subj" "$email" "$notify"
 				sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
@@ -83,7 +83,7 @@ for domain in "${domains[@]}"; do
 
 		# Restoring dns.conf
 		if [ -z "$check_config" ]; then
-			parse_object_kv_list $(cat $tmpdir/home/$user/backup/dns/$domain/hestia/dns.conf)
+			parse_object_kv_list $(cat "$tmpdir/home/$user/backup/dns/$domain/hestia/dns.conf")
 
 			# Checking IP address
 			check_ip=$(is_ip_valid $IP $user)
@@ -110,7 +110,7 @@ for domain in "${domains[@]}"; do
 		if [ "$DNSSEC" = "yes" ]; then
 			format_domain_idn
 			# Probably need to change the cache dir for RHEL
-			cp $tmpdir/home/$user/backup//dns/$domain/conf/keys/* /var/cache/bind/
+			cp "$tmpdir"/home/"$user"/backup/dns/"$domain"/conf/keys/* /var/cache/bind/
 			chown bind:bind /var/cache/bind/K$domain_idn*
 			chmod 644 /var/cache/bind/K$domain_idn*
 		fi
@@ -138,10 +138,10 @@ done
 #                       Hestia                             #
 #----------------------------------------------------------#
 
-rm -fr $tmpdir
+rm -fr "$tmpdir"
 
 # Update user counters
-$BIN/v-update-user-counters $user
+$BIN/v-update-user-counters "$user"
 $BIN/v-update-user-counters "$ROOT_USER"
 $BIN/v-update-sys-ip-counters
 

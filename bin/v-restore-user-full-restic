@@ -62,9 +62,9 @@ if [ -n "$check_user" ]; then
 	fi
 fi
 
-# Reject symlinks to avoid root staging data outside the user home
-is_dir_symlink "/home/$user/tmp"
-tmpdir=$(mktemp -p "/home/$user/tmp/" -d)
+# Stage in root-owned $BACKUP, not the user's home, to avoid races
+# where the user swaps the tmp dir before root reads/writes it
+tmpdir=$(mktemp -p "${BACKUP_TEMP:-$BACKUP}" -d)
 if [ ! -f "$tmpdir/backup.conf" ]; then
 	restic --repo "${REPO%/}/$user" --password-file "$USER_DATA/restic.conf" dump "$snapshot" "/home/$user/backup/backup.conf" > "$tmpdir/backup.conf"
 	if [ "$?" -ne 0 ]; then
@@ -80,9 +80,9 @@ fi
 
 cp "$tmpdir/home/$user/backup/hestia/user.conf" "$USER_DATA/"
 cp -r "$tmpdir/home/$user/backup/hestia/ssl" "$USER_DATA/" > /dev/null 2>&1
-cp -r" $tmpdir/home/$user/backup/hestia/backup-excludes.conf" "$USER_DATA"/ > /dev/null 2>&1
+cp -r "$tmpdir/home/$user/backup/hestia/backup-excludes.conf" "$USER_DATA/" > /dev/null 2>&1
 
-old_uid=$(cut -f 3 -d : $tmpdir/home/$user/backup/pam/passwd)
+old_uid=$(cut -f 3 -d : "$tmpdir/home/$user/backup/pam/passwd")
 # Rebuilding user
 rebuild_user_conf
 
@@ -116,10 +116,10 @@ rebuild_user_conf
 #                       Hestia                             #
 #----------------------------------------------------------#
 
-rm -fr $tmpdir
+rm -fr "$tmpdir"
 
 # Update user counters
-$BIN/v-update-user-counters $user
+$BIN/v-update-user-counters "$user"
 $BIN/v-update-user-counters "$ROOT_USER"
 $BIN/v-update-sys-ip-counters
 

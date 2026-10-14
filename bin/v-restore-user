@@ -371,7 +371,7 @@ if [ "$web" != 'no' ] && [ -n "$WEB_SYSTEM" ]; then
 		is_dir_symlink "$HOMEDIR/$user/web/$domain"
 		is_dir_symlink "$HOMEDIR/$user/web/$domain/public_html"
 		if [ -d "$HOMEDIR/$user/web/$domain/public_html" ]; then
-			rm -rf $HOMEDIR/$user/web/$domain/public_html/*
+			user_exec find "$HOMEDIR/$user/web/$domain/public_html" -mindepth 1 -delete
 		fi
 		chmod u+w "$HOMEDIR/$user/web/$domain"
 		if [[ -d $HOMEDIR/$user/web/$domain/stats ]]; then

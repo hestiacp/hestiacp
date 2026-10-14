@@ -189,7 +189,7 @@ for domain in "${domains[@]}"; do
 		fi
 
 		if [ ! -d "$HOMEDIR/$user/conf/web/$domain/" ]; then
-			mkdir -p $HOMEDIR/$user/conf/web/$domain/
+			mkdir -p "$HOMEDIR/$user/conf/web/$domain/"
 		fi
 		for file in $tmpdir/home/$user/backup/web/$domain/conf/*; do
 			if [[ "$file" == *.ca ]] || [[ "$file" == *.crt ]] || [[ "$file" == *.key ]] || [[ "$file" == *.pem ]] || [[ "$file" == *.conf ]]; then

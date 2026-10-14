@@ -230,7 +230,7 @@ for domain in "${domains[@]}"; do
 				"$HOMEDIR/$user/web/$domain" \
 				"$HOMEDIR/$user/web/$domain/private" \
 				"$HOMEDIR/$user/web/$domain/cgi-bin" \
-				"$HOMEDIR/$user/web/$domain/public_*html" \
+				"$HOMEDIR/$user/web/$domain"/public_*html \
 				"$HOMEDIR/$user/web/$domain/logs" \
 				"$HOMEDIR/$user/web/$domain/stats"
 

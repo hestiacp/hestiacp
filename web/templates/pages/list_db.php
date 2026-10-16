@@ -135,7 +135,6 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
 					$spnd_icon_class = 'icon-highlight';
 					$spnd_confirmation = _('Are you sure you want to suspend database %s?') ;
 				}
-				if ($data[$key]['HOST'] != 'localhost' ) $http_host = $data[$key]['HOST'];
 				if ($data[$key]['TYPE'] == 'mysql') $db_admin = "phpMyAdmin";
 				if ($data[$key]['TYPE'] == 'mysql') $db_admin_link = "https://".$http_host."/phpmyadmin/";
 				if (($data[$key]['TYPE'] == 'mysql') && (!empty($_SESSION['DB_PMA_ALIAS']))) $db_admin_link = $_SESSION['DB_PMA_ALIAS'];

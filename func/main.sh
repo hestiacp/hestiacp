@@ -925,37 +925,37 @@ sort_cron_jobs() {
 # Sync cronjobs with system cron
 sync_cron_jobs() {
 	source_conf "$USER_DATA/user.conf"
-	if [ -e "/var/spool/cron/crontabs" ]; then
-		crontab="/var/spool/cron/crontabs/$user"
+	tmp_crontab=$(mktemp) || return 1
+
+	# Strip CR/LF from CONTACT to prevent injecting extra cron entries
+	contact="${CONTACT//[$'\r\n']/}"
+
+	if [[ "$CRON_REPORTS" == 'yes' ]]; then
+		{
+			printf 'MAILTO=%s\n' "$contact"
+			printf 'CONTENT_TYPE="text/plain; charset=utf-8"\n'
+		} > "$tmp_crontab"
 	else
-		crontab="/var/spool/cron/$user"
-	fi
-
-	# remove file if exists
-	if [ -e "$crontab" ]; then
-		rm -f $crontab
-	fi
-
-	# touch new crontab file
-	touch $crontab
-
-	if [ "$CRON_REPORTS" = 'yes' ]; then
-		echo "MAILTO=$CONTACT" > $crontab
-		echo 'CONTENT_TYPE="text/plain; charset=utf-8"' >> $crontab
-	else
-		echo 'MAILTO=""' > $crontab
+		printf 'MAILTO=""\n' > "$tmp_crontab"
 	fi
 
 	while IFS= read -r line; do
 		parse_object_kv_list "$line"
-		if [ "$SUSPENDED" = 'no' ]; then
+		if [[ "$SUSPENDED" == 'no' ]]; then
 			echo "$MIN $HOUR $DAY $MONTH $WDAY $CMD" \
 				| sed -e "s/%quote%/'/g" -e "s/%dots%/:/g" \
-					>> $crontab
+					>> "$tmp_crontab"
 		fi
-	done < $USER_DATA/cron.conf
-	chown $user:$user $crontab
-	chmod 600 $crontab
+	done < "$USER_DATA/cron.conf"
+
+	if ! crontab -u "$user" "$tmp_crontab"; then
+		rm -f "$tmp_crontab"
+		echo "Error: unable to install crontab for user $user" >&2
+		return 1
+	fi
+
+	rm -f "$tmp_crontab"
+	return 0
 }
 
 # Validates Local part email and mail alias

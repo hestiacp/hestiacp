@@ -1,0 +1,135 @@
+#!/bin/bash
+# info: update user disk quota
+# options: USER
+#
+# example: v-update-user-cgroup admin
+#
+# The functions updates cgroup, cpu, ram ,... for specific user
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '0' "$#" 'USER'
+is_format_valid 'user'
+is_object_valid 'user' 'USER' "$user"
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+user_id=$(id -u "$user")
+user_slice="user-${user_id}.slice"
+
+# PATCH-MARKER-PKGSYNC: before reading the values below, make sure
+# user.conf actually agrees with the account's package.
+#
+# user.conf is supposed to always mirror its PACKAGE's CPU_QUOTA/
+# CPU_QUOTA_PERIOD/MEMORY_LIMIT/SWAP_LIMIT - v-change-user-package writes it
+# at tariff-change time - but it can drift on old accounts, after a manual
+# edit, or after a partially-applied tariff change, and nothing else ever
+# notices or fixes that. Re-checking it here (every time this command runs,
+# including from a periodic timer that just loops over all users) means one
+# script covers both "user.conf vs package" and "cgroup vs user.conf" drift,
+# instead of needing a second, separate resync script with its own copy of
+# this logic.
+package=$(get_user_value '$PACKAGE')
+pkg_conf="$HESTIA/data/packages/${package}.pkg"
+if [ -n "$package" ] && [ -f "$pkg_conf" ]; then
+	for pkey in CPU_QUOTA CPU_QUOTA_PERIOD MEMORY_LIMIT SWAP_LIMIT; do
+		pval=$(grep -m1 "^${pkey}=" "$pkg_conf" | awk -F "'" '{print $2}')
+		uval=$(get_user_value "\$$pkey")
+		[ -z "$pval" ] && pval='unlimited'
+		[ -z "$uval" ] && uval='unlimited'
+		if [ "$pval" != "$uval" ]; then
+			update_user_value "$user" "\$$pkey" "$pval"
+		fi
+	done
+fi
+
+# get user resources values (after the pkgsync step above, so these are
+# guaranteed to reflect the package, not a stale/edited user.conf)
+cpu_quota=$(get_user_value '$CPU_QUOTA')
+cpu_quota_period=$(get_user_value '$CPU_QUOTA_PERIOD')
+memory_limit=$(get_user_value '$MEMORY_LIMIT')
+swap_limit=$(get_user_value '$SWAP_LIMIT')
+
+# PATCH-MARKER: combined single systemctl call for CPU quota + period
+# (see explanation below) - do not remove this comment, it is how a
+# self-heal timer (if you set one up) can detect whether this file still
+# has the fix after a Hestia core update overwrites it with the stock
+# version.
+#
+# Set CPU quota + period for CFS in a single systemctl call.
+#
+# The original Hestia code issued two SEPARATE calls here - one for
+# CPUQuota, one for CPUQuotaPeriodSec - and that is unreliable for a
+# user-<uid>.slice that already has running processes (i.e. almost every
+# existing hosting account, not a freshly created one): the second call
+# (period only) does not always correctly recombine with what the first
+# call just wrote, and cpu.max in the live cgroup ends up stuck at "max"
+# (no limit) even though user.conf and systemd both believe the quota was
+# applied. Confirmed on these servers: the large majority of already-active
+# accounts were affected. A single combined call sets both properties
+# together and has been confirmed to apply reliably.
+cpu_quota_arg=''
+[ "$cpu_quota" != 'unlimited' ] && cpu_quota_arg="$cpu_quota"
+cpu_period_arg=''
+[ "$cpu_quota_period" != 'unlimited' ] && cpu_period_arg="$cpu_quota_period"
+systemctl set-property "$user_slice" CPUQuota="$cpu_quota_arg" CPUQuotaPeriodSec="$cpu_period_arg"
+
+# Set memory limits:
+if [ "$memory_limit" != 'unlimited' ]; then
+	systemctl set-property "$user_slice" MemoryHigh="$memory_limit"
+else
+	systemctl set-property "$user_slice" MemoryHigh=
+fi
+
+# Set memory swap limits:
+if [ "$swap_limit" != 'unlimited' ]; then
+	systemctl set-property "$user_slice" MemorySwapMax="$swap_limit"
+else
+	systemctl set-property "$user_slice" MemorySwapMax=
+fi
+
+# Apply change immediately: not needed for now
+#systemctl restart "$user_slice"
+
+# PATCH-MARKER-LINGER: keep this user's systemd instance (and its
+# slice) alive even with no active sessions/processes.
+#
+# Without this, user-<uid>.slice gets removed by systemd/logind whenever the
+# account is idle (no ssh/cron/php-fpm activity holding it open), and all the
+# properties we just set above (cpu.max, memory.high, ...) disappear with it.
+# The NEXT time the account becomes active, systemd recreates the slice from
+# scratch with its own defaults (unlimited), and the quota stays wrong until
+# v-update-user-cgroup (or the resync timer) runs again. Enabling linger once
+# here keeps the slice persistent, so the settings above don't get lost in
+# between runs of this script.
+loginctl enable-linger "$user" > /dev/null 2>&1
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Logging
+log_event "$OK" "$ARGUMENTS"
+
+exit

@@ -1,0 +1,142 @@
+#!/bin/bash
+# info: delete user
+# options: USER [RESTART]
+#
+# example: v-delete-user whistler
+#
+# This function deletes a certain user and all his resources such as domains,
+# databases, cron jobs, etc.
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+restart=$2
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
+source $HESTIA/func/domain.sh
+# shellcheck source=/usr/local/hestia/func/db.sh
+source $HESTIA/func/db.sh
+# shellcheck source=/usr/local/hestia/func/ip.sh
+source $HESTIA/func/ip.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '1' "$#" 'USER [RESTART]'
+is_format_valid 'user' 'restart'
+is_object_valid 'user' 'USER' "$user"
+if [ "$user" = "$ROOT_USER" ]; then
+	exit
+fi
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Deleting web domains
+if [ -n "$WEB_SYSTEM" ] && [ "$WEB_SYSTEM" != 'no' ]; then
+	$BIN/v-unsuspend-web-domains "$user" "$restart"
+	$BIN/v-delete-web-domains "$user" "$restart"
+	check_result "$?" "web domain deletion failed"
+fi
+
+# Deleting dns domains
+if [ -n "$DNS_SYSTEM" ] && [ "$DNS_SYSTEM" != 'no' ]; then
+	$BIN/v-unsuspend-dns-domains "$user" "$restart"
+	$BIN/v-delete-dns-domains "$user" "$restart"
+	check_result "$?" "dns domain deletion failed"
+fi
+
+# Deleting mail domains
+if [ -n "$MAIL_SYSTEM" ] && [ "$MAIL_SYSTEM" != 'no' ]; then
+	$BIN/v-unsuspend-mail-domains "$user"
+	$BIN/v-delete-mail-domains "$user"
+	check_result "$?" "mail domain deletion failed"
+fi
+
+# Deleting databases
+if [ -n "$DB_SYSTEM" ] && [ "$DB_SYSTEM" != 'no' ]; then
+	$BIN/v-unsuspend-databases "$user"
+	$BIN/v-delete-databases "$user"
+	check_result "$?" "database deletion failed"
+fi
+
+# Unsuspend user just in case
+$BIN/v-unsuspend-user "$user"
+
+# Releasing user ips
+$BIN/v-delete-user-ips "$user"
+check_result "$?" "user ip release failed"
+
+# Deleteing user pipes
+sed -i "/ $user$/d" "$HESTIA/data/queue/disk.pipe"
+sed -i "/ $user$/d" "$HESTIA/data/queue/traffic.pipe"
+
+# Deleting sftp jail
+$BIN/v-delete-user-sftp-jail "$user"
+
+# PATCH-MARKER-CLEANUP-LINGER: before removing the system user, turn off
+# linger and stop its slice.
+#
+# v-update-user-cgroup enables "loginctl enable-linger" for every account so
+# its user-<uid>.slice (and the cgroup limits on it) survive idle periods.
+# That setting is keyed by username, not uid, and "userdel" below does not
+# know anything about it - left alone, it leaves behind a stale
+# /var/lib/systemd/linger/<user> file pointing at a username that no longer
+# exists, and keeps user-<uid>.slice (and the persistent user@<uid>.service
+# instance behind it) running forever with no owner, since linger is
+# exactly what stops systemd from garbage-collecting it on its own.
+user_id_for_cleanup=$(id -u "$user" 2> /dev/null)
+loginctl disable-linger "$user" > /dev/null 2>&1
+if [ -n "$user_id_for_cleanup" ]; then
+	systemctl stop "user-${user_id_for_cleanup}.slice" > /dev/null 2>&1
+fi
+
+# Deleting system user
+/usr/sbin/userdel -f "$user" >> /dev/null 2>&1
+if [ $? -ne 0 ]; then
+	sed -i "/^$user:/d" /etc/passwd
+	sed -i "/^$user:/d" /etc/shadow
+fi
+
+/usr/sbin/groupdel "$user" >> /dev/null 2>&1
+if [ $? -ne 0 ]; then
+	sed -i "/^$user:/d" /etc/group
+fi
+
+# Deleting user directories
+chattr -i $HOMEDIR/$user/conf > /dev/null 2>&1
+rm -rf $HOMEDIR/$user
+rm -f /var/spool/mail/$user
+rm -f /var/spool/cron/$user
+rm -f /var/spool/cron/crontabs/$user
+rm -rf $USER_DATA
+
+# Updating admin counter
+if [ "$user" != "$ROOT_USER" ]; then
+	decrease_user_value "$ROOT_USER" '$U_USERS'
+fi
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Logging
+$BIN/v-log-action "system" "Info" "Users" "User deleted (User: $user)."
+log_event "$OK" "$ARGUMENTS"
+
+exit

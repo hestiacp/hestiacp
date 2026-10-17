@@ -138,3 +138,57 @@ for cert in certificate.crt certificate.key; do
 		chmod 640 "$HESTIA/ssl/$cert"
 	fi
 done
+
+# Start fix ProFTPD
+ftp_system="$(/usr/local/hestia/bin/v-list-sys-config json | jq -r '.[].FTP_SYSTEM')"
+if [[ "$ftp_system" =~ proftpd ]]; then
+	# Add an Include directive to load configuration files from /etc/proftpd/conf.d/
+	# Hestia currently adds conf.d/external_ip.conf to configure the
+	# MasqueradeAddress directive for NAT environments, but the file is never loaded.
+	proftpd_conf="/etc/proftpd/proftpd.conf"
+	backup_file=""
+	restart_proftpd=false
+
+	if [[ -f "$proftpd_conf" ]] && ! grep -qE "^[[:space:]]*Include[[:space:]]+/etc/proftpd/conf.d/" "$proftpd_conf"; then
+		echo "[ + ] Fixing ProFTPD not loading conf files from /etc/proftpd/conf.d/"
+		# Timestamped name: the backup is always created by this run and never overwrites a previous one
+		backup_file="${proftpd_conf}.hestia-backup-$(date +%Y-%m-%d-%H%M%S)"
+
+		if cp -p "$proftpd_conf" "$backup_file"; then
+			sed -i -E '/^[[:space:]]*Include[[:space:]]+\/etc\/proftpd\/tls\.conf([[:space:]]|$)/a Include /etc/proftpd/conf.d/' "$proftpd_conf"
+
+			# Check that the directive was actually added
+			if grep -qE "^[[:space:]]*Include[[:space:]]+/etc/proftpd/conf.d/" "$proftpd_conf"; then
+				restart_proftpd=true
+			else
+				echo "[ ! ] Include directive not added (tls.conf line not found), skipping" >&2
+				# Safe to remove: this backup was created by this run and the file is unchanged
+				rm -f "$backup_file"
+			fi
+		else
+			echo "[ ! ] Could not create backup of $proftpd_conf, skipping" >&2
+		fi
+	fi
+
+	if $restart_proftpd; then
+		echo "[ + ] Restarting ProFTPD service"
+		if proftpd -t &> /dev/null && systemctl restart proftpd &> /dev/null; then
+			echo "[ + ] ProFTPD successfully restarted"
+		else
+			echo "[ ! ] ProFTPD failed to restart, restoring backup" >&2
+			systemctl status proftpd --no-pager -l >&2
+
+			if cp -p "$backup_file" "$proftpd_conf"; then
+				if systemctl restart proftpd &> /dev/null; then
+					echo "[ + ] Backup restored and ProFTPD restarted"
+				else
+					echo "[ ! ] ProFTPD still fails after restoring backup" >&2
+					systemctl status proftpd --no-pager -l >&2
+				fi
+			else
+				echo "[ ! ] Could not restore $backup_file to $proftpd_conf" >&2
+			fi
+		fi
+	fi
+fi
+# End fix ProFTPD

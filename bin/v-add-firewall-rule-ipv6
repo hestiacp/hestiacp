@@ -50,6 +50,14 @@ sort_fw_rules() {
 check_args '3' "$#" 'ACTION IPV6_CIDR PORT [PROTOCOL] [COMMENT] [RULE]'
 is_format_valid 'action' 'protocol' 'port_ext'
 is_system_enabled "$FIREWALL_SYSTEM" 'FIREWALL_SYSTEM'
+
+# Enable the IPv6 firewall with the default rule set first, otherwise all
+# IPv6 traffic except the new rule would be blocked
+if [ ! -f "$HESTIA/data/firewall/rules6.conf" ]; then
+	cp "$HESTIA_COMMON_DIR/firewall/rules6.conf" "$HESTIA/data/firewall/rules6.conf"
+	chmod 660 "$HESTIA/data/firewall/rules6.conf"
+fi
+
 get_next_fw_rule
 is_format_valid 'rule'
 is_object_new '../../../data/firewall/rules6' 'RULE' "$rule"
@@ -61,11 +69,7 @@ if [[ "$ipv6_cidr" =~ ^ipset: ]]; then
 	$BIN/v-list-firewall-ipset-ipv6 plain | grep "^$ipset_name\s" > /dev/null
 	check_result $? 'ipset object not found' "$E_NOTEXIST"
 else
-	# IPv6 validation simple (puedes mejorar la regex si lo necesitas)
-	if ! echo "$ipv6_cidr" | grep -q ':'; then
-		echo "Error: '$ipv6_cidr' does not appear to be a valid IPv6 address."
-		exit 1
-	fi
+	is_format_valid 'ipv6_cidr'
 fi
 
 # Perform verification if read-only mode is enabled

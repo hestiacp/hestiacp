@@ -13,7 +13,6 @@ source_conf "$HESTIA/conf/hestia.conf"
 is_system_enabled "$FIREWALL_SYSTEM" 'FIREWALL_SYSTEM'
 
 conf="$HESTIA/data/firewall/ipset.conf"
-[ -f "$conf" ] || touch "$conf"
 
 json_list() {
 	IFS=$'\n'

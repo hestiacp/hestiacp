@@ -17,7 +17,6 @@ source $HESTIA/func/main.sh
 source_conf "$HESTIA/conf/hestia.conf"
 
 rules="$HESTIA/data/firewall/rules6.conf"
-[ -f "$rules" ] || touch "$rules"
 
 json_list() {
 	IFS=$'\n'

@@ -37,6 +37,16 @@ check_hestia_demo_mode
 
 sed -i "/RULE='$rule' /d" "$rules"
 
+# Reorder firewall rules, v-move-firewall-rule-ipv6 relies on sequential ids
+if [ -s "$rules" ]; then
+	rules_tmp="$(mktemp "${rules}.XXXXXX")"
+	sort -n -k 2 -t \' "$rules" \
+		| awk -v q="'" '{ n++; sub("RULE=" q "[0-9]+" q, "RULE=" q n q); print }' \
+			> "$rules_tmp"
+	mv "$rules_tmp" "$rules"
+	chmod 660 "$rules"
+fi
+
 $BIN/v-update-firewall-ipv6
 
 #----------------------------------------------------------#

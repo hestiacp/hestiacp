@@ -9,7 +9,7 @@
 #   the ip6tables suite. It ensures /sbin/ip6tables, /sbin/ip6tables-save,  #
 #   and /sbin/ip6tables-restore symlinks exist before any firewall script   #
 #   attempts to call them — identical self-healing logic, different binary   #
-#   names. Called by v-add-firewall-chain-ipv6 and v-update-firewall-ipv6.  #
+#   names. Called by v-update-firewall-ipv6 and v-stop-firewall-ipv6.      #
 #                                                                           #
 #   The rest of this file (iptables chain management, ipset helpers, etc.)  #
 #   is unchanged from upstream HestiaCP.                                    #

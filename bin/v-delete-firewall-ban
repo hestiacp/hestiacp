@@ -1,6 +1,6 @@
 #!/bin/bash
-# info: delete firewall blocking rule (IPv4 or IPv6)
-# options: IP_OR_CIDR CHAIN
+# info: delete firewall blocking rule
+# options: IP_CIDR CHAIN
 #
 # example: v-delete-firewall-ban 198.11.130.250 MAIL
 # example: v-delete-firewall-ban 2001:db8::bad MAIL
@@ -17,6 +17,7 @@ chain=$(echo "$2" | tr '[:lower:]' '[:upper:]')
 
 # Defining absolute path for iptables and fail2ban-client
 iptables="/sbin/iptables"
+ip6tables="/sbin/ip6tables"
 f2bcli="/usr/bin/fail2ban-client"
 
 # Includes
@@ -33,10 +34,13 @@ source_conf "$HESTIA/conf/hestia.conf"
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'IP CHAIN'
-if [[ "$ipv4_cidr" =~ ":" ]]; then
-	is_format_valid 'ipv6' 'chain'
+check_args '2' "$#" 'IP_CIDR CHAIN'
+if [[ "$ipv4_cidr" == *:* ]]; then
+	ipv6_cidr="$ipv4_cidr"
+	fw_iptables="$ip6tables"
+	is_format_valid 'ipv6_cidr' 'chain'
 else
+	fw_iptables="$iptables"
 	is_format_valid 'ipv4_cidr' 'chain'
 fi
 is_system_enabled "$FIREWALL_SYSTEM" 'FIREWALL_SYSTEM'
@@ -50,13 +54,6 @@ check_hestia_demo_mode
 
 # Self heal iptables links
 heal_iptables_links
-
-# Use ip6tables for IPv6 bans, iptables for IPv4
-if [[ "$ipv4_cidr" =~ ":" ]]; then
-	fw_iptables="/sbin/ip6tables"
-else
-	fw_iptables="$iptables"
-fi
 
 conf="$HESTIA/data/firewall/banlist.conf"
 if [ "$chain" == "ALL" ]; then

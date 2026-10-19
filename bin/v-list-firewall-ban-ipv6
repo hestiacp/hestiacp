@@ -10,17 +10,18 @@ source /etc/hestiacp/hestia.conf
 source $HESTIA/func/main.sh
 source_conf "$HESTIA/conf/hestia.conf"
 
-banlist="$HESTIA/data/firewall/banlist6.conf"
-[ -f "$banlist" ] || touch "$banlist"
+# IPv6 bans are stored together with the IPv4 bans
+banlist="$HESTIA/data/firewall/banlist.conf"
 
 json_list() {
 	IFS=$'\n'
 	i=1
-	objects=$(grep IP "$banlist" 2> /dev/null | wc -l)
+	objects=$(grep "^IP='[^']*:" "$banlist" 2> /dev/null | wc -l)
 	echo "{"
 	while read str; do
 		[[ -z "$str" ]] && continue
 		parse_object_kv_list "$str"
+		[[ "$IP" != *:* ]] && continue
 		echo -n '    "'$IP'": {
         "IP": "'$IP'",
         "CHAIN": "'$CHAIN'",
@@ -40,6 +41,7 @@ shell_list() {
 	while read str; do
 		[[ -z "$str" ]] && continue
 		parse_object_kv_list "$str"
+		[[ "$IP" != *:* ]] && continue
 		echo "$IP $CHAIN $TIME $DATE"
 	done < <(cat "$banlist" 2> /dev/null)
 }
@@ -49,6 +51,7 @@ plain_list() {
 	while read str; do
 		[[ -z "$str" ]] && continue
 		parse_object_kv_list "$str"
+		[[ "$IP" != *:* ]] && continue
 		echo -e "$IP\t$CHAIN\t$TIME\t$DATE"
 	done < <(cat "$banlist" 2> /dev/null)
 }

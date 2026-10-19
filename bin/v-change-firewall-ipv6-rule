@@ -48,11 +48,7 @@ if [[ "$ipv6_cidr" =~ ^ipset: ]]; then
 	$BIN/v-list-firewall-ipset-ipv6 plain | grep "^$ipset_name\s" > /dev/null
 	check_result $? 'ipset object not found' "$E_NOTEXIST"
 else
-	# Validar IPv6 (simple)
-	if ! echo "$ipv6_cidr" | grep -q ':'; then
-		echo "Error: '$ipv6_cidr' does not appear to be a valid IPv6 address."
-		exit 1
-	fi
+	is_format_valid 'ipv6_cidr'
 fi
 
 check_hestia_demo_mode

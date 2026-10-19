@@ -27,6 +27,14 @@ source_conf "$HESTIA/conf/hestia.conf"
 #                    Verifications                         #
 #----------------------------------------------------------#
 
+# Nothing to do if the IPv6 firewall was never enabled
+if [ ! -e "$HESTIA/data/firewall/rules6.conf" ] && [ ! -e "/lib/systemd/system/hestia-ip6tables.service" ]; then
+	exit
+fi
+if [ ! -x "$ip6tables" ] && ! command -v ip6tables > /dev/null 2>&1; then
+	exit
+fi
+
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
@@ -35,7 +43,7 @@ check_hestia_demo_mode
 #----------------------------------------------------------#
 
 # Self heal ip6tables links
-heal_ip6tables_links
+heal_ip6tables_links > /dev/null 2>&1
 
 # Creating temporary file
 tmp="$(mktemp)"
@@ -49,7 +57,7 @@ echo "$ip6tables -X hestia" >> $tmp
 
 # Deleting custom chains
 IFS=$'\n'
-for chain in $(cat $HESTIA/data/firewall/chains6.conf 2> /dev/null); do
+for chain in $(cat $HESTIA/data/firewall/chains.conf 2> /dev/null); do
 	parse_object_kv_list "$chain"
 	echo "$ip6tables -F fail2ban-$CHAIN" >> $tmp
 	echo "$ip6tables -X fail2ban-$CHAIN" >> $tmp
@@ -79,7 +87,7 @@ else
 		echo "[Service]" >> $sd_unit
 		echo "Type=oneshot" >> $sd_unit
 		echo "RemainAfterExit=yes" >> $sd_unit
-		echo "ExecStartPre=-${HESTIA}/bin/v-update-firewall-ipset-ipv6 load" >> $sd_unit
+		echo "ExecStartPre=-${HESTIA}/bin/v-update-firewall-ipset load" >> $sd_unit
 		if [ "$iptablesversion" = "v1.6" ]; then
 			echo "ExecStart=/sbin/ip6tables-restore /etc/ip6tables.rules" >> $sd_unit
 		else

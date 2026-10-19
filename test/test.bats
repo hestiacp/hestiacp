@@ -1746,6 +1746,25 @@ function check_ip_not_banned(){
     assert_file_contains "$HESTIA/data/users/$user/dns/${ipv6dnsdomain}.conf" "RECORD='@' TYPE='AAAA' PRIORITY='' VALUE='2001:db8:3::1'"
 }
 
+@test "DNS: Remove and add ipv4 of a dual-stack zone" {
+    run v-change-dns-domain-ip $user $ipv6dnsdomain ''
+    assert_success
+    refute_output
+
+    # Names with an AAAA record lose their A record, the mail exchanger and
+    # the SPF record keep the IPv4 address of the server
+    run grep "RECORD='@' TYPE='A' " "$HESTIA/data/users/$user/dns/${ipv6dnsdomain}.conf"
+    assert_failure
+    assert_file_contains "$HESTIA/data/users/$user/dns/${ipv6dnsdomain}.conf" "RECORD='mail' TYPE='A' PRIORITY='' VALUE='198.18.0.125'"
+    assert_file_contains "$HESTIA/data/users/$user/dns/${ipv6dnsdomain}.conf" "ip4:198.18.0.125"
+
+    run v-change-dns-domain-ip $user $ipv6dnsdomain 198.18.0.125
+    assert_success
+    refute_output
+
+    assert_file_contains "$HESTIA/data/users/$user/dns/${ipv6dnsdomain}.conf" "RECORD='@' TYPE='A' PRIORITY='' VALUE='198.18.0.125'"
+}
+
 @test "DNS: Cleanup ipv6 dns domain" {
     run v-delete-dns-domain $user $ipv6dnsdomain
     assert_success
@@ -2538,12 +2557,33 @@ echo   "1.2.3.4" >> $HESTIA/data/firewall/excludes.conf
   run v-update-firewall
   assert_success
 
+  # IPv6 bans block the /64 of the address
   run ip6tables -S fail2ban-HESTIA
   assert_success
-  assert_output --partial "2001:db8::bad"
+  assert_output --partial "2001:db8::/64"
 
   run v-delete-firewall-ban '2001:db8::bad' 'HESTIA'
   assert_success
+}
+
+@test "Firewall: ipv6 network stays banned while an address of it is banned" {
+  [ ! -f "$HESTIA/data/firewall/rules6.conf" ] && skip
+  [ -z "$FIREWALL_EXTENSION" ] && skip
+
+  run v-add-firewall-ban '2001:db8::bad:1' 'HESTIA'
+  assert_success
+  run v-add-firewall-ban '2001:db8::bad:2' 'HESTIA'
+  assert_success
+
+  run v-delete-firewall-ban '2001:db8::bad:1' 'HESTIA'
+  assert_success
+  run ip6tables -S fail2ban-HESTIA
+  assert_output --partial "2001:db8::/64"
+
+  run v-delete-firewall-ban '2001:db8::bad:2' 'HESTIA'
+  assert_success
+  run ip6tables -S fail2ban-HESTIA
+  refute_output --partial "2001:db8::/64"
 }
 
 @test "Firewall: Add ipv6 firewall rule" {

@@ -67,12 +67,9 @@
 				</div>
 			<?php } ?>
 			<!-- IPv4 address selector -->
-			<div class="u-mb10">
+			<div class="<?= empty($ips_v6) ? "u-mb20" : "u-mb10" ?>">
 				<label for="v_ip" class="form-label">
-					<?= tohtml( _("IPv4 Address")) ?>
-					<?php if (!empty($ips_v6)): ?>
-					<span class="optional">(<?= tohtml( _("Select None to remove IPv4 from this domain")) ?>)</span>
-					<?php endif; ?>
+					<?= tohtml(empty($ips_v6) ? _("IP Address") : _("IPv4 Address")) ?>
 				</label>
 				<select class="form-select" name="v_ip" id="v_ip">
 					<?php if (!empty($ips_v6)): ?>
@@ -94,7 +91,7 @@
 			<div class="u-mb20">
 				<label for="v_ip6" class="form-label">
 					<?= tohtml( _("IPv6 Address")) ?>
-					<span class="optional">(<?= tohtml( _("Optional — enables dual-stack for this domain")) ?>)</span>
+					<span class="optional">(<?= tohtml( _("Optional")) ?>)</span>
 				</label>
 				<select class="form-select" name="v_ip6" id="v_ip6">
 					<option value=""><?= tohtml( _("None")) ?></option>

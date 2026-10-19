@@ -3,14 +3,16 @@
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
 			<a class="button button-secondary button-back js-button-back" href="/list/firewall/">
-				<i class="fas fa-arrow-left icon-blue"></i><?= tohtml( _("IPv4 Firewall")) ?>
+				<i class="fas fa-arrow-left icon-blue"></i><?= tohtml( _("Back")) ?>
 			</a>
 			<a href="/add/firewall/ipv6/" class="button button-secondary js-button-create">
-				<i class="fas fa-circle-plus icon-green"></i><?= tohtml( _("Add IPv6 Rule")) ?>
+				<i class="fas fa-circle-plus icon-green"></i><?= tohtml( _("Add Rule")) ?>
 			</a>
-			<a class="button button-secondary" href="/list/firewall/banlist/ipv6/">
-				<i class="fas fa-eye icon-red"></i><?= tohtml( _("Banned IPv6 Addresses")) ?>
-			</a>
+			<?php if (!empty($_SESSION["FIREWALL_EXTENSION"])): ?>
+				<a class="button button-secondary" href="/list/firewall/banlist/">
+					<i class="fas fa-eye icon-red"></i><?= tohtml( _("Banned IP Addresses")) ?>
+				</a>
+			<?php endif; ?>
 		</div>
 		<div class="toolbar-right">
 			<div class="toolbar-sorting">
@@ -117,7 +119,7 @@
 			<div class="units-table-cell units-table-heading-cell u-text-bold">
 				<span class="u-hide-desktop"><?= tohtml( _("Position")) ?>:</span>
 				<a href="/edit/firewall/ipv6/?<?= tohtml(http_build_query(["rule" => $key, "token" => $_SESSION["token"]])) ?>"
-					title="<?= tohtml( _("Edit IPv6 Rule")) ?>">
+					title="<?= tohtml( _("Edit Firewall Rule")) ?>">
 					<?= tohtml($key) ?>
 				</a>
 			</div>
@@ -128,22 +130,22 @@
 						<a class="units-table-row-action-link data-controls js-confirm-action"
 							style="<?= $move_up_enabled ? 'display:block!important' : 'display:none!important' ?>"
 							href="/move/firewall/ipv6/?<?= tohtml(http_build_query(["rule" => $key, "direction" => "up", "token" => $_SESSION["token"]])) ?>"
-							title="<?= tohtml( _("Move Rule Up")) ?>"
+							title="<?= tohtml( _("Move Firewall Rule Up")) ?>"
 							data-confirm-title="<?= tohtml( _("Move Up")) ?>"
 							data-confirm-message="<?= tohtml(sprintf(_("Are you sure you want to move rule #%s up?"), $key)) ?>">
 							<i class="fas fa-arrow-up icon-blue"></i>
-							<span class="u-hide-desktop"><?= tohtml( _("Move Rule Up")) ?></span>
+							<span class="u-hide-desktop"><?= tohtml( _("Move Firewall Rule Up")) ?></span>
 						</a>
 					</li>
 					<li class="units-table-row-action shortcut-down" data-key-action="js">
 						<a class="units-table-row-action-link data-controls js-confirm-action"
 							style="<?= $move_down_enabled ? '' : 'display:none!important' ?>"
 							href="/move/firewall/ipv6/?<?= tohtml(http_build_query(["rule" => $key, "direction" => "down", "token" => $_SESSION["token"]])) ?>"
-							title="<?= tohtml( _("Move Rule Down")) ?>"
+							title="<?= tohtml( _("Move Firewall Rule Down")) ?>"
 							data-confirm-title="<?= tohtml( _("Move Down")) ?>"
 							data-confirm-message="<?= tohtml(sprintf(_("Are you sure you want to move rule #%s down?"), $key)) ?>">
 							<i class="fas fa-arrow-down icon-blue"></i>
-							<span class="u-hide-desktop"><?= tohtml( _("Move Rule Down")) ?></span>
+							<span class="u-hide-desktop"><?= tohtml( _("Move Firewall Rule Down")) ?></span>
 						</a>
 					</li>
 				</ul>
@@ -152,7 +154,7 @@
 			<div class="units-table-cell units-table-heading-cell u-text-bold">
 				<span class="u-hide-desktop"><?= tohtml( _("Action")) ?>:</span>
 				<a href="/edit/firewall/ipv6/?<?= tohtml(http_build_query(["rule" => $key, "token" => $_SESSION["token"]])) ?>"
-					title="<?= tohtml( _("Edit IPv6 Rule")) ?>">
+					title="<?= tohtml( _("Edit Firewall Rule")) ?>">
 					<?php $suspended = $value["SUSPENDED"] == "no"; ?>
 					<i class="fas <?= tohtml($iconClass) ?> u-mr5 <?= tohtml($suspended ? $colorClass : "") ?>"></i>
 					<?= tohtml($action) ?>

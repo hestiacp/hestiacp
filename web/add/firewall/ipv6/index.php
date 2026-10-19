@@ -67,7 +67,7 @@ if (!empty($_POST["ok"])) {
 	}
 
 	if (empty($_SESSION["error_msg"])) {
-		$_SESSION["ok_msg"] = _("IPv6 rule has been created successfully.");
+		$_SESSION["ok_msg"] = _("Rule has been created successfully.");
 		unset($v_port, $v_ip, $v_comment);
 	}
 }

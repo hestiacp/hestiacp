@@ -22,15 +22,14 @@ if (!empty($_POST["ok"])) {
 	if (empty($_POST["v_ip"])) {
 		$errors[] = _("IP Address");
 	}
-	// Netmask/prefix required for IPv4.
-	// For IPv6, prefix can be embedded (2001:db8::1/64) or supplied separately.
-	$is_ipv6 = strpos($_POST["v_ip"] ?? "", ":") !== false;
-	$ipv6_has_inline_prefix = $is_ipv6 && strpos($_POST["v_ip"] ?? "", "/") !== false;
-	if (!$is_ipv6 && empty($_POST["v_netmask"])) {
-		$errors[] = _("Netmask");
-	} elseif ($is_ipv6 && !$ipv6_has_inline_prefix && empty($_POST["v_netmask"])) {
-		// IPv6 without inline CIDR must provide prefix length separately
-		$errors[] = _("Prefix Length (e.g. /64)");
+	// The netmask can be part of the address (IP/PREFIX), IPv6 defaults to /64
+	$v_ip_post = $_POST["v_ip"] ?? "";
+	if (
+		empty($_POST["v_netmask"]) &&
+		strpos($v_ip_post, ":") === false &&
+		strpos($v_ip_post, "/") === false
+	) {
+		$errors[] = _("Netmask / Prefix Length");
 	}
 	if (empty($_POST["v_interface"])) {
 		$errors[] = _("Interface");

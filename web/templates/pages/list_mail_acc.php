@@ -11,7 +11,7 @@ if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
 			<a class="button button-secondary button-back js-button-back" href="/list/mail/">
 				<i class="fas fa-arrow-left icon-blue"></i><?= tohtml( _("Back")) ?>
 			</a>
-			<?php if ($read_only !== "true") { ?>
+			<?php if ($read_only !== true) { ?>
 				<a href="/add/mail/?<?= tohtml(http_build_query(["domain" => $_GET["domain"]])) ?>" class="button button-secondary js-button-create">
 					<i class="fas fa-circle-plus icon-green"></i><?= tohtml( _("Add Mail Account")) ?>
 				</a>
@@ -43,7 +43,7 @@ if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
 						<span class="name"><?= tohtml( _("Quota")) ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
 					</li>
 				</ul>
-				<?php if ($read_only !== "true") { ?>
+				<?php if ($read_only !== true) { ?>
 					<form x-data x-bind="BulkEdit" action="/bulk/mail/" method="post">
 						<input type="hidden" name="token" value="<?= tohtml($_SESSION["token"]) ?>">
 						<input type="hidden" value="<?= tohtml($_GET["domain"]) ?>" name="domain">
@@ -166,7 +166,7 @@ if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
 				</div>
 				<div class="units-table-cell units-table-heading-cell u-text-bold">
 					<span class="u-hide-desktop"><?= tohtml( _("Name")) ?>:</span>
-					<?php if ($read_only === "true" || $data[$key]["SUSPENDED"] == "yes") { ?>
+					<?php if ($read_only === true || $data[$key]["SUSPENDED"] == "yes") { ?>
 						<?= tohtml($key . "@" . $_GET["domain"]) ?>
 					<?php } else { ?>
 						<a href="/edit/mail/?<?= tohtml(http_build_query(["domain" => $_GET['domain'], "account" => $key, "token" => $_SESSION['token']])) ?>" title="<?= tohtml( _("Edit Mail Account")) ?>: <?= tohtml($key) ?>@<?= tohtml($_GET['domain']) ?>">
@@ -176,7 +176,7 @@ if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
 				</div>
 				<div class="units-table-cell">
 					<ul class="units-table-row-actions">
-						<?php if ($read_only === "true") { ?>
+						<?php if ($read_only === true) { ?>
 							<!-- Restrict the ability to edit, delete, or suspend domain items when impersonating 'admin' account -->
 							<?php if ($data[$key]["SUSPENDED"] != "yes") { ?>
 								<li class="units-table-row-action" data-key-action="href">

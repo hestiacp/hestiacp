@@ -5,7 +5,7 @@ define("NO_AUTH_REQUIRED", true);
 $TAB = "RESET PASSWORD";
 
 if (isset($_SESSION["user"])) {
-	header("Location: /list/user");
+	header("Location: /list/user/");
 }
 
 // Main include

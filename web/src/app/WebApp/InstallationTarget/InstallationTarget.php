@@ -22,6 +22,11 @@ class InstallationTarget
         return $this->domain->getUrl();
     }
 
+    public function getResolveUrl(): string
+    {
+        return $this->domain->resolveUrl();
+    }
+
     public function getDocRoot(string $appendedPath = ''): string
     {
         return $this->domain->getDocRoot($appendedPath);

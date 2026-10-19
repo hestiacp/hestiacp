@@ -9,12 +9,12 @@ include $_SERVER["DOCUMENT_ROOT"] . "/inc/main.php";
 
 // Check user
 if ($_SESSION["userContext"] != "admin") {
-	header("Location: /list/user");
+	header("Location: /list/user/");
 	exit();
 }
 
 // Check POST request
-if (!empty($_POST["ok"])) {
+if (!empty($_POST["ok"]) && $read_only !== true) {
 	// Check token
 	verify_csrf($_POST);
 
@@ -26,7 +26,7 @@ if (!empty($_POST["ok"])) {
 		$errors[] = _("Password");
 	}
 	if (empty($_POST["v_package"])) {
-		$errrors[] = _("Package");
+		$errors[] = _("Package");
 	}
 	if (empty($_POST["v_email"])) {
 		$errors[] = _("Email");

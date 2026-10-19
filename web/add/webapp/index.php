@@ -14,13 +14,9 @@ if (empty($_GET["domain"])) {
 	exit();
 }
 
-// Edit as someone else?
-if ($_SESSION["user"] == "admin" && !empty($_GET["user"])) {
-	$user = quoteshellarg($_GET["user"]);
-}
-
 // Check if domain belongs to the user
 $v_domain = $_GET["domain"];
+$user = isset($user) ? $user : quoteshellarg($_SESSION["user"]);
 exec(
 	HESTIA_CMD . "v-list-web-domain " . $user . " " . quoteshellarg($v_domain) . " json",
 	$output,
@@ -65,7 +61,7 @@ if (!empty($_GET["app"])) {
 }
 
 // Check POST request
-if (!empty($_POST["ok"]) && !empty($app)) {
+if (!empty($_POST["ok"]) && !empty($app) && $read_only !== true) {
 	// Check token
 	verify_csrf($_POST);
 

@@ -7,6 +7,11 @@ include $_SERVER["DOCUMENT_ROOT"] . "/inc/main.php";
 // Check token
 verify_csrf($_GET);
 
+if ($read_only === true) {
+	header("Location: /list/web/");
+	exit();
+}
+
 // Delete as someone else?
 if ($_SESSION["userContext"] === "admin" && !empty($_GET["user"])) {
 	$user = quoteshellarg($user);

@@ -33,14 +33,27 @@
 # This function can run before check_result/E_INVALID exist (it loads
 # hestia.conf during main.sh's own bootstrap), so it must fail closed on
 # its own rather than delegating to check_result.
+# Reserved names that must never be assigned from user-controlled config.
+if [[ -z "${HESTIA_RESERVED_CONF_KEYS+x}" ]]; then
+	HESTIA_RESERVED_CONF_KEYS=' PATH IFS CDPATH ENV BASH_ENV PS1 PS2 PS3 PS4 PROMPT_COMMAND LD_PRELOAD LD_LIBRARY_PATH LD_AUDIT TMPDIR SHELLOPTS BASHOPTS BASH_XTRACEFD GLOBIGNORE FIGNORE HISTFILE'
+	HESTIA_RESERVED_CONF_KEYS+=' HESTIA BIN HOMEDIR BACKUP USER_DATA WEBTPL MAILTPL DNSTPL RRD SENDMAIL'
+	HESTIA_RESERVED_CONF_KEYS+=' HESTIA_INSTALL_DIR HESTIA_COMMON_DIR HESTIA_BACKUP HESTIA_PHP HESTIA_GIT_REPO'
+	HESTIA_RESERVED_CONF_KEYS+=' HESTIA_THEMES HESTIA_THEMES_CUSTOM SCRIPT CHECK_RESULT_CALLBACK user'
+	HESTIA_RESERVED_CONF_KEYS+=' OK E_ARGS E_INVALID E_NOTEXIST E_EXISTS E_SUSPENDED E_UNSUSPENDED E_INUSE'
+	HESTIA_RESERVED_CONF_KEYS+=' E_LIMIT E_PASSWORD E_FORBIDEN E_DISABLED E_PARSING E_DISK E_LA E_CONNECT'
+	HESTIA_RESERVED_CONF_KEYS+=' E_FTP E_DB E_RRD E_UPDATE E_RESTART HESTIA_RESERVED_CONF_KEYS HESTIA_OBJECT_KEY_EXCEPTIONS '
+	readonly HESTIA_RESERVED_CONF_KEYS
+fi
+# Object field names that collide with HESTIA_RESERVED_CONF_KEYS but are
+# legitimate in object lines (never via source_conf()).
+# BACKUP: backup filename field in data/users/<user>/backup.conf.
+if [[ -z "${HESTIA_OBJECT_KEY_EXCEPTIONS+x}" ]]; then
+	HESTIA_OBJECT_KEY_EXCEPTIONS=' BACKUP '
+	readonly HESTIA_OBJECT_KEY_EXCEPTIONS
+fi
+
 source_conf() {
-	local reserved=' PATH IFS CDPATH ENV BASH_ENV PS1 PS2 PS3 PS4 PROMPT_COMMAND LD_PRELOAD LD_LIBRARY_PATH LD_AUDIT TMPDIR SHELLOPTS BASHOPTS BASH_XTRACEFD GLOBIGNORE FIGNORE HISTFILE'
-	reserved+=' HESTIA BIN HOMEDIR BACKUP USER_DATA WEBTPL MAILTPL DNSTPL RRD SENDMAIL'
-	reserved+=' HESTIA_INSTALL_DIR HESTIA_COMMON_DIR HESTIA_BACKUP HESTIA_PHP HESTIA_GIT_REPO'
-	reserved+=' HESTIA_THEMES HESTIA_THEMES_CUSTOM SCRIPT CHECK_RESULT_CALLBACK user'
-	reserved+=' OK E_ARGS E_INVALID E_NOTEXIST E_EXISTS E_SUSPENDED E_UNSUSPENDED E_INUSE'
-	reserved+=' E_LIMIT E_PASSWORD E_FORBIDEN E_DISABLED E_PARSING E_DISK E_LA E_CONNECT'
-	reserved+=' E_FTP E_DB E_RRD E_UPDATE E_RESTART '
+	local reserved="$HESTIA_RESERVED_CONF_KEYS"
 	while IFS='= ' read -r lhs rhs; do
 		if [[ ! $lhs =~ ^[A-Za-z_][A-Za-z0-9_]*$ ]]; then
 			continue
@@ -104,6 +117,7 @@ HESTIA_THEMES="$HESTIA/web/css/themes"
 HESTIA_THEMES_CUSTOM="$HESTIA/web/css/themes/custom"
 SCRIPT="$(basename $0)"
 CHECK_RESULT_CALLBACK=""
+LE_STAGING='no'
 
 # Return codes
 OK=0
@@ -127,6 +141,7 @@ E_DB=17
 E_RRD=18
 E_UPDATE=19
 E_RESTART=20
+E_BACKUP=21
 
 # Detect operating system
 detect_os() {
@@ -437,7 +452,14 @@ parse_object_kv_list_non_eval() {
 
 		obj_key=${objkv%%=*} # strip everything after first  '=' char
 		obj_val=${objkv#*=}  # strip everything before first '=' char
-		declare -g $obj_key="$obj_val"
+		if [[ ! "$obj_key" =~ ^[A-Za-z_][A-Za-z0-9_]*$ ]]; then
+			continue
+		fi
+		if [[ "$HESTIA_OBJECT_KEY_EXCEPTIONS" != *" $obj_key "* ]] \
+			&& { [[ "$HESTIA_RESERVED_CONF_KEYS" == *" $obj_key "* ]] || [[ "$obj_key" == BASH_FUNC_* ]]; }; then
+			continue
+		fi
+		declare -g "$obj_key=$obj_val"
 
 	done
 	IFS="$OLD_IFS"
@@ -450,7 +472,7 @@ _parse_object_kv_list_php() {
 
 	str=${@//$'\n'/ }
 	validated_output=$(
-		"$HESTIA_PHP" -- "$str" << 'EOPHP'
+		"$HESTIA_PHP" -- "$str" "$HESTIA_RESERVED_CONF_KEYS" "$HESTIA_OBJECT_KEY_EXCEPTIONS" << 'EOPHP'
 <?php
 declare(strict_types=1);
 
@@ -481,6 +503,14 @@ if ($argc < 2) {
 }
 
 $unparsed = ($argv[1]);
+$reserved = preg_split('/\s+/', trim($argv[2] ?? ''), -1, PREG_SPLIT_NO_EMPTY);
+$exceptions = preg_split('/\s+/', trim($argv[3] ?? ''), -1, PREG_SPLIT_NO_EMPTY);
+if (!is_array($reserved)) {
+    $reserved = [];
+}
+if (!is_array($exceptions)) {
+    $exceptions = [];
+}
 $result = [];
 
 while ($unparsed !== '') {
@@ -498,6 +528,8 @@ while ($unparsed !== '') {
 
     $key_name = $m[1];
     $unparsed = substr($unparsed, strlen($m[0]));
+    $skip_reserved = !in_array($key_name, $exceptions, true)
+        && (in_array($key_name, $reserved, true) || strpos($key_name, 'BASH_FUNC_') === 0);
 
     $key_value = '';
     $is_in_quote = false;
@@ -563,6 +595,9 @@ while ($unparsed !== '') {
         // Matched whitespace: end of this key-value pair.
         $unparsed = ltrim($unparsed);
         break;
+    }
+    if ($skip_reserved) {
+        continue;
     }
     if (array_key_exists($key_name, $result)) {
         $msg = 'Warning: Duplicate key name: ' . $key_name . '. ';
@@ -686,16 +721,21 @@ get_object_values() {
 
 # Update object value
 update_object_value() {
-	row=$(grep -nF "$2='$3'" $USER_DATA/$1.conf)
-	lnr=$(echo $row | cut -f 1 -d ':')
-	object=$(echo $row | sed "s/^$lnr://")
+	local conf="$USER_DATA/$1.conf"
+	local row lnr object varname old new old_target new_target
+	row=$(grep -nF "$2='$3'" "$conf")
+	lnr=${row%%:*}
+	object=${row#*:}
 	parse_object_kv_list "$object"
-	local varname="${4#\$}"
+	varname="${4#\$}"
 	old="${!varname}"
-	old=$(echo "$old" | sed -e 's/\\/\\\\/g' -e 's/&/\\&/g' -e 's/\//\\\//g')
-	new=$(echo "$5" | sed -e 's/\\/\\\\/g' -e 's/&/\\&/g' -e 's/\//\\\//g')
-	sed -i "$lnr s/${4//$/}='${old//\*/\\*}'/${4//$/}='${new//\*/\\*}'/g" \
-		$USER_DATA/$1.conf
+	old="${old//[$'\n\r']/}"
+	new="${5//[$'\n\r']/}"
+	old_target=${old//\'/\'\\\'\'}
+	new_target=${new//\'/\'\\\'\'}
+	old=$(printf '%s' "$old_target" | sed -e 's/[][\\/^$.*]/\\&/g')
+	new=$(printf '%s' "$new_target" | sed -e 's/\\/\\\\/g' -e 's/[&/]/\\&/g')
+	sed -i "$lnr s/${4//$/}='${old}'/${4//$/}='${new}'/g" "$conf"
 }
 
 # Add object key
@@ -1169,12 +1209,33 @@ is_netmask_format_valid() {
 	fi
 }
 
-# Proxy extention format validator
-is_extention_format_valid() {
-	exclude="[!|#|$|^|&|(|)|+|=|{|}|:|@|<|>|?|/|\|\"|'|;|%|\`| ]"
-	if [[ "$1" =~ $exclude ]]; then
-		check_result "$E_INVALID" "invalid proxy extention format :: $1"
+# Proxy extension format validator
+is_extension_format_valid() {
+	local ascii
+
+	# Reject invalid UTF-8 sequences.
+	if ! printf '%s' "$1" | iconv -f UTF-8 -t UTF-8 > /dev/null 2>&1; then
+		check_result "$E_INVALID" "invalid proxy extension format :: $1"
 	fi
+
+	# Allow Unicode characters; validate the remaining ASCII characters.
+	ascii=$(printf '%s' "$1" | LC_ALL=C tr -d '\200-\377')
+
+	# Allow only letters, numbers, underscore, dot, hyphen and comma.
+	if [[ ! "$ascii" =~ ^[A-Za-z0-9_.,-]*$ ]]; then
+		check_result "$E_INVALID" "invalid proxy extension format :: $1"
+	fi
+
+	# No leading, trailing, or consecutive commas.
+	if [[ "$1" == ,* || "$1" == *, || "$1" == *,,* ]]; then
+		check_result "$E_INVALID" "invalid proxy extension format :: $1"
+	fi
+
+	# No leading, trailing, or consecutive dots.
+	if [[ "$1" == .* || "$1" == *. || "$1" == *..* ]]; then
+		check_result "$E_INVALID" "invalid proxy extension format :: $1"
+	fi
+
 	is_no_new_line_format "$1"
 }
 
@@ -1638,6 +1699,71 @@ is_hash_format_valid() {
 	fi
 }
 
+# Certificates Key Algorithm validator
+is_key_algo_format_valid() {
+	if ! [[ "$1" =~ ^(rsa|ecdsa-256|ecdsa-384)$ ]]; then
+		check_result "$E_INVALID" "invalid key_algo format :: $1"
+	fi
+}
+
+# DKIM selector format validator
+is_dkim_selector_format_valid() {
+	object_name=${2-dkim selector}
+	#selector=${1,,}
+	selector=${1}
+
+	if [[ -z "$selector" ]] \
+		|| [[ ${#selector} -gt 63 ]] \
+		|| [[ ! "$selector" =~ ^[a-z0-9]([a-z0-9-]*[a-z0-9])?$ ]]; then
+		check_result "$E_INVALID" "invalid $object_name format :: $1"
+	fi
+
+	is_no_new_line_format "$selector"
+}
+
+# Strict directory path validation.
+# Accepts only a path with an optional leading "/" made of non-empty
+# segments separated by "/". Any UTF-8 character is allowed except
+# whitespace, control characters and shell/sed metacharacters.
+#
+# NOTE: this validator is intentionally more restrictive than Linux itself.
+#
+# Usage: is_dir_path_format_valid VALUE [NAME]
+is_dir_path_format_valid() {
+	local value="$1" name="${2:-dir_path}"
+	local err="invalid $name format :: $value"
+
+	# 1. Strict: reject control characters (\n, \r, \t, ...) and whitespace
+	if [[ "$value" =~ [[:cntrl:][:space:]] ]]; then
+		check_result "$E_INVALID" "$err"
+	fi
+
+	# 2. Strict: reject shell/sed metacharacters and the ":" separator
+	#    (valid on Linux, but restricted for security reasons)
+	case "$value" in
+		*[\\:\;\#\%\&\$\`\"\'\<\>\|\*\?\!\(\)\{\}\[\]\~\^\=]*)
+			check_result "$E_INVALID" "$err"
+			;;
+	esac
+
+	# 3. Strict structure: optional leading "/", non-empty segments,
+	#    optional trailing "/" (no empty segments such as "a//b")
+	local re='^/?([^/]+(/[^/]+)*/?)?$'
+	if [[ ! "$value" =~ $re ]]; then
+		check_result "$E_INVALID" "$err"
+	fi
+
+	# 4. Strict: reject "." and ".." segments to prevent path traversal
+	case "/$value/" in
+		*/../* | */./*) check_result "$E_INVALID" "$err" ;;
+	esac
+
+	# 5. Strict: input must be valid UTF-8 (rejects stray or overlong bytes)
+	if ! printf '%s' "$value" | LC_ALL=C.UTF-8 iconv -f UTF-8 -t UTF-8 > /dev/null 2>&1; then
+		check_result "$E_INVALID" "$err"
+	fi
+}
+
 # Format validation controller
 is_format_valid() {
 	for arg_name in $*; do
@@ -1664,6 +1790,7 @@ is_format_valid() {
 				dbpass) is_password_format_valid "$arg" ;;
 				dbuser) is_dbuser_format_valid "$arg" 'dbuser' ;;
 				dkim) is_boolean_format_valid "$arg" 'dkim' ;;
+				dkim_selector) is_dkim_selector_format_valid "$arg" ;;
 				dkim_size) is_int_format_valid "$arg" ;;
 				domain) is_domain_format_valid "$arg" ;;
 				dom_alias) is_alias_format_valid "$arg" ;;
@@ -1671,9 +1798,10 @@ is_format_valid() {
 				email) is_email_format_valid "$arg" ;;
 				email_forward) is_email_format_valid "$arg" ;;
 				exp) is_date_format_valid "$arg" ;;
-				extentions) is_common_format_valid "$arg" 'extentions' ;;
+				extensions) is_extension_format_valid "$arg" ;;
 				format) is_type_valid 'plain json shell csv' "$arg" ;;
 				ftp_password) is_password_format_valid "$arg" ;;
+				ftp_path) is_dir_path_format_valid "$arg" "$arg_name" ;;
 				ftp_user) is_user_format_valid "$arg" "$arg_name" ;;
 				hash) is_hash_format_valid "$arg" "$arg_name" ;;
 				host) is_object_format_valid "$arg" "$arg_name" ;;
@@ -1689,6 +1817,7 @@ is_format_valid() {
 				ip_status) is_ip_status_format_valid "$arg" ;;
 				job) is_int_format_valid "$arg" 'job' ;;
 				key) is_common_format_valid "$arg" "$arg_name" ;;
+				key_algo) is_key_algo_format_valid "$arg" ;;
 				malias) is_localpart_format_valid "$arg" "$arg_name" '64' ;;
 				max_db) is_int_format_valid "$arg" 'max db' ;;
 				min) is_cron_format_valid "$arg" $arg_name ;;
@@ -1714,7 +1843,7 @@ is_format_valid() {
 				port_ext) is_fw_port_format_valid "$arg" ;;
 				prefix_length) is_ipv6_format_valid "$arg" 'prefix_length' ;;
 				protocol) is_fw_protocol_format_valid "$arg" ;;
-				proxy_ext) is_extention_format_valid "$arg" ;;
+				proxy_ext) is_extension_format_valid "$arg" ;;
 				quota) is_int_format_valid "$arg" 'quota' ;;
 				rate) is_int_format_valid "$arg" 'rate' ;;
 				record) is_common_format_valid "$arg" 'record' ;;

@@ -2,25 +2,10 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<?php if ($_SESSION["userContext"] === "admin" && $_SESSION['look'] !== '' && $_GET["user"] !== $_SESSION['ROOT_USER']) { ?>
-				<a href="/edit/user/?<?= tohtml(http_build_query(["user" => $_SESSION["look"], "token" => $_SESSION["token"]])) ?>" class="button button-secondary button-back js-button-back">
+			<a href="/edit/user/?<?= tohtml(http_build_query(["token" => $_SESSION["token"]])) ?>" class="button button-secondary button-back js-button-back">
 					<i class="fas fa-arrow-left icon-blue"></i><?= tohtml( _("Back")) ?>
-				</a>
-			<?php } elseif ($_SESSION["userContext"] === "admin" && !empty($_GET["user"])) { ?>
-				<a href="/edit/user/?<?= tohtml(http_build_query(["user" => $_GET["user"], "token" => $_SESSION["token"]])) ?>" class="button button-secondary button-back js-button-back">
-					<i class="fas fa-arrow-left icon-blue"></i><?= tohtml( _("Back")) ?>
-				</a>
-			<?php } else { ?>
-				<a href="/edit/user/?<?= tohtml(http_build_query(["user" => $_SESSION["user"], "token" => $_SESSION["token"]])) ?>" class="button button-secondary button-back js-button-back">
-					<i class="fas fa-arrow-left icon-blue"></i><?= tohtml( _("Back")) ?>
-				</a>
-			<?php } ?>
-
-			<?php if ($_SESSION["userContext"] === "admin" && isset($_GET["user"]) && $_GET["user"] !== "admin") { ?>
-				<a href="/add/key/?<?= tohtml(http_build_query(["user" => $_GET["user"]])) ?>" class="button button-secondary js-button-create">
-					<i class="fas fa-circle-plus icon-green"></i><?= tohtml( _("Add SSH Key")) ?>
-				</a>
-			<?php } else { ?>
+			</a>
+			<?php if($read_only !== true) { ?>
 				<a href="/add/key/" class="button button-secondary js-button-create">
 					<i class="fas fa-circle-plus icon-green"></i><?= tohtml( _("Add SSH Key")) ?>
 				</a>
@@ -59,11 +44,7 @@
 						<li class="units-table-row-action shortcut-delete" data-key-action="js">
 							<a
 								class="units-table-row-action-link data-controls js-confirm-action"
-								<?php if ($_SESSION["userContext"] === "admin" && isset($_GET["user"]) && $_GET["user"] !== "admin") { ?>
-									href="/delete/key/?<?= tohtml(http_build_query(["user" => $_GET["user"], "key" => $key, "token" => $_SESSION["token"]])) ?>"
-								<?php } else { ?>
-									href="/delete/key/?<?= tohtml(http_build_query(["key" => $key, "token" => $_SESSION["token"]])) ?>"
-								<?php } ?>
+								href="/delete/key/?<?= tohtml(http_build_query(["key" => $key, "token" => $_SESSION["token"]])) ?>"
 								title="<?= tohtml( _("Delete")) ?>"
 								data-confirm-title="<?= tohtml( _("Delete")) ?>"
 								data-confirm-message="<?= tohtml(sprintf(_("Are you sure you want to delete SSH key %s?"), tohtml($key))) ?>"

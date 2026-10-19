@@ -30,7 +30,7 @@ if (!empty($v_domain)) {
 }
 
 // Check POST request for mail domain
-if (!empty($_POST["ok"])) {
+if (!empty($_POST["ok"]) && $read_only !== true) {
 	// Check token
 	verify_csrf($_POST);
 
@@ -70,6 +70,8 @@ if (!empty($_POST["ok"])) {
 		$v_dkim = "no";
 	}
 
+	$v_dkim_selector = !empty($_POST["v_dkim_selector"]) ? $_POST["v_dkim_selector"] : "mail";
+
 	// Set domain name to lowercase and remove www prefix
 	$v_domain = preg_replace("/^www./i", "", $_POST["v_domain"]);
 	$v_domain = quoteshellarg($v_domain);
@@ -88,7 +90,9 @@ if (!empty($_POST["ok"])) {
 				" " .
 				$v_antivirus .
 				" " .
-				$v_dkim,
+				$v_dkim .
+				" 2048 '' '' " .
+				quoteshellarg($v_dkim_selector),
 			$output,
 			$return_var,
 		);
@@ -201,7 +205,7 @@ if (!empty($_POST["ok"])) {
 }
 
 // Check POST request for mail account
-if (!empty($_POST["ok_acc"])) {
+if (!empty($_POST["ok_acc"]) && $read_only !== true) {
 	// Check token
 	if (!isset($_POST["token"]) || $_SESSION["token"] != $_POST["token"]) {
 		header("location: /login/");

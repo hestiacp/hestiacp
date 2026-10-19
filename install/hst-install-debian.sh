@@ -6,7 +6,7 @@
 # https://www.hestiacp.com/
 #
 # Currently Supported Versions:
-# Debian 11 12 13
+# Debian 12 13
 #
 # ======================================================== #
 
@@ -31,7 +31,7 @@ HESTIA_COMMON_DIR="$HESTIA/install/common"
 VERBOSE='no'
 
 # Define software versions
-HESTIA_INSTALL_VER='1.10.4'
+HESTIA_INSTALL_VER='1.10.5'
 
 # Build the full Hestia version
 # Split base version (1.10.0) from channel suffix (~alpha / ~beta), if present
@@ -77,7 +77,7 @@ software="acl apache2 apache2-suexec-custom apache2-utils at awstats bc bind9 bs
   php$fpm_v php$fpm_v-apcu php$fpm_v-bz2 php$fpm_v-cgi php$fpm_v-cli php$fpm_v-common php$fpm_v-curl php$fpm_v-gd
   php$fpm_v-imagick php$fpm_v-imap php$fpm_v-intl php$fpm_v-ldap php$fpm_v-mbstring php$fpm_v-mysql
   php$fpm_v-pgsql php$fpm_v-pspell php$fpm_v-readline php$fpm_v-xml php$fpm_v-zip postgresql postgresql-contrib
-  proftpd-basic quota rrdtool rsyslog spamd sysstat unrar-free unzip util-linux vim-common vsftpd xxd whois zip zstd bubblewrap restic"
+  proftpd-core proftpd-mod-crypto quota rrdtool rsyslog spamd sysstat unrar-free unzip util-linux vim-common vsftpd xxd whois zip zstd bubblewrap restic"
 
 installer_dependencies="apt-transport-https ca-certificates curl dirmngr gnupg openssl wget sudo"
 
@@ -1049,8 +1049,8 @@ if [ "$vsftpd" = 'no' ]; then
 	software=$(echo "$software" | sed -e "s/vsftpd//")
 fi
 if [ "$proftpd" = 'no' ]; then
-	software=$(echo "$software" | sed -e "s/proftpd-basic//")
-	software=$(echo "$software" | sed -e "s/proftpd-mod-vroot//")
+	software=$(echo "$software" | sed -e "s/proftpd-core//")
+	software=$(echo "$software" | sed -e "s/proftpd-mod-crypto//")
 fi
 if [ "$named" = 'no' ]; then
 	software=$(echo "$software" | sed -e "s/bind9//")
@@ -1390,11 +1390,7 @@ if [ "$exim" = 'yes' ]; then
 		write_config_value "ANTIVIRUS_SYSTEM" "clamav-daemon"
 	fi
 	if [ "$spamd" = 'yes' ]; then
-		if [ "$release" = '11' ]; then
-			write_config_value "ANTISPAM_SYSTEM" "spamassassin"
-		else
-			write_config_value "ANTISPAM_SYSTEM" "spamd"
-		fi
+		write_config_value "ANTISPAM_SYSTEM" "spamd"
 	fi
 	if [ "$dovecot" = 'yes' ]; then
 		write_config_value "IMAP_SYSTEM" "dovecot"
@@ -1522,17 +1518,13 @@ $HESTIA/bin/v-change-sys-hostname $servername > /dev/null 2>&1
 # Configuring global OpenSSL options
 echo "[ * ] Configuring OpenSSL to improve TLS performance..."
 tls13_ciphers="TLS_AES_128_GCM_SHA256:TLS_CHACHA20_POLY1305_SHA256:TLS_AES_256_GCM_SHA384"
-if [ "$release" = "11" ]; then
+if ! grep -qw "^ssl_conf = ssl_sect$" /etc/ssl/openssl.cnf 2> /dev/null; then
+	sed -i '/providers = provider_sect$/a ssl_conf = ssl_sect' /etc/ssl/openssl.cnf
+fi
+if ! grep -qw "^[ssl_sect]$" /etc/ssl/openssl.cnf 2> /dev/null; then
+	sed -i '$a \\n[ssl_sect]\nsystem_default = hestia_openssl_sect\n\n[hestia_openssl_sect]\nCiphersuites = '"$tls13_ciphers"'\nOptions = PrioritizeChaCha' /etc/ssl/openssl.cnf
+elif grep -qw "^system_default = system_default_sect$" /etc/ssl/openssl.cnf 2> /dev/null; then
 	sed -i '/^system_default = system_default_sect$/a system_default = hestia_openssl_sect\n\n[hestia_openssl_sect]\nCiphersuites = '"$tls13_ciphers"'\nOptions = PrioritizeChaCha' /etc/ssl/openssl.cnf
-else
-	if ! grep -qw "^ssl_conf = ssl_sect$" /etc/ssl/openssl.cnf 2> /dev/null; then
-		sed -i '/providers = provider_sect$/a ssl_conf = ssl_sect' /etc/ssl/openssl.cnf
-	fi
-	if ! grep -qw "^[ssl_sect]$" /etc/ssl/openssl.cnf 2> /dev/null; then
-		sed -i '$a \\n[ssl_sect]\nsystem_default = hestia_openssl_sect\n\n[hestia_openssl_sect]\nCiphersuites = '"$tls13_ciphers"'\nOptions = PrioritizeChaCha' /etc/ssl/openssl.cnf
-	elif grep -qw "^system_default = system_default_sect$" /etc/ssl/openssl.cnf 2> /dev/null; then
-		sed -i '/^system_default = system_default_sect$/a system_default = hestia_openssl_sect\n\n[hestia_openssl_sect]\nCiphersuites = '"$tls13_ciphers"'\nOptions = PrioritizeChaCha' /etc/ssl/openssl.cnf
-	fi
 fi
 
 # Generating SSL certificate
@@ -1791,22 +1783,20 @@ if [ "$proftpd" = 'yes' ]; then
 	echo "127.0.0.1 $servername" >> /etc/hosts
 	cp -f $HESTIA_INSTALL_DIR/proftpd/proftpd.conf /etc/proftpd/
 	cp -f $HESTIA_INSTALL_DIR/proftpd/tls.conf /etc/proftpd/
-
+	# In Debian 13 we need to add modules.conf to proftpd.conf so tls mod is loaded
+	if [[ $release -ge 13 ]]; then
+		if [[ -f /etc/proftpd/modules.conf ]] && grep -qF "Include /etc/proftpd/tls.conf" /etc/proftpd/proftpd.conf; then
+			if ! grep -qF "Include /etc/proftpd/modules.conf" /etc/proftpd/proftpd.conf; then
+				sed -i '\|Include /etc/proftpd/tls.conf|i Include /etc/proftpd/modules.conf' /etc/proftpd/proftpd.conf
+			fi
+		fi
+	fi
 	update-rc.d proftpd defaults > /dev/null 2>&1
 	systemctl start proftpd >> $LOG
 	check_result $? "proftpd start failed"
 
-	if [ "$release" -eq 11 ]; then
-		unit_files="$(systemctl list-unit-files | grep proftpd)"
-		if [[ "$unit_files" =~ "disabled" ]]; then
-			systemctl enable proftpd
-		fi
-	fi
-
-	if [ "$release" -eq 12 ] || [ "$release" -eq 13 ]; then
-		systemctl disable --now proftpd.socket
-		systemctl enable --now proftpd.service
-	fi
+	systemctl disable --now proftpd.socket
+	systemctl enable --now proftpd.service
 fi
 
 #----------------------------------------------------------#
@@ -2170,24 +2160,12 @@ fi
 if [ "$spamd" = 'yes' ]; then
 	echo "[ * ] Configuring SpamAssassin..."
 	update-rc.d spamassassin defaults > /dev/null 2>&1
-	if [ "$release" = "11" ]; then
-		update-rc.d spamassassin enable > /dev/null 2>&1
-		systemctl start spamassassin >> $LOG
-		check_result $? "spamassassin start failed"
-		unit_files="$(systemctl list-unit-files | grep spamassassin)"
-		if [[ "$unit_files" =~ "disabled" ]]; then
-			systemctl enable spamassassin > /dev/null 2>&1
-		fi
-		sed -i "s/#CRON=1/CRON=1/" /etc/default/spamassassin
-	else
-		# Deb 12+ renamed to spamd
-		update-rc.d spamd enable > /dev/null 2>&1
-		systemctl start spamd >> $LOG
-		unit_files="$(systemctl list-unit-files | grep spamd)"
-		if [[ "$unit_files" =~ "disabled" ]]; then
-			systemctl enable spamd > /dev/null 2>&1
-		fi
-
+	# Deb 12+ renamed to spamd
+	update-rc.d spamd enable > /dev/null 2>&1
+	systemctl start spamd >> $LOG
+	unit_files="$(systemctl list-unit-files | grep spamd)"
+	if [[ "$unit_files" =~ "disabled" ]]; then
+		systemctl enable spamd > /dev/null 2>&1
 	fi
 fi
 

@@ -59,7 +59,7 @@ After modifying an existing template, you need to rebuild the user configuration
 | `%home%`             | Default home directory                                | `/home`                                    |
 | `%user%`             | Username of current user                              | `username`                                 |
 | `%backend_lsnr%`     | Your default FPM Server                               | `proxy:fcgi://127.0.0.1:9000`              |
-| `%proxy_extentions%` | Extensions that should be handled by the proxy server | A list of extensions                       |
+| `%proxy_extensions%` | Extensions that should be handled by the proxy server | A list of extensions                       |
 
 ::: tip
 `%sdocroot%` can also be set to `%docroot%` with settings

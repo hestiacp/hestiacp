@@ -44,7 +44,7 @@ echo "\$cfg['Servers'][\$i]['designer_coords'] = 'pma__designer_coords';" >> $pm
 echo "\$cfg['Servers'][\$i]['hide_db'] = 'information_schema';" >> $pmapath
 
 # Create temporal dir in /var/lib/
-phpmyadmin_tempdir_conf="/etc/phpmyadmin/conf.d/02-tempdir.php"
+phpmyadmin_tempdir_conf="/etc/phpmyadmin/conf.d/99-tempdir.php"
 phpmyadmin_tmp="/var/lib/phpmyadmin/tmp"
 
 mkdir -p "$phpmyadmin_tmp"

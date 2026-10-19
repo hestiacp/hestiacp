@@ -26,7 +26,7 @@ source_conf "$HESTIA/conf/hestia.conf"
 # JSON list function
 json_list() {
 	echo '{'
-	echo -e "\n\t\"mail._domainkey\": {"
+	echo -e "\n\t\"${dkim_selector}._domainkey\": {"
 	echo "            \"TTL\": \"3600\","
 	echo "            \"TXT\": \"'v=DKIM1; k=rsa; p=$pub'\""
 	echo -e "\t}\n}"
@@ -36,18 +36,18 @@ json_list() {
 shell_list() {
 	echo "RECORD            TTL         TYPE      VALUE"
 	echo "------            ---         ----      -----"
-	echo "mail._domainkey   3600   IN   TXT      \"v=DKIM1; k=rsa; p=$pub\""
+	echo "${dkim_selector}._domainkey   3600   IN   TXT      \"v=DKIM1; k=rsa; p=$pub\""
 }
 
 # PLAIN list function
 plain_list() {
-	echo -e "mail._domainkey\t3600\tIN\tTXT\t\"v=DKIM1; k=rsa; p=$pub\""
+	echo -e "${dkim_selector}._domainkey\t3600\tIN\tTXT\t\"v=DKIM1; k=rsa; p=$pub\""
 }
 
 # CSV list function
 csv_list() {
 	echo "RECORD,TTL,IN,TYPE,VALUE"
-	echo "mail._domainkey,3600,IN,TXT,\"\"v=DKIM1; k=rsa; p=$pub\"\""
+	echo "${dkim_selector}._domainkey,3600,IN,TXT,\"\"v=DKIM1; k=rsa; p=$pub\"\""
 }
 
 #----------------------------------------------------------#
@@ -62,6 +62,9 @@ is_object_valid 'mail' 'DOMAIN' "$domain"
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
+
+dkim_selector=$(get_object_value 'mail' 'DOMAIN' "$domain" '$DKIM_SELECTOR')
+dkim_selector=${dkim_selector:-mail}
 
 # Parsing domain keys
 if [ -e "$USER_DATA/mail/$domain.pub" ]; then

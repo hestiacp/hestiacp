@@ -8,12 +8,17 @@ include $_SERVER["DOCUMENT_ROOT"] . "/inc/main.php";
 // Check token
 verify_csrf($_POST);
 
+if ($read_only === true) {
+	header("Location: /list/mail/");
+	exit();
+}
+
 if (empty($_POST["domain"])) {
-	header("Location: /list/mail");
+	header("Location: /list/mail/");
 	exit();
 }
 if (empty($_POST["action"])) {
-	header("Location: /list/mail");
+	header("Location: /list/mail/");
 	exit();
 }
 

@@ -379,7 +379,7 @@ remote_smtp:
   driver = smtp
   helo_data = ${lookup dnsdb{>: defer_never,ptr=$sending_ip_address}{${listextract{1}{$value}}}{$primary_hostname}}
   dkim_domain = DKIM_DOMAIN
-  dkim_selector = mail
+  dkim_selector = ${if exists{/etc/exim4/domains/${lookup{$dkim_domain}dsearch{/etc/exim4/domains/}}/selector}{${lookup{selector}lsearch{/etc/exim4/domains/${lookup{$dkim_domain}dsearch{/etc/exim4/domains/}}/selector}{$value}{mail}}}{mail}}
   dkim_private_key = DKIM_PRIVATE_KEY
   dkim_canon = relaxed
   dkim_strict = 0

@@ -38,7 +38,7 @@ is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'mail' 'DOMAIN' "$domain"
 is_object_unsuspended 'mail' 'DOMAIN' "$domain"
-is_password_valid "$password" "Password"
+is_password_valid
 is_username_format_valid "$username" "Username"
 format_no_quotes "$password" "Password"
 

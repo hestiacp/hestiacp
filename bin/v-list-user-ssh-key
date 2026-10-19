@@ -1,5 +1,5 @@
 #!/bin/bash
-# info: add ssh key
+# info: list ssh keys
 # options: USER [FORMAT]
 #
 # Lists $user/.ssh/authorized_keys
@@ -17,7 +17,7 @@ format=${2-shell}
 # shellcheck source=/etc/hestiacp/hestia.conf
 source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
-source $HESTIA/func/main.sh
+source "$HESTIA/func/main.sh"
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
@@ -28,8 +28,8 @@ json_list() {
 	objects=$(echo "$keys" | wc -l)
 	echo "{"
 	for str in $keys; do
-		KEY=$(echo $str | awk '{print $(NF-2)}')
-		ID=$(echo $str | awk '{print $(NF-1)}')
+		KEY=$(awk '{print $2}' <<< "$str")
+		ID=$(awk '{for (i=3; i<NF; i++) printf "%s%s", $i, (i<NF-1 ? OFS : ORS)}' <<< "$str")
 		echo -n '    "'$ID'": {
         "ID": "'$ID'",
         "KEY": "'$KEY'"
@@ -45,10 +45,10 @@ json_list() {
 shell_list() {
 	IFS=$'\n'
 	echo "ID~KEY"
-	echo "----~----~---"
+	echo "----~----"
 	for str in $keys; do
-		KEY=$(echo $str | awk '{print $(NF-2)}')
-		ID=$(echo $str | awk '{print $(NF-1)}')
+		KEY=$(awk '{print $2}' <<< "$str")
+		ID=$(awk '{for (i=3; i<NF; i++) printf "%s%s", $i, (i<NF-1 ? OFS : ORS)}' <<< "$str")
 		echo "$ID~$KEY"
 	done
 }
@@ -57,8 +57,8 @@ shell_list() {
 plain_list() {
 	IFS=$'\n'
 	for str in $keys; do
-		KEY=$(echo $str | awk '{print $(NF-2)}')
-		ID=$(echo $str | awk '{print $(NF-1)}')
+		KEY=$(awk '{print $2}' <<< "$str")
+		ID=$(awk '{for (i=3; i<NF; i++) printf "%s%s", $i, (i<NF-1 ? OFS : ORS)}' <<< "$str")
 		echo -e "$ID\t$KEY"
 	done
 }
@@ -68,8 +68,8 @@ csv_list() {
 	IFS=$'\n'
 	echo "ID,KEY"
 	for str in $keys; do
-		KEY=$(echo $str | awk '{print $(NF-2)}')
-		ID=$(echo $str | awk '{print $(NF-1)}')
+		KEY=$(awk '{print $2}' <<< "$str")
+		ID=$(awk '{for (i=3; i<NF; i++) printf "%s%s", $i, (i<NF-1 ? OFS : ORS)}' <<< "$str")
 		echo "\"$ID\",\"$KEY\""
 	done
 }
@@ -88,7 +88,9 @@ is_object_unsuspended 'user' 'USER' "$user"
 #----------------------------------------------------------#
 
 AUTHKEY_FILE="$HOMEDIR/$user/.ssh/authorized_keys"
-[ -z "$(readlink -f "$AUTHKEY_FILE" | egrep "^$HOMEDIR/$user/.ssh/")" ] && check_result $E_FORBIDEN "Invalid authorized keys path"
+if ! readlink -f "$AUTHKEY_FILE" | grep -Eq "^$HOMEDIR/$user/.ssh/"; then
+	check_result "$E_FORBIDEN" "Invalid authorized keys path"
+fi
 
 #check if file exsists
 if [ ! -f "$AUTHKEY_FILE" ]; then
@@ -109,7 +111,7 @@ case $format in
 	json) json_list ;;
 	plain) plain_list ;;
 	csv) csv_list ;;
-	shell) shell_list | column -t ;;
+	shell) shell_list | column -t -s '~' ;;
 esac
 
 #----------------------------------------------------------#

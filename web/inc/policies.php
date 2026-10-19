@@ -5,15 +5,15 @@ if (
 		$panel[$user]["SUSPENDED"] === "yes" &&
 		$_SESSION["POLICY_USER_VIEW_SUSPENDED"] === "yes") ||
 	($_SESSION["userContext"] === "admin" &&
-		$_SESSION["look"] === "admin" &&
+		$_SESSION["look"] === $_SESSION["ROOT_USER"] &&
 		$_SESSION["POLICY_SYSTEM_PROTECTED_ADMIN"] === "yes")
 ) {
-	$read_only = "true";
+	$read_only = true;
 } else {
-	$read_only = "";
+	$read_only = false;
 }
 
-if ($read_only === "true") {
+if ($read_only === true) {
 	$display_mode = "disabled";
 } else {
 	$display_mode = "";

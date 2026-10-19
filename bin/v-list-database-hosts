@@ -122,7 +122,7 @@ csv_list() {
 is_type_format_valid() {
 	exclude="[!|#|$|^|&|(|)|+|=|{|}|:|@|<|>|?|/|\|\"|'|;|%|\`| ]|\."
 	if [[ "$1" =~ $exclude ]]; then
-		check_result $E_INVALID "invalid type extention format :: $1"
+		check_result $E_INVALID "invalid type extension format :: $1"
 	fi
 }
 

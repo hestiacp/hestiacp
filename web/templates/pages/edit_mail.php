@@ -21,7 +21,8 @@
 		x-data="{
 			sslEnabled: <?= tohtml($v_ssl == "yes" ? "true" : "false") ?>,
 			letsEncryptEnabled: <?= tohtml($v_letsencrypt == "yes" ? "true" : "false") ?>,
-			hasSmtpRelay: <?= tohtml($v_smtp_relay == "true" ? "true" : "false") ?>
+			hasSmtpRelay: <?= tohtml($v_smtp_relay == "true" ? "true" : "false") ?>,
+			dkimEnabled: <?= tohtml($v_dkim == "yes" ? "true" : "false") ?>
 		}"
 		id="main-form"
 		name="v_edit_mail"
@@ -88,10 +89,16 @@
 				</div>
 			<?php } ?>
 			<div class="form-check u-mb10">
-				<input class="form-check-input" type="checkbox" name="v_dkim" id="v_dkim" <?php if ($v_dkim == 'yes') echo 'checked'; ?>>
+				<input x-model="dkimEnabled" class="form-check-input" type="checkbox" name="v_dkim" id="v_dkim" <?php if ($v_dkim == 'yes') echo 'checked'; ?>>
 				<label for="v_dkim">
 					<?= tohtml( _("DKIM Support")) ?>
 				</label>
+			</div>
+			<div x-cloak x-show="dkimEnabled" class="u-pl30 u-mb10">
+				<label for="v_dkim_selector" class="form-label">
+					DKIM Selector <span class="optional">(<?= _("Use a-z, 0-9, hyphen; no leading, trailing or consecutive hyphens") ?>)</span>
+				</label>
+				<input type="text" class="form-control" name="v_dkim_selector" id="v_dkim_selector" value="<?= tohtml(empty($v_dkim_selector) ? "mail" : trim($v_dkim_selector, "'")) ?>">
 			</div>
 			<div class="form-check u-mb10">
 				<input x-model="sslEnabled" class="form-check-input" type="checkbox" name="v_ssl" id="v_ssl">
@@ -106,10 +113,24 @@
 						<?= tohtml( _("Use Let's Encrypt to obtain SSL certificate")) ?>
 					</label>
 				</div>
+				<div x-cloak x-show="letsEncryptEnabled" id="v_ssl_key_algo_wrapper" class="u-pl30 u-mb10">
+					<label for="v_ssl_key_algo" class="form-label"><?= tohtml( _("Key Type")) ?></label>
+					<select class="form-select" name="v_ssl_key_algo" id="v_ssl_key_algo">
+						<option value="ecdsa-256" <?php if ($v_ssl_key_algo == "ecdsa-256" || $v_ssl_key_algo == "ecdsa") echo 'selected'; ?>>
+							ECDSA P-256 (<?= tohtml( _("recommended")) ?>)
+						</option>
+						<option value="ecdsa-384" <?php if ($v_ssl_key_algo == "ecdsa-384") echo 'selected'; ?>>
+							ECDSA P-384
+						</option>
+						<option value="rsa" <?php if ($v_ssl_key_algo == "rsa") echo 'selected'; ?>>
+							RSA 4096
+						</option>
+					</select>
+				</div>
 				<div class="alert alert-info u-mb20" role="alert">
 					<i class="fas fa-exclamation"></i>
 					<div>
-						<p><?php echo $v_webmail_alias; ?></p>
+						<p><?= tohtml($v_webmail_alias) ?></p>
 						<p><?= tohtml(sprintf(_("To enable Let's Encrypt SSL, ensure that DNS records exist for mail.%s and %s!"), $v_domain, $v_webmail_alias)) ?></p>
 					</div>
 				</div>

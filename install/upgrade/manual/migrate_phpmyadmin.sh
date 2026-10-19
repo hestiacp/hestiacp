@@ -132,7 +132,7 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
 	echo "\$cfg['Servers'][\$i]['designer_coords'] = 'pma__designer_coords';" >> $pmapath
 
 	# Create temporal dir in /var/lib/
-	phpmyadmin_tempdir_conf="/etc/phpmyadmin/conf.d/02-tempdir.php"
+	phpmyadmin_tempdir_conf="/etc/phpmyadmin/conf.d/99-tempdir.php"
 	phpmyadmin_tmp="/var/lib/phpmyadmin/tmp"
 
 	mkdir -p "$phpmyadmin_tmp"

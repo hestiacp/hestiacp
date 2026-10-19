@@ -43,6 +43,7 @@
 		"phpunit/phpunit": "^8.0",
 		"symfony/var-dumper": "^4.4",
 		"league/flysystem-memory": "^1.0",
-		"phpstan/phpstan": "^2.0.3"
+		"phpstan/phpstan": "^2.0.3",
+        "php-cs-fixer/shim": "^3.95"
 	}
 }

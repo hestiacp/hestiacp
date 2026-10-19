@@ -7,7 +7,7 @@
 			</a>
 		</div>
 		<div class="toolbar-buttons">
-			<?php if (($_SESSION["role"] == "admin" && $accept === "true") || $user_plain !== "admin") { ?>
+			<?php if (($_SESSION["role"] == "admin" && $accept === "true") || $_SESSION["role"] !== "admin") { ?>
 				<button type="submit" class="button" form="main-form">
 					<i class="fas fa-floppy-disk icon-purple"></i><?= tohtml( _("Save")) ?>
 				</button>
@@ -21,7 +21,8 @@
 
 	<form
 		x-data="{
-			hasSmtpRelay: <?= tohtml($v_smtp_relay == "true" ? "true" : "false") ?>
+			hasSmtpRelay: <?= tohtml($v_smtp_relay == "true" ? "true" : "false") ?>,
+			dkimEnabled: <?= tohtml(empty($v_dkim) || $v_dkim == "yes" ? "true" : "false") ?>
 		}"
 		id="main-form"
 		name="v_add_mail"
@@ -103,12 +104,18 @@
 					</div>
 				<?php } ?>
 				<div class="form-check u-mb10">
-					<input class="form-check-input" type="checkbox" name="v_dkim" id="v_dkim" <?php if (empty($v_dkim) || $v_dkim == "yes") {
+					<input x-model="dkimEnabled" class="form-check-input" type="checkbox" name="v_dkim" id="v_dkim" <?php if (empty($v_dkim) || $v_dkim == "yes") {
      	echo "checked";
      } ?>>
 					<label for="v_dkim">
 						<?= tohtml( _("DKIM Support")) ?>
 					</label>
+				</div>
+				<div x-cloak x-show="dkimEnabled" class="u-pl30 u-mb10">
+					<label for="v_dkim_selector" class="form-label">
+						DKIM Selector <span class="optional">(<?= _("Use a-z, 0-9, hyphen; no leading, trailing or consecutive hyphens") ?>)</span>
+					</label>
+					<input type="text" class="form-control" name="v_dkim_selector" id="v_dkim_selector" value="<?= tohtml(empty($v_dkim_selector) ? "mail" : trim($v_dkim_selector, "'")) ?>">
 				</div>
 				<div class="form-check u-mb10">
 					<input x-model="hasSmtpRelay" class="form-check-input" type="checkbox" name="v_smtp_relay" id="v_smtp_relay">

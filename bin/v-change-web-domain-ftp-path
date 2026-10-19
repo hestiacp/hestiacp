@@ -2,9 +2,10 @@
 # info: change path for ftp user.
 # options: USER DOMAIN FTP_USER FTP_PATH
 #
-# example: v-change-web-domain-ftp-path admin example.com /home/admin/example.com
+# example: v-change-web-domain-ftp-path admin example.com user_ftp /public_html
 #
-# This function changes ftp user path.
+# This function changes ftp user path. FTP_PATH is relative to the domain
+# web root ($HOMEDIR/$user/web/$domain).
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #
@@ -37,24 +38,50 @@ format_domain_idn
 #----------------------------------------------------------#
 
 check_args '4' "$#" 'USER DOMAIN FTP_USER FTP_PATH'
-is_format_valid 'user' 'domain' 'ftp_user'
+is_format_valid 'user' 'domain' 'ftp_user' 'ftp_path'
 is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'web' 'DOMAIN' "$domain"
 is_object_unsuspended 'web' 'DOMAIN' "$domain"
 get_domain_values 'web'
-if [ -z "$(echo $FTP_USER | tr ':' '\n' | grep ^$ftp_user$)" ]; then
+
+# Load FTP users / paths into arrays (exact, literal comparison)
+IFS=':' read -ra ftp_users <<< "$FTP_USER"
+IFS=':' read -ra ftp_paths <<< "$FTP_PATH"
+
+position=-1
+for i in "${!ftp_users[@]}"; do
+	if [[ "${ftp_users[$i]}" == "$ftp_user" ]]; then
+		position=$i
+		break
+	fi
+done
+
+if ((position < 0)) || ! getent passwd -- "$ftp_user" > /dev/null; then
 	echo "Error: account $ftp_user doesn't exist"
 	log_event "$E_NOTEXIST" "$ARGUMENTS"
 	exit "$E_NOTEXIST"
 fi
-ftp_path_a=$(readlink -f "$HOMEDIR/$user/web/$domain/$ftp_path")
-if [ -z "$(echo $ftp_path_a | grep $HOMEDIR/$user/web/$domain)" ]; then
-	echo "Error: absolute path $ftp_path_a is invalid"
+
+# Resolve the domain base and the requested path, then make sure the
+# result is the base itself or lives strictly under it (anchored, literal).
+base=$(readlink -f -- "$HOMEDIR/$user/web/$domain")
+if [ -z "$base" ]; then
+	echo "Error: web root for $domain is invalid"
 	log_event "$E_INVALID" "$ARGUMENTS"
 	exit "$E_INVALID"
 fi
+
+ftp_path_a=$(readlink -f -- "$base/$ftp_path")
+case "$ftp_path_a" in
+	"$base" | "$base"/*) ;;
+	*)
+		echo "Error: absolute path $ftp_path_a is invalid"
+		log_event "$E_INVALID" "$ARGUMENTS"
+		exit "$E_INVALID"
+		;;
+esac
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
@@ -65,40 +92,61 @@ check_hestia_demo_mode
 
 # MKDIR if path doesn't exist
 if [ ! -e "$ftp_path_a" ]; then
-	mkdir -p "$ftp_path_a"
-	chown --no-dereference $user:$user "$ftp_path_a"
-	chmod 751 "$ftp_path_a"
+	mkdir -p -- "$ftp_path_a"
+
+	# Re-check after creation (symlink race between check and mkdir)
+	ftp_path_chk=$(readlink -f -- "$ftp_path_a")
+	case "$ftp_path_chk" in
+		"$base" | "$base"/*) ;;
+		*)
+			echo "Error: absolute path $ftp_path_chk is invalid"
+			log_event "$E_INVALID" "$ARGUMENTS"
+			exit "$E_INVALID"
+			;;
+	esac
+	ftp_path_a="$ftp_path_chk"
+	chown --no-dereference "$user:$user" -- "$ftp_path_a"
+	chmod 751 -- "$ftp_path_a"
 fi
 
-# Chaning ftp user path
-pw_str=$(grep -n "^$ftp_user:" /etc/passwd)
-str=$(echo "$pw_str" | cut -f 1 -d :)
-old_path=$(echo "$pw_str" | cut -f 7 -d :)
-sed -i "$str s%$old_path%$ftp_path_a%g" /etc/passwd
+# Changing ftp user path (edits only the home field, no sed on /etc/passwd)
+if ! usermod -d "$ftp_path_a" -- "$ftp_user"; then
+	echo "Error: could not change home directory for $ftp_user"
+	log_event "$E_INVALID" "$ARGUMENTS"
+	exit "$E_INVALID"
+fi
 
 # Updating chroot jail for SFTP and FTP
-delete_chroot_jail $ftp_user
-add_chroot_jail $ftp_user
+delete_chroot_jail "$ftp_user"
+add_chroot_jail "$ftp_user"
 
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
 
-# Transforming absolute path to relative
-ftp_path_r=$(echo $ftp_path_a | sed "s%$HOMEDIR/$user/web/$domain%%")
+# Transforming absolute path to relative (literal prefix removal)
+ftp_path_r="${ftp_path_a#"$base"}"
 
-# Rebuilding FTP variables
-position=$(echo $FTP_USER | tr ':' '\n' | grep -n '' | grep ":$ftp_user$" \
-	| cut -f 1 -d:)
-ftp_path=$(echo $FTP_PATH | tr ':' '\n' | grep -n '' \
-	| sed -e "s%^$position:.*%$position:$ftp_path_r%" \
-	| cut -f 2 -d : | sed -e ':a;N;$!ba;s/\n/:/g')
+# Rebuilding FTP_PATH list, replacing only the entry at $position
+ftp_path=""
+for i in "${!ftp_users[@]}"; do
+	if ((i == position)); then
+		entry="$ftp_path_r"
+	else
+		entry="${ftp_paths[$i]-}"
+	fi
+	if ((i == 0)); then
+		ftp_path="$entry"
+	else
+		ftp_path="$ftp_path:$entry"
+	fi
+done
 
 # Updating config
 update_object_value 'web' 'DOMAIN' "$domain" '$FTP_PATH' "$ftp_path"
 
 # Logging
-$BIN/v-log-action "$user" "Info" "Web" "FTP account path changed (User: $ftp_user@domain, Path: $ftp_path_a)."
+$BIN/v-log-action "$user" "Info" "Web" "FTP account path changed (User: $ftp_user@$domain, Path: $ftp_path_a)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

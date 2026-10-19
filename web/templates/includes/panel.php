@@ -63,7 +63,7 @@
 
 				<!-- Notifications -->
 				<?php
-    $impersonatingAdmin = $_SESSION["userContext"] === "admin" && ($_SESSION["look"] !== "" && $user == "admin");
+    $impersonatingAdmin = $_SESSION["userContext"] === "admin" && ($_SESSION["look"] !== "" && $user == $_SESSION["ROOT_USER"]) && $_SESSION["POLICY_SYSTEM_PROTECTED_ADMIN"] === "yes";
     // Do not show notifications panel when impersonating 'admin' user
     if (!$impersonatingAdmin) { ?>
 					<div x-data="notifications" class="top-bar-notifications">
@@ -170,7 +170,7 @@
 
 							<!-- File Manager -->
 							<?php if (isset($_SESSION["FILE_MANAGER"]) && !empty($_SESSION["FILE_MANAGER"]) && $_SESSION["FILE_MANAGER"] == "true") { ?>
-								<?php if ($_SESSION["userContext"] === "admin" && $_SESSION["look"] === "admin" && $_SESSION["POLICY_SYSTEM_PROTECTED_ADMIN"] == "yes") { ?>
+								<?php if ($_SESSION["userContext"] === "admin" && $_SESSION["look"] === $_SESSION["ROOT_USER"] && $_SESSION["POLICY_SYSTEM_PROTECTED_ADMIN"] == "yes") { ?>
 									<!-- Hide file manager when impersonating admin-->
 								<?php } else { ?>
 									<li class="top-bar-menu-item">
@@ -186,7 +186,7 @@
 
 							<!-- Web Terminal -->
 							<?php if (isset($_SESSION["WEB_TERMINAL"]) && !empty($_SESSION["WEB_TERMINAL"]) && $_SESSION["WEB_TERMINAL"] == "true") { ?>
-								<?php if ($_SESSION["userContext"] === "admin" && $_SESSION["look"] === "admin" && $_SESSION["POLICY_SYSTEM_PROTECTED_ADMIN"] == "yes") { ?>
+								<?php if ($_SESSION["userContext"] === "admin" && $_SESSION["look"] === $_SESSION["ROOT_USER"] && $_SESSION["POLICY_SYSTEM_PROTECTED_ADMIN"] == "yes") { ?>
 									<!-- Hide web terminal when impersonating admin -->
 								<?php } elseif ($_SESSION["login_shell"] != "nologin") { ?>
 									<li class="top-bar-menu-item">
@@ -217,7 +217,7 @@
 							<?php } ?>
 
 							<!-- Edit User -->
-							<?php if ($_SESSION["userContext"] === "admin" && ($_SESSION["look"] !== "" && $user == "admin")) { ?>
+							<?php if ($_SESSION["userContext"] === "admin" && ($_SESSION["look"] !== "" && $user == $_SESSION["ROOT_USER"]) && $_SESSION["POLICY_SYSTEM_PROTECTED_ADMIN"] === "yes") { ?>
 								<!-- Hide 'edit user' entry point from other administrators for default 'admin' account-->
 								<li class="top-bar-menu-item">
 									<a title="<?= _("Logs") ?>" class="top-bar-menu-link <?php if ($TAB == "LOG") {
@@ -297,7 +297,7 @@
 
 				<!-- Users tab -->
 				<?php if ($_SESSION["userContext"] == "admin" && $_SESSION["look"] === "") { ?>
-					<?php if ($_SESSION["user"] !== "admin" && $_SESSION["POLICY_SYSTEM_HIDE_ADMIN"] === "yes") {
+					<?php if ($_SESSION["user"] !== $_SESSION["ROOT_USER"] && $_SESSION["POLICY_SYSTEM_HIDE_ADMIN"] === "yes") {
      	$user_count = $panel[$user]["U_USERS"] - 1;
      } else {
      	$user_count = $panel[$user]["U_USERS"];

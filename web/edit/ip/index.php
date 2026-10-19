@@ -9,7 +9,7 @@ include $_SERVER["DOCUMENT_ROOT"] . "/inc/main.php";
 
 // Check user
 if ($_SESSION["userContext"] != "admin") {
-	header("Location: /list/user");
+	header("Location: /list/user/");
 	exit();
 }
 
@@ -47,7 +47,7 @@ $users = json_decode(implode("", $output), true);
 unset($output);
 
 // Check POST request
-if (!empty($_POST["save"])) {
+if (!empty($_POST["save"]) && $read_only !== true) {
 	// Check token
 	verify_csrf($_POST);
 

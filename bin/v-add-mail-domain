@@ -88,8 +88,8 @@ domain_ip=$(get_object_value 'web' 'DOMAIN' "$domain" '$IP')
 if [ ! -z "$domain_ip" ]; then
 	local_ip=$(get_real_ip "$domain_ip")
 	is_ip_valid "$local_ip" "$user"
-elif [ -n "$(get_user_ips)" ] || [ -z "$(get_user_ip6s)" ]; then # skipped on IPv6-only servers
-	get_user_ip
+else
+	get_user_ip_if_available
 fi
 
 # Generating timestamp

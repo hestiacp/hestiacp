@@ -1654,6 +1654,17 @@ for nameserver in $(grep -is '^nameserver' /etc/resolv.conf | cut -d' ' -f2 | tr
 		fi
 	fi
 done
+# IPv6-only server: use the IPv6 nameservers and resolve IPv6 addresses as well
+if [ -z "$(ip -4 addr show scope global 2> /dev/null)" ] && [ -n "$(ip -6 addr show scope global 2> /dev/null)" ]; then
+	if [ -z "$resolver" ]; then
+		for nameserver in $(grep -is '^nameserver' /etc/resolv.conf | cut -d' ' -f2 | tr '\r\n' ' ' | xargs); do
+			if [[ "$nameserver" == *:* ]] && [[ "$nameserver" != *%* ]]; then
+				resolver="${resolver:+$resolver }[$nameserver]"
+			fi
+		done
+	fi
+	sed -i 's/\(resolver .*\) ipv6=off;/\1;/' /etc/nginx/nginx.conf
+fi
 if [ -n "$resolver" ]; then
 	sed -i "s/1.0.0.1 8.8.4.4 1.1.1.1 8.8.8.8/$resolver/g" /etc/nginx/nginx.conf
 fi
@@ -2571,6 +2582,11 @@ fi' >> /root/.zshrc
 #----------------------------------------------------------#
 #                   Hestia Access Info                     #
 #----------------------------------------------------------#
+
+# IPv6-only server: show the IPv6 address
+if [ -z "$ip" ] && [ -n "$primary_ipv6" ]; then
+	ip="[$primary_ipv6]"
+fi
 
 # Comparing hostname and IP
 host_ip=$(host $servername | head -n 1 | awk '{print $NF}')

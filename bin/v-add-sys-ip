@@ -287,6 +287,8 @@ fi
 syshealth_adapt_hestia_nginx_listen_ports
 # Also update resolver
 syshealth_adapt_nginx_resolver
+# Exim uses IPv6 on IPv6-only servers
+syshealth_adapt_exim_ipv6
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
@@ -319,6 +321,11 @@ fi
 # Restarting firewall
 if [ -n "$FIREWALL_SYSTEM" ]; then
 	$BIN/v-update-firewall
+fi
+
+# Restarting mail server
+if [ "$EXIM_IPV6_CHANGED" = "yes" ]; then
+	$BIN/v-restart-mail
 fi
 
 # Restarting hestia service if nginx backend config was changed

@@ -87,7 +87,8 @@ for domain in "${domains[@]}"; do
 
 			# Checking IP address
 			check_ip=$(is_ip_valid $IP $user)
-			if [ -n "$check_ip" ]; then
+			# Zones keep their IPv4 address on IPv6-only servers
+			if [ -n "$check_ip" ] && [ -n "$(get_user_ips)" ]; then
 				export local_ip=''
 				get_user_ip $user
 				old_ip=$IP

@@ -74,9 +74,9 @@ if [ -n "$web_data" ]; then
 		fi
 	fi
 
-	if [ -z "$(echo $(get_user_ips) | grep $IP)" ]; then
+	if [ -n "$IP" ] && [ -z "$(echo $(get_user_ips) | grep $IP)" ]; then
 		echo "[*] IP dedicated to $owner select new ip address..."
-		get_user_ip
+		get_user_ip_if_available
 	fi
 	old_ip=$IP
 	new_ip=${local_ip:-$ip}

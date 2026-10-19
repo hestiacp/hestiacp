@@ -107,7 +107,9 @@ for domain in "${domains[@]}"; do
 			check_ip=$(is_ip_valid $IP $user)
 			if [ -n "$check_ip" ]; then
 				local_ip=''
-				get_user_ip $user
+				ip=''
+				# IPv6-only servers: the domain keeps its IPv6 address only
+				get_user_ip_if_available
 				old_ip=$IP
 				IP=$ip
 			fi

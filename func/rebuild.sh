@@ -620,7 +620,7 @@ rebuild_mail_domain_conf() {
 		local local_ip=$(get_real_ip "$domain_ip")
 		is_ip_valid "$local_ip" "$user"
 	else
-		get_user_ip
+		get_user_ip_if_available
 	fi
 
 	if [ "$SUSPENDED" = 'yes' ]; then

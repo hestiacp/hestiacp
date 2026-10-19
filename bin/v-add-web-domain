@@ -80,11 +80,8 @@ is_base_domain_owner "$domain,$aliases"
 
 if [ -n "$ip" ]; then
 	is_ip_valid "$ip" "$user"
-elif [ -n "$(get_user_ips)" ] || [ -z "$(get_user_ip6s)" ]; then
-	get_user_ip
 else
-	# IPv6-only server: no IPv4 address available
-	local_ip=''
+	get_user_ip_if_available
 fi
 
 # Assign the first IPv6 address available to the user (dual-stack)

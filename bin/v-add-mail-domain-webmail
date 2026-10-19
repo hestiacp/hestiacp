@@ -88,8 +88,8 @@ if [ -n "$domain_ip" ]; then
 	if [ -n "$nat_ip" ]; then
 		ip=$nat_ip
 	fi
-elif [ -n "$(get_user_ips)" ] || [ -z "$(get_user_ip6s)" ]; then # skipped on IPv6-only servers
-	get_user_ip
+else
+	get_user_ip_if_available
 fi
 
 # Verify that webmail alias variable exists and create it if it does not

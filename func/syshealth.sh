@@ -659,8 +659,45 @@ syshealth_adapt_nginx_resolver() {
 			fi
 		done
 
+		# IPv6-only server: use the IPv6 nameservers
+		if [ -z "$resolver" ] && [ -z "$(ip -4 addr show scope global 2> /dev/null)" ]; then
+			for nameserver in $(grep -is '^nameserver' /etc/resolv.conf | cut -d' ' -f2 | tr '\r\n' ' ' | xargs); do
+				if [[ "$nameserver" == *:* ]] && [[ "$nameserver" != *%* ]]; then
+					resolver="${resolver:+$resolver }[$nameserver]"
+				fi
+			done
+		fi
+
 		if [ -n "$resolver" ]; then
 			sed -i "s/1.0.0.1 8.8.4.4 1.1.1.1 8.8.8.8/$resolver/g" "$NGINX_CONF"
 		fi
+	fi
+
+	# IPv6-only server: resolve IPv6 addresses as well
+	if [ -z "$(ip -4 addr show scope global 2> /dev/null)" ] && [ -n "$(ip -6 addr show scope global 2> /dev/null)" ]; then
+		sed -i 's/\(resolver .*\) ipv6=off;/\1;/' "$NGINX_CONF"
+	fi
+}
+
+# Exim only listens on and sends over IPv6 on IPv6-only servers, outgoing mail
+# over IPv6 needs a reverse DNS entry for the address of the server
+syshealth_adapt_exim_ipv6() {
+	local exim_ipv6_conf="/etc/exim4/hestia-ipv6.conf"
+	local ipv4_ips ipv6_ips
+	if [[ ! "$MAIL_SYSTEM" =~ exim ]] || [ ! -d /etc/exim4 ]; then
+		return 0
+	fi
+	ipv4_ips="$(ls $HESTIA/data/ips/ | grep -v ':')"
+	ipv6_ips="$(ls $HESTIA/data/ips/ | grep ':')"
+	if [ -z "$ipv4_ips" ] && [ -n "$ipv6_ips" ]; then
+		if [ ! -f "$exim_ipv6_conf" ]; then
+			echo "# Added by Hestia, IPv6-only server" > "$exim_ipv6_conf"
+			echo "HESTIA_IPV6 = yes" >> "$exim_ipv6_conf"
+			chmod 644 "$exim_ipv6_conf"
+			EXIM_IPV6_CHANGED='yes'
+		fi
+	elif [ -f "$exim_ipv6_conf" ]; then
+		rm -f "$exim_ipv6_conf"
+		EXIM_IPV6_CHANGED='yes'
 	fi
 }

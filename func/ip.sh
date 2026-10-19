@@ -258,6 +258,13 @@ get_user_ip() {
 	fi
 }
 
+# Get user ip, skipped on IPv6-only servers (IPv6 but no IPv4 address available)
+get_user_ip_if_available() {
+	if [ -n "$(get_user_ips)" ] || [ -z "$(get_user_ip6s)" ]; then
+		get_user_ip
+	fi
+}
+
 # Validate ip address
 is_ip_valid() {
 	local_ip="$1"

@@ -23,6 +23,8 @@ source $HESTIA/func/main.sh
 source $HESTIA/func/ip.sh
 # shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
+# shellcheck source=/usr/local/hestia/func/syshealth.sh
+source "$HESTIA/func/syshealth.sh"
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
@@ -134,6 +136,9 @@ fi
 # Deleting Hestia IP
 rm -f $HESTIA/data/ips/$ip
 
+# Exim uses IPv6 on IPv6-only servers
+syshealth_adapt_exim_ipv6
+
 # Deleting web config
 if [ -n "$WEB_SYSTEM" ]; then
 	rm -f /etc/$WEB_SYSTEM/conf.d/$ip.conf
@@ -203,6 +208,11 @@ fi
 # Restarting firewall
 if [ -n "$FIREWALL_SYSTEM" ]; then
 	$BIN/v-update-firewall
+fi
+
+# Restarting mail server
+if [ "$EXIM_IPV6_CHANGED" = "yes" ]; then
+	$BIN/v-restart-mail
 fi
 
 # Logging

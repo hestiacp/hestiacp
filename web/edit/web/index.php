@@ -323,21 +323,32 @@ if (!empty($_POST["save"]) && $read_only !== true) {
 		unset($output);
 	}
 
-	// Change dns domain IP (records are kept if the IPv4 address is removed)
-	if ($v_ip != $_POST["v_ip"] && !empty($v_newip_public) && empty($_SESSION["error_msg"])) {
-		exec(
-			HESTIA_CMD . "v-list-dns-domain " . $user . " " . quoteshellarg($v_domain) . " json",
-			$output,
-			$return_var,
-		);
-		unset($output);
-		if ($return_var == 0) {
+	// Change dns domain IP of the domain and its aliases, if the IPv4 address
+	// is removed the A records are removed from zones with an IPv6 address
+	if ($v_ip != $_POST["v_ip"] && empty($_SESSION["error_msg"])) {
+		foreach (array_merge([$v_domain], $valiases) as $v_dns_domain) {
+			if (empty($v_dns_domain) || !empty($_SESSION["error_msg"])) {
+				continue;
+			}
+			exec(
+				HESTIA_CMD . "v-list-dns-domain " . $user . " " . quoteshellarg($v_dns_domain) . " json",
+				$output,
+				$return_var,
+			);
+			$dns_domain = json_decode(implode("", $output), true);
+			unset($output);
+			if ($return_var != 0) {
+				continue;
+			}
+			if (empty($v_newip_public) && empty($dns_domain[$v_dns_domain]["IP6"])) {
+				continue;
+			}
 			exec(
 				HESTIA_CMD .
 					"v-change-dns-domain-ip " .
 					$user .
 					" " .
-					quoteshellarg($v_domain) .
+					quoteshellarg($v_dns_domain) .
 					" " .
 					quoteshellarg($v_newip_public) .
 					" 'no'",
@@ -347,34 +358,6 @@ if (!empty($_POST["save"]) && $read_only !== true) {
 			check_return_code($return_var, $output);
 			unset($output);
 			$restart_dns = "yes";
-		}
-	}
-
-	// Change dns ip for each alias
-	if ($v_ip != $_POST["v_ip"] && !empty($v_newip_public) && empty($_SESSION["error_msg"])) {
-		foreach ($valiases as $v_alias) {
-			exec(
-				HESTIA_CMD . "v-list-dns-domain " . $user . " " . quoteshellarg($v_alias) . " json",
-				$output,
-				$return_var,
-			);
-			unset($output);
-			if ($return_var == 0) {
-				exec(
-					HESTIA_CMD .
-						"v-change-dns-domain-ip " .
-						$user .
-						" " .
-						quoteshellarg($v_alias) .
-						" " .
-						quoteshellarg($v_newip_public),
-					$output,
-					$return_var,
-				);
-				check_return_code($return_var, $output);
-				unset($output);
-				$restart_dns = "yes";
-			}
 		}
 	}
 

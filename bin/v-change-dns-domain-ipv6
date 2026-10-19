@@ -87,13 +87,13 @@ elif [ -n "$ipv6" ]; then
 	time=$(echo "$time_n_date" | cut -f 1 -d \ )
 	date=$(echo "$time_n_date" | cut -f 2 -d \ )
 	mx_hosts=$(grep "TYPE='MX'" "$zone" | sed -n "s/.*VALUE='\([^.']*\)\.$domain\.'.*/\1/p")
-	a_records=$(grep "TYPE='A' .*VALUE='$IP'" "$zone" | sed -n "s/.*RECORD='\([^']*\)'.*/\1/p")
+	a_records=$(grep "TYPE='A' .*VALUE='${IP//./[.]}'" "$zone" | sed -n "s/.*RECORD='\([^']*\)'.*/\1/p")
 	[ -z "$a_records" ] && a_records='@'
-	for record in $a_records; do
+	echo "$a_records" | while read -r record; do
 		if echo "$mx_hosts" | grep -qxF "$record"; then
 			continue
 		fi
-		if grep -q "RECORD='$record' TYPE='AAAA'" "$zone"; then
+		if grep -qF "RECORD='$record' TYPE='AAAA'" "$zone"; then
 			continue
 		fi
 		unset id

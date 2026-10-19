@@ -265,7 +265,7 @@ prepare_web_ip_values() {
 # Duplicate the IPv4 listen directives of a nginx config for the IPv6 address
 # (dual-stack). All listen parameters (ssl, quic, reuseport, ...) are kept.
 add_web_config_ipv6_listen() {
-	local conf="$1" ipv4="${2//./\\.}" ipv6="$3"
+	local conf="$1" ipv4="${2//./[.]}" ipv6="$3"
 	if [ -z "$ipv6" ] || [ -z "$2" ] || [[ "$2" == \[* ]]; then
 		return 0
 	fi

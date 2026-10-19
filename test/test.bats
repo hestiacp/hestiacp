@@ -900,6 +900,14 @@ function check_ip_not_banned(){
     assert_failure $E_INVALID
 }
 
+@test "Ip: Change ipv6 name" {
+    run v-change-sys-ip-name "2001:db8:1::10" ipv6.example.com
+    assert_success
+    refute_output
+
+    assert_file_contains $HESTIA/data/ips/2001:db8:1::10 "NAME='ipv6.example.com'"
+}
+
 @test "Ip: Delete the test ipv6" {
     local ip="2001:db8:1::10"
     run v-delete-sys-ip $ip
@@ -1062,14 +1070,11 @@ function check_ip_not_banned(){
     refute_output
 }
 
-@test "WEB: Change web domain ipv6" {
+@test "WEB: Change web domain ipv6 (not registered)" {
     run v-change-web-domain-ipv6 $user $ipv6domain "2001:db8:2::20" yes
-    assert_success
-    refute_output
+    assert_failure $E_NOTEXIST
 
-    run v-list-web-domain $user $ipv6domain
-    assert_success
-    assert_output --partial "2001:db8:2::20"
+    assert_file_not_exist $HESTIA/data/ips/2001:db8:2::20
 }
 
 @test "WEB: Change web domain ipv6 (invalid format)" {
@@ -1077,12 +1082,67 @@ function check_ip_not_banned(){
     assert_failure $E_INVALID
 }
 
+@test "WEB: Change web domain ipv6" {
+    run v-add-sys-ip "2001:db8:2::20" 64 $interface $user
+    assert_success
+    refute_output
+
+    run v-change-web-domain-ipv6 $user $ipv6domain "2001:db8:2::20" yes
+    assert_success
+    refute_output
+
+    run v-list-web-domain $user $ipv6domain
+    assert_success
+    assert_output --partial "2001:db8:2::20"
+
+    # Dual-stack: IPv4 and IPv6 listen directives
+    assert_file_contains "$HOMEDIR/$user/conf/web/$ipv6domain/nginx.conf" "198.18.0.125:"
+    assert_file_contains "$HOMEDIR/$user/conf/web/$ipv6domain/nginx.conf" "[2001:db8:2::20]:"
+}
+
+@test "WEB: Add ssl to ipv6 web domain" {
+    ssl=$(v-generate-ssl-cert "$ipv6domain" "info@$ipv6domain" US CA "Orange County" HestiaCP IT | tail -n1 | awk '{print $2}')
+    mv $ssl/$ipv6domain.crt /tmp/$ipv6domain.crt
+    mv $ssl/$ipv6domain.key /tmp/$ipv6domain.key
+
+    run v-add-web-domain-ssl $user $ipv6domain /tmp
+    assert_success
+    refute_output
+
+    # The IPv6 listen directive keeps the ssl parameter
+    run grep -E "listen +\[2001:db8:2::20\]:[0-9]+ ssl" "$HOMEDIR/$user/conf/web/$ipv6domain/nginx.ssl.conf"
+    assert_success
+}
+
+@test "WEB: Remove ipv4 from dual-stack web domain" {
+    run v-change-web-domain-ip $user $ipv6domain '' no
+    assert_success
+    refute_output
+
+    run grep "198.18.0.125:" "$HOMEDIR/$user/conf/web/$ipv6domain/nginx.conf"
+    assert_failure
+    assert_file_contains "$HOMEDIR/$user/conf/web/$ipv6domain/nginx.conf" "[2001:db8:2::20]:"
+
+    # A domain needs at least one address
+    run v-change-web-domain-ipv6 $user $ipv6domain '' no
+    assert_failure $E_INVALID
+
+    run v-change-web-domain-ip $user $ipv6domain 198.18.0.125 no
+    assert_success
+    refute_output
+    assert_file_contains "$HOMEDIR/$user/conf/web/$ipv6domain/nginx.conf" "198.18.0.125:"
+}
+
 @test "MAIL: Add domain inherits web domain ipv6" {
     run v-add-mail-domain $user $ipv6domain
     assert_success
     refute_output
 
-    assert_file_contains "$HOMEDIR/$user/conf/mail/$ipv6domain/ipv6" "2001:db8:2::20"
+    # Webmail listens on the IPv6 address of the web domain
+    if [ -n "$WEBMAIL_SYSTEM" ]; then
+        run grep -rl "\[2001:db8:2::20\]:" "$HOMEDIR/$user/conf/mail/$ipv6domain/"
+        assert_success
+    fi
 }
 
 @test "WEB: Cleanup ipv6 test domain" {
@@ -1658,7 +1718,32 @@ function check_ip_not_banned(){
     refute_output
 
     assert_file_contains "$HESTIA/data/users/$user/dns/${ipv6dnsdomain}.conf" "RECORD='@' TYPE='AAAA' PRIORITY='' VALUE='2001:db8:3::1'"
-    assert_file_contains "$HESTIA/data/users/$user/dns/${ipv6dnsdomain}.conf" "RECORD='www' TYPE='AAAA' PRIORITY='' VALUE='2001:db8:3::1'"
+    assert_file_contains "$HESTIA/data/users/$user/dns.conf" "DOMAIN='${ipv6dnsdomain}' IP='198.18.0.125' IP6='2001:db8:3::1'"
+
+    # No AAAA records next to CNAME records (www, ftp) and for the mail exchanger
+    run grep -E "RECORD='(www|ftp|mail)' TYPE='AAAA'" "$HESTIA/data/users/$user/dns/${ipv6dnsdomain}.conf"
+    assert_failure
+}
+
+@test "DNS: Change domain ipv6" {
+    run v-change-dns-domain-ipv6 $user $ipv6dnsdomain '2001:db8:3::2'
+    assert_success
+    refute_output
+
+    assert_file_contains "$HESTIA/data/users/$user/dns/${ipv6dnsdomain}.conf" "RECORD='@' TYPE='AAAA' PRIORITY='' VALUE='2001:db8:3::2'"
+
+    run v-change-dns-domain-ipv6 $user $ipv6dnsdomain ''
+    assert_success
+    refute_output
+
+    run grep "TYPE='AAAA'" "$HESTIA/data/users/$user/dns/${ipv6dnsdomain}.conf"
+    assert_failure
+
+    run v-change-dns-domain-ipv6 $user $ipv6dnsdomain '2001:db8:3::1'
+    assert_success
+    refute_output
+
+    assert_file_contains "$HESTIA/data/users/$user/dns/${ipv6dnsdomain}.conf" "RECORD='@' TYPE='AAAA' PRIORITY='' VALUE='2001:db8:3::1'"
 }
 
 @test "DNS: Cleanup ipv6 dns domain" {
@@ -2426,6 +2511,39 @@ echo   "1.2.3.4" >> $HESTIA/data/firewall/excludes.conf
   assert_success
   refute_output
   check_ip_not_banned '2001:db8::bad' 'HESTIA'
+}
+
+@test "Firewall: ipv6 firewall keeps ICMPv6 open" {
+  [ ! -f "$HESTIA/data/firewall/rules6.conf" ] && skip
+  [ ! -d /proc/sys/net/ipv6 ] && skip
+
+  run v-update-firewall
+  assert_success
+
+  # Neighbor discovery must never be blocked
+  run ip6tables -S INPUT
+  assert_success
+  assert_output --partial "--icmpv6-type 135"
+  assert_output --partial "--icmpv6-type 136"
+  assert_output --partial "-i lo -j ACCEPT"
+}
+
+@test "Firewall: ipv6 ban is restored by firewall update" {
+  [ ! -f "$HESTIA/data/firewall/rules6.conf" ] && skip
+  [ -z "$FIREWALL_EXTENSION" ] && skip
+
+  run v-add-firewall-ban '2001:db8::bad' 'HESTIA'
+  assert_success
+
+  run v-update-firewall
+  assert_success
+
+  run ip6tables -S fail2ban-HESTIA
+  assert_success
+  assert_output --partial "2001:db8::bad"
+
+  run v-delete-firewall-ban '2001:db8::bad' 'HESTIA'
+  assert_success
 }
 
 @test "Firewall: Add ipv6 firewall rule" {

@@ -64,7 +64,10 @@ get_ipv6_ban_networks() {
 	if ! [[ "$prefix" =~ ^[0-9]+$ ]] || [ "$prefix" -lt 1 ] || [ "$prefix" -gt 128 ]; then
 		prefix=64
 	fi
-	protected="$(ls $HESTIA/data/ips/ | grep ':'; grep ':' $HESTIA/data/firewall/excludes.conf 2> /dev/null)"
+	protected="$(
+		ls $HESTIA/data/ips/ | grep ':'
+		grep ':' $HESTIA/data/firewall/excludes.conf 2> /dev/null
+	)"
 	# shellcheck disable=SC2086
 	$HESTIA_PHP -r '
 		$prefix = (int) $argv[1];

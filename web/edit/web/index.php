@@ -273,7 +273,12 @@ if (!empty($_POST["save"]) && $read_only !== true) {
 				continue;
 			}
 			exec(
-				HESTIA_CMD . "v-list-dns-domain " . $user . " " . quoteshellarg($v_dns_domain) . " json",
+				HESTIA_CMD .
+					"v-list-dns-domain " .
+					$user .
+					" " .
+					quoteshellarg($v_dns_domain) .
+					" json",
 				$output,
 				$return_var,
 			);
@@ -331,7 +336,12 @@ if (!empty($_POST["save"]) && $read_only !== true) {
 				continue;
 			}
 			exec(
-				HESTIA_CMD . "v-list-dns-domain " . $user . " " . quoteshellarg($v_dns_domain) . " json",
+				HESTIA_CMD .
+					"v-list-dns-domain " .
+					$user .
+					" " .
+					quoteshellarg($v_dns_domain) .
+					" json",
 				$output,
 				$return_var,
 			);

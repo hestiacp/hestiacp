@@ -1118,8 +1118,8 @@ is_ipv6_cidr_format_valid() {
 #   remain the authoritative format validators; this function is for branching
 #   logic, not for validation that exits on failure.
 #
-# get_ip_format() is a backward-compatible alias kept for bin/ scripts that
-# were already calling it before this function was named hst_detect_ip_version.
+# get_ip_format() is a short alias of hst_detect_ip_version used by the
+# v-*-sys-ip scripts.
 # ---------------------------------------------------------------------------
 hst_detect_ip_version() {
 	local input_addr="${1}"
@@ -1198,7 +1198,7 @@ hst_detect_ip_version() {
 	return 0
 }
 
-# Backward-compatible alias
+# Short alias
 get_ip_format() { hst_detect_ip_version "$@"; }
 
 is_netmask_format_valid() {
@@ -1841,7 +1841,6 @@ is_format_valid() {
 				priority) is_int_format_valid $arg ;;
 				port) is_int_format_valid "$arg" 'port' ;;
 				port_ext) is_fw_port_format_valid "$arg" ;;
-				prefix_length) is_ipv6_format_valid "$arg" 'prefix_length' ;;
 				protocol) is_fw_protocol_format_valid "$arg" ;;
 				proxy_ext) is_extension_format_valid "$arg" ;;
 				quota) is_int_format_valid "$arg" 'quota' ;;

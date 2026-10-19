@@ -76,8 +76,8 @@ csv_list() {
 #----------------------------------------------------------#
 
 check_args '1' "$#" 'IP [FORMAT]'
-if [ "$(hst_detect_ip_version "$ip")" = "6" ]; then
-	is_format_valid 'ipv6'
+if is_ipv6_address "$ip"; then
+	is_ipv6_format_valid "$ip"
 else
 	is_format_valid 'ip'
 fi

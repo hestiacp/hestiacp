@@ -4,24 +4,6 @@
 #                                                                           #
 # Hestia Control Panel - IP/Network Function Library                        #
 #                                                                           #
-# IPv6 additions (non-invasive):                                            #
-#   All IPv6 functions are grouped in a clearly marked section at the end   #
-#   of this file. They do NOT modify any existing IPv4 functions.           #
-#                                                                           #
-#   get_user_ip6s()  — discovers IPv6 addresses available to a user,        #
-#                      same logic as get_user_ips() but filtered to         #
-#                      VERSION='6' entries in $HESTIA/data/ips/.            #
-#                                                                           #
-#   get_user_ipv6()  — sets $ipv6 and $local_ipv6 to the first available   #
-#                      IPv6 for the current user. Returns empty on IPv4-    #
-#                      only servers (callers must handle the empty case).   #
-#                                                                           #
-#   is_ipv6_valid()  — validates ownership and pool membership. Mirrors     #
-#                      is_ip_valid() for IPv6 addresses.                    #
-#                                                                           #
-#   get_ipv6_iface() — resolves a numbered interface alias for IPv6         #
-#                      (e.g. eth0:1) used when adding IPs via iproute2.     #
-#                                                                           #
 #===========================================================================#
 
 # Global definitions
@@ -306,33 +288,40 @@ is_ip_valid() {
 	fi
 }
 
-# === IPV6 specific functions ===
+# === IPv6 specific functions ===
 
-# Get full interface name
-get_ipv6_iface() {
-	i=$(/sbin/ip addr | grep -w $interface \
-		| awk '{print $NF}' | tail -n 1 | cut -f 2 -d :)
-	if [ "$i" = "$interface" ]; then
-		n=0
-	else
-		n=$((i + 1))
-	fi
-	echo "$interface:$n"
+# Check if the given address is an IPv6 address (IPv6 always contains ":")
+is_ipv6_address() {
+	[[ "$1" == *:* ]]
+}
+
+# Normalize an IPv6 address to its canonical compressed form (RFC 5952)
+normalize_ipv6() {
+	local normalized
+	normalized=$($HESTIA_PHP -r '$ip = @inet_pton($argv[1]); echo ($ip === false) ? "" : inet_ntop($ip);' "$1" 2> /dev/null)
+	echo "${normalized:-$1}"
 }
 
 # Get user ip6s
 get_user_ip6s() {
-	dedicated=$(grep -H -A10 "OWNER='$user'" $HESTIA/data/ips/* | grep "VERSION='6'")
-	dedicated=$(echo "$dedicated" | cut -f 1 -d '-' | sed 's=.*/==')
-	shared=$(grep -H -A10 "OWNER='$ROOT_USER'" $HESTIA/data/ips/* | grep -A10 shared | grep "VERSION='6'")
-	shared=$(echo "$shared" | cut -f 1 -d '-' | sed 's=.*/==' | cut -f 1 -d \-)
-	for dedicated_ip in $dedicated; do
-		shared=$(echo "$shared" | grep -v $dedicated_ip)
+	local ip_file ip_name ip_owner ip_status dedicated='' shared=''
+	for ip_file in "$HESTIA"/data/ips/*:*; do
+		[ -f "$ip_file" ] || continue
+		ip_name="${ip_file##*/}"
+		ip_owner=$(grep "^OWNER=" "$ip_file" | cut -f 2 -d \')
+		ip_status=$(grep "^STATUS=" "$ip_file" | cut -f 2 -d \')
+		if [ "$ip_owner" = "$user" ]; then
+			dedicated="$dedicated $ip_name"
+		elif [ "$ip_owner" = "$ROOT_USER" ] && [ "$ip_status" = 'shared' ]; then
+			shared="$shared $ip_name"
+		fi
 	done
-	echo -e "$dedicated\n$shared" | sed "/^$/d"
+	for ip_name in $dedicated $shared; do
+		echo "$ip_name"
+	done
 }
 
-# Get user ipv6
+# Get user ipv6 (sets $ipv6 and $local_ipv6, empty if no IPv6 is available)
 get_user_ipv6() {
 	ipv6=$(get_user_ip6s | head -n1)
 	local_ipv6="$ipv6"
@@ -341,22 +330,22 @@ get_user_ipv6() {
 # Validate ipv6 address
 is_ipv6_valid() {
 	local_ipv6="$1"
-	if [ -z "$local_ipv6" ]; then
-		check_result $E_NOTEXIST "IPV6 address is empty"
+	if [ -z "$local_ipv6" ] || ! is_ipv6_address "$local_ipv6"; then
+		check_result "$E_INVALID" "invalid IPv6 address :: $1"
 	fi
-	if [ ! -e "$HESTIA/data/ips/$1" ]; then
-		check_result $E_NOTEXIST "IPV6 $1 doesn't exist"
+	if [ ! -f "$HESTIA/data/ips/$1" ]; then
+		check_result "$E_NOTEXIST" "IPv6 $1 doesn't exist"
 	fi
-	if [ ! -z $2 ]; then
-		ip_data=$(cat $HESTIA/data/ips/$1)
+	if [ -n "$2" ]; then
+		ip_data=$(cat "$HESTIA/data/ips/$1")
 		ip_owner=$(echo "$ip_data" | grep OWNER= | cut -f2 -d \')
 		ip_status=$(echo "$ip_data" | grep STATUS= | cut -f2 -d \')
 		if [ "$ip_owner" != "$user" ] && [ "$ip_status" = 'dedicated' ]; then
-			check_result $E_FORBIDEN "$user user can't use IPV6 $1"
+			check_result "$E_FORBIDEN" "$user user can't use IPv6 $1"
 		fi
 		get_user_owner
 		if [ "$ip_owner" != "$user" ] && [ "$ip_owner" != "$owner" ]; then
-			check_result $E_FORBIDEN "$user user can't use IPV6 $1"
+			check_result "$E_FORBIDEN" "$user user can't use IPv6 $1"
 		fi
 	fi
 }

@@ -3,7 +3,7 @@
 # options: [IP_VERSION] [FORMAT]
 #
 # example: v-list-network
-# example: v-list-network 6 shell
+# example: v-list-network 6 json
 #
 # This function lists system network interfaces and their IP addresses.
 
@@ -67,7 +67,12 @@ function list_network() {
 	esac
 }
 
-list_network "$1" "$2"
+# Arguments: [IP_VERSION] [FORMAT], the format may also be passed alone
+if [[ "$1" =~ ^[46]$ ]]; then
+	list_network "${2:-shell}" "$1"
+else
+	list_network "${1:-shell}" ""
+fi
 
 #----------------------------------------------------------#
 #                       Hestia                             #

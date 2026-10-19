@@ -229,6 +229,10 @@ if [ -n "$WEB_SYSTEM" ]; then
 		fi
 		echo "Listen $web_ip:$WEB_PORT" >> "$web_conf"
 		cat $HESTIA_INSTALL_DIR/apache2/unassigned.conf >> "$web_conf"
+		if [ "$ip_version" = '6' ]; then
+			# Apache does not accept an IPv6 address as ServerName
+			sed -i "s/ServerName directIP/ServerName $(hostname -f 2> /dev/null || hostname)/g" "$web_conf"
+		fi
 		sed -i "s/directIP/$web_ip/g" "$web_conf"
 		sed -i 's/directPORT/'$WEB_PORT'/g' "$web_conf"
 

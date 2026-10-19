@@ -232,40 +232,76 @@ if (!empty($_POST["save"]) && $read_only !== true) {
 		$v_newip_public = empty($ips[$v_newip]["NAT"]) ? $v_newip : $ips[$v_newip]["NAT"];
 	}
 
-	// Handle IPv6 assignment change (add, change, or remove)
-	$posted_ip6 = $_POST["v_ip6"] ?? "";
-	if ($posted_ip6 != $v_ip6 && empty($_SESSION["error_msg"])) {
-		if (!empty($posted_ip6)) {
-			// Assign or change IPv6
-			exec(
-				HESTIA_CMD .
-					"v-change-web-domain-ipv6 " .
-					$user .
-					" " .
-					quoteshellarg($v_domain) .
-					" " .
-					quoteshellarg($posted_ip6),
-				$output,
-				$return_var,
-			);
-			check_return_code($return_var, $output);
-			unset($output);
-		} elseif (!empty($v_ip6)) {
-			// Remove IPv6 — pass empty string to clear IP6 field
-			exec(
-				HESTIA_CMD .
-					"v-change-web-domain-ipv6 " .
-					$user .
-					" " .
-					quoteshellarg($v_domain) .
-					" " .
-					"''",
-				$output,
-				$return_var,
-			);
-			check_return_code($return_var, $output);
-			unset($output);
+	// Change web domain IPv6, only addresses available to the user are accepted
+	$v_newip6 = $_POST["v_ip6"] ?? "";
+	if (!empty($v_newip6) && !array_key_exists($v_newip6, $ips_v6)) {
+		$_SESSION["error_msg"] = _("Invalid IPv6 address.");
+	}
+	$change_ipv6 = function () use (
+		$user,
+		$v_domain,
+		$v_ip6,
+		$v_newip6,
+		$valiases,
+		&$restart_web,
+		&$restart_proxy,
+		&$restart_dns,
+	) {
+		if ($v_newip6 == $v_ip6 || !empty($_SESSION["error_msg"])) {
+			return;
 		}
+		exec(
+			HESTIA_CMD .
+				"v-change-web-domain-ipv6 " .
+				$user .
+				" " .
+				quoteshellarg($v_domain) .
+				" " .
+				quoteshellarg($v_newip6) .
+				" 'no'",
+			$output,
+			$return_var,
+		);
+		check_return_code($return_var, $output);
+		unset($output);
+		$restart_web = "yes";
+		$restart_proxy = "yes";
+
+		// Change dns domain IPv6 of the domain and its aliases
+		foreach (array_merge([$v_domain], $valiases) as $v_dns_domain) {
+			if (empty($v_dns_domain) || !empty($_SESSION["error_msg"])) {
+				continue;
+			}
+			exec(
+				HESTIA_CMD . "v-list-dns-domain " . $user . " " . quoteshellarg($v_dns_domain) . " json",
+				$output,
+				$return_var,
+			);
+			unset($output);
+			if ($return_var == 0) {
+				exec(
+					HESTIA_CMD .
+						"v-change-dns-domain-ipv6 " .
+						$user .
+						" " .
+						quoteshellarg($v_dns_domain) .
+						" " .
+						quoteshellarg($v_newip6) .
+						" 'no'",
+					$output,
+					$return_var,
+				);
+				check_return_code($return_var, $output);
+				unset($output);
+				$restart_dns = "yes";
+			}
+		}
+	};
+
+	// A domain needs at least one address: IPv6 is added before the IPv4
+	// address is removed and removed after an IPv4 address is added
+	if (empty($_POST["v_ip"])) {
+		$change_ipv6();
 	}
 
 	if ($v_ip != $_POST["v_ip"] && empty($_SESSION["error_msg"])) {
@@ -287,8 +323,8 @@ if (!empty($_POST["save"]) && $read_only !== true) {
 		unset($output);
 	}
 
-	// Change dns domain IP
-	if ($v_ip != $_POST["v_ip"] && empty($_SESSION["error_msg"])) {
+	// Change dns domain IP (records are kept if the IPv4 address is removed)
+	if ($v_ip != $_POST["v_ip"] && !empty($v_newip_public) && empty($_SESSION["error_msg"])) {
 		exec(
 			HESTIA_CMD . "v-list-dns-domain " . $user . " " . quoteshellarg($v_domain) . " json",
 			$output,
@@ -315,7 +351,7 @@ if (!empty($_POST["save"]) && $read_only !== true) {
 	}
 
 	// Change dns ip for each alias
-	if ($v_ip != $_POST["v_ip"] && empty($_SESSION["error_msg"])) {
+	if ($v_ip != $_POST["v_ip"] && !empty($v_newip_public) && empty($_SESSION["error_msg"])) {
 		foreach ($valiases as $v_alias) {
 			exec(
 				HESTIA_CMD . "v-list-dns-domain " . $user . " " . quoteshellarg($v_alias) . " json",
@@ -360,6 +396,10 @@ if (!empty($_POST["save"]) && $read_only !== true) {
 			unset($output);
 			$restart_email = "yes";
 		}
+	}
+
+	if (!empty($_POST["v_ip"])) {
+		$change_ipv6();
 	}
 
 	if (

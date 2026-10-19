@@ -107,16 +107,6 @@
 					?>
 				</select>
 			</div>
-			<?php else: ?>
-			<div class="u-mb20">
-				<label class="form-label"><?= tohtml( _("IPv6 Address")) ?></label>
-				<div class="alert alert-info" role="alert" style="margin:0;padding:8px 12px;font-size:0.9em;">
-					<i class="fas fa-info-circle"></i>
-					<?= tohtml( _("No IPv6 addresses configured.")) ?>
-					<a href="/add/ip/"><?= tohtml( _("Add an IPv6 address")) ?></a>
-					<?= tohtml( _("to enable dual-stack for this domain.")) ?>
-				</div>
-			</div>
 			<?php endif; ?>
 			<div class="u-mb10">
 				<label for="v_stats" class="form-label"><?= tohtml( _("Web Statistics")) ?></label>

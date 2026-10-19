@@ -3,6 +3,7 @@
 # options: USER DOMAIN IP [NS1] [NS2] [NS3] [NS4] [NS5] [NS6] [NS7] [NS8] [RESTART] [DNSSEC] [IPV6]
 #
 # example: v-add-dns-domain admin example.com ns1.example.com ns2.example.com '' '' '' '' '' '' yes
+# example: v-add-dns-domain admin example.com 203.0.113.1 "" "" "" "" "" "" "" "" yes no 2001:db8::1
 #
 # This function adds DNS zone with records defined in the template. If the exp
 # argument isn't stated, the expiration date value will be set to next year.
@@ -37,6 +38,8 @@ source /etc/hestiacp/hestia.conf
 source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
+# shellcheck source=/usr/local/hestia/func/ip.sh
+source $HESTIA/func/ip.sh
 # shellcheck source=/usr/local/hestia/func/rebuild.sh
 source $HESTIA/func/rebuild.sh
 # load config file
@@ -52,8 +55,13 @@ domain_utf=$(idn2 --quiet -d "$domain_idn")
 #----------------------------------------------------------#
 
 check_args '3' "$#" 'USER DOMAIN IP [NS1] [NS2] [NS3] [..] [NS8] [RESTART]'
-is_format_valid 'user' 'domain'
-is_ip_format_valid "$ip" || check_result $E_INVALID "Invalid IP format: $ip"
+is_format_valid 'user' 'domain' 'ip' 'ipv6'
+if [ -n "$ipv6" ]; then
+	ipv6=$(normalize_ipv6 "$ipv6")
+fi
+if [ -z "$ip" ] && [ -z "$ipv6" ]; then
+	check_result "$E_INVALID" "IP or IPv6 address is required"
+fi
 is_system_enabled "$DNS_SYSTEM" 'DNS_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
@@ -87,35 +95,35 @@ is_dns_template_valid "$template"
 is_base_domain_owner "$domain"
 
 if [ -n "$ns1" ]; then
-	ns1=$(echo $4 | sed -e 's/\.*$//g' -e 's/^\.*//g')
+	ns1=$(echo "$4" | sed -e 's/\.*$//g' -e 's/^\.*//g')
 	is_format_valid 'ns1'
 fi
 if [ -n "$ns2" ]; then
-	ns2=$(echo $5 | sed -e 's/\.*$//g' -e 's/^\.*//g')
+	ns2=$(echo "$5" | sed -e 's/\.*$//g' -e 's/^\.*//g')
 	is_format_valid 'ns2'
 fi
 if [ -n "$ns3" ]; then
-	ns3=$(echo $6 | sed -e 's/\.*$//g' -e 's/^\.*//g')
+	ns3=$(echo "$6" | sed -e 's/\.*$//g' -e 's/^\.*//g')
 	is_format_valid 'ns3'
 fi
 if [ -n "$ns4" ]; then
-	ns4=$(echo $7 | sed -e 's/\.*$//g' -e 's/^\.*//g')
+	ns4=$(echo "$7" | sed -e 's/\.*$//g' -e 's/^\.*//g')
 	is_format_valid 'ns4'
 fi
 if [ -n "$ns5" ]; then
-	ns5=$(echo $8 | sed -e 's/\.*$//g' -e 's/^\.*//g')
+	ns5=$(echo "$8" | sed -e 's/\.*$//g' -e 's/^\.*//g')
 	is_format_valid 'ns5'
 fi
 if [ -n "$ns6" ]; then
-	ns6=$(echo $9 | sed -e 's/\.*$//g' -e 's/^\.*//g')
+	ns6=$(echo "$9" | sed -e 's/\.*$//g' -e 's/^\.*//g')
 	is_format_valid 'ns6'
 fi
 if [ -n "$ns7" ]; then
-	ns7=$(echo ${10} | sed -e 's/\.*$//g' -e 's/^\.*//g')
+	ns7=$(echo "${10}" | sed -e 's/\.*$//g' -e 's/^\.*//g')
 	is_format_valid 'ns7'
 fi
 if [ -n "$ns8" ]; then
-	ns8=$(echo ${11} | sed -e 's/\.*$//g' -e 's/^\.*//g')
+	ns8=$(echo "${11}" | sed -e 's/\.*$//g' -e 's/^\.*//g')
 	is_format_valid 'ns8'
 fi
 
@@ -171,20 +179,36 @@ time_n_date=$(date +'%T %F')
 time=$(echo "$time_n_date" | cut -f 1 -d \ )
 date=$(echo "$time_n_date" | cut -f 2 -d \ )
 
-# Adding dns zone to the user config
-# Add AAAA records if IPv6 is specified
+# Adding AAAA records for every A record that points to the server. Mail
+# exchangers keep their A record only, because Exim does not listen on IPv6.
+# CNAME records (www, ftp, ...) follow their target automatically.
 if [ -n "$ipv6" ]; then
-	max_id=$(grep -o "ID='[0-9]*'" <<< "$template_data" | sed "s/ID='//;s/'//" | sort -n | tail -1)
-	id=$((max_id + 1))
-	template_data="${template_data}"$'\n'"ID='${id}' RECORD='@' TYPE='AAAA' PRIORITY='' VALUE='${ipv6}' SUSPENDED='no' TIME='${time}' DATE='${date}'"
-	id=$((id + 1))
-	template_data="${template_data}"$'\n'"ID='${id}' RECORD='www' TYPE='AAAA' PRIORITY='' VALUE='${ipv6}' SUSPENDED='no' TIME='${time}' DATE='${date}'"
-	id=$((id + 1))
-	template_data="${template_data}"$'\n'"ID='${id}' RECORD='ftp' TYPE='AAAA' PRIORITY='' VALUE='${ipv6}' SUSPENDED='no' TIME='${time}' DATE='${date}'"
-	id=$((id + 1))
-	template_data="${template_data}"$'\n'"ID='${id}' RECORD='mail' TYPE='AAAA' PRIORITY='' VALUE='${ipv6}' SUSPENDED='no' TIME='${time}' DATE='${date}'"
+	mx_hosts=$(echo "$template_data" | grep "TYPE='MX'" | sed -n "s/.*VALUE='\([^.']*\)\.%domain%\.'.*/\1/p")
+	record_id=$(echo "$template_data" | sed -n "s/^ID='\([0-9]*\)'.*/\1/p" | sort -n | tail -n1)
+	aaaa_records=''
+	while IFS= read -r record_line; do
+		if [[ "$record_line" != *"TYPE='A' "* ]] || [[ "$record_line" != *"VALUE='%ip%'"* ]]; then
+			continue
+		fi
+		record_name=$(echo "$record_line" | sed -n "s/.*RECORD='\([^']*\)'.*/\1/p")
+		if [ -n "$ip" ] && echo "$mx_hosts" | grep -qxF "$record_name"; then
+			continue
+		fi
+		record_id=$((record_id + 1))
+		aaaa_records="$aaaa_records"$'\n'"$(echo "$record_line" \
+			| sed -e "s/^ID='[0-9]*'/ID='$record_id'/" \
+				-e "s/TYPE='A' /TYPE='AAAA' /" \
+				-e "s/VALUE='%ip%'/VALUE='$ipv6'/")"
+	done <<< "$template_data"
+
+	# IPv6-only zone: drop the A records and the IPv4 SPF mechanism
+	if [ -z "$ip" ]; then
+		template_data=$(echo "$template_data" | grep -v "TYPE='A' .*VALUE='%ip%'" | sed "s/ ip4:%ip%//")
+	fi
+	template_data="$template_data$aaaa_records"
 fi
 
+# Adding dns zone to the user config
 echo "$template_data" \
 	| sed -e "s/%ip%/$ip/g" \
 		-e "s/%domain_idn%/$domain_idn/g" \
@@ -204,7 +228,7 @@ chmod 660 $USER_DATA/dns/$domain.conf
 records="$(wc -l $USER_DATA/dns/$domain.conf | cut -f 1 -d ' ')"
 
 # Adding dns.conf record
-dns_rec="DOMAIN='$domain' IP='$ip' TPL='$template' TTL='$ttl' EXP='$exp'"
+dns_rec="DOMAIN='$domain' IP='$ip' IP6='$ipv6' TPL='$template' TTL='$ttl' EXP='$exp'"
 dns_rec="$dns_rec SOA='$soa' SERIAL='$serial' SRC='' RECORDS='$records'"
 dns_rec="$dns_rec DNSSEC='$dnssec' KEY='' SLAVE='no' MASTER='' SUSPENDED='no' TIME='$time' DATE='$date'"
 

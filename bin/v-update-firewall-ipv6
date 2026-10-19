@@ -139,16 +139,14 @@ if [ -n "$FIREWALL_EXTENSION" ]; then
 		done < "$chains"
 	fi
 
+	# IPv6 bans block the network of the banned address (IPv4 bans are
+	# handled by v-update-firewall)
 	if [ -f "$banlist" ]; then
-		while IFS= read -r ban; do
-			parse_object_kv_list "$ban"
-			# IPv4 bans are handled by v-update-firewall
-			if [[ "$IP" != *:* ]]; then
-				continue
-			fi
-			echo -n "$ip6tables -I fail2ban-$CHAIN 1 -s $IP" >> "$tmp"
-			echo " -j DROP" >> "$tmp"
-		done < "$banlist"
+		sed -n "s/^IP='\([^']*:[^']*\)' CHAIN='\([^']*\)'.*/\2 \1/p" "$banlist" \
+			| get_ipv6_ban_networks | sort -u \
+			| while read -r ban_chain ban_network; do
+				echo "$ip6tables -I fail2ban-$ban_chain 1 -s $ban_network -j DROP" >> "$tmp"
+			done
 	fi
 fi
 

@@ -80,8 +80,17 @@ is_base_domain_owner "$domain,$aliases"
 
 if [ -n "$ip" ]; then
 	is_ip_valid "$ip" "$user"
-else
+elif [ -n "$(get_user_ips)" ] || [ -z "$(get_user_ip6s)" ]; then
 	get_user_ip
+else
+	# IPv6-only server: no IPv4 address available
+	local_ip=''
+fi
+
+# Assign the first IPv6 address available to the user (dual-stack)
+get_user_ipv6
+if [ -n "$ipv6" ]; then
+	is_ipv6_valid "$ipv6" "$user"
 fi
 
 # Perform verification if read-only mode is enabled
@@ -174,9 +183,11 @@ else
 		ALIAS="$aliases"
 	fi
 
-	ip_alias=$(get_ip_alias "$domain")
-	if [ -n "$ip_alias" ]; then
-		ALIAS="$ALIAS,$ip_alias"
+	if [ -n "$local_ip" ]; then
+		ip_alias=$(get_ip_alias "$domain")
+		if [ -n "$ip_alias" ]; then
+			ALIAS="$ALIAS,$ip_alias"
+		fi
 	fi
 fi
 
@@ -228,7 +239,12 @@ fi
 #----------------------------------------------------------#
 
 # Increasing counters
-increase_ip_value "$local_ip"
+if [ -n "$local_ip" ]; then
+	increase_ip_value "$local_ip"
+fi
+if [ -n "$local_ipv6" ]; then
+	increase_ip_value "$local_ipv6"
+fi
 increase_user_value "$user" '$U_WEB_DOMAINS'
 increase_user_value "$user" '$U_WEB_ALIASES' "$alias_number"
 
@@ -238,7 +254,7 @@ time=$(echo "$time_n_date" | cut -f 1 -d \ )
 date=$(echo "$time_n_date" | cut -f 2 -d \ )
 
 # Adding domain in web.conf
-echo "DOMAIN='$domain' IP='$ip' IP6='' CUSTOM_DOCROOT='' ALIAS='$ALIAS' TPL='$WEB_TEMPLATE'\
+echo "DOMAIN='$domain' IP='$ip' IP6='$local_ipv6' CUSTOM_DOCROOT='' ALIAS='$ALIAS' TPL='$WEB_TEMPLATE'\
  SSL='no' SSL_FORCE='no' SSL_HOME='same' LETSENCRYPT='no' FTP_USER='' FTP_MD5=''\
  BACKEND='$BACKEND_TEMPLATE' PROXY='$PROXY_TEMPLATE' PROXY_EXT='$PROXY_EXT'\
  STATS='' STATS_USER='' STATS_CRYPT='' U_DISK='0' U_BANDWIDTH='0'\

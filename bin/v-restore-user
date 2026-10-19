@@ -272,6 +272,12 @@ if [ "$web" != 'no' ] && [ -n "$WEB_SYSTEM" ]; then
 				IP=$ip
 			fi
 
+			# Checking IPv6 address
+			if [ -n "$IP6" ] && [ -n "$(is_ipv6_valid "$IP6" "$user")" ]; then
+				get_user_ipv6
+				IP6=$ipv6
+			fi
+
 			# Checking web template
 			check_tpl=$(is_web_template_valid $TPL)
 			if [ -n "$check_tpl" ]; then
@@ -456,8 +462,10 @@ if [ "$dns" != 'no' ] && [ -n "$DNS_SYSTEM" ]; then
 			check_result "$E_PARSING" "$error"
 		fi
 
+		old_ipv6=''
 		# Restoring dns.conf
 		if [ -z "$check_config" ]; then
+			IP6=''
 			parse_object_kv_list $(cat $tmpdir/dns/$domain/$backup_system/dns.conf)
 
 			# Checking IP address
@@ -469,6 +477,13 @@ if [ "$dns" != 'no' ] && [ -n "$DNS_SYSTEM" ]; then
 				IP=$ip
 			fi
 
+			# Checking IPv6 address
+			if [ -n "$IP6" ] && [ -n "$(is_ipv6_valid "$IP6" "$user")" ]; then
+				get_user_ipv6
+				old_ipv6=$IP6
+				IP6=$ipv6
+			fi
+
 			# Checking DNS template
 			check_tpl=$(is_dns_template_valid $TPL)
 			if [ -n "$check_tpl" ]; then
@@ -476,7 +491,7 @@ if [ "$dns" != 'no' ] && [ -n "$DNS_SYSTEM" ]; then
 			fi
 
 			# Merging dns.conf keys
-			str="DOMAIN='$domain' IP='$IP' TPL='$TPL' TTL='$TTL' EXP='$EXP'"
+			str="DOMAIN='$domain' IP='$IP' IP6='$IP6' TPL='$TPL' TTL='$TTL' EXP='$EXP'"
 			str="$str SOA='$SOA' RECORDS='$RECORDS'  DNSSEC='$DNSSEC'"
 			str="$str KEY='$KEY' SLAVE='$SLAVE' MASTER='$MASTER' SUSPENDED='no'"
 			str="$str TIME='$(date +%T)' DATE='$(date +%F)'"
@@ -497,6 +512,13 @@ if [ "$dns" != 'no' ] && [ -n "$DNS_SYSTEM" ]; then
 		# Update IP in records
 		if [ -n "$old_ip" ]; then
 			sed -i s/$old_ip/$IP/g $USER_DATA/dns/$domain.conf
+		fi
+
+		# Update IPv6 in records
+		if [ -n "$old_ipv6" ] && [ -n "$IP6" ]; then
+			sed -i "s/\(TYPE='AAAA' .*VALUE='\)$old_ipv6'/\1$IP6'/" $USER_DATA/dns/$domain.conf
+		elif [ -n "$old_ipv6" ]; then
+			sed -i "/TYPE='AAAA' .*VALUE='$old_ipv6'/d" $USER_DATA/dns/$domain.conf
 		fi
 
 		# Rebuilding DNS domain

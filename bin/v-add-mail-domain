@@ -85,20 +85,11 @@ check_hestia_demo_mode
 source_conf "$USER_DATA/user.conf"
 # Inherit web domain local ip address
 domain_ip=$(get_object_value 'web' 'DOMAIN' "$domain" '$IP')
-domain_ipv6=$(get_object_value 'web' 'DOMAIN' "$domain" '$IP6')
-if [ -n "$domain_ipv6" ]; then
-	local_ipv6=$(get_real_ip "$domain_ipv6")
-	is_ipv6_valid "$local_ipv6" "$user"
-fi
-if [ -n "$domain_ip" ]; then
+if [ ! -z "$domain_ip" ]; then
 	local_ip=$(get_real_ip "$domain_ip")
 	is_ip_valid "$local_ip" "$user"
-fi
-if [ -z "$local_ip" -a -z "$local_ipv6" ]; then
-	get_user_ipv6 #	get first available user ipv6 address as fallback, if none ip address was defined
-	if [ -z "$ipv6" ]; then
-		get_user_ip #	get first available user ipv4 address as fallback, if none ipv6 user address available
-	fi
+elif [ -n "$(get_user_ips)" ] || [ -z "$(get_user_ip6s)" ]; then # skipped on IPv6-only servers
+	get_user_ip
 fi
 
 # Generating timestamp
@@ -147,9 +138,6 @@ if [[ "$MAIL_SYSTEM" =~ exim ]]; then
 	# Seeting outgoing ip address
 	if [ -n "$local_ip" ]; then
 		echo "$local_ip" > $HOMEDIR/$user/conf/mail/$domain/ip
-	fi
-	if [ -n "$local_ipv6" ]; then
-		echo "$local_ipv6" > $HOMEDIR/$user/conf/mail/$domain/ipv6
 	fi
 
 	if [ -n "$ANTISPAM_SYSTEM" ]; then

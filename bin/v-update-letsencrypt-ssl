@@ -27,6 +27,9 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
+# Force UTF-8 so idn2 can handle non-ASCII domains
+export LC_ALL=C.UTF-8
+
 # Set LE counter
 lecounter=0
 max_LE_failures=30
@@ -64,32 +67,43 @@ for user in $("$BIN/v-list-users" list); do
 				sleep 10
 			fi
 			((lecounter++))
+
+			# Convert main domain to punycode, as it is stored that way in the certificate
+			domain_idn=$(idn2 --quiet "${domain,,}" 2> /dev/null || echo "${domain,,}")
+
 			aliases=$(echo "$crt_data" | grep DNS:)
 			aliases=$(echo "$aliases" | sed -e "s/DNS://g" -e "s/,//g")
 			aliases=$(echo "$aliases" | tr ' ' '\n' | sed "/^$/d")
-			aliases=$(echo "$aliases" | egrep -v "^$domain,?$")
+			aliases=$(echo "$aliases" | grep -vxF "$domain_idn")
 			aliases=$(echo "$aliases" | sed -e ':a;N;$!ba;s/\n/,/g')
 
 			# Parsing domain
 			unset SSL_KEY_ALGO
 			parse_object_kv_list $(grep "DOMAIN='$domain'" $USER_DATA/web.conf)
 
-			# Split aliases into array
+			# Map each web.conf alias in punycode to its original form
+			unset alias_map
+			declare -A alias_map
 			IFS=',' read -r -a ALIASES <<< "$ALIAS"
+			for a in "${ALIASES[@]}"; do
+				[[ -z "$a" ]] && continue
+				a_idn=$(idn2 --quiet "$a" 2> /dev/null || echo "$a")
+				alias_map["${a_idn,,}"]="$a"
+			done
 
 			# Unset f_aliases
 			f_aliases=''
 
-			# Loop through all crt aliases
+			# Loop through all crt aliases (punycode) and keep the original web.conf form
 			for alias in ${aliases//,/ }; do
 				# Validate if the alias still exists in web.conf
-				if [[ ",$ALIAS," =~ ,$alias, ]]; then
-					f_aliases+="$alias,"
+				if [[ -n "${alias_map[${alias,,}]}" ]]; then
+					f_aliases+="${alias_map[${alias,,}]},"
 				fi
 			done
 
-			# Remove leading comma
-			if [[ ${f_aliases: -1} = ',' ]]; then f_aliases=${f_aliases::-1}; fi
+			# Remove trailing comma
+			f_aliases=${f_aliases%,}
 
 			# Write the filtered alias list to the default var
 			aliases=$f_aliases

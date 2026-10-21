@@ -25,31 +25,48 @@ source_conf "$HESTIA/conf/hestia.conf"
 
 # JSON list function
 json_list() {
-	IFS=$'\n'
-	i=1
-	objects=$(grep ACCOUNT $USER_DATA/mail/$domain.conf | wc -l)
 	echo "{"
-	while read str; do
-		parse_object_kv_list "$str"
-		echo -n '    "'$ACCOUNT'": {
-        "ALIAS": "'$ALIAS'",
-        "FWD": "'$FWD'",
-        "FWD_ONLY": "'$FWD_ONLY'",
-        "AUTOREPLY": "'$AUTOREPLY'",
-        "QUOTA": "'$QUOTA'",
-        "U_DISK": "'$U_DISK'",
-        "SUSPENDED": "'$SUSPENDED'",
-        "TIME": "'$TIME'",
-        "DATE": "'$DATE'"
-    }'
-		if [ "$i" -lt "$objects" ]; then
-			echo ','
-		else
-			echo
-		fi
-		((i++))
-	done < <(cat $USER_DATA/mail/$domain.conf)
-	echo '}'
+	awk '
+	BEGIN { first = 1 }
+	{
+		# Split the config line into key-value pairs
+		split($0, pairs, " ");
+
+		# Reset variables for the current line
+		account=""; alias=""; fwd=""; fwd_only=""; autoreply=""; quota=""; u_disk=""; suspended=""; time=""; date="";
+
+		for (i in pairs) {
+			if (pairs[i] ~ /^ACCOUNT=/)   { match(pairs[i], /'\''[^'\'' ]+'\''/); account = substr(pairs[i], RSTART+1, RLENGTH-2); }
+			if (pairs[i] ~ /^ALIAS=/)     { match(pairs[i], /'\''[^'\'']*'\''/); alias = substr(pairs[i], RSTART+1, RLENGTH-2); }
+			if (pairs[i] ~ /^FWD=/)       { match(pairs[i], /'\''[^'\'']*'\''/); fwd = substr(pairs[i], RSTART+1, RLENGTH-2); }
+			if (pairs[i] ~ /^FWD_ONLY=/)  { match(pairs[i], /'\''[^'\'']*'\''/); fwd_only = substr(pairs[i], RSTART+1, RLENGTH-2); }
+			if (pairs[i] ~ /^AUTOREPLY=/) { match(pairs[i], /'\''[^'\'']*'\''/); autoreply = substr(pairs[i], RSTART+1, RLENGTH-2); }
+			if (pairs[i] ~ /^QUOTA=/)     { match(pairs[i], /'\''[^'\'']*'\''/); quota = substr(pairs[i], RSTART+1, RLENGTH-2); }
+			if (pairs[i] ~ /^U_DISK=/)    { match(pairs[i], /'\''[^'\'']*'\''/); u_disk = substr(pairs[i], RSTART+1, RLENGTH-2); }
+			if (pairs[i] ~ /^SUSPENDED=/) { match(pairs[i], /'\''[^'\'']*'\''/); suspended = substr(pairs[i], RSTART+1, RLENGTH-2); }
+			if (pairs[i] ~ /^TIME=/)      { match(pairs[i], /'\''[^'\'']*'\''/); time = substr(pairs[i], RSTART+1, RLENGTH-2); }
+			if (pairs[i] ~ /^DATE=/)      { match(pairs[i], /'\''[^'\'']*'\''/); date = substr(pairs[i], RSTART+1, RLENGTH-2); }
+		}
+
+		if (account != "") {
+			if (!first) { print "," }
+			first = 0;
+			printf "    \"%s\": {\n", account
+			printf "        \"ALIAS\": \"%s\",\n", alias
+			printf "        \"FWD\": \"%s\",\n", fwd
+			printf "        \"FWD_ONLY\": \"%s\",\n", fwd_only
+			printf "        \"AUTOREPLY\": \"%s\",\n", autoreply
+			printf "        \"QUOTA\": \"%s\",\n", quota
+			printf "        \"U_DISK\": \"%s\",\n", u_disk
+			printf "        \"SUSPENDED\": \"%s\",\n", suspended
+			printf "        \"TIME\": \"%s\",\n", time
+			printf "        \"DATE\": \"%s\"\n", date
+			printf "    }"
+		}
+	}
+	END { print "" }
+	' "$USER_DATA/mail/$domain.conf"
+	echo "}"
 }
 
 # SHELL list function

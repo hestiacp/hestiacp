@@ -18,6 +18,7 @@ import handleFtpAccounts from './ftpAccounts';
 import handleIpListDataSource from './ipListDataSource';
 import handleListSorting from './listSorting';
 import handleListUnitSelect from './listUnitSelect';
+import handleLoginFormSubmit from './loginForm';
 import handleNameServerInput from './nameServerInput';
 import handlePasswordInput from './passwordInput';
 import initRrdCharts from './rrdCharts';
@@ -55,6 +56,7 @@ function initListeners() {
 	handleToggleAdvanced();
 	initRrdCharts();
 	initWebTerminal();
+	handleLoginFormSubmit();
 }
 
 document.addEventListener('alpine:init', () => {

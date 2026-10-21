@@ -12,6 +12,12 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
+# Check root
+[[ $EUID -eq 0 ]] || {
+	echo "Error: this script must be run as root."
+	exit 1
+}
+
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
 source /etc/hestiacp/hestia.conf

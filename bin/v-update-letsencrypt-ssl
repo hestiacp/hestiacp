@@ -134,7 +134,12 @@ for user in $("$BIN/v-list-users" list); do
 			continue
 		fi
 
-		crt_data=$(openssl x509 -text -in $USER_DATA/ssl/mail.$domain.crt)
+		# A web domain named mail.<domain> shares this data cert and can
+		# update it before the mail service cert is installed. Check the
+		# cert actually used by the mail service.
+		mail_crt="$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.crt"
+		[ -f "$mail_crt" ] || mail_crt="$USER_DATA/ssl/mail.$domain.crt"
+		crt_data=$(openssl x509 -text -in "$mail_crt")
 		not_after=$(echo "$crt_data" | grep "Not After" | cut -f 2,3,4 -d :)
 		expiration=$(date -d "$not_after" +%s)
 		now=$(date +%s)

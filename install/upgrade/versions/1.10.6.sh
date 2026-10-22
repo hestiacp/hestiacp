@@ -129,3 +129,12 @@ if [[ -f "$pma_config/hestia-sso.inc.php" && -f "$pma_config/config.inc.php" ]] 
 		echo "[ ! ] Error: failed to copy base config.inc.php to $pma_config" >&2
 	fi
 fi
+
+# Ensure that Hestia's certificates are owned by root:mail to avoid conflicts
+# with the AppArmor profile for ProFTPD
+for cert in certificate.crt certificate.key; do
+	if [[ -f "$HESTIA/ssl/$cert" ]]; then
+		chown root:mail "$HESTIA/ssl/$cert"
+		chmod 640 "$HESTIA/ssl/$cert"
+	fi
+done

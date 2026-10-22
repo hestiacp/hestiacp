@@ -50,3 +50,52 @@ if [[ -f "$exim_conf" ]] && grep -qF "$pattern" "$exim_conf"; then
 		fi
 	fi
 fi
+
+# Start migrating PPA
+# For Ubuntu: Migrate existing PHP repo from PPA to sury repository
+_running_os="$(lsb_release -s -i)"
+_running_os="${_running_os,,}"
+_arch="$(dpkg --print-architecture)"
+_codename="$(lsb_release -s -c)"
+_apt_dir="/etc/apt/sources.list.d"
+_apt_file="$_apt_dir/php.list"
+_ppa_string="ppa.launchpadcontent.net/ondrej/php/ubuntu"
+_keyring="/usr/share/keyrings/sury-keyring.gpg"
+
+if [[ "$_running_os" == "ubuntu" ]]; then
+
+	# Find PPA files
+	_ppa_files=()
+	while IFS= read -r -d '' _file; do
+		_ppa_files+=("$_file")
+	done < <(grep -rlFZ --include='*.list' --include='*.sources' -- "$_ppa_string" "$_apt_dir")
+
+	# Run only if PPA files exist
+	if [[ ${#_ppa_files[@]} -gt 0 ]]; then
+		echo "[ + ] Migrating PPA repo to sury"
+
+		# Backup and remove PPA files (.save is ignored by apt)
+		_ts="$(date +%Y%m%d_%H%M%S)"
+		for _file in "${_ppa_files[@]}"; do
+			_backup="${_file}.hestia-${_ts}.save"
+			if cp -p -- "$_file" "$_backup" && rm -f -- "$_file"; then
+				echo "[ + ] PPA backed up: $_backup"
+			else
+				echo "[ ! ] PPA backup failed: $_file" >&2
+			fi
+		done
+
+		# Download key to temp file first
+		_tmp_key="$(mktemp)"
+		if curl -fsSm60 https://packages.sury.org/php/apt.gpg | gpg --dearmor --yes > "$_tmp_key" 2> /dev/null && [[ -s "$_tmp_key" ]]; then
+			install -m 644 "$_tmp_key" "$_keyring"
+			echo "[ + ] Key installed: $_keyring"
+			echo "deb [arch=$_arch signed-by=$_keyring] https://packages.sury.org/php/ $_codename main" > "$_apt_file"
+			echo "[ + ] Repo added: $_apt_file"
+		else
+			echo "[ ! ] Key download failed; repo not added" >&2
+		fi
+		rm -f "$_tmp_key"
+	fi
+fi
+# End migrating PPA

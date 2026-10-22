@@ -99,3 +99,12 @@ if [[ "$_running_os" == "ubuntu" ]]; then
 	fi
 fi
 # End migrating PPA
+
+# Ensure that Hestia's certificates are owned by root:mail to avoid conflicts
+# with the AppArmor profile for ProFTPD
+for cert in certificate.crt certificate.key; do
+	if [[ -f "$HESTIA/ssl/$cert" ]]; then
+		chown root:mail "$HESTIA/ssl/$cert"
+		chmod 640 "$HESTIA/ssl/$cert"
+	fi
+done

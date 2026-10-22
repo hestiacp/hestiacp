@@ -854,19 +854,10 @@ echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/nginx-keyring.gpg] https://n
 curl -s https://nginx.org/keys/nginx_signing.key | gpg --dearmor | tee /usr/share/keyrings/nginx-keyring.gpg > /dev/null 2>&1
 
 # Installing sury PHP repo
-# add-apt-repository does not yet support signed-by see: https://bugs.launchpad.net/ubuntu/+source/software-properties/+bug/1862764
 echo "[ * ] PHP"
-if [[ "$release" = "22.04" ]] || [[ "$release" = "24.04" ]]; then
-	if [ "$release" = '24.04' ]; then
-		# Workaround for Ubuntu 24.04 due to weak key warning it sheduled to be fixed in 24.04.1
-		echo 'APT::Key::Assert-Pubkey-Algo "";' > /etc/apt/apt.conf.d/99weakkey-warning
-	fi
-	LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php > /dev/null 2>&1
-else
-	# Ubuntu 26.04 and later use the Sury repository instead of a PPA
-	echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/sury-keyring.gpg] https://packages.sury.org/php/ $codename main" > $apt/php.list
-	curl -s https://packages.sury.org/php/apt.gpg | gpg --dearmor | tee /usr/share/keyrings/sury-keyring.gpg > /dev/null 2>&1
-fi
+# Use the sury repository for all Ubuntu versions instead of the PPA
+echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/sury-keyring.gpg] https://packages.sury.org/php/ $codename main" > $apt/php.list
+curl -s https://packages.sury.org/php/apt.gpg | gpg --dearmor | tee /usr/share/keyrings/sury-keyring.gpg > /dev/null 2>&1
 
 # Installing sury Apache2 repo
 if [ "$apache" = 'yes' ] && [ "$release" = '22.04' ]; then

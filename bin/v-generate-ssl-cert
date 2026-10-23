@@ -150,14 +150,24 @@ else
 fi
 
 if [ -z "$aliases" ]; then
+	cat > "$workdir/openssl-san.cnf" <<EOF
+[ req ]
+distinguished_name = req_distinguished_name
+req_extensions = SAN
+prompt = no
+
+[ req_distinguished_name ]
+CN = $domain_idn
+
+[ SAN ]
+subjectAltName = DNS:$domain
+EOF
 	openssl req -sha256 -new \
 		-batch \
 		-subj "$subj" \
 		-key $domain.key \
-		-reqexts SAN \
-		-config <(cat $ssl_conf \
-			<(printf "[SAN]\nsubjectAltName=DNS:$domain")) \
-		-out $domain.csr > /dev/null 2>&1
+		-config "$workdir/openssl-san.cnf" \
+		-out $domain.csr
 else
 	for alias in $(echo $domain,$aliases | tr ',' '\n' | sort -u); do
 		if [[ "$alias" = *[![:ascii:]]* ]]; then
@@ -166,33 +176,53 @@ else
 		dns_aliases="${dns_aliases}DNS:$alias,"
 	done
 	dns_aliases=$(echo $dns_aliases | sed "s/,$//")
+	cat > "$workdir/openssl-san.cnf" <<EOF
+[ req ]
+distinguished_name = req_distinguished_name
+req_extensions = SAN
+prompt = no
+
+[ req_distinguished_name ]
+CN = $domain_idn
+
+[ SAN ]
+subjectAltName = $dns_aliases
+EOF
 	openssl req -sha256 -new \
 		-batch \
 		-subj "$subj" \
 		-key $domain.key \
-		-reqexts SAN \
-		-config <(cat $ssl_conf \
-			<(printf "[SAN]\nsubjectAltName=$dns_aliases")) \
-		-out $domain.csr > /dev/null 2>&1
+		-config "$workdir/openssl-san.cnf" \
+		-out $domain.csr
 fi
 
 # Generate the cert 1 year
+# >>> FIX: Same as above - use standalone temp config file instead of
+# >>> `-extfile <(printf ...)`. OpenSSL 3.x rejects process substitution here too.
 if [ -z "$aliases" ]; then
+	cat > "$workdir/openssl-ext.cnf" <<EOF
+[SAN]
+subjectAltName = DNS:$domain
+EOF
 	openssl x509 -req -sha256 \
 		-days $DAYS \
 		-in $domain.csr \
 		-signkey $domain.key \
-		-extfile <(printf "[SAN]\nsubjectAltName=DNS:$domain") \
+		-extfile "$workdir/openssl-ext.cnf" \
 		-extensions SAN \
-		-out $domain.crt > /dev/null 2>&1
+		-out $domain.crt
 else
+	cat > "$workdir/openssl-ext.cnf" <<EOF
+[SAN]
+subjectAltName = $dns_aliases
+EOF
 	openssl x509 -req -sha256 \
 		-days $DAYS \
 		-in $domain.csr \
 		-signkey $domain.key \
-		-extfile <(printf "[SAN]\nsubjectAltName=$dns_aliases") \
+		-extfile "$workdir/openssl-ext.cnf" \
 		-extensions SAN \
-		-out $domain.crt > /dev/null 2>&1
+		-out $domain.crt
 fi
 
 # Listing certificates

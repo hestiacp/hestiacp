@@ -2508,6 +2508,8 @@ $HESTIA/bin/v-change-sys-port $port > /dev/null 2>&1
 $HESTIA/bin/v-update-sys-defaults
 
 # Update remaining packages since repositories have changed
+# Skip the final upgrade with --with-debs, otherwise apt would replace the
+# locally installed .deb packages with the ones from apt.hestiacp.com
 if [ -z "$withdebs" ]; then
 	echo -ne "[ * ] Installing remaining software updates... "
 	apt-get -qq update

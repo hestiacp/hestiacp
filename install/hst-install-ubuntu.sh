@@ -2499,11 +2499,28 @@ $HESTIA/bin/v-change-sys-port $port > /dev/null 2>&1
 $HESTIA/bin/v-update-sys-defaults
 
 # Update remaining packages since repositories have changed
-echo -ne "[ * ] Installing remaining software updates..."
-apt-get -qq update
-apt-get -y upgrade >> $LOG &
-BACK_PID=$!
-echo
+# Skip the final upgrade with --with-debs, otherwise apt would replace the
+# locally installed .deb packages with the ones from apt.hestiacp.com
+if [ -z "$withdebs" ]; then
+	echo -ne "[ * ] Installing remaining software updates... "
+	apt-get -qq update
+	apt-get -y upgrade >> $LOG &
+	BACK_PID=$!
+
+	# Check if package installation is done, print a spinner
+	spin_i=1
+	while kill -0 $BACK_PID > /dev/null 2>&1; do
+		printf "\b${spinner:spin_i++%${#spinner}:1}"
+		sleep 0.5
+	done
+
+	# Do a blank echo to get the \n back
+	echo
+
+	# Check Installation result
+	wait $BACK_PID
+	check_result $? 'apt-get upgrade failed'
+fi
 
 # Starting Hestia service
 update-rc.d hestia defaults

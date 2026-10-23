@@ -52,6 +52,15 @@ else
 fi
 
 for service in $service_list; do
+	main_pid=""
+	old_workers=""
+	if [ -d /run/systemd/system ] && { [ "$service" = "apache2" ] || [ "$service" = "nginx" ]; }; then
+		main_pid=$(systemctl show -p MainPID --value "$service" 2> /dev/null)
+		if [ -n "$main_pid" ] && [ "$main_pid" -gt 0 ] 2> /dev/null; then
+			old_workers=$(pgrep -P "$main_pid" 2> /dev/null | tr '\n' ' ')
+		fi
+	fi
+
 	if [ "$service" = "iptables" ]; then
 		# Run the restart rules for iptables firewall
 		$BIN/v-stop-firewall
@@ -85,9 +94,55 @@ for service in $service_list; do
 		systemctl reset-failed "$service" >> $log 2>&1
 		systemctl restart "$service" >> $log 2>&1
 	fi
+	restart_status=$?
+
+	if [ "$restart_status" -eq 0 ] && [ -d /run/systemd/system ]; then
+		if [ "$service" = "apache2" ] || [ "$service" = "nginx" ]; then
+			for ((i = 0; i < 20; i++)); do
+				if ! systemctl is-active --quiet "$service"; then
+					restart_status="$E_RESTART"
+					break
+				fi
+				cur_main_pid=$(systemctl show -p MainPID --value "$service" 2> /dev/null)
+				if [ -n "$cur_main_pid" ] && [ "$cur_main_pid" -gt 0 ] 2> /dev/null; then
+					cur_workers=$(pgrep -P "$cur_main_pid" 2> /dev/null)
+					if [ -n "$cur_workers" ]; then
+						if [ -z "$old_workers" ] || [ "$cur_main_pid" != "$main_pid" ]; then
+							break
+						fi
+						new_worker_found=0
+						old_worker_alive=0
+						for w in $cur_workers; do
+							if [[ " $old_workers " == *" $w "* ]]; then
+								old_worker_alive=1
+							else
+								new_worker_found=1
+							fi
+						done
+						if [ "$new_worker_found" -eq 1 ] && [ "$old_worker_alive" -eq 0 ]; then
+							break
+						fi
+					fi
+				fi
+				sleep 0.5
+			done
+		elif [[ "$service" =~ ^php([0-9]+\.[0-9]+)-fpm$ ]]; then
+			php_ver="${BASH_REMATCH[1]}"
+			for sock in $(grep -hE '^\s*listen\s*=\s*/' "/etc/php/${php_ver}/fpm/pool.d/"*.conf 2> /dev/null | cut -f 2 -d = | tr -d ' \t'); do
+				for ((i = 0; i < 20; i++)); do
+					if ! systemctl is-active --quiet "$service"; then
+						restart_status="$E_RESTART"
+						break 2
+					fi
+					[ -S "$sock" ] && break
+					sleep 0.5
+				done
+			done
+		fi
+	fi
 
 	# Check the result of the service restart and report whether it failed.
-	if [ $? -ne 0 ]; then
+	if [ "$restart_status" -ne 0 ]; then
 		if [ -d /run/systemd/system ]; then
 			# systemd is the init system (the host was booted with systemd):
 			# a non-zero exit is an authoritative failure.

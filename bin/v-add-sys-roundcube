@@ -277,6 +277,9 @@ if [[ "$UPDATE" == "no" ]]; then
 
 	phpenmod mcrypt > /dev/null 2>&1
 else
+	command -v rsync &> /dev/null \
+		|| fail "rsync not installed, try install it"
+
 	cd "$RC_INSTALL_DIR" || fail "Cannot enter $RC_INSTALL_DIR"
 	download_rc
 

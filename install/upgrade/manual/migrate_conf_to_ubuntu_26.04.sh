@@ -1,5 +1,5 @@
 #!/bin/bash
-# info: Configure sudoers, SSH, Bind, Dovecot and Exim to work with Hestia on Ubuntu 26.04
+# info: Configure APT repositories, sudoers, SSH, Bind, Dovecot, Exim and ProFTPd to work with Hestia on Ubuntu 26.04
 
 #----------------------------------------------------------#
 #                    Variables & Functions                 #
@@ -20,6 +20,156 @@ if [[ "$ID" != "ubuntu" || "$VERSION_ID" != "26.04" ]]; then
 	echo "Error: this script requires Ubuntu 26.04" >&2
 	exit 1
 fi
+
+#----------------------------------------------------------#
+#               APT repositories configuration             #
+#----------------------------------------------------------#
+
+echo "[ * ] Checking APT repositories:"
+apt="/etc/apt/sources.list.d"
+codename="resolute"
+RHOST="apt.hestiacp.com"
+mariadb_v="11.8"
+node_v="24"
+_apt_updated=false
+
+case $(arch) in
+	x86_64)
+		ARCH="amd64"
+		;;
+	aarch64)
+		ARCH="arm64"
+		;;
+	*)
+		echo "Error: $(arch) is currently not supported" >&2
+		exit 1
+		;;
+esac
+
+# Remove old Ondřej Launchpad PPAs (replaced by Sury APT repo on Ubuntu 26.04)
+for ondrej_file in "$apt"/*ondrej*; do
+	if [[ -e "$ondrej_file" ]]; then
+		echo "[ + ] Removing obsolete PPA file: $ondrej_file"
+		rm -f "$ondrej_file"
+		_apt_updated=true
+	fi
+done
+while read -r source; do
+	if [[ -n "$source" && -f "$source" ]]; then
+		echo "[ + ] Removing obsolete PPA reference: $source"
+		rm -f "$source"
+		_apt_updated=true
+	fi
+done < <(grep -rl ondrej "$apt" 2> /dev/null)
+if [[ -f /etc/apt/apt.conf.d/99weakkey-warning ]]; then
+	rm -f /etc/apt/apt.conf.d/99weakkey-warning
+fi
+
+ensure_repo() {
+	local name="$1"
+	local list_file="$2"
+	local expected_line="$3"
+	local keyring_file="$4"
+	local key_url="$5"
+	local changed=false
+
+	# Clean up .disabled, .distUpgrade, and .save files if present
+	for ext in disabled distUpgrade save; do
+		if [[ -f "${list_file}.${ext}" ]]; then
+			echo "[ + ] Removing disabled repository file: ${list_file}.${ext}"
+			rm -f "${list_file}.${ext}"
+			changed=true
+		fi
+	done
+
+	if [[ ! -f "$list_file" ]] || [[ "$(cat "$list_file" 2> /dev/null)" != "$expected_line" ]]; then
+		echo "[ + ] Configuring $name APT repository"
+		echo "$expected_line" > "$list_file"
+		changed=true
+	else
+		echo "[ - ] $name APT repository already configured, nothing to do"
+	fi
+
+	if [[ ! -s "$keyring_file" ]]; then
+		echo "[ + ] Installing $name GPG keyring"
+		mkdir -p "$(dirname "$keyring_file")"
+		_tmp_key="$(mktemp)"
+		if curl -fsSL "$key_url" 2> /dev/null | gpg --dearmor 2> /dev/null > "$_tmp_key" && [[ -s "$_tmp_key" ]]; then
+			mv -f "$_tmp_key" "$keyring_file"
+			chmod 644 "$keyring_file"
+			changed=true
+		else
+			rm -f "$_tmp_key"
+			echo "[ ! ] Error downloading/installing GPG key for $name" >&2
+		fi
+	fi
+
+	if [[ "$changed" = true ]]; then
+		_apt_updated=true
+	fi
+}
+
+# Hestia Control Panel repository
+ensure_repo "Hestia Control Panel" \
+	"$apt/hestia.list" \
+	"deb [arch=$ARCH signed-by=/usr/share/keyrings/hestia-keyring.gpg] https://$RHOST/ $codename main" \
+	"/usr/share/keyrings/hestia-keyring.gpg" \
+	"https://$RHOST/pubkey.gpg"
+
+# NGINX repository
+ensure_repo "NGINX" \
+	"$apt/nginx.list" \
+	"deb [arch=$ARCH signed-by=/usr/share/keyrings/nginx-keyring.gpg] https://nginx.org/packages/mainline/ubuntu/ $codename nginx" \
+	"/usr/share/keyrings/nginx-keyring.gpg" \
+	"https://nginx.org/keys/nginx_signing.key"
+
+# Sury PHP repository
+ensure_repo "PHP (Sury)" \
+	"$apt/php.list" \
+	"deb [arch=$ARCH signed-by=/usr/share/keyrings/sury-keyring.gpg] https://packages.sury.org/php/ $codename main" \
+	"/usr/share/keyrings/sury-keyring.gpg" \
+	"https://packages.sury.org/php/apt.gpg"
+
+# MariaDB repository (if installed or previously configured)
+if [[ -f "$apt/mariadb.list" ]] || [[ -f "$apt/mariadb.list.disabled" ]] || [[ -f "$apt/mariadb.list.distUpgrade" ]] \
+	|| { [[ "$DB_SYSTEM" =~ mysql ]] && (dpkg -s mariadb-server &> /dev/null || (command -v mariadb &> /dev/null && ! dpkg -s mysql-server &> /dev/null)); }; then
+	ensure_repo "MariaDB $mariadb_v" \
+		"$apt/mariadb.list" \
+		"deb [arch=$ARCH signed-by=/usr/share/keyrings/mariadb-keyring.gpg] https://dlm.mariadb.com/repo/mariadb-server/$mariadb_v/repo/ubuntu $codename main" \
+		"/usr/share/keyrings/mariadb-keyring.gpg" \
+		"https://mariadb.org/mariadb_release_signing_key.asc"
+fi
+
+# PostgreSQL repository (if installed or previously configured)
+if [[ -f "$apt/postgresql.list" ]] || [[ -f "$apt/postgresql.list.disabled" ]] || [[ -f "$apt/postgresql.list.distUpgrade" ]] \
+	|| [[ "$DB_SYSTEM" =~ pgsql ]] || dpkg -s postgresql &> /dev/null; then
+	ensure_repo "PostgreSQL" \
+		"$apt/postgresql.list" \
+		"deb [arch=$ARCH signed-by=/usr/share/keyrings/postgresql-keyring.gpg] https://apt.postgresql.org/pub/repos/apt/ $codename-pgdg main" \
+		"/usr/share/keyrings/postgresql-keyring.gpg" \
+		"https://www.postgresql.org/media/keys/ACCC4CF8.asc"
+fi
+
+# Node.js repository (if installed or previously configured)
+if [[ -f "$apt/nodejs.list" ]] || [[ -f "$apt/nodejs.list.disabled" ]] || [[ -f "$apt/nodejs.list.distUpgrade" ]] \
+	|| dpkg -s hestia-web-terminal &> /dev/null || dpkg -s nodejs &> /dev/null; then
+	ensure_repo "Node.js $node_v" \
+		"$apt/nodejs.list" \
+		"deb [arch=$ARCH signed-by=/usr/share/keyrings/nodejs.gpg] https://deb.nodesource.com/node_$node_v.x nodistro main" \
+		"/usr/share/keyrings/nodejs.gpg" \
+		"https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key"
+fi
+
+if [[ "$_apt_updated" = true ]]; then
+	echo "[ + ] Updating APT package cache..."
+	if apt-get update; then
+		echo "[ + ] APT package cache updated successfully"
+		echo "[ ! ] Notice: Please run 'apt-get full-upgrade' to complete upgrading packages from updated repositories"
+	else
+		echo "[ ! ] Warning: 'apt-get update' encountered errors" >&2
+	fi
+fi
+echo
 
 #----------------------------------------------------------#
 #                  sudoers configuration                   #

@@ -96,7 +96,7 @@ echo "$iptables -F INPUT" >> "$tmp"
 
 # Handling local traffic
 echo "$iptables -A INPUT -i lo -j ACCEPT" >> "$tmp"
-ips="$(ls $HESTIA/data/ips)"
+ips="$(ls $HESTIA/data/ips | grep -v ":")"
 for ip in $ips; do
 	echo "$iptables -A INPUT -s $ip -j ACCEPT" >> "$tmp"
 done
@@ -128,6 +128,10 @@ if [ -n "$FIREWALL_EXTENSION" ]; then
 	if [ -f "$banlist" ]; then
 		while IFS= read -r ban; do
 			parse_object_kv_list "$ban"
+			# IPv6 bans are handled by v-update-firewall-ipv6
+			if [[ "$IP" == *:* ]]; then
+				continue
+			fi
 			echo -n "$iptables -I fail2ban-$CHAIN 1 -s $IP" >> "$tmp"
 			echo " -j DROP" >> "$tmp"
 		done < "$banlist"
@@ -224,6 +228,11 @@ else
 		systemctl -q daemon-reload
 	fi
 	systemctl -q is-enabled hestia-iptables 2> /dev/null || systemctl -q enable hestia-iptables
+fi
+
+# Updating IPv6 firewall
+if [ -x "$BIN/v-update-firewall-ipv6" ]; then
+	"$BIN/v-update-firewall-ipv6"
 fi
 
 #----------------------------------------------------------#

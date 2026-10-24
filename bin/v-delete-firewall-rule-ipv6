@@ -1,0 +1,59 @@
+#!/bin/bash
+# info: delete IPv6 firewall rule
+# options: RULE
+#
+# example: v-delete-firewall-rule-ipv6 5
+#
+# This function deletes an IPv6 firewall rule from rules6.conf
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+rule=$1
+
+source /etc/hestiacp/hestia.conf
+source $HESTIA/func/main.sh
+source_conf "$HESTIA/conf/hestia.conf"
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '1' "$#" 'RULE'
+is_format_valid 'rule'
+is_system_enabled "$FIREWALL_SYSTEM" 'FIREWALL_SYSTEM'
+
+rules="$HESTIA/data/firewall/rules6.conf"
+if ! grep -q "RULE='$rule'" "$rules" 2> /dev/null; then
+	check_result $E_NOTEXIST "IPv6 firewall rule $rule doesn't exist"
+fi
+
+check_hestia_demo_mode
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+sed -i "/RULE='$rule' /d" "$rules"
+
+# Reorder firewall rules, v-move-firewall-rule-ipv6 relies on sequential ids
+if [ -s "$rules" ]; then
+	rules_tmp="$(mktemp "${rules}.XXXXXX")"
+	sort -n -k 2 -t \' "$rules" \
+		| awk -v q="'" '{ n++; sub("RULE=" q "[0-9]+" q, "RULE=" q n q); print }' \
+			> "$rules_tmp"
+	mv "$rules_tmp" "$rules"
+	chmod 660 "$rules"
+fi
+
+$BIN/v-update-firewall-ipv6
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+$BIN/v-log-action "system" "Info" "Firewall" "Removed IPv6 firewall rule (ID: $rule)."
+log_event "$OK" "$ARGUMENTS"
+
+exit

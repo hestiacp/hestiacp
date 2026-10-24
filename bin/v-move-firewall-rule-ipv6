@@ -1,0 +1,102 @@
+#!/bin/bash
+# info: move IPv6 firewall rule up or down
+# options: RULE DIRECTION
+#
+# example: v-move-firewall-rule-ipv6 4 up
+
+source_rule=$1
+direction=$(echo $2 | tr '[:lower:]' '[:upper:]')
+
+source /etc/hestiacp/hestia.conf
+source $HESTIA/func/main.sh
+source_conf "$HESTIA/conf/hestia.conf"
+
+rules="$HESTIA/data/firewall/rules6.conf"
+
+get_rule_id() {
+	local old=$1
+	local dir=$2
+	if [[ "$dir" == "UP" ]]; then
+		echo $((old - 1))
+	else
+		echo $((old + 1))
+	fi
+}
+
+sort_fw_rules() {
+	sort -n -k 2 -t \' "$rules" > "${rules}.tmp"
+	mv -f "${rules}.tmp" "$rules"
+}
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '2' "$#" 'RULE DIRECTION'
+is_format_valid 'rule' "$source_rule"
+is_system_enabled "$FIREWALL_SYSTEM" 'FIREWALL_SYSTEM'
+
+if ! grep -q "RULE='$source_rule'" "$rules" 2> /dev/null; then
+	check_result $E_NOTEXIST "IPv6 rule $source_rule not found"
+fi
+
+if [[ "$direction" != "UP" && "$direction" != "DOWN" ]]; then
+	echo "Invalid direction. Use 'up' or 'down'."
+	exit 1
+fi
+
+if [[ "$direction" == "UP" && "$source_rule" -eq 1 ]]; then
+	echo "Cannot move rule up. It's already the first rule."
+	exit 1
+fi
+
+last_rule=$(tail -n 1 "$rules" | grep -o "RULE='[0-9]*'" | tr -d "RULE='")
+if [[ "$direction" == "DOWN" && "$source_rule" -eq "$last_rule" ]]; then
+	echo "Cannot move rule down. It's already the last rule."
+	exit 1
+fi
+
+check_hestia_demo_mode
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+target_rule=$(get_rule_id "$source_rule" "$direction")
+
+parse_object_kv_list $(grep "RULE='$source_rule'" "$rules")
+time_n_date=$(date +'%T %F')
+time=$(echo "$time_n_date" | cut -f 1 -d \ )
+date=$(echo "$time_n_date" | cut -f 2 -d \ )
+
+source_str="RULE='$target_rule' ACTION='$ACTION' PROTOCOL='$PROTOCOL' PORT='$PORT'"
+source_str="$source_str IP6='$IP6' COMMENT='$COMMENT' SUSPENDED='$SUSPENDED'"
+source_str="$source_str TIME='$time' DATE='$date'"
+
+sed -i "/RULE='$source_rule' /d" "$rules"
+
+parse_object_kv_list $(grep "RULE='$target_rule'" "$rules")
+time_n_date=$(date +'%T %F')
+time=$(echo "$time_n_date" | cut -f 1 -d \ )
+date=$(echo "$time_n_date" | cut -f 2 -d \ )
+
+target_str="RULE='$source_rule' ACTION='$ACTION' PROTOCOL='$PROTOCOL' PORT='$PORT'"
+target_str="$target_str IP6='$IP6' COMMENT='$COMMENT' SUSPENDED='$SUSPENDED'"
+target_str="$target_str TIME='$time' DATE='$date'"
+
+sed -i "/RULE='$target_rule' /d" "$rules"
+
+echo "$source_str" >> "$rules"
+echo "$target_str" >> "$rules"
+
+sort_fw_rules
+
+$BIN/v-update-firewall-ipv6
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+$BIN/v-log-action "system" "Info" "Firewall" "IPv6 rule $source_rule moved $direction."
+log_event "$OK" "$ARGUMENTS"
+exit

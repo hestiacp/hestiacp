@@ -242,6 +242,36 @@ prepare_web_domain_values() {
 	fi
 }
 
+# Prepare the addresses used for template substitution
+#   $local_ip  - IPv4 address of the domain (may be empty for IPv6-only domains)
+#   $1         - IPv6 address of the domain (may be empty)
+# Sets:
+#   tpl_ip     - value of %ip% (IPv4 address, or [IPv6] for IPv6-only domains)
+#   tpl_ipv6   - additional IPv6 address for dual-stack listen directives
+prepare_web_ip_values() {
+	tpl_ip="$local_ip"
+	tpl_ipv6="$1"
+	# Never render an IPv6 address that is not available on this server,
+	# otherwise the web server would fail to bind on startup
+	if [ -n "$tpl_ipv6" ] && [ ! -f "$HESTIA/data/ips/$tpl_ipv6" ]; then
+		tpl_ipv6=''
+	fi
+	if [ -z "$tpl_ip" ] && [ -n "$tpl_ipv6" ]; then
+		tpl_ip="[$tpl_ipv6]"
+		tpl_ipv6=''
+	fi
+}
+
+# Duplicate the IPv4 listen directives of a nginx config for the IPv6 address
+# (dual-stack). All listen parameters (ssl, quic, reuseport, ...) are kept.
+add_web_config_ipv6_listen() {
+	local conf="$1" ipv4="${2//./[.]}" ipv6="$3"
+	if [ -z "$ipv6" ] || [ -z "$2" ] || [[ "$2" == \[* ]]; then
+		return 0
+	fi
+	sed -i -E "s/^([[:space:]]*listen[[:space:]]+)${ipv4}:([0-9]+)(.*)$/&\n\1[${ipv6}]:\2\3/" "$conf"
+}
+
 # Add web config
 add_web_config() {
 	# Check if folder already exists
@@ -272,8 +302,10 @@ add_web_config() {
 	docroot_escaped="$(sed_escape_replacement "$docroot")"
 	sdocroot_escaped="$(sed_escape_replacement "$sdocroot")"
 
+	prepare_web_ip_values "${local_ipv6:-$IP6}"
+
 	cat "${WEBTPL_LOCATION}/$2" \
-		| sed -e "s|%ip%|$local_ip|g" \
+		| sed -e "s|%ip%|$tpl_ip|g" \
 			-e "s|%domain%|$domain|g" \
 			-e "s|%domain_idn%|$domain_idn|g" \
 			-e "s|%alias%|${aliases//,/ }|g" \
@@ -302,6 +334,7 @@ add_web_config() {
 			-e "s|%ssl_ca%|$ssl_ca|g" \
 			> $conf
 
+	add_web_config_ipv6_listen "$conf" "$tpl_ip" "$tpl_ipv6"
 	process_http2_directive "$conf"
 
 	chown root:$user $conf
@@ -348,8 +381,8 @@ add_web_config() {
 	trigger="${2/.*pl/.sh}"
 	if [ -x "${WEBTPL_LOCATION}/$trigger" ]; then
 		$WEBTPL_LOCATION/$trigger \
-			$user $domain $local_ip $HOMEDIR \
-			$HOMEDIR/$user/web/$domain/public_html
+			"$user" "$domain" "$tpl_ip" "$HOMEDIR" \
+			"$HOMEDIR/$user/web/$domain/public_html"
 	fi
 }
 
@@ -946,8 +979,20 @@ add_webmail_config() {
 	#   -If possible custom templates should be automatically upgraded to use the new format
 	#   -Alternatively a depreciation period with proper notifications should be considered
 
+	# Webmail inherits the IPv6 address of the web domain, mail-only domains use
+	# the first IPv6 address available to the user
+	webmail_ipv6="$local_ipv6"
+	if [ -z "$webmail_ipv6" ]; then
+		if [ -n "$(grep "DOMAIN='$domain'" "$USER_DATA/web.conf" 2> /dev/null)" ]; then
+			webmail_ipv6=$(get_object_value 'web' 'DOMAIN' "$domain" '$IP6')
+		elif declare -F get_user_ip6s > /dev/null; then
+			webmail_ipv6=$(get_user_ip6s | head -n1)
+		fi
+	fi
+	prepare_web_ip_values "$webmail_ipv6"
+
 	cat $MAILTPL/$1/$2 \
-		| sed -e "s|%ip%|$local_ip|g" \
+		| sed -e "s|%ip%|$tpl_ip|g" \
 			-e "s|%domain%|$WEBMAIL_ALIAS.$domain|g" \
 			-e "s|%domain_idn%|$WEBMAIL_ALIAS.$domain_idn|g" \
 			-e "s|%root_domain%|$domain|g" \
@@ -976,6 +1021,7 @@ add_webmail_config() {
 			-e "s|%ssl_ca%|$ssl_ca|g" \
 			> $conf
 
+	add_web_config_ipv6_listen "$conf" "$tpl_ip" "$tpl_ipv6"
 	process_http2_directive "$conf"
 
 	chown root:$user $conf

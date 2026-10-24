@@ -55,7 +55,8 @@ for nic in $nics; do
 	fi
 done
 
-v_ips="$(ls $HESTIA/data/ips/)"
+# IPv6 addresses are not managed by this script
+v_ips="$(ls $HESTIA/data/ips/ | grep -v ":")"
 ip_num="$(echo "$ips" | wc -w)"
 v_ip_num="$(echo "$v_ips" | wc -w)"
 
@@ -170,7 +171,7 @@ done
 pub_ipv4="$(curl -fsLm5 --retry 2 --ipv4 https://ip.hestiacp.com/)"
 if [ ! -e "$HESTIA/data/ips/$pub_ipv4" ]; then
 	if [ -z "$(grep -R "$pub_ipv4" $HESTIA/data/ips/)" ]; then
-		ip="$(ls -t $HESTIA/data/ips/ | head -n1)"
+		ip="$(ls -t $HESTIA/data/ips/ | grep -v ":" | head -n1)"
 		$BIN/v-change-sys-ip-nat "$ip" "$pub_ipv4"
 	fi
 fi

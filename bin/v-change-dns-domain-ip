@@ -3,8 +3,11 @@
 # options: USER DOMAIN IP [RESTART]
 #
 # example: v-change-dns-domain-ip admin domain.com 123.212.111.222
+# example: v-change-dns-domain-ip admin domain.com ''
 #
-# This function for changing the main ip of DNS zone.
+# This function for changing the main ip of DNS zone. An empty IP removes the
+# A records of the names that have an AAAA record (IPv6-only web domain), an IP
+# for a zone without IPv4 adds an A record for every AAAA record of the zone.
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #
@@ -56,12 +59,57 @@ check_hestia_demo_mode
 # Get old ip
 get_domain_values 'dns'
 old=$IP
+if [ -z "$ip" ] && [ -z "$IP6" ]; then
+	check_result "$E_INVALID" "DNS domain $domain needs an IPv4 or IPv6 address"
+fi
+
+zone="$USER_DATA/dns/$domain.conf"
+records_before="$(wc -l < "$zone")"
 
 # Changing ip
 update_object_value 'dns' 'DOMAIN' "$domain" '$IP' "$ip"
 
-# Changing records
-sed -i "s/$old/$ip/g" $USER_DATA/dns/$domain.conf
+if [ -n "$old" ] && [ -n "$ip" ]; then
+	# Changing records
+	sed -i "s/$old/$ip/g" $zone
+elif [ -n "$old" ]; then
+	# Deleting the A records of names that have an AAAA record (IPv6-only web
+	# domain), mail exchangers and SPF keep the IPv4 address of the server
+	grep "TYPE='AAAA' .*VALUE='$IP6'" "$zone" | sed -n "s/.*RECORD='\([^']*\)'.*/\1/p" | while read -r record; do
+		awk -v rec="RECORD='$record' TYPE='A' " -v val="VALUE='$old'" \
+			'index($0, rec) && index($0, val) { next } { print }' "$zone" > "$zone.tmp"
+		cat "$zone.tmp" > "$zone"
+		rm -f "$zone.tmp"
+	done
+elif [ -n "$ip" ]; then
+	# Adding an A record for every AAAA record that points to the zone ipv6
+	time_n_date=$(date +'%T %F')
+	time=$(echo "$time_n_date" | cut -f 1 -d \ )
+	date=$(echo "$time_n_date" | cut -f 2 -d \ )
+	grep "TYPE='AAAA' .*VALUE='$IP6'" "$zone" | sed -n "s/.*RECORD='\([^']*\)'.*/\1/p" | while read -r record; do
+		if grep -qF "RECORD='$record' TYPE='A' " "$zone"; then
+			continue
+		fi
+		unset id
+		get_next_dnsrecord
+		echo "ID='$id' RECORD='$record' TYPE='A' PRIORITY='' VALUE='$ip' SUSPENDED='no' TIME='$time' DATE='$date'" >> "$zone"
+	done
+	sort_dns_records
+fi
+
+# Update counters
+records="$(wc -l < "$zone")"
+if [ "$records" != "$records_before" ]; then
+	update_object_value 'dns' 'DOMAIN' "$domain" '$RECORDS' "$records"
+	while [ "$records_before" -lt "$records" ]; do
+		increase_user_value "$user" '$U_DNS_RECORDS'
+		records_before=$((records_before + 1))
+	done
+	while [ "$records_before" -gt "$records" ]; do
+		decrease_user_value "$user" '$U_DNS_RECORDS'
+		records_before=$((records_before - 1))
+	done
+fi
 
 # Update serial
 update_domain_serial

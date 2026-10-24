@@ -66,18 +66,45 @@
 					<p><?= tohtml( _("If the aliases changes, Let's Encrypt will obtain a new SSL certificate.")) ?></p>
 				</div>
 			<?php } ?>
-			<div class="u-mb20">
-				<label for="v_ip" class="form-label"><?= tohtml( _("IP Address")) ?></label>
+			<!-- IPv4 address selector -->
+			<div class="<?= empty($ips_v6) ? "u-mb20" : "u-mb10" ?>">
+				<label for="v_ip" class="form-label">
+					<?= tohtml(empty($ips_v6) ? _("IP Address") : _("IPv4 Address")) ?>
+				</label>
 				<select class="form-select" name="v_ip" id="v_ip">
+					<?php if (!empty($ips_v6)): ?>
+					<option value=""><?= tohtml( _("None")) ?></option>
+					<?php endif; ?>
 					<?php
-						foreach ($ips as $ip => $value) {
+						foreach ($ips_v4 as $ip => $value) {
 							$display_ip = htmlentities(empty($value['NAT']) ? $ip : "{$value['NAT']}");
-							$ip_selected = ((!empty($v_ip) && $ip == $v_ip) || $v_ip == "'{$ip}'")	? 'selected' : '';
-							echo "\n\t\t\t\t\t\t\t\t\t\t\t\t<option value=\"{$ip}\" {$ip_selected}>{$display_ip}</option>\n";
+							$ip_selected = ((!empty($v_ip) && ($ip == $v_ip || (!empty($value['NAT']) && $value['NAT'] == $v_ip))) || $v_ip == "'{$ip}'") ? 'selected' : '';
+							echo "<option value=\"{$ip}\" {$ip_selected}>{$display_ip}</option>
+";
 						}
 					?>
 				</select>
 			</div>
+
+			<!-- IPv6 address selector — shown only if IPv6 addresses are available on this server -->
+			<?php if (!empty($ips_v6)): ?>
+			<div class="u-mb20">
+				<label for="v_ip6" class="form-label">
+					<?= tohtml( _("IPv6 Address")) ?>
+					<span class="optional">(<?= tohtml( _("Optional")) ?>)</span>
+				</label>
+				<select class="form-select" name="v_ip6" id="v_ip6">
+					<option value=""><?= tohtml( _("None")) ?></option>
+					<?php
+						foreach ($ips_v6 as $ip => $value) {
+							$ip_selected = (!empty($v_ip6) && $ip == $v_ip6) ? 'selected' : '';
+							echo "<option value=\"{$ip}\" {$ip_selected}>{$ip}</option>
+";
+						}
+					?>
+				</select>
+			</div>
+			<?php endif; ?>
 			<div class="u-mb10">
 				<label for="v_stats" class="form-label"><?= tohtml( _("Web Statistics")) ?></label>
 				<select class="form-select js-stats-select" name="v_stats" id="v_stats">

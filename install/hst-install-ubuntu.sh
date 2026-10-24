@@ -1517,24 +1517,30 @@ cp -rf $HESTIA_COMMON_DIR/templates/web/skel/document_errors/* /var/www/document
 # Installing firewall rules
 cp -rf $HESTIA_COMMON_DIR/firewall $HESTIA/data/
 rm -f $HESTIA/data/firewall/ipset/blacklist.sh $HESTIA/data/firewall/ipset/blacklist.ipv6.sh
+chmod 660 $HESTIA/data/firewall/rules6.conf
 
 # Delete rules for services that are not installed
 if [ "$vsftpd" = "no" ] && [ "$proftpd" = "no" ]; then
 	# Remove FTP
 	sed -i "/COMMENT='FTP'/d" $HESTIA/data/firewall/rules.conf
+	sed -i "/COMMENT='FTP'/d" $HESTIA/data/firewall/rules6.conf
 fi
 if [ "$exim" = "no" ]; then
 	# Remove SMTP
 	sed -i "/COMMENT='SMTP'/d" $HESTIA/data/firewall/rules.conf
+	sed -i "/COMMENT='SMTP'/d" $HESTIA/data/firewall/rules6.conf
 fi
 if [ "$dovecot" = "no" ]; then
 	# Remove IMAP / Dovecot
 	sed -i "/COMMENT='IMAP'/d" $HESTIA/data/firewall/rules.conf
+	sed -i "/COMMENT='IMAP'/d" $HESTIA/data/firewall/rules6.conf
 	sed -i "/COMMENT='POP3'/d" $HESTIA/data/firewall/rules.conf
+	sed -i "/COMMENT='POP3'/d" $HESTIA/data/firewall/rules6.conf
 fi
 if [ "$named" = "no" ]; then
 	# Remove IMAP / Dovecot
 	sed -i "/COMMENT='DNS'/d" $HESTIA/data/firewall/rules.conf
+	sed -i "/COMMENT='DNS'/d" $HESTIA/data/firewall/rules6.conf
 fi
 
 # Installing API
@@ -1639,6 +1645,17 @@ for nameserver in $(grep -is '^nameserver' /etc/resolv.conf | cut -d' ' -f2 | tr
 		fi
 	fi
 done
+# IPv6-only server: use the IPv6 nameservers and resolve IPv6 addresses as well
+if [ -z "$(ip -4 addr show scope global 2> /dev/null)" ] && [ -n "$(ip -6 addr show scope global 2> /dev/null)" ]; then
+	if [ -z "$resolver" ]; then
+		for nameserver in $(grep -is '^nameserver' /etc/resolv.conf | cut -d' ' -f2 | tr '\r\n' ' ' | xargs); do
+			if [[ "$nameserver" == *:* ]] && [[ "$nameserver" != *%* ]]; then
+				resolver="${resolver:+$resolver }[$nameserver]"
+			fi
+		done
+	fi
+	sed -i 's/\(resolver .*\) ipv6=off;/\1;/' /etc/nginx/nginx.conf
+fi
 if [ -n "$resolver" ]; then
 	sed -i "s/1.0.0.1 8.8.4.4 1.1.1.1 8.8.8.8/$resolver/g" /etc/nginx/nginx.conf
 fi
@@ -1778,6 +1795,10 @@ chmod 755 /etc/cron.daily/php-session-cleanup
 if [ "$vsftpd" = 'yes' ]; then
 	echo "[ * ] Configuring Vsftpd server..."
 	cp -f $HESTIA_INSTALL_DIR/vsftpd/vsftpd.conf /etc/
+	# Listen on IPv6 as well (dual-stack) if the server has an IPv6 address
+	if [ -n "$(ip -6 addr show scope global 2> /dev/null)" ]; then
+		sed -i 's/^listen=YES$/listen=NO\nlisten_ipv6=YES/' /etc/vsftpd.conf
+	fi
 	touch /var/log/vsftpd.log
 	chown root:adm /var/log/vsftpd.log
 	chmod 640 /var/log/vsftpd.log
@@ -2023,6 +2044,10 @@ if [ "$named" = 'yes' ]; then
 	echo "[ * ] Configuring Bind DNS server..."
 	cp -f $HESTIA_INSTALL_DIR/bind/named.conf /etc/bind/
 	cp -f $HESTIA_INSTALL_DIR/bind/named.conf.options /etc/bind/
+	# Answer DNS queries over IPv6 as well
+	if [ -n "$(ip -6 addr show scope global 2> /dev/null)" ] && ! grep -q "listen-on-v6" /etc/bind/named.conf.options; then
+		sed -i 's/^\(\s*\)allow-recursion/\1listen-on-v6 { any; };\n\1allow-recursion/' /etc/bind/named.conf.options
+	fi
 	chown root:bind /etc/bind/named.conf
 	chown root:bind /etc/bind/named.conf.options
 	chown bind:bind /var/cache/bind
@@ -2397,7 +2422,10 @@ default_nic="$(ip -d -j route show | jq -r '.[] | if .dst == "default" then .dev
 # IPv4
 primary_ipv4="$(ip -4 -d -j addr show "$default_nic" | jq -r '.[] | select(length > 0) | .addr_info[] | if .scope == "global" then .local else empty end' | head -n1)"
 # IPv6
-#primary_ipv6="$(ip -6 -d -j addr show "$default_nic" | jq -r '.[] | select(length > 0) | .addr_info[] | if .scope == "global" then .local else empty end' | head -n1)"
+default_nic6="$(ip -6 -d -j route show | jq -r '.[] | if .dst == "default" then .dev else empty end' | head -n1)"
+[ -z "$default_nic6" ] && default_nic6="$default_nic"
+primary_ipv6="$(ip -6 -d -j addr show "$default_nic6" | jq -r '.[] | select(length > 0) | .addr_info[] | select(.scope == "global" and .temporary != true and .deprecated != true) | .local' | head -n1)"
+primary_ipv6_prefix="$(ip -6 -d -j addr show "$default_nic6" | jq -r --arg IP "$primary_ipv6" '.[].addr_info[] | select(.local == $IP) | .prefixlen' | head -n1)"
 ip="$primary_ipv4"
 local_ip="$primary_ipv4"
 
@@ -2452,6 +2480,11 @@ if [ "$apache" = 'yes' ] && [ "$nginx" = 'yes' ]; then
 	sed -i "s/LogFormat \"%h/LogFormat \"%a/g" /etc/apache2/apache2.conf
 	a2enmod remoteip >> $LOG
 	systemctl restart apache2
+fi
+
+# Registering the primary IPv6 address (dual-stack)
+if [ -n "$primary_ipv6" ]; then
+	$HESTIA/bin/v-add-sys-ip "$primary_ipv6" "${primary_ipv6_prefix:-64}" "$default_nic6" "$username" 'shared' > /dev/null 2>&1
 fi
 
 # Adding default domain
@@ -2557,6 +2590,11 @@ fi' >> /root/.zshrc
 #----------------------------------------------------------#
 #                   Hestia Access Info                     #
 #----------------------------------------------------------#
+
+# IPv6-only server: show the IPv6 address
+if [ -z "$ip" ] && [ -n "$primary_ipv6" ]; then
+	ip="[$primary_ipv6]"
+fi
 
 # Comparing hostname and IP
 host_ip=$(host $servername | head -n 1 | awk '{print $NF}')

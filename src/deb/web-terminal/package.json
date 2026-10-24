@@ -8,11 +8,11 @@
 	},
 	"dependencies": {
 		"node-pty": "^1.1.0",
-		"ws": "^8.21.3"
+		"ws": "^8.22.0"
 	},
 	"devDependencies": {
-		"@types/ws": "^8.18.1",
-		"@types/node": "^24.13.6"
+		"@types/ws": "^8.18.2",
+		"@types/node": "^24.19.2"
 	},
 	"allowScripts": {
 		"node-pty@1.1.0": true

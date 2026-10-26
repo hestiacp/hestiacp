@@ -44,6 +44,9 @@ source $HESTIA/func/main.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
+# Force UTF-8 so idn2 can handle non-ASCII domains
+export LC_ALL=C.UTF-8
+
 # Json function
 json_list_ssl() {
 	jq -n \
@@ -156,7 +159,7 @@ if [ -z "$aliases" ]; then
 		-key $domain.key \
 		-reqexts SAN \
 		-config <(cat $ssl_conf \
-			<(printf "\n[SAN]\nsubjectAltName=DNS:$domain")) \
+			<(printf "\n[SAN]\nsubjectAltName=DNS:$domain_idn")) \
 		-out $domain.csr > /dev/null 2>&1
 else
 	for alias in $(echo $domain,$aliases | tr ',' '\n' | sort -u); do
@@ -182,7 +185,7 @@ if [ -z "$aliases" ]; then
 		-days $DAYS \
 		-in $domain.csr \
 		-signkey $domain.key \
-		-extfile <(printf "[SAN]\nsubjectAltName=DNS:$domain") \
+		-extfile <(printf "[SAN]\nsubjectAltName=DNS:$domain_idn") \
 		-extensions SAN \
 		-out $domain.crt > /dev/null 2>&1
 else

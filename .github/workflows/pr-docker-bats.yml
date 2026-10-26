@@ -61,7 +61,8 @@ jobs:
             set -euxo pipefail
             export TERM=xterm
             cd /hestiacp-git/src
-            bash ./hst_autocompile.sh --hestia --noinstall --keepbuild "~localsrc"
+            # Use a high pkgrev so the local build sorts above the published package.
+            bash ./hst_autocompile.sh --hestia --pkgrev 99 --noinstall --keepbuild "~localsrc"
             DEB_PATH=""
             if [[ -f "/tmp/hestiacp-src/deb" ]]; then
               pkg="$(dpkg-deb -f /tmp/hestiacp-src/deb Package)"

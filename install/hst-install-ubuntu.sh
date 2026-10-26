@@ -77,7 +77,7 @@ software="acl apache2 apache2.2-common apache2-suexec-custom apache2-utils appar
   php$fpm_v php$fpm_v-apcu php$fpm_v-bz2 php$fpm_v-cgi php$fpm_v-cli php$fpm_v-common php$fpm_v-curl php$fpm_v-gd
   php$fpm_v-imagick php$fpm_v-imap php$fpm_v-intl php$fpm_v-ldap php$fpm_v-mbstring php$fpm_v-mysql
   php$fpm_v-pgsql php$fpm_v-pspell php$fpm_v-readline php$fpm_v-xml php$fpm_v-zip postgresql postgresql-contrib
-  proftpd-core proftpd-mod-crypto quota rrdtool rsyslog util-linux spamassassin
+  proftpd-core proftpd-mod-crypto quota rrdtool rsyslog rsync util-linux spamassassin
   sysstat unzip vim-common vsftpd whois zip zstd bubblewrap restic"
 
 installer_dependencies="apt-transport-https ca-certificates curl dirmngr gnupg openssl software-properties-common wget sudo"
@@ -854,19 +854,10 @@ echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/nginx-keyring.gpg] https://n
 curl -s https://nginx.org/keys/nginx_signing.key | gpg --dearmor | tee /usr/share/keyrings/nginx-keyring.gpg > /dev/null 2>&1
 
 # Installing sury PHP repo
-# add-apt-repository does not yet support signed-by see: https://bugs.launchpad.net/ubuntu/+source/software-properties/+bug/1862764
 echo "[ * ] PHP"
-if [[ "$release" = "22.04" ]] || [[ "$release" = "24.04" ]]; then
-	if [ "$release" = '24.04' ]; then
-		# Workaround for Ubuntu 24.04 due to weak key warning it sheduled to be fixed in 24.04.1
-		echo 'APT::Key::Assert-Pubkey-Algo "";' > /etc/apt/apt.conf.d/99weakkey-warning
-	fi
-	LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php > /dev/null 2>&1
-else
-	# Ubuntu 26.04 and later use the Sury repository instead of a PPA
-	echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/sury-keyring.gpg] https://packages.sury.org/php/ $codename main" > $apt/php.list
-	curl -s https://packages.sury.org/php/apt.gpg | gpg --dearmor | tee /usr/share/keyrings/sury-keyring.gpg > /dev/null 2>&1
-fi
+# Use the sury repository for all Ubuntu versions instead of the PPA
+echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/sury-keyring.gpg] https://packages.sury.org/php/ $codename main" > $apt/php.list
+curl -s https://packages.sury.org/php/apt.gpg | gpg --dearmor | tee /usr/share/keyrings/sury-keyring.gpg > /dev/null 2>&1
 
 # Installing sury Apache2 repo
 if [ "$apache" = 'yes' ] && [ "$release" = '22.04' ]; then
@@ -2508,11 +2499,28 @@ $HESTIA/bin/v-change-sys-port $port > /dev/null 2>&1
 $HESTIA/bin/v-update-sys-defaults
 
 # Update remaining packages since repositories have changed
-echo -ne "[ * ] Installing remaining software updates..."
-apt-get -qq update
-apt-get -y upgrade >> $LOG &
-BACK_PID=$!
-echo
+# Skip the final upgrade with --with-debs, otherwise apt would replace the
+# locally installed .deb packages with the ones from apt.hestiacp.com
+if [ -z "$withdebs" ]; then
+	echo -ne "[ * ] Installing remaining software updates... "
+	apt-get -qq update
+	apt-get -y upgrade >> $LOG &
+	BACK_PID=$!
+
+	# Check if package installation is done, print a spinner
+	spin_i=1
+	while kill -0 $BACK_PID > /dev/null 2>&1; do
+		printf "\b${spinner:spin_i++%${#spinner}:1}"
+		sleep 0.5
+	done
+
+	# Do a blank echo to get the \n back
+	echo
+
+	# Check Installation result
+	wait $BACK_PID
+	check_result $? 'apt-get upgrade failed'
+fi
 
 # Starting Hestia service
 update-rc.d hestia defaults

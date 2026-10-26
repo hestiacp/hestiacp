@@ -333,6 +333,28 @@ prepare_chroot() {
 	ACTIVE_CHROOTS+=("$chroot_dir")
 }
 
+# Pack the package trees a chroot build left staged (see SKIP_DEB_PACK in
+# hst_autocompile.sh) into .debs, natively on the host. Under QEMU, dpkg-deb's
+# xz compression is single-threaded and emulated, which dominates the build
+# time of large packages like hestia-php. Only trees newer than the marker
+# file belong to the build that just ran.
+pack_staged_debs() {
+	local host_build_dir=$1 marker=$2 out_dir=$3
+	local threads_opt="" control tree
+	if dpkg-deb --help 2> /dev/null | grep -q -- '--threads-max'; then
+		threads_opt="--threads-max=$(nproc)"
+	else
+		echo >&2 "[!] dpkg-deb has no --threads-max; xz compression will be single-threaded"
+	fi
+	mkdir -p "$out_dir"
+	for control in "$host_build_dir"/*/DEBIAN/control; do
+		[ -f "$control" ] && [ "$control" -nt "$marker" ] || continue
+		tree="${control%/DEBIAN/control}"
+		echo "Packing $(basename "$tree") on host..."
+		dpkg-deb $threads_opt -Zxz --build "$tree" "$out_dir" || return 1
+	done
+}
+
 run_cross_build() {
 	local distro=$1
 	local release=$2
@@ -350,7 +372,9 @@ run_cross_build() {
 	# so $release alone is enough, no need for a distro prefix).
 	local target_deb_dir="$BUILD_DIR/deb"
 	mkdir -p "$target_deb_dir"
-	local deb_dir_export="export DEB_DIR='$target_deb_dir'; "
+	local deb_dir_export="export DEB_DIR='$target_deb_dir'; export SKIP_DEB_PACK=true; "
+	local host_build_dir="${BUILD_DIR}-${distro}-${release}-${target_arch}"
+	local pack_marker="$host_build_dir/.pack-marker"
 
 	# /proc is bind-mounted from the host (see prepare_chroot), so
 	# hst_autocompile.sh's own cpu-core detection would see the host's full
@@ -362,10 +386,17 @@ run_cross_build() {
 		deb_dir_export="${deb_dir_export}export NUM_CPUS=$(grep "^core id" /proc/cpuinfo | sort -u | wc -l); "
 	fi
 
+	touch "$pack_marker"
 	echo "Cross-building $distro/$release/$target_arch inside $chroot_dir..."
 	chroot "$chroot_dir" /bin/bash -c "${deb_dir_export}cd '$REPO_DIR/src' && DEBIAN_FRONTEND=noninteractive ./hst_autocompile.sh $* --noinstall --keepbuild"
 	if [ $? -ne 0 ]; then
 		echo >&2 "[!] Cross build for $distro/$release/$target_arch failed"
+		exit 1
+	fi
+
+	pack_staged_debs "$host_build_dir" "$pack_marker" "$host_build_dir/deb"
+	if [ $? -ne 0 ]; then
+		echo >&2 "[!] Packing .deb for $distro/$release/$target_arch failed"
 		exit 1
 	fi
 
@@ -495,6 +526,6 @@ for dr in "${ALLOS_DISTRO_RELEASES[@]}"; do
 		if [ ! -d "$NATIVE_DEB_DIR/${release}/" ]; then
 			mkdir -p "$NATIVE_DEB_DIR/${release}/"
 		fi
-		mv "$src_deb_dir"/* "$NATIVE_DEB_DIR/${release}/"
+		cp "$src_deb_dir"/* "$NATIVE_DEB_DIR/${release}/"
 	done
 done

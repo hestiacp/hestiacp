@@ -38,7 +38,7 @@ $data = json_decode(implode("", $output), true);
 unset($output);
 
 // Parse domain
-$v_ip = $data[$v_domain]["IP"];
+$v_ip = trim($data[$v_domain]["IP"]);
 $v_template = $data[$v_domain]["TPL"];
 $v_aliases = str_replace(",", "\n", $data[$v_domain]["ALIAS"]);
 $valiases = explode(",", $data[$v_domain]["ALIAS"]);

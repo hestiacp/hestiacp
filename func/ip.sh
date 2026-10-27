@@ -251,6 +251,7 @@ get_user_ip() {
 
 # Validate ip address
 is_ip_valid() {
+	set -- "${1//[[:space:]]/}" "${@:2}"
 	local_ip="$1"
 	if [ ! -e "$HESTIA/data/ips/$1" ]; then
 		nat=$(grep -H "^NAT='$1'" $HESTIA/data/ips/*)

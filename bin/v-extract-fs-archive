@@ -107,7 +107,7 @@ if [ -n "$(echo "$src_file" | grep -Ei '\.zst$')" ] && [ -z "$x" ]; then
 	x='yes'
 	user_exec mkdir -p "$dst_dir" > /dev/null 2>&1
 	user_exec mv "$src_file" "$dst_dir" > /dev/null 2>&1
-	user_exec pzstd -d -f "$dst_dir/$(basename $src_file)" > /dev/null 2>&1
+	user_exec pzstd -d -f "$dst_dir/$(basename "$src_file")" > /dev/null 2>&1
 	rc=$?
 fi
 
@@ -116,7 +116,7 @@ if [ -n "$(echo "$src_file" | grep -Ei '\.gz$')" ] && [ -z "$x" ]; then
 	x='yes'
 	user_exec mkdir -p "$dst_dir" > /dev/null 2>&1
 	user_exec mv "$src_file" "$dst_dir" > /dev/null 2>&1
-	user_exec gzip -d -f "$dst_dir/$(basename $src_file)" > /dev/null 2>&1
+	user_exec gzip -d -f "$dst_dir/$(basename "$src_file")" > /dev/null 2>&1
 	rc=$?
 fi
 
@@ -125,7 +125,7 @@ if [ -n "$(echo "$src_file" | grep -Ei '\.bz2?$')" ] && [ -z "$x" ]; then
 	x='yes'
 	user_exec mkdir -p "$dst_dir" > /dev/null 2>&1
 	user_exec mv "$src_file" "$dst_dir" # >/dev/null 2>&1
-	user_exec bzip2 -d -f "$dst_dir/$(basename $src_file)" > /dev/null 2>&1
+	user_exec bzip2 -d -f "$dst_dir/$(basename "$src_file")" > /dev/null 2>&1
 	rc=$?
 fi
 
@@ -168,7 +168,7 @@ if [ -n "$(echo "$src_file" | grep -Ei '\.rar$')" ] && [ -z "$x" ]; then
 fi
 
 # Checking result
-if [ $rc -ne 0 ]; then
+if [ -z "$x" ] || [ "$rc" -ne 0 ]; then
 	echo "Error: $src_file was not extracted"
 	exit 3
 fi

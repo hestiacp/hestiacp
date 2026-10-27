@@ -765,7 +765,7 @@ is_mail_domain_new() {
 				check_result "$E_EXISTS" "Required subdomain \"$mail_reserved.$1\" already exists"
 			fi
 		fi
-		if [ -n "$(ls $HESTIA/data/users/*/mail/$mail_nosub.conf 2> /dev/null)" ] && [ "$mail_sub" = "$mail_reserved" ]; then
+		if [ -n "$(ls "$HESTIA"/data/users/*/mail/"$mail_nosub.conf" 2> /dev/null)" ] && [ "$mail_sub" = "$mail_reserved" ]; then
 			if [ "$2" == 'mail' ]; then
 				check_result "$E_INVALID" "The subdomain \"$mail_sub.\" is reserved by \"$mail_nosub\""
 			fi
@@ -1050,16 +1050,19 @@ del_webmail_ssl_config() {
 # Checking domain existence
 is_domain_new() {
 	type=$1
-	for object in ${2//,/ }; do
+	local object objects
+	IFS=',' read -ra objects <<< "$2"
+	for object in "${objects[@]}"; do
+		[ -z "$object" ] && continue
 		if [ -n "$WEB_SYSTEM" ]; then
-			is_web_domain_new $object $type
-			is_web_alias_new $object $type
+			is_web_domain_new "$object" "$type"
+			is_web_alias_new "$object" "$type"
 		fi
 		if [ -n "$DNS_SYSTEM" ]; then
-			is_dns_domain_new $object $type
+			is_dns_domain_new "$object" "$type"
 		fi
 		if [ -n "$MAIL_SYSTEM" ]; then
-			is_mail_domain_new $object $type
+			is_mail_domain_new "$object" "$type"
 		fi
 	done
 }

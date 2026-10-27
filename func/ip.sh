@@ -171,6 +171,7 @@ get_ip_value() {
 
 # Get real ip address
 get_real_ip() {
+	set -- "${1//[[:space:]]/}"
 	if [ -e "$HESTIA/data/ips/$1" ]; then
 		echo "$1"
 	else

@@ -70,9 +70,27 @@ $application
 		// check for default fields
 		$WebappInstaller = new \Hestia\WebApp\AppWizard($app_installer, $v_domain, $hestia);
 		$fields = $WebappInstaller->getOptions();
+		$databaseCreate = isset($data["webapp_database_create"])
+			? filter_var($data["webapp_database_create"], FILTER_VALIDATE_BOOLEAN)
+			: true;
 		$array = [];
 		foreach ($fields as $key => $field) {
 			if (is_array($field)) {
+				if (
+					($field["type"] ?? "") === "boolean" &&
+					isset($data["webapp_" . $key])
+				) {
+					$data["webapp_" . $key] = filter_var(
+						$data["webapp_" . $key],
+						FILTER_VALIDATE_BOOLEAN,
+					);
+				}
+				if (
+					!$databaseCreate &&
+					in_array($key, ["database_name", "database_user"], true)
+				) {
+					continue;
+				}
 				if (!empty($field["value"])) {
 					$array["webapp_" . $key] = $field["value"];
 				} elseif (!empty($field["options"])) {

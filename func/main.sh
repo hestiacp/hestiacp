@@ -2244,17 +2244,16 @@ add_chroot_jail() {
 	cat > "/etc/systemd/system/$systemd" << EOF
 [Unit]
 Description=Mount $user's home directory to the jail chroot
-Before=local-fs.target
 
 [Mount]
 What=$(getent passwd | awk -F: -v u="$user" '$1 == u {print $6}')
 Where=/srv/jail/$user/home/$user
 Type=none
-Options=bind
+Options=bind,_netdev
 LazyUnmount=yes
 
 [Install]
-RequiredBy=local-fs.target
+WantedBy=remote-fs.target
 EOF
 
 	systemctl daemon-reload > /dev/null 2>&1

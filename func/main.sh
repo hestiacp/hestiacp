@@ -2147,15 +2147,24 @@ is_key_permissions_format_valid() {
 cleanup_key_permissions() {
 	local permissions="$1"
 
-	local final quote
+	# Bash builtins only: this runs on every API call made with a key that has a
+	# permission list, for every command in it, so a subshell per item made such
+	# calls take more than a second for a long list.
+	local -A seen=()
+	local final="" permission
+	local -a permissions_arr
 	while IFS=',' read -ra permissions_arr; do
 		for permission in "${permissions_arr[@]}"; do
-			permission="$(basename "$permission" | sed -E "s/^\s*|\s*$//g")"
+			# basename, then trim surrounding whitespace
+			permission="${permission%"${permission##*[!/]}"}"
+			permission="${permission##*/}"
+			permission="${permission#"${permission%%[![:space:]]*}"}"
+			permission="${permission%"${permission##*[![:space:]]}"}"
 
-			# Avoid duplicate items
-			if [[ -z "$(echo ",${final}," | grep ",${permission},")" ]]; then
-				final+="${quote}${permission}"
-				quote=','
+			# Avoid empty and duplicate items
+			if [[ -n "$permission" && -z "${seen[$permission]:-}" ]]; then
+				seen[$permission]=1
+				final+="${final:+,}${permission}"
 			fi
 		done
 	done <<< "$permissions"

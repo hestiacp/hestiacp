@@ -556,7 +556,7 @@ if [ -d /etc/netplan ] && [ -z "$force" ]; then
 fi
 
 # Validate whether installation script matches release version before continuing with install
-if [ -z "$withdebs" ] || [ ! -d "$withdebs" ]; then
+if { [ -z "$withdebs" ] || [ ! -d "$withdebs" ]; } && [ -z "$HESTIA_CHANNEL" ]; then
 	release_branch_ver=$(curl -s https://raw.githubusercontent.com/hestiacp/hestiacp/release/src/deb/hestia/control | grep "Version:" | awk '{print $2}')
 	if [ "$HESTIA_INSTALL_VER" != "$release_branch_ver" ]; then
 		echo

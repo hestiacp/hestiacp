@@ -486,7 +486,7 @@ is_dns_template_valid() {
 
 # DNS domain existence check
 is_dns_domain_new() {
-	dns=$(ls $HESTIA/data/users/*/dns/$1.conf 2> /dev/null)
+	dns=$(ls "$HESTIA"/data/users/*/dns/"$1".conf 2> /dev/null)
 	if [ -n "$dns" ]; then
 		if [ "$2" == 'dns' ]; then
 			check_result "$E_EXISTS" "DNS domain $1 exists"
@@ -747,7 +747,7 @@ is_dns_nameserver_valid() {
 
 # Mail domain existence check
 is_mail_domain_new() {
-	mail=$(ls $HESTIA/data/users/*/mail/$1.conf 2> /dev/null)
+	mail=$(ls "$HESTIA"/data/users/*/mail/"$1".conf 2> /dev/null)
 	if [ -n "$mail" ]; then
 		if [ "$2" == 'mail' ]; then
 			check_result $E_EXISTS "Mail domain $1 exists"
@@ -760,7 +760,7 @@ is_mail_domain_new() {
 	mail_sub=$(echo "$1" | cut -f 1 -d .)
 	mail_nosub=$(echo "$1" | cut -f 1 -d . --complement)
 	for mail_reserved in $(echo "mail $WEBMAIL_ALIAS"); do
-		if [ -n "$(ls $HESTIA/data/users/*/mail/$mail_reserved.$1.conf 2> /dev/null)" ]; then
+		if [ -n "$(ls "$HESTIA"/data/users/*/mail/"$mail_reserved.$1.conf" 2> /dev/null)" ]; then
 			if [ "$2" == 'mail' ]; then
 				check_result "$E_EXISTS" "Required subdomain \"$mail_reserved.$1\" already exists"
 			fi

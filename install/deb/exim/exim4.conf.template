@@ -205,7 +205,7 @@ acl_check_data:
   deny   message        = smtp auth required
          !authenticated = *
          hosts          = !+relay_from_hosts : !+whitelist
-         condition      = ${if match_domain{${lc:${domain:$h_from:}}}{+local_domains}{yes}{no}}
+         condition      = ${if forany{${addresses:$h_from:}}{match_domain{${lc:${domain:$item}}}{+local_domains}}{yes}{no}}
 
 .ifdef CLAMD
   deny   message        = Message contains a virus ($malware_name) and has been rejected

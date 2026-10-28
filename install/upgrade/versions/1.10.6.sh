@@ -434,3 +434,14 @@ fix_exim_helo_checks || echo "[ ! ] Exim HELO checks fix was not applied"
 unset -f fix_exim_helo_checks _xhf_build_pattern _xhf_apply_and_restart_exim 2> /dev/null || true
 
 # End fixing Exim HELO checks
+
+# Refresh phpMyAdmin/phpPgAdmin nginx includes so existing installations get
+# the named-capture fix (#5863)
+if [ -n "$DB_PMA_ALIAS" ] && [ -f "/etc/nginx/conf.d/phpmyadmin.inc" ]; then
+	echo "[ + ] Updating phpMyAdmin nginx configuration"
+	"$BIN/v-change-sys-db-alias" pma "$DB_PMA_ALIAS"
+fi
+if [ -n "$DB_PGA_ALIAS" ] && [ -f "/etc/nginx/conf.d/phppgadmin.inc" ]; then
+	echo "[ + ] Updating phpPgAdmin nginx configuration"
+	"$BIN/v-change-sys-db-alias" pga "$DB_PGA_ALIAS"
+fi

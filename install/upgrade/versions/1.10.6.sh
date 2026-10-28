@@ -201,6 +201,7 @@ if compgen -G "$HESTIA/data/users/*/web.conf" > /dev/null; then
 foreach (glob($argv[1] . '/*/web.conf') as $file) {
 	$contents = file_get_contents($file);
 	if ($contents === false) {
+		fwrite(STDERR, "      ! Unable to read $file\n");
 		continue;
 	}
 
@@ -209,9 +210,29 @@ foreach (glob($argv[1] . '/*/web.conf') as $file) {
 		static fn(array $match) => "IP='" . trim($match[1]) . "'",
 		$contents,
 	);
-	if ($trimmed !== null && $trimmed !== $contents && file_put_contents($file, $trimmed, LOCK_EX) !== false) {
-		echo "      - $file\n";
+	if ($trimmed === null || $trimmed === $contents) {
+		continue;
 	}
+
+	// Write to a temp file and rename, so a short write never leaves a
+	// partially written web.conf behind.
+	$temp = "$file.hestia-tmp";
+	if (file_put_contents($temp, $trimmed) !== strlen($trimmed)) {
+		@unlink($temp);
+		fwrite(STDERR, "      ! Unable to write $temp\n");
+		continue;
+	}
+	if (
+		!@chmod($temp, fileperms($file) & 07777) ||
+		!@chown($temp, fileowner($file)) ||
+		!@chgrp($temp, filegroup($file)) ||
+		!rename($temp, $file)
+	) {
+		@unlink($temp);
+		fwrite(STDERR, "      ! Unable to replace $file\n");
+		continue;
+	}
+	echo "      - $file\n";
 }
 EOPHP
 fi

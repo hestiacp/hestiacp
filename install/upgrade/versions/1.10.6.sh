@@ -192,3 +192,27 @@ if [[ "$ftp_system" =~ proftpd ]]; then
 	fi
 fi
 # End fix ProFTPD
+
+# Trim whitespace from IP values in existing web domain configuration files (#5543)
+if compgen -G "$HESTIA/data/users/*/web.conf" > /dev/null; then
+	echo "[ + ] Trimming whitespace from web domain IP addresses"
+	"$HESTIA_PHP" -- "$HESTIA/data/users" << 'EOPHP'
+<?php
+foreach (glob($argv[1] . '/*/web.conf') as $file) {
+	$contents = file_get_contents($file);
+	if ($contents === false) {
+		continue;
+	}
+
+	$trimmed = preg_replace_callback(
+		"/\bIP='([^']*)'/",
+		static fn(array $match) => "IP='" . trim($match[1]) . "'",
+		$contents,
+	);
+	if ($trimmed !== null && $trimmed !== $contents && file_put_contents($file, $trimmed, LOCK_EX) !== false) {
+		echo "      - $file\n";
+	}
+}
+EOPHP
+fi
+# End trimming web domain IP addresses

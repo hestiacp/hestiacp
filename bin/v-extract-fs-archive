@@ -63,8 +63,14 @@ if [ -n "$strip" ]; then
 	is_int_format_valid "$strip" 'strip-components'
 	tar_strip_level="--strip-components $strip"
 fi
+
+# Match the extension on the file name only, ignoring any URL query string
+# kept by wget in downloaded file names (e.g. package.zip?format=zip)
+archive_name="$(basename "$src_file")"
+archive_name="${archive_name%%\?*}"
+
 # Extracting gziped archive
-if [ -n "$(echo "$src_file" | grep -Ei '\.(tgz|tar\.gz)$')" ]; then
+if [ -n "$(echo "$archive_name" | grep -Ei '\.(tgz|tar\.gz)$')" ]; then
 	x='yes'
 	if [ -z "$test" ] || [ "$test" = "no" ]; then
 		user_exec mkdir -p "$dst_dir" > /dev/null 2>&1
@@ -77,7 +83,7 @@ if [ -n "$(echo "$src_file" | grep -Ei '\.(tgz|tar\.gz)$')" ]; then
 fi
 
 # Extracting bziped archive
-if [ -n "$(echo "$src_file" | grep -Ei '\.(tbz|tar\.bz2?)$')" ] && [ -z "$x" ]; then
+if [ -n "$(echo "$archive_name" | grep -Ei '\.(tbz|tar\.bz2?)$')" ] && [ -z "$x" ]; then
 	x='yes'
 	if [ -z "$test" ] || [ "$test" = "no" ]; then
 		user_exec mkdir -p "$dst_dir" > /dev/null 2>&1
@@ -90,7 +96,7 @@ if [ -n "$(echo "$src_file" | grep -Ei '\.(tbz|tar\.bz2?)$')" ] && [ -z "$x" ]; 
 fi
 
 # Extracting ZSTD archive
-if [ -n "$(echo "$src_file" | grep -Ei '\.tar\.zst$')" ] && [ -z "$x" ]; then
+if [ -n "$(echo "$archive_name" | grep -Ei '\.tar\.zst$')" ] && [ -z "$x" ]; then
 	x='yes'
 	if [ -z "$test" ] || [ "$test" = "no" ]; then
 		user_exec mkdir -p "$dst_dir" > /dev/null 2>&1
@@ -103,7 +109,7 @@ if [ -n "$(echo "$src_file" | grep -Ei '\.tar\.zst$')" ] && [ -z "$x" ]; then
 fi
 
 # Extracting gziped file
-if [ -n "$(echo "$src_file" | grep -Ei '\.zst$')" ] && [ -z "$x" ]; then
+if [ -n "$(echo "$archive_name" | grep -Ei '\.zst$')" ] && [ -z "$x" ]; then
 	x='yes'
 	user_exec mkdir -p "$dst_dir" > /dev/null 2>&1
 	user_exec mv "$src_file" "$dst_dir" > /dev/null 2>&1
@@ -112,7 +118,7 @@ if [ -n "$(echo "$src_file" | grep -Ei '\.zst$')" ] && [ -z "$x" ]; then
 fi
 
 # Extracting gziped file
-if [ -n "$(echo "$src_file" | grep -Ei '\.gz$')" ] && [ -z "$x" ]; then
+if [ -n "$(echo "$archive_name" | grep -Ei '\.gz$')" ] && [ -z "$x" ]; then
 	x='yes'
 	user_exec mkdir -p "$dst_dir" > /dev/null 2>&1
 	user_exec mv "$src_file" "$dst_dir" > /dev/null 2>&1
@@ -121,7 +127,7 @@ if [ -n "$(echo "$src_file" | grep -Ei '\.gz$')" ] && [ -z "$x" ]; then
 fi
 
 # Extracting bziped file
-if [ -n "$(echo "$src_file" | grep -Ei '\.bz2?$')" ] && [ -z "$x" ]; then
+if [ -n "$(echo "$archive_name" | grep -Ei '\.bz2?$')" ] && [ -z "$x" ]; then
 	x='yes'
 	user_exec mkdir -p "$dst_dir" > /dev/null 2>&1
 	user_exec mv "$src_file" "$dst_dir" # >/dev/null 2>&1
@@ -130,7 +136,7 @@ if [ -n "$(echo "$src_file" | grep -Ei '\.bz2?$')" ] && [ -z "$x" ]; then
 fi
 
 # Extracting ziped archive
-if [ -n "$(echo "$src_file" | grep -Ei '\.zip$')" ] && [ -z "$x" ]; then
+if [ -n "$(echo "$archive_name" | grep -Ei '\.zip$')" ] && [ -z "$x" ]; then
 	x='yes'
 	user_exec mkdir -p "$dst_dir" > /dev/null 2>&1
 	user_exec unzip -o "$src_file" -d "$dst_dir" > /dev/null 2>&1
@@ -138,7 +144,7 @@ if [ -n "$(echo "$src_file" | grep -Ei '\.zip$')" ] && [ -z "$x" ]; then
 fi
 
 # Extracting ziped archive
-if [ -n "$(echo "$src_file" | grep -Ei '\.7z$')" ] && [ -z "$x" ]; then
+if [ -n "$(echo "$archive_name" | grep -Ei '\.7z$')" ] && [ -z "$x" ]; then
 	x='yes'
 	user_exec mkdir -p "$dst_dir" > /dev/null 2>&1
 	user_exec mv "$src_file" "$dst_dir" > /dev/null 2>&1
@@ -147,7 +153,7 @@ if [ -n "$(echo "$src_file" | grep -Ei '\.7z$')" ] && [ -z "$x" ]; then
 fi
 
 # Extracting tared archive
-if [ -n "$(echo "$src_file" | grep -Ei '\.tar$')" ] && [ -z "$x" ]; then
+if [ -n "$(echo "$archive_name" | grep -Ei '\.tar$')" ] && [ -z "$x" ]; then
 	x='yes'
 	if [ -z "$test" ] || [ "$test" = "no" ]; then
 		user_exec mkdir -p "$dst_dir" > /dev/null 2>&1
@@ -160,7 +166,7 @@ if [ -n "$(echo "$src_file" | grep -Ei '\.tar$')" ] && [ -z "$x" ]; then
 fi
 
 # Extracting rared archive
-if [ -n "$(echo "$src_file" | grep -Ei '\.rar$')" ] && [ -z "$x" ]; then
+if [ -n "$(echo "$archive_name" | grep -Ei '\.rar$')" ] && [ -z "$x" ]; then
 	x='yes'
 	user_exec mkdir -p "$dst_dir" > /dev/null 2>&1
 	user_exec unrar -x -f "$src_file" "$dst_dir" > /dev/null 2>&1

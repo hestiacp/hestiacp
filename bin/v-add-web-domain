@@ -206,7 +206,7 @@ if [ -n "$PROXY_SYSTEM" ]; then
 		# Fonts
 		PROXY_EXT="$PROXY_EXT,otf,ttf,woff,woff2"
 		# Productivity
-		PROXY_EXT="$PROXY_EXT,doc,docx,odf,odp,ods,odt,pdf,ppt,pptx,rtf,txt,xls,xlsx"
+		PROXY_EXT="$PROXY_EXT,doc,docx,odf,odp,ods,odt,pdf,ppt,pptx,rtf,xls,xlsx"
 		# Archive
 		PROXY_EXT="$PROXY_EXT,7z,bz2,gz,rar,tar,tgz,zip"
 		# Binaries

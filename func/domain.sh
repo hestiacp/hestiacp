@@ -1054,7 +1054,7 @@ is_domain_new() {
 	IFS=',' read -ra objects <<< "$2"
 	for object in "${objects[@]}"; do
 		# Trim leading whitespace
-		object="${object#"${object%%[![:space:]]*}"}"	
+		object="${object#"${object%%[![:space:]]*}"}"
 		# Trim trailing whitespace
 		object="${object%"${object##*[![:space:]]}"}"
 		[ -z "$object" ] && continue

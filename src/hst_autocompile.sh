@@ -228,6 +228,18 @@ fi
 
 DEB_DIR="${DEB_DIR:-$BUILD_DIR/deb}"
 
+# Pack a staged package tree into $DEB_DIR. When SKIP_DEB_PACK=true (set by
+# chroot_build_all.sh) the tree is left in place instead, so the .deb can be
+# packed natively on the host: dpkg-deb/xz are single-threaded and very slow
+# under QEMU emulation.
+build_deb() {
+	if [ "$SKIP_DEB_PACK" = 'true' ]; then
+		echo "Skipping .deb packing of $1 (will be packed outside the chroot)"
+		return 0
+	fi
+	dpkg-deb -Zxz --build "$1" "$DEB_DIR"
+}
+
 # Set packages to compile
 for i in $*; do
 	case "$i" in
@@ -592,7 +604,7 @@ if [ "$NGINX_B" = true ]; then
 
 	# Build the package
 	echo Building Nginx DEB
-	dpkg-deb -Zxz --build $BUILD_DIR_HESTIANGINX $DEB_DIR
+	build_deb $BUILD_DIR_HESTIANGINX
 
 	rm -r $BUILD_DIR/usr
 
@@ -714,7 +726,7 @@ if [ "$PHP_B" = true ]; then
 	# Build the package
 	echo Building PHP DEB
 	[ "$HESTIA_DEBUG" ] && echo DEBUG: dpkg-deb -Zxz --build $BUILD_DIR_HESTIAPHP $DEB_DIR
-	dpkg-deb -Zxz --build $BUILD_DIR_HESTIAPHP $DEB_DIR
+	build_deb $BUILD_DIR_HESTIAPHP
 
 	rm -r $BUILD_DIR/usr
 
@@ -785,7 +797,7 @@ if [ "$WEB_TERMINAL_B" = true ]; then
 	# Build the package
 	echo Building Web Terminal DEB
 	[ "$HESTIA_DEBUG" ] && echo DEBUG: dpkg-deb -Zxz --build $BUILD_DIR_HESTIA_TERMINAL $DEB_DIR
-	dpkg-deb -Zxz --build $BUILD_DIR_HESTIA_TERMINAL $DEB_DIR
+	build_deb $BUILD_DIR_HESTIA_TERMINAL
 
 	# clear up the source folder
 	if [ "$KEEPBUILD" != 'true' ]; then
@@ -874,7 +886,7 @@ if [ "$HESTIA_B" = true ]; then
 			chmod +x $BUILD_DIR_HESTIA/DEBIAN/preinst
 
 			echo Building Hestia DEB
-			dpkg-deb -Zxz --build $BUILD_DIR_HESTIA $DEB_DIR
+			build_deb $BUILD_DIR_HESTIA
 
 			# clear up the source folder
 			if [ "$KEEPBUILD" != 'true' ]; then

@@ -151,7 +151,8 @@ rebuild_user_conf() {
 		mkdir -p $HOMEDIR/$user/tmp
 		chmod 751 $HOMEDIR/$user/conf/web
 		chmod 751 $HOMEDIR/$user/web
-		chmod 771 $HOMEDIR/$user/tmp
+		chmod 700 $HOMEDIR/$user/tmp
+		chown --no-dereference $user:$user $HOMEDIR/$user/tmp
 		chown --no-dereference $root:$user $HOMEDIR/$user/web
 		if [ "$create_user" = "yes" ]; then
 			$BIN/v-rebuild-web-domains $user $restart

@@ -157,7 +157,7 @@ for domain in "${domains[@]}"; do
 			if [[ "$dovecot_version" = "2.4" ]]; then
 				echo "" >> /etc/dovecot/conf.d/domains/$domain.conf
 				echo "local_name mail.$domain {" >> /etc/dovecot/conf.d/domains/$domain.conf
-				echo "  sssl_server_cert_file = $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem" >> /etc/dovecot/conf.d/domains/$domain.conf
+				echo "  ssl_server_cert_file = $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem" >> /etc/dovecot/conf.d/domains/$domain.conf
 				echo "  ssl_server_key_file = $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.key" >> /etc/dovecot/conf.d/domains/$domain.conf
 				echo "}" >> /etc/dovecot/conf.d/domains/$domain.conf
 			else

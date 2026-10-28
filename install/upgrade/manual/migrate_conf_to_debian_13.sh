@@ -105,10 +105,10 @@ if [[ "$DNS_SYSTEM" =~ named|bind ]]; then
 	_bind_changed=false
 
 	# named.conf.default-zones was removed in Debian 13
-	if [[ ! -f /etc/bind/named.conf.default-zones ]] \
-		&& grep -q "include.*named.conf.default-zones" /etc/bind/named.conf 2> /dev/null; then
+	# The include must go regardless of whether the file exists on disk
+	if grep -qE '^[[:space:]]*include.*named\.conf\.default-zones' /etc/bind/named.conf 2> /dev/null; then
 		echo "[ + ] Removing the default-zones include from named.conf"
-		sed -i "/^include.*named.conf.default-zones/d" /etc/bind/named.conf
+		sed -i -E '/^[[:space:]]*include.*named\.conf\.default-zones/d' /etc/bind/named.conf
 		_bind_changed=true
 	else
 		echo "[ - ] default-zones include already clean, nothing to do"

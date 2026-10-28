@@ -50,3 +50,145 @@ if [[ -f "$exim_conf" ]] && grep -qF "$pattern" "$exim_conf"; then
 		fi
 	fi
 fi
+
+# Start migrating PPA
+# For Ubuntu: Migrate existing PHP repo from PPA to sury repository
+_running_os="$(lsb_release -s -i)"
+_running_os="${_running_os,,}"
+_arch="$(dpkg --print-architecture)"
+_codename="$(lsb_release -s -c)"
+_apt_dir="/etc/apt/sources.list.d"
+_apt_file="$_apt_dir/php.list"
+_ppa_string="ppa.launchpadcontent.net/ondrej/php/ubuntu"
+_keyring="/usr/share/keyrings/sury-keyring.gpg"
+
+if [[ "$_running_os" == "ubuntu" ]]; then
+
+	# Find PPA files
+	_ppa_files=()
+	while IFS= read -r -d '' _file; do
+		_ppa_files+=("$_file")
+	done < <(grep -rlFZ --include='*.list' --include='*.sources' -- "$_ppa_string" "$_apt_dir")
+
+	# Run only if PPA files exist
+	if [[ ${#_ppa_files[@]} -gt 0 ]]; then
+		echo "[ + ] Migrating PPA repo to sury"
+
+		# Backup and remove PPA files (.save is ignored by apt)
+		_ts="$(date +%Y%m%d_%H%M%S)"
+		for _file in "${_ppa_files[@]}"; do
+			_backup="${_file}.hestia-${_ts}.save"
+			if cp -p -- "$_file" "$_backup" && rm -f -- "$_file"; then
+				echo "[ + ] PPA backed up: $_backup"
+			else
+				echo "[ ! ] PPA backup failed: $_file" >&2
+			fi
+		done
+
+		# Download key to temp file first
+		_tmp_key="$(mktemp)"
+		if curl -fsSm60 https://packages.sury.org/php/apt.gpg | gpg --dearmor --yes > "$_tmp_key" 2> /dev/null && [[ -s "$_tmp_key" ]]; then
+			install -m 644 "$_tmp_key" "$_keyring"
+			echo "[ + ] Key installed: $_keyring"
+			echo "deb [arch=$_arch signed-by=$_keyring] https://packages.sury.org/php/ $_codename main" > "$_apt_file"
+			echo "[ + ] Repo added: $_apt_file"
+		else
+			echo "[ ! ] Key download failed; repo not added" >&2
+		fi
+		rm -f "$_tmp_key"
+	fi
+fi
+# End migrating PPA
+
+# Fix phpmyadmin
+pma_config="/etc/phpmyadmin"
+
+if [[ -f "$pma_config/hestia-sso.inc.php" && -f "$pma_config/config.inc.php" ]] \
+	&& ! grep -qF "if (isset(\$cfg['Servers'][\$i])) {" "$pma_config/config.inc.php"; then
+	echo "[ + ] Fixing PhpMyAdmin SSO config..."
+
+	# Save current blowfish secret
+	blowfish_secret=$(sed -nE 's/^[[:space:]]*\$cfg\["blowfish_secret"\][[:space:]]*=[[:space:]]*"([^"]*)".*/\1/p' "$pma_config/config.inc.php" | head -n1)
+
+	if cp -f "$HESTIA/install/deb/phpmyadmin/config.inc.php" "$pma_config/config.inc.php"; then
+		if grep -q "//Add Hestia SSO code here" "$pma_config/config.inc.php"; then
+			sed -i \
+				-e "s|//Add Hestia SSO code here|//Add Hestia SSO code here\n        if (isset(\$cfg['Servers'][\$i])) {\n                include ('$pma_config/hestia-sso.inc.php');|" \
+				-e "s|^\(\s*\)\$i++;|\1        \$i++;\n\1}|" \
+				"$pma_config/config.inc.php"
+
+			# Restore blowfish secret
+			if [[ -n "$blowfish_secret" ]]; then
+				blowfish_escaped=$(printf '%s' "$blowfish_secret" | sed -e 's/[\\&|]/\\&/g')
+				sed -i "s|%blowfish_secret%|$blowfish_escaped|g" "$pma_config/config.inc.php"
+			fi
+		else
+			echo "[ ! ] Info: SSO marker not found in $pma_config/config.inc.php, skipping patch" >&2
+		fi
+	else
+		echo "[ ! ] Error: failed to copy base config.inc.php to $pma_config" >&2
+	fi
+fi
+
+# Ensure that Hestia's certificates are owned by root:mail to avoid conflicts
+# with the AppArmor profile for ProFTPD
+for cert in certificate.crt certificate.key; do
+	if [[ -f "$HESTIA/ssl/$cert" ]]; then
+		chown root:mail "$HESTIA/ssl/$cert"
+		chmod 640 "$HESTIA/ssl/$cert"
+	fi
+done
+
+# Start fix ProFTPD
+ftp_system="$(/usr/local/hestia/bin/v-list-sys-config json | jq -r '.[].FTP_SYSTEM')"
+if [[ "$ftp_system" =~ proftpd ]]; then
+	# Add an Include directive to load configuration files from /etc/proftpd/conf.d/
+	# Hestia currently adds conf.d/external_ip.conf to configure the
+	# MasqueradeAddress directive for NAT environments, but the file is never loaded.
+	proftpd_conf="/etc/proftpd/proftpd.conf"
+	backup_file=""
+	restart_proftpd=false
+
+	if [[ -f "$proftpd_conf" ]] && ! grep -qE "^[[:space:]]*Include[[:space:]]+/etc/proftpd/conf.d/" "$proftpd_conf"; then
+		echo "[ + ] Fixing ProFTPD not loading conf files from /etc/proftpd/conf.d/"
+		# Timestamped name: the backup is always created by this run and never overwrites a previous one
+		backup_file="${proftpd_conf}.hestia-backup-$(date +%Y-%m-%d-%H%M%S)"
+
+		if cp -p "$proftpd_conf" "$backup_file"; then
+			sed -i -E '/^[[:space:]]*Include[[:space:]]+\/etc\/proftpd\/tls\.conf([[:space:]]|$)/a Include /etc/proftpd/conf.d/' "$proftpd_conf"
+
+			# Check that the directive was actually added
+			if grep -qE "^[[:space:]]*Include[[:space:]]+/etc/proftpd/conf.d/" "$proftpd_conf"; then
+				restart_proftpd=true
+			else
+				echo "[ ! ] Include directive not added (tls.conf line not found), skipping" >&2
+				# Safe to remove: this backup was created by this run and the file is unchanged
+				rm -f "$backup_file"
+			fi
+		else
+			echo "[ ! ] Could not create backup of $proftpd_conf, skipping" >&2
+		fi
+	fi
+
+	if $restart_proftpd; then
+		echo "[ + ] Restarting ProFTPD service"
+		if proftpd -t &> /dev/null && systemctl restart proftpd &> /dev/null; then
+			echo "[ + ] ProFTPD successfully restarted"
+		else
+			echo "[ ! ] ProFTPD failed to restart, restoring backup" >&2
+			systemctl status proftpd --no-pager -l >&2
+
+			if cp -p "$backup_file" "$proftpd_conf"; then
+				if systemctl restart proftpd &> /dev/null; then
+					echo "[ + ] Backup restored and ProFTPD restarted"
+				else
+					echo "[ ! ] ProFTPD still fails after restoring backup" >&2
+					systemctl status proftpd --no-pager -l >&2
+				fi
+			else
+				echo "[ ! ] Could not restore $backup_file to $proftpd_conf" >&2
+			fi
+		fi
+	fi
+fi
+# End fix ProFTPD

@@ -58,7 +58,7 @@ rm /usr/share/phpmyadmin/hestia-sso.php
 rm /etc/phpmyadmin/hestia-sso.inc.php
 
 #revert config
-sed -i "/hestia-sso.inc.php/d" $PMA_CONFIG/config.inc.php
+sed -i -z "s|[[:blank:]]*if (isset(\$cfg\['Servers'\]\[\$i\])) {[[:space:]]*include ('$PMA_CONFIG/hestia-sso.inc.php');[[:space:]]*\$i++;[[:space:]]*}|\t\$i++;|" "$PMA_CONFIG/config.inc.php"
 
 # disable key
 $BIN/v-change-sys-config-value 'PHPMYADMIN_KEY' ""

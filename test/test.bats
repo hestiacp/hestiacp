@@ -818,8 +818,11 @@ function check_ip_not_banned(){
     # The Firefox UA matches the $ar_support_425 regex map. Before the
     # named-capture fix in phpmyadmin.inc this returned 500 (fastcgi request
     # length mismatch) instead of the login page.
-    local ip="198.18.0.125"
+    local ip
     local pma_alias="${DB_PMA_ALIAS:-phpmyadmin}"
+
+    USER_DATA=$HESTIA/data/users/$user
+    ip=$(get_real_ip "$(get_object_value 'web' 'DOMAIN' "$domain" '$IP')")
 
     run curl --silent --output /dev/null --write-out '%{http_code}' \
         --resolve "${domain}:80:${ip}" \

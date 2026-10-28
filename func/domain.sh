@@ -1051,8 +1051,12 @@ del_webmail_ssl_config() {
 is_domain_new() {
 	type=$1
 	local object objects
-	IFS=',' read -ra objects <<< "${2//, /,}"
+	IFS=',' read -ra objects <<< "$2"
 	for object in "${objects[@]}"; do
+	    # Trim leading whitespace
+	    object="${object#"${object%%[![:space:]]*}"}"	
+	    # Trim trailing whitespace
+	    object="${object%"${object##*[![:space:]]}"}"
 		[ -z "$object" ] && continue
 		if [ -n "$WEB_SYSTEM" ]; then
 			is_web_domain_new "$object" "$type"

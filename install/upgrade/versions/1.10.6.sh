@@ -240,7 +240,7 @@ fi
 
 # Start fixing Exim HELO checks
 fix_exim_helo_checks() {
-	local _xhf_conf="/etc/exim4/exim4.conf.template"
+	local _xhf_conf="${1:-/etc/exim4/exim4.conf.template}"
 	local _xhf_old _xhf_new _xhf_pat _xhf_newpat _xhf_rep _xhf_bak
 
 	if [ ! -f "$_xhf_conf" ]; then
@@ -332,7 +332,7 @@ EOF
 	)
 
 	# ---------- Build a whitespace-tolerant ERE from a block of text ----------
-	build_pattern() {
+	_xhf_build_pattern() {
 		local _xhf_body
 		_xhf_body=$(printf '%s\n' "$1" \
 			| tr -s '[:space:]' '\n' \
@@ -343,7 +343,7 @@ EOF
 
 	# ---------- Apply the config and restart Exim ----------
 	# Returns 0 only if everything (generate config, validate, restart) works.
-	apply_and_restart_exim() {
+	_xhf_apply_and_restart_exim() {
 		if ! update-exim4.conf &> /dev/null; then
 			echo "[ ! ] Exim configuration update failed"
 			return 1
@@ -364,8 +364,8 @@ EOF
 		return 0
 	}
 
-	_xhf_pat=$(build_pattern "$_xhf_old")
-	_xhf_newpat=$(build_pattern "$_xhf_new")
+	_xhf_pat=$(_xhf_build_pattern "$_xhf_old")
+	_xhf_newpat=$(_xhf_build_pattern "$_xhf_new")
 
 	# Replacement: keep the captured prefix (\1) and suffix (\2),
 	# escape \, & and / in the new text and turn newlines into \n
@@ -405,7 +405,7 @@ EOF
 
 	# ---------- Regenerate config and restart Exim ----------
 	echo "[ + ] Regenerating configuration and restarting Exim"
-	if apply_and_restart_exim; then
+	if _xhf_apply_and_restart_exim; then
 		echo "[ + ] Exim restarted successfully with the new configuration"
 		return 0
 	fi
@@ -421,7 +421,7 @@ EOF
 	fi
 
 	echo "[ + ] Retrying Exim restart with the original configuration"
-	if apply_and_restart_exim; then
+	if _xhf_apply_and_restart_exim; then
 		echo "[ + ] Exim restarted successfully with the original configuration"
 	else
 		echo "[ ! ] Exim still fails to restart with the original configuration"
@@ -431,5 +431,6 @@ EOF
 }
 
 fix_exim_helo_checks || echo "[ ! ] Exim HELO checks fix was not applied"
+unset -f fix_exim_helo_checks _xhf_build_pattern _xhf_apply_and_restart_exim 2> /dev/null || true
 
 # End fixing Exim HELO checks

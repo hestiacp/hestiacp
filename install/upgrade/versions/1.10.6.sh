@@ -237,3 +237,200 @@ foreach (glob($argv[1] . '/*/web.conf') as $file) {
 EOPHP
 fi
 # End trimming web domain IP addresses
+
+# Start fixing Exim HELO checks
+fix_exim_helo_checks() {
+	local _xhf_conf="${1:-/etc/exim4/exim4.conf.template}"
+	local _xhf_old _xhf_new _xhf_pat _xhf_newpat _xhf_rep _xhf_bak
+
+	if [ ! -f "$_xhf_conf" ]; then
+		return 1
+	fi
+
+	# Already fixed: nothing to apply, so stay silent
+	if grep -q 'No valid forward-confirmed reverse DNS for' "$_xhf_conf"; then
+		return 0
+	fi
+
+	echo "[ + ] Fixing Exim HELO checks"
+
+	# ---------- ORIGINAL TEXT ----------
+	# Only the tokens and their order matter; whitespace (spaces, tabs,
+	# newlines, blank lines) is matched flexibly.
+	_xhf_old=$(
+		cat << 'EOF'
+acl_check_mail:
+  deny    condition     = ${if eq{$sender_helo_name}{}}
+          message       = HELO required before MAIL
+
+  drop    !authenticated = *
+          message       =  Helo name contains an IP address (HELO was $sender_helo_name) and not is valid
+          condition     = ${if match{$sender_helo_name}{\N((\d{1,3}[.-]\d{1,3}[.-]\d{1,3}[.-]\d{1,3})|([0-9a-f]{8})|([0-9A-F]{8}))\N}{yes}{no}}
+          condition     = ${if match {${lookup dnsdb{>: defer_never,ptr=$sender_host_address}}\}{$sender_helo_name}{no}{yes}}
+          delay         = 45s
+
+  drop    !authenticated = *
+          condition     = ${if isip{$sender_helo_name}}
+          message       = Access denied - Invalid HELO name (See RFC2821 4.1.3)
+
+  drop    !authenticated = *
+          condition    = ${if eq{[$interface_address]}{$sender_helo_name}}
+          message       = $interface_address is _my_ address
+
+  accept
+EOF
+	)
+
+	# ---------- NEW TEXT (written literally) ----------
+	_xhf_new=$(
+		cat << 'EOF'
+acl_check_mail:
+
+  # 1. HELO is mandatory (applies to authenticated clients too)
+  deny    condition = ${if eq{$sender_helo_name}{}}
+          message   = HELO required before MAIL
+
+  # 2. Reject HELO that is a bare IP address
+  drop    !authenticated = *
+          condition = ${if isip{$sender_helo_name}}
+          message   = HELO is a bare IP address: $sender_helo_name (see RFC 5321 4.1.3)
+
+  # 3. Temporary error if reverse DNS lookup failed
+  defer   !authenticated = *
+          condition = ${if eq{$host_lookup_deferred}{1}}
+          message   = Temporary DNS verification failure
+
+  # 4. Reject our own IP used as HELO
+  drop    !authenticated = *
+          condition = ${if or{{eq{[$interface_address]}{$sender_helo_name}}{eq{$interface_address}{$sender_helo_name}}}}
+          message   = $interface_address is our address
+
+  # 5. Require forward-confirmed reverse DNS (FCrDNS) (LOG-ONLY for now)
+  #    To enforce: change "warn" to "deny" and uncomment "message".
+  warn    !authenticated = *
+          condition   = ${if eq{$sender_host_name}{}}
+          log_message = NO_FCRDNS host=$sender_host_address helo=$sender_helo_name
+          # message   = No valid forward-confirmed reverse DNS for $sender_host_address
+
+  # 6. Reject IP-like HELOs (e.g. x.1-2-3-4.domain.com, x.1.2.3.4.domain.com,
+  #    and IPv4 address literals like [1.2.3.4]) unless they match the verified PTR
+  drop    !authenticated = *
+          condition = ${if match{$sender_helo_name}{\N\d{1,3}[.-]\d{1,3}[.-]\d{1,3}[.-]\d{1,3}\N}}
+          condition = ${if eqi{$sender_helo_name}{$sender_host_name}{no}{yes}}
+          message   = HELO contains an IP address and does not match PTR: $sender_helo_name
+
+  # 7. HELO should match the verified PTR (LOG-ONLY for now)
+  #    To enforce: change "warn" to "deny" and uncomment "message".
+  warn    !authenticated = *
+          condition   = ${if def:sender_host_name}
+          condition   = ${if eqi{$sender_helo_name}{$sender_host_name}{no}{yes}}
+          log_message = HELO_PTR_MISMATCH helo=$sender_helo_name ptr=$sender_host_name host=$sender_host_address
+          # message   = HELO does not match verified PTR hostname
+
+  accept
+EOF
+	)
+
+	# ---------- Build a whitespace-tolerant ERE from a block of text ----------
+	_xhf_build_pattern() {
+		local _xhf_body
+		_xhf_body=$(printf '%s\n' "$1" \
+			| tr -s '[:space:]' '\n' \
+			| sed 's/[][\\.*^$(){}|+?\/]/\\&/g' \
+			| awk 'NF { printf "%s%s", (n++ ? "[[:space:]]+" : ""), $0 }')
+		printf '(^|\\n)%s([[:space:]]|$)' "$_xhf_body"
+	}
+
+	# ---------- Apply the config and restart Exim ----------
+	# Returns 0 only if everything (generate config, validate, restart) works.
+	_xhf_apply_and_restart_exim() {
+		if ! update-exim4.conf &> /dev/null; then
+			echo "[ ! ] Exim configuration update failed"
+			return 1
+		fi
+		if ! exim4 -bV &> /dev/null; then
+			echo "[ ! ] Exim configuration validation failed"
+			return 1
+		fi
+		if ! systemctl restart exim4 &> /dev/null; then
+			echo "[ ! ] Exim restart failed"
+			return 1
+		fi
+		sleep 2
+		if ! systemctl is-active --quiet exim4 &> /dev/null; then
+			echo "[ ! ] Exim is not active after restart"
+			return 1
+		fi
+		return 0
+	}
+
+	_xhf_pat=$(_xhf_build_pattern "$_xhf_old")
+	_xhf_newpat=$(_xhf_build_pattern "$_xhf_new")
+
+	# Replacement: keep the captured prefix (\1) and suffix (\2),
+	# escape \, & and / in the new text and turn newlines into \n
+	_xhf_rep=$(printf '%s' "$_xhf_new" | sed -z 's/[\\&\/]/\\&/g; s/\n/\\n/g')
+	_xhf_rep="\\1${_xhf_rep}\\2"
+
+	# ---------- Check that the original block exists ----------
+	if ! sed -zE "/$_xhf_pat/!q1" "$_xhf_conf" > /dev/null 2>&1; then
+		echo "[ ! ] Exim original block does NOT match in $_xhf_conf"
+		echo "[ ! ] Nothing was modified."
+		return 1
+	fi
+
+	# ---------- Backup with date and acl_check_mail ----------
+	_xhf_bak="${_xhf_conf}.$(date +%Y%m%d-%H%M%S).acl_check_mail.bak"
+	if ! cp -p -- "$_xhf_conf" "$_xhf_bak"; then
+		echo "[ ! ] Could not create backup. Nothing was modified."
+		return 1
+	fi
+	echo "[ + ] Backup created: $_xhf_bak"
+
+	# ---------- Replacement (first match only) ----------
+	if ! sed -zE -i "s/$_xhf_pat/$_xhf_rep/" "$_xhf_conf"; then
+		echo "[ ! ] Exim replacement failed, restoring backup"
+		cp -p -- "$_xhf_bak" "$_xhf_conf" && echo "[ + ] Exim backup restored"
+		return 1
+	fi
+
+	# ---------- Verify the new block was applied ----------
+	if sed -zE "/$_xhf_newpat/!q1" "$_xhf_conf" > /dev/null 2>&1; then
+		echo "[ + ] Exim replacement done successfully"
+	else
+		echo "[ ! ] Exim verification failed, restoring backup"
+		cp -p -- "$_xhf_bak" "$_xhf_conf" && echo "[ + ] Exim backup restored"
+		return 1
+	fi
+
+	# ---------- Regenerate config and restart Exim ----------
+	echo "[ + ] Regenerating configuration and restarting Exim"
+	if _xhf_apply_and_restart_exim; then
+		echo "[ + ] Exim restarted successfully with the new configuration"
+		return 0
+	fi
+
+	# ---------- Failure: restore backup and retry ----------
+	echo "[ ! ] Could not restart Exim with the new configuration"
+	echo "[ + ] Restoring backup"
+	if cp -p -- "$_xhf_bak" "$_xhf_conf"; then
+		echo "[ + ] Exim backup restored: $_xhf_bak"
+	else
+		echo "[ ! ] Could not restore backup: $_xhf_bak"
+		return 1
+	fi
+
+	echo "[ + ] Retrying Exim restart with the original configuration"
+	if _xhf_apply_and_restart_exim; then
+		echo "[ + ] Exim restarted successfully with the original configuration"
+	else
+		echo "[ ! ] Exim still fails to restart with the original configuration"
+		echo "[ ! ] Check: journalctl -u exim4 / /var/log/exim4/mainlog"
+	fi
+	return 1
+}
+
+fix_exim_helo_checks || echo "[ ! ] Exim HELO checks fix was not applied"
+unset -f fix_exim_helo_checks _xhf_build_pattern _xhf_apply_and_restart_exim 2> /dev/null || true
+
+# End fixing Exim HELO checks

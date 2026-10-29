@@ -9,6 +9,13 @@ define("API_HOST_NAME", "%API_HOST_NAME%");
 define("API_HESTIA_PORT", "%API_HESTIA_PORT%");
 define("API_KEY", "%API_KEY%");
 
+/* Reuse Hestia's own get_real_user_ip() (see get_user_ip() below) instead of
+   re-implementing IP detection here -- this file is deployed standalone into
+   phpMyAdmin's directory, but Hestia's install path is fixed, so it's safe
+   to reach back into it. */
+require_once "/usr/local/hestia/web/inc/vendor/autoload.php";
+require_once "/usr/local/hestia/web/inc/helpers.php";
+
 class Hestia_API {
 	/** @var string */
 	public $hostname;
@@ -80,40 +87,14 @@ class Hestia_API {
 	}
 
 	public function get_user_ip() {
-		// Saving user IPs to the session for preventing session hijacking
-		$user_combined_ip = [];
-		if ($_SERVER["REMOTE_ADDR"] != $_SERVER["SERVER_ADDR"]) {
-			$user_combined_ip[] = $_SERVER["REMOTE_ADDR"];
-		}
-		if (isset($_SERVER["HTTP_CLIENT_IP"])) {
-			$user_combined_ip .= "|" . $_SERVER["HTTP_CLIENT_IP"];
-		}
-		if (isset($_SERVER["HTTP_X_FORWARDED_FOR"])) {
-			if ($_SERVER["REMOTE_ADDR"] != $_SERVER["HTTP_X_FORWARDED_FOR"]) {
-				$user_combined_ip[] = $_SERVER["HTTP_X_FORWARDED_FOR"];
-			}
-		}
-		if (isset($_SERVER["HTTP_FORWARDED_FOR"])) {
-			if ($_SERVER["REMOTE_ADDR"] != $_SERVER["HTTP_FORWARDED_FOR"]) {
-				$user_combined_ip[] = $_SERVER["HTTP_FORWARDED_FOR"];
-			}
-		}
-		if (isset($_SERVER["HTTP_X_FORWARDED"])) {
-			if ($_SERVER["REMOTE_ADDR"] != $_SERVER["HTTP_X_FORWARDED"]) {
-				$user_combined_ip[] = $_SERVER["HTTP_X_FORWARDED"];
-			}
-		}
-		if (isset($_SERVER["HTTP_FORWARDED"])) {
-			if ($_SERVER["REMOTE_ADDR"] != $_SERVER["HTTP_FORWARDED"]) {
-				$user_combined_ip[] = "|" . $_SERVER["HTTP_FORWARDED"];
-			}
-		}
-		if (isset($_SERVER["HTTP_CF_CONNECTING_IP"])) {
-			if (!empty($_SERVER["HTTP_CF_CONNECTING_IP"])) {
-				$user_combined_ip[] = $_SERVER["HTTP_CF_CONNECTING_IP"];
-			}
-		}
-		return implode("|", $user_combined_ip);
+		// Must compute the IP exactly the same way get_real_user_ip() does
+		// in web/inc/helpers.php -- that's what was used to build the
+		// token this value gets checked against in verify_token() below.
+		// This used to re-implement its own (inconsistent) IP detection,
+		// which silently disagreed with get_real_user_ip() as soon as a
+		// reverse proxy or Cloudflare was involved, breaking every SSO
+		// login behind one with "security token mismatch" (see #5068).
+		return get_real_user_ip();
 	}
 }
 

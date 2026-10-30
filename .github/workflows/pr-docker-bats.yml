@@ -12,11 +12,13 @@ permissions:
   contents: read
 
 jobs:
-  docker-bats:
+  docker-bats-nginx-apache:
     runs-on: ubuntu-26.04
     timeout-minutes: 120
+    env:
+      INSTALL_APACHE_ARGS: "--apache yes"
 
-    steps:
+    steps: &bats-steps
       - name: Checkout
         uses: actions/checkout@v7
         with:
@@ -105,6 +107,7 @@ jobs:
               --interactive no \
               --force \
               --with-debs "${DEB_PATH}" \
+              ${{ env.INSTALL_APACHE_ARGS }} \
               --clamav no \
               --spamassassin no
           '
@@ -117,7 +120,7 @@ jobs:
             if ! command -v bats >/dev/null 2>&1; then
               test/test_helper/bats-core/install.sh /usr/local
             fi
-            bats test/test.bats
+            bats test/test.bats test/upgrade/1.10.6.bats
           '
 
       - name: Collect logs on failure
@@ -144,3 +147,12 @@ jobs:
         run: |
           docker rm -f hestia-ci || true
           docker network rm hestia-ci-net || true
+
+  # Same suite against an nginx-only install (no Apache2). Runs in parallel
+  # with the nginx + Apache2 job on its own runner and container.
+  docker-bats-nginx:
+    runs-on: ubuntu-26.04
+    timeout-minutes: 120
+    env:
+      INSTALL_APACHE_ARGS: "--apache no"
+    steps: *bats-steps

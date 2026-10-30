@@ -80,12 +80,7 @@ if [ "$basecmd" != 'ps' -a \
 	check_result "$E_FORBIDEN" "Error: Cli command not enabled"
 fi
 
-all_scriptargs=("$@")
-for ((I = 3; I <= $#; I++)); do
-	cmdArgs="$cmdArgs ${all_scriptargs[${I} - 1]}"
-done
-
-runuser -u "$user" -- $clicmd $cmdArgs 2>&1
+runuser -u "$user" -- "$clicmd" "${@:3}" 2>&1
 if [ $? -ne 0 ]; then
 	echo "Error: cmd exited with errors"
 	exit 3

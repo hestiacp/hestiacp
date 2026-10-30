@@ -406,9 +406,6 @@ class HestiaApp
 
         $command = ['/usr/bin/sudo', $cli_script, ...$arguments];
 
-        // Escape spaces to disallow splitting commands and allow spaces in names like site names
-        $command = array_map(fn(string $argument) => str_replace(' ', '\\ ', $argument), $command);
-
         $process = new Process($command);
         // Increase the timeout from the default 60 seconds to 5 minutes to handle long install processes
         $process->setTimeout(300);

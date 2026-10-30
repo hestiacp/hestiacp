@@ -813,6 +813,25 @@ function check_ip_not_banned(){
     rm $HOMEDIR/$user/web/$domain/public_html/php-test.php
 }
 
+@test "WEB: phpMyAdmin with Firefox User-Agent" {
+    # Regression test for https://github.com/hestiacp/hestiacp/issues/5617
+    # The Firefox UA matches the $ar_support_425 regex map. Before the
+    # named-capture fix in phpmyadmin.inc this returned 500 (fastcgi request
+    # length mismatch) instead of the login page.
+    local ip
+    local pma_alias="${DB_PMA_ALIAS:-phpmyadmin}"
+
+    USER_DATA=$HESTIA/data/users/$user
+    ip=$(get_real_ip "$(get_object_value 'web' 'DOMAIN' "$domain" '$IP')")
+
+    run curl --silent --output /dev/null --write-out '%{http_code}' \
+        --resolve "${domain}:80:${ip}" \
+        -A 'Mozilla/5.0 (X11; Linux x86_64; rv:144.0) Gecko/20100101 Firefox/144.0' \
+        "http://${domain}/${pma_alias}/"
+    assert_success
+    assert_output "200"
+}
+
 @test "WEB: Add web domain (duplicate)" {
     run v-add-web-domain $user $domain 198.18.0.125
     assert_failure $E_EXISTS

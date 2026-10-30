@@ -112,9 +112,27 @@ if (isset($_SESSION["user"])) {
 	exit();
 }
 
+// Seconds the 2FA step may take after the password has been verified
+define("LOGIN_2FA_STEP_TIMEOUT", 300);
+
+// Returns true if the password of $user was verified in the first login step,
+// so the 2FA step does not need the plaintext password in the session
+function login_password_verified($user) {
+	$verified = $_SESSION["login"]["verified"] ?? null;
+	return is_array($verified) &&
+		($verified["user"] ?? null) === $user &&
+		($verified["time"] ?? 0) > time() - LOGIN_2FA_STEP_TIMEOUT;
+}
+
 function authenticate_user($user, $password, $twofa = "") {
+	$password_verified = $twofa !== "" && login_password_verified($user);
+	$verified_time = $password_verified ? $_SESSION["login"]["verified"]["time"] : time();
+	$verified_salt = $password_verified ? $_SESSION["login"]["verified"]["salt"] ?? "" : "";
 	unset($_SESSION["login"]);
 	if (verify_csrf($_POST, true)) {
+		if ($twofa !== "" && !$password_verified) {
+			return _("Your login session has expired. Please log in again.");
+		}
 		$v_user = quoteshellarg($user);
 		$ip = get_real_user_ip();
 		$user_agent = $_SERVER["HTTP_USER_AGENT"];
@@ -142,56 +160,64 @@ function authenticate_user($user, $password, $twofa = "") {
 			}
 			return $error;
 		} else {
-			$salt = $pam[$user]["SALT"];
-			$method = $pam[$user]["METHOD"];
+			if ($password_verified) {
+				// Password was already verified in the first login step, unless it changed since
+				if (!hash_equals($verified_salt, (string) ($pam[$user]["SALT"] ?? ""))) {
+					return _("Your login session has expired. Please log in again.");
+				}
+				$return_var = 0;
+			} else {
+				$salt = $pam[$user]["SALT"];
+				$method = $pam[$user]["METHOD"];
 
-			if ($method == "md5") {
-				$hash = crypt($password, '$1$' . $salt . '$');
-			}
-			if ($method == "sha-512") {
-				$hash = crypt($password, '$6$rounds=5000$' . $salt . '$');
-				$hash = str_replace('$rounds=5000', "", $hash);
-			}
-			if ($method == "yescrypt") {
-				$fp = tmpfile();
-				$v_password = stream_get_meta_data($fp)["uri"];
-				fwrite($fp, $password . "\n");
+				if ($method == "md5") {
+					$hash = crypt($password, '$1$' . $salt . '$');
+				}
+				if ($method == "sha-512") {
+					$hash = crypt($password, '$6$rounds=5000$' . $salt . '$');
+					$hash = str_replace('$rounds=5000', "", $hash);
+				}
+				if ($method == "yescrypt") {
+					$fp = tmpfile();
+					$v_password = stream_get_meta_data($fp)["uri"];
+					fwrite($fp, $password . "\n");
+					exec(
+						HESTIA_CMD .
+							"v-check-user-password " .
+							$v_user .
+							" " .
+							quoteshellarg($v_password) .
+							" " .
+							$v_ip .
+							" yes",
+						$output,
+						$return_var,
+					);
+					$hash = $output[0];
+					fclose($fp);
+					unset($output, $fp, $v_password);
+				}
+				if ($method == "des") {
+					$hash = crypt($password, $salt);
+				}
+
+				// Send hash via tmp file
+				$v_hash = exec("mktemp -p /tmp");
+				$fp = fopen($v_hash, "w");
+				fwrite($fp, $hash . "\n");
+				fclose($fp);
+
+				// Check user hash
 				exec(
-					HESTIA_CMD .
-						"v-check-user-password " .
-						$v_user .
-						" " .
-						quoteshellarg($v_password) .
-						" " .
-						$v_ip .
-						" yes",
+					HESTIA_CMD . "v-check-user-hash " . $v_user . " " . $v_hash . " " . $v_ip,
 					$output,
 					$return_var,
 				);
-				$hash = $output[0];
-				fclose($fp);
-				unset($output, $fp, $v_password);
+				unset($output);
+
+				// Remove tmp file
+				unlink($v_hash);
 			}
-			if ($method == "des") {
-				$hash = crypt($password, $salt);
-			}
-
-			// Send hash via tmp file
-			$v_hash = exec("mktemp -p /tmp");
-			$fp = fopen($v_hash, "w");
-			fwrite($fp, $hash . "\n");
-			fclose($fp);
-
-			// Check user hash
-			exec(
-				HESTIA_CMD . "v-check-user-hash " . $v_user . " " . $v_hash . " " . $v_ip,
-				$output,
-				$return_var,
-			);
-			unset($output);
-
-			// Remove tmp file
-			unlink($v_hash);
 			// Check API answer
 			if ($return_var > 0) {
 				sleep(2);
@@ -263,9 +289,13 @@ function authenticate_user($user, $password, $twofa = "") {
 				}
 
 				if ($data[$user]["TWOFA"] != "") {
-					if (empty($twofa)) {
+					if ($twofa === "") {
 						$_SESSION["login"]["username"] = $user;
-						$_SESSION["login"]["password"] = $password;
+						$_SESSION["login"]["verified"] = [
+							"user" => $user,
+							"time" => $verified_time,
+							"salt" => $pam[$user]["SALT"],
+						];
 						return false;
 					} else {
 						if (strlen($twofa) < 10) {
@@ -280,7 +310,11 @@ function authenticate_user($user, $password, $twofa = "") {
 								sleep(2);
 								$error = _("Invalid or missing 2FA token");
 								$_SESSION["login"]["username"] = $user;
-								$_SESSION["login"]["password"] = $password;
+								$_SESSION["login"]["verified"] = [
+									"user" => $user,
+									"time" => $verified_time,
+									"salt" => $pam[$user]["SALT"],
+								];
 								$v_session_id = quoteshellarg($_POST["token"]);
 								if (isset($_SESSION["failed_twofa"])) {
 									//allow a few failed attemps before start of logging.
@@ -311,7 +345,11 @@ function authenticate_user($user, $password, $twofa = "") {
 							sleep(2);
 							$error = _("Invalid or missing 2FA token");
 							$_SESSION["login"]["username"] = $user;
-							$_SESSION["login"]["password"] = $password;
+							$_SESSION["login"]["verified"] = [
+								"user" => $user,
+								"time" => $verified_time,
+								"salt" => $pam[$user]["SALT"],
+							];
 							$v_session_id = quoteshellarg($_POST["token"]);
 							return $error;
 						}
@@ -413,16 +451,20 @@ if (empty($_POST["user"])) {
 		$user = "";
 	}
 }
-if (
-	!empty($_SESSION["login"]["username"]) &&
-	!empty($_SESSION["login"]["password"]) &&
-	!empty($_POST["twofa"])
-) {
-	$error = authenticate_user(
-		$_SESSION["login"]["username"],
-		$_SESSION["login"]["password"],
-		$_POST["twofa"],
-	);
+$twofa = is_string($_POST["twofa"] ?? null) ? $_POST["twofa"] : "";
+// Drop a 2FA step that expired or was abandoned for a new login
+// (an expired 2FA token submission is handled by authenticate_user)
+if (!empty($_SESSION["login"]["verified"]) && $twofa === "") {
+	if (!empty($_POST["user"])) {
+		unset($_SESSION["login"]["verified"]);
+	} elseif (!login_password_verified($_SESSION["login"]["verified"]["user"] ?? "")) {
+		unset($_SESSION["login"]);
+		$error = _("Your login session has expired. Please log in again.");
+	}
+}
+if (!empty($_SESSION["login"]["verified"]) && $twofa !== "") {
+	// Always continue with the user whose password was verified
+	$error = authenticate_user($_SESSION["login"]["verified"]["user"] ?? "", "", $twofa);
 	unset($_POST);
 } elseif (!empty($_SESSION["login"]["username"]) && !empty($_POST["password"])) {
 	$error = authenticate_user($_SESSION["login"]["username"], $_POST["password"]);
@@ -449,7 +491,7 @@ $token = bin2hex(random_bytes(16));
 $_SESSION["token"] = $token;
 
 require_once "../templates/header.php";
-if (!empty($_SESSION["login"]["password"])) {
+if (!empty($_SESSION["login"]["verified"])) {
 	require_once "../templates/pages/login/login_2.php";
 } elseif (empty($_SESSION["login"]["username"])) {
 	require_once "../templates/pages/login/login" .

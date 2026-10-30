@@ -955,6 +955,22 @@ v-add-user-2fa admin
 
 This function creates a new 2fa token for user.
 
+## v-add-user-2fa-trusted-device
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-user-2fa-trusted-device)
+
+add trusted device for user 2fa
+
+**Options**: `USER` `HASH`
+
+**Examples**:
+
+```bash
+v-add-user-2fa-trusted-device admin 9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08
+```
+
+This function stores the SHA-256 hash of a trusted device token, so the device can skip the 2FA token prompt for TWOFA_TRUSTED_DEVICE_DAYS days.
+
 ## v-add-user-composer
 
 [Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-user-composer)
@@ -2584,6 +2600,22 @@ v-check-user-2fa admin 493690
 
 This function verifies user 2fa token.
 
+## v-check-user-2fa-trusted-device
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-check-user-2fa-trusted-device)
+
+check trusted device for user 2fa
+
+**Options**: `USER` `HASH`
+
+**Examples**:
+
+```bash
+v-check-user-2fa-trusted-device admin 9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08
+```
+
+This function checks if the SHA-256 hash of a device token belongs to a trusted device of the user that has not expired yet.
+
 ## v-check-user-hash
 
 [Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-check-user-hash)
@@ -3570,6 +3602,22 @@ v-delete-user-2fa admin
 ```
 
 This function deletes 2fa token of a user.
+
+## v-delete-user-2fa-trusted-devices
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-user-2fa-trusted-devices)
+
+delete all trusted devices for user 2fa
+
+**Options**: `USER`
+
+**Examples**:
+
+```bash
+v-delete-user-2fa-trusted-devices admin
+```
+
+This function revokes all trusted devices of a user, so every device has to enter a 2FA token again on the next login.
 
 ## v-delete-user-auth-log
 

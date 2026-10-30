@@ -396,6 +396,57 @@ function check_ip_not_banned(){
     refute_output
 }
 
+@test "User: 2FA trusted device" {
+    hash1=$(echo -n "trusted-device-1" | sha256sum | cut -d ' ' -f 1)
+    hash2=$(echo -n "trusted-device-2" | sha256sum | cut -d ' ' -f 1)
+
+    run v-add-user-2fa "$user"
+    assert_success
+
+    # Disabled by default
+    run v-change-sys-config-value TWOFA_TRUSTED_DEVICE_DAYS 0
+    assert_success
+    run v-add-user-2fa-trusted-device "$user" "$hash1"
+    assert_failure $E_DISABLED
+
+    run v-change-sys-config-value TWOFA_TRUSTED_DEVICE_DAYS 30
+    assert_success
+    run v-add-user-2fa-trusted-device "$user" "$hash1"
+    assert_success
+    run v-check-user-2fa-trusted-device "$user" "$hash1"
+    assert_success
+    run v-check-user-2fa-trusted-device "$user" "$hash2"
+    assert_failure $E_NOTEXIST
+    run v-check-user-2fa-trusted-device "$user" "not-a-hash"
+    assert_failure $E_INVALID
+
+    # Lowering the setting to 0 applies to devices trusted earlier
+    run v-change-sys-config-value TWOFA_TRUSTED_DEVICE_DAYS 0
+    assert_success
+    run v-check-user-2fa-trusted-device "$user" "$hash1"
+    assert_failure $E_DISABLED
+    run v-change-sys-config-value TWOFA_TRUSTED_DEVICE_DAYS 30
+    assert_success
+
+    # Password change revokes trusted devices
+    run v-change-user-password "$user" "$userpass2"
+    assert_success
+    run v-check-user-2fa-trusted-device "$user" "$hash1"
+    assert_failure $E_NOTEXIST
+
+    # Disabling 2FA revokes trusted devices
+    run v-add-user-2fa-trusted-device "$user" "$hash2"
+    assert_success
+    run v-delete-user-2fa "$user"
+    assert_success
+    assert_file_not_exist "$HESTIA/data/users/$user/2fa-trusted-devices.conf"
+    run v-check-user-2fa-trusted-device "$user" "$hash2"
+    assert_failure $E_NOTEXIST
+
+    run v-change-sys-config-value TWOFA_TRUSTED_DEVICE_DAYS 0
+    assert_success
+}
+
 @test "User: Change user email" {
     run v-change-user-contact "$user" tester@hestiacp.com
     assert_success

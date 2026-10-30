@@ -49,6 +49,10 @@ fi
 update_user_value "$user" '$TWOFA' ""
 update_user_value "$user" '$QRCODE' ""
 
+# Revoke trusted devices
+$BIN/v-delete-user-2fa-trusted-devices "$user"
+check_result $? "Unable to revoke 2FA trusted devices"
+
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#

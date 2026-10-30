@@ -57,6 +57,10 @@ qrcode=${array[1]}
 update_user_value "$user" '$TWOFA' "$secret"
 update_user_value "$user" '$QRCODE' "$qrcode"
 
+# Revoke trusted devices left over from a previous 2FA secret
+$BIN/v-delete-user-2fa-trusted-devices "$user"
+check_result $? "Unable to revoke 2FA trusted devices"
+
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#

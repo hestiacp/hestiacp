@@ -19,6 +19,15 @@
 			</label>
 			<input type="text" class="form-control" name="twofa" id="twofa" autocomplete="one-time-code" required autofocus>
 		</div>
+		<?php $trust_days = (int) ($_SESSION["TWOFA_TRUSTED_DEVICE_DAYS"] ?? 0); ?>
+		<?php if ($trust_days > 0) { ?>
+			<div class="form-check u-mb20">
+				<input class="form-check-input" type="checkbox" name="trust_device" id="trust_device">
+				<label for="trust_device">
+					<?= tohtml(sprintf(ngettext("Trust this device for %d day", "Trust this device for %d days", $trust_days), $trust_days)) ?>
+				</label>
+			</div>
+		<?php } ?>
 		<div class="u-side-by-side">
 			<button type="submit" class="button">
 				<i class="fas fa-right-to-bracket"></i><?= tohtml( _("Login")) ?>

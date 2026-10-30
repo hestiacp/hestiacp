@@ -112,7 +112,64 @@ if (isset($_SESSION["user"])) {
 	exit();
 }
 
-function authenticate_user($user, $password, $twofa = "") {
+// Cookie that lets a device skip the 2FA token prompt (one per user)
+function twofa_trusted_device_cookie($user) {
+	return "hestia_2fa_trusted_" . substr(hash("sha256", $user), 0, 16);
+}
+
+function set_twofa_trusted_device_cookie($user, $value, $expires) {
+	setcookie(twofa_trusted_device_cookie($user), $value, [
+		"expires" => $expires,
+		"path" => "/",
+		"secure" => true,
+		"httponly" => true,
+		"samesite" => "Strict",
+	]);
+}
+
+function is_twofa_trusted_device($user) {
+	$token = $_COOKIE[twofa_trusted_device_cookie($user)] ?? "";
+	if (!is_string($token) || $token === "") {
+		return false;
+	}
+	// Only the hash of the token is stored and passed to the CLI
+	exec(
+		HESTIA_CMD .
+			"v-check-user-2fa-trusted-device " .
+			quoteshellarg($user) .
+			" " .
+			hash("sha256", $token),
+		$output,
+		$return_var,
+	);
+	if ($return_var !== 0) {
+		set_twofa_trusted_device_cookie($user, "", 1);
+		return false;
+	}
+	return true;
+}
+
+function add_twofa_trusted_device($user) {
+	$days = (int) ($_SESSION["TWOFA_TRUSTED_DEVICE_DAYS"] ?? 0);
+	if ($days < 1) {
+		return;
+	}
+	$token = bin2hex(random_bytes(32));
+	exec(
+		HESTIA_CMD .
+			"v-add-user-2fa-trusted-device " .
+			quoteshellarg($user) .
+			" " .
+			hash("sha256", $token),
+		$output,
+		$return_var,
+	);
+	if ($return_var === 0) {
+		set_twofa_trusted_device_cookie($user, $token, time() + $days * 86400);
+	}
+}
+
+function authenticate_user($user, $password, $twofa = "", $trust_device = false) {
 	unset($_SESSION["login"]);
 	if (verify_csrf($_POST, true)) {
 		$v_user = quoteshellarg($user);
@@ -262,7 +319,10 @@ function authenticate_user($user, $password, $twofa = "") {
 					}
 				}
 
-				if ($data[$user]["TWOFA"] != "") {
+				$twofa_required =
+					$data[$user]["TWOFA"] != "" &&
+					!(empty($twofa) && is_twofa_trusted_device($user));
+				if ($twofa_required) {
 					if (empty($twofa)) {
 						$_SESSION["login"]["username"] = $user;
 						$_SESSION["login"]["password"] = $password;
@@ -316,6 +376,11 @@ function authenticate_user($user, $password, $twofa = "") {
 							return $error;
 						}
 					}
+				}
+
+				// 2FA token was accepted, remember this device if requested
+				if ($twofa_required && $trust_device) {
+					add_twofa_trusted_device($user);
 				}
 
 				// Define session user
@@ -422,6 +487,7 @@ if (
 		$_SESSION["login"]["username"],
 		$_SESSION["login"]["password"],
 		$_POST["twofa"],
+		!empty($_POST["trust_device"]),
 	);
 	unset($_POST);
 } elseif (!empty($_SESSION["login"]["username"]) && !empty($_POST["password"])) {

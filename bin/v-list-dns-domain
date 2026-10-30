@@ -28,6 +28,7 @@ json_list() {
 	echo '{'
 	echo '    "'$DOMAIN'": {
         "IP": "'$IP'",
+        "IP6": "'$IP6'",
         "TPL": "'$TPL'",
         "TTL": "'$TTL'",
         "EXP": "'$EXP'",
@@ -47,6 +48,9 @@ json_list() {
 shell_list() {
 	echo "DOMAIN:         $DOMAIN"
 	echo "IP:             $IP"
+	if [ -n "$IP6" ]; then
+		echo "IP6:            $IP6"
+	fi
 	echo "TEMPLATE:       $TPL"
 	echo "TTL:            $TTL"
 	echo "EXP:            $EXP"

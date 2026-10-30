@@ -13,7 +13,14 @@ smtp_banner = $smtp_active_hostname ESMTP
 smtp_active_hostname = ${lookup dnsdb{>: defer_never,ptr=$interface_address}{${listextract{1}{$value}}}{$primary_hostname}}
 add_environment = <; PATH=/bin:/usr/bin
 keep_environment =
+# IPv6 is only used on IPv6-only servers (see syshealth_adapt_exim_ipv6),
+# outgoing mail over IPv6 needs a reverse DNS entry for the address
+.include_if_exists /etc/exim4/hestia-ipv6.conf
+.ifdef HESTIA_IPV6
+disable_ipv6 = false
+.else
 disable_ipv6 = true
+.endif
 smtp_accept_max = 100
 smtp_accept_max_per_host = 20
 

@@ -90,6 +90,28 @@ fi
 $BIN/v-restart-web-backend "$restart" "$backend_version"
 check_result $? "PHP restart failed" > /dev/null
 
+# php-fpm's systemd unit reloads via `ExecReload=kill -USR2 $MAINPID`, a
+# fire-and-forget signal: systemctl reports the reload as done as soon as the
+# signal is sent, not once php-fpm has actually re-parsed pool configs and
+# bound this pool's listener. Wait for the listener (unix socket or TCP port)
+# to actually come up before returning, so callers that immediately hit the
+# new backend don't race a reload that is still in flight.
+if [ "$restart" != "no" ] && [ "$restart" != "scheduled" ] && [ "$SCHEDULED_RESTART" != "yes" ]; then
+	listen_target=$(grep -oP '^listen\s*=\s*\K.*' "$pool/$backend_type.conf" 2> /dev/null)
+	if [[ "$listen_target" == /* ]]; then
+		for _ in $(seq 1 50); do
+			[ -S "$listen_target" ] && break
+			sleep 0.1
+		done
+	elif [[ "$listen_target" == *:* ]]; then
+		listen_port="${listen_target##*:}"
+		for _ in $(seq 1 50); do
+			ss -tln 2> /dev/null | grep -q ":${listen_port}\b" && break
+			sleep 0.1
+		done
+	fi
+fi
+
 # Logging
 $BIN/v-log-action "$user" "Info" "Web" "Web domain configuration applied (Domain: $domain, Backend: $WEB_BACKEND)."
 log_event "$OK" "$ARGUMENTS"

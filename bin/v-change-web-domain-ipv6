@@ -1,0 +1,105 @@
+#!/bin/bash
+# info: change web domain ipv6 address
+# options: USER DOMAIN IPV6 [RESTART]
+#
+# example: v-change-web-domain-ipv6 admin example.com 2001:db8::1 yes
+# example: v-change-web-domain-ipv6 admin example.com ''
+#
+# This function changes the IPv6 address of a web domain. The address has to
+# be registered with v-add-sys-ip and available to the user. An empty IPV6
+# removes IPv6 from the domain (only possible if the domain has an IPv4).
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+domain=$2
+domain_idn=$2
+ipv6=$3
+restart=$4
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
+source $HESTIA/func/domain.sh
+# shellcheck source=/usr/local/hestia/func/ip.sh
+source $HESTIA/func/ip.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+# Additional argument formatting
+format_domain
+format_domain_idn
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '3' "$#" 'USER DOMAIN IPV6 [RESTART]'
+is_format_valid 'user' 'domain' 'ipv6' 'restart'
+is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
+is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
+is_object_valid 'web' 'DOMAIN' "$domain"
+is_object_unsuspended 'web' 'DOMAIN' "$domain"
+if [ -n "$ipv6" ]; then
+	ipv6=$(normalize_ipv6 "$ipv6")
+	is_ipv6_valid "$ipv6" "$user"
+fi
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Load current domain values
+get_domain_values 'web'
+if [ -z "$ipv6" ] && [ -z "$IP" ]; then
+	check_result "$E_INVALID" "web domain $domain needs an IPv4 or IPv6 address"
+fi
+old_ipv6="$IP6"
+if [ "$old_ipv6" = "$ipv6" ]; then
+	exit
+fi
+
+# Update config and rebuild the domain, the listen directives change
+update_object_value 'web' 'DOMAIN' "$domain" '$IP6' "$ipv6"
+$BIN/v-rebuild-web-domain "$user" "$domain" 'no'
+check_result $? "Rebuild of web domain $domain failed" > /dev/null
+
+# Check for webmail
+if [ -n "$IMAP_SYSTEM" ] && [ -n "$(grep "DOMAIN='$domain'" "$USER_DATA/mail.conf" 2> /dev/null)" ]; then
+	$BIN/v-rebuild-mail-domain "$user" "$domain"
+fi
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Update counters
+if [ -n "$ipv6" ]; then
+	increase_ip_value "$ipv6"
+fi
+if [ -n "$old_ipv6" ] && [ -f "$HESTIA/data/ips/$old_ipv6" ]; then
+	decrease_ip_value "$old_ipv6"
+fi
+
+# Restart web server
+$BIN/v-restart-web "$restart"
+check_result $? "WEB restart failed" > /dev/null
+
+$BIN/v-restart-proxy "$restart"
+check_result $? "Proxy restart failed" > /dev/null
+
+# Logging
+$BIN/v-log-action "$user" "Info" "Web" "Web domain IPv6 address changed (IPv6: $ipv6, Domain: $domain)."
+log_event "$OK" "$ARGUMENTS"
+
+exit

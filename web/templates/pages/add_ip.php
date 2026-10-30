@@ -36,7 +36,7 @@
 				<input type="text" class="form-control" name="v_ip" id="v_ip" value="<?= tohtml(trim($v_ip, "'")) ?>">
 			</div>
 			<div class="u-mb10">
-				<label for="v_netmask" class="form-label"><?= tohtml( _("Netmask")) ?></label>
+				<label for="v_netmask" class="form-label"><?= tohtml( _("Netmask / Prefix Length")) ?></label>
 				<input type="text" class="form-control" name="v_netmask" id="v_netmask" value="<?= tohtml(trim($v_netmask, "'")) ?>">
 			</div>
 			<div class="u-mb10">

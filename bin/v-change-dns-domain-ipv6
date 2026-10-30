@@ -1,0 +1,153 @@
+#!/bin/bash
+# info: change dns domain ipv6 address
+# options: USER DOMAIN IPV6 [RESTART]
+#
+# example: v-change-dns-domain-ipv6 admin domain.com 2001:db8::1
+# example: v-change-dns-domain-ipv6 admin domain.com ''
+#
+# This function changes the main IPv6 address of a DNS zone. Existing AAAA
+# records pointing to the old address are updated. If the zone has no IPv6
+# address yet, an AAAA record is added for every A record pointing to the
+# IPv4 address of the zone (except mail exchangers). An empty IPV6 removes
+# the AAAA records of the old address.
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+domain=$2
+domain_idn=$2
+ipv6=$3
+restart=$4
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
+source $HESTIA/func/domain.sh
+# shellcheck source=/usr/local/hestia/func/ip.sh
+source $HESTIA/func/ip.sh
+# shellcheck source=/usr/local/hestia/func/rebuild.sh
+source $HESTIA/func/rebuild.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+# Additional argument formatting
+format_domain
+format_domain_idn
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '3' "$#" 'USER DOMAIN IPV6 [RESTART]'
+if [ "$ipv6" = 'no' ]; then
+	ipv6=''
+fi
+is_format_valid 'user' 'domain' 'ipv6' 'restart'
+is_system_enabled "$DNS_SYSTEM" 'DNS_SYSTEM'
+is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
+is_object_valid 'dns' 'DOMAIN' "$domain"
+is_object_unsuspended 'dns' 'DOMAIN' "$domain"
+if [ -n "$ipv6" ]; then
+	ipv6=$(normalize_ipv6 "$ipv6")
+fi
+
+# Get old ip
+get_domain_values 'dns'
+old=$IP6
+if [ -z "$ipv6" ] && [ -z "$IP" ]; then
+	check_result "$E_INVALID" "DNS domain $domain needs an IPv4 or IPv6 address"
+fi
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+zone="$USER_DATA/dns/$domain.conf"
+records_before="$(wc -l < "$zone")"
+
+if [ -n "$old" ] && [ -n "$ipv6" ]; then
+	# Changing records
+	sed -i "s/\(TYPE='AAAA' .*VALUE='\)$old'/\1$ipv6'/" "$zone"
+elif [ -n "$old" ]; then
+	# Deleting records
+	sed -i "/TYPE='AAAA' .*VALUE='$old'/d" "$zone"
+elif [ -n "$ipv6" ]; then
+	# Adding records for every A record that points to the zone ip
+	time_n_date=$(date +'%T %F')
+	time=$(echo "$time_n_date" | cut -f 1 -d \ )
+	date=$(echo "$time_n_date" | cut -f 2 -d \ )
+	mx_hosts=$(grep "TYPE='MX'" "$zone" | sed -n "s/.*VALUE='\([^.']*\)\.$domain\.'.*/\1/p")
+	a_records=$(grep "TYPE='A' .*VALUE='${IP//./[.]}'" "$zone" | sed -n "s/.*RECORD='\([^']*\)'.*/\1/p")
+	[ -z "$a_records" ] && a_records='@'
+	echo "$a_records" | while read -r record; do
+		if echo "$mx_hosts" | grep -qxF "$record"; then
+			continue
+		fi
+		if grep -qF "RECORD='$record' TYPE='AAAA'" "$zone"; then
+			continue
+		fi
+		unset id
+		get_next_dnsrecord
+		echo "ID='$id' RECORD='$record' TYPE='AAAA' PRIORITY='' VALUE='$ipv6' SUSPENDED='no' TIME='$time' DATE='$date'" >> "$zone"
+	done
+	sort_dns_records
+fi
+
+# Changing ip
+if [ -z "$(grep "DOMAIN='$domain'" "$USER_DATA/dns.conf" | grep "IP6=")" ]; then
+	add_object_key 'dns' 'DOMAIN' "$domain" 'IP6' 'TPL'
+fi
+update_object_value 'dns' 'DOMAIN' "$domain" '$IP6' "$ipv6"
+
+# Update counters
+records="$(wc -l < "$zone")"
+update_object_value 'dns' 'DOMAIN' "$domain" '$RECORDS' "$records"
+while [ "$records_before" -lt "$records" ]; do
+	increase_user_value "$user" '$U_DNS_RECORDS'
+	records_before=$((records_before + 1))
+done
+while [ "$records_before" -gt "$records" ]; do
+	decrease_user_value "$user" '$U_DNS_RECORDS'
+	records_before=$((records_before - 1))
+done
+
+# Update serial
+update_domain_serial
+# Updating zone
+if [[ "$DNS_SYSTEM" =~ named|bind ]]; then
+	rebuild_dns_domain_conf
+fi
+
+# Updating dns-cluster queue
+if [ "$DNS_CLUSTER" = "yes" ]; then
+	# Check for first sync
+	dlock=$(grep "domain $user $domain" $HESTIA/data/queue/dns-cluster.pipe)
+	if [ -z "$dlock" ]; then
+		cmd="$BIN/v-add-remote-dns-domain $user $domain yes"
+		echo "$cmd" >> $HESTIA/data/queue/dns-cluster.pipe
+	fi
+fi
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Restarting named
+$BIN/v-restart-dns "$restart"
+check_result $? "DNS restart failed" > /dev/null
+
+# Logging
+$BIN/v-log-action "$user" "Info" "DNS" "IPv6 address for DNS domain changed (IPv6: $ipv6, Domain: $domain)."
+log_event "$OK" "$ARGUMENTS"
+
+exit

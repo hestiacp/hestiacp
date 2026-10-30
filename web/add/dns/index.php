@@ -10,6 +10,8 @@ include $_SERVER["DOCUMENT_ROOT"] . "/inc/main.php";
 // List ip addresses
 exec(HESTIA_CMD . "v-list-user-ips " . $user . " json", $output, $return_var);
 $v_ips = json_decode(implode("", $output), true);
+// IPv6 addresses can not be used for A records
+$v_ips = array_filter($v_ips ?? [], fn($ip) => strpos($ip, ":") === false, ARRAY_FILTER_USE_KEY);
 unset($output);
 
 // Check POST request for dns domain

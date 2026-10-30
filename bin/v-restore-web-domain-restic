@@ -107,9 +107,17 @@ for domain in "${domains[@]}"; do
 			check_ip=$(is_ip_valid $IP $user)
 			if [ -n "$check_ip" ]; then
 				local_ip=''
-				get_user_ip $user
+				ip=''
+				# IPv6-only servers: the domain keeps its IPv6 address only
+				get_user_ip_if_available
 				old_ip=$IP
 				IP=$ip
+			fi
+
+			# Checking IPv6 address
+			if [ -n "$IP6" ] && [ -n "$(is_ipv6_valid "$IP6" "$user")" ]; then
+				get_user_ipv6
+				IP6=$ipv6
 			fi
 
 			# Checking web template

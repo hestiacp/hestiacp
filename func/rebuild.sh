@@ -235,7 +235,28 @@ rebuild_web_domain_conf() {
 
 	syshealth_repair_web_config
 	get_domain_values 'web'
-	is_ip_valid $IP
+
+	# IPv4 address of the domain (empty for IPv6-only domains)
+	local_ip=''
+	if [ -n "$IP" ]; then
+		is_ip_valid $IP
+	fi
+
+	# IPv6 address of the domain (dual-stack or IPv6-only). Addresses that are
+	# not available on this server (e.g. after a restore) are skipped.
+	local_ipv6=''
+	if [ -n "$IP6" ] && [ -f "$HESTIA/data/ips/$IP6" ]; then
+		local_ipv6="$IP6"
+	fi
+
+	# Fall back to the first available address if none is assigned
+	if [ -z "$local_ip" ] && [ -z "$local_ipv6" ]; then
+		if [ -n "$(get_user_ips)" ] || [ -z "$(get_user_ip6s)" ]; then
+			get_user_ip
+		else
+			get_user_ipv6
+		fi
+	fi
 	prepare_web_domain_values
 
 	# Remove old web configuration files
@@ -600,7 +621,7 @@ rebuild_mail_domain_conf() {
 		local local_ip=$(get_real_ip "$domain_ip")
 		is_ip_valid "$local_ip" "$user"
 	else
-		get_user_ip
+		get_user_ip_if_available
 	fi
 
 	if [ "$SUSPENDED" = 'yes' ]; then

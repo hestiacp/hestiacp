@@ -1,8 +1,9 @@
 #!/bin/bash
 # info: delete firewall blocking rule
-# options: IPV4_CIDR CHAIN
+# options: IP_CIDR CHAIN
 #
 # example: v-delete-firewall-ban 198.11.130.250 MAIL
+# example: v-delete-firewall-ban 2001:db8::bad MAIL
 #
 # This function deletes blocking rule from system firewall
 
@@ -32,8 +33,13 @@ source_conf "$HESTIA/conf/hestia.conf"
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'IPV4_CIDR CHAIN'
-is_format_valid 'ipv4_cidr' 'chain'
+check_args '2' "$#" 'IP_CIDR CHAIN'
+if [[ "$ipv4_cidr" == *:* ]]; then
+	ipv6_cidr="$ipv4_cidr"
+	is_format_valid 'ipv6_cidr' 'chain'
+else
+	is_format_valid 'ipv4_cidr' 'chain'
+fi
 is_system_enabled "$FIREWALL_SYSTEM" 'FIREWALL_SYSTEM'
 
 # Perform verification if read-only mode is enabled
@@ -58,8 +64,12 @@ if [ "$chain" == "ALL" ]; then
 		# Deleting ip from banlist
 		sip=$(echo "$IP" | sed "s|/|\\\/|g")
 		sed -i "/IP='$sip' CHAIN='$CHAIN'/d" $conf
-		b=$($iptables -L fail2ban-$CHAIN --line-number -n | grep -w $ipv4_cidr | awk '{print $1}')
-		$iptables -D fail2ban-$CHAIN $b 2> /dev/null
+		if [[ "$ipv4_cidr" == *:* ]]; then
+			delete_ipv6_ban_rule "$CHAIN" "$ipv4_cidr"
+		else
+			b=$($iptables -L fail2ban-$CHAIN --line-number -n | grep -w $ipv4_cidr | awk '{print $1}')
+			$iptables -D fail2ban-$CHAIN $b 2> /dev/null
+		fi
 		# --- [PATCH] skip fail2ban sync when invoked by fail2ban (prevents recursive deadlock)
 		if [ -z "${HESTIA_F2B_CALLER:-}" ]; then
 			for f2bjail in $("$f2bcli" status | grep -i 'Jail list:' | cut -d':' -f2- | sed -E 's/\s*//g' | tr ',' ' '); do
@@ -80,8 +90,12 @@ else
 	# Deleting ip from banlist
 	sip=$(echo "$ipv4_cidr" | sed "s|/|\\\/|g")
 	sed -i "/IP='$sip' CHAIN='$chain'/d" $conf
-	b=$($iptables -L fail2ban-$chain --line-number -n | grep -w $ipv4_cidr | awk '{print $1}')
-	$iptables -D fail2ban-$chain $b 2> /dev/null
+	if [[ "$ipv4_cidr" == *:* ]]; then
+		delete_ipv6_ban_rule "$chain" "$ipv4_cidr"
+	else
+		b=$($iptables -L fail2ban-$chain --line-number -n | grep -w $ipv4_cidr | awk '{print $1}')
+		$iptables -D fail2ban-$chain $b 2> /dev/null
+	fi
 	# --- [PATCH] skip fail2ban sync when invoked by fail2ban (prevents recursive deadlock)
 	if [ -z "${HESTIA_F2B_CALLER:-}" ]; then
 		for f2bjail in $("$f2bcli" status | grep -i 'Jail list:' | cut -d':' -f2- | sed -E 's/\s*//g' | tr ',' ' '); do

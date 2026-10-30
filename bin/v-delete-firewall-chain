@@ -14,6 +14,7 @@
 chain=$(echo "$1" | tr '[:lower:]' '[:upper:]')
 
 iptables='/sbin/iptables'
+ip6tables='/sbin/ip6tables'
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
 source /etc/hestiacp/hestia.conf
@@ -53,11 +54,23 @@ if [ -n "$chain_param" ]; then
 	sed -i "/CHAIN='$chain'/d" "$banlist"
 	$iptables -D INPUT -p $PROTOCOL \
 		--dport $PORT -j fail2ban-$CHAIN 2> /dev/null
+	if [ -x "$ip6tables" ]; then
+		if [[ "$PORT" =~ ,|-|: ]]; then
+			ip6_port="-m multiport --dports $PORT"
+		else
+			ip6_port="--dport $PORT"
+		fi
+		$ip6tables -D INPUT -p $PROTOCOL $ip6_port -j fail2ban-$CHAIN 2> /dev/null
+	fi
 fi
 
 # Deleting iptables chain
 $iptables -F fail2ban-$CHAIN 2> /dev/null
 $iptables -X fail2ban-$CHAIN 2> /dev/null
+if [ -x "$ip6tables" ]; then
+	$ip6tables -F fail2ban-$CHAIN 2> /dev/null
+	$ip6tables -X fail2ban-$CHAIN 2> /dev/null
+fi
 
 # Changing permissions
 [ -f "$chains" ] && chmod 660 "$chains"

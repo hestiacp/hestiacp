@@ -541,23 +541,21 @@ pre[class*="language-"] ::selection {
 		height: 38px;
 	}
 
-	/* Selected-items actions (Download, Copy, Move, Zip, Delete): icons only, one line */
-	#multi-actions > div:first-child > a.is-inline-block:not(.add-new) {
-		justify-content: center;
-		width: 42px;
-		padding: 0 !important;
-		font-size: 0;
-	}
-
-	#multi-actions > div:first-child > a.is-inline-block:not(.add-new) .icon {
-		font-size: 1rem;
-	}
-
+	/* Selected-items actions (Download, Copy, Move, Zip, Delete): one line, sharing the full width */
 	#multi-actions > div:first-child {
 		display: flex;
+		flex: 1 1 auto;
 		flex-wrap: wrap;
 		align-items: center;
 		gap: 6px;
+	}
+
+	#multi-actions > div:first-child > a.is-inline-block:not(.add-new) {
+		flex: 1 1 0;
+		justify-content: center;
+		min-width: 0;
+		padding: 0 6px !important;
+		white-space: nowrap;
 	}
 
 	#multi-actions > div:first-child > *,
@@ -577,30 +575,11 @@ pre[class*="language-"] ::selection {
 	}
 
 	.navbar {
-		display: flex !important;
-		align-items: center;
 		min-height: 48px !important;
 	}
 
-	.navbar-burger {
-		display: none !important;
-	}
-
 	.navbar-menu {
-		display: flex !important;
-		flex: 1 1 auto;
-		min-width: 0;
 		margin-left: 96px; /* room for the search and tree icons */
-		padding: 0 !important;
-		background: transparent !important;
-		box-shadow: none !important;
-	}
-
-	.navbar-end {
-		display: flex;
-		align-items: center;
-		min-width: 0;
-		margin-left: auto;
 	}
 
 	.navbar-item.profile {
@@ -640,6 +619,59 @@ pre[class*="language-"] ::selection {
 		top: 12px;
 		left: 70px;
 		display: flex;
+	}
+
+}
+
+/* Icons only where the labels don't fit */
+@media screen and (width < 480px) {
+	#multi-actions > div:first-child > a.is-inline-block:not(.add-new) {
+		gap: 0;
+		padding: 0 !important;
+		font-size: 0;
+	}
+
+	#multi-actions > div:first-child > a.is-inline-block:not(.add-new) .icon {
+		margin: 0 !important;
+		font-size: 1rem;
+	}
+}
+
+/* ------------------------------ */
+/*    Tablets and phones (<1088px) */
+/* ------------------------------ */
+
+/* Bulma hides the user and exit links behind a hamburger here; keep them in the top bar as on desktop */
+@media screen and (width <= 1087px) {
+	.navbar {
+		display: flex !important;
+		align-items: center;
+	}
+
+	.navbar-burger {
+		display: none !important;
+	}
+
+	.navbar-menu {
+		display: flex !important;
+		flex: 1 1 auto;
+		min-width: 0;
+		padding: 0 !important;
+		background: transparent !important;
+		box-shadow: none !important;
+	}
+
+	.navbar-end {
+		display: flex;
+		align-items: center;
+		min-width: 0;
+		margin-left: auto;
+	}
+
+	.navbar-item.profile,
+	.navbar-item.logout {
+		display: flex;
+		align-items: center;
 	}
 
 	@media (prefers-color-scheme: dark) {

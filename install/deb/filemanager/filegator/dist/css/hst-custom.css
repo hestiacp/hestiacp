@@ -564,9 +564,37 @@ pre[class*="language-"] ::selection {
 		margin: 0 !important;
 	}
 
-	/* Items per page: the default is enough on a phone */
+	/* Items per page: next to Add files / New in the same size; hidden while items are selected */
+	#multi-actions {
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 6px;
+	}
+
+	#multi-actions:has(> div:first-child > a.is-inline-block:not(.add-new)) #pagination {
+		display: none;
+	}
+
 	#pagination {
-		display: none !important;
+		margin-left: auto;
+	}
+
+	#pagination .select,
+	#pagination select {
+		height: 38px;
+		font-size: 1rem; /* also keeps iOS from zooming in on focus */
+	}
+
+	#pagination .select::after {
+		right: 0.8em;
+	}
+
+	#pagination select {
+		padding: 0 1.8em 0 0.6em;
+		border: 1px solid #26232c26;
+		border-radius: 6px;
+		background: #fff;
+		color: #424242;
 	}
 
 	/* Top row: logo, search and folder tree on the left; user and exit on the right (no hamburger) */
@@ -621,6 +649,14 @@ pre[class*="language-"] ::selection {
 		display: flex;
 	}
 
+
+	@media (prefers-color-scheme: dark) {
+		#pagination select {
+			border-color: #222;
+			background: #222;
+			color: #fff;
+		}
+	}
 }
 
 /* Icons only where the labels don't fit */

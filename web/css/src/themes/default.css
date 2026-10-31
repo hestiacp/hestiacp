@@ -148,6 +148,7 @@
 
 .top-bar-usage-item {
 	margin-right: 11px;
+	white-space: nowrap;
 
 	&:last-child {
 		margin-right: 0;
@@ -1082,6 +1083,14 @@
 	font-size: 0.9rem;
 	padding-top: 5px;
 	padding-bottom: 5px;
+
+	/* Desktop column width caps would cut emails and domains short in cards */
+	@media (--viewport-below-large) {
+		& .u-max-width200,
+		& .u-max-width300 {
+			max-width: none !important;
+		}
+	}
 
 	@media (--viewport-large) {
 		font-size: 0.8rem;

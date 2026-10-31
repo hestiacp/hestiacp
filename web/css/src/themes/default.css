@@ -1378,6 +1378,11 @@
 		font-weight: 400;
 	}
 
+	/* Rows that don't follow the card structure (incremental file browser) stay stacked */
+	.units-table-stacked .units-table-row {
+		display: block;
+	}
+
 	/* Dense rows (cron schedule): narrow columns so the five fields fit on one line */
 	.units-table-dense .units-table-row {
 		grid-template-columns: repeat(auto-fill, minmax(48px, 1fr));

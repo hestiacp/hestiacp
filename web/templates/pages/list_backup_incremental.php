@@ -65,10 +65,10 @@
 			<div class="units-table-cell units-table-heading-cell u-text-bold">
 				<b>
 					<?php if ($read_only === true) { ?>
-							<span class="u-hide-desktop"><?= tohtml( _("Snapshot")) ?></span>
+							<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Snapshot")) ?></span>
 							<?= tohtml($value['short_id']) ?>
 					<?php } else { ?>
-						<span class="u-hide-desktop"><?= tohtml( _("Snapshot")) ?></span>
+						<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Snapshot")) ?></span>
 						<a href="/list/backup/incremental/?<?= tohtml(http_build_query(["snapshot" => $value['short_id'], "token" => $_SESSION["token"]])) ?>" title="<?= tohtml( _("Restore")) ?>"><?= tohtml($value['short_id']) ?></a>
 					<?php } ?>
 				</b>

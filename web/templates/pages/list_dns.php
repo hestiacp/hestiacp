@@ -132,7 +132,7 @@
 					</div>
 				</div>
 					<div class="units-table-cell units-table-heading-cell u-text-bold">
-						<span class="u-hide-desktop"><?= tohtml( _("Name")) ?>:</span>
+						<span class="u-hide-desktop"><?= tohtml( _("Name")) ?></span>
 						<a href="/list/dns/?<?= tohtml(http_build_query(array("domain" => $key, "token" => $_SESSION["token"]))) ?>" title="<?= tohtml( _("DNS Records")) ?>: <?= tohtml($key) ?>">
 							<?= tohtml($key) ?>
 						</a>
@@ -213,7 +213,7 @@
 					<?php } ?>
 				</div>
 				<div class="units-table-cell u-text-center-desktop">
-					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Records")) ?>:</span>
+					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Records")) ?></span>
 					<?php if ($data[$key]['RECORDS']) {
 						echo '<span>'.$data[$key]['RECORDS'].'</span>';
 					} else {
@@ -221,25 +221,25 @@
 					} ?>
 				</div>
 				<div class="units-table-cell u-text-center-desktop">
-					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Template")) ?>:</span>
+					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Template")) ?></span>
 					<span class="u-text-bold">
 						<?= tohtml($data[$key]["TPL"]) ?>
 					</span>
 				</div>
 				<div class="units-table-cell u-text-center-desktop">
-					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("TTL")) ?>:</span>
+					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("TTL")) ?></span>
 					<?= tohtml($data[$key]["TTL"]) ?>
 				</div>
 				<div class="units-table-cell u-text-center-desktop">
-					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("SOA")) ?>:</span>
+					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("SOA")) ?></span>
 					<?= tohtml($data[$key]["SOA"]) ?>
 				</div>
 				<div class="units-table-cell u-text-center-desktop">
-					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("DNSSEC")) ?>:</span>
+					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("DNSSEC")) ?></span>
 					<i class="fas <?= tohtml($dnssec_icon) ?>" title="<?= tohtml($dnssec_title) ?>"></i>
 				</div>
 				<div class="units-table-cell u-text-center-desktop">
-					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Expiration Date")) ?>:</span>
+					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Expiration Date")) ?></span>
 					<time class="u-text-bold" datetime="<?= tohtml($data[$key]["EXP"]) ?>">
 						<?= tohtml($data[$key]["EXP"]) ?>
 					</time>

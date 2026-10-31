@@ -62,17 +62,17 @@
 				</div>
 			</div>
 			<div class="units-table-cell units-table-heading-cell">
-				<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Type")) ?>:</span>
+				<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Type")) ?></span>
 				<i class="fas fa-earth-americas u-mr5"></i><?= tohtml( _("Web Domain")) ?>
 			</div>
-			<div class="units-table-cell u-text-bold">
-				<span class="u-hide-desktop"><?= tohtml( _("Details")) ?>:</span>
+			<div class="units-table-cell units-table-cell-wide u-text-bold">
+				<span class="u-hide-desktop"><?= tohtml( _("Details")) ?></span>
 					<?= tohtml($key) ?>
 			</div>
 			<div class="units-table-cell">
 				<ul class="units-table-row-actions">
 					<li class="units-table-row-action shortcut-enter" data-key-action="href">
-						<a href="/schedule/restore/incremental/?<?= tohtml(http_build_query(array("snapshot" => $_GET["snapshot"], "type" => "web", "object" => $key, "token" => $_SESSION["token"]))) ?>" title="<?= tohtml( _("Restore")) ?>">
+						<a class="units-table-row-action-link" href="/schedule/restore/incremental/?<?= tohtml(http_build_query(array("snapshot" => $_GET["snapshot"], "type" => "web", "object" => $key, "token" => $_SESSION["token"]))) ?>" title="<?= tohtml( _("Restore")) ?>">
 						<i class="fas fa-arrow-rotate-left icon-green"></i>
 						<span class="u-hide-desktop"><?= tohtml( _("Restore")) ?></span>
 						</a>
@@ -96,17 +96,17 @@
 				</div>
 			</div>
 			<div class="units-table-cell units-table-heading-cell">
-				<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Type")) ?>:</span>
+				<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Type")) ?></span>
 				<i class="fas fa-envelopes-bulk u-mr5"></i><?= tohtml( _("Mail Domain")) ?>
 			</div>
-			<div class="units-table-cell u-text-bold">
-				<span class="u-hide-desktop"><?= tohtml( _("Details")) ?>:</span>
+			<div class="units-table-cell units-table-cell-wide u-text-bold">
+				<span class="u-hide-desktop"><?= tohtml( _("Details")) ?></span>
 					<?= tohtml($key) ?>
 			</div>
 			<div class="units-table-cell">
 				<ul class="units-table-row-actions">
 					<li class="units-table-row-action shortcut-enter" data-key-action="href">
-							<a href="/schedule/restore/incremental/?<?= tohtml(http_build_query(array("snapshot" => $_GET["snapshot"], "type" => "mail", "object" => $key, "token" => $_SESSION["token"]))) ?>" title="<?= tohtml( _("Restore")) ?>">
+							<a class="units-table-row-action-link" href="/schedule/restore/incremental/?<?= tohtml(http_build_query(array("snapshot" => $_GET["snapshot"], "type" => "mail", "object" => $key, "token" => $_SESSION["token"]))) ?>" title="<?= tohtml( _("Restore")) ?>">
 						<i class="fas fa-arrow-rotate-left icon-green"></i>
 						<span class="u-hide-desktop"><?= tohtml( _("Restore")) ?></span>
 						</a>
@@ -130,17 +130,17 @@
 				</div>
 			</div>
 			<div class="units-table-cell units-table-heading-cell">
-				<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Type")) ?>:</span>
+				<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Type")) ?></span>
 				<i class="fas fa-book-atlas u-mr5"></i><?= tohtml( _("DNS Domain")) ?>
 			</div>
-			<div class="units-table-cell u-text-bold">
-				<span class="u-hide-desktop"><?= tohtml( _("Details")) ?>:</span>
+			<div class="units-table-cell units-table-cell-wide u-text-bold">
+				<span class="u-hide-desktop"><?= tohtml( _("Details")) ?></span>
 					<?= tohtml($key) ?>
 			</div>
 			<div class="units-table-cell">
 				<ul class="units-table-row-actions">
 					<li class="units-table-row-action shortcut-enter" data-key-action="href">
-							<a href="/schedule/restore/incremental/?<?= tohtml(http_build_query(array("snapshot" => $_GET["snapshot"], "type" => "dns", "object" => $key, "token" => $_SESSION["token"]))) ?>" title="<?= tohtml( _("Restore")) ?>">
+							<a class="units-table-row-action-link" href="/schedule/restore/incremental/?<?= tohtml(http_build_query(array("snapshot" => $_GET["snapshot"], "type" => "dns", "object" => $key, "token" => $_SESSION["token"]))) ?>" title="<?= tohtml( _("Restore")) ?>">
 						<i class="fas fa-arrow-rotate-left icon-green"></i>
 						<span class="u-hide-desktop"><?= tohtml( _("Restore")) ?></span>
 						</a>
@@ -164,17 +164,17 @@
 				</div>
 			</div>
 			<div class="units-table-cell units-table-heading-cell">
-				<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Type")) ?>:</span>
+				<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Type")) ?></span>
 				<i class="fas fa-database u-mr5"></i><?= tohtml( _("Database")) ?>
 			</div>
-			<div class="units-table-cell u-text-bold">
-				<span class="u-hide-desktop"><?= tohtml( _("Details")) ?>:</span>
+			<div class="units-table-cell units-table-cell-wide u-text-bold">
+				<span class="u-hide-desktop"><?= tohtml( _("Details")) ?></span>
 					<?= tohtml($key) ?>
 			</div>
 			<div class="units-table-cell">
 				<ul class="units-table-row-actions">
 					<li class="units-table-row-action shortcut-enter" data-key-action="href">
-							<a href="/schedule/restore/incremental/?<?= tohtml(http_build_query(array("snapshot" => $_GET["snapshot"], "type" => "db", "object" => $key, "token" => $_SESSION["token"]))) ?>" title="<?= tohtml( _("Restore")) ?>">
+							<a class="units-table-row-action-link" href="/schedule/restore/incremental/?<?= tohtml(http_build_query(array("snapshot" => $_GET["snapshot"], "type" => "db", "object" => $key, "token" => $_SESSION["token"]))) ?>" title="<?= tohtml( _("Restore")) ?>">
 						<i class="fas fa-arrow-rotate-left icon-green"></i>
 						<span class="u-hide-desktop"><?= tohtml( _("Restore")) ?></span>
 						</a>
@@ -198,17 +198,17 @@
 			</div>
 		</div>
 		<div class="units-table-cell units-table-heading-cell">
-			<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Type")) ?>:</span>
+			<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Type")) ?></span>
 			<i class="fas fa-clock u-mr5"></i><?= tohtml( _("Cronjob")) ?>
 		</div>
-		<div class="units-table-cell u-text-bold">
-			<span class="u-hide-desktop"><?= tohtml( _("Details")) ?>:</span>
+		<div class="units-table-cell units-table-cell-wide u-text-bold">
+			<span class="u-hide-desktop"><?= tohtml( _("Details")) ?></span>
 				<?= tohtml($key) ?>
 		</div>
 		<div class="units-table-cell">
 			<ul class="units-table-row-actions">
 				<li class="units-table-row-action shortcut-enter" data-key-action="href">
-					<a href="/schedule/restore/incremental/?<?= tohtml(http_build_query(array("snapshot" => $_GET["snapshot"], "type" => "cron", "object" => $key, "token" => $_SESSION["token"]))) ?>" title="<?= tohtml( _("Restore")) ?>">
+					<a class="units-table-row-action-link" href="/schedule/restore/incremental/?<?= tohtml(http_build_query(array("snapshot" => $_GET["snapshot"], "type" => "cron", "object" => $key, "token" => $_SESSION["token"]))) ?>" title="<?= tohtml( _("Restore")) ?>">
 					<i class="fas fa-arrow-rotate-left icon-green"></i>
 					<span class="u-hide-desktop"><?= tohtml( _("Restore")) ?></span>
 					</a>

@@ -1182,6 +1182,189 @@
 	}
 }
 
+/* Units table: mobile cards
+   Below 1024px each row is a card: title, a grid of small labelled values,
+   icon-only actions at the bottom and the selection checkbox in the corner.
+   ========================================================================== */
+
+@media (--viewport-below-large) {
+	.units-table {
+		padding-left: 12px;
+		padding-right: 12px;
+	}
+
+	.units-table-row {
+		position: relative;
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+		gap: 10px 12px;
+		padding: 14px 14px 12px;
+		margin-top: 8px;
+		border-radius: 10px;
+
+		/* Selection checkbox, or a lone status icon (logs, search), in the top-right corner */
+		& > .units-table-cell:first-child:has(.js-unit-checkbox, > i:only-child) {
+			position: absolute;
+			top: 6px;
+			right: 6px;
+
+			& > div {
+				display: flex;
+			}
+
+			& label {
+				display: none;
+			}
+		}
+
+		/* Keep the (last) title clear of that corner */
+		&:has(
+				> .units-table-cell:first-child .js-unit-checkbox,
+				> .units-table-cell:first-child > i:only-child
+			)
+			> .units-table-heading-cell:not(:has(~ .units-table-heading-cell)) {
+			padding-right: 34px;
+		}
+
+		& .js-unit-checkbox {
+			width: 20px;
+			height: 20px;
+			margin: 6px;
+			cursor: pointer;
+		}
+	}
+
+	.units-table-cell {
+		min-width: 0;
+	}
+
+	.units-table-heading-cell {
+		grid-column: 1 / -1;
+		padding: 0;
+		font-size: 1rem;
+		line-height: 1.35;
+
+		& .u-hide-desktop.u-text-bold,
+		& > .u-hide-desktop:first-child {
+			display: none;
+		}
+
+		& p {
+			font-size: 0.8rem;
+			opacity: 0.7;
+			margin-top: 2px;
+		}
+	}
+
+	/* Two title cells (firewall: "#1" and "ACCEPT") share the first line */
+	.units-table-heading-cell:has(~ .units-table-heading-cell) {
+		grid-column: 1 / span 1;
+		grid-row: 1;
+	}
+
+	.units-table-heading-cell ~ .units-table-heading-cell {
+		grid-column: 2 / -1;
+		grid-row: 1;
+	}
+
+	/* Values: small muted label above the value */
+	.units-table-cell:not(.units-table-heading-cell):not(
+			:has(.units-table-row-actions, .js-unit-checkbox)
+		) {
+		font-size: 0.85rem;
+		line-height: 1.3;
+		font-weight: 600;
+		overflow-wrap: break-word;
+
+		& > .u-hide-desktop:first-child {
+			display: block;
+			font-size: 0.68rem;
+			font-weight: 500 !important;
+			text-transform: uppercase;
+			letter-spacing: 0.03em;
+			opacity: 0.6;
+			margin-bottom: 1px;
+		}
+	}
+
+	/* Long free text (log message, record value, ...) takes the full card width */
+	.units-table-row > .units-table-cell.units-table-cell-wide {
+		grid-column: 1 / -1;
+		font-weight: 400;
+	}
+
+	/* Dense rows (cron schedule): narrow columns so the five fields fit on one line */
+	.units-table-dense .units-table-row {
+		grid-template-columns: repeat(auto-fill, minmax(48px, 1fr));
+	}
+
+	/* Actions: last row, icon-only buttons; the text stays for screen readers */
+	.units-table-cell:has(> .units-table-row-actions) {
+		grid-column: 1 / -1;
+		order: 99;
+		border-top: 1px solid rgb(128 128 128 / 20%);
+		padding-top: 10px;
+	}
+
+	/* Secondary actions right before a title cell (firewall move up/down) go to the bottom-right */
+	.units-table-cell:has(> .units-table-row-actions):has(+ .units-table-heading-cell) {
+		position: absolute;
+		right: 14px;
+		bottom: 12px;
+		border-top: 0;
+		padding: 0;
+	}
+
+	.units-table-row-actions {
+		padding-top: 0;
+		gap: 8px;
+	}
+
+	.units-table-row-action {
+		margin: 0;
+
+		& .fas {
+			margin: 0;
+			padding: 0;
+			font-size: 1rem;
+		}
+
+		& .u-hide-desktop {
+			border: 0;
+			clip-path: inset(50%);
+			height: 1px;
+			overflow: hidden;
+			padding: 0;
+			position: absolute;
+			white-space: nowrap;
+			width: 1px;
+		}
+
+		/* A hidden move arrow keeps its slot so the other arrow doesn't shift */
+		&:has(> .u-hidden) {
+			width: 42px;
+			height: 40px;
+		}
+
+		/* Non-link marker ("this is you" in the user list) */
+		&:not(:has(a)) {
+			display: flex;
+			align-items: center;
+			height: 40px;
+			padding: 0 6px;
+			opacity: 0.6;
+		}
+	}
+
+	.units-table-row-action-link {
+		width: 42px;
+		height: 40px;
+		justify-content: center;
+		padding: 0;
+		border-radius: 8px;
+	}
+}
+
 /* Cards
    ========================================================================== */
 

@@ -375,3 +375,165 @@ pre[class*="language-"] ::selection {
 		}
 	}
 }
+
+/* ------------------------------ */
+/*        Phones (≤768px)        */
+/* ------------------------------ */
+
+@media screen and (width <= 768px) {
+	/* File list: compact rows instead of labelled cards */
+	.b-table .table.has-mobile-cards {
+		border-radius: 8px !important;
+	}
+
+	.b-table .table.has-mobile-cards tr.file-row {
+		display: grid !important;
+		grid-template-columns: 40px auto minmax(0, max-content) minmax(0, 1fr) 44px;
+		grid-template-areas:
+			"check name name name actions"
+			"check size time perms actions";
+		align-items: center;
+		column-gap: 6px;
+		row-gap: 1px;
+		margin: 0 !important;
+		padding: 7px 0 !important;
+		box-shadow: none !important;
+		border-bottom: 1px solid #0000001a;
+	}
+
+	.b-table .table.has-mobile-cards tr.file-row:not(:has(> td.checkbox-cell)) {
+		grid-template-columns: 0 auto minmax(0, max-content) minmax(0, 1fr) 44px;
+		padding-left: 10px !important;
+	}
+
+	.b-table .table.has-mobile-cards tr.file-row:last-child {
+		border-bottom: 0;
+	}
+
+	.b-table .table.has-mobile-cards tr.file-row td {
+		display: block !important;
+		min-width: 0;
+		padding: 0 !important;
+		border: 0 !important;
+		text-align: left !important;
+	}
+
+	.b-table .table.has-mobile-cards tr.file-row td::before {
+		display: none !important;
+	}
+
+	.b-table .table.has-mobile-cards tr.file-row td.checkbox-cell {
+		grid-area: check;
+		width: auto !important;
+		padding-left: 10px !important;
+		align-self: stretch;
+		display: flex !important;
+		align-items: center;
+	}
+
+	.b-table .table.has-mobile-cards tr.file-row td.checkbox-cell .check {
+		width: 20px !important;
+		height: 20px !important;
+	}
+
+	/* Cells: Name, Permissions (only with write/chmod), Size, Time, actions */
+	.b-table .table.has-mobile-cards tr.file-row td:has(a.name) {
+		grid-area: name;
+	}
+
+	.file-row a.name:not([data-v]) {
+		padding: 2px 0 !important;
+		overflow-wrap: anywhere;
+		line-height: 1.3;
+	}
+
+	.file-row a.name:not([data-v])::before {
+		padding: 0 6px 0 0 !important;
+	}
+
+	.b-table .table.has-mobile-cards tr.file-row td:nth-last-child(4):not(:has(a.name)),
+	.b-table .table.has-mobile-cards tr.file-row td:nth-last-child(3),
+	.b-table .table.has-mobile-cards tr.file-row td:nth-last-child(2) {
+		font-size: 0.75rem;
+		opacity: 0.65;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	.b-table .table.has-mobile-cards tr.file-row td:nth-last-child(4):not(:has(a.name)) {
+		grid-area: perms;
+	}
+
+	.b-table .table.has-mobile-cards tr.file-row td:nth-last-child(3) {
+		grid-area: size;
+	}
+
+	.b-table .table.has-mobile-cards tr.file-row td:nth-last-child(2) {
+		grid-area: time;
+	}
+
+	.b-table .table.has-mobile-cards tr.file-row td:nth-last-child(3)::after,
+	.b-table
+		.table.has-mobile-cards
+		tr.file-row
+		td:nth-last-child(4):not(:has(a.name))
+		~ td:nth-last-child(2)::after {
+		content: "·";
+		margin-left: 6px;
+	}
+
+	/* Less empty space around the navbar */
+	#dropzone > .container {
+		padding: 8px 12px !important;
+	}
+
+	#browser {
+		margin-top: 8px !important;
+		margin-bottom: 40px !important;
+	}
+
+	/* ".." row: name only */
+	.b-table
+		.table.has-mobile-cards
+		tr.file-row.type-back
+		td:nth-last-child(-n + 4):not(:last-child, :has(a.name)) {
+		display: none !important;
+	}
+
+	.b-table .table.has-mobile-cards tr.file-row td:last-child {
+		grid-area: actions;
+	}
+
+	#single-actions .dropdown-trigger .button {
+		width: 40px;
+		height: 40px;
+		padding: 0 !important;
+	}
+
+	/* Toolbar: bigger tap targets */
+	#browser .breadcrumb a:not([data-v]) {
+		display: inline-flex;
+		align-items: center;
+		min-height: 34px;
+		padding: 4px 10px !important;
+	}
+
+	#browser #search,
+	#browser #sitemap {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 40px;
+		height: 40px;
+		padding: 0 !important;
+	}
+
+	#multi-actions a:not([data-v], .dropdown-item),
+	#multi-actions .upload a:not([data-v]) {
+		display: inline-flex !important;
+		align-items: center;
+		gap: 6px;
+		min-height: 38px;
+	}
+}

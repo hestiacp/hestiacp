@@ -621,6 +621,7 @@
 		padding: 8px 12px;
 		border: 1px solid rgb(128 128 128 / 35%);
 		border-radius: 8px;
+		color: var(--color-text);
 		text-align: left;
 
 		& > .fa-bars {
@@ -655,7 +656,7 @@
 
 	.main-menu-list {
 		position: absolute;
-		z-index: 1;
+		z-index: 20;
 		top: calc(100% - 4px);
 		left: 20px;
 		right: 20px;
@@ -1324,6 +1325,7 @@
 	}
 
 	.units-table-heading-cell {
+		order: -1;
 		grid-column: 1 / -1;
 		padding: 0;
 		font-size: 1rem;
@@ -1361,6 +1363,10 @@
 		font-weight: 600;
 		overflow-wrap: break-word;
 
+		&.u-text-no-wrap {
+			white-space: normal !important;
+		}
+
 		& > .u-hide-desktop:first-child {
 			display: block;
 			font-size: 0.68rem;
@@ -1376,6 +1382,19 @@
 	.units-table-row > .units-table-cell.units-table-cell-wide {
 		grid-column: 1 / -1;
 		font-weight: 400;
+	}
+
+	/* Short description (service list): muted line under the title, no label */
+	.units-table-row > .units-table-cell.units-table-cell-note {
+		grid-column: 1 / -1;
+		margin-top: -8px;
+		font-size: 0.8rem;
+		font-weight: 400;
+		opacity: 0.7;
+
+		& > .u-hide-desktop:first-child {
+			display: none;
+		}
 	}
 
 	/* Rows that don't follow the card structure (incremental file browser) stay stacked */

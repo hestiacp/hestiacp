@@ -687,6 +687,11 @@ upgrade_filemanager() {
 		else
 			echo "[ * ] File Manager is up to date ($fm_v)..."
 
+			# Hestia's own stylesheet ships with the panel, so refresh it on every upgrade
+			if [ -d "$HESTIA/web/fm/dist/css" ]; then
+				cp -f "$HESTIA_INSTALL_DIR/filemanager/filegator/dist/css/hst-custom.css" "$HESTIA/web/fm/dist/css/hst-custom.css"
+			fi
+
 			if [ "$UPGRADE_UPDATE_FILEMANAGER_CONFIG" = "true" ]; then
 				if [ -e "$HESTIA/web/fm/configuration.php" ]; then
 					echo "[ ! ] Updating File Manager configuration..."

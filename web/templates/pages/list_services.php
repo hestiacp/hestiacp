@@ -188,7 +188,7 @@
 						</li>
 					</ul>
 				</div>
-				<div class="units-table-cell">
+				<div class="units-table-cell units-table-cell-note">
 					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Description")) ?></span>
 					<?= tohtml( _($data[$key]["SYSTEM"])) ?>
 				</div>

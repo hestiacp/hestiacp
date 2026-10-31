@@ -144,7 +144,7 @@
 					</div>
 				</div>
 				<div class="units-table-cell units-table-heading-cell u-text-bold">
-					<span class="u-hide-desktop"><?= tohtml( _("Service")) ?>:</span>
+					<span class="u-hide-desktop"><?= tohtml( _("Service")) ?></span>
 					<i class="fas <?= tohtml($state_icon) ?> u-mr5"></i>
 					<a href="/edit/server/<? echo $edit_url ?>/" title="<?= tohtml( _("Edit")) ?>: <?= tohtml($key) ?>">
 						<?= tohtml($key) ?>
@@ -189,19 +189,19 @@
 					</ul>
 				</div>
 				<div class="units-table-cell">
-					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Description")) ?>:</span>
+					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Description")) ?></span>
 					<?= tohtml( _($data[$key]["SYSTEM"])) ?>
 				</div>
 				<div class="units-table-cell u-text-bold u-text-center-desktop">
-					<span class="u-hide-desktop"><?= tohtml( _("Uptime")) ?>:</span>
+					<span class="u-hide-desktop"><?= tohtml( _("Uptime")) ?></span>
 					<?= tohtml(humanize_time($data[$key]["RTIME"])) ?>
 				</div>
 				<div class="units-table-cell u-text-bold u-text-center-desktop">
-					<span class="u-hide-desktop"><?= tohtml( _("CPU")) ?>:</span>
+					<span class="u-hide-desktop"><?= tohtml( _("CPU")) ?></span>
 					<?= tohtml($cpu) ?>
 				</div>
 				<div class="units-table-cell u-text-bold u-text-center-desktop">
-					<span class="u-hide-desktop"><?= tohtml( _("Memory")) ?>:</span>
+					<span class="u-hide-desktop"><?= tohtml( _("Memory")) ?></span>
 					<?= tohtml($data[$key]["MEM"]) ?> <?= tohtml( _("MB")) ?>
 				</div>
 			</div>

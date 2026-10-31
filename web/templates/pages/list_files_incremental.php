@@ -69,7 +69,7 @@
 						<div class="units-table-cell">
 						</div>
 						<div class="units-table-cell">
-							<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Type")) ?>:</span>
+							<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Type")) ?></span>
 							<span class="u-text-bold">
 								Directory
 							</span>
@@ -116,13 +116,13 @@
 							<?php } ?>
 						</div>
 						<div class="units-table-cell">
-							<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Type")) ?>:</span>
+							<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Type")) ?></span>
 							<span class="u-text-bold">
 								<?= tohtml(getTransByType($file['type'])) ?>
 							</span>
 						</div>
 						<div class="units-table-cell">
-							<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Date / Time")) ?>:</span>
+							<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Date / Time")) ?></span>
 							<span class="u-text-bold">
 								<?= tohtml(convert_datetime($file['ctime'], 'Y-m-d  H:i:s')) ?>
 							</span>

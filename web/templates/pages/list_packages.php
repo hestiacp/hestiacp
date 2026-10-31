@@ -120,7 +120,7 @@
 					</div>
 				</div>
 				<div class="units-table-cell units-table-heading-cell u-text-bold">
-					<span class="u-hide-desktop"><?= tohtml( _("Package")) ?>:</span>
+					<span class="u-hide-desktop"><?= tohtml( _("Package")) ?></span>
 					<?php if ($key == "system") { ?>
 						<?= tohtml($key) ?>
 					<?php } else { ?>
@@ -170,7 +170,7 @@
 					</ul>
 				</div>
 				<div class="units-table-cell u-text-center-desktop">
-					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Shell")) ?>:</span>
+					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Shell")) ?></span>
 					<?php if ($data[$key]["SHELL"] == "nologin") { ?>
 						<i class="fas fa-circle-minus icon-large" title="<?= tohtml( _("SSH Access")) ?>: <?= tohtml($data[$key]["SHELL"]) ?>"> </i>
 					<?php } else { ?>
@@ -178,7 +178,7 @@
 					<?php } ?>
 				</div>
 				<div class="units-table-cell u-text-center-desktop">
-					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Quota")) ?>:</span>
+					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Quota")) ?></span>
 					<span title="<?= tohtml( _("Quota")) ?>: <?= tohtml(humanize_usage_size($data[$key]["DISK_QUOTA"])) ?> <?= tohtml(humanize_usage_measure($data[$key]["DISK_QUOTA"])) ?>">
 						<?php if (preg_match("/[a-z]/i", $data[$key]["DISK_QUOTA"])): ?>
 							<span class="u-text-bold">
@@ -195,7 +195,7 @@
 					</span>
 				</div>
 				<div class="units-table-cell u-text-center-desktop">
-					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Bandwidth")) ?>:</span>
+					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Bandwidth")) ?></span>
 					<span title="<?= tohtml( _("Bandwidth")) ?>: <?= tohtml(humanize_usage_size($data[$key]["BANDWIDTH"])) ?> <?= tohtml(humanize_usage_measure($data[$key]["BANDWIDTH"])) ?>">
 						<?php if ($data[$key]["BANDWIDTH"] == "unlimited") { ?>
 							<span class="u-text-bold">
@@ -212,7 +212,7 @@
 					</span>
 				</div>
 				<div class="units-table-cell compact u-text-bold u-text-center-desktop">
-					<span class="u-hide-desktop"><?= tohtml( _("Web Domains")) ?>:</span>
+					<span class="u-hide-desktop"><?= tohtml( _("Web Domains")) ?></span>
 					<span class="units-table-badge" title="<?= tohtml( _("Web Domains")) ?>: <?= tohtml($data[$key]["WEB_DOMAINS"]) ?>">
 						<?php if ($data[$key]["WEB_DOMAINS"] == "unlimited") { ?>
 							&infin;
@@ -222,7 +222,7 @@
 					</span>
 				</div>
 				<div class="units-table-cell compact u-text-bold u-text-center-desktop">
-					<span class="u-hide-desktop"><?= tohtml( _("Web Aliases")) ?>:</span>
+					<span class="u-hide-desktop"><?= tohtml( _("Web Aliases")) ?></span>
 					<span class="units-table-badge" title="<?= tohtml( _("Web Aliases")) ?>: <?= tohtml($data[$key]["WEB_ALIASES"]) ?>">
 						<?php if ($data[$key]["WEB_ALIASES"] == "unlimited") { ?>
 							&infin;
@@ -232,7 +232,7 @@
 					</span>
 				</div>
 				<div class="units-table-cell compact u-text-bold u-text-center-desktop">
-					<span class="u-hide-desktop"><?= tohtml( _("DNS Zones")) ?>:</span>
+					<span class="u-hide-desktop"><?= tohtml( _("DNS Zones")) ?></span>
 					<span class="units-table-badge" title="<?= tohtml( _("DNS Zones")) ?>: <?= tohtml($data[$key]["DNS_DOMAINS"]) ?>">
 						<?php if ($data[$key]["DNS_DOMAINS"] == "unlimited") { ?>
 							&infin;
@@ -242,7 +242,7 @@
 					</span>
 				</div>
 				<div class="units-table-cell compact u-text-bold u-text-center-desktop">
-					<span class="u-hide-desktop"><?= tohtml( _("DNS Records")) ?>:</span>
+					<span class="u-hide-desktop"><?= tohtml( _("DNS Records")) ?></span>
 					<span class="units-table-badge" title="<?= tohtml( _("DNS Records")) ?>: <?= tohtml($data[$key]["DNS_RECORDS"]) ?>">
 						<?php if ($data[$key]["DNS_RECORDS"] == "unlimited") { ?>
 							&infin;
@@ -252,7 +252,7 @@
 					</span>
 				</div>
 				<div class="units-table-cell compact u-text-bold u-text-center-desktop">
-					<span class="u-hide-desktop"><?= tohtml( _("Mail Domains")) ?>:</span>
+					<span class="u-hide-desktop"><?= tohtml( _("Mail Domains")) ?></span>
 					<span class="units-table-badge" title="<?= tohtml( _("Mail Domains")) ?>: <?= tohtml($data[$key]["MAIL_DOMAINS"]) ?>">
 						<?php if ($data[$key]["MAIL_DOMAINS"] == "unlimited") { ?>
 							&infin;
@@ -262,7 +262,7 @@
 					</span>
 				</div>
 				<div class="units-table-cell compact u-text-bold u-text-center-desktop">
-					<span class="u-hide-desktop"><?= tohtml( _("Mail Accounts")) ?>:</span>
+					<span class="u-hide-desktop"><?= tohtml( _("Mail Accounts")) ?></span>
 					<span class="units-table-badge" title="<?= tohtml( _("Mail Accounts")) ?>: <?= tohtml($data[$key]["MAIL_ACCOUNTS"]) ?>">
 						<?php if ($data[$key]["MAIL_ACCOUNTS"] == "unlimited") { ?>
 							&infin;
@@ -272,7 +272,7 @@
 					</span>
 				</div>
 				<div class="units-table-cell compact u-text-bold u-text-center-desktop">
-					<span class="u-hide-desktop"><?= tohtml( _("Databases")) ?>:</span>
+					<span class="u-hide-desktop"><?= tohtml( _("Databases")) ?></span>
 					<span class="units-table-badge" title="<?= tohtml( _("Databases")) ?>: <?= tohtml($data[$key]["DATABASES"]) ?>">
 						<?php if ($data[$key]["DATABASES"] == "unlimited") { ?>
 							&infin;
@@ -282,7 +282,7 @@
 					</span>
 				</div>
 				<div class="units-table-cell compact u-text-bold u-text-center-desktop">
-					<span class="u-hide-desktop"><?= tohtml( _("Cron Jobs")) ?>:</span>
+					<span class="u-hide-desktop"><?= tohtml( _("Cron Jobs")) ?></span>
 					<span class="units-table-badge" title="<?= tohtml( _("Cron Jobs")) ?>: <?= tohtml($data[$key]["CRON_JOBS"]) ?>">
 						<?php if ($data[$key]["CRON_JOBS"] == "unlimited") { ?>
 							&infin;
@@ -292,7 +292,7 @@
 					</span>
 				</div>
 				<div class="units-table-cell compact u-text-bold u-text-center-desktop">
-					<span class="u-hide-desktop"><?= tohtml( _("Backups")) ?>:</span>
+					<span class="u-hide-desktop"><?= tohtml( _("Backups")) ?></span>
 					<span class="units-table-badge" title="<?= tohtml( _("Backups")) ?>: <?= tohtml($data[$key]["BACKUPS"]) ?>">
 						<?php if ($data[$key]["BACKUPS"] == "unlimited") { ?>
 							&infin;

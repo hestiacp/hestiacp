@@ -110,7 +110,7 @@
 						</div>
 					</div>
 					<div class="units-table-cell units-table-heading-cell u-text-bold">
-						<span class="u-hide-desktop"><?= tohtml( _("Record")) ?>:</span>
+						<span class="u-hide-desktop"><?= tohtml( _("Record")) ?></span>
 							<?php if (($read_only === true) || ($data[$key]['SUSPENDED'] == 'yes')) { ?>
 								<?= tohtml(substr($data[$key]['RECORD'], 0, 40)) ?><?php if (strlen($data[$key]['RECORD']) > 40 ) echo '...'; ?>
 							<?php } else { ?>
@@ -152,19 +152,19 @@
 					<?php } ?>
 					</div>
 					<div class="units-table-cell u-text-bold u-text-center-desktop">
-						<span class="u-hide-desktop"><?= tohtml( _("Type")) ?>:</span>
+						<span class="u-hide-desktop"><?= tohtml( _("Type")) ?></span>
 						<?= tohtml($data[$key]["TYPE"]) ?>
 					</div>
 					<div class="units-table-cell u-text-center-desktop">
-						<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Priority")) ?>:</span>
+						<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Priority")) ?></span>
 						<?= tohtml($data[$key]["PRIORITY"]) ?>
 					</div>
 					<div class="units-table-cell u-text-center-desktop">
-						<span class="u-hide-desktop u-text-bold"><?= tohtml( _("TTL")) ?>:</span>
+						<span class="u-hide-desktop u-text-bold"><?= tohtml( _("TTL")) ?></span>
 						<?php if ($data[$key]['TTL'] == ''){ echo tohtml(_('Default')); } else { echo tohtml($data[$key]['TTL']);} ?>
 					</div>
-					<div class="units-table-cell">
-						<span class="u-hide-desktop u-text-bold"><?= tohtml( _("IP or Value")) ?>:</span>
+					<div class="units-table-cell units-table-cell-wide">
+						<span class="u-hide-desktop u-text-bold"><?= tohtml( _("IP or Value")) ?></span>
 						<span class="u-text-break">
 							<?= tohtml($data[$key]["VALUE"]) ?>
 						</span>

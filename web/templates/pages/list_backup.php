@@ -80,7 +80,7 @@
 					</div>
 				</div>
 				<div class="units-table-cell units-table-heading-cell u-text-bold">
-					<span class="u-hide-desktop"><?= tohtml( _("File Name")) ?>:</span>
+					<span class="u-hide-desktop"><?= tohtml( _("File Name")) ?></span>
 					<?php if ($read_only === true) { ?>
 						<?= tohtml($key) ?>
 					<?php } else { ?>
@@ -130,13 +130,13 @@
 					<?php } ?>
 				</div>
 				<div class="units-table-cell u-text-center-desktop">
-					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Date")) ?>:</span>
+					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Date")) ?></span>
 					<span class="u-text-bold">
 						<?= tohtml(translate_date($data[$key]["DATE"])) ?>
 					</span>
 				</div>
 				<div class="units-table-cell u-text-center-desktop">
-					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Size")) ?>:</span>
+					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Size")) ?></span>
 					<span class="u-text-bold">
 						<?= tohtml(humanize_usage_size($data[$key]["SIZE"])) ?>
 					</span>
@@ -145,11 +145,11 @@
 					</span>
 				</div>
 				<div class="units-table-cell u-text-center-desktop">
-					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Type")) ?>:</span>
+					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Type")) ?></span>
 					<?= tohtml($data[$key]["TYPE"]) ?>
 				</div>
 				<div class="units-table-cell u-text-center-desktop">
-					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Runtime")) ?>:</span>
+					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Runtime")) ?></span>
 					<?= tohtml(humanize_time($data[$key]["RUNTIME"])) ?>
 				</div>
 			</div>

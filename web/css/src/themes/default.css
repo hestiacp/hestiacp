@@ -989,6 +989,21 @@
 	}
 }
 
+/* Below the tablet layout: buttons share rows and size to their label */
+@media (--viewport-below-medium) {
+	.toolbar-buttons {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 6px;
+
+		& .button {
+			flex: 1 1 auto;
+			width: auto;
+			margin: 0;
+		}
+	}
+}
+
 .toolbar-search {
 	margin-top: 5px;
 
@@ -2250,6 +2265,24 @@
 
 .button-floating-shortcuts {
 	right: 110px;
+}
+
+/* Touch-size targets below the desktop layout */
+@media (--viewport-below-large) {
+	.button:not(.button-floating) {
+		min-height: 40px;
+	}
+
+	.form-check {
+		padding-left: 28px;
+	}
+
+	.form-check-input {
+		width: 20px;
+		height: 20px;
+		margin-top: 0;
+		margin-left: -28px;
+	}
 }
 
 /* Clipboard component

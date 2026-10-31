@@ -465,9 +465,10 @@
 			<?php
    $main_menu_list = ob_get_clean();
    // On phones the toggle names the current section: the label of the item rendered as active
-   $main_menu_current = preg_match('/main-menu-item-link\s+active\b.*?<p class="main-menu-item-label">(.*?)<\/p>/s', $main_menu_list, $main_menu_match)
-   	? $main_menu_match[1]
-   	: null;
+   $main_menu_current = null;
+   if (preg_match('/main-menu-item-link\s+active\b.*?<p class="main-menu-item-label">(.*?)<\/p>/s', $main_menu_list, $main_menu_match)) {
+   	$main_menu_current = $main_menu_match[1];
+   }
    ?>
 			<button
 				x-ref="toggle"

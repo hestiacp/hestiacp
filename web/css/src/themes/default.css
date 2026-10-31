@@ -1422,14 +1422,22 @@
 		bottom: 12px;
 		border-top: 0;
 		padding: 0;
+
+		& .units-table-row-action {
+			flex: 0 0 42px;
+		}
 	}
 
+	/* Up to 7 buttons (web domains) on one line: they shrink a little on narrow phones */
 	.units-table-row-actions {
+		flex-wrap: nowrap;
 		padding-top: 0;
-		gap: 8px;
+		gap: clamp(4px, 1.5vw, 8px);
 	}
 
 	.units-table-row-action {
+		flex: 0 1 42px;
+		min-width: 32px;
 		margin: 0;
 
 		& .fas {
@@ -1466,7 +1474,7 @@
 	}
 
 	.units-table-row-action-link {
-		width: 42px;
+		width: 100%;
 		height: 40px;
 		justify-content: center;
 		padding: 0;

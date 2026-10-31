@@ -607,6 +607,76 @@
 	}
 }
 
+/* Phones: the toggle is a bar naming the current section; the menu opens as a dropdown over the page */
+@media (--viewport-below-small) {
+	.main-menu > .container {
+		position: relative;
+		padding: 8px 20px;
+	}
+
+	.main-menu-toggle {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		padding: 8px 12px;
+		border: 1px solid rgb(128 128 128 / 35%);
+		border-radius: 8px;
+		text-align: left;
+
+		& > .fa-bars {
+			display: none;
+		}
+
+		&::after {
+			content: "";
+			width: 8px;
+			height: 8px;
+			border-right: 2px solid currentcolor;
+			border-bottom: 2px solid currentcolor;
+			transform: translateY(-2px) rotate(45deg);
+			opacity: 0.6;
+			transition: transform 0.15s;
+		}
+
+		&[aria-expanded="true"]::after {
+			transform: translateY(2px) rotate(-135deg);
+		}
+	}
+
+	.main-menu-toggle-label {
+		flex: 1;
+		text-transform: uppercase;
+		letter-spacing: 0.03em;
+
+		& .fas {
+			margin-left: 6px;
+		}
+	}
+
+	.main-menu-list {
+		position: absolute;
+		z-index: 1;
+		top: calc(100% - 4px);
+		left: 20px;
+		right: 20px;
+		padding: 4px;
+		border: 1px solid rgb(128 128 128 / 35%);
+		border-radius: 8px;
+		background-color: var(--color-background);
+		box-shadow: 0 8px 24px rgb(0 0 0 / 35%);
+	}
+
+	.main-menu-item-link {
+		text-align: left;
+		padding: 10px 12px;
+		border-radius: 6px;
+
+		&.active {
+			background-color: rgb(128 128 128 / 15%);
+		}
+	}
+}
+
 /* Toolbar
    ========================================================================== */
 

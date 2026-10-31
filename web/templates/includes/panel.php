@@ -282,18 +282,15 @@
 		</div>
 	</div>
 
-	<nav x-data="{ open: false }" class="main-menu">
+	<nav
+		x-data="{ open: false }"
+		x-on:click.outside="open = false"
+		x-on:keydown.escape="if (open) { open = false; $refs.toggle.focus(); }"
+		class="main-menu"
+	>
 		<div class="container">
-			<button x-on:click="open = !open" type="button" class="main-menu-toggle">
-				<i class="fas fa-bars"></i>
-				<span
-					x-text="open ? '<?= _("Collapse main menu") ?>' : '<?= _("Expand main menu") ?>'"
-					class="main-menu-toggle-label"
-				>
-					<?= _("Expand main menu") ?>
-				</span>
-			</button>
-			<ul x-cloak x-show="open" class="main-menu-list">
+			<?php ob_start(); ?>
+			<ul x-cloak x-show="open" class="main-menu-list" id="main-menu-list">
 
 				<!-- Users tab -->
 				<?php if ($_SESSION["userContext"] == "admin" && $_SESSION["look"] === "") { ?>
@@ -465,6 +462,34 @@
 				<?php } ?>
 
 			</ul>
+			<?php
+   $main_menu_list = ob_get_clean();
+   // On phones the toggle names the current section: the label of the item rendered as active
+   $main_menu_current = preg_match('/main-menu-item-link\s+active\b.*?<p class="main-menu-item-label">(.*?)<\/p>/s', $main_menu_list, $main_menu_match)
+   	? $main_menu_match[1]
+   	: null;
+   ?>
+			<button
+				x-ref="toggle"
+				x-on:click="open = !open"
+				x-bind:aria-expanded="open"
+				aria-expanded="false"
+				aria-controls="main-menu-list"
+				type="button"
+				class="main-menu-toggle"
+			>
+				<i class="fas fa-bars"></i>
+				<span
+					x-text="open ? '<?= _("Collapse main menu") ?>' : '<?= _("Expand main menu") ?>'"
+					class="<?= $main_menu_current === null ? "main-menu-toggle-label" : "u-hidden-visually" ?>"
+				>
+					<?= _("Expand main menu") ?>
+				</span>
+				<?php if ($main_menu_current !== null) { ?>
+					<span class="main-menu-toggle-label main-menu-toggle-current"><?= $main_menu_current ?></span>
+				<?php } ?>
+			</button>
+			<?= $main_menu_list ?>
 		</div>
 	</nav>
 

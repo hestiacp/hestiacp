@@ -519,6 +519,10 @@ pre[class*="language-"] ::selection {
 		padding: 4px 10px !important;
 	}
 
+	#browser .breadcrumb {
+		margin-bottom: 10px !important;
+	}
+
 	#browser #search,
 	#browser #sitemap {
 		display: inline-flex;
@@ -534,6 +538,114 @@ pre[class*="language-"] ::selection {
 		display: inline-flex !important;
 		align-items: center;
 		gap: 6px;
-		min-height: 38px;
+		height: 38px;
+	}
+
+	/* Selected-items actions (Download, Copy, Move, Zip, Delete): icons only, one line */
+	#multi-actions > div:first-child > a.is-inline-block:not(.add-new) {
+		justify-content: center;
+		width: 42px;
+		padding: 0 !important;
+		font-size: 0;
+	}
+
+	#multi-actions > div:first-child > a.is-inline-block:not(.add-new) .icon {
+		font-size: 1rem;
+	}
+
+	#multi-actions > div:first-child {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 6px;
+	}
+
+	#multi-actions > div:first-child > *,
+	#multi-actions .upload,
+	#multi-actions .upload a {
+		margin: 0 !important;
+	}
+
+	/* Items per page: the default is enough on a phone */
+	#pagination {
+		display: none !important;
+	}
+
+	/* Top row: logo, search and folder tree on the left; user and exit on the right (no hamburger) */
+	#dropzone > .container {
+		position: relative;
+	}
+
+	.navbar {
+		display: flex !important;
+		align-items: center;
+		min-height: 48px !important;
+	}
+
+	.navbar-burger {
+		display: none !important;
+	}
+
+	.navbar-menu {
+		display: flex !important;
+		flex: 1 1 auto;
+		min-width: 0;
+		margin-left: 96px; /* room for the search and tree icons */
+		padding: 0 !important;
+		background: transparent !important;
+		box-shadow: none !important;
+	}
+
+	.navbar-end {
+		display: flex;
+		align-items: center;
+		min-width: 0;
+		margin-left: auto;
+	}
+
+	.navbar-item.profile {
+		display: block !important;
+		flex: 0 1 auto !important;
+		min-width: 0;
+		padding: 0 4px 0 8px !important;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		font-size: 0.85rem;
+		pointer-events: none;
+	}
+
+	.navbar-item.logout {
+		display: flex !important;
+		align-items: center;
+		justify-content: center;
+		flex: none;
+		width: 40px;
+		height: 40px;
+		padding: 0 !important;
+		font-size: 0;
+		border-radius: 6px;
+	}
+
+	.navbar-item.logout::before {
+		content: "\f2f5";
+		font-family: "Font Awesome 5 Free";
+		font-weight: 900;
+		font-size: 1.1rem;
+	}
+
+	#browser > .is-flex:first-child > div:last-child {
+		position: absolute;
+		z-index: 31;
+		top: 12px;
+		left: 70px;
+		display: flex;
+	}
+
+	@media (prefers-color-scheme: dark) {
+		.navbar-item.profile,
+		.navbar-item.logout {
+			color: #dbdbdb !important;
+		}
 	}
 }

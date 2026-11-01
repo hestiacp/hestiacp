@@ -153,6 +153,19 @@ for cert in certificate.crt certificate.key; do
 	fi
 done
 
+# Let unattended-upgrades install MariaDB updates from the repository Hestia
+# installs it from. The stock configuration only allows distribution
+# repositories.
+_uu_mariadb_conf="/etc/apt/apt.conf.d/60unattended-upgrades-hestia-mariadb"
+if [ ! -f "$_uu_mariadb_conf" ]; then
+	echo "[ + ] Allowing unattended-upgrades to install MariaDB updates"
+	cat > "$_uu_mariadb_conf" << 'EOF'
+Unattended-Upgrade::Origins-Pattern {
+	"origin=MariaDB";
+};
+EOF
+fi
+
 # Start fix ProFTPD
 ftp_system="$(/usr/local/hestia/bin/v-list-sys-config json | jq -r '.[].FTP_SYSTEM')"
 if [[ "$ftp_system" =~ proftpd ]]; then

@@ -892,6 +892,14 @@ if [ "$mysql" = 'yes' ]; then
 	echo "[ * ] MariaDB $mariadb_v"
 	echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/mariadb-keyring.gpg] https://dlm.mariadb.com/repo/mariadb-server/$mariadb_v/repo/$VERSION $codename main" > $apt/mariadb.list
 	curl -s https://mariadb.org/mariadb_release_signing_key.asc | gpg --dearmor | tee /usr/share/keyrings/mariadb-keyring.gpg > /dev/null 2>&1
+
+	# Let unattended-upgrades install MariaDB updates from the repository
+	# above; the stock configuration only allows distribution repositories
+	cat > /etc/apt/apt.conf.d/60unattended-upgrades-hestia-mariadb << 'EOF'
+Unattended-Upgrade::Origins-Pattern {
+	"origin=MariaDB";
+};
+EOF
 fi
 
 # Installing Mysql8 repo

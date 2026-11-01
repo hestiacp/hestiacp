@@ -143,6 +143,33 @@ html {
 	}
 }
 
+/* Items per page: same size as the toolbar buttons, muted text */
+#pagination .select,
+#pagination select {
+	height: 32px;
+	font-size: 1rem; /* 16px also keeps iOS from zooming in on focus */
+}
+
+#pagination .select::after {
+	right: 0.8em;
+}
+
+#pagination select {
+	padding: 0 1.8em 0 0.6em;
+	border: 1px solid #26232c26;
+	border-radius: 6px;
+	background: #fff;
+	color: #757575;
+}
+
+@media (prefers-color-scheme: dark) {
+	#pagination select {
+		border-color: #222;
+		background: #222;
+		color: #a3a3a3;
+	}
+}
+
 /* ------------------------------ */
 
 /*     Folder and file icons    */
@@ -582,19 +609,6 @@ pre[class*="language-"] ::selection {
 	#pagination .select,
 	#pagination select {
 		height: 38px;
-		font-size: 1rem; /* also keeps iOS from zooming in on focus */
-	}
-
-	#pagination .select::after {
-		right: 0.8em;
-	}
-
-	#pagination select {
-		padding: 0 1.8em 0 0.6em;
-		border: 1px solid #26232c26;
-		border-radius: 6px;
-		background: #fff;
-		color: #424242;
 	}
 
 	/* Top row: logo, search and folder tree on the left; user and exit on the right (no hamburger) */
@@ -648,14 +662,12 @@ pre[class*="language-"] ::selection {
 		left: 70px;
 		display: flex;
 	}
+}
 
-
-	@media (prefers-color-scheme: dark) {
-		#pagination select {
-			border-color: #222;
-			background: #222;
-			color: #fff;
-		}
+/* Items per page does not fit next to Add files / New on the narrowest phones */
+@media screen and (width < 360px) {
+	#pagination {
+		display: none;
 	}
 }
 

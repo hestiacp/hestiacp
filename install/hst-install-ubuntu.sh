@@ -924,6 +924,14 @@ if [ "$postgresql" = 'yes' ]; then
 	echo "[ * ] PostgreSQL"
 	echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/postgresql-keyring.gpg] https://apt.postgresql.org/pub/repos/apt/ $codename-pgdg main" > $apt/postgresql.list
 	curl -s https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor | tee /usr/share/keyrings/postgresql-keyring.gpg > /dev/null 2>&1
+
+	# Let unattended-upgrades install PostgreSQL updates from the repository
+	# above; the stock configuration only allows distribution repositories
+	cat > /etc/apt/apt.conf.d/60unattended-upgrades-hestia-postgresql << 'EOF'
+Unattended-Upgrade::Origins-Pattern {
+	"origin=apt.postgresql.org";
+};
+EOF
 fi
 
 # Echo for a new line

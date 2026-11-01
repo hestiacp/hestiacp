@@ -881,6 +881,14 @@ EOF
 if [ "$apache" = 'yes' ] && [ "$release" = '22.04' ]; then
 	echo "[ * ] Apache2"
 	echo "deb http://ppa.launchpad.net/ondrej/apache2/ubuntu $codename main" > $apt/apache2.list
+
+	# Let unattended-upgrades install Apache updates from the repository
+	# above; the stock configuration only allows distribution repositories
+	cat > /etc/apt/apt.conf.d/60unattended-upgrades-hestia-apache2 << 'EOF'
+Unattended-Upgrade::Origins-Pattern {
+	"origin=LP-PPA-ondrej-apache2";
+};
+EOF
 fi
 
 # Installing MariaDB repo

@@ -517,3 +517,17 @@ if [ -n "$DB_PGA_ALIAS" ] && [ -f "/etc/nginx/conf.d/phppgadmin.inc" ]; then
 	echo "[ + ] Updating phpPgAdmin nginx configuration"
 	"$BIN/v-change-sys-db-alias" pga "$DB_PGA_ALIAS"
 fi
+
+# Let unattended-upgrades install Apache updates from the repository Hestia
+# installs it from. The stock configuration only allows distribution
+# repositories.
+_uu_apache2_conf="/etc/apt/apt.conf.d/60unattended-upgrades-hestia-apache2"
+if [ ! -f "$_uu_apache2_conf" ]; then
+	echo "[ + ] Allowing unattended-upgrades to install Apache updates"
+	cat > "$_uu_apache2_conf" << 'EOF'
+Unattended-Upgrade::Origins-Pattern {
+	"origin=LP-PPA-ondrej-apache2";
+};
+EOF
+fi
+

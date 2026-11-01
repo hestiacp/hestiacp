@@ -102,8 +102,12 @@ abstract class BaseSetup implements InstallerInterface
 
             $userPrefix = $this->appcontext->user() . '_';
 
-            $databaseName = str_replace($userPrefix, '', $database->name);
-            $databaseUser = str_replace($userPrefix, '', $database->user);
+            $databaseName = str_starts_with($database->name, $userPrefix)
+                ? substr($database->name, strlen($userPrefix))
+                : $database->name;
+            $databaseUser = str_starts_with($database->user, $userPrefix)
+                ? substr($database->user, strlen($userPrefix))
+                : $database->user;
 
             $this->appcontext->databaseAdd(
                 $databaseName,

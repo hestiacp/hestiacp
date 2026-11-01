@@ -114,6 +114,19 @@ Unattended-Upgrade::Origins-Pattern {
 EOF
 fi
 
+# Let unattended-upgrades install nginx updates from the repository Hestia
+# installs it from. The stock configuration only allows distribution
+# repositories.
+_uu_nginx_conf="/etc/apt/apt.conf.d/60unattended-upgrades-hestia-nginx"
+if [ ! -f "$_uu_nginx_conf" ]; then
+	echo "[ + ] Allowing unattended-upgrades to install nginx updates"
+	cat > "$_uu_nginx_conf" << 'EOF'
+Unattended-Upgrade::Origins-Pattern {
+	"origin=nginx";
+};
+EOF
+fi
+
 # Fix phpmyadmin
 pma_config="/etc/phpmyadmin"
 

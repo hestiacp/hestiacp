@@ -853,6 +853,14 @@ echo "[ * ] NGINX"
 echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/nginx-keyring.gpg] https://nginx.org/packages/mainline/$VERSION/ $codename nginx" > $apt/nginx.list
 curl -s https://nginx.org/keys/nginx_signing.key | gpg --dearmor | tee /usr/share/keyrings/nginx-keyring.gpg > /dev/null 2>&1
 
+# Let unattended-upgrades install nginx updates from the repository
+# above; the stock configuration only allows distribution repositories
+cat > /etc/apt/apt.conf.d/60unattended-upgrades-hestia-nginx << 'EOF'
+Unattended-Upgrade::Origins-Pattern {
+	"origin=nginx";
+};
+EOF
+
 # Installing sury PHP repo
 echo "[ * ] PHP"
 # Use the sury repository for all Ubuntu versions instead of the PPA

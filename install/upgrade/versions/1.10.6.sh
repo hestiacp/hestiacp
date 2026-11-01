@@ -220,6 +220,19 @@ if [[ "$ftp_system" =~ proftpd ]]; then
 fi
 # End fix ProFTPD
 
+# Let unattended-upgrades install Node.js updates from the repository Hestia
+# installs it from. The stock configuration only allows distribution
+# repositories.
+_uu_nodejs_conf="/etc/apt/apt.conf.d/60unattended-upgrades-hestia-nodejs"
+if [ ! -f "$_uu_nodejs_conf" ]; then
+	echo "[ + ] Allowing unattended-upgrades to install Node.js updates"
+	cat > "$_uu_nodejs_conf" << 'EOF'
+Unattended-Upgrade::Origins-Pattern {
+	"site=deb.nodesource.com";
+};
+EOF
+fi
+
 # Trim whitespace from IP values in existing web domain configuration files (#5543)
 if compgen -G "$HESTIA/data/users/*/web.conf" > /dev/null; then
 	echo "[ + ] Trimming whitespace from web domain IP addresses"

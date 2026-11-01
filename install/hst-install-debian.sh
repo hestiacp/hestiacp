@@ -928,6 +928,14 @@ if [ "$webterminal" = 'yes' ]; then
 	echo "[ * ] Node.js $node_v"
 	echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/nodejs.gpg] https://deb.nodesource.com/node_$node_v.x nodistro main" > $apt/nodejs.list
 	curl -s https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor | tee /usr/share/keyrings/nodejs.gpg > /dev/null 2>&1
+
+	# Let unattended-upgrades install Node.js updates from the repository
+	# above; the stock configuration only allows distribution repositories
+	cat > /etc/apt/apt.conf.d/60unattended-upgrades-hestia-nodejs << 'EOF'
+Unattended-Upgrade::Origins-Pattern {
+	"site=deb.nodesource.com";
+};
+EOF
 	apt-get -y install nodejs >> $LOG
 fi
 

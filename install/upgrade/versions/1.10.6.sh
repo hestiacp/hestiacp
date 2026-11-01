@@ -530,4 +530,3 @@ Unattended-Upgrade::Origins-Pattern {
 };
 EOF
 fi
-

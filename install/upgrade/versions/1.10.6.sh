@@ -252,6 +252,25 @@ EOPHP
 fi
 # End trimming web domain IP addresses
 
+# Let unattended-upgrades install PostgreSQL updates from the repository Hestia
+# installs it from. The stock configuration only allows distribution
+# repositories.
+_uu_postgresql_conf="/etc/apt/apt.conf.d/60unattended-upgrades-hestia-postgresql"
+if [ ! -f "$_uu_postgresql_conf" ]; then
+	echo "[ + ] Allowing unattended-upgrades to install PostgreSQL updates"
+	cat > "$_uu_postgresql_conf" << 'EOF'
+Unattended-Upgrade::Origins-Pattern {
+	"origin=apt.postgresql.org";
+};
+// The unversioned metapackages point at the default major, so leave them to
+// the admin; versioned postgresql-NN packages stay eligible.
+Unattended-Upgrade::Package-Blacklist {
+	"^postgresql$";
+	"^postgresql-contrib$";
+};
+EOF
+fi
+
 # Start fixing Exim HELO checks
 fix_exim_helo_checks() {
 	local _xhf_conf="${1:-/etc/exim4/exim4.conf.template}"

@@ -100,6 +100,20 @@ if [[ "$_running_os" == "ubuntu" ]]; then
 fi
 # End migrating PPA
 
+# Let unattended-upgrades install PHP updates from the repository we install
+# hosted PHP from. The stock configuration only allows distribution
+# repositories, so PHP was never patched automatically.
+_uu_conf="/etc/apt/apt.conf.d/60unattended-upgrades-hestia-php"
+if [ ! -f "$_uu_conf" ]; then
+	echo "[ + ] Allowing unattended-upgrades to install PHP updates"
+	cat > "$_uu_conf" << 'EOF'
+Unattended-Upgrade::Origins-Pattern {
+	"origin=deb.sury.org";
+	"origin=LP-PPA-ondrej-php";
+};
+EOF
+fi
+
 # Fix phpmyadmin
 pma_config="/etc/phpmyadmin"
 

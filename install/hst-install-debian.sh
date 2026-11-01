@@ -870,6 +870,16 @@ echo "[ * ] PHP"
 echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/sury-keyring.gpg] https://packages.sury.org/php/ $codename main" > $apt/php.list
 curl -s https://packages.sury.org/php/apt.gpg | gpg --dearmor | tee /usr/share/keyrings/sury-keyring.gpg > /dev/null 2>&1
 
+# Let unattended-upgrades install PHP updates from the repository above. The
+# stock configuration only allows distribution repositories, so hosted PHP
+# would otherwise never be patched automatically.
+cat > /etc/apt/apt.conf.d/60unattended-upgrades-hestia-php << 'EOF'
+Unattended-Upgrade::Origins-Pattern {
+	"origin=deb.sury.org";
+	"origin=LP-PPA-ondrej-php";
+};
+EOF
+
 # Installing sury Apache2 repo
 if [ "$apache" = 'yes' ]; then
 	echo "[ * ] Apache2"

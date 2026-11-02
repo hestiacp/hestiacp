@@ -15,7 +15,7 @@ if ($read_only === true) {
 
 if ($_SESSION["userContext"] === "admin" && !empty($_GET["user"])) {
 	$user = quoteshellarg($_GET["user"]);
-	$user_plain = $_GET["user"];
+	$user_plain = htmlentities($_GET["user"]);
 }
 
 // Checks if API access is enabled

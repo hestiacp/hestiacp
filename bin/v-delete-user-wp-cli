@@ -1,0 +1,98 @@
+#!/bin/bash
+# info: delete wp-cli for a user
+# options: USER
+#
+# example: v-delete-user-wp-cli user
+#
+# This function removes wp-cli support from the user account, added earlier
+# by v-add-user-wp-cli. That script has no delete counterpart, so until now
+# removing wp-cli meant deleting the folder by hand and left the
+# "alias wp=..." line behind in .bash_aliases, piling up duplicates on
+# repeated install/remove cycles.
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+
+if [ -z "$HESTIA" ]; then
+	HESTIA="/usr/local/hestia"
+fi
+
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+# Drop privileges if the user can write to their homedir (users with a shell),
+# otherwise run as root (root-owned homedir: the user can't tamper with it).
+home_exec() {
+	if [ "$HOME_WRITABLE" = 'yes' ]; then
+		user_exec "$@"
+	else
+		"$@"
+	fi
+}
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '1' "$#" 'USER'
+is_format_valid 'user'
+is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+WPCLI_DIR="$HOMEDIR/$user/.wp-cli"
+WPCLI_BIN="$WPCLI_DIR/wp"
+ALIASES_FILE="$HOMEDIR/$user/.bash_aliases"
+REAL_HOMEDIR="$(readlink -f "$HOMEDIR")"
+
+# Never follow symlinks planted by the user: paths must resolve exactly
+if [ -L "$WPCLI_DIR" ]; then
+	check_result "$E_FORBIDEN" "WP Cli dir is a symlink"
+fi
+if [ "$(readlink -m "$WPCLI_DIR")" != "$REAL_HOMEDIR/$user/.wp-cli" ]; then
+	check_result "$E_FORBIDEN" "Path outside of user homedir (WP Cli dir)"
+fi
+
+if [ ! -f "$WPCLI_BIN" ]; then
+	check_result "$E_NOTEXIST" "For user name '$user' WP-CLI is not installed"
+fi
+
+if user_exec test -w "$HOMEDIR/$user"; then
+	HOME_WRITABLE='yes'
+else
+	HOME_WRITABLE='no'
+fi
+
+home_exec rm -rf --one-file-system -- "$WPCLI_DIR"
+check_result $? "Unable to remove WP Cli dir"
+
+# Remove only the alias added by v-add-user-wp-cli (and its duplicates)
+if [ -f "$ALIASES_FILE" ] && [ ! -L "$ALIASES_FILE" ] \
+	&& [ "$(readlink -m "$ALIASES_FILE")" = "$REAL_HOMEDIR/$user/.bash_aliases" ]; then
+	home_exec sed -i "\|^alias wp=$HOMEDIR/$user/\.wp-cli/wp\$|d" "$ALIASES_FILE"
+	check_result $? "Unable to update .bash_aliases"
+fi
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Logging
+$BIN/v-log-action "$user" "Info" "Plugins" "WP-CLI support disabled."
+log_event "$OK" "$ARGUMENTS"
+
+exit

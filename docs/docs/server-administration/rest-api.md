@@ -108,3 +108,4 @@ Run the command `v-generate-api-key`.
 | 18    | E_RDD         | RRDtool failed to update the database                        |
 | 19    | E_UPDATE      | Update operation failed                                      |
 | 20    | E_RESTART     | Service restart failed                                       |
+| 21    | E_BACKUP      | Backup failed                                                |

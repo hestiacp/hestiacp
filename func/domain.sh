@@ -7,6 +7,16 @@
 #===========================================================================#
 
 #----------------------------------------------------------#
+#                   GENERAL FUNCTIONS                      #
+#----------------------------------------------------------#
+
+# Prepares a string for safe use in sed.
+# Escapes backslashes, '|', and '&'.
+sed_escape_replacement() {
+	printf '%s' "$1" | sed -e 's/[\&|]/\\&/g'
+}
+
+#----------------------------------------------------------#
 #                        WEB                               #
 #----------------------------------------------------------#
 
@@ -259,6 +269,9 @@ add_web_config() {
 	#   -If possible custom templates should be automatically upgraded to use the new format
 	#   -Alternatively a depreciation period with proper notifications should be considered
 
+	docroot_escaped="$(sed_escape_replacement "$docroot")"
+	sdocroot_escaped="$(sed_escape_replacement "$sdocroot")"
+
 	cat "${WEBTPL_LOCATION}/$2" \
 		| sed -e "s|%ip%|$local_ip|g" \
 			-e "s|%domain%|$domain|g" \
@@ -280,8 +293,8 @@ add_web_config() {
 			-e "s|%user%|$user|g" \
 			-e "s|%group%|$user|g" \
 			-e "s|%home%|$HOMEDIR|g" \
-			-e "s|%docroot%|$docroot|g" \
-			-e "s|%sdocroot%|$sdocroot|g" \
+			-e "s|%docroot%|$docroot_escaped|g" \
+			-e "s|%sdocroot%|$sdocroot_escaped|g" \
 			-e "s|%ssl_crt%|$ssl_crt|g" \
 			-e "s|%ssl_key%|$ssl_key|g" \
 			-e "s|%ssl_pem%|$ssl_pem|g" \
@@ -473,7 +486,7 @@ is_dns_template_valid() {
 
 # DNS domain existence check
 is_dns_domain_new() {
-	dns=$(ls $HESTIA/data/users/*/dns/$1.conf 2> /dev/null)
+	dns=$(ls "$HESTIA"/data/users/*/dns/"$1".conf 2> /dev/null)
 	if [ -n "$dns" ]; then
 		if [ "$2" == 'dns' ]; then
 			check_result "$E_EXISTS" "DNS domain $1 exists"
@@ -734,7 +747,7 @@ is_dns_nameserver_valid() {
 
 # Mail domain existence check
 is_mail_domain_new() {
-	mail=$(ls $HESTIA/data/users/*/mail/$1.conf 2> /dev/null)
+	mail=$(ls "$HESTIA"/data/users/*/mail/"$1".conf 2> /dev/null)
 	if [ -n "$mail" ]; then
 		if [ "$2" == 'mail' ]; then
 			check_result $E_EXISTS "Mail domain $1 exists"
@@ -747,12 +760,12 @@ is_mail_domain_new() {
 	mail_sub=$(echo "$1" | cut -f 1 -d .)
 	mail_nosub=$(echo "$1" | cut -f 1 -d . --complement)
 	for mail_reserved in $(echo "mail $WEBMAIL_ALIAS"); do
-		if [ -n "$(ls $HESTIA/data/users/*/mail/$mail_reserved.$1.conf 2> /dev/null)" ]; then
+		if [ -n "$(ls "$HESTIA"/data/users/*/mail/"$mail_reserved.$1.conf" 2> /dev/null)" ]; then
 			if [ "$2" == 'mail' ]; then
 				check_result "$E_EXISTS" "Required subdomain \"$mail_reserved.$1\" already exists"
 			fi
 		fi
-		if [ -n "$(ls $HESTIA/data/users/*/mail/$mail_nosub.conf 2> /dev/null)" ] && [ "$mail_sub" = "$mail_reserved" ]; then
+		if [ -n "$(ls "$HESTIA"/data/users/*/mail/"$mail_nosub.conf" 2> /dev/null)" ] && [ "$mail_sub" = "$mail_reserved" ]; then
 			if [ "$2" == 'mail' ]; then
 				check_result "$E_INVALID" "The subdomain \"$mail_sub.\" is reserved by \"$mail_nosub\""
 			fi
@@ -1037,16 +1050,23 @@ del_webmail_ssl_config() {
 # Checking domain existence
 is_domain_new() {
 	type=$1
-	for object in ${2//,/ }; do
+	local object objects
+	IFS=',' read -ra objects <<< "$2"
+	for object in "${objects[@]}"; do
+		# Trim leading whitespace
+		object="${object#"${object%%[![:space:]]*}"}"
+		# Trim trailing whitespace
+		object="${object%"${object##*[![:space:]]}"}"
+		[ -z "$object" ] && continue
 		if [ -n "$WEB_SYSTEM" ]; then
-			is_web_domain_new $object $type
-			is_web_alias_new $object $type
+			is_web_domain_new "$object" "$type"
+			is_web_alias_new "$object" "$type"
 		fi
 		if [ -n "$DNS_SYSTEM" ]; then
-			is_dns_domain_new $object $type
+			is_dns_domain_new "$object" "$type"
 		fi
 		if [ -n "$MAIL_SYSTEM" ]; then
-			is_mail_domain_new $object $type
+			is_mail_domain_new "$object" "$type"
 		fi
 	done
 }

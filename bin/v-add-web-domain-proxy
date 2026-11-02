@@ -36,7 +36,7 @@ source_conf "$HESTIA/conf/hestia.conf"
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'USER DOMAIN [TEMPLATE] [EXTENTIONS] [RESTART]'
+check_args '2' "$#" 'USER DOMAIN [TEMPLATE] [EXTENSIONS] [RESTART]'
 is_format_valid 'user' 'domain' 'extensions' 'restart'
 is_system_enabled "$PROXY_SYSTEM" 'PROXY_SYSTEM'
 is_object_valid 'user' 'USER' "$user"

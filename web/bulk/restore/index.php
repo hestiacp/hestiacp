@@ -18,7 +18,7 @@ if (empty($_POST["backup"])) {
 	exit();
 }
 if (empty($_POST["action"])) {
-	header("Location: /list/backup");
+	header("Location: /list/backup/");
 	exit();
 }
 

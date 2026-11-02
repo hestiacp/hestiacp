@@ -47,7 +47,9 @@ source_conf $HESTIA/conf/restic.conf
 #                       Action                             #
 #----------------------------------------------------------#
 
-tmpdir=$(mktemp -p /home/$user/tmp/ -d)
+# Stage in root-owned $BACKUP, not the user's home, to avoid races
+# where the user swaps the tmp dir before root reads/writes it
+tmpdir=$(mktemp -p "${BACKUP_TEMP:-$BACKUP}" -d)
 
 restic --repo "${REPO%/}/$user" --password-file "$USER_DATA/restic.conf" --json dump "$snapshot" "/home/$user/backup/cron/cron.conf" > "$tmpdir/cron.conf"
 
@@ -68,7 +70,7 @@ check_result $? "CRON restart failed"
 rm -fr "$tmpdir"
 
 # Update user counters
-$BIN/v-update-user-counters $user
+$BIN/v-update-user-counters "$user"
 $BIN/v-update-user-counters "$ROOT_USER"
 $BIN/v-update-sys-ip-counters
 

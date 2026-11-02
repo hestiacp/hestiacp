@@ -386,10 +386,14 @@ class HestiaApp
         try {
             return $this->runUser('v-run-cli-cmd', $phpCommand);
         } catch (ProcessFailedException $exception) {
+            $process = $exception->getProcess();
+            $output = trim($process->getOutput());
+
             throw new RuntimeException(
                 sprintf(
-                    'Failed to run php command "%s"',
-                    $exception->getProcess()->getCommandLine(),
+                    'Failed to run php command "%s"%s',
+                    $process->getCommandLine(),
+                    $output !== '' ? ': ' . $output : '',
                 ),
             );
         }

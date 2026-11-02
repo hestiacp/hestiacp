@@ -42,6 +42,13 @@ if (!empty($_POST["file"])) {
 	$udir = quoteshellarg(implode(",", $_POST["file"]));
 }
 
+// Initialized up front so we never hit "undefined variable" if no
+// restore item below ends up matching.
+$output = [];
+$return_var = 0;
+$errors = [];
+$scheduled = false;
+
 if ($action == "restore") {
 	if (!empty($web)) {
 		exec(
@@ -57,6 +64,10 @@ if ($action == "restore") {
 			$output,
 			$return_var,
 		);
+		$scheduled = true;
+		if ($return_var != 0) {
+			$errors = array_merge($errors, $output);
+		}
 	}
 	if (!empty($dns)) {
 		exec(
@@ -72,8 +83,12 @@ if ($action == "restore") {
 			$output,
 			$return_var,
 		);
+		$scheduled = true;
+		if ($return_var != 0) {
+			$errors = array_merge($errors, $output);
+		}
 	}
-	if (!empty($mail)) {
+	if (!empty($db)) {
 		exec(
 			HESTIA_CMD .
 				"v-schedule-user-restore-restic " .
@@ -87,20 +102,28 @@ if ($action == "restore") {
 			$output,
 			$return_var,
 		);
-		if (!empty($dns)) {
-			exec(
-				HESTIA_CMD .
-					"v-schedule-user-restore-restic " .
-					$user .
-					" " .
-					$snapshot .
-					" " .
-					"dns" .
-					" " .
-					$dns,
-				$output,
-				$return_var,
-			);
+		$scheduled = true;
+		if ($return_var != 0) {
+			$errors = array_merge($errors, $output);
+		}
+	}
+	if (!empty($mail)) {
+		exec(
+			HESTIA_CMD .
+				"v-schedule-user-restore-restic " .
+				$user .
+				" " .
+				$snapshot .
+				" " .
+				"mail" .
+				" " .
+				$mail,
+			$output,
+			$return_var,
+		);
+		$scheduled = true;
+		if ($return_var != 0) {
+			$errors = array_merge($errors, $output);
 		}
 	}
 	if (!empty($cron)) {
@@ -109,9 +132,13 @@ if ($action == "restore") {
 			$output,
 			$return_var,
 		);
+		$scheduled = true;
+		if ($return_var != 0) {
+			$errors = array_merge($errors, $output);
+		}
 	}
 
-	if (!empty($file)) {
+	if (!empty($udir)) {
 		exec(
 			HESTIA_CMD .
 				"v-schedule-user-restore-restic " .
@@ -120,17 +147,25 @@ if ($action == "restore") {
 				$snapshot .
 				" " .
 				"file" .
-				$file,
+				" " .
+				$udir,
 			$output,
 			$return_var,
 		);
+		$scheduled = true;
+		if ($return_var != 0) {
+			$errors = array_merge($errors, $output);
+		}
 	}
 }
-if ($return_var == 0) {
+
+if (!$scheduled) {
+	$_SESSION["error_msg"] = _("No items were selected to restore.");
+} elseif (empty($errors)) {
 	$_SESSION["error_msg"] = _(
 		"Task has been added to the queue. You will receive an email notification when your restore has been completed.",
 	);
 } else {
-	$_SESSION["error_msg"] = implode("<br>", $output);
+	$_SESSION["error_msg"] = implode("<br>", $errors);
 }
 header("Location: /list/backup/incremental/?snapshot=" . $_POST["snapshot"]);

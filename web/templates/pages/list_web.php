@@ -73,7 +73,7 @@
 
 	<h1 class="u-text-center u-hide-desktop u-mt20 u-pr30 u-mb20 u-pl30"><?= tohtml( _("Web Domains")) ?></h1>
 
-	<div class="units-table js-units-container">
+	<div class="units-table js-units-container<?= $_SESSION['userSortOrder'] === 'name' ? ' is-domain-grouped' : '' ?>">
 		<div class="units-table-header">
 				<div class="units-table-cell">
 					<input type="checkbox" class="js-toggle-all-checkbox" title="<?= tohtml( _("Select all")) ?>"<?= $display_mode === "disabled" ? " disabled" : "" ?>>
@@ -192,6 +192,8 @@
 				data-sort-ip="<?= tohtml(str_replace(".", "", $data[$key]["IP"])) ?>"
 				data-sort-date="<?= tohtml(strtotime($data[$key]["DATE"] . " " . $data[$key]["TIME"])) ?>"
 				data-sort-name="<?= tohtml($key) ?>"
+				data-sort-domain="<?= tohtml($domain_sort_keys[$key]['domain']) ?>"
+				data-sort-subdomain="<?= tohtml($domain_sort_keys[$key]['subdomain']) ?>"
 				data-sort-bandwidth="<?= tohtml($data[$key]["U_BANDWIDTH"]) ?>"
 				data-sort-disk="<?= tohtml($data[$key]["U_DISK"]) ?>">
 				<div class="units-table-cell">
@@ -200,7 +202,7 @@
 						<label for="check<?= tohtml($i) ?>" class="u-hide-desktop"><?= tohtml( _("Select")) ?></label>
 					</div>
 				</div>
-				<div class="units-table-cell units-table-heading-cell u-text-bold">
+				<div class="units-table-cell units-table-heading-cell u-text-bold<?= $domain_sort_keys[$key]['subdomain'] !== '' ? ' web-domain-subdomain' : '' ?>">
 					<span class="u-hide-desktop"><?= tohtml( _("Name")) ?>:</span>
 					<?php if ($read_only === true) { ?>
 						<?= tohtml($key) ?>

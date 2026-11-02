@@ -100,6 +100,33 @@ if [[ "$_running_os" == "ubuntu" ]]; then
 fi
 # End migrating PPA
 
+# Let unattended-upgrades install PHP updates from the repository we install
+# hosted PHP from. The stock configuration only allows distribution
+# repositories, so PHP was never patched automatically.
+_uu_conf="/etc/apt/apt.conf.d/60unattended-upgrades-hestia-php"
+if [ ! -f "$_uu_conf" ]; then
+	echo "[ + ] Allowing unattended-upgrades to install PHP updates"
+	cat > "$_uu_conf" << 'EOF'
+Unattended-Upgrade::Origins-Pattern {
+	"origin=deb.sury.org";
+	"origin=LP-PPA-ondrej-php";
+};
+EOF
+fi
+
+# Let unattended-upgrades install nginx updates from the repository Hestia
+# installs it from. The stock configuration only allows distribution
+# repositories.
+_uu_nginx_conf="/etc/apt/apt.conf.d/60unattended-upgrades-hestia-nginx"
+if [ ! -f "$_uu_nginx_conf" ]; then
+	echo "[ + ] Allowing unattended-upgrades to install nginx updates"
+	cat > "$_uu_nginx_conf" << 'EOF'
+Unattended-Upgrade::Origins-Pattern {
+	"origin=nginx";
+};
+EOF
+fi
+
 # Fix phpmyadmin
 pma_config="/etc/phpmyadmin"
 
@@ -138,6 +165,19 @@ for cert in certificate.crt certificate.key; do
 		chmod 640 "$HESTIA/ssl/$cert"
 	fi
 done
+
+# Let unattended-upgrades install MariaDB updates from the repository Hestia
+# installs it from. The stock configuration only allows distribution
+# repositories.
+_uu_mariadb_conf="/etc/apt/apt.conf.d/60unattended-upgrades-hestia-mariadb"
+if [ ! -f "$_uu_mariadb_conf" ]; then
+	echo "[ + ] Allowing unattended-upgrades to install MariaDB updates"
+	cat > "$_uu_mariadb_conf" << 'EOF'
+Unattended-Upgrade::Origins-Pattern {
+	"origin=MariaDB";
+};
+EOF
+fi
 
 # Start fix ProFTPD
 ftp_system="$(/usr/local/hestia/bin/v-list-sys-config json | jq -r '.[].FTP_SYSTEM')"
@@ -193,6 +233,19 @@ if [[ "$ftp_system" =~ proftpd ]]; then
 fi
 # End fix ProFTPD
 
+# Let unattended-upgrades install Node.js updates from the repository Hestia
+# installs it from. The stock configuration only allows distribution
+# repositories.
+_uu_nodejs_conf="/etc/apt/apt.conf.d/60unattended-upgrades-hestia-nodejs"
+if [ ! -f "$_uu_nodejs_conf" ]; then
+	echo "[ + ] Allowing unattended-upgrades to install Node.js updates"
+	cat > "$_uu_nodejs_conf" << 'EOF'
+Unattended-Upgrade::Origins-Pattern {
+	"site=deb.nodesource.com";
+};
+EOF
+fi
+
 # Trim whitespace from IP values in existing web domain configuration files (#5543)
 if compgen -G "$HESTIA/data/users/*/web.conf" > /dev/null; then
 	echo "[ + ] Trimming whitespace from web domain IP addresses"
@@ -237,6 +290,25 @@ foreach (glob($argv[1] . '/*/web.conf') as $file) {
 EOPHP
 fi
 # End trimming web domain IP addresses
+
+# Let unattended-upgrades install PostgreSQL updates from the repository Hestia
+# installs it from. The stock configuration only allows distribution
+# repositories.
+_uu_postgresql_conf="/etc/apt/apt.conf.d/60unattended-upgrades-hestia-postgresql"
+if [ ! -f "$_uu_postgresql_conf" ]; then
+	echo "[ + ] Allowing unattended-upgrades to install PostgreSQL updates"
+	cat > "$_uu_postgresql_conf" << 'EOF'
+Unattended-Upgrade::Origins-Pattern {
+	"origin=apt.postgresql.org";
+};
+// The unversioned metapackages point at the default major, so leave them to
+// the admin; versioned postgresql-NN packages stay eligible.
+Unattended-Upgrade::Package-Blacklist {
+	"^postgresql$";
+	"^postgresql-contrib$";
+};
+EOF
+fi
 
 # Start fixing Exim HELO checks
 fix_exim_helo_checks() {
@@ -444,4 +516,17 @@ fi
 if [ -n "$DB_PGA_ALIAS" ] && [ -f "/etc/nginx/conf.d/phppgadmin.inc" ]; then
 	echo "[ + ] Updating phpPgAdmin nginx configuration"
 	"$BIN/v-change-sys-db-alias" pga "$DB_PGA_ALIAS"
+fi
+
+# Let unattended-upgrades install Apache updates from the repository Hestia
+# installs it from. The stock configuration only allows distribution
+# repositories.
+_uu_apache2_conf="/etc/apt/apt.conf.d/60unattended-upgrades-hestia-apache2"
+if [ ! -f "$_uu_apache2_conf" ]; then
+	echo "[ + ] Allowing unattended-upgrades to install Apache updates"
+	cat > "$_uu_apache2_conf" << 'EOF'
+Unattended-Upgrade::Origins-Pattern {
+	"origin=LP-PPA-ondrej-apache2";
+};
+EOF
 fi

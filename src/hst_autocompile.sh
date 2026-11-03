@@ -291,6 +291,13 @@ for i in $*; do
 			# Handled below; value captured next iteration
 			_next_is_pkgrev='true'
 			;;
+		--release=*)
+			BUILD_RELEASE="${i#*=}"
+			RELEASE_EXPLICIT='true'
+			;;
+		--pkgrev=*)
+			BUILD_PKG_REV="${i#*=}"
+			;;
 		*)
 			if [ "$_next_is_release" = 'true' ]; then
 				# Capture the value that follows --release
@@ -301,6 +308,10 @@ for i in $*; do
 				# Capture the value that follows --pkgrev
 				BUILD_PKG_REV="$i"
 				unset _next_is_pkgrev
+			elif [[ "$i" == -* ]]; then
+				echo >&2 "[!] Unknown option: $i"
+				usage
+				exit 1
 			else
 				branch="$i"
 			fi
@@ -310,6 +321,11 @@ done
 
 if [[ $# -eq 0 ]]; then
 	usage
+	exit 1
+fi
+
+if [ -n "$BUILD_PKG_REV" ] && ! [[ "$BUILD_PKG_REV" =~ ^[0-9]+$ ]]; then
+	echo >&2 "[!] --pkgrev must be a number, got '$BUILD_PKG_REV'"
 	exit 1
 fi
 

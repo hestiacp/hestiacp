@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-#info: list all web domains grouped by backend template and owner
-#options: [FORMAT]
+# info: list all web domains grouped by backend template and owner
+# options: [FORMAT]
 #
-# example: v-list-web-domains-all json
+# example: v-list-web-domain-backendtpl-all json
 #
 # This command returns all web domains from all users grouped by
 # the backend template in use and the domain owner.

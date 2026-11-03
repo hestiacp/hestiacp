@@ -439,6 +439,9 @@ while [ $# -gt 0 ]; do
 		--debug)
 			HESTIA_DEBUG='true'
 			;;
+		--all-os)
+			# Always the case; accepted for compatibility with the usage text.
+			;;
 
 		--release)
 			shift
@@ -448,8 +451,19 @@ while [ $# -gt 0 ]; do
 			shift
 			pkg_rev="$1"
 			;;
+		--release=*)
+			release_tag="${1#*=}"
+			;;
+		--pkgrev=*)
+			pkg_rev="${1#*=}"
+			;;
 
 		--help | -h)
+			usage
+			exit 1
+			;;
+		-*)
+			echo >&2 "[!] Unknown option: $1"
 			usage
 			exit 1
 			;;
@@ -459,6 +473,11 @@ while [ $# -gt 0 ]; do
 	esac
 	shift
 done
+
+if [ -n "$pkg_rev" ] && ! [[ "$pkg_rev" =~ ^[0-9]+$ ]]; then
+	echo >&2 "[!] --pkgrev must be a number, got '$pkg_rev'"
+	exit 1
+fi
 
 if [ -z "$branch" ]; then
 	echo -n "Please enter the name of the branch to build from (e.g. main): "
@@ -497,6 +516,12 @@ fi
 [ -n "$release_tag" ] && PKG_FLAGS="$PKG_FLAGS --release $release_tag"
 [ -n "$pkg_rev" ] && PKG_FLAGS="$PKG_FLAGS --pkgrev $pkg_rev"
 
+if [ "$NEEDS_CHROOT_BUILD" != "true" ]; then
+	echo >&2 "[!] No package selected to build."
+	usage
+	exit 1
+fi
+
 if [ "$NEEDS_CHROOT_BUILD" = "true" ]; then
 	TARGET_COMBOS=()
 	for dr in "${ALLOS_DISTRO_RELEASES[@]}"; do
@@ -523,9 +548,12 @@ for dr in "${ALLOS_DISTRO_RELEASES[@]}"; do
 	release="${dr#* }"
 	for a in amd64 arm64; do
 		src_deb_dir="${BUILD_DIR}-${distro}-${release}-${a}/deb"
-		if [ ! -d "$NATIVE_DEB_DIR/${release}/" ]; then
-			mkdir -p "$NATIVE_DEB_DIR/${release}/"
+		debs=("$src_deb_dir"/*.deb)
+		if [ ! -f "${debs[0]}" ]; then
+			echo >&2 "[!] No packages found in $src_deb_dir, skipping"
+			continue
 		fi
-		cp "$src_deb_dir"/* "$NATIVE_DEB_DIR/${release}/"
+		mkdir -p "$NATIVE_DEB_DIR/${release}/"
+		cp "${debs[@]}" "$NATIVE_DEB_DIR/${release}/"
 	done
 done

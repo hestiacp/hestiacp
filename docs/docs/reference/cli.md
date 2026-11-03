@@ -5542,6 +5542,22 @@ v-list-web-domain-accesslog admin example.com
 
 This function of obtaining raw access web domain logs.
 
+## v-list-web-domain-backendtpl-all
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-web-domain-backendtpl-all)
+
+list all web domains grouped by backend template and owner
+
+**Options**: `[FORMAT]`
+
+**Examples**:
+
+```bash
+v-list-web-domain-backendtpl-all json
+```
+
+This command returns all web domains from all users grouped by the backend template in use and the domain owner.
+
 ## v-list-web-domain-errorlog
 
 [Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-web-domain-errorlog)

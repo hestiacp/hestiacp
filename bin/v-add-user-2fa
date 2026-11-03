@@ -53,6 +53,11 @@ IFS='-' read -r -a array <<< "$data"
 secret=${array[0]}
 qrcode=${array[1]}
 
+# Never save a broken secret (e.g. PHP dependencies missing), it would lock the user out
+if ! [[ "$secret" =~ ^[A-Z2-7]{16,}$ ]] || [[ "$qrcode" != data:image/* ]]; then
+	check_result "$E_PARSING" "Unable to generate 2FA secret, try running v-add-sys-dependencies"
+fi
+
 # Save the secret in user config (needs encryption?)
 update_user_value "$user" '$TWOFA' "$secret"
 update_user_value "$user" '$QRCODE' "$qrcode"

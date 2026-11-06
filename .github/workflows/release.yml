@@ -73,9 +73,11 @@ jobs:
           R2_BUCKET: ${{ inputs.channel == 'beta' && secrets.R2_BETA_BUCKET || secrets.R2_PROD_BUCKET }}
           R2_S3_ENDPOINT: ${{ inputs.channel == 'beta' && secrets.R2_BETA_S3_ENDPOINT || secrets.R2_PROD_S3_ENDPOINT }}
           R2_ACCOUNT_ID: ${{ inputs.channel == 'beta' && secrets.R2_BETA_ACCOUNT_ID || secrets.R2_PROD_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ZONE_ID: ${{ secrets.CLOUDFLARE_ZONE_ID }}
         run: |
           missing=()
-          for name in APT_GPG_PRIVATE_KEY R2_ACCESS_KEY_ID R2_SECRET_ACCESS_KEY R2_BUCKET; do
+          for name in APT_GPG_PRIVATE_KEY R2_ACCESS_KEY_ID R2_SECRET_ACCESS_KEY R2_BUCKET CLOUDFLARE_API_TOKEN CLOUDFLARE_ZONE_ID; do
             [[ -n "${!name:-}" ]] || missing+=("$name")
           done
           if [[ -z "${R2_S3_ENDPOINT:-}" && -z "${R2_ACCOUNT_ID:-}" ]]; then

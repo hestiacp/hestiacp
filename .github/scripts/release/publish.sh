@@ -69,6 +69,11 @@ require R2_ACCESS_KEY_ID
 require R2_SECRET_ACCESS_KEY
 require R2_BUCKET
 
+if [[ "$DRY_RUN" != 'true' ]]; then
+	require CLOUDFLARE_API_TOKEN
+	require CLOUDFLARE_ZONE_ID
+fi
+
 R2_BUCKET="${R2_BUCKET#s3://}"
 R2_BUCKET="${R2_BUCKET%/}"
 
@@ -353,22 +358,19 @@ for suite in "${SUITE_LIST[@]}"; do
 	fi
 done
 
-if [[ -n "${CLOUDFLARE_API_TOKEN:-}" ]]; then
-	echo '==> Purging Cloudflare cache'
-	zone_id="${CLOUDFLARE_ZONE_ID:-}"
-	if [[ -z "$zone_id" ]]; then
-		zone_id="$(curl -fsS "https://api.cloudflare.com/client/v4/zones?name=hestiacp.com" \
-			-H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" | jq -r '.result[0].id // empty')"
-	fi
-	if [[ -z "$zone_id" ]]; then
-		echo '::error::Could not determine Cloudflare zone ID' >&2
-		exit 1
-	fi
-	files_json="$(printf '%s\n' "${PURGE_URLS[@]}" | jq -R . | jq -s .)"
-	curl -fsS -X POST "https://api.cloudflare.com/client/v4/zones/$zone_id/purge_cache" \
-		-H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
-		-H "Content-Type: application/json" \
-		--data "{\"files\":$files_json}" > /dev/null
-else
-	echo '==> Cloudflare purge skipped (CLOUDFLARE_API_TOKEN not set)'
+if [[ -z "${CLOUDFLARE_API_TOKEN:-}" ]]; then
+	echo '::error::CLOUDFLARE_API_TOKEN is not set; cannot purge the Cloudflare cache' >&2
+	exit 1
 fi
+if [[ -z "${CLOUDFLARE_ZONE_ID:-}" ]]; then
+	echo '::error::CLOUDFLARE_ZONE_ID is not set; cannot purge the Cloudflare cache' >&2
+	exit 1
+fi
+
+echo '==> Purging Cloudflare cache'
+zone_id="$CLOUDFLARE_ZONE_ID"
+files_json="$(printf '%s\n' "${PURGE_URLS[@]}" | jq -R . | jq -s .)"
+curl -fsS -X POST "https://api.cloudflare.com/client/v4/zones/$zone_id/purge_cache" \
+	-H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+	-H "Content-Type: application/json" \
+	--data "{\"files\":$files_json}" > /dev/null

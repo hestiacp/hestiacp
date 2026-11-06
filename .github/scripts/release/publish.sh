@@ -307,11 +307,11 @@ if [[ "$FORCE" != 'true' ]]; then
 	echo '==> Checking for existing package objects'
 	while IFS= read -r -d '' deb; do
 		key="${deb#"$REPO/"}"
-		if ! existing="$(aws s3 ls "s3://$R2_BUCKET/$key" --endpoint-url "$ENDPOINT" 2>&1)"; then
+		if ! existing="$(aws s3api list-objects-v2 --bucket "$R2_BUCKET" --prefix "$key" --max-keys 1 --endpoint-url "$ENDPOINT" 2>&1)"; then
 			echo "::error::Could not check s3://$R2_BUCKET/$key: $existing" >&2
 			exit 1
 		fi
-		if [[ -n "$existing" ]]; then
+		if [[ "$existing" == *'"Key"'* ]]; then
 			echo "::error::Object already exists: s3://$R2_BUCKET/$key (bump pkgrev or set force=true)" >&2
 			exit 1
 		fi

@@ -72,11 +72,15 @@ jobs:
           R2_SECRET_ACCESS_KEY: ${{ inputs.channel == 'beta' && secrets.R2_BETA_SECRET_ACCESS_KEY || secrets.R2_PROD_SECRET_ACCESS_KEY }}
           R2_BUCKET: ${{ inputs.channel == 'beta' && secrets.R2_BETA_BUCKET || secrets.R2_PROD_BUCKET }}
           R2_S3_ENDPOINT: ${{ inputs.channel == 'beta' && secrets.R2_BETA_S3_ENDPOINT || secrets.R2_PROD_S3_ENDPOINT }}
+          R2_ACCOUNT_ID: ${{ inputs.channel == 'beta' && secrets.R2_BETA_ACCOUNT_ID || secrets.R2_PROD_ACCOUNT_ID }}
         run: |
           missing=()
-          for name in APT_GPG_PRIVATE_KEY R2_ACCESS_KEY_ID R2_SECRET_ACCESS_KEY R2_BUCKET R2_S3_ENDPOINT; do
+          for name in APT_GPG_PRIVATE_KEY R2_ACCESS_KEY_ID R2_SECRET_ACCESS_KEY R2_BUCKET; do
             [[ -n "${!name:-}" ]] || missing+=("$name")
           done
+          if [[ -z "${R2_S3_ENDPOINT:-}" && -z "${R2_ACCOUNT_ID:-}" ]]; then
+            missing+=("R2_S3_ENDPOINT or R2_ACCOUNT_ID")
+          fi
           if ((${#missing[@]})); then
             echo "::error::Missing secrets for channel '${{ inputs.channel }}': ${missing[*]}"
             exit 1
@@ -102,10 +106,12 @@ jobs:
 
       - name: Validate version
         id: version
+        env:
+          INPUT_VERSION: ${{ inputs.version }}
         run: |
           control="$(awk '/^Version:/ {print $2; exit}' src/deb/hestia/control)"
-          if [[ "$control" != "${{ inputs.version }}" ]]; then
-            echo "::error::Input version '${{ inputs.version }}' does not match src/deb/hestia/control '$control'"
+          if [[ "$control" != "$INPUT_VERSION" ]]; then
+            echo "::error::Input version '$INPUT_VERSION' does not match src/deb/hestia/control '$control'"
             exit 1
           fi
           for file in install/hst-install-debian.sh install/hst-install-ubuntu.sh; do

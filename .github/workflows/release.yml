@@ -211,8 +211,15 @@ jobs:
       - name: Detect CPU count
         id: cpu
         run: |
+          # nproc respects the runner's CPU quota/cgroup; fall back to
+          # getconf and finally to 1 if neither is available.
           cpus="$(nproc 2>/dev/null || getconf _NPROCESSORS_ONLN 2>/dev/null || echo 1)"
           if [[ "${{ matrix.arch }}" == 'arm64' ]]; then
+            # QEMU user-mode emulation uses far more memory per compiler
+            # process than native code, so build with half the host cores
+            # (minimum 1) to avoid OOM-killing cc1. This is deliberately
+            # computed on the host: nproc inside the arm64 container would
+            # report the host's core count anyway.
             cpus=$((cpus / 2))
             if ((cpus < 1)); then cpus=1; fi
           fi

@@ -210,6 +210,19 @@ jobs:
         with:
           ref: ${{ needs.prepare.outputs.sha }}
 
+      - name: Prepare packages
+        id: prepare
+        env:
+          SUITE: ${{ matrix.suite }}
+          ARCH: ${{ matrix.arch }}
+          APT_HOST: ${{ inputs.channel == 'beta' && 'beta-apt.hestiacp.com' || 'apt.hestiacp.com' }}
+          PKGREV: ${{ inputs.pkgrev }}
+          VERSION: ${{ inputs.version }}
+        run: |
+          curl -fsSL "https://raw.githubusercontent.com/${{ github.repository }}/${{ github.sha }}/.github/scripts/release/prepare-packages.py" -o /tmp/prepare-packages.py
+          flags="$(python3 /tmp/prepare-packages.py)"
+          echo "flags=$flags" >> "$GITHUB_OUTPUT"
+
       - name: Setup QEMU
         if: matrix.arch == 'arm64'
         uses: docker/setup-qemu-action@v3
@@ -234,9 +247,11 @@ jobs:
           echo "num=$cpus" >> "$GITHUB_OUTPUT"
 
       - name: Build packages
+        if: steps.prepare.outputs.flags != ''
         env:
           NUM_CPUS: ${{ steps.cpu.outputs.num }}
           PKGREV: ${{ inputs.pkgrev }}
+          BUILD_FLAGS: ${{ steps.prepare.outputs.flags }}
         run: |
           mkdir -p out
           docker run --rm \
@@ -247,13 +262,14 @@ jobs:
             -e TZ=Etc/UTC \
             -e NUM_CPUS="$NUM_CPUS" \
             -e PKGREV="$PKGREV" \
+            -e BUILD_FLAGS="$BUILD_FLAGS" \
             "${{ matrix.image }}" \
             bash -lc '
               set -euo pipefail
               apt-get update
               apt-get install -y xz-utils ca-certificates
               cd src
-              TERM=xterm bash -e ./hst_autocompile.sh --nginx --php --web-terminal --noinstall --keepbuild "~localsrc" --pkgrev "$PKGREV"
+              TERM=xterm bash -e ./hst_autocompile.sh $BUILD_FLAGS --noinstall --keepbuild "~localsrc" --pkgrev "$PKGREV"
               mkdir -p /repo/out
               cp /tmp/hestiacp-src/deb/*.deb /repo/out/
             '
@@ -281,7 +297,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
         with:
-          ref: ${{ github.event.repository.default_branch }}
+          ref: ${{ github.sha }}
 
       - name: Install tools
         run: |

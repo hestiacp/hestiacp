@@ -47,6 +47,7 @@ case "$CHANNEL" in
 		;;
 esac
 
+# Keep in sync with .github/scripts/release/prepare-packages.py.
 declare -A SUITE_SUFFIX=(
 	[bullseye]=debian11
 	[bookworm]=debian12

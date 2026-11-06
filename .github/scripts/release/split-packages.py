@@ -17,7 +17,10 @@ def main() -> int:
         if not stanza.strip():
             continue
         fields = stanza.splitlines()
-        if any(line.strip() == f"Architecture: {arch}" for line in fields):
+        if any(
+            line.strip() in (f"Architecture: {arch}", "Architecture: all")
+            for line in fields
+        ):
             sys.stdout.write(stanza.rstrip() + "\n\n")
 
     return 0

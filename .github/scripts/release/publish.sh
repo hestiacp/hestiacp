@@ -25,6 +25,7 @@ VERSION="${VERSION:?VERSION is required}"
 SUITES="${SUITES:?SUITES is required}"
 DRY_RUN="${DRY_RUN:-true}"
 PRUNE="${PRUNE:-false}"
+FORCE="${FORCE:-false}"
 DEBS_DIR="${DEBS_DIR:-debs}"
 HESTIA_DIR="${HESTIA_DIR:-hestia}"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -48,7 +49,6 @@ declare -A SUITE_SUFFIX=(
 	[bullseye]=debian11
 	[bookworm]=debian12
 	[trixie]=debian13
-	[focal]=ubuntu20.04
 	[jammy]=ubuntu22.04
 	[noble]=ubuntu24.04
 	[resolute]=ubuntu26.04
@@ -139,17 +139,23 @@ for suite in ${SUITES//,/ }; do
 			exit 1
 		fi
 
+		declare -A seen_pkgs=()
 		for deb in "${debs[@]}"; do
 			pkg="$(dpkg-deb -f "$deb" Package)"
 			arch_in_deb="$(dpkg-deb -f "$deb" Architecture)"
 			ver="$(dpkg-deb -f "$deb" Version)"
 			case "$pkg" in
-				hestia | hestia-nginx | hestia-php | hestia-web-terminal) ;;
+				hestia-nginx | hestia-php | hestia-web-terminal) ;;
+				hestia)
+					echo "::error::Unexpected hestia package in native artifact $deb" >&2
+					exit 1
+					;;
 				*)
 					echo "::error::Unexpected package $pkg in $deb" >&2
 					exit 1
 					;;
 			esac
+			seen_pkgs["$pkg"]=$((${seen_pkgs[$pkg]:-0} + 1))
 			if [[ "$arch_in_deb" != "$arch" ]]; then
 				echo "::error::$deb has architecture $arch_in_deb, expected $arch" >&2
 				exit 1
@@ -166,6 +172,13 @@ for suite in ${SUITES//,/ }; do
 			dest="$REPO/pool/$suite/main/$letter/$pkg"
 			mkdir -p "$dest"
 			cp "$deb" "$dest/"
+		done
+
+		for required in hestia-nginx hestia-php hestia-web-terminal; do
+			if [[ "${seen_pkgs[$required]:-0}" -ne 1 ]]; then
+				echo "::error::$suite/$arch: expected exactly one $required, found ${seen_pkgs[$required]:-0}" >&2
+				exit 1
+			fi
 		done
 
 		# The hestia package is built once with --cross for every distro suffix.
@@ -290,15 +303,39 @@ if [[ "$DEBUG" == 'true' ]]; then
 	AWS_FLAGS=()
 fi
 
-DELETE=()
-if [[ "$PRUNE" == 'true' ]]; then
-	DELETE=(--delete)
+if [[ "$FORCE" != 'true' ]]; then
+	echo '==> Checking for existing package objects'
+	while IFS= read -r -d '' deb; do
+		key="${deb#"$REPO/"}"
+		if ! existing="$(aws s3 ls "s3://$R2_BUCKET/$key" --endpoint-url "$ENDPOINT" 2>&1)"; then
+			echo "::error::Could not check s3://$R2_BUCKET/$key: $existing" >&2
+			exit 1
+		fi
+		if [[ -n "$existing" ]]; then
+			echo "::error::Object already exists: s3://$R2_BUCKET/$key (bump pkgrev or set force=true)" >&2
+			exit 1
+		fi
+	done < <(find "$REPO/pool" -type f -name '*.deb' -print0)
 fi
 
 for suite in "${SUITE_LIST[@]}"; do
 	echo "==> Uploading $suite to s3://$R2_BUCKET"
 	aws s3 sync "$REPO/pool/$suite/" "s3://$R2_BUCKET/pool/$suite/" \
-		--endpoint-url "$ENDPOINT" "${AWS_FLAGS[@]}" "${DELETE[@]}"
-	aws s3 sync "$REPO/dists/$suite/" "s3://$R2_BUCKET/dists/$suite/" \
-		--endpoint-url "$ENDPOINT" "${AWS_FLAGS[@]}" "${DELETE[@]}"
+		--endpoint-url "$ENDPOINT" "${AWS_FLAGS[@]}"
+	aws s3 sync "$REPO/dists/$suite/main/" "s3://$R2_BUCKET/dists/$suite/main/" \
+		--endpoint-url "$ENDPOINT" "${AWS_FLAGS[@]}"
+	aws s3 cp "$REPO/dists/$suite/Release" "s3://$R2_BUCKET/dists/$suite/Release" \
+		--endpoint-url "$ENDPOINT" "${AWS_FLAGS[@]}"
+	aws s3 cp "$REPO/dists/$suite/Release.gpg" "s3://$R2_BUCKET/dists/$suite/Release.gpg" \
+		--endpoint-url "$ENDPOINT" "${AWS_FLAGS[@]}"
+	aws s3 cp "$REPO/dists/$suite/InRelease" "s3://$R2_BUCKET/dists/$suite/InRelease" \
+		--endpoint-url "$ENDPOINT" "${AWS_FLAGS[@]}"
+
+	if [[ "$PRUNE" == 'true' ]]; then
+		echo "==> Pruning old objects for $suite"
+		aws s3 sync "$REPO/pool/$suite/" "s3://$R2_BUCKET/pool/$suite/" \
+			--endpoint-url "$ENDPOINT" "${AWS_FLAGS[@]}" --delete
+		aws s3 sync "$REPO/dists/$suite/main/" "s3://$R2_BUCKET/dists/$suite/main/" \
+			--endpoint-url "$ENDPOINT" "${AWS_FLAGS[@]}" --delete
+	fi
 done

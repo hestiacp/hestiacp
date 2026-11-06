@@ -40,6 +40,15 @@ on:
         description: Enable verbose tracing
         type: boolean
         default: false
+      pkgrev:
+        description: Package revision (bump when rebuilding the same version)
+        required: true
+        type: string
+        default: "1"
+      force:
+        description: Overwrite existing package objects (recovery only)
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -80,11 +89,16 @@ jobs:
     outputs:
       matrix: ${{ steps.matrix.outputs.matrix }}
       version: ${{ steps.version.outputs.version }}
+      sha: ${{ steps.sha.outputs.sha }}
     steps:
       - name: Checkout
         uses: actions/checkout@v7
         with:
           ref: ${{ inputs.ref }}
+
+      - name: Resolve commit
+        id: sha
+        run: echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
 
       - name: Validate version
         id: version
@@ -117,7 +131,6 @@ jobs:
               "bullseye": "debian:11",
               "bookworm": "debian:12",
               "trixie": "debian:13",
-              "focal": "ubuntu:20.04",
               "jammy": "ubuntu:22.04",
               "noble": "ubuntu:24.04",
               "resolute": "ubuntu:26.04",
@@ -153,15 +166,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
         with:
-          ref: ${{ inputs.ref }}
+          ref: ${{ needs.prepare.outputs.sha }}
 
       - name: Install build tools
         run: sudo apt-get update && sudo apt-get install -y xz-utils
 
       - name: Build hestia
+        env:
+          PKGREV: ${{ inputs.pkgrev }}
         run: |
           cd src
-          sudo ./hst_autocompile.sh --hestia --noinstall --cross --keepbuild '~localsrc'
+          sudo env TERM=xterm PKGREV="$PKGREV" bash -e ./hst_autocompile.sh --hestia --noinstall --cross --keepbuild '~localsrc' --pkgrev "$PKGREV"
 
       - name: Upload hestia debs
         uses: actions/upload-artifact@v4
@@ -185,7 +200,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
         with:
-          ref: ${{ inputs.ref }}
+          ref: ${{ needs.prepare.outputs.sha }}
 
       - name: Setup QEMU
         if: matrix.arch == 'arm64'
@@ -196,6 +211,7 @@ jobs:
       - name: Build packages
         env:
           NUM_CPUS: ${{ matrix.arch == 'arm64' && 2 || 4 }}
+          PKGREV: ${{ inputs.pkgrev }}
         run: |
           mkdir -p out
           docker run --rm \
@@ -205,13 +221,14 @@ jobs:
             -e DEBIAN_FRONTEND=noninteractive \
             -e TZ=Etc/UTC \
             -e NUM_CPUS="$NUM_CPUS" \
+            -e PKGREV="$PKGREV" \
             "${{ matrix.image }}" \
             bash -lc '
               set -euo pipefail
               apt-get update
               apt-get install -y xz-utils ca-certificates
               cd src
-              ./hst_autocompile.sh --nginx --php --web-terminal --noinstall --keepbuild "~localsrc"
+              TERM=xterm bash -e ./hst_autocompile.sh --nginx --php --web-terminal --noinstall --keepbuild "~localsrc" --pkgrev "$PKGREV"
               mkdir -p /repo/out
               cp /tmp/hestiacp-src/deb/*.deb /repo/out/
             '
@@ -267,6 +284,7 @@ jobs:
           DRY_RUN: ${{ inputs.dry_run }}
           PRUNE: ${{ inputs.prune }}
           DEBUG: ${{ inputs.debug }}
+          FORCE: ${{ inputs.force }}
           APT_GPG_PRIVATE_KEY: ${{ inputs.channel == 'beta' && secrets.APT_BETA_GPG_PRIVATE_KEY || secrets.APT_PROD_GPG_PRIVATE_KEY }}
           APT_GPG_PASSPHRASE: ${{ inputs.channel == 'beta' && secrets.APT_BETA_GPG_PASSPHRASE || secrets.APT_PROD_GPG_PASSPHRASE }}
           R2_ACCESS_KEY_ID: ${{ inputs.channel == 'beta' && secrets.R2_BETA_ACCESS_KEY_ID || secrets.R2_PROD_ACCESS_KEY_ID }}

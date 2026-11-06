@@ -1177,6 +1177,7 @@ fi
 # Disabling daemon autostart on apt-get install
 echo -e '#!/bin/sh\nexit 101' > /usr/sbin/policy-rc.d
 chmod a+x /usr/sbin/policy-rc.d
+trap 'rm -f /usr/sbin/policy-rc.d' EXIT
 
 # Installing apt packages
 echo "The installer is now downloading and installing all required packages."

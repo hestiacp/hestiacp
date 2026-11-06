@@ -31,6 +31,7 @@ All notable changes to this project will be documented in this file.
 - Optimize JSON listing with bulk validated object parsing #5726 #5890
 - Support bond interfaces in hestia-nginx port detection #5752
 - Autofocus the web terminal on page load #5893
+- Remove the admin account warning from the add web, mail, database and DNS pages, as the admin account no longer has sudo privileges #5896
 - Set default `LANG` to `C.UTF-8` for web terminal sessions #5770
 - Increase length of the Record column in the DNS records list #5771
 - Remove `txt` from default `PROXY_EXT` to avoid `expires max` on `robots.txt` #5850
@@ -40,10 +41,12 @@ All notable changes to this project will be documented in this file.
 - Bump hestia-php to 8.5.12 #5738 #5816
 - Bump hestia-nginx to 1.30.6 #5723 #5797
 - Bump OpenSSL to 3.5.9 and PCRE to 10.49 #5751
-- Bump File Manager to 7.16.8 #5717 #5732 #5741 #5827
+- Bump File Manager to 7.16.9 #5717 #5732 #5741 #5827 #5898
+- Bump Quick Install app versions: Castopod, Grav, Joomla, MediaWiki, PrestaShop #5899
 - Update Roundcube to 1.7.5 #5810
+- Update SnappyMail to 3.0.0 #5901
 - Run BATS suite on nginx-only installs and add upgrade migration tests #5865 #5861
-- Update dependencies #5734 #5735 #5765 #5766 #5789 #5790 #5791 #5807 #5832 #5838 #5840 #5847 #5884
+- Update dependencies #5734 #5735 #5765 #5766 #5789 #5790 #5791 #5807 #5832 #5838 #5840 #5847 #5884 #5894 #5895
 
 ### Fixes
 
@@ -57,7 +60,7 @@ All notable changes to this project will be documented in this file.
 - Fix bug with the B2 CLI tool #5728
 - Fix tar path handling #5754
 - Fix syntax and error code typos in backup scripts #5782 #5783 #5784
-- Fix suspend/unsuspend of DNS records on remote DNS hosts #5821 #5846
+- Fix suspend/unsuspend of DNS records on remote DNS hosts #5821 #5845 #5846
 - Fix Bind `default-zones` include removal in Debian 13 / Ubuntu 26.04 migration scripts #5836
 - Fix PHP version installation failure handling in `v-add-web-php` #5823
 - Keep working PHP dependencies when `v-add-sys-dependencies` fails #5871
@@ -72,6 +75,7 @@ All notable changes to this project will be documented in this file.
 - Fix phpMyAdmin config loop adding a phantom server for non-server `conf.d` files #5795
 - Speed up `cleanup_key_permissions` for keys with long permission lists #5792
 - Fix doubled user prefix in Quick Install database name and show CLI output on failure #5875
+- Fix WordPress Quick Install failing for locales without a localized release zip by falling back to `en_US` and installing the language pack, and fix the `zh_CN` locale identifier #5900
 - Fix trailing single quote being stripped when editing cron commands #5892
 - Fix undefined `$panel` in `policies.php` #5835
 - Fix File Manager showing the session-timeout redirect as file content #5636

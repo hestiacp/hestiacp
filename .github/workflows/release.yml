@@ -284,7 +284,7 @@ jobs:
       - name: Install tools
         run: |
           sudo apt-get update
-          sudo apt-get install -y apt-utils gnupg gzip awscli
+          sudo apt-get install -y apt-utils gnupg gzip awscli jq
 
       - name: Download artifacts
         uses: actions/download-artifact@v4
@@ -315,4 +315,6 @@ jobs:
           R2_BUCKET: ${{ inputs.channel == 'beta' && secrets.R2_BETA_BUCKET || secrets.R2_PROD_BUCKET }}
           R2_S3_ENDPOINT: ${{ inputs.channel == 'beta' && secrets.R2_BETA_S3_ENDPOINT || secrets.R2_PROD_S3_ENDPOINT }}
           R2_ACCOUNT_ID: ${{ inputs.channel == 'beta' && secrets.R2_BETA_ACCOUNT_ID || secrets.R2_PROD_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ZONE_ID: ${{ secrets.CLOUDFLARE_ZONE_ID }}
         run: .github/scripts/release/publish.sh

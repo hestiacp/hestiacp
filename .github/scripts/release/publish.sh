@@ -34,10 +34,12 @@ case "$CHANNEL" in
 	beta)
 		ORIGIN='Hesita Beta'
 		LABEL='Hestia Beta'
+		APT_HOST='beta-apt.hestiacp.com'
 		;;
 	production)
 		ORIGIN='apt.hestiacp.com'
 		LABEL='apt repository'
+		APT_HOST='apt.hestiacp.com'
 		;;
 	*)
 		echo "::error::Unknown channel: $CHANNEL" >&2
@@ -318,6 +320,7 @@ if [[ "$FORCE" != 'true' ]]; then
 	done < <(find "$REPO/pool" -type f -name '*.deb' -print0)
 fi
 
+PURGE_URLS=()
 for suite in "${SUITE_LIST[@]}"; do
 	echo "==> Uploading $suite to s3://$R2_BUCKET"
 	aws s3 sync "$REPO/pool/$suite/" "s3://$R2_BUCKET/pool/$suite/" \
@@ -331,6 +334,16 @@ for suite in "${SUITE_LIST[@]}"; do
 	aws s3 cp "$REPO/dists/$suite/InRelease" "s3://$R2_BUCKET/dists/$suite/InRelease" \
 		--endpoint-url "$ENDPOINT" "${AWS_FLAGS[@]}"
 
+	PURGE_URLS+=(
+		"https://$APT_HOST/dists/$suite/InRelease"
+		"https://$APT_HOST/dists/$suite/Release"
+		"https://$APT_HOST/dists/$suite/Release.gpg"
+		"https://$APT_HOST/dists/$suite/main/binary-amd64/Packages"
+		"https://$APT_HOST/dists/$suite/main/binary-amd64/Packages.gz"
+		"https://$APT_HOST/dists/$suite/main/binary-arm64/Packages"
+		"https://$APT_HOST/dists/$suite/main/binary-arm64/Packages.gz"
+	)
+
 	if [[ "$PRUNE" == 'true' ]]; then
 		echo "==> Pruning old objects for $suite"
 		aws s3 sync "$REPO/pool/$suite/" "s3://$R2_BUCKET/pool/$suite/" \
@@ -339,3 +352,23 @@ for suite in "${SUITE_LIST[@]}"; do
 			--endpoint-url "$ENDPOINT" "${AWS_FLAGS[@]}" --delete
 	fi
 done
+
+if [[ -n "${CLOUDFLARE_API_TOKEN:-}" ]]; then
+	echo '==> Purging Cloudflare cache'
+	zone_id="${CLOUDFLARE_ZONE_ID:-}"
+	if [[ -z "$zone_id" ]]; then
+		zone_id="$(curl -fsS "https://api.cloudflare.com/client/v4/zones?name=hestiacp.com" \
+			-H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" | jq -r '.result[0].id // empty')"
+	fi
+	if [[ -z "$zone_id" ]]; then
+		echo '::error::Could not determine Cloudflare zone ID' >&2
+		exit 1
+	fi
+	files_json="$(printf '%s\n' "${PURGE_URLS[@]}" | jq -R . | jq -s .)"
+	curl -fsS -X POST "https://api.cloudflare.com/client/v4/zones/$zone_id/purge_cache" \
+		-H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+		-H "Content-Type: application/json" \
+		--data "{\"files\":$files_json}" > /dev/null
+else
+	echo '==> Cloudflare purge skipped (CLOUDFLARE_API_TOKEN not set)'
+fi

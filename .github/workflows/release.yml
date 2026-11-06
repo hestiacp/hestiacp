@@ -136,7 +136,6 @@ jobs:
           import sys
 
           images = {
-              "bullseye": "debian:11",
               "bookworm": "debian:12",
               "trixie": "debian:13",
               "jammy": "ubuntu:22.04",

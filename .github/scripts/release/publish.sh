@@ -49,7 +49,6 @@ esac
 
 # Keep in sync with .github/scripts/release/prepare-packages.py.
 declare -A SUITE_SUFFIX=(
-	[bullseye]=debian11
 	[bookworm]=debian12
 	[trixie]=debian13
 	[jammy]=ubuntu22.04

@@ -14,9 +14,11 @@ export default async function initWebTerminal() {
 	}
 	terminal.loadAddon(new Addon());
 	terminal.open(container);
+	terminal.focus();
 
 	const socket = new WebSocket(`wss://${window.location.host}/_shell/`);
 	socket.addEventListener('open', (_) => {
+		terminal.focus();
 		terminal.onData((data) => socket.send(data));
 		socket.addEventListener('message', (evt) => terminal.write(evt.data));
 	});

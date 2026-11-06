@@ -277,12 +277,30 @@ if [[ "$UPDATE" == "no" ]]; then
 
 	phpenmod mcrypt > /dev/null 2>&1
 else
+	command -v rsync &> /dev/null \
+		|| fail "rsync not installed, try install it"
+
 	cd "$RC_INSTALL_DIR" || fail "Cannot enter $RC_INSTALL_DIR"
 	download_rc
 
 	tar xzf "$RC_FILE" || fail "Failed to extract $RC_FILE"
 	[[ -x "$RC_INSTALL_DIR/$RC_EXTRACT/bin/installto.sh" ]] \
 		|| fail "installto.sh not found in $RC_EXTRACT"
+
+	# rsync 3.5.0 introduced stricter security checks for destination symlinks owned
+	# by untrusted users. This causes Roundcube's installto.sh to fail when copying
+	# files through the config symlink, owned by hestiamail, while the installer runs
+	# as root. The workaround conditionally adds --insecure-links when supported by the
+	# installed rsync version.
+	if rsync -h 2>&1 | grep -q 'insecure-links'; then
+		sed -i \
+			's/rsync -a --out-format=%n/rsync --insecure-links -a --out-format=%n/' \
+			"$RC_INSTALL_DIR/$RC_EXTRACT/bin/installto.sh"
+
+		sed -i \
+			's/rsync -aC --out-format=%n/rsync --insecure-links -aC --out-format=%n/' \
+			"$RC_INSTALL_DIR/$RC_EXTRACT/bin/installto.sh"
+	fi
 
 	# Run Roundcube upgrade script
 	"$PHP_CLI" "$ENABLE_PHP_FUNCTIONS" "$RC_INSTALL_DIR/$RC_EXTRACT/bin/installto.sh" -y "$RC_INSTALL_DIR" > /dev/null 2>&1 \

@@ -11,7 +11,7 @@ class PrestaShopSetup extends BaseSetup {
     protected array $info = [
         "name" => "PrestaShop",
         "group" => "ecommerce",
-        "version" => "9.1.5",
+        "version" => "9.2.0",
         "thumbnail" => "prestashop-logo.svg",
     ];
 
@@ -79,7 +79,7 @@ class PrestaShopSetup extends BaseSetup {
         "resources" => [
             "archive" => [
                 "src" =>
-                    "https://assets.prestashop3.com/dst/edition/corporate/9.1.5-5.0/prestashop_edition_classic_version_9.1.5-5.0.zip?source=hestiacp",
+                    "https://assets.prestashop3.com/dst/edition/corporate/9.2.0-6.0/prestashop_edition_classic_version_9.2.0-6.0.zip?source=hestiacp",
             ],
         ],
         "server" => [

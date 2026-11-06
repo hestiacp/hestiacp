@@ -217,7 +217,7 @@ No, Cloudflare’s Proxy does not work with email. If you use email hosted on yo
 - A record with name **webmail** pointing to your server IP.
 - MX record with name **@** with pointing to `mail.domain.tld`.
 - TXT record with name **@** containing `v=spf1 a mx ip4:your ip; \~all`
-- TXT record with name **mail.\_domainkey** containing `v=DKIM1; k=rsa; p=<DKIM key>;`
+- TXT record with name **\<selector\>.\_domainkey** (default selector is `mail`) containing `v=DKIM1; k=rsa; p=<DKIM key>;`
 - TXT record with name **\_dmarc** containing `v=DMARC1; p=quarantine; sp=quarantine; adkim=s; aspf=s;`
 
 The DKIM key and SPF record can be found in the **Mail Domains** list ([documentation](../user-guide/mail-domains#get-dns-records)).
@@ -227,6 +227,8 @@ The DKIM key and SPF record can be found in the **Mail Domains** list ([document
 Make sure you have set up the correct RDNS, SPF records and DKIM records.
 
 If this doesn’t work, it’s be possible that your IP address is on one or more blacklists. You can check your IP using [Suped's Blocklist Checker](https://www.suped.com/tools/blocklist-checker). You can try to unblock yourself, but often the easier method is to use SMTP and SMTP Relay with Amazon SES or another SMTP provider.
+
+To help narrow down the cause, send a test message to [Mail Tester](https://mail-tester.com/) and review the report for authentication, blocklist and message-content issues. The findings can help identify configuration or reputation problems, but they do not guarantee inbox placement at individual providers.
 
 ## How can I enable ManageSieve?
 

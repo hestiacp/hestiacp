@@ -228,6 +228,18 @@ fi
 
 DEB_DIR="${DEB_DIR:-$BUILD_DIR/deb}"
 
+# Pack a staged package tree into $DEB_DIR. When SKIP_DEB_PACK=true (set by
+# chroot_build_all.sh) the tree is left in place instead, so the .deb can be
+# packed natively on the host: dpkg-deb/xz are single-threaded and very slow
+# under QEMU emulation.
+build_deb() {
+	if [ "$SKIP_DEB_PACK" = 'true' ]; then
+		echo "Skipping .deb packing of $1 (will be packed outside the chroot)"
+		return 0
+	fi
+	dpkg-deb -Zxz --build "$1" "$DEB_DIR"
+}
+
 # Set packages to compile
 for i in $*; do
 	case "$i" in
@@ -279,6 +291,13 @@ for i in $*; do
 			# Handled below; value captured next iteration
 			_next_is_pkgrev='true'
 			;;
+		--release=*)
+			BUILD_RELEASE="${i#*=}"
+			RELEASE_EXPLICIT='true'
+			;;
+		--pkgrev=*)
+			BUILD_PKG_REV="${i#*=}"
+			;;
 		*)
 			if [ "$_next_is_release" = 'true' ]; then
 				# Capture the value that follows --release
@@ -289,6 +308,10 @@ for i in $*; do
 				# Capture the value that follows --pkgrev
 				BUILD_PKG_REV="$i"
 				unset _next_is_pkgrev
+			elif [[ "$i" == -* ]]; then
+				echo >&2 "[!] Unknown option: $i"
+				usage
+				exit 1
 			else
 				branch="$i"
 			fi
@@ -298,6 +321,11 @@ done
 
 if [[ $# -eq 0 ]]; then
 	usage
+	exit 1
+fi
+
+if [ -n "$BUILD_PKG_REV" ] && ! [[ "$BUILD_PKG_REV" =~ ^[0-9]+$ ]]; then
+	echo >&2 "[!] --pkgrev must be a number, got '$BUILD_PKG_REV'"
 	exit 1
 fi
 
@@ -361,8 +389,8 @@ echo "Build version ${BUILD_VER}${_build_release}, with Nginx version $NGINX_V, 
 HESTIA_V="${BUILD_VER}_${BUILD_ARCH}"
 # List of supported OS releases for Hestia used for crossbuilding.
 supported_os="debian11 debian12 debian13 ubuntu22.04 ubuntu24.04 ubuntu26.04"
-OPENSSL_V='3.5.8'
-PCRE_V='10.48'
+OPENSSL_V='3.5.9'
+PCRE_V='10.49'
 ZLIB_V='1.3.2'
 
 # Create build directories
@@ -381,7 +409,7 @@ timestamp() {
 if [ "$dontinstalldeps" != 'true' ]; then
 	# Install needed software
 	# Set package dependencies for compiling
-	SOFTWARE='wget tar git curl ca-certificates build-essential libxml2-dev libz-dev libzip-dev libgmp-dev libcurl4-gnutls-dev unzip openssl libssl-dev pkg-config libsqlite3-dev libonig-dev lsb-release'
+	SOFTWARE='wget tar git curl ca-certificates build-essential libxml2-dev libz-dev libzip-dev libgmp-dev libcurl4-openssl-dev unzip openssl libssl-dev pkg-config libsqlite3-dev libonig-dev lsb-release'
 	echo "Updating system APT repositories..."
 	apt-get -qq update
 	echo "Installing dependencies for compilation..."
@@ -592,7 +620,7 @@ if [ "$NGINX_B" = true ]; then
 
 	# Build the package
 	echo Building Nginx DEB
-	dpkg-deb -Zxz --build $BUILD_DIR_HESTIANGINX $DEB_DIR
+	build_deb $BUILD_DIR_HESTIANGINX
 
 	rm -r $BUILD_DIR/usr
 
@@ -714,7 +742,7 @@ if [ "$PHP_B" = true ]; then
 	# Build the package
 	echo Building PHP DEB
 	[ "$HESTIA_DEBUG" ] && echo DEBUG: dpkg-deb -Zxz --build $BUILD_DIR_HESTIAPHP $DEB_DIR
-	dpkg-deb -Zxz --build $BUILD_DIR_HESTIAPHP $DEB_DIR
+	build_deb $BUILD_DIR_HESTIAPHP
 
 	rm -r $BUILD_DIR/usr
 
@@ -785,7 +813,7 @@ if [ "$WEB_TERMINAL_B" = true ]; then
 	# Build the package
 	echo Building Web Terminal DEB
 	[ "$HESTIA_DEBUG" ] && echo DEBUG: dpkg-deb -Zxz --build $BUILD_DIR_HESTIA_TERMINAL $DEB_DIR
-	dpkg-deb -Zxz --build $BUILD_DIR_HESTIA_TERMINAL $DEB_DIR
+	build_deb $BUILD_DIR_HESTIA_TERMINAL
 
 	# clear up the source folder
 	if [ "$KEEPBUILD" != 'true' ]; then
@@ -874,7 +902,7 @@ if [ "$HESTIA_B" = true ]; then
 			chmod +x $BUILD_DIR_HESTIA/DEBIAN/preinst
 
 			echo Building Hestia DEB
-			dpkg-deb -Zxz --build $BUILD_DIR_HESTIA $DEB_DIR
+			build_deb $BUILD_DIR_HESTIA
 
 			# clear up the source folder
 			if [ "$KEEPBUILD" != 'true' ]; then

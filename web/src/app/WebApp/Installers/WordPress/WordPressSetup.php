@@ -43,7 +43,7 @@ class WordPressSetup extends BaseSetup {
                     "tr_TR" => "Turkish",
                     "ru_RU" => "Russian",
                     "uk" => "Ukrainian",
-                    "zh-CN" => "Simplified Chinese (China)",
+                    "zh_CN" => "Simplified Chinese (China)",
                     "zh_TW" => "Traditional Chinese",
                 ],
             ],
@@ -93,5 +93,21 @@ class WordPressSetup extends BaseSetup {
             [],
             $target->getResolveUrl()
         );
+
+        // If en_US was downloaded as a fallback, install and activate the selected language
+        if ($options["language"] !== "en_US") {
+            try {
+                $this->appcontext->runWp($options["php_version"], [
+                    "language",
+                    "core",
+                    "install",
+                    $options["language"],
+                    "--activate",
+                    "--path=" . $target->getDocRoot(),
+                ]);
+            } catch (\RuntimeException) {
+                // Do not block the installation if the language pack fails
+            }
+        }
     }
 }

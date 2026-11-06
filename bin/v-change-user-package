@@ -49,7 +49,7 @@ is_package_available() {
 	fi
 	if [ "$MAIL_DOMAINS" != 'unlimited' ]; then
 		if [ "$MAIL_DOMAINS" -lt "$U_MAIL_DOMAINS" ]; then
-			check_result "$E_LIMI"T "Package doesn't cover MAIL_DOMAIN usage"
+			check_result "$E_LIMIT" "Package doesn't cover MAIL_DOMAIN usage"
 		fi
 	fi
 	if [ "$DATABASES" != 'unlimited' ]; then

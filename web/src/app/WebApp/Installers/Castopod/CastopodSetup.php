@@ -14,7 +14,7 @@ class CastopodSetup extends BaseSetup {
     protected array $info = [
         "name" => "Castopod",
         "group" => "podcasting",
-        "version" => "1.15.5",
+        "version" => "1.15.6",
         "thumbnail" => "castopod-logo.svg",
     ];
 
@@ -27,7 +27,7 @@ class CastopodSetup extends BaseSetup {
         "resources" => [
             "archive" => [
                 "src" =>
-                    "https://code.castopod.org/-/project/2/uploads/419c795a5ab306a27082b7d86aa43df6/castopod-1.15.5.zip",
+                    "https://code.castopod.org/-/project/2/uploads/eb32d0f673b58fa1f0a92eb8b2518b5f/castopod-1.15.6.zip",
             ],
         ],
         "server" => [

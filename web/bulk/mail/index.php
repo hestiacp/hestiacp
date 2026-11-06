@@ -14,11 +14,11 @@ if ($read_only === true) {
 }
 
 if (empty($_POST["domain"])) {
-	header("Location: /list/mail");
+	header("Location: /list/mail/");
 	exit();
 }
 if (empty($_POST["action"])) {
-	header("Location: /list/mail");
+	header("Location: /list/mail/");
 	exit();
 }
 

@@ -117,6 +117,7 @@ HESTIA_THEMES="$HESTIA/web/css/themes"
 HESTIA_THEMES_CUSTOM="$HESTIA/web/css/themes/custom"
 SCRIPT="$(basename $0)"
 CHECK_RESULT_CALLBACK=""
+LE_STAGING='no'
 
 # Return codes
 OK=0
@@ -140,6 +141,7 @@ E_DB=17
 E_RRD=18
 E_UPDATE=19
 E_RESTART=20
+E_BACKUP=21
 
 # Detect operating system
 detect_os() {
@@ -469,159 +471,18 @@ _parse_object_kv_list_php() {
 	local IFS=$'\n'
 
 	str=${@//$'\n'/ }
+
 	validated_output=$(
-		"$HESTIA_PHP" -- "$str" "$HESTIA_RESERVED_CONF_KEYS" "$HESTIA_OBJECT_KEY_EXCEPTIONS" << 'EOPHP'
-<?php
-declare(strict_types=1);
-
-// Supported syntax:
-//   KEY1='value1' KEY2='value with spaces' KEY3=''
-//   KEY=value
-//   KEY=value\ with\ spaces
-//   KEY=ab\ c'de f'ghi
-//   KEY=
-//   KEY= KEY2=value
-//   KEY='abc'def
-//   KEY=abc''
-//   KEY=\'
-//   KEY=\\
-//
-// Notes:
-// - Key names must match: [a-zA-Z][a-zA-Z0-9_]*
-// - Inside single quotes, every character is literal except the closing single quote.
-// - Outside single quotes, backslash escapes the next character.
-function fail(string $message): never
-{
-    fwrite(STDERR, $message . PHP_EOL);
-    exit(2);
-}
-
-if ($argc < 2) {
-    fail('Usage: php '.$argv[0].' "KEY=\'value\' KEY2=value"');
-}
-
-$unparsed = ($argv[1]);
-$reserved = preg_split('/\s+/', trim($argv[2] ?? ''), -1, PREG_SPLIT_NO_EMPTY);
-$exceptions = preg_split('/\s+/', trim($argv[3] ?? ''), -1, PREG_SPLIT_NO_EMPTY);
-if (!is_array($reserved)) {
-    $reserved = [];
-}
-if (!is_array($exceptions)) {
-    $exceptions = [];
-}
-$result = [];
-
-while ($unparsed !== '') {
-    $unparsed = ltrim($unparsed);
-    if ($unparsed === '') {
-        break;
-    }
-
-    $key_name_extracted = preg_match('/^([a-zA-Z][a-zA-Z0-9_]*)=/', $unparsed, $m);
-
-    if ($key_name_extracted !== 1) {
-		// example: `eval(code)=123`
-        fail('Invalid key value format. Could not extract key name from: ' . $unparsed);
-    }
-
-    $key_name = $m[1];
-    $unparsed = substr($unparsed, strlen($m[0]));
-    $skip_reserved = !in_array($key_name, $exceptions, true)
-        && (in_array($key_name, $reserved, true) || strpos($key_name, 'BASH_FUNC_') === 0);
-
-    $key_value = '';
-    $is_in_quote = false;
-
-    while (true) {
-        if ($is_in_quote) {
-            // Inside single quotes, only a single quote is special.
-            $pos = strpos($unparsed, "'");
-
-            if ($pos === false) {
-				// example: `KEY='value` (missing closing quote)
-                fail('Invalid key value format. No closing quote for key: ' . $key_name . ' in: ' . $unparsed);
-            }
-
-            $key_value .= substr($unparsed, 0, $pos);
-            $unparsed = substr($unparsed, $pos + 1);
-            $is_in_quote = false;
-
-            if ($unparsed === '') {
-				// parsing complete
-                break;
-            }
-            continue;
-        }
-
-        // Outside single quotes, whitespace, single quote, and backslash are special.
-        $match = preg_match('/\s|\'|\\\\/u', $unparsed, $m, PREG_OFFSET_CAPTURE);
-        if ($match !== 1) {
-            // No more special chars; rest of string is the value.
-            $key_value .= $unparsed;
-            $unparsed = '';
-            break;
-        }
-
-        $matched_char = $m[0][0];
-        $pos = $m[0][1];
-
-        // Add everything before the matched special character.
-        $key_value .= substr($unparsed, 0, $pos);
-		$unparsed = substr($unparsed, $pos + strlen($matched_char));
-
-        if ($matched_char === "'") {
-            if ($unparsed === '') {
-				// example: `KEY='` - missing closing quote. nearest legal alternative is `KEY=''`
-                fail('Invalid key value format. No closing quote for key: ' . $key_name);
-            }
-            $is_in_quote = true;
-            continue;
-        }
-        if ($matched_char === '\\') {
-			if($unparsed === '') {
-				// example: `KEY=foo\`
-                fail('Invalid key value format. Escape character cannot be the last character in value for key: ' . $key_name . ' in: ' . $unparsed);
-            }
-
-            // Backslash escapes the next character verbatim
-			$next_char = mb_substr($unparsed, 0, 1, 'UTF-8'); // remember multi-byte unicode support, æøåÆØÅ
-			$key_value .= $next_char;
-			$unparsed = substr($unparsed, strlen($next_char));
-            continue;
-        }
-
-        // Matched whitespace: end of this key-value pair.
-        $unparsed = ltrim($unparsed);
-        break;
-    }
-    if ($skip_reserved) {
-        continue;
-    }
-    if (array_key_exists($key_name, $result)) {
-        $msg = 'Warning: Duplicate key name: ' . $key_name . '. ';
-
-        if ($result[$key_name] === $key_value) {
-            $msg .= 'value is identical.';
-        } else {
-            $msg .= var_export([
-                'old_value' => $result[$key_name],
-                'new_value' => $key_value,
-            ], true);
-        }
-        fwrite(STDERR, $msg . PHP_EOL);
-    }
-    $result[$key_name] = $key_value;
-}
-$assignments = [];
-foreach ($result as $k => $v) {
-    $v_quoted = "'" . strtr($v, ["'" => "'\\''"]) . "'";
-    $assignments[] = "$k=$v_quoted";
-}
-echo implode(' ', $assignments);
-EOPHP
+		"$HESTIA_PHP" "$HESTIA/func/object-parser.php" \
+			line-shell \
+			"$str" \
+			"$HESTIA_RESERVED_CONF_KEYS" \
+			"$HESTIA_OBJECT_KEY_EXCEPTIONS"
 	)
 	check_status=$?
+
 	check_result "$check_status" "Invalid object format: ${str}" "$E_INVALID"
+
 	eval "$validated_output"
 }
 
@@ -923,37 +784,37 @@ sort_cron_jobs() {
 # Sync cronjobs with system cron
 sync_cron_jobs() {
 	source_conf "$USER_DATA/user.conf"
-	if [ -e "/var/spool/cron/crontabs" ]; then
-		crontab="/var/spool/cron/crontabs/$user"
+	tmp_crontab=$(mktemp) || return 1
+
+	# Strip CR/LF from CONTACT to prevent injecting extra cron entries
+	contact="${CONTACT//[$'\r\n']/}"
+
+	if [[ "$CRON_REPORTS" == 'yes' ]]; then
+		{
+			printf 'MAILTO=%s\n' "$contact"
+			printf 'CONTENT_TYPE="text/plain; charset=utf-8"\n'
+		} > "$tmp_crontab"
 	else
-		crontab="/var/spool/cron/$user"
-	fi
-
-	# remove file if exists
-	if [ -e "$crontab" ]; then
-		rm -f $crontab
-	fi
-
-	# touch new crontab file
-	touch $crontab
-
-	if [ "$CRON_REPORTS" = 'yes' ]; then
-		echo "MAILTO=$CONTACT" > $crontab
-		echo 'CONTENT_TYPE="text/plain; charset=utf-8"' >> $crontab
-	else
-		echo 'MAILTO=""' > $crontab
+		printf 'MAILTO=""\n' > "$tmp_crontab"
 	fi
 
 	while IFS= read -r line; do
 		parse_object_kv_list "$line"
-		if [ "$SUSPENDED" = 'no' ]; then
+		if [[ "$SUSPENDED" == 'no' ]]; then
 			echo "$MIN $HOUR $DAY $MONTH $WDAY $CMD" \
 				| sed -e "s/%quote%/'/g" -e "s/%dots%/:/g" \
-					>> $crontab
+					>> "$tmp_crontab"
 		fi
-	done < $USER_DATA/cron.conf
-	chown $user:$user $crontab
-	chmod 600 $crontab
+	done < "$USER_DATA/cron.conf"
+
+	if ! crontab -u "$user" "$tmp_crontab"; then
+		rm -f "$tmp_crontab"
+		echo "Error: unable to install crontab for user $user" >&2
+		return 1
+	fi
+
+	rm -f "$tmp_crontab"
+	return 0
 }
 
 # Validates Local part email and mail alias
@@ -1099,12 +960,33 @@ is_netmask_format_valid() {
 	fi
 }
 
-# Proxy extention format validator
-is_extention_format_valid() {
-	exclude="[!|#|$|^|&|(|)|+|=|{|}|:|@|<|>|?|/|\|\"|'|;|%|\`| ]"
-	if [[ "$1" =~ $exclude ]]; then
-		check_result "$E_INVALID" "invalid proxy extention format :: $1"
+# Proxy extension format validator
+is_extension_format_valid() {
+	local ascii
+
+	# Reject invalid UTF-8 sequences.
+	if ! printf '%s' "$1" | iconv -f UTF-8 -t UTF-8 > /dev/null 2>&1; then
+		check_result "$E_INVALID" "invalid proxy extension format :: $1"
 	fi
+
+	# Allow Unicode characters; validate the remaining ASCII characters.
+	ascii=$(printf '%s' "$1" | LC_ALL=C tr -d '\200-\377')
+
+	# Allow only letters, numbers, underscore, dot, hyphen and comma.
+	if [[ ! "$ascii" =~ ^[A-Za-z0-9_.,-]*$ ]]; then
+		check_result "$E_INVALID" "invalid proxy extension format :: $1"
+	fi
+
+	# No leading, trailing, or consecutive commas.
+	if [[ "$1" == ,* || "$1" == *, || "$1" == *,,* ]]; then
+		check_result "$E_INVALID" "invalid proxy extension format :: $1"
+	fi
+
+	# No leading, trailing, or consecutive dots.
+	if [[ "$1" == .* || "$1" == *. || "$1" == *..* ]]; then
+		check_result "$E_INVALID" "invalid proxy extension format :: $1"
+	fi
+
 	is_no_new_line_format "$1"
 }
 
@@ -1568,6 +1450,71 @@ is_hash_format_valid() {
 	fi
 }
 
+# Certificates Key Algorithm validator
+is_key_algo_format_valid() {
+	if ! [[ "$1" =~ ^(rsa|ecdsa-256|ecdsa-384)$ ]]; then
+		check_result "$E_INVALID" "invalid key_algo format :: $1"
+	fi
+}
+
+# DKIM selector format validator
+is_dkim_selector_format_valid() {
+	object_name=${2-dkim selector}
+	#selector=${1,,}
+	selector=${1}
+
+	if [[ -z "$selector" ]] \
+		|| [[ ${#selector} -gt 63 ]] \
+		|| [[ ! "$selector" =~ ^[a-z0-9]([a-z0-9-]*[a-z0-9])?$ ]]; then
+		check_result "$E_INVALID" "invalid $object_name format :: $1"
+	fi
+
+	is_no_new_line_format "$selector"
+}
+
+# Strict directory path validation.
+# Accepts only a path with an optional leading "/" made of non-empty
+# segments separated by "/". Any UTF-8 character is allowed except
+# whitespace, control characters and shell/sed metacharacters.
+#
+# NOTE: this validator is intentionally more restrictive than Linux itself.
+#
+# Usage: is_dir_path_format_valid VALUE [NAME]
+is_dir_path_format_valid() {
+	local value="$1" name="${2:-dir_path}"
+	local err="invalid $name format :: $value"
+
+	# 1. Strict: reject control characters (\n, \r, \t, ...) and whitespace
+	if [[ "$value" =~ [[:cntrl:][:space:]] ]]; then
+		check_result "$E_INVALID" "$err"
+	fi
+
+	# 2. Strict: reject shell/sed metacharacters and the ":" separator
+	#    (valid on Linux, but restricted for security reasons)
+	case "$value" in
+		*[\\:\;\#\%\&\$\`\"\'\<\>\|\*\?\!\(\)\{\}\[\]\~\^\=]*)
+			check_result "$E_INVALID" "$err"
+			;;
+	esac
+
+	# 3. Strict structure: optional leading "/", non-empty segments,
+	#    optional trailing "/" (no empty segments such as "a//b")
+	local re='^/?([^/]+(/[^/]+)*/?)?$'
+	if [[ ! "$value" =~ $re ]]; then
+		check_result "$E_INVALID" "$err"
+	fi
+
+	# 4. Strict: reject "." and ".." segments to prevent path traversal
+	case "/$value/" in
+		*/../* | */./*) check_result "$E_INVALID" "$err" ;;
+	esac
+
+	# 5. Strict: input must be valid UTF-8 (rejects stray or overlong bytes)
+	if ! printf '%s' "$value" | LC_ALL=C.UTF-8 iconv -f UTF-8 -t UTF-8 > /dev/null 2>&1; then
+		check_result "$E_INVALID" "$err"
+	fi
+}
+
 # Format validation controller
 is_format_valid() {
 	for arg_name in $*; do
@@ -1594,6 +1541,7 @@ is_format_valid() {
 				dbpass) is_password_format_valid "$arg" ;;
 				dbuser) is_dbuser_format_valid "$arg" 'dbuser' ;;
 				dkim) is_boolean_format_valid "$arg" 'dkim' ;;
+				dkim_selector) is_dkim_selector_format_valid "$arg" ;;
 				dkim_size) is_int_format_valid "$arg" ;;
 				domain) is_domain_format_valid "$arg" ;;
 				dom_alias) is_alias_format_valid "$arg" ;;
@@ -1601,9 +1549,10 @@ is_format_valid() {
 				email) is_email_format_valid "$arg" ;;
 				email_forward) is_email_format_valid "$arg" ;;
 				exp) is_date_format_valid "$arg" ;;
-				extentions) is_common_format_valid "$arg" 'extentions' ;;
+				extensions) is_extension_format_valid "$arg" ;;
 				format) is_type_valid 'plain json shell csv' "$arg" ;;
 				ftp_password) is_password_format_valid "$arg" ;;
+				ftp_path) is_dir_path_format_valid "$arg" "$arg_name" ;;
 				ftp_user) is_user_format_valid "$arg" "$arg_name" ;;
 				hash) is_hash_format_valid "$arg" "$arg_name" ;;
 				host) is_object_format_valid "$arg" "$arg_name" ;;
@@ -1619,6 +1568,7 @@ is_format_valid() {
 				ip_status) is_ip_status_format_valid "$arg" ;;
 				job) is_int_format_valid "$arg" 'job' ;;
 				key) is_common_format_valid "$arg" "$arg_name" ;;
+				key_algo) is_key_algo_format_valid "$arg" ;;
 				malias) is_localpart_format_valid "$arg" "$arg_name" '64' ;;
 				max_db) is_int_format_valid "$arg" 'max db' ;;
 				min) is_cron_format_valid "$arg" $arg_name ;;
@@ -1643,7 +1593,7 @@ is_format_valid() {
 				port) is_int_format_valid "$arg" 'port' ;;
 				port_ext) is_fw_port_format_valid "$arg" ;;
 				protocol) is_fw_protocol_format_valid "$arg" ;;
-				proxy_ext) is_extention_format_valid "$arg" ;;
+				proxy_ext) is_extension_format_valid "$arg" ;;
 				quota) is_int_format_valid "$arg" 'quota' ;;
 				rate) is_int_format_valid "$arg" 'rate' ;;
 				record) is_common_format_valid "$arg" 'record' ;;
@@ -2056,15 +2006,24 @@ is_key_permissions_format_valid() {
 cleanup_key_permissions() {
 	local permissions="$1"
 
-	local final quote
+	# Bash builtins only: this runs on every API call made with a key that has a
+	# permission list, for every command in it, so a subshell per item made such
+	# calls take more than a second for a long list.
+	local -A seen=()
+	local final="" permission
+	local -a permissions_arr
 	while IFS=',' read -ra permissions_arr; do
 		for permission in "${permissions_arr[@]}"; do
-			permission="$(basename "$permission" | sed -E "s/^\s*|\s*$//g")"
+			# basename, then trim surrounding whitespace
+			permission="${permission%"${permission##*[!/]}"}"
+			permission="${permission##*/}"
+			permission="${permission#"${permission%%[![:space:]]*}"}"
+			permission="${permission%"${permission##*[![:space:]]}"}"
 
-			# Avoid duplicate items
-			if [[ -z "$(echo ",${final}," | grep ",${permission},")" ]]; then
-				final+="${quote}${permission}"
-				quote=','
+			# Avoid empty and duplicate items
+			if [[ -n "$permission" && -z "${seen[$permission]:-}" ]]; then
+				seen[$permission]=1
+				final+="${final:+,}${permission}"
 			fi
 		done
 	done <<< "$permissions"

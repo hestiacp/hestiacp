@@ -325,7 +325,7 @@ if [ -n "$FIREWALL_SYSTEM" ] && [ "$FIREWALL_SYSTEM" != 'remote' ]; then
 	data="$data STATE='$state' CPU='0' MEM='0' RTIME='0'"
 fi
 
-# Checking FIREWALL Fail2ban extention
+# Checking FIREWALL Fail2ban extension
 if [ -n "$FIREWALL_EXTENSION" ]; then
 	if [ -e '/usr/bin/lsb_release' ]; then
 		if [ "$(lsb_release -s -r)" = "20.04" ]; then

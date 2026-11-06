@@ -151,7 +151,8 @@ rebuild_user_conf() {
 		mkdir -p $HOMEDIR/$user/tmp
 		chmod 751 $HOMEDIR/$user/conf/web
 		chmod 751 $HOMEDIR/$user/web
-		chmod 771 $HOMEDIR/$user/tmp
+		chmod 700 $HOMEDIR/$user/tmp
+		chown --no-dereference $user:$user $HOMEDIR/$user/tmp
 		chown --no-dereference $root:$user $HOMEDIR/$user/web
 		if [ "$create_user" = "yes" ]; then
 			$BIN/v-rebuild-web-domains $user $restart
@@ -582,6 +583,10 @@ rebuild_mail_domain_conf() {
 	syshealth_repair_mail_config
 
 	get_domain_values 'mail'
+	if [ -z "$DKIM_SELECTOR" ]; then
+		update_object_value 'mail' 'DOMAIN' "$domain" '$DKIM_SELECTOR' 'mail'
+		DKIM_SELECTOR='mail'
+	fi
 	if [[ "$domain" = *[![:ascii:]]* ]]; then
 		domain_idn=$(idn2 --quiet $domain)
 	else
@@ -653,6 +658,8 @@ rebuild_mail_domain_conf() {
 		if [ "$DKIM" = 'yes' ]; then
 			cp $USER_DATA/mail/$domain.pem \
 				$HOMEDIR/$user/conf/mail/$domain/dkim.pem
+			dkim_selector=${DKIM_SELECTOR:-mail}
+			printf 'selector:%s\n' "$dkim_selector" > "$HOMEDIR/$user/conf/mail/$domain/selector"
 		fi
 
 		# Rebuild SMTP Relay configuration

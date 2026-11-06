@@ -302,13 +302,14 @@ else
 			"$RC_INSTALL_DIR/$RC_EXTRACT/bin/installto.sh"
 	fi
 
+	# Use COMPOSER_ALLOW_SUPERUSER=1 to prevent update.sh script from freezing trying
+	# to execute composer as root to update roundcube dependencies
+	export COMPOSER_ALLOW_SUPERUSER=1
+
 	# Run Roundcube upgrade script
 	"$PHP_CLI" "$ENABLE_PHP_FUNCTIONS" "$RC_INSTALL_DIR/$RC_EXTRACT/bin/installto.sh" -y "$RC_INSTALL_DIR" > /dev/null 2>&1 \
 		|| fail "installto.sh failed (Roundcube $version -> $rc_v)"
 
-	# Use COMPOSER_ALLOW_SUPERUSER=1 to prevent update.sh script from freezing trying
-	# to execute composer as root to update roundcube dependencies
-	export COMPOSER_ALLOW_SUPERUSER=1
 	"$PHP_CLI" "$ENABLE_PHP_FUNCTIONS" "$RC_INSTALL_DIR/bin/update.sh" --version "$version" > /dev/null 2>&1 \
 		|| fail "update.sh failed (Roundcube $version -> $rc_v)"
 

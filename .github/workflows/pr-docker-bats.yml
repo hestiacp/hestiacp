@@ -111,7 +111,7 @@ jobs:
               if ! grep -F "Status: install ok installed" <<< "${info}" > /dev/null ||
                 ! grep -F -- "-99+" <<< "${info}" > /dev/null; then
                 echo "${pkg} was not installed from the local build"
-                printf '%s\n' "${info}"
+                printf "%s\n" "${info}"
                 exit 1
               fi
             done

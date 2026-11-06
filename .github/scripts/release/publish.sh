@@ -64,6 +64,9 @@ require R2_ACCESS_KEY_ID
 require R2_SECRET_ACCESS_KEY
 require R2_BUCKET
 
+R2_BUCKET="${R2_BUCKET#s3://}"
+R2_BUCKET="${R2_BUCKET%/}"
+
 WORK="${RUNNER_TEMP:-/tmp}/hestia-apt-release"
 REPO="$WORK/repo"
 export GNUPGHOME="$WORK/gnupg"

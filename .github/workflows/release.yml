@@ -208,9 +208,19 @@ jobs:
         with:
           platforms: arm64
 
+      - name: Detect CPU count
+        id: cpu
+        run: |
+          cpus="$(nproc 2>/dev/null || getconf _NPROCESSORS_ONLN 2>/dev/null || echo 1)"
+          if [[ "${{ matrix.arch }}" == 'arm64' ]]; then
+            cpus=$((cpus / 2))
+            if ((cpus < 1)); then cpus=1; fi
+          fi
+          echo "num=$cpus" >> "$GITHUB_OUTPUT"
+
       - name: Build packages
         env:
-          NUM_CPUS: ${{ matrix.arch == 'arm64' && 2 || 4 }}
+          NUM_CPUS: ${{ steps.cpu.outputs.num }}
           PKGREV: ${{ inputs.pkgrev }}
         run: |
           mkdir -p out

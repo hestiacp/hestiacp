@@ -464,11 +464,11 @@ if [ "$dontinstalldeps" != 'true' ]; then
 	fi
 fi
 
-# Get system cpu cores. Callers running this inside a QEMU-emulated chroot
-# (cross-arch builds) can pre-set NUM_CPUS to override this: /proc is
-# bind-mounted from the host, so the detected count would otherwise be the
-# host's real core count, not a safe parallelism level for emulated compiles.
-NUM_CPUS="${NUM_CPUS:-$(grep "^cpu cores" /proc/cpuinfo | uniq | awk '{print $4}')}"
+# Get the available CPU count. Callers running this inside a QEMU-emulated
+# chroot (cross-arch builds) can pre-set NUM_CPUS to override this: nproc
+# would otherwise report the host's core count, not a safe parallelism level
+# for emulated compiles.
+NUM_CPUS="${NUM_CPUS:-$(nproc 2> /dev/null || getconf _NPROCESSORS_ONLN 2> /dev/null || echo 1)}"
 
 if [ "$HESTIA_DEBUG" ]; then
 	echo "OS type          : Debian / Ubuntu"

@@ -104,11 +104,14 @@ jobs:
               --spamassassin no
 
             # The installer silently falls back to apt.hestiacp.com when a
-            # local deb is missing, so assert the local builds were used.
+            # local deb is missing, so assert the local builds were used and
+            # fully configured (dpkg -i leaves failed packages unpacked).
             for pkg in hestia hestia-php hestia-nginx; do
-              if ! dpkg-query -W "${pkg}" | grep -F -- "-99+" > /dev/null; then
+              info="$(dpkg-query -s "${pkg}" 2> /dev/null || true)"
+              if ! grep -F "Status: install ok installed" <<< "${info}" > /dev/null ||
+                ! grep -F -- "-99+" <<< "${info}" > /dev/null; then
                 echo "${pkg} was not installed from the local build"
-                dpkg-query -W "${pkg}" || true
+                printf '%s\n' "${info}"
                 exit 1
               fi
             done

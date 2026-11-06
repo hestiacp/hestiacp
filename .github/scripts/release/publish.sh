@@ -17,6 +17,9 @@
 #   PRUNE=true|false (default false)
 set -euo pipefail
 
+DEBUG="${DEBUG:-false}"
+trap 'echo "::error::publish.sh failed at line $LINENO"' ERR
+
 CHANNEL="${CHANNEL:?CHANNEL is required}"
 VERSION="${VERSION:?VERSION is required}"
 SUITES="${SUITES:?SUITES is required}"
@@ -75,6 +78,7 @@ mkdir -p "$REPO" "$GNUPGHOME"
 chmod 700 "$GNUPGHOME"
 
 # Import the signing key. Support both armored and base64-wrapped secrets.
+echo '==> Importing signing key'
 if [[ "$APT_GPG_PRIVATE_KEY" == *'BEGIN PGP PRIVATE KEY'* ]]; then
 	printf '%s\n' "$APT_GPG_PRIVATE_KEY" | gpg --batch --import
 else
@@ -97,6 +101,10 @@ else
 	GPG_ARGS+=(--passphrase '')
 fi
 
+if [[ "$DEBUG" == 'true' ]]; then
+	set -x
+fi
+
 BASE_VERSION="${VERSION%%~*}"
 PRERELEASE_TAG=''
 if [[ "$VERSION" == *'~'* ]]; then
@@ -104,6 +112,7 @@ if [[ "$VERSION" == *'~'* ]]; then
 fi
 
 # Populate the pool with only the packages built for this release.
+echo '==> Building package pool'
 SUITE_LIST=()
 for suite in ${SUITES//,/ }; do
 	suite="${suite//[[:space:]]/}"
@@ -115,6 +124,7 @@ for suite in ${SUITES//,/ }; do
 	SUITE_LIST+=("$suite")
 
 	for arch in amd64 arm64; do
+		echo "==> $suite/$arch: collecting packages"
 		src="$DEBS_DIR/debs-$suite-$arch"
 		if [[ ! -d "$src" ]]; then
 			echo "::error::Missing artifact directory: $src" >&2
@@ -189,6 +199,7 @@ done
 
 # Generate Packages, Packages.gz, Release, InRelease and Release.gpg per suite.
 for suite in "${SUITE_LIST[@]}"; do
+	echo "==> Generating metadata for $suite"
 	(
 		cd "$REPO"
 		apt-ftparchive packages "pool/$suite"
@@ -220,6 +231,7 @@ done
 
 # Verify signatures and local metadata.
 for suite in "${SUITE_LIST[@]}"; do
+	echo "==> Verifying $suite"
 	gpg --batch --verify "$REPO/dists/$suite/InRelease" > /dev/null 2>&1
 	for arch in amd64 arm64; do
 		grep -q '^Package: hestia$' "$REPO/dists/$suite/main/binary-$arch/Packages"
@@ -229,19 +241,24 @@ for suite in "${SUITE_LIST[@]}"; do
 	mkdir -p "$WORK/lists.$suite" "$WORK/cache.$suite"
 	printf 'deb [signed-by=%s] file:%s %s main\n' "$WORK/trusted.gpg" "$REPO" "$suite" \
 		> "$WORK/sources.$suite.list"
-	apt-get \
-		-o "Dir::Etc::sourcelist=$WORK/sources.$suite.list" \
-		-o 'Dir::Etc::sourceparts=/dev/null' \
-		-o "Dir::Etc::trusted=$WORK/trusted.gpg" \
-		-o 'Dir::Etc::trustedparts=/dev/null' \
-		-o "Dir::State::Lists=$WORK/lists.$suite" \
-		-o "Dir::Cache=$WORK/cache.$suite" \
-		-o 'APT::Get::List-Cleanup=0' \
-		update > /dev/null
+	APT_OPTS=(
+		-o "Dir::Etc::sourcelist=$WORK/sources.$suite.list"
+		-o 'Dir::Etc::sourceparts=/dev/null'
+		-o "Dir::Etc::trusted=$WORK/trusted.gpg"
+		-o 'Dir::Etc::trustedparts=/dev/null'
+		-o "Dir::State::Lists=$WORK/lists.$suite"
+		-o "Dir::Cache=$WORK/cache.$suite"
+		-o 'APT::Get::List-Cleanup=0'
+	)
+	if [[ "$DEBUG" == 'true' ]]; then
+		apt-get "${APT_OPTS[@]}" update
+	else
+		apt-get "${APT_OPTS[@]}" update > /dev/null
+	fi
 done
 
 if [[ "$DRY_RUN" == 'true' ]]; then
-	echo "Dry run: generated repository at $REPO"
+	echo "==> Dry run complete: $REPO"
 	find "$REPO" -type f | sort
 	du -sh "$REPO"
 	exit 0
@@ -257,10 +274,21 @@ if [[ -z "$ENDPOINT" ]]; then
 fi
 ENDPOINT="${ENDPOINT%/}"
 
+if [[ "$DEBUG" == 'true' ]]; then
+	set +x
+fi
 export AWS_ACCESS_KEY_ID="$R2_ACCESS_KEY_ID"
 export AWS_SECRET_ACCESS_KEY="$R2_SECRET_ACCESS_KEY"
 export AWS_DEFAULT_REGION='auto'
 export AWS_EC2_METADATA_DISABLED='true'
+if [[ "$DEBUG" == 'true' ]]; then
+	set -x
+fi
+
+AWS_FLAGS=(--only-show-errors)
+if [[ "$DEBUG" == 'true' ]]; then
+	AWS_FLAGS=()
+fi
 
 DELETE=()
 if [[ "$PRUNE" == 'true' ]]; then
@@ -268,8 +296,9 @@ if [[ "$PRUNE" == 'true' ]]; then
 fi
 
 for suite in "${SUITE_LIST[@]}"; do
+	echo "==> Uploading $suite to s3://$R2_BUCKET"
 	aws s3 sync "$REPO/pool/$suite/" "s3://$R2_BUCKET/pool/$suite/" \
-		--endpoint-url "$ENDPOINT" --only-show-errors "${DELETE[@]}"
+		--endpoint-url "$ENDPOINT" "${AWS_FLAGS[@]}" "${DELETE[@]}"
 	aws s3 sync "$REPO/dists/$suite/" "s3://$R2_BUCKET/dists/$suite/" \
-		--endpoint-url "$ENDPOINT" --only-show-errors "${DELETE[@]}"
+		--endpoint-url "$ENDPOINT" "${AWS_FLAGS[@]}" "${DELETE[@]}"
 done

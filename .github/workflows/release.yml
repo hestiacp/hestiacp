@@ -36,6 +36,10 @@ on:
         description: Delete objects not present in this build (latest-only)
         type: boolean
         default: false
+      debug:
+        description: Enable verbose tracing
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -262,6 +266,7 @@ jobs:
           SUITES: ${{ inputs.suites }}
           DRY_RUN: ${{ inputs.dry_run }}
           PRUNE: ${{ inputs.prune }}
+          DEBUG: ${{ inputs.debug }}
           APT_GPG_PRIVATE_KEY: ${{ inputs.channel == 'beta' && secrets.APT_BETA_GPG_PRIVATE_KEY || secrets.APT_PROD_GPG_PRIVATE_KEY }}
           APT_GPG_PASSPHRASE: ${{ inputs.channel == 'beta' && secrets.APT_BETA_GPG_PASSPHRASE || secrets.APT_PROD_GPG_PASSPHRASE }}
           R2_ACCESS_KEY_ID: ${{ inputs.channel == 'beta' && secrets.R2_BETA_ACCESS_KEY_ID || secrets.R2_PROD_ACCESS_KEY_ID }}

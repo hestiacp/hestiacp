@@ -180,7 +180,10 @@ class HestiaApp
         }
     }
 
-    public function sendPostRequest($url, array $formData, array $headers = [], string $resolve = ''): void
+    /**
+     * @return string The effective URL after following redirects
+     */
+    public function sendPostRequest($url, array $formData, array $headers = [], string $resolve = ''): string
     {
         $ch = curl_init($url);
 
@@ -202,12 +205,15 @@ class HestiaApp
 
         $error = curl_error($ch);
         $errno = curl_errno($ch);
+        $effectiveUrl = (string) curl_getinfo($ch, CURLINFO_EFFECTIVE_URL);
 
         curl_close($ch);
 
         if (0 !== $errno) {
             throw new RuntimeException($error, $errno);
         }
+
+        return $effectiveUrl;
     }
 
     // Effective user

@@ -1534,6 +1534,51 @@ if (!empty($_POST["save"])) {
 		}
 	}
 
+
+	// Change POLICY_USER_EDIT_BACKEND_TEMPLATES
+	if (empty($_SESSION["error_msg"])) {
+		if (
+			$_POST["v_policy_user_edit_backend_templates"] !=
+			$_SESSION["POLICY_USER_EDIT_BACKEND_TEMPLATES"]
+		) {
+			exec(
+				HESTIA_CMD .
+					"v-change-sys-config-value POLICY_USER_EDIT_BACKEND_TEMPLATES " .
+					quoteshellarg($_POST["v_policy_user_edit_backend_templates"]),
+				$output,
+				$return_var,
+			);
+			check_return_code($return_var, $output);
+			unset($output);
+			if (empty($_SESSION["error_msg"])) {
+				$v_policy_user_edit_details = $_POST["v_policy_user_edit_backend_templates"];
+			}
+			$v_security_adv = "yes";
+		}
+	}
+
+	// Change POLICY_USER_EDIT_PROXY_TEMPLATES
+	if (empty($_SESSION["error_msg"])) {
+		if (
+			$_POST["v_policy_user_edit_proxy_templates"] !=
+			$_SESSION["POLICY_USER_EDIT_PROXY_TEMPLATES"]
+		) {
+			exec(
+				HESTIA_CMD .
+					"v-change-sys-config-value POLICY_USER_EDIT_PROXY_TEMPLATES " .
+					quoteshellarg($_POST["v_policy_user_edit_proxy_templates"]),
+				$output,
+				$return_var,
+			);
+			check_return_code($return_var, $output);
+			unset($output);
+			if (empty($_SESSION["error_msg"])) {
+				$v_policy_user_edit_details = $_POST["v_policy_user_edit_proxy_templates"];
+			}
+			$v_security_adv = "yes";
+		}
+	}
+
 	// Change POLICY_USER_EDIT_DNS_TEMPLATES
 	if (empty($_SESSION["error_msg"])) {
 		if (

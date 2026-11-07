@@ -47,7 +47,7 @@ if ($v_suspended == "yes") {
 }
 
 // Check POST request
-if (!empty($_POST["save"])) {
+if (!empty($_POST["save"]) && $read_only !== true) {
 	$v_username = $user;
 
 	// Check token

@@ -11,7 +11,7 @@ class ThirtyBeesSetup extends BaseSetup {
     protected array $info = [
         "name" => "ThirtyBees",
         "group" => "ecommerce",
-        "version" => "1.6.0",
+        "version" => "1.7.0",
         "thumbnail" => "thirtybees-thumb.png",
     ];
 
@@ -27,7 +27,7 @@ class ThirtyBeesSetup extends BaseSetup {
         "resources" => [
             "archive" => [
                 "src" =>
-                    "https://github.com/thirtybees/thirtybees/releases/download/1.6.0/thirtybees-v1.6.0-php7.4.zip",
+                    "https://github.com/thirtybees/thirtybees/releases/download/1.7.0/thirtybees-v1.7.0-php7.4.zip",
             ],
         ],
         "server" => [

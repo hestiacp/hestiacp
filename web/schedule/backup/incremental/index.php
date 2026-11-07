@@ -7,6 +7,11 @@ include $_SERVER["DOCUMENT_ROOT"] . "/inc/main.php";
 // Check token
 verify_csrf($_GET);
 
+if ($read_only === true) {
+	header("Location: /list/backup/incremental/");
+	exit();
+}
+
 if (empty($_GET["object"])) {
 	$_GET["object"] = "";
 }

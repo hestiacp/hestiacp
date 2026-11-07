@@ -86,11 +86,14 @@ plain_list() {
 
 source_conf $HESTIA/conf/restic.conf
 
-restic --repo "${REPO%/}/$user" --password-file $USER_DATA/restic.conf --json dump $snapshot /home/$user/backup/backup.conf > /home/$user/tmp/backup.conf
+# Stage in root-owned $BACKUP, not the user's home, to avoid races
+# where the user swaps the tmp dir before root reads/writes it
+tmpdir=$(mktemp -p "${BACKUP_TEMP:-$BACKUP}" -d)
+restic --repo "${REPO%/}/$user" --password-file "$USER_DATA/restic.conf" --json dump "$snapshot" "/home/$user/backup/backup.conf" > "$tmpdir/backup.conf"
 
-parse_object_kv_list $(cat /home/$user/tmp/backup.conf)
+parse_object_kv_list $(cat "$tmpdir/backup.conf")
 
-rm /home/$user/tmp/backup.conf
+rm -fr "$tmpdir"
 # Listing data
 case $format in
 	json) json_list ;;

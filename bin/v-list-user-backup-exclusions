@@ -52,6 +52,31 @@ json_list() {
 	done
 	echo '    },'
 	i=1
+	echo '    "DNS": {'
+	objects=$(echo "${DNS//,/ }" | wc -w)
+	for object in $(echo "${DNS//,/ }"); do
+		j=1
+		object_keys=$(echo ${object//:/ } | wc -w)
+		for key in $(echo "${object/:/ }"); do
+			if [ "$j" -eq 1 ]; then
+				echo -n "        \"$key\": "
+				if [ "$object_keys" -eq 1 ]; then
+					echo -n '""'
+				fi
+			else
+				echo -n "\"${key//:/,}\""
+			fi
+			((j++))
+		done
+		if [ "$i" -lt "$objects" ]; then
+			echo ','
+		else
+			echo
+		fi
+		((i++))
+	done
+	echo '    },'
+	i=1
 	echo '    "MAIL": {'
 	objects=$(echo "${MAIL//,/ }" | wc -w)
 	for object in $(echo "${MAIL//,/ }"); do
@@ -80,6 +105,31 @@ json_list() {
 	echo '    "DB": {'
 	objects=$(echo "${DB//,/ }" | wc -w)
 	for object in $(echo "${DB//,/ }"); do
+		j=1
+		object_keys=$(echo ${object//:/ } | wc -w)
+		for key in $(echo "${object/:/ }"); do
+			if [ "$j" -eq 1 ]; then
+				echo -n "        \"$key\": "
+				if [ "$object_keys" -eq 1 ]; then
+					echo -n '""'
+				fi
+			else
+				echo -n "\"${key//:/,}\""
+			fi
+			((j++))
+		done
+		if [ "$i" -lt "$objects" ]; then
+			echo ','
+		else
+			echo
+		fi
+		((i++))
+	done
+	echo '    },'
+	i=1
+	echo '    "CRON": {'
+	objects=$(echo "${CRON//,/ }" | wc -w)
+	for object in $(echo "${CRON//,/ }"); do
 		j=1
 		object_keys=$(echo ${object//:/ } | wc -w)
 		for key in $(echo "${object/:/ }"); do
@@ -133,20 +183,22 @@ json_list() {
 # SHELL list function
 shell_list() {
 	echo "WEB:            $WEB"
+	echo "DNS:            $DNS"
 	echo "MAIL:           $MAIL"
 	echo "DB:             $DB"
+	echo "CRON:           $CRON"
 	echo "USER DIRS:      $USER"
 }
 
 # PLAIN list function
 plain_list() {
-	echo "$WEB\t$MAIL\t$DB\t$USER"
+	echo "$WEB\t$DNS\t$MAIL\t$DB\t$CRON\t$USER"
 }
 
 # CSV list function
 csv_list() {
-	echo "WEB,MAIL,DB,USER"
-	echo "\"$WEB\",\"$MAIL\",\"$DB\",\"$USER\""
+	echo "WEB,DNS,MAIL,DB,CRON,USER"
+	echo "\"$WEB\",\"$DNS\",\"$MAIL\",\"$DB\",\"$CRON\",\"$USER\""
 }
 
 #----------------------------------------------------------#
@@ -163,8 +215,10 @@ is_object_valid 'user' 'USER' "$user"
 
 # Flushing variables
 WEB=''
+DNS=''
 MAIL=''
 DB=''
+CRON=''
 USER=''
 
 # Parsing backup exclusion list

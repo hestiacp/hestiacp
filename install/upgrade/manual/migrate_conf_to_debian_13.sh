@@ -1,5 +1,5 @@
 #!/bin/bash
-# info: Configure SSH, Bind and Dovecot to work with Hestia on Debian 13
+# info: Configure SSH, Bind, Dovecot and Exim to work with Hestia on Debian 13
 
 #----------------------------------------------------------#
 #                    Variables & Functions                 #
@@ -11,8 +11,8 @@
 }
 
 source /etc/hestiacp/hestia.conf
-source $HESTIA/conf/hestia.conf
-source $HESTIA/func/main.sh
+source "$HESTIA/conf/hestia.conf"
+source "$HESTIA/func/main.sh"
 
 [[ -f /etc/os-release ]] && source /etc/os-release
 
@@ -74,7 +74,7 @@ if [[ "$dovecot_version" = "2.4" ]]; then
 				|| sed -i -E -z 's/    user = dovecot\n  \}\n\}/    user = dovecot\n  \}\n\n  unix_listener auth-master {\n    group = mail\n    mode = 0660\n    user = dovecot\n  }\n\}/' /etc/dovecot/conf.d/10-master.conf
 			grep -q 'mail_plugins.*sieve' /etc/dovecot/conf.d/15-lda.conf \
 				|| sed -i '/^protocol lda {$/a\  mail_plugins = mail_compress quota sieve' /etc/dovecot/conf.d/15-lda.conf
-			grep -q 'imap_sieve' /etc/dovecot/conf.d/20-imap.conf \
+			grep -q 'imap_quota imap_sieve' /etc/dovecot/conf.d/20-imap.conf \
 				|| sed -i "s/quota imap_quota/quota imap_quota imap_sieve/g" /etc/dovecot/conf.d/20-imap.conf
 			cp -f "$HESTIA_COMMON_DIR"/dovecot/2.4/sieve/* /etc/dovecot/conf.d
 		fi
@@ -105,10 +105,10 @@ if [[ "$DNS_SYSTEM" =~ named|bind ]]; then
 	_bind_changed=false
 
 	# named.conf.default-zones was removed in Debian 13
-	if [[ ! -f /etc/bind/named.conf.default-zones ]] \
-		&& grep -q "include.*named.conf.default-zones" /etc/bind/named.conf 2> /dev/null; then
+	# The include must go regardless of whether the file exists on disk
+	if grep -qE '^[[:space:]]*include.*named\.conf\.default-zones' /etc/bind/named.conf 2> /dev/null; then
 		echo "[ + ] Removing the default-zones include from named.conf"
-		sed -i "/^include.*named.conf.default-zones/d" /etc/bind/named.conf
+		sed -i -E '/^[[:space:]]*include.*named\.conf\.default-zones/d' /etc/bind/named.conf
 		_bind_changed=true
 	else
 		echo "[ - ] default-zones include already clean, nothing to do"
@@ -137,4 +137,94 @@ else
 fi
 echo
 
+#----------------------------------------------------------#
+#                    Exim configuration                    #
+#----------------------------------------------------------#
+
+echo "[ * ] Checking Exim configuration:"
+if [[ $MAIL_SYSTEM == exim4 ]] \
+	&& [[ $(dovecot --version) == 2.4* ]] \
+	&& [[ -f /etc/exim4/exim4.conf.template ]]; then
+	sed -i.bak '
+s#  directory = "${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}/mail/${lookup{$domain}dsearch{/etc/exim4/domains/}}/${lookup{$local_part}dsearch{${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}/mail/${lookup{$domain}dsearch{/etc/exim4/domains/}}}}"#  directory = "${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}"#
+
+s#  directory = "${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}/mail/${lookup{$domain}dsearch{/etc/exim4/domains/}}/${lookup{$local_part}dsearch{${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}/mail/${lookup{$domain}dsearch{/etc/exim4/domains/}}}}/.Spam"#  directory = "${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}/.Spam"#
+
+s#  quota_directory = "${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}/mail/${lookup{$domain}dsearch{/etc/exim4/domains/}}/${lookup{$local_part}dsearch{${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}/mail/${lookup{$domain}dsearch{/etc/exim4/domains/}}}}"#  quota_directory = "${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}"#
+' /etc/exim4/exim4.conf.template
+	if ! cmp -s /etc/exim4/exim4.conf.template{.bak,}; then
+		echo "[ + ] Local delivery directives fixed in Exim configuration"
+		if systemctl restart exim4 &> /dev/null; then
+			echo "[ + ] Exim successfully restarted"
+		else
+			echo "[ ! ] Error restarting Exim" >&2
+			systemctl status exim4 --no-pager -l >&2
+			echo "[ + ] Recovering configuration backup"
+			cp -f /etc/exim4/exim4.conf.template.bak /etc/exim4/exim4.conf.template
+
+			if systemctl restart exim4 &> /dev/null; then
+				echo "[ + ] Exim successfully restarted after recovery"
+			else
+				echo "[ ! ] Error restarting Exim after recovery" >&2
+				systemctl status exim4 --no-pager -l >&2
+			fi
+		fi
+	else
+		echo "[ * ] Exim configuration already up to date"
+	fi
+
+fi
+echo
+
+#----------------------------------------------------------#
+#                   ProFTPd configuration                    #
+#----------------------------------------------------------#
+
+if [[ "$FTP_SYSTEM" =~ proftpd ]]; then
+	restart_proftpd=false
+	echo "[ * ] Checking ProFTPd:"
+	if ! dpkg -s proftpd-mod-crypto &> /dev/null; then
+		echo "[ + ] Installing proftpd-mod-crypto:"
+		if apt-get install -y proftpd-mod-crypto &> /dev/null; then
+			echo "[ + ] proftpd-mod-crypto successfully installed"
+		else
+			echo "[ ! ] Error installing proftpd-mod-crypto" >&2
+		fi
+	else
+		echo "[ - ] proftpd-mod-crypto already installed, nothing to do"
+	fi
+
+	if [[ -f /etc/proftpd/modules.conf.proftpd-new ]] && [[ -f /etc/proftpd/modules.conf ]] && ! grep -qE "^[[:space:]]*LoadModule[[:space:]]+mod_xfer\.c" /etc/proftpd/modules.conf; then
+		echo "[ + ] Ensuring xfer module is enabled"
+		if grep -qE "^[[:space:]]*LoadModule[[:space:]]+mod_xfer\.c" /etc/proftpd/modules.conf.proftpd-new; then
+			cp /etc/proftpd/modules.conf "/etc/proftpd/modules.conf.hestia-backup-$(date +%Y-%m-%d)"
+			cp /etc/proftpd/modules.conf.proftpd-new /etc/proftpd/modules.conf
+			restart_proftpd=true
+		else
+			echo "[ ! ] Error: mod_xfer.c is not enabled in modules.conf.proftpd-new either"
+		fi
+	fi
+
+	if [[ -f /etc/proftpd/modules.conf ]] && grep -qF "Include /etc/proftpd/tls.conf" /etc/proftpd/proftpd.conf; then
+		if ! grep -qF "Include /etc/proftpd/modules.conf" /etc/proftpd/proftpd.conf; then
+			echo "[ + ] Updating ProFTPd configuration:"
+			sed -i '\|Include /etc/proftpd/tls.conf|i Include /etc/proftpd/modules.conf' /etc/proftpd/proftpd.conf
+			restart_proftpd=true
+		else
+			echo "[ - ] ProFTPd already configured, nothing to do"
+		fi
+	fi
+
+	if $restart_proftpd; then
+		if systemctl restart proftpd &> /dev/null; then
+			echo "[ + ] ProFTPd successfully restarted"
+		else
+			echo "[ ! ] Error restarting ProFTPd" >&2
+			systemctl status proftpd --no-pager -l >&2
+		fi
+	fi
+
+fi
+
+echo
 echo "[ * ] Configuration finished!"

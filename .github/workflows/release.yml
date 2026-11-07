@@ -1,0 +1,337 @@
+name: Release
+
+# Manual apt release for the beta and production channels.
+#
+# Production secrets are intentionally not configured yet. The publish job
+# fails with a clear message if they are missing.
+on:
+  workflow_dispatch:
+    inputs:
+      channel:
+        description: Release channel
+        type: choice
+        options:
+          - beta
+          - production
+        default: beta
+      version:
+        description: Base version from src/deb/hestia/control (for example 1.10.6 or 1.10.6~beta1)
+        required: true
+        type: string
+      ref:
+        description: Branch or tag to build
+        required: true
+        default: main
+        type: string
+      suites:
+        description: Comma-separated suites
+        required: true
+        default: bookworm,trixie,jammy,noble,resolute
+        type: string
+      dry_run:
+        description: Build and generate metadata, but do not upload
+        type: boolean
+        default: true
+      prune:
+        description: Delete objects not present in this build (latest-only)
+        type: boolean
+        default: false
+      debug:
+        description: Enable verbose tracing
+        type: boolean
+        default: false
+      pkgrev:
+        description: Package revision (bump when rebuilding the same version)
+        required: true
+        type: string
+        default: "1"
+      force:
+        description: Overwrite existing package objects (recovery only)
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: release-${{ inputs.channel }}
+  cancel-in-progress: false
+
+jobs:
+  check-secrets:
+    name: Check secrets
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ inputs.channel }}
+    steps:
+      - name: Check required secrets
+        env:
+          APT_GPG_PRIVATE_KEY: ${{ inputs.channel == 'beta' && secrets.APT_BETA_GPG_PRIVATE_KEY || secrets.APT_PROD_GPG_PRIVATE_KEY }}
+          R2_ACCESS_KEY_ID: ${{ inputs.channel == 'beta' && secrets.R2_BETA_ACCESS_KEY_ID || secrets.R2_PROD_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ inputs.channel == 'beta' && secrets.R2_BETA_SECRET_ACCESS_KEY || secrets.R2_PROD_SECRET_ACCESS_KEY }}
+          R2_BUCKET: ${{ inputs.channel == 'beta' && secrets.R2_BETA_BUCKET || secrets.R2_PROD_BUCKET }}
+          R2_S3_ENDPOINT: ${{ inputs.channel == 'beta' && secrets.R2_BETA_S3_ENDPOINT || secrets.R2_PROD_S3_ENDPOINT }}
+          R2_ACCOUNT_ID: ${{ inputs.channel == 'beta' && secrets.R2_BETA_ACCOUNT_ID || secrets.R2_PROD_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ZONE_ID: ${{ secrets.CLOUDFLARE_ZONE_ID }}
+        run: |
+          missing=()
+          for name in APT_GPG_PRIVATE_KEY R2_ACCESS_KEY_ID R2_SECRET_ACCESS_KEY R2_BUCKET CLOUDFLARE_API_TOKEN CLOUDFLARE_ZONE_ID; do
+            [[ -n "${!name:-}" ]] || missing+=("$name")
+          done
+          if [[ -z "${R2_S3_ENDPOINT:-}" && -z "${R2_ACCOUNT_ID:-}" ]]; then
+            missing+=("R2_S3_ENDPOINT or R2_ACCOUNT_ID")
+          fi
+          if ((${#missing[@]})); then
+            echo "::error::Missing secrets for channel '${{ inputs.channel }}': ${missing[*]}"
+            exit 1
+          fi
+
+  prepare:
+    name: Prepare
+    needs: check-secrets
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.matrix.outputs.matrix }}
+      version: ${{ steps.version.outputs.version }}
+      sha: ${{ steps.sha.outputs.sha }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.ref }}
+
+      - name: Resolve commit
+        id: sha
+        run: echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+      - name: Validate version
+        id: version
+        env:
+          INPUT_VERSION: ${{ inputs.version }}
+        run: |
+          control="$(awk '/^Version:/ {print $2; exit}' src/deb/hestia/control)"
+          if [[ "$control" != "$INPUT_VERSION" ]]; then
+            echo "::error::Input version '$INPUT_VERSION' does not match src/deb/hestia/control '$control'"
+            exit 1
+          fi
+          for file in install/hst-install-debian.sh install/hst-install-ubuntu.sh; do
+            ver="$(sed -n "s/^HESTIA_INSTALL_VER='\\(.*\\)'/\\1/p" "$file")"
+            if [[ "$ver" != "$control" ]]; then
+              echo "::error::$file has HESTIA_INSTALL_VER='$ver', expected '$control'"
+              exit 1
+            fi
+          done
+          echo "version=$control" >> "$GITHUB_OUTPUT"
+
+      - name: Build matrix
+        id: matrix
+        env:
+          SUITES: ${{ inputs.suites }}
+        run: |
+          matrix="$(python3 - <<'PY'
+          import json
+          import os
+          import sys
+
+          images = {
+              "bookworm": "debian:12",
+              "trixie": "debian:13",
+              "jammy": "ubuntu:22.04",
+              "noble": "ubuntu:24.04",
+              "resolute": "ubuntu:26.04",
+          }
+          suites = list(
+              dict.fromkeys(
+                  s.strip() for s in os.environ["SUITES"].split(",") if s.strip()
+              )
+          )
+          if not suites:
+              sys.exit("no suites selected")
+          unknown = [s for s in suites if s not in images]
+          if unknown:
+              sys.exit(f"unsupported suites: {', '.join(unknown)}")
+          include = [
+              {"suite": suite, "image": images[suite], "arch": arch}
+              for suite in suites
+              for arch in ("amd64", "arm64")
+          ]
+          print(json.dumps({"include": include}))
+          PY
+          )"
+          echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
+
+  build-hestia:
+    name: Build hestia
+    needs:
+      - check-secrets
+      - prepare
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ needs.prepare.outputs.sha }}
+
+      - name: Install build tools
+        run: sudo apt-get update && sudo apt-get install -y xz-utils
+
+      - name: Build hestia
+        env:
+          PKGREV: ${{ inputs.pkgrev }}
+        run: |
+          cd src
+          sudo env TERM=xterm PKGREV="$PKGREV" bash -e ./hst_autocompile.sh --hestia --noinstall --cross --keepbuild '~localsrc' --pkgrev "$PKGREV"
+
+      - name: Upload hestia debs
+        uses: actions/upload-artifact@v4
+        with:
+          name: hestia-debs
+          path: /tmp/hestiacp-src/deb/*.deb
+          if-no-files-found: error
+          retention-days: 7
+
+  build-native:
+    name: Build ${{ matrix.suite }}/${{ matrix.arch }}
+    needs:
+      - check-secrets
+      - prepare
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.prepare.outputs.matrix) }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ needs.prepare.outputs.sha }}
+
+      - name: Prepare packages
+        id: prepare
+        env:
+          SUITE: ${{ matrix.suite }}
+          ARCH: ${{ matrix.arch }}
+          APT_HOST: ${{ inputs.channel == 'beta' && 'beta-apt.hestiacp.com' || 'apt.hestiacp.com' }}
+          PKGREV: ${{ inputs.pkgrev }}
+          VERSION: ${{ inputs.version }}
+        run: |
+          curl -fsSL "https://raw.githubusercontent.com/${{ github.repository }}/${{ github.sha }}/.github/scripts/release/prepare-packages.py" -o /tmp/prepare-packages.py
+          flags="$(python3 /tmp/prepare-packages.py)"
+          echo "flags=$flags" >> "$GITHUB_OUTPUT"
+
+      - name: Setup QEMU
+        if: matrix.arch == 'arm64'
+        uses: docker/setup-qemu-action@v3
+        with:
+          platforms: arm64
+
+      - name: Detect CPU count
+        id: cpu
+        run: |
+          # nproc respects the runner's CPU quota/cgroup; fall back to
+          # getconf and finally to 1 if neither is available.
+          cpus="$(nproc 2>/dev/null || getconf _NPROCESSORS_ONLN 2>/dev/null || echo 1)"
+          if [[ "${{ matrix.arch }}" == 'arm64' ]]; then
+            # QEMU user-mode emulation uses far more memory per compiler
+            # process than native code, so build with half the host cores
+            # (minimum 1) to avoid OOM-killing cc1. This is deliberately
+            # computed on the host: nproc inside the arm64 container would
+            # report the host's core count anyway.
+            cpus=$((cpus / 2))
+            if ((cpus < 1)); then cpus=1; fi
+          fi
+          echo "num=$cpus" >> "$GITHUB_OUTPUT"
+
+      - name: Build packages
+        if: steps.prepare.outputs.flags != ''
+        env:
+          NUM_CPUS: ${{ steps.cpu.outputs.num }}
+          PKGREV: ${{ inputs.pkgrev }}
+          BUILD_FLAGS: ${{ steps.prepare.outputs.flags }}
+        run: |
+          mkdir -p out
+          docker run --rm \
+            --platform "linux/${{ matrix.arch }}" \
+            -v "$PWD:/repo" \
+            -w /repo \
+            -e DEBIAN_FRONTEND=noninteractive \
+            -e TZ=Etc/UTC \
+            -e NUM_CPUS="$NUM_CPUS" \
+            -e PKGREV="$PKGREV" \
+            -e BUILD_FLAGS="$BUILD_FLAGS" \
+            "${{ matrix.image }}" \
+            bash -lc '
+              set -euo pipefail
+              apt-get update
+              apt-get install -y xz-utils ca-certificates
+              cd src
+              TERM=xterm bash -e ./hst_autocompile.sh $BUILD_FLAGS --noinstall --keepbuild "~localsrc" --pkgrev "$PKGREV"
+              mkdir -p /repo/out
+              cp /tmp/hestiacp-src/deb/*.deb /repo/out/
+            '
+
+      - name: Upload debs
+        uses: actions/upload-artifact@v4
+        with:
+          name: debs-${{ matrix.suite }}-${{ matrix.arch }}
+          path: out/*.deb
+          if-no-files-found: error
+          retention-days: 7
+
+  publish:
+    name: Publish ${{ inputs.channel }}
+    needs:
+      - check-secrets
+      - prepare
+      - build-hestia
+      - build-native
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    environment:
+      name: ${{ inputs.channel }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.sha }}
+
+      - name: Install tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y apt-utils gnupg gzip awscli jq
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: debs-*
+          path: debs
+          merge-multiple: false
+
+      - name: Download hestia debs
+        uses: actions/download-artifact@v4
+        with:
+          name: hestia-debs
+          path: hestia
+
+      - name: Publish
+        env:
+          CHANNEL: ${{ inputs.channel }}
+          VERSION: ${{ needs.prepare.outputs.version }}
+          SUITES: ${{ inputs.suites }}
+          DRY_RUN: ${{ inputs.dry_run }}
+          PRUNE: ${{ inputs.prune }}
+          DEBUG: ${{ inputs.debug }}
+          FORCE: ${{ inputs.force }}
+          APT_GPG_PRIVATE_KEY: ${{ inputs.channel == 'beta' && secrets.APT_BETA_GPG_PRIVATE_KEY || secrets.APT_PROD_GPG_PRIVATE_KEY }}
+          APT_GPG_PASSPHRASE: ${{ inputs.channel == 'beta' && secrets.APT_BETA_GPG_PASSPHRASE || secrets.APT_PROD_GPG_PASSPHRASE }}
+          R2_ACCESS_KEY_ID: ${{ inputs.channel == 'beta' && secrets.R2_BETA_ACCESS_KEY_ID || secrets.R2_PROD_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ inputs.channel == 'beta' && secrets.R2_BETA_SECRET_ACCESS_KEY || secrets.R2_PROD_SECRET_ACCESS_KEY }}
+          R2_BUCKET: ${{ inputs.channel == 'beta' && secrets.R2_BETA_BUCKET || secrets.R2_PROD_BUCKET }}
+          R2_S3_ENDPOINT: ${{ inputs.channel == 'beta' && secrets.R2_BETA_S3_ENDPOINT || secrets.R2_PROD_S3_ENDPOINT }}
+          R2_ACCOUNT_ID: ${{ inputs.channel == 'beta' && secrets.R2_BETA_ACCOUNT_ID || secrets.R2_PROD_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ZONE_ID: ${{ secrets.CLOUDFLARE_ZONE_ID }}
+        run: .github/scripts/release/publish.sh

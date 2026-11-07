@@ -1,0 +1,105 @@
+#!/usr/bin/env bash
+# info: list all web domains grouped by backend template and owner
+# options: [FORMAT]
+#
+# example: v-list-web-domain-backendtpl-all json
+#
+# This command returns all web domains from all users grouped by
+# the backend template in use and the domain owner.
+
+format="${1:-json}"
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source "$HESTIA/func/main.sh"
+users_dir="$HESTIA/data/users"
+
+# Only allow known output formats
+case "$format" in
+	json | plain) ;;
+	*)
+		echo "Error: invalid format (use json or plain)" >&2
+		exit 1
+		;;
+esac
+
+# Character whitelist for valid usernames (directory names)
+valid_user() { [[ "$1" =~ ^[A-Za-z0-9_][A-Za-z0-9_.-]{0,63}$ ]]; }
+
+# Collect "user=web.conf" pairs for every valid, readable user config
+pairs=()
+shopt -s nullglob
+for user_dir in "$users_dir"/*/; do
+	user_dir="${user_dir%/}"
+	user="${user_dir##*/}"
+
+	# Skip directories with suspicious names and symbolic links
+	valid_user "$user" || continue
+	[[ -L "$user_dir" ]] && continue
+
+	web_conf="$user_dir/web.conf"
+	[[ -f "$web_conf" && ! -L "$web_conf" && -r "$web_conf" ]] || continue
+
+	pairs+=("$user=$web_conf")
+done
+
+# Parse every web.conf in a single PHP process instead of one per user/domain
+"$HESTIA_PHP" -- \
+	"$HESTIA/func/object-parser.php" \
+	"$HESTIA_RESERVED_CONF_KEYS" \
+	"$HESTIA_OBJECT_KEY_EXCEPTIONS" \
+	"$format" \
+	"${pairs[@]}" << 'EOPHP'
+<?php
+
+declare(strict_types=1);
+
+[$script, $parser, $reservedString, $exceptionsString, $format] = $argv;
+$pairs = array_slice($argv, 5);
+
+require $parser;
+
+$reserved = parseObjectKvList($reservedString);
+$exceptions = parseObjectKvList($exceptionsString);
+
+$entries = [];
+
+foreach ($pairs as $pair) {
+    [$user, $file] = explode('=', $pair, 2);
+
+    foreach (parseObjectKvFile($file, $reserved, $exceptions) as $record) {
+        $domain = $record['DOMAIN']
+            ?? objectParserFail('Missing DOMAIN in: ' . $file);
+
+        $backend = $record['BACKEND'] ?? '';
+
+        $entries[] = [
+            'backend' => $backend !== '' ? $backend : 'default',
+            'user' => $user,
+            'domain' => $domain,
+        ];
+    }
+}
+
+if ($format === 'plain') {
+    foreach ($entries as $entry) {
+        echo "{$entry['backend']} {$entry['user']} {$entry['domain']}" . PHP_EOL;
+    }
+    exit(0);
+}
+
+try {
+    echo json_encode(
+        $entries,
+        JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR,
+    ) . PHP_EOL;
+} catch (JsonException $exception) {
+    objectParserFail('Could not encode JSON: ' . $exception->getMessage());
+}
+EOPHP
+
+check_result "$?" "Invalid object format while listing web domains" "$E_INVALID"
+
+exit 0

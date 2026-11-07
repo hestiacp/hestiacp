@@ -7,7 +7,7 @@
 # This function adds virtual host to a server. In cases when ip is
 # undefined in the script, "default" template will be used. The alias of
 # `www.domain.tld` type will be automatically assigned to the domain unless
-# "none" is transmited as argument. If ip have associated dns name, this
+# "none" is transmitted as argument. If ip have associated dns name, this
 # domain will also get the alias domain-tpl.$ipname. An alias with the ip
 # name is useful during the site testing while dns isn't moved to server yet.
 
@@ -125,9 +125,9 @@ chown root:$user /var/log/$WEB_SYSTEM/domains/$domain.* $conf
 chmod 640 /var/log/$WEB_SYSTEM/domains/$domain.*
 user_exec chmod 751 $HOMEDIR/$user/web/$domain/*
 user_exec chmod 551 $HOMEDIR/$user/web/$domain/stats $HOMEDIR/$user/web/$domain/logs
-# Apply 755 to directories and 644 to files
-find $HOMEDIR/$user/web/$domain/public_html -type d | xargs chmod 755
-find $HOMEDIR/$user/web/$domain/public_html -type f | xargs chmod 644
+# Apply 755 to directories (excluding public_html) and 644 to files
+find "$HOMEDIR/$user/web/$domain/public_html" -mindepth 1 -type d -print0 | xargs -0 -r chmod 755
+find "$HOMEDIR/$user/web/$domain/public_html" -type f -print0 | xargs -0 -r chmod 644
 
 # domain folder permissions: DOMAINDIR_WRITABLE: default-val:no source:hestia.conf
 DOMAINDIR_MODE=551
@@ -206,7 +206,7 @@ if [ -n "$PROXY_SYSTEM" ]; then
 		# Fonts
 		PROXY_EXT="$PROXY_EXT,otf,ttf,woff,woff2"
 		# Productivity
-		PROXY_EXT="$PROXY_EXT,doc,docx,odf,odp,ods,odt,pdf,ppt,pptx,rtf,txt,xls,xlsx"
+		PROXY_EXT="$PROXY_EXT,doc,docx,odf,odp,ods,odt,pdf,ppt,pptx,rtf,xls,xlsx"
 		# Archive
 		PROXY_EXT="$PROXY_EXT,7z,bz2,gz,rar,tar,tgz,zip"
 		# Binaries

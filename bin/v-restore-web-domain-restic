@@ -52,7 +52,13 @@ source_conf $HESTIA/conf/restic.conf
 #                       Action                             #
 #----------------------------------------------------------#
 
-tmpdir=$(mktemp -p /home/$user/tmp/ -d)
+# Reject symlinks: a shell user owns $HOMEDIR/$user and could replace
+# top-level directories before triggering a restore
+is_dir_symlink "$HOMEDIR/$user/web"
+is_dir_symlink "$HOMEDIR/$user/conf"
+# Stage in root-owned $BACKUP, not the user's home, to avoid races
+# where the user swaps the tmp dir before root reads/writes it
+tmpdir=$(mktemp -p "${BACKUP_TEMP:-$BACKUP}" -d)
 if [ ! -f "$tmpdir/backup.conf" ]; then
 	restic --repo "${REPO%/}/$user" --password-file "$USER_DATA/restic.conf" dump "$snapshot" "/home/$user/backup/backup.conf" > "$tmpdir/backup.conf"
 	if [ "$?" -ne 0 ]; then
@@ -60,10 +66,10 @@ if [ ! -f "$tmpdir/backup.conf" ]; then
 	fi
 fi
 restic --repo "${REPO%/}/$user" --password-file "$USER_DATA/restic.conf" dump "$snapshot" "/home/$user/backup/pam/passwd" > "$tmpdir/passwd"
-old_uid=$(cut -f 3 -d : $tmpdir/passwd)
+old_uid=$(cut -f 3 -d : "$tmpdir/passwd")
 
 domains=""
-parse_object_kv_list $(cat $tmpdir/backup.conf)
+parse_object_kv_list $(cat "$tmpdir/backup.conf")
 IFS=',' read -a domains <<< "$WEB"
 for domain in "${domains[@]}"; do
 	if [[ ",$web," == *",$domain,"* || "$web" = '*' ]]; then
@@ -75,7 +81,7 @@ for domain in "${domains[@]}"; do
 		if [ -z "$check_config" ]; then
 			check_new=$(is_domain_new 'web' $domain)
 			if [ "$check_new" = 'yes' ]; then
-				rm -rf $tmpdir
+				rm -rf "$tmpdir"
 				error="$domain belongs to another user"
 				echo "$error" | $SENDMAIL -s "$subj" $email $notify
 				sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
@@ -89,7 +95,7 @@ for domain in "${domains[@]}"; do
 
 		# Restoring web.conf
 		if [ -z "$check_config" ]; then
-			parse_object_kv_list $(cat $tmpdir/home/$user/backup/web/$domain/hestia/web.conf)
+			parse_object_kv_list $(cat "$tmpdir/home/$user/backup/web/$domain/hestia/web.conf")
 
 			# Deleting conflicting aliases
 			for dom_alias in ${ALIAS//,/ }; do
@@ -184,9 +190,9 @@ for domain in "${domains[@]}"; do
 		fi
 
 		if [ ! -d "$HOMEDIR/$user/conf/web/$domain/" ]; then
-			mkdir -p $HOMEDIR/$user/conf/web/$domain/
+			mkdir -p "$HOMEDIR/$user/conf/web/$domain/"
 		fi
-		for file in $tmpdir/home/$user/backup/web/$domain/conf/*; do
+		for file in "$tmpdir"/home/"$user"/backup/web/"$domain"/conf/*; do
 			if [[ "$file" == *.ca ]] || [[ "$file" == *.crt ]] || [[ "$file" == *.key ]] || [[ "$file" == *.pem ]] || [[ "$file" == *.conf ]]; then
 				continue
 			fi
@@ -201,11 +207,17 @@ for domain in "${domains[@]}"; do
 		# Rebuilding vhost to prevent user overwrite default config changes not ideal
 		rebuild_web_domain_conf
 
+		# Reject symlinks to avoid root following them outside the user home
+		is_dir_symlink "$HOMEDIR/$user/web/$domain"
+		is_dir_symlink "$HOMEDIR/$user/web/$domain/public_html"
 		if [ -d "$HOMEDIR/$user/web/$domain/public_html" ]; then
-			rm -rf $HOMEDIR/$user/web/$domain/public_html/*
+			user_exec find "$HOMEDIR/$user/web/$domain/public_html" -mindepth 1 -delete
 		fi
 
-		[[ -d $HOMEDIR/$user/web/$domain/stats ]] && chmod u+w "$HOMEDIR/$user/web/$domain/stats"
+		if [[ -d "$HOMEDIR/$user/web/$domain/stats" ]]; then
+			is_dir_symlink "$HOMEDIR/$user/web/$domain/stats"
+			chmod u+w "$HOMEDIR/$user/web/$domain/stats"
+		fi
 
 		restic --repo "${REPO%/}/$user" --password-file "$USER_DATA/restic.conf" restore "$snapshot" --include "/home/$user/web/$domain" --target /
 		if [ "$?" -ne 0 ]; then
@@ -213,18 +225,19 @@ for domain in "${domains[@]}"; do
 		fi
 		if [ "$new_user" = "yes" ]; then
 			echo "[ * ] Fix permissions"
-			chown --no-dereference $user:$user \
-				$HOMEDIR/$user/ \
-				$HOMEDIR/$user/web/ \
-				$HOMEDIR/$user/web/$domain \
-				$HOMEDIR/$user/web/$domain/private \
-				$HOMEDIR/$user/web/$domain/cgi-bin \
-				$HOMEDIR/$user/web/$domain/public_*html \
-				$HOMEDIR/$user/web/$domain/logs \
-				$HOMEDIR/$user/web/$domain/stats
+			chown --no-dereference "$user:$user" \
+				"$HOMEDIR/$user/" \
+				"$HOMEDIR/$user/web/" \
+				"$HOMEDIR/$user/web/$domain" \
+				"$HOMEDIR/$user/web/$domain/private" \
+				"$HOMEDIR/$user/web/$domain/cgi-bin" \
+				"$HOMEDIR/$user/web/$domain"/public_*html \
+				"$HOMEDIR/$user/web/$domain/logs" \
+				"$HOMEDIR/$user/web/$domain/stats"
 
-			chown -R $user:$user $HOMEDIR/$user/web/$domain/document_errors
-			chown root:$user /var/log/$WEB_SYSTEM/domains/$domain.*
+			# --no-dereference: don't follow if document_errors is a symlink
+			chown -R --no-dereference "$user:$user" "$HOMEDIR/$user/web/$domain/document_errors"
+			chown "root:$user" "/var/log/$WEB_SYSTEM/domains/$domain".*
 		fi
 		# Rebuilding web config for the second time to make sure ftp users keep working
 		rebuild_web_domain_conf
@@ -237,10 +250,10 @@ done
 if [ "$new_user" = "yes" ]; then
 	rebuild_user_conf
 fi
-rm -fr $tmpdir
+rm -fr "$tmpdir"
 
 # Update user counters
-$BIN/v-update-user-counters $user
+$BIN/v-update-user-counters "$user"
 $BIN/v-update-user-counters "$ROOT_USER"
 $BIN/v-update-sys-ip-counters
 

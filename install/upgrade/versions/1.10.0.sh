@@ -20,15 +20,20 @@
 upgrade_config_set_value 'UPGRADE_UPDATE_WEB_TEMPLATES' 'false'
 upgrade_config_set_value 'UPGRADE_UPDATE_DNS_TEMPLATES' 'false'
 upgrade_config_set_value 'UPGRADE_UPDATE_FILEMANAGER_CONFIG' 'false'
-upgrade_config_set_value 'UPGRADE_UPDATE_MAIL_TEMPLATES' 'false'
-upgrade_config_set_value 'UPGRADE_REBUILD_USERS' 'false'
+upgrade_config_set_value 'UPGRADE_UPDATE_MAIL_TEMPLATES' 'true'
+upgrade_config_set_value 'UPGRADE_REBUILD_USERS' 'true'
 
 # fix/file manager ignores user language
 echo "[ * ] Fix File Manager ignoring user language"
 cp -f "$HESTIA"/install/deb/filemanager/filegator/configuration.php "$HESTIA"/web/fm/configuration.php
 
 if [ -f /etc/os-release ]; then
+	# /etc/os-release defines its own $VERSION, which would otherwise
+	# clobber Hestia's $VERSION since this script is sourced by the caller
+	_HESTIA_VERSION="$VERSION"
 	source /etc/os-release
+	VERSION="$_HESTIA_VERSION"
+	unset _HESTIA_VERSION
 fi
 
 # Set running OS
@@ -247,3 +252,45 @@ fi
 # Updating logrotate conf for Hestia
 echo "[ * ] Updating logrotate conf for Hestia"
 cp -f "$HESTIA"/install/deb/logrotate/hestia /etc/logrotate.d/hestia
+
+# Enhance - Update current composer installations
+echo "[ * ] Updating composer for users:"
+for huser in $("$HESTIA/bin/v-list-users" list); do
+	if [[ -f "/home/$huser/.composer/composer" ]]; then
+		echo "      - $huser..."
+		"$HESTIA/bin/v-add-user-composer" "$huser" 2 yes &> /dev/null
+	fi
+done
+
+# If Dovecot 2.4, modify the local delivery directives in Exim"
+echo "[ * ] Updating Exim configuration:"
+if [[ $MAIL_SYSTEM == exim4 ]] \
+	&& [[ $(dovecot --version) == 2.4* ]] \
+	&& [[ -f /etc/exim4/exim4.conf.template ]]; then
+	sed -i.bak '
+s#  directory = "${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}/mail/${lookup{$domain}dsearch{/etc/exim4/domains/}}/${lookup{$local_part}dsearch{${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}/mail/${lookup{$domain}dsearch{/etc/exim4/domains/}}}}"#  directory = "${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}"#
+
+s#  directory = "${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}/mail/${lookup{$domain}dsearch{/etc/exim4/domains/}}/${lookup{$local_part}dsearch{${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}/mail/${lookup{$domain}dsearch{/etc/exim4/domains/}}}}/.Spam"#  directory = "${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}/.Spam"#
+
+s#  quota_directory = "${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}/mail/${lookup{$domain}dsearch{/etc/exim4/domains/}}/${lookup{$local_part}dsearch{${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}/mail/${lookup{$domain}dsearch{/etc/exim4/domains/}}}}"#  quota_directory = "${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}"#
+' /etc/exim4/exim4.conf.template
+	if ! cmp -s /etc/exim4/exim4.conf.template{.bak,}; then
+		echo "[ + ] Local delivery directives fixed in Exim configuration"
+		if systemctl restart exim4 &> /dev/null; then
+			echo "[ + ] Exim successfully restarted"
+		else
+			echo "[ ! ] Error restarting Exim" >&2
+			systemctl status exim4 --no-pager -l >&2
+			echo "[ + ] Recovering configuration backup"
+			cp -f /etc/exim4/exim4.conf.template.bak /etc/exim4/exim4.conf.template
+			if systemctl restart exim4 &> /dev/null; then
+				echo "[ + ] Exim successfully restarted after recovery"
+			else
+				echo "[ ! ] Error restarting Exim after recovery" >&2
+				systemctl status exim4 --no-pager -l >&2
+			fi
+		fi
+	else
+		echo "[ * ] Exim configuration already up to date"
+	fi
+fi

@@ -17,9 +17,9 @@ v-add-letsencrypt-host
 Due to changes in the code, the error message has been changed. The following list will be extended in the future.
 :::
 
-| Error         | Message                                                                                                                                              |
-| ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `rateLimited` | The rate limit of the maximum requests have been passed. Please check [https://crt.sh](https://crt.sh) to see how many active certificates you have. |
+| Error         | Message                                                                                                                                                                                                              |
+| ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `rateLimited` | The rate limit of the maximum requests have been passed. Please check [https://crt.sh](https://crt.sh) or [CertObserver CT search](https://certobserver.com/ct-search) to see how many active certificates you have. |
 
 ### Let’s Encrypt validation status 400
 
@@ -87,7 +87,7 @@ Yes, you are able to use Let’s Encrypt certificates with Cloudflare’s proxy,
 1. Disable Cloudflare’s proxy for the desired domain.
 2. Wait at least 5 minutes, for DNS caches to expire.
 3. Request the certificate via the control panel or use the CLI command.
-4. Reenable the proxy.
+4. Re-enable the proxy.
 5. In the **SSL/TLS** tab, switch over to **Full (strict)**.
 
 ## Can I use a Cloudflare Origin CA SSL Certificate?

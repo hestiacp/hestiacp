@@ -517,7 +517,7 @@ This function adds fwd-only flag
 
 add mail domain
 
-**Options**: `USER` `DOMAIN` `[ANTISPAM]` `[ANTIVIRUS]` `[DKIM]` `[DKIM_SIZE]` `[RESTART]` `[REJECT_SPAM]`
+**Options**: `USER` `DOMAIN` `[ANTISPAM]` `[ANTIVIRUS]` `[DKIM]` `[DKIM_SIZE]` `[RESTART]` `[REJECT_SPAM]` `[DKIM_SELECTOR]`
 
 **Examples**:
 
@@ -781,7 +781,7 @@ This function adds IP address into a system. It also creates rc scripts. You
 can specify IP name which will be used as root domain for temporary aliases.
 For example, if you set a1.myhosting.com as name, each new domain created on
 this IP will automatically receive alias $domain.a1.myhosting.com. Of course
-you must have wildcard record \*.a1.myhosting.com pointed to IP. This feature
+you must have wildcard record *.a1.myhosting.com pointed to IP. This feature
 is very handy when customer wants to test domain before dns migration.
 
 ## v-add-sys-mail-dnsbl
@@ -790,7 +790,7 @@ is very handy when customer wants to test domain before dns migration.
 
 add dnsbl entry
 
-**Options**: `HOST`
+**Options**: `HOST` `[RESTART]`
 
 **Examples**:
 
@@ -799,6 +799,19 @@ v-add-sys-mail-dnsbl zen.spamhaus.org
 ```
 
 This function adds a new DNSBL server for Exim to check.
+
+## v-add-sys-pma-restrict
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-sys-pma-restrict)
+
+restrict phpMyAdmin access to Hestia Single Sign-On only
+
+**Options**: `[MODE]`
+
+This function blocks direct/anonymous access to phpMyAdmin. Without a
+valid Hestia SSO token or an already established SSO session, requests
+are redirected to the Hestia login page instead of falling back to
+phpMyAdmin's own login form.
 
 ## v-add-sys-pma-sso
 
@@ -819,7 +832,7 @@ add system quota
 **Options**: –
 
 This function enables filesystem quota on /home partition
-Some kernels do require additional packages to be installed first
+Supports XFS and ext4 (both external and native quotas)
 
 ## v-add-sys-roundcube
 
@@ -1055,7 +1068,7 @@ v-add-web-domain admin wonderland.com 192.18.22.43 yes www.wonderland.com
 This function adds virtual host to a server. In cases when ip is
 undefined in the script, "default" template will be used. The alias of
 `www.domain.tld` type will be automatically assigned to the domain unless
-"none" is transmited as argument. If ip have associated dns name, this
+"none" is transmitted as argument. If ip have associated dns name, this
 domain will also get the alias domain-tpl.$ipname. An alias with the ip
 name is useful during the site testing while dns isn't moved to server yet.
 
@@ -1074,7 +1087,7 @@ v-add-web-domain-alias admin acme.com www.acme.com yes
 ```
 
 This function adds one or more aliases to a domain (it is also called
-"domain parking"). This function supports wildcards <\*.domain.tld>.
+"domain parking"). This function supports wildcards <*.domain.tld>.
 
 ## v-add-web-domain-allow-users
 
@@ -1149,7 +1162,7 @@ This function is used for securing web domain with http auth
 
 add webdomain proxy support
 
-**Options**: `USER` `DOMAIN` `[TEMPLATE]` `[EXTENTIONS]` `[RESTART]`
+**Options**: `USER` `DOMAIN` `[TEMPLATE]` `[EXTENSIONS]` `[RESTART]`
 
 **Examples**:
 
@@ -1333,10 +1346,10 @@ backup system user with all its objects to restic backup
 **Examples**:
 
 ```bash
-v-backup-user admin yes
+v-backup-user-restic admin yes
 ```
 
-This function is used for backing up user with all its domains and databases.
+Backup user with all its objects to restic backup. If the repo doesn't exists a new one will be created.
 
 ## v-backup-users
 
@@ -1982,7 +1995,7 @@ update web templates
 
 This function for changing the release branch for the
 Hestia Control Panel. This allows the user to switch between
-stable and pre-release builds which will automaticlly update
+stable and pre-release builds which will automatically update
 based on the appropriate release schedule if auto-update is
 turned on.
 
@@ -2000,7 +2013,7 @@ change service config
 v-change-sys-service-config /home/admin/dovecot.conf dovecot yes
 ```
 
-This function for changing service confguration.
+This function for changing service configuration.
 
 ## v-change-sys-timezone
 
@@ -2187,7 +2200,7 @@ change user random key
 
 **Options**: `USER` `[HASH]`
 
-This function changes user's RKEY value thats has been used for security value to be used forgot password function only.
+This function changes user's RKEY value that has been used for security value to be used forgot password function only.
 
 ## v-change-user-role
 
@@ -2410,7 +2423,7 @@ This function is used for changing the domain name.
 
 change web domain proxy template
 
-**Options**: `USER` `DOMAIN` `TEMPLATE` `[EXTENTIONS]` `[RESTART]`
+**Options**: `USER` `DOMAIN` `TEMPLATE` `[EXTENSIONS]` `[RESTART]`
 
 **Examples**:
 
@@ -3033,7 +3046,7 @@ This function deletes file on the file system
 
 [Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-letsencrypt-domain)
 
-deleting letsencrypt ssl cetificate for domain
+deleting letsencrypt ssl certificate for domain
 
 **Options**: `USER` `DOMAIN` `[RESTART]` `[MAIL]`
 
@@ -3349,7 +3362,7 @@ This function synchronise dns with the remote server.
 
 [Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-sys-api-ip)
 
-delete ip adresss from allowed ip list api
+delete ip address from allowed ip list api
 
 **Options**: `IP`
 
@@ -3412,7 +3425,7 @@ on interface and do not allow to delete IP which is used by a web domain.
 
 delete dnsbl entry
 
-**Options**: `HOST`
+**Options**: `HOST` `[RESTART]`
 
 **Examples**:
 
@@ -3432,6 +3445,17 @@ delete exim mail queue
 
 This function checks for messages stuck in the exim mail queue
 and prompts the user to clear the queue if desired.
+
+## v-delete-sys-pma-restrict
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-sys-pma-restrict)
+
+undo phpMyAdmin access restriction, allow its normal login form again
+
+**Options**: `[MODE]`
+
+Reverts v-add-sys-pma-restrict: phpMyAdmin falls back to its own login
+form again when no valid Hestia SSO token or session is present.
 
 ## v-delete-sys-pma-sso
 
@@ -3589,6 +3613,23 @@ v-delete-user-backup-exclusions admin
 
 This function for deleting backup exclusion
 
+## v-delete-user-backup-restic
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-user-backup-restic)
+
+delete a specific user snapshot from restic backup repository.
+
+**Options**: `USER` `SNAPSHOT`
+
+**Examples**:
+
+```bash
+v-delete-user-backup-restic admin snapshot
+```
+
+Delete a specific user snapshot from restic backup repository. It doesn't take in account any pruning done by the retention policy.
+This function is used for deleting a specific user snapshot from restic backup repository.
+
 ## v-delete-user-ips
 
 [Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-user-ips)
@@ -3702,6 +3743,24 @@ example: v-delete-user-stats admin overall
 
 This function deletes user statistics data.
 
+## v-delete-user-wp-cli
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-user-wp-cli)
+
+delete wp-cli for a user
+
+**Options**: `USER`
+
+**Examples**:
+
+```bash
+v-delete-user-wp-cli user
+```
+
+This function removes wp-cli support from the user account, added earlier
+by `v-add-user-wp-cli`. It removes `~/.wp-cli` and the matching
+`alias wp=...` line(s) from `.bash_aliases` together, atomically.
+
 ## v-delete-web-domain
 
 [Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-web-domain)
@@ -3736,7 +3795,7 @@ v-delete-web-domain-alias admin example.com www.example.com
 ```
 
 This function of deleting the alias domain (parked domain). By this call
-default www aliase can be removed as well.
+default www alias can be removed as well.
 
 ## v-delete-web-domain-allow-users
 
@@ -4301,7 +4360,7 @@ v-list-access-key 1234567890ABCDefghij json
 
 list all API access keys
 
-**Options**: `[FORMAT]`
+**Options**: `[USER]` `[FORMAT]`
 
 **Examples**:
 
@@ -4577,7 +4636,7 @@ This function for obtaining the list of all DNS templates available.
 
 list public dnssec key
 
-**Options**: `USER` `DOMAIN` `[FROMAT]`
+**Options**: `USER` `DOMAIN` `[FORMAT]`
 
 **Examples**:
 
@@ -5004,12 +5063,6 @@ list dnsbl config parameters
 
 **Options**: `[FORMAT]`
 
-**Examples**:
-
-```bash
-v-list-sys-mail-dnsbl
-```
-
 This function lists the active DNSBL servers used by Exim.
 
 ## v-list-sys-mail-status
@@ -5080,7 +5133,7 @@ listing available PHP versions installed
 
 **Options**: `[FORMAT]`
 
-List /etc/php/\* version check if folder fpm is available
+List /etc/php/* version check if folder fpm is available
 
 ## v-list-sys-php-config
 
@@ -5251,7 +5304,7 @@ v-list-user-backup admin admin.2019-05-19_03-31-30.tar
 ```
 
 This function of obtaining the list of backup parameters. This call, just as
-all v*list*\* calls, supports 3 formats - json, shell and plain.
+all v_list_* calls, supports 3 formats - json, shell and plain.
 
 ## v-list-user-backup-exclusions
 
@@ -5489,6 +5542,22 @@ v-list-web-domain-accesslog admin example.com
 
 This function of obtaining raw access web domain logs.
 
+## v-list-web-domain-backendtpl-all
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-web-domain-backendtpl-all)
+
+list all web domains grouped by backend template and owner
+
+**Options**: `[FORMAT]`
+
+**Examples**:
+
+```bash
+v-list-web-domain-backendtpl-all json
+```
+
+This command returns all web domains from all users grouped by the backend template in use and the domain owner.
+
 ## v-list-web-domain-errorlog
 
 [Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-web-domain-errorlog)
@@ -5603,6 +5672,23 @@ add user login
 Log User logout event
 
 **Options**: `USER` `FINGERPRINT`
+
+## v-move-firewall-rule
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-move-firewall-rule)
+
+change firewall rule
+
+**Options**: `RULE` `DIRECTION`
+
+**Examples**:
+
+```bash
+v-move-firewall-rule 4 up
+```
+
+This function is used for moving an existing firewall rule.
+Direction can be either "up" or "down".
 
 ## v-move-fs-directory
 
@@ -6297,7 +6383,7 @@ This function runs a limited list of cli commands with dropped privileges as the
 
 [Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-schedule-letsencrypt-domain)
 
-adding cronjob for letsencrypt cetificate installation
+adding cronjob for letsencrypt certificate installation
 
 **Options**: `USER` `DOMAIN` `[ALIASES]`
 
@@ -7277,7 +7363,7 @@ v-update-sys-hestia hestia-php
 ```
 
 This function runs as apt update trigger. It pulls shell script from hestia
-server and runs it. (hestia, hestia-nginx and hestia-php are valid options)
+server and runs it. (hestia, hestia-nginx, hestia-php and hestia-web-terminal are valid options)
 
 ## v-update-sys-hestia-all
 
@@ -7361,7 +7447,7 @@ update system rrd charts
 **Options**: –
 
 This function is wrapper for all rrd functions. It updates all
-v-update-sys-rrd\_\* at once.
+v-update-sys-rrd_* at once.
 
 ## v-update-sys-rrd-apache2
 
@@ -7503,7 +7589,7 @@ update user disk quota
 v-update-user-cgroup admin
 ```
 
-The functions upates cgroup, cpu, ram ,... for specific user
+The functions updates cgroup, cpu, ram ,... for specific user
 
 ## v-update-user-counters
 
@@ -7511,7 +7597,7 @@ The functions upates cgroup, cpu, ram ,... for specific user
 
 update user usage counters
 
-**Options**: `USER`
+**Options**: `[USER]`
 
 **Examples**:
 
@@ -7567,7 +7653,7 @@ update user disk quota
 v-update-user-quota alice
 ```
 
-The functions upates disk quota for specific user
+The functions updates disk quota for specific user
 
 ## v-update-user-stats
 
@@ -7575,7 +7661,7 @@ The functions upates disk quota for specific user
 
 update user statistics
 
-**Options**: `USER`
+**Options**: `[USER]`
 
 **Examples**:
 

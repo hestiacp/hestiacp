@@ -13,13 +13,13 @@
 # Argument definition
 user=$1
 snapshot=$2
-web=$3
-dns=$4
-mail=$5
-db=$6
-cron=$7
-udir=${8-yes}
-notify=${9-no}
+web=${3:-*}
+dns=${4:-*}
+mail=${5:-*}
+db=${6:-*}
+cron=${7:-yes}
+udir=${8:-yes}
+notify=${9:-no}
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -41,8 +41,8 @@ source_conf "$HESTIA/conf/hestia.conf"
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-args_usage='USER SNAPSHOT KEY [NOTIFY]'
-check_args '3' "$#" "$args_usage"
+args_usage='USER SNAPSHOT [WEB] [DNS] [MAIL] [DB] [CRON] [UDIR] [NOTIFY]'
+check_args '2' "$#" "$args_usage"
 is_format_valid 'user'
 is_object_valid 'user' 'USER' "$user"
 
@@ -52,7 +52,9 @@ source_conf $HESTIA/conf/restic.conf
 #                       Action                             #
 #----------------------------------------------------------#
 
-tmpdir=$(mktemp -p /home/$user/tmp/ -d)
+# Stage in root-owned $BACKUP, not the user's home, to avoid races
+# where the user swaps the tmp dir before root reads/writes it
+tmpdir=$(mktemp -p "${BACKUP_TEMP:-$BACKUP}" -d)
 if [ ! -f "$tmpdir/backup.conf" ]; then
 	restic --repo "${REPO%/}/$user" --password-file "$USER_DATA/restic.conf" dump "$snapshot" "/home/$user/backup/backup.conf" > "$tmpdir/backup.conf"
 	if [ "$?" -ne 0 ]; then
@@ -97,7 +99,7 @@ rebuild_user_conf
 rm -fr "$tmpdir"
 
 # Update user counters
-$BIN/v-update-user-counters $user
+$BIN/v-update-user-counters "$user"
 $BIN/v-update-user-counters "$ROOT_USER"
 $BIN/v-update-sys-ip-counters
 

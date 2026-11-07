@@ -503,6 +503,23 @@ function check_ip_not_banned(){
   assert_success
   refute_output
 }
+
+@test "User: Add user notification with XSS payload is sanitized" {
+  run v-add-user-notification $user "XSS test" "<p>safe</p><script>alert(document.cookie)</script><img src=x onerror=alert(1)>"
+  assert_success
+  refute_output
+
+  run v-list-user-notifications $user csv
+  assert_success
+  assert_output --partial '<p>safe</p>'
+  refute_output --partial '<script>'
+  refute_output --partial 'onerror'
+
+  run v-delete-user-notification $user 2
+  assert_success
+  refute_output
+}
+
 @test "User: Acknowledge user notification" {
   run v-acknowledge-user-notification $user 1
   assert_success
@@ -794,6 +811,25 @@ function check_ip_not_banned(){
     echo -e "<?php\necho 'Hestia Test:'.(4*3);" > $HOMEDIR/$user/web/$domain/public_html/php-test.php
     validate_web_domain $user $domain 'Hestia Test:12' 'php-test.php'
     rm $HOMEDIR/$user/web/$domain/public_html/php-test.php
+}
+
+@test "WEB: phpMyAdmin with Firefox User-Agent" {
+    # Regression test for https://github.com/hestiacp/hestiacp/issues/5617
+    # The Firefox UA matches the $ar_support_425 regex map. Before the
+    # named-capture fix in phpmyadmin.inc this returned 500 (fastcgi request
+    # length mismatch) instead of the login page.
+    local ip
+    local pma_alias="${DB_PMA_ALIAS:-phpmyadmin}"
+
+    USER_DATA=$HESTIA/data/users/$user
+    ip=$(get_real_ip "$(get_object_value 'web' 'DOMAIN' "$domain" '$IP')")
+
+    run curl --silent --output /dev/null --write-out '%{http_code}' \
+        --resolve "${domain}:80:${ip}" \
+        -A 'Mozilla/5.0 (X11; Linux x86_64; rv:144.0) Gecko/20100101 Firefox/144.0' \
+        "http://${domain}/${pma_alias}/"
+    assert_success
+    assert_output "200"
 }
 
 @test "WEB: Add web domain (duplicate)" {
@@ -1204,6 +1240,26 @@ function check_ip_not_banned(){
 	rm $HOMEDIR/$user/web/$multi_domain/public_html/php-test.php
 }
 
+@test "Multiphp: Change backend version - default" {
+	def_phpver=$(multiphp_default_version)
+	multi_domain="multiphp.${domain}"
+
+	run v-change-web-domain-backend-tpl $user $multi_domain 'default' 'yes'
+	assert_success
+	refute_output
+
+	# Changing web backend to default must create the pool config in the default php folder
+	assert_file_exist "/etc/php/${def_phpver}/fpm/pool.d/${multi_domain}.conf"
+
+	# A single php-fpm pool config file must be present
+	num_fpm_config_files="$(find -L /etc/php/ -name "${multi_domain}.conf" | wc -l)"
+	assert_equal "$num_fpm_config_files" '1'
+
+	echo -e "<?php\necho 'hestia-multiphptest:'.PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;" > "$HOMEDIR/$user/web/$multi_domain/public_html/php-test.php"
+	validate_web_domain $user $multi_domain "hestia-multiphptest:$def_phpver" 'php-test.php'
+	rm "$HOMEDIR/$user/web/$multi_domain/public_html/php-test.php"
+}
+
 @test "Multiphp: Cleanup" {
     multi_domain="multiphp.${domain}"
 
@@ -1431,13 +1487,25 @@ function check_ip_not_banned(){
 
 @test "DNS: Add domain record CNAME" {
     run v-delete-dns-record $user $domain 50
-    run v-add-dns-record $user $domain 'mail' CNAME mx.hestiacp.com  '' 50
+    run v-add-dns-record $user $domain 'mail' CNAME mx.hestiacp.com '' 50
+    assert_failure $E_INVALID
+
+    run v-add-dns-record $user $domain 'cname-test' CNAME mx.hestiacp.com '' 50
     assert_success
     refute_output
 
     assert_file_contains "$HOMEDIR/$user/conf/dns/${domain}.db" "mx.hestiacp.com."
 
+    run v-add-dns-record $user $domain 'cname-test' A "$ip"
+    assert_failure $E_INVALID
+
     run v-change-dns-record $user $domain 50 'mail' CNAME mx.hestia.com
+    assert_failure $E_INVALID
+
+    run v-change-dns-record $user $domain 50 'MAIL' cname mx.hestia.com
+    assert_failure $E_INVALID
+
+    run v-change-dns-record $user $domain 50 'cname-test' CNAME mx.hestia.com
     assert_success
     refute_output
 
@@ -1508,6 +1576,28 @@ function check_ip_not_banned(){
     run v-delete-dns-record $user $domain 50
     assert_success
     refute_output
+}
+
+@test "DNS: Check serial rollover from max 32-bit value to 1 (RFC 1982)" {
+	[ -z "$DNS_SYSTEM" ] && skip
+
+	USER_DATA=$HESTIA/data/users/$user
+	local zn_conf="$HOMEDIR/$user/conf/dns/${domain}.db"
+
+	# Seed the zone's current serial to the max unsigned 32-bit value so the
+	# next update has to wrap around per RFC 1982 (serial 0 is skipped, so it
+	# wraps to 1, not 0).
+	sed -i -E "0,/^[[:space:]]*[0-9]+[[:space:]]*\$/s//                                            4294967295/" "$zn_conf"
+	assert_file_contains "$zn_conf" "4294967295"
+
+	# Any DNS-mutating command runs update_domain_serial() as a side effect.
+	run v-change-dns-domain-ttl $user $domain 3600
+	assert_success
+	refute_output
+
+	run get_object_value 'dns' 'DOMAIN' "$domain" '$SERIAL'
+	assert_success
+	assert_output "0000000001"
 }
 
 @test "DNS: Change domain ip" {
@@ -1741,6 +1831,24 @@ function check_ip_not_banned(){
     run grep "RECORD='mail._domainkey'" "${HESTIA}/data/users/${user}/dns/${domain}.conf"
     assert_success
     assert_output  --partial "RECORD='mail._domainkey' TYPE='TXT'"
+}
+
+@test "MAIL: Add DKIM with custom selector" {
+    run v-delete-mail-domain-dkim $user $domain
+    assert_success
+    refute_output
+
+    run v-add-mail-domain-dkim $user $domain '' hestia
+    assert_success
+    refute_output
+
+    run grep "RECORD='hestia._domainkey'" "${HESTIA}/data/users/${user}/dns/${domain}.conf"
+    assert_success
+    assert_output --partial "RECORD='hestia._domainkey' TYPE='TXT'"
+
+    run grep "RECORD='mail._domainkey'" "${HESTIA}/data/users/${user}/dns/${domain}.conf"
+    assert_failure
+    refute_output
 }
 
 @test "MAIL: Delete DKIM but preserve custom dkim records" {
@@ -2242,6 +2350,280 @@ echo   "1.2.3.4" >> $HESTIA/data/firewall/excludes.conf
 }
 
 #----------------------------------------------------------#
+#                  Backup exclusions                       #
+#----------------------------------------------------------#
+
+@test "Backup Exclusions: Domain with subpaths is allowed" {
+  echo "WEB='$domain:public_html/cache/:public_html/tmp/'
+DNS=''
+MAIL=''
+DB=''
+CRON=''
+USER=''" > /tmp/backup_exclusions_valid
+  run v-update-user-backup-exclusions $user /tmp/backup_exclusions_valid
+  assert_success
+  rm -f /tmp/backup_exclusions_valid
+
+  run v-list-user-backup-exclusions $user shell
+  assert_success
+  assert_output --partial "$domain:public_html/cache/:public_html/tmp/"
+}
+
+@test "Backup Exclusions: Wildcard for all is allowed" {
+  echo "WEB='*'
+DNS=''
+MAIL=''
+DB=''
+CRON=''
+USER=''" > /tmp/backup_exclusions_wildcard
+  run v-update-user-backup-exclusions $user /tmp/backup_exclusions_wildcard
+  assert_success
+  rm -f /tmp/backup_exclusions_wildcard
+
+  run v-list-user-backup-exclusions $user shell
+  assert_success
+  assert_output --partial "WEB:            *"
+}
+
+@test "Backup Exclusions: Mail domain with mailbox exclusions is allowed" {
+  echo "WEB=''
+DNS=''
+MAIL='$domain:info:support'
+DB=''
+CRON=''
+USER=''" > /tmp/backup_exclusions_mail
+  run v-update-user-backup-exclusions $user /tmp/backup_exclusions_mail
+  assert_success
+  rm -f /tmp/backup_exclusions_mail
+
+  run v-list-user-backup-exclusions $user shell
+  assert_success
+  assert_output --partial "$domain:info:support"
+}
+
+@test "Backup Exclusions: Database name is allowed" {
+  echo "WEB=''
+DNS=''
+MAIL=''
+DB='$database'
+CRON=''
+USER=''" > /tmp/backup_exclusions_db
+  run v-update-user-backup-exclusions $user /tmp/backup_exclusions_db
+  assert_success
+  rm -f /tmp/backup_exclusions_db
+
+  run v-list-user-backup-exclusions $user shell
+  assert_success
+  assert_output --partial "$database"
+}
+
+@test "Backup Exclusions: Database entry with domain-style colon is rejected" {
+  echo "WEB=''
+DNS=''
+MAIL=''
+DB='$database:cache'
+CRON=''
+USER=''" > /tmp/backup_exclusions_db_invalid
+  run v-update-user-backup-exclusions $user /tmp/backup_exclusions_db_invalid
+  assert_failure $E_INVALID
+  rm -f /tmp/backup_exclusions_db_invalid
+}
+
+@test "Backup Exclusions: User directory name is allowed" {
+  echo "WEB=''
+DNS=''
+MAIL=''
+DB=''
+CRON=''
+USER='backups/old'" > /tmp/backup_exclusions_userdir
+  run v-update-user-backup-exclusions $user /tmp/backup_exclusions_userdir
+  assert_success
+  rm -f /tmp/backup_exclusions_userdir
+
+  run v-list-user-backup-exclusions $user shell
+  assert_success
+  assert_output --partial "backups/old"
+}
+
+@test "Backup Exclusions: User directory with domain-style colon is rejected" {
+  echo "WEB=''
+DNS=''
+MAIL=''
+DB=''
+CRON=''
+USER='$domain:cache'" > /tmp/backup_exclusions_userdir_invalid
+  run v-update-user-backup-exclusions $user /tmp/backup_exclusions_userdir_invalid
+  assert_failure $E_INVALID
+  rm -f /tmp/backup_exclusions_userdir_invalid
+}
+
+@test "Backup Exclusions: DNS bare domain is allowed" {
+  echo "WEB=''
+DNS='$domain'
+MAIL=''
+DB=''
+CRON=''
+USER=''" > /tmp/backup_exclusions_dns
+  run v-update-user-backup-exclusions $user /tmp/backup_exclusions_dns
+  assert_success
+  rm -f /tmp/backup_exclusions_dns
+}
+
+@test "Backup Exclusions: DNS with colon segment is rejected (no record-level exclusion exists)" {
+  echo "WEB=''
+DNS='$domain:record1'
+MAIL=''
+DB=''
+CRON=''
+USER=''" > /tmp/backup_exclusions_dns_invalid
+  run v-update-user-backup-exclusions $user /tmp/backup_exclusions_dns_invalid
+  assert_failure $E_INVALID
+  rm -f /tmp/backup_exclusions_dns_invalid
+}
+
+@test "Backup Exclusions: CRON wildcard is allowed" {
+  echo "WEB=''
+DNS=''
+MAIL=''
+DB=''
+CRON='*'
+USER=''" > /tmp/backup_exclusions_cron
+  run v-update-user-backup-exclusions $user /tmp/backup_exclusions_cron
+  assert_success
+  rm -f /tmp/backup_exclusions_cron
+
+  run v-list-user-backup-exclusions $user shell
+  assert_success
+  assert_output --partial "CRON:           *"
+}
+
+@test "Backup Exclusions: CRON non-wildcard value is rejected (no per-job exclusion exists)" {
+  echo "WEB=''
+DNS=''
+MAIL=''
+DB=''
+CRON='some-job'
+USER=''" > /tmp/backup_exclusions_cron_invalid
+  run v-update-user-backup-exclusions $user /tmp/backup_exclusions_cron_invalid
+  assert_failure $E_INVALID
+  rm -f /tmp/backup_exclusions_cron_invalid
+}
+
+@test "Backup Exclusions: Embedded newline / PATH injection is rejected" {
+  printf "WEB='domain1.test\nPATH=/tmp/fakebin:/usr/local/hestia/bin\nMARKER_END'\n" > /tmp/backup_exclusions_path
+  run v-update-user-backup-exclusions $user /tmp/backup_exclusions_path
+  assert_failure $E_INVALID
+  rm -f /tmp/backup_exclusions_path
+}
+
+@test "Backup Exclusions: Path traversal is rejected" {
+  echo "WEB='$domain:public_html/../../../etc'
+DNS=''
+MAIL=''
+DB=''
+CRON=''
+USER=''" > /tmp/backup_exclusions_traversal
+  run v-update-user-backup-exclusions $user /tmp/backup_exclusions_traversal
+  assert_failure $E_INVALID
+  rm -f /tmp/backup_exclusions_traversal
+}
+
+@test "Backup Exclusions: Leading dash (tar flag injection) is rejected" {
+  echo "WEB='$domain:--checkpoint=1'
+DNS=''
+MAIL=''
+DB=''
+CRON=''
+USER=''" > /tmp/backup_exclusions_dash
+  run v-update-user-backup-exclusions $user /tmp/backup_exclusions_dash
+  assert_failure $E_INVALID
+  rm -f /tmp/backup_exclusions_dash
+}
+
+@test "Backup Exclusions: Unknown key is rejected" {
+  echo "WEB=''
+EVIL='x'" > /tmp/backup_exclusions_unknownkey
+  run v-update-user-backup-exclusions $user /tmp/backup_exclusions_unknownkey
+  assert_failure $E_INVALID
+  rm -f /tmp/backup_exclusions_unknownkey
+}
+
+@test "Backup Exclusions: Clean up" {
+  run v-delete-user-backup-exclusions $user
+  assert_success
+}
+
+#----------------------------------------------------------#
+#                       Suspend user                       #
+#----------------------------------------------------------#
+
+# Needed for testing suspension of users and for changing ownership of databases
+@test "Suspend: Add database" {
+    run v-add-database $user database dbuser 1234 mysql
+    assert_success
+    refute_output
+    # validate_database mysql database_name database_user password
+    validate_database mysql $database $dbuser 1234
+}
+
+@test "Suspend: Suspend user" {
+    run v-suspend-user $user
+    assert_success
+}
+
+@test "Suspend: Check if login is disabled" {
+    run v-get-user-salt $user
+    assert_failure $E_SUSPENDED
+}
+
+@test "Suspend: Check if web domain is disabled" {
+    run v-list-web-domain $user $domain
+    assert_success
+    assert_output --regexp "SUSPENDED:[[:space:]]+yes"
+}
+
+@test "Suspend: Check if mail domain is disabled" {
+    run v-list-mail-domain $user $domain
+    assert_success
+    assert_output --regexp "SUSPENDED:[[:space:]]+yes"
+}
+
+@test "Suspend: Check if database is disabled" {
+    run v-list-database $user $database
+    assert_success
+    assert_output --regexp "SUSPENDED:[[:space:]]+yes"
+}
+
+@test "Unsuspend: Unsuspend user" {
+    run v-unsuspend-user $user
+    assert_success
+}
+
+@test "Unsuspend: Check if login is enabled" {
+    run v-get-user-salt $user
+    assert_success
+}
+
+@test "Unsuspend: Check if web domain is enabled" {
+    run v-list-web-domain $user $domain
+    assert_success
+    assert_output --regexp "SUSPENDED:[[:space:]]+no"
+}
+
+@test "Unsuspend: Check if mail domain is enabled" {
+    run v-list-mail-domain $user $domain
+    assert_success
+    assert_output --regexp "SUSPENDED:[[:space:]]+no"
+}
+
+@test "Unsuspend: Check if database is enabled" {
+    run v-list-database $user $database
+    assert_success
+    assert_output --regexp "SUSPENDED:[[:space:]]+no"
+}
+
+
+#----------------------------------------------------------#
 #                  Change owner scripts                    #
 #----------------------------------------------------------#
 
@@ -2252,14 +2634,6 @@ echo   "1.2.3.4" >> $HESTIA/data/firewall/excludes.conf
     run v-restart-web
     run v-restart-proxy
 
-}
-
-@test "Change: Add database" {
-    run v-add-database $user database dbuser 1234 mysql
-    assert_success
-    refute_output
-    # validate_database mysql database_name database_user password
-    validate_database mysql $database $dbuser 1234
 }
 
 @test "Change: Change database owner" {
@@ -2307,8 +2681,6 @@ echo   "1.2.3.4" >> $HESTIA/data/firewall/excludes.conf
     assert_success
     refute_output
 }
-
-
 
 @test "Ip: Delete the test IP" {
     run v-delete-sys-ip 198.18.0.125

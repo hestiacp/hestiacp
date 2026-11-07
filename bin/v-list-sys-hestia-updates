@@ -114,6 +114,21 @@ data="$data\nNAME='hestia-nginx' VERSION='$VERSION'"
 data="$data ARCH='$ARCH' UPDATED='$UPDATED' DESCR='Hestia internal web server'"
 data="$data TIME='$TIME' DATE='$DATE'"
 
+# Checking installed hestia-web-terminal version
+if dpkg-query -W -f='${Status}' hestia-web-terminal 2> /dev/null | grep -q "ok installed"; then
+	terminal_v=$(apt-cache policy hestia-web-terminal | grep Candidate | cut -d ':' -f 2 | xargs)
+	check_installed_deb hestia-web-terminal
+
+	UPDATED='yes'
+	if [ -n "$terminal_v" ] && [ "$terminal_v" \> "$VERSION" ]; then
+		UPDATED='no'
+	fi
+
+	data="$data\nNAME='hestia-web-terminal' VERSION='$VERSION'"
+	data="$data ARCH='$ARCH' UPDATED='$UPDATED' DESCR='Hestia web terminal'"
+	data="$data TIME='$TIME' DATE='$DATE'"
+fi
+
 # Listing data
 case $format in
 	json) json_list ;;

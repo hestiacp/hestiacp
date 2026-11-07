@@ -77,7 +77,7 @@ ionice -c2 -n7 nice -n 19 restic --repo "${REPO%/}/$user" --limit-upload 10240 -
 
 if [ $? -ne 0 ]; then
 	echo "Unable to create the backup" | $SENDMAIL -s "$subj" "$email" "yes"
-	check_result $E_BACKUP "Unable to backup user"
+	check_result "$E_BACKUP" "Unable to backup user"
 fi
 
 if [[ -n "$SNAPSHOTS" && "$SNAPSHOTS" -ge 0 ]]; then

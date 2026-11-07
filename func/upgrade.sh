@@ -546,8 +546,13 @@ upgrade_start_routine() {
 upgrade_b2_tool() {
 	b2cli="/usr/local/bin/b2"
 	b2lnk="https://github.com/Backblaze/B2_Command_Line_Tool/releases/download/v$b2_v/b2-linux"
+	# Backblaze publishes a separate build for arm64
+	if [ "$(uname -m)" = "aarch64" ]; then
+		b2lnk="$b2lnk-aarch64"
+	fi
 	if [ -f "$b2cli" ]; then
-		b2_version=$($b2cli version | grep -o -E '[0-9].[0-9].[0-9]+' | head -1)
+		# A binary for the wrong architecture returns no version, so it gets replaced
+		b2_version=$($b2cli version 2> /dev/null | grep -o -E '[0-9].[0-9].[0-9]+' | head -1)
 		if version_ge "$b2_version" "$b2_v"; then
 			echo "[ * ] Backblaze CLI tool is up to date ($b2_v)..."
 		else
@@ -591,7 +596,7 @@ upgrade_cloudflare_ip() {
 upgrade_phppgadmin() {
 	if [ -n "$(echo $DB_SYSTEM | grep -w 'pgsql')" ]; then
 		pga_release=$(cat /usr/share/phppgadmin/libraries/lib.inc.php | grep appVersion | head -n1 | cut -f2 -d\' | cut -f1 -d-)
-		if version_ge "$pga_release" "pga_v"; then
+		if version_ge "$pga_release" "$pga_v"; then
 			echo "[ * ] phppgadmin is up to date ($pga_release)..."
 		else
 			# Display upgrade information
@@ -714,17 +719,18 @@ upgrade_roundcube() {
 			echo "[ ! ] Roundcube: Updates are currently managed using the apt package manager"
 			echo "      To upgrade to the latest version of Roundcube directly from upstream, from please run the command migrate_roundcube.sh located in: /usr/local/hestia/install/upgrade/manual/"
 		else
-			rc_version=$(cat /var/lib/roundcube/index.php | grep -o -E '[0-9].[0-9].[0-9]+' | head -1)
-			if ! version_ge "$rc_version" "$rc_v"; then
-				echo "[ ! ] Upgrading Roundcube to version $rc_v..."
-				$BIN/v-add-sys-roundcube
-			else
-				echo "[ * ] Roundcube is up to date ($rc_v)..."
+			if [[ -f "/var/lib/roundcube/program/include/iniset.php" ]]; then
+				rc_version="$(grep RCMAIL_VERSION /var/lib/roundcube/program/include/iniset.php | cut -d "'" -f 4)"
+				if ! version_ge "$rc_version" "$rc_v"; then
+					echo "[ ! ] Upgrading Roundcube to version $rc_v..."
+					"$BIN"/v-add-sys-roundcube || echo "[ ! ] Error upgrading Roundcube $rc_v"
+				else
+					echo "[ * ] Roundcube is up to date ($rc_v)..."
+				fi
 			fi
 		fi
 	fi
 }
-
 upgrade_snappymail() {
 	if [ -n "$(echo "$WEBMAIL_SYSTEM" | grep -w 'snappymail')" ]; then
 		sm_version=$(cat /var/lib/snappymail/data/VERSION)

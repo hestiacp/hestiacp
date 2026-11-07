@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Hestia\WebApp\Installers\Joomla;
 
-use Hestia\System\Util;
 use Hestia\WebApp\BaseSetup;
 use Hestia\WebApp\InstallationTarget\InstallationTarget;
 
@@ -12,7 +11,7 @@ class JoomlaSetup extends BaseSetup {
     protected array $info = [
         "name" => "Joomla",
         "group" => "cms",
-        "version" => "6.1.1",
+        "version" => "6.2.0",
         "thumbnail" => "joomla-logo.svg",
     ];
 
@@ -24,7 +23,7 @@ class JoomlaSetup extends BaseSetup {
             ],
             "admin_user" => [
                 "type" => "text",
-                "value" => "John",
+                "value" => "",
             ],
             "admin_username" => [
                 "type" => "text",
@@ -43,7 +42,7 @@ class JoomlaSetup extends BaseSetup {
         "resources" => [
             "archive" => [
                 "src" =>
-                    "https://downloads.joomla.org/cms/joomla6/6-1-1/Joomla_6-1-1-Stable-Full_Package.zip?format=zip",
+                    "https://downloads.joomla.org/cms/joomla6/6-2-0/Joomla_6-2-0-Stable-Full_Package.zip?format=zip",
             ],
         ],
         "server" => [
@@ -51,7 +50,7 @@ class JoomlaSetup extends BaseSetup {
                 "template" => "joomla",
             ],
             "php" => [
-                "supported" => ["8.3", "8.4"],
+                "supported" => ["8.3", "8.4", "8.5"],
             ],
         ],
     ];

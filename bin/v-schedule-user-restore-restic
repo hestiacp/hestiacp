@@ -29,7 +29,21 @@ source_conf "$HESTIA/conf/hestia.conf"
 #----------------------------------------------------------#
 
 check_args '2' "$#" 'USER SNAPSHOT OBJECT VALUE'
-is_format_valid 'user'
+is_format_valid 'user' 'snapshot'
+if [ "$object" = "file" ]; then
+	if [ -z "$value" ] || [[ "$value" == *, ]] || [[ "$value" == ,* ]] || [[ "$value" == *,,* ]]; then
+		check_result "$E_INVALID" "Invalid value format :: $value"
+	fi
+	IFS=',' read -r -a file_list <<< "$value"
+	for file_path in "${file_list[@]}"; do
+		is_dir_path_format_valid "$file_path" 'value'
+		if [[ "$file_path" != "/home/$user/"?* ]] || [[ "$file_path" == "/home/$user/conf" ]] || [[ "$file_path" == "/home/$user/conf/"* ]]; then
+			check_result "$E_INVALID" "Invalid value format :: $value"
+		fi
+	done
+else
+	is_format_valid 'value'
+fi
 is_system_enabled "$BACKUP_SYSTEM" 'BACKUP_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_backup_scheduled 'restore'
@@ -37,14 +51,27 @@ is_backup_scheduled 'restore'
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
+source_conf $HESTIA/conf/restic.conf
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
 log=$HESTIA/log/restore.log
 
+#Verify if snapshot / repo exists
+# Stage in root-owned $BACKUP, not the user's home, to avoid races
+# where the user swaps the tmp dir before root reads/writes it
+tmpdir=$(mktemp -p "${BACKUP_TEMP:-$BACKUP}" -d)
+# Check if snapshot exists
+restic --repo "${REPO%/}/$user" --password-file "$USER_DATA/restic.conf" dump "$snapshot" "/home/$user/backup/backup.conf" > "$tmpdir/backup.conf"
+if [ "$?" -ne 0 ]; then
+	rm -fr "$tmpdir"
+	check_result "$E_NOTEXIST" "Unable to download from snapshot"
+fi
+rm -fr "$tmpdir"
+
 if [ -z "$object" ]; then
-	echo "$BIN/v-restore-user-restic '$user' '$snapshot' '' '' '' '' '' '' 'yes' >> $log 2>&1" >> $HESTIA/data/queue/backup.pipe
+	echo "$BIN/v-restore-user-restic '$user' '$snapshot' '*' '*' '*' '*' 'yes' 'yes' 'yes' >> $log 2>&1" >> $HESTIA/data/queue/backup.pipe
 else
 	if [ "$object" = "web" ]; then
 		echo "$BIN/v-restore-web-domain-restic '$user' '$snapshot' '$value' 'yes' >> $log 2>&1" >> $HESTIA/data/queue/backup.pipe
@@ -55,7 +82,9 @@ else
 	elif [ "$object" = "db" ]; then
 		echo "$BIN/v-restore-database-restic '$user' '$snapshot' '$value' 'yes' >> $log 2>&1" >> $HESTIA/data/queue/backup.pipe
 	elif [ "$object" = "cron" ]; then
-		echo "$BIN/v-restore-cron-restic '$user' '$snapshot' 'yes' >> $log 2>&1" >> $HESTIA/data/queue/backup.pipe
+		echo "$BIN/v-restore-cron-job-restic '$user' '$snapshot' 'yes' >> $log 2>&1" >> $HESTIA/data/queue/backup.pipe
+	elif [ "$object" = "file" ]; then
+		echo "$BIN/v-restore-file-restic '$user' '$snapshot' '$value' 'yes' >> $log 2>&1" >> $HESTIA/data/queue/backup.pipe
 	else
 		check_result "$E_INVALID" "Not supported"
 	fi

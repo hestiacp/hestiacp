@@ -7,30 +7,27 @@ $TAB = "USER";
 // Main include
 include $_SERVER["DOCUMENT_ROOT"] . "/inc/main.php";
 
-// Check user argument
-if (empty($_GET["user"])) {
-	header("Location: /list/user/");
+if (empty($_SESSION["user"])) {
+	header("Location: /login/");
 	exit();
 }
 
-// Edit as someone else?
-if ($_SESSION["userContext"] === "admin" && !empty($_GET["user"])) {
-	$user = $_GET["user"];
-	$v_username = $_GET["user"];
+if ($_SESSION["userContext"] === "admin" && $_SESSION["look"] !== "") {
+	$user = $_SESSION["look"];
 } else {
 	$user = $_SESSION["user"];
-	$v_username = $_SESSION["user"];
 }
 
-// Prevent other users with admin privileges from editing properties of default 'admin' user
+$v_username = $user;
+
+// Prevent other users with admin privileges from editing properties of the ROOT_USER account.
+// Only a session whose real logged-in user IS the ROOT_USER may edit it,
+// regardless of impersonation state ($_SESSION["look"] is always set by main.php).
 if (
-	($_SESSION["userContext"] === "admin" &&
-		$_SESSION["look"] != "" &&
-		$user == $_SESSION["ROOT_USER"]) ||
-	($_SESSION["userContext"] === "admin" &&
-		!isset($_SESSION["look"]) &&
-		$user == "admin" &&
-		$_SESSION["user"] != $_SESSION["ROOT_USER"])
+	$_SESSION["userContext"] === "admin" &&
+	!empty($_SESSION["ROOT_USER"]) &&
+	$user === $_SESSION["ROOT_USER"] &&
+	$_SESSION["user"] !== $_SESSION["ROOT_USER"]
 ) {
 	header("Location: /list/user/");
 	exit();
@@ -149,9 +146,20 @@ $php_versions = json_decode(implode("", $output), true);
 unset($output);
 
 // Check POST request
-if (!empty($_POST["save"])) {
+if (!empty($_POST["save"]) && $read_only !== true) {
 	// Check token
 	verify_csrf($_POST);
+
+	// A non-ROOT_USER admin must never modify the ROOT_USER account
+	if (
+		$_SESSION["userContext"] === "admin" &&
+		!empty($_SESSION["ROOT_USER"]) &&
+		$v_username === $_SESSION["ROOT_USER"] &&
+		$_SESSION["user"] !== $_SESSION["ROOT_USER"]
+	) {
+		header("Location: /list/user/");
+		exit();
+	}
 
 	// Change password
 	if (!empty($_POST["v_password"]) && empty($_SESSION["error_msg"])) {
@@ -350,7 +358,7 @@ if (!empty($_POST["save"])) {
 		if (
 			$v_role != $_POST["v_role"] &&
 			$_SESSION["userContext"] === "admin" &&
-			$v_username != "admin" &&
+			$v_username != $_SESSION["ROOT_USER"] &&
 			empty($_SESSION["error_msg"])
 		) {
 			if (!empty($_POST["v_role"])) {
@@ -403,6 +411,7 @@ if (!empty($_POST["save"])) {
 				$_SESSION["language"] = $_POST["v_language"];
 				$refresh = $_SERVER["REQUEST_URI"];
 				header("Location: $refresh");
+				exit();
 			}
 		}
 		unset($output);

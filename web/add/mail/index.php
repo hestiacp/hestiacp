@@ -30,7 +30,7 @@ if (!empty($v_domain)) {
 }
 
 // Check POST request for mail domain
-if (!empty($_POST["ok"])) {
+if (!empty($_POST["ok"]) && $read_only !== true) {
 	// Check token
 	verify_csrf($_POST);
 
@@ -70,6 +70,8 @@ if (!empty($_POST["ok"])) {
 		$v_dkim = "no";
 	}
 
+	$v_dkim_selector = !empty($_POST["v_dkim_selector"]) ? $_POST["v_dkim_selector"] : "mail";
+
 	// Set domain name to lowercase and remove www prefix
 	$v_domain = preg_replace("/^www./i", "", $_POST["v_domain"]);
 	$v_domain = quoteshellarg($v_domain);
@@ -88,7 +90,9 @@ if (!empty($_POST["ok"])) {
 				" " .
 				$v_antivirus .
 				" " .
-				$v_dkim,
+				$v_dkim .
+				" 2048 '' '' " .
+				quoteshellarg($v_dkim_selector),
 			$output,
 			$return_var,
 		);
@@ -153,12 +157,16 @@ if (!empty($_POST["ok"])) {
 				$v_smtp_relay = true;
 				$v_smtp_relay_host = quoteshellarg($_POST["v_smtp_relay_host"]);
 				$v_smtp_relay_user = quoteshellarg($_POST["v_smtp_relay_user"]);
-				$v_smtp_relay_pass = quoteshellarg($_POST["v_smtp_relay_pass"]);
 				if (!empty($_POST["v_smtp_relay_port"])) {
 					$v_smtp_relay_port = quoteshellarg($_POST["v_smtp_relay_port"]);
 				} else {
 					$v_smtp_relay_port = "587";
 				}
+				//create a tmp file
+				$v_smtp_relay_password = tempnam("/tmp", "vst");
+				$fp = fopen($v_smtp_relay_password, "w");
+				fwrite($fp, $_POST["v_smtp_relay_pass"] . "\n");
+				fclose($fp);
 				exec(
 					HESTIA_CMD .
 						"v-add-mail-domain-smtp-relay " .
@@ -170,7 +178,7 @@ if (!empty($_POST["ok"])) {
 						" " .
 						$v_smtp_relay_user .
 						" " .
-						$v_smtp_relay_pass .
+						$v_smtp_relay_password .
 						" " .
 						$v_smtp_relay_port,
 					$output,
@@ -197,7 +205,7 @@ if (!empty($_POST["ok"])) {
 }
 
 // Check POST request for mail account
-if (!empty($_POST["ok_acc"])) {
+if (!empty($_POST["ok_acc"]) && $read_only !== true) {
 	// Check token
 	if (!isset($_POST["token"]) || $_SESSION["token"] != $_POST["token"]) {
 		header("location: /login/");

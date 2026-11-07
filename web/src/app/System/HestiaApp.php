@@ -180,7 +180,7 @@ class HestiaApp
         }
     }
 
-    public function sendPostRequest($url, array $formData, array $headers = []): void
+    public function sendPostRequest($url, array $formData, array $headers = [], string $resolve = ''): void
     {
         $ch = curl_init($url);
 
@@ -192,6 +192,10 @@ class HestiaApp
 
         if ($headers !== []) {
             curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        }
+        # When behind a NAT the server might not be able to resolve the domain name to the correct IP address.
+        if ($resolve) {
+            curl_setopt($ch, CURLOPT_RESOLVE, [$resolve]);
         }
 
         curl_exec($ch);
@@ -261,11 +265,16 @@ class HestiaApp
     {
         try {
             $result = $this->runUser('v-list-user', ['json']);
-
             $userInfo = $result->getOutputJson()[$this->user()];
 
-            return $userInfo['DATABASES'] === 'unlimited' ||
-                $userInfo['DATABASES'] - $userInfo['U_DATABASES'] < 1;
+            if ($userInfo['DATABASES'] === 'unlimited') {
+                return true;
+            }
+
+            $limit = (int) $userInfo['DATABASES'];
+            $used  = (int) $userInfo['U_DATABASES'];
+
+            return ($limit - $used) > 0;
         } catch (ProcessFailedException) {
             throw new RuntimeException('Unable to check database limit');
         }
@@ -377,10 +386,14 @@ class HestiaApp
         try {
             return $this->runUser('v-run-cli-cmd', $phpCommand);
         } catch (ProcessFailedException $exception) {
+            $process = $exception->getProcess();
+            $output = trim($process->getOutput());
+
             throw new RuntimeException(
                 sprintf(
-                    'Failed to run php command "%s"',
-                    $exception->getProcess()->getCommandLine(),
+                    'Failed to run php command "%s"%s',
+                    $process->getCommandLine(),
+                    $output !== '' ? ': ' . $output : '',
                 ),
             );
         }

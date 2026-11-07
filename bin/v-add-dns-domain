@@ -135,7 +135,7 @@ if [ -z $ns2 ]; then
 fi
 soa="$ns1"
 exp=$(date +%F -d "+ 1 year")
-serial=$(date +'%Y%m%d01')
+serial=3000000000
 ttl=14400
 
 # Reading template

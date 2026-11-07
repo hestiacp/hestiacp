@@ -29,7 +29,7 @@ If you have just set up your slave, check that the host name resolves and that y
 
 ## DNS Cluster setup
 
-A Master server is where DNS zones are created, and a Slave server recieves the zone via the API. Hestia can be configured as Master <-> Master or Master -> Slave. With a Master <-> Master configuration, each Master is also a Slave, so it could be considered as Master/Slave <-> Master/Slave.
+A Master server is where DNS zones are created, and a Slave server receives the zone via the API. Hestia can be configured as Master <-> Master or Master -> Slave. With a Master <-> Master configuration, each Master is also a Slave, so it could be considered as Master/Slave <-> Master/Slave.
 
 On each Slave server, a unique user is required who will be assigned the zones, and must be assigned the "Sync DNS User" or "dns-cluster" role.
 
@@ -162,7 +162,7 @@ To view the public key. Got to the list DNS domains and click the <i class="fas 
 Depending on your registrar, you will either be able to create a new record based on the DNSKEY or based on DS key. After the DNSSEC public key has been added to the registrar, DNSSEC is enabled and live.
 
 ::: danger
-Removing or disabling the private key in Hestia will make the domain inaccessble.
+Removing or disabling the private key in Hestia will make the domain inaccessible.
 :::
 
 ## FAQ & troubleshooting

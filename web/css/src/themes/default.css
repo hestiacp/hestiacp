@@ -1,4 +1,4 @@
-@import url("node:xterm/css/xterm.css");
+@import url("node:@xterm/xterm/css/xterm.css");
 @import url("node:normalize.css/normalize.css");
 @import url("node:@fortawesome/fontawesome-free/css/fontawesome");
 @import url("node:@fortawesome/fontawesome-free/css/solid");
@@ -1151,7 +1151,8 @@
 	}
 
 	& .fas {
-		padding: 5px 5px 5px 10px;
+		padding: 5px 0;
+		margin: 0 5px 0 10px;
 		font-size: 0.9rem;
 	}
 
@@ -1162,6 +1163,7 @@
 		& .fas {
 			color: silver;
 			padding: 4px;
+			margin: 0;
 		}
 	}
 }

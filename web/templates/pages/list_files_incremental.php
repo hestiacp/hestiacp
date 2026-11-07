@@ -2,7 +2,7 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<?php if ($read_only !== "true") { ?>
+			<?php if ($read_only !== true) { ?>
 			<?php if(str_starts_with($files[0]['path'],'/home/'.$user_plain) && $files[0]['path'] != '/home/'.$user_plain ){
 			?>
 			<a class="button button-secondary" id="btn-back" href="/list/backup/incremental/?<?= tohtml(http_build_query(["snapshot" => $_GET["snapshot"], "browse" => "yes", "folder" => $files[0]["path"] . "/../", "token" => $_SESSION["token"]])) ?>"><i class="fas fa-arrow-left icon-blue"></i><?= tohtml( _("Back")) ?></a>
@@ -15,13 +15,13 @@
 			<?php } ?>
 		</div>
 		<div class="toolbar-right">
-					<?php if ($read_only !== "true") { ?>
-						<form x-data x-bind="BulkEdit" action="/bulk/restore/" method="post">
-							<input type="hidden" name="backup" value="<?= tohtml($_GET["snapshot"]) ?>">
+					<?php if ($read_only !== true) { ?>
+						<form x-data x-bind="BulkEdit" action="/bulk/restore/incremental/" method="post">
+							<input type="hidden" name="snapshot" value="<?= tohtml($_GET["snapshot"]) ?>">
 							<input type="hidden" name="token" value="<?= tohtml($_SESSION["token"]) ?>">
 						<select class="form-select" name="action">
 							<option value=""><?= tohtml( _("Apply to selected")) ?></option>
-							<option value="delete"><?= tohtml( _("Restore Files")) ?></option>
+							<option value="restore"><?= tohtml( _("Restore Files")) ?></option>
 						</select>
 						<button type="submit" class="toolbar-input-submit" title="<?= tohtml( _("Apply to selected")) ?>">
 							<i class="fas fa-arrow-right"></i>
@@ -55,6 +55,7 @@
 			<div class="units-table-cell u-text-center"><?= tohtml( _("Date")) ?></div>
 		</div>
 		<?php
+		$i = 0;
 		foreach($files as $file){
 			if($file['path'] != '/home/'.$user_plain){
 				if($file['path'] != '/home/'.$user_plain && $file['path'] == $files[0]['path']){
@@ -78,17 +79,20 @@
 					</div>
 				<?php
 					}else{
+						++$i;
 				?>
 					<div class="units-table-row js-unit">
 						<div class="units-table-cell">
 							<div>
-								<input id="check<?= tohtml($i) ?>" class="ch-toggle" type="checkbox" name="files[]" value="<?=htmlentities($file['path'])?>">
+								<?php if ($file["path"] !== "/home/" . $user_plain . "/conf" && !str_starts_with($file["path"], "/home/" . $user_plain . "/conf/")) { ?>
+								<input id="check<?= tohtml($i) ?>" class="js-unit-checkbox" type="checkbox" name="file[]" value="<?= tohtml($file["path"]) ?>">
+								<?php } ?>
 							</div>
 						</div>
 						<div class="units-table-cell">
 							<div>
 								<?php if($file['type'] == 'dir'){
-									if(str_starts_with($file['path'], '/home/'.$user_plain.'/conf')){
+									if ($file["path"] === "/home/" . $user_plain . "/conf" || str_starts_with($file["path"], "/home/" . $user_plain . "/conf/")) {
 								?>
 								<b><i class="fas fa-folder icon-dim u-mr5"></i><?= tohtml($file['name']) ?></b>
 								<?php
@@ -105,9 +109,11 @@
 							</div>
 						</div>
 						<div class="units-table-cell">
+							<?php if ($file["path"] !== "/home/" . $user_plain . "/conf" && !str_starts_with($file["path"], "/home/" . $user_plain . "/conf/")) { ?>
 							<a href="/schedule/restore/incremental/?<?= tohtml(http_build_query(["snapshot" => $_GET["snapshot"], "type" => "file", "object" => $file["path"], "token" => $_SESSION["token"]])) ?>" title="<?= tohtml( _("Restore")) ?>">
 								<i class="fas fa-arrow-rotate-left icon-green icon-dim u-mr5"></i>
 							</a>
+							<?php } ?>
 						</div>
 						<div class="units-table-cell">
 							<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Type")) ?>:</span>

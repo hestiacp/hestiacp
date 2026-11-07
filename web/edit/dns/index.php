@@ -92,7 +92,12 @@ if (!empty($_GET["domain"]) && !empty($_GET["record_id"])) {
 }
 
 // Check POST request for dns domain
-if (!empty($_POST["save"]) && !empty($_GET["domain"]) && empty($_GET["record_id"])) {
+if (
+	!empty($_POST["save"]) &&
+	!empty($_GET["domain"]) &&
+	empty($_GET["record_id"]) &&
+	$read_only !== true
+) {
 	$v_domain = quoteshellarg($_POST["v_domain"]);
 
 	// Check token
@@ -247,7 +252,12 @@ if (!empty($_POST["save"]) && !empty($_GET["domain"]) && empty($_GET["record_id"
 }
 
 // Check POST request for dns record
-if (!empty($_POST["save"]) && !empty($_GET["domain"]) && !empty($_GET["record_id"])) {
+if (
+	!empty($_POST["save"]) &&
+	!empty($_GET["domain"]) &&
+	!empty($_GET["record_id"]) &&
+	$read_only !== true
+) {
 	// Check token
 	verify_csrf($_POST);
 
@@ -348,8 +358,9 @@ if (empty($_GET["record_id"])) {
 	render_page($user, $TAB, "edit_dns");
 } else {
 	if (empty($data[$_GET["record_id"]])) {
-		header("Location: /list/dns/");
 		$_SESSION["error_msg"] = _("Error: unknown record ID.");
+		header("Location: /list/dns/");
+		exit();
 	}
 	// Display body for dns record
 	render_page($user, $TAB, "edit_dns_rec");

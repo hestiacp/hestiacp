@@ -5,7 +5,7 @@
 # example: v-delete-web-domain-alias admin example.com www.example.com
 #
 # This function of deleting the alias domain (parked domain). By this call
-# default www aliase can be removed as well.
+# default www alias can be removed as well.
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

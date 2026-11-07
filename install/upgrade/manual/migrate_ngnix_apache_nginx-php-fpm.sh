@@ -20,12 +20,12 @@ source $HESTIA/conf/hestia.conf
 #----------------------------------------------------------#
 
 if [ "$WEB_BACKEND" != "php-fpm" ]; then
-	check_result $E_NOTEXISTS "PHP-FPM is not enabled" > /dev/null
+	check_result "$E_NOTEXIST" "PHP-FPM is not enabled" > /dev/null
 	exit 1
 fi
 
 if [ "$WEB_SYSTEM" != "apache2" ]; then
-	check_result $E_NOTEXISTS "Apache2 is not enabled" > /dev/null
+	check_result "$E_NOTEXIST" "Apache2 is not enabled" > /dev/null
 	exit 1
 fi
 

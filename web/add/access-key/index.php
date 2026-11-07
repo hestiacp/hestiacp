@@ -26,7 +26,7 @@ ksort($apis);
 unset($output);
 
 // Check POST request
-if (!empty($_POST["ok"])) {
+if (!empty($_POST["ok"]) && $read_only !== true) {
 	// Check token
 	verify_csrf($_POST);
 

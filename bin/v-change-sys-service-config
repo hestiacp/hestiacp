@@ -4,7 +4,7 @@
 #
 # example: v-change-sys-service-config /home/admin/dovecot.conf dovecot yes
 #
-# This function for changing service confguration.
+# This function for changing service configuration.
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

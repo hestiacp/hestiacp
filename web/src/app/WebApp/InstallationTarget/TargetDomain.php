@@ -25,4 +25,9 @@ class TargetDomain
     {
         return Util::joinPaths($this->domainPath, 'public_html', $appendedPath);
     }
+
+    public function resolveUrl(): string
+    {
+        return $this->domainName . ':' . ($this->isSslEnabled ? '443' : '80') . ':' . $this->ipAddress;
+    }
 }

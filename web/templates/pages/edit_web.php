@@ -176,6 +176,20 @@
 						<?= tohtml( _("Use Let's Encrypt to obtain SSL certificate")) ?>
 					</label>
 				</div>
+				<div x-cloak x-show="letsEncryptEnabled" id="v_ssl_key_algo_wrapper" class="u-pl30 u-mb10">
+					<label for="v_ssl_key_algo" class="form-label"><?= tohtml( _("Key Type")) ?></label>
+					<select class="form-select" name="v_ssl_key_algo" id="v_ssl_key_algo">
+						<option value="ecdsa-256" <?php if ($v_ssl_key_algo == "ecdsa-256" || $v_ssl_key_algo == "ecdsa") echo 'selected'; ?>>
+							ECDSA P-256 (<?= tohtml( _("recommended")) ?>)
+						</option>
+						<option value="ecdsa-384" <?php if ($v_ssl_key_algo == "ecdsa-384") echo 'selected'; ?>>
+							ECDSA P-384
+						</option>
+						<option value="rsa" <?php if ($v_ssl_key_algo == "rsa") echo 'selected'; ?>>
+							RSA 4096
+						</option>
+					</select>
+				</div>
 				<div class="form-check u-mb10">
 					<input class="form-check-input" type="checkbox" name="v_ssl_forcessl" id="v_ssl_forcessl" <?php if ($v_ssl_forcessl == 'yes') echo 'checked' ?>>
 					<label for="v_ssl_forcessl">
@@ -248,7 +262,7 @@
 								type="button"
 								class="form-link"
 								x-on:click="showCertificates = !showCertificates"
-								x-text="showCertificates ? <?= json_encode(_("Hide Certificate"), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_THROW_ON_ERROR) ?> : <?= json_encode(_("Show Certificate"), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_THROW_ON_ERROR) ?>">
+								x-text='showCertificates ? <?= json_encode(_("Hide Certificate"), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_THROW_ON_ERROR) ?> : <?= json_encode(_("Show Certificate"), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_THROW_ON_ERROR) ?>'>
 								<?= tohtml( _("Show Certificate")) ?>
 							</button>
 						</p>

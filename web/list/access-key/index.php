@@ -8,7 +8,7 @@ include $_SERVER["DOCUMENT_ROOT"] . "/inc/main.php";
 
 if ($_SESSION["userContext"] === "admin" && !empty($_GET["user"])) {
 	$user = quoteshellarg($_GET["user"]);
-	$user_plain = $_GET["user"];
+	$user_plain = htmlentities($_GET["user"]);
 }
 
 // Checks if API access is enabled
@@ -38,14 +38,14 @@ if (!empty($_GET["key"])) {
 	exec(HESTIA_CMD . "v-list-apis json", $output, $return_var);
 	$apis = json_decode(implode("", $output), true);
 	$apis = array_filter($apis, function ($api) use ($user_plain) {
-		return $user_plain == "admin" || $api["ROLE"] == "user";
+		return $user_plain == $_SESSION["ROOT_USER"] || $api["ROLE"] == "user";
 	});
 	ksort($apis);
 	unset($output);
 
 	render_page($user, $TAB, "list_access_key");
 } else {
-	exec(HESTIA_CMD . "v-list-access-keys $user json", $output, $return_var);
+	exec(HESTIA_CMD . "v-list-access-keys " . $user . " json", $output, $return_var);
 	$data = json_decode(implode("", $output), true);
 
 	uasort($data, function ($a, $b) {

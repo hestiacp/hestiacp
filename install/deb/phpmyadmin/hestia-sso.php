@@ -187,6 +187,36 @@ function session_invalid() {
 	die();
 }
 
+/* Find the phpMyAdmin server index in config.inc.php
+ that corresponds to the host received from Hestia */
+function find_pma_server_id($host) {
+	$cfg = [];
+	(function () use (&$cfg) {
+		require "/etc/phpmyadmin/config.inc.php";
+	})();
+	if (empty($cfg["Servers"])) {
+		return 1;
+	}
+	$wanted = strtolower(trim($host));
+	foreach ($cfg["Servers"] as $id => $server) {
+		if (!isset($server["host"])) {
+			continue;
+		}
+		$cfg_host = strtolower(trim($server["host"]));
+		if ($cfg_host === $wanted) {
+			return $id;
+		}
+		// in case "localhost" comes in as 127.0.0.1 or vice versa
+		if (
+			in_array($wanted, ["localhost", "127.0.0.1"], true) &&
+			in_array($cfg_host, ["localhost", "127.0.0.1"], true)
+		) {
+			return $id;
+		}
+	}
+	return 1; // fallback: localhost
+}
+
 $api = new Hestia_API();
 if (!empty($_GET)) {
 	if (isset($_GET["logout"])) {
@@ -214,11 +244,6 @@ if (!empty($_GET)) {
 			// create_temp_user_all()/delete_temp_user_all().
 			$database = !empty($_GET["database"]) ? $_GET["database"] : "__all__";
 			$user = $_GET["user"];
-			// v-add-database-temp-user-all already accepts a HOST argument
-			// (it filters v-list-databases by it) -- read it from the link
-			// instead of hardcoding "localhost", so the generic "all
-			// databases" button can target whichever single host actually
-			// holds the account's databases (see list_db.php).
 			$host = !empty($_GET["host"]) ? $_GET["host"] : "localhost";
 			$token = $_GET["hestia_token"];
 			if (is_numeric($_GET["exp"])) {
@@ -247,9 +272,16 @@ if (!empty($_GET)) {
 					$_SESSION["HESTIA_sso_database"] = $database;
 					$_SESSION["HESTIA_sso_host"] = $host;
 
+					$server_id = find_pma_server_id($host);
+
 					@session_write_close();
 					setcookie($session_name, $id, 0, "/");
-					header("Location: " . dirname($_SERVER["PHP_SELF"]) . "/index.php");
+					header(
+						"Location: " .
+							dirname($_SERVER["PHP_SELF"]) .
+							"/index.php?server=" .
+							$server_id,
+					);
 					die();
 				} else {
 					session_invalid();

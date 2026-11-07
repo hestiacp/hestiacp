@@ -1,5 +1,5 @@
 #!/bin/bash
-# info: deleting letsencrypt ssl cetificate for domain
+# info: deleting letsencrypt ssl certificate for domain
 # options: USER DOMAIN [RESTART] [MAIL]
 #
 # example: v-delete-letsencrypt-domain admin acme.com yes

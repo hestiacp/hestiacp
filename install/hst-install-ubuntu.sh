@@ -31,7 +31,7 @@ HESTIA_COMMON_DIR="$HESTIA/install/common"
 VERBOSE='no'
 
 # Define software versions
-HESTIA_INSTALL_VER='1.10.0~alpha'
+HESTIA_INSTALL_VER='1.10.6'
 
 # Build the full Hestia version
 # Split base version (1.10.0) from channel suffix (~alpha / ~beta), if present
@@ -77,7 +77,7 @@ software="acl apache2 apache2.2-common apache2-suexec-custom apache2-utils appar
   php$fpm_v php$fpm_v-apcu php$fpm_v-bz2 php$fpm_v-cgi php$fpm_v-cli php$fpm_v-common php$fpm_v-curl php$fpm_v-gd
   php$fpm_v-imagick php$fpm_v-imap php$fpm_v-intl php$fpm_v-ldap php$fpm_v-mbstring php$fpm_v-mysql
   php$fpm_v-pgsql php$fpm_v-pspell php$fpm_v-readline php$fpm_v-xml php$fpm_v-zip postgresql postgresql-contrib
-  proftpd-core proftpd-mod-crypto quota rrdtool rsyslog util-linux spamassassin
+  proftpd-core proftpd-mod-crypto quota rrdtool rsyslog rsync util-linux spamassassin
   sysstat unzip vim-common vsftpd whois zip zstd bubblewrap restic"
 
 installer_dependencies="apt-transport-https ca-certificates curl dirmngr gnupg openssl software-properties-common wget sudo"
@@ -556,7 +556,7 @@ if [ -d /etc/netplan ] && [ -z "$force" ]; then
 fi
 
 # Validate whether installation script matches release version before continuing with install
-if [ -z "$withdebs" ] || [ ! -d "$withdebs" ]; then
+if [ -z "$HESTIA_CHANNEL" ] && [ ! -d "$withdebs" ]; then
 	release_branch_ver=$(curl -s https://raw.githubusercontent.com/hestiacp/hestiacp/release/src/deb/hestia/control | grep "Version:" | awk '{print $2}')
 	if [ "$HESTIA_INSTALL_VER" != "$release_branch_ver" ]; then
 		echo
@@ -600,7 +600,7 @@ esac
 #----------------------------------------------------------#
 
 install_welcome_message() {
-	DISPLAY_VER=$(echo $HESTIA_INSTALL_VER | sed "s|~alpha||g" | sed "s|~beta||g")
+	DISPLAY_VER=$(echo $HESTIA_INSTALL_VER | sed "s|~alpha||g" | sed "s|~beta||g" | sed "s|~rc[0-9]*||g")
 	echo
 	echo '                _   _           _   _        ____ ____                  '
 	echo '               | | | | ___  ___| |_(_) __ _ / ___|  _ \                 '
@@ -609,6 +609,9 @@ install_welcome_message() {
 	echo '               |_| |_|\___||___/\__|_|\__,_|\____|_|                    '
 	echo "                                                                        "
 	echo "                          Hestia Control Panel                          "
+	if [[ "$HESTIA_INSTALL_VER" =~ "rc" ]]; then
+		echo "                             RELEASE CANDIDATE                      "
+	fi
 	if [[ "$HESTIA_INSTALL_VER" =~ "beta" ]]; then
 		echo "                              BETA RELEASE                          "
 	fi
@@ -850,25 +853,42 @@ echo "[ * ] NGINX"
 echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/nginx-keyring.gpg] https://nginx.org/packages/mainline/$VERSION/ $codename nginx" > $apt/nginx.list
 curl -s https://nginx.org/keys/nginx_signing.key | gpg --dearmor | tee /usr/share/keyrings/nginx-keyring.gpg > /dev/null 2>&1
 
+# Let unattended-upgrades install nginx updates from the repository
+# above; the stock configuration only allows distribution repositories
+cat > /etc/apt/apt.conf.d/60unattended-upgrades-hestia-nginx << 'EOF'
+Unattended-Upgrade::Origins-Pattern {
+	"origin=nginx";
+};
+EOF
+
 # Installing sury PHP repo
-# add-apt-repository does not yet support signed-by see: https://bugs.launchpad.net/ubuntu/+source/software-properties/+bug/1862764
 echo "[ * ] PHP"
-if [[ "$release" = "22.04" ]] || [[ "$release" = "24.04" ]]; then
-	if [ "$release" = '24.04' ]; then
-		# Workaround for Ubuntu 24.04 due to weak key warning it sheduled to be fixed in 24.04.1
-		echo 'APT::Key::Assert-Pubkey-Algo "";' > /etc/apt/apt.conf.d/99weakkey-warning
-	fi
-	LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php > /dev/null 2>&1
-else
-	# Ubuntu 26.04 and later use the Sury repository instead of a PPA
-	echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/sury-keyring.gpg] https://packages.sury.org/php/ $codename main" > $apt/php.list
-	curl -s https://packages.sury.org/php/apt.gpg | gpg --dearmor | tee /usr/share/keyrings/sury-keyring.gpg > /dev/null 2>&1
-fi
+# Use the sury repository for all Ubuntu versions instead of the PPA
+echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/sury-keyring.gpg] https://packages.sury.org/php/ $codename main" > $apt/php.list
+curl -s https://packages.sury.org/php/apt.gpg | gpg --dearmor | tee /usr/share/keyrings/sury-keyring.gpg > /dev/null 2>&1
+
+# Let unattended-upgrades install PHP updates from the repository above. The
+# stock configuration only allows distribution repositories, so hosted PHP
+# would otherwise never be patched automatically.
+cat > /etc/apt/apt.conf.d/60unattended-upgrades-hestia-php << 'EOF'
+Unattended-Upgrade::Origins-Pattern {
+	"origin=deb.sury.org";
+	"origin=LP-PPA-ondrej-php";
+};
+EOF
 
 # Installing sury Apache2 repo
 if [ "$apache" = 'yes' ] && [ "$release" = '22.04' ]; then
 	echo "[ * ] Apache2"
 	echo "deb http://ppa.launchpad.net/ondrej/apache2/ubuntu $codename main" > $apt/apache2.list
+
+	# Let unattended-upgrades install Apache updates from the repository
+	# above; the stock configuration only allows distribution repositories
+	cat > /etc/apt/apt.conf.d/60unattended-upgrades-hestia-apache2 << 'EOF'
+Unattended-Upgrade::Origins-Pattern {
+	"origin=LP-PPA-ondrej-apache2";
+};
+EOF
 fi
 
 # Installing MariaDB repo
@@ -876,18 +896,34 @@ if [ "$mysql" = 'yes' ]; then
 	echo "[ * ] MariaDB $mariadb_v"
 	echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/mariadb-keyring.gpg] https://dlm.mariadb.com/repo/mariadb-server/$mariadb_v/repo/$VERSION $codename main" > $apt/mariadb.list
 	curl -s https://mariadb.org/mariadb_release_signing_key.asc | gpg --dearmor | tee /usr/share/keyrings/mariadb-keyring.gpg > /dev/null 2>&1
+
+	# Let unattended-upgrades install MariaDB updates from the repository
+	# above; the stock configuration only allows distribution repositories
+	cat > /etc/apt/apt.conf.d/60unattended-upgrades-hestia-mariadb << 'EOF'
+Unattended-Upgrade::Origins-Pattern {
+	"origin=MariaDB";
+};
+EOF
 fi
 
 # Installing HestiaCP repo
 echo "[ * ] Hestia Control Panel"
 echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/hestia-keyring.gpg] https://$RHOST/ $codename main" > $apt/hestia.list
-gpg --no-default-keyring --keyring /usr/share/keyrings/hestia-keyring.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys A189E93654F0B0E5 > /dev/null 2>&1
+curl -s "https://$RHOST/pubkey.gpg" | gpg --dearmor | tee /usr/share/keyrings/hestia-keyring.gpg > /dev/null 2>&1
 
 # Installing Node.js repo
 if [ "$webterminal" = 'yes' ]; then
 	echo "[ * ] Node.js $node_v"
 	echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/nodejs.gpg] https://deb.nodesource.com/node_$node_v.x nodistro main" > $apt/nodejs.list
 	curl -s https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor | tee /usr/share/keyrings/nodejs.gpg > /dev/null 2>&1
+
+	# Let unattended-upgrades install Node.js updates from the repository
+	# above; the stock configuration only allows distribution repositories
+	cat > /etc/apt/apt.conf.d/60unattended-upgrades-hestia-nodejs << 'EOF'
+Unattended-Upgrade::Origins-Pattern {
+	"site=deb.nodesource.com";
+};
+EOF
 	apt-get -y install nodejs >> $LOG
 fi
 
@@ -896,6 +932,14 @@ if [ "$postgresql" = 'yes' ]; then
 	echo "[ * ] PostgreSQL"
 	echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/postgresql-keyring.gpg] https://apt.postgresql.org/pub/repos/apt/ $codename-pgdg main" > $apt/postgresql.list
 	curl -s https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor | tee /usr/share/keyrings/postgresql-keyring.gpg > /dev/null 2>&1
+
+	# Let unattended-upgrades install PostgreSQL updates from the repository
+	# above; the stock configuration only allows distribution repositories
+	cat > /etc/apt/apt.conf.d/60unattended-upgrades-hestia-postgresql << 'EOF'
+Unattended-Upgrade::Origins-Pattern {
+	"origin=apt.postgresql.org";
+};
+EOF
 fi
 
 # Echo for a new line
@@ -1024,7 +1068,6 @@ if [ "$vsftpd" = 'no' ]; then
 fi
 if [ "$proftpd" = 'no' ]; then
 	software=$(echo "$software" | sed -e "s/proftpd-core//")
-	software=$(echo "$software" | sed -e "s/proftpd-mod-vroot//")
 	software=$(echo "$software" | sed -e "s/proftpd-mod-crypto//")
 fi
 if [ "$named" = 'no' ]; then
@@ -1134,6 +1177,7 @@ fi
 # Disabling daemon autostart on apt-get install
 echo -e '#!/bin/sh\nexit 101' > /usr/sbin/policy-rc.d
 chmod a+x /usr/sbin/policy-rc.d
+trap 'rm -f /usr/sbin/policy-rc.d' EXIT
 
 # Installing apt packages
 echo "The installer is now downloading and installing all required packages."
@@ -1164,31 +1208,38 @@ echo
 if [ -n "$withdebs" ] && [ -d "$withdebs" ]; then
 	echo "[ * ] Installing local package files..."
 	echo "    - hestia core package"
-	dpkg -i $withdebs/hestia_*.deb > /dev/null 2>&1
+	dpkg -i $withdebs/hestia_*.deb >> $LOG 2>&1
+	check_result $? "Failed to install hestia package from $withdebs. See $LOG for details."
 
 	if [ -z $(ls $withdebs/hestia-php_*.deb 2> /dev/null) ]; then
 		echo "    - hestia-php backend package (from apt)"
-		apt-get -y install hestia-php > /dev/null 2>&1
+		apt-get -y install hestia-php >> $LOG 2>&1
+		check_result $? "Failed to install hestia-php package from apt. See $LOG for details."
 	else
 		echo "    - hestia-php backend package"
-		dpkg -i $withdebs/hestia-php_*.deb > /dev/null 2>&1
+		dpkg -i $withdebs/hestia-php_*.deb >> $LOG 2>&1
+		check_result $? "Failed to install hestia-php package from $withdebs. See $LOG for details."
 	fi
 
 	if [ -z $(ls $withdebs/hestia-nginx_*.deb 2> /dev/null) ]; then
 		echo "    - hestia-nginx backend package (from apt)"
-		apt-get -y install hestia-nginx > /dev/null 2>&1
+		apt-get -y install hestia-nginx >> $LOG 2>&1
+		check_result $? "Failed to install hestia-nginx package from apt. See $LOG for details."
 	else
 		echo "    - hestia-nginx backend package"
-		dpkg -i $withdebs/hestia-nginx_*.deb > /dev/null 2>&1
+		dpkg -i $withdebs/hestia-nginx_*.deb >> $LOG 2>&1
+		check_result $? "Failed to install hestia-nginx package from $withdebs. See $LOG for details."
 	fi
 
 	if [ "$webterminal" = "yes" ]; then
 		if [ -z $(ls $withdebs/hestia-web-terminal_*.deb 2> /dev/null) ]; then
 			echo "    - hestia-web-terminal package (from apt)"
-			apt-get -y install hestia-web-terminal > /dev/null 2>&1
+			apt-get -y install hestia-web-terminal >> $LOG 2>&1
+			check_result $? "Failed to install hestia-web-terminal package from apt. See $LOG for details."
 		else
 			echo "    - hestia-web-terminal"
-			dpkg -i $withdebs/hestia-web-terminal_*.deb > /dev/null 2>&1
+			dpkg -i $withdebs/hestia-web-terminal_*.deb >> $LOG 2>&1
+			check_result $? "Failed to install hestia-web-terminal package from $withdebs. See $LOG for details."
 		fi
 	fi
 fi
@@ -1809,6 +1860,39 @@ if [ "$proftpd" = 'yes' ]; then
 	cp -f $HESTIA_INSTALL_DIR/proftpd/proftpd.conf /etc/proftpd/
 	cp -f $HESTIA_INSTALL_DIR/proftpd/tls.conf /etc/proftpd/
 
+	# In Ubuntu 26.04 we need to:
+	#   1.- Add modules.conf to proftpd.conf so tls mod is loaded.
+	#   2.- Add rules to AppArmor to allow ProFTPD to read the certificates and create the socket.
+	ubuntu_major="${release%%.*}"
+	if [[ "$ubuntu_major" -ge 26 ]]; then
+		# Add modules.conf
+		if [[ -f /etc/proftpd/modules.conf ]] && grep -qF "Include /etc/proftpd/tls.conf" /etc/proftpd/proftpd.conf; then
+			if ! grep -qF "Include /etc/proftpd/modules.conf" /etc/proftpd/proftpd.conf; then
+				sed -i '\|Include /etc/proftpd/tls.conf|i Include /etc/proftpd/modules.conf' /etc/proftpd/proftpd.conf
+			fi
+		fi
+
+		# Add ruleset for AppArmor
+		mkdir -p /etc/apparmor.d/local
+		if [[ ! -f /etc/apparmor.d/local/proftpd ]]; then
+			cat > /etc/apparmor.d/local/proftpd << 'EOF'
+# Configuration added by Hestia
+/usr/local/hestia/ssl/certificate.crt r,
+/usr/local/hestia/ssl/certificate.key r,
+/run/proftpd.sock rw,
+EOF
+			apparmor_parser -r /etc/apparmor.d/proftpd 2> /dev/null
+		elif ! grep -qF "# Configuration added by Hestia" /etc/apparmor.d/local/proftpd; then
+			cat >> /etc/apparmor.d/local/proftpd << 'EOF'
+# Configuration added by Hestia
+/usr/local/hestia/ssl/certificate.crt r,
+/usr/local/hestia/ssl/certificate.key r,
+/run/proftpd.sock rw,
+EOF
+			apparmor_parser -r /etc/apparmor.d/proftpd 2> /dev/null
+		fi
+	fi
+
 	update-rc.d proftpd defaults > /dev/null 2>&1
 	systemctl start proftpd >> $LOG
 	check_result $? "proftpd start failed"
@@ -2047,6 +2131,18 @@ if [ "$exim" = 'yes' ]; then
 	else
 		cp -f $HESTIA_INSTALL_DIR/exim/exim4.conf.template /etc/exim4/
 	fi
+	# If Dovecot 2.4, modify the local delivery directives"
+	if [[ $(dovecot --version) == 2.4* ]] \
+		&& [[ -f /etc/exim4/exim4.conf.template ]]; then
+		sed -i.bak '
+s#  directory = "${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}/mail/${lookup{$domain}dsearch{/etc/exim4/domains/}}/${lookup{$local_part}dsearch{${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}/mail/${lookup{$domain}dsearch{/etc/exim4/domains/}}}}"#  directory = "${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}"#
+
+s#  directory = "${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}/mail/${lookup{$domain}dsearch{/etc/exim4/domains/}}/${lookup{$local_part}dsearch{${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}/mail/${lookup{$domain}dsearch{/etc/exim4/domains/}}}}/.Spam"#  directory = "${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}/.Spam"#
+
+s#  quota_directory = "${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}/mail/${lookup{$domain}dsearch{/etc/exim4/domains/}}/${lookup{$local_part}dsearch{${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}/mail/${lookup{$domain}dsearch{/etc/exim4/domains/}}}}"#  quota_directory = "${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}"#
+' /etc/exim4/exim4.conf.template
+	fi
+
 	cp -f $HESTIA_INSTALL_DIR/exim/dnsbl.conf /etc/exim4/
 	cp -f $HESTIA_INSTALL_DIR/exim/spam-blocks.conf /etc/exim4/
 	cp -f $HESTIA_INSTALL_DIR/exim/limit.conf /etc/exim4/
@@ -2461,11 +2557,28 @@ $HESTIA/bin/v-change-sys-port $port > /dev/null 2>&1
 $HESTIA/bin/v-update-sys-defaults
 
 # Update remaining packages since repositories have changed
-echo -ne "[ * ] Installing remaining software updates..."
-apt-get -qq update
-apt-get -y upgrade >> $LOG &
-BACK_PID=$!
-echo
+# Skip the final upgrade with --with-debs, otherwise apt would replace the
+# locally installed .deb packages with the ones from apt.hestiacp.com
+if [ -z "$withdebs" ]; then
+	echo -ne "[ * ] Installing remaining software updates... "
+	apt-get -qq update
+	apt-get -y upgrade >> $LOG &
+	BACK_PID=$!
+
+	# Check if package installation is done, print a spinner
+	spin_i=1
+	while kill -0 $BACK_PID > /dev/null 2>&1; do
+		printf "\b${spinner:spin_i++%${#spinner}:1}"
+		sleep 0.5
+	done
+
+	# Do a blank echo to get the \n back
+	echo
+
+	# Check Installation result
+	wait $BACK_PID
+	check_result $? 'apt-get upgrade failed'
+fi
 
 # Starting Hestia service
 update-rc.d hestia defaults

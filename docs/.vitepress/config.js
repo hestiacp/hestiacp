@@ -6,6 +6,10 @@ export default defineConfig({
 	title: 'Hestia Control Panel',
 	description: 'Open-source web server control panel.',
 
+	sitemap: {
+		hostname: 'https://hestiacp.com',
+	},
+
 	lastUpdated: true,
 	cleanUrls: false,
 
@@ -65,15 +69,15 @@ function nav() {
 			items: [
 				{
 					text: 'Changelog',
-					link: 'https://github.com/hestiacp/hestiacp/blob/main/CHANGELOG.md',
+					link: 'https://github.com/hestiacp/hestiacp/blob/release/CHANGELOG.md',
 				},
 				{
 					text: 'Contributing',
-					link: 'https://github.com/hestiacp/hestiacp/blob/main/CONTRIBUTING.md',
+					link: 'https://github.com/hestiacp/hestiacp/blob/release/CONTRIBUTING.md',
 				},
 				{
 					text: 'Security policy',
-					link: 'https://github.com/hestiacp/hestiacp/blob/main/SECURITY.md',
+					link: 'https://github.com/hestiacp/hestiacp/blob/release/SECURITY.md',
 				},
 			],
 		},

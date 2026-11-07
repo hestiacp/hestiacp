@@ -1482,6 +1482,9 @@ function check_ip_not_banned(){
     run v-change-dns-record $user $domain 50 'mail' CNAME mx.hestia.com
     assert_failure $E_INVALID
 
+    run v-change-dns-record $user $domain 50 'MAIL' cname mx.hestia.com
+    assert_failure $E_INVALID
+
     run v-change-dns-record $user $domain 50 'cname-test' CNAME mx.hestia.com
     assert_success
     refute_output

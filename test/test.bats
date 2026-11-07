@@ -1297,6 +1297,23 @@ function check_ip_not_banned(){
     rm "$HOMEDIR/$user/web/$docroot1_domain/public_html/public/php-test.php"
 }
 
+@test "Docroot: Self Subfolder with parent PHP root and backend rebuild" {
+    docroot1_domain="docroot1.${domain}"
+
+    run v-change-web-domain-docroot $user "$docroot1_domain" "$docroot1_domain" "/public" "yes"
+    assert_success
+    refute_output
+
+    run v-change-web-domain-backend-tpl $user "$docroot1_domain" "default" "yes"
+    assert_success
+    refute_output
+
+    echo "parent-ok" > "$HOMEDIR/$user/web/$docroot1_domain/public_html/parent-test.txt"
+    echo -e '<?php\necho "self-phproot-".$_SERVER["HTTP_HOST"]."-".trim(file_get_contents(__DIR__."/../parent-test.txt"));' > "$HOMEDIR/$user/web/$docroot1_domain/public_html/public/php-test.php"
+    validate_web_domain $user $docroot1_domain "self-phproot-${docroot1_domain}-parent-ok" 'php-test.php'
+    rm "$HOMEDIR/$user/web/$docroot1_domain/public_html/public/php-test.php" "$HOMEDIR/$user/web/$docroot1_domain/public_html/parent-test.txt"
+}
+
 @test "Docroot: Other domain subfolder" {
     docroot1_domain="docroot1.${domain}"
     docroot2_domain="docroot2.${domain}"
@@ -1326,9 +1343,16 @@ function check_ip_not_banned(){
     assert_success
     refute_output
 
-    echo -e '<?php\necho "doc2-root-".$_SERVER["HTTP_HOST"];' > "$HOMEDIR/$user/web/$docroot2_domain/public_html/php-test.php"
-    validate_web_domain $user $docroot1_domain "doc2-root-${docroot1_domain}" 'php-test.php'
-    rm "$HOMEDIR/$user/web/$docroot2_domain/public_html/php-test.php"
+    echo "private-ok" > "$HOMEDIR/$user/web/$docroot2_domain/private/private-test.txt"
+    echo -e '<?php\necho "doc2-root-".$_SERVER["HTTP_HOST"]."-".trim(file_get_contents(__DIR__."/../private/private-test.txt"));' > "$HOMEDIR/$user/web/$docroot2_domain/public_html/php-test.php"
+    validate_web_domain $user $docroot1_domain "doc2-root-${docroot1_domain}-private-ok" 'php-test.php'
+
+    run v-change-web-domain-backend-tpl $user "$docroot1_domain" "default" "yes"
+    assert_success
+    refute_output
+
+    validate_web_domain $user $docroot1_domain "doc2-root-${docroot1_domain}-private-ok" 'php-test.php'
+    rm "$HOMEDIR/$user/web/$docroot2_domain/public_html/php-test.php" "$HOMEDIR/$user/web/$docroot2_domain/private/private-test.txt"
 }
 
 @test "Docroot: Reset" {

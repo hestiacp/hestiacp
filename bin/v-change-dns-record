@@ -15,8 +15,9 @@ user=$1
 domain=$2
 domain_idn=$2
 id=$3
-record=$4
-rtype=$5
+record=$(idn2 --quiet -d "$4")
+record=$(echo "$record" | tr '[:upper:]' '[:lower:]')
+rtype=$(echo "$5" | tr '[:lower:]' '[:upper:]')
 dvalue=$6
 priority=$7
 restart=$8
@@ -117,6 +118,13 @@ is_format_valid 'user' 'domain' 'id' 'record' 'rtype' 'dvalue'
 # Additional verifications
 is_dns_fqnd "$rtype" "$dvalue"
 is_dns_nameserver_valid "$domain" "$rtype" "$dvalue"
+if [ "$rtype" = "CNAME" ]; then
+	if grep -v "^ID='$id' " "$USER_DATA/dns/$domain.conf" | grep -Fq "RECORD='$record'"; then
+		check_result "$E_INVALID" "A CNAME record cannot coexist with other records for the same name"
+	fi
+elif grep -v "^ID='$id' " "$USER_DATA/dns/$domain.conf" | grep -Fq "RECORD='$record' TYPE='CNAME'"; then
+	check_result "$E_INVALID" "Another record cannot be added when a CNAME record exists for the same name"
+fi
 
 current_value_canon=${VALUE//\'/%quote%}
 new_value_canon=${dvalue//\'/%quote%}

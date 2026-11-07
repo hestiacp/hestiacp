@@ -1467,13 +1467,25 @@ function check_ip_not_banned(){
 
 @test "DNS: Add domain record CNAME" {
     run v-delete-dns-record $user $domain 50
-    run v-add-dns-record $user $domain 'mail' CNAME mx.hestiacp.com  '' 50
+    run v-add-dns-record $user $domain 'mail' CNAME mx.hestiacp.com '' 50
+    assert_failure $E_INVALID
+
+    run v-add-dns-record $user $domain 'cname-test' CNAME mx.hestiacp.com '' 50
     assert_success
     refute_output
 
     assert_file_contains "$HOMEDIR/$user/conf/dns/${domain}.db" "mx.hestiacp.com."
 
+    run v-add-dns-record $user $domain 'cname-test' A "$ip"
+    assert_failure $E_INVALID
+
     run v-change-dns-record $user $domain 50 'mail' CNAME mx.hestia.com
+    assert_failure $E_INVALID
+
+    run v-change-dns-record $user $domain 50 'MAIL' cname mx.hestia.com
+    assert_failure $E_INVALID
+
+    run v-change-dns-record $user $domain 50 'cname-test' CNAME mx.hestia.com
     assert_success
     refute_output
 

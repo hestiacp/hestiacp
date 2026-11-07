@@ -80,50 +80,46 @@ class Hestia_API {
 	}
 
 	public function get_user_ip() {
-		// Saving user IPs to the session for preventing session hijacking
-		$user_combined_ip = [];
-		if ($_SERVER["REMOTE_ADDR"] != $_SERVER["SERVER_ADDR"]) {
-			$user_combined_ip[] = $_SERVER["REMOTE_ADDR"];
+		$ip = "";
+		if (
+			!empty($_SERVER["REMOTE_ADDR"]) &&
+			filter_var($_SERVER["REMOTE_ADDR"], FILTER_VALIDATE_IP)
+		) {
+			$ip = $_SERVER["REMOTE_ADDR"];
 		}
-		if (isset($_SERVER["HTTP_CLIENT_IP"])) {
-			$user_combined_ip .= "|" . $_SERVER["HTTP_CLIENT_IP"];
-		}
-		if (isset($_SERVER["HTTP_X_FORWARDED_FOR"])) {
-			if ($_SERVER["REMOTE_ADDR"] != $_SERVER["HTTP_X_FORWARDED_FOR"]) {
-				$user_combined_ip[] = $_SERVER["HTTP_X_FORWARDED_FOR"];
+		if (
+			isset($_SERVER["SERVER_ADDR"]) &&
+			$ip === $_SERVER["SERVER_ADDR"] &&
+			!empty($_SERVER["HTTP_X_FORWARDED_FOR"])
+		) {
+			$forwarded_ip = trim(explode(",", $_SERVER["HTTP_X_FORWARDED_FOR"])[0]);
+			if (filter_var($forwarded_ip, FILTER_VALIDATE_IP)) {
+				$ip = $forwarded_ip;
 			}
 		}
-		if (isset($_SERVER["HTTP_FORWARDED_FOR"])) {
-			if ($_SERVER["REMOTE_ADDR"] != $_SERVER["HTTP_FORWARDED_FOR"]) {
-				$user_combined_ip[] = $_SERVER["HTTP_FORWARDED_FOR"];
-			}
+		if (
+			!empty($_SERVER["HTTP_CF_CONNECTING_IP"]) &&
+			filter_var($_SERVER["HTTP_CF_CONNECTING_IP"], FILTER_VALIDATE_IP)
+		) {
+			$ip = $_SERVER["HTTP_CF_CONNECTING_IP"];
 		}
-		if (isset($_SERVER["HTTP_X_FORWARDED"])) {
-			if ($_SERVER["REMOTE_ADDR"] != $_SERVER["HTTP_X_FORWARDED"]) {
-				$user_combined_ip[] = $_SERVER["HTTP_X_FORWARDED"];
-			}
+		// Handling IPv4-mapped IPv6 address
+		if (strpos($ip, ":") === 0 && strpos($ip, ".") > 0) {
+			$ip = substr($ip, strrpos($ip, ":") + 1); // Strip IPv4 Compatibility notation
 		}
-		if (isset($_SERVER["HTTP_FORWARDED"])) {
-			if ($_SERVER["REMOTE_ADDR"] != $_SERVER["HTTP_FORWARDED"]) {
-				$user_combined_ip[] = "|" . $_SERVER["HTTP_FORWARDED"];
-			}
-		}
-		if (isset($_SERVER["HTTP_CF_CONNECTING_IP"])) {
-			if (!empty($_SERVER["HTTP_CF_CONNECTING_IP"])) {
-				$user_combined_ip[] = $_SERVER["HTTP_CF_CONNECTING_IP"];
-			}
-		}
-		return implode("|", $user_combined_ip);
+		return $ip;
 	}
 }
 
 function verify_token($database, $user, $ip, $time, $token) {
+	$remote_addr = $_SERVER["REMOTE_ADDR"] ?? "";
+	if (strpos($remote_addr, ":") === 0 && strpos($remote_addr, ".") > 0) {
+		$remote_addr = substr($remote_addr, strrpos($remote_addr, ":") + 1);
+	}
 	if (!password_verify($database . $user . $ip . $time . PHPMYADMIN_KEY, $token)) {
 		if (
-			!password_verify(
-				$database . $user . $_SERVER["SERVER_ADDR"] . "|" . $ip . $time . PHPMYADMIN_KEY,
-				$token,
-			)
+			$remote_addr === $ip ||
+			!password_verify($database . $user . $remote_addr . $time . PHPMYADMIN_KEY, $token)
 		) {
 			trigger_error(
 				"Access denied: There is a security token mismatch " . $time,

@@ -12,6 +12,9 @@ if ($_SESSION["userSortOrder"] == "name") {
 } else {
 	$data = array_reverse($data, true);
 }
+if (is_subdomain_grouping_enabled()) {
+	$data = group_domains_by_parent($data);
+}
 $ips = json_decode(shell_exec(HESTIA_CMD . "v-list-sys-ips json"), true);
 
 // Render page

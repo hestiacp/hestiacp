@@ -5155,6 +5155,14 @@ list proftpd config parameters
 
 This function for obtaining the list of proftpd config parameters.
 
+## v-list-sys-public-suffixes
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-public-suffixes)
+
+Print the cached Public Suffix List as plain text. The web domain list uses these
+rules to group related domains, including domains with suffixes such as `co.uk`.
+This read-only command does not download or refresh the cache.
+
 ## v-list-sys-rrd
 
 [Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-sys-rrd)

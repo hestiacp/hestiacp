@@ -7363,7 +7363,7 @@ v-update-sys-hestia hestia-php
 ```
 
 This function runs as apt update trigger. It pulls shell script from hestia
-server and runs it. (hestia, hestia-nginx and hestia-php are valid options)
+server and runs it. (hestia, hestia-nginx, hestia-php and hestia-web-terminal are valid options)
 
 ## v-update-sys-hestia-all
 

@@ -5,7 +5,7 @@
 # example: v-update-sys-hestia hestia-php
 #
 # This function runs as apt update trigger. It pulls shell script from hestia
-# server and runs it. (hestia, hestia-nginx and hestia-php are valid options)
+# server and runs it. (hestia, hestia-nginx, hestia-php and hestia-web-terminal are valid options)
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #
@@ -28,7 +28,7 @@ source_conf "$HESTIA/conf/hestia.conf"
 
 # Checking arg number
 check_args '1' "$#" 'PACKAGE'
-is_hestia_package "hestia hestia-nginx hestia-php" "$package"
+is_hestia_package "hestia hestia-nginx hestia-php hestia-web-terminal" "$package"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode

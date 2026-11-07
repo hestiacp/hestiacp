@@ -36,9 +36,19 @@ source_conf "$HESTIA/conf/hestia.conf"
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-args_usage='USER SNAPSHOT DOMAIN [NOTIFY]'
+args_usage='USER SNAPSHOT FILE [NOTIFY]'
 check_args '3' "$#" "$args_usage"
-is_format_valid 'user'
+is_format_valid 'user' 'snapshot'
+if [ -z "$file" ] || [[ "$file" == *, ]] || [[ "$file" == ,* ]] || [[ "$file" == *,,* ]]; then
+	check_result "$E_INVALID" "Invalid file format :: $file"
+fi
+IFS=',' read -r -a file_list <<< "$file"
+for file_path in "${file_list[@]}"; do
+	is_dir_path_format_valid "$file_path" 'file'
+	if [[ "$file_path" != "/home/$user/"?* ]] || [[ "$file_path" == "/home/$user/conf" ]] || [[ "$file_path" == "/home/$user/conf/"* ]]; then
+		check_result "$E_INVALID" "Invalid file format :: $file"
+	fi
+done
 is_object_valid 'user' 'USER' "$user"
 
 source_conf $HESTIA/conf/restic.conf
@@ -53,11 +63,17 @@ tmpdir=$(mktemp -p "${BACKUP_TEMP:-$BACKUP}" -d)
 if [ ! -f "$tmpdir/backup.conf" ]; then
 	restic --repo "${REPO%/}/$user" --password-file "$USER_DATA/restic.conf" dump "$snapshot" "/home/$user/backup/backup.conf" > "$tmpdir/backup.conf"
 	if [ "$?" -ne 0 ]; then
+		rm -rf "$tmpdir"
 		check_result "$E_NOTEXIST" "Unable to download snapshot data"
 	fi
 fi
 
-restic --repo "${REPO%/}/$user" --password-file "$USER_DATA/restic.conf" restore "$snapshot" --include "$file" --target /
+for file_path in "${file_list[@]}"; do
+	if ! restic --repo "${REPO%/}/$user" --password-file "$USER_DATA/restic.conf" restore "$snapshot" --include "$file_path" --target /; then
+		rm -rf "$tmpdir"
+		check_result "$E_NOTEXIST" "Unable to restore file from snapshot"
+	fi
+done
 
 #----------------------------------------------------------#
 #                       Hestia                             #
@@ -70,10 +86,10 @@ $BIN/v-update-user-counters "$user"
 $BIN/v-update-user-counters "$ROOT_USER"
 $BIN/v-update-sys-ip-counters
 
-sed -i "/v-restore-file-restic '$user' '$snapshot' '$file' /d" $HESTIA/data/queue/backup.pipe
+sed -i "\|v-restore-file-restic '$user' '$snapshot' '$file' |d" $HESTIA/data/queue/backup.pipe
 
 # Logging
-$BIN/v-log-action "system" "Info" "Backup" "DNS Domain successfully restored (User: $user, Snapshot: $snapshot, Databse: $database)."
-$BIN/v-log-action "$user" "Info" "Backup" "DNS Domain successfully restored (User: $user, Snapshot: $snapshot, Databse: $database)."
+$BIN/v-log-action "system" "Info" "Backup" "File successfully restored (User: $user, Snapshot: $snapshot, File: $file)."
+$BIN/v-log-action "$user" "Info" "Backup" "File successfully restored (User: $user, Snapshot: $snapshot, File: $file)."
 log_event "$OK" "$ARGUMENTS"
 exit

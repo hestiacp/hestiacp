@@ -65,10 +65,10 @@
 			<div class="units-table-cell units-table-heading-cell u-text-bold">
 				<b>
 					<?php if ($read_only === true) { ?>
-							<span class="u-hide-desktop"><?= tohtml( _("Snapshot")) ?>:</span>
+							<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Snapshot")) ?></span>
 							<?= tohtml($value['short_id']) ?>
 					<?php } else { ?>
-						<span class="u-hide-desktop"><?= tohtml( _("Snapshot")) ?>:</span>
+						<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Snapshot")) ?></span>
 						<a href="/list/backup/incremental/?<?= tohtml(http_build_query(["snapshot" => $value['short_id'], "token" => $_SESSION["token"]])) ?>" title="<?= tohtml( _("Restore")) ?>"><?= tohtml($value['short_id']) ?></a>
 					<?php } ?>
 				</b>
@@ -77,28 +77,28 @@
 				<?php if (!$read_only) { ?>
 					<ul class="units-table-row-actions">
 						<li class="units-table-row-action shortcut-enter" data-key-action="href">
-							<a href="/list/backup/incremental/?<?= tohtml(http_build_query(["snapshot" => $value['short_id'], "browse" => 'yes', "token" => $_SESSION["token"]])) ?>" title="<?= tohtml( _("Browse")) ?>"><i class="fas fa-folder-open icon-lightblue icon-dim"></i></a>
+							<a class="units-table-row-action-link" href="/list/backup/incremental/?<?= tohtml(http_build_query(["snapshot" => $value['short_id'], "browse" => 'yes', "token" => $_SESSION["token"]])) ?>" title="<?= tohtml( _("Browse")) ?>"><i class="fas fa-folder-open icon-lightblue icon-dim"></i></a>
 						</li>
 						<li class="units-table-row-action shortcut-enter" data-key-action="href">
-							<a href="/list/backup/incremental/?<?= tohtml(http_build_query(["snapshot" => $value['short_id'], "token" => $_SESSION["token"]])) ?>" title="<?= tohtml( _("Restore")) ?>"><i class="fas fa-arrow-rotate-left icon-green icon-dim"></i></a>
+							<a class="units-table-row-action-link" href="/list/backup/incremental/?<?= tohtml(http_build_query(["snapshot" => $value['short_id'], "token" => $_SESSION["token"]])) ?>" title="<?= tohtml( _("Restore")) ?>"><i class="fas fa-arrow-rotate-left icon-green icon-dim"></i></a>
 						</li>
 					</ul>
 				<?php } ?>
 			</div>
 			<div class="units-table-cell">
-				<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Date")) ?>:</span>
+				<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Date")) ?></span>
 				<span class="u-text-bold">
 					<?= tohtml(convert_datetime($value['time'])) ?>
 				</span>
 			</div>
 			<div class="units-table-cell">
-				<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Type")) ?>:</span>
+				<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Type")) ?></span>
 				<span class="u-text-bold">
 					Restic
 				</span>
 			</div>
 				<div class="units-table-cell">
-					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Hostname")) ?>:</span>
+					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Hostname")) ?></span>
 					<span class="u-text-bold">
 						<?= tohtml($value['hostname']) ?>
 					</span>

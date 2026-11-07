@@ -91,7 +91,7 @@
 					</div>
 				</div>
 				<div class="units-table-cell units-table-heading-cell u-text-bold">
-					<span class="u-hide-desktop"><?= tohtml( _("IP Address")) ?>:</span>
+					<span class="u-hide-desktop"><?= tohtml( _("IP Address")) ?></span>
 					<a href="/edit/ip/?<?= tohtml(http_build_query(["ip" => $key, "token" => $_SESSION['token']])) ?>" title="<?= tohtml( _("Edit IP Address")) ?>">
 						<?= tohtml($key) ?> <?php if (!empty($data[$key]['NAT'])) echo ' → ' . $data[$key]['NAT'] . ''; ?>
 					</a>
@@ -123,23 +123,23 @@
 					</ul>
 				</div>
 				<div class="units-table-cell u-text-center-desktop">
-					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Netmask")) ?>:</span>
+					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Netmask")) ?></span>
 					<?= tohtml($data[$key]["NETMASK"]) ?>
 				</div>
 				<div class="units-table-cell u-text-center-desktop">
-					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Interface")) ?>:</span>
+					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Interface")) ?></span>
 					<?= tohtml($data[$key]["INTERFACE"]) ?>
 				</div>
 				<div class="units-table-cell u-text-bold u-text-center-desktop">
-					<span class="u-hide-desktop"><?= tohtml( _("Status")) ?>:</span>
+					<span class="u-hide-desktop"><?= tohtml( _("Status")) ?></span>
 					<?= tohtml( _($data[$key]["STATUS"])) ?>
 				</div>
 				<div class="units-table-cell u-text-bold u-text-center-desktop">
-					<span class="u-hide-desktop"><?= tohtml( _("Domains")) ?>:</span>
+					<span class="u-hide-desktop"><?= tohtml( _("Domains")) ?></span>
 					<?= tohtml($data[$key]["U_WEB_DOMAINS"]) ?>
 				</div>
 				<div class="units-table-cell u-text-bold u-text-center-desktop">
-					<span class="u-hide-desktop"><?= tohtml( _("Owner")) ?>:</span>
+					<span class="u-hide-desktop"><?= tohtml( _("Owner")) ?></span>
 					<?= tohtml($data[$key]["OWNER"]) ?>
 				</div>
 			</div>

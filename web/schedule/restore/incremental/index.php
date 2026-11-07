@@ -24,21 +24,6 @@ if (empty($_GET["type"])) {
 		$output,
 		$return_var,
 	);
-	if ($return_var == 0) {
-		$_SESSION["error_msg"] = _(
-			"Task has been added to the queue. You will receive an email notification when your restore has been completed.",
-		);
-	} else {
-		$_SESSION["error_msg"] = implode("<br>", $output);
-		if (empty($_SESSION["error_msg"])) {
-			$_SESSION["error_msg"] = _("Error: Hestia did not return any output.");
-		}
-		if ($return_var == 4) {
-			$_SESSION["error_msg"] = _(
-				"An existing restoration task is already running. Please wait for it to finish before launching it again.",
-			);
-		}
-	}
 } else {
 	exec(
 		HESTIA_CMD .
@@ -53,6 +38,22 @@ if (empty($_GET["type"])) {
 		$output,
 		$return_var,
 	);
+}
+
+if ($return_var == 0) {
+	$_SESSION["error_msg"] = _(
+		"Task has been added to the queue. You will receive an email notification when your restore has been completed.",
+	);
+} else {
+	$_SESSION["error_msg"] = implode("<br>", $output);
+	if (empty($_SESSION["error_msg"])) {
+		$_SESSION["error_msg"] = _("Error: Hestia did not return any output.");
+	}
+	if ($return_var == 4) {
+		$_SESSION["error_msg"] = _(
+			"An existing restoration task is already running. Please wait for it to finish before launching it again.",
+		);
+	}
 }
 
 header("Location: /list/backup/incremental/?snapshot=" . $_GET["snapshot"]);

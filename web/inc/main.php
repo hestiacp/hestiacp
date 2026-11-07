@@ -230,6 +230,14 @@ function render_page($user, $TAB, $page) {
 	// Panel
 	$panel = top_panel(empty($_SESSION["look"]) ? $_SESSION["user"] : $_SESSION["look"], $TAB);
 
+	// Warn administrators when the host operating system is no longer supported
+	if (($_SESSION["userContext"] ?? "") === "admin" && empty($_SESSION["look"])) {
+		$eol_os_warning = get_eol_os_warning();
+		if ($eol_os_warning !== null) {
+			include $__template_dir . "includes/eol-warning.php";
+		}
+	}
+
 	// Body
 	include $__template_dir . "pages/" . $page . ".php";
 

@@ -178,3 +178,54 @@ function display_title($tab) {
 	$array2 = [$tab, get_hostname(), $_SERVER["REMOTE_ADDR"], $_SESSION["APP_NAME"]];
 	return str_replace($array1, $array2, $_SESSION["TITLE"]);
 }
+
+/**
+ * Returns a warning when the host runs an operating system that is no longer
+ * supported by HestiaCP, or null when the host is supported.
+ *
+ * @param string $os_release_path Path to the os-release file.
+ * @return string|null
+ */
+function get_eol_os_warning(string $os_release_path = "/etc/os-release"): ?string {
+	static $warnings = [];
+
+	if (array_key_exists($os_release_path, $warnings)) {
+		return $warnings[$os_release_path];
+	}
+
+	$warnings[$os_release_path] = null;
+	$os_release = @file_get_contents($os_release_path);
+	if ($os_release === false) {
+		return null;
+	}
+
+	$data = [];
+	foreach (explode("\n", $os_release) as $line) {
+		$line = trim($line);
+		if ($line === "" || $line[0] === "#" || !str_contains($line, "=")) {
+			continue;
+		}
+		[$key, $value] = explode("=", $line, 2);
+		$data[strtoupper(trim($key))] = trim(trim($value), "\"'");
+	}
+
+	$id = strtolower($data["ID"] ?? "");
+	$version_id = $data["VERSION_ID"] ?? "";
+	$codename = strtolower($data["VERSION_CODENAME"] ?? "");
+
+	if (
+		$codename === "bullseye" ||
+		($id === "debian" && ($version_id === "11" || str_starts_with($version_id, "11.")))
+	) {
+		$warnings[$os_release_path] =
+			"Debian 11 (Bullseye) is no longer supported by HestiaCP and no longer receives security updates. Please upgrade to Debian 12 (Bookworm) or later as soon as possible.";
+	} elseif (
+		$codename === "focal" ||
+		($id === "ubuntu" && ($version_id === "20.04" || str_starts_with($version_id, "20.04.")))
+	) {
+		$warnings[$os_release_path] =
+			"Ubuntu 20.04 (Focal) is no longer supported by HestiaCP and no longer receives security updates. Please upgrade to Ubuntu 22.04 or later as soon as possible.";
+	}
+
+	return $warnings[$os_release_path];
+}

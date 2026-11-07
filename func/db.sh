@@ -438,9 +438,11 @@ add_mysql_database_temp_user_all() {
 	mysql_ver_sub=$(echo $mysql_ver | cut -d '.' -f1)
 	mysql_ver_sub_sub=$(echo $mysql_ver | cut -d '.' -f2)
 
+	dbpass_esc=$(mysql_sql_escape "$dbpass")
+
 	if [ "$mysql_fork" = "mysql" ] && [ "$mysql_ver_sub" -ge 8 ]; then
 		query="CREATE USER \`$dbuser\`@\`%\`
-			IDENTIFIED BY '$dbpass'"
+			IDENTIFIED BY '$dbpass_esc'"
 		mysql_query "$query" > /dev/null
 
 		for database in $databases; do
@@ -452,7 +454,7 @@ add_mysql_database_temp_user_all() {
 		for database in $databases; do
 			if [ "$first" = "yes" ]; then
 				query="GRANT ALL ON \`$database\`.* TO \`$dbuser\`@\`%\`
-	    			IDENTIFIED BY '$dbpass'"
+	    			IDENTIFIED BY '$dbpass_esc'"
 				first="no"
 			else
 				query="GRANT ALL ON \`$database\`.* TO \`$dbuser\`@\`%\`"

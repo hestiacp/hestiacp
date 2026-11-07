@@ -30,7 +30,7 @@ source_conf "$HESTIA/conf/hestia.conf"
 #----------------------------------------------------------#
 
 check_args '2' "$#" 'USER DBUSER [HOST]'
-is_format_valid 'user' 'dbuser'
+is_format_valid 'user' 'dbuser' 'host'
 is_system_enabled "$DB_SYSTEM" 'DB_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"

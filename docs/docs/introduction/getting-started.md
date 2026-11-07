@@ -82,7 +82,6 @@ To choose what software gets installed, you can provide flags to the installatio
 
 ```bash
 -a, --apache Install Apache [yes | no] default: yes
--w, --phpfpm Install PHP-FPM [yes | no] default: yes
 -o, --multiphp Install MultiPHP [yes | no] default: no
 -v, --vsftpd Install VSFTPD [yes | no] default: yes
 -j, --proftpd Install ProFTPD [yes | no] default: no

@@ -1485,6 +1485,7 @@ write_config_value "THEME" "dark"
 
 # Inactive session timeout
 write_config_value "INACTIVE_SESSION_TIMEOUT" "60"
+write_config_value "TWOFA_TRUSTED_DEVICE_DAYS" "0"
 
 # Version & Release Branch
 write_config_value "VERSION" "${HESTIA_INSTALL_VER}"

@@ -79,6 +79,9 @@ if [ "$?" -ne 0 ]; then
 fi
 
 cp "$tmpdir/home/$user/backup/hestia/user.conf" "$USER_DATA/"
+# Restored password / 2FA secret must not inherit current trusted devices
+$BIN/v-delete-user-2fa-trusted-devices "$user"
+check_result $? "Unable to revoke 2FA trusted devices"
 cp -r "$tmpdir/home/$user/backup/hestia/ssl" "$USER_DATA/" > /dev/null 2>&1
 cp -r "$tmpdir/home/$user/backup/hestia/backup-excludes.conf" "$USER_DATA/" > /dev/null 2>&1
 

@@ -12,8 +12,12 @@ define("API_KEY", "%API_KEY%");
 /* Reuse Hestia's own get_real_user_ip() (see get_user_ip() below) instead of
    re-implementing IP detection here -- this file is deployed standalone into
    phpMyAdmin's directory, but Hestia's install path is fixed, so it's safe
-   to reach back into it. */
-require_once "/usr/local/hestia/web/inc/vendor/autoload.php";
+   to reach back into it.
+   Note: deliberately not vendor/autoload.php. Its Composer platform check
+   requires the PHP version of Hestia's own PHP, but this file runs under the
+   system PHP-FPM, which may be older (e.g. 8.3), and the check would abort
+   with a fatal error. get_real_user_ip() only needs CloudflareIpValidator. */
+require_once "/usr/local/hestia/web/inc/vendor/divinity76/cloudflare-ip-validator/src/CloudflareIpValidator.php";
 require_once "/usr/local/hestia/web/inc/helpers.php";
 
 class Hestia_API {

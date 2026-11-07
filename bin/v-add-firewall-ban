@@ -1,10 +1,15 @@
 #!/bin/bash
 # info: add firewall blocking rule
-# options: IPV4_CIDR CHAIN
+# options: IP_CIDR CHAIN
 #
 # example: v-add-firewall-ban 37.120.129.20 MAIL
+# example: v-add-firewall-ban 2001:db8::bad MAIL
 #
 # This function adds new blocking rule to system firewall
+#
+# IPv6 bans block the whole /64 of the address (FIREWALL_IPV6_BAN_PREFIX in
+# hestia.conf), unless it contains an address of this server or an excluded
+# address. The banlist keeps the banned address.
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #
@@ -16,6 +21,7 @@ chain=$(echo "$2" | tr '[:lower:]' '[:upper:]')
 
 # Defining absolute path for iptables and modprobe
 iptables="/sbin/iptables"
+ip6tables="/sbin/ip6tables"
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -31,8 +37,13 @@ source_conf "$HESTIA/conf/hestia.conf"
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'IPV4_CIDR CHAIN'
-is_format_valid 'ipv4_cidr' 'chain'
+check_args '2' "$#" 'IP_CIDR CHAIN'
+if [[ "$ipv4_cidr" == *:* ]]; then
+	ipv6_cidr="$ipv4_cidr"
+	is_format_valid 'ipv6_cidr' 'chain'
+else
+	is_format_valid 'ipv4_cidr' 'chain'
+fi
 is_system_enabled "$FIREWALL_SYSTEM" 'FIREWALL_SYSTEM'
 
 # Perform verification if read-only mode is enabled
@@ -46,7 +57,7 @@ check_hestia_demo_mode
 heal_iptables_links
 
 # Checking server ip
-if [ -e "$HESTIA/data/ips/$ipv4_cidr" ] || [ "$ipv4_cidr" = '127.0.0.1' ]; then
+if [ -e "$HESTIA/data/ips/$ipv4_cidr" ] || [ "$ipv4_cidr" = '127.0.0.1' ] || [ "$ipv4_cidr" = '::1' ]; then
 	exit
 fi
 
@@ -74,8 +85,16 @@ date=$(echo "$time_n_date" | cut -f 2 -d \ )
 
 # Adding ip to banlist
 echo "IP='$ipv4_cidr' CHAIN='$chain' TIME='$time' DATE='$date'" >> $conf
-$iptables -I fail2ban-$chain 1 -s $ipv4_cidr \
-	-j DROP 2> /dev/null
+if [[ "$ipv4_cidr" == *:* ]]; then
+	# The network may already be blocked because of another address
+	ban_network=$(echo "$chain $ipv4_cidr" | get_ipv6_ban_networks | cut -d ' ' -f 2)
+	if ! $ip6tables -C fail2ban-$chain -s $ban_network -j DROP 2> /dev/null; then
+		$ip6tables -I fail2ban-$chain 1 -s $ban_network -j DROP 2> /dev/null
+	fi
+else
+	$iptables -I fail2ban-$chain 1 -s $ipv4_cidr \
+		-j DROP 2> /dev/null
+fi
 
 # Changing permissions
 chmod 660 $conf

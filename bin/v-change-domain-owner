@@ -74,9 +74,9 @@ if [ -n "$web_data" ]; then
 		fi
 	fi
 
-	if [ -z "$(echo $(get_user_ips) | grep $IP)" ]; then
+	if [ -n "$IP" ] && [ -z "$(echo $(get_user_ips) | grep $IP)" ]; then
 		echo "[*] IP dedicated to $owner select new ip address..."
-		get_user_ip
+		get_user_ip_if_available
 	fi
 	old_ip=$IP
 	new_ip=${local_ip:-$ip}
@@ -85,6 +85,15 @@ if [ -n "$web_data" ]; then
 	# Change IP
 	if [ -n "$ip" ]; then
 		web_data=$(echo "$web_data" | sed "s/IP='$IP'/IP='$ip'/")
+	fi
+
+	# Change IPv6 if the address is not available to the new owner
+	old_ipv6=$IP6
+	new_ipv6=$IP6
+	if [ -n "$IP6" ] && [ -z "$(get_user_ip6s | grep -xF "$IP6")" ]; then
+		get_user_ipv6
+		new_ipv6=$ipv6
+		web_data=$(echo "$web_data" | sed "s/IP6='$IP6'/IP6='$new_ipv6'/")
 	fi
 	if [ -n "$new_docroot" ]; then
 		web_data=$(echo "$web_data" | sed "s|CUSTOM_DOCROOT='$CUSTOM_DOCROOT'|CUSTOM_DOCROOT='$new_docroot'|")
@@ -151,6 +160,16 @@ if [ -n "$dns_data" ]; then
 	if [ -n "$ip" ]; then
 		dns_data=$(echo "$dns_data" | sed "s/IP='$IP'/IP='$ip'/")
 		sed -i "s/$IP/$ip/g" $HESTIA/data/users/$owner/dns/$domain.conf
+	fi
+
+	# Change IPv6
+	if [ -n "$old_ipv6" ] && [ "$old_ipv6" != "$new_ipv6" ]; then
+		dns_data=$(echo "$dns_data" | sed "s/IP6='$old_ipv6'/IP6='$new_ipv6'/")
+		if [ -n "$new_ipv6" ]; then
+			sed -i "s/\(TYPE='AAAA' .*VALUE='\)$old_ipv6'/\1$new_ipv6'/" $HESTIA/data/users/$owner/dns/$domain.conf
+		else
+			sed -i "/TYPE='AAAA' .*VALUE='$old_ipv6'/d" $HESTIA/data/users/$owner/dns/$domain.conf
+		fi
 	fi
 
 	# Move config
@@ -314,6 +333,13 @@ if [ -n "$old_ip" ]; then
 		# recalculate ip
 		decrease_ip_value $old_ip $owner
 		increase_ip_value $old_ip
+	fi
+fi
+if [ -n "$old_ipv6" ] && [ -f "$HESTIA/data/ips/$old_ipv6" ]; then
+	# Recalculate ipv6 usage
+	decrease_ip_value "$old_ipv6" "$owner"
+	if [ -n "$new_ipv6" ]; then
+		increase_ip_value "$new_ipv6"
 	fi
 fi
 # Send notification to panel

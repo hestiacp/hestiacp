@@ -22,8 +22,14 @@ if (!empty($_POST["ok"])) {
 	if (empty($_POST["v_ip"])) {
 		$errors[] = _("IP Address");
 	}
-	if (empty($_POST["v_netmask"])) {
-		$errors[] = _("Netmask");
+	// The netmask can be part of the address (IP/PREFIX), IPv6 defaults to /64
+	$v_ip_post = $_POST["v_ip"] ?? "";
+	if (
+		empty($_POST["v_netmask"]) &&
+		strpos($v_ip_post, ":") === false &&
+		strpos($v_ip_post, "/") === false
+	) {
+		$errors[] = _("Netmask / Prefix Length");
 	}
 	if (empty($_POST["v_interface"])) {
 		$errors[] = _("Interface");

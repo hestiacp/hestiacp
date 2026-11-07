@@ -95,6 +95,16 @@ if (!empty($_POST["ok"]) && $read_only !== true) {
 	}
 	// Add DNS domain
 	if ($_POST["v_dns"] == "on" && empty($_SESSION["error_msg"])) {
+		// Publish AAAA records only for the IPv6 address the web domain listens on
+		exec(
+			HESTIA_CMD . "v-list-web-domain " . $user . " " . quoteshellarg($v_domain) . " json",
+			$output,
+			$return_var,
+		);
+		$web_domain = json_decode(implode("", $output), true);
+		unset($output);
+		$v_ip6 = $web_domain[$v_domain]["IP6"] ?? "";
+
 		exec(
 			HESTIA_CMD .
 				"v-add-dns-domain " .
@@ -103,7 +113,8 @@ if (!empty($_POST["ok"]) && $read_only !== true) {
 				quoteshellarg($v_domain) .
 				" " .
 				$v_public_ip .
-				" '' '' '' '' '' '' '' '' 'no'",
+				" '' '' '' '' '' '' '' '' 'no' '' " .
+				quoteshellarg($v_ip6),
 			$output,
 			$return_var,
 		);
@@ -170,6 +181,8 @@ if (!empty($_SESSION["PROXY_SYSTEM"])) {
 // List IP addresses
 exec(HESTIA_CMD . "v-list-user-ips " . $user . " json", $output, $return_var);
 $ips = json_decode(implode("", $output), true);
+// Web domains get their IPv6 address automatically
+$ips = array_filter($ips ?? [], fn($ip) => strpos($ip, ":") === false, ARRAY_FILTER_USE_KEY);
 unset($output);
 
 // Get all user domains

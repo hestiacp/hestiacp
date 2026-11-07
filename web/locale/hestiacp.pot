@@ -5101,3 +5101,144 @@ msgstr ""
 #: ../../bin/v-list-sys-services:336
 msgid "web terminal backend"
 msgstr ""
+
+#: ../../web/templates/pages/edit_web.php:19
+msgid "Node.js App"
+msgstr ""
+
+#: ../../web/templates/pages/setup_node.php:24
+msgid "Node.js & PM2 Application Manager"
+msgstr ""
+
+#: ../../web/templates/pages/setup_node.php:32
+msgid "Node.js / PM2 Not Installed"
+msgstr ""
+
+#: ../../web/templates/pages/setup_node.php:33
+msgid "Node.js or PM2 process manager is not installed on this server."
+msgstr ""
+
+#: ../../web/templates/pages/setup_node.php:34
+msgid "You can install it on your server using:"
+msgstr ""
+
+#: ../../web/templates/pages/setup_node.php:41
+msgid "Node.js Version"
+msgstr ""
+
+#: ../../web/templates/pages/setup_node.php:45
+msgid "NPM Version"
+msgstr ""
+
+#: ../../web/templates/pages/setup_node.php:49
+msgid "PM2 Version"
+msgstr ""
+
+#: ../../web/templates/pages/setup_node.php:53
+msgid "Active Applications"
+msgstr ""
+
+#: ../../web/templates/pages/setup_node.php:61
+msgid "Running Applications"
+msgstr ""
+
+#: ../../web/templates/pages/setup_node.php:67
+msgid "Application (Domain)"
+msgstr ""
+
+#: ../../web/templates/pages/setup_node.php:78
+msgid "No active Node.js applications found."
+msgstr ""
+
+#: ../../web/templates/pages/setup_node.php:103
+msgid "Are you sure you want to delete this application?"
+msgstr ""
+
+#: ../../web/templates/pages/setup_node.php:115
+msgid "Deploy Node.js Application"
+msgstr ""
+
+#: ../../web/templates/pages/setup_node.php:121
+msgid "-- Select Domain --"
+msgstr ""
+
+#: ../../web/templates/pages/setup_node.php:132
+msgid "Internal Port (Proxy Pass)"
+msgstr ""
+
+#: ../../web/templates/pages/setup_node.php:134
+msgid "The local port where your Node.js application listens. NGINX will reverse-proxy requests to this port."
+msgstr ""
+
+#: ../../web/templates/pages/setup_node.php:138
+msgid "Application Path"
+msgstr ""
+
+#: ../../web/templates/pages/setup_node.php:142
+msgid "Create Folder"
+msgstr ""
+
+#: ../../web/templates/pages/setup_node.php:148
+msgid "Full filesystem path to your Node.js project directory."
+msgstr ""
+
+#: ../../web/templates/pages/setup_node.php:152
+msgid "Entry File"
+msgstr ""
+
+#: ../../web/templates/pages/setup_node.php:154
+msgid "Entry script executed by PM2 (e.g. app.js, index.js, or server.js)."
+msgstr ""
+
+#: ../../web/templates/pages/setup_node.php:15
+#: ../../web/templates/pages/setup_node.php:159
+msgid "Start Application"
+msgstr ""
+
+#: ../../web/templates/pages/setup_node.php:178
+msgid "Please select a domain first."
+msgstr ""
+
+#: ../../web/templates/pages/setup_node.php:185
+msgid "Directory created successfully!"
+msgstr ""
+
+#: ../../web/templates/pages/setup_node.php:187
+msgid "Failed to create directory."
+msgstr ""
+
+#: ../../web/templates/pages/setup_node.php:191
+msgid "Request failed."
+msgstr ""
+
+#: ../../web/add/node/index.php:40
+#, php-format
+msgid "Node.js application '%s' was deleted successfully."
+msgstr ""
+
+#: ../../web/add/node/index.php:42
+#, php-format
+msgid "Node.js application '%s' was restarted successfully."
+msgstr ""
+
+#: ../../web/add/node/index.php:44
+#, php-format
+msgid "Node.js application '%s' was stopped successfully."
+msgstr ""
+
+#: ../../web/add/node/index.php:47
+msgid "An error occurred executing the action."
+msgstr ""
+
+#: ../../web/add/node/index.php:61
+msgid "All fields are required."
+msgstr ""
+
+#: ../../web/add/node/index.php:75
+#, php-format
+msgid "Node.js application '%s' deployed and started on port %s."
+msgstr ""
+
+#: ../../web/add/node/index.php:79
+msgid "Failed to start application."
+msgstr ""

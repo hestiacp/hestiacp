@@ -207,6 +207,15 @@
 				</div>
 				<div x-cloak x-show="showAdvanced">
 					<div class="u-mb10">
+						<label for="v_extended_backup" class="form-label">
+							<?= tohtml( _("Extended Backup")) ?> <i class="fas fa-circle-question icon-blue" title="<?= tohtml( _("Create detailed database backups with separate files for table structures, views, stored routines and triggers")) ?>"></i>
+						</label>
+						<select class="form-select" name="v_extended_backup" id="v_extended_backup">
+							<option value='yes' <?php if ($v_extended_backup === 'yes') echo 'selected' ?>><?= tohtml( _("Yes")) ?></option>
+							<option value='no' <?php if (empty($v_extended_backup) || $v_extended_backup === 'no') echo 'selected' ?>><?= tohtml( _("No")) ?></option>
+						</select>
+					</div>
+					<div class="u-mb10">
 						<label for="v_shell" class="form-label"><?= tohtml( _("SSH Access")) ?></label>
 						<select class="form-select" name="v_shell" id="v_shell">
 							<?php

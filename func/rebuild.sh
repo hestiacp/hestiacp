@@ -502,8 +502,13 @@ rebuild_dns_domain_conf() {
 
 		# Sorting records
 		sort_dns_records
-		#Remove old sign files
-		rm -fr $HOMEDIR/$user/conf/dns/$domain.db.*
+		if [ "$DNSSEC" = "yes" ]; then
+			# Keep the signed zone, it holds the published serial
+			rm -f $HOMEDIR/$user/conf/dns/$domain.db.jnl
+		else
+			#Remove old sign files
+			rm -fr $HOMEDIR/$user/conf/dns/$domain.db.*
+		fi
 		# Updating zone
 		update_domain_zone
 

@@ -64,7 +64,7 @@ multiphp_required=("8.1" "8.2" "8.3" "8.4" "8.5")
 # Default PHP version if none supplied
 fpm_v="8.5"
 # MariaDB version
-mariadb_v="11.8"
+mariadb_v="12.3"
 # Node.js version
 node_v="24"
 

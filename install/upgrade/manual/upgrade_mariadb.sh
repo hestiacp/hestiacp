@@ -7,16 +7,17 @@
 #----------------------------------------------------------#
 
 # Set MariaDB Target Version
-mariadb_v='10.11'
+mariadb_v='11.8'
 
 #----------------------------------------------------------#
 #                      Verifications                       #
 #----------------------------------------------------------#
 
 # Detect installed MariaDB version
-mysql_v="$(mysqld -V | awk '{print $3}' | cut -d: -f1)"
+mysql_v="$(mysqld -V 2> /dev/null || mariadbd -V 2> /dev/null)"
+mysql_v="$(echo "$mysql_v" | awk '{print $3}' | cut -d- -f1 | cut -d: -f1)"
 
-if [ "${mysql_v%.*}" = "$mariadb_v" ]; then
+if [ "${mysql_v%.*}" = "$mariadb_v" ] || dpkg --compare-versions "${mysql_v%.*}" ge "$mariadb_v" 2> /dev/null; then
 	echo "[ ! ] MariaDB version ($mariadb_v) is already up to date."
 	exit 0
 else
@@ -49,6 +50,12 @@ apt="/etc/apt/sources.list.d"
 echo "[ * ] Installing MariaDB repository..."
 echo "deb [arch=$arch signed-by=/usr/share/keyrings/mariadb-keyring.gpg] https://dlm.mariadb.com/repo/mariadb-server/$mariadb_v/repo/$os $codename main" > $apt/mariadb.list
 curl -s https://mariadb.org/mariadb_release_signing_key.asc | gpg --dearmor | tee /usr/share/keyrings/mariadb-keyring.gpg > /dev/null 2>&1
+
+cat > /etc/apt/apt.conf.d/60unattended-upgrades-hestia-mariadb << 'EOF'
+Unattended-Upgrade::Origins-Pattern {
+	"origin=MariaDB";
+};
+EOF
 
 # Update repository
 echo "[ * ] Update apt repository..."

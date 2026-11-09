@@ -17,6 +17,15 @@ pmapath="/etc/phpmyadmin/conf.d/01-localhost.php"
 echo "<?php " >> $pmapath
 echo "\$cfg['Servers'][\$i]['host'] = 'localhost';" >> $pmapath
 echo "\$cfg['Servers'][\$i]['port'] = '3306';" >> $pmapath
+# Pin the configuration storage (pma__* tables below) to localhost
+# independently of the main connection's host. Without this, Hestia SSO
+# to a remote database host (hestia-sso.php's "host" GET param) makes
+# AuthenticationSignon override $cfg['Servers'][$i]['host'] for the whole
+# session -- config storage would then try to use that same remote host
+# too, where neither the 'phpmyadmin' database nor the 'pma' control user
+# below exist, intermittently failing with errors like "INSERT command
+# denied ... for table `phpmyadmin`.`pma__userconfig`".
+echo "\$cfg['Servers'][\$i]['controlhost'] = 'localhost';" >> $pmapath
 echo "\$cfg['Servers'][\$i]['favorite'] = 'pma__favorite';" >> $pmapath
 echo "\$cfg['Servers'][\$i]['usergroups'] = 'pma__usergroups';" >> $pmapath
 echo "\$cfg['Servers'][\$i]['central_columns'] = 'pma__central_columns';" >> $pmapath

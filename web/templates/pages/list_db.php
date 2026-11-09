@@ -9,6 +9,38 @@ if (!empty($_SESSION["DB_PMA_ALIAS"])) {
 if (!empty($_SESSION["DB_PGA_ALIAS"])) {
 	$db_pgadmin_link = "//" . $http_host . "/" . $_SESSION["DB_PGA_ALIAS"] . "/";
 }
+
+// v-add-database-temp-user-all (used by the generic "log in with access to
+// all databases" button below) only covers databases on a single MySQL host
+// -- phpMyAdmin's SSO session can only be signed on to one server at a time,
+// so there is no such thing as logging into "all" databases when they're
+// spread across several hosts. Pick whichever host actually holds this
+// account's databases: localhost if it has any (the common case), otherwise
+// the remote host with the most of them, so an account whose databases are
+// entirely on a remote host (e.g. added via a Database Host in the panel)
+// still gets a working button instead of one hardcoded to an empty
+// localhost. Databases on any other host stay reachable via their
+// individual per-database SSO link further down.
+$mysql_host_db_counts = [];
+foreach ($data as $db) {
+	if ($db["TYPE"] === "mysql" && $db["SUSPENDED"] !== "yes") {
+		$mysql_host_db_counts[$db["HOST"]] = ($mysql_host_db_counts[$db["HOST"]] ?? 0) + 1;
+	}
+}
+if (isset($mysql_host_db_counts["localhost"])) {
+	$db_myadmin_all_host = "localhost";
+} elseif (!empty($mysql_host_db_counts)) {
+	arsort($mysql_host_db_counts);
+	$db_myadmin_all_host = array_key_first($mysql_host_db_counts);
+} else {
+	// No MySQL databases at all: there's nothing to log into, and unlike the
+	// per-database links, the bare (non-SSO) phpMyAdmin link is not a usable
+	// fallback here -- once "Restrict phpMyAdmin to Hestia login"
+	// (PMA_RESTRICT_ACCESS) is enabled it never shows a login form, it just
+	// redirects back to the Hestia login page. Leave it null so the button
+	// is hidden below instead of offering a dead end.
+	$db_myadmin_all_host = null;
+}
 ?>
 
 <!-- Begin toolbar -->
@@ -19,10 +51,69 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
 				<a href="/add/db/" class="button button-secondary js-button-create">
 					<i class="fas fa-circle-plus icon-green"></i><?= tohtml( _("Add Database")) ?>
 				</a>
-				<?php if ($_SESSION["DB_SYSTEM"] === "mysql" || $_SESSION["DB_SYSTEM"] === "mysql,pgsql" || $_SESSION["DB_SYSTEM"] === "pgsql,mysql") { ?>
-					<a class="button button-secondary <?= tohtml(ipUsed() ? "button-suspended" : "") ?>" href="<?= tohtml($db_myadmin_link) ?>" target="_blank">
-						<i class="fas fa-database icon-orange"></i>phpMyAdmin
-					</a>
+				<?php if (
+					($_SESSION["DB_SYSTEM"] === "mysql" ||
+						$_SESSION["DB_SYSTEM"] === "mysql,pgsql" ||
+						$_SESSION["DB_SYSTEM"] === "pgsql,mysql") &&
+					(empty($_SESSION["PHPMYADMIN_KEY"]) || $db_myadmin_all_host !== null)
+				) { ?>
+					<?php
+						// If SSO is enabled, log in with access to all of this
+						// user's databases at once instead of linking to
+						// phpMyAdmin's own (potentially restricted) login form
+						// -- see hestia-sso.php's "__all__" sentinel handling.
+						// $db_myadmin_all_sso_base has no "host" yet: the SSO
+						// token doesn't cover the host (see verify_token()),
+						// so it stays valid no matter which of the account's
+						// MySQL hosts is picked below -- only the link's
+						// "host" query param needs to change, which the
+						// x-data below does entirely client-side.
+						$db_myadmin_all_sso_base = null;
+						if (!empty($_SESSION["PHPMYADMIN_KEY"])) {
+							$time = time();
+							$hestia_sso_token_all = password_hash(
+								"__all__" . $user_plain . $_SESSION["user_combined_ip"] . $time . $_SESSION["PHPMYADMIN_KEY"],
+								PASSWORD_DEFAULT,
+							);
+							$db_myadmin_all_sso_base =
+								$db_myadmin_link .
+								"hestia-sso.php?" .
+								http_build_query([
+									"user" => $user_plain,
+									"exp" => $time,
+									"hestia_token" => $hestia_sso_token_all,
+								]);
+						}
+						$mysql_hosts_available = array_keys($mysql_host_db_counts);
+					?>
+					<?php if ($db_myadmin_all_sso_base !== null && count($mysql_hosts_available) > 1) { ?>
+						<div class="u-pos-relative" x-data="{ open: false }" @click.outside="open = false">
+							<a
+								class="button button-secondary <?= tohtml(ipUsed() ? "button-suspended" : "") ?>"
+								href="#"
+								@click.prevent="open = !open"
+							>
+								<i class="fas fa-database icon-orange"></i>phpMyAdmin
+								<i class="fas fa-caret-down u-ml5"></i>
+							</a>
+							<ul class="toolbar-button-menu" x-show="open" x-cloak>
+								<?php foreach ($mysql_hosts_available as $mysql_host_option) { ?>
+									<li>
+										<a
+											href="<?= tohtml($db_myadmin_all_sso_base . "&" . http_build_query(["host" => $mysql_host_option])) ?>"
+											target="_blank"
+										>
+											<?= tohtml($mysql_host_option) ?>
+										</a>
+									</li>
+								<?php } ?>
+							</ul>
+						</div>
+					<?php } else { ?>
+						<a class="button button-secondary <?= tohtml(ipUsed() ? "button-suspended" : "") ?>" href="<?= tohtml($db_myadmin_all_sso_base !== null ? $db_myadmin_all_sso_base . "&" . http_build_query(["host" => $db_myadmin_all_host]) : $db_myadmin_link) ?>" target="_blank">
+							<i class="fas fa-database icon-orange"></i>phpMyAdmin
+						</a>
+					<?php } ?>
 				<?php } ?>
 				<?php if ($_SESSION["DB_SYSTEM"] === "pgsql" || $_SESSION["DB_SYSTEM"] === "mysql,pgsql" || $_SESSION["DB_SYSTEM"] === "pgsql,mysql") { ?>
 					<a class="button button-secondary <?= tohtml(ipUsed() ? "button-suspended" : "") ?>" href="<?= tohtml($db_pgadmin_link) ?>" target="_blank">

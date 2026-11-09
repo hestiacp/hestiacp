@@ -4,27 +4,24 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "098c7edb18d039e1bfb9302f3018d902",
+    "content-hash": "d768101536cb5544e8c0d9c3c2dd5086",
     "packages": [
         {
             "name": "divinity76/cloudflare-ip-validator",
-            "version": "v1.0.0",
+            "version": "v1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/divinity76/cloudflare-ip-validator.git",
-                "reference": "557a95ef8db59192a6688a30316440e73403644f"
+                "reference": "cc9e0258a7c206929db787902a05e81afe9ada7e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/divinity76/cloudflare-ip-validator/zipball/557a95ef8db59192a6688a30316440e73403644f",
-                "reference": "557a95ef8db59192a6688a30316440e73403644f",
+                "url": "https://api.github.com/repos/divinity76/cloudflare-ip-validator/zipball/cc9e0258a7c206929db787902a05e81afe9ada7e",
+                "reference": "cc9e0258a7c206929db787902a05e81afe9ada7e",
                 "shasum": ""
             },
             "require": {
                 "php": ">=8.0"
-            },
-            "suggest": {
-                "ext-filter": "Used for additional input validation in your application stack"
             },
             "type": "library",
             "autoload": {
@@ -39,9 +36,10 @@
             "description": "Fast Cloudflare IP validator for PHP",
             "support": {
                 "issues": "https://github.com/divinity76/cloudflare-ip-validator/issues",
-                "source": "https://github.com/divinity76/cloudflare-ip-validator/tree/v1.0.0"
+                "source": "https://github.com/divinity76/cloudflare-ip-validator/tree/v1.0.1"
             },
-            "time": "2026-03-23T21:11:01+00:00"
+            "time": "2026-11-09T13:01:46+00:00",
+            "published-time": "2026-11-09T13:02:35+00:00"
         },
         {
             "name": "hestiacp/phpquoteshellarg",

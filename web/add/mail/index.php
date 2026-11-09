@@ -100,7 +100,7 @@ if (!empty($_POST["ok"]) && $read_only !== true) {
 		unset($output);
 	}
 
-	if (!empty($_POST["v_reject"]) && $v_antispam == "yes") {
+	if (empty($_SESSION["error_msg"]) && !empty($_POST["v_reject"]) && $v_antispam == "yes") {
 		exec(
 			HESTIA_CMD . "v-add-mail-domain-reject " . $user . " " . $v_domain . " yes",
 			$output,

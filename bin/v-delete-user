@@ -89,6 +89,13 @@ sed -i "/ $user$/d" "$HESTIA/data/queue/traffic.pipe"
 # Deleting sftp jail
 $BIN/v-delete-user-sftp-jail "$user"
 
+# Deleting access keys
+for key_file in "$HESTIA/data/access-keys/"*; do
+	if [ -f "$key_file" ] && grep -qx "USER='$user'" "$key_file"; then
+		rm -f "$key_file"
+	fi
+done
+
 # Deleting system user
 /usr/sbin/userdel -f "$user" >> /dev/null 2>&1
 if [ $? -ne 0 ]; then

@@ -1,7 +1,7 @@
 #!/usr/local/hestia/php/bin/php
 <?php
 //# info: Install Quick Install Web App via CLI
-//# options: action [user] [domain] [app] [options ...]
+# options: action [user] [domain] [app] [options ...]
 //#
 //# example: v-quick-install-app install admin domain.com WordPress email="info@hestiacp" password="123456" username="admin" site_name="HestiaCP Demo" install_directory="/" language="nl_NL" php_version="8.2" database_create="true"
 //# example: v-quick-install-app app

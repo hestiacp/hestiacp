@@ -82,9 +82,14 @@ class ClassicPressSetup extends BaseSetup {
 
         // Ensure language pack exists
         if ($options["language"] !== "en_US") {
-            $this->appcontext->sendPostRequest($target->getUrl() . "/wp-admin/install.php?step=1", [
-                "language" => $options["language"],
-            ]);
+            $this->appcontext->sendPostRequest(
+                $target->getUrl() . "/wp-admin/install.php?step=1",
+                [
+                    "language" => $options["language"],
+                ],
+                [],
+                $target->getResolveUrl(),
+            );
         }
 
         $this->appcontext->sendPostRequest($target->getUrl() . "/wp-admin/install.php?step=2", [

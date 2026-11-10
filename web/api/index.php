@@ -298,6 +298,20 @@ function api_connection(array $request_data) {
 		api_error(E_API_DISABLED, "API has been disabled", $hst_return);
 	}
 
+	// A non-admin key may only run commands whose "# options:" header lets us
+	// locate the user argument. Without that header the check below is skipped,
+	// so treat the command as not allowed for access keys instead.
+	if ($key_user != $root_user && $hst_cmd != "v-make-tmp-file") {
+		$command_source = @file_get_contents("/usr/local/hestia/bin/" . $hst_cmd);
+		if (!is_string($command_source) || !preg_match('/^# options: /m', $command_source)) {
+			api_error(
+				E_FORBIDEN,
+				"Key $hst_access_key_id - the command $hst_cmd does not declare a user argument",
+				$hst_return,
+			);
+		}
+	}
+
 	// Checks if the value entered in the "user" argument matches the user of the key
 	if (
 		$key_user != $root_user &&

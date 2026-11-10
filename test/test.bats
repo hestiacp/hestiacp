@@ -588,6 +588,34 @@ function check_ip_not_banned(){
   assert_failure $E_PASSWORD
 }
 
+@test "User: Check user password and salt with sha-512 rounds parameter" {
+  orig_shadow=$(awk -v user="$user" -F : 'user == $1 {print $2}' /etc/shadow)
+  rounds_hash=$(perl -e 'print crypt($ARGV[0], $ARGV[1])' "$userpass2" '$6$rounds=24000$g7cdSalt12345678$')
+  [[ "$rounds_hash" == '$6$rounds=24000$g7cdSalt12345678$'* ]]
+  chmod u+w /etc/shadow
+  sed -i "s|^$user:[^:]*:|$user:$rounds_hash:|" /etc/shadow
+  chmod u-w /etc/shadow
+
+  run v-get-user-salt $user 192.168.2.10 json
+  assert_success
+  assert_output --partial '"METHOD": "sha-512"'
+  assert_output --partial '"SALT": "rounds=24000$g7cdSalt12345678"'
+
+  run v-check-user-password $user "$userpass2" 192.168.2.10 'no'
+  assert_success
+
+  run v-check-user-password $user "$userpass1" 192.168.2.10 'no'
+  assert_failure $E_PASSWORD
+
+  hash=$(v-check-user-password $user "$userpass2" 192.168.2.10 'yes')
+  run v-check-user-hash $user "$hash" 192.168.2.10
+  assert_success
+
+  chmod u+w /etc/shadow
+  sed -i "s|^$user:[^:]*:|$user:$orig_shadow:|" /etc/shadow
+  chmod u-w /etc/shadow
+}
+
 #----------------------------------------------------------#
 #                         Cron                             #
 #----------------------------------------------------------#

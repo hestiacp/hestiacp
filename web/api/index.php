@@ -100,8 +100,12 @@ function api_legacy(array $request_data) {
 			$hash = crypt($password, '$1$' . $salt . '$');
 		}
 		if ($method == "sha-512") {
-			$hash = crypt($password, '$6$rounds=5000$' . $salt . '$');
-			$hash = str_replace('$rounds=5000', "", $hash);
+			if (preg_match('/^rounds=[1-9][0-9]{3,8}\$[a-zA-Z0-9.\/]{1,16}\z/', $salt)) {
+				$hash = crypt($password, '$6$' . $salt . '$');
+			} else {
+				$hash = crypt($password, '$6$rounds=5000$' . $salt . '$');
+				$hash = str_replace('$rounds=5000', "", $hash);
+			}
 		}
 		if ($method == "yescrypt") {
 			$fp = tmpfile();

@@ -34,7 +34,8 @@ if ($_SESSION["userContext"] === "admin" && $_SESSION["look"] == "") {
 		exec(HESTIA_CMD . "v-search-object " . $q . " json", $output, $return_var);
 	}
 } else {
-	$user = quoteshellarg($_SESSION["user"]);
+	$username = !empty($_SESSION["look"]) ? $_SESSION["look"] : $_SESSION["user"];
+	$user = quoteshellarg($username);
 	exec(HESTIA_CMD . "v-search-user-object " . $user . " " . $q . " json", $output, $return_var);
 }
 

@@ -260,6 +260,17 @@ function wait_for_app() {
 	assert_file_exist "$HOMEDIR/$user/web/$domain2/app/index.html"
 }
 
+@test "APP: Re-added app does not show the previous app's log" {
+	sleep 1
+	run v-add-web-domain-app $user $domain2 custom system 'true'
+	assert_success
+	run v-list-web-domain-app-log $user $domain2 500
+	assert_success
+	refute_output --partial 'GET /'
+	run v-delete-web-domain-app $user $domain2
+	assert_success
+}
+
 @test "APP: Delete web domain removes its app" {
 	run v-delete-web-domain $user $domain
 	assert_success

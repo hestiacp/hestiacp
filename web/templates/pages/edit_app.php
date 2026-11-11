@@ -253,7 +253,7 @@
 		<?php if (trim($v_log) === "") { ?>
 			<p class="u-mb20"><?= tohtml( _("No log entries yet.")) ?></p>
 		<?php } else { ?>
-			<pre class="console-output u-max-height600 u-overflow-auto u-mb20"><?= tohtml($v_log) ?></pre>
+			<pre class="console-output u-max-height600 u-overflow-auto u-mb20" x-data x-init="$el.scrollTop = $el.scrollHeight"><?= tohtml($v_log) ?></pre>
 		<?php } ?>
 		<!-- End logs -->
 	</div>

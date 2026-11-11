@@ -44,7 +44,15 @@ fi
 #                       Action                             #
 #----------------------------------------------------------#
 
-journalctl -u "$(app_unit_name "$user" "$domain")" -n "$lines" --no-pager \
+# Only show entries since the app was added: the journal is keyed by unit
+# name, so a re-created user/domain must not see an earlier owner's output
+get_app_values "$domain"
+since=()
+if [[ "$DATE $TIME" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}\ [0-9]{2}:[0-9]{2}:[0-9]{2}$ ]]; then
+	since=(--since "$DATE $TIME")
+fi
+
+journalctl -u "$(app_unit_name "$user" "$domain")" "${since[@]}" -n "$lines" --no-pager \
 	-o short-iso --no-hostname 2> /dev/null | grep -v '^-- No entries --$'
 
 #----------------------------------------------------------#

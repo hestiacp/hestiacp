@@ -298,6 +298,17 @@ function api_connection(array $request_data) {
 		api_error(E_API_DISABLED, "API has been disabled", $hst_return);
 	}
 
+	// A non-admin key is scoped to its owner through the "user" argument. Refuse
+	// commands where that argument could not be located, otherwise the check
+	// below would be skipped.
+	if ($key_user != $root_user && $hst_cmd != "v-make-tmp-file" && $user_arg_position <= 0) {
+		api_error(
+			E_FORBIDEN,
+			"Key $hst_access_key_id - the command $hst_cmd does not declare a user argument",
+			$hst_return,
+		);
+	}
+
 	// Checks if the value entered in the "user" argument matches the user of the key
 	if (
 		$key_user != $root_user &&

@@ -2076,7 +2076,7 @@ search_command_arg_position() {
 
 	local position=0
 	local count=0
-	local command_options="$(sed -En 's/^# options: (.+)/\1/p' "$command_path")"
+	local command_options="$(sed -En 's|^(//)?# options: (.+)|\2|p' "$command_path")"
 	while IFS=' ' read -ra options_arr; do
 		for option in "${options_arr[@]}"; do
 			count=$((count + 1))

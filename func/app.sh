@@ -578,9 +578,9 @@ app_disable_template() {
 
 app_json_escape() {
 	local s="$1"
-	s="${s//\/\\/}"
+	s="${s//\\/\\\\}"
 	s="${s//\"/\\\"}"
-	s="${s//$'\t'/\t}"
+	s="${s//$'\t'/\\t}"
 	printf '%s' "$s"
 }
 
@@ -702,4 +702,142 @@ is_app_template_change_valid() {
 	if [ -n "$tpl_type" ] && [ "$tpl_type" = "$kind" ] && [ "$template" != "$APP_TEMPLATE" ]; then
 		check_result "$E_INUSE" "domain $domain serves an application, delete it first (v-delete-web-domain-app)"
 	fi
+}
+
+#----------------------------------------------------------#
+#                    Backup & restore                      #
+#----------------------------------------------------------#
+
+# Copy the app settings and environment of $user/$domain into $3 (the
+# "hestia" folder of the domain in a backup). The app files themselves are
+# part of the domain data archive.
+backup_app_conf() {
+	local user="$1" domain="$2" dst="$3" envfile
+	app_exists "$user" "$domain" || return 0
+	grep "^DOMAIN='$domain' " "$HESTIA/data/users/$user/app.conf" > "$dst/app.conf"
+	envfile=$(app_env_file "$user" "$domain")
+	if [ -f "$envfile" ]; then
+		cp "$envfile" "$dst/app.env"
+	fi
+	chmod 600 "$dst/app.conf" "$dst/app.env" 2> /dev/null
+	return 0
+}
+
+# A restored web.conf may still select the app template while its app could
+# not be restored: fall back to the default template.
+app_restore_reset_template() {
+	local domain="$1"
+	if [ "$(get_object_value 'web' 'DOMAIN' "$domain" '$PROXY')" = "$APP_TEMPLATE" ]; then
+		update_object_value 'web' 'DOMAIN' "$domain" '$PROXY' 'default'
+	fi
+	if [ "$(get_object_value 'web' 'DOMAIN' "$domain" '$TPL')" = "$APP_TEMPLATE" ]; then
+		update_object_value 'web' 'DOMAIN' "$domain" '$TPL' 'default'
+	fi
+}
+
+# Register the app of $user/$domain from the "hestia" folder $3 of a backup.
+# Backup content is not trusted (restic backups pass through the user home):
+# every value is validated again, the port is re-allocated when it is taken,
+# the environment is re-parsed and the template type follows this server.
+# Call it after the domain data was restored and before the final rebuild,
+# which writes the unit and starts the app.
+restore_app_conf() {
+	local user="$1" domain="$2" src="$3"
+	local line port tpl_type prev_tpl envfile tmpenv used
+	# Filled by parse_object_kv_list; local so restore variables are untouched
+	# shellcheck disable=SC2034
+	local DOMAIN RUNTIME VERSION DIR CMD INSTALL PORT STATUS TPL_TYPE PREV_TPL SUSPENDED TIME DATE
+
+	if [ ! -f "$src/app.conf" ]; then
+		app_exists "$user" "$domain" || app_restore_reset_template "$domain"
+		return 0
+	fi
+	if [ "$PROXY_SYSTEM" != 'nginx' ] && [ "$WEB_SYSTEM" != 'nginx' ]; then
+		echo "$(date "+%F %T") skipping application of $domain: nginx is required"
+		return 0
+	fi
+	line=$(grep -m1 "^DOMAIN='$domain' " "$src/app.conf")
+	[ -n "$line" ] || return 0
+	parse_object_kv_list "$line" || return 0
+	CMD="${CMD//%quote%/\'}"
+	INSTALL="${INSTALL//%quote%/\'}"
+
+	# Validate in subshells: check_result would end the whole restore
+	if ! (is_app_runtime_valid "$RUNTIME") > /dev/null \
+		|| ! (is_app_dir_valid "$DIR") > /dev/null \
+		|| ! (is_app_command_valid "$CMD" 'command') > /dev/null \
+		|| ! (is_app_command_valid "$INSTALL" 'install command') > /dev/null; then
+		echo "$(date "+%F %T") skipping application of $domain: invalid settings in backup"
+		app_restore_reset_template "$domain"
+		return 0
+	fi
+	if [ -z "$CMD" ] && [ "$RUNTIME" != 'node' ]; then
+		echo "$(date "+%F %T") skipping application of $domain: no start command"
+		app_restore_reset_template "$domain"
+		return 0
+	fi
+	if ! (is_app_version_valid "$RUNTIME" "$VERSION") > /dev/null 2>&1; then
+		echo "$(date "+%F %T") Node.js $VERSION is not installed, $domain uses the system version"
+		VERSION='system'
+	fi
+	[ "$STATUS" = 'running' ] || STATUS='stopped'
+
+	app_lock
+	# Keep the old port when no other app uses it and nothing listens on it
+	used=$(grep -h "PORT='$PORT'" "$HESTIA"/data/users/*/app.conf 2> /dev/null \
+		| grep -v "^DOMAIN='$domain' ")
+	port="$PORT"
+	if ! [[ "$port" =~ ^[0-9]+$ ]] || [ "$port" -lt "$(app_port_min)" ] \
+		|| [ "$port" -gt "$(app_port_max)" ] || [ -n "$used" ] \
+		|| { ! app_exists "$user" "$domain" && ss -Htln "sport = :$port" | grep -q .; }; then
+		port=$(get_free_app_port)
+		if [ -z "$port" ]; then
+			flock -u "$APP_LOCK_FD"
+			echo "$(date "+%F %T") skipping application of $domain: no free port"
+			app_restore_reset_template "$domain"
+			return 0
+		fi
+	fi
+
+	# Point the domain at the app on this server (with or without Apache)
+	if [ "$PROXY_SYSTEM" = 'nginx' ]; then
+		tpl_type='proxy'
+		prev_tpl=$(get_object_value 'web' 'DOMAIN' "$domain" '$PROXY')
+		update_object_value 'web' 'DOMAIN' "$domain" '$PROXY' "$APP_TEMPLATE"
+	else
+		tpl_type='web'
+		prev_tpl=$(get_object_value 'web' 'DOMAIN' "$domain" '$TPL')
+		update_object_value 'web' 'DOMAIN' "$domain" '$TPL' "$APP_TEMPLATE"
+	fi
+	if [ "$prev_tpl" = "$APP_TEMPLATE" ]; then
+		prev_tpl="$PREV_TPL"
+		[[ "$prev_tpl" =~ ^[[:alnum:]][-._[:alnum:]]*$ ]] || prev_tpl='default'
+	fi
+
+	touch "$USER_DATA/app.conf"
+	chmod 660 "$USER_DATA/app.conf"
+	sed -i "/^DOMAIN='$domain' /d" "$USER_DATA/app.conf"
+	echo "DOMAIN='$domain' RUNTIME='$RUNTIME' VERSION='$VERSION'\
+ DIR='$DIR' CMD='$(app_conf_encode "$CMD")' INSTALL='$(app_conf_encode "$INSTALL")'\
+ PORT='$port' STATUS='$STATUS' TPL_TYPE='$tpl_type' PREV_TPL='$prev_tpl'\
+ SUSPENDED='no' TIME='$(date +%T)' DATE='$(date +%F)'" >> "$USER_DATA/app.conf"
+	flock -u "$APP_LOCK_FD"
+
+	# Environment: re-parse the backup copy, fall back to an empty one
+	mkdir -p "$USER_DATA/app"
+	chmod 750 "$USER_DATA/app"
+	envfile=$(app_env_file "$user" "$domain")
+	: > "$envfile"
+	chmod 600 "$envfile"
+	if [ -f "$src/app.env" ] && [ ! -L "$src/app.env" ]; then
+		tmpenv=$(mktemp)
+		print_app_env "$src/app.env" > "$tmpenv"
+		if ! (write_app_env "$tmpenv" "$envfile") > /dev/null; then
+			echo "$(date "+%F %T") environment of $domain could not be restored"
+		fi
+		rm -f "$tmpenv"
+	fi
+
+	app_ensure_templates
+	echo "$(date "+%F %T") application of $domain restored ($RUNTIME, port $port, $STATUS)"
 }

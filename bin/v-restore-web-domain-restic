@@ -26,6 +26,8 @@ source /etc/hestiacp/hestia.conf
 source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
+# shellcheck source=/usr/local/hestia/func/app.sh
+source $HESTIA/func/app.sh
 # shellcheck source=/usr/local/hestia/func/ip.sh
 source $HESTIA/func/ip.sh
 # shellcheck source=/usr/local/hestia/func/rebuild.sh
@@ -239,6 +241,10 @@ for domain in "${domains[@]}"; do
 			chown -R --no-dereference "$user:$user" "$HOMEDIR/$user/web/$domain/document_errors"
 			chown "root:$user" "/var/log/$WEB_SYSTEM/domains/$domain".*
 		fi
+
+		# Restoring web domain application (started by the rebuild below)
+		restore_app_conf "$user" "$domain" "$tmpdir/home/$user/backup/web/$domain/hestia"
+
 		# Rebuilding web config for the second time to make sure ftp users keep working
 		rebuild_web_domain_conf
 
@@ -251,6 +257,14 @@ if [ "$new_user" = "yes" ]; then
 	rebuild_user_conf
 fi
 rm -fr "$tmpdir"
+
+# Load the restored vhosts
+$BIN/v-restart-web
+check_result $? "Web restart failed"
+if [ -n "$PROXY_SYSTEM" ]; then
+	$BIN/v-restart-proxy
+	check_result $? "Proxy restart failed"
+fi
 
 # Update user counters
 $BIN/v-update-user-counters "$user"

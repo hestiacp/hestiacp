@@ -188,6 +188,48 @@ function wait_for_app() {
 	assert_output 'disabled'
 }
 
+@test "APP: JSON output escapes backslashes and quotes" {
+	run v-change-web-domain-app $user $domain custom system 'exec python3 -m http.server "$PORT" --bind "$HOST" # a\b "q"'
+	assert_success
+	run bash -c "v-list-web-domain-apps $user json | python3 -c 'import json,sys; print(json.load(sys.stdin)[\"$domain\"][\"CMD\"])'"
+	assert_success
+	assert_output --partial 'a\b "q"'
+}
+
+@test "APP: Backup and restore keep the app" {
+	printf 'GREETING=from-backup\n' > /tmp/app-5285.env
+	run v-change-web-domain-app-env $user $domain /tmp/app-5285.env no
+	assert_success
+	rm -f /tmp/app-5285.env
+	run v-start-web-domain-app $user $domain
+	assert_success
+	port=$(grep "^DOMAIN='$domain' " $HESTIA/data/users/$user/app.conf | grep -o "PORT='[0-9]*'")
+
+	rm -f /backup/$user.*.tar
+	run v-backup-user $user
+	assert_success
+	backup=$(ls -t /backup/$user.*.tar | head -n1)
+	run bash -c "tar tf $backup | grep -c 'web/$domain/hestia/app'"
+	assert_output '2'
+
+	run v-delete-user $user
+	assert_success
+	assert_file_not_exist "/etc/systemd/system/$unit"
+
+	run v-restore-user $user "$(basename $backup)"
+	assert_success
+	run grep -o "PORT='[0-9]*'" <(grep "^DOMAIN='$domain' " $HESTIA/data/users/$user/app.conf)
+	assert_output "$port"
+	run v-list-web-domain-app-env $user $domain plain
+	assert_output 'GREETING=from-backup'
+	run systemctl is-active $unit
+	assert_output 'active'
+	wait_for_app $domain
+	run request $domain
+	assert_output 'hestia-app-proof'
+	rm -f "$backup"
+}
+
 @test "APP: Python app with virtualenv" {
 	pydir=$HOMEDIR/$user/web/$domain2/app
 	run v-add-web-domain-app $user $domain2 python system '.venv/bin/python -m http.server "$PORT" --bind "$HOST"'

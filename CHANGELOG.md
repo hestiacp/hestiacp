@@ -8,6 +8,11 @@ All notable changes to this project will be documented in this file.
 
 - Add web domain applications: run Node.js, Python or custom-command apps per web domain as systemd services under the domain owner, proxied by nginx (new `app` template), with PM2-style start/stop/restart, live CPU/memory/uptime/restarts, logs, `.env` editor and dependency install from the panel (`v-*-web-domain-app*`)
 - Add `v-add-sys-nodejs`, `v-delete-sys-nodejs` and `v-list-sys-nodejs` to install additional Node.js versions for web domain applications
+- Include web domain applications (settings and environment) in user and restic backups and restore them
+
+### Bugfixes
+
+- Restart the web server and proxy after `v-restore-web-domain-restic` so restored domains are served right away
 
 ## [1.10.6] - Service Release
 

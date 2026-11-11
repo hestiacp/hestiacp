@@ -21,6 +21,8 @@ source /etc/hestiacp/hestia.conf
 source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
+# shellcheck source=/usr/local/hestia/func/app.sh
+source $HESTIA/func/app.sh
 # shellcheck source=/usr/local/hestia/func/db.sh
 source $HESTIA/func/db.sh
 # shellcheck source=/usr/local/hestia/func/backup.sh
@@ -358,6 +360,9 @@ if [ -n "$WEB_SYSTEM" ] && [ "$WEB" != '*' ]; then
 			cp $HOMEDIR/$user/conf/web/$domain/ssl/$domain.* conf/
 			cp $USER_DATA/ssl/$domain.* hestia/
 		fi
+
+		# Backup web domain application settings
+		backup_app_conf "$user" "$domain" hestia
 
 		# Changin dir to documentroot
 		cd $HOMEDIR/$user/web/$domain

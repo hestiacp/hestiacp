@@ -34,6 +34,8 @@ source /etc/hestiacp/hestia.conf
 source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/func/backup.sh
 source $HESTIA/func/backup.sh
+# shellcheck source=/usr/local/hestia/func/app.sh
+source $HESTIA/func/app.sh
 # shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
 # shellcheck source=/usr/local/hestia/func/ip.sh
@@ -404,6 +406,10 @@ if [ "$web" != 'no' ] && [ -n "$WEB_SYSTEM" ]; then
 			find "$HOMEDIR/$user/web/$domain/" -user $old_uid \
 				-exec chown -h $user:$user {} \;
 		fi
+
+		# Restoring web domain application (started by the rebuild below)
+		restore_app_conf "$user" "$domain" "$tmpdir/web/$domain/$backup_system" \
+			| tee -a "$tmpdir/restore.log"
 
 		# Rebuilding web config for the second time to make sure ftp users keep working
 		rebuild_web_domain_conf

@@ -76,6 +76,7 @@ Click **Delete** on the app page. The service stops and the domain goes back to 
 - When the server uses resource limits, apps share the CPU and memory limits of your package.
 - The domain can’t be renamed and its proxy template can’t be changed while it has an app; delete the app first.
 - Suspending the domain stops the app; unsuspending starts it again.
+- Backups include the app files, its settings and its environment variables. Restoring the domain (also from restic snapshots) registers the app again and starts it if it was running. If its Node.js version isn’t installed on the new server, the system version is used.
 
 ## Command line
 

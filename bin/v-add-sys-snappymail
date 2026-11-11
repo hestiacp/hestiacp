@@ -161,8 +161,70 @@ else
 		rm $SM_INSTALL_DIR/$SM_FILE
 	fi
 	rm -fr /tmp/snappy
-fi
 
+	# Update SnappyMail plugins
+	if ! php -r '
+$_ENV["SNAPPYMAIL_INCLUDE_AS_API"] = true;
+require_once "/var/lib/snappymail/index.php";
+
+$oConfig = \RainLoop\Api::Config();
+
+// Enable the plugin system globally
+$oConfig->Set("plugins", "enable", "On");
+
+$plugins = [
+    "add-x-originating-ip-header",
+    "change-password",
+    "change-password-hestia"
+];
+
+// Install all three plugins
+foreach ($plugins as $plugin) {
+    echo "Installing plugin: {$plugin}...\n";
+
+    if (!\SnappyMail\Repository::installPackage("plugin", $plugin)) {
+        fwrite(STDERR, "ERROR: Could not install {$plugin}\n");
+        exit(1);
+    }
+}
+
+// Enable only the first two
+$enabledPlugins = [
+    "add-x-originating-ip-header",
+    "change-password"
+];
+
+foreach ($enabledPlugins as $plugin) {
+    echo "Enabling plugin: {$plugin}...\n";
+
+    if (!\SnappyMail\Repository::enablePackage($plugin)) {
+        fwrite(STDERR, "ERROR: Could not enable {$plugin}\n");
+        exit(1);
+    }
+}
+
+// Save plugin configuration
+if (!$oConfig->Save()) {
+    fwrite(STDERR, "ERROR: Could not save SnappyMail configuration\n");
+    exit(1);
+}
+
+echo "All SnappyMail plugins processed successfully\n";
+'; then
+		echo "ERROR: SnappyMail plugin update failed"
+		exit 1
+	fi
+
+	# Fix SnappyMail plugin ownership and permissions
+	PLUGINS_DIR="$SM_INSTALL_DIR/data/_data_/_default_/plugins"
+
+	chown -R hestiamail:www-data "$PLUGINS_DIR"
+	find "$PLUGINS_DIR" -type d -exec chmod 750 {} \;
+	find "$PLUGINS_DIR" -type f -exec chmod 640 {} \;
+
+fi
+# Get actual installed version
+version=$(cat "$SM_INSTALL_DIR/data/VERSION")
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#

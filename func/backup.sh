@@ -6,6 +6,43 @@
 #                                                                           #
 #===========================================================================#
 
+# Execute a remote backup command with configurable retry attempts and delay.
+# Honors BACKUP_REMOTE_RETRIES (default: 3) and BACKUP_REMOTE_RETRY_DELAY
+# (default: 10 seconds, linear backoff) from hestia.conf or *.backup.conf.
+remote_retry_exec() {
+	local label="$1"
+	shift
+	local max_attempts="${BACKUP_REMOTE_RETRIES:-3}"
+	local base_delay="${BACKUP_REMOTE_RETRY_DELAY:-10}"
+	max_attempts="${max_attempts//[[:space:]]/}"
+	base_delay="${base_delay//[[:space:]]/}"
+	[[ "$max_attempts" =~ ^[1-9][0-9]*$ ]] || max_attempts=3
+	[[ "$base_delay" =~ ^[0-9]+$ ]] || base_delay=10
+
+	local attempt=1
+	local rc=0
+	local wait_sec=0
+	while true; do
+		"$@"
+		rc=$?
+		if [ "$rc" -eq 0 ]; then
+			return 0
+		fi
+		if [ "$attempt" -ge "$max_attempts" ]; then
+			return "$rc"
+		fi
+		wait_sec=$((base_delay * attempt))
+		if [ -n "${BACKUP:-}" ] && [ -n "${user:-}" ] && [ -d "$BACKUP" ]; then
+			echo -e "$(date "+%F %T") Warning: $label failed (exit $rc), retrying ($((attempt + 1))/$max_attempts) in ${wait_sec}s..." \
+				| tee -a "$BACKUP/$user.log"
+		else
+			echo -e "$(date "+%F %T") Warning: $label failed (exit $rc), retrying ($((attempt + 1))/$max_attempts) in ${wait_sec}s..."
+		fi
+		sleep "$wait_sec"
+		attempt=$((attempt + 1))
+	done
+}
+
 # Local storage
 # Defining local storage function
 local_backup() {
@@ -61,8 +98,50 @@ ftpc() {
 EOF
 }
 
+# Execute FTP commands in verbose mode so 4xx/5xx server replies and dropped
+# connections return non-zero exit codes instead of failing silently.
+ftpc_checked() {
+	local ftp_out rc
+	ftp_out=$(
+		/usr/bin/ftp -nvp "$HOST" "$PORT" 2>&1 << EOF
+    quote USER $USERNAME
+    quote PASS $PASSWORD
+    binary
+    ${1:-}
+    ${2:-}
+    ${3:-}
+    quit
+EOF
+	)
+	rc=$?
+	if [ "$rc" -ne 0 ]; then
+		return "$E_CONNECT"
+	fi
+	if printf '%s\n' "$ftp_out" | grep -vE '^[0-9]+ bytes (sent|received) in ' | grep -qiE '^([45][0-9]{2}[ -]|ftp:|not connected|lost connection|passive mode refused|login failed|transfer incomplete)'; then
+		if printf '%s\n' "$ftp_out" | grep -qiE '^(530[ -]|ftp:.*connect|not connected)'; then
+			return "$E_CONNECT"
+		fi
+		return "$E_FTP"
+	fi
+	if ! printf '%s\n' "$ftp_out" | grep -qE '^230[ -]'; then
+		return "$E_CONNECT"
+	fi
+	case "${1:-} ${2:-} ${3:-}" in
+		*"put "* | *"get "*)
+			if ! printf '%s\n' "$ftp_out" | grep -qE '^226[ -]'; then
+				return "$E_FTP"
+			fi
+			;;
+	esac
+	return 0
+}
+
 # Defining ftp storage function
 ftp_backup() {
+	local BACKUP_REMOTE_RETRIES="${BACKUP_REMOTE_RETRIES:-}"
+	local BACKUP_REMOTE_RETRY_DELAY="${BACKUP_REMOTE_RETRY_DELAY:-}"
+	local rc=0
+
 	# Checking config
 	if [ ! -e "$HESTIA/conf/ftp.backup.conf" ]; then
 		error="ftp.backup.conf doesn't exist"
@@ -95,9 +174,7 @@ ftp_backup() {
 	echo -e "$(date "+%F %T") Remote: ftp://$HOST$BPATH/$user.$backup_new_date.tar"
 
 	# Checking ftp connection
-	fconn=$(ftpc)
-	ferror=$(echo $fconn | grep -i -e failed -e error -e "Can't" -e "not conn")
-	if [ -n "$ferror" ]; then
+	if ! remote_retry_exec "FTP connection check ($HOST)" ftpc_checked; then
 		error="Error: can't login to ftp ftp://$USERNAME@$HOST"
 		echo "$error" | $SENDMAIL -s "$subj" $email $notify
 		sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
@@ -149,20 +226,32 @@ ftp_backup() {
 	if [ "$localbackup" = 'yes' ]; then
 		cd $BACKUP
 		if [ -z $BPATH ]; then
-			ftpc "put $user.$backup_new_date.tar"
+			remote_retry_exec "FTP upload ($user.$backup_new_date.tar)" ftpc_checked "put $user.$backup_new_date.tar"
+			rc=$?
 		else
-			ftpc "cd $BPATH" "put $user.$backup_new_date.tar"
+			remote_retry_exec "FTP upload ($user.$backup_new_date.tar)" ftpc_checked "cd $BPATH" "put $user.$backup_new_date.tar"
+			rc=$?
 		fi
 	else
 		cd $tmpdir
 		tar -cf $BACKUP/$user.$backup_new_date.tar .
 		cd $BACKUP/
 		if [ -z $BPATH ]; then
-			ftpc "put $user.$backup_new_date.tar"
+			remote_retry_exec "FTP upload ($user.$backup_new_date.tar)" ftpc_checked "put $user.$backup_new_date.tar"
+			rc=$?
 		else
-			ftpc "cd $BPATH" "put $user.$backup_new_date.tar"
+			remote_retry_exec "FTP upload ($user.$backup_new_date.tar)" ftpc_checked "cd $BPATH" "put $user.$backup_new_date.tar"
+			rc=$?
 		fi
 		rm -f $user.$backup_new_date.tar
+	fi
+	if [ "$rc" -ne 0 ]; then
+		error="Can't upload backup archive $user.$backup_new_date.tar to ftp://$HOST$BPATH"
+		echo "$error" | $SENDMAIL -s "$subj" $email $notify
+		sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
+		echo "$error"
+		errorcode="$rc"
+		return "$rc"
 	fi
 }
 
@@ -345,7 +434,22 @@ sftp_delete() {
 
 }
 
+sftpc_quiet() {
+	sftpc "$@" > /dev/null 2>&1
+}
+
+sftp_check_dir() {
+	if [ -n "$BPATH" ]; then
+		sftpc "mkdir $BPATH" > /dev/null 2>&1
+	fi
+	sftpc "mkdir $1" "rmdir $1" > /dev/null 2>&1
+}
+
 sftp_backup() {
+	local BACKUP_REMOTE_RETRIES="${BACKUP_REMOTE_RETRIES:-}"
+	local BACKUP_REMOTE_RETRY_DELAY="${BACKUP_REMOTE_RETRY_DELAY:-}"
+	local rc=0
+
 	# Checking config
 	if [ ! -e "$HESTIA/conf/sftp.backup.conf" ]; then
 		error="Can't open sftp.backup.conf"
@@ -384,8 +488,7 @@ sftp_backup() {
 	else
 		sftmpdir="$BPATH/vst.bK76A9SUkt"
 	fi
-	sftpc "mkdir $BPATH" > /dev/null 2>&1
-	sftpc "mkdir $sftmpdir" "rmdir $sftmpdir" > /dev/null 2>&1
+	remote_retry_exec "SFTP connection check ($HOST)" sftp_check_dir "$sftmpdir"
 	rc=$?
 	if [[ "$rc" != 0 ]]; then
 		case $rc in
@@ -429,25 +532,45 @@ sftp_backup() {
 	if [ "$localbackup" = 'yes' ]; then
 		cd $BACKUP
 		if [ -z $BPATH ]; then
-			sftpc "put $user.$backup_new_date.tar" "chmod 0600 $user.$backup_new_date.tar" > /dev/null 2>&1
+			remote_retry_exec "SFTP upload ($user.$backup_new_date.tar)" sftpc_quiet "put $user.$backup_new_date.tar" "chmod 0600 $user.$backup_new_date.tar"
+			rc=$?
 		else
-			sftpc "cd $BPATH" "put $user.$backup_new_date.tar" "chmod 0600 $user.$backup_new_date.tar" > /dev/null 2>&1
+			remote_retry_exec "SFTP upload ($user.$backup_new_date.tar)" sftpc_quiet "cd $BPATH" "put $user.$backup_new_date.tar" "chmod 0600 $user.$backup_new_date.tar"
+			rc=$?
 		fi
 	else
 		cd $tmpdir
 		tar -cf $BACKUP/$user.$backup_new_date.tar .
 		cd $BACKUP/
 		if [ -z $BPATH ]; then
-			sftpc "put $user.$backup_new_date.tar" "chmod 0600 $user.$backup_new_date.tar" > /dev/null 2>&1
+			remote_retry_exec "SFTP upload ($user.$backup_new_date.tar)" sftpc_quiet "put $user.$backup_new_date.tar" "chmod 0600 $user.$backup_new_date.tar"
+			rc=$?
 		else
-			sftpc "cd $BPATH" "put $user.$backup_new_date.tar" "chmod 0600 $user.$backup_new_date.tar" > /dev/null 2>&1
+			remote_retry_exec "SFTP upload ($user.$backup_new_date.tar)" sftpc_quiet "cd $BPATH" "put $user.$backup_new_date.tar" "chmod 0600 $user.$backup_new_date.tar"
+			rc=$?
 		fi
 		rm -f $user.$backup_new_date.tar
 	fi
+	if [ "$rc" -ne 0 ]; then
+		error="Can't upload backup archive $user.$backup_new_date.tar to sftp://$HOST/$BPATH"
+		echo "$error" | $SENDMAIL -s "$subj" $email "yes"
+		sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
+		echo "$error"
+		errorcode="$rc"
+		return "$rc"
+	fi
+}
+
+b2_upload_quiet() {
+	b2 file upload "$@" > /dev/null 2>&1
 }
 
 # BackBlaze B2 backup function
 b2_backup() {
+	local BACKUP_REMOTE_RETRIES="${BACKUP_REMOTE_RETRIES:-}"
+	local BACKUP_REMOTE_RETRY_DELAY="${BACKUP_REMOTE_RETRY_DELAY:-}"
+	local rc=0
+
 	# Defining backblaze b2 settings
 	source_conf "$HESTIA/conf/b2.backup.conf"
 
@@ -459,12 +582,17 @@ b2_backup() {
 	echo -e "$(date "+%F %T") Upload to B2: $user/$user.$backup_new_date.tar"
 	if [ "$localbackup" = 'yes' ]; then
 		cd $BACKUP
-		b2 file upload $BUCKET $user.$backup_new_date.tar $user/$user.$backup_new_date.tar > /dev/null 2>&1
+		remote_retry_exec "B2 upload ($user.$backup_new_date.tar)" b2_upload_quiet "$BUCKET" "$user.$backup_new_date.tar" "$user/$user.$backup_new_date.tar"
+		rc=$?
+		if [ "$rc" -ne 0 ]; then
+			errorcode="$E_CONNECT"
+			return "$E_CONNECT"
+		fi
 	else
 		cd $tmpdir
 		tar -cf $BACKUP/$user.$backup_new_date.tar .
 		cd $BACKUP/
-		b2 file upload $BUCKET $user.$backup_new_date.tar $user/$user.$backup_new_date.tar > /dev/null 2>&1
+		remote_retry_exec "B2 upload ($user.$backup_new_date.tar)" b2_upload_quiet "$BUCKET" "$user.$backup_new_date.tar" "$user/$user.$backup_new_date.tar"
 		rc=$?
 		rm -f $user.$backup_new_date.tar
 		if [ "$rc" -ne 0 ]; then
@@ -512,6 +640,10 @@ b2_delete() {
 }
 
 rclone_backup() {
+	local BACKUP_REMOTE_RETRIES="${BACKUP_REMOTE_RETRIES:-}"
+	local BACKUP_REMOTE_RETRY_DELAY="${BACKUP_REMOTE_RETRY_DELAY:-}"
+	local rc=0
+
 	# Define rclone config
 	source_conf "$HESTIA/conf/rclone.backup.conf"
 	echo -e "$(date "+%F %T") Upload With Rclone to $HOST: $user.$backup_new_date.tar"
@@ -522,9 +654,15 @@ rclone_backup() {
 	cd $BACKUP/
 
 	if [ -z "$BPATH" ]; then
-		rclone copy -v $user.$backup_new_date.tar $HOST:$backup
-		if [ "$?" -ne 0 ]; then
-			check_result "$E_CONNECT" "Unable to upload backup"
+		remote_retry_exec "Rclone upload ($user.$backup_new_date.tar)" rclone copy -v "$user.$backup_new_date.tar" "$HOST:$backup"
+		rc=$?
+		if [ "$rc" -ne 0 ]; then
+			if [ "$localbackup" != 'yes' ]; then
+				rm -f "$user.$backup_new_date.tar"
+				check_result "$E_CONNECT" "Unable to upload backup"
+			fi
+			errorcode="$E_CONNECT"
+			return "$E_CONNECT"
 		fi
 
 		# Only include *.tar files
@@ -538,9 +676,15 @@ rclone_backup() {
 			done
 		fi
 	else
-		rclone copy -v $user.$backup_new_date.tar $HOST:$BPATH
-		if [ "$?" -ne 0 ]; then
-			check_result "$E_CONNECT" "Unable to upload backup"
+		remote_retry_exec "Rclone upload ($user.$backup_new_date.tar)" rclone copy -v "$user.$backup_new_date.tar" "$HOST:$BPATH"
+		rc=$?
+		if [ "$rc" -ne 0 ]; then
+			if [ "$localbackup" != 'yes' ]; then
+				rm -f "$user.$backup_new_date.tar"
+				check_result "$E_CONNECT" "Unable to upload backup"
+			fi
+			errorcode="$E_CONNECT"
+			return "$E_CONNECT"
 		fi
 
 		# Only include *.tar files

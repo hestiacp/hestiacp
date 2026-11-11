@@ -128,7 +128,15 @@ if ($action == "restore") {
 	}
 	if (!empty($cron)) {
 		exec(
-			HESTIA_CMD . "v-schedule-user-restore-restic " . $user . " " . $snapshot . " " . "cron",
+			HESTIA_CMD .
+				"v-schedule-user-restore-restic " .
+				$user .
+				" " .
+				$snapshot .
+				" " .
+				"cron" .
+				" " .
+				"'yes'",
 			$output,
 			$return_var,
 		);

@@ -277,8 +277,10 @@ function list_web_app_node_versions() {
 			}
 		}
 	}
-	if (!isset($versions["system"])) {
-		$versions = ["system" => ""] + $versions;
+	// Offer "system" only when it is installed, or as the only (failing with a
+	// clear message) choice when no Node.js is available at all
+	if (empty($versions)) {
+		$versions = ["system" => ""];
 	}
 	return $versions;
 }

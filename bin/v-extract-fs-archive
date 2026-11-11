@@ -69,7 +69,7 @@ fi
 archive_name="$(basename "$src_file")"
 archive_name="${archive_name%%\?*}"
 
-# Extracting gziped archive
+# Extracting tar gziped archive
 if [ -n "$(echo "$archive_name" | grep -Ei '\.(tgz|tar\.gz)$')" ]; then
 	x='yes'
 	if [ -z "$test" ] || [ "$test" = "no" ]; then
@@ -82,8 +82,8 @@ if [ -n "$(echo "$archive_name" | grep -Ei '\.(tgz|tar\.gz)$')" ]; then
 	fi
 fi
 
-# Extracting bziped archive
-if [ -n "$(echo "$archive_name" | grep -Ei '\.(tbz|tar\.bz2?)$')" ] && [ -z "$x" ]; then
+# Extracting tar bziped archive
+if [ -n "$(echo "$archive_name" | grep -Ei '\.(tbz2?|tar\.bz2?)$')" ] && [ -z "$x" ]; then
 	x='yes'
 	if [ -z "$test" ] || [ "$test" = "no" ]; then
 		user_exec mkdir -p "$dst_dir" > /dev/null 2>&1
@@ -95,7 +95,20 @@ if [ -n "$(echo "$archive_name" | grep -Ei '\.(tbz|tar\.bz2?)$')" ] && [ -z "$x"
 	fi
 fi
 
-# Extracting ZSTD archive
+# Extracting tar xziped archive
+if [ -n "$(echo "$archive_name" | grep -Ei '\.(txz|tar\.xz)$')" ] && [ -z "$x" ]; then
+	x='yes'
+	if [ -z "$test" ] || [ "$test" = "no" ]; then
+		user_exec mkdir -p "$dst_dir" > /dev/null 2>&1
+		user_exec tar -xJf "$src_file" -C "$dst_dir" --no-wildcards "$selected_dir" $tar_strip_level > /dev/null 2>&1
+		rc=$?
+	else
+		user_exec tar -tf "$src_file" --no-wildcards "$selected_dir" > /dev/null 2>&1
+		rc=$?
+	fi
+fi
+
+# Extracting tar ZSTD archive
 if [ -n "$(echo "$archive_name" | grep -Ei '\.tar\.zst$')" ] && [ -z "$x" ]; then
 	x='yes'
 	if [ -z "$test" ] || [ "$test" = "no" ]; then
@@ -108,12 +121,13 @@ if [ -n "$(echo "$archive_name" | grep -Ei '\.tar\.zst$')" ] && [ -z "$x" ]; the
 	fi
 fi
 
-# Extracting gziped file
+# Extracting ZSTD file
 if [ -n "$(echo "$archive_name" | grep -Ei '\.zst$')" ] && [ -z "$x" ]; then
 	x='yes'
 	user_exec mkdir -p "$dst_dir" > /dev/null 2>&1
-	user_exec mv "$src_file" "$dst_dir" > /dev/null 2>&1
-	user_exec pzstd -d -f "$dst_dir/$(basename "$src_file")" > /dev/null 2>&1
+	# Rename to the cleaned file name so pzstd doesn't reject a leftover URL query string
+	user_exec mv "$src_file" "$dst_dir/$archive_name" > /dev/null 2>&1
+	user_exec pzstd -d -f "$dst_dir/$archive_name" > /dev/null 2>&1
 	rc=$?
 fi
 
@@ -121,8 +135,19 @@ fi
 if [ -n "$(echo "$archive_name" | grep -Ei '\.gz$')" ] && [ -z "$x" ]; then
 	x='yes'
 	user_exec mkdir -p "$dst_dir" > /dev/null 2>&1
-	user_exec mv "$src_file" "$dst_dir" > /dev/null 2>&1
-	user_exec gzip -d -f "$dst_dir/$(basename "$src_file")" > /dev/null 2>&1
+	# Rename to the cleaned file name so gzip doesn't reject a leftover URL query string
+	user_exec mv "$src_file" "$dst_dir/$archive_name" > /dev/null 2>&1
+	user_exec gzip -d -f "$dst_dir/$archive_name" > /dev/null 2>&1
+	rc=$?
+fi
+
+# Extracting xziped file
+if [ -n "$(echo "$archive_name" | grep -Ei '\.xz$')" ] && [ -z "$x" ]; then
+	x='yes'
+	user_exec mkdir -p "$dst_dir" > /dev/null 2>&1
+	# Rename to the cleaned file name so xz doesn't reject a leftover URL query string
+	user_exec mv "$src_file" "$dst_dir/$archive_name" > /dev/null 2>&1
+	user_exec xz -d -f "$dst_dir/$archive_name" > /dev/null 2>&1
 	rc=$?
 fi
 
@@ -130,8 +155,9 @@ fi
 if [ -n "$(echo "$archive_name" | grep -Ei '\.bz2?$')" ] && [ -z "$x" ]; then
 	x='yes'
 	user_exec mkdir -p "$dst_dir" > /dev/null 2>&1
-	user_exec mv "$src_file" "$dst_dir" # >/dev/null 2>&1
-	user_exec bzip2 -d -f "$dst_dir/$(basename "$src_file")" > /dev/null 2>&1
+	# Rename to the cleaned file name so bzip2 doesn't reject a leftover URL query string
+	user_exec mv "$src_file" "$dst_dir/$archive_name" # >/dev/null 2>&1
+	user_exec bzip2 -d -f "$dst_dir/$archive_name" > /dev/null 2>&1
 	rc=$?
 fi
 
@@ -143,12 +169,13 @@ if [ -n "$(echo "$archive_name" | grep -Ei '\.zip$')" ] && [ -z "$x" ]; then
 	rc=$?
 fi
 
-# Extracting ziped archive
+# Extracting 7ziped archive
 if [ -n "$(echo "$archive_name" | grep -Ei '\.7z$')" ] && [ -z "$x" ]; then
 	x='yes'
 	user_exec mkdir -p "$dst_dir" > /dev/null 2>&1
-	user_exec mv "$src_file" "$dst_dir" > /dev/null 2>&1
-	user_exec p7zip -d -f "$src_file" > /dev/null 2>&1
+	# Rename to the cleaned file name so p7zip doesn't reject a leftover URL query string
+	user_exec mv "$src_file" "$dst_dir/$archive_name" > /dev/null 2>&1
+	(cd "$dst_dir" && user_exec p7zip -d -f "$dst_dir/$archive_name") > /dev/null 2>&1
 	rc=$?
 fi
 
@@ -174,7 +201,11 @@ if [ -n "$(echo "$archive_name" | grep -Ei '\.rar$')" ] && [ -z "$x" ]; then
 fi
 
 # Checking result
-if [ -z "$x" ] || [ "$rc" -ne 0 ]; then
+if [ -z "$x" ]; then
+	echo "Error: unsupported archive format: $src_file"
+	exit 3
+fi
+if [ "$rc" -ne 0 ]; then
 	echo "Error: $src_file was not extracted"
 	exit 3
 fi

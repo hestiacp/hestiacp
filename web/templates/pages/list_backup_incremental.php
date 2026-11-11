@@ -95,11 +95,25 @@
 			<div class="units-table-cell">
 				<?php if (!$read_only) { ?>
 					<ul class="units-table-row-actions">
-						<li class="units-table-row-action shortcut-enter" data-key-action="href">
-							<a href="/list/backup/incremental/?<?= tohtml(http_build_query(["snapshot" => $value['short_id'], "browse" => 'yes', "token" => $_SESSION["token"]])) ?>" title="<?= tohtml( _("Browse")) ?>"><i class="fas fa-folder-open icon-lightblue icon-dim"></i></a>
+						<li class="units-table-row-action shortcut-b" data-key-action="href">
+							<a
+								class="units-table-row-action-link"
+								href="/list/backup/incremental/?<?= tohtml(http_build_query(["snapshot" => $value['short_id'], "browse" => 'yes', "token" => $_SESSION["token"]])) ?>"
+								title="<?= tohtml( _("Browse")) ?>"
+							>
+								<i class="fas fa-folder-open icon-lightblue"></i>
+								<span class="u-hide-desktop"><?= tohtml( _("Browse")) ?></span>
+							</a>
 						</li>
 						<li class="units-table-row-action shortcut-enter" data-key-action="href">
-							<a href="/list/backup/incremental/?<?= tohtml(http_build_query(["snapshot" => $value['short_id'], "token" => $_SESSION["token"]])) ?>" title="<?= tohtml( _("Restore")) ?>"><i class="fas fa-arrow-rotate-left icon-green icon-dim"></i></a>
+							<a
+								class="units-table-row-action-link"
+								href="/list/backup/incremental/?<?= tohtml(http_build_query(["snapshot" => $value['short_id'], "token" => $_SESSION["token"]])) ?>"
+								title="<?= tohtml( _("Restore")) ?>"
+							>
+								<i class="fas fa-arrow-rotate-left icon-green"></i>
+								<span class="u-hide-desktop"><?= tohtml( _("Restore")) ?></span>
+							</a>
 						</li>
 					</ul>
 				<?php } ?>

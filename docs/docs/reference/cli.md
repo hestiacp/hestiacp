@@ -5542,6 +5542,22 @@ v-list-web-domain-accesslog admin example.com
 
 This function of obtaining raw access web domain logs.
 
+## v-list-web-domain-backendtpl-all
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-web-domain-backendtpl-all)
+
+list all web domains grouped by backend template and owner
+
+**Options**: `[FORMAT]`
+
+**Examples**:
+
+```bash
+v-list-web-domain-backendtpl-all json
+```
+
+This command returns all web domains from all users grouped by the backend template in use and the domain owner.
+
 ## v-list-web-domain-errorlog
 
 [Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-web-domain-errorlog)
@@ -7347,7 +7363,7 @@ v-update-sys-hestia hestia-php
 ```
 
 This function runs as apt update trigger. It pulls shell script from hestia
-server and runs it. (hestia, hestia-nginx and hestia-php are valid options)
+server and runs it. (hestia, hestia-nginx, hestia-php and hestia-web-terminal are valid options)
 
 ## v-update-sys-hestia-all
 

@@ -52,15 +52,15 @@ if [ -n "$chain_param" ]; then
 	parse_object_kv_list "$chain_param"
 	sed -i "/CHAIN='$chain'/d" "$chains"
 	sed -i "/CHAIN='$chain'/d" "$banlist"
+	if [[ "$PORT" =~ ,|-|: ]]; then
+		port_str="-m multiport --dports $PORT"
+	else
+		port_str="--dport $PORT"
+	fi
 	$iptables -D INPUT -p $PROTOCOL \
-		--dport $PORT -j fail2ban-$CHAIN 2> /dev/null
+		$port_str -j fail2ban-$CHAIN 2> /dev/null
 	if [ -x "$ip6tables" ]; then
-		if [[ "$PORT" =~ ,|-|: ]]; then
-			ip6_port="-m multiport --dports $PORT"
-		else
-			ip6_port="--dport $PORT"
-		fi
-		$ip6tables -D INPUT -p $PROTOCOL $ip6_port -j fail2ban-$CHAIN 2> /dev/null
+		$ip6tables -D INPUT -p $PROTOCOL $port_str -j fail2ban-$CHAIN 2> /dev/null
 	fi
 fi
 

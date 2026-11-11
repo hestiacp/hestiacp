@@ -80,30 +80,40 @@ class DolibarrSetup extends BaseSetup {
         );
 
         // Adapted from YunoHost install script: https://github.com/YunoHost-Apps/dolibarr_ynh/blob/master/scripts/install
-        $this->appcontext->sendPostRequest($target->getUrl() . "/install/step1.php", [
-            "testpost" => "ok",
-            "action" => "set",
-            "main_dir" => $target->getDocRoot("htdocs"),
-            "main_data_dir" => $target->getDocRoot("documents"),
-            "main_url" => $target->getUrl(),
-            "main_force_https" => $target->domain->isSslEnabled,
-            "db_type" => "mysqli",
-            "db_host" => $target->database->host,
-            "db_port" => "3306",
-            "db_prefix" => "llx_",
-            "db_name" => $target->database->name,
-            "db_user" => $target->database->user,
-            "db_pass" => $target->database->password,
-            "selectlang" => $language,
-        ]);
+        $this->appcontext->sendPostRequest(
+            $target->getUrl() . "/install/step1.php",
+            [
+                "testpost" => "ok",
+                "action" => "set",
+                "main_dir" => $target->getDocRoot("htdocs"),
+                "main_data_dir" => $target->getDocRoot("documents"),
+                "main_url" => $target->getUrl(),
+                "main_force_https" => $target->domain->isSslEnabled,
+                "db_type" => "mysqli",
+                "db_host" => $target->database->host,
+                "db_port" => "3306",
+                "db_prefix" => "llx_",
+                "db_name" => $target->database->name,
+                "db_user" => $target->database->user,
+                "db_pass" => $target->database->password,
+                "selectlang" => $language,
+            ],
+            [],
+            $target->getResolveUrl(),
+        );
 
-        $this->appcontext->sendPostRequest($target->getUrl() . "/install/step2.php", [
-            "testpost" => "ok",
-            "action" => "set",
-            "dolibarr_main_db_character_set" => "utf8",
-            "dolibarr_main_db_collation" => "utf8_unicode_ci",
-            "selectlang" => $language,
-        ]);
+        $this->appcontext->sendPostRequest(
+            $target->getUrl() . "/install/step2.php",
+            [
+                "testpost" => "ok",
+                "action" => "set",
+                "dolibarr_main_db_character_set" => "utf8",
+                "dolibarr_main_db_collation" => "utf8_unicode_ci",
+                "selectlang" => $language,
+            ],
+            [],
+            $target->getResolveUrl(),
+        );
 
         // Give time to complete the step 2
         sleep(10);

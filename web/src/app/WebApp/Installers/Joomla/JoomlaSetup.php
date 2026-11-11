@@ -11,7 +11,7 @@ class JoomlaSetup extends BaseSetup {
     protected array $info = [
         "name" => "Joomla",
         "group" => "cms",
-        "version" => "6.1.3",
+        "version" => "6.2.0",
         "thumbnail" => "joomla-logo.svg",
     ];
 
@@ -42,7 +42,7 @@ class JoomlaSetup extends BaseSetup {
         "resources" => [
             "archive" => [
                 "src" =>
-                    "https://downloads.joomla.org/cms/joomla6/6-1-3/Joomla_6-1-3-Stable-Full_Package.zip?format=zip",
+                    "https://downloads.joomla.org/cms/joomla6/6-2-0/Joomla_6-2-0-Stable-Full_Package.zip?format=zip",
             ],
         ],
         "server" => [
@@ -50,7 +50,7 @@ class JoomlaSetup extends BaseSetup {
                 "template" => "joomla",
             ],
             "php" => [
-                "supported" => ["8.3", "8.4"],
+                "supported" => ["8.3", "8.4", "8.5"],
             ],
         ],
     ];

@@ -61,57 +61,75 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
-cd "$PM_INSTALL_DIR"
-rm --recursive --force ${PM_INSTALL_DIR}/vendor
-mkdir -p ${PM_INSTALL_DIR}/vendor
-chown $user: -R ${PM_INSTALL_DIR}/vendor
+# Serialize runs, they share vendor.new / vendor.old
+exec 9> /run/hestia-sys-dependencies.lock
+check_result $? "Unable to create dependencies lock file"
+flock -w 600 9
+check_result $? "Unable to acquire dependencies lock"
 
 openssl_installed=$(/usr/local/hestia/php/bin/php -m | grep openssl)
-if [ -z "$openssl_installed" ]; then
-	COMPOSER_HOME="$HOMEDIR/$user/.config/composer" user_exec /usr/bin/php $COMPOSER_BIN --quiet --no-dev install
-else
-	COMPOSER_HOME="$HOMEDIR/$user/.config/composer" user_exec $HESTIA_PHP $COMPOSER_BIN --quiet --no-dev install
-fi
 
-# Check if installation was successful, if not abort script and throw error message notification and clean-up
-if [ $? -ne 0 ]; then
+# Install the dependencies of $1 into $1/vendor.new and only replace $1/vendor
+# once that succeeded, so a failed install (e.g. a network timeout) keeps the
+# previous, working dependencies instead of leaving the panel without them
+install_dependencies() {
+	local dir=$1
+	rm --recursive --force "$dir/vendor.new"
+	mkdir -p "$dir/vendor.new"
+	chown $user: "$dir/vendor.new"
+
+	cd "$dir" || return 1
+	if [ -z "$openssl_installed" ]; then
+		COMPOSER_HOME="$HOMEDIR/$user/.config/composer" COMPOSER_VENDOR_DIR="$dir/vendor.new" user_exec /usr/bin/php $COMPOSER_BIN --quiet --no-dev install
+	else
+		COMPOSER_HOME="$HOMEDIR/$user/.config/composer" COMPOSER_VENDOR_DIR="$dir/vendor.new" user_exec $HESTIA_PHP $COMPOSER_BIN --quiet --no-dev install
+	fi
+	if [ $? -ne 0 ] || [ ! -f "$dir/vendor.new/autoload.php" ]; then
+		rm --recursive --force "$dir/vendor.new"
+		return 1
+	fi
+
+	chown root: -R "$dir/vendor.new"
+	rm --recursive --force "$dir/vendor.old"
+	if [ -d "$dir/vendor" ]; then
+		mv "$dir/vendor" "$dir/vendor.old" || return 1
+	fi
+	if ! mv "$dir/vendor.new" "$dir/vendor"; then
+		if [ -d "$dir/vendor.old" ]; then
+			mv "$dir/vendor.old" "$dir/vendor"
+		fi
+		rm --recursive --force "$dir/vendor.new"
+		return 1
+	fi
+	rm --recursive --force "$dir/vendor.old"
+}
+
+# Check if installation was successful, if not abort script and throw error message notification
+if ! install_dependencies "$PM_INSTALL_DIR"; then
 	echo "ERROR: PHPMailer installation failed!"
 	echo "Please report this to our development team:"
 	echo "https://github.com/hestiacp/hestiacp/issues"
 	$BIN/v-add-user-notification "$ROOT_USER" 'Hestia PHP dependencies installation failed!' '<p>Please <a href="https://github.com/hestiacp/hestiacp/issues" target="_blank">open an issue on GitHub</a> to report this to our development team.</p>'
-	# Installation failed, clean up files
-	rm --recursive --force ${PM_INSTALL_DIR}/vendor
-	$BIN/v-change-sys-config-value 'USE_SERVER_SMTP' 'n'
+	if [ -f "$PM_INSTALL_DIR/vendor/autoload.php" ]; then
+		echo "The previously installed PHP dependencies have been kept."
+	else
+		$BIN/v-change-sys-config-value 'USE_SERVER_SMTP' 'n'
+	fi
 	$BIN/v-log-action "system" "Error" "Plugins" "PHP dependencies installation failed"
 	exit 1
 fi
 
-cd "$QUICK_INSTALL_DIR"
-rm --recursive --force ${QUICK_INSTALL_DIR}/vendor
-mkdir -p ${QUICK_INSTALL_DIR}/vendor
-chown $user: -R ${QUICK_INSTALL_DIR}/vendor
-
-if [ -z "$openssl_installed" ]; then
-	COMPOSER_HOME="$HOMEDIR/$user/.config/composer" user_exec /usr/bin/php $COMPOSER_BIN --quiet --no-dev install
-else
-	COMPOSER_HOME="$HOMEDIR/$user/.config/composer" user_exec $HESTIA_PHP $COMPOSER_BIN --quiet --no-dev install
-fi
-
-# Check if installation was successful, if not abort script and throw error message notification and clean-up
-if [ $? -ne 0 ]; then
+if ! install_dependencies "$QUICK_INSTALL_DIR"; then
 	echo "ERROR: Quick install dependencies installation failed!"
 	echo "Please report this to our development team:"
 	echo "https://github.com/hestiacp/hestiacp/issues"
 	$BIN/v-add-user-notification "$ROOT_USER" 'Hestia Quick Install dependencies installation failed!' '<p>Please <a href="https://github.com/hestiacp/hestiacp/issues" target="_blank">open an issue on GitHub</a> to report this to our development team.</p>'
-	# Installation failed, clean up files
-	rm --recursive --force ${QUICK_INSTALL_DIR}/vendor
+	if [ -f "$QUICK_INSTALL_DIR/vendor/autoload.php" ]; then
+		echo "The previously installed Quick Install dependencies have been kept."
+	fi
 	$BIN/v-log-action "system" "Error" "Plugins" "Quick Install dependencies installation failed"
 	exit 1
 fi
-
-# Set permissions
-chown root: -R "${PM_INSTALL_DIR}/vendor"
-chown root: -R "${QUICK_INSTALL_DIR}/vendor"
 
 #----------------------------------------------------------#
 #                       Logging                            #

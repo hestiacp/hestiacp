@@ -291,6 +291,13 @@ for i in $*; do
 			# Handled below; value captured next iteration
 			_next_is_pkgrev='true'
 			;;
+		--release=*)
+			BUILD_RELEASE="${i#*=}"
+			RELEASE_EXPLICIT='true'
+			;;
+		--pkgrev=*)
+			BUILD_PKG_REV="${i#*=}"
+			;;
 		*)
 			if [ "$_next_is_release" = 'true' ]; then
 				# Capture the value that follows --release
@@ -301,6 +308,10 @@ for i in $*; do
 				# Capture the value that follows --pkgrev
 				BUILD_PKG_REV="$i"
 				unset _next_is_pkgrev
+			elif [[ "$i" == -* ]]; then
+				echo >&2 "[!] Unknown option: $i"
+				usage
+				exit 1
 			else
 				branch="$i"
 			fi
@@ -310,6 +321,11 @@ done
 
 if [[ $# -eq 0 ]]; then
 	usage
+	exit 1
+fi
+
+if [ -n "$BUILD_PKG_REV" ] && ! [[ "$BUILD_PKG_REV" =~ ^[0-9]+$ ]]; then
+	echo >&2 "[!] --pkgrev must be a number, got '$BUILD_PKG_REV'"
 	exit 1
 fi
 
@@ -375,7 +391,7 @@ HESTIA_V="${BUILD_VER}_${BUILD_ARCH}"
 supported_os="debian11 debian12 debian13 ubuntu22.04 ubuntu24.04 ubuntu26.04"
 OPENSSL_V='3.5.9'
 PCRE_V='10.49'
-ZLIB_V='1.3.2'
+ZLIB_V='1.4'
 
 # Create build directories
 if [ "$KEEPBUILD" != 'true' ]; then
@@ -393,7 +409,7 @@ timestamp() {
 if [ "$dontinstalldeps" != 'true' ]; then
 	# Install needed software
 	# Set package dependencies for compiling
-	SOFTWARE='wget tar git curl ca-certificates build-essential libxml2-dev libz-dev libzip-dev libgmp-dev libcurl4-gnutls-dev unzip openssl libssl-dev pkg-config libsqlite3-dev libonig-dev lsb-release'
+	SOFTWARE='wget tar git curl ca-certificates build-essential libxml2-dev libz-dev libzip-dev libgmp-dev libcurl4-openssl-dev unzip openssl libssl-dev pkg-config libsqlite3-dev libonig-dev lsb-release'
 	echo "Updating system APT repositories..."
 	apt-get -qq update
 	echo "Installing dependencies for compilation..."
@@ -448,11 +464,11 @@ if [ "$dontinstalldeps" != 'true' ]; then
 	fi
 fi
 
-# Get system cpu cores. Callers running this inside a QEMU-emulated chroot
-# (cross-arch builds) can pre-set NUM_CPUS to override this: /proc is
-# bind-mounted from the host, so the detected count would otherwise be the
-# host's real core count, not a safe parallelism level for emulated compiles.
-NUM_CPUS="${NUM_CPUS:-$(grep "^cpu cores" /proc/cpuinfo | uniq | awk '{print $4}')}"
+# Get the available CPU count. Callers running this inside a QEMU-emulated
+# chroot (cross-arch builds) can pre-set NUM_CPUS to override this: nproc
+# would otherwise report the host's core count, not a safe parallelism level
+# for emulated compiles.
+NUM_CPUS="${NUM_CPUS:-$(nproc 2> /dev/null || getconf _NPROCESSORS_ONLN 2> /dev/null || echo 1)}"
 
 if [ "$HESTIA_DEBUG" ]; then
 	echo "OS type          : Debian / Ubuntu"

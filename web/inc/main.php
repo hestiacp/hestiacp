@@ -567,31 +567,22 @@ function load_hestia_config() {
  * @return array
  */
 function backendtpl_with_webdomains() {
-	exec(HESTIA_CMD . "v-list-users json", $output, $return_var);
-	$users = json_decode(implode("", $output), true);
+	exec(HESTIA_CMD . "v-list-web-domain-backendtpl-all json", $output, $return_var);
+	$entries = json_decode(implode("", $output), true);
 	unset($output);
 
 	$backend_list = [];
-	foreach ($users as $user => $user_details) {
-		exec(
-			HESTIA_CMD . "v-list-web-domains " . quoteshellarg($user) . " json",
-			$output,
-			$return_var,
-		);
-		$domains = json_decode(implode("", $output), true);
-		unset($output);
-		foreach ($domains as $domain => $domain_details) {
-			if (!empty($domain_details["BACKEND"])) {
-				$backend = $domain_details["BACKEND"];
-				$backend_list[$backend][$user][] = $domain;
+	foreach ($entries as $entry) {
+		$backend = $entry["backend"];
+		$user = $entry["user"];
+		$domain = $entry["domain"];
+		$backend_list[$backend][$user][] = $domain;
 
-				// Also count custom backend template names like YOURNAME-PHP-8_4 under PHP-8_4
-				if (preg_match('/(PHP-\d+_\d+)$/', $backend, $m)) {
-					// Avoid duplicates when backend already is the base template
-					if ($backend !== $m[1]) {
-						$backend_list[$m[1]][$user][] = $domain;
-					}
-				}
+		// Also count custom backend template names like YOURNAME-PHP-8_4 under PHP-8_4
+		if (preg_match('/(PHP-\d+_\d+)$/', $backend, $m)) {
+			// Avoid duplicates when backend already is the base template
+			if ($backend !== $m[1]) {
+				$backend_list[$m[1]][$user][] = $domain;
 			}
 		}
 	}

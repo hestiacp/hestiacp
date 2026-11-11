@@ -70,34 +70,39 @@ jobs:
             sleep 0.1
           done
 
-      - name: Install Hestia from local git
+      - name: Build local Hestia packages
         run: |
           docker exec hestia-ci bash -lc '
             set -euxo pipefail
             export TERM=xterm
             cd /hestiacp-git/src
-            # Use a high pkgrev so the local build sorts above the published package.
-            bash ./hst_autocompile.sh --hestia --pkgrev 99 --noinstall --keepbuild "~localsrc"
-            DEB_PATH=""
-            if [[ -f "/tmp/hestiacp-src/deb" ]]; then
-              pkg="$(dpkg-deb -f /tmp/hestiacp-src/deb Package)"
-              ver="$(dpkg-deb -f /tmp/hestiacp-src/deb Version)"
-              arch="$(dpkg-deb -f /tmp/hestiacp-src/deb Architecture)"
-              DEB_PATH="/tmp/hestiacp-src/debs"
-              mkdir -p "${DEB_PATH}"
-              cp /tmp/hestiacp-src/deb "${DEB_PATH}/${pkg}_${ver}_${arch}.deb"
-            fi
-            if compgen -G "/tmp/hestiacp-src/deb/hestia_*.deb" >/dev/null; then
-              DEB_PATH="/tmp/hestiacp-src/deb"
-            elif compgen -G "/tmp/hestiacp-src/debs/hestia_*.deb" >/dev/null; then
-              DEB_PATH="/tmp/hestiacp-src/debs"
-            else
-              echo "No local hestia debs found under /tmp/hestiacp-src/{deb,debs}"
-              ls -la /tmp/hestiacp-src || true
-              ls -la /tmp/hestiacp-src/deb || true
-              ls -la /tmp/hestiacp-src/debs || true
-              exit 1
-            fi
+            # Build the control panel plus its backend packages (hestia-php,
+            # hestia-nginx, hestia-web-terminal) so the install below does not
+            # depend on apt.hestiacp.com being in sync. --pkgrev 99 keeps the
+            # local versions above any published package.
+            bash ./hst_autocompile.sh --all --pkgrev 99 --noinstall --keepbuild "~localsrc"
+
+            DEB_PATH=/tmp/hestiacp-src/debs
+            rm -rf "${DEB_PATH}"
+            mkdir -p "${DEB_PATH}"
+            cp /tmp/hestiacp-src/deb/*.deb "${DEB_PATH}/"
+
+            # Fail here, not silently inside the installer, if the build did not
+            # produce every package the installer needs.
+            for pkg in hestia hestia-php hestia-nginx hestia-web-terminal; do
+              if ! compgen -G "${DEB_PATH}/${pkg}_*.deb" > /dev/null; then
+                echo "No ${pkg}_*.deb produced by hst_autocompile.sh"
+                ls -la /tmp/hestiacp-src/deb || true
+                exit 1
+              fi
+            done
+            ls -la "${DEB_PATH}"
+          '
+
+      - name: Install Hestia from local debs
+        run: |
+          docker exec hestia-ci bash -lc '
+            set -euxo pipefail
             cd /hestiacp-git
             bash install/hst-install-ubuntu.sh \
               --hostname hestia.local.test \
@@ -106,10 +111,23 @@ jobs:
               --password Password123 \
               --interactive no \
               --force \
-              --with-debs "${DEB_PATH}" \
+              --with-debs /tmp/hestiacp-src/debs \
               ${{ env.INSTALL_APACHE_ARGS }} \
               --clamav no \
               --spamassassin no
+
+            # The installer silently falls back to apt.hestiacp.com when a
+            # local deb is missing, so assert the local builds were used and
+            # fully configured (dpkg -i leaves failed packages unpacked).
+            for pkg in hestia hestia-php hestia-nginx; do
+              info="$(dpkg-query -s "${pkg}" 2> /dev/null || true)"
+              if ! grep -F "Status: install ok installed" <<< "${info}" > /dev/null ||
+                ! grep -F -- "-99+" <<< "${info}" > /dev/null; then
+                echo "${pkg} was not installed from the local build"
+                printf "%s\n" "${info}"
+                exit 1
+              fi
+            done
           '
 
       - name: Run BATS test suite

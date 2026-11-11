@@ -1459,6 +1459,26 @@ function check_ip_not_banned(){
 	rm $HOMEDIR/$user/web/$multi_domain/public_html/php-test.php
 }
 
+@test "Multiphp: Change backend version - default" {
+	def_phpver=$(multiphp_default_version)
+	multi_domain="multiphp.${domain}"
+
+	run v-change-web-domain-backend-tpl $user $multi_domain 'default' 'yes'
+	assert_success
+	refute_output
+
+	# Changing web backend to default must create the pool config in the default php folder
+	assert_file_exist "/etc/php/${def_phpver}/fpm/pool.d/${multi_domain}.conf"
+
+	# A single php-fpm pool config file must be present
+	num_fpm_config_files="$(find -L /etc/php/ -name "${multi_domain}.conf" | wc -l)"
+	assert_equal "$num_fpm_config_files" '1'
+
+	echo -e "<?php\necho 'hestia-multiphptest:'.PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;" > "$HOMEDIR/$user/web/$multi_domain/public_html/php-test.php"
+	validate_web_domain $user $multi_domain "hestia-multiphptest:$def_phpver" 'php-test.php'
+	rm "$HOMEDIR/$user/web/$multi_domain/public_html/php-test.php"
+}
+
 @test "Multiphp: Cleanup" {
     multi_domain="multiphp.${domain}"
 
@@ -1496,6 +1516,23 @@ function check_ip_not_banned(){
     rm "$HOMEDIR/$user/web/$docroot1_domain/public_html/public/php-test.php"
 }
 
+@test "Docroot: Self Subfolder with parent PHP root and backend rebuild" {
+    docroot1_domain="docroot1.${domain}"
+
+    run v-change-web-domain-docroot $user "$docroot1_domain" "$docroot1_domain" "/public" "yes"
+    assert_success
+    refute_output
+
+    run v-change-web-domain-backend-tpl $user "$docroot1_domain" "default" "yes"
+    assert_success
+    refute_output
+
+    echo "parent-ok" > "$HOMEDIR/$user/web/$docroot1_domain/public_html/parent-test.txt"
+    echo -e '<?php\necho "self-phproot-".$_SERVER["HTTP_HOST"]."-".trim(file_get_contents(__DIR__."/../parent-test.txt"));' > "$HOMEDIR/$user/web/$docroot1_domain/public_html/public/php-test.php"
+    validate_web_domain $user $docroot1_domain "self-phproot-${docroot1_domain}-parent-ok" 'php-test.php'
+    rm "$HOMEDIR/$user/web/$docroot1_domain/public_html/public/php-test.php" "$HOMEDIR/$user/web/$docroot1_domain/public_html/parent-test.txt"
+}
+
 @test "Docroot: Other domain subfolder" {
     docroot1_domain="docroot1.${domain}"
     docroot2_domain="docroot2.${domain}"
@@ -1525,9 +1562,16 @@ function check_ip_not_banned(){
     assert_success
     refute_output
 
-    echo -e '<?php\necho "doc2-root-".$_SERVER["HTTP_HOST"];' > "$HOMEDIR/$user/web/$docroot2_domain/public_html/php-test.php"
-    validate_web_domain $user $docroot1_domain "doc2-root-${docroot1_domain}" 'php-test.php'
-    rm "$HOMEDIR/$user/web/$docroot2_domain/public_html/php-test.php"
+    echo "private-ok" > "$HOMEDIR/$user/web/$docroot2_domain/private/private-test.txt"
+    echo -e '<?php\necho "doc2-root-".$_SERVER["HTTP_HOST"]."-".trim(file_get_contents(__DIR__."/../private/private-test.txt"));' > "$HOMEDIR/$user/web/$docroot2_domain/public_html/php-test.php"
+    validate_web_domain $user $docroot1_domain "doc2-root-${docroot1_domain}-private-ok" 'php-test.php'
+
+    run v-change-web-domain-backend-tpl $user "$docroot1_domain" "default" "yes"
+    assert_success
+    refute_output
+
+    validate_web_domain $user $docroot1_domain "doc2-root-${docroot1_domain}-private-ok" 'php-test.php'
+    rm "$HOMEDIR/$user/web/$docroot2_domain/public_html/php-test.php" "$HOMEDIR/$user/web/$docroot2_domain/private/private-test.txt"
 }
 
 @test "Docroot: Reset" {
@@ -1686,13 +1730,25 @@ function check_ip_not_banned(){
 
 @test "DNS: Add domain record CNAME" {
     run v-delete-dns-record $user $domain 50
-    run v-add-dns-record $user $domain 'mail' CNAME mx.hestiacp.com  '' 50
+    run v-add-dns-record $user $domain 'mail' CNAME mx.hestiacp.com '' 50
+    assert_failure $E_INVALID
+
+    run v-add-dns-record $user $domain 'cname-test' CNAME mx.hestiacp.com '' 50
     assert_success
     refute_output
 
     assert_file_contains "$HOMEDIR/$user/conf/dns/${domain}.db" "mx.hestiacp.com."
 
+    run v-add-dns-record $user $domain 'cname-test' A "$ip"
+    assert_failure $E_INVALID
+
     run v-change-dns-record $user $domain 50 'mail' CNAME mx.hestia.com
+    assert_failure $E_INVALID
+
+    run v-change-dns-record $user $domain 50 'MAIL' cname mx.hestia.com
+    assert_failure $E_INVALID
+
+    run v-change-dns-record $user $domain 50 'cname-test' CNAME mx.hestia.com
     assert_success
     refute_output
 

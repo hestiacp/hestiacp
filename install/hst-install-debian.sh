@@ -31,7 +31,7 @@ HESTIA_COMMON_DIR="$HESTIA/install/common"
 VERBOSE='no'
 
 # Define software versions
-HESTIA_INSTALL_VER='1.10.5'
+HESTIA_INSTALL_VER='1.10.6'
 
 # Build the full Hestia version
 # Split base version (1.10.0) from channel suffix (~alpha / ~beta), if present
@@ -64,7 +64,7 @@ multiphp_required=("8.1" "8.2" "8.3" "8.4" "8.5")
 # Default PHP version if none supplied
 fpm_v="8.5"
 # MariaDB version
-mariadb_v="11.8"
+mariadb_v="12.3"
 # Node.js version
 node_v="24"
 
@@ -1175,6 +1175,7 @@ locale-gen > /dev/null 2>&1
 # Disabling daemon autostart on apt-get install
 echo -e '#!/bin/sh\nexit 101' > /usr/sbin/policy-rc.d
 chmod a+x /usr/sbin/policy-rc.d
+trap 'rm -f /usr/sbin/policy-rc.d' EXIT
 
 # Installing apt packages
 echo "The installer is now downloading and installing all required packages."
@@ -1205,31 +1206,38 @@ echo
 if [ -n "$withdebs" ] && [ -d "$withdebs" ]; then
 	echo "[ * ] Installing local package files..."
 	echo "    - hestia core package"
-	dpkg -i $withdebs/hestia_*.deb > /dev/null 2>&1
+	dpkg -i $withdebs/hestia_*.deb >> $LOG 2>&1
+	check_result $? "Failed to install hestia package from $withdebs. See $LOG for details."
 
 	if [ -z $(ls $withdebs/hestia-php_*.deb 2> /dev/null) ]; then
 		echo "    - hestia-php backend package (from apt)"
-		apt-get -y install hestia-php > /dev/null 2>&1
+		apt-get -y install hestia-php >> $LOG 2>&1
+		check_result $? "Failed to install hestia-php package from apt. See $LOG for details."
 	else
 		echo "    - hestia-php backend package"
-		dpkg -i $withdebs/hestia-php_*.deb > /dev/null 2>&1
+		dpkg -i $withdebs/hestia-php_*.deb >> $LOG 2>&1
+		check_result $? "Failed to install hestia-php package from $withdebs. See $LOG for details."
 	fi
 
 	if [ -z $(ls $withdebs/hestia-nginx_*.deb 2> /dev/null) ]; then
 		echo "    - hestia-nginx backend package (from apt)"
-		apt-get -y install hestia-nginx > /dev/null 2>&1
+		apt-get -y install hestia-nginx >> $LOG 2>&1
+		check_result $? "Failed to install hestia-nginx package from apt. See $LOG for details."
 	else
 		echo "    - hestia-nginx backend package"
-		dpkg -i $withdebs/hestia-nginx_*.deb > /dev/null 2>&1
+		dpkg -i $withdebs/hestia-nginx_*.deb >> $LOG 2>&1
+		check_result $? "Failed to install hestia-nginx package from $withdebs. See $LOG for details."
 	fi
 
 	if [ "$webterminal" = "yes" ]; then
 		if [ -z $(ls $withdebs/hestia-web-terminal_*.deb 2> /dev/null) ]; then
 			echo "    - hestia-web-terminal package (from apt)"
-			apt-get -y install hestia-web-terminal > /dev/null 2>&1
+			apt-get -y install hestia-web-terminal >> $LOG 2>&1
+			check_result $? "Failed to install hestia-web-terminal package from apt. See $LOG for details."
 		else
 			echo "    - hestia-web-terminal"
-			dpkg -i $withdebs/hestia-web-terminal_*.deb > /dev/null 2>&1
+			dpkg -i $withdebs/hestia-web-terminal_*.deb >> $LOG 2>&1
+			check_result $? "Failed to install hestia-web-terminal package from $withdebs. See $LOG for details."
 		fi
 	fi
 fi

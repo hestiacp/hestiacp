@@ -1,0 +1,54 @@
+#!/bin/bash
+# info: list web domain application log
+# options: USER DOMAIN [LINES]
+#
+# example: v-list-web-domain-app-log admin example.com 200
+#
+# This function prints the most recent output (stdout and stderr) of a web
+# domain application from the systemd journal.
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+domain=$2
+lines=${3:-100}
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/app.sh
+source $HESTIA/func/app.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '2' "$#" 'USER DOMAIN [LINES]'
+is_format_valid 'user' 'domain'
+is_int_format_valid "$lines" 'lines'
+is_object_valid 'user' 'USER' "$user"
+is_object_valid 'web' 'DOMAIN' "$domain"
+is_app_valid "$domain"
+if [ "$lines" -gt 5000 ]; then
+	lines=5000
+fi
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+journalctl -u "$(app_unit_name "$user" "$domain")" -n "$lines" --no-pager \
+	-o short-iso --no-hostname 2> /dev/null | grep -v '^-- No entries --$'
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+exit 0

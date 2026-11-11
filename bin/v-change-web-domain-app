@@ -1,0 +1,96 @@
+#!/bin/bash
+# info: change web domain application settings
+# options: USER DOMAIN RUNTIME [VERSION] [CMD] [DIR] [INSTALL] [RESTART]
+#
+# example: v-change-web-domain-app admin example.com node 22 'node server.js'
+#
+# This function changes the runtime, version, start command, folder and
+# install command of a web domain application. A running application is
+# restarted to apply the changes.
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+domain=$2
+runtime=$3
+version=${4:-system}
+cmd=$5
+dir=${6:-app}
+install_cmd=$7
+restart=$8
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
+source $HESTIA/func/domain.sh
+# shellcheck source=/usr/local/hestia/func/app.sh
+source $HESTIA/func/app.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+# Additional argument formatting
+format_domain
+format_domain_idn
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '3' "$#" 'USER DOMAIN RUNTIME [VERSION] [CMD] [DIR] [INSTALL] [RESTART]'
+is_format_valid 'user' 'domain' 'restart'
+is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
+is_object_valid 'web' 'DOMAIN' "$domain"
+is_object_unsuspended 'web' 'DOMAIN' "$domain"
+is_app_valid "$domain"
+is_app_runtime_valid "$runtime"
+is_app_version_valid "$runtime" "$version"
+is_app_command_valid "$cmd" 'command'
+is_app_command_valid "$install_cmd" 'install command'
+is_app_dir_valid "$dir"
+if [ -z "$cmd" ] && [ "$runtime" != 'node' ]; then
+	check_result "$E_ARGS" "a start command is required for runtime $runtime"
+fi
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+appdir=$(app_dir_path "$user" "$domain" "$dir")
+if [ ! -e "$appdir" ]; then
+	domain_mode=$(stat -c %a "$HOMEDIR/$user/web/$domain")
+	chmod 751 "$HOMEDIR/$user/web/$domain"
+	$BIN/v-add-fs-directory "$user" "$appdir"
+	result=$?
+	chmod "$domain_mode" "$HOMEDIR/$user/web/$domain"
+	check_result $result "unable to create $appdir"
+fi
+is_dir_symlink "$appdir"
+
+update_app_value "$domain" '$RUNTIME' "$runtime"
+update_app_value "$domain" '$VERSION' "$version"
+update_app_value "$domain" '$CMD' "$cmd"
+update_app_value "$domain" '$DIR' "$dir"
+update_app_value "$domain" '$INSTALL' "$install_cmd"
+
+# Rewrite the unit, restart when running
+sync_app_service "$user" "$domain"
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Logging
+$BIN/v-log-action "$user" "Info" "Web" "Application changed (Domain: $domain, Runtime: $runtime)."
+log_event "$OK" "$ARGUMENTS"
+
+exit

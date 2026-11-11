@@ -153,6 +153,14 @@
 	max-height: 300px !important;
 }
 
+.u-max-height600 {
+	max-height: 600px !important;
+}
+
+.u-overflow-auto {
+	overflow: auto !important;
+}
+
 .u-side-by-side {
 	display: flex !important;
 	justify-content: space-between !important;

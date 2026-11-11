@@ -272,8 +272,14 @@ add_web_config() {
 	docroot_escaped="$(sed_escape_replacement "$docroot")"
 	sdocroot_escaped="$(sed_escape_replacement "$sdocroot")"
 
+	# Local port of the web domain application (see func/app.sh). Port 9
+	# (discard) has no listener, so a template without an app returns 502.
+	app_port=$(grep -s "^DOMAIN='$domain' " "$USER_DATA/app.conf" | grep -o " PORT='[0-9]*'" | tr -dc '0-9')
+	app_port="${app_port:-9}"
+
 	cat "${WEBTPL_LOCATION}/$2" \
 		| sed -e "s|%ip%|$local_ip|g" \
+			-e "s|%app_port%|$app_port|g" \
 			-e "s|%domain%|$domain|g" \
 			-e "s|%domain_idn%|$domain_idn|g" \
 			-e "s|%alias%|${aliases//,/ }|g" \

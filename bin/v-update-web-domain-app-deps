@@ -1,0 +1,113 @@
+#!/bin/bash
+# info: install web domain application dependencies
+# options: USER DOMAIN
+#
+# example: v-update-web-domain-app-deps admin example.com
+#
+# This function runs the install command of a web domain application as the
+# domain owner and prints its output. Without an install command it runs the
+# runtime default: "npm ci" (or "npm install") for Node.js; for Python it
+# creates .venv and installs requirements.txt or pyproject.toml. Python apps
+# always get a .venv, also with a custom install command.
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+domain=$2
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/app.sh
+source $HESTIA/func/app.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '2' "$#" 'USER DOMAIN'
+is_format_valid 'user' 'domain'
+is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
+is_object_valid 'web' 'DOMAIN' "$domain"
+is_object_unsuspended 'web' 'DOMAIN' "$domain"
+is_app_valid "$domain"
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+get_app_values "$domain"
+appdir=$(app_dir_path "$user" "$domain" "$DIR")
+is_dir_symlink "$appdir"
+if [ ! -d "$appdir" ]; then
+	check_result "$E_NOTEXIST" "application folder $appdir doesn't exist"
+fi
+
+install_cmd="$INSTALL"
+if [ "$RUNTIME" = 'python' ]; then
+	# "python3 -m venv" needs the distribution venv package
+	if ! /usr/bin/python3 -c 'import ensurepip' > /dev/null 2>&1; then
+		py_v=$(/usr/bin/python3 -c 'import sys; print("%d.%d" % sys.version_info[:2])')
+		apt-get -qq update > /dev/null 2>&1
+		apt-get -qq -y install "python${py_v}-venv" > /dev/null 2>&1 \
+			|| apt-get -qq -y install python3-venv > /dev/null 2>&1
+		check_result $? "unable to install python3-venv"
+	fi
+	venv='{ [ -x .venv/bin/python ] || /usr/bin/python3 -m venv .venv; }'
+	if [ -z "$install_cmd" ]; then
+		install_cmd="$venv && if [ -f requirements.txt ]; then .venv/bin/pip install -r requirements.txt;"
+		install_cmd+=" elif [ -f pyproject.toml ]; then .venv/bin/pip install .;"
+		install_cmd+=" else echo 'No requirements.txt or pyproject.toml found'; fi"
+	else
+		install_cmd="$venv && $install_cmd"
+	fi
+elif [ -z "$install_cmd" ] && [ "$RUNTIME" = 'node' ]; then
+	install_cmd="if [ ! -f package.json ]; then echo 'No package.json found'; exit 1; fi;"
+	install_cmd+=" if [ -f package-lock.json ] || [ -f npm-shrinkwrap.json ]; then npm ci; else npm install; fi"
+fi
+if [ -z "$install_cmd" ]; then
+	echo "No install command configured"
+	exit 0
+fi
+
+# Run as the domain owner in a transient unit: same slice (resource limits)
+# and sandbox as the application, a clean environment and a hard timeout.
+write_app_slice "$user"
+systemctl daemon-reload
+systemd-run --quiet --wait --pipe --collect \
+	--uid="$user" --gid="$user" \
+	--slice="$(app_slice_name "$user")" \
+	--unit="hestia-app-install-${user}_${domain}-$(date +%s)" \
+	--property=WorkingDirectory="$appdir" \
+	--property=RuntimeMaxSec="$APP_INSTALL_TIMEOUT" \
+	--property=NoNewPrivileges=yes \
+	--property=PrivateTmp=yes \
+	--property=ProtectSystem=full \
+	--setenv=HOME="$HOMEDIR/$user" \
+	--setenv=USER="$user" \
+	--setenv=PATH="$(app_path "$user" "$RUNTIME" "$VERSION" "$appdir")" \
+	--setenv=PORT="$PORT" \
+	/bin/bash -c "$install_cmd" < /dev/null 2>&1
+result=$?
+check_result $result "install command failed (exit code $result)"
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Logging
+$BIN/v-log-action "$user" "Info" "Web" "Application dependencies installed (Domain: $domain)."
+log_event "$OK" "$ARGUMENTS"
+
+exit

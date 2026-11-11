@@ -1,0 +1,147 @@
+#!/bin/bash
+# info: add application to web domain
+# options: USER DOMAIN RUNTIME [VERSION] [CMD] [DIR] [INSTALL] [RESTART]
+#
+# example: v-add-web-domain-app admin example.com node
+# example: v-add-web-domain-app admin example.com node 22 'npm start' app
+# example: v-add-web-domain-app admin example.com python system 'gunicorn -b 127.0.0.1:$PORT app:app'
+#
+# This function adds a long-running application (Node.js, Python or a custom
+# command) to a web domain. The application runs as a systemd service under
+# the domain owner, listens on 127.0.0.1:$PORT and the domain is proxied to it
+# through the "app" nginx template. RUNTIME is node, python or custom.
+# VERSION is "system" or an installed Node.js major version (v-add-sys-nodejs).
+# DIR is relative to the domain folder and defaults to "app". INSTALL is the
+# dependency/build command run by v-update-web-domain-app-deps.
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+domain=$2
+runtime=$3
+version=${4:-system}
+cmd=$5
+dir=${6:-app}
+install_cmd=$7
+restart=$8
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
+source $HESTIA/func/domain.sh
+# shellcheck source=/usr/local/hestia/func/app.sh
+source $HESTIA/func/app.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+# Additional argument formatting
+format_domain
+format_domain_idn
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '3' "$#" 'USER DOMAIN RUNTIME [VERSION] [CMD] [DIR] [INSTALL] [RESTART]'
+is_format_valid 'user' 'domain' 'restart'
+is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
+is_app_system_supported
+is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
+is_object_valid 'web' 'DOMAIN' "$domain"
+is_object_unsuspended 'web' 'DOMAIN' "$domain"
+is_app_new "$domain"
+is_app_runtime_valid "$runtime"
+is_app_version_valid "$runtime" "$version"
+is_app_command_valid "$cmd" 'command'
+is_app_command_valid "$install_cmd" 'install command'
+is_app_dir_valid "$dir"
+if [ -z "$cmd" ] && [ "$runtime" != 'node' ]; then
+	check_result "$E_ARGS" "a start command is required for runtime $runtime"
+fi
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+appdir=$(app_dir_path "$user" "$domain" "$dir")
+is_dir_symlink "$HOMEDIR/$user/web/$domain"
+
+# Create the application folder as the user
+if [ ! -e "$appdir" ]; then
+	# The domain folder is read-only for its owner (DOMAINDIR_WRITABLE)
+	domain_mode=$(stat -c %a "$HOMEDIR/$user/web/$domain")
+	chmod 751 "$HOMEDIR/$user/web/$domain"
+	$BIN/v-add-fs-directory "$user" "$appdir"
+	result=$?
+	chmod "$domain_mode" "$HOMEDIR/$user/web/$domain"
+	check_result $result "unable to create $appdir"
+fi
+is_dir_symlink "$appdir"
+if [ "$(stat -c %U "$appdir")" != "$user" ]; then
+	check_result "$E_FORBIDEN" "$appdir is not owned by $user"
+fi
+no_symlink_chmod 750 "$appdir"
+
+# Allocate a port and register the app
+app_lock
+port=$(get_free_app_port)
+check_result $? "no free application port between $(app_port_min) and $(app_port_max)"
+
+time_n_date=$(date +'%T %F')
+time=$(echo "$time_n_date" | cut -f 1 -d \ )
+date=$(echo "$time_n_date" | cut -f 2 -d \ )
+
+# Start right away when there is code to run, otherwise wait for v-start-web-domain-app
+status='stopped'
+if [ -n "$(ls -A "$appdir" 2> /dev/null)" ]; then
+	status='running'
+fi
+
+touch "$USER_DATA/app.conf"
+chmod 660 "$USER_DATA/app.conf"
+echo "DOMAIN='$domain' RUNTIME='$runtime' VERSION='$version'\
+ DIR='$dir' CMD='$(app_conf_encode "$cmd")' INSTALL='$(app_conf_encode "$install_cmd")'\
+ PORT='$port' STATUS='$status' TPL_TYPE='' PREV_TPL=''\
+ SUSPENDED='no' TIME='$time' DATE='$date'" >> "$USER_DATA/app.conf"
+flock -u "$APP_LOCK_FD"
+
+# Empty environment file
+mkdir -p "$USER_DATA/app"
+chmod 750 "$USER_DATA/app"
+envfile=$(app_env_file "$user" "$domain")
+if [ ! -f "$envfile" ]; then
+	touch "$envfile"
+	chmod 600 "$envfile"
+fi
+
+# Proxy the domain to the app
+template_state=$(app_enable_template "$user" "$domain" "$restart")
+if [ $? -ne 0 ]; then
+	sed -i "/^DOMAIN='$domain' /d" "$USER_DATA/app.conf"
+	check_result "$E_PARSING" "$template_state"
+fi
+update_app_value "$domain" '$TPL_TYPE' "${template_state%% *}"
+update_app_value "$domain" '$PREV_TPL' "${template_state#* }"
+
+# Create and start the service
+sync_app_service "$user" "$domain"
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Logging
+$BIN/v-log-action "$user" "Info" "Web" "Application added (Domain: $domain, Runtime: $runtime, Port: $port)."
+log_event "$OK" "$ARGUMENTS"
+
+exit

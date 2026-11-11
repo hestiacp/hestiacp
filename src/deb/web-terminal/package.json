@@ -12,7 +12,7 @@
 	},
 	"devDependencies": {
 		"@types/ws": "^8.18.2",
-		"@types/node": "^24.19.2"
+		"@types/node": "^26.6.6"
 	},
 	"allowScripts": {
 		"node-pty@1.1.0": true

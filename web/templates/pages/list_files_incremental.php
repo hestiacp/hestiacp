@@ -15,6 +15,25 @@
 			<?php } ?>
 		</div>
 		<div class="toolbar-right">
+			<div class="toolbar-sorting">
+				<button class="toolbar-sorting-toggle js-toggle-sorting-menu" type="button" title="<?= tohtml( _("Sort items")) ?>">
+					<?= tohtml( _("Sort by")) ?>:
+					<span class="u-text-bold">
+						<?= tohtml(_("Name")) ?> <i class="fas fa-arrow-down-a-z"></i>
+					</span>
+				</button>
+				<ul class="toolbar-sorting-menu js-sorting-menu u-hidden">
+					<li data-entity="sort-date" data-sort-as-int="1">
+						<span class="name"><?= tohtml( _("Date")) ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
+					</li>
+					<li data-entity="sort-name">
+						<span class="name active"><?= tohtml( _("Name")) ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
+					</li>
+					<li data-entity="sort-type">
+						<span class="name"><?= tohtml( _("Type")) ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
+					</li>
+				</ul>
+			</div>
 					<?php if ($read_only !== true) { ?>
 						<form x-data x-bind="BulkEdit" action="/bulk/restore/incremental/" method="post">
 							<input type="hidden" name="snapshot" value="<?= tohtml($_GET["snapshot"]) ?>">
@@ -29,9 +48,12 @@
 					</form>
 				<?php } ?>
 				<div class="toolbar-search">
-					<form action="/search/" method="get">
+					<form action="/list/backup/incremental/" method="get">
+						<input type="hidden" name="snapshot" value="<?= tohtml($_GET["snapshot"]) ?>">
+						<input type="hidden" name="browse" value="yes">
+						<input type="hidden" name="folder" value="<?= tohtml($_GET["folder"]) ?>">
 						<input type="hidden" name="token" value="<?= tohtml($_SESSION["token"]) ?>">
-						<input type="search" class="form-control js-search-input" name="q" value="<?= tohtml($_POST['q'] ?? '') ?>" title="<?= tohtml( _("Search")) ?>">
+						<input type="search" class="form-control js-search-input" name="q" value="<?= tohtml($_GET['q'] ?? $_POST['q'] ?? '') ?>" title="<?= tohtml( _("Search")) ?>">
 						<button type="submit" class="toolbar-input-submit" title="<?= tohtml( _("Search")) ?>">
 							<i class="fas fa-magnifying-glass"></i>
 						</button>
@@ -60,7 +82,7 @@
 			if($file['path'] != '/home/'.$user_plain){
 				if($file['path'] != '/home/'.$user_plain && $file['path'] == $files[0]['path']){
 					?>
-					<div class="units-table-row js-unit">
+					<div class="units-table-row">
 						<div class="units-table-cell">
 						</div>
 						<div class="units-table-cell units-table-heading-cell u-text-bold">
@@ -81,7 +103,10 @@
 					}else{
 						++$i;
 				?>
-					<div class="units-table-row js-unit">
+					<div class="units-table-row js-unit"
+						data-sort-date="<?= tohtml(strtotime($file['ctime'])) ?>"
+						data-sort-name="<?= tohtml($file['name']) ?>"
+						data-sort-type="<?= tohtml($file['type']) ?>">
 						<div class="units-table-cell">
 							<div>
 								<?php if ($file["path"] !== "/home/" . $user_plain . "/conf" && !str_starts_with($file["path"], "/home/" . $user_plain . "/conf/")) { ?>

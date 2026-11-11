@@ -98,6 +98,18 @@ fi
 
 restic --repo "${REPO%/}/$user" --password-file $USER_DATA/restic.conf forget $restic_prune --prune
 
+snapshots_json=$(restic --repo "${REPO%/}/$user" --password-file "$USER_DATA/restic.conf" --json snapshots 2> /dev/null)
+if [ -n "$snapshots_json" ]; then
+	u_snapshots=$(printf '%s' "$snapshots_json" | grep -o '"short_id"' | wc -l)
+else
+	u_snapshots=0
+fi
+if grep -q "^U_BACKUPS_INCREMENTAL=" "$USER_DATA/user.conf"; then
+	update_user_value "$user" '$U_BACKUPS_INCREMENTAL' "$u_snapshots"
+else
+	sed -i "s/^U_BACKUPS=/U_BACKUPS_INCREMENTAL='$u_snapshots'\nU_BACKUPS=/" "$USER_DATA/user.conf"
+fi
+
 # Send notification
 if [ -e "$BACKUP/$user.log" ] && [ "$notify" = "yes" ]; then
 	subj="$user → backup has been completed"

@@ -9,6 +9,23 @@
 		<?php } ?>
 		</div>
 		<div class="toolbar-right">
+			<div class="toolbar-sorting">
+				<button class="toolbar-sorting-toggle js-toggle-sorting-menu" type="button" title="<?= tohtml( _("Sort items")) ?>">
+					<?= tohtml( _("Sort by")) ?>:
+					<span class="u-text-bold">
+						<?php if ($_SESSION['userSortOrder'] === 'name') { $label = _('Name'); } else { $label = _('Date'); } ?>
+						<?= tohtml($label) ?> <i class="fas fa-arrow-down-a-z"></i>
+					</span>
+				</button>
+				<ul class="toolbar-sorting-menu js-sorting-menu u-hidden">
+					<li data-entity="sort-date" data-sort-as-int="1">
+						<span class="name <?php if ($_SESSION['userSortOrder'] === 'date') { echo 'active'; } ?>"><?= tohtml( _("Date")) ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
+					</li>
+					<li data-entity="sort-name">
+						<span class="name <?php if ($_SESSION['userSortOrder'] === 'name') { echo 'active'; } ?>"><?= tohtml( _("Name")) ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
+					</li>
+				</ul>
+			</div>
 			<?php if ($read_only !== true) { ?>
 				<form x-data x-bind="BulkEdit" action="/bulk/backup/incremental/" method="post">
 					<input type="hidden" name="token" value="<?= tohtml($_SESSION["token"]) ?>">
@@ -22,7 +39,7 @@
 				</form>
 			<?php } ?>
 			<div class="toolbar-search">
-				<form action="/search/" method="get">
+				<form action="/list/backup/incremental/" method="get">
 					<input type="hidden" name="token" value="<?= tohtml($_SESSION["token"]) ?>">
 						<input type="search" class="form-control js-search-input" name="q" value="<?= tohtml($_GET['q'] ?? '') ?>" title="<?= tohtml( _("Search")) ?>">
 					<button type="submit" class="toolbar-input-submit" title="<?= tohtml( _("Search")) ?>">
@@ -56,7 +73,9 @@
 		foreach ($data as $key => $value) {
 			$i++;
 	?>
-		<div class="units-table-row js-unit">
+		<div class="units-table-row js-unit"
+			data-sort-date="<?= tohtml(strtotime($value['time'])) ?>"
+			data-sort-name="<?= tohtml($value['short_id']) ?>">
 			<div class="units-table-cell">
 				<div>
 					<input id="check<?= tohtml($i) ?>" class="js-unit-checkbox" type="checkbox" title="<?= tohtml( _("Select")) ?>" name="backup[]" value="<?= tohtml($value['short_id']) ?>" <?= tohtml($display_mode) ?>>					<span class="u-hide-desktop"><label for="check<?= tohtml($i) ?>" class="u-hide-desktop"><?= tohtml( _("Select")) ?></label></span>

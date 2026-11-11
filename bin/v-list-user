@@ -78,6 +78,7 @@ json_list() {
         "U_DATABASES": "'$U_DATABASES'",
         "U_CRON_JOBS": "'$U_CRON_JOBS'",
         "U_BACKUPS": "'$U_BACKUPS'",
+        "U_BACKUPS_INCREMENTAL": "'${U_BACKUPS_INCREMENTAL:-0}'",
         "BACKUPS_INCREMENTAL": "'$BACKUPS_INCREMENTAL'",
         "LANGUAGE": "'$LANGUAGE'",
         "THEME": "'$THEME'",

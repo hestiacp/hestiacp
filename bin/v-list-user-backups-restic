@@ -47,7 +47,16 @@ check_hestia_demo_mode
 source_conf $HESTIA/conf/restic.conf
 
 function json_list() {
-	restic --repo "${REPO%/}/$user" --password-file $USER_DATA/restic.conf --json snapshots
+	snapshots_json=$(restic --repo "${REPO%/}/$user" --password-file $USER_DATA/restic.conf --json snapshots)
+	if [ -n "$snapshots_json" ]; then
+		u_snapshots=$(printf '%s' "$snapshots_json" | grep -o '"short_id"' | wc -l)
+		if grep -q "^U_BACKUPS_INCREMENTAL=" "$USER_DATA/user.conf"; then
+			update_user_value "$user" '$U_BACKUPS_INCREMENTAL' "$u_snapshots"
+		else
+			sed -i "s/^U_BACKUPS=/U_BACKUPS_INCREMENTAL='$u_snapshots'\nU_BACKUPS=/" "$USER_DATA/user.conf"
+		fi
+	fi
+	printf '%s\n' "$snapshots_json"
 }
 
 function plain_list() {

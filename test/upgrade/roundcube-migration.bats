@@ -43,6 +43,10 @@ mysql_connect() { mkdir -p "$HESTIA/conf"; : > "$HESTIA/conf/.mysql.localhost"; 
 mysql_sql_escape() { printf '%s' "$1" | sed -e 's/\\/\\\\/g' -e "s/'/''/g"; }
 mysql_query() { printf '%s\n' "$1" >> "$RC_TEST_SQL_LOG"; return 0; }
 mysql_query_raw() {
+	if [[ "$1" == "SELECT @@port" ]]; then
+		echo 3306
+		return 0
+	fi
 	if [[ "$1" == SHOW\ GRANTS* ]]; then
 		return 0
 	fi
@@ -156,7 +160,8 @@ EOF
 
 	cat > "$HESTIA/bin/v-add-sys-roundcube" <<'EOF'
 #!/bin/bash
-mkdir -p "$RC_INSTALL_DIR/program/include" "$RC_INSTALL_DIR/bin" "$RC_INSTALL_DIR/plugins/managesieve"
+mkdir -p "$RC_INSTALL_DIR/program/include" "$RC_INSTALL_DIR/bin" "$RC_INSTALL_DIR/plugins/managesieve" "$RC_INSTALL_DIR/vendor"
+printf '{"require":{"roundcube/roundcubemail":"*"}}\n' > "$RC_INSTALL_DIR/composer.json"
 mkdir -p "$RC_CONFIG_DIR/plugins/password" "$RC_CONFIG_DIR/plugins/newmail_notifier" "$RC_CONFIG_DIR/plugins/zipdownload"
 cat > "$RC_INSTALL_DIR/program/include/iniset.php" <<PHP
 <?php
@@ -172,6 +177,33 @@ printf '#!/usr/bin/env php\n<?php file_put_contents(getenv("RC_TEST_UPDATE_LOG")
 chmod +x "$RC_INSTALL_DIR/bin/update.sh"
 EOF
 
+	mkdir -p "$WORK/home/admin/.composer"
+	cat > "$WORK/home/admin/.composer/composer" <<'EOF'
+#!/usr/bin/php
+<?php
+file_put_contents(getenv("RC_TEST_COMPOSER_LOG"), implode(" ", array_slice($argv, 1)) . "\n", FILE_APPEND);
+$dir = getenv("RC_INSTALL_DIR");
+if ($dir) {
+	@mkdir($dir . "/vendor", 0755, true);
+	file_put_contents($dir . "/vendor/autoload.php", "<?php\n");
+}
+exit(0);
+EOF
+	chmod +x "$WORK/home/admin/.composer/composer"
+
+	cat > "$MOCK_BIN/php-test" <<'EOF'
+#!/bin/bash
+case "$*" in
+	*PHP_VERSION_ID*)
+		echo 80300
+		exit 0
+		;;
+	*class_exists*Pdo*)
+		exit 1
+		;;
+esac
+exec /usr/bin/php "$@"
+EOF
 	chmod +x "$MOCK_BIN"/* "$HESTIA/bin/v-add-sys-roundcube"
 }
 
@@ -183,6 +215,9 @@ run_script() {
 	run env -i \
 		PATH="$MOCK_BIN:/usr/bin:/bin" \
 		HOME=/root \
+		HOMEDIR="$WORK/home" \
+		ROOT_USER=admin \
+		PHP_CLI="$MOCK_BIN/php-test" \
 		HESTIA="$HESTIA" \
 		RC_HESTIA_CONF=/dev/null \
 		RC_SHARE_DIR="$SHARE_DIR" \
@@ -196,6 +231,7 @@ run_script() {
 		RC_TEST_PURGED="$WORK/purged" \
 		RC_TEST_UPDATE_LOG="$WORK/update.log" \
 		RC_TEST_SYSTEMD_LOG="$WORK/systemd.log" \
+		RC_TEST_COMPOSER_LOG="$WORK/composer.log" \
 		HESTIA_BACKUP="$WORK/upgrade-backup" \
 		bash "$REPO_ROOT/install/upgrade/migrate_roundcube.sh" "$@"
 }
@@ -282,6 +318,9 @@ EOF
 	run grep -q "newpass@localhost/roundcube" "$CONFIG_DIR/config.inc.php"
 	assert_success
 	[ -f "$CONFIG_DIR/plugins/managesieve/config.inc.php" ]
+	run grep -q "symfony/polyfill-php84" "$WORK/composer.log"
+	assert_success
+	[ -f "$INSTALL_DIR/vendor/autoload.php" ]
 
 	# Database dump and import, with no package autoremove
 	run grep -q "INSERT INTO \`users\`" "$WORK/import.sql"
@@ -340,6 +379,81 @@ EOF
 	[ -f "$CONFIG_DIR/config.inc.php" ]
 	[ -f "$SHARE_DIR/program/include/iniset.php" ]
 	run test -f "$WORK/apt.log"
+	assert_failure
+}
+
+@test "Roundcube migration skips when the old database port differs from Hestia" {
+	sed -i 's|@localhost/roundcube|@localhost:3307/roundcube|' "$CONFIG_DIR/config.inc.php"
+
+	run_migration
+	assert_success
+	assert_output --partial "differs from the Hestia server port"
+	[ -f "$SHARE_DIR/program/include/iniset.php" ]
+	run test -f "$WORK/apt.log"
+	assert_failure
+}
+
+@test "Roundcube migration skips when no distribution Roundcube packages are installed" {
+	printf '#!/bin/bash\nexit 0\n' > "$MOCK_BIN/dpkg-query"
+	chmod +x "$MOCK_BIN/dpkg-query"
+
+	run_migration
+	assert_success
+	assert_output --partial "no installed distribution Roundcube packages"
+	[ -f "$SHARE_DIR/program/include/iniset.php" ]
+	run test -f "$WORK/apt.log"
+	assert_failure
+}
+
+@test "Roundcube repair imports a post-update snapshot without rerunning update.sh" {
+	sed -n '/^repair_new_database() {/,/^}$/p' 		"$REPO_ROOT/install/upgrade/migrate_roundcube.sh" > "$WORK/repair-func.sh"
+	mkdir -p "$WORK/repair-config" "$WORK/repair-backup/db" "$INSTALL_DIR/bin"
+	cat > "$WORK/repair-config/config.inc.php" <<'EOF'
+<?php
+$config["db_dsnw"] = "mysql://roundcube:newpass@localhost/roundcube";
+EOF
+	printf 'CREATE TABLE `users` (`id` int);\n' > "$WORK/repair-dump.sql"
+	cat > "$INSTALL_DIR/bin/update.sh" <<'EOF'
+#!/usr/bin/env php
+<?php file_put_contents(getenv("RC_TEST_UPDATE_LOG"), "update\n", FILE_APPEND);
+EOF
+	chmod +x "$INSTALL_DIR/bin/update.sh"
+
+	run env 		RC_TEST_DUMP="$WORK/repair-dump.sql" \
+		RC_TEST_IMPORT_LOG="$WORK/repair-import.sql" \
+		RC_TEST_UPDATE_LOG="$WORK/repair-update.log" \
+		RC_TEST_MYSQL="$MOCK_BIN/mysql" \
+		RC_TEST_DUMPBIN="$MOCK_BIN/mysqldump" \
+		RC_TEST_CFG="$WORK/repair-config" \
+		RC_TEST_TOOL="$HESTIA/install/upgrade/roundcube-config-tool.php" \
+		RC_TEST_PHP="$MOCK_BIN/php-test" \
+		RC_TEST_BACKUP="$WORK/repair-backup" \
+		RC_TEST_FUNC="$WORK/repair-func.sh" \
+		RC_INSTALL_DIR="$INSTALL_DIR" \
+		bash -c '
+			mysql_sql_escape() { printf "%s" "$1"; }
+			mysql_query() { :; }
+			mysql_query_raw() {
+				case "$1" in
+					*information_schema.schemata*) echo roundcube ;;
+					*information_schema.tables*) echo 0 ;;
+				esac
+			}
+			new_db_repair_dump() { echo "$RC_TEST_DUMP"; }
+			MYSQL_CLIENT_BIN="$RC_TEST_MYSQL"
+			MYSQL_DUMP_BIN="$RC_TEST_DUMPBIN"
+			mycnf=/dev/null
+			NEW_DB_NAME=roundcube
+			RC_CONFIG_DIR="$RC_TEST_CFG"
+			RC_CONFIG_TOOL="$RC_TEST_TOOL"
+			PHP_CLI="$RC_TEST_PHP"
+			BACKUP_DIR="$RC_TEST_BACKUP"
+			source "$RC_TEST_FUNC"
+			repair_new_database
+		'
+	assert_success
+	[ -s "$WORK/repair-import.sql" ]
+	run test -s "$WORK/repair-update.log"
 	assert_failure
 }
 

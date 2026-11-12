@@ -711,11 +711,8 @@ repair_new_database() {
 		return 1
 	fi
 
-	if ! "$PHP_CLI" -d disable_functions= "$RC_INSTALL_DIR/bin/update.sh" \
-		--version "$old_version" < /dev/null >> "$BACKUP_DIR/update-after-purge.log" 2>&1; then
-		return 1
-	fi
-
+	# The pre-purge snapshot already has the post-update schema. Do not run
+	# update.sh again: it would replay old->new migrations against that schema.
 	return 0
 }
 
@@ -1208,6 +1205,13 @@ if [[ -z "$PACKAGE_MANAGER" ]]; then
 	skip_migration "no supported package manager found"
 fi
 
+if ! installed_packages="$(installed_roundcube_packages)"; then
+	skip_migration "could not determine which distribution Roundcube packages are installed"
+fi
+if [[ -z "$installed_packages" ]]; then
+	skip_migration "no installed distribution Roundcube packages were found"
+fi
+
 MYSQL_DUMP_BIN="$(command -v mariadb-dump || command -v mysqldump || true)"
 MYSQL_CLIENT_BIN="$(command -v mariadb || command -v mysql || true)"
 if [[ -z "$MYSQL_DUMP_BIN" || -z "$MYSQL_CLIENT_BIN" ]]; then
@@ -1235,6 +1239,15 @@ OLD_DB_HOST="$RC_DB_HOST"
 OLD_DB_PORT="$RC_DB_PORT"
 OLD_DB_PREFIX="${RC_DB_PREFIX:-}"
 OLD_DB_PREFIX_UNKNOWN="${RC_DB_PREFIX_UNKNOWN:-0}"
+
+if [[ -n "$OLD_DB_PORT" ]]; then
+	if ! hestia_db_port="$(mysql_query_raw "SELECT @@port")"; then
+		skip_migration "could not determine the Hestia database port"
+	fi
+	if [[ "$hestia_db_port" != "$OLD_DB_PORT" ]]; then
+		skip_migration "Roundcube database port $OLD_DB_PORT differs from the Hestia server port $hestia_db_port"
+	fi
+fi
 
 if [[ "$OLD_DB_PREFIX_UNKNOWN" == "1" ]]; then
 	skip_migration "Roundcube has a non-literal db_prefix setting; cannot safely preserve table names"
@@ -1341,9 +1354,6 @@ mkdir -p "$BACKUP_DIR/db" "$BACKUP_DIR/files" "$BACKUP_DIR/packages" || abort_ea
 chmod 700 "$BACKUP_DIR" || abort_early "could not secure backup directory $BACKUP_DIR"
 echo "[ * ] Backup directory: $BACKUP_DIR"
 
-if ! installed_packages="$(installed_roundcube_packages)"; then
-	abort_early "could not determine which Roundcube packages are installed"
-fi
 printf '%s\n' "$installed_packages" > "$BACKUP_DIR/packages/installed.tsv"
 cut -f 1 <<< "$installed_packages" | sed '/^$/d' > "$BACKUP_DIR/packages/names.txt"
 

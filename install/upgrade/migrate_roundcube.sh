@@ -149,6 +149,57 @@ is_distribution_roundcube_layout() {
 	[[ -L "$RC_INSTALL_DIR/program" || -L "$RC_INSTALL_DIR/index.php" ]]
 }
 
+ensure_roundcube_polyfill() {
+	local php_id
+	local composer_bin
+	local composer_home
+	local composer_log
+
+	php_id="$("$PHP_CLI" -r 'echo PHP_VERSION_ID;' 2> /dev/null || true)"
+	[[ "$php_id" =~ ^[0-9]+$ ]] || return 0
+	[[ "$php_id" -lt 80400 ]] || return 0
+
+	if [[ -f "$RC_INSTALL_DIR/vendor/autoload.php" ]]; then
+		# shellcheck disable=SC2016 # $argv is PHP, not shell
+		if "$PHP_CLI" -r 'require $argv[1]; exit(class_exists("Pdo\\Mysql") ? 0 : 1);' \
+			"$RC_INSTALL_DIR/vendor/autoload.php" > /dev/null 2>&1; then
+			return 0
+		fi
+	elif "$PHP_CLI" -r 'exit(class_exists("Pdo\\Mysql") ? 0 : 1);' > /dev/null 2>&1; then
+		return 0
+	fi
+
+	if [[ ! -f "$RC_INSTALL_DIR/composer.json" ]]; then
+		echo "[ ! ] Pdo\\Mysql is missing and $RC_INSTALL_DIR/composer.json is absent" >&2
+		return 1
+	fi
+
+	composer_bin="$HOMEDIR/${ROOT_USER:-admin}/.composer/composer"
+	if [[ ! -x "$composer_bin" ]]; then
+		"$BIN/v-add-user-composer" "${ROOT_USER:-admin}" &> /dev/null || true
+	fi
+	if [[ ! -x "$composer_bin" ]]; then
+		echo "[ ! ] Pdo\\Mysql is missing and Composer is unavailable" >&2
+		return 1
+	fi
+
+	composer_home="$(mktemp -d)"
+	composer_log="$(mktemp)"
+	if COMPOSER_ALLOW_SUPERUSER=1 COMPOSER_HOME="$composer_home" "$PHP_CLI" -d disable_functions= \
+		"$composer_bin" --working-dir="$RC_INSTALL_DIR" require 'symfony/polyfill-php84:^1.34' \
+		--no-interaction --no-progress --update-no-dev > "$composer_log" 2>&1; then
+		echo "[ + ] Installed symfony/polyfill-php84 for Roundcube"
+	else
+		echo "[ ! ] Failed to install symfony/polyfill-php84 for Roundcube" >&2
+		tail -n 20 "$composer_log" >&2 || true
+		rm -rf "$composer_home" "$composer_log"
+		return 1
+	fi
+
+	rm -rf "$composer_home" "$composer_log"
+	return 0
+}
+
 roundcube_version() {
 	local file="$1"
 
@@ -302,7 +353,7 @@ installed_roundcube_packages() {
 		local dpkg_rc=$?
 		# dpkg-query exits 1 when the glob matches no packages; that is a
 		# normal "none installed" result, not a command failure.
-		if [[ "$dpkg_rc" -ne 0 && ! ( "$dpkg_rc" -eq 1 && -z "$output" ) ]]; then
+		if [[ "$dpkg_rc" -ne 0 && ! ("$dpkg_rc" -eq 1 && -z "$output") ]]; then
 			return 1
 		fi
 		awk -F '\t' '$1 !~ /^(un|pn)/ && $2 ~ /^roundcube(-|$)/ { print $2 "\t" $3 }' <<< "$output"
@@ -427,9 +478,13 @@ restore_old_database() {
 		mysql_query "DROP USER IF EXISTS '$NEW_DB_USER'@'localhost', '$NEW_DB_USER'@'127.0.0.1', '$NEW_DB_USER'@'::1', '$NEW_DB_USER'@'%'" || true
 	fi
 
-	# Grants on a dropped/recreated database can be lost; restore them.
-	query="GRANT ALL ON \`$OLD_DB_NAME\`.* TO '$escaped_user'@'$escaped_host'"
-	mysql_query "$query" || true
+	# Only touch grants when the old database/user was actually removed or the
+	# new one may have replaced it. A failure before any destructive step must
+	# leave the old account exactly as it was.
+	if [[ "$recreate_old_db" -eq 1 || "$OLD_USER_DROPPED" -eq 1 || "$VADD_ATTEMPTED" -eq 1 ]]; then
+		query="GRANT ALL ON \`$OLD_DB_NAME\`.* TO '$escaped_user'@'$escaped_host'"
+		mysql_query "$query" || true
+	fi
 
 	if [[ "$recreate_old_db" -eq 1 ]]; then
 		if ! "$MYSQL_CLIENT_BIN" --defaults-file="$mycnf" "$OLD_DB_NAME" < "$dump_file"; then
@@ -857,7 +912,6 @@ purge_distribution_packages() {
 	return 0
 }
 
-
 mark_cleanup_scheduled() {
 	if [[ -n "${HESTIA_BACKUP:-}" && -d "$HESTIA_BACKUP" ]]; then
 		printf '%s\n' "$BACKUP_DIR" > "$HESTIA_BACKUP/roundcube-package-cleanup-scheduled" || true
@@ -1028,7 +1082,7 @@ purge_only_main() {
 		return 1
 	}
 
-	if ! ( mysql_connect localhost ) > /dev/null 2>&1; then
+	if ! (mysql_connect localhost) > /dev/null 2>&1; then
 		echo "ERROR: could not connect to the Hestia MySQL/MariaDB server" >&2
 		return 1
 	fi
@@ -1079,7 +1133,6 @@ if [[ "$PURGE_ONLY" == "yes" ]]; then
 	fi
 	exit 0
 fi
-
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -1145,6 +1198,10 @@ fi
 if [[ -z "$old_version" ]]; then
 	skip_migration "could not determine the installed distribution Roundcube version"
 fi
+if [[ "$old_version" != "$rc_v" ]] \
+	&& [[ "$(printf '%s\n%s\n' "$old_version" "$rc_v" | sort -V | tail -n 1)" == "$old_version" ]]; then
+	skip_migration "installed distribution Roundcube $old_version is newer than Hestia's target $rc_v"
+fi
 
 detect_package_manager
 if [[ -z "$PACKAGE_MANAGER" ]]; then
@@ -1159,7 +1216,7 @@ fi
 
 # func/db.sh's mysql_connect exits the shell on failure. Run it in a subshell
 # to contain that exit, then use the defaults file it creates.
-if ! ( mysql_connect localhost ) > /dev/null 2>&1; then
+if ! (mysql_connect localhost) > /dev/null 2>&1; then
 	abort_early "could not connect to the Hestia MySQL/MariaDB server"
 fi
 mycnf="$HESTIA/conf/.mysql.localhost"
@@ -1410,6 +1467,12 @@ if [[ "$new_version" != "$rc_v" ]]; then
 fi
 if [[ ! -f "$RC_CONFIG_DIR/config.inc.php" ]]; then
 	fail "new Roundcube configuration is missing $RC_CONFIG_DIR/config.inc.php"
+fi
+
+# Roundcube 1.7.6's Pdo\Mysql class is only in PHP 8.4+ or the
+# symfony/polyfill-php84 package. Ensure it exists before update.sh.
+if ! ensure_roundcube_polyfill; then
+	fail "Roundcube's required Pdo\\Mysql polyfill could not be installed"
 fi
 
 echo "[ * ] Preserving custom plugins, skins and plugin configuration"

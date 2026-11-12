@@ -328,6 +328,21 @@ EOF
 	assert_failure
 }
 
+@test "Roundcube migration skips when the distro version is newer than Hestia's target" {
+	cat > "$SHARE_DIR/program/include/iniset.php" <<'EOF'
+<?php
+define('RCMAIL_VERSION', '1.8.0');
+EOF
+
+	run_migration
+	assert_success
+	assert_output --partial "is newer than Hestia's target"
+	[ -f "$CONFIG_DIR/config.inc.php" ]
+	[ -f "$SHARE_DIR/program/include/iniset.php" ]
+	run test -f "$WORK/apt.log"
+	assert_failure
+}
+
 @test "Roundcube deferred purge-only mode removes packages and keeps the new install" {
 	rm -rf "$INSTALL_DIR" "$SHARE_DIR"
 	mkdir -p "$INSTALL_DIR/program/include" "$INSTALL_DIR/bin" "$CONFIG_DIR"

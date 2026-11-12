@@ -12,6 +12,7 @@ BLACKLISTS=(
 	"https://cinsscore.com/list/ci-badguys.txt"                                                              # C.I. Army Malicious IP List
 	"https://lists.blocklist.de/lists/all.txt"                                                               # blocklist.de attackers
 	"https://blocklist.greensnow.co/greensnow.txt"                                                           # GreenSnow
+	"https://netapi.com/zf-api/f/compromised/ip/live/"                                                       # NetAPI honeypot attackers (last 48 hours)
 	"https://iplists.firehol.org/files/firehol_level1.netset"                                                # Firehol Level 1
 	"https://iplists.firehol.org/files/stopforumspam_7d.ipset"                                               # Stopforumspam via Firehol
 	"https://raw.githubusercontent.com/borestad/blocklist-abuseipdb/refs/heads/main/abuseipdb-s100-30d.ipv4" # AbuseIPDB 30d 100% confidence score

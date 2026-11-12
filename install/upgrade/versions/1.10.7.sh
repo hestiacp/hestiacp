@@ -84,7 +84,7 @@ rc_install_dir="/var/lib/roundcube"
 rc_composer_bin="$HOMEDIR/$ROOT_USER/.composer/composer"
 
 if [[ -f "$rc_install_dir/composer.json" ]] \
-	&& ! grep -q '"roundcube/roundcubemail"' "$rc_install_dir/composer.json" 2>/dev/null; then
+	&& ! grep -q '"roundcube/roundcubemail"' "$rc_install_dir/composer.json" 2> /dev/null; then
 	echo "[ ! ] $rc_install_dir/composer.json does not look like a Roundcube composer.json"
 	add_upgrade_message "Roundcube was not upgraded: $rc_install_dir/composer.json is not a Roundcube composer.json."
 elif roundcube_polyfill_missing; then
@@ -98,7 +98,7 @@ elif roundcube_polyfill_missing; then
 
 		if COMPOSER_ALLOW_SUPERUSER=1 COMPOSER_HOME="$rc_composer_home" /usr/bin/php -d disable_functions= \
 			"$rc_composer_bin" --working-dir="$rc_install_dir" require 'symfony/polyfill-php84:^1.34' \
-			--no-interaction --no-progress --update-no-dev >"$rc_composer_log" 2>&1; then
+			--no-interaction --no-progress --update-no-dev > "$rc_composer_log" 2>&1; then
 			echo "[ + ] Installed symfony/polyfill-php84 for Roundcube"
 		else
 			echo "[ ! ] Failed to install symfony/polyfill-php84 for Roundcube"

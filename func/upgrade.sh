@@ -725,7 +725,7 @@ upgrade_roundcube() {
 			cleanup_failed_marker="$HESTIA_BACKUP/roundcube-package-cleanup-failed"
 			installed_rc_packages=""
 			if command -v dpkg-query > /dev/null 2>&1; then
-				installed_rc_packages="$(dpkg-query -W -f='${db:Status-Abbrev} ${Package}\n' 'roundcube*' 2> /dev/null | awk '$1 !~ /^(un|pn)/ && $2 ~ /^roundcube(-|$)/ { print $2 }')"
+				installed_rc_packages="$(dpkg-query -W -f='${db:Status-Abbrev} ${Package}\n' 'roundcube*' 2> /dev/null | awk 'substr($1,2,1) == "i" && $2 ~ /^roundcube(-|$)/ { print $2 }')"
 			fi
 			if [ -f "$cleanup_failed_marker" ]; then
 				echo "[ ! ] Roundcube: distribution package cleanup failed."

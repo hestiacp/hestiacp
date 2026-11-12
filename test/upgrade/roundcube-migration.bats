@@ -382,6 +382,14 @@ EOF
 	assert_failure
 }
 
+@test "Roundcube migration accepts an explicit 3306 port" {
+	sed -i 's|@localhost/roundcube|@localhost:3306/roundcube|' "$CONFIG_DIR/config.inc.php"
+
+	run_migration
+	assert_success
+	assert_output --partial "Roundcube migrated from the distribution package"
+}
+
 @test "Roundcube migration skips when the old database port differs from Hestia" {
 	sed -i 's|@localhost/roundcube|@localhost:3307/roundcube|' "$CONFIG_DIR/config.inc.php"
 
@@ -403,6 +411,42 @@ EOF
 	[ -f "$SHARE_DIR/program/include/iniset.php" ]
 	run test -f "$WORK/apt.log"
 	assert_failure
+}
+
+@test "Roundcube migration skips config-only rc Roundcube packages" {
+	cat > "$MOCK_BIN/dpkg-query" <<'EOF'
+#!/bin/bash
+printf 'rc \troundcube-core\t1.6.6\n'
+exit 0
+EOF
+	chmod +x "$MOCK_BIN/dpkg-query"
+
+	run_migration
+	assert_success
+	assert_output --partial "no installed distribution Roundcube packages"
+	[ -f "$SHARE_DIR/program/include/iniset.php" ]
+}
+
+@test "Roundcube quiesce helper waits for active queries to drain" {
+	sed -n '/^wait_for_roundcube_db_idle() {/,/^}$/p' \
+		"$REPO_ROOT/install/upgrade/migrate_roundcube.sh" > "$WORK/quiesce-func.sh"
+	cat > "$WORK/quiesce-test.sh" <<'EOF'
+mysql_query_raw() {
+	local count
+	count="$(cat "$RC_TEST_IDLE_STATE")"
+	echo "$count"
+	if [[ "$count" -gt 0 ]]; then
+		echo $((count - 1)) > "$RC_TEST_IDLE_STATE"
+	fi
+}
+sleep() { :; }
+source "$RC_TEST_IDLE_FUNC"
+wait_for_roundcube_db_idle roundcube 3
+EOF
+	printf '2\n' > "$WORK/idle-state"
+	run env RC_TEST_IDLE_STATE="$WORK/idle-state" RC_TEST_IDLE_FUNC="$WORK/quiesce-func.sh" bash "$WORK/quiesce-test.sh"
+	assert_success
+	[ "$(cat "$WORK/idle-state")" = "0" ]
 }
 
 @test "Roundcube repair imports a post-update snapshot without rerunning update.sh" {

@@ -225,6 +225,32 @@ new_db_repair_dump() {
 	fi
 }
 
+wait_for_roundcube_db_idle() {
+	local database="$1"
+	local timeout="${2:-15}"
+	local elapsed=0
+	local active
+
+	while [[ "$elapsed" -lt "$timeout" ]]; do
+		if ! active="$(mysql_query_raw "SELECT COUNT(*) FROM information_schema.processlist WHERE DB = '$(mysql_sql_escape "$database")' AND COMMAND <> 'Sleep' AND ID <> CONNECTION_ID()")"; then
+			echo "[ ! ] Could not inspect active queries for database $database" >&2
+			return 1
+		fi
+		if [[ ! "$active" =~ ^[0-9]+$ ]]; then
+			echo "[ ! ] Invalid active-query count '$active' for database $database" >&2
+			return 1
+		fi
+		if [[ "$active" -eq 0 ]]; then
+			return 0
+		fi
+		sleep 1
+		elapsed=$((elapsed + 1))
+	done
+
+	echo "[ ! ] Database $database still has active queries after ${timeout}s; continuing with the snapshot" >&2
+	return 1
+}
+
 row_counts() {
 	local database="$1"
 	local tables
@@ -356,7 +382,7 @@ installed_roundcube_packages() {
 		if [[ "$dpkg_rc" -ne 0 && ! ("$dpkg_rc" -eq 1 && -z "$output") ]]; then
 			return 1
 		fi
-		awk -F '\t' '$1 !~ /^(un|pn)/ && $2 ~ /^roundcube(-|$)/ { print $2 "\t" $3 }' <<< "$output"
+		awk -F '\t' 'substr($1,2,1) == "i" && $2 ~ /^roundcube(-|$)/ { print $2 "\t" $3 }' <<< "$output"
 	elif command -v rpm > /dev/null 2>&1; then
 		output="$(rpm -qa --qf '%{NAME}\t%{VERSION}-%{RELEASE}\n' 2> /dev/null)" || return 1
 		awk -F '\t' '$1 ~ /^roundcube(-|$)/' <<< "$output"
@@ -811,7 +837,11 @@ purge_distribution_packages() {
 	fi
 
 	# The webmail files are out of the way, so no new requests can start.
-	# Take and verify a fresh snapshot before removing the packages.
+	# Wait briefly for workers already running, then take and verify a fresh
+	# snapshot before removing the packages.
+	if ! wait_for_roundcube_db_idle "$NEW_DB_NAME" 15; then
+		echo "[ ! ] Continuing pre-purge snapshot with a reduced but non-zero in-flight write window" >&2
+	fi
 	if ! capture_row_counts "$BACKUP_DIR/db/rowcounts-before-purge.tsv" "$NEW_DB_NAME"; then
 		echo "[ ! ] Could not record row counts before package removal" >&2
 		return 2
@@ -1240,13 +1270,12 @@ OLD_DB_PORT="$RC_DB_PORT"
 OLD_DB_PREFIX="${RC_DB_PREFIX:-}"
 OLD_DB_PREFIX_UNKNOWN="${RC_DB_PREFIX_UNKNOWN:-0}"
 
-if [[ -n "$OLD_DB_PORT" ]]; then
-	if ! hestia_db_port="$(mysql_query_raw "SELECT @@port")"; then
-		skip_migration "could not determine the Hestia database port"
-	fi
-	if [[ "$hestia_db_port" != "$OLD_DB_PORT" ]]; then
-		skip_migration "Roundcube database port $OLD_DB_PORT differs from the Hestia server port $hestia_db_port"
-	fi
+OLD_DB_PORT="${OLD_DB_PORT:-3306}"
+if ! hestia_db_port="$(mysql_query_raw "SELECT @@port")"; then
+	skip_migration "could not determine the Hestia database port"
+fi
+if [[ "$hestia_db_port" != "$OLD_DB_PORT" ]]; then
+	skip_migration "Roundcube database port $OLD_DB_PORT differs from the Hestia server port $hestia_db_port"
 fi
 
 if [[ "$OLD_DB_PREFIX_UNKNOWN" == "1" ]]; then
@@ -1430,6 +1459,15 @@ fi
 # The webmail files are gone, so no new requests can start. Take one final
 # snapshot to minimize the window in which writes can be lost between the
 # initial backup and the database swap.
+echo "[ * ] Waiting briefly for in-flight Roundcube database activity"
+# Moving the docroots stops new requests, but workers already running can still
+# write. Wait for active queries to drain; this is bounded and cannot cancel a
+# long-running request, so a write committed after this snapshot is still lost.
+# We deliberately do not stop unrelated PHP-FPM/Apache/nginx services.
+if ! wait_for_roundcube_db_idle "$OLD_DB_NAME" 15; then
+	echo "[ ! ] Continuing final snapshot with a reduced but non-zero in-flight write window" >&2
+fi
+
 echo "[ * ] Taking a final database snapshot"
 if ! capture_row_counts "$BACKUP_DIR/db/rowcounts-before-import.tsv" "$OLD_DB_NAME"; then
 	fail "could not record row counts before the final snapshot"
@@ -1578,8 +1616,8 @@ if [[ "$DEFER_PACKAGE_REMOVAL" == "yes" ]]; then
 		echo "[ * ] Distribution package removal scheduled to run after apt releases its lock"
 		add_rc_message "Roundcube was migrated to the Hestia-managed install at $RC_INSTALL_DIR. Removal of the distribution packages was scheduled to run after the Hestia package upgrade releases the apt/dpkg lock; the migration itself is complete. Backup: $BACKUP_DIR"
 	else
-		echo "[ ! ] Could not schedule distribution package removal; remove the packages manually" >&2
-		add_rc_message "Roundcube was migrated to the Hestia-managed install at $RC_INSTALL_DIR, but the distribution packages could not be scheduled for removal while apt held its lock. Remove the remaining roundcube* packages manually. Backup: $BACKUP_DIR"
+		echo "[ ! ] Could not schedule distribution package removal; retry with: $0 --purge-only --backup-dir $BACKUP_DIR" >&2
+		add_rc_message "Roundcube was migrated to the Hestia-managed install at $RC_INSTALL_DIR, but distribution package cleanup could not be scheduled. Retry with: $0 --purge-only --backup-dir $BACKUP_DIR"
 	fi
 else
 	purge_distribution_packages

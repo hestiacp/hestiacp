@@ -76,3 +76,39 @@ if [[ -f "$f2b_action" ]] && [[ -f "$hestia_f2b_action" ]] && ! grep -qE '^[[:sp
 		rm -f "$backup_action"
 	fi
 fi
+
+# Roundcube 1.7.6 requires symfony/polyfill-php84 for Pdo\Mysql on PHP < 8.4.
+# installto.sh does not update a Composer-managed vendor directory, so install
+# it before upgrade_roundcube runs (roundcube/roundcubemail#10399).
+rc_install_dir="/var/lib/roundcube"
+rc_composer_bin="$HOMEDIR/$ROOT_USER/.composer/composer"
+
+if [[ -f "$rc_install_dir/composer.json" ]] \
+	&& ! grep -q '"roundcube/roundcubemail"' "$rc_install_dir/composer.json" 2> /dev/null; then
+	echo "[ ! ] $rc_install_dir/composer.json does not look like a Roundcube composer.json"
+	add_upgrade_message "Roundcube was not upgraded: $rc_install_dir/composer.json is not a Roundcube composer.json."
+elif roundcube_polyfill_missing; then
+	if [[ ! -x "$rc_composer_bin" ]]; then
+		"$BIN/v-add-user-composer" "$ROOT_USER" &> /dev/null
+	fi
+
+	if [[ -x "$rc_composer_bin" ]]; then
+		rc_composer_home="$(mktemp -d)"
+		rc_composer_log="$(mktemp)"
+
+		if COMPOSER_ALLOW_SUPERUSER=1 COMPOSER_HOME="$rc_composer_home" /usr/bin/php -d disable_functions= \
+			"$rc_composer_bin" --working-dir="$rc_install_dir" require 'symfony/polyfill-php84:^1.34' \
+			--no-interaction --no-progress --update-no-dev > "$rc_composer_log" 2>&1; then
+			echo "[ + ] Installed symfony/polyfill-php84 for Roundcube"
+		else
+			echo "[ ! ] Failed to install symfony/polyfill-php84 for Roundcube"
+			sed 's/^/  /' "$rc_composer_log"
+			add_upgrade_message "Roundcube was not upgraded: failed to install symfony/polyfill-php84. See the upgrade log."
+		fi
+
+		rm -rf "$rc_composer_home" "$rc_composer_log"
+	else
+		echo "[ ! ] Composer is unavailable, unable to install symfony/polyfill-php84 for Roundcube"
+		add_upgrade_message "Roundcube was not upgraded: Composer is unavailable. See the upgrade log."
+	fi
+fi

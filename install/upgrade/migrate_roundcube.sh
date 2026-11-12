@@ -628,9 +628,9 @@ verify_roundcube_credentials() {
 	eval "$new_db_values"
 
 	if [[ "$RC_DB_HOST" == "localhost" ]]; then
-		MYSQL_PWD="$RC_DB_PASS" "$MYSQL_CLIENT_BIN" -u "$RC_DB_USER" "$RC_DB_NAME" -e 'SELECT 1' > /dev/null 2>&1
+		MYSQL_PWD="$RC_DB_PASS" "$MYSQL_CLIENT_BIN" --no-defaults -u "$RC_DB_USER" "$RC_DB_NAME" -e 'SELECT 1' > /dev/null 2>&1
 	else
-		MYSQL_PWD="$RC_DB_PASS" "$MYSQL_CLIENT_BIN" -h "$RC_DB_HOST" -P "${RC_DB_PORT:-3306}" \
+		MYSQL_PWD="$RC_DB_PASS" "$MYSQL_CLIENT_BIN" --no-defaults -h "$RC_DB_HOST" -P "${RC_DB_PORT:-3306}" \
 			-u "$RC_DB_USER" "$RC_DB_NAME" -e 'SELECT 1' > /dev/null 2>&1
 	fi
 }
@@ -1507,6 +1507,15 @@ if getent passwd hestiamail > /dev/null 2>&1; then
 fi
 
 echo "[ * ] Restoring the Roundcube database contents"
+# v-add-sys-roundcube creates the current schema. Drop its tables so the old
+# snapshot is imported into an empty database; otherwise update.sh sees tables
+# that did not exist in the old version (e.g. "uploads already exists").
+if ! mysql_query "DROP DATABASE IF EXISTS \`$NEW_DB_NAME\`"; then
+	fail "could not reset database '$NEW_DB_NAME' before importing the old data"
+fi
+if ! mysql_query "CREATE DATABASE IF NOT EXISTS \`$NEW_DB_NAME\` CHARACTER SET utf8"; then
+	fail "could not recreate database '$NEW_DB_NAME' before importing the old data"
+fi
 if ! "$MYSQL_CLIENT_BIN" --defaults-file="$mycnf" "$NEW_DB_NAME" < "$(new_db_repair_dump)"; then
 	fail "could not import the old database into database '$NEW_DB_NAME'"
 fi
@@ -1539,10 +1548,10 @@ if ! new_db_values="$("$PHP_CLI" "$RC_CONFIG_TOOL" db-config "$RC_CONFIG_DIR/con
 fi
 eval "$new_db_values"
 if [[ "$RC_DB_HOST" == "localhost" ]]; then
-	MYSQL_PWD="$RC_DB_PASS" "$MYSQL_CLIENT_BIN" -u "$RC_DB_USER" "$RC_DB_NAME" -e 'SELECT 1' > /dev/null 2>&1 \
+	MYSQL_PWD="$RC_DB_PASS" "$MYSQL_CLIENT_BIN" --no-defaults -u "$RC_DB_USER" "$RC_DB_NAME" -e 'SELECT 1' > /dev/null 2>&1 \
 		|| fail "Roundcube's database credentials do not work after the migration"
 else
-	MYSQL_PWD="$RC_DB_PASS" "$MYSQL_CLIENT_BIN" -h "$RC_DB_HOST" -P "${RC_DB_PORT:-3306}" \
+	MYSQL_PWD="$RC_DB_PASS" "$MYSQL_CLIENT_BIN" --no-defaults -h "$RC_DB_HOST" -P "${RC_DB_PORT:-3306}" \
 		-u "$RC_DB_USER" "$RC_DB_NAME" -e 'SELECT 1' > /dev/null 2>&1 \
 		|| fail "Roundcube's database credentials do not work after the migration"
 fi

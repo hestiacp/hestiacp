@@ -6,10 +6,16 @@ All notable changes to this project will be documented in this file.
 
 ### Security
 
-- Harden `v-quick-install` and fix `v-quick-install-app` option parsing and PHP version check #5946 #5747 #5748
+- Harden `v-quick-install` and fix `v-quick-install-app` option parsing and PHP version check #5946 #5747 #5748, (GHSA-chw8-phjg-wmq7)
 - Anchor archive extension checks in `v-extract-fs-archive` #5819
 - Delete access keys when deleting a user #5941
 - Add NetAPI honeypot attackers to the malicious IP blacklist #5974
+- Fix symlink following by root in user home directories: verify directories component by component and do user-owned file operations with the user's privileges in mail/web domain scripts, rebuild and domain moves, SSH key scripts, user backup/restore and restic restores (restic now restores into a root-only staging directory) (GHSA-hc82-cqjf-hcpg, GHSA-wp7p-qfxc-cg88 and GHSA-pfj7-fhx8-q4qx )
+- Fail `v-add-mail-account` when the mailbox can't be created
+- Harden API authentication: validate API key names and refuse symlinked or out-of-store key files in `v-check-api-key`, fail closed on empty client IPs, trim and strictly compare the allowed IP list, and reject non-string request fields
+- Harden handling of password and hash files: check ownership, refuse symlinks and path traversal, fail closed on invalid files, remove them after reading, create API temp files with `tmpfile()`, clean up SMTP relay password files and pass the backup password through a file instead of argv (GHSA-vxpc-8vm2-8rv3)
+- Block mutating GET requests in read-only sessions and exit after redirecting logged-in users from password reset
+- Protect `ROOT_USER` SSH keys like access keys and enforce the protected-admin policy in the web terminal (GHSA-p4vq-6v6h-cc74)
 
 ### Changes
 

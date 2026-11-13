@@ -91,6 +91,11 @@ function wait_for_app() {
 	wait_for_app $domain
 	run request $domain
 	assert_output 'hestia-app-proof'
+
+	# Proxied through an upstream with keepalive
+	assert_file_contains "$HOMEDIR/$user/conf/web/$domain/nginx.conf" "upstream hestia_app_$domain {"
+	assert_file_contains "$HOMEDIR/$user/conf/web/$domain/nginx.conf" "keepalive 32;"
+	assert_file_contains "$HOMEDIR/$user/conf/web/$domain/nginx.conf" "proxy_pass         http://hestia_app_$domain;"
 }
 
 @test "APP: App runs as the domain owner" {
@@ -156,6 +161,28 @@ function wait_for_app() {
 	wait_for_app $domain
 }
 
+@test "APP: Owner restarts the app by touching tmp/restart.txt" {
+	pid=$(systemctl show -p MainPID --value $unit)
+	runuser -u $user -- mkdir -p $appdir/tmp
+	runuser -u $user -- touch $appdir/tmp/restart.txt
+	for _ in $(seq 1 50); do
+		[ "$(systemctl show -p MainPID --value $unit)" != "$pid" ] && break
+		sleep 0.2
+	done
+	run systemctl show -p MainPID --value $unit
+	refute_output "$pid"
+	run systemctl is-active $unit
+	assert_output 'active'
+	wait_for_app $domain
+
+	# Other files in tmp/ do not restart the app
+	pid=$(systemctl show -p MainPID --value $unit)
+	runuser -u $user -- touch $appdir/tmp/cache.txt
+	sleep 2
+	run systemctl show -p MainPID --value $unit
+	assert_output "$pid"
+}
+
 @test "APP: Suspend and unsuspend web domain" {
 	run v-suspend-web-domain $user $domain
 	assert_success
@@ -186,6 +213,12 @@ function wait_for_app() {
 	assert_output 'inactive'
 	run systemctl is-enabled $unit
 	assert_output 'disabled'
+
+	# The restart trigger does not start a stopped app
+	runuser -u $user -- touch $appdir/tmp/restart.txt
+	sleep 2
+	run systemctl is-active $unit
+	assert_output 'inactive'
 }
 
 @test "APP: JSON output escapes backslashes and quotes" {

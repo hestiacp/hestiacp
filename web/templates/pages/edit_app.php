@@ -123,6 +123,10 @@
 				</a>
 			</div>
 		<?php } ?>
+		<p class="hint u-mb20">
+			<?= tohtml( _("To restart the app from a deploy script, touch this file:")) ?>
+			<code><?= tohtml($app_x_data["home"] . ($app["DIR"] ?? "app") . "/tmp/restart.txt") ?></code>
+		</p>
 		<!-- End status -->
 
 		<?php if ($v_deps_output !== null) { ?>

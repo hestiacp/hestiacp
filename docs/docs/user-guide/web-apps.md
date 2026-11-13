@@ -53,6 +53,16 @@ The **Apps** page shows every app with its state, PID, CPU and memory usage, upt
 
 The app page also shows the **logs** (everything the app writes to stdout and stderr).
 
+### Restart from a script
+
+To restart the app without the panel, for example at the end of a deploy script or in a Git hook, touch the file `tmp/restart.txt` in the app folder:
+
+```bash
+cd ~/web/example.com/app && git pull && npm ci && mkdir -p tmp && touch tmp/restart.txt
+```
+
+This needs no root access or SSH (uploading the file over SFTP works too). It only restarts a running app: an app you stopped, or the app of a suspended domain, stays stopped.
+
 ## Environment variables
 
 Edit the **Environment variables** box in `.env` format and click **Save**; the app is restarted to apply them.

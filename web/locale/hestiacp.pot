@@ -5329,3 +5329,7 @@ msgstr ""
 #: ../../web/update/app/index.php:46
 msgid "Dependencies have been installed."
 msgstr ""
+
+#: ../../web/templates/pages/edit_app.php:127
+msgid "To restart the app from a deploy script, touch this file:"
+msgstr ""

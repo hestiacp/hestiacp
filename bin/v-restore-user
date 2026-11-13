@@ -542,7 +542,10 @@ if [ "$dns" != 'no' ] && [ -n "$DNS_SYSTEM" ]; then
 			# Checking IPv6 address
 			if [ -n "$IP6" ] && [ -n "$(is_ipv6_valid "$IP6" "$user")" ]; then
 				get_user_ipv6
-				old_ipv6=$IP6
+				# The backup is untrusted, only rewrite records of a plain address
+				if [[ "$IP6" =~ ^[0-9A-Fa-f:.]+$ ]]; then
+					old_ipv6=$IP6
+				fi
 				IP6=$ipv6
 			fi
 
@@ -578,9 +581,9 @@ if [ "$dns" != 'no' ] && [ -n "$DNS_SYSTEM" ]; then
 
 		# Update IPv6 in records
 		if [ -n "$old_ipv6" ] && [ -n "$IP6" ]; then
-			sed -i "s/\(TYPE='AAAA' .*VALUE='\)$old_ipv6'/\1$IP6'/" $USER_DATA/dns/$domain.conf
+			sed -i "s/\(TYPE='AAAA' .*VALUE='\)${old_ipv6//./[.]}'/\1$IP6'/" $USER_DATA/dns/$domain.conf
 		elif [ -n "$old_ipv6" ]; then
-			sed -i "/TYPE='AAAA' .*VALUE='$old_ipv6'/d" $USER_DATA/dns/$domain.conf
+			sed -i "/TYPE='AAAA' .*VALUE='${old_ipv6//./[.]}'/d" $USER_DATA/dns/$domain.conf
 		fi
 
 		# Rebuilding DNS domain

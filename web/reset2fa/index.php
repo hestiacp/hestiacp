@@ -6,6 +6,7 @@ $TAB = "RESET PASSWORD";
 
 if (isset($_SESSION["user"])) {
 	header("Location: /list/user/");
+	exit();
 }
 
 // Main include

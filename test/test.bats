@@ -39,6 +39,10 @@ function setup() {
     source $HESTIA/func/ip.sh
 }
 
+function teardown() {
+    rm -rf "${HESTIA:-/usr/local/hestia}/data/keys/apitestkey"*
+}
+
 function validate_web_domain() {
     local user=$1
     local domain=$2
@@ -658,6 +662,34 @@ function check_ip_not_banned(){
 @test "User: Check user hash ipv6 incorrect" {
   run v-check-user-hash $user 'jafawefaweijawe' 21DA:D3:0:2F3B:2AA:FF:FE28:9C5A
   assert_failure $E_PASSWORD
+}
+
+@test "User: Check user password and salt with sha-512 rounds parameter" {
+  orig_shadow=$(awk -v user="$user" -F : 'user == $1 {print $2}' /etc/shadow)
+  rounds_hash=$(perl -e 'print crypt($ARGV[0], $ARGV[1])' "$userpass2" '$6$rounds=24000$g7cdSalt12345678$')
+  [[ "$rounds_hash" == '$6$rounds=24000$g7cdSalt12345678$'* ]]
+  chmod u+w /etc/shadow
+  sed -i "s|^$user:[^:]*:|$user:$rounds_hash:|" /etc/shadow
+  chmod u-w /etc/shadow
+
+  run v-get-user-salt $user 192.168.2.10 json
+  assert_success
+  assert_output --partial '"METHOD": "sha-512"'
+  assert_output --partial '"SALT": "rounds=24000$g7cdSalt12345678"'
+
+  run v-check-user-password $user "$userpass2" 192.168.2.10 'no'
+  assert_success
+
+  run v-check-user-password $user "$userpass1" 192.168.2.10 'no'
+  assert_failure $E_PASSWORD
+
+  hash=$(v-check-user-password $user "$userpass2" 192.168.2.10 'yes')
+  run v-check-user-hash $user "$hash" 192.168.2.10
+  assert_success
+
+  chmod u+w /etc/shadow
+  sed -i "s|^$user:[^:]*:|$user:$orig_shadow:|" /etc/shadow
+  chmod u-w /etc/shadow
 }
 
 #----------------------------------------------------------#
@@ -3108,4 +3140,40 @@ EVIL='x'" > /tmp/backup_exclusions_unknownkey
 @test 'assert()' {
   touch '/var/log/test.log'
   assert [ -e '/var/log/test.log' ]
+}
+
+@test "API: v-check-api-key accepts a regular file in the key store" {
+    mkdir -p "$HESTIA/data/keys"
+    touch "$HESTIA/data/keys/apitestkey000000000000000001"
+    run v-check-api-key "$HESTIA/data/keys/apitestkey000000000000000001"
+    assert_success
+    rm -f "$HESTIA/data/keys/apitestkey000000000000000001"
+}
+
+@test "API: v-check-api-key rejects a directory in the key store" {
+    mkdir -p "$HESTIA/data/keys/apitestkey000000000000000002"
+    run v-check-api-key "$HESTIA/data/keys/apitestkey000000000000000002"
+    assert_failure
+    rmdir "$HESTIA/data/keys/apitestkey000000000000000002"
+}
+
+@test "API: v-check-api-key rejects a symlink in the key store" {
+    touch "$HESTIA/data/keys/apitestkey000000000000000003"
+    ln -s "$HESTIA/data/keys/apitestkey000000000000000003" "$HESTIA/data/keys/apitestkey000000000000000004"
+    run v-check-api-key "$HESTIA/data/keys/apitestkey000000000000000004"
+    assert_failure
+    rm -f "$HESTIA/data/keys/apitestkey000000000000000003" "$HESTIA/data/keys/apitestkey000000000000000004"
+}
+
+@test "API: v-check-api-key rejects unsafe and over-long key names" {
+    touch "$HESTIA/data/keys/apitestkey with-space000000000001"
+    run v-check-api-key "$HESTIA/data/keys/apitestkey with-space000000000001"
+    assert_failure
+    rm -f "$HESTIA/data/keys/apitestkey with-space000000000001"
+
+    longkey="apitestkey$(printf 'a%.0s' {1..119})"
+    touch "$HESTIA/data/keys/$longkey"
+    run v-check-api-key "$HESTIA/data/keys/$longkey"
+    assert_failure
+    rm -f "$HESTIA/data/keys/$longkey"
 }

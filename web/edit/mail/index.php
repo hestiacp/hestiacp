@@ -550,13 +550,19 @@ if (
 
 			// Cleanup certificate tempfiles
 			if (!empty($_POST["v_ssl_crt"])) {
-				unlink($tmpdir . "/" . $v_domain . ".crt");
+				if (file_exists($tmpdir . "/" . $v_domain . ".crt")) {
+					unlink($tmpdir . "/" . $v_domain . ".crt");
+				}
 			}
 			if (!empty($_POST["v_ssl_key"])) {
-				unlink($tmpdir . "/" . $v_domain . ".key");
+				if (file_exists($tmpdir . "/" . $v_domain . ".key")) {
+					unlink($tmpdir . "/" . $v_domain . ".key");
+				}
 			}
 			if (!empty($_POST["v_ssl_ca"])) {
-				unlink($tmpdir . "/" . $v_domain . ".ca");
+				if (file_exists($tmpdir . "/" . $v_domain . ".ca")) {
+					unlink($tmpdir . "/" . $v_domain . ".ca");
+				}
 			}
 			rmdir($tmpdir);
 		}
@@ -793,13 +799,19 @@ if (
 
 			// Cleanup certificate tempfiles
 			if (!empty($_POST["v_ssl_crt"])) {
-				unlink($tmpdir . "/" . $v_domain . ".crt");
+				if (file_exists($tmpdir . "/" . $v_domain . ".crt")) {
+					unlink($tmpdir . "/" . $v_domain . ".crt");
+				}
 			}
 			if (!empty($_POST["v_ssl_key"])) {
-				unlink($tmpdir . "/" . $v_domain . ".key");
+				if (file_exists($tmpdir . "/" . $v_domain . ".key")) {
+					unlink($tmpdir . "/" . $v_domain . ".key");
+				}
 			}
 			if (!empty($_POST["v_ssl_ca"])) {
-				unlink($tmpdir . "/" . $v_domain . ".ca");
+				if (file_exists($tmpdir . "/" . $v_domain . ".ca")) {
+					unlink($tmpdir . "/" . $v_domain . ".ca");
+				}
 			}
 			rmdir($tmpdir);
 		}
@@ -846,6 +858,9 @@ if (
 				);
 				check_return_code($return_var, $output);
 				unset($output);
+				if (file_exists($v_smtp_relay_password)) {
+					unlink($v_smtp_relay_password);
+				}
 			}
 		}
 		if (!isset($_POST["v_smtp_relay"]) && $v_smtp_relay == true) {
@@ -931,7 +946,9 @@ if (
 			);
 			check_return_code($return_var, $output);
 			unset($output);
-			unlink($v_password);
+			if (file_exists($v_password)) {
+				unlink($v_password);
+			}
 			$v_password = quoteshellarg($_POST["v_password"]);
 		}
 	}

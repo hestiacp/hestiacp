@@ -57,9 +57,11 @@ if [ ! -f "$tmpdir/backup.conf" ]; then
 	fi
 fi
 
-parse_object_kv_list $(cat "$tmpdir/backup.conf")
+parse_untrusted_conf_file "$tmpdir/backup.conf" DNS || exit $?
 domains=''
 IFS=',' read -a domains <<< "$DNS"
+# backup.conf comes from the user's home, never use its names as paths unchecked
+is_backup_list_valid domain "${domains[@]}"
 for domain in "${domains[@]}"; do
 	if [[ ",$dns," == *",$domain,"* || "$dns" = '*' ]]; then
 		# Cleanup previous config keys
@@ -80,12 +82,26 @@ for domain in "${domains[@]}"; do
 		if [ "$?" -ne 0 ]; then
 			check_result $E_NOTEXIST "Unable to download domain from snapshot"
 		fi
+		# Root copies and parses these files below, don't follow anything in them
+		restic_check_staged_tree "$tmpdir" "home/$user/backup/dns/$domain"
+		check_result $? "Unable to restore $domain from snapshot"
 
 		old_ipv6=''
 		# Restoring dns.conf
 		if [ -z "$check_config" ]; then
 			IP6=''
-			parse_object_kv_list $(cat "$tmpdir/home/$user/backup/dns/$domain/hestia/dns.conf")
+			parse_untrusted_conf_file "$tmpdir/home/$user/backup/dns/$domain/hestia/dns.conf" \
+				DNSSEC \
+				EXP \
+				IP \
+				IP6 \
+				KEY \
+				MASTER \
+				RECORDS \
+				SLAVE \
+				SOA \
+				TPL \
+				TTL || exit $?
 
 			# Checking IP address
 			check_ip=$(is_ip_valid $IP $user)

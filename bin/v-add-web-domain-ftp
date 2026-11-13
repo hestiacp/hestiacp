@@ -82,10 +82,13 @@ else
 	fi
 
 	# Creating ftp user home directory
+	# The path is inside the user owned domain directory, so create it
+	# with the user's privileges to avoid following swapped symlinks as root.
+	# This fails below directories the user can't write to (e.g. stats).
 	if [ ! -e "$ftp_path_a" ]; then
-		mkdir -p "$ftp_path_a"
-		chown --no-dereference $user:$user "$ftp_path_a"
-		chmod 751 "$ftp_path_a"
+		user_exec_in_writable_dir "$HOMEDIR/$user/web/$domain" mkdir -p -- "$ftp_path_a" \
+			&& user_exec chmod 751 -- "$ftp_path_a"
+		check_result $? "Unable to create ftp home directory $ftp_path_a"
 	fi
 fi
 

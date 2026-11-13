@@ -222,6 +222,12 @@ if [ "$web" != 'no' ] && [ -n "$WEB_SYSTEM" ]; then
 		domains=$(echo "$backup_domains" | egrep -x -f "$tmpdir/selected.txt")
 	fi
 
+	# Names come from the backup archive, never use them as paths unchecked
+	while IFS= read -r domain; do
+		[ -z "$domain" ] && continue
+		is_domain_format_valid "$domain"
+	done <<< "$domains"
+
 	# Restoring web domain
 	for domain in $domains; do
 		echo -e "$(date "+%F %T") $domain" | tee -a "$tmpdir/restore.log"
@@ -254,7 +260,32 @@ if [ "$web" != 'no' ] && [ -n "$WEB_SYSTEM" ]; then
 
 		# Restoring web.conf
 		if [ -z "$check_config" ]; then
-			parse_object_kv_list $(cat $tmpdir/web/$domain/$backup_system/web.conf)
+			parse_untrusted_conf_file "$tmpdir/web/$domain/$backup_system/web.conf" \
+				ALIAS \
+				BACKEND \
+				CUSTOM_DOCROOT \
+				CUSTOM_PHPROOT \
+				FASTCGI_CACHE \
+				FASTCGI_DURATION \
+				FTP_MD5 \
+				FTP_PATH \
+				FTP_USER \
+				IP \
+				IP6 \
+				LETSENCRYPT \
+				PROXY \
+				PROXY_EXT \
+				REDIRECT \
+				REDIRECT_CODE \
+				SSL \
+				SSL_FORCE \
+				SSL_HOME \
+				SSL_HSTS \
+				STATS \
+				STATS_CRYPT \
+				STATS_USER \
+				TPL \
+				U_DISK || exit $?
 
 			# Deleting conflicting aliases
 			for dom_alias in ${ALIAS//,/ }; do
@@ -381,10 +412,11 @@ if [ "$web" != 'no' ] && [ -n "$WEB_SYSTEM" ]; then
 		if [ -d "$HOMEDIR/$user/web/$domain/public_html" ]; then
 			user_exec find "$HOMEDIR/$user/web/$domain/public_html" -mindepth 1 -delete
 		fi
-		chmod u+w "$HOMEDIR/$user/web/$domain"
+		# The domain directory and its content are owned by the user, so change
+		# the permissions with the user's privileges
+		user_exec chmod u+w "$HOMEDIR/$user/web/$domain"
 		if [[ -d "$HOMEDIR/$user/web/$domain/stats" ]]; then
-			is_dir_symlink "$HOMEDIR/$user/web/$domain/stats"
-			chmod u+w "$HOMEDIR/$user/web/$domain/stats"
+			user_exec chmod u+w "$HOMEDIR/$user/web/$domain/stats"
 		fi
 
 		if [ "$backup_mode" = "zstd" ]; then
@@ -409,8 +441,7 @@ if [ "$web" != 'no' ] && [ -n "$WEB_SYSTEM" ]; then
 
 		# Re-chowning files if uid differs
 		if [ "$old_uid" -ne "$new_uid" ]; then
-			find "$HOMEDIR/$user/web/$domain/" -user $old_uid \
-				-exec chown -h $user:$user {} \;
+			chown_user_dir_files "$user" "web/$domain" "$user:$user" -user "$old_uid"
 		fi
 
 		# Rebuilding web config for the second time to make sure ftp users keep working
@@ -444,6 +475,12 @@ if [ "$dns" != 'no' ] && [ -n "$DNS_SYSTEM" ]; then
 		echo "$dns" | tr ',' '\n' > $tmpdir/selected.txt
 		domains=$(echo "$backup_domains" | egrep -x -f $tmpdir/selected.txt)
 	fi
+
+	# Names come from the backup archive, never use them as paths unchecked
+	while IFS= read -r domain; do
+		[ -z "$domain" ] && continue
+		is_domain_format_valid "$domain"
+	done <<< "$domains"
 
 	# Restoring DNS domain
 	for domain in $domains; do
@@ -479,7 +516,18 @@ if [ "$dns" != 'no' ] && [ -n "$DNS_SYSTEM" ]; then
 		# Restoring dns.conf
 		if [ -z "$check_config" ]; then
 			IP6=''
-			parse_object_kv_list $(cat $tmpdir/dns/$domain/$backup_system/dns.conf)
+			parse_untrusted_conf_file "$tmpdir/dns/$domain/$backup_system/dns.conf" \
+				DNSSEC \
+				EXP \
+				IP \
+				IP6 \
+				KEY \
+				MASTER \
+				RECORDS \
+				SLAVE \
+				SOA \
+				TPL \
+				TTL || exit $?
 
 			# Checking IP address
 			check_ip=$(is_ip_valid $IP $user)
@@ -576,6 +624,12 @@ if [ "$mail" != 'no' ] && [ -n "$MAIL_SYSTEM" ]; then
 	if [ "$check_exim_username" -eq 1 ]; then
 		exim_user="Debian-exim"
 	fi
+
+	# Names come from the backup archive, never use them as paths unchecked
+	while IFS= read -r domain; do
+		[ -z "$domain" ] && continue
+		is_domain_format_valid "$domain"
+	done <<< "$domains"
 
 	# Restoring DNS domain
 	for domain in $domains; do
@@ -710,16 +764,26 @@ if [ "$mail" != 'no' ] && [ -n "$MAIL_SYSTEM" ]; then
 
 		domain_idn=$domain
 		format_domain_idn
-
-		if [ ! -d "$HOMEDIR/$user/mail/$domain_idn" ]; then
-			mkdir "$HOMEDIR/$user/mail/$domain_idn"
+		# idn2 maps Unicode dot variants to '.', re-check the name used in paths
+		if ! is_domain_name_safe "$domain_idn"; then
+			check_result "$E_PARSING" "Invalid mail domain in backup archive"
 		fi
 
 		# Current Hestia store email in the $HOMEDIR/$user/mail/$domain_idn
-		# Reject symlinks to avoid root following them outside the user home
-		is_dir_symlink "$HOMEDIR/$user/mail/$domain_idn"
-		chmod u+w "$HOMEDIR/$user/mail/$domain_idn"
-		chown "$user:$user" "$HOMEDIR/$user/mail/$domain_idn"
+		# Operate relative to the verified root-owned mail directory and reject
+		# symlinks to avoid root following them outside the user home
+		(
+			enter_user_dir "$user" "mail" root
+			if [ -L "./$domain_idn" ]; then
+				check_result "$E_FORBIDEN" "$HOMEDIR/$user/mail/$domain_idn directory is a symlink"
+			fi
+			if [ ! -d "./$domain_idn" ]; then
+				mkdir -- "./$domain_idn"
+			fi
+			chmod u+w -- "./$domain_idn"
+			chown -h "$user:$user" -- "./$domain_idn"
+			exit 0
+		) || exit $?
 
 		# Restoring emails
 		if [ $backup_mode = 'zstd' ]; then
@@ -734,8 +798,7 @@ if [ "$mail" != 'no' ] && [ -n "$MAIL_SYSTEM" ]; then
 				fi
 
 				# Chowning as owner needs to be user:mail instead of user:user
-				find "$HOMEDIR/$user/mail/$domain_idn" -user "$user" \
-					-exec chown -h "$user:mail" {} \;
+				chown_user_dir_files "$user" "mail/$domain_idn" "$user:mail" -user "$user"
 			fi
 		else
 			if [ -e "$tmpdir/mail/$domain/accounts.tar.gz" ]; then
@@ -749,8 +812,7 @@ if [ "$mail" != 'no' ] && [ -n "$MAIL_SYSTEM" ]; then
 				fi
 
 				# Chowning as owner needs to be user:mail instead of user:user
-				find "$HOMEDIR/$user/mail/$domain_idn" -user "$user" \
-					-exec chown -h "$user:mail" {} \;
+				chown_user_dir_files "$user" "mail/$domain_idn" "$user:mail" -user "$user"
 			fi
 		fi
 		# Chowning mail conf files to exim user
@@ -809,7 +871,14 @@ if [ "$db" != 'no' ] && [ -n "$DB_SYSTEM" ]; then
 
 		# Restore database config
 		if [ -z "$check_config" ]; then
-			parse_object_kv_list $(cat $tmpdir/db/$database/$backup_system/db.conf)
+			parse_untrusted_conf_file "$tmpdir/db/$database/$backup_system/db.conf" \
+				DB \
+				CHARSET \
+				DBUSER \
+				HOST \
+				MD5 \
+				TYPE \
+				U_DISK || exit $?
 
 			if [ -z "$MD5" ]; then
 				echo "Warning!: Database ${DB} backup does not contain a password for user ${DBUSER}."
@@ -950,8 +1019,11 @@ if [ "$udir" != 'no' ]; then
 
 			# Re-chowning files if uid differs
 			if [ "$old_uid" -ne "$new_uid" ]; then
-				find "$HOMEDIR/$user/$user_dir" -user "$old_uid" \
-					-exec chown -h "$user:$user" {} \;
+				# -execdir avoids races on intermediate path components (find
+				# refuses it if PATH contains relative or empty entries)
+				PATH='/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin' \
+					find "$HOMEDIR/$user/$user_dir" -user "$old_uid" \
+					-execdir chown -h "$user:$user" -- {} +
 			fi
 		done <<< "$user_dirs"
 	fi
@@ -960,12 +1032,17 @@ fi
 # Create tmp/
 # Reject symlinks to avoid root following them outside the user home
 is_dir_symlink "$HOMEDIR/$user/tmp"
-mkdir -p "$HOMEDIR/$user/tmp"
-chmod 700 "$HOMEDIR/$user/tmp"
+# $HOMEDIR/$user itself can't be swapped by the user and mkdir doesn't follow
+# a symlink as last path component, so creating tmp as root is safe
+if [ ! -e "$HOMEDIR/$user/tmp" ]; then
+	mkdir "$HOMEDIR/$user/tmp"
+fi
 chown -R --no-dereference "$user:$user" "$HOMEDIR/$user/tmp"
+# tmp belongs to the user, chmod it with the user's privileges
+user_exec chmod 700 "$HOMEDIR/$user/tmp"
 
-# Delete Hestia File manager key
-rm -f "$HOMEDIR/$user/.ssh/hst-filemanager-key"
+# Delete Hestia File manager key (~/.ssh is user owned, never rm in it as root)
+user_exec rm -f "$HOMEDIR/$user/.ssh/hst-filemanager-key"
 
 # Sending mail notification
 subj="$user → restore has been completed"

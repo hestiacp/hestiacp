@@ -5,8 +5,16 @@ $TAB = "USER";
 // Main include
 include $_SERVER["DOCUMENT_ROOT"] . "/inc/main.php";
 
+// Prevent other users with admin privileges from managing SSH keys of the ROOT_USER account.
+// An SSH key for ROOT_USER is equivalent to taking over the account.
+$target_user = $user_plain;
 if ($_SESSION["userContext"] === "admin" && !empty($_GET["user"])) {
 	$user = quoteshellarg($_GET["user"]);
+	$target_user = htmlentities($_GET["user"]);
+}
+if (is_protected_root_target($target_user)) {
+	header("Location: /list/user/");
+	exit();
 }
 
 exec(HESTIA_CMD . "v-list-user-ssh-key " . $user . " json", $output, $return_var);

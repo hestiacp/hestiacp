@@ -24,12 +24,45 @@ source $HESTIA/func/ip.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
+# Check that the data directory NAME in SUBDIR ("web" or "mail") can be moved
+# from $owner to $user, so that nothing is changed if it can't.
+# Usage: check_domain_data SUBDIR NAME
+check_domain_data() {
+	(
+		enter_user_dir "$user" "$1" root
+		if [ -e "./$2" ] || [ -L "./$2" ]; then
+			check_result "$E_EXISTS" "$HOMEDIR/$user/$1/$2 already exists"
+		fi
+		enter_user_dir "$owner" "$1" root
+		if [ -L "./$2" ] || [ ! -d "./$2" ]; then
+			check_result "$E_NOTEXIST" "$HOMEDIR/$owner/$1/$2 is not a directory or is a symlink"
+		fi
+	)
+}
+
+# Move the data directory NAME in SUBDIR from $owner to $user and hand the
+# files of $owner over to NEW_OWNER. If that fails the directory is moved back,
+# so the caller can still abort without losing data.
+# Usage: move_domain_data SUBDIR NAME NEW_OWNER[:GROUP] OLD_OWNER[:GROUP]
+move_domain_data() {
+	move_user_dir_entry "$owner" "$user" "$1" "$2" || return $?
+	if ! chown_user_dir_files "$user" "$1/$2" "$3" -user "$owner"; then
+		echo "Error: unable to change the owner of $HOMEDIR/$user/$1/$2, moving it back"
+		chown_user_dir_files "$user" "$1/$2" "$4" -user "$user"
+		move_user_dir_entry "$user" "$owner" "$1" "$2"
+		return "$E_FORBIDEN"
+	fi
+}
+
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
 
 check_args '2' "$#" 'DOMAIN USER'
 is_format_valid 'domain' 'user'
+# Mail data is stored below the IDN name of the domain
+domain_idn=''
+format_domain_idn
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 owner=$($BIN/v-search-domain-owner "$domain")
@@ -39,6 +72,14 @@ fi
 if [ "$owner" = "$user" ]; then
 	echo "ERROR: $domain is already owned by $user."
 	exit
+fi
+
+# Fail before anything is changed if the data can't be moved
+if grep -q "DOMAIN='$domain'" "$HESTIA/data/users/$owner/web.conf" 2> /dev/null; then
+	check_domain_data "web" "$domain" || exit $?
+fi
+if grep -q "DOMAIN='$domain'" "$HESTIA/data/users/$owner/mail.conf" 2> /dev/null; then
+	check_domain_data "mail" "$domain_idn" || exit $?
 fi
 
 # Perform verification if read-only mode is enabled
@@ -101,6 +142,14 @@ if [ -n "$web_data" ]; then
 	fi
 	web_data=$(echo "$web_data" | sed "s/SUSPENDED='no'/SUSPENDED='yes'/")
 
+	# Move data first, nothing else has been changed if that fails
+	move_domain_data "web" "$domain" "$user:$user" "$owner:$owner"
+	rc=$?
+	if [ "$rc" -ne 0 ]; then
+		$BIN/v-unsuspend-web-domain "$owner" "$domain" >> /dev/null 2>&1
+		check_result "$rc" "Unable to move the web data of $domain to $user, nothing has been changed"
+	fi
+
 	# Check SSL
 	if [ "$SSL" = 'yes' ]; then
 		ssl_crt=$HESTIA/data/users/$owner/ssl/$domain.crt
@@ -124,13 +173,6 @@ if [ -n "$web_data" ]; then
 	# Move config
 	sed -i "/DOMAIN='$domain'/d" $HESTIA/data/users/$owner/web.conf
 	echo "$web_data" >> $HESTIA/data/users/$user/web.conf
-
-	# Move data
-	mv $HOMEDIR/$owner/web/$domain $HOMEDIR/$user/web/
-
-	# Change ownership
-	find "$HOMEDIR/$user/web/$domain" -user "$owner" \
-		-exec chown -h $user:$user {} \;
 
 	if [ "$SSL" = 'yes' ]; then
 		sleep 10
@@ -201,6 +243,15 @@ if [ -n "$mail_data" ]; then
 	echo "[*] Moving mail domain and accounts..."
 
 	parse_object_kv_list "$mail_data"
+
+	# Move data first, nothing else of the mail domain has been changed if
+	# that fails
+	move_domain_data "mail" "$domain_idn" "$user" "$owner"
+	rc=$?
+	if [ "$rc" -ne 0 ]; then
+		$BIN/v-unsuspend-mail-domain "$owner" "$domain" no >> /dev/null 2>&1
+		check_result "$rc" "Unable to move the mail data of $domain to $user, the mail domain has not been changed"
+	fi
 
 	# Ensure mail configuration directory exists for receiving user
 	if [ ! -e "$HOMEDIR/$user/conf/mail/$domain/" ]; then
@@ -281,13 +332,6 @@ if [ -n "$mail_data" ]; then
 		chown -h $user:mail /usr/local/hestia/ssl/mail/*
 	fi
 
-	# Move data
-	mv $HOMEDIR/$owner/mail/$domain $HOMEDIR/$user/mail/
-
-	# Change ownership
-	find $HOMEDIR/$user/mail/$domain -user $owner \
-		-exec chown -h $user {} \;
-
 	# Checking exim username for later chowning
 	exim_user="exim"
 	check_exim_username=$(grep -c '^Debian-exim:' /etc/passwd)
@@ -298,11 +342,6 @@ if [ -n "$mail_data" ]; then
 	if [ -d "$HOMEDIR/$user/conf/mail/$domain" ]; then
 		find $HOMEDIR/$user/conf/mail/$domain -user root \
 			-exec chown $exim_user {} \;
-	fi
-
-	# Remove old mail directory from original owner
-	if [ -e "$HOMEDIR/$owner/mail/$domain" ]; then
-		rm -rf "$HOMEDIR/$owner/mail/$domain"
 	fi
 
 	# Remove old mail configuration directory from original owner

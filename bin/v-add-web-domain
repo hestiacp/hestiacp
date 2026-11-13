@@ -51,6 +51,10 @@ domain_utf=$(idn2 --quiet -d "$domain_idn")
 is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
 check_args '2' "$#" 'USER DOMAIN [IP] [RESTART] [ALIASES] [PROXY_EXTENSIONS]'
 is_format_valid 'user' 'domain' 'aliases' 'ip' 'proxy_ext' 'restart'
+# idn2 maps Unicode dot variants to '.', so check the name used in paths
+if ! is_domain_name_safe "$domain_idn"; then
+	check_result "$E_INVALID" "invalid domain format :: $domain"
+fi
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 is_package_full 'WEB_DOMAINS'
@@ -102,9 +106,30 @@ source_conf "$USER_DATA/user.conf"
 
 [[ -e "$HOMEDIR/$user/web/$domain" ]] && check_result "$E_EXISTS" "Web domain folder for $domain should not exist"
 
+# Remove the partially created domain directory and logs when a step below
+# fails, so that the domain can be added again. Exits with the status of the
+# failed step.
+remove_new_domain_dir() {
+	local rc=$?
+	(cd_user_dir "$user" "web" root && rm -rf -- "./$domain")
+	rm -f "/var/log/$WEB_SYSTEM/domains/$domain.bytes" \
+		"/var/log/$WEB_SYSTEM/domains/$domain.log" \
+		"/var/log/$WEB_SYSTEM/domains/$domain.error.log"
+	exit "$rc"
+}
+
 # Creating domain directories
-mkdir $HOMEDIR/$user/web/$domain
-chown $user:$user $HOMEDIR/$user/web/$domain
+# Operate relative to the verified root-owned web directory, a user who owns
+# $HOMEDIR/$user could otherwise swap "web" for a symlink at any time
+(
+	enter_user_dir "$user" "web" root
+	mkdir -- "./$domain" || check_result "$E_EXISTS" "Web domain folder for $domain should not exist"
+	if ! chown -h "$user:$user" -- "./$domain"; then
+		rmdir -- "./$domain"
+		check_result "$E_FORBIDEN" "Unable to change the owner of $HOMEDIR/$user/web/$domain"
+	fi
+	exit 0
+) || exit $?
 $BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain/public_html"
 $BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain/document_errors"
 $BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain/cgi-bin"
@@ -116,31 +141,43 @@ $BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain/logs"
 touch /var/log/$WEB_SYSTEM/domains/$domain.bytes \
 	/var/log/$WEB_SYSTEM/domains/$domain.log \
 	/var/log/$WEB_SYSTEM/domains/$domain.error.log
-ln -f -s /var/log/$WEB_SYSTEM/domains/$domain.*log \
-	$HOMEDIR/$user/web/$domain/logs/
+# The logs directory is owned by the user, link inside the verified directory
+(
+	enter_user_dir "$user" "web/$domain/logs"
+	ln -f -s /var/log/$WEB_SYSTEM/domains/$domain.*log .
+	exit 0
+) || remove_new_domain_dir
 
 # Adding domain skeleton
 user_exec cp -r $WEBTPL/skel/* "$HOMEDIR/$user/web/$domain/" > /dev/null 2>&1
-for file in $(find "$HOMEDIR/$user/web/$domain/" -type f); do
-	sed -i "s/%domain%/$domain/g" $file
-done
+# Content is owned by the user, never edit it as root
+user_exec find "$HOMEDIR/$user/web/$domain/" -type f \
+	-exec sed -i "s/%domain%/$domain/g" {} + > /dev/null 2>&1
 
 # Changing file owner & permission
-chown -R $user:$user $HOMEDIR/$user/web/$domain
+(
+	enter_user_dir "$user" "web" root
+	chown -R --no-dereference "$user:$user" -- "./$domain"
+	exit 0
+) || remove_new_domain_dir
 chown root:$user /var/log/$WEB_SYSTEM/domains/$domain.* $conf
 chmod 640 /var/log/$WEB_SYSTEM/domains/$domain.*
 user_exec chmod 751 $HOMEDIR/$user/web/$domain/*
 user_exec chmod 551 $HOMEDIR/$user/web/$domain/stats $HOMEDIR/$user/web/$domain/logs
 # Apply 755 to directories (excluding public_html) and 644 to files
-find "$HOMEDIR/$user/web/$domain/public_html" -mindepth 1 -type d -print0 | xargs -0 -r chmod 755
-find "$HOMEDIR/$user/web/$domain/public_html" -type f -print0 | xargs -0 -r chmod 644
+user_exec find "$HOMEDIR/$user/web/$domain/public_html" -mindepth 1 -type d -exec chmod 755 {} +
+user_exec find "$HOMEDIR/$user/web/$domain/public_html" -type f -exec chmod 644 {} +
 
 # domain folder permissions: DOMAINDIR_WRITABLE: default-val:no source:hestia.conf
 DOMAINDIR_MODE=551
 if [ "$DOMAINDIR_WRITABLE" = 'yes' ]; then DOMAINDIR_MODE=751; fi
 
 user_exec chmod $DOMAINDIR_MODE $HOMEDIR/$user/web/$domain
-chown --no-dereference $user:www-data $HOMEDIR/$user/web/$domain/public_*html
+(
+	enter_user_dir "$user" "web/$domain"
+	chown --no-dereference "$user:www-data" -- public_*html
+	exit 0
+) || remove_new_domain_dir
 
 # Adding PHP-FPM backend
 if [ -n "$WEB_BACKEND" ]; then

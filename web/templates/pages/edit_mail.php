@@ -210,7 +210,9 @@
 				</div>
 				<div class="u-mb10">
 					<label for="v_smtp_relay_pass" class="form-label"><?= tohtml( _("Password")) ?></label>
-					<input type="text" class="form-control" name="v_smtp_relay_pass" id="v_smtp_relay_pass">
+					<div class="u-pos-relative">
+						<input type="text" class="form-control js-password-input" name="v_smtp_relay_pass" id="v_smtp_relay_pass">
+					</div>
 				</div>
 			</div>
 		</div>

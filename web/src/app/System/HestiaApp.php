@@ -98,7 +98,9 @@ class HestiaApp
 
         $this->runUser('v-copy-fs-file', [$tmpFile, $path]);
 
-        unlink($tmpFile);
+        if (file_exists($tmpFile)) {
+            unlink($tmpFile);
+        }
     }
 
     public function moveFile(string $fromPath, string $toPath): void
@@ -145,7 +147,9 @@ class HestiaApp
         try {
             $this->runUser('v-extract-fs-archive', [$filePath, $extractDirectoryPath, '', 1]);
 
-            unlink($filePath);
+            if (file_exists($filePath)) {
+                unlink($filePath);
+            }
         } catch (ProcessFailedException) {
             throw new RuntimeException(sprintf('Failed to extract "%s"', $filePath));
         }
@@ -299,7 +303,9 @@ class HestiaApp
         } catch (ProcessFailedException) {
             throw new RuntimeException(_('Unable to add database!'));
         } finally {
-            unlink($passwordFile);
+            if (file_exists($passwordFile)) {
+                unlink($passwordFile);
+            }
         }
     }
 

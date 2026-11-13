@@ -462,7 +462,9 @@
 										<i class="fas fa-arrows-rotate icon-green"></i>
 									</button>
 								</label>
-								<input type="text" class="form-control js-ftp-user-psw" name="v_ftp_user[<?= tohtml($i) ?>][v_ftp_password]" id="v_ftp_user[<?= tohtml($i) ?>][v_ftp_password]" value="<?= tohtml(trim($v_ftp_password, "'")) ?>">
+								<div class="u-pos-relative">
+									<input type="text" class="form-control js-ftp-user-psw js-password-input" name="v_ftp_user[<?= tohtml($i) ?>][v_ftp_password]" id="v_ftp_user[<?= tohtml($i) ?>][v_ftp_password]" value="<?= tohtml(trim($v_ftp_password, "'")) ?>">
+								</div>
 							</div>
 							<div class="u-pl30 u-mb10">
 								<label for="v_ftp_user[<?= tohtml($i) ?>][v_ftp_path]" class="form-label"><?= tohtml( _("Path")) ?></label>
@@ -515,7 +517,9 @@
 					<i class="fas fa-arrows-rotate icon-green"></i>
 				</button>
 			</label>
-			<input type="text" class="form-control js-ftp-user-psw" name="v_ftp_user[%INDEX%][v_ftp_password]" id="v_ftp_user[%INDEX%][v_ftp_password]">
+			<div class="u-pos-relative">
+				<input type="text" class="form-control js-ftp-user-psw js-password-input" name="v_ftp_user[%INDEX%][v_ftp_password]" id="v_ftp_user[%INDEX%][v_ftp_password]">
+			</div>
 		</div>
 		<div class="u-pl30 u-mb10">
 			<label for="v_ftp_user[%INDEX%][v_ftp_path]" class="form-label"><?= tohtml( _("Path")) ?></label>

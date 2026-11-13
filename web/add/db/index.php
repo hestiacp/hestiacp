@@ -94,7 +94,9 @@ if (!empty($_POST["ok"]) && $read_only !== true) {
 		);
 		check_return_code($return_var, $output);
 		unset($output);
-		unlink($v_password);
+		if (file_exists($v_password)) {
+			unlink($v_password);
+		}
 		$v_password = quoteshellarg($_POST["v_password"]);
 		$v_type = $_POST["v_type"];
 		$v_host = $_POST["v_host"];

@@ -23,7 +23,9 @@
 					</a>
 				<?php } ?>
 			</label>
-			<input type="password" class="form-control" name="password" id="password" autocomplete="current-password" required>
+			<div class="u-pos-relative">
+				<input type="password" class="form-control js-password-input" name="password" id="password" autocomplete="current-password" required>
+			</div>
 		</div>
 		<button type="submit" class="button">
 			<i class="fas fa-right-to-bracket"></i><?= tohtml( _("Next")) ?>

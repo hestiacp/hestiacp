@@ -893,13 +893,15 @@
 								<label for="v_backup_application_key" class="form-label">
 									Application Key
 								</label>
-								<input
-									type="text"
-									class="form-control"
-									name="v_backup_application_key"
-									id="v_backup_application_key"
-									value="<?= tohtml(trim($v_backup_application_key, "'")) ?>"
-								>
+								<div class="u-pos-relative">
+									<input
+										type="text"
+										class="form-control js-password-input"
+										name="v_backup_application_key"
+										id="v_backup_application_key"
+										value="<?= tohtml(trim($v_backup_application_key, "'")) ?>"
+									>
+								</div>
 							</div>
 						</div>
 						<div x-cloak x-show="backupType == 'rclone'">

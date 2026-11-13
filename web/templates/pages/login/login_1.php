@@ -16,7 +16,9 @@
 					</a>
 				<?php } ?>
 			</label>
-			<input type="password" class="form-control" name="password" id="password" autocomplete="current-password" required autofocus>
+			<div class="u-pos-relative">
+				<input type="password" class="form-control js-password-input" name="password" id="password" autocomplete="current-password" required autofocus>
+			</div>
 		</div>
 		<div class="u-side-by-side">
 			<button type="submit" class="button">

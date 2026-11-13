@@ -2,6 +2,56 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.10.7] - Service Release
+
+### Security
+
+- Harden `v-quick-install` and fix `v-quick-install-app` option parsing and PHP version check #5946 #5747 #5748
+- Anchor archive extension checks in `v-extract-fs-archive` #5819
+- Delete access keys when deleting a user #5941
+- Add NetAPI honeypot attackers to the malicious IP blacklist #5974
+
+### Changes
+
+- Add `.xz`/`.txz` archive support to `v-extract-fs-archive` and fix extraction of single-file archives with URL query strings #5852
+- Add a visibility toggle button to password inputs #5742 #5959
+- Support the `rounds=` parameter in sha-512 shadow hashes #5955 #5956
+- Update Roundcube to 1.7.6 and install `symfony/polyfill-php84` before the upgrade #5972
+- Update SnappyMail to 3.0.1 #5960
+- Update SnappyMail plugins during upgrade #5961
+- Update MariaDB target version to 12.3 #5536
+- Update Zlib to 1.4
+- Update `cloudflare-ip-validator` to 1.0.1 #5947
+- Raise `pm.max_children` of the panel PHP-FPM pool from 4 to 8
+- Prevent CNAME DNS records from coexisting with other records for the same name
+- Include the installed `hestia-web-terminal` package in system update checks and automatic updates
+- Add `actionflush` to the Fail2Ban action; the 1.10.7 upgrade updates the action on existing installations #5022
+- Update all non-major dependencies and Biome to 2.6.6 #5945 #5944
+- Add a manual apt release workflow, build all Hestia debs locally for BATS and drop bullseye from the release matrix #5902 #5907
+
+### Bug fixes
+
+- Fix Let's Encrypt dns-01 challenge status polling #5842 #5854
+- Fix the broken redirect URL when impersonating a user from search results #5957
+- Fix search returning no results while impersonating a user #5958
+- Skip `v-add-mail-domain-reject` when `v-add-mail-domain` fails #5037 #5950
+- Pass the domain resolve URL to all ClassicPress and Dolibarr setup requests #5656 #5951
+- Fix apps and options in `v-quick-install-app` #5943
+- Keep signed zone files when rebuilding DNSSEC domains #5939
+- Fix `v-delete-user-backup-exclusion` #5928
+- Format the target domain in `v-change-web-domain-name` #4958
+- Include the target domain's private directory in `open_basedir` for cross-domain docroots
+- Fix web domain unsuspend target and allow suspending mail/db objects of suspended users
+- Fix incremental backup file restoration from the web UI and CLI
+- Include MySQL events in database dumps and append wildcard user grants
+- Refresh the PHP-FPM pool path and previous version on backend template change
+- Normalize `record` and `rtype` arguments in `v-change-dns-record`
+- Fix the Backblaze B2 CLI download on arm64 #5905
+- Fix the fail2ban multiport chain deletion #5022
+- Fix the Roundcube upgrade hanging by exporting `COMPOSER_ALLOW_SUPERUSER` earlier
+- Remove `policy-rc.d` on installer exit
+- Fail loudly when the installer's backend package install fails
+
 ## [1.10.6] - Service Release
 
 ### Security

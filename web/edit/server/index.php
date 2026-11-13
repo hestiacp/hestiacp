@@ -12,6 +12,14 @@ if ($_SESSION["userContext"] != "admin") {
 	exit();
 }
 
+// The POLICY_SYSTEM_PROTECTED_ADMIN, POLICY_SYSTEM_HIDE_ADMIN and POLICY_SYSTEM_HIDE_SERVICES
+// policies may only be changed by the real ROOT_USER (not another admin, and regardless of
+// impersonation state). The form only renders these fields for ROOT_USER; enforce it here too.
+$is_root_user =
+	!empty($_SESSION["ROOT_USER"]) &&
+	isset($_SESSION["user"]) &&
+	$_SESSION["user"] === $_SESSION["ROOT_USER"];
+
 // Get server hostname
 $v_hostname = exec("hostname");
 
@@ -699,7 +707,9 @@ if (!empty($_POST["save"])) {
 			);
 			check_return_code($return_var, $output);
 			unset($output);
-			unlink($v_mysql_pass);
+			if (file_exists($v_mysql_pass)) {
+				unlink($v_mysql_pass);
+			}
 			$v_db_adv = "yes";
 		}
 	}
@@ -760,7 +770,9 @@ if (!empty($_POST["save"])) {
 				);
 				check_return_code($return_var, $output);
 				unset($output);
-				unlink($v_smtp_relay_pass);
+				if (file_exists($v_smtp_relay_pass)) {
+					unlink($v_smtp_relay_pass);
+				}
 			}
 		}
 		if (!isset($_POST["v_smtp_relay"]) && $v_smtp_relay == true) {
@@ -998,7 +1010,9 @@ if (!empty($_POST["save"])) {
 				);
 				check_return_code($return_var, $output);
 				unset($output);
-				unlink($v_backup_pass);
+				if (file_exists($v_backup_pass)) {
+					unlink($v_backup_pass);
+				}
 				if (empty($_SESSION["error_msg"])) {
 					$v_backup_host = $_POST["v_backup_host"];
 				}
@@ -1043,7 +1057,9 @@ if (!empty($_POST["save"])) {
 				);
 				check_return_code($return_var, $output);
 				unset($output);
-				unlink($v_backup_pass);
+				if (file_exists($v_backup_pass)) {
+					unlink($v_backup_pass);
+				}
 				if (empty($_SESSION["error_msg"])) {
 					$v_backup_bucket = quoteshellarg($_POST["v_backup_bucket"]);
 				}
@@ -1128,7 +1144,9 @@ if (!empty($_POST["save"])) {
 				);
 				check_return_code($return_var, $output);
 				unset($output);
-				unlink($v_backup_pass);
+				if (file_exists($v_backup_pass)) {
+					unlink($v_backup_pass);
+				}
 				if (empty($_SESSION["error_msg"])) {
 					$v_backup_host = $_POST["v_backup_host"];
 				}
@@ -1171,7 +1189,9 @@ if (!empty($_POST["save"])) {
 				);
 				check_return_code($return_var, $output);
 				unset($output);
-				unlink($v_backup_pass);
+				if (file_exists($v_backup_pass)) {
+					unlink($v_backup_pass);
+				}
 				$v_backup_type = quoteshellarg($_POST["v_backup_type"]);
 				if (empty($_SESSION["error_msg"])) {
 					$v_backup_bucket = quoteshellarg($_POST["v_backup_bucket"]);
@@ -1218,7 +1238,7 @@ if (!empty($_POST["save"])) {
 							" " .
 							$v_backup_username .
 							" " .
-							$v_backup_password .
+							$v_backup_pass .
 							" " .
 							$v_backup_bpath .
 							" " .
@@ -1228,7 +1248,9 @@ if (!empty($_POST["save"])) {
 					);
 					check_return_code($return_var, $output);
 					unset($output);
-					unlink($v_backup_pass);
+					if (file_exists($v_backup_pass)) {
+						unlink($v_backup_pass);
+					}
 					if (empty($_SESSION["error_msg"])) {
 						$v_backup_host = $_POST["v_backup_host"];
 					}
@@ -1278,7 +1300,9 @@ if (!empty($_POST["save"])) {
 					);
 					check_return_code($return_var, $output);
 					unset($output);
-					unlink($v_backup_pass);
+					if (file_exists($v_backup_pass)) {
+						unlink($v_backup_pass);
+					}
 					if (empty($_SESSION["error_msg"])) {
 						$v_backup_bucket = quoteshellarg($_POST["v_backup_bucket"]);
 					}
@@ -1708,7 +1732,7 @@ if (!empty($_POST["save"])) {
 
 	// Change POLICY_SYSTEM_PROTECTED_ADMIN
 	if (empty($_SESSION["error_msg"])) {
-		if (!empty($_POST["v_policy_system_protected_admin"])) {
+		if ($is_root_user && !empty($_POST["v_policy_system_protected_admin"])) {
 			if (
 				$_POST["v_policy_system_protected_admin"] !=
 				$_SESSION["POLICY_SYSTEM_PROTECTED_ADMIN"]
@@ -1786,7 +1810,7 @@ if (!empty($_POST["save"])) {
 
 	// Change POLICY_SYSTEM_HIDE_ADMIN
 	if (empty($_SESSION["error_msg"])) {
-		if (!empty($_POST["v_policy_system_hide_admin"])) {
+		if ($is_root_user && !empty($_POST["v_policy_system_hide_admin"])) {
 			if ($_POST["v_policy_system_hide_admin"] != $_SESSION["POLICY_SYSTEM_HIDE_ADMIN"]) {
 				exec(
 					HESTIA_CMD .
@@ -1807,7 +1831,7 @@ if (!empty($_POST["save"])) {
 
 	// Change POLICY_SYSTEM_HIDE_SERVICES
 	if (empty($_SESSION["error_msg"])) {
-		if (!empty($_POST["v_policy_system_hide_services"])) {
+		if ($is_root_user && !empty($_POST["v_policy_system_hide_services"])) {
 			if (
 				$_POST["v_policy_system_hide_services"] != $_SESSION["POLICY_SYSTEM_HIDE_SERVICES"]
 			) {

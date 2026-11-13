@@ -90,7 +90,9 @@ if (!empty($_POST["save"]) && $read_only !== true) {
 			);
 			check_return_code($return_var, $output);
 			unset($output);
-			unlink($v_password);
+			if (file_exists($v_password)) {
+				unlink($v_password);
+			}
 			$v_password = quoteshellarg($_POST["v_password"]);
 		}
 	}

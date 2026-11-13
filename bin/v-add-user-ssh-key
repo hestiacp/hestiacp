@@ -56,11 +56,14 @@ if ! echo "$key" | ssh-keygen -l -f - > /dev/null 2>&1; then
 	check_result "$E_PARSING" "Validating user private key"
 fi
 
+# ~/.ssh is owned by the user, who can replace authorized_keys with a symlink at
+# any time. Only modify it with the user's privileges, never as root.
 # Make sure authorized_keys ends with EOL
-[ -f "${AUTHKEY_FILE}" ] && sed -i '$a\' "${AUTHKEY_FILE}"
+[ -f "${AUTHKEY_FILE}" ] && user_exec sed -i '$a\' "${AUTHKEY_FILE}"
 
 # Append key data to file
-echo "$key" >> "$AUTHKEY_FILE"
+printf '%s\n' "$key" | user_exec tee -a -- "$AUTHKEY_FILE" > /dev/null
+check_result $? "Unable to write $AUTHKEY_FILE"
 
 #----------------------------------------------------------#
 #                       Hestia                             #

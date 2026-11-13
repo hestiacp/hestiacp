@@ -56,6 +56,8 @@ is_object_unsuspended 'mail' 'DOMAIN' "$domain"
 is_package_full 'MAIL_ACCOUNTS'
 is_mail_new "$account"
 is_password_valid
+# Fail before anything is changed if the mail directory can't be trusted
+(enter_user_dir "$user" "mail" root) || exit $?
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
@@ -78,6 +80,34 @@ else
 	salt=$(generate_password "$PW_MATRIX" "8")
 	md5="{MD5}$($BIN/v-generate-password-hash md5 $salt <<< $password)"
 fi
+# Create mail account folder (mailbox)
+# Done before the account is added anywhere, so a failure leaves nothing behind.
+# The domain mailbox directory is owned by the user, so the user can replace
+# the account entry with a symlink at any time (chown and chmod would follow
+# it). Create it with the user's own privileges (group mail) inside the
+# verified domain directory instead of running chown/chmod on it as root.
+(
+	enter_user_dir "$user" "mail" root
+	# mail is root-owned, so $domain_idn can't be swapped after the check
+	if [ -L "./$domain_idn" ] || [ ! -d "./$domain_idn" ]; then
+		check_result "$E_NOTEXIST" "$HOMEDIR/$user/mail/$domain_idn is not a directory or is a symlink"
+	fi
+	cd -P -- "./$domain_idn" || check_result "$E_NOTEXIST" "Unable to enter $HOMEDIR/$user/mail/$domain_idn"
+	if [ -L "./$account" ]; then
+		check_result "$E_FORBIDEN" "$HOMEDIR/$user/mail/$domain_idn/$account is a symlink"
+	elif [ -e "./$account" ]; then
+		# Reuse a mailbox left behind by a deleted account of the same name,
+		# but only a directory of the user
+		if [ ! -d "./$account" ] || [ "$(stat -c '%U' -- "./$account")" != "$user" ]; then
+			check_result "$E_FORBIDEN" "$HOMEDIR/$user/mail/$domain_idn/$account is not a mailbox of $user"
+		fi
+	else
+		setpriv --reuid "$user" --regid mail --clear-groups -- mkdir -m 700 -- "./$account"
+		check_result $? "Unable to create mailbox $HOMEDIR/$user/mail/$domain_idn/$account" "$E_NOTEXIST"
+	fi
+	exit 0
+) || exit $?
+
 # Adding account info into password file
 if [[ "$MAIL_SYSTEM" =~ exim ]]; then
 	if [ "$quota" = 'unlimited' ]; then
@@ -96,11 +126,6 @@ if [[ "$MAIL_SYSTEM" =~ exim ]]; then
 		echo $userstr >> $HOMEDIR/$user/conf/mail/$domain/accounts
 	fi
 fi
-
-# Create mail account folder (mailbox)
-mkdir $HOMEDIR/$user/mail/$domain_idn/$account
-chown $user:mail $HOMEDIR/$user/mail/$domain_idn/$account
-chmod 700 $HOMEDIR/$user/mail/$domain_idn/$account
 
 #----------------------------------------------------------#
 #                       Hestia                             #

@@ -116,11 +116,11 @@ setfacl -m "g:hestia-users:---" "$HOMEDIR/$user"
 mkdir $HOMEDIR/$user/conf
 
 if [ -n "$WEB_SYSTEM" ]; then
-	mkdir $HOMEDIR/$user/conf/web $HOMEDIR/$user/web $HOMEDIR/$user/tmp
-	chmod 751 $HOMEDIR/$user/conf/web
-	chmod 700 $HOMEDIR/$user/tmp
-	chown $user:$user $HOMEDIR/$user/tmp
-	chown root:$user $HOMEDIR/$user/web/
+	# Set the modes on creation, never chmod a path below the home directory
+	mkdir -m 751 $HOMEDIR/$user/conf/web $HOMEDIR/$user/web
+	mkdir -m 700 $HOMEDIR/$user/tmp
+	chown -h $user:$user $HOMEDIR/$user/tmp
+	chown -h root:$user $HOMEDIR/$user/web
 fi
 
 if [ -n "$MAIL_SYSTEM" ]; then

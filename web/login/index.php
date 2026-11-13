@@ -51,7 +51,11 @@ if (isset($_SESSION["user"])) {
 					$edit_link = urldecode($_GET["edit_link"]);
 					// Prevent open redirect by allowing only internal links
 					if (preg_match("/^\//", $edit_link)) {
-						$url = $edit_link . "?token=" . $_SESSION["token"];
+						$url =
+							$edit_link .
+							(str_contains($edit_link, "?") ? "&" : "?") .
+							"token=" .
+							$_SESSION["token"];
 						header("Location: " . $url);
 						die();
 					}
@@ -149,8 +153,12 @@ function authenticate_user($user, $password, $twofa = "") {
 				$hash = crypt($password, '$1$' . $salt . '$');
 			}
 			if ($method == "sha-512") {
-				$hash = crypt($password, '$6$rounds=5000$' . $salt . '$');
-				$hash = str_replace('$rounds=5000', "", $hash);
+				if (preg_match('/^rounds=[1-9][0-9]{3,8}\$[a-zA-Z0-9.\/]{1,16}\z/', $salt)) {
+					$hash = crypt($password, '$6$' . $salt . '$');
+				} else {
+					$hash = crypt($password, '$6$rounds=5000$' . $salt . '$');
+					$hash = str_replace('$rounds=5000', "", $hash);
+				}
 			}
 			if ($method == "yescrypt") {
 				$fp = tmpfile();
@@ -191,7 +199,9 @@ function authenticate_user($user, $password, $twofa = "") {
 			unset($output);
 
 			// Remove tmp file
-			unlink($v_hash);
+			if (file_exists($v_hash)) {
+				unlink($v_hash);
+			}
 			// Check API answer
 			if ($return_var > 0) {
 				sleep(2);

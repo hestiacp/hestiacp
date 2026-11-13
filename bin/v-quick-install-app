@@ -52,8 +52,8 @@ $application
 		$options = $input->getArgument("options");
 		$data = [];
 		foreach ($options as $option) {
-			$o = explode("=", $option);
-			$data["webapp_" . $o[0]] = $o[1];
+			$o = explode("=", $option, 2);
+			$data["webapp_" . $o[0]] = $o[1] ?? "";
 		}
 		$hestia = new \Hestia\System\HestiaApp();
 		if (class_exists("\Hestia\WebApp\Installers\\" . $app . "\\" . $app . "Setup") === false) {
@@ -62,13 +62,35 @@ $application
 		}
 		$app_installer_class = "\Hestia\WebApp\Installers\\" . $app . "\\" . $app . "Setup";
 		$app_installer = new $app_installer_class($hestia);
+		if (!$app_installer->getInfo()->isInstallable()) {
+			$output->writeln(sprintf("Unable to install %s, required php version is not available.", $app));
+			return Command::FAILURE;
+		}
 
 		// check for default fields
 		$WebappInstaller = new \Hestia\WebApp\AppWizard($app_installer, $v_domain, $hestia);
 		$fields = $WebappInstaller->getOptions();
+		$databaseCreate = isset($data["webapp_database_create"])
+			? filter_var($data["webapp_database_create"], FILTER_VALIDATE_BOOLEAN)
+			: true;
 		$array = [];
 		foreach ($fields as $key => $field) {
 			if (is_array($field)) {
+				if (
+					($field["type"] ?? "") === "boolean" &&
+					isset($data["webapp_" . $key])
+				) {
+					$data["webapp_" . $key] = filter_var(
+						$data["webapp_" . $key],
+						FILTER_VALIDATE_BOOLEAN,
+					);
+				}
+				if (
+					!$databaseCreate &&
+					in_array($key, ["database_name", "database_user"], true)
+				) {
+					continue;
+				}
 				if (!empty($field["value"])) {
 					$array["webapp_" . $key] = $field["value"];
 				} elseif (!empty($field["options"])) {
@@ -85,7 +107,7 @@ $application
 		foreach ($fields as $key => $field) {
 			if (empty($data["webapp_" . $key])) {
 				if (strpos($key, "database_") !== false) {
-					if ($data["webapp_database_create"] != true) {
+					if ($key !== "database_create" && $data["webapp_database_create"] != true) {
 						$output->writeln("Missing required field: " . $key);
 						$error = true;
 					}
@@ -116,7 +138,6 @@ $application
 		foreach ($appInstallers as $appInstaller) {
 			$app = basename(dirname($appInstaller));
 			$hestia = new \Hestia\System\HestiaApp();
-			$domain = "demo.hestiacp.com";
 			if (
 				!file_exists(
 					__DIR__ .
@@ -130,9 +151,9 @@ $application
 				continue;
 			}
 			$app_installer_class = "\Hestia\WebApp\Installers\\" . $app . "\\" . $app . "Setup";
-			$app_installer = new $app_installer_class($domain, $hestia);
-			$info = $app_installer->info();
-			$output->writeln($info["name"] . " - " . $info["version"]);
+			$app_installer = new $app_installer_class($hestia);
+			$info = $app_installer->getInfo();
+			$output->writeln($info->name . " - " . $info->version);
 		}
 		$output->writeln("---------------------------------");
 		$output->writeln("Please note app names are case sensitive");
@@ -158,7 +179,11 @@ $application
 			return Command::FAILURE;
 		}
 		$app_installer_class = "\Hestia\WebApp\Installers\\" . $app . "\\" . $app . "Setup";
-		$app_installer = new $app_installer_class($v_domain, $hestia);
+		$app_installer = new $app_installer_class($hestia);
+		if (!$app_installer->getInfo()->isInstallable()) {
+			$output->writeln(sprintf("Unable to install %s, required php version is not available.", $app));
+			return Command::FAILURE;
+		}
 		$WebappInstaller = new \Hestia\WebApp\AppWizard($app_installer, $v_domain, $hestia);
 		$output->writeln("To install " . $app . " use the following command:");
 		$output->writeln(

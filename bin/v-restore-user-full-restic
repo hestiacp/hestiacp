@@ -77,12 +77,30 @@ restic --repo "${REPO%/}/$user" --password-file "$USER_DATA/restic.conf" restore
 if [ "$?" -ne 0 ]; then
 	check_result "$E_NOTEXIST" "Unable to download user data"
 fi
+# Root copies and parses these files below, don't follow anything in them
+restic_check_staged_tree "$tmpdir" "home/$user/backup"
+check_result $? "Unable to restore user data"
 
 cp "$tmpdir/home/$user/backup/hestia/user.conf" "$USER_DATA/"
 cp -r "$tmpdir/home/$user/backup/hestia/ssl" "$USER_DATA/" > /dev/null 2>&1
 cp -r "$tmpdir/home/$user/backup/hestia/backup-excludes.conf" "$USER_DATA/" > /dev/null 2>&1
 
 old_uid=$(cut -f 3 -d : "$tmpdir/home/$user/backup/pam/passwd")
+# The uid comes from the snapshot. Only take over files of a regular uid that
+# isn't used by another account, never those of root or of service accounts.
+uid_min=$(awk '$1 == "UID_MIN" {print $2}' /etc/login.defs 2> /dev/null)
+if ! [[ "$uid_min" =~ ^[0-9]+$ ]]; then
+	uid_min=1000
+fi
+old_uid_owner=''
+if [[ "$old_uid" =~ ^[0-9]+$ ]]; then
+	old_uid_owner=$(getent passwd "$old_uid" | cut -f 1 -d :)
+fi
+if ! [[ "$old_uid" =~ ^[0-9]+$ ]] || [ "$old_uid" -lt "$uid_min" ] \
+	|| { [ -n "$old_uid_owner" ] && [ "$old_uid_owner" != "$user" ]; }; then
+	echo "Warning: ignoring uid '$old_uid' from the snapshot, file ownership is not converted"
+	old_uid=''
+fi
 # Rebuilding user
 rebuild_user_conf
 
@@ -98,16 +116,24 @@ $BIN/v-restore-database-restic "$user" "$snapshot" '*'
 echo "[ * ] Restore Cronjobs"
 $BIN/v-restore-cron-job-restic "$user" "$snapshot"
 echo "[ * ] Restore user files"
-restic --repo "${REPO%/}/$user" --password-file "$USER_DATA/restic.conf" restore "$snapshot" --exclude "/home/$user/web/" --exclude "/home/$user/conf" --exclude "/home/$user/mail" --target /
+# Never let restic (root) write into the user controlled home directory
+restic_restore_user_path "$snapshot" "" --exclude "/home/$user/web" --exclude "/home/$user/conf" \
+	--exclude "/home/$user/mail" --exclude "/home/$user/backup"
 if [ "$?" -ne 0 ]; then
 	check_result "$E_NOTEXIST" "Unable to download user folders"
 fi
 
-find "$HOMEDIR/$user/" -user "$old_uid" \
-	-exec chown -h "$user":"$user" {} \;
+# -execdir avoids races on intermediate path components (find refuses it if
+# PATH contains relative or empty entries)
+if [ -n "$old_uid" ]; then
+	PATH='/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin' \
+		find "$HOMEDIR/$user/" -user "$old_uid" \
+		-execdir chown -h "$user":"$user" -- {} +
 
-find "$HOMEDIR/$user/" -group "$old_uid" \
-	-exec chown -h "$user":"$user" {} \;
+	PATH='/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin' \
+		find "$HOMEDIR/$user/" -group "$old_uid" \
+		-execdir chown -h "$user":"$user" -- {} +
+fi
 
 # Rebuilding user
 rebuild_user_conf

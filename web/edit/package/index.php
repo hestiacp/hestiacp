@@ -345,7 +345,9 @@ if (!empty($_POST["save"])) {
 	unset($output);
 
 	fclose($fp);
-	unlink($tmpfile);
+	if (file_exists($tmpfile)) {
+		unlink($tmpfile);
+	}
 
 	// Propagate new package
 	exec(HESTIA_CMD . "v-update-user-package " . $v_package . " 'json'", $output, $return_var);

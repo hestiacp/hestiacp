@@ -1600,6 +1600,39 @@
 	}
 }
 
+.form-control.js-password-input {
+	padding-right: 36px;
+
+	&::-ms-reveal,
+	&::-ms-clear {
+		display: none;
+	}
+}
+
+.password-toggle {
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 36px;
+	padding: 0;
+	border: 0;
+	background-color: transparent;
+	color: var(--color-text);
+
+	&:hover,
+	&:focus-visible {
+		color: var(--color-text-link-hover);
+	}
+}
+
+.password-meter ~ .password-toggle {
+	bottom: 3px;
+}
+
 .password-meter {
 	height: 3px;
 	overflow: hidden;

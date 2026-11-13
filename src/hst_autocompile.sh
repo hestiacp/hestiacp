@@ -391,7 +391,7 @@ HESTIA_V="${BUILD_VER}_${BUILD_ARCH}"
 supported_os="debian11 debian12 debian13 ubuntu22.04 ubuntu24.04 ubuntu26.04"
 OPENSSL_V='3.5.9'
 PCRE_V='10.49'
-ZLIB_V='1.3.2'
+ZLIB_V='1.4'
 
 # Create build directories
 if [ "$KEEPBUILD" != 'true' ]; then
@@ -464,11 +464,11 @@ if [ "$dontinstalldeps" != 'true' ]; then
 	fi
 fi
 
-# Get system cpu cores. Callers running this inside a QEMU-emulated chroot
-# (cross-arch builds) can pre-set NUM_CPUS to override this: /proc is
-# bind-mounted from the host, so the detected count would otherwise be the
-# host's real core count, not a safe parallelism level for emulated compiles.
-NUM_CPUS="${NUM_CPUS:-$(grep "^cpu cores" /proc/cpuinfo | uniq | awk '{print $4}')}"
+# Get the available CPU count. Callers running this inside a QEMU-emulated
+# chroot (cross-arch builds) can pre-set NUM_CPUS to override this: nproc
+# would otherwise report the host's core count, not a safe parallelism level
+# for emulated compiles.
+NUM_CPUS="${NUM_CPUS:-$(nproc 2> /dev/null || getconf _NPROCESSORS_ONLN 2> /dev/null || echo 1)}"
 
 if [ "$HESTIA_DEBUG" ]; then
 	echo "OS type          : Debian / Ubuntu"

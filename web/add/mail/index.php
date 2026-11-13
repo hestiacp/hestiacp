@@ -100,7 +100,7 @@ if (!empty($_POST["ok"]) && $read_only !== true) {
 		unset($output);
 	}
 
-	if (!empty($_POST["v_reject"]) && $v_antispam == "yes") {
+	if (empty($_SESSION["error_msg"]) && !empty($_POST["v_reject"]) && $v_antispam == "yes") {
 		exec(
 			HESTIA_CMD . "v-add-mail-domain-reject " . $user . " " . $v_domain . " yes",
 			$output,
@@ -186,6 +186,9 @@ if (!empty($_POST["ok"]) && $read_only !== true) {
 				);
 				check_return_code($return_var, $output);
 				unset($output);
+				if (file_exists($v_smtp_relay_password)) {
+					unlink($v_smtp_relay_password);
+				}
 			}
 		}
 	}
@@ -293,7 +296,9 @@ if (!empty($_POST["ok_acc"]) && $read_only !== true) {
 		);
 		check_return_code($return_var, $output);
 		unset($output);
-		unlink($v_password);
+		if (file_exists($v_password)) {
+			unlink($v_password);
+		}
 		$v_password = quoteshellarg($_POST["v_password"]);
 	}
 

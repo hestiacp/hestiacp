@@ -761,13 +761,19 @@ if (!empty($_POST["save"]) && $read_only !== true) {
 
 			// Cleanup certificate tempfiles
 			if (!empty($_POST["v_ssl_crt"])) {
-				unlink($tmpdir . "/" . $v_domain . ".crt");
+				if (file_exists($tmpdir . "/" . $v_domain . ".crt")) {
+					unlink($tmpdir . "/" . $v_domain . ".crt");
+				}
 			}
 			if (!empty($_POST["v_ssl_key"])) {
-				unlink($tmpdir . "/" . $v_domain . ".key");
+				if (file_exists($tmpdir . "/" . $v_domain . ".key")) {
+					unlink($tmpdir . "/" . $v_domain . ".key");
+				}
 			}
 			if (!empty($_POST["v_ssl_ca"])) {
-				unlink($tmpdir . "/" . $v_domain . ".ca");
+				if (file_exists($tmpdir . "/" . $v_domain . ".ca")) {
+					unlink($tmpdir . "/" . $v_domain . ".ca");
+				}
 			}
 			rmdir($tmpdir);
 		}
@@ -982,13 +988,19 @@ if (!empty($_POST["save"]) && $read_only !== true) {
 
 			// Cleanup certificate tempfiles
 			if (!empty($_POST["v_ssl_crt"])) {
-				unlink($tmpdir . "/" . $v_domain . ".crt");
+				if (file_exists($tmpdir . "/" . $v_domain . ".crt")) {
+					unlink($tmpdir . "/" . $v_domain . ".crt");
+				}
 			}
 			if (!empty($_POST["v_ssl_key"])) {
-				unlink($tmpdir . "/" . $v_domain . ".key");
+				if (file_exists($tmpdir . "/" . $v_domain . ".key")) {
+					unlink($tmpdir . "/" . $v_domain . ".key");
+				}
 			}
 			if (!empty($_POST["v_ssl_ca"])) {
-				unlink($tmpdir . "/" . $v_domain . ".ca");
+				if (file_exists($tmpdir . "/" . $v_domain . ".ca")) {
+					unlink($tmpdir . "/" . $v_domain . ".ca");
+				}
 			}
 			rmdir($tmpdir);
 		}
@@ -1154,7 +1166,9 @@ if (!empty($_POST["save"]) && $read_only !== true) {
 			);
 			check_return_code($return_var, $output);
 			unset($output);
-			unlink($v_stats_password);
+			if (file_exists($v_stats_password)) {
+				unlink($v_stats_password);
+			}
 			$v_stats_password = quoteshellarg($_POST["v_stats_password"]);
 		}
 	}
@@ -1198,7 +1212,9 @@ if (!empty($_POST["save"]) && $read_only !== true) {
 			);
 			check_return_code($return_var, $output);
 			unset($output);
-			unlink($v_stats_password);
+			if (file_exists($v_stats_password)) {
+				unlink($v_stats_password);
+			}
 			$v_stats_password = quoteshellarg($_POST["v_stats_password"]);
 		}
 	}
@@ -1334,7 +1350,9 @@ if (!empty($_POST["save"]) && $read_only !== true) {
 						unset($v_ftp_email);
 					}
 					unset($output);
-					unlink($v_ftp_password);
+					if (file_exists($v_ftp_password)) {
+						unlink($v_ftp_password);
+					}
 					$v_ftp_password = quoteshellarg($v_ftp_user_data["v_ftp_password"]);
 				}
 
@@ -1433,7 +1451,9 @@ if (!empty($_POST["save"]) && $read_only !== true) {
 						$output,
 						$return_var,
 					);
-					unlink($v_ftp_password);
+					if (file_exists($v_ftp_password)) {
+						unlink($v_ftp_password);
+					}
 				}
 				if (!empty($v_ftp_user_data["v_ftp_email"]) && empty($_SESSION["error_msg"])) {
 					$to = $v_ftp_user_data["v_ftp_email"];

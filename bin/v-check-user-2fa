@@ -47,7 +47,7 @@ fi
 result=$($HESTIA_PHP $HESTIA/web/inc/2fa/check.php "$TWOFA" "$token")
 if [ "$result" != "ok" ]; then
 	echo "Error: Authentication token mismatch."
-	exit 9
+	exit "$E_PASSWORD"
 fi
 
 #----------------------------------------------------------#

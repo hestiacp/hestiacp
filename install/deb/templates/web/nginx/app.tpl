@@ -5,6 +5,12 @@
 # https://hestiacp.com/docs/server-administration/web-templates.html      #
 #=========================================================================#
 
+# The proxy keeps connections to the application open and reuses them
+upstream hestia_app_%domain_idn% {
+	server    127.0.0.1:%app_port%;
+	keepalive 32;
+}
+
 server {
 	listen      %ip%:%proxy_port%;
 	server_name %domain_idn% %alias_idn%;
@@ -20,7 +26,7 @@ server {
 	}
 
 	location / {
-		proxy_pass         http://127.0.0.1:%app_port%;
+		proxy_pass         http://hestia_app_%domain_idn%;
 		proxy_http_version 1.1;
 
 		# Any proxy_set_header here replaces the global ones from nginx.conf

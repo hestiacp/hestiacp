@@ -25,7 +25,6 @@ hash=$user
 HASH=$user
 password=$4
 HIDE=4
-PASSWORD=$password
 type=${5}
 TYPE="$type"
 dns_user=${6-dns-cluster}
@@ -61,6 +60,7 @@ fi
 is_type_valid "api ssh" "$type"
 is_system_enabled "$DNS_SYSTEM" 'DNS_SYSTEM'
 is_password_valid
+PASSWORD="$password"
 is_dnshost_new
 is_dnshost_alive
 

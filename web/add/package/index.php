@@ -229,7 +229,9 @@ if (!empty($_POST["ok"])) {
 			unset($output);
 
 			fclose($fp);
-			unlink($tmpfile);
+			if (file_exists($tmpfile)) {
+				unlink($tmpfile);
+			}
 		}
 		// Flush field values on success
 		if (empty($_SESSION["error_msg"])) {

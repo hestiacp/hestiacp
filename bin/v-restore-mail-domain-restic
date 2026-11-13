@@ -65,8 +65,10 @@ if [ ! -f "$tmpdir/backup.conf" ]; then
 fi
 
 domains=""
-parse_object_kv_list $(cat "$tmpdir/backup.conf")
+parse_untrusted_conf_file "$tmpdir/backup.conf" MAIL || exit $?
 IFS=',' read -a domains <<< "$MAIL"
+# backup.conf comes from the user's home, never use its names as paths unchecked
+is_backup_list_valid domain "${domains[@]}"
 
 # Checking exim username for later chowning
 exim_user="exim"
@@ -94,6 +96,9 @@ for domain in "${domains[@]}"; do
 		if [ "$?" -ne 0 ]; then
 			check_result $E_NOTEXIST "Unable to download domain from snapshot"
 		fi
+		# Root copies and parses these files below, don't follow anything in them
+		restic_check_staged_tree "$tmpdir" "home/$user/backup/mail/$domain"
+		check_result $? "Unable to restore $domain from snapshot"
 
 		# Restoring mail.conf
 		if [ -z "$check_config" ]; then
@@ -201,21 +206,34 @@ for domain in "${domains[@]}"; do
 
 		domain_idn=$domain
 		format_domain_idn
-
-		if [ ! -d "$HOMEDIR/$user/mail/$domain_idn" ]; then
-			mkdir "$HOMEDIR/$user/mail/$domain_idn"
+		# idn2 maps Unicode dot variants to '.', re-check the name used in paths
+		if ! is_domain_name_safe "$domain_idn"; then
+			check_result "$E_PARSING" "Invalid mail domain in backup.conf"
 		fi
 
 		# Current Hestia store email in the $HOMEDIR/$user/mail/$domain_idn
-		# Reject symlinks to avoid root following them outside the user home
-		is_dir_symlink "$HOMEDIR/$user/mail/$domain_idn"
-		chmod u+w "$HOMEDIR/$user/mail/$domain_idn"
-		chown $user:$user "$HOMEDIR/$user/mail/$domain_idn"
+		# Operate relative to the verified root-owned mail directory and reject
+		# symlinks to avoid root following them outside the user home
+		(
+			enter_user_dir "$user" "mail" root
+			if [ -L "./$domain_idn" ]; then
+				check_result "$E_FORBIDEN" "$HOMEDIR/$user/mail/$domain_idn directory is a symlink"
+			fi
+			if [ ! -d "./$domain_idn" ]; then
+				mkdir -- "./$domain_idn"
+			fi
+			chmod u+w -- "./$domain_idn"
+			chown -h "$user:$user" -- "./$domain_idn"
+			exit 0
+		) || exit $?
 
-		restic --repo "${REPO%/}/$user" --password-file "$USER_DATA/restic.conf" restore "$snapshot" --include /home/$user/mail/$domain_idn --target /
-		if [ "$?" -ne 0 ]; then
+		# Never let restic (root) write into the user controlled home directory
+		if ! restic_restore_user_path "$snapshot" "mail/$domain_idn"; then
 			check_result "$E_NOTEXIST" "Unable to download user data"
 		fi
+
+		# Chowning as owner needs to be user:mail instead of user:user
+		chown_user_dir_files "$user" "mail/$domain_idn" "$user:mail" -user "$user"
 
 		# Chowning mail conf files to exim user
 		if [ -d "$HOMEDIR/$user/conf/mail/$domain" ]; then

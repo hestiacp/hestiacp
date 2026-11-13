@@ -121,7 +121,11 @@ rm -f /var/log/$WEB_SYSTEM/domains/$domain.bytes
 rm -f /var/log/$WEB_SYSTEM/domains/$domain.error*
 
 # Deleting directory
-rm -rf $HOMEDIR/$user/web/$domain
+# Delete relative to the verified root-owned web directory, so a swapped "web"
+# symlink can't redirect the removal outside the user's home. If the directory
+# can't be verified the data is left alone, the domain is still removed from
+# the configuration.
+(enter_user_dir "$user" "web" root && rm -rf -- "./$domain")
 rm -rf $HOMEDIR/$user/conf/web/$domain
 
 #----------------------------------------------------------#

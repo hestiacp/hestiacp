@@ -91,7 +91,8 @@ source_conf $HESTIA/conf/restic.conf
 tmpdir=$(mktemp -p "${BACKUP_TEMP:-$BACKUP}" -d)
 restic --repo "${REPO%/}/$user" --password-file "$USER_DATA/restic.conf" --json dump "$snapshot" "/home/$user/backup/backup.conf" > "$tmpdir/backup.conf"
 
-parse_object_kv_list $(cat "$tmpdir/backup.conf")
+parse_untrusted_conf_file "$tmpdir/backup.conf" \
+	BACKUP TYPE SIZE WEB DNS MAIL DB CRON UDIR RUNTIME TIME DATE || exit $?
 
 rm -fr "$tmpdir"
 # Listing data

@@ -18,6 +18,13 @@ function setup() {
     source $HESTIA/func/main.sh
     source $HESTIA/conf/hestia.conf
     source $HESTIA/func/ip.sh
+    testkey="t$(random 15)"
+}
+
+function teardown() {
+    if [ -n "${testkey:-}" ]; then
+        rm -rf "${HESTIA:-/usr/local/hestia}/data/keys/${testkey}"*
+    fi
 }
 
 @test "[Success][ Admin/password ] List users" {
@@ -30,6 +37,58 @@ function setup() {
     run curl -k -s -X POST -H "Content-Type: application/x-www-form-urlencoded" -d "hash=$apikey&returncode=no&cmd=v-list-users&arg1=plain" "https://$server:$port/api/index.php"
     assert_success
     assert_output --partial "admin"
+}
+
+@test "[Fail][ Hash ] Trailing newline in hash" {
+    run curl -k -s -X POST -H "Content-Type: application/x-www-form-urlencoded" --data-urlencode "hash=$apikey"$'\n' -d "cmd=v-list-users&arg1=plain" "https://$server:$port/api/index.php"
+    assert_success
+    assert_output --partial "Error: authentication failed"
+}
+
+@test "[Fail][ Hash ] Unknown key" {
+    run curl -k -s -X POST -H "Content-Type: application/x-www-form-urlencoded" -d "hash=${testkey}u&returncode=no&cmd=v-list-users&arg1=plain" "https://$server:$port/api/index.php"
+    assert_success
+    assert_output --partial "Error: authentication failed"
+}
+
+@test "[Success][ Hash ] Shortest allowed key name" {
+    touch "$HESTIA/data/keys/$testkey"
+    assert_file_exist "$HESTIA/data/keys/$testkey"
+    run curl -k -s -X POST -H "Content-Type: application/x-www-form-urlencoded" -d "hash=$testkey&returncode=no&cmd=v-list-users&arg1=plain" "https://$server:$port/api/index.php"
+    assert_success
+    assert_output --partial "admin"
+}
+
+@test "[Fail][ Hash ] Key name longer than 128 characters" {
+    longkey="${testkey}$(printf 'a%.0s' {1..113})"
+    touch "$HESTIA/data/keys/$longkey"
+    assert_file_exist "$HESTIA/data/keys/$longkey"
+    run curl -k -s -X POST -H "Content-Type: application/x-www-form-urlencoded" -d "hash=$longkey&returncode=no&cmd=v-list-users&arg1=plain" "https://$server:$port/api/index.php"
+    assert_success
+    assert_output --partial "Error: authentication failed"
+}
+
+@test "[Fail][ Hash ] Array hash" {
+    run curl -k -s -X POST -H "Content-Type: application/x-www-form-urlencoded" -d "hash[]=aaaaaaaaaaaaaaaa&returncode=no&cmd=v-list-users&arg1=plain" "https://$server:$port/api/index.php"
+    assert_success
+    assert_output --partial "hash must be a string"
+}
+
+@test "[Fail][ Hash ] Directory in key store" {
+    mkdir "$HESTIA/data/keys/${testkey}d"
+    assert_dir_exist "$HESTIA/data/keys/${testkey}d"
+    run curl -k -s -X POST -H "Content-Type: application/x-www-form-urlencoded" -d "hash=${testkey}d&returncode=no&cmd=v-list-users&arg1=plain" "https://$server:$port/api/index.php"
+    assert_success
+    assert_output --partial "Error: authentication failed"
+}
+
+@test "[Fail][ Hash ] Symlink in key store" {
+    assert_file_exist "$HESTIA/data/keys/$apikey"
+    ln -s "$HESTIA/data/keys/$apikey" "$HESTIA/data/keys/${testkey}l"
+    assert [ -L "$HESTIA/data/keys/${testkey}l" ]
+    run curl -k -s -X POST -H "Content-Type: application/x-www-form-urlencoded" -d "hash=${testkey}l&returncode=no&cmd=v-list-users&arg1=plain" "https://$server:$port/api/index.php"
+    assert_success
+    assert_output --partial "Error: authentication failed"
 }
 
 @test "[Fail][ APIV2 ] Create new user" {

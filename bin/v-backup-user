@@ -365,7 +365,16 @@ if [ -n "$WEB_SYSTEM" ] && [ "$WEB" != '*' ]; then
 		backup_app_conf "$user" "$domain" hestia
 
 		# Changin dir to documentroot
-		cd $HOMEDIR/$user/web/$domain
+		# A user who owns $HOMEDIR/$user can replace "web" with a symlink, so
+		# verify the directory instead of following the path as root. A
+		# directory that can't be verified is backed up empty.
+		empty_dir=''
+		if ! cd_user_dir "$user" "web/$domain"; then
+			echo "$(date "+%F %T") skipping data of $domain: $cd_user_dir_error" \
+				| tee -a $BACKUP/$user.log
+			empty_dir=$(mktemp -p $BACKUP_TEMP -d)
+			cd "$empty_dir"
+		fi
 
 		# Define exclude arguments
 		exclusion=$(echo -e "$WEB" | tr ',' '\n' | grep "^$domain\|\*:")
@@ -398,6 +407,10 @@ if [ -n "$WEB_SYSTEM" ] && [ "$WEB" != '*' ]; then
 			tar "${fargs[@]}" -cpf- -- . | pzstd -"$BACKUP_GZIP" - > $tmpdir/web/$domain/domain_data.tar.zst
 		else
 			tar "${fargs[@]}" -cpf- -- . | gzip -"$BACKUP_GZIP" - > $tmpdir/web/$domain/domain_data.tar.gz
+		fi
+		if [ -n "$empty_dir" ]; then
+			cd "$tmpdir"
+			rmdir "$empty_dir"
 		fi
 	done
 
@@ -504,7 +517,12 @@ if [ -n "$MAIL_SYSTEM" ] && [ "$MAIL" != '*' ]; then
 		fi
 
 		# Backup emails
-		cd $HOMEDIR/$user/mail/$domain_idn
+		# Same as for web: verify the directory instead of following the path
+		if ! cd_user_dir "$user" "mail/$domain_idn"; then
+			echo "$(date "+%F %T") skipping mailboxes of $domain: $cd_user_dir_error" \
+				| tee -a $BACKUP/$user.log
+			continue
+		fi
 		accounts=()
 		for account in *; do
 			exclusion=$(echo "$MAIL" | tr ',' '\n' | grep "$domain:")

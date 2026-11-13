@@ -71,8 +71,10 @@ restic --repo "${REPO%/}/$user" --password-file "$USER_DATA/restic.conf" dump "$
 old_uid=$(cut -f 3 -d : "$tmpdir/passwd")
 
 domains=""
-parse_object_kv_list $(cat "$tmpdir/backup.conf")
+parse_untrusted_conf_file "$tmpdir/backup.conf" WEB || exit $?
 IFS=',' read -a domains <<< "$WEB"
+# backup.conf comes from the user's home, never use its names as paths unchecked
+is_backup_list_valid domain "${domains[@]}"
 for domain in "${domains[@]}"; do
 	if [[ ",$web," == *",$domain,"* || "$web" = '*' ]]; then
 		# Cleanup previous domain keys
@@ -94,10 +96,38 @@ for domain in "${domains[@]}"; do
 		if [ "$?" -ne 0 ]; then
 			check_result $E_NOTEXIST "Unable to download domain from snapshot"
 		fi
+		# Root copies and parses these files below, don't follow anything in them
+		restic_check_staged_tree "$tmpdir" "home/$user/backup/web/$domain"
+		check_result $? "Unable to restore $domain from snapshot"
 
 		# Restoring web.conf
 		if [ -z "$check_config" ]; then
-			parse_object_kv_list $(cat "$tmpdir/home/$user/backup/web/$domain/hestia/web.conf")
+			parse_untrusted_conf_file "$tmpdir/home/$user/backup/web/$domain/hestia/web.conf" \
+				ALIAS \
+				BACKEND \
+				CUSTOM_DOCROOT \
+				CUSTOM_PHPROOT \
+				FASTCGI_CACHE \
+				FASTCGI_DURATION \
+				FTP_MD5 \
+				FTP_PATH \
+				FTP_USER \
+				IP \
+				IP6 \
+				LETSENCRYPT \
+				PROXY \
+				PROXY_EXT \
+				REDIRECT \
+				REDIRECT_CODE \
+				SSL \
+				SSL_FORCE \
+				SSL_HOME \
+				SSL_HSTS \
+				STATS \
+				STATS_CRYPT \
+				STATS_USER \
+				TPL \
+				U_DISK || exit $?
 
 			# Deleting conflicting aliases
 			for dom_alias in ${ALIAS//,/ }; do
@@ -216,29 +246,39 @@ for domain in "${domains[@]}"; do
 			user_exec find "$HOMEDIR/$user/web/$domain/public_html" -mindepth 1 -delete
 		fi
 
+		# The domain directory and its content are owned by the user, so change
+		# the permissions with the user's privileges
+		user_exec chmod u+w "$HOMEDIR/$user/web/$domain"
 		if [[ -d "$HOMEDIR/$user/web/$domain/stats" ]]; then
-			is_dir_symlink "$HOMEDIR/$user/web/$domain/stats"
-			chmod u+w "$HOMEDIR/$user/web/$domain/stats"
+			user_exec chmod u+w "$HOMEDIR/$user/web/$domain/stats"
 		fi
 
-		restic --repo "${REPO%/}/$user" --password-file "$USER_DATA/restic.conf" restore "$snapshot" --include "/home/$user/web/$domain" --target /
-		if [ "$?" -ne 0 ]; then
+		# Never let restic (root) write into the user controlled home directory
+		if ! restic_restore_user_path "$snapshot" "web/$domain" \
+			--exclude "/home/$user/web/$domain/logs"; then
 			check_result "$E_NOTEXIST" "Unable to download user data"
 		fi
 		if [ "$new_user" = "yes" ]; then
 			echo "[ * ] Fix permissions"
-			chown --no-dereference "$user:$user" \
-				"$HOMEDIR/$user/" \
-				"$HOMEDIR/$user/web/" \
-				"$HOMEDIR/$user/web/$domain" \
-				"$HOMEDIR/$user/web/$domain/private" \
-				"$HOMEDIR/$user/web/$domain/cgi-bin" \
-				"$HOMEDIR/$user/web/$domain"/public_*html \
-				"$HOMEDIR/$user/web/$domain/logs" \
-				"$HOMEDIR/$user/web/$domain/stats"
+			# Operate relative to the verified root-owned web directory, the
+			# user could otherwise swap path components for symlinks
+			(
+				enter_user_dir "$user" "web" root
+				if [ -L "./$domain" ] || [ ! -d "./$domain" ]; then
+					check_result "$E_FORBIDEN" "$HOMEDIR/$user/web/$domain is not a directory or is a symlink"
+				fi
+				chown --no-dereference "$user:$user" -- \
+					"./$domain" \
+					"./$domain/private" \
+					"./$domain/cgi-bin" \
+					"./$domain"/public_*html \
+					"./$domain/logs" \
+					"./$domain/stats"
 
-			# --no-dereference: don't follow if document_errors is a symlink
-			chown -R --no-dereference "$user:$user" "$HOMEDIR/$user/web/$domain/document_errors"
+				# --no-dereference: don't follow if document_errors is a symlink
+				chown -R --no-dereference "$user:$user" -- "./$domain/document_errors"
+				exit 0
+			) || exit $?
 			chown "root:$user" "/var/log/$WEB_SYSTEM/domains/$domain".*
 		fi
 

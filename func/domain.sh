@@ -185,8 +185,9 @@ prepare_web_domain_values() {
 	if [ "$SSL_HOME" = 'single' ]; then
 		sdocroot="$HOMEDIR/$user/web/$domain/public_shtml"
 		$BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain/public_shtml"
-		chmod 751 $HOMEDIR/$user/web/$domain/public_shtml
-		chown www-data:$user $HOMEDIR/$user/web/$domain/public_shtml
+		# Operate on the verified directory itself, the user owns the parent
+		# directory and could replace public_shtml with a symlink
+		(cd_user_dir "$user" "web/$domain/public_shtml" && chmod 751 . && chown "www-data:$user" .)
 	fi
 
 	if [ -n "$WEB_BACKEND" ]; then

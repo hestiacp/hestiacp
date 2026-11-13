@@ -97,6 +97,8 @@ if [ ! -f "$AUTHKEY_FILE" ]; then
 	exit
 fi
 
+# ~/.ssh is owned by the user, who can replace authorized_keys with a symlink
+# at any time, so read it with the user's privileges
 first_loop=1
 while read l; do
 	sshkey=$([[ -n $l && ${l###} = $l ]] && ssh-keygen -l -f <(echo $l))
@@ -104,7 +106,7 @@ while read l; do
 		(($first_loop)) && keys="$sshkey" || keys="$keys"$'\n'"$sshkey"
 		unset first_loop
 	fi
-done < "$AUTHKEY_FILE"
+done < <(user_exec cat -- "$AUTHKEY_FILE")
 
 # Listing data
 case $format in

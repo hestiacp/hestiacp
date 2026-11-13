@@ -40,7 +40,9 @@ if (!empty($_POST["save"])) {
 		);
 		check_return_code($return_var, $output);
 		unset($output);
-		unlink($new_conf);
+		if (file_exists($new_conf)) {
+			unlink($new_conf);
+		}
 	}
 
 	// Update config
@@ -57,7 +59,9 @@ if (!empty($_POST["save"])) {
 		);
 		check_return_code($return_var, $output);
 		unset($output);
-		unlink($new_conf);
+		if (file_exists($new_conf)) {
+			unlink($new_conf);
+		}
 	}
 
 	// Set success message

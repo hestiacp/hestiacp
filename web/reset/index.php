@@ -44,7 +44,9 @@ if (!empty($_POST["user"]) && empty($_POST["code"])) {
 					$return_var,
 				);
 				unset($output);
-				unlink($v_rkey);
+				if (file_exists($v_rkey)) {
+					unlink($v_rkey);
+				}
 				$template = get_email_template("reset_password", $data[$user]["LANGUAGE"]);
 				if (!empty($template)) {
 					preg_match("/<subject>(.*?)<\/subject>/si", $template, $matches);
@@ -182,7 +184,9 @@ if (!empty($_POST["user"]) && !empty($_POST["code"]) && !empty($_POST["password"
 						$output,
 						$return_var,
 					);
-					unlink($v_password);
+					if (file_exists($v_password)) {
+						unlink($v_password);
+					}
 					if ($return_var > 0) {
 						sleep(5);
 						$error = _("An internal error occurred");

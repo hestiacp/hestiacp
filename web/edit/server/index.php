@@ -707,7 +707,9 @@ if (!empty($_POST["save"])) {
 			);
 			check_return_code($return_var, $output);
 			unset($output);
-			unlink($v_mysql_pass);
+			if (file_exists($v_mysql_pass)) {
+				unlink($v_mysql_pass);
+			}
 			$v_db_adv = "yes";
 		}
 	}
@@ -768,7 +770,9 @@ if (!empty($_POST["save"])) {
 				);
 				check_return_code($return_var, $output);
 				unset($output);
-				unlink($v_smtp_relay_pass);
+				if (file_exists($v_smtp_relay_pass)) {
+					unlink($v_smtp_relay_pass);
+				}
 			}
 		}
 		if (!isset($_POST["v_smtp_relay"]) && $v_smtp_relay == true) {
@@ -1006,7 +1010,9 @@ if (!empty($_POST["save"])) {
 				);
 				check_return_code($return_var, $output);
 				unset($output);
-				unlink($v_backup_pass);
+				if (file_exists($v_backup_pass)) {
+					unlink($v_backup_pass);
+				}
 				if (empty($_SESSION["error_msg"])) {
 					$v_backup_host = $_POST["v_backup_host"];
 				}
@@ -1051,7 +1057,9 @@ if (!empty($_POST["save"])) {
 				);
 				check_return_code($return_var, $output);
 				unset($output);
-				unlink($v_backup_pass);
+				if (file_exists($v_backup_pass)) {
+					unlink($v_backup_pass);
+				}
 				if (empty($_SESSION["error_msg"])) {
 					$v_backup_bucket = quoteshellarg($_POST["v_backup_bucket"]);
 				}
@@ -1136,7 +1144,9 @@ if (!empty($_POST["save"])) {
 				);
 				check_return_code($return_var, $output);
 				unset($output);
-				unlink($v_backup_pass);
+				if (file_exists($v_backup_pass)) {
+					unlink($v_backup_pass);
+				}
 				if (empty($_SESSION["error_msg"])) {
 					$v_backup_host = $_POST["v_backup_host"];
 				}
@@ -1179,7 +1189,9 @@ if (!empty($_POST["save"])) {
 				);
 				check_return_code($return_var, $output);
 				unset($output);
-				unlink($v_backup_pass);
+				if (file_exists($v_backup_pass)) {
+					unlink($v_backup_pass);
+				}
 				$v_backup_type = quoteshellarg($_POST["v_backup_type"]);
 				if (empty($_SESSION["error_msg"])) {
 					$v_backup_bucket = quoteshellarg($_POST["v_backup_bucket"]);
@@ -1226,7 +1238,7 @@ if (!empty($_POST["save"])) {
 							" " .
 							$v_backup_username .
 							" " .
-							$v_backup_password .
+							$v_backup_pass .
 							" " .
 							$v_backup_bpath .
 							" " .
@@ -1236,7 +1248,9 @@ if (!empty($_POST["save"])) {
 					);
 					check_return_code($return_var, $output);
 					unset($output);
-					unlink($v_backup_pass);
+					if (file_exists($v_backup_pass)) {
+						unlink($v_backup_pass);
+					}
 					if (empty($_SESSION["error_msg"])) {
 						$v_backup_host = $_POST["v_backup_host"];
 					}
@@ -1286,7 +1300,9 @@ if (!empty($_POST["save"])) {
 					);
 					check_return_code($return_var, $output);
 					unset($output);
-					unlink($v_backup_pass);
+					if (file_exists($v_backup_pass)) {
+						unlink($v_backup_pass);
+					}
 					if (empty($_SESSION["error_msg"])) {
 						$v_backup_bucket = quoteshellarg($_POST["v_backup_bucket"]);
 					}

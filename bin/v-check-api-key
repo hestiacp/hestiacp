@@ -9,6 +9,8 @@
 #----------------------------------------------------------#
 #                Variables & Functions                     #
 #----------------------------------------------------------#
+password="$1"
+HIDE=1
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -43,7 +45,11 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
-key="${1##*/}"
+# If key is set as tmp file it will be read from there
+is_password_valid
+
+#password is now set with the value of api key
+key="$(basename "$password")"
 
 # Exit if Key is unset or to short
 [[ -z $key || ${#key} -lt 16 ]] && abort_missmatch

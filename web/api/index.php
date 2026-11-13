@@ -19,6 +19,41 @@ define("HESTIA_CMD", "/usr/bin/sudo /usr/local/hestia/bin/");
 include $_SERVER["DOCUMENT_ROOT"] . "/inc/helpers.php";
 
 /**
+ * Writes $content to /tmp/<basename($name)> with mode 0600 (v-make-tmp-file).
+ *
+ * The name is chosen by the caller and is not unique (DNS cluster uses
+ * /tmp/vst-sync.<domain>), so a stale regular file from a failed run is
+ * removed first. Symlinks and files that cannot be removed are refused, and
+ * the file is opened with "x" so it is never followed or reused.
+ *
+ * @param string $name
+ * @param string $content
+ * @param string $hst_return
+ * @return void
+ */
+function api_make_tmp_file(string $name, string $content, $hst_return): void {
+	$name = basename($name);
+	if ($name === "" || $name === "." || $name === "..") {
+		api_error(E_INVALID, "Invalid temporary file name", $hst_return);
+	}
+	$path = "/tmp/" . $name;
+	if (is_link($path)) {
+		api_error(E_FORBIDDEN, "Unable to create temporary file", $hst_return);
+	}
+	if (file_exists($path) && (!is_file($path) || !@unlink($path))) {
+		api_error(E_FORBIDDEN, "Unable to create temporary file", $hst_return);
+	}
+	$old_umask = umask(0077);
+	$fp = @fopen($path, "x");
+	umask($old_umask);
+	if ($fp === false) {
+		api_error(E_FORBIDDEN, "Unable to create temporary file", $hst_return);
+	}
+	fwrite($fp, $content . "\n");
+	fclose($fp);
+}
+
+/**
  * Displays the error message, checks the proper code and saves a log if needed.
  *
  * @param int $exit_code
@@ -133,10 +168,13 @@ function api_legacy(array $request_data) {
 		}
 
 		// Send hash via tmp file
-		$v_hash = exec("mktemp -p /tmp");
-		$fp = fopen($v_hash, "w");
+		$fp = tmpfile();
+		if ($fp === false) {
+			api_error(E_INVALID, "Unable to create temporary file", $hst_return);
+		}
+		$v_hash = stream_get_meta_data($fp)["uri"];
 		fwrite($fp, $hash . "\n");
-		fclose($fp);
+		fflush($fp);
 
 		// Check user hash
 		exec(
@@ -145,9 +183,7 @@ function api_legacy(array $request_data) {
 			$return_var,
 		);
 		unset($output);
-
-		// Remove tmp file
-		unlink($v_hash);
+		fclose($fp);
 
 		// Check API answer
 		if ($return_var > 0) {
@@ -160,12 +196,21 @@ function api_legacy(array $request_data) {
 		}
 		$key = "/usr/local/hestia/data/keys/" . $hash;
 		$v_ip = quoteshellarg(get_real_user_ip());
+		// Send the key name via a temporary file
+		$fp = tmpfile();
+		if ($fp === false) {
+			api_error(E_INVALID, "Unable to create temporary file", $hst_return);
+		}
+		$v_key = stream_get_meta_data($fp)["uri"];
+		fwrite($fp, $request_data["hash"] . "\n");
+		fflush($fp);
 		exec(
-			HESTIA_CMD . "v-check-api-key " . quoteshellarg($key) . " " . $v_ip,
+			HESTIA_CMD . "v-check-api-key " . quoteshellarg($v_key) . " " . $v_ip,
 			$output,
 			$return_var,
 		);
 		unset($output);
+		fclose($fp);
 		// Check API answer
 		if ($return_var > 0) {
 			api_error(E_PASSWORD, "Error: authentication failed", $hst_return);
@@ -189,9 +234,7 @@ function api_legacy(array $request_data) {
 	// Check command
 	if ($hst_cmd == "v-make-tmp-file") {
 		// Used in DNS Cluster
-		$fp = fopen("/tmp/" . basename(escapeshellcmd($hst_cmd_args["arg2"])), "w");
-		fwrite($fp, $hst_cmd_args["arg1"] . "\n");
-		fclose($fp);
+		api_make_tmp_file($hst_cmd_args["arg2"] ?? "", $hst_cmd_args["arg1"] ?? "", $hst_return);
 		$return_var = 0;
 	} else {
 		// Prepare command
@@ -257,6 +300,7 @@ function api_connection(array $request_data) {
 	// Get POST Params
 	$hst_access_key_id = trim($request_data["access_key"] ?? "");
 	$hst_secret_access_key = trim($request_data["secret_key"] ?? "");
+
 	$hst_cmd = trim($request_data["cmd"] ?? "");
 	$hst_cmd_args = [];
 	for ($i = 1; $i <= 13; $i++) {
@@ -275,13 +319,21 @@ function api_connection(array $request_data) {
 		api_error(E_PASSWORD, "Authentication failed", $hst_return);
 	}
 
+	// Send the secret via a temporary file
+	$fp = tmpfile();
+	if ($fp === false) {
+		api_error(E_INVALID, "Unable to create temporary file", $hst_return);
+	}
+	$v_key = stream_get_meta_data($fp)["uri"];
+	fwrite($fp, $hst_secret_access_key . "\n");
+	fflush($fp);
 	// Authenticates the key and checks permission to run the script
 	exec(
 		HESTIA_CMD .
 			"v-check-access-key " .
 			quoteshellarg($hst_access_key_id) .
 			" " .
-			quoteshellarg($hst_secret_access_key) .
+			quoteshellarg($v_key) .
 			" " .
 			quoteshellarg($hst_cmd) .
 			" " .
@@ -290,6 +342,7 @@ function api_connection(array $request_data) {
 		$output,
 		$return_var,
 	);
+	fclose($fp);
 	if ($return_var > 0) {
 		//api_error($return_var, "Key $hst_access_key_id - authentication failed", $hst_return);
 		api_error($return_var, $output, $hst_return);
@@ -342,9 +395,7 @@ function api_connection(array $request_data) {
 
 	# v-make-temp files is manodory other wise some functions will break
 	if ($hst_cmd == "v-make-tmp-file") {
-		$fp = fopen("/tmp/" . basename($hst_cmd_args["arg2"]), "w");
-		fwrite($fp, $hst_cmd_args["arg1"] . "\n");
-		fclose($fp);
+		api_make_tmp_file($hst_cmd_args["arg2"] ?? "", $hst_cmd_args["arg1"] ?? "", $hst_return);
 		$cmd_exit_code = 0;
 	} else {
 		// Run cmd query

@@ -199,7 +199,9 @@ function authenticate_user($user, $password, $twofa = "") {
 			unset($output);
 
 			// Remove tmp file
-			unlink($v_hash);
+			if (file_exists($v_hash)) {
+				unlink($v_hash);
+			}
 			// Check API answer
 			if ($return_var > 0) {
 				sleep(2);

@@ -552,26 +552,31 @@ is_object_value_exist() {
 	fi
 }
 
+# Check if a secret is passed via a temporary file
+is_secret_file() {
+	local file="$1"
+	local owner
+
+	# Only accept the temp files Hestia itself creates for this purpose
+	[[ "$file" =~ ^/tmp/(vst|php|hst[_.]?|tmp\.)[A-Za-z0-9]{6,32}$ ]] || return 1
+	[[ -f "$file" && ! -L "$file" ]] || return 1
+
+	owner="$(stat -c '%u' "$file" 2> /dev/null)" || return 1
+	[[ "$owner" == "0" || "$owner" == "${SUDO_UID:--1}" ]]
+}
+
 # Check if password is transmitted via file
 is_password_valid() {
-	if [[ "$password" =~ ^/tmp/ ]]; then
-		if ! [[ "$password" == *../* ]]; then
-			if [ -f "$password" ]; then
-				password="$(head -n1 $password)"
-			fi
-		fi
-	fi
+	[[ "$password" == /tmp/* ]] || return 0
+	is_secret_file "$password" || check_result "$E_INVALID" "Invalid password file"
+	password="$(head -n1 "$password")"
 }
 
 # Check if hash is transmitted via file
 is_hash_valid() {
-	if [[ "$hash" =~ ^/tmp/ ]]; then
-		if ! [[ "$hash" == *../* ]]; then
-			if [ -f "$hash" ]; then
-				hash="$(head -n1 $hash)"
-			fi
-		fi
-	fi
+	[[ "$hash" == /tmp/* ]] || return 0
+	is_secret_file "$hash" || check_result "$E_INVALID" "Invalid hash file"
+	hash="$(head -n1 "$hash")"
 }
 
 # Check if directory is a symlink

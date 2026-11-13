@@ -36,7 +36,9 @@ if (!empty($_POST["save"])) {
 		);
 		check_return_code($return_var, $output);
 		unset($output);
-		unlink($new_conf);
+		if (file_exists($new_conf)) {
+			unlink($new_conf);
+		}
 	}
 
 	// Update config1
@@ -53,7 +55,9 @@ if (!empty($_POST["save"])) {
 		);
 		check_return_code($return_var, $output);
 		unset($output);
-		unlink($new_conf);
+		if (file_exists($new_conf)) {
+			unlink($new_conf);
+		}
 	}
 
 	// Update config2
@@ -70,7 +74,9 @@ if (!empty($_POST["save"])) {
 		);
 		check_return_code($return_var, $output);
 		unset($output);
-		unlink($new_conf);
+		if (file_exists($new_conf)) {
+			unlink($new_conf);
+		}
 	}
 
 	// Update config3
@@ -87,7 +93,9 @@ if (!empty($_POST["save"])) {
 		);
 		check_return_code($return_var, $output);
 		unset($output);
-		unlink($new_conf);
+		if (file_exists($new_conf)) {
+			unlink($new_conf);
+		}
 	}
 
 	// Update config4
@@ -104,7 +112,9 @@ if (!empty($_POST["save"])) {
 		);
 		check_return_code($return_var, $output);
 		unset($output);
-		unlink($new_conf);
+		if (file_exists($new_conf)) {
+			unlink($new_conf);
+		}
 	}
 
 	// Update config5
@@ -121,7 +131,9 @@ if (!empty($_POST["save"])) {
 		);
 		check_return_code($return_var, $output);
 		unset($output);
-		unlink($new_conf);
+		if (file_exists($new_conf)) {
+			unlink($new_conf);
+		}
 	}
 
 	// Update config6
@@ -138,7 +150,9 @@ if (!empty($_POST["save"])) {
 		);
 		check_return_code($return_var, $output);
 		unset($output);
-		unlink($new_conf);
+		if (file_exists($new_conf)) {
+			unlink($new_conf);
+		}
 	}
 
 	// Update config7
@@ -155,7 +169,9 @@ if (!empty($_POST["save"])) {
 		);
 		check_return_code($return_var, $output);
 		unset($output);
-		unlink($new_conf);
+		if (file_exists($new_conf)) {
+			unlink($new_conf);
+		}
 	}
 
 	// Update config8
@@ -172,7 +188,9 @@ if (!empty($_POST["save"])) {
 		);
 		check_return_code($return_var, $output);
 		unset($output);
-		unlink($new_conf);
+		if (file_exists($new_conf)) {
+			unlink($new_conf);
+		}
 	}
 
 	// Set success message

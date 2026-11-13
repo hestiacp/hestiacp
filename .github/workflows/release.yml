@@ -50,7 +50,7 @@ on:
         type: boolean
         default: false
       emulate_arm64:
-        description: Debugging only - build arm64 under QEMU on an x86 runner instead of a native arm64 runner (roughly 7x slower)
+        description: Use QEMU on an x86 runner instead of a native arm64 runner, for when native arm64 is unavailable (roughly 7x slower)
         type: boolean
         default: false
 

@@ -49,6 +49,10 @@ on:
         description: Overwrite existing package objects (recovery only)
         type: boolean
         default: false
+      emulate_arm64:
+        description: Debugging only - build arm64 under QEMU on an x86 runner instead of a native arm64 runner (roughly 7x slower)
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -194,12 +198,19 @@ jobs:
           retention-days: 7
 
   build-native:
-    name: Build ${{ matrix.suite }}/${{ matrix.arch }}
+    name: Build ${{ matrix.suite }}/${{ matrix.arch }}${{ matrix.arch == 'arm64' && inputs.emulate_arm64 && ' (QEMU)' || '' }}
     needs:
       - check-secrets
       - prepare
-    runs-on: ubuntu-latest
+    # arm64 builds on GitHub's native arm64 runners; QEMU emulation is only
+    # used when emulate_arm64 is set, so arm64 never depends on x86 capacity.
+    runs-on: ${{ matrix.arch == 'arm64' && !inputs.emulate_arm64 && 'ubuntu-24.04-arm' || 'ubuntu-latest' }}
     timeout-minutes: 360
+    env:
+      # Normalised to the same truthiness as the runs-on and QEMU gates, so
+      # the shell checks below cannot disagree with those expressions.
+      EMULATE_ARM64: ${{ inputs.emulate_arm64 && 'true' || 'false' }}
+      ARCH: ${{ matrix.arch }}
     strategy:
       fail-fast: false
       matrix: ${{ fromJSON(needs.prepare.outputs.matrix) }}
@@ -223,7 +234,7 @@ jobs:
           echo "flags=$flags" >> "$GITHUB_OUTPUT"
 
       - name: Setup QEMU
-        if: matrix.arch == 'arm64'
+        if: matrix.arch == 'arm64' && inputs.emulate_arm64
         uses: docker/setup-qemu-action@v3
         with:
           platforms: arm64
@@ -234,7 +245,7 @@ jobs:
           # nproc respects the runner's CPU quota/cgroup; fall back to
           # getconf and finally to 1 if neither is available.
           cpus="$(nproc 2>/dev/null || getconf _NPROCESSORS_ONLN 2>/dev/null || echo 1)"
-          if [[ "${{ matrix.arch }}" == 'arm64' ]]; then
+          if [[ "$ARCH" == 'arm64' && "$EMULATE_ARM64" == 'true' ]]; then
             # QEMU user-mode emulation uses far more memory per compiler
             # process than native code, so build with half the host cores
             # (minimum 1) to avoid OOM-killing cc1. This is deliberately
@@ -253,8 +264,15 @@ jobs:
           BUILD_FLAGS: ${{ steps.prepare.outputs.flags }}
         run: |
           mkdir -p out
+          # An explicit platform is only needed for QEMU: a native arm64
+          # runner already resolves arm64 images, and forcing --platform
+          # there would be redundant.
+          platform=()
+          if [[ "$ARCH" != 'arm64' || "$EMULATE_ARM64" == 'true' ]]; then
+            platform+=(--platform "linux/$ARCH")
+          fi
           docker run --rm \
-            --platform "linux/${{ matrix.arch }}" \
+            "${platform[@]}" \
             -v "$PWD:/repo" \
             -w /repo \
             -e DEBIAN_FRONTEND=noninteractive \

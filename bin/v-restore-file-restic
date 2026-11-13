@@ -69,7 +69,8 @@ if [ ! -f "$tmpdir/backup.conf" ]; then
 fi
 
 for file_path in "${file_list[@]}"; do
-	if ! restic --repo "${REPO%/}/$user" --password-file "$USER_DATA/restic.conf" restore "$snapshot" --include "$file_path" --target /; then
+	# Never let restic (root) write into the user controlled home directory
+	if ! restic_restore_user_path "$snapshot" "${file_path#/home/$user/}"; then
 		rm -rf "$tmpdir"
 		check_result "$E_NOTEXIST" "Unable to restore file from snapshot"
 	fi

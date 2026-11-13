@@ -55,9 +55,13 @@ if [ ! -e "$config" ]; then
 fi
 
 # Checking statistics directory
+# The stats directory is inside the user owned domain directory, so the user
+# can replace it with a symlink at any time. awstats keeps its data files in
+# that directory, so awstats and every other write into the stats directory
+# run with the user's privileges. The user can read the config and the log.
 dir="$HOMEDIR/$user/web/$domain/stats"
 if [ ! -e "$dir" ]; then
-	mkdir -p $dir
+	user_exec_in_writable_dir "$HOMEDIR/$user/web/$domain" mkdir -p -- "$dir"
 fi
 
 # Defining functions
@@ -81,30 +85,33 @@ build_awstats() {
 
 	# Checking statistics directory
 	if [ ! -e "$dir/$month" ]; then
-		mkdir -p $dir/$month
+		user_exec mkdir -p -- "$dir/$month"
 	fi
 
 	# Logo check
 	if [ ! -e "$dir/logo.svg" ]; then
-		cp -r $HESTIA/web/images/logo.svg $dir/
+		user_exec tee -- "$dir/logo.svg" < $HESTIA/web/images/logo.svg > /dev/null
 	fi
 
 	# Icon directory check
 	if [ ! -e "$dir/icon" ]; then
-		cp -r $wwwroot/icon $dir/
+		user_exec cp -r -- $wwwroot/icon "$dir/"
 	fi
 
 	# Creating main awstats page
-	$awstats $opts | sed "s%awstats.$domain.%%g" > $dir/$month/index.html
+	user_exec $awstats $opts | sed "s%awstats.$domain.%%g" \
+		| user_exec tee -- "$dir/$month/index.html" > /dev/null
 
 	# Creating suplemental awstats pages
 	for format in $output; do
-		$awstats $opts=$format \
-			| sed "s%awstats.$domain.%%g" > $dir/$month/$format.html
+		user_exec $awstats $opts=$format \
+			| sed "s%awstats.$domain.%%g" \
+			| user_exec tee -- "$dir/$month/$format.html" > /dev/null
 	done
 
 	# Creating index page
-	cat $WEBTPL/awstats/index.tpl | sed "s/%month%/$month/g" > $dir/index.html
+	cat $WEBTPL/awstats/index.tpl | sed "s/%month%/$month/g" \
+		| user_exec tee -- "$dir/index.html" > /dev/null
 
 	# Creating navigation page
 	months=$(find $dir -type d | sed -e "s%$dir/%%g" -e "s%$dir%%g" \
@@ -128,17 +135,26 @@ build_awstats() {
 		esac
 		select_m="$select_m<option value=$link>$month $year<\/option>\n"
 	done
-	cat $WEBTPL/awstats/nav.tpl | sed "s/%select_month%/$select_m/" > $dir/nav.html
+	cat $WEBTPL/awstats/nav.tpl | sed "s/%select_month%/$select_m/" \
+		| user_exec tee -- "$dir/nav.html" > /dev/null
 }
 
-# Switching on statistics type
-case $STATS in
-	awstats) build_awstats ;;
-esac
-
-# Chown
+# Hand over files an older version left behind as root, so the user can
+# overwrite them. Done on the verified stats directory, -R doesn't follow
+# symlinks.
 groups=$(groups "$user" | cut -f 3 -d ' ')
-chown -R $user:$groups "$dir"
+(cd_user_dir "$user" "web/$domain/stats" && chown -R --no-dereference "$user:$groups" -- .)
+
+# Switching on statistics type (stats is 551 by default, temporarily allow the
+# owner to write to it)
+case $STATS in
+	awstats)
+		stats_mode=$(user_exec stat -c '%a' -- "$dir")
+		user_exec chmod u+w -- "$dir"
+		build_awstats
+		[ -n "$stats_mode" ] && user_exec chmod "$stats_mode" -- "$dir"
+		;;
+esac
 
 #----------------------------------------------------------#
 #                       Hestia                             #

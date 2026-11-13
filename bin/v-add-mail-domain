@@ -53,6 +53,10 @@ domain_utf=$(idn2 --quiet -d "$domain_idn")
 
 check_args '2' "$#" 'USER DOMAIN [ANTISPAM] [ANTIVIRUS] [DKIM] [DKIM_SIZE] [RESTART] [REJECT_SPAM] [DKIM_SELECTOR]'
 is_format_valid 'user' 'domain' 'antispam' 'antivirus' 'dkim' 'dkim_size' 'restart' 'reject' 'dkim_selector'
+# idn2 maps Unicode dot variants to '.', so check the name used in paths
+if ! is_domain_name_safe "$domain_idn"; then
+	check_result "$E_INVALID" "invalid domain format :: $domain"
+fi
 is_system_enabled "$MAIL_SYSTEM" 'MAIL_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
@@ -72,6 +76,10 @@ fi
 
 is_package_full 'MAIL_DOMAINS'
 is_dir_symlink "$HOMEDIR/$user/mail"
+if [[ "$MAIL_SYSTEM" =~ exim ]]; then
+	# Fail before anything is changed if the mail directory can't be trusted
+	(enter_user_dir "$user" "mail" root) || exit $?
+fi
 
 is_base_domain_owner "$domain"
 
@@ -103,6 +111,31 @@ if [ -z "$ANTIVIRUS_SYSTEM" ]; then
 	antivirus="no"
 fi
 
+# Create the mailbox directory first, so a failure leaves nothing behind.
+# Work relative to the verified root-owned mail directory: a user who owns
+# $HOMEDIR/$user could otherwise swap "mail" for a symlink between the checks
+# and the chmod/chown below. Nothing in it can be swapped by the user.
+if [[ "$MAIL_SYSTEM" =~ exim ]]; then
+	(
+		enter_user_dir "$user" "mail" root
+		if [ -L "./$domain_idn" ]; then
+			check_result "$E_FORBIDEN" "$HOMEDIR/$user/mail/$domain_idn is a symlink"
+		elif [ -e "./$domain_idn" ]; then
+			# Reuse the mail left behind by a deleted domain of the same
+			# name, but only a directory of the user
+			if [ ! -d "./$domain_idn" ] || [ "$(stat -c '%U' -- "./$domain_idn")" != "$user" ]; then
+				check_result "$E_FORBIDEN" "$HOMEDIR/$user/mail/$domain_idn is not a mail directory of $user"
+			fi
+		else
+			mkdir -m 700 -- "./$domain_idn"
+			check_result $? "Unable to create $HOMEDIR/$user/mail/$domain_idn" "$E_NOTEXIST"
+		fi
+		chmod 770 -- "./$domain_idn" && chown -h "$user:mail" -- "./$domain_idn"
+		check_result $? "Unable to set permissions of $HOMEDIR/$user/mail/$domain_idn" "$E_NOTEXIST"
+		exit 0
+	) || exit $?
+fi
+
 # Adding domain to mail.conf
 s="DOMAIN='$domain' ANTIVIRUS='$antivirus' ANTISPAM='$antispam' REJECT='$reject' DKIM='$dkim' DKIM_SELECTOR='$dkim_selector'"
 s="$s WEBMAIL='' SSL='no' LETSENCRYPT='no' CATCHALL='' ACCOUNTS='0' RATE_LIMIT='$RATE_LIMIT' U_DISK='0' SUSPENDED='no'"
@@ -126,7 +159,7 @@ chmod 660 $USER_DATA/mail.conf
 # Building exim configs
 if [[ "$MAIL_SYSTEM" =~ exim ]]; then
 	mkdir $HOMEDIR/$user/conf/mail/$domain
-	mkdir $HOMEDIR/$user/mail/$domain_idn
+
 	touch $HOMEDIR/$user/conf/mail/$domain/aliases
 	touch $HOMEDIR/$user/conf/mail/$domain/passwd
 	touch $HOMEDIR/$user/conf/mail/$domain/fwd_only
@@ -168,7 +201,6 @@ if [[ "$MAIL_SYSTEM" =~ exim ]]; then
 	chmod 771 $HOMEDIR/$user/conf/mail/$domain
 	chmod 660 $HOMEDIR/$user/conf/mail/$domain/*
 	chmod 771 /etc/$MAIL_SYSTEM/domains/$domain_idn
-	chmod 770 $HOMEDIR/$user/mail/$domain_idn
 
 	# Set ownership
 	chown -R $MAIL_USER:mail $HOMEDIR/$user/conf/mail/$domain
@@ -176,7 +208,6 @@ if [[ "$MAIL_SYSTEM" =~ exim ]]; then
 		chown -R dovecot:mail $HOMEDIR/$user/conf/mail/$domain/passwd
 	fi
 	chown $MAIL_USER:mail $HOMEDIR/$user/conf/mail/$domain/accounts
-	chown $user:mail $HOMEDIR/$user/mail/$domain_idn
 fi
 
 # Adding dkim dns records

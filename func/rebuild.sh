@@ -150,10 +150,11 @@ rebuild_user_conf() {
 		mkdir -p $HOMEDIR/$user/web
 		mkdir -p $HOMEDIR/$user/tmp
 		chmod 751 $HOMEDIR/$user/conf/web
-		chmod 751 $HOMEDIR/$user/web
-		chmod 700 $HOMEDIR/$user/tmp
-		chown --no-dereference $user:$user $HOMEDIR/$user/tmp
-		chown --no-dereference $root:$user $HOMEDIR/$user/web
+		# Change owner and mode of the verified directories themselves, a path
+		# based chmod would follow a symlink swapped in by the user. web has
+		# to be owned by root, so the user can't replace the domain directories.
+		(cd_user_dir "$user" "web" && chown "root:$user" . && chmod 751 .)
+		(cd_user_dir "$user" "tmp" && chown "$user:$user" . && chmod 700 .)
 		if [ "$create_user" = "yes" ]; then
 			$BIN/v-rebuild-web-domains $user $restart
 		fi
@@ -192,7 +193,8 @@ rebuild_user_conf() {
 		fi
 		mkdir -p $HOMEDIR/$user/conf/mail/$domain
 		mkdir -p $HOMEDIR/$user/mail
-		chmod 751 $HOMEDIR/$user/mail
+		# Same as for web: verified directory, owned by root
+		(cd_user_dir "$user" "mail" && chown root . && chmod 751 .)
 		chmod 751 $HOMEDIR/$user/conf/mail
 		if [ "$create_user" = "yes" ]; then
 			$BIN/v-rebuild-mail-domains $user
@@ -246,8 +248,24 @@ rebuild_web_domain_conf() {
 		rm -f /etc/$PROXY_SYSTEM/conf.d/$domain*.conf
 	fi
 
+	# Verify the root-owned web directory and the domain directory below it, a
+	# user who owns $HOMEDIR/$user could swap path components for symlinks.
+	# The domain is skipped if its directory can't be verified.
+	(cd_user_dir "$user" "web" && chown "root:$user" . && chmod 751 .)
+	(
+		enter_user_dir "$user" "web" root
+		if [ -L "./$domain" ]; then
+			check_result "$E_FORBIDEN" "$HOMEDIR/$user/web/$domain is a symlink"
+		fi
+		if [ ! -d "./$domain" ]; then
+			mkdir -- "./$domain"
+		fi
+		chown --no-dereference "$user:$user" -- "./$domain"
+		exit 0
+	) || return $?
+
 	# Temporary allow write permissions to owner
-	[ -d "$HOMEDIR/$user/web/$domain" ] && chmod 751 "$HOMEDIR/$user/web/$domain"
+	user_exec chmod 751 "$HOMEDIR/$user/web/$domain"
 
 	# Rebuilding domain directories
 	if [ -d "$HOMEDIR/$user/web/$domain/document_errors" ]; then
@@ -256,10 +274,6 @@ rebuild_web_domain_conf() {
 		fi
 	fi
 
-	if [ ! -d $HOMEDIR/$user/web/$domain ]; then
-		mkdir $HOMEDIR/$user/web/$domain
-	fi
-	chown --no-dereference $user:$user $HOMEDIR/$user/web/$domain
 	$BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain/public_html"
 	if [ ! -d "$HOMEDIR/$user/web/$domain/document_errors" ]; then
 		$BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain/document_errors"
@@ -280,19 +294,18 @@ rebuild_web_domain_conf() {
 		/var/log/$WEB_SYSTEM/domains/$domain.log \
 		/var/log/$WEB_SYSTEM/domains/$domain.error.log
 
-	# Creating symlinks
-	cd $HOMEDIR/$user/web/$domain/logs/
-	ln -f -s /var/log/$WEB_SYSTEM/domains/$domain.log .
-	ln -f -s /var/log/$WEB_SYSTEM/domains/$domain.error.log .
-	cd /
-
-	# Set ownership
-	chown --no-dereference $user:$user \
-		$HOMEDIR/$user/web/$domain \
-		$HOMEDIR/$user/web/$domain/private \
-		$HOMEDIR/$user/web/$domain/cgi-bin \
-		$HOMEDIR/$user/web/$domain/public_*html
-	chown -R $user:$user $HOMEDIR/$user/web/$domain/document_errors
+	# Creating symlinks and set ownership relative to the verified directories
+	# (skipped if the user replaced a directory with a symlink)
+	(
+		cd_user_dir "$user" "web/$domain/logs" || exit
+		ln -f -s /var/log/$WEB_SYSTEM/domains/$domain.log .
+		ln -f -s /var/log/$WEB_SYSTEM/domains/$domain.error.log .
+	)
+	(
+		cd_user_dir "$user" "web/$domain" || exit
+		chown --no-dereference "$user:$user" -- . private cgi-bin public_*html
+		chown -R --no-dereference "$user:$user" -- document_errors
+	)
 	chown root:$user /var/log/$WEB_SYSTEM/domains/$domain.*
 
 	# Adding vhost configuration
@@ -466,17 +479,18 @@ rebuild_web_domain_conf() {
 	DOMAINDIR_MODE=551
 	if [ "$DOMAINDIR_WRITABLE" = 'yes' ]; then DOMAINDIR_MODE=751; fi
 
-	# Set folder permissions
-	no_symlink_chmod 751 $HOMEDIR/$user/web/$domain \
-		$HOMEDIR/$user/web/$domain/stats \
-		$HOMEDIR/$user/web/$domain/logs
-	no_symlink_chmod 751 $HOMEDIR/$user/web/$domain/private \
-		$HOMEDIR/$user/web/$domain/cgi-bin \
-		$HOMEDIR/$user/web/$domain/public_*html \
-		$HOMEDIR/$user/web/$domain/document_errors
+	# Set folder permissions on the verified directories themselves, a path
+	# based chmod would follow a symlink swapped in by the user. Directories
+	# the user replaced with a symlink are skipped.
+	for web_dir in '' /stats /logs /private /cgi-bin /public_html /public_shtml /document_errors; do
+		(cd_user_dir "$user" "web/$domain$web_dir" && chmod 751 .)
+	done
 	chmod 640 /var/log/$WEB_SYSTEM/domains/$domain.*
 
-	chown --no-dereference $user:www-data $HOMEDIR/$user/web/$domain/public_*html
+	(
+		cd_user_dir "$user" "web/$domain" || exit
+		chown --no-dereference "$user:www-data" -- public_*html
+	)
 }
 # DNS domain rebuild
 rebuild_dns_domain_conf() {
@@ -679,9 +693,19 @@ rebuild_mail_domain_conf() {
 		fi
 
 		# Adding mail directory
-		if [ ! -e $HOMEDIR/$user/mail/$domain_idn ]; then
-			mkdir "$HOMEDIR/$user/mail/$domain_idn"
-		fi
+		# Operate relative to the verified root-owned mail directory, the user
+		# owns $HOMEDIR/$user and could swap "mail" for a symlink at any time
+		(
+			enter_user_dir "$user" "mail" root
+			if [ -L "./$domain_idn" ]; then
+				check_result "$E_FORBIDEN" "$HOMEDIR/$user/mail/$domain_idn is a symlink"
+			fi
+			if [ ! -e "./$domain_idn" ]; then
+				mkdir -- "./$domain_idn"
+			fi
+			chmod 770 -- "./$domain_idn"
+			chown -h "$user:mail" -- "./$domain_idn"
+		)
 
 		# Webamil client
 		if [ "$WEBMAIL" = '' ]; then
@@ -761,13 +785,11 @@ rebuild_mail_domain_conf() {
 		chmod 771 $HOMEDIR/$user/conf/mail/$domain
 		chmod 660 $HOMEDIR/$user/conf/mail/$domain/*
 		chmod 771 /etc/$MAIL_SYSTEM/domains/$domain_idn
-		chmod 770 $HOMEDIR/$user/mail/$domain_idn
 		chown -R $MAIL_USER:mail $HOMEDIR/$user/conf/mail/$domain
 		if [ "$IMAP_SYSTEM" = "dovecot" ]; then
 			chown -R dovecot:mail $HOMEDIR/$user/conf/mail/$domain/passwd
 		fi
 		chown $MAIL_USER:mail $HOMEDIR/$user/conf/mail/$domain/accounts
-		chown $user:mail $HOMEDIR/$user/mail/$domain_idn
 	fi
 
 	# Add missing SSL configuration flags to existing domains

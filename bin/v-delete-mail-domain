@@ -55,7 +55,11 @@ accounts=$(wc -l "$USER_DATA/mail/$domain.conf" | cut -f 1 -d ' ')
 if [[ "$MAIL_SYSTEM" =~ exim ]]; then
 	rm -f /etc/$MAIL_SYSTEM/domains/$domain_idn
 	rm -rf $HOMEDIR/$user/conf/mail/$domain
-	rm -rf $HOMEDIR/$user/mail/$domain_idn
+	# Delete relative to the verified root-owned mail directory, so a swapped
+	# "mail" symlink can't redirect the removal outside the user's home. If the
+	# directory can't be verified the data is left alone, the domain is still
+	# removed from the configuration.
+	(enter_user_dir "$user" "mail" root && rm -rf -- "./$domain_idn")
 fi
 
 # Deleting dkim dns record

@@ -83,7 +83,9 @@ if [ -n "$cron" ]; then
 fi
 if [ "$udir" = "yes" ]; then
 	echo "[ * ] Restore user files"
-	restic --repo "${REPO%/}/$user" --password-file "$USER_DATA/restic.conf" restore "$snapshot" --exclude "/home/$user/web/" --exclude "/home/$user/conf" --exclude "/home/$user/mail" --target /
+	# Never let restic (root) write into the user controlled home directory
+	restic_restore_user_path "$snapshot" "" --exclude "/home/$user/web" --exclude "/home/$user/conf" \
+		--exclude "/home/$user/mail" --exclude "/home/$user/backup"
 	if [ "$?" -ne 0 ]; then
 		check_result "$E_NOTEXIST" "Unable to download user folders"
 	fi

@@ -129,6 +129,38 @@ is_app_system_supported() {
 	fi
 }
 
+# Create the application folder $3 of $user/$domain as the user and verify it.
+# The user owns $HOMEDIR/$user and could swap any part of the path for a
+# symlink, so root only works relative to a directory that was verified
+# component by component (cd_user_dir).
+create_app_dir() {
+	local user="$1" domain="$2" dir="$3" appdir
+	appdir=$(app_dir_path "$user" "$domain" "$dir")
+
+	if [ ! -e "$appdir" ] && [ ! -L "$appdir" ]; then
+		(
+			enter_user_dir "$user" "web/$domain"
+			# The domain folder is read-only for its owner (DOMAINDIR_WRITABLE)
+			domain_mode=$(stat -c %a .)
+			chmod 751 .
+			$BIN/v-add-fs-directory "$user" "$appdir"
+			result=$?
+			chmod "$domain_mode" .
+			check_result $result "unable to create $appdir"
+			exit 0
+		) || exit $?
+	fi
+
+	(
+		enter_user_dir "$user" "web/$domain/$dir"
+		if [ "$(stat -c %U .)" != "$user" ]; then
+			check_result "$E_FORBIDEN" "$appdir is not owned by $user"
+		fi
+		chmod 750 .
+		exit 0
+	) || exit $?
+}
+
 #----------------------------------------------------------#
 #                    Configuration                         #
 #----------------------------------------------------------#
@@ -778,10 +810,13 @@ is_app_template_change_valid() {
 backup_app_conf() {
 	local user="$1" domain="$2" dst="$3" envfile
 	app_exists "$user" "$domain" || return 0
+	# v-backup-user-config stages below the user home: never write through a
+	# file or symlink that is already there
+	rm -f -- "$dst/app.conf" "$dst/app.env"
 	grep "^DOMAIN='$domain' " "$HESTIA/data/users/$user/app.conf" > "$dst/app.conf"
 	envfile=$(app_env_file "$user" "$domain")
 	if [ -f "$envfile" ]; then
-		cp "$envfile" "$dst/app.env"
+		cp --no-dereference --remove-destination "$envfile" "$dst/app.env"
 	fi
 	chmod 600 "$dst/app.conf" "$dst/app.env" 2> /dev/null
 	return 0

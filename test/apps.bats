@@ -72,6 +72,20 @@ function wait_for_app() {
 	assert_failure $E_ARGS
 }
 
+@test "APP: Symlinked app folder is refused" {
+	# The owner must not be able to point root at another directory
+	mode=$(stat -c %a /etc)
+	ln -s /etc "$HOMEDIR/$user/web/$domain2/linked"
+	chown -h $user:$user "$HOMEDIR/$user/web/$domain2/linked"
+	run v-add-web-domain-app $user $domain2 custom system 'true' linked
+	assert_failure $E_FORBIDEN
+	run stat -c %a /etc
+	assert_output "$mode"
+	run v-list-web-domain-app $user $domain2
+	assert_failure $E_NOTEXIST
+	rm -f "$HOMEDIR/$user/web/$domain2/linked"
+}
+
 @test "APP: App template can't be selected without an app" {
 	if [ -n "$PROXY_SYSTEM" ]; then
 		run v-change-web-domain-proxy-tpl $user $domain2 app

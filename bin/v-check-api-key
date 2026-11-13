@@ -18,12 +18,17 @@ source $HESTIA/func/main.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
+# Byte semantics for the key name check, independent of the system locale
+LC_ALL=C
+
 new_timestamp
 
 abort_missmatch() {
 	echo "Error: key missmatch"
 	echo "$date $time api $ip failed to login" >> $HESTIA/log/auth.log
-	exit "$E_PASSWORD"
+	# Hardcoded E_PASSWORD: a rejected key must never exit with 0, even if
+	# func/main.sh could not be sourced.
+	exit 9
 }
 
 ip=${2-127.0.0.1}
@@ -38,12 +43,20 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
-key="$(basename "$1")"
+key="${1##*/}"
 
 # Exit if Key is unset or to short
 [[ -z $key || ${#key} -lt 16 ]] && abort_missmatch
 
-# Key file must exist
+# Key name must only contain safe characters
+[[ $key =~ ^[A-Za-z0-9_.-]{16,128}$ ]] || abort_missmatch
+
+# Key file must exist and be a regular file, not a symlink
+key_path="${HESTIA}/data/keys/${key}"
+[[ -L $key_path ]] && abort_missmatch
+[[ -f $key_path ]] || abort_missmatch
+
+# Resolve the path and make sure it stays inside the key store
 maybe_key_path="$(readlink -e "${HESTIA}/data/keys/${key}")"
 [[ -z $maybe_key_path ]] && abort_missmatch
 

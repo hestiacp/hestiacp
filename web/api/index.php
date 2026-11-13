@@ -67,9 +67,9 @@ function api_legacy(array $request_data) {
 	}
 
 	if ($settings["config"]["API_ALLOWED_IP"] != "allow-all") {
-		$ip_list = explode(",", $settings["config"]["API_ALLOWED_IP"]);
-		$ip_list[] = "";
-		if (!in_array(get_real_user_ip(), $ip_list)) {
+		$ip_list = array_map("trim", explode(",", $settings["config"]["API_ALLOWED_IP"]));
+		$v_real_user_ip = get_real_user_ip();
+		if ($v_real_user_ip === "" || !in_array($v_real_user_ip, $ip_list, true)) {
 			api_error(E_FORBIDDEN, "Error: IP is not allowed to connect with API", $hst_return);
 		}
 	}
@@ -84,7 +84,7 @@ function api_legacy(array $request_data) {
 		if ($request_data["user"] != "$root_user") {
 			api_error(E_FORBIDDEN, "Error: authentication failed", $hst_return);
 		}
-		$password = $request_data["password"];
+		$password = $request_data["password"] ?? null;
 		if (!isset($password)) {
 			api_error(E_PASSWORD, "Error: authentication failed", $hst_return);
 		}
@@ -154,7 +154,11 @@ function api_legacy(array $request_data) {
 			api_error(E_PASSWORD, "Error: authentication failed", $hst_return);
 		}
 	} else {
-		$key = "/usr/local/hestia/data/keys/" . basename($request_data["hash"]);
+		$hash = basename($request_data["hash"]);
+		if (!preg_match('/^[A-Za-z0-9_.-]{16,128}\z/', $hash)) {
+			api_error(E_PASSWORD, "Error: authentication failed", $hst_return);
+		}
+		$key = "/usr/local/hestia/data/keys/" . $hash;
 		$v_ip = quoteshellarg(get_real_user_ip());
 		exec(
 			HESTIA_CMD . "v-check-api-key " . quoteshellarg($key) . " " . $v_ip,
@@ -241,9 +245,11 @@ function api_connection(array $request_data) {
 
 	// Check if API access is enabled for the user
 	if ($settings["config"]["API_ALLOWED_IP"] != "allow-all") {
-		$ip_list = explode(",", $settings["config"]["API_ALLOWED_IP"]);
-		$ip_list[] = "";
-		if (!in_array($v_real_user_ip, $ip_list) && !in_array("0.0.0.0", $ip_list)) {
+		$ip_list = array_map("trim", explode(",", $settings["config"]["API_ALLOWED_IP"]));
+		if (
+			$v_real_user_ip === "" ||
+			(!in_array($v_real_user_ip, $ip_list, true) && !in_array("0.0.0.0", $ip_list, true))
+		) {
 			api_error(E_FORBIDDEN, "IP is not allowed to connect with API", $hst_return);
 		}
 	}
@@ -379,6 +385,22 @@ if (isset($_POST["access_key"]) || isset($_POST["user"]) || isset($_POST["hash"]
 		"Error: data received is null or invalid, check https://hestiacp.com/docs/server-administration/rest-api.html",
 		"",
 	);
+}
+
+// Validate request data types
+$hst_return = ($request_data["returncode"] ?? "no") === "yes" ? "code" : "";
+$string_fields = ["access_key", "secret_key", "user", "password", "hash", "cmd", "returncode"];
+for ($i = 1; $i <= 13; $i++) {
+	$string_fields[] = "arg{$i}";
+}
+foreach ($string_fields as $field) {
+	if (!isset($request_data[$field])) {
+		continue;
+	}
+	if (!is_scalar($request_data[$field])) {
+		api_error(E_INVALID, "Error: $field must be a string", $hst_return);
+	}
+	$request_data[$field] = (string) $request_data[$field];
 }
 
 // Try to get access key in the hash

@@ -191,7 +191,7 @@ function api_legacy(array $request_data) {
 		}
 	} else {
 		$hash = basename($request_data["hash"]);
-		if (!preg_match('/^[A-Za-z0-9_.-]{16,128}\z/', $hash)) {
+		if (!preg_match("/^[A-Za-z0-9_.-]{16,128}\z/", $hash)) {
 			api_error(E_PASSWORD, "Error: authentication failed", $hst_return);
 		}
 		$key = "/usr/local/hestia/data/keys/" . $hash;

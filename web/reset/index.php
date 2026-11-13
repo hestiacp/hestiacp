@@ -9,6 +9,7 @@ include $_SERVER["DOCUMENT_ROOT"] . "/inc/main.php";
 
 if (isset($_SESSION["user"])) {
 	header("Location: /list/user/");
+	exit();
 }
 
 if ($_SESSION["POLICY_SYSTEM_PASSWORD_RESET"] == "no") {

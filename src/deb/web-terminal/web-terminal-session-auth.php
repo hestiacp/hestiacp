@@ -44,6 +44,23 @@ if (!is_string($look)) {
 	$look = "";
 }
 
+$config = @parse_ini_file($hestia . "/conf/hestia.conf");
+if ($config === false) {
+	deny("unable to read configuration");
+}
+
+// This script runs as root and the config is world-readable, so enforce the protected-admin
+// policy here as well: an admin impersonating ROOT_USER must not get a terminal.
+$rootUser = $config["ROOT_USER"] ?? "";
+if (
+	($config["POLICY_SYSTEM_PROTECTED_ADMIN"] ?? "") === "yes" &&
+	$rootUser !== "" &&
+	$user !== $rootUser &&
+	$look === $rootUser
+) {
+	deny("read-only protected admin session");
+}
+
 echo json_encode(
 	["ok" => true, "user" => $user, "look" => $look],
 	JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR,

@@ -159,6 +159,14 @@ function ipUsed() {
 	}
 }
 
+// An admin must not target the ROOT_USER account unless they are ROOT_USER themselves.
+function is_protected_root_target(string $target): bool {
+	return ($_SESSION["userContext"] ?? "") === "admin" &&
+		($_SESSION["ROOT_USER"] ?? "") !== "" &&
+		$target === htmlentities($_SESSION["ROOT_USER"]) &&
+		($_SESSION["user"] ?? "") !== $_SESSION["ROOT_USER"];
+}
+
 if (isset($_SESSION["user"])) {
 	$user = quoteshellarg($_SESSION["user"]);
 	$user_plain = htmlentities($_SESSION["user"]);
@@ -182,6 +190,32 @@ $read_only = false;
 if (isset($_SESSION["userContext"])) {
 	require_once dirname(__FILE__) . "/policies.php";
 }
+
+// Central guard: a read-only session (suspended user, or an admin impersonating a protected
+// ROOT_USER) must never change state. Individual pages also check $read_only, but this makes
+// sure a page that forgets the check cannot be abused via a crafted request. GET prefixes are
+// listed because those endpoints act on GET with a token in the query string.
+$request_path = parse_url($_SERVER["REQUEST_URI"] ?? "/", PHP_URL_PATH) ?: "/";
+$request_method = $_SERVER["REQUEST_METHOD"] ?? "";
+$is_mutating_request =
+	($request_method === "POST" && $request_path !== "/list/rrd/ajax.php") ||
+	($request_method === "GET" &&
+		($request_path === "/add/cron/autoupdate/" ||
+			str_starts_with($request_path, "/delete/") ||
+			str_starts_with($request_path, "/start/") ||
+			str_starts_with($request_path, "/stop/") ||
+			str_starts_with($request_path, "/restart/") ||
+			str_starts_with($request_path, "/update/") ||
+			str_starts_with($request_path, "/copy/") ||
+			str_starts_with($request_path, "/move/") ||
+			str_starts_with($request_path, "/suspend/") ||
+			str_starts_with($request_path, "/unsuspend/")));
+if ($read_only === true && $is_mutating_request) {
+	$_SESSION["error_msg"] = _("This action is not allowed in read-only mode.");
+	header("Location: /", true, 303);
+	exit();
+}
+unset($request_path, $request_method, $is_mutating_request);
 
 function check_error($return_var) {
 	if ($return_var > 0) {

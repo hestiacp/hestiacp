@@ -46,11 +46,13 @@ check_hestia_demo_mode
 # Get current time
 start_time=$(date '+%s')
 
-tmpdir="/home/$user/backup/"
+tmpdir="/home/$user/backup"
 
 # We delete the backup dir first make sure all old database has been cleared
-rm -fr "/home/$user/backup/"
-mkdir -p "$tmpdir"
+rm -fr "$tmpdir"
+umask 077
+install -d -m 0700 -o root -g root "$tmpdir"
+(enter_user_dir "$user" "backup" root) || exit $?
 
 # Backup sys configs
 echo "-- SYSTEM --" | tee $BACKUP/$user.log
@@ -458,5 +460,6 @@ backup_str="$backup_str UDIR='${udir_list// /,}'"
 backup_str="$backup_str RUNTIME='$run_time' TIME='$time' DATE='$date'"
 backup_str="$backup_str BACKUP_MODE='$BACKUP_MODE'"
 echo "$backup_str" > $tmpdir/backup.conf
+chmod 660 "$BACKUP/$user.log"
 
 exit

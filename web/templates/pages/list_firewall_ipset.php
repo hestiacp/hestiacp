@@ -56,7 +56,7 @@
 					</div>
 				</div>
 				<div class="units-table-cell units-table-heading-cell u-text-bold">
-					<span class="u-hide-desktop"><?= tohtml( _("IP List Name")) ?>:</span>
+					<span class="u-hide-desktop"><?= tohtml( _("IP List Name")) ?></span>
 					<?= tohtml($listname) ?>
 				</div>
 				<div class="units-table-cell">
@@ -76,7 +76,7 @@
 					</ul>
 				</div>
 				<div class="units-table-cell u-text-bold u-text-center-desktop">
-					<span class="u-hide-desktop"><?= tohtml( _("Auto Update")) ?>:</span>
+					<span class="u-hide-desktop"><?= tohtml( _("Auto Update")) ?></span>
 					<?php if ($data[$key]["AUTOUPDATE"] == "no") { ?>
 						<i class="fas fa-circle-xmark icon-red" title="<?= tohtml( _("Disabled")) ?>"></i>
 					<?php } else { ?>
@@ -84,15 +84,15 @@
 					<?php } ?>
 				</div>
 				<div class="units-table-cell u-text-center-desktop">
-					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("IP Version")) ?>:</span>
+					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("IP Version")) ?></span>
 					<?= tohtml( _($data[$key]["IP_VERSION"])) ?>
 				</div>
 				<div class="units-table-cell u-text-center-desktop">
-					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Date")) ?>:</span>
+					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Date")) ?></span>
 					<time datetime="<?= tohtml( _($data[$key]["DATE"])) ?>"><?= tohtml( _($data[$key]["DATE"])) ?></time>
 				</div>
 				<div class="units-table-cell u-text-center-desktop">
-					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Time")) ?>:</span>
+					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Time")) ?></span>
 					<?= tohtml($data[$key]["TIME"]) ?>
 				</div>
 			</div>

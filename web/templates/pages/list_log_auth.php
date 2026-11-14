@@ -65,23 +65,23 @@
 					<i class="fas <?= tohtml($status_icon) ?> u-mr5" title="<?= tohtml($status_title) ?>"></i>
 				</div>
 				<div class="units-table-cell units-table-heading-cell u-text-bold">
-					<span class="u-hide-desktop"><?= tohtml( _("Date")) ?>:</span>
+					<span class="u-hide-desktop"><?= tohtml( _("Date")) ?></span>
 					<time class="u-text-no-wrap" datetime="<?= tohtml($data[$key]["DATE"]) ?>">
 						<?= tohtml(translate_date($data[$key]["DATE"])) ?>
 					</time>
 				</div>
 				<div class="units-table-cell u-text-bold">
-					<span class="u-hide-desktop"><?= tohtml( _("Time")) ?>:</span>
+					<span class="u-hide-desktop"><?= tohtml( _("Time")) ?></span>
 					<time datetime="<?= tohtml($data[$key]["TIME"]) ?>">
 						<?= tohtml($data[$key]["TIME"]) ?>
 					</time>
 				</div>
 				<div class="units-table-cell">
-					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("IP Address")) ?>:</span>
+					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("IP Address")) ?></span>
 					<?= tohtml($data[$key]["IP"]) ?>
 				</div>
-				<div class="units-table-cell">
-					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Browser")) ?>:</span>
+				<div class="units-table-cell units-table-cell-wide">
+					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Browser")) ?></span>
 					<?= tohtml($data[$key]["USER_AGENT"]) ?>
 				</div>
 			</div>

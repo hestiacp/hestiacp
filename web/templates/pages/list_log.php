@@ -78,25 +78,25 @@
 					<i class="fas <?= tohtml($level_icon) ?>" title="<?= tohtml($level_title) ?>"></i>
 				</div>
 				<div class="units-table-cell units-table-heading-cell u-text-bold">
-					<span class="u-hide-desktop"><?= tohtml( _("Date")) ?>:</span>
+					<span class="u-hide-desktop"><?= tohtml( _("Date")) ?></span>
 					<time datetime="<?= tohtml($data[$key]["DATE"]) ?>" class="u-text-no-wrap">
 						<?= tohtml(translate_date($data[$key]["DATE"])) ?>
 					</time>
 				</div>
 				<div class="units-table-cell u-text-bold">
-					<span class="u-hide-desktop"><?= tohtml( _("Time")) ?>:</span>
+					<span class="u-hide-desktop"><?= tohtml( _("Time")) ?></span>
 					<time datetime="<?= tohtml($data[$key]["TIME"]) ?>">
 						<?= tohtml($data[$key]["TIME"]) ?>
 					</time>
 				</div>
 				<div class="units-table-cell u-text-bold">
-					<span class="u-hide-desktop"><?= tohtml( _("Category")) ?>:</span>
+					<span class="u-hide-desktop"><?= tohtml( _("Category")) ?></span>
 					<span class="u-text-no-wrap">
 						<?= tohtml($data[$key]["CATEGORY"]) ?>
 					</span>
 				</div>
-				<div class="units-table-cell">
-					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Message")) ?>:</span>
+				<div class="units-table-cell units-table-cell-wide">
+					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Message")) ?></span>
 					<?= tohtml($data[$key]["MESSAGE"]) ?>
 				</div>
 			</div>

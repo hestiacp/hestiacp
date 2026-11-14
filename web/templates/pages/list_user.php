@@ -146,24 +146,24 @@
 					</div>
 				</div>
 				<div class="units-table-cell units-table-heading-cell">
-					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Name")) ?>:</span>
+					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Name")) ?></span>
 					<?php if ($key == $user_plain) { ?>
 						<a href="/edit/user/?<?= tohtml(http_build_query(["token" => $_SESSION["token"]])) ?>" title="<?= tohtml( _("Edit User")) ?>">
 							<span class="u-text-bold">
 								<?= tohtml($key) ?>
 							</span>
-							(<?= tohtml($data[$key]["NAME"]) ?>)
+							<?php if ($data[$key]["NAME"] !== "") { ?>(<?= tohtml($data[$key]["NAME"]) ?>)<?php } ?>
 						</a>
 					<?php } else { ?>
 						<a href="/login/?<?= tohtml(http_build_query(["loginas" => $key, "token" => $_SESSION["token"]])) ?>" title="<?= tohtml( _("Log in as")) ?> <?= tohtml($key) ?>">
 							<span class="u-text-bold">
 								<?= tohtml($key) ?>
 							</span>
-							(<?= tohtml($data[$key]["NAME"]) ?>)
+							<?php if ($data[$key]["NAME"] !== "") { ?>(<?= tohtml($data[$key]["NAME"]) ?>)<?php } ?>
 						</a>
 					<?php } ?>
 					<p class="u-max-width200 u-text-truncate">
-						<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Email")) ?>:</span>
+						<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Email")) ?></span>
 						<span title="<?= tohtml($data[$key]["CONTACT"]) ?>"><?= tohtml($data[$key]["CONTACT"]) ?></span>
 					</p>
 				</div>
@@ -171,8 +171,8 @@
 					<ul class="units-table-row-actions">
 						<?php if ($key == $user_plain) { ?>
 							<li class="units-table-row-action">
-								<i class="fas fa-user-check" title="<?= tohtml($key) ?> (<?= tohtml($data[$key]["NAME"]) ?>)"></i>
-								<span class="u-hide-desktop"><?= tohtml($key) ?> (<?= tohtml($data[$key]["NAME"]) ?>)</span>
+								<i class="fas fa-user-check" title="<?= tohtml($data[$key]["NAME"] !== "" ? $key . " (" . $data[$key]["NAME"] . ")" : $key) ?>"></i>
+								<span class="u-hide-desktop"><?= tohtml($data[$key]["NAME"] !== "" ? $key . " (" . $data[$key]["NAME"] . ")" : $key) ?></span>
 							</li>
 						<?php } else { ?>
 							<li class="units-table-row-action">
@@ -240,7 +240,7 @@
 					</ul>
 				</div>
 				<div class="units-table-cell u-text-bold u-text-center-desktop">
-					<span class="u-hide-desktop"><?= tohtml( _("Package")) ?>:</span>
+					<span class="u-hide-desktop"><?= tohtml( _("Package")) ?></span>
 					<?php if ($data[$key]["PACKAGE"] === "system") { ?>
 						<?= tohtml($data[$key]["PACKAGE"]) ?>
 					<?php } else { ?>
@@ -250,11 +250,11 @@
 					<?php } ?>
 				</div>
 				<div class="units-table-cell u-text-center-desktop">
-					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("IPs")) ?>:</span>
+					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("IPs")) ?></span>
 					<?= tohtml($data[$key]["IP_OWNED"]) ?>
 				</div>
 				<div class="units-table-cell u-text-center-desktop u-text-no-wrap">
-					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Disk")) ?>:</span>
+					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Disk")) ?></span>
 					<span class="u-text-bold">
 						<?= tohtml(humanize_usage_size($data[$key]["U_DISK"], 1)) ?>
 					</span>
@@ -269,7 +269,7 @@
 					</span>
 				</div>
 				<div class="units-table-cell u-text-center-desktop u-text-no-wrap">
-					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Bandwidth")) ?>:</span>
+					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Bandwidth")) ?></span>
 					<span class="u-text-bold">
 						<?= tohtml(humanize_usage_size($data[$key]["U_BANDWIDTH"], 1)) ?>
 					</span>
@@ -284,31 +284,31 @@
 					</span>
 				</div>
 				<div class="units-table-cell compact u-text-center-desktop">
-					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Web Domains")) ?>:</span>
+					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Web Domains")) ?></span>
 					<span class="units-table-badge">
 						<?= tohtml($data[$key]["U_WEB_DOMAINS"]) ?>
 					</span>
 				</div>
 				<div class="units-table-cell compact u-text-center-desktop">
-					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("DNS Zones")) ?>:</span>
+					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("DNS Zones")) ?></span>
 					<span class="units-table-badge">
 						<?= tohtml($data[$key]["U_DNS_DOMAINS"]) ?>
 					</span>
 				</div>
 				<div class="units-table-cell compact u-text-center-desktop">
-					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Mail Domains")) ?>:</span>
+					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Mail Domains")) ?></span>
 					<span class="units-table-badge">
 						<?= tohtml($data[$key]["U_MAIL_DOMAINS"]) ?>
 					</span>
 				</div>
 				<div class="units-table-cell compact u-text-center-desktop">
-					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Databases")) ?>:</span>
+					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Databases")) ?></span>
 					<span class="units-table-badge">
 						<?= tohtml($data[$key]["U_DATABASES"]) ?>
 					</span>
 				</div>
 				<div class="units-table-cell compact u-text-center-desktop">
-					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Backups")) ?>:</span>
+					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Backups")) ?></span>
 					<span class="units-table-badge">
 						<?= tohtml($data[$key]["U_BACKUPS"]) ?>
 					</span>

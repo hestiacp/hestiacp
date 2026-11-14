@@ -84,6 +84,14 @@ else
 fi
 shell=$(grep -w "$shell_conf" /etc/shells | head -n1)
 
+# Ubuntu's %admin sudoers and polkit rules would give the "admin" user full root
+# access (#5919), so protect it before the account exists
+# The protection is kept if the user creation fails below: it only denies a user named admin
+if [ "$user" = "admin" ]; then
+	protect_admin_user
+	check_result $? "unable to remove sudo and polkit administrator rights from the '$user' user" "$E_INVALID"
+fi
+
 # Adding user
 /usr/sbin/useradd "$user" -s "$shell" -c "$email" -m -d "$HOMEDIR/$user" -U
 check_result $? "user creation failed" "$E_INVALID"

@@ -1,0 +1,9 @@
+// Ubuntu's 49-ubuntu-admin.rules lets members of the "admin" group authenticate
+// as administrators, and the Hestia user named "admin" has a primary group of the
+// same name, so that user could authenticate as an administrator with its own
+// password and run pkexec and similar tools as root. This file sorts before that
+// one and takes precedence, so only members of the "sudo" group are offered as
+// administrators.
+polkit.addAdminRule(function (action, subject) {
+	return ["unix-group:sudo"];
+});

@@ -63,6 +63,22 @@ v-delete-web-domain-allow-users user domain.tld
 
 In Hestia 1.3, we have made it possible to give another user Administrator access. In 1.4, we have given system administrators the option to limit access to the main **System Administrator** account to improve security.
 
+## Does the `admin` account have sudo access?
+
+No. Hestia removes the sudo and polkit administrator rights from the `admin` account. Ubuntu's default `/etc/sudoers` contains `%admin ALL=(ALL) ALL` and its polkit configuration (`49-ubuntu-admin.rules`) accepts members of the `admin` group as administrators, which would give a user named `admin` full root access through its primary group of the same name (`sudo`, `pkexec`). To prevent this, Hestia installs:
+
+- `/etc/sudoers.d/zz-hestia-deny-admin` (`admin ALL=(ALL:ALL) !ALL`). sudo uses the last matching entry and the file is named so that it is read after the `%admin` rule. This also overrides a leftover `/etc/sudoers.d/admin` on old servers.
+- On Ubuntu, `/etc/polkit-1/rules.d/49-hestia-admin-identities.rules`, which offers only members of the `sudo` group as administrators. It is named so that it is read before Ubuntu's `49-ubuntu-admin.rules` but after custom `40`-`48` rules. It is installed on Ubuntu (also on 22.04, where polkit ignores it until a release upgrade), not on Debian. Other members of the `admin` group are no longer offered as polkit administrators either; add them to `sudo`.
+
+The files are installed before the `admin` user is created, by `v-add-user` and `v-rebuild-user`/`v-restore-user`, and by the upgrade to 1.10.8 on existing servers. They are removed again by `v-delete-user admin` (only possible when `admin` is not the main administrator account, `ROOT_USER`). Because of the `zz-` ordering, a drop-in of your own that sorts later in `/etc/sudoers.d` can still override the sudoers entry. That is your choice as the server administrator.
+
+If you need root access in a shell, create a separate account and add it to the `sudo` group instead of re-enabling it for `admin`:
+
+```bash
+adduser myadmin
+usermod -aG sudo myadmin
+```
+
 ## My server IP has changed, what do I need to do?
 
 When a server IP changes, you need to run the following command, which will rebuild all config files:

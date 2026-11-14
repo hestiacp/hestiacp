@@ -92,12 +92,6 @@ export const options = [
 		default: 'yes',
 	},
 	{
-		flag: 'phpfpm',
-		label: 'PHP-FPM',
-		description: 'Process manager for executing PHP scripts',
-		default: 'yes',
-	},
-	{
 		flag: 'multiphp',
 		label: 'MultiPHP',
 		description: 'Allows installing multiple PHP versions, specify comma separated. Eg: 7.4,8.3',

@@ -190,7 +190,6 @@ array_walk($containers, function (&$element) {
 
 	if ($element["php"] == "fpm") {
 		$lxc_name .= "-fpm";
-		$hst_args .= " --phpfpm yes";
 	} elseif ($element["php"] == "multiphp") {
 		$lxc_name .= "-mphp";
 		$hst_args .= " --multiphp yes";

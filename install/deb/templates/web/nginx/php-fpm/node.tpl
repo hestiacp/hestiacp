@@ -1,0 +1,26 @@
+server {
+    listen      %ip%:%proxy_port%;
+    server_name %domain_idn% %alias_idn%;
+    root        %docroot%;
+    index       index.html index.htm;
+    access_log  /var/log/nginx/domains/%domain%.log combined;
+    access_log  /var/log/nginx/domains/%domain%.bytes bytes;
+    error_log   /var/log/nginx/domains/%domain%.error.log error;
+
+    include %home%/%user%/conf/web/%domain%/nginx.forcessl.conf*;
+
+    location / {
+        include %home%/%user%/conf/web/%domain%/node_port.conf*;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    location /error/ {
+        alias %home%/%user%/web/%domain%/document_errors/;
+    }
+}

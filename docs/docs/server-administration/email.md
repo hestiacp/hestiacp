@@ -52,6 +52,20 @@ SMTP mail relay is the process of transferring an email from one server to anoth
 
 To setup create a account by the provider you want or use and follow their instruction to update your DNS. When completed you can enter the SMTP user account they provider in the settings under "Global SMTP" or under the "Edit mail domain" -> "SMTP relay"
 
+## How are emails sent from websites (PHP `mail()`) rate limited?
+
+Emails sent by a website through `sendmail` or PHP `mail()` are counted per hosting user and per hour. The limit is the **Rate limit** of the user's [package](../user-guide/packages.md#rate-limit), and 200 per hour for users that are not listed. All websites of the same user share one counter, and the sender address does not matter.
+
+Hestia keeps the limits in `/etc/exim4/user-limits` (one `user:limit` line each) and updates the file when a user is added, rebuilt, deleted or gets another package. Do not edit it by hand, and keep it readable by everyone (`root:root`, mode `0644`), otherwise Exim cannot read it and rejects the mail. Exim also logs a warning at half of the limit:
+
+```bash
+grep 'Sender rate' /var/log/exim4/mainlog
+```
+
+The limit applies to messages passed to `sendmail` on the command line (PHP `mail()`, most CMS). Programs that talk SMTP to `sendmail -bs` (the Symfony and Laravel `sendmail` transport) are not counted.
+
+Servers that customised the `acl_not_smtp` block of `/etc/exim4/exim4.conf.template` are not upgraded automatically. Replace the `acl_not_smtp` block with the one from `/usr/local/hestia/install/deb/exim/exim4.conf.template`, then run `update-exim4.conf` and restart Exim.
+
 ## I am unable to receive email
 
 If you are unable to receive emails, make sure you have setup your DNS properly. If you are using Cloudflare, disable the use of the proxy for `mail.domain.tld`.

@@ -47,6 +47,11 @@ if [ -z "$check_ckey" ]; then
 fi
 update_user_value "$user" "${key^^}" "$value"
 
+if [ "${key^^}" = 'RATE_LIMIT' ]; then
+	# The helper warns on failure; the new value is saved either way
+	update_exim_user_limit "$user" || true
+fi
+
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#

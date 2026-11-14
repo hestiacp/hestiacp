@@ -173,6 +173,9 @@ check_hestia_demo_mode
 # Changing user package
 change_user_package
 
+# Updating Exim per-user mail rate limit
+update_exim_user_limit "$user"
+
 # Update user shell
 shell_conf=$(cat "$HESTIA/data/packages/$package.pkg" | grep -m1 'SHELL' | cut -f 2 -d \')
 $BIN/v-change-user-shell "$user" "$shell_conf"

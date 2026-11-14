@@ -71,9 +71,76 @@ fi
 
 # create backup of the user.conf an database
 $BIN/v-backup-user-config $user
+
+restic_excludes=()
+if [ -e "$USER_DATA/backup-excludes.conf" ]; then
+	source_conf "$USER_DATA/backup-excludes.conf"
+
+	if [ "$WEB" = '*' ]; then
+		restic_excludes+=(--exclude "/home/$user/web/*")
+	elif [ -n "$WEB" ]; then
+		IFS=',' read -ra web_entries <<< "$WEB"
+		for entry in "${web_entries[@]}"; do
+			[ -z "$entry" ] && continue
+			IFS=':' read -ra parts <<< "$entry"
+			domain_part="${parts[0]}"
+			[ -z "$domain_part" ] && continue
+			if [ "${#parts[@]}" -eq 1 ]; then
+				restic_excludes+=(--exclude "/home/$user/web/$domain_part")
+			else
+				for ((i = 1; i < ${#parts[@]}; i++)); do
+					seg="${parts[$i]#/}"
+					seg="${seg%/}"
+					[ -n "$seg" ] && restic_excludes+=(--exclude "/home/$user/web/$domain_part/$seg")
+				done
+			fi
+		done
+	fi
+
+	if [ "$MAIL" = '*' ]; then
+		restic_excludes+=(--exclude "/home/$user/mail/*")
+	elif [ -n "$MAIL" ]; then
+		IFS=',' read -ra mail_entries <<< "$MAIL"
+		for entry in "${mail_entries[@]}"; do
+			[ -z "$entry" ] && continue
+			IFS=':' read -ra parts <<< "$entry"
+			domain_part="${parts[0]}"
+			[ -z "$domain_part" ] && continue
+			if [ "$domain_part" != '*' ]; then
+				domain_idn="$domain_part"
+				format_domain_idn
+				domain_part="$domain_idn"
+			fi
+			if [ "${#parts[@]}" -eq 1 ]; then
+				restic_excludes+=(--exclude "/home/$user/mail/$domain_part")
+			else
+				for ((i = 1; i < ${#parts[@]}; i++)); do
+					seg="${parts[$i]#/}"
+					seg="${seg%/}"
+					[ -n "$seg" ] && restic_excludes+=(--exclude "/home/$user/mail/$domain_part/$seg")
+				done
+			fi
+		done
+	fi
+
+	if [ "$USER" = '*' ]; then
+		while IFS= read -r udir; do
+			[ -z "$udir" ] && continue
+			restic_excludes+=(--exclude "/home/$user/$udir")
+		done < <(ls -A "/home/$user" | grep -Ev '^(backup|conf|web|dns|tmp|mail)$')
+	elif [ -n "$USER" ]; then
+		IFS=',' read -ra user_entries <<< "$USER"
+		for xpath in "${user_entries[@]}"; do
+			xpath="${xpath#/}"
+			xpath="${xpath%/}"
+			[ -n "$xpath" ] && restic_excludes+=(--exclude "/home/$user/$xpath")
+		done
+	fi
+fi
+
 export GOMAXPROCS=2
 export RESTIC_READ_CONCURRENCY=2
-ionice -c2 -n7 nice -n 19 restic --repo "${REPO%/}/$user" --limit-upload 10240 --read-concurrency 2 --password-file $USER_DATA/restic.conf backup /home/$user
+ionice -c2 -n7 nice -n 19 restic --repo "${REPO%/}/$user" --limit-upload 10240 --read-concurrency 2 --password-file $USER_DATA/restic.conf backup "${restic_excludes[@]}" /home/$user
 
 if [ $? -ne 0 ]; then
 	echo "Unable to create the backup" | $SENDMAIL -s "$subj" "$email" "yes"

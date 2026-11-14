@@ -319,7 +319,23 @@ if [[ "$FORCE" != 'true' ]]; then
 			exit 1
 		fi
 		if [[ "$existing" == *'"Key"'* ]]; then
-			echo "::error::Object already exists: s3://$R2_BUCKET/$key (bump pkgrev or set force=true)" >&2
+			# Packages reused by prepare-packages.py are byte-identical to the
+			# published object, so the generated index still matches. Anything
+			# else under an existing key is a rebuild and would cause a hash
+			# mismatch for clients.
+			local_sha="$(sha256sum "$deb" | cut -d' ' -f1)"
+			if ! remote_sha="$(
+				set -o pipefail
+				aws s3 cp "s3://$R2_BUCKET/$key" - --endpoint-url "$ENDPOINT" --only-show-errors | sha256sum | cut -d' ' -f1
+			)"; then
+				echo "::error::Could not download s3://$R2_BUCKET/$key for comparison" >&2
+				exit 1
+			fi
+			if [[ "$local_sha" == "$remote_sha" ]]; then
+				echo "==> $key already published with identical content; reusing"
+				continue
+			fi
+			echo "::error::Object already exists with different content: s3://$R2_BUCKET/$key (bump pkgrev or set force=true)" >&2
 			exit 1
 		fi
 	done < <(find "$REPO/pool" -type f -name '*.deb' -print0)

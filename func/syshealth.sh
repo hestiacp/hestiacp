@@ -618,8 +618,10 @@ function syshealth_repair_system_cronjobs() {
 # Adapt Port Listing in HESTIA NGINX Backend
 # Activates or deactivates port listing on IPV4 or/and IPV6 network interfaces
 function syshealth_adapt_hestia_nginx_listen_ports() {
-	# Detect "physical" NICs and bond interfaces only (virtual NICs created by Docker, WireGuard etc. are excluded)
-	physical_nics="$(ip -d -j link show | jq -r '.[] | if .link_type == "loopback" then empty elif .linkinfo.info_kind == "bond" then .ifname elif .linkinfo.info_kind then empty else .ifname end')"
+	ipv4_scope_global=""
+	ipv6_scope_global=""
+	# Detect physical NICs and host-level bond, PPPoE, VLAN, and bridge interfaces (virtual NICs created by Docker, WireGuard etc. are excluded)
+	physical_nics="$(ip -d -j link show | jq -r '.[] | if .link_type == "loopback" then empty elif (.linkinfo.info_kind == "bond" or .linkinfo.info_kind == "ppp" or .linkinfo.info_kind == "vlan") then .ifname elif (.linkinfo.info_kind == "bridge" and (.ifname | test("^(docker|br-)") | not)) then .ifname elif .linkinfo.info_kind then empty else .ifname end')"
 	if [ -z "$physical_nics" ]; then
 		physical_nics="$(ip -d -j link show | jq -r '.[] | if .link_type == "loopback" then empty else .ifname end')"
 	fi
@@ -632,9 +634,21 @@ function syshealth_adapt_hestia_nginx_listen_ports() {
 		fi
 	done
 
+	# Fallback to all non-loopback interfaces when global IPs are assigned to PPPoE, bridge, or VLAN interfaces
+	if [ -z "$ipv4_scope_global" ] && [ -z "$ipv6_scope_global" ]; then
+		for nic in $(ip -d -j link show | jq -r '.[] | if .link_type == "loopback" then empty else .ifname end'); do
+			if [ -z "$ipv4_scope_global" ]; then
+				ipv4_scope_global="$(ip -4 -d -j addr show "$nic" | jq -r '.[] | select(length > 0) | .addr_info[] | if .scope == "global" then .local else empty end')"
+			fi
+			if [ -z "$ipv6_scope_global" ]; then
+				ipv6_scope_global="$(ip -6 -d -j addr show "$nic" | jq -r '.[] | select(length > 0) | .addr_info[] | if .scope == "global" then .local else empty end')"
+			fi
+		done
+	fi
+
 	# Adapt port listing in nginx.conf depended on availability of IPV4 and IPV6 network interface
 	NGINX_CONF="/usr/local/hestia/nginx/conf/nginx.conf"
-	if [ -z "$ipv4_scope_global" ]; then
+	if [ -z "$ipv4_scope_global" ] && [ -n "$ipv6_scope_global" ]; then
 		sed -i 's/^\([ \t]*listen[ \t]*[0-9]\{1,5\}.*\)/#\1/' "$NGINX_CONF"
 	else
 		sed -i 's/#\([ \t]*listen[ \t]*[0-9]\{1,5\}.*\)/\1/' "$NGINX_CONF"

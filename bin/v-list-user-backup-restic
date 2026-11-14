@@ -37,6 +37,9 @@ is_format_valid 'user'
 is_system_enabled "$BACKUP_SYSTEM" 'BACKUP_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
+if [[ ! "$snapshot" =~ ^[a-fA-F0-9]{8,64}$ ]]; then
+	check_result "$E_INVALID" "Invalid snapshot ID format"
+fi
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
@@ -89,7 +92,8 @@ source_conf $HESTIA/conf/restic.conf
 # Stage in root-owned $BACKUP, not the user's home, to avoid races
 # where the user swaps the tmp dir before root reads/writes it
 tmpdir=$(mktemp -p "${BACKUP_TEMP:-$BACKUP}" -d)
-if ! restic --no-lock --repo "${REPO%/}/$user" --password-file "$USER_DATA/restic.conf" --json dump "$snapshot" "/home/$user/backup/backup.conf" > "$tmpdir/backup.conf"; then
+[ -n "$tmpdir" ] && [ -d "$tmpdir" ] || check_result "$E_DISK" "Unable to create temporary directory"
+if ! restic --no-lock --repo "${REPO%/}/$user" --password-file "$USER_DATA/restic.conf" --json dump -- "$snapshot" "/home/$user/backup/backup.conf" > "$tmpdir/backup.conf"; then
 	rm -fr "$tmpdir"
 	check_result "$E_NOTEXIST" "Unable to download from snapshot"
 fi

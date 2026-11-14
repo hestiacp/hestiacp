@@ -55,11 +55,13 @@ if [ ! -f "$USER_DATA/restic.conf" ]; then
 	check_result "$E_NOTEXIST" "Restic configuration for user $user does not exist"
 fi
 
-if ! forget_out=$(restic --repo "${REPO%/}/$user" --password-file "$USER_DATA/restic.conf" forget -- "$snapshot" 2>&1); then
-	check_result "$E_CONNECT" "Unable to delete Restic snapshot"
-fi
+forget_out=$(restic --repo "${REPO%/}/$user" --password-file "$USER_DATA/restic.conf" forget -- "$snapshot" 2>&1)
+forget_rc=$?
 if printf '%s\n' "$forget_out" | grep -qi "no matching ID found"; then
 	check_result "$E_NOTEXIST" "Snapshot $snapshot does not exist"
+fi
+if [ "$forget_rc" -ne 0 ]; then
+	check_result "$E_CONNECT" "Unable to delete Restic snapshot"
 fi
 
 # Preserve the last known count when the repository is unavailable or returns invalid JSON.

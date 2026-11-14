@@ -26,7 +26,7 @@ if (empty($_GET["snapshot"])) {
 	exec(HESTIA_CMD . "v-list-user-backups-restic $user json", $output, $return_var);
 	$data = json_decode(implode("", $output), true);
 	if (is_array($data)) {
-		$panel[$user]["U_BACKUPS_INCREMENTAL"] = count($data);
+		$panel[$user_plain]["U_BACKUPS_INCREMENTAL"] = count($data);
 		if ($_SESSION["userSortOrder"] == "name") {
 			usort($data, function ($a, $b) {
 				return strcmp($a["short_id"] ?? "", $b["short_id"] ?? "");
@@ -50,7 +50,7 @@ if (empty($_GET["snapshot"])) {
 			);
 		}
 	} else {
-		$data = "";
+		$data = [];
 	}
 
 	render_page($user, $TAB, "list_backup_incremental");

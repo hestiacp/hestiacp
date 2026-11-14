@@ -1,0 +1,87 @@
+#=========================================================================#
+# Default Web Domain Template                                             #
+# DO NOT MODIFY THIS FILE! CHANGES WILL BE LOST WHEN REBUILDING DOMAINS   #
+# https://hestiacp.com/docs/server-administration/web-templates.html      #
+#=========================================================================#
+
+server {
+	listen      %ip%:%web_port%;
+	server_name %domain_idn% %alias_idn%;
+	root        %docroot%;
+	index       index.php index.html index.htm;
+	access_log  /var/log/nginx/domains/%domain%.log combined;
+	access_log  /var/log/nginx/domains/%domain%.bytes bytes;
+	error_log   /var/log/nginx/domains/%domain%.error.log error;
+
+	include %home%/%user%/conf/web/%domain%/nginx.forcessl.conf*;
+
+	location = /favicon.ico {
+		try_files /favicon.ico =204;
+	}
+
+	location ~ /\.(?!well-known\/) {
+		deny all;
+		return 404;
+	}
+
+	location / {
+		try_files $uri $uri/ =404;
+
+		# Tag Manager preview containers must never be cached
+		location ~ ^/js/container_.*_preview\.js$ {
+			expires off;
+			add_header Cache-Control "private, no-cache, no-store";
+		}
+
+		# matomo.js is embedded on other sites, so no referer check and a short expiry
+		location ~* ^.+\.(jpeg|jpg|png|webp|gif|bmp|ico|svg|css|js|woff|woff2|ttf|eot|mp3|mp4|wav|ogg)$ {
+			expires 1h;
+			fastcgi_hide_header "Set-Cookie";
+		}
+
+		location ~* ^/(?:index|matomo|piwik|js/index|plugins/HeatmapSessionRecording/configs)\.php$ {
+			try_files $uri =404;
+
+			include /etc/nginx/fastcgi_params;
+
+			fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+
+			fastcgi_pass %backend_lsnr%;
+
+			include %home%/%user%/conf/web/%domain%/nginx.fastcgi_cache.conf*;
+		}
+
+		location ~ ^/(?:libs|vendor|plugins|misc|node_modules)/ {
+			return 403;
+		}
+	}
+
+	location ^~ /config/ { return 403; }
+	location ^~ /tmp/ { return 403; }
+	location ^~ /core/ { return 403; }
+	location ^~ /lang/ { return 403; }
+	location = /console { return 404; }
+
+	# Any other attempt to access PHP files returns a 404.
+	location ~* ^.+\.php$ {
+		return 404;
+	}
+
+	# Return a 404 for all text files.
+	location ~* ^/(?:README|LICENSE[^.]*|LEGALNOTICE|CHANGELOG|CONTRIBUTING|SECURITY|PRIVACY)(?:\.txt|\.md)*$ {
+		return 404;
+	}
+
+	location /error/ {
+		alias %home%/%user%/web/%domain%/document_errors/;
+	}
+
+	location /vstats/ {
+		alias   %home%/%user%/web/%domain%/stats/;
+		include %home%/%user%/web/%domain%/stats/auth.conf*;
+	}
+
+	include /etc/nginx/conf.d/phpmyadmin.inc*;
+	include /etc/nginx/conf.d/phppgadmin.inc*;
+	include %home%/%user%/conf/web/%domain%/nginx.conf_*;
+}

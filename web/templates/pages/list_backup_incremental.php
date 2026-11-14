@@ -97,7 +97,7 @@
 					<ul class="units-table-row-actions">
 						<li class="units-table-row-action u-mr10 shortcut-b" data-key-action="href">
 							<a
-								class="units-table-row-action-link"
+								class="units-table-row-action-link data-controls"
 								href="/list/backup/incremental/?<?= tohtml(http_build_query(["snapshot" => $value['short_id'], "browse" => 'yes', "token" => $_SESSION["token"]])) ?>"
 								title="<?= tohtml( _("Browse")) ?>"
 							>
@@ -105,14 +105,26 @@
 								<span class="u-hide-desktop"><?= tohtml( _("Browse")) ?></span>
 							</a>
 						</li>
-						<li class="units-table-row-action shortcut-enter" data-key-action="href">
+						<li class="units-table-row-action u-mr10 shortcut-enter" data-key-action="href">
 							<a
-								class="units-table-row-action-link"
+								class="units-table-row-action-link data-controls"
 								href="/list/backup/incremental/?<?= tohtml(http_build_query(["snapshot" => $value['short_id'], "token" => $_SESSION["token"]])) ?>"
 								title="<?= tohtml( _("Restore")) ?>"
 							>
 								<i class="fas fa-arrow-rotate-left icon-green"></i>
 								<span class="u-hide-desktop"><?= tohtml( _("Restore")) ?></span>
+							</a>
+						</li>
+						<li class="units-table-row-action shortcut-delete" data-key-action="js">
+							<a
+								class="units-table-row-action-link data-controls js-confirm-action"
+								href="/delete/backup/incremental/?<?= tohtml(http_build_query(["snapshot" => $value['short_id'], "token" => $_SESSION["token"]])) ?>"
+								title="<?= tohtml( _("Delete")) ?>"
+								data-confirm-title="<?= tohtml( _("Delete")) ?>"
+								data-confirm-message="<?= tohtml(sprintf(_("Are you sure you want to delete backup %s?"), $value['short_id'])) ?>"
+							>
+								<i class="fas fa-trash icon-red"></i>
+								<span class="u-hide-desktop"><?= tohtml( _("Delete")) ?></span>
 							</a>
 						</li>
 					</ul>

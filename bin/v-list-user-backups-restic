@@ -48,7 +48,7 @@ source_conf $HESTIA/conf/restic.conf
 
 function json_list() {
 	local snapshots_json u_snapshots
-	snapshots_json=$(restic --repo "${REPO%/}/$user" --password-file "$USER_DATA/restic.conf" --json snapshots) || return $?
+	snapshots_json=$(restic --no-lock --repo "${REPO%/}/$user" --password-file "$USER_DATA/restic.conf" --json snapshots) || return $?
 	u_snapshots=$(printf '%s' "$snapshots_json" | jq -er 'if type == "array" and all(.[]; type == "object" and (.id | type == "string")) then length else error("Invalid Restic snapshot list") end') || return $?
 	if grep -q "^U_BACKUPS_INCREMENTAL=" "$USER_DATA/user.conf"; then
 		update_user_value "$user" '$U_BACKUPS_INCREMENTAL' "$u_snapshots"
@@ -59,7 +59,7 @@ function json_list() {
 }
 
 function plain_list() {
-	restic --repo "${REPO%/}/$user" --password-file $USER_DATA/restic.conf snapshots
+	restic --no-lock --repo "${REPO%/}/$user" --password-file $USER_DATA/restic.conf snapshots
 }
 
 # Listing data

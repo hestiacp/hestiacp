@@ -89,10 +89,17 @@ source_conf $HESTIA/conf/restic.conf
 # Stage in root-owned $BACKUP, not the user's home, to avoid races
 # where the user swaps the tmp dir before root reads/writes it
 tmpdir=$(mktemp -p "${BACKUP_TEMP:-$BACKUP}" -d)
-restic --repo "${REPO%/}/$user" --password-file "$USER_DATA/restic.conf" --json dump "$snapshot" "/home/$user/backup/backup.conf" > "$tmpdir/backup.conf"
+if ! restic --no-lock --repo "${REPO%/}/$user" --password-file "$USER_DATA/restic.conf" --json dump "$snapshot" "/home/$user/backup/backup.conf" > "$tmpdir/backup.conf"; then
+	rm -fr "$tmpdir"
+	check_result "$E_NOTEXIST" "Unable to download from snapshot"
+fi
 
 parse_untrusted_conf_file "$tmpdir/backup.conf" \
-	BACKUP TYPE SIZE WEB DNS MAIL DB CRON UDIR RUNTIME TIME DATE || exit $?
+	BACKUP TYPE SIZE WEB DNS MAIL DB CRON UDIR RUNTIME TIME DATE || {
+	rc=$?
+	rm -fr "$tmpdir"
+	exit "$rc"
+}
 
 rm -fr "$tmpdir"
 # Listing data

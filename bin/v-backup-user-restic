@@ -61,7 +61,7 @@ if [ ! -f "$USER_DATA/restic.conf" ]; then
 	fi
 else
 	# Check if repo exists and is accessible with restic key
-	restic --repo "${REPO%/}/$user" --password-file $USER_DATA/restic.conf --json snapshots > /dev/null
+	restic --no-lock --repo "${REPO%/}/$user" --password-file $USER_DATA/restic.conf --json snapshots > /dev/null
 	if [ $? -ne 0 ]; then
 		# Send an email
 		echo "Unable to open restic backup. It might not exists or key is incorrect" | $SENDMAIL -s "$subj" "$email" "yes"
@@ -99,7 +99,7 @@ fi
 restic --repo "${REPO%/}/$user" --password-file $USER_DATA/restic.conf forget $restic_prune --prune
 
 # Preserve the last known count when the repository is unavailable or returns invalid JSON.
-if snapshots_json=$(restic --repo "${REPO%/}/$user" --password-file "$USER_DATA/restic.conf" --json snapshots 2> /dev/null) \
+if snapshots_json=$(restic --no-lock --repo "${REPO%/}/$user" --password-file "$USER_DATA/restic.conf" --json snapshots 2> /dev/null) \
 	&& u_snapshots=$(printf '%s' "$snapshots_json" | jq -er 'if type == "array" and all(.[]; type == "object" and (.id | type == "string")) then length else error("Invalid Restic snapshot list") end'); then
 	if grep -q "^U_BACKUPS_INCREMENTAL=" "$USER_DATA/user.conf"; then
 		update_user_value "$user" '$U_BACKUPS_INCREMENTAL' "$u_snapshots"

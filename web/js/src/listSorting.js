@@ -56,7 +56,28 @@ export default function handleListSorting() {
 			faIcon.classList.add(span.classList.contains('up') ? 'fa-arrow-up-a-z' : 'fa-arrow-down-a-z');
 
 			// Sort units and reattach them to the DOM
+			unitsContainer.classList.toggle('is-domain-grouped', state.sort_par === 'sort-name');
 			const units = Array.from(document.querySelectorAll('.js-unit')).sort((a, b) => {
+				if (
+					state.sort_par === 'sort-name' &&
+					a.hasAttribute('data-sort-domain') &&
+					b.hasAttribute('data-sort-domain')
+				) {
+					const aDomain = a.getAttribute('data-sort-domain');
+					const bDomain = b.getAttribute('data-sort-domain');
+					if (aDomain !== bDomain) {
+						return (aDomain < bDomain ? -1 : 1) * -state.sort_direction;
+					}
+					const aSubdomain = a.getAttribute('data-sort-subdomain');
+					const bSubdomain = b.getAttribute('data-sort-subdomain');
+					// Keep the parent above its children in either sorting direction.
+					if (aSubdomain === '' || bSubdomain === '') {
+						return aSubdomain === bSubdomain ? 0 : aSubdomain === '' ? -1 : 1;
+					}
+					return aSubdomain === bSubdomain
+						? 0
+						: (aSubdomain < bSubdomain ? -1 : 1) * -state.sort_direction;
+				}
 				const aAttr = a.getAttribute(`data-${state.sort_par}`);
 				const bAttr = b.getAttribute(`data-${state.sort_par}`);
 

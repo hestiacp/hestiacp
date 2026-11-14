@@ -2,9 +2,15 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
+			<a class="button button-secondary button-back js-button-back" href="/list/backup/">
+				<i class="fas fa-arrow-left icon-blue"></i><?= tohtml( _("Back")) ?>
+			</a>
 		<?php if ($read_only !== true) { ?>
 			<a href="/schedule/backup/incremental/?<?= tohtml(http_build_query(["token" => $_SESSION["token"]])) ?>" class="button button-secondary js-button-create">
 				<i class="fas fa-circle-plus icon-green"></i><?= tohtml( _("Create Snapshot")) ?>
+			</a>
+			<a href="/list/backup/exclusions/" class="button button-secondary">
+				<i class="fas fa-folder-minus icon-orange"></i><?= tohtml( _("Backup Exclusions")) ?>
 			</a>
 		<?php } ?>
 		</div>
@@ -112,7 +118,7 @@
 <footer class="app-footer">
 	<div class="container app-footer-inner">
 		<p>
-			<?php printf(ngettext("%d snapshot", "%d snapshots", count($data)), count($data)); ?>
+			<?php printf(ngettext("%d snapshot", "%d snapshots", $i), $i); ?>
 		</p>
 	</div>
 </footer>

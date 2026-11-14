@@ -1479,6 +1479,32 @@ if (!empty($_POST["save"])) {
 		}
 	}
 
+	// Change TWOFA_TRUSTED_DEVICE_DAYS
+	if (empty($_SESSION["error_msg"]) && isset($_POST["v_twofa_trusted_device_days"])) {
+		if (
+			$_POST["v_twofa_trusted_device_days"] !=
+			($_SESSION["TWOFA_TRUSTED_DEVICE_DAYS"] ?? "0")
+		) {
+			if (
+				!preg_match('/^\d{1,3}$/', $_POST["v_twofa_trusted_device_days"]) ||
+				$_POST["v_twofa_trusted_device_days"] > 365
+			) {
+				$_SESSION["error_msg"] = _("Trusted 2FA device days must be between 0 and 365.");
+			} else {
+				exec(
+					HESTIA_CMD .
+						"v-change-sys-config-value TWOFA_TRUSTED_DEVICE_DAYS " .
+						quoteshellarg((string) (int) $_POST["v_twofa_trusted_device_days"]),
+					$output,
+					$return_var,
+				);
+				check_return_code($return_var, $output);
+				unset($output);
+			}
+			$v_security_adv = "yes";
+		}
+	}
+
 	// Change POLICY_CSRF_STRICTNESS
 	if (empty($_SESSION["error_msg"])) {
 		if ($_POST["v_policy_csrf_strictness"] != $_SESSION["POLICY_CSRF_STRICTNESS"]) {

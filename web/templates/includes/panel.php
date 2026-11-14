@@ -452,12 +452,17 @@
 						<li class="main-menu-item">
 							<a class="main-menu-item-link <?php if ($TAB == "BACKUP") {
        	echo "active";
-       } ?>" href="/list/backup/" title="<?= _("Backups") ?>: <?= $panel[$user]["U_BACKUPS"] ?>&#13;<?= _("Limit") ?>: <?= $panel[$user]["BACKUPS"] == "unlimited" ? "∞" : $panel[$user]["BACKUPS"] ?>">
+       } ?>" href="/list/backup/" title="<?= _("Backups") ?>: <?= $panel[$user]["U_BACKUPS"] ?>&#13;<?= _("Limit") ?>: <?= $panel[$user]["BACKUPS"] == "unlimited" ? "∞" : $panel[$user]["BACKUPS"] ?><?php if ($panel[$user]["BACKUPS_INCREMENTAL"] == "yes") { ?>&#13;<?= _("Snapshots") ?>: <?= $panel[$user]["U_BACKUPS_INCREMENTAL"] ?? 0 ?><?php } ?>">
 								<p class="main-menu-item-label"><?= _("BACKUP") ?><i class="fas fa-file-zipper"></i></p>
 								<ul class="main-menu-stats">
 									<li>
 										<?= _("Backups") ?>: <?= $panel[$user]["U_BACKUPS"] ?> / <?= $panel[$user]["BACKUPS"] == "unlimited" ? "<span class=\"u-text-bold\">∞</span>" : $panel[$user]["BACKUPS"] ?>
 									</li>
+									<?php if ($panel[$user]["BACKUPS_INCREMENTAL"] == "yes") { ?>
+										<li>
+											<?= _("Snapshots") ?>: <?= $panel[$user]["U_BACKUPS_INCREMENTAL"] ?? 0 ?>
+										</li>
+									<?php } ?>
 								</ul>
 							</a>
 						</li>

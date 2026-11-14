@@ -20,6 +20,7 @@ protocol=$(echo "$protocol" | tr '[:lower:]' '[:upper:]')
 
 # Defining absolute path to iptables
 iptables="/sbin/iptables"
+ip6tables="/sbin/ip6tables"
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -108,6 +109,20 @@ if [ $? -eq 0 ]; then
 		port_str="--dport $port"
 	fi
 	$iptables -I INPUT -p $protocol $port_str -j fail2ban-$chain
+fi
+
+# Adding IPv6 chain if the IPv6 firewall is enabled
+if [ -f "$HESTIA/data/firewall/rules6.conf" ] && [ -x "$ip6tables" ]; then
+	if ! $ip6tables -L fail2ban-$chain &> /dev/null; then
+		$ip6tables -N fail2ban-$chain
+		$ip6tables -A fail2ban-$chain -j RETURN
+		if [[ "$port" =~ ,|-|: ]]; then
+			port_str="-m multiport --dports $port"
+		else
+			port_str="--dport $port"
+		fi
+		$ip6tables -I INPUT -p $protocol $port_str -j fail2ban-$chain
+	fi
 fi
 
 # Preserving chain

@@ -17,10 +17,17 @@ is_ip_owner() {
 	fi
 }
 
+# Check if ip address is already registered in the system (any version)
+is_ip_exists() {
+	local check_ip="${1:-$ip}"
+	[ -e "$HESTIA/data/ips/$check_ip" ]
+}
+
 # Check if ip address is free
 is_ip_free() {
-	if [ -e "$HESTIA/data/ips/$ip" ]; then
-		check_result "$E_EXISTS" "$ip is already exists"
+	local check_ip="${1:-$ip}"
+	if [ -e "$HESTIA/data/ips/$check_ip" ]; then
+		check_result "$E_EXISTS" "$check_ip is already exists"
 	fi
 }
 
@@ -177,7 +184,9 @@ get_real_ip() {
 	else
 		nat=$(grep -H "^NAT='$1'" $HESTIA/data/ips/* | head -n1)
 		if [ -n "$nat" ]; then
-			echo "$nat" | cut -f 1 -d : | cut -f 7 -d /
+			# sed on the literal ":NAT=" boundary (not a bare ":" cut) so IPv6
+			# filenames, which themselves contain colons, aren't truncated.
+			echo "$nat" | sed "s/:NAT=.*//" | xargs -I{} basename {} 2> /dev/null
 		fi
 	fi
 }
@@ -250,6 +259,13 @@ get_user_ip() {
 	fi
 }
 
+# Get user ip, skipped on IPv6-only servers (IPv6 but no IPv4 address available)
+get_user_ip_if_available() {
+	if [ -n "$(get_user_ips)" ] || [ -z "$(get_user_ip6s)" ]; then
+		get_user_ip
+	fi
+}
+
 # Validate ip address
 is_ip_valid() {
 	set -- "${1//[[:space:]]/}" "${@:2}"
@@ -277,6 +293,68 @@ is_ip_valid() {
 		get_user_owner
 		if [ "$ip_owner" != "$user" ] && [ "$ip_owner" != "$owner" ]; then
 			check_result "$E_FORBIDEN" "$user user can't use IP $1"
+		fi
+	fi
+}
+
+# === IPv6 specific functions ===
+
+# Check if the given address is an IPv6 address (IPv6 always contains ":")
+is_ipv6_address() {
+	[[ "$1" == *:* ]]
+}
+
+# Normalize an IPv6 address to its canonical compressed form (RFC 5952)
+normalize_ipv6() {
+	local normalized
+	normalized=$($HESTIA_PHP -r '$ip = @inet_pton($argv[1]); echo ($ip === false) ? "" : inet_ntop($ip);' "$1" 2> /dev/null)
+	echo "${normalized:-$1}"
+}
+
+# Get user ip6s
+get_user_ip6s() {
+	local ip_file ip_name ip_owner ip_status dedicated='' shared=''
+	for ip_file in "$HESTIA"/data/ips/*:*; do
+		[ -f "$ip_file" ] || continue
+		ip_name="${ip_file##*/}"
+		ip_owner=$(grep "^OWNER=" "$ip_file" | cut -f 2 -d \')
+		ip_status=$(grep "^STATUS=" "$ip_file" | cut -f 2 -d \')
+		if [ "$ip_owner" = "$user" ]; then
+			dedicated="$dedicated $ip_name"
+		elif [ "$ip_owner" = "$ROOT_USER" ] && [ "$ip_status" = 'shared' ]; then
+			shared="$shared $ip_name"
+		fi
+	done
+	for ip_name in $dedicated $shared; do
+		echo "$ip_name"
+	done
+}
+
+# Get user ipv6 (sets $ipv6 and $local_ipv6, empty if no IPv6 is available)
+get_user_ipv6() {
+	ipv6=$(get_user_ip6s | head -n1)
+	local_ipv6="$ipv6"
+}
+
+# Validate ipv6 address
+is_ipv6_valid() {
+	local_ipv6="$1"
+	if [ -z "$local_ipv6" ] || ! is_ipv6_address "$local_ipv6"; then
+		check_result "$E_INVALID" "invalid IPv6 address :: $1"
+	fi
+	if [ ! -f "$HESTIA/data/ips/$1" ]; then
+		check_result "$E_NOTEXIST" "IPv6 $1 doesn't exist"
+	fi
+	if [ -n "$2" ]; then
+		ip_data=$(cat "$HESTIA/data/ips/$1")
+		ip_owner=$(echo "$ip_data" | grep OWNER= | cut -f2 -d \')
+		ip_status=$(echo "$ip_data" | grep STATUS= | cut -f2 -d \')
+		if [ "$ip_owner" != "$user" ] && [ "$ip_status" = 'dedicated' ]; then
+			check_result "$E_FORBIDEN" "$user user can't use IPv6 $1"
+		fi
+		get_user_owner
+		if [ "$ip_owner" != "$user" ] && [ "$ip_owner" != "$owner" ]; then
+			check_result "$E_FORBIDEN" "$user user can't use IPv6 $1"
 		fi
 	fi
 }

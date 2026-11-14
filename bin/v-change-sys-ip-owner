@@ -3,6 +3,7 @@
 # options: IP USER
 #
 # example: v-change-sys-ip-owner 203.0.113.1 admin
+# example: v-change-sys-ip-owner 2001:db8::1 admin
 #
 # This function of changing IP address ownership.
 
@@ -28,7 +29,13 @@ source_conf "$HESTIA/conf/hestia.conf"
 #----------------------------------------------------------#
 
 check_args '2' "$#" 'IP USER'
-is_format_valid 'ip' 'user'
+if is_ipv6_address "$ip"; then
+	is_ipv6_format_valid "$ip"
+	ip=$(normalize_ipv6 "$ip")
+	is_format_valid 'user'
+else
+	is_format_valid 'ip' 'user'
+fi
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 is_ip_valid "$ip"

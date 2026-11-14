@@ -178,3 +178,140 @@ function display_title($tab) {
 	$array2 = [$tab, get_hostname(), $_SERVER["REMOTE_ADDR"], $_SESSION["APP_NAME"]];
 	return str_replace($array1, $array2, $_SESSION["TITLE"]);
 }
+
+/**
+ * Format a byte count as a human readable string (e.g. "52.4 MB").
+ *
+ * @param int|float|string|null $bytes
+ * @param int $precision
+ * @return string
+ */
+function humanize_bytes($bytes, $precision = 1) {
+	if (!is_numeric($bytes) || $bytes <= 0) {
+		return "0 B";
+	}
+	$units = ["B", "KB", "MB", "GB", "TB"];
+	$i = min((int) floor(log((float) $bytes, 1024)), count($units) - 1);
+	$value = $bytes / 1024 ** $i;
+	return number_format($value, $i === 0 ? 0 : $precision) . " " . $units[$i];
+}
+
+/**
+ * Format a duration in seconds as a compact string (e.g. "2d 3h", "5m 12s").
+ *
+ * @param int|string|null $seconds
+ * @return string
+ */
+function humanize_duration($seconds) {
+	if (!is_numeric($seconds) || $seconds < 0) {
+		return "-";
+	}
+	$seconds = (int) $seconds;
+	$days = intdiv($seconds, 86400);
+	$hours = intdiv($seconds % 86400, 3600);
+	$minutes = intdiv($seconds % 3600, 60);
+	$secs = $seconds % 60;
+	if ($days > 0) {
+		return $days . "d " . $hours . "h";
+	}
+	if ($hours > 0) {
+		return $hours . "h " . $minutes . "m";
+	}
+	if ($minutes > 0) {
+		return $minutes . "m " . $secs . "s";
+	}
+	return $secs . "s";
+}
+
+/**
+ * Map a web domain app's systemd ActiveState to an icon and label.
+ *
+ * @param string|null $state
+ * @return array{icon: string, color: string, label: string}
+ */
+function get_web_app_state($state) {
+	switch ($state) {
+		case "active":
+			return [
+				"icon" => "fa-circle-check icon-green",
+				"color" => "icon-green",
+				"label" => _("Running"),
+			];
+		case "failed":
+			return [
+				"icon" => "fa-circle-xmark icon-red",
+				"color" => "icon-red",
+				"label" => _("Failed"),
+			];
+		case "activating":
+		case "reloading":
+			return [
+				"icon" => "fa-circle-notch icon-orange",
+				"color" => "icon-orange",
+				"label" => _("Starting"),
+			];
+		case "deactivating":
+			return [
+				"icon" => "fa-circle-notch icon-orange",
+				"color" => "icon-orange",
+				"label" => _("Stopping"),
+			];
+		default:
+			return ["icon" => "fa-circle-minus", "color" => "", "label" => _("Stopped")];
+	}
+}
+
+/**
+ * List the Node.js versions usable for web domain apps.
+ *
+ * @return array<string, string> VERSION key => installed version (e.g. "system" => "v24.11.0")
+ */
+function list_web_app_node_versions() {
+	exec(HESTIA_CMD . "v-list-sys-nodejs json", $output, $return_var);
+	$versions = [];
+	if ($return_var == 0) {
+		$data = json_decode(implode("", $output), true);
+		if (is_array($data)) {
+			foreach ($data as $key => $value) {
+				$versions[(string) $key] = $value["VERSION"] ?? "";
+			}
+		}
+	}
+	// Offer "system" only when it is installed, or as the only (failing with a
+	// clear message) choice when no Node.js is available at all
+	if (empty($versions)) {
+		$versions = ["system" => ""];
+	}
+	return $versions;
+}
+
+/**
+ * Replace the environment (.env) of a web domain app.
+ *
+ * @param string $user Already shell-quoted user name
+ * @param string $domain Domain name (unquoted)
+ * @param string $env Dotenv text
+ * @param string $restart "yes" or "no"
+ * @return array{0: int, 1: array} [return code, output lines]
+ */
+function save_web_app_env($user, $domain, $env, $restart = "yes") {
+	$env = str_replace("\r\n", "\n", $env);
+	$env = rtrim($env) . "\n";
+	$tmpfile = tempnam("/tmp", "hst_");
+	file_put_contents($tmpfile, $env);
+	exec(
+		HESTIA_CMD .
+			"v-change-web-domain-app-env " .
+			$user .
+			" " .
+			quoteshellarg($domain) .
+			" " .
+			quoteshellarg($tmpfile) .
+			" " .
+			quoteshellarg($restart),
+		$output,
+		$return_var,
+	);
+	unlink($tmpfile);
+	return [$return_var, $output];
+}

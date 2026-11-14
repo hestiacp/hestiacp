@@ -491,6 +491,14 @@ rebuild_web_domain_conf() {
 		cd_user_dir "$user" "web/$domain" || exit
 		chown --no-dereference "$user:www-data" -- public_*html
 	)
+
+	# Web domain application service (subshell: app values must not leak)
+	if [ -f "$USER_DATA/app.conf" ] && grep -q "^DOMAIN='$domain' " "$USER_DATA/app.conf"; then
+		(
+			source "$HESTIA/func/app.sh"
+			sync_app_service "$user" "$domain"
+		)
+	fi
 }
 # DNS domain rebuild
 rebuild_dns_domain_conf() {

@@ -1,0 +1,69 @@
+#!/bin/bash
+# info: restart web domain application
+# options: USER DOMAIN
+#
+# example: v-restart-web-domain-app admin example.com
+#
+# This function restarts the application of a web domain (it is started when stopped).
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+domain=$2
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
+source $HESTIA/func/domain.sh
+# shellcheck source=/usr/local/hestia/func/app.sh
+source $HESTIA/func/app.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+# Additional argument formatting
+format_domain
+format_domain_idn
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '2' "$#" 'USER DOMAIN'
+is_format_valid 'user' 'domain'
+is_object_valid 'user' 'USER' "$user"
+is_object_valid 'web' 'DOMAIN' "$domain"
+is_app_valid "$domain"
+is_object_unsuspended 'user' 'USER' "$user"
+is_object_unsuspended 'web' 'DOMAIN' "$domain"
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+update_app_value "$domain" '$STATUS' 'running'
+sync_app_service "$user" "$domain" 'yes'
+unit=$(app_unit_name "$user" "$domain")
+sleep 1
+if ! systemctl is-active -q "$unit"; then
+	journalctl -u "$unit" -n 20 --no-pager -o cat 2> /dev/null
+	check_result "$E_RESTART" "application of $domain failed to start"
+fi
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Logging
+$BIN/v-log-action "$user" "Info" "Web" "Application restarted (Domain: $domain)."
+log_event "$OK" "$ARGUMENTS"
+
+exit

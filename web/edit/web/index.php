@@ -166,9 +166,18 @@ unset($output);
 
 $v_ip_public = empty($ips[$v_ip]["NAT"]) ? $v_ip : $ips[$v_ip]["NAT"];
 
+// The "app" template is managed by web domain apps (/edit/app/): only list it
+// when the domain already uses it
+function hide_app_template($list, $current) {
+	if (!is_array($list) || $current === "app") {
+		return $list;
+	}
+	return array_values(array_filter($list, fn($tpl) => $tpl !== "app"));
+}
+
 // List web templates
 exec(HESTIA_CMD . "v-list-web-templates json", $output, $return_var);
-$templates = json_decode(implode("", $output), true);
+$templates = hide_app_template(json_decode(implode("", $output), true), $v_template);
 unset($output);
 
 // List backend templates
@@ -181,7 +190,10 @@ if (!empty($_SESSION["WEB_BACKEND"])) {
 // List proxy templates
 if (!empty($_SESSION["PROXY_SYSTEM"])) {
 	exec(HESTIA_CMD . "v-list-web-templates-proxy json", $output, $return_var);
-	$proxy_templates = json_decode(implode("", $output), true);
+	$proxy_templates = hide_app_template(
+		json_decode(implode("", $output), true),
+		$v_proxy_template,
+	);
 	unset($output);
 }
 

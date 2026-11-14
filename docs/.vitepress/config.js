@@ -109,6 +109,7 @@ function sidebarDocs() {
 				{ text: 'Packages', link: '/docs/user-guide/packages' },
 				{ text: 'Statistics', link: '/docs/user-guide/statistics' },
 				{ text: 'Users', link: '/docs/user-guide/users' },
+				{ text: 'Web apps (Node.js, Python)', link: '/docs/user-guide/web-apps' },
 				{ text: 'Web domains', link: '/docs/user-guide/web-domains' },
 			],
 		},

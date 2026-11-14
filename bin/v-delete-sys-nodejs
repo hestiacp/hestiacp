@@ -1,0 +1,62 @@
+#!/bin/bash
+# info: delete Node.js version for web domain applications
+# options: VERSION
+#
+# example: v-delete-sys-nodejs 20
+#
+# This function removes a Node.js version installed with v-add-sys-nodejs.
+# It refuses while web domain applications still use that version.
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Argument definition
+version=$1
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/app.sh
+source $HESTIA/func/app.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '1' "$#" 'VERSION'
+if ! [[ "$version" =~ ^[0-9]{2,3}$ ]]; then
+	check_result "$E_INVALID" "invalid Node.js major version :: $version"
+fi
+if [ ! -d "$APP_NODE_DIR/$version" ]; then
+	check_result "$E_NOTEXIST" "Node.js $version is not installed"
+fi
+
+users=$(grep -l "RUNTIME='node' VERSION='$version'" "$HESTIA"/data/users/*/app.conf 2> /dev/null \
+	| xargs -r -n1 dirname | xargs -r -n1 basename | tr '\n' ' ')
+if [ -n "$users" ]; then
+	check_result "$E_INUSE" "Node.js $version is used by applications of: $users"
+fi
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+rm -rf "${APP_NODE_DIR:?}/$version"
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Logging
+$BIN/v-log-action "system" "Info" "System" "Node.js $version removed."
+log_event "$OK" "$ARGUMENTS"
+
+exit

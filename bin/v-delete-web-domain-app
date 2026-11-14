@@ -1,0 +1,83 @@
+#!/bin/bash
+# info: delete web domain application
+# options: USER DOMAIN [RESTART]
+#
+# example: v-delete-web-domain-app admin example.com
+#
+# This function stops and removes the application service of a web domain
+# and restores the template that was active before. The application files
+# and their folder are kept.
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+domain=$2
+restart=$3
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
+source $HESTIA/func/domain.sh
+# shellcheck source=/usr/local/hestia/func/app.sh
+source $HESTIA/func/app.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+# Additional argument formatting
+format_domain
+format_domain_idn
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '2' "$#" 'USER DOMAIN [RESTART]'
+is_format_valid 'user' 'domain' 'restart'
+is_object_valid 'user' 'USER' "$user"
+is_object_valid 'web' 'DOMAIN' "$domain"
+is_app_valid "$domain"
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+get_app_values "$domain"
+tpl_type="$TPL_TYPE"
+prev_tpl="$PREV_TPL"
+
+# Stop and remove the service
+delete_app_unit "$user" "$domain"
+rm -f "$(app_env_file "$user" "$domain")"
+
+# Remove the app before switching templates so %app_port% is no longer set
+sed -i "/^DOMAIN='$domain' /d" "$USER_DATA/app.conf"
+
+# Restore the previous template. A suspended domain serves the "suspended"
+# template, so only record the template it gets back when unsuspended.
+web_suspended=$(get_object_value 'web' 'DOMAIN' "$domain" '$SUSPENDED')
+if [ "$web_suspended" != 'yes' ]; then
+	app_disable_template "$user" "$domain" "$restart" "$tpl_type" "$prev_tpl"
+elif [ "$tpl_type" = 'proxy' ]; then
+	update_object_value 'web' 'DOMAIN' "$domain" '$PROXY' "${prev_tpl:-default}"
+else
+	update_object_value 'web' 'DOMAIN' "$domain" '$TPL' "${prev_tpl:-default}"
+fi
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Logging
+$BIN/v-log-action "$user" "Info" "Web" "Application deleted (Domain: $domain)."
+log_event "$OK" "$ARGUMENTS"
+
+exit

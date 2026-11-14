@@ -56,6 +56,7 @@ function setup() {
 
 @test "Web Config test" {
     for template in $(v-list-web-templates plain); do
+        [ "$template" = app ] && continue # managed by v-add-web-domain-app
         run v-change-web-domain-tpl $user testhestiacp.com $template
         assert_success
         refute_output
@@ -65,6 +66,7 @@ function setup() {
 @test "Proxy Config test" {
     if [ "$PROXY_SYSTEM" = "nginx" ]; then
         for template in $(v-list-proxy-templates plain); do
+            [ "$template" = app ] && continue # managed by v-add-web-domain-app
             run v-change-web-domain-proxy-tpl $user testhestiacp.com $template
             assert_success
             refute_output

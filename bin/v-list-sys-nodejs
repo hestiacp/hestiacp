@@ -1,0 +1,82 @@
+#!/bin/bash
+# info: list Node.js versions for web domain applications
+# options: [FORMAT]
+#
+# example: v-list-sys-nodejs json
+#
+# This function lists the Node.js versions web domain applications can use:
+# "system" (/usr/bin/node) and the versions installed with v-add-sys-nodejs.
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Argument definition
+format=${1-shell}
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/app.sh
+source $HESTIA/func/app.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Collect "NAME VERSION PATH" rows
+rows=()
+if [ -x /usr/bin/node ]; then
+	rows+=("system $(/usr/bin/node --version 2> /dev/null) /usr/bin/node")
+fi
+for dir in "$APP_NODE_DIR"/*/; do
+	name=$(basename "$dir")
+	[[ "$name" =~ ^[0-9]+$ ]] || continue
+	[ -x "$dir/bin/node" ] || continue
+	rows+=("$name $("$dir/bin/node" --version 2> /dev/null) ${dir%/}/bin/node")
+done
+
+case $format in
+	json)
+		echo '{'
+		for i in "${!rows[@]}"; do
+			read -r name ver path <<< "${rows[$i]}"
+			echo -n "    \"$name\": {
+        \"VERSION\": \"$ver\",
+        \"PATH\": \"$path\"
+    }"
+			[ "$((i + 1))" -lt "${#rows[@]}" ] && echo ',' || echo
+		done
+		echo '}'
+		;;
+	plain)
+		for row in "${rows[@]}"; do
+			read -r name ver path <<< "$row"
+			echo -e "$name\t$ver\t$path"
+		done
+		;;
+	csv)
+		echo "NAME,VERSION,PATH"
+		for row in "${rows[@]}"; do
+			read -r name ver path <<< "$row"
+			echo "$name,$ver,$path"
+		done
+		;;
+	shell)
+		{
+			echo "NAME VERSION PATH"
+			echo "---- ------- ----"
+			for row in "${rows[@]}"; do echo "$row"; done
+		} | column -t
+		;;
+esac
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+exit

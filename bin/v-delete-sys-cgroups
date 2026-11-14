@@ -46,6 +46,14 @@ $BIN/v-change-sys-config-value "RESOURCES_LIMIT" "no"
 #                       Hestia                             #
 #----------------------------------------------------------#
 
+# Drop the limits from web domain application slices
+RESOURCES_LIMIT='no'
+source "$HESTIA/func/app.sh"
+for conf in "$HESTIA"/data/users/*/app.conf; do
+	[ -s "$conf" ] && write_app_slice "$(basename "$(dirname "$conf")")"
+done
+systemctl daemon-reload
+
 # Logging
 $BIN/v-log-action "system" "Info" "Plugins" "System cgroup Enforcement disabled."
 log_event "$OK" "$ARGUMENTS"

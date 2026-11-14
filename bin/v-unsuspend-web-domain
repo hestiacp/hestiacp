@@ -23,6 +23,8 @@ source /etc/hestiacp/hestia.conf
 source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
+# shellcheck source=/usr/local/hestia/func/app.sh
+source $HESTIA/func/app.sh
 # shellcheck source=/usr/local/hestia/func/ip.sh
 source $HESTIA/func/ip.sh
 # load config file
@@ -102,6 +104,11 @@ check_result $? "Web restart failed" > /dev/null
 
 $BIN/v-restart-proxy "$restart"
 check_result $? "Proxy restart failed" > /dev/null
+
+# Starting web domain application
+if app_exists "$user" "$domain"; then
+	sync_app_service "$user" "$domain"
+fi
 
 # Logging
 $BIN/v-log-action "system" "Info" "Web" "Unsuspended web domain (User: $user, Domain: $domain)."

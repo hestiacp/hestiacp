@@ -23,6 +23,20 @@ upgrade_config_set_value 'UPGRADE_UPDATE_FILEMANAGER_CONFIG' 'false'
 upgrade_config_set_value 'UPGRADE_UPDATE_MAIL_TEMPLATES' 'false'
 upgrade_config_set_value 'UPGRADE_REBUILD_USERS' 'false'
 
+# Migrate a distribution-packaged Roundcube to the Hestia-managed upstream
+# installation. Keep this near the top, before the later revert/upgrade steps.
+if [[ -d "/usr/share/roundcube" ]] && grep -qw 'roundcube' <<< "${WEBMAIL_SYSTEM:-}"; then
+	rc_migration="$HESTIA/install/upgrade/migrate_roundcube.sh"
+
+	if [[ -x "$rc_migration" ]]; then
+		if ! HESTIA_BACKUP="${HESTIA_BACKUP:-}" "$rc_migration" --yes --defer-package-removal; then
+			echo "[ ! ] Roundcube migration failed; see the log above and restore from the reported backup if needed"
+		fi
+	else
+		echo "[ ! ] Roundcube migration script not found: $rc_migration"
+	fi
+fi
+
 # Add actionflush to Hestia Fail2Ban action for existing installations (#5022 / #5936)
 f2b_action="/etc/fail2ban/action.d/hestia.conf"
 hestia_f2b_action="$HESTIA_INSTALL_DIR/fail2ban/action.d/hestia.conf"

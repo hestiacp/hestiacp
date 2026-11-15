@@ -29,8 +29,14 @@ source_conf "$HESTIA/conf/hestia.conf"
 
 check_args '0' "$#" 'IP'
 if [ -n "$ip" ]; then
-	is_format_valid 'ip'
-	is_ip_valid
+	if is_ipv6_address "$ip"; then
+		ipv6="$ip"
+		is_format_valid 'ipv6'
+		is_ipv6_valid "$ip"
+	else
+		is_format_valid 'ip'
+		is_ip_valid
+	fi
 fi
 
 # Perform verification if read-only mode is enabled
@@ -50,8 +56,12 @@ fi
 # Updating user stats
 for ip in $ip_list; do
 
-	# Calculate usage
-	ip_usage="$(grep -H "$ip" $HESTIA/data/users/*/web.conf)"
+	# Calculate usage, match the address exactly (IPv6 addresses are stored in IP6)
+	ip_key='IP'
+	if is_ipv6_address "$ip"; then
+		ip_key='IP6'
+	fi
+	ip_usage="$(grep -HF " $ip_key='$ip'" $HESTIA/data/users/*/web.conf)"
 	web_domains="$(echo "$ip_usage" | sed '/^$/d' | wc -l)"
 	sys_users="$(echo "$ip_usage" | cut -f7 -d/ | sort -u | tr '\n' ',' | sed "s/,$//g")"
 

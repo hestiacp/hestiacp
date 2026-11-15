@@ -2418,10 +2418,11 @@ $HESTIA/bin/v-update-sys-ip > /dev/null 2>&1
 default_nic="$(ip -d -j route show | jq -r '.[] | if .dst == "default" then .dev else empty end')"
 # IPv4
 primary_ipv4="$(ip -4 -d -j addr show "$default_nic" | jq -r '.[] | select(length > 0) | .addr_info[] | if .scope == "global" then .local else empty end' | head -n1)"
-# IPv6
+# IPv6, unique local addresses (fc00::/7) are skipped since they are not
+# reachable from the internet
 default_nic6="$(ip -6 -d -j route show | jq -r '.[] | if .dst == "default" then .dev else empty end' | head -n1)"
 [ -z "$default_nic6" ] && default_nic6="$default_nic"
-primary_ipv6="$(ip -6 -d -j addr show "$default_nic6" | jq -r '.[] | select(length > 0) | .addr_info[] | select(.scope == "global" and .temporary != true and .deprecated != true) | .local' | head -n1)"
+primary_ipv6="$(ip -6 -d -j addr show "$default_nic6" | jq -r '.[] | select(length > 0) | .addr_info[] | select(.scope == "global" and .temporary != true and .deprecated != true and (.local | test("^f[cd]") | not)) | .local' | head -n1)"
 primary_ipv6_prefix="$(ip -6 -d -j addr show "$default_nic6" | jq -r --arg IP "$primary_ipv6" '.[].addr_info[] | select(.local == $IP) | .prefixlen' | head -n1)"
 ip="$primary_ipv4"
 local_ip="$primary_ipv4"

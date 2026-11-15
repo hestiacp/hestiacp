@@ -310,6 +310,10 @@ if [[ "$DEBUG" == 'true' ]]; then
 	AWS_FLAGS=()
 fi
 
+# Keys verified to be byte-identical to the published object. They are kept in
+# the local pool (so the index lists them and pruning leaves them alone) but are
+# excluded from the pool sync so they are not uploaded again.
+REUSED_KEYS=()
 if [[ "$FORCE" != 'true' ]]; then
 	echo '==> Checking for existing package objects'
 	while IFS= read -r -d '' deb; do
@@ -333,6 +337,7 @@ if [[ "$FORCE" != 'true' ]]; then
 			fi
 			if [[ "$local_sha" == "$remote_sha" ]]; then
 				echo "==> $key already published with identical content; reusing"
+				REUSED_KEYS+=("$key")
 				continue
 			fi
 			echo "::error::Object already exists with different content: s3://$R2_BUCKET/$key (bump pkgrev or set force=true)" >&2
@@ -343,9 +348,20 @@ fi
 
 PURGE_URLS=()
 for suite in "${SUITE_LIST[@]}"; do
+	# --exclude patterns are relative to the sync source and use fnmatch, so
+	# escape the glob metacharacters. Excluded keys are neither uploaded nor
+	# deleted by --delete, which keeps the reused packages published.
+	POOL_EXCLUDES=()
+	for key in "${REUSED_KEYS[@]}"; do
+		[[ "$key" == "pool/$suite/"* ]] || continue
+		rel="${key#"pool/$suite/"}"
+		rel="$(printf '%s' "$rel" | sed 's/[][*?]/[&]/g')"
+		POOL_EXCLUDES+=(--exclude "$rel")
+	done
+
 	echo "==> Uploading $suite to s3://$R2_BUCKET"
 	aws s3 sync "$REPO/pool/$suite/" "s3://$R2_BUCKET/pool/$suite/" \
-		--endpoint-url "$ENDPOINT" "${AWS_FLAGS[@]}"
+		--endpoint-url "$ENDPOINT" "${AWS_FLAGS[@]}" "${POOL_EXCLUDES[@]}"
 	aws s3 sync "$REPO/dists/$suite/main/" "s3://$R2_BUCKET/dists/$suite/main/" \
 		--endpoint-url "$ENDPOINT" "${AWS_FLAGS[@]}"
 	aws s3 cp "$REPO/dists/$suite/Release" "s3://$R2_BUCKET/dists/$suite/Release" \
@@ -368,7 +384,7 @@ for suite in "${SUITE_LIST[@]}"; do
 	if [[ "$PRUNE" == 'true' ]]; then
 		echo "==> Pruning old objects for $suite"
 		aws s3 sync "$REPO/pool/$suite/" "s3://$R2_BUCKET/pool/$suite/" \
-			--endpoint-url "$ENDPOINT" "${AWS_FLAGS[@]}" --delete
+			--endpoint-url "$ENDPOINT" "${AWS_FLAGS[@]}" "${POOL_EXCLUDES[@]}" --delete
 		aws s3 sync "$REPO/dists/$suite/main/" "s3://$R2_BUCKET/dists/$suite/main/" \
 			--endpoint-url "$ENDPOINT" "${AWS_FLAGS[@]}" --delete
 	fi

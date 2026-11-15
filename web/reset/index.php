@@ -177,6 +177,10 @@ if ($csrf_valid && !empty($_POST["user"]) && !empty($_POST["code"]) && !empty($_
 	if ($_POST["password"] == $_POST["password_confirm"]) {
 		$v_user = quoteshellarg($_POST["user"]);
 		$user = $_POST["user"];
+		// Needed for v-log-user-login on failed attempts
+		$v_ip = quoteshellarg(get_real_user_ip());
+		$v_session_id = quoteshellarg($_POST["token"]);
+		$v_user_agent = quoteshellarg($_SERVER["HTTP_USER_AGENT"] ?? "");
 		exec(HESTIA_CMD . "v-list-user " . $v_user . " json", $output, $return_var);
 		if ($return_var == 0) {
 			$data = json_decode(implode("", $output), true);

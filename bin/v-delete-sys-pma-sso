@@ -44,13 +44,16 @@ fi
 #                       Action                             #
 #----------------------------------------------------------#
 
-apikey=$(grep -Po "'API_KEY', '(.*)'" /usr/share/phpmyadmin/hestia-sso.php | cut "-d'" -f4)
+# hestia-sso.php defines the key as define("API_KEY", "..."), older versions
+# used single quotes: accept both, otherwise the key is never revoked
+apikey=$(grep -Po "[\"']API_KEY[\"'],\s*[\"']\K[^\"']*" "$PMA_INSTALL/hestia-sso.php")
 
-if [ -z $(echo $apikey | grep ":") ]; then
+if [[ "$apikey" == *:* ]]; then
+	# Access key in the form ACCESS_KEY_ID:SECRET_ACCESS_KEY
+	$BIN/v-delete-access-key "${apikey%%:*}"
+elif [ -n "$apikey" ]; then
+	# Legacy API hash
 	$BIN/v-revoke-api-key "$apikey"
-else
-	apikey=$(grep -Po "'API_KEY', '(.*)'" /usr/share/phpmyadmin/hestia-sso.php | cut "-d'" -f4 | cut -d ":" -f1)
-	$BIN/v-delete-access-key "$apikey"
 fi
 
 #remove new files

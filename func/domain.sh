@@ -1235,28 +1235,22 @@ is_base_domain_owner() {
 #----------------------------------------------------------#
 
 process_http2_directive() {
+	# Edit the matching lines in place, they can't be used as sed patterns
+	# since IPv6 addresses are written in brackets
+	local http2_listen='listen.*(\bssl\b(\s|.+){1,}\bhttp2\b|\bhttp2\b(\s|.+){1,}\bssl\b).*;'
 	if [ -e /etc/nginx/conf.d/http2-directive.conf ]; then
-		while IFS= read -r old_param; do
-			new_param="$(echo "$old_param" | sed 's/\shttp2//')"
-			sed -i "s/$old_param/$new_param/" "$1"
-		done < <(grep -E "listen.*(\bssl\b(\s|.+){1,}\bhttp2\b|\bhttp2\b(\s|.+){1,}\bssl\b).*;" "$1")
+		sed -i -E "/$http2_listen/ s/\shttp2//" "$1"
 	else
 		if version_ge "$(nginx -v 2>&1 | cut -d'/' -f2)" "1.25.1"; then
 			echo "http2 on;" > /etc/nginx/conf.d/http2-directive.conf
 
-			while IFS= read -r old_param; do
-				new_param="$(echo "$old_param" | sed 's/\shttp2//')"
-				sed -i "s/$old_param/$new_param/" "$1"
-			done < <(grep -E "listen.*(\bssl\b(\s|.+){1,}\bhttp2\b|\bhttp2\b(\s|.+){1,}\bssl\b).*;" "$1")
+			sed -i -E "/$http2_listen/ s/\shttp2//" "$1"
 		else
 			listen_ssl="$(grep -E "listen.*\s\bssl\b(?:\s)*.*;" "$1")"
-			listen_http2="$(grep -E "listen.*(\bssl\b(\s|.+){1,}\bhttp2\b|\bhttp2\b(\s|.+){1,}\bssl\b).*;" "$1")"
+			listen_http2="$(grep -E "$http2_listen" "$1")"
 
 			if [ -n "$listen_ssl" ] && [ -z "$listen_http2" ]; then
-				while IFS= read -r old_param; do
-					new_param="$(echo "$old_param" | sed 's/\sssl/ ssl http2/')"
-					sed -i "s/$old_param/$new_param/" "$1"
-				done < <(grep -E "listen.*\s\bssl\b(?:\s)*.*;" "$1")
+				sed -i -E '/listen.*\s\bssl\b\s*.*;/ s/\sssl/ ssl http2/' "$1"
 			fi
 		fi
 	fi

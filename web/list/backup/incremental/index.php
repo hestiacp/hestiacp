@@ -5,6 +5,15 @@ $TAB = "BACKUP";
 // Main include
 include $_SERVER["DOCUMENT_ROOT"] . "/inc/main.php";
 
+foreach (["snapshot", "browse", "folder", "q"] as $param) {
+	if (isset($_GET[$param]) && !is_string($_GET[$param])) {
+		$_GET[$param] = "";
+	}
+}
+if (isset($_POST["q"]) && !is_string($_POST["q"])) {
+	$_POST["q"] = "";
+}
+
 function getTransByType($type) {
 	switch ($type) {
 		case "dir":
@@ -67,23 +76,30 @@ if (empty($_GET["snapshot"])) {
 		$folder = quoteshellarg($_GET["folder"]);
 		$snapshot = quoteshellarg($_GET["snapshot"]);
 		exec(HESTIA_CMD . "v-list-user-files-restic $user $snapshot $folder", $output, $return_var);
-		$info = json_decode($output[0], true);
-		unset($output[0]);
 		$files = [];
-		$q = $_GET["q"] ?? "";
-		foreach ($output as $key => $value) {
-			$item = json_decode($value, true);
-			if ($q !== "" && $key !== 1 && ($item["path"] ?? "") !== $_GET["folder"]) {
-				$haystack = implode(" ", [
-					$item["name"] ?? "",
-					$item["type"] ?? "",
-					$item["ctime"] ?? "",
-				]);
-				if (stripos($haystack, $q) === false) {
+		if ($return_var === 0) {
+			$info = isset($output[0]) ? json_decode($output[0], true) : [];
+			unset($output[0]);
+			$q = $_GET["q"] ?? "";
+			foreach ($output as $key => $value) {
+				$item = json_decode($value, true);
+				if (!is_array($item)) {
 					continue;
 				}
+				if ($q !== "" && $key !== 1 && ($item["path"] ?? "") !== $_GET["folder"]) {
+					$haystack = implode(" ", [
+						$item["name"] ?? "",
+						$item["type"] ?? "",
+						$item["ctime"] ?? "",
+					]);
+					if (stripos($haystack, $q) === false) {
+						continue;
+					}
+				}
+				$files[] = $item;
 			}
-			$files[] = $item;
+		} else {
+			check_return_code($return_var, $output);
 		}
 		render_page($user, $TAB, "list_files_incremental");
 	}

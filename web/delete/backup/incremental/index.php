@@ -4,7 +4,7 @@ use function Hestiacp\quoteshellarg\quoteshellarg;
 ob_start();
 include $_SERVER["DOCUMENT_ROOT"] . "/inc/main.php";
 
-if ($_SESSION["userContext"] === "admin" && !empty($_GET["user"])) {
+if ($_SESSION["userContext"] === "admin" && !empty($_GET["user"]) && is_string($_GET["user"])) {
 	$user = quoteshellarg($_GET["user"]);
 }
 
@@ -16,7 +16,7 @@ if ($read_only === true) {
 	exit();
 }
 
-if (!empty($_GET["snapshot"])) {
+if (!empty($_GET["snapshot"]) && is_string($_GET["snapshot"])) {
 	$v_snapshot = quoteshellarg($_GET["snapshot"]);
 	exec(
 		HESTIA_CMD . "v-delete-user-backup-restic " . $user . " " . $v_snapshot,

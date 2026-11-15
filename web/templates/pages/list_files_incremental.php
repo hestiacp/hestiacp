@@ -3,7 +3,7 @@
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
 			<?php if ($read_only !== true) { ?>
-			<?php if(str_starts_with($files[0]['path'],'/home/'.$user_plain) && $files[0]['path'] != '/home/'.$user_plain ){
+			<?php if(str_starts_with($files[0]['path'] ?? '', '/home/'.$user_plain) && ($files[0]['path'] ?? '') != '/home/'.$user_plain ){
 			?>
 			<a class="button button-secondary" id="btn-back" href="/list/backup/incremental/?<?= tohtml(http_build_query(["snapshot" => $_GET["snapshot"], "browse" => "yes", "folder" => $files[0]["path"] . "/../", "token" => $_SESSION["token"]])) ?>"><i class="fas fa-arrow-left icon-blue"></i><?= tohtml( _("Back")) ?></a>
 			<?php }else{

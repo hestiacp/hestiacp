@@ -80,9 +80,9 @@ install_dependencies() {
 
 	cd "$dir" || return 1
 	if [ -z "$openssl_installed" ]; then
-		COMPOSER_HOME="$HOMEDIR/$user/.config/composer" COMPOSER_VENDOR_DIR="$dir/vendor.new" user_exec /usr/bin/php $COMPOSER_BIN --quiet --no-dev install
+		COMPOSER_HOME="$HOMEDIR/$user/.config/composer" COMPOSER_VENDOR_DIR="$dir/vendor.new" user_exec /usr/bin/php $COMPOSER_BIN --quiet --no-dev --working-dir="$dir" install
 	else
-		COMPOSER_HOME="$HOMEDIR/$user/.config/composer" COMPOSER_VENDOR_DIR="$dir/vendor.new" user_exec $HESTIA_PHP $COMPOSER_BIN --quiet --no-dev install
+		COMPOSER_HOME="$HOMEDIR/$user/.config/composer" COMPOSER_VENDOR_DIR="$dir/vendor.new" user_exec $HESTIA_PHP $COMPOSER_BIN --quiet --no-dev --working-dir="$dir" install
 	fi
 	if [ $? -ne 0 ] || [ ! -f "$dir/vendor.new/autoload.php" ]; then
 		rm --recursive --force "$dir/vendor.new"

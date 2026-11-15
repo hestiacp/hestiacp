@@ -2378,8 +2378,19 @@ user_exec() {
 
 	local user_groups=$(id -G "$user")
 	user_groups=${user_groups//\ /,}
+	local -a priv=(setpriv --groups "$user_groups" --reuid "$user" --regid "$user" --)
 
-	setpriv --groups "$user_groups" --reuid "$user" --regid "$user" -- "${@}"
+	# Keep the caller's working directory when the user can use it (callers
+	# like composer rely on it). Otherwise, e.g. when run from /root, switch
+	# to the user's home, as tools like find fail on an inaccessible cwd.
+	if "${priv[@]}" test -r . -a -x . 2> /dev/null; then
+		"${priv[@]}" "${@}"
+	else
+		(
+			cd "$HOMEDIR/$user" 2> /dev/null || cd /
+			"${priv[@]}" "${@}"
+		)
+	fi
 }
 
 # Run a command as $user while the user owned directory DIR is temporarily

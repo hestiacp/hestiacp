@@ -2632,6 +2632,13 @@ echo   "1.2.3.4" >> $HESTIA/data/firewall/excludes.conf
   check_ip_banned '2001:db8::bad' 'HESTIA'
 }
 
+@test "Firewall: Add ipv6 to banlist (address of a whole network)" {
+  for address in '::ffff:192.0.2.1' 'fe80::1' 'ff02::1' '::'; do
+    run v-add-firewall-ban "$address" 'HESTIA'
+    assert_failure $E_INVALID
+  done
+}
+
 @test "Firewall: Delete ipv6 from banlist" {
   run v-delete-firewall-ban '2001:db8::bad' 'HESTIA'
   assert_success
@@ -2652,6 +2659,8 @@ echo   "1.2.3.4" >> $HESTIA/data/firewall/excludes.conf
   assert_output --partial "--icmpv6-type 135"
   assert_output --partial "--icmpv6-type 136"
   assert_output --partial "-i lo -j ACCEPT"
+  # DHCPv6 replies
+  assert_output --partial "--dport 546"
 }
 
 @test "Firewall: ipv6 ban is restored by firewall update" {
@@ -2697,6 +2706,14 @@ echo   "1.2.3.4" >> $HESTIA/data/firewall/excludes.conf
   run v-add-firewall-rule-ipv6 'DROP' '2001:db8::1' '2222' 'TCP' 'Test IPv6' '101'
   assert_success
   refute_output
+}
+
+@test "Firewall: Add ipv6 firewall rule (invalid prefix)" {
+  for source in '::/0;touch /tmp/hestia-pwned6;' '2001:db8::/' '2001:db8::/-1' '2001:db8::/129' '2001:db8::/64/1'; do
+    run v-add-firewall-rule-ipv6 'ACCEPT' "$source" '8888' 'TCP'
+    assert_failure $E_INVALID
+  done
+  assert_file_not_exist /tmp/hestia-pwned6
 }
 
 @test "Firewall: List ipv6 firewall rules" {

@@ -54,6 +54,16 @@ heal_ip6tables_links() {
 	done
 }
 
+# Check that an IPv6 address can be banned. Bans of IPv4-mapped, link-local,
+# multicast or unspecified addresses would block a whole network.
+is_ipv6_ban_address_valid() {
+	local valid
+	valid=$($HESTIA_PHP -r '$ip = @inet_pton(explode("/", $argv[1])[0]); $hex = ($ip === false) ? "" : bin2hex($ip); echo ($hex !== "" && substr($hex, 0, 20) !== str_repeat("0", 20) && !preg_match("/^(fe[89ab]|ff)/", $hex)) ? 0 : 1;' "$1")
+	if [ "$valid" -ne 0 ]; then
+		check_result "$E_INVALID" "IPv6 address can't be banned :: $1"
+	fi
+}
+
 # Networks blocked for banned IPv6 addresses: reads "CHAIN ADDRESS" lines and
 # prints "CHAIN NETWORK". A single host usually owns a complete /64, so a ban
 # covers the whole network (FIREWALL_IPV6_BAN_PREFIX, default 64) unless the

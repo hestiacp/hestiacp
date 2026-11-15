@@ -41,6 +41,9 @@ check_args '2' "$#" 'IP_CIDR CHAIN'
 if [[ "$ipv4_cidr" == *:* ]]; then
 	ipv6_cidr="$ipv4_cidr"
 	is_format_valid 'ipv6_cidr' 'chain'
+	if [ "$ipv4_cidr" != '::1' ]; then
+		is_ipv6_ban_address_valid "$ipv4_cidr"
+	fi
 else
 	is_format_valid 'ipv4_cidr' 'chain'
 fi

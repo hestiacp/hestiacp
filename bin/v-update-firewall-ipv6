@@ -122,6 +122,10 @@ for icmp_type in 130 131 132 143; do
 	echo "$ip6tables -A INPUT -s fe80::/10 -p ipv6-icmp --icmpv6-type $icmp_type -j ACCEPT" >> "$tmp"
 done
 
+# DHCPv6 replies come from the link-local address of the DHCPv6 server and
+# don't match the multicast request in conntrack
+echo "$ip6tables -A INPUT -s fe80::/10 -p udp --sport 547 --dport 546 -j ACCEPT" >> "$tmp"
+
 # Checking fail2ban support
 if [ -n "$FIREWALL_EXTENSION" ]; then
 	if [ -f "$chains" ]; then
@@ -172,7 +176,7 @@ for line in $(sort -r -n -k 2 -t \' $rules); do
 			fi
 			ip="-m set --match-set '${ipset_name}' src"
 		else
-			ip="-s $IP6"
+			printf -v ip -- '-s %q' "$IP6"
 		fi
 
 		# Adding multiport module

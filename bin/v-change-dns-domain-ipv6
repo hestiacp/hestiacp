@@ -96,6 +96,14 @@ elif [ -n "$ipv6" ]; then
 		if grep -qF "RECORD='$record' TYPE='AAAA'" "$zone"; then
 			continue
 		fi
+		# Web domains that don't listen on the address must not get an AAAA
+		# record, Let's Encrypt would validate them over IPv6
+		fqdn="$record.$domain"
+		[ "$record" = '@' ] && fqdn="$domain"
+		web_ipv6=$(get_web_domain_ipv6 "$fqdn")
+		if [ -n "$web_ipv6" ] && [ "$web_ipv6" != "IP6=$ipv6" ]; then
+			continue
+		fi
 		unset id
 		get_next_dnsrecord
 		echo "ID='$id' RECORD='$record' TYPE='AAAA' PRIORITY='' VALUE='$ipv6' SUSPENDED='no' TIME='$time' DATE='$date'" >> "$zone"

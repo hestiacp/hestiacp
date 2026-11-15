@@ -179,34 +179,8 @@ time_n_date=$(date +'%T %F')
 time=$(echo "$time_n_date" | cut -f 1 -d \ )
 date=$(echo "$time_n_date" | cut -f 2 -d \ )
 
-# Adding AAAA records for every A record that points to the server. Mail
-# exchangers keep their A record only, because Exim does not listen on IPv6.
-# CNAME records (www, ftp, ...) follow their target automatically.
-if [ -n "$ipv6" ]; then
-	mx_hosts=$(echo "$template_data" | grep "TYPE='MX'" | sed -n "s/.*VALUE='\([^.']*\)\.%domain%\.'.*/\1/p")
-	record_id=$(echo "$template_data" | sed -n "s/^ID='\([0-9]*\)'.*/\1/p" | sort -n | tail -n1)
-	aaaa_records=''
-	while IFS= read -r record_line; do
-		if [[ "$record_line" != *"TYPE='A' "* ]] || [[ "$record_line" != *"VALUE='%ip%'"* ]]; then
-			continue
-		fi
-		record_name=$(echo "$record_line" | sed -n "s/.*RECORD='\([^']*\)'.*/\1/p")
-		if [ -n "$ip" ] && echo "$mx_hosts" | grep -qxF "$record_name"; then
-			continue
-		fi
-		record_id=$((record_id + 1))
-		aaaa_records="$aaaa_records"$'\n'"$(echo "$record_line" \
-			| sed -e "s/^ID='[0-9]*'/ID='$record_id'/" \
-				-e "s/TYPE='A' /TYPE='AAAA' /" \
-				-e "s/VALUE='%ip%'/VALUE='$ipv6'/")"
-	done <<< "$template_data"
-
-	# IPv6-only zone: drop the A records and the IPv4 SPF mechanism
-	if [ -z "$ip" ]; then
-		template_data=$(echo "$template_data" | grep -v "TYPE='A' .*VALUE='%ip%'" | sed "s/ ip4:%ip%//")
-	fi
-	template_data="$template_data$aaaa_records"
-fi
+# Adding AAAA records
+add_dns_template_ipv6_records "$ip" "$ipv6"
 
 # Adding dns zone to the user config
 echo "$template_data" \

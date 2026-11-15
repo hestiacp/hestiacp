@@ -1832,6 +1832,13 @@ function check_ip_not_banned(){
     assert_failure
 }
 
+@test "DNS: Change domain template keeps AAAA records" {
+    run v-change-dns-domain-tpl $user $ipv6dnsdomain default
+    assert_success
+
+    assert_file_contains "$HESTIA/data/users/$user/dns/${ipv6dnsdomain}.conf" "RECORD='@' TYPE='AAAA' PRIORITY='' VALUE='2001:db8:3::1'"
+}
+
 @test "DNS: Change domain ipv6" {
     run v-change-dns-domain-ipv6 $user $ipv6dnsdomain '2001:db8:3::2'
     assert_success

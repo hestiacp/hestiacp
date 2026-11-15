@@ -708,6 +708,68 @@ get_next_dnsrecord() {
 	fi
 }
 
+# Add AAAA records to the DNS template ($template_data) for every A record
+# that points to the server. Mail exchangers keep their A record only, because
+# Exim does not listen on IPv6. CNAME records (www, ftp, ...) follow their
+# target automatically. Zones without IPv4 address lose their A records.
+# Usage: add_dns_template_ipv6_records IP IPV6
+add_dns_template_ipv6_records() {
+	local ip="$1" ipv6="$2"
+	local mx_hosts record_id aaaa_records='' record_line record_name
+	if [ -z "$ipv6" ]; then
+		return 0
+	fi
+
+	mx_hosts=$(echo "$template_data" | grep "TYPE='MX'" | sed -n "s/.*VALUE='\([^.']*\)\.%domain%\.'.*/\1/p")
+	record_id=$(echo "$template_data" | sed -n "s/^ID='\([0-9]*\)'.*/\1/p" | sort -n | tail -n1)
+	while IFS= read -r record_line; do
+		if [[ "$record_line" != *"TYPE='A' "* ]] || [[ "$record_line" != *"VALUE='%ip%'"* ]]; then
+			continue
+		fi
+		record_name=$(echo "$record_line" | sed -n "s/.*RECORD='\([^']*\)'.*/\1/p")
+		if [ -n "$ip" ] && echo "$mx_hosts" | grep -qxF "$record_name"; then
+			continue
+		fi
+		record_id=$((record_id + 1))
+		aaaa_records="$aaaa_records"$'\n'"$(echo "$record_line" \
+			| sed -e "s/^ID='[0-9]*'/ID='$record_id'/" \
+				-e "s/TYPE='A' /TYPE='AAAA' /" \
+				-e "s/VALUE='%ip%'/VALUE='$ipv6'/")"
+	done <<< "$template_data"
+
+	# IPv6-only zone: drop the A records and the IPv4 SPF mechanism
+	if [ -z "$ip" ]; then
+		template_data=$(echo "$template_data" | grep -v "TYPE='A' .*VALUE='%ip%'" | sed "s/ ip4:%ip%//")
+	fi
+	template_data="$template_data$aaaa_records"
+}
+
+# Print "IP6=<address>" of the web domain of the user that serves NAME (as
+# domain or alias), nothing if NAME is not a web domain of the user
+# Usage: get_web_domain_ipv6 NAME
+get_web_domain_ipv6() {
+	[ -f "$USER_DATA/web.conf" ] || return 0
+	awk -v q="'" -v name="$1" '
+		function value(key, s) {
+			if (!match($0, "(^| )" key "=" q "[^" q "]*" q)) {
+				return ""
+			}
+			s = substr($0, RSTART, RLENGTH)
+			sub("^ ?" key "=" q, "", s)
+			sub(q "$", "", s)
+			return s
+		}
+		{
+			n = split(value("DOMAIN") "," value("ALIAS"), names, ",")
+			for (i = 1; i <= n; i++) {
+				if (names[i] == name) {
+					print "IP6=" value("IP6")
+					exit
+				}
+			}
+		}' "$USER_DATA/web.conf"
+}
+
 # Sort DNS records
 sort_dns_records() {
 	conf="$USER_DATA/dns/$domain.conf"

@@ -48,11 +48,29 @@ start_time=$(date '+%s')
 
 tmpdir="/home/$user/backup"
 
-# We delete the backup dir first make sure all old database has been cleared
+# We delete the backup dir first to make sure all old data has been cleared
 rm -fr "$tmpdir"
 umask 077
-install -d -m 0700 -o root -g root "$tmpdir"
-(enter_user_dir "$user" "backup" root) || exit $?
+# mkdir fails if the path exists, so a symlink planted after rm is never followed
+mkdir -m 0700 -- "$tmpdir" 2> /dev/null
+check_result $? "Unable to create $tmpdir"
+# The owner of /home/$user can still rename "backup" while we work. Verify the
+# directory, hold it open on fd 9, and write through /proc/$$/fd/9 from here on.
+enter_user_dir "$user" "backup"
+exec 9< .
+# Require root:root 0700 as just created; do not take over a user-swapped dir.
+if [ "$(stat -L -c '%u:%g:%a' -- "/proc/$$/fd/9")" != '0:0:700' ]; then
+	check_result "$E_FORBIDEN" "$tmpdir is not owned by root with mode 0700"
+fi
+# Drop ACLs inherited from /home/$user so default ACLs cannot expose staged files
+if command -v setfacl > /dev/null; then
+	setfacl -b -k "/proc/$$/fd/9"
+	check_result $? "Unable to remove ACLs from $tmpdir"
+fi
+if [ -n "$(ls -A "/proc/$$/fd/9")" ]; then
+	check_result "$E_FORBIDEN" "$tmpdir is not empty"
+fi
+tmpdir="/proc/$$/fd/9"
 
 # Backup sys configs
 echo "-- SYSTEM --" | tee $BACKUP/$user.log

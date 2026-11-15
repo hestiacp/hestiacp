@@ -53,7 +53,10 @@ source_conf $HESTIA/conf/restic.conf
 
 if [ ! -f "$USER_DATA/restic.conf" ]; then
 	password=$(generate_password '' '32')
-	echo "$password" > $USER_DATA/restic.conf
+	(
+		umask 077
+		echo "$password" > "$USER_DATA/restic.conf"
+	)
 
 	restic --repo "${REPO%/}/$user" --password-file $USER_DATA/restic.conf init
 	if [ $? -ne 0 ]; then
@@ -69,8 +72,11 @@ else
 	fi
 fi
 
-# create backup of the user.conf an database
-$BIN/v-backup-user-config $user
+# create backup of the user.conf and database
+if ! "$BIN/v-backup-user-config" "$user"; then
+	echo "Unable to stage the configuration of $user for backup" | $SENDMAIL -s "$subj" "$email" "yes"
+	check_result "$E_BACKUP" "Unable to stage the configuration of $user for backup"
+fi
 export GOMAXPROCS=2
 export RESTIC_READ_CONCURRENCY=2
 ionice -c2 -n7 nice -n 19 restic --repo "${REPO%/}/$user" --limit-upload 10240 --read-concurrency 2 --password-file $USER_DATA/restic.conf backup /home/$user

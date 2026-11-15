@@ -9,10 +9,21 @@ include $_SERVER["DOCUMENT_ROOT"] . "/inc/main.php";
 
 // List ip addresses
 exec(HESTIA_CMD . "v-list-user-ips " . $user . " json", $output, $return_var);
-$v_ips = json_decode(implode("", $output), true);
+$user_ips = json_decode(implode("", $output), true) ?? [];
 // IPv6 addresses can not be used for A records
-$v_ips = array_filter($v_ips ?? [], fn($ip) => strpos($ip, ":") === false, ARRAY_FILTER_USE_KEY);
+$v_ips = array_filter($user_ips, fn($ip) => strpos($ip, ":") === false, ARRAY_FILTER_USE_KEY);
 unset($output);
+
+// IPv6-only servers: zones get the first IPv6 address of the user
+$v_ip6 = "";
+if (empty($v_ips)) {
+	foreach (array_keys($user_ips) as $ip) {
+		if (strpos($ip, ":") !== false) {
+			$v_ip6 = $ip;
+			break;
+		}
+	}
+}
 
 // Check POST request for dns domain
 if (!empty($_POST["ok"]) && $read_only !== true) {
@@ -23,7 +34,7 @@ if (!empty($_POST["ok"]) && $read_only !== true) {
 	if (empty($_POST["v_domain"])) {
 		$errors[] = _("Domain");
 	}
-	if (empty($_POST["v_ip"])) {
+	if (empty($_POST["v_ip"]) && empty($v_ip6)) {
 		$errors[] = _("IP Address");
 	}
 	if (!empty($errors[0])) {
@@ -107,7 +118,9 @@ if (!empty($_POST["ok"]) && $read_only !== true) {
 				" " .
 				$v_ns8 .
 				" no " .
-				$v_dnssec,
+				$v_dnssec .
+				" " .
+				quoteshellarg($v_ip6),
 			$output,
 			$return_var,
 		);

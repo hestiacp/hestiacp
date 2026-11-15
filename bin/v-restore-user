@@ -315,6 +315,11 @@ if [ "$web" != 'no' ] && [ -n "$WEB_SYSTEM" ]; then
 				get_user_ipv6
 				IP6=$ipv6
 			fi
+			# IPv6-only servers: a domain needs at least one address
+			if [ -z "$IP" ] && [ -z "$IP6" ]; then
+				get_user_ipv6
+				IP6=$ipv6
+			fi
 
 			# Checking web template
 			check_tpl=$(is_web_template_valid $TPL)

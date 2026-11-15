@@ -28,6 +28,7 @@
                                         <label for="v_domain" class="form-label"><?= tohtml( _("Domain")) ?></label>
                                         <input type="text" class="form-control" name="v_domain" id="v_domain" value="<?= tohtml(trim($v_domain, "'")) ?>" required>
                                 </div>
+                                <?php if (!empty($ips)) { ?>
                                 <div class="u-mb20">
                                         <label for="v_ip" class="form-label"><?= tohtml( _("IP Address")) ?></label>
                                         <select class="form-select" name="v_ip" id="v_ip">
@@ -40,6 +41,7 @@
                                                 ?>
                                         </select>
                                 </div>
+                                <?php } ?>
                                 <?php if (isset($_SESSION["DNS_SYSTEM"]) && !empty($_SESSION["DNS_SYSTEM"])) { ?>
                                         <?php if ($panel[$user_plain]["DNS_DOMAINS"] != "0") { ?>
                                                 <div class="form-check u-mb10">

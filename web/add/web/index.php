@@ -16,7 +16,14 @@ if (!empty($_POST["ok"]) && $read_only !== true) {
 	if (empty($_POST["v_domain"])) {
 		$errors[] = _("Domain");
 	}
-	if (empty($_POST["v_ip"])) {
+	exec(HESTIA_CMD . "v-list-user-ips " . $user . " json", $output, $return_var);
+	$ips = json_decode(implode("", $output), true);
+	unset($output);
+	// IPv6-only servers: the domain gets the IPv6 address of the user only
+	$has_ipv4 = !empty(
+		array_filter($ips ?? [], fn($ip) => strpos($ip, ":") === false, ARRAY_FILTER_USE_KEY)
+	);
+	if (empty($_POST["v_ip"]) && $has_ipv4) {
 		$errors[] = _("IP Address");
 	}
 
@@ -36,15 +43,12 @@ if (!empty($_POST["ok"]) && $read_only !== true) {
 	$v_domain = strtolower($v_domain);
 
 	// Define domain ip address
-	$v_ip = quoteshellarg($_POST["v_ip"]);
+	$v_ip = quoteshellarg($_POST["v_ip"] ?? "");
 
 	// Using public IP instead of internal IP when creating DNS
 	// Gets public IP from 'v-list-user-ips' command (that reads /hestia/data/ips/ip), precisely from 'NAT' field
 	$v_public_ip = $v_ip;
-	$v_clean_ip = $_POST["v_ip"]; // clean_ip = IP without quotas
-	exec(HESTIA_CMD . "v-list-user-ips " . $user . " json", $output, $return_var);
-	$ips = json_decode(implode("", $output), true);
-	unset($output);
+	$v_clean_ip = $_POST["v_ip"] ?? ""; // clean_ip = IP without quotas
 	if (
 		isset($ips[$v_clean_ip]) &&
 		isset($ips[$v_clean_ip]["NAT"]) &&

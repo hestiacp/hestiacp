@@ -6,8 +6,8 @@ namespace Hestia\WebApp;
 
 use Hestia\System\HestiaApp;
 use Hestia\System\Util;
+use RuntimeException;
 
-use function array_filter;
 use function count;
 use function defined;
 use function dirname;
@@ -39,13 +39,18 @@ final class DomainSkeleton
     ): bool {
         $skelRoot = $skeletonDocRoot ?? self::defaultSkeletonDocRoot();
         if (!is_dir($skelRoot) || !is_readable($skelRoot)) {
-            $files = $appcontext->listFiles($docRoot);
-            $unexpected = array_filter(
-                $files,
-                fn(string $file) => !in_array($file, self::DEFAULT_FILES, true),
-            );
+            $entries = $appcontext->listDirectoryEntries($docRoot);
+            if ($entries === null) {
+                return false;
+            }
 
-            return count($unexpected) === 0;
+            foreach ($entries as $file => $type) {
+                if ($type !== 'f' || !in_array($file, self::DEFAULT_FILES, true)) {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         return self::isDirectoryClean($appcontext, $docRoot, $skelRoot);
@@ -58,8 +63,15 @@ final class DomainSkeleton
     ): void {
         $skelRoot = $skeletonDocRoot ?? self::defaultSkeletonDocRoot();
         if (!is_dir($skelRoot) || !is_readable($skelRoot)) {
+            $entries = $appcontext->listDirectoryEntries($docRoot);
+            if ($entries === null) {
+                return;
+            }
+
             foreach (self::DEFAULT_FILES as $defaultFile) {
-                $appcontext->deleteFile(Util::joinPaths($docRoot, $defaultFile));
+                if (($entries[$defaultFile] ?? null) === 'f') {
+                    $appcontext->deleteFile(Util::joinPaths($docRoot, $defaultFile));
+                }
             }
 
             return;
@@ -73,19 +85,23 @@ final class DomainSkeleton
         string $currentDocDir,
         string $currentSkelDir,
     ): bool {
-        $docEntries = $appcontext->listFiles($currentDocDir);
+        $docEntries = $appcontext->listDirectoryEntries($currentDocDir);
+        if ($docEntries === null) {
+            return false;
+        }
+
         $skelEntries = self::readSkeletonEntries($currentSkelDir);
         if ($skelEntries === null) {
             return count($docEntries) === 0;
         }
 
-        foreach ($docEntries as $entry) {
-            if (!in_array($entry, $skelEntries, true)) {
+        foreach ($docEntries as $entry => $docType) {
+            if (!isset($skelEntries[$entry]) || $docType !== $skelEntries[$entry]) {
                 return false;
             }
 
-            $skelEntryPath = rtrim($currentSkelDir, '/\\') . '/' . $entry;
-            if (is_dir($skelEntryPath) && !is_link($skelEntryPath)) {
+            if ($skelEntries[$entry] === 'd') {
+                $skelEntryPath = rtrim($currentSkelDir, '/\\') . '/' . $entry;
                 $nestedDocDir = Util::joinPaths($currentDocDir, $entry);
                 if (!self::isDirectoryClean($appcontext, $nestedDocDir, $skelEntryPath)) {
                     return false;
@@ -106,19 +122,29 @@ final class DomainSkeleton
             return;
         }
 
-        $docEntries = $appcontext->listFiles($currentDocDir);
-        foreach ($skelEntries as $entry) {
-            if (!in_array($entry, $docEntries, true)) {
+        $docEntries = $appcontext->listDirectoryEntries($currentDocDir);
+        if ($docEntries === null) {
+            return;
+        }
+
+        foreach ($skelEntries as $entry => $skelType) {
+            if (!isset($docEntries[$entry]) || $docEntries[$entry] !== $skelType) {
                 continue;
             }
 
             $skelEntryPath = rtrim($currentSkelDir, '/\\') . '/' . $entry;
             $docEntryPath = Util::joinPaths($currentDocDir, $entry);
-            if (is_dir($skelEntryPath) && !is_link($skelEntryPath)) {
+            if ($skelType === 'd') {
                 if (self::isDirectoryClean($appcontext, $docEntryPath, $skelEntryPath)) {
                     $appcontext->deleteDirectory($docEntryPath);
                 } else {
                     self::cleanupDirectory($appcontext, $docEntryPath, $skelEntryPath);
+                }
+            } elseif ($skelType === 'l') {
+                try {
+                    $appcontext->deleteFile($docEntryPath);
+                } catch (RuntimeException) {
+                    // Skip symlinks rejected by v-delete-fs-file boundary checks.
                 }
             } else {
                 $appcontext->deleteFile($docEntryPath);
@@ -127,7 +153,7 @@ final class DomainSkeleton
     }
 
     /**
-     * @return string[]|null
+     * @return array<string, string>|null
      */
     private static function readSkeletonEntries(string $skelDir): ?array
     {
@@ -145,7 +171,14 @@ final class DomainSkeleton
             if ($entry === '.' || $entry === '..') {
                 continue;
             }
-            $filtered[] = $entry;
+            $entryPath = rtrim($skelDir, '/\\') . '/' . $entry;
+            if (is_link($entryPath)) {
+                $filtered[$entry] = 'l';
+            } elseif (is_dir($entryPath)) {
+                $filtered[$entry] = 'd';
+            } else {
+                $filtered[$entry] = 'f';
+            }
         }
 
         return $filtered;

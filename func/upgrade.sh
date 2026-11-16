@@ -737,8 +737,29 @@ upgrade_roundcube() {
 	if [ -n "$(echo "$WEBMAIL_SYSTEM" | grep -w 'roundcube')" ]; then
 		if [ -d "/usr/share/roundcube" ]; then
 			echo "[ ! ] Roundcube: Updates are currently managed using the apt package manager"
-			echo "      To upgrade to the latest version of Roundcube directly from upstream, from please run the command migrate_roundcube.sh located in: /usr/local/hestia/install/upgrade/manual/"
+			echo "      The Hestia upgrade migrates it to the upstream/Hestia-managed installation automatically."
+			echo "      If the migration was skipped, run the following command and check its output:"
+			echo "      /usr/local/hestia/install/upgrade/migrate_roundcube.sh --yes"
 		else
+			cleanup_marker="$HESTIA_BACKUP/roundcube-package-cleanup-scheduled"
+			cleanup_failed_marker="$HESTIA_BACKUP/roundcube-package-cleanup-failed"
+			installed_rc_packages=""
+			if command -v dpkg-query > /dev/null 2>&1; then
+				installed_rc_packages="$(dpkg-query -W -f='${db:Status-Abbrev} ${Package}\n' 'roundcube*' 2> /dev/null | awk 'substr($1,2,1) == "i" && $2 ~ /^roundcube(-|$)/ { print $2 }')"
+			fi
+			if [ -f "$cleanup_failed_marker" ]; then
+				echo "[ ! ] Roundcube: distribution package cleanup failed."
+				echo "      Inspect $(cat "$cleanup_failed_marker")/cleanup.log and retry with:"
+				echo "      /usr/local/hestia/install/upgrade/migrate_roundcube.sh --purge-only --backup-dir $(cat "$cleanup_failed_marker")"
+			elif [ -f "$cleanup_marker" ]; then
+				echo "[ * ] Roundcube: distribution package removal is scheduled after apt releases its lock."
+				echo "      Backup: $(cat "$cleanup_marker")"
+			elif [ -n "$installed_rc_packages" ]; then
+				echo "[ ! ] Roundcube: distribution packages are still installed: $installed_rc_packages"
+				echo "      Run /usr/local/hestia/install/upgrade/migrate_roundcube.sh --purge-only --backup-dir <backup directory>"
+				echo "      using the backup directory reported by the 1.10.7 migration."
+			fi
+
 			if [[ -f "/var/lib/roundcube/program/include/iniset.php" ]]; then
 				rc_version="$(grep RCMAIL_VERSION /var/lib/roundcube/program/include/iniset.php | cut -d "'" -f 4)"
 				if ! version_ge "$rc_version" "$rc_v"; then

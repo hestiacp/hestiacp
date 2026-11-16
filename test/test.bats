@@ -324,6 +324,20 @@ function check_ip_not_banned(){
     refute_output
 }
 
+@test "User: admin has no sudo access (#5919)" {
+    if [ ! -d "$HESTIA/data/users/admin" ]; then
+        skip "no Hestia user named admin"
+    fi
+    assert_file_exist /etc/sudoers.d/zz-hestia-deny-admin
+    run id admin
+    assert_success
+    run sudo -l -U admin /usr/bin/true
+    assert_failure
+    if [ -f /usr/share/polkit-1/rules.d/49-ubuntu-admin.rules ] || grep -Eqx 'ID="?ubuntu"?' /etc/os-release; then
+        assert_file_exist /etc/polkit-1/rules.d/49-hestia-admin-identities.rules
+    fi
+}
+
 @test "User: Add new user Failed 1" {
 	run v-add-user 'jäap' $user $user@hestiacp2.com default "Super Test"
 	assert_failure $E_INVALID

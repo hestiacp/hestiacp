@@ -1,0 +1,6 @@
+# Ubuntu's /etc/sudoers contains "%admin ALL=(ALL) ALL" and the Hestia user
+# named "admin" has a primary group of the same name, so it would inherit full
+# sudo access. Hestia does not grant sudo to its admin user, so deny it.
+# sudo uses the last matching entry, so this file must be read after the %admin
+# rule; files in /etc/sudoers.d are read in alphabetical order, hence the "zz-".
+admin ALL=(ALL:ALL) !ALL

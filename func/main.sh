@@ -2613,3 +2613,56 @@ delete_chroot_jail() {
 	rm -r /srv/jail/$user/ > /dev/null 2>&1
 	rmdir /srv/jail/$user > /dev/null 2>&1
 }
+
+# Remove the administrator rights Ubuntu grants to the "admin" group from the Hestia
+# user "admin" (#5919). Ubuntu ships "%admin ALL=(ALL) ALL" in /etc/sudoers and
+# "unix-group:admin" as a polkit administrator identity, and Hestia users get a
+# primary group of the same name, so the user would otherwise inherit full sudo and
+# pkexec. Installs a sudoers deny (read last) and, on Ubuntu, a polkit rule that
+# offers only the sudo group (named 49- to sort before Ubuntu's 49-ubuntu-admin.rules
+# but after custom 40-48 rules). The sudoers file is validated with visudo; both files are published atomically.
+# Idempotent; run it before the user is created.
+protect_admin_user() {
+	local sudo_src="$HESTIA_COMMON_DIR/sudo/zz-hestia-deny-admin"
+	local sudo_dst="/etc/sudoers.d/zz-hestia-deny-admin"
+	local sudo_tmp="/etc/sudoers.d/.zz-hestia-deny-admin.$$"
+	local pk_src="$HESTIA_COMMON_DIR/polkit/49-hestia-admin-identities.rules"
+	local pk_dst="/etc/polkit-1/rules.d/49-hestia-admin-identities.rules"
+	local pk_tmp="$pk_dst.tmp.$$"
+
+	if ! command -v visudo > /dev/null 2>&1 || [ ! -f "$sudo_src" ]; then
+		return 1
+	fi
+	# sudo ignores files in sudoers.d whose name contains a dot
+	mkdir -p /etc/sudoers.d || return 1
+	if ! install -o root -g root -m 0440 "$sudo_src" "$sudo_tmp" \
+		|| ! visudo -cqf "$sudo_tmp" > /dev/null 2>&1 \
+		|| ! mv -f "$sudo_tmp" "$sudo_dst"; then
+		rm -f "$sudo_tmp"
+		return 1
+	fi
+
+	# Also when polkit is not installed yet or the directory is missing: polkit may be
+	# installed later, or the system upgraded from a release without the Ubuntu rule
+	if [ -f /usr/share/polkit-1/rules.d/49-ubuntu-admin.rules ] \
+		|| grep -Eqx 'ID="?ubuntu"?' /etc/os-release 2> /dev/null; then
+		# Create missing directories 0755 whatever the umask, polkitd runs unprivileged
+		local pk_dir
+		for pk_dir in /etc/polkit-1 /etc/polkit-1/rules.d; do
+			[ -d "$pk_dir" ] || mkdir -m 0755 "$pk_dir" || return 1
+		done
+		if [ ! -f "$pk_src" ] \
+			|| ! install -o root -g root -m 0644 "$pk_src" "$pk_tmp" \
+			|| ! mv -f "$pk_tmp" "$pk_dst"; then
+			rm -f "$pk_tmp"
+			return 1
+		fi
+	fi
+	return 0
+}
+
+# Remove the files installed by protect_admin_user
+unprotect_admin_user() {
+	rm -f /etc/sudoers.d/zz-hestia-deny-admin \
+		/etc/polkit-1/rules.d/49-hestia-admin-identities.rules
+}

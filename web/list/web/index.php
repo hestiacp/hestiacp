@@ -14,6 +14,16 @@ if ($_SESSION["userSortOrder"] == "name") {
 }
 $ips = json_decode(shell_exec(HESTIA_CMD . "v-list-sys-ips json"), true);
 
+// Web domain apps (hide the app actions if the feature is not available)
+unset($output);
+exec(HESTIA_CMD . "v-list-web-domain-apps " . $user . " json", $output, $return_var);
+$apps_enabled = $return_var == 0;
+$apps = $apps_enabled ? json_decode(implode("", $output), true) : [];
+if (!is_array($apps)) {
+	$apps = [];
+}
+unset($output);
+
 // Render page
 render_page($user, $TAB, "list_web");
 

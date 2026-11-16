@@ -7,6 +7,11 @@
 					<i class="fas fa-circle-plus icon-green"></i><?= tohtml( _("Add Web Domain")) ?>
 				</a>
 			<?php } ?>
+			<?php if ($apps_enabled) { ?>
+				<a href="/list/app/" class="button button-secondary">
+					<i class="fas fa-cube icon-blue"></i><?= tohtml( _("Apps")) ?>
+				</a>
+			<?php } ?>
 		</div>
 		<div class="toolbar-right">
 			<div class="toolbar-sorting">
@@ -223,6 +228,11 @@
 								?>
 							</a>
 						<?php } ?>
+					<?php if (isset($apps[$key])) {
+						$app_state = get_web_app_state($apps[$key]["STATE"] ?? "");
+						?>
+						<i class="fas fa-cube u-ml5 <?= tohtml($app_state["color"]) ?>" title="<?= tohtml( _("App")) ?>: <?= tohtml($app_state["label"]) ?>"></i>
+					<?php } ?>
 				</div>
 				<div class="units-table-cell">
 					<ul class="units-table-row-actions">
@@ -274,6 +284,21 @@
 										<span class="u-hide-desktop"><?= tohtml( _("Download Site")) ?></span>
 									</a>
 								</li>
+								<?php if ($apps_enabled) {
+									$app_action = isset($apps[$key]) ? "edit" : "add";
+									$app_action_title = isset($apps[$key]) ? _("Edit App") : _("Add App");
+									?>
+									<li class="units-table-row-action" data-key-action="href">
+										<a
+											class="units-table-row-action-link"
+											href="/<?= tohtml($app_action) ?>/app/?<?= tohtml(http_build_query(["domain" => $key])) ?>"
+											title="<?= tohtml($app_action_title) ?>"
+										>
+											<i class="fas fa-cube icon-teal"></i>
+											<span class="u-hide-desktop"><?= tohtml($app_action_title) ?></span>
+										</a>
+									</li>
+								<?php } ?>
 							<?php } ?>
 							<li class="units-table-row-action shortcut-l" data-key-action="href">
 								<a

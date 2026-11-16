@@ -1,0 +1,78 @@
+#!/bin/bash
+# info: change web domain application environment
+# options: USER DOMAIN FILE [RESTART]
+#
+# example: v-change-web-domain-app-env admin example.com /tmp/app.env
+#
+# This function replaces the environment variables of a web domain application
+# with the KEY=VALUE lines (dotenv format) from FILE, which must be a regular
+# file directly under /tmp. PORT is managed by Hestia and can't be set. A
+# running application is restarted unless RESTART is "no".
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+domain=$2
+file=$3
+restart=$4
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/app.sh
+source $HESTIA/func/app.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '3' "$#" 'USER DOMAIN FILE [RESTART]'
+is_format_valid 'user' 'domain' 'restart'
+is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
+is_object_valid 'web' 'DOMAIN' "$domain"
+is_app_valid "$domain"
+if ! [[ "$file" =~ ^/tmp/[^/]+$ ]] || [ -L "$file" ] || [ ! -f "$file" ]; then
+	check_result "$E_INVALID" "environment file must be a regular file in /tmp"
+fi
+# Only accept files written by root, the panel or the user, so the command
+# can't be used to read other users' files in /tmp
+file_owner=$(stat -c %U "$file")
+if [ "$file_owner" != 'root' ] && [ "$file_owner" != 'hestiaweb' ] && [ "$file_owner" != "$user" ]; then
+	check_result "$E_FORBIDEN" "environment file must belong to root, hestiaweb or $user"
+fi
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+mkdir -p "$USER_DATA/app"
+chmod 750 "$USER_DATA/app"
+write_app_env "$file" "$(app_env_file "$user" "$domain")"
+
+# Apply the new environment
+get_app_values "$domain"
+web_suspended=$(get_object_value 'web' 'DOMAIN' "$domain" '$SUSPENDED')
+if [ "$restart" != 'no' ] && [ "$STATUS" = 'running' ] && [ "$web_suspended" != 'yes' ]; then
+	start_app_service "$user" "$domain"
+fi
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Logging
+$BIN/v-log-action "$user" "Info" "Web" "Application environment changed (Domain: $domain)."
+log_event "$OK" "$ARGUMENTS"
+
+exit

@@ -5101,3 +5101,235 @@ msgstr ""
 #: ../../bin/v-list-sys-services:336
 msgid "web terminal backend"
 msgstr ""
+
+#: ../../web/add/app/index.php:20 ../../web/edit/app/index.php:28
+msgid "Custom command"
+msgstr ""
+
+#: ../../web/add/app/index.php:44 ../../web/edit/app/index.php:70
+#: ../../web/templates/pages/add_app.php:109
+#: ../../web/templates/pages/edit_app.php:189
+msgid "Start Command"
+msgstr ""
+
+#: ../../web/add/app/index.php:91
+msgid ""
+"The app has been created, but the environment variables could not be saved."
+msgstr ""
+
+#: ../../web/add/app/index.php:107
+#, php-format
+msgid "App for %s has been created successfully."
+msgstr ""
+
+#: ../../web/edit/app/index.php:131
+msgid "Environment variables have been saved."
+msgstr ""
+
+#: ../../web/inc/helpers.php:238 ../../web/templates/pages/edit_app.php:81
+msgid "Running"
+msgstr ""
+
+#: ../../web/inc/helpers.php:251
+msgid "Starting"
+msgstr ""
+
+#: ../../web/inc/helpers.php:257
+msgid "Stopping"
+msgstr ""
+
+#: ../../web/inc/helpers.php:260 ../../web/templates/pages/edit_app.php:81
+msgid "Stopped"
+msgstr ""
+
+#: ../../web/restart/app/index.php:28
+#, php-format
+msgid "App for %s has been restarted."
+msgstr ""
+
+#: ../../web/start/app/index.php:28
+#, php-format
+msgid "App for %s has been started."
+msgstr ""
+
+#: ../../web/stop/app/index.php:28
+#, php-format
+msgid "App for %s has been stopped."
+msgstr ""
+
+#: ../../web/templates/pages/add_app.php:45
+#: ../../web/templates/pages/list_apps.php:10
+#: ../../web/templates/pages/list_web.php:289
+msgid "Add App"
+msgstr ""
+
+#: ../../web/templates/pages/add_app.php:50
+msgid "There is no web domain without an app. Add a web domain first."
+msgstr ""
+
+#: ../../web/templates/pages/add_app.php:59
+msgid ""
+"The app runs as a background service under your user account and is "
+"published on the domain through a reverse proxy. It must listen on 127.0.0.1 "
+"and the port given in the PORT environment variable."
+msgstr ""
+
+#: ../../web/templates/pages/add_app.php:110
+#: ../../web/templates/pages/edit_app.php:190
+msgid "default"
+msgstr ""
+
+#: ../../web/templates/pages/add_app.php:123
+#: ../../web/templates/pages/edit_app.php:206
+msgid "App Directory"
+msgstr ""
+
+#: ../../web/templates/pages/add_app.php:131
+#: ../../web/templates/pages/edit_app.php:214
+msgid "Install / Build Command"
+msgstr ""
+
+#: ../../web/templates/pages/add_app.php:131
+#: ../../web/templates/pages/add_app.php:140
+#: ../../web/templates/pages/edit_app.php:214
+msgid "optional"
+msgstr ""
+
+#: ../../web/templates/pages/add_app.php:135
+#: ../../web/templates/pages/edit_app.php:218
+msgid ""
+"Leave empty to use the runtime default: npm ci (or npm install without a "
+"lock file) for Node.js, a virtualenv with pip install -r requirements.txt "
+"for Python, nothing for custom commands."
+msgstr ""
+
+#: ../../web/templates/pages/add_app.php:140
+#: ../../web/templates/pages/edit_app.php:229
+#: ../../web/templates/pages/edit_app.php:231
+msgid "Environment Variables"
+msgstr ""
+
+#: ../../web/templates/pages/add_app.php:144
+msgid ""
+"One KEY=VALUE per line, lines starting with # are ignored. PORT and HOST are "
+"set automatically."
+msgstr ""
+
+#: ../../web/templates/pages/edit_app.php:39
+#: ../../web/templates/pages/list_apps.php:97
+#: ../../web/templates/pages/list_apps.php:147
+#: ../../web/templates/pages/list_apps.php:150
+#: ../../web/templates/pages/list_web.php:289
+msgid "Edit App"
+msgstr ""
+
+#: ../../web/templates/pages/edit_app.php:56
+#: ../../web/templates/pages/list_apps.php:57
+#: ../../web/templates/pages/list_apps.php:188
+msgid "PID"
+msgstr ""
+
+#: ../../web/templates/pages/edit_app.php:72
+#: ../../web/templates/pages/list_apps.php:61
+#: ../../web/templates/pages/list_apps.php:204
+msgid "Restarts"
+msgstr ""
+
+#: ../../web/templates/pages/edit_app.php:80
+msgid "Desired State"
+msgstr ""
+
+#: ../../web/templates/pages/edit_app.php:91
+#: ../../web/templates/pages/list_apps.php:112
+#, php-format
+msgid "Are you sure you want to restart the app of %s?"
+msgstr ""
+
+#: ../../web/templates/pages/edit_app.php:99
+#: ../../web/templates/pages/list_apps.php:124
+#, php-format
+msgid "Are you sure you want to stop the app of %s?"
+msgstr ""
+
+#: ../../web/templates/pages/edit_app.php:111
+#: ../../web/templates/pages/edit_app.php:114
+msgid "Install Dependencies / Build"
+msgstr ""
+
+#: ../../web/templates/pages/edit_app.php:112
+msgid "Run the install / build command now? This can take a few minutes."
+msgstr ""
+
+#: ../../web/templates/pages/edit_app.php:120
+#: ../../web/templates/pages/list_apps.php:170
+#, php-format
+msgid ""
+"Are you sure you want to delete the app of %s? The app files will be kept."
+msgstr ""
+
+#: ../../web/templates/pages/edit_app.php:129
+msgid "Install / Build Output"
+msgstr ""
+
+#: ../../web/templates/pages/edit_app.php:144
+msgid "Settings"
+msgstr ""
+
+#: ../../web/templates/pages/edit_app.php:202
+msgid ""
+"The app must listen on 127.0.0.1 and the port given in the PORT environment "
+"variable."
+msgstr ""
+
+#: ../../web/templates/pages/edit_app.php:234
+msgid ""
+"One KEY=VALUE per line, lines starting with # are ignored. PORT and HOST are "
+"set automatically. Saving restarts the app if it is running."
+msgstr ""
+
+#: ../../web/templates/pages/edit_app.php:239
+msgid "Save Environment Variables"
+msgstr ""
+
+#: ../../web/templates/pages/edit_app.php:252
+#, php-format
+msgid "Last %s lines"
+msgstr ""
+
+#: ../../web/templates/pages/edit_app.php:254
+msgid "No log entries yet."
+msgstr ""
+
+#: ../../web/templates/pages/list_apps.php:48
+#: ../../web/templates/pages/list_web.php:12
+msgid "Apps"
+msgstr ""
+
+#: ../../web/templates/pages/list_apps.php:68
+msgid "Custom"
+msgstr ""
+
+#: ../../web/templates/pages/list_apps.php:217
+#, php-format
+msgid "%d app"
+msgid_plural "%d apps"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../../web/templates/pages/list_web.php:234
+msgid "App"
+msgstr ""
+
+#: ../../web/update/app/index.php:42
+#, php-format
+msgid ""
+"The install / build command failed (error code %s). See the output below."
+msgstr ""
+
+#: ../../web/update/app/index.php:46
+msgid "Dependencies have been installed."
+msgstr ""
+
+#: ../../web/templates/pages/edit_app.php:127
+msgid "To restart the app from a deploy script, touch this file:"
+msgstr ""

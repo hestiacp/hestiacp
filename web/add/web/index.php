@@ -142,7 +142,8 @@ $user_config = json_decode(implode("", $output), true);
 unset($output);
 // List web templates and set default values
 exec(HESTIA_CMD . "v-list-web-templates json", $output, $return_var);
-$templates = json_decode(implode("", $output), true);
+// The "app" template is selected through web domain apps (/add/app/)
+$templates = array_values(array_diff((array) json_decode(implode("", $output), true), ["app"]));
 unset($output);
 $v_template = !empty($_POST["v_template"])
 	? $_POST["v_template"]
@@ -160,7 +161,9 @@ if (!empty($_SESSION["WEB_BACKEND"])) {
 // List proxy templates
 if (!empty($_SESSION["PROXY_SYSTEM"])) {
 	exec(HESTIA_CMD . "v-list-web-templates-proxy json", $output, $return_var);
-	$proxy_templates = json_decode(implode("", $output), true);
+	$proxy_templates = array_values(
+		array_diff((array) json_decode(implode("", $output), true), ["app"]),
+	);
 	unset($output);
 	$v_proxy_template = !empty($_POST["v_proxy_template"])
 		? $_POST["v_proxy_template"]

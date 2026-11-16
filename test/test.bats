@@ -390,6 +390,110 @@ function check_ip_not_banned(){
 	refute_output
 }
 
+@test "User: Exim rate limit file is filled on add, package change and delete" {
+	if [ -z "$MAIL_SYSTEM" ] || [[ "$MAIL_SYSTEM" != exim* ]]; then
+		skip "Exim is not installed"
+	fi
+	local limits=/etc/exim4/user-limits
+
+	# add: default package RATE_LIMIT is applied
+	assert_file_exist $limits
+	run grep -x "$user:$(grep -m1 "^RATE_LIMIT=" $HESTIA/data/users/$user/user.conf | cut -f 2 -d \')" $limits
+	assert_success
+
+	# a user whose name starts with the same characters is not touched
+	run v-add-user 'ratelimit' $user $user@hestiacp2.com default "Super Test"
+	assert_success
+	run v-add-user 'ratelimit2' $user $user@hestiacp2.com default "Super Test"
+	assert_success
+
+	# package change updates only that user's line
+	cp $HESTIA/data/packages/default.pkg /tmp/package-ratelimit
+	sed -i "s/^RATE_LIMIT=.*/RATE_LIMIT='7'/" /tmp/package-ratelimit
+	run v-add-user-package /tmp/package-ratelimit ratelimittest
+	assert_success
+	run v-change-user-package ratelimit ratelimittest
+	assert_success
+	run grep -x "ratelimit:7" $limits
+	assert_success
+	run grep -c "^ratelimit:" $limits
+	assert_output "1"
+	run grep -x "ratelimit2:$(grep -m1 "^RATE_LIMIT=" $HESTIA/data/users/ratelimit2/user.conf | cut -f 2 -d \')" $limits
+	assert_success
+
+	# direct change of the value
+	run v-change-user-config-value ratelimit RATE_LIMIT 9
+	assert_success
+	run grep -x "ratelimit:9" $limits
+	assert_success
+
+	# delete removes only that user
+	run v-delete-user ratelimit
+	assert_success
+	run grep "^ratelimit:" $limits
+	assert_failure
+	run grep "^ratelimit2:" $limits
+	assert_success
+	run v-delete-user ratelimit2
+	assert_success
+	run grep "^ratelimit2:" $limits
+	assert_failure
+	run grep "^$user:" $limits
+	assert_success
+
+	run v-delete-user-package ratelimittest
+	rm -f /tmp/package-ratelimit
+}
+
+@test "User: Exim rate limit lookup expression falls back and handles leading zeros" {
+	if [ -z "$MAIL_SYSTEM" ] || [[ "$MAIL_SYSTEM" != exim* ]]; then
+		skip "Exim is not installed"
+	fi
+	local tpl lines expr half
+	local f=/tmp/hestia-exim-user-limits-test
+	printf '%s\n' 'alice:20' 'empty:' 'text:abc' 'mixed:5x' 'zero:0' 'oct8:08' 'oct20:020' > $f
+
+	for tpl in $HESTIA/install/deb/exim/exim4.conf*template; do
+		# The expressions are taken from the shipped template, only the file path is swapped
+		expr=$(grep -m1 '^  set acl_c_msg_limit' $tpl | sed "s/^.*= //; s#/etc/exim4/user-limits#$f#g")
+		half=$(grep -m1 '^  warn    ratelimit *= \${eval10:' $tpl | sed 's/^.*= //; s# / 1h.*$##')
+		[ -n "$expr" ]
+		[ -n "$half" ]
+
+		run exim4 -oMai alice -be "$expr"
+		assert_output '20'
+		run exim4 -oMai unknown -be "$expr"
+		assert_output '200'
+		run exim4 -be "$expr"
+		assert_output '200'
+		run exim4 -oMai empty -be "$expr"
+		assert_output '200'
+		run exim4 -oMai text -be "$expr"
+		assert_output '200'
+		run exim4 -oMai mixed -be "$expr"
+		assert_output '200'
+		run exim4 -oMai zero -be "$expr"
+		assert_output '0'
+		run exim4 -oMai oct8 -be "$expr"
+		assert_output '08'
+		run exim4 -oMai oct20 -be "$expr"
+		assert_output '020'
+
+		# Missing file
+		run exim4 -oMai alice -be "${expr//$f//nonexistent/user-limits}"
+		assert_output '200'
+
+		# Half of the limit is computed in base 10 ("08" and "020" are valid)
+		run exim4 -be "${half//\$acl_c_msg_limit/08}"
+		assert_output '4'
+		run exim4 -be "${half//\$acl_c_msg_limit/020}"
+		assert_output '10'
+		run exim4 -be "${half//\$acl_c_msg_limit/200}"
+		assert_output '100'
+	done
+	rm -f $f
+}
+
 @test "User: Change user password" {
     run v-change-user-password "$user" "$userpass2"
     assert_success

@@ -116,6 +116,9 @@ rm -f /var/spool/cron/$user
 rm -f /var/spool/cron/crontabs/$user
 rm -rf $USER_DATA
 
+# Removing Exim per-user mail rate limit
+update_exim_user_limit "$user"
+
 # Updating admin counter
 if [ "$user" != "$ROOT_USER" ]; then
 	decrease_user_value "$ROOT_USER" '$U_USERS'

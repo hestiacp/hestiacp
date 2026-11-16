@@ -105,6 +105,8 @@ Maximum number of mail accounts that can be added per domain.
 
 Maximum number of emails that accounts can send per hour.
 
+The limit also applies to mail sent from the hosting user's websites through `sendmail` or PHP `mail()`. Those emails are counted per hosting user, shared across all of that user's websites. If a site sends more than the limit (newsletters, for example), raise the package rate limit or send through an SMTP account instead.
+
 ## Databases
 
 Maximum number of databases that can be created.

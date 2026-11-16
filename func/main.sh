@@ -1069,6 +1069,56 @@ update_user_value() {
 	fi
 }
 
+# Sync a user's package RATE_LIMIT into /etc/exim4/user-limits ("user:limit" per
+# line), which Exim's acl_not_smtp reads to cap sendmail / PHP mail() per hour.
+# The value is read from the saved user.conf. A missing user or a non-numeric
+# value removes the line, and Exim then falls back to its built-in default.
+# The file is published only if every step succeeded, otherwise the old file
+# stays untouched, the temp file is removed, a warning is printed on stderr and
+# the status is non-zero.
+update_exim_user_limit() {
+	local user="$1"
+	local file="/etc/exim4/user-limits"
+	local rc
+
+	[[ "$MAIL_SYSTEM" == exim* ]] || return 0
+	[[ "$user" =~ ^[A-Za-z0-9._-]+$ ]] || return 0
+
+	(
+		# Root-only lock file (not in the world-writable /run/lock, where a tenant
+		# could hold or pre-create it), and do not wait forever.
+		umask 077
+		exec 9> /run/hestia-exim-user-limits.lock && flock -w 30 9 || exit 1
+
+		limit=""
+		if [ -f "$HESTIA/data/users/$user/user.conf" ]; then
+			limit=$(grep -m1 "^RATE_LIMIT='" "$HESTIA/data/users/$user/user.conf" | cut -f 2 -d \')
+		fi
+		[[ "$limit" =~ ^[0-9]+$ ]] || limit=""
+
+		tmp=$(mktemp "$file.XXXXXX") || exit 1
+		if [ -f "$file" ]; then
+			awk -v key="$user:" 'index($0, key) != 1' "$file" > "$tmp"
+		else
+			: > "$tmp"
+		fi \
+			&& { [ -z "$limit" ] || echo "$user:$limit" >> "$tmp"; } \
+			&& chown root:root "$tmp" \
+			&& chmod 644 "$tmp" \
+			&& mv -f "$tmp" "$file"
+		rc=$?
+		if [ "$rc" -ne 0 ]; then
+			rm -f "$tmp"
+		fi
+		exit "$rc"
+	)
+	rc=$?
+	if [ "$rc" -ne 0 ]; then
+		echo "Warning: could not update /etc/exim4/user-limits for $user (mail rate limit may be stale)" >&2
+	fi
+	return "$rc"
+}
+
 # Increase user counter
 increase_user_value() {
 	key="${2//$/}"

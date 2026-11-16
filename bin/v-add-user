@@ -270,6 +270,9 @@ TIME='$time'
 DATE='$date'" > $USER_DATA/user.conf
 chmod 660 $USER_DATA/user.conf
 
+# Updating Exim per-user mail rate limit
+update_exim_user_limit "$user"
+
 # Updating quota
 if [ "$disk_quota_enabled" = 'yes' ]; then
 	$BIN/v-update-user-quota "$user"

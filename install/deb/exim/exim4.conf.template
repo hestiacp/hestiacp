@@ -103,9 +103,10 @@ begin acl
 # Limit per user for PHP scripts
 acl_not_smtp:
   deny    message       = Website of user $authenticated_id is sending too many emails - rate overlimit = $sender_rate / $sender_rate_period
-  ratelimit             = 200 / 1h / $authenticated_id
+  set acl_c_msg_limit   = ${if and{{!eq{$authenticated_id}{}}{exists{/etc/exim4/user-limits}}}{${lookup{$authenticated_id}lsearch{/etc/exim4/user-limits}{${if match{$value}{\N^\d+$\N}{$value}{200}}}{200}}}{200}}
+  ratelimit             = $acl_c_msg_limit / 1h / $authenticated_id
 
-  warn    ratelimit     = 100 / 1h / strict / $authenticated_id
+  warn    ratelimit     = ${eval10:$acl_c_msg_limit / 2} / 1h / strict / $authenticated_id
   log_message           = Sender rate [limitlog]: log / account / $authenticated_id / $sender_rate / $sender_rate_period
 
   accept
@@ -174,7 +175,7 @@ acl_check_rcpt:
       set acl_c_msg_limit  = ${if exists{/etc/exim4/domains/${lookup{${domain:$authenticated_id}}dsearch{/etc/exim4/domains/}}/limits}{${lookup {$authenticated_id} lsearch{/etc/exim4/domains/${lookup{${domain:$authenticated_id}}dsearch{/etc/exim4/domains/}}/limits}{$value}{${readfile{/etc/exim4/limit.conf}}}}}{${readfile{/etc/exim4/limit.conf}}} }
           ratelimit     = $acl_c_msg_limit / 1h / strict/ $authenticated_id
 
-  warn    ratelimit     = ${eval:$acl_c_msg_limit / 2} / 1h / strict / $authenticated_id
+  warn    ratelimit     = ${eval10:$acl_c_msg_limit / 2} / 1h / strict / $authenticated_id
           log_message           = Sender rate [limitlog]: log / email / $authenticated_id / $sender_rate / $sender_rate_period
 
   deny    message       = Restricted characters in address

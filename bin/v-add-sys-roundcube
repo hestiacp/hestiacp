@@ -66,6 +66,13 @@ if [[ -d "/usr/share/roundcube" ]]; then
 	exit 2
 fi
 
+for rc_path in "$RC_INSTALL_DIR" "$RC_CONFIG_DIR" "$RC_LOG"; do
+	if [[ -L "$rc_path" ]]; then
+		echo "ERROR: $rc_path must not be a symlink" >&2
+		exit 2
+	fi
+done
+
 # Get current version
 if [[ -f "$RC_INSTALL_DIR/program/include/iniset.php" ]]; then
 	version="$(grep RCMAIL_VERSION "$RC_INSTALL_DIR/program/include/iniset.php" | cut -d "'" -f 4)"
@@ -89,15 +96,42 @@ fi
 
 # Check whether ROOT_USER has composer installed to update RC modules
 COMPOSER_ROOT_USER_BIN="$HOMEDIR/$ROOT_USER/.composer/composer"
-if [[ -x "$COMPOSER_ROOT_USER_BIN" ]] \
+if [[ -L "$COMPOSER_ROOT_USER_BIN" ]]; then
+	echo "Warning: $COMPOSER_ROOT_USER_BIN is a symlink, skipping Composer" >&2
+	composer_available=0
+elif [[ -x "$COMPOSER_ROOT_USER_BIN" ]] \
 	|| "$BIN"/v-add-user-composer "$ROOT_USER" &> /dev/null; then
-	composer_available=1
+	if [[ ! -L "$COMPOSER_ROOT_USER_BIN" && -f "$COMPOSER_ROOT_USER_BIN" && -x "$COMPOSER_ROOT_USER_BIN" ]]; then
+		composer_available=1
+	else
+		composer_available=0
+	fi
 else
 	composer_available=0
 fi
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
+
+RC_WORK_DIR="$(umask 077 && mktemp -d)" || {
+	echo "ERROR: Failed to create temporary directory" >&2
+	exit 1
+}
+RC_COMPOSER_HOME="$RC_WORK_DIR/composer-home"
+if ! (umask 077 && mkdir "$RC_COMPOSER_HOME") || ! chmod 0700 "$RC_COMPOSER_HOME"; then
+	rm -rf "${RC_WORK_DIR:?}"
+	echo "ERROR: Failed to create temporary Composer directory" >&2
+	exit 1
+fi
+
+# shellcheck disable=SC2317
+cleanup() {
+	rm -rf "${RC_WORK_DIR:?}"
+	if [[ -d "$RC_INSTALL_DIR" && ! -L "$RC_INSTALL_DIR" ]]; then
+		rm -rf "${RC_INSTALL_DIR:?}/$RC_FILE" "${RC_INSTALL_DIR:?}/$RC_EXTRACT"
+	fi
+}
+trap cleanup EXIT
 
 #----------------------------------------------------------#
 #                      Functions                           #
@@ -114,20 +148,35 @@ fail() {
 	exit 1
 }
 
+restore_rc_backup() {
+	if [[ -d "$RC_WORK_DIR/backup_install" ]]; then
+		find "$RC_INSTALL_DIR" -mindepth 1 -maxdepth 1 -exec rm -rf -- {} + 2> /dev/null || true
+		cp -a "$RC_WORK_DIR/backup_install"/. "$RC_INSTALL_DIR"/ || true
+	fi
+	if [[ -d "$RC_WORK_DIR/backup_config" ]]; then
+		find "$RC_CONFIG_DIR" -mindepth 1 -maxdepth 1 -exec rm -rf -- {} + 2> /dev/null || true
+		cp -a "$RC_WORK_DIR/backup_config"/. "$RC_CONFIG_DIR"/ || true
+	fi
+}
+
 download_rc() {
-	if [[ ! -f "$RC_INSTALL_DIR/$RC_FILE" ]]; then
-		if ! wget "$RC_URL" --retry-connrefused --quiet -O "$RC_INSTALL_DIR/$RC_FILE"; then
-			rm -f "${RC_INSTALL_DIR:?}/$RC_FILE"
+	local target_dir="${1:-$RC_INSTALL_DIR}"
+	if [[ "$target_dir" != "$RC_INSTALL_DIR" && -f "$RC_INSTALL_DIR/$RC_FILE" && ! -L "$RC_INSTALL_DIR/$RC_FILE" ]]; then
+		cp -f "$RC_INSTALL_DIR/$RC_FILE" "$target_dir/$RC_FILE"
+	fi
+	if [[ ! -f "$target_dir/$RC_FILE" ]]; then
+		if ! wget "$RC_URL" --retry-connrefused --quiet -O "$target_dir/$RC_FILE"; then
+			rm -f "${target_dir:?}/$RC_FILE"
 			fail "Failed to download $RC_URL"
 		fi
 	fi
 	# Empty file or HTML error page
-	if [[ ! -s "$RC_INSTALL_DIR/$RC_FILE" ]]; then
-		rm -f "${RC_INSTALL_DIR:?}/$RC_FILE"
+	if [[ ! -s "$target_dir/$RC_FILE" ]]; then
+		rm -f "${target_dir:?}/$RC_FILE"
 		fail "Downloaded archive is empty: $RC_FILE"
 	fi
-	if ! tar tzf "$RC_INSTALL_DIR/$RC_FILE" &> /dev/null; then
-		rm -f "${RC_INSTALL_DIR:?}/$RC_FILE"
+	if ! tar tzf "$target_dir/$RC_FILE" &> /dev/null; then
+		rm -f "${target_dir:?}/$RC_FILE"
 		fail "Downloaded archive is corrupted: $RC_FILE"
 	fi
 }
@@ -136,12 +185,15 @@ update_rc_modules() {
 	[[ "$composer_available" -eq 1 ]] || return 0
 
 	# Use COMPOSER_ALLOW_SUPERUSER=1 to prevent composer from freezing
-	# when executed as root
+	# when executed as root, and ensure COMPOSER_HOME is set under dpkg/cron.
 	export COMPOSER_ALLOW_SUPERUSER=1
+	export COMPOSER_NO_INTERACTION=1
+	export COMPOSER_HOME="$RC_COMPOSER_HOME"
 
 	if ! "$PHP_CLI" "$ENABLE_PHP_FUNCTIONS" "$COMPOSER_ROOT_USER_BIN" \
-		--working-dir="$RC_INSTALL_DIR" update --no-dev --no-interaction --optimize-autoloader &> /dev/null; then
+		--working-dir="$RC_INSTALL_DIR" update --no-dev --no-interaction --optimize-autoloader > "$RC_WORK_DIR/composer.log" 2>&1; then
 		echo "Warning: Failed to update Roundcube modules"
+		sed 's/^/  /' "$RC_WORK_DIR/composer.log" >&2
 		echo "To investigate the issue, run:"
 		echo "COMPOSER_ALLOW_SUPERUSER=1 \"$PHP_CLI\" \"$ENABLE_PHP_FUNCTIONS\" \"$COMPOSER_ROOT_USER_BIN\" --working-dir=\"$RC_INSTALL_DIR\" update --no-dev --no-interaction --optimize-autoloader"
 		return 1
@@ -280,11 +332,12 @@ else
 	command -v rsync &> /dev/null \
 		|| fail "rsync not installed, try install it"
 
-	cd "$RC_INSTALL_DIR" || fail "Cannot enter $RC_INSTALL_DIR"
-	download_rc
+	cd "$RC_WORK_DIR" || fail "Cannot enter $RC_WORK_DIR"
+	download_rc "$RC_WORK_DIR"
 
 	tar xzf "$RC_FILE" || fail "Failed to extract $RC_FILE"
-	[[ -x "$RC_INSTALL_DIR/$RC_EXTRACT/bin/installto.sh" ]] \
+	RC_EXTRACT_DIR="$RC_WORK_DIR/$RC_EXTRACT"
+	[[ -f "$RC_EXTRACT_DIR/bin/installto.sh" ]] \
 		|| fail "installto.sh not found in $RC_EXTRACT"
 
 	# rsync 3.5.0 introduced stricter security checks for destination symlinks owned
@@ -295,23 +348,65 @@ else
 	if rsync -h 2>&1 | grep -q 'insecure-links'; then
 		sed -i \
 			's/rsync -a --out-format=%n/rsync --insecure-links -a --out-format=%n/' \
-			"$RC_INSTALL_DIR/$RC_EXTRACT/bin/installto.sh"
+			"$RC_EXTRACT_DIR/bin/installto.sh"
 
 		sed -i \
 			's/rsync -aC --out-format=%n/rsync --insecure-links -aC --out-format=%n/' \
-			"$RC_INSTALL_DIR/$RC_EXTRACT/bin/installto.sh"
+			"$RC_EXTRACT_DIR/bin/installto.sh"
 	fi
 
-	# Use COMPOSER_ALLOW_SUPERUSER=1 to prevent update.sh script from freezing trying
-	# to execute composer as root to update roundcube dependencies
+	# Propagate -d disable_functions= to child PHP_BINARY invocations spawned by
+	# Roundcube 1.7.6+ installto.sh and update.sh (e.g. bin/update.sh, composer).
+	sed -i \
+		-e "s|\\\\PHP_BINARY \\. ' |\\\\PHP_BINARY . ' $ENABLE_PHP_FUNCTIONS |g" \
+		-e "s|\\\\PHP_BINARY \\. \" |\\\\PHP_BINARY . \" $ENABLE_PHP_FUNCTIONS |g" \
+		"$RC_EXTRACT_DIR/bin/installto.sh"
+	if [[ -f "$RC_EXTRACT_DIR/bin/update.sh" ]]; then
+		sed -i \
+			-e "s|\\\\PHP_BINARY \\. ' |\\\\PHP_BINARY . ' $ENABLE_PHP_FUNCTIONS |g" \
+			-e "s|\\\\PHP_BINARY \\. \" |\\\\PHP_BINARY . \" $ENABLE_PHP_FUNCTIONS |g" \
+			"$RC_EXTRACT_DIR/bin/update.sh"
+	fi
+
+	# Snapshot existing installation and config before modifying files in place so a
+	# mid-upgrade installto.sh/update.sh failure can restore a working previous state.
+	cp -a "$RC_INSTALL_DIR" "$RC_WORK_DIR/backup_install" \
+		|| fail "Failed to back up $RC_INSTALL_DIR before upgrade"
+	if [[ -d "$RC_CONFIG_DIR" ]]; then
+		cp -a "$RC_CONFIG_DIR" "$RC_WORK_DIR/backup_config" \
+			|| fail "Failed to back up $RC_CONFIG_DIR before upgrade"
+	fi
+
+	# Use COMPOSER_ALLOW_SUPERUSER=1, COMPOSER_NO_INTERACTION=1, and COMPOSER_HOME
+	# so Composer runs cleanly under non-interactive dpkg/cron environments.
 	export COMPOSER_ALLOW_SUPERUSER=1
+	export COMPOSER_NO_INTERACTION=1
+	export COMPOSER_HOME="$RC_COMPOSER_HOME"
+
+	rc_upgrade_path="$PATH"
+	if [[ "$composer_available" -eq 1 ]]; then
+		if (umask 077 && mkdir "$RC_WORK_DIR/bin") \
+			&& chmod 0700 "$RC_WORK_DIR/bin" \
+			&& ln -s "$COMPOSER_ROOT_USER_BIN" "$RC_WORK_DIR/bin/composer"; then
+			rc_upgrade_path="$RC_WORK_DIR/bin:$PATH"
+		fi
+	fi
 
 	# Run Roundcube upgrade script
-	"$PHP_CLI" "$ENABLE_PHP_FUNCTIONS" "$RC_INSTALL_DIR/$RC_EXTRACT/bin/installto.sh" -y "$RC_INSTALL_DIR" > /dev/null 2>&1 \
-		|| fail "installto.sh failed (Roundcube $version -> $rc_v)"
+	if ! PATH="$rc_upgrade_path" "$PHP_CLI" "$ENABLE_PHP_FUNCTIONS" "$RC_EXTRACT_DIR/bin/installto.sh" -y "$RC_INSTALL_DIR" > "$RC_WORK_DIR/installto.log" 2>&1; then
+		sed 's/^/  /' "$RC_WORK_DIR/installto.log" >&2
+		restore_rc_backup
+		fail "installto.sh failed (Roundcube $version -> $rc_v)"
+	fi
 
-	"$PHP_CLI" "$ENABLE_PHP_FUNCTIONS" "$RC_INSTALL_DIR/bin/update.sh" --version "$version" > /dev/null 2>&1 \
-		|| fail "update.sh failed (Roundcube $version -> $rc_v)"
+	# Roundcube <1.7.6 installto.sh runs bin/update.sh without checking its exit code.
+	if ! grep -q 'rcube::raise_error.*errors' "$RC_EXTRACT_DIR/bin/installto.sh"; then
+		if ! PATH="$rc_upgrade_path" "$PHP_CLI" "$ENABLE_PHP_FUNCTIONS" "$RC_INSTALL_DIR/bin/update.sh" --version="$version" -y > "$RC_WORK_DIR/update.log" 2>&1; then
+			sed 's/^/  /' "$RC_WORK_DIR/update.log" >&2
+			restore_rc_backup
+			fail "update.sh failed (Roundcube $version -> $rc_v)"
+		fi
+	fi
 
 	# Non critical: only warn
 	"$PHP_CLI" "$ENABLE_PHP_FUNCTIONS" "$RC_INSTALL_DIR/bin/indexcontacts.sh" > /dev/null 2>&1 \
@@ -326,12 +421,10 @@ else
 		cp -f "$HESTIA/install/deb/logrotate/roundcube" /etc/logrotate.d/
 	fi
 
-	#clean up the mess
+	# Clean up installer directory if left behind in target installation
 	if [[ -d "$RC_INSTALL_DIR/installer" ]]; then
 		rm -rf "${RC_INSTALL_DIR:?}/installer"
 	fi
-	rm -rf "${RC_INSTALL_DIR:?}/$RC_FILE"
-	rm -rf "${RC_INSTALL_DIR:?}/$RC_EXTRACT"
 fi
 
 #----------------------------------------------------------#

@@ -460,7 +460,9 @@ else
 	# A vendor/ left behind by an earlier update_rc_modules() has no marker, so
 	# installto.sh would treat it as Composer-managed and skip it. Repair that
 	# before running the installer so the upgrade does not depend on composer
-	# being on root's PATH.
+	# being on root's PATH. A previous run can leave the tree root-owned, and
+	# the marker is restored as hestiamail, so hand it over first.
+	chown -R hestiamail:www-data "$RC_INSTALL_DIR"
 	restore_vendor_marker
 
 	# Run Roundcube upgrade script. Keep the output: installto.sh prints the

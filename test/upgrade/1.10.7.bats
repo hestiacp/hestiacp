@@ -212,6 +212,23 @@ EOF
     assert_equal "$(marker_count)" "0"
 }
 
+@test "Roundcube: a refusal says which file or package caused it" {
+    # The upgrade log is the only place an admin sees why the repair was
+    # skipped, so a silent exit is not good enough.
+    printf '{}\n' > "${install_dir}/composer.json"
+
+    run bash -c "source '${workdir}/func.sh'; restore_vendor_marker 2>&1"
+    assert_output --partial "composer.json is not a Roundcube composer.json"
+}
+
+@test "Roundcube: malformed JSON reports the parse error instead of failing silently" {
+    printf 'not json\n' > "${install_dir}/composer.json"
+
+    run bash -c "source '${workdir}/func.sh'; restore_vendor_marker 2>&1"
+    assert_output --partial "JsonException"
+    assert_equal "$(marker_count)" "0"
+}
+
 @test "Roundcube: vendor marker is not restored when composer.json is not Roundcube's" {
     printf '{ "require": {} }\n' > "${install_dir}/composer.json"
 

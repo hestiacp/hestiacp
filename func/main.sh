@@ -2379,7 +2379,13 @@ user_exec() {
 	local user_groups=$(id -G "$user")
 	user_groups=${user_groups//\ /,}
 
-	setpriv --groups "$user_groups" --reuid "$user" --regid "$user" -- "${@}"
+	# Always run from the user's home (or / as fallback) instead of the
+	# caller's working directory, which the user may not be able to access
+	# (e.g. /root) and breaks tools like find. Pass absolute paths.
+	(
+		cd "$HOMEDIR/$user" 2> /dev/null || cd /
+		setpriv --groups "$user_groups" --reuid "$user" --regid "$user" -- "${@}"
+	)
 }
 
 # Run a command as $user while the user owned directory DIR is temporarily

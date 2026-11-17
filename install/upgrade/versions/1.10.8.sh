@@ -23,6 +23,11 @@ upgrade_config_set_value 'UPGRADE_UPDATE_FILEMANAGER_CONFIG' 'false'
 upgrade_config_set_value 'UPGRADE_UPDATE_MAIL_TEMPLATES' 'false'
 upgrade_config_set_value 'UPGRADE_REBUILD_USERS' 'false'
 
+# Fix duplicate entries in traffic queue
+if [[ -f "$HESTIA/data/queue/traffic.pipe" ]]; then
+	awk -i inplace '!seen[$0]++' "$HESTIA/data/queue/traffic.pipe"
+fi
+
 # Fix per-domain SMTP relay lookup for authenticated null-sender mail on existing Exim installations
 exim_conf="${exim_conf:-/etc/exim4/exim4.conf.template}"
 exim_conf_bak="${exim_conf}.before_smtp_relay_null_sender.bak"

@@ -9,6 +9,7 @@ hst_autocompile.sh flag.
 Build flags are printed on stdout; logs go to stderr.
 """
 
+import hashlib
 import os
 import shutil
 import subprocess
@@ -56,8 +57,16 @@ def read_control_version(path: str) -> str:
     raise RuntimeError(f"no Version in {path}")
 
 
-def parse_packages(text: str) -> dict[tuple[str, str], str]:
-    result: dict[tuple[str, str], str] = {}
+def sha256_file(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def parse_packages(text: str) -> dict[tuple[str, str], tuple[str, str]]:
+    result: dict[tuple[str, str], tuple[str, str]] = {}
     for stanza in text.split("\n\n"):
         fields: dict[str, str] = {}
         for line in stanza.splitlines():
@@ -67,8 +76,9 @@ def parse_packages(text: str) -> dict[tuple[str, str], str]:
         package = fields.get("Package")
         version = fields.get("Version")
         filename = fields.get("Filename")
-        if package and version and filename:
-            result[(package, version)] = filename
+        sha256 = fields.get("SHA256")
+        if package and version and filename and sha256:
+            result[(package, version)] = (filename, sha256.lower())
     return result
 
 
@@ -102,11 +112,12 @@ def main() -> int:
         if tag:
             expected += f"~{tag}"
 
-        filename = index.get((package, expected))
-        if not filename:
+        entry = index.get((package, expected))
+        if not entry:
             log(f"{package} {expected} not published; will build")
             flags.append(flag)
             continue
+        filename, expected_sha256 = entry
 
         destination = out_dir / Path(filename).name
         if destination.exists():
@@ -126,6 +137,11 @@ def main() -> int:
             actual = result.stdout.strip()
             if actual != expected:
                 raise RuntimeError(f"downloaded version {actual} != {expected}")
+            actual_sha256 = sha256_file(destination)
+            if actual_sha256 != expected_sha256:
+                raise RuntimeError(
+                    f"downloaded SHA256 {actual_sha256} != index {expected_sha256}"
+                )
         except Exception as exc:
             log(f"failed to reuse {package}: {exc}; will build")
             destination.unlink(missing_ok=True)

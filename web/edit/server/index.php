@@ -723,6 +723,27 @@ if (!empty($_POST["save"])) {
 		}
 	}
 
+	// Dovecot migration needs a validated passdb hook, not just a config flag.
+	if (
+		empty($_SESSION["error_msg"]) &&
+		($_SESSION["IMAP_SYSTEM"] ?? "") === "dovecot" &&
+		$_SESSION["MAIL_SYSTEM"] !== "remote" &&
+		isset($_POST["v_policy_mail_upgrade_md5"]) &&
+		in_array($_POST["v_policy_mail_upgrade_md5"], ["yes", "no"], true) &&
+		$_POST["v_policy_mail_upgrade_md5"] !== ($_SESSION["POLICY_MAIL_UPGRADE_MD5"] ?? "no")
+	) {
+		exec(
+			HESTIA_CMD .
+				"v-change-sys-mail-password-upgrade " .
+				quoteshellarg($_POST["v_policy_mail_upgrade_md5"]),
+			$output,
+			$return_var,
+		);
+		check_return_code($return_var, $output);
+		unset($output);
+		$v_mail_adv = "yes";
+	}
+
 	// Update system wide smtp relay
 	if (empty($_SESSION["error_msg"])) {
 		if (isset($_POST["v_smtp_relay"]) && !empty($_POST["v_smtp_relay_host"])) {
@@ -1704,6 +1725,28 @@ if (!empty($_POST["save"])) {
 			}
 			$v_security_adv = "yes";
 		}
+	}
+
+	// Change POLICY_SYSTEM_UPGRADE_MD5
+	if (
+		empty($_SESSION["error_msg"]) &&
+		isset($_POST["v_policy_system_upgrade_md5"]) &&
+		in_array($_POST["v_policy_system_upgrade_md5"], ["yes", "no"], true) &&
+		$_POST["v_policy_system_upgrade_md5"] !== ($_SESSION["POLICY_SYSTEM_UPGRADE_MD5"] ?? "no")
+	) {
+		exec(
+			HESTIA_CMD .
+				"v-change-sys-config-value POLICY_SYSTEM_UPGRADE_MD5 " .
+				quoteshellarg($_POST["v_policy_system_upgrade_md5"]),
+			$output,
+			$return_var,
+		);
+		check_return_code($return_var, $output);
+		unset($output);
+		if (empty($_SESSION["error_msg"])) {
+			$v_policy_system_upgrade_md5 = $_POST["v_policy_system_upgrade_md5"];
+		}
+		$v_security_adv = "yes";
 	}
 
 	// Change POLICY_SYSTEM_PROTECTED_ADMIN

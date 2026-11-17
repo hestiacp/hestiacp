@@ -416,6 +416,21 @@
 								>
 							</div>
 						<?php } ?>
+						<?php if (($_SESSION["IMAP_SYSTEM"] ?? "") === "dovecot" && $_SESSION["MAIL_SYSTEM"] !== "remote") { ?>
+							<div class="u-mt15 u-mb10">
+								<label for="v_policy_mail_upgrade_md5" class="form-label">
+									<?= tohtml( _("Upgrade MD5 mailbox password hashes on login")) ?>
+								</label>
+								<select class="form-select" name="v_policy_mail_upgrade_md5" id="v_policy_mail_upgrade_md5">
+									<option value="no">
+										<?= tohtml( _("No")) ?>
+									</option>
+									<option value="yes" <?= tohtml(($_SESSION["POLICY_MAIL_UPGRADE_MD5"] ?? "no") === "yes" ? "selected" : "") ?>>
+										<?= tohtml( _("Yes")) ?>
+									</option>
+								</select>
+							</div>
+						<?php } ?>
 						<div class="form-check u-mt20">
 							<input
 								x-model="hasSmtpRelay"
@@ -1187,6 +1202,19 @@
 										<?= tohtml($_SESSION["POLICY_SYSTEM_PASSWORD_RESET"] == "no" ? "selected" : "") ?>
 									>
 										<?= tohtml( _("No")) ?>
+									</option>
+								</select>
+							</div>
+							<div class="u-mb20">
+								<label for="v_policy_system_upgrade_md5" class="form-label">
+									<?= tohtml( _("Upgrade MD5 password hashes to yescrypt on login")) ?>
+								</label>
+								<select class="form-select" name="v_policy_system_upgrade_md5" id="v_policy_system_upgrade_md5">
+									<option value="no">
+										<?= tohtml( _("No")) ?>
+									</option>
+									<option value="yes" <?= tohtml(($_SESSION["POLICY_SYSTEM_UPGRADE_MD5"] ?? "no") === "yes" ? "selected" : "") ?>>
+										<?= tohtml( _("Yes")) ?>
 									</option>
 								</select>
 							</div>

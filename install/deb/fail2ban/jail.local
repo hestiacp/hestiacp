@@ -20,9 +20,10 @@ logpath  = /var/log/exim4/mainlog
 
 [dovecot-iptables]
 enabled  = true
-filter   = dovecot
+filter   = dovecot-hestia
 action   = hestia[name=MAIL]
 logpath  = /var/log/dovecot.log
+maxretry = 10
 
 [mysqld-iptables]
 enabled  = false

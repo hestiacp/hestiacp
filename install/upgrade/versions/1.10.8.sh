@@ -53,7 +53,17 @@ if [[ -f "$f2b_jail" ]] && [[ -f "$hestia_f2b_filter" ]] \
 
 	backup_jail="$(mktemp)"
 
-	if ! cp -p "$f2b_jail" "$backup_jail"; then
+	# Keep an existing (possibly customised) filter under a unique name
+	filter_backup_ok=true
+	if [[ -f "$f2b_filter" ]]; then
+		if backup_filter="$(mktemp "$f2b_filter.bak-XXXXXX")" && cp -p "$f2b_filter" "$backup_filter"; then
+			echo "[ + ] Previous dovecot-hestia filter saved as $backup_filter"
+		else
+			filter_backup_ok=false
+		fi
+	fi
+
+	if ! cp -p "$f2b_jail" "$backup_jail" || ! $filter_backup_ok; then
 		echo "[ ! ] Failed to create temporary backup"
 		rm -f "$backup_jail"
 	elif ! cp -f "$hestia_f2b_filter" "$f2b_filter"; then

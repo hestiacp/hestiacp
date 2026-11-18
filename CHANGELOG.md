@@ -7,9 +7,12 @@ All notable changes to this project will be documented in this file.
 ### Security
 
 - Generate 2FA QR codes locally instead of sending the secret to api.qrserver.com, and refuse to save a broken 2FA secret #5869
+- Only allow internal `/edit/` links as the post-login redirect, blocking open redirects such as `//evil.com` #5990
+- Only allow users to download their own backup archives (`<user>.<date>….tar`), not other files starting with their username #5990
 
 ### Changes
 
+- Update SnappyMail to 3.1.3 #6009
 - Update Nginx to 1.30.7 #6008
 - Add `bacon/bacon-qr-code` 3.1.1 to the panel PHP dependencies
 - Run `user_exec` commands from the user's home directory instead of the caller's working directory #5989
@@ -20,6 +23,7 @@ All notable changes to this project will be documented in this file.
 
 ### Bug fixes
 
+- Fix the password reset and 2FA reset pages when opened from the email link: always provide a CSRF token, show a "session expired" message instead of silently redirecting to the login page, and log failed attempts correctly #5990
 - Fix the `dovecot-iptables` Fail2Ban jail never matching any login failure: add a Hestia-specific Dovecot filter (covering PAM/SQL/LDAP backends) and set `maxretry = 10`; the 1.10.8 upgrade updates the jail on existing installations #5977
 - Fix duplicate entries in the traffic queue and remove existing duplicates during upgrade #6002
 - Restore the Roundcube vendor marker so upgrades no longer depend on root's composer #6000

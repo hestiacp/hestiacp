@@ -49,8 +49,8 @@ if (isset($_SESSION["user"])) {
 				unset($_SESSION["_sf2_meta"]);
 				if (!empty($_GET["edit_link"])) {
 					$edit_link = urldecode($_GET["edit_link"]);
-					// Prevent open redirect by allowing only internal links
-					if (preg_match("/^\//", $edit_link)) {
+					// Prevent open redirect by allowing only internal /edit/ links.
+					if (preg_match('#^/edit/[^\\\\\s\x00-\x1f\x7f]*$#', $edit_link)) {
 						$url =
 							$edit_link .
 							(str_contains($edit_link, "?") ? "&" : "?") .

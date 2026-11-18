@@ -4,11 +4,11 @@
 
 <h2 align="center">Lightweight and powerful control panel for the modern web</h2>
 
-<p align="center"><strong>Latest stable release:</strong> Version 1.10.6 | <a href="https://github.com/hestiacp/hestiacp/blob/release/CHANGELOG.md">View Changelog</a></p>
+<p align="center"><strong>Latest stable release:</strong> Version 1.10.8 | <a href="https://github.com/hestiacp/hestiacp/blob/release/CHANGELOG.md">View Changelog</a></p>
 
 <p align="center">
-	<a href="https://www.hestiacp.com/">HestiaCP.com</a> |
-	<a href="https://docs.hestiacp.com/">Documentation</a> |
+	<a href="https://hestiacp.com/">HestiaCP.com</a> |
+	<a href="https://hestiacp.com/docs/introduction/getting-started">Documentation</a> |
 	<a href="https://forum.hestiacp.com/">Forum</a>
 	<br/><br/>
 	<a href="https://github.com/hestiacp/hestiacp/actions/workflows/lint.yml">

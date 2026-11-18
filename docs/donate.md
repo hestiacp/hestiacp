@@ -3,7 +3,7 @@ aside: false
 lastUpdated: false
 ---
 
-# Donate to the project
+# Donate to the projects
 
 By donating to Hestia, you help maintain server costs, development time, and more!
 

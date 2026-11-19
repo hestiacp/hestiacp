@@ -1,0 +1,26 @@
+name: Domain sorting
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  domain-sorting:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "lts/*"
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.2"
+          coverage: none
+      - run: npm ci --ignore-scripts
+      - run: php test/domain-sorting.php
+      - run: node --test test/domain-sorting.test.js

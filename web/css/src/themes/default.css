@@ -1090,6 +1090,10 @@
 	}
 }
 
+.is-domain-grouped .web-domain-subdomain {
+	padding-inline-start: 1.5rem;
+}
+
 .units-table-row-actions {
 	display: flex;
 	flex-wrap: wrap;

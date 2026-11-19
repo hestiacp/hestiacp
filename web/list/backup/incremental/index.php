@@ -8,16 +8,13 @@ include $_SERVER["DOCUMENT_ROOT"] . "/inc/main.php";
 function getTransByType($type) {
 	switch ($type) {
 		case "dir":
-			echo _("Directory");
-			break;
+			return _("Directory");
 		case "file":
-			echo _("File");
-			break;
+			return _("File");
 		case "symlink":
-			echo _("Symlink");
-			break;
+			return _("Symlink");
 		default:
-			echo _("Unknown");
+			return _("Unknown");
 	}
 }
 
@@ -28,7 +25,7 @@ if (empty($_GET["snapshot"])) {
 	if (is_array($data)) {
 		$data = array_reverse($data);
 	} else {
-		$data = "";
+		$data = [];
 	}
 
 	render_page($user, $TAB, "list_backup_incremental");

@@ -28,6 +28,8 @@ if (empty($_GET["domain"])) {
 	unset($output);
 	exec(HESTIA_CMD . "v-list-user-ips " . $user . " json", $output, $return_var);
 	$ips = json_decode(implode("", $output), true);
+	// IPv6 addresses can not be used for A records
+	$ips = array_filter($ips ?? [], fn($ip) => strpos($ip, ":") === false, ARRAY_FILTER_USE_KEY);
 	$ips = array_reverse($ips, true);
 	unset($output);
 	exec(

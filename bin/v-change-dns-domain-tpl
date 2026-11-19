@@ -87,6 +87,9 @@ if [ -z "$ns8" ]; then
 	template_data=$(echo "$template_data" | grep -v %ns8%)
 fi
 
+# Adding AAAA records
+add_dns_template_ipv6_records "$IP" "$IP6"
+
 # Changing tpl
 echo "$template_data" \
 	| sed -e "s/%ip%/$IP/g" \

@@ -5101,3 +5101,41 @@ msgstr ""
 #: ../../bin/v-list-sys-services:336
 msgid "web terminal backend"
 msgstr ""
+
+#: ../../web/templates/pages/list_firewall.php:20
+msgid "IPv6 Firewall"
+msgstr ""
+
+#: ../../web/templates/pages/list_firewall_ipv6.php:62
+msgid "IPv6 Firewall Rules"
+msgstr ""
+
+#: ../../web/templates/pages/edit_web.php:72
+msgid "IPv4 Address"
+msgstr ""
+
+#: ../../web/add/firewall/ipv6/index.php:41
+#: ../../web/edit/firewall/ipv6/index.php:69
+#: ../../web/templates/pages/edit_web.php:93
+#: ../../web/templates/pages/list_firewall_ipv6.php:36
+#: ../../web/templates/pages/list_firewall_ipv6.php:76
+#: ../../web/templates/pages/list_firewall_ipv6.php:213
+msgid "IPv6 Address"
+msgstr ""
+
+#: ../../web/templates/pages/edit_web.php:76
+#: ../../web/templates/pages/edit_web.php:97
+msgid "None"
+msgstr ""
+
+#: ../../web/edit/web/index.php:223
+msgid "A domain must have at least one IP address (IPv4 or IPv6)."
+msgstr ""
+
+#: ../../web/edit/web/index.php:238
+msgid "Invalid IPv6 address."
+msgstr ""
+
+#: ../../web/add/ip/index.php:32 ../../web/templates/pages/add_ip.php:39
+msgid "Netmask / Prefix Length"
+msgstr ""

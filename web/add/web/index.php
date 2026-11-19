@@ -16,7 +16,14 @@ if (!empty($_POST["ok"]) && $read_only !== true) {
 	if (empty($_POST["v_domain"])) {
 		$errors[] = _("Domain");
 	}
-	if (empty($_POST["v_ip"])) {
+	exec(HESTIA_CMD . "v-list-user-ips " . $user . " json", $output, $return_var);
+	$ips = json_decode(implode("", $output), true);
+	unset($output);
+	// IPv6-only servers: the domain gets the IPv6 address of the user only
+	$has_ipv4 = !empty(
+		array_filter($ips ?? [], fn($ip) => strpos($ip, ":") === false, ARRAY_FILTER_USE_KEY)
+	);
+	if (empty($_POST["v_ip"]) && $has_ipv4) {
 		$errors[] = _("IP Address");
 	}
 
@@ -36,15 +43,12 @@ if (!empty($_POST["ok"]) && $read_only !== true) {
 	$v_domain = strtolower($v_domain);
 
 	// Define domain ip address
-	$v_ip = quoteshellarg($_POST["v_ip"]);
+	$v_ip = quoteshellarg($_POST["v_ip"] ?? "");
 
 	// Using public IP instead of internal IP when creating DNS
 	// Gets public IP from 'v-list-user-ips' command (that reads /hestia/data/ips/ip), precisely from 'NAT' field
 	$v_public_ip = $v_ip;
-	$v_clean_ip = $_POST["v_ip"]; // clean_ip = IP without quotas
-	exec(HESTIA_CMD . "v-list-user-ips " . $user . " json", $output, $return_var);
-	$ips = json_decode(implode("", $output), true);
-	unset($output);
+	$v_clean_ip = $_POST["v_ip"] ?? ""; // clean_ip = IP without quotas
 	if (
 		isset($ips[$v_clean_ip]) &&
 		isset($ips[$v_clean_ip]["NAT"]) &&
@@ -95,6 +99,16 @@ if (!empty($_POST["ok"]) && $read_only !== true) {
 	}
 	// Add DNS domain
 	if ($_POST["v_dns"] == "on" && empty($_SESSION["error_msg"])) {
+		// Publish AAAA records only for the IPv6 address the web domain listens on
+		exec(
+			HESTIA_CMD . "v-list-web-domain " . $user . " " . quoteshellarg($v_domain) . " json",
+			$output,
+			$return_var,
+		);
+		$web_domain = json_decode(implode("", $output), true);
+		unset($output);
+		$v_ip6 = $web_domain[$v_domain]["IP6"] ?? "";
+
 		exec(
 			HESTIA_CMD .
 				"v-add-dns-domain " .
@@ -103,7 +117,8 @@ if (!empty($_POST["ok"]) && $read_only !== true) {
 				quoteshellarg($v_domain) .
 				" " .
 				$v_public_ip .
-				" '' '' '' '' '' '' '' '' 'no'",
+				" '' '' '' '' '' '' '' '' 'no' '' " .
+				quoteshellarg($v_ip6),
 			$output,
 			$return_var,
 		);
@@ -170,6 +185,8 @@ if (!empty($_SESSION["PROXY_SYSTEM"])) {
 // List IP addresses
 exec(HESTIA_CMD . "v-list-user-ips " . $user . " json", $output, $return_var);
 $ips = json_decode(implode("", $output), true);
+// Web domains get their IPv6 address automatically
+$ips = array_filter($ips ?? [], fn($ip) => strpos($ip, ":") === false, ARRAY_FILTER_USE_KEY);
 unset($output);
 
 // Get all user domains

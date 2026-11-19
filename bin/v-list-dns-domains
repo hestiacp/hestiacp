@@ -57,6 +57,7 @@ foreach ($records as $record) {
 
     $output[$domain] = [
         'IP' => $record['IP'] ?? '',
+        'IP6' => $record['IP6'] ?? '',
         'TPL' => $record['TPL'] ?? '',
         'TTL' => $record['TTL'] ?? '',
         'EXP' => $record['EXP'] ?? '',

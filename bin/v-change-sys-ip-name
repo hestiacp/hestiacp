@@ -3,6 +3,7 @@
 # options: IP NAME
 #
 # example: v-change-sys-ip-name 203.0.113.1 acme.com
+# example: v-change-sys-ip-name 2001:db8::1 acme.com
 #
 # This function for changing dns domain associated with IP.
 
@@ -29,7 +30,12 @@ source_conf "$HESTIA/conf/hestia.conf"
 #----------------------------------------------------------#
 
 check_args '2' "$#" 'IP IP_NAME'
-is_format_valid 'ip'
+if is_ipv6_address "$ip"; then
+	is_ipv6_format_valid "$ip"
+	ip=$(normalize_ipv6 "$ip")
+else
+	is_format_valid 'ip'
+fi
 is_format_valid 'ip_name'
 is_ip_valid "$ip"
 

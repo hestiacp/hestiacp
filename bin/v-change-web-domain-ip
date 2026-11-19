@@ -46,9 +46,13 @@ is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'web' 'DOMAIN' "$domain"
 is_object_unsuspended 'web' 'DOMAIN' "$domain"
 is_ip_valid "$ip" "$user"
+if is_ipv4_web_name "$domain"; then
+	check_primary_web_ip "$domain" "$ip" "$user"
+fi
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
+release_ip_default_ssl "$user" "$domain"
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -88,6 +92,7 @@ update_object_value 'web' 'DOMAIN' "$domain" '$IP' "$3"
 # Update counters
 increase_ip_value "$new"
 decrease_ip_value "$old"
+sync_dedicated_ip_https || exit $?
 
 # Restart web server
 $BIN/v-restart-web "$restart"

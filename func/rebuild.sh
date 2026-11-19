@@ -241,10 +241,10 @@ rebuild_web_domain_conf() {
 	prepare_web_domain_values
 
 	# Remove old web configuration files
-	if [ -f /etc/$WEB_SYSTEM/conf.d/$domain.conf ]; then
+	if ! is_ipv4_web_name "$domain" && [ -f /etc/$WEB_SYSTEM/conf.d/$domain.conf ]; then
 		rm -f /etc/$WEB_SYSTEM/conf.d/$domain*.conf
 	fi
-	if [ -f /etc/$PROXY_SYSTEM/conf.d/$domain.conf ]; then
+	if ! is_ipv4_web_name "$domain" && [ -f /etc/$PROXY_SYSTEM/conf.d/$domain.conf ]; then
 		rm -f /etc/$PROXY_SYSTEM/conf.d/$domain*.conf
 	fi
 

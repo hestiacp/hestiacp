@@ -99,6 +99,7 @@ fi
 # Adding new alias
 update_object_value 'web' 'DOMAIN' "$domain" '$ALIAS' "$ALIAS"
 increase_user_value "$user" '$U_WEB_ALIASES'
+sync_dedicated_ip_https || exit $?
 
 # Restarting web server
 $BIN/v-restart-web "$restart"

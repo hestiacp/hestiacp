@@ -20,6 +20,8 @@ source /etc/hestiacp/hestia.conf
 source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/func/ip.sh
 source $HESTIA/func/ip.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
+source $HESTIA/func/domain.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
@@ -39,6 +41,7 @@ ip_status="$(get_ip_value '$STATUS')"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
+release_ip_default_ssl_address "$ip"
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -81,6 +84,8 @@ fi
 ip_status="$(get_ip_value '$STATUS')"
 if [ "$user" != "$ROOT_USER" ] && [ "$ip_status" = 'shared' ]; then
 	$BIN/v-change-sys-ip-status "$ip" 'dedicated'
+else
+	sync_dedicated_ip_owner_sites "$ip" || exit $?
 fi
 
 #----------------------------------------------------------#

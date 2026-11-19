@@ -34,6 +34,7 @@ if (!empty($_POST["ok"]) && $read_only !== true) {
 	// Set domain to lowercase and remove www prefix
 	$v_domain = preg_replace("/^www\./i", "", $_POST["v_domain"]);
 	$v_domain = strtolower($v_domain);
+	$ip_domain = filter_var(trim($v_domain, "."), FILTER_VALIDATE_IP, FILTER_FLAG_IPV4);
 
 	// Define domain ip address
 	$v_ip = quoteshellarg($_POST["v_ip"]);
@@ -94,7 +95,7 @@ if (!empty($_POST["ok"]) && $read_only !== true) {
 		$_POST["v_mail"] = "no";
 	}
 	// Add DNS domain
-	if ($_POST["v_dns"] == "on" && empty($_SESSION["error_msg"])) {
+	if (!$ip_domain && $_POST["v_dns"] == "on" && empty($_SESSION["error_msg"])) {
 		exec(
 			HESTIA_CMD .
 				"v-add-dns-domain " .
@@ -112,7 +113,7 @@ if (!empty($_POST["ok"]) && $read_only !== true) {
 	}
 
 	// Add mail domain
-	if ($_POST["v_mail"] == "on" && empty($_SESSION["error_msg"])) {
+	if (!$ip_domain && $_POST["v_mail"] == "on" && empty($_SESSION["error_msg"])) {
 		exec(
 			HESTIA_CMD . "v-add-mail-domain " . $user . " " . quoteshellarg($v_domain),
 			$output,

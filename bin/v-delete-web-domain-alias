@@ -45,6 +45,7 @@ fi
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
+release_ip_default_ssl "$user" "$domain" "$dom_alias"
 
 #----------------------------------------------------------#
 #                       Action                             #

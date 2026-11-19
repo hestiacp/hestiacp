@@ -69,6 +69,8 @@ fi
 
 # Updating configs
 if [ -n "$old_ip" ]; then
+	check_no_primary_web_ip "$old_ip"
+	release_ip_default_ssl_address "$old_ip"
 	mv $HESTIA/data/ips/$old_ip $HESTIA/data/ips/$new_ip
 
 	# Generating timestamp

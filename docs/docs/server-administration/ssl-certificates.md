@@ -11,6 +11,32 @@ v-change-sys-hostname host.domain.tld
 v-add-letsencrypt-host
 ```
 
+## Serve a website on its dedicated IPv4 address
+
+Assign a dedicated IPv4 address to the site owner. In **Web → Add Web Domain**,
+the owner can enter the public IPv4 address itself in **Domain** and select the
+matching **IP Address**. No hostname, alias, DNS zone, or mail domain is needed.
+For NAT, enter the public address in **Domain** and select its local IP record.
+Alternatively, add the public IP as an alias on a named site using that address.
+
+Enable SSL and Let's Encrypt on the site. Hestia requests an IP certificate
+with the `shortlived` profile and renews it with fewer than three days remaining.
+Keep scheduled renewal enabled. nginx automatically serves the site at
+`https://<IP>/`; shared IPs keep their existing listener. Remove an IP-named
+site before reassigning its address.
+
+Clients connecting without SNI (or with an unknown hostname) on that dedicated
+IP receive the site's certificate. Removing the IP alias, disabling SSL or
+suspending the site restores the original listener and reloads nginx, even with
+`RESTART=no`. Other IPs and the global certificate are unaffected.
+
+Keep the original listener backups in `$HESTIA/data/ip-default-ssl/` while a
+selection is active. If the command reports **Manual recovery required**,
+dependent operations are blocked. Use the `IP.recovery` record there to locate
+and restore the saved listener, IP metadata and any Apache/site files. Test
+and reload the affected services before removing the record and transaction
+files.
+
 ## Common errors using Let’s Encrypt
 
 ::: info

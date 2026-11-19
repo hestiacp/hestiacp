@@ -2613,3 +2613,19 @@ delete_chroot_jail() {
 	rm -r /srv/jail/$user/ > /dev/null 2>&1
 	rmdir /srv/jail/$user > /dev/null 2>&1
 }
+
+# Administrative writers share a gate with the Dovecot password migrator.
+# Shared locks compose across nested CLI calls; only the migration's short
+# final recheck/commit takes this gate exclusively. Do not use an inherited
+# environment flag to bypass acquisition.
+case "$SCRIPT" in
+	v-*-mail-* | v-import-* | v-restore-* | v-rebuild-* | v-change-domain-owner | \
+		v-delete-user | v-suspend-user | v-unsuspend-user | \
+		v-change-sys-config-value)
+		# shellcheck source=/usr/local/hestia/func/mail-password-lock.sh
+		source "$HESTIA/func/mail-password-lock.sh" \
+			|| check_result "$E_PARSING" "Cannot load mail password upgrade lock"
+		lock_mail_password_writes \
+			|| check_result "$E_PARSING" "Cannot coordinate mail password writes"
+		;;
+esac

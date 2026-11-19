@@ -421,6 +421,18 @@ function syshealth_repair_system_config() {
 		$BIN/v-change-sys-config-value "POLICY_SYSTEM_PASSWORD_RESET" "no"
 	fi
 
+	# Upgrade legacy password hashes after successful panel login
+	if [[ -z $(check_key_exists 'POLICY_SYSTEM_UPGRADE_MD5') ]]; then
+		echo "[ ! ] Adding missing variable to hestia.conf: POLICY_SYSTEM_UPGRADE_MD5 ('no')"
+		$BIN/v-change-sys-config-value "POLICY_SYSTEM_UPGRADE_MD5" "no"
+	fi
+
+	# Mail password migration is independent of control-panel password migration.
+	if [[ -z $(check_key_exists 'POLICY_MAIL_UPGRADE_MD5') ]]; then
+		echo "[ ! ] Adding missing variable to hestia.conf: POLICY_MAIL_UPGRADE_MD5 ('no')"
+		$BIN/v-change-sys-config-value "POLICY_MAIL_UPGRADE_MD5" "no"
+	fi
+
 	# Theme editor
 	if [[ -z $(check_key_exists 'POLICY_USER_CHANGE_THEME') ]]; then
 		echo "[ ! ] Adding missing variable to hestia.conf: POLICY_USER_CHANGE_THEME ('yes')"

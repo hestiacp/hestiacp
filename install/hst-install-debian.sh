@@ -1066,6 +1066,12 @@ if [ "$phpfpm" = 'yes' ]; then
 	software="$software $fpm"
 fi
 
+# Newer distributions package the Lua passdb separately from dovecot-core.
+if [ "$exim" = 'yes' ] && [ "$dovecot" = 'yes' ] \
+	&& apt-cache show dovecot-auth-lua > /dev/null 2>&1; then
+	software="$software dovecot-auth-lua"
+fi
+
 #----------------------------------------------------------#
 #                     Package Excludes                     #
 #----------------------------------------------------------#

@@ -1,3 +1,5 @@
+!include_try /etc/dovecot/conf.d/auth-hestia-password-upgrade.conf.ext
+
 passdb {
   driver = passwd-file
   args = scheme=MD5-CRYPT username_format=%n /etc/exim4/domains/%d/passwd

@@ -106,9 +106,6 @@ if (!empty($_POST["ok"]) && $read_only !== true) {
 	// Get database manager url
 	if (empty($_SESSION["error_msg"])) {
 		[$http_host, $port] = explode(":", $_SERVER["HTTP_HOST"] . ":");
-		if ($_POST["v_host"] != "localhost") {
-			$http_host = $_POST["v_host"];
-		}
 		if ($_POST["v_type"] == "mysql") {
 			$db_admin = "phpMyAdmin";
 		}

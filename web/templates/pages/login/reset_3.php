@@ -15,11 +15,15 @@
 			<input type="hidden" name="user" value="<?= tohtml($_GET["user"]) ?>">
 			<input type="hidden" name="code" value="<?= tohtml($_GET["code"]) ?>">
 			<label for="password" class="form-label"><?= tohtml( _("New Password")) ?></label>
-			<input type="password" class="form-control" name="password" id="password" autocomplete="new-password" required autofocus>
+			<div class="u-pos-relative">
+				<input type="password" class="form-control js-password-input" name="password" id="password" autocomplete="new-password" required autofocus>
+			</div>
 		</div>
 		<div class="u-mb20">
 			<label for="password_confirm" class="form-label"><?= tohtml( _("Confirm Password")) ?></label>
-			<input type="password" class="form-control" name="password_confirm" id="password_confirm" autocomplete="new-password" required>
+			<div class="u-pos-relative">
+				<input type="password" class="form-control js-password-input" name="password_confirm" id="password_confirm" autocomplete="new-password" required>
+			</div>
 		</div>
 		<div class="u-side-by-side">
 			<button type="submit" class="button">

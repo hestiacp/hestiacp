@@ -83,6 +83,7 @@ json_list() {
         "THEME": "'$THEME'",
         "NOTIFICATIONS": "'$NOTIFICATIONS'",
         "PREF_UI_SORT": "'$PREF_UI_SORT'",
+        "PREF_SUBDOMAIN_GROUPING": "'$PREF_SUBDOMAIN_GROUPING'",
         "LOGIN_DISABLED": "'$LOGIN_DISABLED'",
         "LOGIN_USE_IPLIST": "'$LOGIN_USE_IPLIST'",
         "LOGIN_ALLOW_IPS": "'$LOGIN_ALLOW_IPS'",

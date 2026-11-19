@@ -1469,6 +1469,23 @@
 									</option>
 								</select>
 							</div>
+							<div class="u-mb10">
+								<label for="v_subdomain_grouping" class="form-label">
+									<?= tohtml( _("Group subdomains in the Web domain list")) ?>
+								</label>
+								<select
+									class="form-select"
+									name="v_subdomain_grouping"
+									id="v_subdomain_grouping"
+								>
+									<option value="no" <?= tohtml($_SESSION["SUBDOMAIN_GROUPING"] != "yes" ? "selected" : "") ?>>
+										<?= tohtml( _("No")) ?>
+									</option>
+									<option value="yes" <?= tohtml($_SESSION["SUBDOMAIN_GROUPING"] == "yes" ? "selected" : "") ?>>
+										<?= tohtml( _("Yes")) ?>
+									</option>
+								</select>
+							</div>
 						</div>
 					</details>
 

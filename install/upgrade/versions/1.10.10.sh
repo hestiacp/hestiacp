@@ -68,3 +68,66 @@ if [[ -f "$exim_conf" ]] \
 		fi
 	fi
 fi
+
+# Allow tnftp (used by FTP backups) to read/write local backup archives under AppArmor (#6003)
+if [[ -e /etc/apparmor.d/tnftp || -L /etc/apparmor.d/tnftp ]]; then
+	_tnftp_local="/etc/apparmor.d/local/tnftp"
+	if [[ -L /etc/apparmor.d/tnftp || -L /etc/apparmor.d/local || -L "$_tnftp_local" ]]; then
+		echo "[ ! ] Warning: Refusing to follow symlink under /etc/apparmor.d for tnftp" >&2
+	elif mkdir -p /etc/apparmor.d/local && [[ ! -L /etc/apparmor.d/local ]] && _tnftp_tmp="$(umask 077 && mktemp /etc/apparmor.d/local/.tnftp.XXXXXX)"; then
+		_tnftp_extra=""
+		if [[ -f "$_tnftp_local" ]]; then
+			_tnftp_extra="$(awk '
+				/^# Begin configuration added by Hestia$/ { skip = 1; next }
+				/^# End configuration added by Hestia$/ { skip = 0; next }
+				!skip { print }
+			' "$_tnftp_local")"
+		fi
+		if {
+			if [[ "$_tnftp_extra" == *[^[:space:]]* ]]; then
+				printf '%s\n' "$_tnftp_extra"
+			fi
+			{
+				printf '# Begin configuration added by Hestia\n'
+				printf 'capability dac_read_search,\n'
+				printf 'capability dac_override,\n'
+				printf '/backup/ r,\n'
+				printf '/backup/** rwk,\n'
+				for _tnftp_cand in \
+					"${BACKUP:-/backup}" \
+					"$(realpath -e /backup 2> /dev/null || true)" \
+					"$(realpath -e "${BACKUP:-/backup}" 2> /dev/null || true)"; do
+					_bdir="$_tnftp_cand"
+					while [[ "$_bdir" == */ && "$_bdir" != "/" ]]; do
+						_bdir="${_bdir%/}"
+					done
+					if [[ -n "$_bdir" && "$_bdir" != "/" && "$_bdir" != "/backup" ]] \
+						&& [[ "$_bdir" != *$'\n'* && "$_bdir" != *$'\r'* ]] \
+						&& [[ "$_bdir" =~ ^/[A-Za-z0-9._/-]+$ ]] \
+						&& [[ "$_bdir" != *//* ]] \
+						&& [[ ! "$_bdir" =~ (^|/)\.\.(/|$) ]]; then
+						printf '%s/ r,\n' "$_bdir"
+						printf '%s/** rwk,\n' "$_bdir"
+					fi
+				done
+				printf '# End configuration added by Hestia\n'
+			} | awk '!seen[$0]++'
+		} > "$_tnftp_tmp" && chmod 644 "$_tnftp_tmp" && [[ ! -L "$_tnftp_local" ]]; then
+			if [[ ! -f "$_tnftp_local" ]] || ! cmp -s "$_tnftp_tmp" "$_tnftp_local"; then
+				echo "[ + ] Updating AppArmor rules for tnftp"
+				mv -f "$_tnftp_tmp" "$_tnftp_local"
+				if command -v apparmor_parser > /dev/null 2>&1; then
+					apparmor_parser -r /etc/apparmor.d/tnftp > /dev/null 2>&1 || true
+				fi
+			else
+				rm -f "$_tnftp_tmp"
+			fi
+		else
+			rm -f "$_tnftp_tmp"
+			echo "[ ! ] Warning: Failed to update AppArmor rules for tnftp" >&2
+		fi
+	else
+		echo "[ ! ] Warning: Failed to update AppArmor rules for tnftp" >&2
+	fi
+	unset _tnftp_local _tnftp_tmp _tnftp_extra _tnftp_cand _bdir
+fi

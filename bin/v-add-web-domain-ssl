@@ -121,6 +121,7 @@ increase_user_value "$user" '$U_WEB_SSL'
 # Adding ssl values
 update_object_value 'web' 'DOMAIN' "$domain" '$SSL_HOME' "$SSL_HOME"
 update_object_value 'web' 'DOMAIN' "$domain" '$SSL' "yes"
+sync_dedicated_ip_https || exit $?
 
 # Restarting web server
 $BIN/v-restart-web "$restart"

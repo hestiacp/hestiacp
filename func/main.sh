@@ -2613,3 +2613,7 @@ delete_chroot_jail() {
 	rm -r /srv/jail/$user/ > /dev/null 2>&1
 	rmdir /srv/jail/$user > /dev/null 2>&1
 }
+
+# Default TLS certificate lifecycle helpers and command-scoped locking.
+# shellcheck source=/usr/local/hestia/func/ip-default-ssl.sh
+source "$HESTIA/func/ip-default-ssl.sh"

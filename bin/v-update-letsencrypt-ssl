@@ -62,7 +62,12 @@ for user in $("$BIN/v-list-users" list); do
 		now=$(date +%s)
 		seconds_valid=$((expiration - now))
 		days_valid=$((seconds_valid / 86400))
-		if [[ "$days_valid" -lt "$days_valid_setting" ]]; then
+		ip_aliases=$(echo "$crt_data" | grep -o 'IP Address:[^,[:space:]]*' | sed 's/IP Address://g' | paste -sd, -)
+		renewal_days_valid_setting=$days_valid_setting
+		if [ -n "$ip_aliases" ]; then
+			renewal_days_valid_setting=3
+		fi
+		if [[ "$days_valid" -lt "$renewal_days_valid_setting" ]]; then
 			if [ $lecounter -gt 0 ]; then
 				sleep 10
 			fi
@@ -71,11 +76,7 @@ for user in $("$BIN/v-list-users" list); do
 			# Convert main domain to punycode, as it is stored that way in the certificate
 			domain_idn=$(idn2 --quiet "${domain,,}" 2> /dev/null || echo "${domain,,}")
 
-			aliases=$(echo "$crt_data" | grep DNS:)
-			aliases=$(echo "$aliases" | sed -e "s/DNS://g" -e "s/,//g")
-			aliases=$(echo "$aliases" | tr ' ' '\n' | sed "/^$/d")
-			aliases=$(echo "$aliases" | grep -vxF "$domain_idn")
-			aliases=$(echo "$aliases" | sed -e ':a;N;$!ba;s/\n/,/g')
+			aliases=$(echo "$crt_data" | grep -o 'DNS:[^,[:space:]]*' | cut -c5- | grep -Fxv "$domain_idn" | paste -sd, -)
 
 			# Parsing domain
 			unset SSL_KEY_ALGO
@@ -107,6 +108,15 @@ for user in $("$BIN/v-list-users" list); do
 
 			# Write the filtered alias list to the default var
 			aliases=$f_aliases
+			# Do not resurrect a removed alias or request an IP that no longer
+			# belongs to this site after an IP/NAT change.
+			if [ -n "$ip_aliases" ] && record=$(dedicated_ip_record "$IP" "$user"); then
+				public_ip=$(get_ip_default_ssl_value "$record" NAT)
+				public_ip=${public_ip:-${record##*/}}
+				if [[ ",$ip_aliases," == *,"$public_ip",* && ",$ALIAS," == *,"$public_ip",* ]]; then
+					aliases="${aliases:+$aliases,}$public_ip"
+				fi
+			fi
 
 			# Preserve the key algorithm the domain was issued with.
 			# Domains created before SSL_KEY_ALGO existed fall back to

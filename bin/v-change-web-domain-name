@@ -52,6 +52,9 @@ format_domain_idn
 check_args '3' "$#" 'USER DOMAIN NEW_DOMAIN [RESTART]'
 is_format_valid 'user' 'domain' 'restart'
 is_domain_format_valid "$new_domain"
+if is_ipv4_web_name "$domain" || is_ipv4_web_name "$(idn2 --quiet "$new_domain")"; then
+	check_result "$E_INVALID" "Create a new website instead of renaming an IP website"
+fi
 is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
@@ -75,6 +78,7 @@ fi
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
+release_ip_default_ssl "$user" "$domain"
 
 #----------------------------------------------------------#
 #                       Action                             #

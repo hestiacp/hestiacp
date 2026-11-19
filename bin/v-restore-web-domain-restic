@@ -75,6 +75,8 @@ IFS=',' read -a domains <<< "$WEB"
 is_backup_list_valid domain "${domains[@]}"
 for domain in "${domains[@]}"; do
 	if [[ ",$web," == *",$domain,"* || "$web" = '*' ]]; then
+		check_hestia_demo_mode
+		release_ip_default_ssl "$user" "$domain"
 		# Cleanup previous domain keys
 		unset -v DOMAIN IP IP6 ALIAS TPL SSL SSL_HOME LETSENCRYPT FTP_USER FTP_MD5 BACKEND PROXY PROXY_EXT STATS STATS_USER STATS_CRYPT U_DISK CUSTOM_DOCROOT CUSTOM_PHPROOT
 
@@ -140,6 +142,9 @@ for domain in "${domains[@]}"; do
 			done
 
 			# Checking IP address
+			if is_ipv4_web_name "$domain"; then
+				check_primary_web_ip "$domain" "$IP" "$user"
+			fi
 			check_ip=$(is_ip_valid $IP $user)
 			if [ -n "$check_ip" ]; then
 				local_ip=''
@@ -281,6 +286,7 @@ for domain in "${domains[@]}"; do
 		fi
 		# Rebuilding web config for the second time to make sure ftp users keep working
 		rebuild_web_domain_conf
+		sync_dedicated_ip_https || exit $?
 
 	fi
 done

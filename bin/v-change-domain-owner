@@ -76,6 +76,9 @@ fi
 
 # Fail before anything is changed if the data can't be moved
 if grep -q "DOMAIN='$domain'" "$HESTIA/data/users/$owner/web.conf" 2> /dev/null; then
+	if is_ipv4_web_name "$domain"; then
+		check_result "$E_INUSE" "Remove the IP website before transferring its dedicated address"
+	fi
 	check_domain_data "web" "$domain" || exit $?
 fi
 if grep -q "DOMAIN='$domain'" "$HESTIA/data/users/$owner/mail.conf" 2> /dev/null; then
@@ -84,6 +87,11 @@ fi
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
+# The transfer ignores some nested command failures, so release dependencies
+# explicitly before moving either web or shared mail certificate paths.
+release_ip_default_ssl "$owner" "$domain"
+release_ip_default_ssl "$owner" "mail.$domain"
+release_ip_default_ssl "$user" "mail.$domain"
 
 #----------------------------------------------------------#
 #                       Action                             #

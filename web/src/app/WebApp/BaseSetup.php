@@ -44,8 +44,7 @@ abstract class BaseSetup implements InstallerInterface
 
     public function install(InstallationTarget $target, array $options): void
     {
-        $this->appcontext->deleteFile($target->getDocRoot('robots.txt'));
-        $this->appcontext->deleteFile($target->getDocRoot('index.html'));
+        DomainSkeleton::cleanup($this->appcontext, $target->getDocRoot());
 
         $this->retrieveResources($target, $options);
         $this->setupDatabase($target->database);

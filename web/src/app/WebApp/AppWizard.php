@@ -10,9 +10,7 @@ use Hestia\WebApp\InstallationTarget\TargetDatabase;
 use Hestia\WebApp\InstallationTarget\TargetDomain;
 use RuntimeException;
 
-use function array_filter;
 use function bin2hex;
-use function in_array;
 use function max;
 use function str_replace;
 use function str_starts_with;
@@ -33,14 +31,8 @@ class AppWizard
     public function isDomainRootClean(): bool
     {
         $installationTarget = $this->getInstallationTarget($this->domain);
-        $files = $this->appcontext->listFiles($installationTarget->getDocRoot());
 
-        $filteredFiles = array_filter(
-            $files,
-            fn(string $file) => !in_array($file, ['index.html', 'robots.txt']),
-        );
-
-        return count($filteredFiles) <= 0;
+        return DomainSkeleton::isClean($this->appcontext, $installationTarget->getDocRoot());
     }
 
     public function formNamespace(): string

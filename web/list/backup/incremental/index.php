@@ -5,6 +5,15 @@ $TAB = "BACKUP";
 // Main include
 include $_SERVER["DOCUMENT_ROOT"] . "/inc/main.php";
 
+foreach (["snapshot", "browse", "folder", "q"] as $param) {
+	if (isset($_GET[$param]) && !is_string($_GET[$param])) {
+		$_GET[$param] = "";
+	}
+}
+if (isset($_POST["q"]) && !is_string($_POST["q"])) {
+	$_POST["q"] = "";
+}
+
 function getTransByType($type) {
 	switch ($type) {
 		case "dir":
@@ -26,9 +35,31 @@ if (empty($_GET["snapshot"])) {
 	exec(HESTIA_CMD . "v-list-user-backups-restic $user json", $output, $return_var);
 	$data = json_decode(implode("", $output), true);
 	if (is_array($data)) {
-		$data = array_reverse($data);
+		$panel[$user_plain]["U_BACKUPS_INCREMENTAL"] = count($data);
+		if ($_SESSION["userSortOrder"] == "name") {
+			usort($data, function ($a, $b) {
+				return strcmp($a["short_id"] ?? "", $b["short_id"] ?? "");
+			});
+		} else {
+			$data = array_reverse($data);
+		}
+		if (!empty($_GET["q"])) {
+			$q = $_GET["q"];
+			$data = array_values(
+				array_filter($data, function ($value) use ($q) {
+					$haystack = implode(" ", [
+						$value["short_id"] ?? "",
+						$value["time"] ?? "",
+						convert_datetime($value["time"] ?? ""),
+						$value["hostname"] ?? "",
+						"Restic",
+					]);
+					return stripos($haystack, $q) !== false;
+				}),
+			);
+		}
 	} else {
-		$data = "";
+		$data = [];
 	}
 
 	render_page($user, $TAB, "list_backup_incremental");
@@ -45,11 +76,30 @@ if (empty($_GET["snapshot"])) {
 		$folder = quoteshellarg($_GET["folder"]);
 		$snapshot = quoteshellarg($_GET["snapshot"]);
 		exec(HESTIA_CMD . "v-list-user-files-restic $user $snapshot $folder", $output, $return_var);
-		$info = json_decode($output[0], true);
-		unset($output[0]);
 		$files = [];
-		foreach ($output as $value) {
-			$files[] = json_decode($value, true);
+		if ($return_var === 0) {
+			$info = isset($output[0]) ? json_decode($output[0], true) : [];
+			unset($output[0]);
+			$q = $_GET["q"] ?? "";
+			foreach ($output as $key => $value) {
+				$item = json_decode($value, true);
+				if (!is_array($item)) {
+					continue;
+				}
+				if ($q !== "" && $key !== 1 && ($item["path"] ?? "") !== $_GET["folder"]) {
+					$haystack = implode(" ", [
+						$item["name"] ?? "",
+						$item["type"] ?? "",
+						$item["ctime"] ?? "",
+					]);
+					if (stripos($haystack, $q) === false) {
+						continue;
+					}
+				}
+				$files[] = $item;
+			}
+		} else {
+			check_return_code($return_var, $output);
 		}
 		render_page($user, $TAB, "list_files_incremental");
 	}

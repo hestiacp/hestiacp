@@ -106,6 +106,17 @@ usage() {
 	echo "    --pkgrev <n>    Set the package revision number (default: 1)."
 	echo "                    Replaces the '-1' in the version suffix"
 	echo "                    (e.g. --pkgrev 2 → 1.0.0-2+deb12)."
+	echo "                    Applies to every package being built, unless"
+	echo "                    overridden individually below."
+	echo "    --pkgrev-hestia <n>"
+	echo "    --pkgrev-nginx <n>"
+	echo "    --pkgrev-php <n>"
+	echo "    --pkgrev-web-terminal <n>"
+	echo "                    Set the package revision number for just that one"
+	echo "                    package, overriding --pkgrev for it. Useful when"
+	echo "                    only one package needs a rebuild at a higher"
+	echo "                    revision while the others stay as they are"
+	echo "                    (e.g. --php --pkgrev-php 2)."
 	echo "    --release <id>  Set a release identifier appended to the package version"
 	echo "                    as '~<id>' (e.g. --release myci1 → 1.0.0-1+deb12~myci1)."
 	echo "                    Useful to distinguish custom or CI builds from official ones."
@@ -146,6 +157,7 @@ get_distro_suffix() {
 apply_distro_version() {
 	local control_file="$1"
 	local distro_suffix="$2"
+	local pkgrev_override="$3"
 	if [ -z "$distro_suffix" ]; then
 		distro_suffix=$(get_distro_suffix)
 	fi
@@ -163,14 +175,18 @@ apply_distro_version() {
 	fi
 
 	# Build the release suffix:
-	#   - Default pkgrev is 1; override with --pkgrev <n>
+	#   - Default pkgrev is 1; override globally with --pkgrev <n>, or for just
+	#     this package via the per-package --pkgrev-<pkg> <n> flag (passed in
+	#     as pkgrev_override by the caller), which takes precedence over
+	#     --pkgrev. This lets e.g. hestia-php be rebuilt at a higher revision
+	#     without bumping nginx/web-terminal/hestia too.
 	#   - Without a release id : -<pkgrev>+<distro_suffix>                (e.g. -1+debian12)
 	#   - With    a release id : -<pkgrev>+<distro_suffix>~<BUILD_RELEASE> (e.g. -1+debian12~myci1)
 	# BUILD_RELEASE here may come from:
 	#   1) the --release command line option (explicit user choice), or
 	#   2) the '~<tag>' suffix auto-detected from the hestia control file's Version,
 	#      when --release was NOT specified (see detection right after BUILD_VER is read).
-	local pkg_rev="${BUILD_PKG_REV:-1}"
+	local pkg_rev="${pkgrev_override:-${BUILD_PKG_REV:-1}}"
 	local release_suffix="-${pkg_rev}+${distro_suffix}"
 	if [ -n "$BUILD_RELEASE" ]; then
 		release_suffix="${release_suffix}~${BUILD_RELEASE}"
@@ -291,12 +307,36 @@ for i in $*; do
 			# Handled below; value captured next iteration
 			_next_is_pkgrev='true'
 			;;
+		--pkgrev-hestia)
+			_next_is_pkgrev_hestia='true'
+			;;
+		--pkgrev-nginx)
+			_next_is_pkgrev_nginx='true'
+			;;
+		--pkgrev-php)
+			_next_is_pkgrev_php='true'
+			;;
+		--pkgrev-web-terminal)
+			_next_is_pkgrev_web_terminal='true'
+			;;
 		--release=*)
 			BUILD_RELEASE="${i#*=}"
 			RELEASE_EXPLICIT='true'
 			;;
 		--pkgrev=*)
 			BUILD_PKG_REV="${i#*=}"
+			;;
+		--pkgrev-hestia=*)
+			BUILD_PKG_REV_HESTIA="${i#*=}"
+			;;
+		--pkgrev-nginx=*)
+			BUILD_PKG_REV_NGINX="${i#*=}"
+			;;
+		--pkgrev-php=*)
+			BUILD_PKG_REV_PHP="${i#*=}"
+			;;
+		--pkgrev-web-terminal=*)
+			BUILD_PKG_REV_WEB_TERMINAL="${i#*=}"
 			;;
 		*)
 			if [ "$_next_is_release" = 'true' ]; then
@@ -308,6 +348,18 @@ for i in $*; do
 				# Capture the value that follows --pkgrev
 				BUILD_PKG_REV="$i"
 				unset _next_is_pkgrev
+			elif [ "$_next_is_pkgrev_hestia" = 'true' ]; then
+				BUILD_PKG_REV_HESTIA="$i"
+				unset _next_is_pkgrev_hestia
+			elif [ "$_next_is_pkgrev_nginx" = 'true' ]; then
+				BUILD_PKG_REV_NGINX="$i"
+				unset _next_is_pkgrev_nginx
+			elif [ "$_next_is_pkgrev_php" = 'true' ]; then
+				BUILD_PKG_REV_PHP="$i"
+				unset _next_is_pkgrev_php
+			elif [ "$_next_is_pkgrev_web_terminal" = 'true' ]; then
+				BUILD_PKG_REV_WEB_TERMINAL="$i"
+				unset _next_is_pkgrev_web_terminal
 			elif [[ "$i" == -* ]]; then
 				echo >&2 "[!] Unknown option: $i"
 				usage
@@ -328,6 +380,18 @@ if [ -n "$BUILD_PKG_REV" ] && ! [[ "$BUILD_PKG_REV" =~ ^[0-9]+$ ]]; then
 	echo >&2 "[!] --pkgrev must be a number, got '$BUILD_PKG_REV'"
 	exit 1
 fi
+
+for _pkgrev_opt_name in '--pkgrev-hestia:BUILD_PKG_REV_HESTIA' '--pkgrev-nginx:BUILD_PKG_REV_NGINX' \
+	'--pkgrev-php:BUILD_PKG_REV_PHP' '--pkgrev-web-terminal:BUILD_PKG_REV_WEB_TERMINAL'; do
+	_pkgrev_opt_flag="${_pkgrev_opt_name%%:*}"
+	_pkgrev_opt_var="${_pkgrev_opt_name#*:}"
+	_pkgrev_opt_val="${!_pkgrev_opt_var}"
+	if [ -n "$_pkgrev_opt_val" ] && ! [[ "$_pkgrev_opt_val" =~ ^[0-9]+$ ]]; then
+		echo >&2 "[!] $_pkgrev_opt_flag must be a number, got '$_pkgrev_opt_val'"
+		exit 1
+	fi
+done
+unset _pkgrev_opt_name _pkgrev_opt_flag _pkgrev_opt_var _pkgrev_opt_val
 
 # Clear previous screen output
 clear
@@ -482,6 +546,11 @@ if [ "$HESTIA_DEBUG" ]; then
 	echo "Debug mode       : $HESTIA_DEBUG"
 	echo "Source directory : $SRC_DIR"
 	echo "Build release    : $BUILD_RELEASE"
+	echo "Pkgrev (default) : ${BUILD_PKG_REV:-1}"
+	echo "Pkgrev hestia    : ${BUILD_PKG_REV_HESTIA:-${BUILD_PKG_REV:-1}}"
+	echo "Pkgrev nginx     : ${BUILD_PKG_REV_NGINX:-${BUILD_PKG_REV:-1}}"
+	echo "Pkgrev php       : ${BUILD_PKG_REV_PHP:-${BUILD_PKG_REV:-1}}"
+	echo "Pkgrev webterm   : ${BUILD_PKG_REV_WEB_TERMINAL:-${BUILD_PKG_REV:-1}}"
 fi
 
 # Generate Links for sourcecode
@@ -603,7 +672,7 @@ if [ "$NGINX_B" = true ]; then
 	if [ "$BUILD_ARCH" != "amd64" ]; then
 		sed -i "s/amd64/${BUILD_ARCH}/g" "$BUILD_DIR_HESTIANGINX/DEBIAN/control"
 	fi
-	apply_distro_version "$BUILD_DIR_HESTIANGINX/DEBIAN/control"
+	apply_distro_version "$BUILD_DIR_HESTIANGINX/DEBIAN/control" '' "$BUILD_PKG_REV_NGINX"
 	get_branch_file 'src/deb/nginx/copyright' "$BUILD_DIR_HESTIANGINX/DEBIAN/copyright"
 	get_branch_file 'src/deb/nginx/postinst' "$BUILD_DIR_HESTIANGINX/DEBIAN/postinst"
 	get_branch_file 'src/deb/nginx/postrm' "$BUILD_DIR_HESTIANGINX/DEBIAN/portrm"
@@ -721,7 +790,7 @@ if [ "$PHP_B" = true ]; then
 	if [ "$BUILD_ARCH" != "amd64" ]; then
 		sed -i "s/amd64/${BUILD_ARCH}/g" "$BUILD_DIR_HESTIAPHP/DEBIAN/control"
 	fi
-	apply_distro_version "$BUILD_DIR_HESTIAPHP/DEBIAN/control"
+	apply_distro_version "$BUILD_DIR_HESTIAPHP/DEBIAN/control" '' "$BUILD_PKG_REV_PHP"
 
 	# Extract correct libs as depends
 	PHP_BIN="$BUILD_DIR_HESTIAPHP/usr/local/hestia/php/sbin/hestia-php"
@@ -787,7 +856,7 @@ if [ "$WEB_TERMINAL_B" = true ]; then
 	if [ "$BUILD_ARCH" != "amd64" ]; then
 		sed -i "s/amd64/${BUILD_ARCH}/g" "$BUILD_DIR_HESTIA_TERMINAL/DEBIAN/control"
 	fi
-	apply_distro_version "$BUILD_DIR_HESTIA_TERMINAL/DEBIAN/control"
+	apply_distro_version "$BUILD_DIR_HESTIA_TERMINAL/DEBIAN/control" '' "$BUILD_PKG_REV_WEB_TERMINAL"
 	get_branch_file 'src/deb/web-terminal/copyright' "$BUILD_DIR_HESTIA_TERMINAL/DEBIAN/copyright"
 	get_branch_file 'src/deb/web-terminal/postinst' "$BUILD_DIR_HESTIA_TERMINAL/DEBIAN/postinst"
 	chmod +x $BUILD_DIR_HESTIA_TERMINAL/DEBIAN/postinst
@@ -894,7 +963,7 @@ if [ "$HESTIA_B" = true ]; then
 			if [ "$BUILD_ARCH" != "amd64" ]; then
 				sed -i "s/amd64/${BUILD_ARCH}/g" "$BUILD_DIR_HESTIA/DEBIAN/control"
 			fi
-			apply_distro_version "$BUILD_DIR_HESTIA/DEBIAN/control" "$os"
+			apply_distro_version "$BUILD_DIR_HESTIA/DEBIAN/control" "$os" "$BUILD_PKG_REV_HESTIA"
 			get_branch_file 'src/deb/hestia/copyright' "$BUILD_DIR_HESTIA/DEBIAN/copyright"
 			get_branch_file 'src/deb/hestia/preinst' "$BUILD_DIR_HESTIA/DEBIAN/preinst"
 			get_branch_file 'src/deb/hestia/postinst' "$BUILD_DIR_HESTIA/DEBIAN/postinst"

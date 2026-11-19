@@ -7,6 +7,12 @@ published in the channel's apt repo, download the existing deb into OUT_DIR and
 skip the build; otherwise emit the matching hst_autocompile.sh flag.
 
 Build flags are printed on stdout; logs go to stderr.
+
+Each of the three backend packages can be pinned to its own revision via
+PKGREV_NGINX / PKGREV_PHP / PKGREV_WEBTERMINAL, falling back to PKGREV when
+unset. This lets one package be rebuilt at a higher revision (e.g. because it
+needed a fix) without forcing the other two to rebuild as well: the emitted
+flags include a matching --pkgrev-<pkg> override for hst_autocompile.sh.
 """
 
 import hashlib
@@ -29,9 +35,15 @@ SUITE_SUFFIX = {
 }
 
 PACKAGES = [
-    ("hestia-nginx", "src/deb/nginx/control", "--nginx"),
-    ("hestia-php", "src/deb/php/control", "--php"),
-    ("hestia-web-terminal", "src/deb/web-terminal/control", "--web-terminal"),
+    ("hestia-nginx", "src/deb/nginx/control", "--nginx", "--pkgrev-nginx", "PKGREV_NGINX"),
+    ("hestia-php", "src/deb/php/control", "--php", "--pkgrev-php", "PKGREV_PHP"),
+    (
+        "hestia-web-terminal",
+        "src/deb/web-terminal/control",
+        "--web-terminal",
+        "--pkgrev-web-terminal",
+        "PKGREV_WEBTERMINAL",
+    ),
 ]
 
 
@@ -111,7 +123,6 @@ def main() -> int:
     suite = os.environ["SUITE"]
     arch = os.environ["ARCH"]
     apt_host = os.environ["APT_HOST"]
-    pkgrev = os.environ.get("PKGREV", "1")
     version = os.environ["VERSION"]
     out_dir = Path(os.environ.get("OUT_DIR", "out"))
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -131,28 +142,33 @@ def main() -> int:
         index = {}
 
     flags: list[str] = []
-    for package, control, flag in PACKAGES:
+    for package, control, flag, pkgrev_flag, pkgrev_env in PACKAGES:
+        pkg_pkgrev = os.environ.get(pkgrev_env, "1")
         control_version = read_control_version(control).split("~", 1)[0]
-        expected = f"{control_version}-{pkgrev}+{suffix}"
+        expected = f"{control_version}-{pkg_pkgrev}+{suffix}"
         if tag:
             expected += f"~{tag}"
 
         published = find_published(index, package, control_version, suffix, tag)
         entry = index.get((package, expected))
-        if published and pkgrev.isdigit() and published[0] >= int(pkgrev):
+        if published and pkg_pkgrev.isdigit() and published[0] >= int(pkg_pkgrev):
             # Same upstream version already published at this or a higher
             # revision: reuse it rather than rebuild at a lower revision, which
             # would publish a downgrade.
             if published[1] != expected:
                 log(
                     f"{package} {published[1]} published (requested revision "
-                    f"{pkgrev}); reusing instead of building {expected}"
+                    f"{pkg_pkgrev}); reusing instead of building {expected}"
                 )
             expected = published[1]
             entry = index[(package, expected)]
         if not entry:
             log(f"{package} {expected} not published; will build")
-            flags.append(flag)
+            # Always emit the per-package revision explicitly (rather than
+            # relying on a shared default), so the resulting build command
+            # is correct regardless of what, if anything, hst_autocompile.sh
+            # is invoked with as its own --pkgrev default.
+            flags.append(f"{flag} {pkgrev_flag} {pkg_pkgrev}")
             continue
         filename, expected_sha256 = entry
 

@@ -41,7 +41,14 @@ on:
         type: boolean
         default: false
       pkgrev:
-        description: Package revision (bump when rebuilding the same version)
+        description: >-
+          Package revision. Applies to every package by default; bump when
+          rebuilding the same version. To bump just one or two packages
+          instead (e.g. only hestia-php needed a fix), use
+          "pkg=rev,pkg=rev" (pkg is one of hestia, nginx, php, web-terminal),
+          e.g. "php=2" or "php=2,web-terminal=2". Packages not listed keep
+          using the plain default value given here (or "1" if this is also
+          a pkg=rev list without a plain default).
         required: true
         type: string
         default: "1"
@@ -100,6 +107,10 @@ jobs:
       matrix: ${{ steps.matrix.outputs.matrix }}
       version: ${{ steps.version.outputs.version }}
       sha: ${{ steps.sha.outputs.sha }}
+      pkgrev_hestia: ${{ steps.pkgrev.outputs.hestia }}
+      pkgrev_nginx: ${{ steps.pkgrev.outputs.nginx }}
+      pkgrev_php: ${{ steps.pkgrev.outputs.php }}
+      pkgrev_web_terminal: ${{ steps.pkgrev.outputs.web_terminal }}
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -128,6 +139,69 @@ jobs:
             fi
           done
           echo "version=$control" >> "$GITHUB_OUTPUT"
+
+      - name: Parse pkgrev
+        id: pkgrev
+        env:
+          PKGREV: ${{ inputs.pkgrev }}
+        run: |
+          # inputs.pkgrev is either a plain number ("2", applied to every
+          # package) or a comma-separated "pkg=rev" list (e.g.
+          # "php=2,web-terminal=2") for bumping only specific packages, with
+          # packages not listed defaulting to 1. The two forms cannot be
+          # mixed: a bare default alongside pkg=rev entries would be
+          # ambiguous about which packages it's meant to apply to.
+          python3 - <<'PY'
+          import os
+          import sys
+
+          raw = os.environ["PKGREV"].strip()
+          packages = {"hestia", "nginx", "php", "web-terminal"}
+          revs = dict.fromkeys(packages, "1")
+
+          if "=" not in raw:
+              if not raw.isdigit():
+                  sys.exit(f"pkgrev must be a number or a pkg=rev list, got '{raw}'")
+              revs = dict.fromkeys(packages, raw)
+          else:
+              for entry in raw.split(","):
+                  entry = entry.strip()
+                  if not entry:
+                      continue
+                  if "=" not in entry:
+                      sys.exit(f"invalid pkgrev entry '{entry}', expected pkg=rev")
+                  pkg, rev = (part.strip() for part in entry.split("=", 1))
+                  if pkg not in packages:
+                      sys.exit(f"unknown package '{pkg}' in pkgrev, expected one of {sorted(packages)}")
+                  if not rev.isdigit():
+                      sys.exit(f"pkgrev for '{pkg}' must be a number, got '{rev}'")
+                  revs[pkg] = rev
+
+          with open(os.environ["GITHUB_OUTPUT"], "a") as handle:
+              handle.write(f"hestia={revs['hestia']}\n")
+              handle.write(f"nginx={revs['nginx']}\n")
+              handle.write(f"php={revs['php']}\n")
+              handle.write(f"web_terminal={revs['web-terminal']}\n")
+          PY
+
+      - name: Validate install script pkgrev
+        env:
+          HESTIA_PKGREV: ${{ steps.pkgrev.outputs.hestia }}
+        run: |
+          # install/hst-install-{debian,ubuntu}.sh hardcode the "hestia"
+          # package's own revision (HESTIA_INSTALL_PKGREV) to pin the exact
+          # .deb version they install. If this release publishes "hestia" at
+          # a revision other than what those scripts expect, installs done
+          # with the currently-published installer would request a version
+          # that no longer exists once an older revision is pruned, so fail
+          # the release up front instead.
+          for file in install/hst-install-debian.sh install/hst-install-ubuntu.sh; do
+            rev="$(sed -n "s/^HESTIA_INSTALL_PKGREV='\\(.*\\)'/\\1/p" "$file")"
+            if [[ "$rev" != "$HESTIA_PKGREV" ]]; then
+              echo "::error::$file has HESTIA_INSTALL_PKGREV='$rev', expected '$HESTIA_PKGREV' (from pkgrev input)"
+              exit 1
+            fi
+          done
 
       - name: Build matrix
         id: matrix
@@ -184,7 +258,7 @@ jobs:
 
       - name: Build hestia
         env:
-          PKGREV: ${{ inputs.pkgrev }}
+          PKGREV: ${{ needs.prepare.outputs.pkgrev_hestia }}
         run: |
           cd src
           sudo env TERM=xterm PKGREV="$PKGREV" bash -e ./hst_autocompile.sh --hestia --noinstall --cross --keepbuild '~localsrc' --pkgrev "$PKGREV"
@@ -226,7 +300,9 @@ jobs:
           SUITE: ${{ matrix.suite }}
           ARCH: ${{ matrix.arch }}
           APT_HOST: ${{ inputs.channel == 'beta' && 'beta-apt.hestiacp.com' || 'apt.hestiacp.com' }}
-          PKGREV: ${{ inputs.pkgrev }}
+          PKGREV_NGINX: ${{ needs.prepare.outputs.pkgrev_nginx }}
+          PKGREV_PHP: ${{ needs.prepare.outputs.pkgrev_php }}
+          PKGREV_WEBTERMINAL: ${{ needs.prepare.outputs.pkgrev_web_terminal }}
           VERSION: ${{ inputs.version }}
         run: |
           curl -fsSL "https://raw.githubusercontent.com/${{ github.repository }}/${{ github.sha }}/.github/scripts/release/prepare-packages.py" -o /tmp/prepare-packages.py
@@ -260,7 +336,6 @@ jobs:
         if: steps.prepare.outputs.flags != ''
         env:
           NUM_CPUS: ${{ steps.cpu.outputs.num }}
-          PKGREV: ${{ inputs.pkgrev }}
           BUILD_FLAGS: ${{ steps.prepare.outputs.flags }}
         run: |
           mkdir -p out
@@ -278,7 +353,6 @@ jobs:
             -e DEBIAN_FRONTEND=noninteractive \
             -e TZ=Etc/UTC \
             -e NUM_CPUS="$NUM_CPUS" \
-            -e PKGREV="$PKGREV" \
             -e BUILD_FLAGS="$BUILD_FLAGS" \
             "${{ matrix.image }}" \
             bash -lc '
@@ -286,7 +360,10 @@ jobs:
               apt-get update
               apt-get install -y xz-utils ca-certificates
               cd src
-              TERM=xterm bash -e ./hst_autocompile.sh $BUILD_FLAGS --noinstall --keepbuild "~localsrc" --pkgrev "$PKGREV"
+              # BUILD_FLAGS already carries an explicit --pkgrev-<pkg> per
+              # package selected (see prepare-packages.py), so no shared
+              # --pkgrev default is needed here.
+              TERM=xterm bash -e ./hst_autocompile.sh $BUILD_FLAGS --noinstall --keepbuild "~localsrc"
               mkdir -p /repo/out
               cp /tmp/hestiacp-src/deb/*.deb /repo/out/
             '

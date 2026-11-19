@@ -613,7 +613,7 @@ function backendtpl_with_webdomains() {
 		$backend_list[$backend][$user][] = $domain;
 
 		// Also count custom backend template names like YOURNAME-PHP-8_4 under PHP-8_4
-		if (preg_match('/(PHP-\d+_\d+)$/', $backend, $m)) {
+		if (preg_match('/(PHP-\d+_\d+)(?:-[A-Za-z0-9_]+)?$/', $backend, $m)) {
 			// Avoid duplicates when backend already is the base template
 			if ($backend !== $m[1]) {
 				$backend_list[$m[1]][$user][] = $domain;

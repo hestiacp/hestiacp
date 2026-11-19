@@ -60,7 +60,7 @@ if [ "$WEB_BACKEND_POOL" = 'user' ]; then
 	backend_type="$user"
 fi
 existing_pool=$(find -L /etc/php/ -name "$backend_type.conf" -exec dirname {} \; | head -n1)
-if [[ $BACKEND =~ ^.*PHP-([0-9])\_([0-9])$ ]]; then
+if [[ $BACKEND =~ ^.*PHP-([0-9])\_([0-9])(-[A-Za-z0-9_]+)?$ ]]; then
 	version="${BASH_REMATCH[1]}.${BASH_REMATCH[2]}"
 elif [[ $existing_pool =~ /etc/php/([0-9]+\.[0-9]+)/ ]]; then
 	version="${BASH_REMATCH[1]}"

@@ -1076,6 +1076,11 @@ if (
 				check_return_code($return_var, $output);
 				unset($output);
 			}
+		}
+		if (empty($_SESSION["error_msg"])) {
+			if ($v_fwd_only == "yes" && !empty(array_filter($vfwd))) {
+				$v_fwd_only = "";
+			}
 			exec(
 				HESTIA_CMD .
 					"v-add-mail-account-forward " .
@@ -1102,6 +1107,26 @@ if (
 		$wfwd = trim($wfwd);
 		$fwd = explode(" ", $wfwd);
 		$v_fwd = str_replace(" ", "\n", $wfwd);
+		$result = array_diff($fwd, $vfwd);
+		foreach ($result as $forward) {
+			if (empty($_SESSION["error_msg"]) && !empty($forward)) {
+				exec(
+					HESTIA_CMD .
+						"v-add-mail-account-forward " .
+						$v_username .
+						" " .
+						quoteshellarg($v_domain) .
+						" " .
+						quoteshellarg($v_account) .
+						" " .
+						quoteshellarg($forward),
+					$output,
+					$return_var,
+				);
+				check_return_code($return_var, $output);
+				unset($output);
+			}
+		}
 		$result = array_diff($vfwd, $fwd);
 		foreach ($result as $forward) {
 			if (empty($_SESSION["error_msg"]) && !empty($forward)) {
@@ -1122,25 +1147,9 @@ if (
 				unset($output);
 			}
 		}
-		$result = array_diff($fwd, $vfwd);
-		foreach ($result as $forward) {
-			if (empty($_SESSION["error_msg"]) && !empty($forward)) {
-				exec(
-					HESTIA_CMD .
-						"v-add-mail-account-forward " .
-						$v_username .
-						" " .
-						quoteshellarg($v_domain) .
-						" " .
-						quoteshellarg($v_account) .
-						" " .
-						quoteshellarg($forward),
-					$output,
-					$return_var,
-				);
-				check_return_code($return_var, $output);
-				unset($output);
-			}
+		if (empty($_SESSION["error_msg"]) && $v_fwd === "" && $v_fwd_only == "yes") {
+			$v_fwd_only = "";
+			unset($_POST["v_fwd_only"]);
 		}
 		$v_blackhole = "no";
 	}

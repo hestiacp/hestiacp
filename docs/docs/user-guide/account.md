@@ -36,6 +36,12 @@ If you do not have an authenticator app, here are a couple of recommendations.
 
 :::
 
+#### Trusted devices
+
+If the administrator has set **Trust 2FA devices for (Days)** in **Server Settings** → **Security** to more than 0, the 2FA login page shows a **Trust this device** checkbox. When it is checked, that browser will not be asked for a 2FA token again for the configured number of days; your password is still required.
+
+Changing your password or disabling 2FA revokes all trusted devices. An administrator can also revoke them with `v-delete-user-2fa-trusted-devices USER`.
+
 ### Login restrictions
 
 Hestia has the following options to help you secure your account:

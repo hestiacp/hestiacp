@@ -1,0 +1,63 @@
+#!/bin/bash
+# info: delete all trusted devices for user 2fa
+# options: USER
+#
+# example: v-delete-user-2fa-trusted-devices admin
+#
+# This function revokes all trusted devices of a user, so every device has to
+# enter a 2FA token again on the next login.
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '1' "$#" 'USER'
+is_format_valid 'user'
+is_object_valid 'user' 'USER' "$user"
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Serialize changes to the trusted devices of this user (root-only lock file)
+old_umask=$(umask)
+umask 077
+exec 9> "/run/hestia-2fa-trusted-$user.lock"
+check_result $? "Unable to create trusted devices lock file"
+umask "$old_umask"
+flock -w 30 9
+check_result $? "Unable to acquire trusted devices lock"
+
+conf="$USER_DATA/2fa-trusted-devices.conf"
+if [ -f "$conf" ]; then
+	rm -f "$conf"
+	check_result $? "Unable to revoke trusted devices"
+	revoked="yes"
+fi
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Logging
+if [ "$revoked" = "yes" ]; then
+	$BIN/v-log-action "$user" "Warning" "Security" "Trusted devices for two-factor authentication revoked."
+fi
+log_event "$OK" "$ARGUMENTS"
+
+exit

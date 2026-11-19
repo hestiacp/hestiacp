@@ -38,11 +38,11 @@
 		<?php foreach ($data as $key => $value) { ?>
 			<div class="units-table-row js-unit">
 				<div class="units-table-cell units-table-heading-cell u-text-bold">
-					<span class="u-hide-desktop"><?= tohtml( _("Type")) ?>:</span>
+					<span class="u-hide-desktop"><?= tohtml( _("Type")) ?></span>
 					<?= tohtml($key) ?>
 				</div>
-				<div class="units-table-cell">
-					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Value")) ?>:</span>
+				<div class="units-table-cell units-table-cell-wide">
+					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Value")) ?></span>
 					<?php
 						if (empty($value)) {
 							echo _("No exclusions");

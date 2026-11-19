@@ -34,7 +34,7 @@
 			?>
 			<div class="units-table-row js-unit" style="<?php if ($data[$key]['ID'] === 'filemanager.ssh.key') { echo 'display: none;'; } ?>">
 				<div class="units-table-cell units-table-heading-cell u-text-bold">
-					<span class="u-hide-desktop"><?= tohtml( _("SSH ID")) ?>:</span>
+					<span class="u-hide-desktop"><?= tohtml( _("SSH ID")) ?></span>
 					<span class="u-text-break">
 						<?= tohtml($data[$key]["ID"]) ?>
 					</span>
@@ -55,8 +55,8 @@
 						</li>
 					</ul>
 				</div>
-				<div class="units-table-cell u-text-bold">
-					<span class="u-hide-desktop"><?= tohtml( _("SSH Key")) ?>:</span>
+				<div class="units-table-cell units-table-cell-wide u-text-bold">
+					<span class="u-hide-desktop"><?= tohtml( _("SSH Key")) ?></span>
 					<span class="u-text-break">
 						<?= tohtml($data[$key]["KEY"]) ?>
 					</span>

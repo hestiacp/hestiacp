@@ -81,7 +81,7 @@
 					</div>
 				</div>
 				<div class="units-table-cell units-table-heading-cell u-text-bold">
-					<span class="u-hide-desktop"><?= tohtml( _("Access Key")) ?>:</span>
+					<span class="u-hide-desktop"><?= tohtml( _("Access Key")) ?></span>
 					<a href="/list/access-key/?<?= tohtml(http_build_query(["key" => $key, "token" => $_SESSION["token"]])) ?>" title="<?= tohtml( _("Access Key")) ?>: <?= tohtml($key) ?>">
 						<?= tohtml($key) ?>
 					</a>
@@ -103,15 +103,15 @@
 					</ul>
 				</div>
 				<div class="units-table-cell u-text-bold u-text-center-desktop">
-					<span class="u-hide-desktop"><?= tohtml( _("Comment")) ?>:</span>
+					<span class="u-hide-desktop"><?= tohtml( _("Comment")) ?></span>
 					<?= tohtml( _($key_comment)) ?>
 				</div>
 				<div class="units-table-cell u-text-bold u-text-center-desktop">
-					<span class="u-hide-desktop"><?= tohtml( _("Date")) ?>:</span>
+					<span class="u-hide-desktop"><?= tohtml( _("Date")) ?></span>
 					<time datetime="<?= tohtml($key_date) ?>"><?= tohtml($key_date) ?></time>
 				</div>
 				<div class="units-table-cell u-text-bold u-text-center-desktop">
-					<span class="u-hide-desktop"><?= tohtml( _("Time")) ?>:</span>
+					<span class="u-hide-desktop"><?= tohtml( _("Time")) ?></span>
 					<?= tohtml($key_time) ?>
 				</div>
 			</div>

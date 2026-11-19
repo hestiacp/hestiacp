@@ -157,7 +157,7 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
 					</div>
 				</div>
 				<div class="units-table-cell units-table-heading-cell u-text-bold">
-					<span class="u-hide-desktop"><?= tohtml( _("Name")) ?>:</span>
+					<span class="u-hide-desktop"><?= tohtml( _("Name")) ?></span>
 					<?php if ($read_only === true || $data[$key]["SUSPENDED"] == "yes") { ?>
 						<?= tohtml($key) ?>
 					<?php } else { ?>
@@ -244,7 +244,7 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
 					<?php } ?>
 				</div>
 				<div class="units-table-cell u-text-center-desktop">
-					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Disk")) ?>:</span>
+					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Disk")) ?></span>
 					<span class="u-text-bold">
 						<?= tohtml(humanize_usage_size($data[$key]["U_DISK"])) ?>
 					</span>
@@ -253,19 +253,19 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
 					</span>
 				</div>
 				<div class="units-table-cell u-text-center-desktop">
-					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Type")) ?>:</span>
+					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Type")) ?></span>
 					<?= tohtml($data[$key]["TYPE"]) ?>
 				</div>
 				<div class="units-table-cell u-text-bold u-text-center-desktop">
-					<span class="u-hide-desktop"><?= tohtml( _("Username")) ?>:</span>
+					<span class="u-hide-desktop"><?= tohtml( _("Username")) ?></span>
 					<?= tohtml($data[$key]["DBUSER"]) ?>
 				</div>
 				<div class="units-table-cell u-text-bold u-text-center-desktop">
-					<span class="u-hide-desktop"><?= tohtml( _("Hostname")) ?>:</span>
+					<span class="u-hide-desktop"><?= tohtml( _("Hostname")) ?></span>
 					<?= tohtml($data[$key]["HOST"]) ?>
 				</div>
 				<div class="units-table-cell u-text-center-desktop">
-					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Charset")) ?>:</span>
+					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Charset")) ?></span>
 					<?= tohtml($data[$key]["CHARSET"]) ?>
 				</div>
 			</div>

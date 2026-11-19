@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.10.9] - Service Release
+
+### Changes
+
+- Update hestia-php to 8.5.13
+
 ## [1.10.8] - Service Release
 
 ### Security

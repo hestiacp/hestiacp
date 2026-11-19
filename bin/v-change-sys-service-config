@@ -50,7 +50,20 @@ case $service in
 	exim4) dst='/etc/exim4/exim4.conf.template' ;;
 	vsftpd) dst=$(find /etc/vsftpd* -name 'vsftpd.conf') ;;
 	proftpd) dst=$(find /etc/proftpd* -name 'proftpd.conf') ;;
-	php) dst=$(find /etc/php* -name php.ini) ;;
+	php)
+		dst=$($BIN/v-list-sys-php-config plain | awk '$1 == "config_path" { print $2 }')
+		if [ -z "$dst" ]; then
+			check_result "$E_NOTEXIST" "php config doesn't exist"
+		fi
+		;;
+	php[0-9]*.[0-9]*-fpm)
+		php_ver=${service#php}
+		php_ver=${php_ver%-fpm}
+		if ! [[ "$php_ver" =~ ^[0-9]+\.[0-9]+$ ]]; then
+			check_result "$E_INVALID" "invalid service format :: $service"
+		fi
+		dst="/etc/php/$php_ver/fpm/php.ini"
+		;;
 	mysql) dst=$(find /etc/my* -name my.cnf) ;;
 	mysqld) dst=$(find /etc/my* -name my.cnf) ;;
 	mariadb) dst=$(find /etc/my* -name my.cnf) ;;
@@ -97,14 +110,18 @@ done
 
 # Restarting service
 if [ "$update" = 'yes' ] && [ "$restart" != 'no' ]; then
-	if [[ "$service" =~ - ]]; then
-		service=$(echo ${service%-*})
+	if [[ "$service" =~ - ]] && ! [[ "$service" =~ ^php[0-9]+\.[0-9]+-fpm$ ]]; then
+		service=${service%-*}
 	fi
 
 	if [ "$service" = 'php' ]; then
-		if [ "$(multiphp_count)" -gt 0 ]; then
+		if [[ "$dst" =~ ^/etc/php/([0-9]+\.[0-9]+)/fpm/php\.ini$ ]]; then
+			service="php${BASH_REMATCH[1]}-fpm"
+		elif [[ "$dst" =~ ^/etc/php/[0-9]+\.[0-9]+/apache2?/php\.ini$ ]] && { [ "$WEB_SYSTEM" = 'apache2' ] || [ "$WEB_SYSTEM" = 'httpd' ]; }; then
+			service="$WEB_SYSTEM"
+		elif [ "$(multiphp_count)" -gt 0 ]; then
 			service="php-fpm"
-		elif [ "$WEB_SYSTEM" = 'apache2' ]; then
+		elif [ "$WEB_SYSTEM" = 'apache2' ] || [ "$WEB_SYSTEM" = 'httpd' ]; then
 			service="$WEB_SYSTEM"
 		fi
 	fi

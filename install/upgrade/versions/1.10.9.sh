@@ -22,14 +22,3 @@ upgrade_config_set_value 'UPGRADE_UPDATE_DNS_TEMPLATES' 'false'
 upgrade_config_set_value 'UPGRADE_UPDATE_FILEMANAGER_CONFIG' 'false'
 upgrade_config_set_value 'UPGRADE_UPDATE_MAIL_TEMPLATES' 'false'
 upgrade_config_set_value 'UPGRADE_REBUILD_USERS' 'false'
-
-# Restrict permissions of existing Restic configuration files (#5965)
-if [[ -f "$HESTIA/conf/restic.conf" ]] && [[ ! -L "$HESTIA/conf/restic.conf" ]]; then
-	chmod 660 -- "$HESTIA/conf/restic.conf"
-fi
-for restic_conf in "$HESTIA"/data/users/*/restic.conf; do
-	if [[ -f "$restic_conf" ]] && [[ ! -L "$restic_conf" ]]; then
-		chmod 600 -- "$restic_conf"
-	fi
-done
-unset restic_conf

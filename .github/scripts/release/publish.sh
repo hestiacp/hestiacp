@@ -314,7 +314,32 @@ fi
 # the local pool (so the index lists them and pruning leaves them alone) but are
 # excluded from the pool sync so they are not uploaded again.
 REUSED_KEYS=()
+# Orphaned objects (present in the bucket but not listed in the live index)
+# that this release overwrites; their CDN cache is purged after upload.
+OVERWRITTEN_KEYS=()
 if [[ "$FORCE" != 'true' ]]; then
+	echo '==> Reading live package indexes'
+	# Filenames referenced by the currently published indexes. Only these can
+	# be cached by clients with a known hash; any other pool object is an
+	# orphan from an earlier publish and is safe to overwrite.
+	LIVE_INDEX="$WORK/live-filenames"
+	: > "$LIVE_INDEX"
+	for suite in "${SUITE_LIST[@]}"; do
+		for arch in amd64 arm64; do
+			index_key="dists/$suite/main/binary-$arch/Packages"
+			if ! index_list="$(aws s3api list-objects-v2 --bucket "$R2_BUCKET" --prefix "$index_key" --max-keys 1 --endpoint-url "$ENDPOINT" 2>&1)"; then
+				echo "::error::Could not check s3://$R2_BUCKET/$index_key: $index_list" >&2
+				exit 1
+			fi
+			[[ "$index_list" == *"\"Key\": \"$index_key\""* ]] || continue
+			if ! aws s3 cp "s3://$R2_BUCKET/$index_key" - --endpoint-url "$ENDPOINT" --only-show-errors \
+				| sed -n 's/^Filename: //p' >> "$LIVE_INDEX"; then
+				echo "::error::Could not download s3://$R2_BUCKET/$index_key" >&2
+				exit 1
+			fi
+		done
+	done
+
 	echo '==> Checking for existing package objects'
 	while IFS= read -r -d '' deb; do
 		key="${deb#"$REPO/"}"
@@ -340,13 +365,21 @@ if [[ "$FORCE" != 'true' ]]; then
 				REUSED_KEYS+=("$key")
 				continue
 			fi
-			echo "::error::Object already exists with different content: s3://$R2_BUCKET/$key (bump pkgrev or set force=true)" >&2
+			if ! grep -qxF "$key" "$LIVE_INDEX"; then
+				echo "::warning::Overwriting orphaned s3://$R2_BUCKET/$key (not in the live index)"
+				OVERWRITTEN_KEYS+=("$key")
+				continue
+			fi
+			echo "::error::Object already exists with different content and is in the live index: s3://$R2_BUCKET/$key (bump pkgrev or set force=true)" >&2
 			exit 1
 		fi
 	done < <(find "$REPO/pool" -type f -name '*.deb' -print0)
 fi
 
 PURGE_URLS=()
+for key in "${OVERWRITTEN_KEYS[@]}"; do
+	PURGE_URLS+=("https://$APT_HOST/$key")
+done
 for suite in "${SUITE_LIST[@]}"; do
 	# --exclude patterns are relative to the sync source and use fnmatch, so
 	# escape the glob metacharacters. Excluded keys are neither uploaded nor

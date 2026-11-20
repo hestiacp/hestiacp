@@ -121,6 +121,7 @@ if [ -n "$WEB_SYSTEM" ]; then
 	mkdir -m 700 $HOMEDIR/$user/tmp
 	chown -h $user:$user $HOMEDIR/$user/tmp
 	chown -h root:$user $HOMEDIR/$user/web
+	setfacl -d -m g:www-data:r-x $HOMEDIR/$user/web
 fi
 
 if [ -n "$MAIL_SYSTEM" ]; then

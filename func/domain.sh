@@ -304,6 +304,9 @@ add_web_config() {
 			> $conf
 
 	process_http2_directive "$conf"
+	if [ "$1" = "nginx" ]; then
+		process_quic_reuseport_domain "$conf" "$local_ip"
+	fi
 
 	chown root:$user $conf
 	chmod 640 $conf
@@ -1214,4 +1217,41 @@ process_http2_directive() {
 			fi
 		fi
 	fi
+}
+
+#----------------------------------------------------------#
+#        Process "quic reuseport" listener for NGINX       #
+#----------------------------------------------------------#
+
+# HTTP/3 runs over UDP. Without "reuseport", all nginx workers share one UDP
+# socket, so packets of a QUIC connection can be read by a worker that does not
+# own that connection and are dropped. Clients then see page loads that stall
+# for seconds. With "reuseport", every worker gets its own socket and the kernel
+# keeps each connection on one worker.
+#
+# nginx allows "reuseport" only once per address:port, while Hestia renders one
+# config per domain from shared templates. So the option is set once, in the
+# per-IP config (/etc/nginx/conf.d/<ip>.conf), and removed from domain configs.
+
+# Add "listen <ip>:<port> quic reuseport;" to a per-IP config, next to its
+# default SSL listener. Does nothing if nginx has no HTTP/3 module or the file
+# already has a QUIC listener.
+process_quic_reuseport_ip() {
+	local conf="$1"
+	[ -f "$conf" ] || return 0
+	nginx -V 2>&1 | grep -q 'http_v3_module' || return 0
+	grep -qE '^\s*listen\s+\S+\s+quic\b' "$conf" && return 0
+	sed -i -E '/^\s*listen\s+\S+\s.*\bdefault_server\b.*\bssl\b|^\s*listen\s+\S+\s.*\bssl\b.*\bdefault_server\b/{h;s/^(\s*listen\s+)(\S+).*/\1\2 quic reuseport;/;G}' "$conf"
+}
+
+# Remove "reuseport" from the QUIC listeners of a domain config when the per-IP
+# config already sets it, so custom templates that still carry it can't produce
+# a duplicate listen option and break nginx.
+process_quic_reuseport_domain() {
+	local conf="$1"
+	local ip="$2"
+	local ip_conf="/etc/nginx/conf.d/$ip.conf"
+	[ -f "$conf" ] && [ -f "$ip_conf" ] || return 0
+	grep -qE '^\s*listen\s+\S+\s+quic\s+reuseport\b' "$ip_conf" || return 0
+	sed -i -E "s/^(\s*listen\s+${ip//./\\.}:[0-9]+\s+quic)\s+reuseport\b/\1/" "$conf"
 }

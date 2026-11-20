@@ -163,6 +163,7 @@ for ip in $ips; do
 		$BIN/v-add-sys-ip "$ip" "$netmask" "$interface"
 	elif [ -e "/etc/nginx/conf.d/$ip.conf" ]; then
 		process_http2_directive "/etc/nginx/conf.d/$ip.conf"
+		process_quic_reuseport_ip "/etc/nginx/conf.d/$ip.conf"
 	fi
 done
 

@@ -2,19 +2,22 @@
 """Decide which Hestia backend packages need building for one suite/arch.
 
 For each package, compute the exact version the build would produce. If that
-version is already published in the channel's apt repo, download the existing
-deb into OUT_DIR and skip the build; otherwise emit the matching
-hst_autocompile.sh flag.
+version, or the same upstream version at a higher package revision, is already
+published in the channel's apt repo, download the existing deb into OUT_DIR and
+skip the build; otherwise emit the matching hst_autocompile.sh flag.
 
 Build flags are printed on stdout; logs go to stderr.
 """
 
+import hashlib
 import os
+import re
 import shutil
 import subprocess
 import sys
 import urllib.request
 from pathlib import Path
+from typing import Optional
 
 # Keep in sync with .github/scripts/release/publish.sh.
 SUITE_SUFFIX = {
@@ -56,8 +59,16 @@ def read_control_version(path: str) -> str:
     raise RuntimeError(f"no Version in {path}")
 
 
-def parse_packages(text: str) -> dict[tuple[str, str], str]:
-    result: dict[tuple[str, str], str] = {}
+def sha256_file(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def parse_packages(text: str) -> dict[tuple[str, str], tuple[str, str]]:
+    result: dict[tuple[str, str], tuple[str, str]] = {}
     for stanza in text.split("\n\n"):
         fields: dict[str, str] = {}
         for line in stanza.splitlines():
@@ -67,9 +78,33 @@ def parse_packages(text: str) -> dict[tuple[str, str], str]:
         package = fields.get("Package")
         version = fields.get("Version")
         filename = fields.get("Filename")
-        if package and version and filename:
-            result[(package, version)] = filename
+        sha256 = fields.get("SHA256")
+        if package and version and filename and sha256:
+            result[(package, version)] = (filename, sha256.lower())
     return result
+
+
+def find_published(
+    index: dict[tuple[str, str], tuple[str, str]],
+    package: str,
+    upstream: str,
+    suffix: str,
+    tag: str,
+) -> Optional[tuple[int, str]]:
+    """Return (revision, version) of the highest published revision of
+    upstream for this suite suffix and prerelease tag, if any."""
+    pattern = re.compile(
+        rf"{re.escape(upstream)}-(\d+)\+{re.escape(suffix)}"
+        + (rf"~{re.escape(tag)}" if tag else "")
+    )
+    best: Optional[tuple[int, str]] = None
+    for name, version in index:
+        if name != package:
+            continue
+        match = pattern.fullmatch(version)
+        if match and (best is None or int(match.group(1)) > best[0]):
+            best = (int(match.group(1)), version)
+    return best
 
 
 def main() -> int:
@@ -102,11 +137,24 @@ def main() -> int:
         if tag:
             expected += f"~{tag}"
 
-        filename = index.get((package, expected))
-        if not filename:
+        published = find_published(index, package, control_version, suffix, tag)
+        entry = index.get((package, expected))
+        if published and pkgrev.isdigit() and published[0] >= int(pkgrev):
+            # Same upstream version already published at this or a higher
+            # revision: reuse it rather than rebuild at a lower revision, which
+            # would publish a downgrade.
+            if published[1] != expected:
+                log(
+                    f"{package} {published[1]} published (requested revision "
+                    f"{pkgrev}); reusing instead of building {expected}"
+                )
+            expected = published[1]
+            entry = index[(package, expected)]
+        if not entry:
             log(f"{package} {expected} not published; will build")
             flags.append(flag)
             continue
+        filename, expected_sha256 = entry
 
         destination = out_dir / Path(filename).name
         if destination.exists():
@@ -126,6 +174,11 @@ def main() -> int:
             actual = result.stdout.strip()
             if actual != expected:
                 raise RuntimeError(f"downloaded version {actual} != {expected}")
+            actual_sha256 = sha256_file(destination)
+            if actual_sha256 != expected_sha256:
+                raise RuntimeError(
+                    f"downloaded SHA256 {actual_sha256} != index {expected_sha256}"
+                )
         except Exception as exc:
             log(f"failed to reuse {package}: {exc}; will build")
             destination.unlink(missing_ok=True)

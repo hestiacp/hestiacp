@@ -35,7 +35,8 @@ if (!file_exists("/backup/" . $backup)) {
 	}
 
 	if (!empty($_SESSION["user"]) && $_SESSION["userContext"] != "admin") {
-		if (strpos($backup, $_SESSION["user"] . ".") === 0) {
+		$user = $_SESSION["user"];
+		if (preg_match("/^" . preg_quote($user, "/") . '\.\d{4}-.+\.tar$/', $backup) === 1) {
 			header("Content-type: application/gzip");
 			header("Content-Disposition: attachment; filename=\"" . $backup . "\";");
 			header("X-Accel-Redirect: /backup/" . $backup);

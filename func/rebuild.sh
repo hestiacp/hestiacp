@@ -136,9 +136,9 @@ rebuild_user_conf() {
 		chmod 770 $USER_DATA/ssl
 		touch $USER_DATA/web.conf
 		chmod 660 $USER_DATA/web.conf
-		if [ "$(grep -w $user $HESTIA/data/queue/traffic.pipe)" ]; then
+		if ! grep -qw "$user" "$HESTIA/data/queue/traffic.pipe"; then
 			echo "$BIN/v-update-web-domains-traff $user" \
-				>> $HESTIA/data/queue/traffic.pipe
+				>> "$HESTIA/data/queue/traffic.pipe"
 		fi
 		echo "$BIN/v-update-web-domains-disk $user" \
 			>> $HESTIA/data/queue/disk.pipe

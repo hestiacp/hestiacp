@@ -310,7 +310,36 @@ if [[ "$DEBUG" == 'true' ]]; then
 	AWS_FLAGS=()
 fi
 
+# Keys verified to be byte-identical to the published object. They are kept in
+# the local pool (so the index lists them and pruning leaves them alone) but are
+# excluded from the pool sync so they are not uploaded again.
+REUSED_KEYS=()
+# Orphaned objects (present in the bucket but not listed in the live index)
+# that this release overwrites; their CDN cache is purged after upload.
+OVERWRITTEN_KEYS=()
 if [[ "$FORCE" != 'true' ]]; then
+	echo '==> Reading live package indexes'
+	# Filenames referenced by the currently published indexes. Only these can
+	# be cached by clients with a known hash; any other pool object is an
+	# orphan from an earlier publish and is safe to overwrite.
+	LIVE_INDEX="$WORK/live-filenames"
+	: > "$LIVE_INDEX"
+	for suite in "${SUITE_LIST[@]}"; do
+		for arch in amd64 arm64; do
+			index_key="dists/$suite/main/binary-$arch/Packages"
+			if ! index_list="$(aws s3api list-objects-v2 --bucket "$R2_BUCKET" --prefix "$index_key" --max-keys 1 --endpoint-url "$ENDPOINT" 2>&1)"; then
+				echo "::error::Could not check s3://$R2_BUCKET/$index_key: $index_list" >&2
+				exit 1
+			fi
+			[[ "$index_list" == *"\"Key\": \"$index_key\""* ]] || continue
+			if ! aws s3 cp "s3://$R2_BUCKET/$index_key" - --endpoint-url "$ENDPOINT" --only-show-errors \
+				| sed -n 's/^Filename: //p' >> "$LIVE_INDEX"; then
+				echo "::error::Could not download s3://$R2_BUCKET/$index_key" >&2
+				exit 1
+			fi
+		done
+	done
+
 	echo '==> Checking for existing package objects'
 	while IFS= read -r -d '' deb; do
 		key="${deb#"$REPO/"}"
@@ -319,17 +348,53 @@ if [[ "$FORCE" != 'true' ]]; then
 			exit 1
 		fi
 		if [[ "$existing" == *'"Key"'* ]]; then
-			echo "::error::Object already exists: s3://$R2_BUCKET/$key (bump pkgrev or set force=true)" >&2
+			# Packages reused by prepare-packages.py are byte-identical to the
+			# published object, so the generated index still matches. Anything
+			# else under an existing key is a rebuild and would cause a hash
+			# mismatch for clients.
+			local_sha="$(sha256sum "$deb" | cut -d' ' -f1)"
+			if ! remote_sha="$(
+				set -o pipefail
+				aws s3 cp "s3://$R2_BUCKET/$key" - --endpoint-url "$ENDPOINT" --only-show-errors | sha256sum | cut -d' ' -f1
+			)"; then
+				echo "::error::Could not download s3://$R2_BUCKET/$key for comparison" >&2
+				exit 1
+			fi
+			if [[ "$local_sha" == "$remote_sha" ]]; then
+				echo "==> $key already published with identical content; reusing"
+				REUSED_KEYS+=("$key")
+				continue
+			fi
+			if ! grep -qxF "$key" "$LIVE_INDEX"; then
+				echo "::warning::Overwriting orphaned s3://$R2_BUCKET/$key (not in the live index)"
+				OVERWRITTEN_KEYS+=("$key")
+				continue
+			fi
+			echo "::error::Object already exists with different content and is in the live index: s3://$R2_BUCKET/$key (bump pkgrev or set force=true)" >&2
 			exit 1
 		fi
 	done < <(find "$REPO/pool" -type f -name '*.deb' -print0)
 fi
 
 PURGE_URLS=()
+for key in "${OVERWRITTEN_KEYS[@]}"; do
+	PURGE_URLS+=("https://$APT_HOST/$key")
+done
 for suite in "${SUITE_LIST[@]}"; do
+	# --exclude patterns are relative to the sync source and use fnmatch, so
+	# escape the glob metacharacters. Excluded keys are neither uploaded nor
+	# deleted by --delete, which keeps the reused packages published.
+	POOL_EXCLUDES=()
+	for key in "${REUSED_KEYS[@]}"; do
+		[[ "$key" == "pool/$suite/"* ]] || continue
+		rel="${key#"pool/$suite/"}"
+		rel="$(printf '%s' "$rel" | sed 's/[][*?]/[&]/g')"
+		POOL_EXCLUDES+=(--exclude "$rel")
+	done
+
 	echo "==> Uploading $suite to s3://$R2_BUCKET"
 	aws s3 sync "$REPO/pool/$suite/" "s3://$R2_BUCKET/pool/$suite/" \
-		--endpoint-url "$ENDPOINT" "${AWS_FLAGS[@]}"
+		--endpoint-url "$ENDPOINT" "${AWS_FLAGS[@]}" "${POOL_EXCLUDES[@]}"
 	aws s3 sync "$REPO/dists/$suite/main/" "s3://$R2_BUCKET/dists/$suite/main/" \
 		--endpoint-url "$ENDPOINT" "${AWS_FLAGS[@]}"
 	aws s3 cp "$REPO/dists/$suite/Release" "s3://$R2_BUCKET/dists/$suite/Release" \
@@ -352,7 +417,7 @@ for suite in "${SUITE_LIST[@]}"; do
 	if [[ "$PRUNE" == 'true' ]]; then
 		echo "==> Pruning old objects for $suite"
 		aws s3 sync "$REPO/pool/$suite/" "s3://$R2_BUCKET/pool/$suite/" \
-			--endpoint-url "$ENDPOINT" "${AWS_FLAGS[@]}" --delete
+			--endpoint-url "$ENDPOINT" "${AWS_FLAGS[@]}" "${POOL_EXCLUDES[@]}" --delete
 		aws s3 sync "$REPO/dists/$suite/main/" "s3://$R2_BUCKET/dists/$suite/main/" \
 			--endpoint-url "$ENDPOINT" "${AWS_FLAGS[@]}" --delete
 	fi

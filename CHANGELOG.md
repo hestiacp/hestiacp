@@ -2,6 +2,39 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.10.9] - Service Release
+
+### Changes
+
+- Update hestia-php to 8.5.13
+
+## [1.10.8] - Service Release
+
+### Security
+
+- Generate 2FA QR codes locally instead of sending the secret to api.qrserver.com, and refuse to save a broken 2FA secret #5869
+- Only allow internal `/edit/` links as the post-login redirect, blocking open redirects such as `//evil.com` #5990
+- Only allow users to download their own backup archives (`<user>.<date>….tar`), not other files starting with their username #5990
+
+### Changes
+
+- Update SnappyMail to 3.1.3 #6009
+- Update Nginx to 1.30.7 #6008
+- Add `bacon/bacon-qr-code` 3.1.1 to the panel PHP dependencies
+- Run `user_exec` commands from the user's home directory instead of the caller's working directory #5989
+- Explain multiple forward addresses and forward-only mail accounts in the documentation #5984
+- Skip uploading release packages that already exist with the same SHA256 checksum #5978
+- Build arm64 packages on native arm64 runners #5976
+- Update all non-major dependencies and linters #5995 #5996
+
+### Bug fixes
+
+- Fix the password reset and 2FA reset pages when opened from the email link: always provide a CSRF token, show a "session expired" message instead of silently redirecting to the login page, and log failed attempts correctly #5990
+- Fix the `dovecot-iptables` Fail2Ban jail never matching any login failure: add a Hestia-specific Dovecot filter (covering PAM/SQL/LDAP backends) and set `maxretry = 10`; the 1.10.8 upgrade updates the jail on existing installations #5977
+- Fix duplicate entries in the traffic queue and remove existing duplicates during upgrade #6002
+- Restore the Roundcube vendor marker so upgrades no longer depend on root's composer #6000
+- Pass `--working-dir` to composer in `v-add-sys-dependencies`
+
 ## [1.10.7] - Service Release
 
 ### Security

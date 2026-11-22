@@ -196,7 +196,11 @@ fi
 
 if [ "$ip_version" = '6' ]; then
 	# Allow web servers to bind to the address while duplicate address
-	# detection is still running (after boot or right after adding it)
+	# detection is still running (after boot or right after adding it).
+	# nodad only covers addresses added by Hestia, not the ones configured by
+	# netplan, and optimistic_dad only SLAAC addresses. Waiting for DAD before
+	# starting the web server would take every site down if one address turns
+	# out to be a duplicate. Ports below 1024 still can't be bound by users.
 	echo "net.ipv6.ip_nonlocal_bind = 1" > /etc/sysctl.d/60-hestia-ipv6.conf
 	sysctl -q -w net.ipv6.ip_nonlocal_bind=1 > /dev/null 2>&1
 fi

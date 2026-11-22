@@ -18,6 +18,19 @@ After every edit or update the firewall, Hestia will clear the current iptables 
 
 You can also use the [v-add-firewall-rule](../reference/cli#v-add-firewall-rule) command.
 
+## Why does a ban block a whole IPv6 network?
+
+When Fail2Ban or the [v-add-firewall-ban](../reference/cli#v-add-firewall-ban) command bans an IPv6 address, Hestia blocks the whole /64 network of the address. A single client usually gets a complete /64 and can switch to another address in it at any time. The ban list still shows the banned address.
+
+Only the address itself is blocked if the /64 contains an address of the server or an address listed in `/usr/local/hestia/data/firewall/excludes.conf`.
+
+If your hosting provider shares one /64 between several customers, block single addresses instead:
+
+```bash
+v-change-sys-config-value FIREWALL_IPV6_BAN_PREFIX 128
+v-update-firewall-ipv6
+```
+
 ## How do I setup an IPSet blacklist or whitelist?
 
 IPSet are large lists of IP addresses or subnets. They can be used for blacklists and whitelists.

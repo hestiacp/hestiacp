@@ -68,3 +68,16 @@ if [[ -f "$exim_conf" ]] \
 		fi
 	fi
 fi
+
+# SMTP relay configs contain the relay password and were created world-readable
+if [[ -f /etc/exim4/smtp_relay.conf ]]; then
+	echo "[ + ] Restricting permissions of SMTP relay configuration"
+	chmod 640 /etc/exim4/smtp_relay.conf
+	chown root:Debian-exim /etc/exim4/smtp_relay.conf
+fi
+for relay_conf in /etc/exim4/domains/*/smtp_relay.conf; do
+	if [[ -f "$relay_conf" ]]; then
+		chmod 660 "$relay_conf"
+		chown Debian-exim:mail "$relay_conf"
+	fi
+done

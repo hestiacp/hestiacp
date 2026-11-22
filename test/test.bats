@@ -1196,6 +1196,35 @@ function check_ip_not_banned(){
     fi
 }
 
+@test "WEB: IP usage counters match complete addresses" {
+    # 2001:db8:2::2 is a part of 2001:db8:2::20, which $ipv6domain still uses
+    run v-add-web-domain $user "ipv6b.${domain}" 198.18.0.125
+    assert_success
+    refute_output
+
+    run v-add-sys-ip "2001:db8:2::2" 64 $interface $user
+    assert_success
+    refute_output
+
+    run v-change-web-domain-ipv6 $user "ipv6b.${domain}" "2001:db8:2::2" no
+    assert_success
+    refute_output
+    assert_file_contains $HESTIA/data/ips/2001:db8:2::2 "U_SYS_USERS='$user'"
+
+    run v-delete-web-domain $user "ipv6b.${domain}"
+    assert_success
+    refute_output
+    assert_file_contains $HESTIA/data/ips/2001:db8:2::2 "U_SYS_USERS=''"
+
+    run v-update-sys-ip-counters "2001:db8:2::2"
+    assert_success
+    assert_file_contains $HESTIA/data/ips/2001:db8:2::2 "U_WEB_DOMAINS='0'"
+
+    run v-delete-sys-ip "2001:db8:2::2"
+    assert_success
+    refute_output
+}
+
 @test "WEB: Cleanup ipv6 test domain" {
     run v-delete-mail-domain $user $ipv6domain
     assert_success

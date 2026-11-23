@@ -81,3 +81,72 @@ for relay_conf in /etc/exim4/domains/*/smtp_relay.conf; do
 		chown Debian-exim:mail "$relay_conf"
 	fi
 done
+
+# Add the mail_compress plugin to the global mail_plugins setting in Dovecot 2.4
+# so that doveadm can work with compressed emails.
+_config_file="/etc/dovecot/conf.d/10-mail.conf"
+_backup_file="${_config_file}.hestia_$(date +%Y%m%d_%H%M).bak"
+_service_name="dovecot"
+_required_version="2.4"
+_old_line_regex='^\s*mail_plugins\s*=\s*quota\s*$'
+_new_line="mail_plugins = mail_compress quota"
+_dovecot_version=$(dovecot --version 2> /dev/null | awk '{print $1}' | cut -d. -f1,2)
+
+if [ "$_dovecot_version" = "$_required_version" ]; then
+	echo "[ * ] Adding mail_compress to Dovecot's global mail_plugins"
+
+	if [ ! -f "$_config_file" ]; then
+		echo "[ ! ] File not found: $_config_file" >&2
+	elif ! grep -Eq "$_old_line_regex" "$_config_file"; then
+		echo "[ * ] Line 'mail_plugins = quota' not found in $_config_file. Nothing to do"
+	elif ! cp -p "$_config_file" "$_backup_file"; then
+		echo "[ ! ] Could not create backup: $_backup_file" >&2
+	else
+		echo "[ + ] Backup created: $_backup_file"
+
+		# Replace the line
+		if sed -i -E "s/$_old_line_regex/$_new_line/" "$_config_file"; then
+			echo "[ + ] Line replaced with: $_new_line"
+
+			# Validate the configuration
+			if doveconf -n > /dev/null 2>&1; then
+
+				# Restart the service and check that it is running
+				if systemctl restart "$_service_name" && sleep 2 && systemctl is-active --quiet "$_service_name"; then
+					echo "[ + ] $_service_name is running with the new configuration"
+				else
+					# Failure: restore the backup and restart with the old configuration
+					echo "[ ! ] $_service_name failed to start with the new configuration" >&2
+					if cp -p "$_backup_file" "$_config_file"; then
+						echo "[ + ] Backup restored: $_config_file"
+
+						# Restart again and check that the original configuration works
+						if systemctl restart "$_service_name" && sleep 2 && systemctl is-active --quiet "$_service_name"; then
+							echo "[ * ] $_service_name is running again with the original configuration"
+						else
+							echo "[ ! ] $_service_name still fails to start after restoring the backup" >&2
+						fi
+					else
+						echo "[ ! ] Could not restore the backup, it is still available at: $_backup_file" >&2
+					fi
+				fi
+			else
+				# Invalid configuration: restore the backup
+				echo "[ ! ] Invalid Dovecot configuration after modification" >&2
+				if cp -p "$_backup_file" "$_config_file"; then
+					echo "[ + ] Backup restored: $_config_file"
+				else
+					echo "[ ! ] Could not restore the backup, it is still available at: $_backup_file" >&2
+				fi
+			fi
+		else
+			# Replacement failed: restore the backup
+			echo "[ ! ] Could not modify $_config_file" >&2
+			if cp -p "$_backup_file" "$_config_file"; then
+				echo "[ + ] Backup restored: $_config_file"
+			else
+				echo "[ ! ] Could not restore the backup, it is still available at: $_backup_file" >&2
+			fi
+		fi
+	fi
+fi

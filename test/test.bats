@@ -2201,6 +2201,9 @@ function check_ip_not_banned(){
   assert_success
   refute_output
   assert_file_exist /etc/exim4/smtp_relay.conf
+
+  run stat -c '%a %U:%G' /etc/exim4/smtp_relay.conf
+  assert_output '640 root:Debian-exim'
 }
 
 @test "System: Delete SMTP relay" {

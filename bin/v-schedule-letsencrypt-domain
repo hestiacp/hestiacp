@@ -55,7 +55,7 @@ fi
 $BIN/v-add-cron-letsencrypt-job
 
 # Adding LE task
-echo "$BIN/v-add-letsencrypt-domain $user $domain '$aliases' no yes" \
+echo "$BIN/v-add-letsencrypt-domain $user $domain '$aliases' no" \
 	>> $HESTIA/data/queue/letsencrypt.pipe
 
 #----------------------------------------------------------#

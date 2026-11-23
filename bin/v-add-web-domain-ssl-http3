@@ -1,0 +1,103 @@
+#!/bin/bash
+# info: enable HTTP/3 (QUIC) for a web domain
+# options: USER DOMAIN [RESTART] [QUIET]
+#
+# example: v-add-web-domain-ssl-http3 admin example.com
+#
+# This function enables HTTP/3 for a web domain with SSL: nginx gets a QUIC
+# listener on the HTTPS port of the domain and announces HTTP/3 to browsers
+# with an Alt-Svc header. It works with every web and proxy template. When the
+# firewall is enabled, UDP on the HTTPS port is opened as well, since HTTP/3
+# runs over UDP. Requires nginx with the http_v3_module.
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+domain=$2
+restart=$3
+quiet=$4
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
+source $HESTIA/func/domain.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '2' "$#" 'USER DOMAIN [RESTART] [QUIET]'
+is_format_valid 'user' 'domain' 'restart'
+is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
+is_object_valid 'web' 'DOMAIN' "$domain"
+is_object_unsuspended 'web' 'DOMAIN' "$domain"
+
+parse_object_kv_list $(grep "DOMAIN='$domain'" $USER_DATA/web.conf)
+if [ "$SSL" != 'yes' ]; then
+	check_result "$E_NOTEXIST" "SSL is not enabled for $domain"
+fi
+if [ "$PROXY_SYSTEM" != 'nginx' ] && [ "$WEB_SYSTEM" != 'nginx' ]; then
+	check_result "$E_NOTEXIST" "HTTP/3 requires nginx as web or proxy server"
+fi
+if ! is_nginx_http3_supported; then
+	check_result "$E_NOTEXIST" "nginx was built without HTTP/3 support (http_v3_module)"
+fi
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+if [ -z "$SSL_HTTP3" ]; then
+	add_object_key "web" 'DOMAIN' "$domain" 'SSL_HTTP3' 'SSL_HOME'
+fi
+update_object_value 'web' 'DOMAIN' "$domain" '$SSL_HTTP3' 'yes'
+
+sconf="$HOMEDIR/$user/conf/web/$domain/nginx.ssl.conf"
+write_web_http3_config "$user" "$domain" "$sconf"
+
+# A QUIC listener nginx can't load would stop every site on the next
+# restart: test first and roll back on failure
+if ! nginx_check=$(nginx -t 2>&1); then
+	rm -f "$HOMEDIR/$user/conf/web/$domain/nginx.ssl.conf_http3"
+	update_object_value 'web' 'DOMAIN' "$domain" '$SSL_HTTP3' 'no'
+	echo "$nginx_check" | tail -n 3
+	check_result "$E_PARSING" "HTTP/3 could not be enabled, nginx configuration test failed"
+fi
+
+# HTTP/3 runs over UDP
+if [ "$PROXY_SYSTEM" = 'nginx' ]; then
+	add_web_http3_firewall_rule "$PROXY_SSL_PORT"
+else
+	add_web_http3_firewall_rule "$WEB_SSL_PORT"
+fi
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Restart services if requested
+$BIN/v-restart-web "$restart"
+check_result $? "Web restart failed" > /dev/null
+
+$BIN/v-restart-proxy "$restart"
+check_result $? "Proxy restart failed" > /dev/null
+
+# Logging
+if [ "$quiet" != "yes" ]; then
+	$BIN/v-log-action "$user" "Info" "Web" "HTTP/3 enabled (Domain: $domain)."
+fi
+log_event "$OK" "$ARGUMENTS"
+
+exit

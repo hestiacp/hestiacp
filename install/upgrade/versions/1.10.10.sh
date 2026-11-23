@@ -150,3 +150,16 @@ if [ "$_dovecot_version" = "$_required_version" ]; then
 		fi
 	fi
 fi
+
+# HTTP/3 (QUIC) runs over UDP, but the firewall only opened TCP 443. Servers that
+# already serve HTTP/3 (for example with the wordpress-http3 templates) had their
+# QUIC packets dropped, so browsers showed QUIC errors before falling back to
+# HTTP/2. Open UDP 443 when nginx serves HTTP/3 on any domain.
+if [ -n "$FIREWALL_SYSTEM" ] && [ "$FIREWALL_SYSTEM" != "no" ] \
+	&& nginx -V 2>&1 | grep -q 'http_v3_module' \
+	&& grep -lsE '^\s*listen\s+\S+\s+quic\b' "$HOMEDIR"/*/conf/web/*/nginx.ssl.conf* > /dev/null; then
+	# shellcheck source=/usr/local/hestia/func/domain.sh
+	source $HESTIA/func/domain.sh
+	echo "[ * ] Opening UDP port 443 in the firewall for HTTP/3"
+	add_web_http3_firewall_rule 443
+fi

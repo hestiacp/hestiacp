@@ -5101,3 +5101,7 @@ msgstr ""
 #: ../../bin/v-list-sys-services:336
 msgid "web terminal backend"
 msgstr ""
+
+#: ../../web/templates/pages/edit_web.php:212
+msgid "Enable HTTP/3 (QUIC)"
+msgstr ""

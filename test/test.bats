@@ -979,10 +979,77 @@ function check_ip_not_banned(){
     refute_output
 }
 
+@test "WEB: Enable HTTP/3" {
+    if ! nginx -V 2>&1 | grep -q http_v3_module; then
+        skip "nginx without http_v3_module"
+    fi
+
+    run v-add-web-domain-ssl-http3 $user $domain
+    assert_success
+    refute_output
+
+    http3conf="$HOMEDIR/$user/conf/web/$domain/nginx.ssl.conf_http3"
+    assert_file_exist "$http3conf"
+    assert_file_contains "$http3conf" ":443 quic;"
+    assert_file_contains "$http3conf" "add_header Alt-Svc 'h3=\":443\"; ma=86400' always;"
+
+    run nginx -t
+    assert_success
+
+    run v-list-web-domain $user $domain json
+    assert_output --partial '"SSL_HTTP3": "yes"'
+
+    # HTTP/3 runs over UDP
+    if [ -n "$FIREWALL_SYSTEM" ]; then
+        assert_file_contains "$HESTIA/data/firewall/rules.conf" "PROTOCOL='UDP' PORT='443'"
+    fi
+}
+
 @test "WEB: Rebuild web domain" {
     run v-rebuild-web-domains $user
     assert_success
     refute_output
+}
+
+@test "WEB: HTTP/3 survives a rebuild" {
+    if ! nginx -V 2>&1 | grep -q http_v3_module; then
+        skip "nginx without http_v3_module"
+    fi
+    assert_file_contains "$HOMEDIR/$user/conf/web/$domain/nginx.ssl.conf_http3" ":443 quic;"
+}
+
+@test "WEB: HTTP/3 with a template that has its own QUIC listener" {
+    if ! nginx -V 2>&1 | grep -q http_v3_module; then
+        skip "nginx without http_v3_module"
+    fi
+    if [ -n "$PROXY_SYSTEM" ] || [ ! -f "$HESTIA/data/templates/web/nginx/php-fpm/wordpress-http3.stpl" ]; then
+        skip "wordpress-http3 is an nginx + PHP-FPM template"
+    fi
+
+    # No second "listen ... quic" in the same server block
+    run v-change-web-domain-tpl $user $domain wordpress-http3
+    assert_success
+    assert_file_not_exist "$HOMEDIR/$user/conf/web/$domain/nginx.ssl.conf_http3"
+    run nginx -t
+    assert_success
+
+    run v-change-web-domain-tpl $user $domain default
+    assert_success
+    assert_file_exist "$HOMEDIR/$user/conf/web/$domain/nginx.ssl.conf_http3"
+}
+
+@test "WEB: Disable HTTP/3" {
+    if ! nginx -V 2>&1 | grep -q http_v3_module; then
+        skip "nginx without http_v3_module"
+    fi
+
+    run v-delete-web-domain-ssl-http3 $user $domain
+    assert_success
+    refute_output
+    assert_file_not_exist "$HOMEDIR/$user/conf/web/$domain/nginx.ssl.conf_http3"
+
+    run v-list-web-domain $user $domain json
+    assert_output --partial '"SSL_HTTP3": "no"'
 }
 
 @test "WEB: Use quick install app on web domain" {

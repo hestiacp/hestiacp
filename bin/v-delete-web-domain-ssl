@@ -70,6 +70,9 @@ rm -f $USER_DATA/ssl/$domain.pem
 # Deleting force ssl
 $BIN/v-delete-web-domain-ssl-force "$user" "$domain" 'no' 'yes'
 
+# Deleting HTTP/3, it only works with SSL
+$BIN/v-delete-web-domain-ssl-http3 "$user" "$domain" 'no' 'yes'
+
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#

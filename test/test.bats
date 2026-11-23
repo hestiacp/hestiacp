@@ -1050,6 +1050,19 @@ function check_ip_not_banned(){
 
     run v-list-web-domain $user $domain json
     assert_output --partial '"SSL_HTTP3": "no"'
+
+    # The UDP rule is kept for other HTTP/3 domains. Remove it here so the
+    # firewall tests further down see the default rule numbers.
+    if [ -n "$FIREWALL_SYSTEM" ]; then
+        assert_file_contains "$HESTIA/data/firewall/rules.conf" "COMMENT='HTTP3'"
+        # Deleting a rule renumbers the rules after it, so look the rule up each time
+        while rule=$(grep -m1 "COMMENT='HTTP3'" "$HESTIA/data/firewall/rules.conf" | grep -o "^RULE='[0-9]*'" | cut -d "'" -f 2) && [ -n "$rule" ]; do
+            run v-delete-firewall-rule "$rule"
+            assert_success
+            refute_output
+        done
+        assert_file_not_contains "$HESTIA/data/firewall/rules.conf" "COMMENT='HTTP3'"
+    fi
 }
 
 @test "WEB: Use quick install app on web domain" {

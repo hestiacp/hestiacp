@@ -620,6 +620,83 @@ function check_ip_not_banned(){
   chmod u-w /etc/shadow
 }
 
+@test "User: Log user login ipv4" {
+  session="bats$(random 12)"
+  run v-log-user-login $user 192.168.2.10 success "$session" "bats-agent"
+  assert_success
+  refute_output
+  assert_file_contains "$HESTIA/data/users/$user/auth.log" "IP='192.168.2.10' ACTION='login' STATUS='success' USER_AGENT='bats-agent' SESSION='$session' ACTIVE='yes'"
+}
+
+@test "User: Log user login ipv6" {
+  session="bats$(random 12)"
+  run v-log-user-login $user "21DA:D3:0:2F3B:2AA:FF:FE28:9C5A" success "$session" "bats-agent"
+  assert_success
+  refute_output
+  assert_file_contains "$HESTIA/data/users/$user/auth.log" "IP='21DA:D3:0:2F3B:2AA:FF:FE28:9C5A' ACTION='login' STATUS='success' USER_AGENT='bats-agent' SESSION='$session' ACTIVE='yes'"
+}
+
+@test "User: Log user login ipv6 failed with system auth.log" {
+  session="bats$(random 12)"
+  run v-log-user-login $user "2001:db8::1" failed "$session" "bats-agent" yes "bats-$session"
+  assert_success
+  refute_output
+  assert_file_contains "$HESTIA/data/users/$user/auth.log" "IP='2001:db8::1' ACTION='login' STATUS='failed' USER_AGENT='bats-agent' SESSION='$session' ACTIVE='no'"
+  assert_file_contains "$HESTIA/log/auth.log" "$user 2001:db8::1 failed to login (bats-$session)"
+}
+
+@test "User: Log user login invalid ip" {
+  run v-log-user-login $user 192.168.992.10 success "bats$(random 12)" "bats-agent"
+  assert_failure $E_INVALID
+  run v-log-user-login $user "21DA:D3:0:2F3B:ZZZ:FF:FE28:9C5A" success "bats$(random 12)" "bats-agent"
+  assert_failure $E_INVALID
+}
+
+@test "User: Log user login invalid status" {
+  run v-log-user-login $user 192.168.2.10 "success' INJECTED='1" "bats$(random 12)" "bats-agent"
+  assert_failure $E_INVALID
+  run v-log-user-login $user 192.168.2.10 $'success\nDATE=1' "bats$(random 12)" "bats-agent"
+  assert_failure $E_INVALID
+  refute grep -q "INJECTED" "$HESTIA/data/users/$user/auth.log"
+}
+
+@test "User: Log user login creates auth.log with mode 660" {
+  authlog="$HESTIA/data/users/$user/auth.log"
+  if [ -e "$authlog" ]; then mv "$authlog" "$authlog.bats"; fi
+  run v-log-user-login $user 192.168.2.10 success "bats$(random 12)" "bats-agent"
+  mode=$(stat -c '%a' "$authlog")
+  rm -f "$authlog"
+  if [ -e "$authlog.bats" ]; then mv "$authlog.bats" "$authlog"; fi
+  assert_success
+  [ "$mode" = "660" ]
+}
+
+@test "User: Log user login refuses symlinked user auth.log" {
+  authlog="$HESTIA/data/users/$user/auth.log"
+  target="$BATS_TEST_TMPDIR/auth.log.target"
+  touch "$target"
+  if [ -e "$authlog" ]; then mv "$authlog" "$authlog.bats"; fi
+  ln -s "$target" "$authlog"
+  run v-log-user-login $user 192.168.2.10 success "bats$(random 12)" "bats-agent"
+  rm -f "$authlog"
+  if [ -e "$authlog.bats" ]; then mv "$authlog.bats" "$authlog"; fi
+  assert_failure $E_FORBIDEN
+  assert_file_empty "$target"
+}
+
+@test "User: Log user login refuses symlinked system auth.log" {
+  authlog="$HESTIA/log/auth.log"
+  target="$BATS_TEST_TMPDIR/auth.log.target"
+  touch "$target"
+  if [ -e "$authlog" ]; then mv "$authlog" "$authlog.bats"; fi
+  ln -s "$target" "$authlog"
+  run v-log-user-login $user 192.168.2.10 failed "bats$(random 12)" "bats-agent" yes "bats"
+  rm -f "$authlog"
+  if [ -e "$authlog.bats" ]; then mv "$authlog.bats" "$authlog"; fi
+  assert_failure $E_FORBIDEN
+  assert_file_empty "$target"
+}
+
 #----------------------------------------------------------#
 #                         Cron                             #
 #----------------------------------------------------------#

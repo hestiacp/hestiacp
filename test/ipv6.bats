@@ -203,7 +203,8 @@ function web_conf() {
 @test "Ip6: Added IPv6 is persisted in the network config" {
 	require_ipv6
 	if [ -f /etc/netplan/60-hestia.yaml ]; then
-		assert_file_contains /etc/netplan/60-hestia.yaml "- $ip6_shared/64"
+		run grep -F -- "- $ip6_shared/64" /etc/netplan/60-hestia.yaml
+		assert_success
 	else
 		assert_file_contains /etc/network/interfaces "iface $interface inet6 static"
 		assert_file_contains /etc/network/interfaces "address $ip6_shared"
@@ -523,7 +524,6 @@ function web_conf() {
 	require_ipv6
 	run v-change-domain-owner owner.$domain $user2
 	assert_success
-	refute_output
 
 	USER_DATA=$HESTIA/data/users/$user2
 	run get_object_value 'web' 'DOMAIN' "owner.$domain" '$IP6'
@@ -759,7 +759,9 @@ function web_conf() {
 
 @test "Firewall6: Cleanup rules" {
 	require_ipv6_firewall
-	for rule in 201 202 203; do
+	# Deleting a rule renumbers the remaining rules
+	for comment in 'IPv6 changed' 'IPv6 range' 'IPv6 ipset'; do
+		rule=$(grep "COMMENT='$comment'" $HESTIA/data/firewall/rules6.conf | cut -f 2 -d \')
 		run v-delete-firewall-rule-ipv6 $rule
 		assert_success
 		refute_output

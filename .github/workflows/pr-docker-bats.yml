@@ -138,7 +138,7 @@ jobs:
             if ! command -v bats >/dev/null 2>&1; then
               test/test_helper/bats-core/install.sh /usr/local
             fi
-            bats test/test.bats test/upgrade/1.10.6.bats test/upgrade/1.10.7.bats
+            bats test/test.bats test/ipv6.bats test/upgrade/1.10.6.bats test/upgrade/1.10.7.bats
           '
 
       - name: Collect logs on failure

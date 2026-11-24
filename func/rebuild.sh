@@ -894,6 +894,134 @@ rebuild_mysql_database() {
 	mysql_query "FLUSH PRIVILEGES" > /dev/null
 }
 
+# Reassign PostgreSQL object ownership in $DB to $DBUSER (excluding system/extension objects)
+fix_pgsql_database_ownership() {
+	if [ -z "$DB" ] || [ -z "$DBUSER" ]; then
+		return 0
+	fi
+
+	psql -h "$HOST" -U "$USER" -p "$PORT" -d "$DB" -v "dbuser=$DBUSER" << 'EOF' > /dev/null 2>&1
+BEGIN;
+SET LOCAL hestia.dbuser = :'dbuser';
+DO $$
+DECLARE
+	target_owner text := current_setting('hestia.dbuser');
+	rec record;
+BEGIN
+	-- Reassign user-created schemas (preserve pg_*, information_schema, extension schemas, and pg_database_owner)
+	FOR rec IN
+		SELECT n.nspname
+		FROM pg_namespace n
+		WHERE n.nspname NOT LIKE 'pg\_%' ESCAPE '\'
+			AND n.nspname <> 'information_schema'
+			AND n.nspowner <> COALESCE(to_regrole('pg_database_owner'), 0)
+			AND NOT EXISTS (
+				SELECT 1 FROM pg_depend d
+				WHERE d.classid = 'pg_namespace'::regclass
+					AND d.objid = n.oid
+					AND d.deptype = 'e'
+			)
+	LOOP
+		EXECUTE format('ALTER SCHEMA %I OWNER TO %I', rec.nspname, target_owner);
+	END LOOP;
+
+	-- Reassign non-extension relations (also transfers SERIAL and IDENTITY sequences)
+	FOR rec IN
+		SELECT n.nspname, c.relname, c.relkind
+		FROM pg_class c
+		JOIN pg_namespace n ON n.oid = c.relnamespace
+		WHERE n.nspname NOT LIKE 'pg\_%' ESCAPE '\'
+			AND n.nspname <> 'information_schema'
+			AND c.relkind IN ('r', 'p', 'v', 'm', 'f')
+			AND NOT EXISTS (
+				SELECT 1 FROM pg_depend d
+				WHERE d.classid = 'pg_class'::regclass
+					AND d.objid = c.oid
+					AND d.deptype = 'e'
+			)
+	LOOP
+		IF rec.relkind IN ('r', 'p') THEN
+			EXECUTE format('ALTER TABLE %I.%I OWNER TO %I', rec.nspname, rec.relname, target_owner);
+		ELSIF rec.relkind = 'v' THEN
+			EXECUTE format('ALTER VIEW %I.%I OWNER TO %I', rec.nspname, rec.relname, target_owner);
+		ELSIF rec.relkind = 'm' THEN
+			EXECUTE format('ALTER MATERIALIZED VIEW %I.%I OWNER TO %I', rec.nspname, rec.relname, target_owner);
+		ELSIF rec.relkind = 'f' THEN
+			EXECUTE format('ALTER FOREIGN TABLE %I.%I OWNER TO %I', rec.nspname, rec.relname, target_owner);
+		END IF;
+	END LOOP;
+
+	-- Reassign standalone non-extension sequences (skip table-owned SERIAL/IDENTITY sequences)
+	FOR rec IN
+		SELECT n.nspname, c.relname
+		FROM pg_class c
+		JOIN pg_namespace n ON n.oid = c.relnamespace
+		WHERE n.nspname NOT LIKE 'pg\_%' ESCAPE '\'
+			AND n.nspname <> 'information_schema'
+			AND c.relkind = 'S'
+			AND NOT EXISTS (
+				SELECT 1 FROM pg_depend d
+				WHERE d.classid = 'pg_class'::regclass
+					AND d.objid = c.oid
+					AND d.deptype IN ('e', 'a', 'i')
+			)
+	LOOP
+		EXECUTE format('ALTER SEQUENCE %I.%I OWNER TO %I', rec.nspname, rec.relname, target_owner);
+	END LOOP;
+
+	-- Reassign non-extension user-defined types and domains (exclude internal multirange/table row types)
+	FOR rec IN
+		SELECT n.nspname, t.typname, t.typtype
+		FROM pg_type t
+		JOIN pg_namespace n ON n.oid = t.typnamespace
+		LEFT JOIN pg_class c ON c.oid = t.typrelid
+		WHERE n.nspname NOT LIKE 'pg\_%' ESCAPE '\'
+			AND n.nspname <> 'information_schema'
+			AND t.typtype IN ('c', 'd', 'e', 'r', 'm')
+			AND (t.typrelid = 0 OR c.relkind = 'c')
+			AND NOT EXISTS (
+				SELECT 1 FROM pg_depend d
+				WHERE d.classid = 'pg_type'::regclass
+					AND d.objid = t.oid
+					AND d.deptype IN ('e', 'i')
+			)
+	LOOP
+		IF rec.typtype = 'd' THEN
+			EXECUTE format('ALTER DOMAIN %I.%I OWNER TO %I', rec.nspname, rec.typname, target_owner);
+		ELSE
+			EXECUTE format('ALTER TYPE %I.%I OWNER TO %I', rec.nspname, rec.typname, target_owner);
+		END IF;
+	END LOOP;
+
+	-- Reassign non-extension functions, procedures, and aggregates
+	FOR rec IN
+		SELECT n.nspname, p.proname, p.prokind, pg_get_function_identity_arguments(p.oid) AS args
+		FROM pg_proc p
+		JOIN pg_namespace n ON n.oid = p.pronamespace
+		WHERE n.nspname NOT LIKE 'pg\_%' ESCAPE '\'
+			AND n.nspname <> 'information_schema'
+			AND p.prokind IN ('f', 'p', 'a')
+			AND NOT EXISTS (
+				SELECT 1 FROM pg_depend d
+				WHERE d.classid = 'pg_proc'::regclass
+					AND d.objid = p.oid
+					AND d.deptype = 'e'
+			)
+	LOOP
+		IF rec.prokind = 'p' THEN
+			EXECUTE format('ALTER PROCEDURE %I.%I(%s) OWNER TO %I', rec.nspname, rec.proname, rec.args, target_owner);
+		ELSIF rec.prokind = 'a' THEN
+			EXECUTE format('ALTER AGGREGATE %I.%I(%s) OWNER TO %I', rec.nspname, rec.proname, COALESCE(NULLIF(rec.args, ''), '*'), target_owner);
+		ELSE
+			EXECUTE format('ALTER FUNCTION %I.%I(%s) OWNER TO %I', rec.nspname, rec.proname, rec.args, target_owner);
+		END IF;
+	END LOOP;
+END
+$$;
+COMMIT;
+EOF
+}
+
 # Rebuild PostgreSQL
 rebuild_pgsql_database() {
 
@@ -924,25 +1052,37 @@ rebuild_pgsql_database() {
 		exit "$E_CONNECT"
 	fi
 
-	query="CREATE ROLE $DBUSER"
-	psql -h $HOST -U $USER -p $PORT -c "$query" > /dev/null 2>&1
+	psql -h "$HOST" -U "$USER" -p "$PORT" -v "dbuser=$DBUSER" << 'EOF' > /dev/null 2>&1
+CREATE ROLE :"dbuser" WITH LOGIN;
+EOF
 
-	query="UPDATE pg_authid SET rolpassword='$MD5' WHERE rolname='$DBUSER'"
-	psql -h $HOST -U $USER -p $PORT -c "$query" > /dev/null 2>&1
-
-	query="CREATE DATABASE $DB OWNER $DBUSER"
-	if [ "$TPL" = 'template0' ]; then
-		query="$query ENCODING '$CHARSET' TEMPLATE $TPL"
+	if [ -n "$MD5" ]; then
+		psql -h "$HOST" -U "$USER" -p "$PORT" -v "dbuser=$DBUSER" -v "md5=$MD5" << 'EOF' > /dev/null 2>&1
+ALTER ROLE :"dbuser" WITH LOGIN PASSWORD :'md5';
+EOF
 	else
-		query="$query TEMPLATE $TPL"
+		psql -h "$HOST" -U "$USER" -p "$PORT" -v "dbuser=$DBUSER" << 'EOF' > /dev/null 2>&1
+ALTER ROLE :"dbuser" WITH LOGIN;
+EOF
 	fi
-	psql -h $HOST -U $USER -p $PORT -c "$query" > /dev/null 2>&1
 
-	query="GRANT ALL PRIVILEGES ON DATABASE $DB TO $DBUSER"
-	psql -h $HOST -U $USER -p $PORT -c "$query" > /dev/null 2>&1
+	if [ "$TPL" = 'template0' ]; then
+		psql -h "$HOST" -U "$USER" -p "$PORT" -v "db=$DB" -v "dbuser=$DBUSER" -v "charset=$CHARSET" -v "tpl=$TPL" << 'EOF' > /dev/null 2>&1
+CREATE DATABASE :"db" OWNER :"dbuser" ENCODING :'charset' TEMPLATE :"tpl";
+EOF
+	else
+		psql -h "$HOST" -U "$USER" -p "$PORT" -v "db=$DB" -v "dbuser=$DBUSER" -v "tpl=$TPL" << 'EOF' > /dev/null 2>&1
+CREATE DATABASE :"db" OWNER :"dbuser" TEMPLATE :"tpl";
+EOF
+	fi
 
-	query="GRANT CONNECT ON DATABASE template1 to $DBUSER"
-	psql -h $HOST -U $USER -p $PORT -c "$query" > /dev/null 2>&1
+	psql -h "$HOST" -U "$USER" -p "$PORT" -v "db=$DB" -v "dbuser=$DBUSER" << 'EOF' > /dev/null 2>&1
+ALTER DATABASE :"db" OWNER TO :"dbuser";
+GRANT ALL PRIVILEGES ON DATABASE :"db" TO :"dbuser";
+GRANT CONNECT ON DATABASE template1 TO :"dbuser";
+EOF
+
+	fix_pgsql_database_ownership
 }
 
 # Import MySQL dump
@@ -979,4 +1119,5 @@ import_pgsql_database() {
 	fi
 
 	psql -h $HOST -U $USER -p $PORT $DB < $1 > /dev/null 2>&1
+	fix_pgsql_database_ownership
 }

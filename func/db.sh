@@ -198,6 +198,12 @@ psql_query() {
 	rm -f $sql_tmp
 }
 
+get_pgsql_password_hash() {
+	psql -h "$HOST" -U "$USER" -p "$PORT" -t -A -v "dbuser=$1" 2> /dev/null << 'EOF'
+SELECT rolpassword FROM pg_authid WHERE rolname = :'dbuser';
+EOF
+}
+
 psql_dump() {
 	pg_dump -h $HOST -U $USER -p $PORT -c --inserts -O -x -f $1 $2 2> /tmp/e.psql
 	if [ '0' -ne "$?" ]; then
@@ -392,8 +398,7 @@ add_pgsql_database() {
 	query="GRANT CONNECT ON DATABASE template1 to $dbuser"
 	psql_query "$query" > /dev/null
 
-	query="SELECT rolpassword FROM pg_authid WHERE rolname='$dbuser'"
-	md5=$(psql_query "$query" | grep md5 | cut -f 2 -d \ )
+	md5=$(get_pgsql_password_hash "$dbuser")
 }
 
 add_mysql_database_temp_user() {
@@ -521,8 +526,7 @@ change_pgsql_password() {
 	query="ALTER ROLE $DBUSER WITH LOGIN PASSWORD '$dbpass_esc'"
 	psql_query "$query" > /dev/null
 
-	query="SELECT rolpassword FROM pg_authid WHERE rolname='$DBUSER'"
-	md5=$(psql_query "$query" | grep md5 | cut -f 2 -d \ )
+	md5=$(get_pgsql_password_hash "$DBUSER")
 }
 
 # Delete MySQL database
@@ -584,11 +588,17 @@ dump_pgsql_database() {
 
 	psql_dump $dump $database
 
-	query="SELECT rolpassword FROM pg_authid WHERE rolname='$DBUSER'"
-	md5=$(psql_query "$query" | head -n1 | cut -f 2 -d \ )
-	pw_str="UPDATE pg_authid SET rolpassword='$md5' WHERE rolname='$DBUSER'"
-	gr_str="GRANT ALL PRIVILEGES ON DATABASE $database to '$DBUSER'"
-	echo -e "$pw_str\n$gr_str" >> $grants
+	md5=$(get_pgsql_password_hash "$DBUSER")
+	dbuser_ident=${DBUSER//\"/\"\"}
+	db_ident=${database//\"/\"\"}
+	if [ -n "$md5" ]; then
+		md5_sql=$(sql_escape "$md5")
+		pw_str="ALTER ROLE \"$dbuser_ident\" WITH LOGIN PASSWORD '$md5_sql';"
+	else
+		pw_str="ALTER ROLE \"$dbuser_ident\" WITH LOGIN;"
+	fi
+	gr_str="GRANT ALL PRIVILEGES ON DATABASE \"$db_ident\" TO \"$dbuser_ident\";"
+	printf '%s\n%s\n' "$pw_str" "$gr_str" >> "$grants"
 }
 
 # Check if database server is in use

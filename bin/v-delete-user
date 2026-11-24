@@ -96,6 +96,21 @@ for key_file in "$HESTIA/data/access-keys/"*; do
 	fi
 done
 
+# Deleting php-fpm pools still owned by the user. Domain deletion removes the
+# pools of the domains Hestia knows about, but a pool left behind by an earlier
+# partial deletion would survive the user and make php-fpm fail to start for
+# every website once the user no longer exists.
+pools_deleted=''
+for pool_file in /etc/php/*/fpm/pool.d/*.conf; do
+	if [ -f "$pool_file" ] && grep -qE "^[[:space:]]*user[[:space:]]*=[[:space:]]*${user}[[:space:]]*$" "$pool_file"; then
+		rm -f "$pool_file"
+		pools_deleted='yes'
+	fi
+done
+if [ -n "$pools_deleted" ] && [ -n "$WEB_BACKEND" ] && [ "$WEB_BACKEND" != 'remote' ]; then
+	$BIN/v-restart-web-backend "$restart"
+fi
+
 # Deleting system user
 /usr/sbin/userdel -f "$user" >> /dev/null 2>&1
 if [ $? -ne 0 ]; then

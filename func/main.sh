@@ -2256,7 +2256,7 @@ format_aliases() {
 
 is_restart_format_valid() {
 	if [ -n "$1" ]; then
-		if [ "$1" != 'yes' ] && [ "$1" != 'no' ] && [ "$1" != 'ssl' ] && [ "$1" != 'reload' ] && [ "$1" != 'updatessl' ] && [ "$1" != "scheduled" ]; then
+		if [ "$1" != 'yes' ] && [ "$1" != 'no' ] && [ "$1" != 'ssl' ] && [ "$1" != 'reload' ] && [ "$1" != 'updatessl' ] && [ "$1" != "scheduled" ] && [ "$1" != 'now' ]; then
 			check_result "$E_INVALID" "invalid $2 format :: $1"
 		fi
 	fi

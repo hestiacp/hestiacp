@@ -150,3 +150,87 @@ if [ "$_dovecot_version" = "$_required_version" ]; then
 		fi
 	fi
 fi
+
+# Start migrating PPA
+# For Ubuntu: Migrate existing Apache2 repo from PPA to sury repository
+# and add sury Apache2 repo if Apache2 is the web system and no sury repo is configured
+_running_os="$(lsb_release -s -i)"
+_running_os="${_running_os,,}"
+_arch="$(dpkg --print-architecture)"
+_codename="$(lsb_release -s -c)"
+_apt_dir="/etc/apt/sources.list.d"
+_apt_file="$_apt_dir/apache2.list"
+_ppa_regex='ppa\.launchpad(content)?\.net/ondrej/apache2/ubuntu'
+_sury_regex='packages\.sury\.org/apache2'
+_keyring="/usr/share/keyrings/apache2-keyring.gpg"
+
+# Download sury Apache2 key and add repo
+_add_sury_apache2_repo() {
+	local _tmp_key
+	_tmp_key="$(mktemp)"
+	if curl -fsL --connect-timeout 15 --max-time 60 --retry 3 --retry-delay 5 --retry-max-time 30 https://packages.sury.org/apache2/apt.gpg | gpg --dearmor --yes > "$_tmp_key" 2> /dev/null && [[ -s "$_tmp_key" ]]; then
+		install -m 644 "$_tmp_key" "$_keyring"
+		echo "[ + ] Key installed: $_keyring"
+		echo "deb [arch=$_arch signed-by=$_keyring] https://packages.sury.org/apache2/ $_codename main" > "$_apt_file"
+		echo "[ + ] Repo added: $_apt_file"
+	else
+		echo "[ ! ] Key download failed; repo not added" >&2
+	fi
+	rm -f "$_tmp_key"
+}
+
+if [[ "$_running_os" == "ubuntu" ]]; then
+
+	# Find PPA files
+	_ppa_files=()
+	while IFS= read -r -d '' _file; do
+		_ppa_files+=("$_file")
+	done < <(grep -rlEZ --include='*.list' --include='*.sources' -- "$_ppa_regex" "$_apt_dir")
+
+	# Run only if PPA files exist
+	if [[ ${#_ppa_files[@]} -gt 0 ]]; then
+		echo "[ + ] Migrating Apache2 PPA repo to sury"
+
+		# Backup and remove PPA files (.save is ignored by apt)
+		_ts="$(date +%Y%m%d_%H%M%S)"
+		for _file in "${_ppa_files[@]}"; do
+			_backup="${_file}.hestia-${_ts}.save"
+			if cp -p -- "$_file" "$_backup" && rm -f -- "$_file"; then
+				echo "[ + ] PPA backed up: $_backup"
+			else
+				echo "[ ! ] PPA backup failed: $_file" >&2
+			fi
+		done
+
+		_add_sury_apache2_repo
+	fi
+
+	# Add sury repo if Apache2 is the web system and no sury Apache2 repo is configured
+	_web_system="$("$BIN"/v-list-sys-config json | jq -r '.[]|.WEB_SYSTEM')"
+	if [[ "$_web_system" == "apache2" && ! -e "$_apt_file" ]] \
+		&& ! grep -rqE --include='*.list' --include='*.sources' -- "$_sury_regex" "$_apt_dir"; then
+		echo "[ + ] Adding sury Apache2 repo"
+		_add_sury_apache2_repo
+	fi
+fi
+
+# The Launchpad PPA origin (ppa:ondrej/php) is no longer listed because the
+# PPA has been deprecated.
+_uu_conf="/etc/apt/apt.conf.d/60unattended-upgrades-hestia-php"
+echo "[ + ] Update unattended-upgrades conf to install PHP updates"
+cat > "$_uu_conf" << 'EOF'
+Unattended-Upgrade::Origins-Pattern {
+        "origin=deb.sury.org";
+};
+EOF
+
+# Remove the unattended-upgrades conf that allowed Apache updates from the
+# Sury PPA. That PPA has been deprecated, so the file is obsolete. Apache
+# updates are still applied automatically: the PHP conf above allows the
+# "deb.sury.org" origin, which also covers Sury's apache2 repository.
+_uu_apache2_conf="/etc/apt/apt.conf.d/60unattended-upgrades-hestia-apache2"
+if [ -f "$_uu_apache2_conf" ]; then
+	echo "[ + ] Removing obsolete unattended-upgrades conf to install Apache updates"
+	rm -f "$_uu_apache2_conf"
+fi
+# End migrating Apache2 PPA

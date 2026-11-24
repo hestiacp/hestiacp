@@ -235,6 +235,96 @@ if [ -f "$_uu_apache2_conf" ]; then
 fi
 # End migrating Apache2 PPA
 
+# Catch-up migration for Ubuntu hosts whose legacy PHP PPA still uses
+# ppa.launchpad.net (1.10.6.sh only matched ppa.launchpadcontent.net) or
+# whose ondrej/php PPA survived in .list / .sources files.
+_php_running_os="$(lsb_release -s -i 2> /dev/null)"
+if [ "${_php_running_os,,}" = "ubuntu" ]; then
+	_php_apt_dir="/etc/apt/sources.list.d"
+	_php_ppa_regex='^[^#]*ppa\.launchpad(content)?\.net/ondrej/php/ubuntu'
+	_php_sury_regex='^[^#]*packages\.sury\.org/php(/|[[:space:]]|$)'
+	_php_keyring="/usr/share/keyrings/sury-keyring.gpg"
+	_php_list="$_php_apt_dir/php.list"
+
+	_php_ppa_files=()
+	if [ -d "$_php_apt_dir" ]; then
+		while IFS= read -r -d '' _php_file; do
+			_php_ppa_files+=("$_php_file")
+		done < <(grep -rlEZ --include='*.list' --include='*.sources' "$_php_ppa_regex" "$_php_apt_dir" 2> /dev/null)
+	fi
+
+	if [ "${#_php_ppa_files[@]}" -gt 0 ]; then
+		_php_has_other_sury=0
+		while IFS= read -r -d '' _php_sury_file; do
+			_php_in_ppa=0
+			for _php_file in "${_php_ppa_files[@]}"; do
+				if [ "$_php_sury_file" = "$_php_file" ]; then
+					_php_in_ppa=1
+					break
+				fi
+			done
+			if [ "$_php_in_ppa" -eq 0 ]; then
+				_php_has_other_sury=1
+				break
+			fi
+		done < <(grep -rlEZ --include='*.list' --include='*.sources' "$_php_sury_regex" "$_php_apt_dir" 2> /dev/null)
+
+		_php_arch=""
+		_php_codename=""
+		_php_ready=1
+		if [ "$_php_has_other_sury" -eq 0 ]; then
+			_php_arch="$(dpkg --print-architecture 2> /dev/null)"
+			_php_codename="$(lsb_release -s -c 2> /dev/null)"
+			if [ -z "$_php_arch" ] || [ -z "$_php_codename" ]; then
+				echo "[ ! ] Unable to determine architecture or Ubuntu codename; keeping existing PHP PPA sources"
+				_php_ready=0
+			fi
+		fi
+
+		_php_need_key=1
+		if [ "$_php_has_other_sury" -eq 1 ] && [ -s "$_php_keyring" ]; then
+			_php_need_key=0
+		fi
+
+		_php_tmp_raw=""
+		_php_tmp_key=""
+		if [ "$_php_ready" -eq 1 ] && [ "$_php_need_key" -eq 1 ]; then
+			_php_tmp_raw="$(mktemp)"
+			_php_tmp_key="$(mktemp)"
+			if [ -z "$_php_tmp_raw" ] || [ -z "$_php_tmp_key" ] || ! curl -fsL --connect-timeout 15 --max-time 60 --retry 3 --retry-delay 5 --retry-max-time 30 -o "$_php_tmp_raw" https://packages.sury.org/php/apt.gpg || [ ! -s "$_php_tmp_raw" ] || ! gpg --batch --yes --dearmor -o "$_php_tmp_key" "$_php_tmp_raw" || [ ! -s "$_php_tmp_key" ]; then
+				echo "[ ! ] Failed to download Sury PHP archive keyring; keeping existing PHP PPA sources"
+				rm -f "$_php_tmp_raw" "$_php_tmp_key"
+				_php_ready=0
+			elif ! mkdir -p "$(dirname "$_php_keyring")" || ! install -m 644 "$_php_tmp_key" "$_php_keyring"; then
+				echo "[ ! ] Failed to install Sury PHP archive keyring; keeping existing PHP PPA sources"
+				rm -f "$_php_tmp_raw" "$_php_tmp_key"
+				_php_ready=0
+			else
+				rm -f "$_php_tmp_raw" "$_php_tmp_key"
+			fi
+		fi
+
+		if [ "$_php_ready" -eq 1 ]; then
+			_php_backup_dir="${HESTIA_BACKUP:-/root/hst_backups}/conf/apt-php-ppa"
+			for _php_file in "${_php_ppa_files[@]}"; do
+				echo "[ + ] Migrating legacy Ubuntu PHP PPA source: $_php_file"
+				_php_rel="${_php_file#"$_php_apt_dir"/}"
+				mkdir -p "$_php_backup_dir/$(dirname "$_php_rel")"
+				mv -f "$_php_file" "$_php_backup_dir/$_php_rel"
+			done
+
+			if ! grep -rlEq --include='*.list' --include='*.sources' "$_php_sury_regex" "$_php_apt_dir" 2> /dev/null; then
+				echo "deb [arch=$_php_arch signed-by=$_php_keyring] https://packages.sury.org/php/ $_php_codename main" > "$_php_list"
+				chmod 644 "$_php_list"
+			fi
+		fi
+	fi
+fi
+unset _php_running_os _php_apt_dir _php_ppa_regex _php_sury_regex _php_keyring _php_list \
+	_php_ppa_files _php_file _php_has_other_sury _php_sury_file _php_in_ppa \
+	_php_arch _php_codename _php_ready _php_need_key _php_tmp_raw _php_tmp_key _php_backup_dir _php_rel
+# End migrating legacy PHP PPA
+
 # Restrict permissions of existing Restic configuration files (#5965)
 if [[ -f "$HESTIA/conf/restic.conf" ]] && [[ ! -L "$HESTIA/conf/restic.conf" ]]; then
 	chmod 660 -- "$HESTIA/conf/restic.conf"

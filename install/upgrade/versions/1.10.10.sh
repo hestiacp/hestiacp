@@ -214,6 +214,51 @@ if [[ "$_running_os" == "ubuntu" ]]; then
 	fi
 fi
 
+# For Ubuntu: Migrate the remaining PHP repo from PPA to sury repository.
+# 1.10.6 only matched ppa.launchpadcontent.net, the hostname used by Ubuntu 22.04
+# and later. Servers installed on Ubuntu 20.04 or older and upgraded in place still
+# have the old ppa.launchpad.net hostname, so match both here.
+_php_apt_file="$_apt_dir/php.list"
+_php_ppa_regex='ppa\.launchpad(content)?\.net/ondrej/php/ubuntu'
+_php_keyring="/usr/share/keyrings/sury-keyring.gpg"
+
+if [[ "$_running_os" == "ubuntu" ]]; then
+
+	# Find PPA files
+	_ppa_files=()
+	while IFS= read -r -d '' _file; do
+		_ppa_files+=("$_file")
+	done < <(grep -rlEZ --include='*.list' --include='*.sources' -- "$_php_ppa_regex" "$_apt_dir")
+
+	# Run only if PPA files exist
+	if [[ ${#_ppa_files[@]} -gt 0 ]]; then
+		echo "[ + ] Migrating PHP PPA repo to sury"
+
+		# Backup and remove PPA files (.save is ignored by apt)
+		_ts="$(date +%Y%m%d_%H%M%S)"
+		for _file in "${_ppa_files[@]}"; do
+			_backup="${_file}.hestia-${_ts}.save"
+			if cp -p -- "$_file" "$_backup" && rm -f -- "$_file"; then
+				echo "[ + ] PPA backed up: $_backup"
+			else
+				echo "[ ! ] PPA backup failed: $_file" >&2
+			fi
+		done
+
+		# Download key to temp file first
+		_tmp_key="$(mktemp)"
+		if curl -fsL --connect-timeout 15 --max-time 60 --retry 3 --retry-delay 5 --retry-max-time 30 https://packages.sury.org/php/apt.gpg | gpg --dearmor --yes > "$_tmp_key" 2> /dev/null && [[ -s "$_tmp_key" ]]; then
+			install -m 644 "$_tmp_key" "$_php_keyring"
+			echo "[ + ] Key installed: $_php_keyring"
+			echo "deb [arch=$_arch signed-by=$_php_keyring] https://packages.sury.org/php/ $_codename main" > "$_php_apt_file"
+			echo "[ + ] Repo added: $_php_apt_file"
+		else
+			echo "[ ! ] Key download failed; repo not added" >&2
+		fi
+		rm -f "$_tmp_key"
+	fi
+fi
+
 # The Launchpad PPA origin (ppa:ondrej/php) is no longer listed because the
 # PPA has been deprecated.
 _uu_conf="/etc/apt/apt.conf.d/60unattended-upgrades-hestia-php"

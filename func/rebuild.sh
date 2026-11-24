@@ -332,17 +332,27 @@ rebuild_web_domain_conf() {
 		fi
 	fi
 
-	# Refresh HTTPS redirection if previously enabled
-	if [ "$SSL_FORCE" = 'yes' ]; then
+	# Refresh HTTPS redirection, HSTS and FastCGI cache if previously enabled.
+	# Skip it while the domain or the user is suspended: the v-add-* scripts
+	# refuse to run then, so the delete would turn the setting off for good, and
+	# it would stay off after the domain is unsuspended. The existing config
+	# files are kept.
+	if [ "$SUSPENDED" = 'yes' ] || [ "$(get_user_value '$SUSPENDED')" = 'yes' ]; then
+		ssl_refresh='no'
+	else
+		ssl_refresh='yes'
+	fi
+
+	if [ "$SSL_FORCE" = 'yes' ] && [ "$ssl_refresh" = 'yes' ]; then
 		$BIN/v-delete-web-domain-ssl-force $user $domain no yes
 		$BIN/v-add-web-domain-ssl-force $user $domain no yes
 	fi
 
-	if [ "$SSL_HSTS" = 'yes' ]; then
+	if [ "$SSL_HSTS" = 'yes' ] && [ "$ssl_refresh" = 'yes' ]; then
 		$BIN/v-delete-web-domain-ssl-hsts $user $domain no yes
 		$BIN/v-add-web-domain-ssl-hsts $user $domain no yes
 	fi
-	if [ "$FASTCGI_CACHE" = 'yes' ]; then
+	if [ "$FASTCGI_CACHE" = 'yes' ] && [ "$ssl_refresh" = 'yes' ]; then
 		$BIN/v-delete-fastcgi-cache $user $domain
 		$BIN/v-add-fastcgi-cache $user $domain "$FASTCGI_DURATION"
 	fi

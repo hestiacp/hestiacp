@@ -45,7 +45,7 @@ Project infrastructure is partly provided by [infrahost](https://infrahost.ch/en
 
 ## Supported platforms and operating systems
 
-- **Debian:** 13, 12, 11
+- **Debian:** 13, 12
 - **Ubuntu:** 26.04 LTS, 24.04 LTS, 22.04 LTS
 
 **NOTES:**

@@ -67,28 +67,29 @@ csv_list() {
 HOSTNAME=$(hostname)
 
 # Check OS/Release
-if [ -d '/etc/sysconfig' ]; then
-	if [ -e '/etc/redhat-release' ]; then
-		OS='CentOS'
-		VERSION=$(cat /etc/redhat-release | tr ' ' '\n' | grep [0-9])
-	else
-		OS="Amazon"
-		VERSION=$(cat /etc/issue | tr ' ' '\n' | grep [0-9])
+os_id=""
+if [ -r '/etc/os-release' ]; then
+	os_id=$(grep -m1 '^ID=' /etc/os-release | cut -f 2 -d '=' | tr -d '"' | tr '[:upper:]' '[:lower:]')
+fi
+
+if { [ "$os_id" = 'ubuntu' ] || [ "$(lsb_release -si 2> /dev/null)" = "Ubuntu" ]; } && [ -e '/etc/debian_version' ]; then
+	OS="Ubuntu"
+	if [ -r '/etc/lsb-release' ]; then
+		VERSION=$(grep -m1 '^DISTRIB_RELEASE=' /etc/lsb-release | cut -f 2 -d '=')
+	fi
+	if [ -z "$VERSION" ] && [ -r '/etc/os-release' ]; then
+		VERSION=$(grep -m1 '^VERSION_ID=' /etc/os-release | cut -f 2 -d '=' | tr -d '"')
+	fi
+elif [ "$os_id" = 'debian' ] || [ "$(head -n1 /etc/issue 2> /dev/null | cut -f 1 -d ' ')" = 'Debian' ]; then
+	OS="Debian"
+	if [ -r '/etc/debian_version' ]; then
+		VERSION=$(cat /etc/debian_version)
+	elif [ -r '/etc/os-release' ]; then
+		VERSION=$(grep -m1 '^VERSION_ID=' /etc/os-release | cut -f 2 -d '=' | tr -d '"')
 	fi
 else
-	if [ "$(lsb_release -si)" == "Ubuntu" ] && [ -e '/etc/debian_version' ]; then
-		OS="Ubuntu"
-		VERSION=$(grep DISTRIB_RELEASE /etc/lsb-release | cut -f 2 -d '=')
-	else
-		distro=$(head -n1 /etc/issue | cut -f 1 -d ' ')
-		if [ "$distro" = 'Debian' ]; then
-			OS="Debian"
-			VERSION=$(cat /etc/debian_version)
-		else
-			OS='UNKNOWN'
-			VERSION='UNKNOWN'
-		fi
-	fi
+	OS='UNKNOWN'
+	VERSION='UNKNOWN'
 fi
 
 # Check architecture

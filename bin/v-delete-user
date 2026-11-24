@@ -102,7 +102,7 @@ done
 # every website once the user no longer exists.
 pools_deleted=''
 for pool_file in /etc/php/*/fpm/pool.d/*.conf; do
-	if [ -f "$pool_file" ] && grep -qE "^[[:space:]]*user[[:space:]]*=[[:space:]]*$user[[:space:]]*$" "$pool_file"; then
+	if [ -f "$pool_file" ] && grep -qE "^[[:space:]]*user[[:space:]]*=[[:space:]]*${user}[[:space:]]*$" "$pool_file"; then
 		rm -f "$pool_file"
 		pools_deleted='yes'
 	fi

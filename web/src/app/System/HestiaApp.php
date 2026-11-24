@@ -401,6 +401,34 @@ class HestiaApp
         }
     }
 
+    public function addCronJob(
+        string $minute,
+        string $hour,
+        string $day,
+        string $month,
+        string $weekday,
+        string $command,
+    ): void {
+        $process = new Process([
+            '/usr/bin/sudo',
+            HESTIA_DIR_BIN . 'v-add-cron-job',
+            $this->user(),
+            $minute,
+            $hour,
+            $day,
+            $month,
+            $weekday,
+            $command,
+        ]);
+        $process->setTimeout(300);
+
+        try {
+            $process->mustRun();
+        } catch (ProcessFailedException $exception) {
+            throw new RuntimeException('Failed to add cron job', previous: $exception);
+        }
+    }
+
     public function runComposer(string $phpVersion, array $arguments): HestiaCommandResult
     {
         $this->runUser('v-add-user-composer', ['2', 'yes']);

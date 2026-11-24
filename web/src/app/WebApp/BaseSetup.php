@@ -9,12 +9,18 @@ use Hestia\WebApp\InstallationTarget\InstallationTarget;
 use Hestia\WebApp\InstallationTarget\TargetDatabase;
 use RuntimeException;
 
+use function array_filter;
+use function array_map;
 use function basename;
 use function dirname;
+use function explode;
+use function implode;
+use function in_array;
 use function is_string;
 use function sprintf;
 use function str_replace;
 use function str_starts_with;
+use function strtolower;
 
 abstract class BaseSetup implements InstallerInterface
 {
@@ -44,6 +50,8 @@ abstract class BaseSetup implements InstallerInterface
 
     public function install(InstallationTarget $target, array $options): void
     {
+        $this->checkPHPExtensions($options['php_version']);
+
         $this->appcontext->deleteFile($target->getDocRoot('robots.txt'));
         $this->appcontext->deleteFile($target->getDocRoot('index.html'));
 
@@ -54,6 +62,29 @@ abstract class BaseSetup implements InstallerInterface
     }
 
     abstract protected function setupApplication(InstallationTarget $target, array $options): void;
+
+    private function checkPHPExtensions(string $phpVersion): void
+    {
+        $requiredExtensions = $this->config['server']['php']['extensions'] ?? [];
+        if ($requiredExtensions === []) {
+            return;
+        }
+
+        $result = $this->appcontext->runPHP($phpVersion, '-m', []);
+        $loadedExtensions = array_map('trim', explode("\n", strtolower($result->output)));
+        $missingExtensions = array_filter(
+            $requiredExtensions,
+            fn(string $extension): bool => !in_array(strtolower($extension), $loadedExtensions, true),
+        );
+
+        if ($missingExtensions !== []) {
+            throw new RuntimeException(sprintf(
+                'Unable to install %s, required PHP extensions are missing: %s',
+                $this->info['name'],
+                implode(', ', $missingExtensions),
+            ));
+        }
+    }
 
     private function setupWebServer(string $domainName, string $phpVersion): void
     {

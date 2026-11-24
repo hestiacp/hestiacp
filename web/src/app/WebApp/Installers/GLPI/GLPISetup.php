@@ -7,14 +7,13 @@ namespace Hestia\WebApp\Installers\GLPI;
 use Hestia\System\HestiaApp;
 use Hestia\WebApp\BaseSetup;
 use Hestia\WebApp\InstallationTarget\InstallationTarget;
-use Hestia\WebApp\InstallerInfo;
 
 class GLPISetup extends BaseSetup
 {
     protected array $info = [
         'name' => 'GLPI',
         'group' => 'ITSM',
-        'version' => '11.0.8',
+        'version' => '12.0.2',
         'thumbnail' => 'glpi-thumb.png',
     ];
 
@@ -30,7 +29,7 @@ class GLPISetup extends BaseSetup
                     'template' => 'glpi',
                 ],
                 'php' => [
-                    'supported' => ['8.1', '8.2', '8.3', '8.4', '8.5'],
+                    'supported' => ['8.3', '8.4', '8.5'],
                     'extensions' => ['bcmath', 'curl', 'gd', 'intl', 'mbstring', 'mysqli', 'zlib', 'openssl'],
                 ],
             ],
@@ -44,21 +43,7 @@ class GLPISetup extends BaseSetup
 
     protected function setupApplication(InstallationTarget $target, array $options): void
     {
-        // 1. Verify PHP extensions for the selected PHP version
-        $requiredExtensions = $this->config['server']['php']['extensions'] ?? [];
-        if (!empty($requiredExtensions)) {
-            $result = $this->appcontext->runPHP($options['php_version'], '-m', []);
-            $extensions = array_map('strtolower', array_map('trim', explode("\n", $result->getOutput())));
-            $missing = array_diff($requiredExtensions, $extensions);
-
-            if (!empty($missing)) {
-                throw new \RuntimeException(
-                    "Unable to install GLPI, required PHP extensions are missing: " . implode(', ', $missing)
-                );
-            }
-        }
-
-        // 2. DB install via CLI. Pass 100M limits so GLPI's installer saves them to the DB.
+        // Pass 100M limits so GLPI's database installer saves them to the DB.
         $this->appcontext->runPHP($options['php_version'], '-d', [
             'upload_max_filesize=100M',
             '-d',
@@ -72,7 +57,7 @@ class GLPISetup extends BaseSetup
             '--no-interaction'
         ]);
 
-        // 4. Set url_base dynamically based on SSL status
+        // Set url_base dynamically based on SSL status
         $this->appcontext->runPHP($options['php_version'], $target->getDocRoot('bin/console'), [
             'config:set',
             'url_base',
@@ -80,13 +65,15 @@ class GLPISetup extends BaseSetup
             '--no-interaction'
         ]);
 
-        // 5. Setup cron job (runs every minute)
-        $this->appcontext->runUser('v-add-cron-job', [
-            '*', '*', '*', '*', '*',
-            '/usr/bin/php' . $options['php_version'] . ' ' . $target->getDocRoot('front/cron.php') . ' > /dev/null 2>&1'
-        ]);
+        // Set up the cron job to run every minute
+        $cronCommand = sprintf(
+            '%s %s > /dev/null 2>&1',
+            escapeshellarg('/usr/bin/php' . $options['php_version']),
+            escapeshellarg($target->getDocRoot('front/cron.php')),
+        );
+        $this->appcontext->addCronJob('*', '*', '*', '*', '*', $cronCommand);
 
-        // 6. Cleanup
+        // Remove the web installer
         $this->appcontext->deleteFile($target->getDocRoot('install/install.php'));
     }
 }

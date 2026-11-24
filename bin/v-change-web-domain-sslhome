@@ -72,12 +72,14 @@ case $SSL_HOME in
 esac
 
 if [ "$SSL_HOME" = 'single' ] && [ ! -d "$HOMEDIR/$user/web/$domain/public_shtml" ]; then
-	mkdir $HOMEDIR/$user/web/$domain/public_shtml
-	chown $user:$user $HOMEDIR/$user/web/$domain/public_shtml
+	# The domain directory is owned by the user (not writable by default), so
+	# create the directory with the user's privileges
+	user_exec_in_writable_dir "$HOMEDIR/$user/web/$domain" \
+		mkdir -- "$HOMEDIR/$user/web/$domain/public_shtml"
 	user_exec cp $WEBTPL/skel/public_html/* "$HOMEDIR/$user/web/$domain/public_shtml" > /dev/null 2>&1
-	for file in $(find "$HOMEDIR/$user/web/$domain/public_shtml" -type f); do
-		sed -i "s/%domain%/$domain/g" $file
-	done
+	# Content is owned by the user, never edit it as root
+	user_exec find "$HOMEDIR/$user/web/$domain/public_shtml" -type f \
+		-exec sed -i "s/%domain%/$domain/g" {} + > /dev/null 2>&1
 fi
 
 # Changing sslhome directory

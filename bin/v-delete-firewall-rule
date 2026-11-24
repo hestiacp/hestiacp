@@ -40,6 +40,29 @@ check_hestia_demo_mode
 # Deleting rule
 sed -i "/RULE='$rule' /d" $HESTIA/data/firewall/rules.conf
 
+# Reorder firewall rules
+rulesf="$HESTIA/data/firewall/rules.conf"
+
+if [[ ! -f "$rulesf" ]]; then
+	echo "Error: $rulesf not found" >&2
+	exit 1
+fi
+
+if [[ ! -s "$rulesf" ]]; then
+	# Empty file, nothing to reorder
+	exit 0
+fi
+
+rules_tmp="$(mktemp "${rulesf}.XXXXXX")"
+trap 'rm -f "$rules_tmp"' EXIT
+
+# Sort by rule number (field 2, quote-delimited) and renumber sequentially
+sort -n -k 2 -t \' "$rulesf" \
+	| awk -v q="'" '{ n++; sub("RULE=" q "[0-9]+" q, "RULE=" q n q); print }' \
+		> "$rules_tmp"
+
+mv "$rules_tmp" "$rulesf"
+
 # Updating system firewall
 $BIN/v-update-firewall
 

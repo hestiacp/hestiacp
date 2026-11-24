@@ -89,6 +89,13 @@ if echo "$shadow" | grep -qE '^\$[0-9a-z]+\$[^\$]+\$'; then
 		method='md5'
 	elif [ "$method" -eq '6' ]; then
 		method='sha-512'
+		if [[ "$salt" =~ ^rounds= ]]; then
+			if [[ "$shadow" =~ ^\$6\$(rounds=[1-9][0-9]{3,8}\$[./0-9A-Za-z]{1,16})\$ ]]; then
+				salt="${BASH_REMATCH[1]}"
+			else
+				salt=''
+			fi
+		fi
 	else
 		echo "Error: password missmatch"
 		echo "$date $time $user $ip46 failed to login" >> $HESTIA/log/auth.log

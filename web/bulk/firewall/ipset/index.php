@@ -11,7 +11,7 @@ verify_csrf($_POST);
 
 // Check user
 if ($_SESSION["userContext"] != "admin") {
-	header("Location: /list/user");
+	header("Location: /list/user/");
 	exit();
 }
 

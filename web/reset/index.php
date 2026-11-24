@@ -8,7 +8,8 @@ $TAB = "RESET PASSWORD";
 include $_SERVER["DOCUMENT_ROOT"] . "/inc/main.php";
 
 if (isset($_SESSION["user"])) {
-	header("Location: /list/user");
+	header("Location: /list/user/");
+	exit();
 }
 
 if ($_SESSION["POLICY_SYSTEM_PASSWORD_RESET"] == "no") {
@@ -16,9 +17,21 @@ if ($_SESSION["POLICY_SYSTEM_PASSWORD_RESET"] == "no") {
 	exit();
 }
 
-if (!empty($_POST["user"]) && empty($_POST["code"])) {
-	// Check token
-	verify_csrf($_POST);
+// Check CSRF token. Don't use the default redirect to /login/: it hides the
+// reason from the user (e.g. reset link opened in a new browser / expired session)
+$csrf_valid = true;
+if (!empty($_POST) && !verify_csrf($_POST, true)) {
+	$csrf_valid = false;
+	$error = _("Your session has expired. Please try again.");
+}
+
+// The CSRF token is normally only generated on /login/, so make sure the
+// forms on this page always have one (e.g. when opened from the email link)
+if (empty($_SESSION["token"])) {
+	$_SESSION["token"] = bin2hex(random_bytes(16));
+}
+
+if ($csrf_valid && !empty($_POST["user"]) && empty($_POST["code"])) {
 	$v_user = quoteshellarg($_POST["user"]);
 	$user = $_POST["user"];
 	$email = $_POST["email"];
@@ -43,7 +56,9 @@ if (!empty($_POST["user"]) && empty($_POST["code"])) {
 					$return_var,
 				);
 				unset($output);
-				unlink($v_rkey);
+				if (file_exists($v_rkey)) {
+					unlink($v_rkey);
+				}
 				$template = get_email_template("reset_password", $data[$user]["LANGUAGE"]);
 				if (!empty($template)) {
 					preg_match("/<subject>(.*?)<\/subject>/si", $template, $matches);
@@ -158,12 +173,14 @@ if (!empty($_POST["user"]) && empty($_POST["code"])) {
 	unset($output);
 }
 
-if (!empty($_POST["user"]) && !empty($_POST["code"]) && !empty($_POST["password"])) {
-	// Check token
-	verify_csrf($_POST);
+if ($csrf_valid && !empty($_POST["user"]) && !empty($_POST["code"]) && !empty($_POST["password"])) {
 	if ($_POST["password"] == $_POST["password_confirm"]) {
 		$v_user = quoteshellarg($_POST["user"]);
 		$user = $_POST["user"];
+		// Needed for v-log-user-login on failed attempts
+		$v_ip = quoteshellarg(get_real_user_ip());
+		$v_session_id = quoteshellarg($_POST["token"]);
+		$v_user_agent = quoteshellarg($_SERVER["HTTP_USER_AGENT"] ?? "");
 		exec(HESTIA_CMD . "v-list-user " . $v_user . " json", $output, $return_var);
 		if ($return_var == 0) {
 			$data = json_decode(implode("", $output), true);
@@ -181,7 +198,9 @@ if (!empty($_POST["user"]) && !empty($_POST["code"]) && !empty($_POST["password"
 						$output,
 						$return_var,
 					);
-					unlink($v_password);
+					if (file_exists($v_password)) {
+						unlink($v_password);
+					}
 					if ($return_var > 0) {
 						sleep(5);
 						$error = _("An internal error occurred");

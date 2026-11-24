@@ -58,7 +58,7 @@
 }
 
 .u-text-break {
-	overflow-wrap: break-word !important;
+	overflow-wrap: anywhere !important;
 }
 
 .u-text-no-wrap {

@@ -36,7 +36,7 @@ Currently HestiaCP only support restoring backups made using:
 
 To edit the number of backups, please read the [Packages](../user-guide/packages) and [Users](../user-guide/users) documentation. You will need to create or edit a package, and assign it to the desired user.
 
-## Not enough disk space available to preform the backup
+## Not enough disk space available to perform the backup
 
 For safety reasons, Hestia takes into account 2x the user’s disk usage when creating a backup. Therefore, before starting a backup, we check how much disk usage a user has left. If you encounter this error, you can do one of the following to solve the issue:
 
@@ -54,7 +54,7 @@ For more information see [the zstd repo](https://github.com/facebook/zstd).
 
 ## What is the optimal compression ratio
 
-The higher the number how better the compression ratio. During our testing, we discoverd that zstd level 3 is similar to level 9 for disk space, however it is much faster. zstd level 11 took about the same time, but gave us a smaller size. Levels higher than 19 should never be used, as zstd then becomes terribly slow.
+The higher the number how better the compression ratio. During our testing, we discovered that zstd level 3 is similar to level 9 for disk space, however it is much faster. zstd level 11 took about the same time, but gave us a smaller size. Levels higher than 19 should never be used, as zstd then becomes terribly slow.
 
 ## What kind of protocols are currently supported
 
@@ -183,7 +183,7 @@ v-backup-user-restic username
 ```
 
 :::warning
-A new restic repository is initiated on the first time you run this command. An encryption key is generated at the same time in /usr/local/hestia/data/users/{users}/restic.conf. Please make sure to backup this file somewhere incase the server gets comprimised or the user gets deleted. Without this "secret" key we don't provide any method to restore the user data. This is the reason why we alway advice to keep the orignal backup still working.
+A new restic repository is initiated on the first time you run this command. An encryption key is generated at the same time in /usr/local/hestia/data/users/{users}/restic.conf. Please make sure to backup this file somewhere in case the server gets compromised or the user gets deleted. Without this "secret" key we don't provide any method to restore the user data. This is the reason why we always advice to keep the original backup still working.
 :::
 
 ### Other methods

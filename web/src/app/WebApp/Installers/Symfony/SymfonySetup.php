@@ -8,50 +8,56 @@ use Hestia\WebApp\BaseSetup;
 use Hestia\WebApp\InstallationTarget\InstallationTarget;
 use function file_get_contents;
 
-class SymfonySetup extends BaseSetup
-{
+class SymfonySetup extends BaseSetup {
     protected array $info = [
-        'name' => 'Symfony',
-        'group' => 'framework',
-        'version' => 'latest',
-        'thumbnail' => 'symfony-thumb.png',
+        "name" => "Symfony",
+        "group" => "framework",
+        "version" => "latest",
+        "thumbnail" => "symfony-logo.svg",
     ];
 
     protected array $config = [
-        'form' => [],
-        'database' => false,
-        'resources' => [
-            'composer' => ['src' => 'symfony/website-skeleton', 'dst' => '/'],
+        "form" => [],
+        "database" => false,
+        "resources" => [
+            "composer" => ["src" => "symfony/skeleton", "dst" => "/"],
         ],
-        'server' => [
-            'nginx' => [
-                'template' => 'symfony4-5',
+        "server" => [
+            "nginx" => [
+                "template" => "symfony4-5",
             ],
-            'php' => [
-                'supported' => ['8.2', '8.3', '8.4'],
+            "php" => [
+                "supported" => ["8.4", "8.5"],
             ],
         ],
     ];
 
-    protected function setupApplication(InstallationTarget $target, array $options = null): void
-    {
+    protected function setupApplication(InstallationTarget $target, array $options = null): void {
         $this->appcontext->createFile(
-            $target->getDocRoot('.htaccess'),
-            file_get_contents(__DIR__ . '/.htaccess'),
+            $target->getDocRoot(".htaccess"),
+            file_get_contents(__DIR__ . "/.htaccess"),
         );
 
-        $this->appcontext->runComposer($options['php_version'], [
-            'config',
-            '-d',
+        $this->appcontext->runComposer($options["php_version"], [
+            "config",
+            "-d",
             $target->getDocRoot(),
-            'extra.symfony.allow-contrib',
-            'true',
+            "extra.symfony.allow-contrib",
+            "true",
         ]);
-        $this->appcontext->runComposer($options['php_version'], [
-            'require',
-            '-d',
+
+        $this->appcontext->runComposer($options["php_version"], [
+            "require",
+            "-d",
             $target->getDocRoot(),
-            'symfony/apache-pack',
+            "webapp",
+        ]);
+
+        $this->appcontext->runComposer($options["php_version"], [
+            "require",
+            "-d",
+            $target->getDocRoot(),
+            "symfony/apache-pack",
         ]);
     }
 }

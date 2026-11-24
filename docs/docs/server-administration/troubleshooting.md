@@ -56,7 +56,7 @@ xxxxxx is the date/time the backup is made during the last update of HestiaCP
 
 If you don't have have a backup made you can also copy the config in /usr/local/hestia/install/deb/apache2/apache2.conf to /etc/apache2.conf and also empty /etc/apache2/ports.conf
 
-## Unable to bind adress
+## Unable to bind address
 
 In rare cases the network service might be slower than Apache2 and or Nginx. In that case Nginx or Apache2 will refuse to start up successfully start.
 
@@ -117,7 +117,7 @@ worker_rlimit_nofile 16384
 
 And then restart nginx with systemctl restart nginx
 
-To verifiy run:
+To verify run:
 
 ```bash
 cat /proc/ < nginx-pid > /limits

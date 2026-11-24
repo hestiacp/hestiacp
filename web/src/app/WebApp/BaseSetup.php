@@ -102,8 +102,12 @@ abstract class BaseSetup implements InstallerInterface
 
             $userPrefix = $this->appcontext->user() . '_';
 
-            $databaseName = str_replace($userPrefix, '', $database->name);
-            $databaseUser = str_replace($userPrefix, '', $database->user);
+            $databaseName = str_starts_with($database->name, $userPrefix)
+                ? substr($database->name, strlen($userPrefix))
+                : $database->name;
+            $databaseUser = str_starts_with($database->user, $userPrefix)
+                ? substr($database->user, strlen($userPrefix))
+                : $database->user;
 
             $this->appcontext->databaseAdd(
                 $databaseName,
@@ -141,13 +145,25 @@ abstract class BaseSetup implements InstallerInterface
             }
 
             if ($resourceType === 'wp') {
-                $this->appcontext->runWp($options['php_version'], [
+                $locale = $options['language'];
+                $download = fn(string $loc) => $this->appcontext->runWp($options['php_version'], [
                     'core',
                     'download',
-                    '--locale=' . $options['language'],
+                    '--locale=' . $loc,
                     '--version=' . $this->info['version'],
                     '--path=' . $destinationPath,
                 ]);
+
+                try {
+                    $download($locale);
+                } catch (RuntimeException $e) {
+                    if ($locale === 'en_US') {
+                        throw $e;
+                    }
+                    // Some locales don't have a localized ZIP for the latest version.
+                    // Download en_US instead and install the language separately as a package.
+                    $download('en_US');
+                }
 
                 return;
             }

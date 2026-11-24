@@ -44,13 +44,15 @@ fi
 #                       Action                             #
 #----------------------------------------------------------#
 
-apikey=$(grep -Po "'API_KEY', '(.*)'" /usr/share/phpmyadmin/hestia-sso.php | cut "-d'" -f4)
+# API_KEY is written double-quoted: define("API_KEY", "<key>");
+apikey=$(grep -Po 'define\("API_KEY", "\K[^"]*' /usr/share/phpmyadmin/hestia-sso.php)
 
-if [ -z $(echo $apikey | grep ":") ]; then
-	$BIN/v-revoke-api-key "$apikey"
-else
-	apikey=$(grep -Po "'API_KEY', '(.*)'" /usr/share/phpmyadmin/hestia-sso.php | cut "-d'" -f4 | cut -d ":" -f1)
-	$BIN/v-delete-access-key "$apikey"
+if [ -n "$apikey" ]; then
+	if [ -z "$(echo "$apikey" | grep ":")" ]; then
+		$BIN/v-revoke-api-key "$apikey"
+	else
+		$BIN/v-delete-access-key "$(echo "$apikey" | cut -d ":" -f1)"
+	fi
 fi
 
 #remove new files
@@ -58,7 +60,7 @@ rm /usr/share/phpmyadmin/hestia-sso.php
 rm /etc/phpmyadmin/hestia-sso.inc.php
 
 #revert config
-sed -i "/hestia-sso.inc.php/d" $PMA_CONFIG/config.inc.php
+sed -i -z "s|[[:blank:]]*if (isset(\$cfg\['Servers'\]\[\$i\])) {[[:space:]]*include ('$PMA_CONFIG/hestia-sso.inc.php');[[:space:]]*\$i++;[[:space:]]*}|\t\$i++;|" "$PMA_CONFIG/config.inc.php"
 
 # disable key
 $BIN/v-change-sys-config-value 'PHPMYADMIN_KEY' ""

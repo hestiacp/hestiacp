@@ -117,22 +117,37 @@ class Hestia_API {
 	}
 }
 
-function verify_token($database, $user, $ip, $time, $token) {
-	if (!password_verify($database . $user . $ip . $time . PHPMYADMIN_KEY, $token)) {
-		if (
-			!password_verify(
-				$database . $user . $_SERVER["SERVER_ADDR"] . "|" . $ip . $time . PHPMYADMIN_KEY,
-				$token,
-			)
-		) {
-			trigger_error(
-				"Access denied: There is a security token mismatch " . $time,
-				E_USER_WARNING,
-			);
-			session_invalid();
+/*
+ * Keyed signature over every field the request carries, including host.
+ *
+ * This must never fall back to bcrypt-based password hashing: bcrypt only
+ * considers the first 72 bytes of its input. With the key appended last, a long
+ * attacker-controlled field (e.g. an oversized "exp") could push the key past
+ * byte 72 so it was ignored, letting a token be forged offline without knowing
+ * the key. HMAC-SHA256 has no such length limit, covers the whole message, and
+ * is compared in constant time with hash_equals().
+ */
+function sso_expected_token($database, $user, $ip, $time, $host) {
+	return hash_hmac(
+		"sha256",
+		implode("\0", [$database, $user, $ip, (string) $time, $host]),
+		PHPMYADMIN_KEY,
+	);
+}
+
+function verify_token($database, $user, $ip, $time, $host, $token) {
+	if (!is_string($token)) {
+		$token = "";
+	}
+	// get_user_ip() may or may not prefix the server address, so accept both.
+	foreach ([$ip, $_SERVER["SERVER_ADDR"] . "|" . $ip] as $candidate_ip) {
+		$expected = sso_expected_token($database, $user, $candidate_ip, $time, $host);
+		if (hash_equals($expected, $token)) {
+			return;
 		}
 	}
-	return;
+	trigger_error("Access denied: There is a security token mismatch " . $time, E_USER_WARNING);
+	session_invalid();
 }
 /* Need to have cookie visible from parent directory */
 session_set_cookie_params(0, "/", "", true, true);
@@ -150,6 +165,36 @@ function session_invalid() {
 	die();
 }
 
+/* Find the phpMyAdmin server index in config.inc.php
+ that corresponds to the host received from Hestia */
+function find_pma_server_id($host) {
+	$cfg = [];
+	(function () use (&$cfg) {
+		require "/etc/phpmyadmin/config.inc.php";
+	})();
+	if (empty($cfg["Servers"])) {
+		return 1;
+	}
+	$wanted = strtolower(trim($host));
+	foreach ($cfg["Servers"] as $id => $server) {
+		if (!isset($server["host"])) {
+			continue;
+		}
+		$cfg_host = strtolower(trim($server["host"]));
+		if ($cfg_host === $wanted) {
+			return $id;
+		}
+		// in case "localhost" comes in as 127.0.0.1 or vice versa
+		if (
+			in_array($wanted, ["localhost", "127.0.0.1"], true) &&
+			in_array($cfg_host, ["localhost", "127.0.0.1"], true)
+		) {
+			return $id;
+		}
+	}
+	return 1; // fallback: localhost
+}
+
 $api = new Hestia_API();
 if (!empty($_GET)) {
 	if (isset($_GET["logout"])) {
@@ -165,10 +210,16 @@ if (!empty($_GET)) {
 		if (isset($_GET["user"]) && isset($_GET["hestia_token"])) {
 			$database = $_GET["database"];
 			$user = $_GET["user"];
-			$host = "localhost";
+			$host = !empty($_GET["host"]) ? $_GET["host"] : "localhost";
 			$token = $_GET["hestia_token"];
-			if (is_numeric($_GET["exp"])) {
-				$time = $_GET["exp"];
+			// A plain Unix timestamp: digits only and short. Rejecting long
+			// values also stops "exp" being used to pad the signed message.
+			if (
+				isset($_GET["exp"]) &&
+				ctype_digit((string) $_GET["exp"]) &&
+				strlen((string) $_GET["exp"]) <= 12
+			) {
+				$time = (int) $_GET["exp"];
 			} else {
 				$time = 0;
 			}
@@ -176,7 +227,7 @@ if (!empty($_GET)) {
 			if ($time + 60 > time()) {
 				//note: Possible issues with cloudflare due to ip obfuscation
 				$ip = $api->get_user_ip();
-				verify_token($database, $user, $ip, $time, $token);
+				verify_token($database, $user, $ip, $time, $host, $token);
 				$id = session_id();
 				//create a new temp user
 				$data = $api->create_temp_user($database, $user, $host);
@@ -189,9 +240,16 @@ if (!empty($_GET)) {
 					$_SESSION["HESTIA_sso_database"] = $database;
 					$_SESSION["HESTIA_sso_host"] = $host;
 
+					$server_id = find_pma_server_id($host);
+
 					@session_write_close();
 					setcookie($session_name, $id, 0, "/");
-					header("Location: " . dirname($_SERVER["PHP_SELF"]) . "/index.php");
+					header(
+						"Location: " .
+							dirname($_SERVER["PHP_SELF"]) .
+							"/index.php?server=" .
+							$server_id,
+					);
 					die();
 				} else {
 					session_invalid();

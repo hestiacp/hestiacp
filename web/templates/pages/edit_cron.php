@@ -34,7 +34,7 @@
 			<?php show_alert_message($_SESSION); ?>
 			<div class="u-mb20">
 				<label for="v_cmd" class="form-label"><?= tohtml( _("Command")) ?></label>
-				<input type="text" class="form-control" name="v_cmd" id="v_cmd" value="<?= tohtml(trim($v_cmd, "'")) ?>">
+				<input type="text" class="form-control" name="v_cmd" id="v_cmd" value="<?= tohtml($v_cmd) ?>">
 			</div>
 			<div class="sidebar-left-grid">
 				<div class="sidebar-left-grid-sidebar">

@@ -8,7 +8,7 @@ $TAB = "DB";
 include $_SERVER["DOCUMENT_ROOT"] . "/inc/main.php";
 
 // Check POST request
-if (!empty($_POST["ok"])) {
+if (!empty($_POST["ok"]) && $read_only !== true) {
 	// Check token
 	verify_csrf($_POST);
 
@@ -94,7 +94,9 @@ if (!empty($_POST["ok"])) {
 		);
 		check_return_code($return_var, $output);
 		unset($output);
-		unlink($v_password);
+		if (file_exists($v_password)) {
+			unlink($v_password);
+		}
 		$v_password = quoteshellarg($_POST["v_password"]);
 		$v_type = $_POST["v_type"];
 		$v_host = $_POST["v_host"];

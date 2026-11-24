@@ -16,6 +16,7 @@ domain=$2
 host=$3
 username=$4
 password=$5
+HIDE=5
 port=${6-587}
 
 # Includes
@@ -37,7 +38,7 @@ is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'mail' 'DOMAIN' "$domain"
 is_object_unsuspended 'mail' 'DOMAIN' "$domain"
-is_password_valid "$password" "Password"
+is_password_valid
 is_username_format_valid "$username" "Username"
 format_no_quotes "$password" "Password"
 
@@ -48,6 +49,8 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
+# Contains the relay password, same permissions as set by v-rebuild-mail-domain
+install -m 660 -o Debian-exim -g mail /dev/null /etc/exim4/domains/${domain}/smtp_relay.conf
 cat > /etc/exim4/domains/${domain}/smtp_relay.conf << EOL
 host:$host
 port:$port

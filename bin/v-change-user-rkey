@@ -2,7 +2,7 @@
 # info: change user random key
 # options: USER [HASH]
 #
-# This function changes user's RKEY value thats has been used for security value to be used forgot password function only.
+# This function changes user's RKEY value that has been used for security value to be used forgot password function only.
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

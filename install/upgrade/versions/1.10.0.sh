@@ -20,19 +20,41 @@
 upgrade_config_set_value 'UPGRADE_UPDATE_WEB_TEMPLATES' 'false'
 upgrade_config_set_value 'UPGRADE_UPDATE_DNS_TEMPLATES' 'false'
 upgrade_config_set_value 'UPGRADE_UPDATE_FILEMANAGER_CONFIG' 'false'
-upgrade_config_set_value 'UPGRADE_UPDATE_MAIL_TEMPLATES' 'false'
-upgrade_config_set_value 'UPGRADE_REBUILD_USERS' 'false'
+upgrade_config_set_value 'UPGRADE_UPDATE_MAIL_TEMPLATES' 'true'
+upgrade_config_set_value 'UPGRADE_REBUILD_USERS' 'true'
 
 # fix/file manager ignores user language
 echo "[ * ] Fix File Manager ignoring user language"
 cp -f "$HESTIA"/install/deb/filemanager/filegator/configuration.php "$HESTIA"/web/fm/configuration.php
 
 if [ -f /etc/os-release ]; then
+	# /etc/os-release defines its own $VERSION, which would otherwise
+	# clobber Hestia's $VERSION since this script is sourced by the caller
+	_HESTIA_VERSION="$VERSION"
 	source /etc/os-release
+	VERSION="$_HESTIA_VERSION"
+	unset _HESTIA_VERSION
 fi
 
-# Apply SSH config if running on Debian 13
+# Set running OS
+IS_DEBIAN13=false
+IS_UBUNTU2604=false
+IS_DEBIAN13_OR_UBUNTU2604=false
+
 if [[ "$ID" == "debian" && "$VERSION_ID" == "13" ]]; then
+	IS_DEBIAN13=true
+fi
+
+if [[ "$ID" == "ubuntu" && "$VERSION_ID" == "26.04" ]]; then
+	IS_UBUNTU2604=true
+fi
+
+if $IS_DEBIAN13 || $IS_UBUNTU2604; then
+	IS_DEBIAN13_OR_UBUNTU2604=true
+fi
+
+# Apply SSH config if running on Debian 13 or Ubuntu 26.04
+if $IS_DEBIAN13_OR_UBUNTU2604; then
 	_KEX_CONF="/etc/ssh/sshd_config.d/hestia-kex.conf"
 	_KEX_LINE="KexAlgorithms +diffie-hellman-group-exchange-sha256"
 
@@ -69,14 +91,14 @@ if [[ -d "$SNAPPYMAIL_ETC_DATA" ]] && ! [[ -L "$SNAPPYMAIL_ETC_DATA" ]]; then
 	fi
 fi
 
-# If Dovecot is version 2.4 and Debian is Trixie (13), replace Dovecot's configuration and rebuild users
+# If Dovecot is version 2.4 and OS is Trixie (13) or Ubuntu 26.04, replace Dovecot's configuration and rebuild users
 if command -v dovecot &> /dev/null; then
 	dovecot_version="$(dovecot --version | cut -f -2 -d .)"
 else
 	dovecot_version=false
 fi
 
-if [[ "$ID" == "debian" && "$VERSION_ID" == "13" && "$dovecot_version" = "2.4" ]]; then
+if $IS_DEBIAN13_OR_UBUNTU2604 && [[ "$dovecot_version" = "2.4" ]]; then
 	if ! grep -q 'modified by Hestia' /etc/dovecot/dovecot.conf \
 		|| ! grep -q 'ssl_server_cert_file = /usr/local/hestia' /etc/dovecot/conf.d/10-ssl.conf; then
 		echo "[ * ] Updating Dovecot $dovecot_version configuration"
@@ -105,8 +127,8 @@ if [[ "$ID" == "debian" && "$VERSION_ID" == "13" && "$dovecot_version" = "2.4" ]
 	fi
 fi
 
-# Configure Bind for Debian 13
-if [[ "$ID" == "debian" && "$VERSION_ID" == "13" ]]; then
+# Configure Bind for Debian 13 or Ubuntu 26.04
+if $IS_DEBIAN13_OR_UBUNTU2604; then
 	source "$HESTIA"/conf/hestia.conf
 	if [[ "$DNS_SYSTEM" =~ named|bind ]]; then
 		# named.conf.default-zones was removed in Debian 13
@@ -165,5 +187,67 @@ if [[ -f "$phpmyadmin_conf" ]]; then
 <?php
 $cfg['TempDir'] = '/var/lib/phpmyadmin/tmp';
 EOF
+	fi
+fi
+
+# Patch Spamhaus DQS key leak in existing exim templates
+echo "[ * ] Patching Exim Spamhaus DQS configuration"
+if [ -f "/etc/exim4/exim4.conf.template" ]; then
+	sed -i 's|at $dnslist_domain\\n$dnslist_text|at ${if match{$dnslist_domain}{^[^.]+[.](.+dq[.]spamhaus.*)}{$1}{$dnslist_domain}}\\n$dnslist_text|g' /etc/exim4/exim4.conf.template
+fi
+
+# Configuring sudoers to remove unsupported requiretty option on Ubuntu 26.04
+if $IS_UBUNTU2604; then
+	if [[ -f /etc/sudoers.d/hestiaweb ]] && grep -q '^Defaults:root !requiretty$' /etc/sudoers.d/hestiaweb &> /dev/null; then
+		echo "[ + ] Configuring sudoers to remove unsupported requiretty option"
+		chmod 640 /etc/sudoers.d/hestiaweb
+		sed -i '/^Defaults:root !requiretty$/d' /etc/sudoers.d/hestiaweb
+		chmod 440 /etc/sudoers.d/hestiaweb
+	fi
+fi
+
+# Updating logrotate conf for Hestia
+echo "[ * ] Updating logrotate conf for Hestia"
+cp -f "$HESTIA"/install/deb/logrotate/hestia /etc/logrotate.d/hestia
+
+# Enhance - Update current composer installations
+echo "[ * ] Updating composer for users:"
+for huser in $("$HESTIA/bin/v-list-users" list); do
+	if [[ -f "/home/$huser/.composer/composer" ]]; then
+		echo "      - $huser..."
+		"$HESTIA/bin/v-add-user-composer" "$huser" 2 yes &> /dev/null
+	fi
+done
+
+# If Dovecot 2.4, modify the local delivery directives in Exim"
+echo "[ * ] Updating Exim configuration:"
+if [[ $MAIL_SYSTEM == exim4 ]] \
+	&& [[ $(dovecot --version) == 2.4* ]] \
+	&& [[ -f /etc/exim4/exim4.conf.template ]]; then
+	sed -i.bak '
+s#  directory = "${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}/mail/${lookup{$domain}dsearch{/etc/exim4/domains/}}/${lookup{$local_part}dsearch{${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}/mail/${lookup{$domain}dsearch{/etc/exim4/domains/}}}}"#  directory = "${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}"#
+
+s#  directory = "${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}/mail/${lookup{$domain}dsearch{/etc/exim4/domains/}}/${lookup{$local_part}dsearch{${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}/mail/${lookup{$domain}dsearch{/etc/exim4/domains/}}}}/.Spam"#  directory = "${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}/.Spam"#
+
+s#  quota_directory = "${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}/mail/${lookup{$domain}dsearch{/etc/exim4/domains/}}/${lookup{$local_part}dsearch{${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}/mail/${lookup{$domain}dsearch{/etc/exim4/domains/}}}}"#  quota_directory = "${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}"#
+' /etc/exim4/exim4.conf.template
+	if ! cmp -s /etc/exim4/exim4.conf.template{.bak,}; then
+		echo "[ + ] Local delivery directives fixed in Exim configuration"
+		if systemctl restart exim4 &> /dev/null; then
+			echo "[ + ] Exim successfully restarted"
+		else
+			echo "[ ! ] Error restarting Exim" >&2
+			systemctl status exim4 --no-pager -l >&2
+			echo "[ + ] Recovering configuration backup"
+			cp -f /etc/exim4/exim4.conf.template.bak /etc/exim4/exim4.conf.template
+			if systemctl restart exim4 &> /dev/null; then
+				echo "[ + ] Exim successfully restarted after recovery"
+			else
+				echo "[ ! ] Error restarting Exim after recovery" >&2
+				systemctl status exim4 --no-pager -l >&2
+			fi
+		fi
+	else
+		echo "[ * ] Exim configuration already up to date"
 	fi
 fi

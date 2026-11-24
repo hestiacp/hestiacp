@@ -39,6 +39,10 @@ function setup() {
     source $HESTIA/func/ip.sh
 }
 
+function teardown() {
+    rm -rf "${HESTIA:-/usr/local/hestia}/data/keys/apitestkey"*
+}
+
 function validate_web_domain() {
     local user=$1
     local domain=$2
@@ -503,6 +507,23 @@ function check_ip_not_banned(){
   assert_success
   refute_output
 }
+
+@test "User: Add user notification with XSS payload is sanitized" {
+  run v-add-user-notification $user "XSS test" "<p>safe</p><script>alert(document.cookie)</script><img src=x onerror=alert(1)>"
+  assert_success
+  refute_output
+
+  run v-list-user-notifications $user csv
+  assert_success
+  assert_output --partial '<p>safe</p>'
+  refute_output --partial '<script>'
+  refute_output --partial 'onerror'
+
+  run v-delete-user-notification $user 2
+  assert_success
+  refute_output
+}
+
 @test "User: Acknowledge user notification" {
   run v-acknowledge-user-notification $user 1
   assert_success
@@ -569,6 +590,111 @@ function check_ip_not_banned(){
 @test "User: Check user hash ipv6 incorrect" {
   run v-check-user-hash $user 'jafawefaweijawe' 21DA:D3:0:2F3B:2AA:FF:FE28:9C5A
   assert_failure $E_PASSWORD
+}
+
+@test "User: Check user password and salt with sha-512 rounds parameter" {
+  orig_shadow=$(awk -v user="$user" -F : 'user == $1 {print $2}' /etc/shadow)
+  rounds_hash=$(perl -e 'print crypt($ARGV[0], $ARGV[1])' "$userpass2" '$6$rounds=24000$g7cdSalt12345678$')
+  [[ "$rounds_hash" == '$6$rounds=24000$g7cdSalt12345678$'* ]]
+  chmod u+w /etc/shadow
+  sed -i "s|^$user:[^:]*:|$user:$rounds_hash:|" /etc/shadow
+  chmod u-w /etc/shadow
+
+  run v-get-user-salt $user 192.168.2.10 json
+  assert_success
+  assert_output --partial '"METHOD": "sha-512"'
+  assert_output --partial '"SALT": "rounds=24000$g7cdSalt12345678"'
+
+  run v-check-user-password $user "$userpass2" 192.168.2.10 'no'
+  assert_success
+
+  run v-check-user-password $user "$userpass1" 192.168.2.10 'no'
+  assert_failure $E_PASSWORD
+
+  hash=$(v-check-user-password $user "$userpass2" 192.168.2.10 'yes')
+  run v-check-user-hash $user "$hash" 192.168.2.10
+  assert_success
+
+  chmod u+w /etc/shadow
+  sed -i "s|^$user:[^:]*:|$user:$orig_shadow:|" /etc/shadow
+  chmod u-w /etc/shadow
+}
+
+@test "User: Log user login ipv4" {
+  session="bats$(random 12)"
+  run v-log-user-login $user 192.168.2.10 success "$session" "bats-agent"
+  assert_success
+  refute_output
+  assert_file_contains "$HESTIA/data/users/$user/auth.log" "IP='192.168.2.10' ACTION='login' STATUS='success' USER_AGENT='bats-agent' SESSION='$session' ACTIVE='yes'"
+}
+
+@test "User: Log user login ipv6" {
+  session="bats$(random 12)"
+  run v-log-user-login $user "21DA:D3:0:2F3B:2AA:FF:FE28:9C5A" success "$session" "bats-agent"
+  assert_success
+  refute_output
+  assert_file_contains "$HESTIA/data/users/$user/auth.log" "IP='21DA:D3:0:2F3B:2AA:FF:FE28:9C5A' ACTION='login' STATUS='success' USER_AGENT='bats-agent' SESSION='$session' ACTIVE='yes'"
+}
+
+@test "User: Log user login ipv6 failed with system auth.log" {
+  session="bats$(random 12)"
+  run v-log-user-login $user "2001:db8::1" failed "$session" "bats-agent" yes "bats-$session"
+  assert_success
+  refute_output
+  assert_file_contains "$HESTIA/data/users/$user/auth.log" "IP='2001:db8::1' ACTION='login' STATUS='failed' USER_AGENT='bats-agent' SESSION='$session' ACTIVE='no'"
+  assert_file_contains "$HESTIA/log/auth.log" "$user 2001:db8::1 failed to login (bats-$session)"
+}
+
+@test "User: Log user login invalid ip" {
+  run v-log-user-login $user 192.168.992.10 success "bats$(random 12)" "bats-agent"
+  assert_failure $E_INVALID
+  run v-log-user-login $user "21DA:D3:0:2F3B:ZZZ:FF:FE28:9C5A" success "bats$(random 12)" "bats-agent"
+  assert_failure $E_INVALID
+}
+
+@test "User: Log user login invalid status" {
+  run v-log-user-login $user 192.168.2.10 "success' INJECTED='1" "bats$(random 12)" "bats-agent"
+  assert_failure $E_INVALID
+  run v-log-user-login $user 192.168.2.10 $'success\nDATE=1' "bats$(random 12)" "bats-agent"
+  assert_failure $E_INVALID
+  refute grep -q "INJECTED" "$HESTIA/data/users/$user/auth.log"
+}
+
+@test "User: Log user login creates auth.log with mode 660" {
+  authlog="$HESTIA/data/users/$user/auth.log"
+  if [ -e "$authlog" ]; then mv "$authlog" "$authlog.bats"; fi
+  run v-log-user-login $user 192.168.2.10 success "bats$(random 12)" "bats-agent"
+  mode=$(stat -c '%a' "$authlog")
+  rm -f "$authlog"
+  if [ -e "$authlog.bats" ]; then mv "$authlog.bats" "$authlog"; fi
+  assert_success
+  [ "$mode" = "660" ]
+}
+
+@test "User: Log user login refuses symlinked user auth.log" {
+  authlog="$HESTIA/data/users/$user/auth.log"
+  target="$BATS_TEST_TMPDIR/auth.log.target"
+  touch "$target"
+  if [ -e "$authlog" ]; then mv "$authlog" "$authlog.bats"; fi
+  ln -s "$target" "$authlog"
+  run v-log-user-login $user 192.168.2.10 success "bats$(random 12)" "bats-agent"
+  rm -f "$authlog"
+  if [ -e "$authlog.bats" ]; then mv "$authlog.bats" "$authlog"; fi
+  assert_failure $E_FORBIDEN
+  assert_file_empty "$target"
+}
+
+@test "User: Log user login refuses symlinked system auth.log" {
+  authlog="$HESTIA/log/auth.log"
+  target="$BATS_TEST_TMPDIR/auth.log.target"
+  touch "$target"
+  if [ -e "$authlog" ]; then mv "$authlog" "$authlog.bats"; fi
+  ln -s "$target" "$authlog"
+  run v-log-user-login $user 192.168.2.10 failed "bats$(random 12)" "bats-agent" yes "bats"
+  rm -f "$authlog"
+  if [ -e "$authlog.bats" ]; then mv "$authlog.bats" "$authlog"; fi
+  assert_failure $E_FORBIDEN
+  assert_file_empty "$target"
 }
 
 #----------------------------------------------------------#
@@ -796,6 +922,25 @@ function check_ip_not_banned(){
     rm $HOMEDIR/$user/web/$domain/public_html/php-test.php
 }
 
+@test "WEB: phpMyAdmin with Firefox User-Agent" {
+    # Regression test for https://github.com/hestiacp/hestiacp/issues/5617
+    # The Firefox UA matches the $ar_support_425 regex map. Before the
+    # named-capture fix in phpmyadmin.inc this returned 500 (fastcgi request
+    # length mismatch) instead of the login page.
+    local ip
+    local pma_alias="${DB_PMA_ALIAS:-phpmyadmin}"
+
+    USER_DATA=$HESTIA/data/users/$user
+    ip=$(get_real_ip "$(get_object_value 'web' 'DOMAIN' "$domain" '$IP')")
+
+    run curl --silent --output /dev/null --write-out '%{http_code}' \
+        --resolve "${domain}:80:${ip}" \
+        -A 'Mozilla/5.0 (X11; Linux x86_64; rv:144.0) Gecko/20100101 Firefox/144.0' \
+        "http://${domain}/${pma_alias}/"
+    assert_success
+    assert_output "200"
+}
+
 @test "WEB: Add web domain (duplicate)" {
     run v-add-web-domain $user $domain 198.18.0.125
     assert_failure $E_EXISTS
@@ -915,6 +1060,94 @@ function check_ip_not_banned(){
     run v-rebuild-web-domains $user
     assert_success
     refute_output
+}
+
+@test "WEB: Dump site does not follow symlinks to root-owned files" {
+    # v-dump-site runs the archiver as root in the customer's web directory.
+    # A customer-owned symlink in public_html must be stored as a link, never
+    # followed, or the downloadable archive would leak the target's contents
+    # (e.g. /etc/shadow, mysql.conf, panel session files).
+    local pub="$HOMEDIR/$user/web/$domain/public_html"
+    ln -sf /etc/shadow "$pub/shadow_link"
+    chown -h $user:$user "$pub/shadow_link"
+
+    run v-dump-site $user $domain full
+    assert_success
+    local zip="$BACKUP/$(echo "$output" | head -1)"
+    assert_file_exist "$zip"
+
+    # The entry must be the symlink text, not the real shadow file
+    run unzip -p "$zip" public_html/shadow_link
+    assert_success
+    assert_output "/etc/shadow"
+    refute_output --partial 'root:'
+
+    rm -f "$pub/shadow_link" "$zip"
+}
+
+@test "WEB: Dump site does not follow a symlinked public_html" {
+    # public_html is inside the user owned domain directory, so the user can
+    # replace it with a symlink. The archiver must not follow it as root.
+    local dom_dir="$HOMEDIR/$user/web/$domain"
+    mv "$dom_dir/public_html" "$dom_dir/public_html.orig"
+    ln -s /etc "$dom_dir/public_html"
+    chown -h $user:$user "$dom_dir/public_html"
+
+    run v-dump-site $user $domain
+    local dump_output="$output"
+
+    # Restore before asserting so a failure doesn't break later tests
+    rm -f "$dom_dir/public_html"
+    mv "$dom_dir/public_html.orig" "$dom_dir/public_html"
+
+    local zip="$BACKUP/$(echo "$dump_output" | head -1)"
+    if [ -f "$zip" ]; then
+        run unzip -p "$zip" shadow
+        refute_output --partial 'root:'
+        rm -f "$zip"
+    fi
+}
+
+@test "WEB: Dump site full does not follow a swapped web directory" {
+    # The root owned web directory sits in the user owned home, so the user
+    # can rename it and put a symlinked domain directory in its place.
+    local home="$HOMEDIR/$user"
+    mv "$home/web" "$home/web.orig"
+    mkdir "$home/web"
+    ln -s /etc "$home/web/$domain"
+    chown -h $user:$user "$home/web" "$home/web/$domain"
+
+    run v-dump-site $user $domain full
+    local dump_output="$output"
+
+    # Restore before asserting so a failure doesn't break later tests
+    rm -f "$home/web/$domain"
+    rmdir "$home/web"
+    mv "$home/web.orig" "$home/web"
+
+    local zip="$BACKUP/$(echo "$dump_output" | head -1)"
+    if [ -f "$zip" ]; then
+        run unzip -p "$zip" shadow
+        refute_output --partial 'root:'
+        rm -f "$zip"
+    fi
+}
+
+@test "WEB: Dump site archives files the user can read" {
+    local pub="$HOMEDIR/$user/web/$domain/public_html"
+    echo "dump-site-check" > "$pub/dump_check.txt"
+    chown $user:$user "$pub/dump_check.txt"
+
+    run v-dump-site $user $domain full
+    assert_success
+    local zip="$BACKUP/$(echo "$output" | head -1)"
+    assert_file_exist "$zip"
+
+    run unzip -p "$zip" public_html/dump_check.txt
+    assert_success
+    assert_output "dump-site-check"
+
+    rm -f "$pub/dump_check.txt" "$zip"
 }
 
 @test "WEB: Use quick install app on web domain" {
@@ -1204,6 +1437,26 @@ function check_ip_not_banned(){
 	rm $HOMEDIR/$user/web/$multi_domain/public_html/php-test.php
 }
 
+@test "Multiphp: Change backend version - default" {
+	def_phpver=$(multiphp_default_version)
+	multi_domain="multiphp.${domain}"
+
+	run v-change-web-domain-backend-tpl $user $multi_domain 'default' 'yes'
+	assert_success
+	refute_output
+
+	# Changing web backend to default must create the pool config in the default php folder
+	assert_file_exist "/etc/php/${def_phpver}/fpm/pool.d/${multi_domain}.conf"
+
+	# A single php-fpm pool config file must be present
+	num_fpm_config_files="$(find -L /etc/php/ -name "${multi_domain}.conf" | wc -l)"
+	assert_equal "$num_fpm_config_files" '1'
+
+	echo -e "<?php\necho 'hestia-multiphptest:'.PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;" > "$HOMEDIR/$user/web/$multi_domain/public_html/php-test.php"
+	validate_web_domain $user $multi_domain "hestia-multiphptest:$def_phpver" 'php-test.php'
+	rm "$HOMEDIR/$user/web/$multi_domain/public_html/php-test.php"
+}
+
 @test "Multiphp: Cleanup" {
     multi_domain="multiphp.${domain}"
 
@@ -1241,6 +1494,23 @@ function check_ip_not_banned(){
     rm "$HOMEDIR/$user/web/$docroot1_domain/public_html/public/php-test.php"
 }
 
+@test "Docroot: Self Subfolder with parent PHP root and backend rebuild" {
+    docroot1_domain="docroot1.${domain}"
+
+    run v-change-web-domain-docroot $user "$docroot1_domain" "$docroot1_domain" "/public" "yes"
+    assert_success
+    refute_output
+
+    run v-change-web-domain-backend-tpl $user "$docroot1_domain" "default" "yes"
+    assert_success
+    refute_output
+
+    echo "parent-ok" > "$HOMEDIR/$user/web/$docroot1_domain/public_html/parent-test.txt"
+    echo -e '<?php\necho "self-phproot-".$_SERVER["HTTP_HOST"]."-".trim(file_get_contents(__DIR__."/../parent-test.txt"));' > "$HOMEDIR/$user/web/$docroot1_domain/public_html/public/php-test.php"
+    validate_web_domain $user $docroot1_domain "self-phproot-${docroot1_domain}-parent-ok" 'php-test.php'
+    rm "$HOMEDIR/$user/web/$docroot1_domain/public_html/public/php-test.php" "$HOMEDIR/$user/web/$docroot1_domain/public_html/parent-test.txt"
+}
+
 @test "Docroot: Other domain subfolder" {
     docroot1_domain="docroot1.${domain}"
     docroot2_domain="docroot2.${domain}"
@@ -1270,9 +1540,16 @@ function check_ip_not_banned(){
     assert_success
     refute_output
 
-    echo -e '<?php\necho "doc2-root-".$_SERVER["HTTP_HOST"];' > "$HOMEDIR/$user/web/$docroot2_domain/public_html/php-test.php"
-    validate_web_domain $user $docroot1_domain "doc2-root-${docroot1_domain}" 'php-test.php'
-    rm "$HOMEDIR/$user/web/$docroot2_domain/public_html/php-test.php"
+    echo "private-ok" > "$HOMEDIR/$user/web/$docroot2_domain/private/private-test.txt"
+    echo -e '<?php\necho "doc2-root-".$_SERVER["HTTP_HOST"]."-".trim(file_get_contents(__DIR__."/../private/private-test.txt"));' > "$HOMEDIR/$user/web/$docroot2_domain/public_html/php-test.php"
+    validate_web_domain $user $docroot1_domain "doc2-root-${docroot1_domain}-private-ok" 'php-test.php'
+
+    run v-change-web-domain-backend-tpl $user "$docroot1_domain" "default" "yes"
+    assert_success
+    refute_output
+
+    validate_web_domain $user $docroot1_domain "doc2-root-${docroot1_domain}-private-ok" 'php-test.php'
+    rm "$HOMEDIR/$user/web/$docroot2_domain/public_html/php-test.php" "$HOMEDIR/$user/web/$docroot2_domain/private/private-test.txt"
 }
 
 @test "Docroot: Reset" {
@@ -1285,6 +1562,45 @@ function check_ip_not_banned(){
     echo -e '<?php\necho "doc1-root-".$_SERVER["HTTP_HOST"];' > "$HOMEDIR/$user/web/$docroot1_domain/public_html/php-test.php"
     validate_web_domain $user $docroot1_domain "doc1-root-${docroot1_domain}" 'php-test.php'
     rm "$HOMEDIR/$user/web/$docroot1_domain/public_html/php-test.php"
+}
+
+@test "Docroot: Reject a directory name with config-breaking characters" {
+    docroot1_domain="docroot1.${domain}"
+    local evil='x;}}} log_format hpwn escape=none $http_x_hpwn;#'
+    local evildir="$HOMEDIR/$user/web/$docroot1_domain/public_html/$evil"
+
+    mkdir -p "$evildir"
+    run v-change-web-domain-docroot $user "$docroot1_domain" "$docroot1_domain" "/$evil"
+    assert_failure
+    # The payload must never reach the web server config
+    refute grep -rqF 'log_format hpwn' /etc/nginx /usr/local/hestia/data/users/$user
+    rm -rf "$evildir"
+}
+
+@test "Docroot: Reject a clean symlink that resolves to a config-breaking path" {
+    # Reproduces GHSA: the typed name is clean, but readlink -e resolves the
+    # symlink to a directory chain whose component names break out of the
+    # nginx `root %docroot%;` directive.
+    docroot1_domain="docroot1.${domain}"
+    local pub="$HOMEDIR/$user/web/$docroot1_domain/public_html"
+    local evil='x;}}} log_format hpwn escape=none $http_x_hpwn; server{listen 198.18.0.125:80;server_name hpwn.test;access_log /etc/cron.d/hpwn hpwn;location /{location ~* x{#'
+
+    mkdir -p "$pub/$evil"
+    ln -sfn "$pub/$evil" "$pub/lnk"
+    chown -h $user:$user "$pub/lnk"
+
+    run v-change-web-domain-docroot $user "$docroot1_domain" "$docroot1_domain" "/lnk"
+    assert_failure
+
+    # Neither the stored config nor the generated nginx config may carry it,
+    # and no cron drop must have been written
+    run get_object_value 'web' 'DOMAIN' "$docroot1_domain" '$CUSTOM_DOCROOT'
+    refute_output --partial 'log_format'
+    refute grep -rqF 'log_format hpwn' /etc/nginx
+    assert_file_not_exist /etc/cron.d/hpwn
+
+    rm -f "$pub/lnk"
+    rm -rf "$pub/$evil"
 }
 
 @test "Docroot: Cleanup" {
@@ -1431,13 +1747,25 @@ function check_ip_not_banned(){
 
 @test "DNS: Add domain record CNAME" {
     run v-delete-dns-record $user $domain 50
-    run v-add-dns-record $user $domain 'mail' CNAME mx.hestiacp.com  '' 50
+    run v-add-dns-record $user $domain 'mail' CNAME mx.hestiacp.com '' 50
+    assert_failure $E_INVALID
+
+    run v-add-dns-record $user $domain 'cname-test' CNAME mx.hestiacp.com '' 50
     assert_success
     refute_output
 
     assert_file_contains "$HOMEDIR/$user/conf/dns/${domain}.db" "mx.hestiacp.com."
 
+    run v-add-dns-record $user $domain 'cname-test' A "$ip"
+    assert_failure $E_INVALID
+
     run v-change-dns-record $user $domain 50 'mail' CNAME mx.hestia.com
+    assert_failure $E_INVALID
+
+    run v-change-dns-record $user $domain 50 'MAIL' cname mx.hestia.com
+    assert_failure $E_INVALID
+
+    run v-change-dns-record $user $domain 50 'cname-test' CNAME mx.hestia.com
     assert_success
     refute_output
 
@@ -1508,6 +1836,28 @@ function check_ip_not_banned(){
     run v-delete-dns-record $user $domain 50
     assert_success
     refute_output
+}
+
+@test "DNS: Check serial rollover from max 32-bit value to 1 (RFC 1982)" {
+	[ -z "$DNS_SYSTEM" ] && skip
+
+	USER_DATA=$HESTIA/data/users/$user
+	local zn_conf="$HOMEDIR/$user/conf/dns/${domain}.db"
+
+	# Seed the zone's current serial to the max unsigned 32-bit value so the
+	# next update has to wrap around per RFC 1982 (serial 0 is skipped, so it
+	# wraps to 1, not 0).
+	sed -i -E "0,/^[[:space:]]*[0-9]+[[:space:]]*\$/s//                                            4294967295/" "$zn_conf"
+	assert_file_contains "$zn_conf" "4294967295"
+
+	# Any DNS-mutating command runs update_domain_serial() as a side effect.
+	run v-change-dns-domain-ttl $user $domain 3600
+	assert_success
+	refute_output
+
+	run get_object_value 'dns' 'DOMAIN' "$domain" '$SERIAL'
+	assert_success
+	assert_output "0000000001"
 }
 
 @test "DNS: Change domain ip" {
@@ -1743,6 +2093,24 @@ function check_ip_not_banned(){
     assert_output  --partial "RECORD='mail._domainkey' TYPE='TXT'"
 }
 
+@test "MAIL: Add DKIM with custom selector" {
+    run v-delete-mail-domain-dkim $user $domain
+    assert_success
+    refute_output
+
+    run v-add-mail-domain-dkim $user $domain '' hestia
+    assert_success
+    refute_output
+
+    run grep "RECORD='hestia._domainkey'" "${HESTIA}/data/users/${user}/dns/${domain}.conf"
+    assert_success
+    assert_output --partial "RECORD='hestia._domainkey' TYPE='TXT'"
+
+    run grep "RECORD='mail._domainkey'" "${HESTIA}/data/users/${user}/dns/${domain}.conf"
+    assert_failure
+    refute_output
+}
+
 @test "MAIL: Delete DKIM but preserve custom dkim records" {
     run v-add-dns-record $user $domain 'k2._domainkey' 'TXT' 'v=DKIM1; k=rsa; p=123456'
     assert_success
@@ -1922,6 +2290,200 @@ function check_ip_not_banned(){
     assert_failure $E_NOTEXIST
 }
 
+#----------------------------------------------------------#
+#     DB grants: "_" must not act as a wildcard            #
+#----------------------------------------------------------#
+# A GRANT on `test-5285_wc_db`.* with an unescaped name also covers
+# `test-5285_wcxdb`, which stands in for a database of another customer
+# (GHSA-g95g-h6p5-m6c6). The "foreign" database is created as root, outside
+# Hestia, and the Hestia database user must never be able to use it.
+
+# Run a query as the MySQL admin user Hestia uses for localhost
+function mysql_root_query() {
+    (
+        source $HESTIA/func/db.sh
+        mysql_connect localhost
+        mysql_query_raw "$1"
+    )
+}
+
+# Succeeds when <dbuser> with <password> can USE <database>
+function mysql_user_can_use() {
+    local dbuser=$1 password=$2 db=$3 cnf cli=mysql rc
+    [ -x /usr/bin/mariadb ] && cli=mariadb
+    cnf=$(mktemp /tmp/mysql.XXXXXX)
+    chmod 600 "$cnf"
+    printf "[client]\nhost='localhost'\nuser='%s'\npassword='%s'\n" "$dbuser" "$password" > "$cnf"
+    echo "USE \`$db\`;" | $cli --defaults-file="$cnf" > /dev/null 2>&1
+    rc=$?
+    rm -f "$cnf"
+    return $rc
+}
+
+# Recreate the grants older Hestia versions made (unescaped database name)
+function mysql_add_legacy_grant() {
+    mysql_root_query "GRANT ALL ON \`$1\`.* TO \`$2\`@\`%\`"
+    mysql_root_query "GRANT ALL ON \`$1\`.* TO \`$2\`@localhost"
+}
+
+@test "MYSQL grants: Add database does not grant wildcard access" {
+    mysql_root_query "CREATE DATABASE IF NOT EXISTS \`${user}_wcxdb\`"
+
+    run v-add-database $user wc_db wcuser 1234abcd mysql
+    assert_success
+    refute_output
+
+    run mysql_user_can_use "${user}_wcuser" 1234abcd "${user}_wc_db"
+    assert_success
+    run mysql_user_can_use "${user}_wcuser" 1234abcd "${user}_wcxdb"
+    assert_failure
+
+    run mysql_root_query "SHOW GRANTS FOR \`${user}_wcuser\`@localhost"
+    assert_output --partial "${user}\\_wc\\_db"
+}
+
+@test "MYSQL grants: Rebuild database does not grant wildcard access" {
+    run v-rebuild-database $user "${user}_wc_db"
+    assert_success
+
+    run mysql_user_can_use "${user}_wcuser" 1234abcd "${user}_wc_db"
+    assert_success
+    run mysql_user_can_use "${user}_wcuser" 1234abcd "${user}_wcxdb"
+    assert_failure
+}
+
+@test "MYSQL grants: Change password does not grant wildcard access" {
+    run v-change-database-password $user "${user}_wc_db" 5678abcd
+    assert_success
+
+    run mysql_user_can_use "${user}_wcuser" 5678abcd "${user}_wc_db"
+    assert_success
+    run mysql_user_can_use "${user}_wcuser" 5678abcd "${user}_wcxdb"
+    assert_failure
+}
+
+@test "MYSQL grants: Legacy wildcard grant does reach the foreign database" {
+    # Sanity check that the setup reproduces the issue, so the other
+    # tests failing to reach the foreign database means something
+    mysql_add_legacy_grant "${user}_wc_db" "${user}_wcuser"
+
+    run mysql_user_can_use "${user}_wcuser" 5678abcd "${user}_wcxdb"
+    assert_success
+}
+
+@test "MYSQL grants: Suspend removes legacy wildcard grant" {
+    run v-suspend-database $user "${user}_wc_db"
+    assert_success
+
+    run mysql_user_can_use "${user}_wcuser" 5678abcd "${user}_wc_db"
+    assert_failure
+    run mysql_user_can_use "${user}_wcuser" 5678abcd "${user}_wcxdb"
+    assert_failure
+}
+
+@test "MYSQL grants: Unsuspend does not grant wildcard access" {
+    mysql_add_legacy_grant "${user}_wc_db" "${user}_wcuser"
+
+    run v-unsuspend-database $user "${user}_wc_db"
+    assert_success
+
+    run mysql_user_can_use "${user}_wcuser" 5678abcd "${user}_wc_db"
+    assert_success
+    run mysql_user_can_use "${user}_wcuser" 5678abcd "${user}_wcxdb"
+    assert_failure
+}
+
+@test "MYSQL grants: Upgrade migration replaces legacy wildcard grant" {
+    mysql_add_legacy_grant "${user}_wc_db" "${user}_wcuser"
+    run mysql_user_can_use "${user}_wcuser" 5678abcd "${user}_wcxdb"
+    assert_success
+
+    run bash -c 'source /etc/hestiacp/hestia.conf; source $HESTIA/func/main.sh; source $HESTIA/func/db.sh; mysql_migrate_legacy_db_grants'
+    assert_success
+
+    run mysql_user_can_use "${user}_wcuser" 5678abcd "${user}_wc_db"
+    assert_success
+    run mysql_user_can_use "${user}_wcuser" 5678abcd "${user}_wcxdb"
+    assert_failure
+}
+
+@test "MYSQL grants: Temp user does not get wildcard access" {
+    # TTL 0: no "at" job, the user is removed at the end of this test
+    run v-add-database-temp-user $user "${user}_wc_db" mysql localhost 0
+    assert_success
+    local tmpuser tmppass
+    tmpuser=$(echo "$output" | grep -o '"user": *"[^"]*"' | cut -d'"' -f4)
+    tmppass=$(echo "$output" | grep -o '"password": *"[^"]*"' | cut -d'"' -f4)
+    refute [ -z "$tmpuser" ]
+    refute [ -z "$tmppass" ]
+
+    run mysql_user_can_use "$tmpuser" "$tmppass" "${user}_wc_db"
+    assert_success
+    run mysql_user_can_use "$tmpuser" "$tmppass" "${user}_wcxdb"
+    assert_failure
+
+    run v-delete-database-temp-user $user "${user}_wc_db" "$tmpuser" mysql localhost
+    assert_success
+}
+
+@test "SSO temp user: rejects a host with shell metacharacters" {
+    # The host reaches a root-run "at" line; a value with shell metacharacters
+    # must be refused outright, never scheduled (GHSA SSO chain).
+    local payload="localhost';touch /tmp/hestia_sso_rce_\$\$;#"
+    rm -f /tmp/hestia_sso_rce_*
+    run v-add-database-temp-user $user "${user}_wc_db" mysql "$payload" 1
+    assert_failure
+    assert_output --partial "invalid host format"
+    # Nothing must have been scheduled with the payload
+    run bash -c "at -l >/dev/null 2>&1 && for j in \$(atq 2>/dev/null | awk '{print \$1}'); do at -c \"\$j\" 2>/dev/null; done | grep -c 'touch /tmp/hestia_sso_rce'"
+    assert_output "0"
+    assert_file_not_exist "/tmp/hestia_sso_rce_"
+}
+
+@test "SSO temp user: accepts a valid configured host" {
+    run v-add-database-temp-user $user "${user}_wc_db" mysql localhost 0
+    assert_success
+    local tmpuser
+    tmpuser=$(echo "$output" | grep -o '"user": *"[^"]*"' | cut -d'"' -f4)
+    refute [ -z "$tmpuser" ]
+    run v-delete-database-temp-user $user "${user}_wc_db" "$tmpuser" mysql localhost
+    assert_success
+}
+
+@test "SSO token: signed with keyed HMAC, not truncatable bcrypt" {
+    # The SSO token must be a keyed HMAC compared in constant time. bcrypt
+    # (password_hash/password_verify) ignores input past 72 bytes, which let
+    # the key be pushed out and the token forged offline.
+    local sso="$HESTIA/install/deb/phpmyadmin/hestia-sso.php"
+    local gen="$HESTIA/web/templates/pages/list_db.php"
+    assert_file_exist "$sso"
+    assert_file_exist "$gen"
+
+    # Verifier: HMAC + constant-time compare, and no bcrypt verify
+    run grep -q "hash_hmac" "$sso"; assert_success
+    run grep -q "hash_equals" "$sso"; assert_success
+    run grep -q "password_verify" "$sso"; assert_failure
+    # exp is bounded to a short digit string
+    run grep -q "ctype_digit" "$sso"; assert_success
+
+    # Generator: the SSO token line uses hash_hmac, not password_hash
+    run grep -q "hestia_sso_token = hash_hmac" "$gen"; assert_success
+    run bash -c "grep -A3 'hestia_sso_token =' '$gen' | grep -q 'password_hash'"; assert_failure
+}
+
+@test "MYSQL grants: Delete database removes all grants" {
+    mysql_add_legacy_grant "${user}_wc_db" "${user}_wcuser"
+
+    run v-delete-database $user "${user}_wc_db"
+    assert_success
+
+    # Neither the exact nor the legacy wildcard grant may survive
+    run mysql_root_query "SELECT COUNT(*) FROM mysql.db WHERE Db IN ('${user}_wc_db', '${user}\\\\_wc\\\\_db')"
+    assert_output "0"
+
+    mysql_root_query "DROP DATABASE IF EXISTS \`${user}_wcxdb\`"
+}
+
 @test "PGSQL: Add database invalid user" {
   if [ -z "$(echo $DB_SYSTEM | grep -w "pgsql")" ]; then
     skip "PostGreSQL is not installed"
@@ -2037,6 +2599,9 @@ function check_ip_not_banned(){
   assert_success
   refute_output
   assert_file_exist /etc/exim4/smtp_relay.conf
+
+  run stat -c '%a %U:%G' /etc/exim4/smtp_relay.conf
+  assert_output '640 root:Debian-exim'
 }
 
 @test "System: Delete SMTP relay" {
@@ -2045,6 +2610,39 @@ function check_ip_not_banned(){
   refute_output
   assert_file_not_exist /etc/exim4/smtp_relay.conf
 }
+
+@test "System: Add Mail DNSBL (Simple Syntax)" {
+  run v-add-sys-mail-dnsbl sbl.spamhaus.org
+  assert_success
+  refute_output
+  assert_file_exist $HESTIA/conf/dnsbl.conf
+  assert_file_exist /etc/exim4/dnsbl.conf
+  assert_file_contains $HESTIA/conf/dnsbl.conf "sbl.spamhaus.org"
+  assert_file_contains /etc/exim4/dnsbl.conf "sbl.spamhaus.org"
+}
+
+@test "System: Add Mail DNSBL (Complex Syntax)" {
+  run v-add-sys-mail-dnsbl zen.spamhaus.org!=127.255.255.252,127.255.255.254,127.255.255.255
+  assert_success
+  refute_output
+  assert_file_contains $HESTIA/conf/dnsbl.conf "zen.spamhaus.org!=127.255.255.252,127.255.255.254,127.255.255.255"
+  assert_file_contains /etc/exim4/dnsbl.conf "zen.spamhaus.org!=127.255.255.252,127.255.255.254,127.255.255.255"
+}
+
+@test "System: List Mail DNSBL" {
+  run v-list-sys-mail-dnsbl plain
+  assert_success
+  assert_output --partial "sbl.spamhaus.org"
+  assert_output --partial "zen.spamhaus.org!=127.255.255.252,127.255.255.254,127.255.255.255"
+}
+
+@test "System: Delete Mail DNSBL (Cleanup)" {
+  run v-delete-sys-mail-dnsbl sbl.spamhaus.org
+  assert_success
+  run v-delete-sys-mail-dnsbl zen.spamhaus.org!=127.255.255.252,127.255.255.254,127.255.255.255
+  assert_success
+}
+
 
 #----------------------------------------------------------#
 #                        Firewall                          #
@@ -2209,6 +2807,280 @@ echo   "1.2.3.4" >> $HESTIA/data/firewall/excludes.conf
 }
 
 #----------------------------------------------------------#
+#                  Backup exclusions                       #
+#----------------------------------------------------------#
+
+@test "Backup Exclusions: Domain with subpaths is allowed" {
+  echo "WEB='$domain:public_html/cache/:public_html/tmp/'
+DNS=''
+MAIL=''
+DB=''
+CRON=''
+USER=''" > /tmp/backup_exclusions_valid
+  run v-update-user-backup-exclusions $user /tmp/backup_exclusions_valid
+  assert_success
+  rm -f /tmp/backup_exclusions_valid
+
+  run v-list-user-backup-exclusions $user shell
+  assert_success
+  assert_output --partial "$domain:public_html/cache/:public_html/tmp/"
+}
+
+@test "Backup Exclusions: Wildcard for all is allowed" {
+  echo "WEB='*'
+DNS=''
+MAIL=''
+DB=''
+CRON=''
+USER=''" > /tmp/backup_exclusions_wildcard
+  run v-update-user-backup-exclusions $user /tmp/backup_exclusions_wildcard
+  assert_success
+  rm -f /tmp/backup_exclusions_wildcard
+
+  run v-list-user-backup-exclusions $user shell
+  assert_success
+  assert_output --partial "WEB:            *"
+}
+
+@test "Backup Exclusions: Mail domain with mailbox exclusions is allowed" {
+  echo "WEB=''
+DNS=''
+MAIL='$domain:info:support'
+DB=''
+CRON=''
+USER=''" > /tmp/backup_exclusions_mail
+  run v-update-user-backup-exclusions $user /tmp/backup_exclusions_mail
+  assert_success
+  rm -f /tmp/backup_exclusions_mail
+
+  run v-list-user-backup-exclusions $user shell
+  assert_success
+  assert_output --partial "$domain:info:support"
+}
+
+@test "Backup Exclusions: Database name is allowed" {
+  echo "WEB=''
+DNS=''
+MAIL=''
+DB='$database'
+CRON=''
+USER=''" > /tmp/backup_exclusions_db
+  run v-update-user-backup-exclusions $user /tmp/backup_exclusions_db
+  assert_success
+  rm -f /tmp/backup_exclusions_db
+
+  run v-list-user-backup-exclusions $user shell
+  assert_success
+  assert_output --partial "$database"
+}
+
+@test "Backup Exclusions: Database entry with domain-style colon is rejected" {
+  echo "WEB=''
+DNS=''
+MAIL=''
+DB='$database:cache'
+CRON=''
+USER=''" > /tmp/backup_exclusions_db_invalid
+  run v-update-user-backup-exclusions $user /tmp/backup_exclusions_db_invalid
+  assert_failure $E_INVALID
+  rm -f /tmp/backup_exclusions_db_invalid
+}
+
+@test "Backup Exclusions: User directory name is allowed" {
+  echo "WEB=''
+DNS=''
+MAIL=''
+DB=''
+CRON=''
+USER='backups/old'" > /tmp/backup_exclusions_userdir
+  run v-update-user-backup-exclusions $user /tmp/backup_exclusions_userdir
+  assert_success
+  rm -f /tmp/backup_exclusions_userdir
+
+  run v-list-user-backup-exclusions $user shell
+  assert_success
+  assert_output --partial "backups/old"
+}
+
+@test "Backup Exclusions: User directory with domain-style colon is rejected" {
+  echo "WEB=''
+DNS=''
+MAIL=''
+DB=''
+CRON=''
+USER='$domain:cache'" > /tmp/backup_exclusions_userdir_invalid
+  run v-update-user-backup-exclusions $user /tmp/backup_exclusions_userdir_invalid
+  assert_failure $E_INVALID
+  rm -f /tmp/backup_exclusions_userdir_invalid
+}
+
+@test "Backup Exclusions: DNS bare domain is allowed" {
+  echo "WEB=''
+DNS='$domain'
+MAIL=''
+DB=''
+CRON=''
+USER=''" > /tmp/backup_exclusions_dns
+  run v-update-user-backup-exclusions $user /tmp/backup_exclusions_dns
+  assert_success
+  rm -f /tmp/backup_exclusions_dns
+}
+
+@test "Backup Exclusions: DNS with colon segment is rejected (no record-level exclusion exists)" {
+  echo "WEB=''
+DNS='$domain:record1'
+MAIL=''
+DB=''
+CRON=''
+USER=''" > /tmp/backup_exclusions_dns_invalid
+  run v-update-user-backup-exclusions $user /tmp/backup_exclusions_dns_invalid
+  assert_failure $E_INVALID
+  rm -f /tmp/backup_exclusions_dns_invalid
+}
+
+@test "Backup Exclusions: CRON wildcard is allowed" {
+  echo "WEB=''
+DNS=''
+MAIL=''
+DB=''
+CRON='*'
+USER=''" > /tmp/backup_exclusions_cron
+  run v-update-user-backup-exclusions $user /tmp/backup_exclusions_cron
+  assert_success
+  rm -f /tmp/backup_exclusions_cron
+
+  run v-list-user-backup-exclusions $user shell
+  assert_success
+  assert_output --partial "CRON:           *"
+}
+
+@test "Backup Exclusions: CRON non-wildcard value is rejected (no per-job exclusion exists)" {
+  echo "WEB=''
+DNS=''
+MAIL=''
+DB=''
+CRON='some-job'
+USER=''" > /tmp/backup_exclusions_cron_invalid
+  run v-update-user-backup-exclusions $user /tmp/backup_exclusions_cron_invalid
+  assert_failure $E_INVALID
+  rm -f /tmp/backup_exclusions_cron_invalid
+}
+
+@test "Backup Exclusions: Embedded newline / PATH injection is rejected" {
+  printf "WEB='domain1.test\nPATH=/tmp/fakebin:/usr/local/hestia/bin\nMARKER_END'\n" > /tmp/backup_exclusions_path
+  run v-update-user-backup-exclusions $user /tmp/backup_exclusions_path
+  assert_failure $E_INVALID
+  rm -f /tmp/backup_exclusions_path
+}
+
+@test "Backup Exclusions: Path traversal is rejected" {
+  echo "WEB='$domain:public_html/../../../etc'
+DNS=''
+MAIL=''
+DB=''
+CRON=''
+USER=''" > /tmp/backup_exclusions_traversal
+  run v-update-user-backup-exclusions $user /tmp/backup_exclusions_traversal
+  assert_failure $E_INVALID
+  rm -f /tmp/backup_exclusions_traversal
+}
+
+@test "Backup Exclusions: Leading dash (tar flag injection) is rejected" {
+  echo "WEB='$domain:--checkpoint=1'
+DNS=''
+MAIL=''
+DB=''
+CRON=''
+USER=''" > /tmp/backup_exclusions_dash
+  run v-update-user-backup-exclusions $user /tmp/backup_exclusions_dash
+  assert_failure $E_INVALID
+  rm -f /tmp/backup_exclusions_dash
+}
+
+@test "Backup Exclusions: Unknown key is rejected" {
+  echo "WEB=''
+EVIL='x'" > /tmp/backup_exclusions_unknownkey
+  run v-update-user-backup-exclusions $user /tmp/backup_exclusions_unknownkey
+  assert_failure $E_INVALID
+  rm -f /tmp/backup_exclusions_unknownkey
+}
+
+@test "Backup Exclusions: Clean up" {
+  run v-delete-user-backup-exclusions $user
+  assert_success
+}
+
+#----------------------------------------------------------#
+#                       Suspend user                       #
+#----------------------------------------------------------#
+
+# Needed for testing suspension of users and for changing ownership of databases
+@test "Suspend: Add database" {
+    run v-add-database $user database dbuser 1234 mysql
+    assert_success
+    refute_output
+    # validate_database mysql database_name database_user password
+    validate_database mysql $database $dbuser 1234
+}
+
+@test "Suspend: Suspend user" {
+    run v-suspend-user $user
+    assert_success
+}
+
+@test "Suspend: Check if login is disabled" {
+    run v-get-user-salt $user
+    assert_failure $E_SUSPENDED
+}
+
+@test "Suspend: Check if web domain is disabled" {
+    run v-list-web-domain $user $domain
+    assert_success
+    assert_output --regexp "SUSPENDED:[[:space:]]+yes"
+}
+
+@test "Suspend: Check if mail domain is disabled" {
+    run v-list-mail-domain $user $domain
+    assert_success
+    assert_output --regexp "SUSPENDED:[[:space:]]+yes"
+}
+
+@test "Suspend: Check if database is disabled" {
+    run v-list-database $user $database
+    assert_success
+    assert_output --regexp "SUSPENDED:[[:space:]]+yes"
+}
+
+@test "Unsuspend: Unsuspend user" {
+    run v-unsuspend-user $user
+    assert_success
+}
+
+@test "Unsuspend: Check if login is enabled" {
+    run v-get-user-salt $user
+    assert_success
+}
+
+@test "Unsuspend: Check if web domain is enabled" {
+    run v-list-web-domain $user $domain
+    assert_success
+    assert_output --regexp "SUSPENDED:[[:space:]]+no"
+}
+
+@test "Unsuspend: Check if mail domain is enabled" {
+    run v-list-mail-domain $user $domain
+    assert_success
+    assert_output --regexp "SUSPENDED:[[:space:]]+no"
+}
+
+@test "Unsuspend: Check if database is enabled" {
+    run v-list-database $user $database
+    assert_success
+    assert_output --regexp "SUSPENDED:[[:space:]]+no"
+}
+
+
+#----------------------------------------------------------#
 #                  Change owner scripts                    #
 #----------------------------------------------------------#
 
@@ -2219,14 +3091,6 @@ echo   "1.2.3.4" >> $HESTIA/data/firewall/excludes.conf
     run v-restart-web
     run v-restart-proxy
 
-}
-
-@test "Change: Add database" {
-    run v-add-database $user database dbuser 1234 mysql
-    assert_success
-    refute_output
-    # validate_database mysql database_name database_user password
-    validate_database mysql $database $dbuser 1234
 }
 
 @test "Change: Change database owner" {
@@ -2275,8 +3139,6 @@ echo   "1.2.3.4" >> $HESTIA/data/firewall/excludes.conf
     refute_output
 }
 
-
-
 @test "Ip: Delete the test IP" {
     run v-delete-sys-ip 198.18.0.125
     assert_success
@@ -2286,4 +3148,40 @@ echo   "1.2.3.4" >> $HESTIA/data/firewall/excludes.conf
 @test 'assert()' {
   touch '/var/log/test.log'
   assert [ -e '/var/log/test.log' ]
+}
+
+@test "API: v-check-api-key accepts a regular file in the key store" {
+    mkdir -p "$HESTIA/data/keys"
+    touch "$HESTIA/data/keys/apitestkey000000000000000001"
+    run v-check-api-key "$HESTIA/data/keys/apitestkey000000000000000001"
+    assert_success
+    rm -f "$HESTIA/data/keys/apitestkey000000000000000001"
+}
+
+@test "API: v-check-api-key rejects a directory in the key store" {
+    mkdir -p "$HESTIA/data/keys/apitestkey000000000000000002"
+    run v-check-api-key "$HESTIA/data/keys/apitestkey000000000000000002"
+    assert_failure
+    rmdir "$HESTIA/data/keys/apitestkey000000000000000002"
+}
+
+@test "API: v-check-api-key rejects a symlink in the key store" {
+    touch "$HESTIA/data/keys/apitestkey000000000000000003"
+    ln -s "$HESTIA/data/keys/apitestkey000000000000000003" "$HESTIA/data/keys/apitestkey000000000000000004"
+    run v-check-api-key "$HESTIA/data/keys/apitestkey000000000000000004"
+    assert_failure
+    rm -f "$HESTIA/data/keys/apitestkey000000000000000003" "$HESTIA/data/keys/apitestkey000000000000000004"
+}
+
+@test "API: v-check-api-key rejects unsafe and over-long key names" {
+    touch "$HESTIA/data/keys/apitestkey with-space000000000001"
+    run v-check-api-key "$HESTIA/data/keys/apitestkey with-space000000000001"
+    assert_failure
+    rm -f "$HESTIA/data/keys/apitestkey with-space000000000001"
+
+    longkey="apitestkey$(printf 'a%.0s' {1..119})"
+    touch "$HESTIA/data/keys/$longkey"
+    run v-check-api-key "$HESTIA/data/keys/$longkey"
+    assert_failure
+    rm -f "$HESTIA/data/keys/$longkey"
 }

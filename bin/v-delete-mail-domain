@@ -55,13 +55,18 @@ accounts=$(wc -l "$USER_DATA/mail/$domain.conf" | cut -f 1 -d ' ')
 if [[ "$MAIL_SYSTEM" =~ exim ]]; then
 	rm -f /etc/$MAIL_SYSTEM/domains/$domain_idn
 	rm -rf $HOMEDIR/$user/conf/mail/$domain
-	rm -rf $HOMEDIR/$user/mail/$domain_idn
+	# Delete relative to the verified root-owned mail directory, so a swapped
+	# "mail" symlink can't redirect the removal outside the user's home. If the
+	# directory can't be verified the data is left alone, the domain is still
+	# removed from the configuration.
+	(enter_user_dir "$user" "mail" root && rm -rf -- "./$domain_idn")
 fi
 
 # Deleting dkim dns record
 if [ "$DKIM" = 'yes' ] && [ -e "$USER_DATA/dns/$domain.conf" ]; then
 	# Legacy _domainkey policy records are deprecated but still cleaned up; remove once obsolete.
-	dkim_records=$($BIN/v-list-dns-records "$user" "$domain" | grep -E "\s(mail\._domainkey|_domainkey)\s" | cut -f 1 -d ' ')
+	dkim_selector=${DKIM_SELECTOR:-mail}
+	dkim_records=$($BIN/v-list-dns-records "$user" "$domain" | grep -E "\s(${dkim_selector}\._domainkey|_domainkey)\s" | cut -f 1 -d ' ')
 	for id in $dkim_records; do
 		$BIN/v-delete-dns-record "$user" "$domain" "$id" '' 'yes'
 	done

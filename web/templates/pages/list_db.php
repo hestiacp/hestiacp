@@ -15,7 +15,7 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<?php if ($read_only !== "true") { ?>
+			<?php if ($read_only !== true) { ?>
 				<a href="/add/db/" class="button button-secondary js-button-create">
 					<i class="fas fa-circle-plus icon-green"></i><?= tohtml( _("Add Database")) ?>
 				</a>
@@ -65,7 +65,7 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
 						<span class="name"><?= tohtml( _("Username")) ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
 					</li>
 				</ul>
-				<?php if ($read_only !== "true") { ?>
+				<?php if ($read_only !== true) { ?>
 					<form x-data x-bind="BulkEdit" action="/bulk/db/" method="post">
 						<input type="hidden" name="token" value="<?= tohtml($_SESSION["token"]) ?>">
 						<select class="form-select" name="action">
@@ -158,7 +158,7 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
 				</div>
 				<div class="units-table-cell units-table-heading-cell u-text-bold">
 					<span class="u-hide-desktop"><?= tohtml( _("Name")) ?>:</span>
-					<?php if ($read_only === "true" || $data[$key]["SUSPENDED"] == "yes") { ?>
+					<?php if ($read_only === true || $data[$key]["SUSPENDED"] == "yes") { ?>
 						<?= tohtml($key) ?>
 					<?php } else { ?>
 						<a href="/edit/db/?<?= tohtml(http_build_query(["database" => $key, "token" => $_SESSION["token"]])) ?>" title="<?= tohtml( _("Edit Database")) ?>: <?= tohtml($key) ?>">
@@ -183,11 +183,23 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
 							<?php } ?>
 								<?php if ($data[$key]['TYPE'] == 'mysql' && isset($_SESSION['PHPMYADMIN_KEY']) && $_SESSION['PHPMYADMIN_KEY'] != '' && !ipUsed()) { $time = time(); ?>
 									<?php
-										$hestia_sso_token = password_hash(
-											$key . $user_plain . $_SESSION['user_combined_ip'] . $time . $_SESSION['PHPMYADMIN_KEY'],
-											PASSWORD_DEFAULT,
+										// Keyed signature over every field in the link, host included.
+										// Must stay in sync with verify_token() in hestia-sso.php.
+										// Not bcrypt: it ignores input past 72 bytes, which allowed
+										// offline token forgery (see hestia-sso.php).
+										$hestia_sso_token = hash_hmac(
+											'sha256',
+											implode("\0", [
+												$key,
+												$user_plain,
+												$_SESSION['user_combined_ip'],
+												(string) $time,
+												$data[$key]['HOST'],
+											]),
+											$_SESSION['PHPMYADMIN_KEY'],
 										);
 										$hestia_sso_url = $db_myadmin_link . "hestia-sso.php?" . http_build_query([
+											"host" => $data[$key]["HOST"],
 											"database" => $key,
 											"user" => $user_plain,
 											"exp" => $time,

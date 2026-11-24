@@ -106,6 +106,13 @@ is_format_valid 'id'
 is_object_new "dns/$domain" 'ID' "$id"
 is_dns_fqnd "$rtype" "$dvalue"
 is_dns_nameserver_valid "$domain" "$rtype" "$dvalue"
+if [ "$rtype" = "CNAME" ]; then
+	if grep -Fq "RECORD='$record'" "$USER_DATA/dns/$domain.conf"; then
+		check_result "$E_INVALID" "A CNAME record cannot coexist with other records for the same name"
+	fi
+elif grep -Fq "RECORD='$record' TYPE='CNAME'" "$USER_DATA/dns/$domain.conf"; then
+	check_result "$E_INVALID" "Another record cannot be added when a CNAME record exists for the same name"
+fi
 is_format_valid 'ttl'
 is_format_valid 'restart'
 

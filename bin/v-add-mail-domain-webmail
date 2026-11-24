@@ -102,42 +102,17 @@ else
 		if [ "$dns_domain" = "$domain" ]; then
 			if [ "$WEBMAIL_ALIAS" != "mail" ]; then
 				# Handle non-mail webmail alias (e.g., "webmail")
-				webmail_record=$($BIN/v-list-dns-records $user $domain | awk '{if ($2 == "'"$WEBMAIL_ALIAS"'") print $1}')
+				webmail_record=$($BIN/v-list-dns-records "$user" "$domain" plain | awk -F'\t' '$2 == "'"$WEBMAIL_ALIAS"'" {print $1}')
 				if [ -z "$webmail_record" ]; then
-					if [ "$quiet" = "yes" ]; then
-						$BIN/v-add-dns-record "$user" "$domain" "$WEBMAIL_ALIAS" A "$ip" '' '' "$restart" '' 'yes'
-					else
-						$BIN/v-add-dns-record "$user" "$domain" "$WEBMAIL_ALIAS" A "$ip" '' '' "$restart" '' 'yes'
-					fi
-				else
-					if [ "$quiet" = "yes" ]; then
-						$BIN/v-delete-dns-record "$user" "$domain" "$webmail_record" "$restart" 'yes'
-						$BIN/v-add-dns-record "$user" "$domain" "$WEBMAIL_ALIAS" A "$ip" '' '' "$restart" '' 'yes'
-					else
-						$BIN/v-delete-dns-record "$user" "$domain" "$webmail_record" "$restart" 'yes'
-						$BIN/v-add-dns-record "$user" "$domain" "$WEBMAIL_ALIAS" A "$ip" '' '' "$restart" '' 'yes'
-					fi
+					$BIN/v-add-dns-record "$user" "$domain" "$WEBMAIL_ALIAS" A "$ip" '' '' "$restart" '' 'yes'
 				fi
 			else
 				# WEBMAIL_ALIAS is "mail" - ensure webmail CNAME points to mail.domain.com
-				webmail_cname_record=$($BIN/v-list-dns-records $user $domain | awk '$2 == "webmail" && $3 == "CNAME" {print $1}')
+				webmail_cname_record=$($BIN/v-list-dns-records "$user" "$domain" plain | awk -F'\t' '$2 == "webmail" && $3 == "CNAME" {print $1}')
 				mail_target="mail.$domain."
 				if [ -z "$webmail_cname_record" ]; then
 					# Add webmail CNAME record
-					if [ "$quiet" = "yes" ]; then
-						$BIN/v-add-dns-record "$user" "$domain" "webmail" CNAME "$mail_target" '' '' "$restart" '' 'yes'
-					else
-						$BIN/v-add-dns-record "$user" "$domain" "webmail" CNAME "$mail_target" '' '' "$restart" '' 'yes'
-					fi
-				else
-					# Update existing webmail CNAME record
-					if [ "$quiet" = "yes" ]; then
-						$BIN/v-delete-dns-record "$user" "$domain" "$webmail_cname_record" "$restart" 'yes'
-						$BIN/v-add-dns-record "$user" "$domain" "webmail" CNAME "$mail_target" '' '' "$restart" '' 'yes'
-					else
-						$BIN/v-delete-dns-record "$user" "$domain" "$webmail_cname_record" "$restart" 'yes'
-						$BIN/v-add-dns-record "$user" "$domain" "webmail" CNAME "$mail_target" '' '' "$restart" '' 'yes'
-					fi
+					$BIN/v-add-dns-record "$user" "$domain" "webmail" CNAME "$mail_target" '' '' "$restart" '' 'yes'
 				fi
 			fi
 		fi

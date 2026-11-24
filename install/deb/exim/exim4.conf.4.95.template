@@ -83,7 +83,9 @@ DKIM_PRIVATE_KEY = ${if exists{DKIM_FILE}{DKIM_FILE}{0}}
 
 OUTGOING_IP = /etc/exim4/domains/${lookup{$sender_address_domain}dsearch{/etc/exim4/domains}}/ip
 
-SMTP_RELAY_FILE = ${if exists{/etc/exim4/domains/${lookup{$sender_address_domain}dsearch{/etc/exim4/domains}}/smtp_relay.conf}{/etc/exim4/domains/${lookup{$sender_address_domain}dsearch{/etc/exim4/domains}}/smtp_relay.conf}{/etc/exim4/smtp_relay.conf}}
+RELAY_SENDER_DOMAIN = ${if eq{$sender_address_domain}{}{${extract{2}{@}{$authenticated_id}}}{$sender_address_domain}}
+RELAY_DOMAIN_DIR = /etc/exim4/domains/${lookup{RELAY_SENDER_DOMAIN}dsearch{/etc/exim4/domains}}
+SMTP_RELAY_FILE = ${if exists{RELAY_DOMAIN_DIR/smtp_relay.conf}{RELAY_DOMAIN_DIR/smtp_relay.conf}{/etc/exim4/smtp_relay.conf}}
 SMTP_RELAY_HOST = ${lookup{host}lsearch{SMTP_RELAY_FILE}}
 SMTP_RELAY_PORT = ${lookup{port}lsearch{SMTP_RELAY_FILE}}
 SMTP_RELAY_USER = ${lookup{user}lsearch{SMTP_RELAY_FILE}}
@@ -123,24 +125,49 @@ acl_check_spammers:
 
 
 acl_check_mail:
-	deny    condition     = ${if eq{$sender_helo_name}{}}
-			message       = HELO required before MAIL
 
-	drop    !authenticated = *
-			message       =  Helo name contains an IP address (HELO was $sender_helo_name) and not is valid
-			condition     = ${if match{$sender_helo_name}{\N((\d{1,3}[.-]\d{1,3}[.-]\d{1,3}[.-]\d{1,3})|([0-9a-f]{8})|([0-9A-F]{8}))\N}{yes}{no}}
-			condition     = ${if match {${lookup dnsdb{>: defer_never,ptr=$sender_host_address}}\}{$sender_helo_name}{no}{yes}}
-			delay         = 45s
+  # 1. HELO is mandatory (applies to authenticated clients too)
+  deny    condition = ${if eq{$sender_helo_name}{}}
+          message   = HELO required before MAIL
 
-	drop    !authenticated = *
-			condition     = ${if isip{$sender_helo_name}}
-			message       = Access denied - Invalid HELO name (See RFC2821 4.1.3)
+  # 2. Reject HELO that is a bare IP address
+  drop    !authenticated = *
+          condition = ${if isip{$sender_helo_name}}
+          message   = HELO is a bare IP address: $sender_helo_name (see RFC 5321 4.1.3)
 
-	drop    !authenticated = *
-			condition    = ${if eq{[$interface_address]}{$sender_helo_name}}
-			message       = $interface_address is _my_ address
+  # 3. Temporary error if reverse DNS lookup failed
+  defer   !authenticated = *
+          condition = ${if eq{$host_lookup_deferred}{1}}
+          message   = Temporary DNS verification failure
 
-	accept
+  # 4. Reject our own IP used as HELO
+  drop    !authenticated = *
+          condition = ${if or{{eq{[$interface_address]}{$sender_helo_name}}{eq{$interface_address}{$sender_helo_name}}}}
+          message   = $interface_address is our address
+
+  # 5. Require forward-confirmed reverse DNS (FCrDNS) (LOG-ONLY for now)
+  #    To enforce: change "warn" to "deny" and uncomment "message".
+  warn    !authenticated = *
+          condition   = ${if eq{$sender_host_name}{}}
+          log_message = NO_FCRDNS host=$sender_host_address helo=$sender_helo_name
+          # message   = No valid forward-confirmed reverse DNS for $sender_host_address
+
+  # 6. Reject IP-like HELOs (e.g. x.1-2-3-4.domain.com, x.1.2.3.4.domain.com,
+  #    and IPv4 address literals like [1.2.3.4]) unless they match the verified PTR
+  drop    !authenticated = *
+          condition = ${if match{$sender_helo_name}{\N\d{1,3}[.-]\d{1,3}[.-]\d{1,3}[.-]\d{1,3}\N}}
+          condition = ${if eqi{$sender_helo_name}{$sender_host_name}{no}{yes}}
+          message   = HELO contains an IP address and does not match PTR: $sender_helo_name
+
+  # 7. HELO should match the verified PTR (LOG-ONLY for now)
+  #    To enforce: change "warn" to "deny" and uncomment "message".
+  warn    !authenticated = *
+          condition   = ${if def:sender_host_name}
+          condition   = ${if eqi{$sender_helo_name}{$sender_host_name}{no}{yes}}
+          log_message = HELO_PTR_MISMATCH helo=$sender_helo_name ptr=$sender_host_name host=$sender_host_address
+          # message   = HELO does not match verified PTR hostname
+
+  accept
 
 
 acl_check_rcpt:
@@ -170,7 +197,7 @@ acl_check_rcpt:
   accept  authenticated = *
           control       = submission/domain=
 
-  deny    message       = Rejected because $sender_host_address is in a black list at $dnslist_domain\n$dnslist_text
+  deny    message       = Rejected because $sender_host_address is in a black list at ${if match{$dnslist_domain}{^[^.]+[.](.+dq[.]spamhaus.*)}{$1}{$dnslist_domain}}\n$dnslist_text
           hosts         = !+whitelist
           dnslists      = ${readfile {/etc/exim4/dnsbl.conf}{:}}
 
@@ -401,7 +428,7 @@ remote_smtp:
   driver = smtp
   helo_data = ${lookup dnsdb{>: defer_never,ptr=$sending_ip_address}{${listextract{1}{$value}}}{$primary_hostname}}
   dkim_domain = DKIM_DOMAIN
-  dkim_selector = mail
+  dkim_selector = ${if exists{/etc/exim4/domains/${lookup{$dkim_domain}dsearch{/etc/exim4/domains/}}/selector}{${lookup{selector}lsearch{/etc/exim4/domains/${lookup{$dkim_domain}dsearch{/etc/exim4/domains/}}/selector}{$value}{mail}}}{mail}}
   dkim_private_key = DKIM_PRIVATE_KEY
   dkim_canon = relaxed
   dkim_strict = 0
@@ -412,7 +439,7 @@ remote_forwarded_smtp:
   driver = smtp
   helo_data = ${lookup dnsdb{>: defer_never,ptr=$sending_ip_address}{${listextract{1}{$value}}}{$primary_hostname}}
   dkim_domain = DKIM_DOMAIN
-  dkim_selector = mail
+  dkim_selector = ${if exists{/etc/exim4/domains/${lookup{$dkim_domain}dsearch{/etc/exim4/domains/}}/selector}{${lookup{selector}lsearch{/etc/exim4/domains/${lookup{$dkim_domain}dsearch{/etc/exim4/domains/}}/selector}{$value}{mail}}}{mail}}
   dkim_private_key = DKIM_PRIVATE_KEY
   dkim_canon = relaxed
   dkim_strict = 0

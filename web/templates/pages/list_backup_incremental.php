@@ -2,14 +2,14 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-		<?php if ($read_only !== "true") { ?>
+		<?php if ($read_only !== true) { ?>
 			<a href="/schedule/backup/incremental/?<?= tohtml(http_build_query(["token" => $_SESSION["token"]])) ?>" class="button button-secondary js-button-create">
 				<i class="fas fa-circle-plus icon-green"></i><?= tohtml( _("Create Snapshot")) ?>
 			</a>
 		<?php } ?>
 		</div>
 		<div class="toolbar-right">
-			<?php if ($read_only !== "true") { ?>
+			<?php if ($read_only !== true) { ?>
 				<form x-data x-bind="BulkEdit" action="/bulk/backup/incremental/" method="post">
 					<input type="hidden" name="token" value="<?= tohtml($_SESSION["token"]) ?>">
 					<select class="form-select" name="action">
@@ -64,7 +64,7 @@
 			</div>
 			<div class="units-table-cell units-table-heading-cell u-text-bold">
 				<b>
-					<?php if ($read_only === "true") { ?>
+					<?php if ($read_only === true) { ?>
 							<span class="u-hide-desktop"><?= tohtml( _("Snapshot")) ?>:</span>
 							<?= tohtml($value['short_id']) ?>
 					<?php } else { ?>

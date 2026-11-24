@@ -139,11 +139,13 @@ class AppWizard
                 $options['database_password'] = bin2hex(random_bytes(10));
             }
 
+            $userPrefix = $this->appcontext->user() . '_';
+
             $target->addTargetDatabase(
                 new TargetDatabase(
                     $options['database_host'],
-                    $this->appcontext->user() . '_' . $options['database_name'],
-                    $this->appcontext->user() . '_' . $options['database_user'],
+                    $this->withPrefix($userPrefix, $options['database_name']),
+                    $this->withPrefix($userPrefix, $options['database_user']),
                     $options['database_password'],
                     !empty($options['database_create']),
                 ),
@@ -176,6 +178,11 @@ class AppWizard
             ),
             TargetDatabase::noDatabase(),
         );
+    }
+
+    private function withPrefix(string $prefix, string $name): string
+    {
+        return str_starts_with($name, $prefix) ? $name : $prefix . $name;
     }
 
     private function generateDatabaseName(): string

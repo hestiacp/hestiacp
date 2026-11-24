@@ -47,7 +47,7 @@ if ($v_suspended == "yes") {
 }
 
 // Check POST request
-if (!empty($_POST["save"])) {
+if (!empty($_POST["save"]) && $read_only !== true) {
 	$v_username = $user;
 
 	// Check token
@@ -90,7 +90,9 @@ if (!empty($_POST["save"])) {
 			);
 			check_return_code($return_var, $output);
 			unset($output);
-			unlink($v_password);
+			if (file_exists($v_password)) {
+				unlink($v_password);
+			}
 			$v_password = quoteshellarg($_POST["v_password"]);
 		}
 	}

@@ -8,10 +8,10 @@ $config["db_dsnw"] = "mysql://roundcube:%password%@localhost/roundcube";
 $config["smtp_log"] = false;
 
 // Log IMAP conversation to <log_dir>/imap or to syslog
-$config["imap_debug"] = true;
+$config["imap_debug"] = false;
 
 // Log SMTP conversation to <log_dir>/smtp.log or to syslog
-$config["smtp_debug"] = true;
+$config["smtp_debug"] = false;
 
 // ----------------------------------
 // IMAP

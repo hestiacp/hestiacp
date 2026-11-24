@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: Delete auth log file for user
-#
+# options: USER
 # This function for deleting a users auth log file
 
 #----------------------------------------------------------#

@@ -83,7 +83,7 @@ function syshealth_update_mail_config_format() {
 	# MAIL DOMAINS
 	# Create array of known keys in configuration file
 	system="mail"
-	known_keys="DOMAIN ANTIVIRUS ANTISPAM DKIM WEBMAIL SSL LETSENCRYPT CATCHALL ACCOUNTS RATE_LIMIT REJECT U_DISK SUSPENDED TIME DATE"
+	known_keys="DOMAIN ANTIVIRUS ANTISPAM DKIM DKIM_SELECTOR WEBMAIL SSL LETSENCRYPT CATCHALL ACCOUNTS RATE_LIMIT REJECT U_DISK SUSPENDED TIME DATE"
 	write_kv_config_file
 	unset system
 	unset known_keys
@@ -161,9 +161,29 @@ function syshealth_repair_mail_config() {
 	sanitize_config_file "$system"
 	get_domain_values 'mail'
 	prev="DOMAIN"
+	# Repair missing keys in existing mail configurations. DKIM_SELECTOR was
+	# added as a new configuration option, so it may be missing from existing
+	# configurations. Use the next defined key (or the previous one) to insert
+	# the missing key in the correct position.
 	for key in $known_keys; do
 		if [ -z "${!key}" ]; then
-			add_object_key 'mail' 'DOMAIN' "$domain" "$key" "$prev"
+			next=""
+			seen=""
+			for k in $known_keys; do
+				if [ "$k" = "$key" ]; then
+					seen=yes
+					continue
+				fi
+				if [ -n "$seen" ] && [ -n "${!k+x}" ]; then
+					next=$k
+					break
+				fi
+			done
+			if [ -n "$next" ]; then
+				add_object_key 'mail' 'DOMAIN' "$domain" "$key" "$next"
+			else
+				add_object_key 'mail' 'DOMAIN' "$domain" "$key" "$prev"
+			fi
 		fi
 		prev=$key
 	done
@@ -186,6 +206,7 @@ function syshealth_repair_mail_account_config() {
 	system="mail_accounts"
 	sanitize_config_file "$system"
 	get_object_values "mail/$domain" 'ACCOUNT' "$account"
+	prev="ACCOUNT"
 	for key in $known_keys; do
 		if [ -z "${!key}" ]; then
 			add_object_key "mail/$domain" 'ACCOUNT' "$account" "$key" "$prev"
@@ -548,14 +569,14 @@ function syshealth_repair_system_config() {
 		$BIN/v-change-sys-config-value "DOMAINDIR_WRITABLE" "no"
 	fi
 
-	touch $HESTIA/conf/hestia.conf.new
+	: > "$HESTIA/conf/hestia.conf.new"
+
 	while IFS='= ' read -r lhs rhs; do
 		if [[ ! $lhs =~ ^\ *# && -n $lhs ]]; then
-			rhs="${rhs%%^\#*}" # Del in line right comments
-			rhs="${rhs%%*( )}" # Del trailing spaces
-			rhs="${rhs%\'*}"   # Del opening string quotes
-			rhs="${rhs#\'*}"   # Del closing string quotes
-
+			rhs="${rhs%%#*}"             # Del inline right comments
+			rhs="${rhs%"${rhs##*[! ]}"}" # Del trailing spaces
+			rhs="${rhs%\'}"              # Del closing string quote
+			rhs="${rhs#\'}"              # Del opening string quote
 		fi
 		check_ckey=$(grep "^$lhs='" "$HESTIA/conf/hestia.conf.new")
 		if [ -z "$check_ckey" ]; then
@@ -563,15 +584,13 @@ function syshealth_repair_system_config() {
 		else
 			sed -i "s|^$lhs=.*|$lhs='$rhs'|g" "$HESTIA/conf/hestia.conf.new"
 		fi
-	done < $HESTIA/conf/hestia.conf
+	done < "$HESTIA/conf/hestia.conf"
 
-	cmp --silent $HESTIA/conf/hestia.conf $HESTIA/conf/hestia.conf.new
-	if [ $? -ne 0 ]; then
+	if ! cmp --silent "$HESTIA/conf/hestia.conf" "$HESTIA/conf/hestia.conf.new"; then
 		echo "[ ! ] Duplicated keys found repair config"
-		rm $HESTIA/conf/hestia.conf
-		cp $HESTIA/conf/hestia.conf.new $HESTIA/conf/hestia.conf
-		rm $HESTIA/conf/hestia.conf.new
+		cp "$HESTIA/conf/hestia.conf.new" "$HESTIA/conf/hestia.conf"
 	fi
+	rm -f "$HESTIA/conf/hestia.conf.new"
 
 	source_conf "$HESTIA/conf/hestia.conf"
 }
@@ -599,8 +618,8 @@ function syshealth_repair_system_cronjobs() {
 # Adapt Port Listing in HESTIA NGINX Backend
 # Activates or deactivates port listing on IPV4 or/and IPV6 network interfaces
 function syshealth_adapt_hestia_nginx_listen_ports() {
-	# Detect "physical" NICs only (virtual NICs created by Docker, WireGuard etc. are excluded)
-	physical_nics="$(ip -d -j link show | jq -r '.[] | if .link_type == "loopback" // .linkinfo.info_kind then empty else .ifname end')"
+	# Detect "physical" NICs and bond interfaces only (virtual NICs created by Docker, WireGuard etc. are excluded)
+	physical_nics="$(ip -d -j link show | jq -r '.[] | if .link_type == "loopback" then empty elif .linkinfo.info_kind == "bond" then .ifname elif .linkinfo.info_kind then empty else .ifname end')"
 	if [ -z "$physical_nics" ]; then
 		physical_nics="$(ip -d -j link show | jq -r '.[] | if .link_type == "loopback" then empty else .ifname end')"
 	fi

@@ -129,7 +129,7 @@ The maximum space the account is allowed to use. This includes mail, contacts, e
 
 ### Aliases
 
-Add an alias to redirect mail to the main account. Enter the username only. For example: `alice`.
+Add an alias to redirect mail to the main account. Enter the username only. For example: `alice`. An alias delivers only to this account; to send one address to several people, see [Forward mail](#forward-mail).
 
 ### Discard all mail
 
@@ -137,7 +137,7 @@ All incoming mail will not get forwarded and will get deleted.
 
 ### Do not store forwarded mail
 
-If this option is selected, all forwarded mail will get deleted.
+If this option is selected, mail is only forwarded and no copy is kept in the mailbox.
 
 ### Auto-Reply
 
@@ -145,7 +145,20 @@ Setup an auto-reply.
 
 ### Forward mail
 
-Forward all incoming mail to the entered email address.
+Forward all incoming mail to one or more email addresses. Enter one address per line.
+
+To make a role address such as `support@example.com` reach several people, create the account, add each recipient as a forward address and select [Do not store forwarded mail](#do-not-store-forwarded-mail) so the account works as a forward-only address.
+
+If you remove all forward addresses, also clear [Do not store forwarded mail](#do-not-store-forwarded-mail), or incoming mail is discarded.
+
+On the command line, create the account if it does not exist yet, run `v-add-mail-account-forward` once per address, then `v-add-mail-account-fwd-only` for a forward-only account:
+
+```bash
+v-add-mail-account admin example.com support 'PASSWORD'
+v-add-mail-account-forward admin example.com support alice@example.com
+v-add-mail-account-forward admin example.com support bob@example.com
+v-add-mail-account-fwd-only admin example.com support
+```
 
 ::: warning
 A lot of spam filters may flag the forwarded mail as spam by default!

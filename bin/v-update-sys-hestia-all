@@ -29,6 +29,9 @@ check_hestia_demo_mode
 for package in hestia hestia-nginx hestia-php; do
 	$BIN/v-update-sys-hestia "$package"
 done
+if dpkg-query -W -f='${Status}' hestia-web-terminal 2> /dev/null | grep -q "ok installed"; then
+	$BIN/v-update-sys-hestia "hestia-web-terminal"
+fi
 
 #----------------------------------------------------------#
 #                       Hestia                             #

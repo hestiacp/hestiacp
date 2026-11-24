@@ -9,7 +9,7 @@ include $_SERVER["DOCUMENT_ROOT"] . "/inc/main.php";
 
 // Check user
 if ($_SESSION["userContext"] != "admin") {
-	header("Location: /list/user");
+	header("Location: /list/user/");
 	exit();
 }
 
@@ -229,7 +229,9 @@ if (!empty($_POST["ok"])) {
 			unset($output);
 
 			fclose($fp);
-			unlink($tmpfile);
+			if (file_exists($tmpfile)) {
+				unlink($tmpfile);
+			}
 		}
 		// Flush field values on success
 		if (empty($_SESSION["error_msg"])) {

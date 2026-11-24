@@ -7,6 +7,15 @@ $TAB = "LOG";
 // Main include
 include $_SERVER["DOCUMENT_ROOT"] . "/inc/main.php";
 
+if (
+	$_SESSION["userContext"] === "admin" &&
+	$_SESSION["look"] === $_SESSION["ROOT_USER"] &&
+	$_SESSION["POLICY_SYSTEM_PROTECTED_ADMIN"] === "yes"
+) {
+	header("Location: /");
+	exit();
+}
+
 // Edit as someone else?
 if ($_SESSION["userContext"] === "admin" && $_SESSION["look"] != "") {
 	$user = quoteshellarg($_SESSION["look"]);

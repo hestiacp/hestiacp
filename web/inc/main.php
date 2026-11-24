@@ -71,6 +71,46 @@ if (!isset($_SESSION["user"]) && !defined("NO_AUTH_REQUIRED")) {
 	exit();
 }
 
+if (isset($_SESSION["user"])) {
+	$user_data = get_user_data($_SESSION["user"]);
+	$user_data = $user_data[$_SESSION["user"]] ?? null;
+
+	// If the user no longer exists, destroy session and redirect to login
+	if (!isset($user_data)) {
+		destroy_sessions();
+		header("Location: /login/");
+		exit();
+	}
+
+	// Check if user is still admin; if not destroy session and redirect to login
+	if (($_SESSION["userContext"] ?? "") === "admin" && $user_data["ROLE"] !== "admin") {
+		destroy_sessions();
+		header("Location: /login/");
+		exit();
+	}
+
+	// Log out active sessions for suspended users
+	if ($user_data["SUSPENDED"] === "yes" && $_SESSION["POLICY_USER_VIEW_SUSPENDED"] !== "yes") {
+		destroy_sessions();
+		$_SESSION["error_msg"] = _("You are logged out, please log in again.");
+		header("Location: /login/");
+		exit();
+	}
+
+	$_SESSION["login_shell"] = $user_data["SHELL"];
+	$_SESSION["role"] = $user_data["ROLE"];
+
+	// When impersonating, reflect the looked user's shell/role
+	if (!empty($_SESSION["look"])) {
+		$look_user_data = get_user_data($_SESSION["look"]);
+		$look_user_data = $look_user_data[$_SESSION["look"]] ?? null;
+		if (isset($look_user_data)) {
+			$_SESSION["login_shell"] = $look_user_data["SHELL"];
+			$_SESSION["role"] = $look_user_data["ROLE"];
+		}
+	}
+}
+
 // Generate CSRF Token and set user shell variable
 if (isset($_SESSION["user"])) {
 	if (!isset($_SESSION["token"])) {
@@ -81,13 +121,6 @@ if (isset($_SESSION["user"])) {
 	if (!empty($_SESSION["look"])) {
 		$username = $_SESSION["look"];
 	}
-
-	exec(HESTIA_CMD . "v-list-user " . quoteshellarg($username) . " json", $output, $return_var);
-	$data = json_decode(implode("", $output), true);
-	unset($output, $return_var);
-	$_SESSION["login_shell"] = $data[$username]["SHELL"];
-	$_SESSION["role"] = $data[$username]["ROLE"];
-	unset($data, $username);
 }
 
 if ($_SESSION["RELEASE_BRANCH"] == "release" && $_SESSION["DEBUG_MODE"] == "false") {
@@ -100,6 +133,7 @@ if (!defined("NO_AUTH_REQUIRED")) {
 	if (empty($_SESSION["LAST_ACTIVITY"]) || empty($_SESSION["INACTIVE_SESSION_TIMEOUT"])) {
 		destroy_sessions();
 		header("Location: /login/");
+		exit();
 	} elseif ($_SESSION["INACTIVE_SESSION_TIMEOUT"] * 60 + $_SESSION["LAST_ACTIVITY"] < time()) {
 		$v_user = quoteshellarg($_SESSION["user"]);
 		$v_session_id = quoteshellarg($_SESSION["token"]);
@@ -125,6 +159,14 @@ function ipUsed() {
 	}
 }
 
+// An admin must not target the ROOT_USER account unless they are ROOT_USER themselves.
+function is_protected_root_target(string $target): bool {
+	return ($_SESSION["userContext"] ?? "") === "admin" &&
+		($_SESSION["ROOT_USER"] ?? "") !== "" &&
+		$target === htmlentities($_SESSION["ROOT_USER"]) &&
+		($_SESSION["user"] ?? "") !== $_SESSION["ROOT_USER"];
+}
+
 if (isset($_SESSION["user"])) {
 	$user = quoteshellarg($_SESSION["user"]);
 	$user_plain = htmlentities($_SESSION["user"]);
@@ -142,6 +184,38 @@ if (!isset($_SESSION["look"])) {
 }
 
 require_once dirname(__FILE__) . "/i18n.php";
+
+$read_only = false;
+//accessing main.php via CLI doesn't set $_SESSION["userContext"], so we need to check if it's set before including policies.php
+if (isset($_SESSION["userContext"])) {
+	require_once dirname(__FILE__) . "/policies.php";
+}
+
+// Central guard: a read-only session (suspended user, or an admin impersonating a protected
+// ROOT_USER) must never change state. Individual pages also check $read_only, but this makes
+// sure a page that forgets the check cannot be abused via a crafted request. GET prefixes are
+// listed because those endpoints act on GET with a token in the query string.
+$request_path = parse_url($_SERVER["REQUEST_URI"] ?? "/", PHP_URL_PATH) ?: "/";
+$request_method = $_SERVER["REQUEST_METHOD"] ?? "";
+$is_mutating_request =
+	($request_method === "POST" && $request_path !== "/list/rrd/ajax.php") ||
+	($request_method === "GET" &&
+		($request_path === "/add/cron/autoupdate/" ||
+			str_starts_with($request_path, "/delete/") ||
+			str_starts_with($request_path, "/start/") ||
+			str_starts_with($request_path, "/stop/") ||
+			str_starts_with($request_path, "/restart/") ||
+			str_starts_with($request_path, "/update/") ||
+			str_starts_with($request_path, "/copy/") ||
+			str_starts_with($request_path, "/move/") ||
+			str_starts_with($request_path, "/suspend/") ||
+			str_starts_with($request_path, "/unsuspend/")));
+if ($read_only === true && $is_mutating_request) {
+	$_SESSION["error_msg"] = _("This action is not allowed in read-only mode.");
+	header("Location: /", true, 303);
+	exit();
+}
+unset($request_path, $request_method, $is_mutating_request);
 
 function check_error($return_var) {
 	if ($return_var > 0) {
@@ -173,6 +247,7 @@ function check_return_code_redirect($return_var, $output, $location) {
 		}
 		$_SESSION["error_msg"] = $error;
 		header("Location:" . $location);
+		exit();
 	}
 }
 
@@ -188,9 +263,6 @@ function render_page($user, $TAB, $page) {
 
 	// Panel
 	$panel = top_panel(empty($_SESSION["look"]) ? $_SESSION["user"] : $_SESSION["look"], $TAB);
-
-	// Policies controller
-	@include_once dirname(__DIR__) . "/inc/policies.php";
 
 	// Body
 	include $__template_dir . "pages/" . $page . ".php";
@@ -242,8 +314,13 @@ function show_alert_message($data) {
 	}
 }
 
-function top_panel($user, $TAB) {
-	$command = HESTIA_CMD . "v-list-user " . $user . " 'json'";
+function get_user_data($user) {
+	static $cache = [];
+	if (array_key_exists($user, $cache)) {
+		return $cache[$user];
+	}
+
+	$command = HESTIA_CMD . "v-list-user " . quoteshellarg($user) . " 'json'";
 	exec($command, $output, $return_var);
 	if ($return_var > 0) {
 		destroy_sessions();
@@ -251,24 +328,15 @@ function top_panel($user, $TAB) {
 		header("Location: /login/");
 		exit();
 	}
-	$panel = json_decode(implode("", $output), true);
+	$data = json_decode(implode("", $output), true);
 	unset($output);
 
-	// Log out active sessions for suspended users
-	if ($panel[$user]["SUSPENDED"] === "yes" && $_SESSION["POLICY_USER_VIEW_SUSPENDED"] !== "yes") {
-		if (empty($_SESSION["look"])) {
-			destroy_sessions();
-			$_SESSION["error_msg"] = _("You are logged out, please log in again.");
-			header("Location: /login/");
-		}
-	}
+	$cache[$user] = $data;
+	return $data;
+}
 
-	// Reset user permissions if changed while logged in
-	if ($panel[$user]["ROLE"] !== $_SESSION["userContext"] && !isset($_SESSION["look"])) {
-		unset($_SESSION["userContext"]);
-		$_SESSION["userContext"] = $panel[$user]["ROLE"];
-	}
-
+function top_panel($user, $TAB) {
+	$panel = get_user_data($user);
 	// Load user's selected theme and do not change it when impersonting user
 	if (isset($panel[$user]["THEME"]) && !isset($_SESSION["look"])) {
 		$_SESSION["userTheme"] = $panel[$user]["THEME"];
@@ -320,14 +388,12 @@ function convert_datetime($date, $format = "Y-m-d H:i:s") {
 }
 
 function humanize_time($usage) {
-	if ($usage > 60) {
-		$usage = $usage / 60;
-		if ($usage > 24) {
-			$usage = $usage / 24;
-			$usage = number_format($usage);
+	if ($usage >= 60) {
+		$usage = round($usage / 60);
+		if ($usage >= 24) {
+			$usage = round($usage / 24);
 			return sprintf(ngettext("%d day", "%d days", $usage), $usage);
 		} else {
-			$usage = round($usage);
 			return sprintf(ngettext("%d hour", "%d hours", $usage), $usage);
 		}
 	} else {
@@ -535,31 +601,22 @@ function load_hestia_config() {
  * @return array
  */
 function backendtpl_with_webdomains() {
-	exec(HESTIA_CMD . "v-list-users json", $output, $return_var);
-	$users = json_decode(implode("", $output), true);
+	exec(HESTIA_CMD . "v-list-web-domain-backendtpl-all json", $output, $return_var);
+	$entries = json_decode(implode("", $output), true);
 	unset($output);
 
 	$backend_list = [];
-	foreach ($users as $user => $user_details) {
-		exec(
-			HESTIA_CMD . "v-list-web-domains " . quoteshellarg($user) . " json",
-			$output,
-			$return_var,
-		);
-		$domains = json_decode(implode("", $output), true);
-		unset($output);
-		foreach ($domains as $domain => $domain_details) {
-			if (!empty($domain_details["BACKEND"])) {
-				$backend = $domain_details["BACKEND"];
-				$backend_list[$backend][$user][] = $domain;
+	foreach ($entries as $entry) {
+		$backend = $entry["backend"];
+		$user = $entry["user"];
+		$domain = $entry["domain"];
+		$backend_list[$backend][$user][] = $domain;
 
-				// Also count custom backend template names like YOURNAME-PHP-8_4 under PHP-8_4
-				if (preg_match('/(PHP-\d+_\d+)$/', $backend, $m)) {
-					// Avoid duplicates when backend already is the base template
-					if ($backend !== $m[1]) {
-						$backend_list[$m[1]][$user][] = $domain;
-					}
-				}
+		// Also count custom backend template names like YOURNAME-PHP-8_4 under PHP-8_4
+		if (preg_match('/(PHP-\d+_\d+)$/', $backend, $m)) {
+			// Avoid duplicates when backend already is the base template
+			if ($backend !== $m[1]) {
+				$backend_list[$m[1]][$user][] = $domain;
 			}
 		}
 	}

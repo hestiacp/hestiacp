@@ -1,5 +1,5 @@
 #!/bin/bash
-# info: delete ip adresss from allowed ip list api
+# info: delete ip address from allowed ip list api
 # options: IP
 #
 # example: v-delete-sys-api-ip 1.1.1.1

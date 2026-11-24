@@ -5,14 +5,14 @@
 				<a class="button button-secondary button-back js-button-back" href="/list/backup/">
 					<i class="fas fa-arrow-left icon-blue"></i><?= tohtml( _("Back")) ?>
 				</a>
-				<?php if ($read_only !== "true") { ?>
+				<?php if ($read_only !== true) { ?>
 					<a href="/schedule/restore/?<?= tohtml(http_build_query(array("token" => $_SESSION["token"], "backup" => $_GET["backup"]))) ?>" class="button button-secondary">
 						<i class="fas fa-arrow-rotate-left icon-green"></i><?= tohtml( _("Restore All")) ?>
 					</a>
 				<?php } ?>
 			</div>
 			<div class="toolbar-right">
-				<?php if ($read_only !== "true") { ?>
+				<?php if ($read_only !== true) { ?>
 					<form x-data x-bind="BulkEdit" action="/bulk/restore/" method="post">
 						<input type="hidden" name="token" value="<?= tohtml($_SESSION["token"]) ?>">
 						<input type="hidden" name="backup" value="<?= tohtml($_GET["backup"]) ?>">
@@ -73,7 +73,7 @@
 					</div>
 				<div class="units-table-cell units-table-heading-cell">
 					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Type")) ?>:</span>
-					<?= tohtml( _("Web Domain")) ?>
+					<i class="fas fa-earth-americas u-mr5"></i><?= tohtml( _("Web Domain")) ?>
 				</div>
 				<div class="units-table-cell u-text-bold">
 					<span class="u-hide-desktop"><?= tohtml( _("Details")) ?>:</span>
@@ -116,7 +116,7 @@
 					</div>
 				<div class="units-table-cell units-table-heading-cell">
 					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Type")) ?>:</span>
-					<?= tohtml( _("Mail Domain")) ?>
+					<i class="fas fa-envelopes-bulk u-mr5"></i><?= tohtml( _("Mail Domain")) ?>
 				</div>
 				<div class="units-table-cell u-text-bold">
 					<span class="u-hide-desktop"><?= tohtml( _("Details")) ?>:</span>
@@ -159,7 +159,7 @@
 					</div>
 				<div class="units-table-cell units-table-heading-cell">
 					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Type")) ?>:</span>
-					<?= tohtml( _("DNS Zone")) ?>
+					<i class="fas fa-book-atlas u-mr5"></i><?= tohtml( _("DNS Zone")) ?>
 				</div>
 				<div class="units-table-cell u-text-bold">
 					<span class="u-hide-desktop"><?= tohtml( _("Details")) ?>:</span>
@@ -202,7 +202,7 @@
 					</div>
 				<div class="units-table-cell units-table-heading-cell">
 					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Type")) ?>:</span>
-					<?= tohtml( _("Database")) ?>
+					<i class="fas fa-database u-mr5"></i><?= tohtml( _("Database")) ?>
 				</div>
 				<div class="units-table-cell u-text-bold">
 					<span class="u-hide-desktop"><?= tohtml( _("Details")) ?>:</span>
@@ -243,7 +243,7 @@
 					</div>
 				<div class="units-table-cell units-table-heading-cell">
 					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Type")) ?>:</span>
-					<?= tohtml( _("Cron Jobs")) ?>
+					<i class="fas fa-clock u-mr5"></i><?= tohtml( _("Cron Jobs")) ?>
 				</div>
 				<div class="units-table-cell u-text-bold">
 					<span class="u-hide-desktop"><?= tohtml( _("Details")) ?>:</span>
@@ -286,7 +286,7 @@
 					</div>
 				<div class="units-table-cell units-table-heading-cell">
 					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Type")) ?>:</span>
-					<?= tohtml( _("User Directory")) ?>
+					<i class="fas fa-folder-open u-mr5"></i><?= tohtml( _("User Directory")) ?>
 				</div>
 				<div class="units-table-cell u-text-bold">
 					<span class="u-hide-desktop"><?= tohtml( _("Details")) ?>:</span>

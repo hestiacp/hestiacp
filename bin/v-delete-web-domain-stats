@@ -52,7 +52,14 @@ check_hestia_demo_mode
 get_domain_values 'web'
 
 # Deleting dir content
-rm -rf "$HOMEDIR/$user/web/$domain/stats"
+# Relative to the verified root-owned web directory, a swapped "web" symlink
+# can't redirect the removal (rm doesn't follow "stats" if it is a symlink)
+(
+	enter_user_dir "$user" "web" root
+	if [ ! -L "./$domain" ] && [ -d "./$domain" ]; then
+		rm -rf -- "./$domain/stats"
+	fi
+)
 
 # Deleting config
 rm -f "/etc/awstats/$STATS.$domain_idn.conf"

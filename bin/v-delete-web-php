@@ -41,6 +41,16 @@ if [[ ! $version =~ ^[0-9]\.[0-9]+ ]]; then
 	exit
 fi
 
+# Don't remove a version that is still used by web domains (same check as the web UI)
+used_by=$(grep -l "BACKEND='PHP-${version/\./_}'" $HESTIA/data/users/*/web.conf 2> /dev/null \
+	| awk -F '/' '{print $(NF-1)}' | sort -u | paste -sd ' ')
+if [ -n "$used_by" ]; then
+	check_result "$E_INUSE" "PHP $version is used by web domains of: $used_by"
+fi
+if [ -n "$WEB_BACKEND" ] && [ "$version" = "$(multiphp_default_version)" ]; then
+	check_result "$E_INUSE" "PHP $version is the default PHP version"
+fi
+
 # Remove backend template
 [ -f $HESTIA/data/templates/web/php-fpm/PHP-${version/\./_}.tpl ] && rm -f $HESTIA/data/templates/web/php-fpm/PHP-${version/\./_}.tpl
 

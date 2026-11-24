@@ -78,6 +78,10 @@ if [ -n "$CUSTOM_DOCROOT" ]; then
 		docroot="$CUSTOM_PHPROOT"
 	fi
 	sed -i "s|/home\/$user\/web\/$domain\/public_html|$docroot|g" $pool/$backend_type.conf
+	if [[ "$CUSTOM_DOCROOT" =~ ^"$HOMEDIR/$user/web/"([^/]+)(/|$) ]] && [ "${BASH_REMATCH[1]}" != "$domain" ]; then
+		custom_domain="${BASH_REMATCH[1]}"
+		sed -i "s|/home\/$user\/web\/$domain\/private|/home/$user/web/$custom_domain/private:/home/$user/web/$domain/private|g" $pool/$backend_type.conf
+	fi
 else
 	docroot="$HOMEDIR/$user/web/$domain/public_html/"
 fi

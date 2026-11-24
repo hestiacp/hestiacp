@@ -11,6 +11,11 @@ if ($_SESSION["userContext"] === "admin" && !empty($_GET["user"])) {
 // Check token
 verify_csrf($_GET);
 
+if ($read_only === true) {
+	header("Location: /list/db/");
+	exit();
+}
+
 if (!empty($_GET["database"])) {
 	$v_database = quoteshellarg($_GET["database"]);
 	exec(HESTIA_CMD . "v-delete-database " . $user . " " . $v_database, $output, $return_var);

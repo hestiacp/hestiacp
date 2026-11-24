@@ -14,9 +14,11 @@ export default async function initWebTerminal() {
 	}
 	terminal.loadAddon(new Addon());
 	terminal.open(container);
+	terminal.focus();
 
 	const socket = new WebSocket(`wss://${window.location.host}/_shell/`);
 	socket.addEventListener('open', (_) => {
+		terminal.focus();
 		terminal.onData((data) => socket.send(data));
 		socket.addEventListener('message', (evt) => terminal.write(evt.data));
 	});
@@ -32,7 +34,7 @@ export default async function initWebTerminal() {
 	});
 }
 
-/** @returns {Promise<typeof import("xterm").Terminal>} */
+/** @returns {Promise<typeof import("@xterm/xterm").Terminal>} */
 async function loadXterm() {
 	// NOTE: String expression used to prevent ESBuild from resolving
 	// the import on build (xterm is a separate bundle)
@@ -41,7 +43,7 @@ async function loadXterm() {
 	return xtermModule.default.Terminal;
 }
 
-/** @returns {Promise<typeof import("xterm-addon-webgl").WebglAddon>} */
+/** @returns {Promise<typeof import("@xterm/addon-webgl").WebglAddon>} */
 async function loadWebGLAddon() {
 	// NOTE: String expression used to prevent ESBuild from resolving
 	// the import on build (xterm-addon-webgl is a separate bundle)
@@ -50,7 +52,7 @@ async function loadWebGLAddon() {
 	return xtermModule.default.WebglAddon;
 }
 
-/** @returns {Promise<typeof import("xterm-addon-canvas").CanvasAddon>} */
+/** @returns {Promise<typeof import("@xterm/addon-canvas").CanvasAddon>} */
 async function loadCanvasAddon() {
 	// NOTE: String expression used to prevent ESBuild from resolving
 	// the import on build (xterm-addon-canvas is a separate bundle)

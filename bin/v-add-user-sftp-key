@@ -44,43 +44,57 @@ SSH_DIR="$HOMEDIR/$user/.ssh"
 [ -z "$(readlink -f "$PUBKEY_FILE" | egrep "^$HOMEDIR/$user/.ssh/")" ] && check_result "$E_FORBIDEN" "Invalid public key file path"
 [ -z "$(readlink -f "$AUTHKEY_FILE" | egrep "^$HOMEDIR/$user/.ssh/")" ] && check_result "$E_FORBIDEN" "Invalid authorized keys path"
 
-if [ ! -f "${PRVKEY_FILE}" ]; then
-	ssh-keygen -q -b 1024 -t rsa -f "${PRVKEY_FILE}" -N ""
-	rm "${PUBKEY_FILE}"
+if ! command -v setfacl > /dev/null 2>&1; then
+	echo "Error: 'setfacl' is not available."
+	exit 1
+fi
+
+# ~/.ssh is owned by the user, who can replace any entry in it with a symlink
+# at any time. All file operations below therefore run with the user's
+# privileges, never as root.
+if [ ! -d "${SSH_DIR}" ]; then
+	user_exec mkdir -m 700 -- "${SSH_DIR}"
+fi
+
+# Older versions created the key owned by hestiaweb, the user can't read it,
+# so create a new key owned by the user instead.
+if [ ! -f "${PRVKEY_FILE}" ] || [ -L "${PRVKEY_FILE}" ] \
+	|| [ "$(stat -c '%U' -- "${PRVKEY_FILE}")" != "$user" ]; then
+	user_exec rm -f -- "${PRVKEY_FILE}" "${PUBKEY_FILE}"
+	user_exec ssh-keygen -q -b 1024 -t rsa -f "${PRVKEY_FILE}" -N ""
+	check_result $? "Unable to create file manager key"
+	user_exec rm -f -- "${PUBKEY_FILE}"
 	new_privkey=true
 fi
 
 if [ ! -f "${AUTHKEY_FILE}" ] || [ "$new_privkey" = true ]; then
-	pubkey_str="$(ssh-keygen -y -f ${PRVKEY_FILE})"
+	pubkey_str="$(user_exec ssh-keygen -y -f "${PRVKEY_FILE}")"
 	pubkey_desc="filemanager.ssh.key"
 
-	if grep --quiet --no-messages -F "$pubkey_desc" "${AUTHKEY_FILE}"; then
-		sed -i "/filemanager\.ssh\.key\$/d" "${AUTHKEY_FILE}"
+	if user_exec grep --quiet --no-messages -F "$pubkey_desc" "${AUTHKEY_FILE}"; then
+		user_exec sed -i "/filemanager\.ssh\.key\$/d" "${AUTHKEY_FILE}"
 	fi
 
 	# make sure authorized_keys is ending with EOL
-	[ -f "${AUTHKEY_FILE}" ] && sed -i '$a\' "${AUTHKEY_FILE}"
+	[ -f "${AUTHKEY_FILE}" ] && user_exec sed -i '$a\' "${AUTHKEY_FILE}"
 
 	expire=0
 	if [[ "$ttl" -gt 0 ]]; then
 		expire=$(date +%s -d "+${ttl} min")
-		echo "rm ${PRVKEY_FILE}" | at "now +${ttl} minute" > /dev/null 2>&1
+		printf 'runuser -u %q -- rm -f -- %q\n' "$user" "${PRVKEY_FILE}" | at "now +${ttl} minute" > /dev/null 2>&1
 	fi
-	echo "from=\"127.0.0.1\",command=\"internal-sftp\",restrict ${pubkey_str} TS:${expire} ${pubkey_desc}" >> "${AUTHKEY_FILE}"
+	echo "from=\"127.0.0.1\",command=\"internal-sftp\",restrict ${pubkey_str} TS:${expire} ${pubkey_desc}" \
+		| user_exec tee -a -- "${AUTHKEY_FILE}" > /dev/null
+	check_result $? "Unable to write ${AUTHKEY_FILE}"
 fi
 
-#
-chown ${user}: "${AUTHKEY_FILE}"
-chown "hestiaweb": "${PRVKEY_FILE}"
-
-# Ensure file manager service account can traverse user's .ssh folder
-# to read the dedicated private key.
-if command -v setfacl > /dev/null 2>&1; then
-	setfacl -m u:hestiaweb:--x "${SSH_DIR}" > /dev/null 2>&1
-else
-	echo "Error: 'setfacl' is not available."
-	exit 1
-fi
+# Allow the file manager service account to traverse the user's .ssh folder
+# and to read the dedicated private key. The user owns both, so set the ACLs
+# with the user's privileges.
+user_exec setfacl -m u:hestiaweb:--x -- "${SSH_DIR}" > /dev/null 2>&1
+check_result $? "Unable to grant the file manager access to ${SSH_DIR}"
+user_exec setfacl -m u:hestiaweb:r-- -- "${PRVKEY_FILE}" > /dev/null 2>&1
+check_result $? "Unable to grant the file manager access to ${PRVKEY_FILE}"
 
 #----------------------------------------------------------#
 #                       Hestia                             #

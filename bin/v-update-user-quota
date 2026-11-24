@@ -4,7 +4,7 @@
 #
 # example: v-update-user-quota alice
 #
-# The functions upates disk quota for specific user
+# The functions updates disk quota for specific user
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

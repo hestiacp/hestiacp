@@ -8,8 +8,8 @@
 #
 # Currently Supported Operating Systems:
 #
-# Debian 11, 12, 13
-# Ubuntu 22.04, 24.04 LTS
+# Debian 12, 13
+# Ubuntu 22.04, 24.04 26.04 LTS
 #
 # ======================================================== #
 
@@ -67,8 +67,8 @@ no_support_message() {
 	echo "Your operating system (OS) is not supported by"
 	echo "Hestia Control Panel. Officially supported releases:"
 	echo "****************************************************"
-	echo "  Debian 11, 12, 13"
-	echo "  Ubuntu 22.04, 24.04 LTS"
+	echo "  Debian 12, 13"
+	echo "  Ubuntu 22.04, 24.04, 26.04 LTS"
 	echo ""
 	exit 1
 }
@@ -130,7 +130,7 @@ check_wget_curl() {
 
 # Check for supported operating system before proceeding with download
 # of OS-specific installer, and throw error message if unsupported OS detected.
-if [[ "$release" =~ ^(11|12|13|22.04|24.04)$ ]]; then
+if [[ "$release" =~ ^(12|13|22.04|24.04|26.04)$ ]]; then
 	check_wget_curl "$@"
 else
 	no_support_message

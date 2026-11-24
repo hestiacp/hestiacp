@@ -90,21 +90,27 @@ apt-get -y -qq -o Dpkg::Options::="--force-confold" install $mph > /dev/null 2>&
 BACK_PID=$!
 
 # Check if package installation is done, print a spinner
-echo "Installing PHP-$version, please wait..."
-spinner="/-\|"
-spin_i=1
-while kill -0 $BACK_PID > /dev/null 2>&1; do
-	printf "\b${spinner:spin_i++%${#spinner}:1}"
-	sleep 0.5
-done
+if [ -t 1 ]; then
+	echo "Installing PHP-$version, please wait..."
+	spinner="/-\|"
+	spin_i=1
+	while kill -0 $BACK_PID > /dev/null 2>&1; do
+		printf "\b${spinner:spin_i++%${#spinner}:1}"
+		sleep 0.5
+	done
 
-# Do a blank echo to get the \n back
-echo
+	# Do a blank echo to get the \n back
+	echo
+else
+	wait $BACK_PID
+fi
 
 # Check if installation was successful
 if [ ! -f "$php_fpm" ]; then
 	echo "ERROR: Installation failed, please run the following command manually for debugging:"
-	echo "apt-get install $mph"
+	echo "apt-get install $(echo $mph)"
+	log_event "$E_UPDATE" "$ARGUMENTS"
+	exit "$E_UPDATE"
 fi
 
 # Check if required modules for apache2 are enabled

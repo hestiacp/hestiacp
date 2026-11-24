@@ -91,6 +91,79 @@ mysql_connect() {
 	rm -f $mysql_out
 }
 
+# Escape a value for safe use inside a PostgreSQL single-quoted SQL string
+# literal. PostgreSQL uses standard-conforming strings by default, so a
+# backslash is NOT an escape character and must not be doubled here.
+sql_escape() {
+	printf '%s' "$1" | sed "s/'/''/g"
+}
+
+# Escape a value for safe use inside a MariaDB/MySQL single-quoted SQL string
+# literal. MariaDB/MySQL treat backslash as an escape character by default
+# (unless NO_BACKSLASH_QUOTES is set), so both backslashes and single quotes
+# must be escaped. Backslashes are doubled first so the backslashes introduced
+# when escaping single quotes are not doubled again.
+mysql_sql_escape() {
+	printf '%s' "$1" | sed -e 's/\\/\\\\/g' -e "s/'/''/g"
+}
+
+# Escape a database name for the database part of a MySQL GRANT/REVOKE.
+# In database-level privileges "_" and "%" are wildcards, so an unescaped
+# grant on "johnv_shop" also matches "johnvxshop", and "mys_l" matches
+# the "mysql" system schema.
+mysql_grant_db_name() {
+	printf '%s' "$1" | sed -e 's/\\/\\\\/g' -e 's/_/\\_/g' -e 's/%/\\%/g'
+}
+
+# Revoke grants created by older Hestia versions with an unescaped (wildcard)
+# database name. Usage: mysql_revoke_legacy_db_grants <database> <dbuser>
+mysql_revoke_legacy_db_grants() {
+	mysql_query "REVOKE ALL ON \`$1\`.* FROM \`$2\`@\`%\`" > /dev/null
+	mysql_query "REVOKE ALL ON \`$1\`.* FROM \`$2\`@localhost" > /dev/null
+}
+
+# Revoke all database-level grants of a user on a database, both the escaped
+# form and the legacy unescaped form.
+# Usage: mysql_revoke_db_grants <database> <dbuser>
+mysql_revoke_db_grants() {
+	local db_grant
+	db_grant=$(mysql_grant_db_name "$1")
+	mysql_query "REVOKE ALL ON \`$db_grant\`.* FROM \`$2\`@\`%\`" > /dev/null
+	mysql_query "REVOKE ALL ON \`$db_grant\`.* FROM \`$2\`@localhost" > /dev/null
+	mysql_revoke_legacy_db_grants "$1" "$2"
+}
+
+# Replace grants made by older Hestia versions (unescaped database name) with
+# exact grants, for every MySQL database in the users' db.conf files.
+# Suspended databases only lose the legacy grant.
+mysql_migrate_legacy_db_grants() {
+	local db_conf db_line
+	for db_conf in "$HESTIA"/data/users/*/db.conf; do
+		[ -f "$db_conf" ] || continue
+		while IFS= read -r db_line; do
+			[[ "$db_line" == *"TYPE='mysql'"* ]] || continue
+			# Subshell: parse_object_kv_list and mysql_connect overwrite
+			# globals (USER, HOST, ...) and mysql_connect may exit
+			(
+				parse_object_kv_list "$db_line"
+				db_name="$DB"
+				db_user="$DBUSER"
+				db_suspended="$SUSPENDED"
+				if [ -z "$db_name" ] || [ -z "$db_user" ] || [ -z "$HOST" ]; then
+					exit 0
+				fi
+				mysql_connect "$HOST"
+				mysql_revoke_legacy_db_grants "$db_name" "$db_user"
+				if [ "$db_suspended" != 'yes' ]; then
+					db_grant=$(mysql_grant_db_name "$db_name")
+					mysql_query "GRANT ALL ON \`$db_grant\`.* TO \`$db_user\`@\`%\`" > /dev/null
+					mysql_query "GRANT ALL ON \`$db_grant\`.* TO \`$db_user\`@localhost" > /dev/null
+				fi
+			)
+		done < "$db_conf"
+	done
+}
+
 mysql_query() {
 	sql_tmp=$(mktemp)
 	echo "$1" > $sql_tmp
@@ -105,15 +178,34 @@ mysql_query() {
 	return $return_code
 }
 
+# Run a query and return raw rows without column headers.
+# Intended for reading result sets from the shell, e.g.
+# SELECT Host FROM mysql.user WHERE User = ...
+mysql_query_raw() {
+	sql_tmp=$(mktemp)
+	echo "$1" > $sql_tmp
+	if [ -f '/usr/bin/mariadb' ]; then
+		mariadb --defaults-file=$mycnf --batch --skip-column-names --raw \
+			< "$sql_tmp" 2> /dev/null
+		return_code=$?
+	else
+		mysql --defaults-file=$mycnf --batch --skip-column-names --raw \
+			< "$sql_tmp" 2> /dev/null
+		return_code=$?
+	fi
+	rm -f "$sql_tmp"
+	return $return_code
+}
+
 mysql_dump() {
 	err="/tmp/e.mysql"
 	mysqldmp="mysqldump"
 	if [ -f '/usr/bin/mariadb-dump' ]; then
 		mysqldmp="/usr/bin/mariadb-dump"
 	fi
-	$mysqldmp --defaults-file=$mycnf --single-transaction --routines -r $1 $2 2> $err
+	$mysqldmp --defaults-file=$mycnf --single-transaction --routines --events -r $1 $2 2> $err
 	if [ '0' -ne "$?" ]; then
-		$mysqldmp --defaults-extra-file=$mycnf --single-transaction --routines -r $1 $2 2> $err
+		$mysqldmp --defaults-extra-file=$mycnf --single-transaction --routines --events -r $1 $2 2> $err
 		if [ '0' -ne "$?" ]; then
 			rm -rf $tmpdir
 			if [ "$notify" != 'no' ]; then
@@ -272,31 +364,33 @@ add_mysql_database() {
 	mysql_ver_sub=$(echo $mysql_ver | cut -d '.' -f1)
 	mysql_ver_sub_sub=$(echo $mysql_ver | cut -d '.' -f2)
 
+	dbpass_esc=$(mysql_sql_escape "$dbpass")
+
 	query="CREATE DATABASE \`$database\` CHARACTER SET $charset"
 	mysql_query "$query"
 	check_result $? "Unable to create database $database"
 
 	if [ "$mysql_fork" = "mysql" ] && [ "$mysql_ver_sub" -ge 8 ]; then
 		query="CREATE USER \`$dbuser\`@\`%\`
-            IDENTIFIED BY '$dbpass'"
+            IDENTIFIED BY '$dbpass_esc'"
 		mysql_query "$query" > /dev/null
 
 		query="CREATE USER \`$dbuser\`@localhost
-            IDENTIFIED BY '$dbpass'"
+            IDENTIFIED BY '$dbpass_esc'"
 		mysql_query "$query" > /dev/null
 
-		query="GRANT ALL ON \`$database\`.* TO \`$dbuser\`@\`%\`"
+		query="GRANT ALL ON \`$(mysql_grant_db_name "$database")\`.* TO \`$dbuser\`@\`%\`"
 		mysql_query "$query" > /dev/null
 
-		query="GRANT ALL ON \`$database\`.* TO \`$dbuser\`@localhost"
+		query="GRANT ALL ON \`$(mysql_grant_db_name "$database")\`.* TO \`$dbuser\`@localhost"
 		mysql_query "$query" > /dev/null
 	else
-		query="GRANT ALL ON \`$database\`.* TO \`$dbuser\`@\`%\`
-            IDENTIFIED BY '$dbpass'"
+		query="GRANT ALL ON \`$(mysql_grant_db_name "$database")\`.* TO \`$dbuser\`@\`%\`
+            IDENTIFIED BY '$dbpass_esc'"
 		mysql_query "$query" > /dev/null
 
-		query="GRANT ALL ON \`$database\`.* TO \`$dbuser\`@localhost
-            IDENTIFIED BY '$dbpass'"
+		query="GRANT ALL ON \`$(mysql_grant_db_name "$database")\`.* TO \`$dbuser\`@localhost
+            IDENTIFIED BY '$dbpass_esc'"
 		mysql_query "$query" > /dev/null
 	fi
 
@@ -337,7 +431,8 @@ add_mysql_database() {
 add_pgsql_database() {
 	psql_connect $host
 
-	query="CREATE ROLE $dbuser WITH LOGIN PASSWORD '$dbpass'"
+	dbpass_esc=$(sql_escape "$dbpass")
+	query="CREATE ROLE $dbuser WITH LOGIN PASSWORD '$dbpass_esc'"
 	psql_query "$query" > /dev/null
 
 	query="CREATE DATABASE $database OWNER $dbuser"
@@ -364,25 +459,29 @@ add_mysql_database_temp_user() {
 	mysql_ver_sub=$(echo $mysql_ver | cut -d '.' -f1)
 	mysql_ver_sub_sub=$(echo $mysql_ver | cut -d '.' -f2)
 
+	dbpass_esc=$(mysql_sql_escape "$dbpass")
+
 	if [ "$mysql_fork" = "mysql" ] && [ "$mysql_ver_sub" -ge 8 ]; then
-		query="CREATE USER \`$dbuser\`@localhost
-			IDENTIFIED BY '$dbpass'"
+		query="CREATE USER \`$dbuser\`@\`%\`
+			IDENTIFIED BY '$dbpass_esc'"
 		mysql_query "$query" > /dev/null
 
-		query="GRANT ALL ON \`$database\`.* TO \`$dbuser\`@localhost"
+		query="GRANT ALL ON \`$(mysql_grant_db_name "$database")\`.* TO \`$dbuser\`@\`%\`"
 		mysql_query "$query" > /dev/null
 	else
-		query="GRANT ALL ON \`$database\`.* TO \`$dbuser\`@localhost
-    		IDENTIFIED BY '$dbpass'"
+		query="GRANT ALL ON \`$(mysql_grant_db_name "$database")\`.* TO \`$dbuser\`@\`%\`
+    		IDENTIFIED BY '$dbpass_esc'"
 		mysql_query "$query" > /dev/null
 	fi
 }
 
 delete_mysql_database_temp_user() {
 	mysql_connect $host
-	query="REVOKE ALL ON \`$database\`.* FROM \`$dbuser\`@localhost"
+	query="REVOKE ALL ON \`$(mysql_grant_db_name "$database")\`.* FROM \`$dbuser\`@\`%\`"
 	mysql_query "$query" > /dev/null
-	query="DROP USER '$dbuser'@'localhost'"
+	query="REVOKE ALL ON \`$database\`.* FROM \`$dbuser\`@\`%\`"
+	mysql_query "$query" > /dev/null
+	query="DROP USER '$dbuser'@'%'"
 	mysql_query "$query" > /dev/null
 }
 
@@ -406,36 +505,39 @@ get_database_values() {
 # Change MySQL database password
 change_mysql_password() {
 	mysql_connect $HOST
+	mysql_revoke_legacy_db_grants "$database" "$DBUSER"
 
 	mysql_ver_sub=$(echo $mysql_ver | cut -d '.' -f1)
 	mysql_ver_sub_sub=$(echo $mysql_ver | cut -d '.' -f2)
+
+	dbpass_esc=$(mysql_sql_escape "$dbpass")
 
 	if [ "$mysql_fork" = "mysql" ]; then
 		# mysql
 		if [ "$mysql_ver_sub" -ge 8 ]; then
 			# mysql >= 8
-			query="SET PASSWORD FOR \`$DBUSER\`@\`%\` = '$dbpass'"
+			query="SET PASSWORD FOR \`$DBUSER\`@\`%\` = '$dbpass_esc'"
 			mysql_query "$query" > /dev/null
-			query="SET PASSWORD FOR \`$DBUSER\`@localhost = '$dbpass'"
+			query="SET PASSWORD FOR \`$DBUSER\`@localhost = '$dbpass_esc'"
 			mysql_query "$query" > /dev/null
 		else
 			# mysql < 8
-			query="GRANT ALL ON \`$database\`.* TO \`$DBUSER\`@\`%\`
-                  IDENTIFIED BY '$dbpass'"
+			query="GRANT ALL ON \`$(mysql_grant_db_name "$database")\`.* TO \`$DBUSER\`@\`%\`
+                  IDENTIFIED BY '$dbpass_esc'"
 			mysql_query "$query" > /dev/null
 
-			query="GRANT ALL ON \`$database\`.* TO \`$DBUSER\`@localhost
-                  IDENTIFIED BY '$dbpass'"
+			query="GRANT ALL ON \`$(mysql_grant_db_name "$database")\`.* TO \`$DBUSER\`@localhost
+                  IDENTIFIED BY '$dbpass_esc'"
 			mysql_query "$query" > /dev/null
 		fi
 	else
 		# mariadb
-		query="GRANT ALL ON \`$database\`.* TO \`$DBUSER\`@\`%\`
-              IDENTIFIED BY '$dbpass'"
+		query="GRANT ALL ON \`$(mysql_grant_db_name "$database")\`.* TO \`$DBUSER\`@\`%\`
+              IDENTIFIED BY '$dbpass_esc'"
 		mysql_query "$query" > /dev/null
 
-		query="GRANT ALL ON \`$database\`.* TO \`$DBUSER\`@localhost
-              IDENTIFIED BY '$dbpass'"
+		query="GRANT ALL ON \`$(mysql_grant_db_name "$database")\`.* TO \`$DBUSER\`@localhost
+              IDENTIFIED BY '$dbpass_esc'"
 		mysql_query "$query" > /dev/null
 	fi
 
@@ -475,7 +577,8 @@ change_mysql_password() {
 # Change PostgreSQL database password
 change_pgsql_password() {
 	psql_connect $HOST
-	query="ALTER ROLE $DBUSER WITH LOGIN PASSWORD '$dbpass'"
+	dbpass_esc=$(sql_escape "$dbpass")
+	query="ALTER ROLE $DBUSER WITH LOGIN PASSWORD '$dbpass_esc'"
 	psql_query "$query" > /dev/null
 
 	query="SELECT rolpassword FROM pg_authid WHERE rolname='$DBUSER'"
@@ -489,11 +592,7 @@ delete_mysql_database() {
 	query="DROP DATABASE \`$database\`"
 	mysql_query "$query"
 
-	query="REVOKE ALL ON \`$database\`.* FROM \`$DBUSER\`@\`%\`"
-	mysql_query "$query" > /dev/null
-
-	query="REVOKE ALL ON \`$database\`.* FROM \`$DBUSER\`@localhost"
-	mysql_query "$query" > /dev/null
+	mysql_revoke_db_grants "$database" "$DBUSER"
 
 	if [ "$(grep "DBUSER='$DBUSER'" $USER_DATA/db.conf | wc -l)" -lt 2 ]; then
 		query="DROP USER '$DBUSER'@'%'"
@@ -532,7 +631,7 @@ dump_mysql_database() {
 	mysql_query "$query" | grep -v "Grants for" > $grants
 
 	query="SHOW GRANTS FOR '$DBUSER'@'%'"
-	mysql_query "$query" | grep -v "Grants for" > $grants
+	mysql_query "$query" | grep -v "Grants for" >> $grants
 }
 
 # Dump PostgreSQL database
@@ -562,10 +661,7 @@ is_dbhost_free() {
 # Suspend MySQL database
 suspend_mysql_database() {
 	mysql_connect $HOST
-	query="REVOKE ALL ON \`$database\`.* FROM \`$DBUSER\`@\`%\`"
-	mysql_query "$query" > /dev/null
-	query="REVOKE ALL ON \`$database\`.* FROM \`$DBUSER\`@localhost"
-	mysql_query "$query" > /dev/null
+	mysql_revoke_db_grants "$database" "$DBUSER"
 }
 
 # Suspend PostgreSQL database
@@ -578,9 +674,10 @@ suspend_pgsql_database() {
 # Unsuspend MySQL database
 unsuspend_mysql_database() {
 	mysql_connect $HOST
-	query="GRANT ALL ON \`$database\`.* TO \`$DBUSER\`@\`%\`"
+	mysql_revoke_legacy_db_grants "$database" "$DBUSER"
+	query="GRANT ALL ON \`$(mysql_grant_db_name "$database")\`.* TO \`$DBUSER\`@\`%\`"
 	mysql_query "$query" > /dev/null
-	query="GRANT ALL ON \`$database\`.* TO \`$DBUSER\`@localhost"
+	query="GRANT ALL ON \`$(mysql_grant_db_name "$database")\`.* TO \`$DBUSER\`@localhost"
 	mysql_query "$query" > /dev/null
 }
 
@@ -625,11 +722,7 @@ get_pgsql_disk_usage() {
 delete_mysql_user() {
 	mysql_connect $HOST
 
-	query="REVOKE ALL ON \`$database\`.* FROM \`$old_dbuser\`@\`%\`"
-	mysql_query "$query" > /dev/null
-
-	query="REVOKE ALL ON \`$database\`.* FROM \`$old_dbuser\`@localhost"
-	mysql_query "$query" > /dev/null
+	mysql_revoke_db_grants "$database" "$old_dbuser"
 
 	query="DROP USER '$old_dbuser'@'%'"
 	mysql_query "$query" > /dev/null

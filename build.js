@@ -10,9 +10,8 @@ const externalPackages = [
 	'chart.js/auto',
 	'alpinejs/dist/cdn.min.js',
 	'@alpinejs/collapse/dist/cdn.min.js',
-	'xterm',
-	'xterm-addon-webgl',
-	'xterm-addon-canvas',
+	'@xterm/xterm',
+	'@xterm/addon-webgl',
 ];
 
 // Build main bundle
@@ -45,6 +44,7 @@ async function buildExternalJS() {
 				bundle: true,
 				minify: true,
 				format: 'esm',
+				mainFields: ['main'],
 			});
 			console.log(`✅ Dependency build completed for ${pkg}`);
 		});
@@ -63,6 +63,10 @@ function getOutputPath(pkg) {
 		pkgName = 'alpinejs';
 	} else if (pkg.startsWith('@alpinejs/collapse')) {
 		pkgName = 'alpinejs-collapse';
+	} else if (pkg === '@xterm/xterm') {
+		pkgName = 'xterm';
+	} else if (pkg.startsWith('@xterm/')) {
+		pkgName = pkg.replace('@xterm/', 'xterm-');
 	} else {
 		pkgName = pkg.replace(/\//g, '-');
 	}

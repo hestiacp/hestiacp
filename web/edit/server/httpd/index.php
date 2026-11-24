@@ -7,7 +7,7 @@ include $_SERVER["DOCUMENT_ROOT"] . "/inc/main.php";
 
 // Check user
 if ($_SESSION["userContext"] != "admin") {
-	header("Location: /list/user");
+	header("Location: /list/user/");
 	exit();
 }
 
@@ -36,7 +36,9 @@ if (!empty($_POST["save"])) {
 		);
 		check_return_code($return_var, $output);
 		unset($output);
-		unlink($new_conf);
+		if (file_exists($new_conf)) {
+			unlink($new_conf);
+		}
 	}
 
 	// Set success message

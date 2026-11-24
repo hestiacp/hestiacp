@@ -15,9 +15,9 @@
 type=$1
 host=$2
 user=$3
+password=$4
 raw_password=$4
 HIDE=4
-password=$(perl -e 'print quotemeta shift(@ARGV)' "${raw_password}")
 path=${5-/backup}
 port=$6
 
@@ -39,6 +39,10 @@ source_conf "$HESTIA/install/upgrade/upgrade.conf"
 # Paths
 b2cli="/usr/local/bin/b2"
 b2lnk="https://github.com/Backblaze/B2_Command_Line_Tool/releases/download/v$b2_v/b2-linux"
+# Backblaze publishes a separate build for arm64
+if [ "$arch" = 'aarch64' ] || [ "$arch" = 'arm64' ]; then
+	b2lnk="$b2lnk-aarch64"
+fi
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -155,13 +159,8 @@ fi
 if [ "$type" = 'b2' ]; then
 	# Download b2 binary
 	if [ ! -f "$b2cli" ]; then
-		if [ "$arch" = 'aarch64' ] || [ "$arch" = 'arm64' ]; then
-			echo "Error: B2 binary for arm64 must be downloaded manually."
-			exit 3
-		else
-			wget -O $b2cli $b2lnk > /dev/null 2>&1
-			chmod +x $b2cli > /dev/null 2>&1
-		fi
+		wget -O $b2cli $b2lnk > /dev/null 2>&1
+		chmod +x $b2cli > /dev/null 2>&1
 		if [ ! -f "$b2cli" ]; then
 			echo "Error: Binary download failed, b2 doesn't work as expected."
 			exit 3
@@ -175,9 +174,9 @@ if [ "$type" = 'b2' ]; then
 		exit 3
 	fi
 
-	b2 clear-account > /dev/null 2>&1
-	b2 authorize-account "$user" "$raw_password" > /dev/null 2>&1
-	b2 ls --long "$host" "$user" > /dev/null 2>&1
+	b2 account clear > /dev/null 2>&1
+	b2 account authorize "$user" "$password" > /dev/null 2>&1
+	b2 ls --long "b2://$host/$user" > /dev/null 2>&1
 
 	if [ $? -ne 0 ]; then
 		check_result "$E_CONNECT" "b2 failed to verify connection"
@@ -211,7 +210,7 @@ if [ $type == 'ftp' ] || [ $type = 'sftp' ]; then
 	chmod 660 $HESTIA/conf/$type.backup.conf
 elif [ $type == 'b2' ]; then
 	new_timestamp
-	str="BUCKET='$host'\nB2_KEYID='$user'\nB2_KEY='$raw_password'"
+	str="BUCKET='$host'\nB2_KEYID='$user'\nB2_KEY='$password'"
 	str="$str\nTIME='$time'\nDATE='$date'"
 	echo -e "$str" > $HESTIA/conf/$type.backup.conf
 	chmod 660 $HESTIA/conf/$type.backup.conf

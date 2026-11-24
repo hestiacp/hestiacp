@@ -1,5 +1,5 @@
 #!/bin/bash
-# info: adding cronjob for letsencrypt cetificate installation
+# info: adding cronjob for letsencrypt certificate installation
 # options: USER DOMAIN [ALIASES]
 #
 # example: v-schedule-letsencrypt-domain admin example.com www.example.com
@@ -55,7 +55,7 @@ fi
 $BIN/v-add-cron-letsencrypt-job
 
 # Adding LE task
-echo "$BIN/v-add-letsencrypt-domain $user $domain '$aliases' no yes" \
+echo "$BIN/v-add-letsencrypt-domain $user $domain '$aliases' no" \
 	>> $HESTIA/data/queue/letsencrypt.pipe
 
 #----------------------------------------------------------#

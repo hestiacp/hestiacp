@@ -98,7 +98,9 @@ class HestiaApp
 
         $this->runUser('v-copy-fs-file', [$tmpFile, $path]);
 
-        unlink($tmpFile);
+        if (file_exists($tmpFile)) {
+            unlink($tmpFile);
+        }
     }
 
     public function moveFile(string $fromPath, string $toPath): void
@@ -145,7 +147,9 @@ class HestiaApp
         try {
             $this->runUser('v-extract-fs-archive', [$filePath, $extractDirectoryPath, '', 1]);
 
-            unlink($filePath);
+            if (file_exists($filePath)) {
+                unlink($filePath);
+            }
         } catch (ProcessFailedException) {
             throw new RuntimeException(sprintf('Failed to extract "%s"', $filePath));
         }
@@ -180,7 +184,7 @@ class HestiaApp
         }
     }
 
-    public function sendPostRequest($url, array $formData, array $headers = []): void
+    public function sendPostRequest($url, array $formData, array $headers = [], string $resolve = ''): void
     {
         $ch = curl_init($url);
 
@@ -193,6 +197,15 @@ class HestiaApp
         if ($headers !== []) {
             curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         }
+        # When behind a NAT the server might not be able to resolve the domain name to the correct IP address.
+        if ($resolve) {
+            curl_setopt($ch, CURLOPT_RESOLVE, [$resolve]);
+        }
+
+        // The request goes to this same server, so the certificate
+        // may legitimately be self-signed or not issued yet.
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
 
         curl_exec($ch);
 
@@ -261,11 +274,16 @@ class HestiaApp
     {
         try {
             $result = $this->runUser('v-list-user', ['json']);
-
             $userInfo = $result->getOutputJson()[$this->user()];
 
-            return $userInfo['DATABASES'] === 'unlimited' ||
-                $userInfo['DATABASES'] - $userInfo['U_DATABASES'] < 1;
+            if ($userInfo['DATABASES'] === 'unlimited') {
+                return true;
+            }
+
+            $limit = (int) $userInfo['DATABASES'];
+            $used  = (int) $userInfo['U_DATABASES'];
+
+            return ($limit - $used) > 0;
         } catch (ProcessFailedException) {
             throw new RuntimeException('Unable to check database limit');
         }
@@ -290,7 +308,9 @@ class HestiaApp
         } catch (ProcessFailedException) {
             throw new RuntimeException(_('Unable to add database!'));
         } finally {
-            unlink($passwordFile);
+            if (file_exists($passwordFile)) {
+                unlink($passwordFile);
+            }
         }
     }
 
@@ -333,16 +353,48 @@ class HestiaApp
         }
     }
 
+    /**
+     * Hestia stores the public (NAT) IP in web.conf, but nginx/Apache listen on the
+     * internal one. Translate it back, as Hestia's get_real_ip() does.
+     */
+    public function getRealIp(string $ip): string
+    {
+        try {
+            $result = $this->run('v-list-sys-ips', ['json']);
+        } catch (ProcessFailedException) {
+            return $ip;
+        }
+
+        $sysIps = $result->getOutputJson();
+
+        // Already an internal/real system IP
+        if (isset($sysIps[$ip])) {
+            return $ip;
+        }
+
+        foreach ($sysIps as $internalIp => $data) {
+            if (($data['NAT'] ?? '') === $ip) {
+                return (string) $internalIp;
+            }
+        }
+
+        // No match: leave it untouched
+        return $ip;
+    }
+
     public function getWebDomain(string $domainName): WebDomain
     {
         try {
             $result = $this->runUser('v-list-web-domain', [$domainName, 'json']);
+            $domainInfo = $result->getOutputJson()[$domainName];
+
+            $ip = filter_var($domainInfo['IP'], FILTER_VALIDATE_IP);
 
             return new WebDomain(
                 $domainName,
                 Util::joinPaths($this->getUserHomeDir(), 'web', $domainName),
-                filter_var($result->getOutputJson()[$domainName]['IP'], FILTER_VALIDATE_IP),
-                $result->getOutputJson()[$domainName]['SSL'] === 'yes',
+                $ip !== false ? $this->getRealIp($ip) : $ip,
+                $domainInfo['SSL'] === 'yes',
             );
         } catch (ProcessFailedException) {
             throw new Exception('Cannot find domain for user');
@@ -377,10 +429,14 @@ class HestiaApp
         try {
             return $this->runUser('v-run-cli-cmd', $phpCommand);
         } catch (ProcessFailedException $exception) {
+            $process = $exception->getProcess();
+            $output = trim($process->getOutput());
+
             throw new RuntimeException(
                 sprintf(
-                    'Failed to run php command "%s"',
-                    $exception->getProcess()->getCommandLine(),
+                    'Failed to run php command "%s"%s',
+                    $process->getCommandLine(),
+                    $output !== '' ? ': ' . $output : '',
                 ),
             );
         }
@@ -401,6 +457,8 @@ class HestiaApp
         $command = array_map(fn(string $argument) => str_replace(' ', '\\ ', $argument), $command);
 
         $process = new Process($command);
+        // Increase the timeout from the default 60 seconds to 5 minutes to handle long install processes
+        $process->setTimeout(300);
         $process->run();
 
         if (!$process->isSuccessful()) {

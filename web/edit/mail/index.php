@@ -43,6 +43,10 @@ if (!empty($_GET["domain"]) && empty($_GET["account"])) {
 	$v_reject = $data[$v_domain]["REJECT"];
 	$v_antivirus = $data[$v_domain]["ANTIVIRUS"];
 	$v_dkim = $data[$v_domain]["DKIM"];
+	$v_dkim_selector = $data[$v_domain]["DKIM_SELECTOR"];
+	if (empty($v_dkim_selector)) {
+		$v_dkim_selector = "mail";
+	}
 	$v_catchall = $data[$v_domain]["CATCHALL"];
 	$v_rate = $data[$v_domain]["RATE_LIMIT"];
 	$v_date = $data[$v_domain]["DATE"];
@@ -89,6 +93,14 @@ if (!empty($_GET["domain"]) && empty($_GET["account"])) {
 	$v_letsencrypt = $data[$v_domain]["LETSENCRYPT"];
 	if (empty($v_letsencrypt)) {
 		$v_letsencrypt = "no";
+	}
+
+	$v_ssl_key_algo = strtolower($data[$v_domain]["SSL_KEY_ALGO"] ?? "");
+	if (
+		empty($v_ssl_key_algo) ||
+		!in_array($v_ssl_key_algo, ["ecdsa-256", "ecdsa-384", "rsa"], true)
+	) {
+		$v_ssl_key_algo = $v_ssl == "yes" ? "rsa" : "ecdsa-256";
 	}
 }
 
@@ -167,9 +179,22 @@ if (!empty($_GET["domain"]) && !empty($_GET["account"])) {
 }
 
 // Check POST request for mail domain
-if (!empty($_POST["save"]) && !empty($_GET["domain"]) && empty($_GET["account"])) {
+if (
+	!empty($_POST["save"]) &&
+	!empty($_GET["domain"]) &&
+	empty($_GET["account"]) &&
+	$read_only !== true
+) {
 	// Check token
 	verify_csrf($_POST);
+
+	$v_ssl_key_algo_post = "ecdsa-256";
+	if (!empty($_POST["v_ssl_key_algo"])) {
+		$v_ssl_key_algo_candidate = strtolower(trim($_POST["v_ssl_key_algo"]));
+		if (in_array($v_ssl_key_algo_candidate, ["ecdsa-256", "ecdsa-384", "rsa"], true)) {
+			$v_ssl_key_algo_post = $v_ssl_key_algo_candidate;
+		}
+	}
 
 	exec(
 		HESTIA_CMD . "v-list-mail-domain " . $user . " " . quoteshellarg($v_domain) . " json",
@@ -244,6 +269,8 @@ if (!empty($_POST["save"]) && !empty($_GET["domain"]) && empty($_GET["account"])
 		unset($output);
 	}
 
+	$posted_dkim_selector = !empty($_POST["v_dkim_selector"]) ? $_POST["v_dkim_selector"] : "mail";
+
 	// Delete DKIM
 	if ($v_dkim == "yes" && empty($_POST["v_dkim"]) && empty($_SESSION["error_msg"])) {
 		exec(
@@ -260,10 +287,38 @@ if (!empty($_POST["save"]) && !empty($_GET["domain"]) && empty($_GET["account"])
 		unset($output);
 	}
 
+	// Change DKIM selector (regenerate keys and DNS)
+	if (
+		$v_dkim == "yes" &&
+		!empty($_POST["v_dkim"]) &&
+		$posted_dkim_selector !== $v_dkim_selector &&
+		empty($_SESSION["error_msg"])
+	) {
+		exec(
+			HESTIA_CMD .
+				"v-delete-mail-domain-dkim " .
+				$v_username .
+				" " .
+				quoteshellarg($v_domain),
+			$output,
+			$return_var,
+		);
+		check_return_code($return_var, $output);
+		$v_dkim = "no";
+		unset($output);
+	}
+
 	// Add DKIM
 	if ($v_dkim == "no" && !empty($_POST["v_dkim"]) && empty($_SESSION["error_msg"])) {
+		$v_dkim_selector = $posted_dkim_selector;
 		exec(
-			HESTIA_CMD . "v-add-mail-domain-dkim " . $v_username . " " . quoteshellarg($v_domain),
+			HESTIA_CMD .
+				"v-add-mail-domain-dkim " .
+				$v_username .
+				" " .
+				quoteshellarg($v_domain) .
+				" '' " .
+				quoteshellarg($v_dkim_selector),
 			$output,
 			$return_var,
 		);
@@ -495,16 +550,72 @@ if (!empty($_POST["save"]) && !empty($_GET["domain"]) && empty($_GET["account"])
 
 			// Cleanup certificate tempfiles
 			if (!empty($_POST["v_ssl_crt"])) {
-				unlink($tmpdir . "/" . $v_domain . ".crt");
+				if (file_exists($tmpdir . "/" . $v_domain . ".crt")) {
+					unlink($tmpdir . "/" . $v_domain . ".crt");
+				}
 			}
 			if (!empty($_POST["v_ssl_key"])) {
-				unlink($tmpdir . "/" . $v_domain . ".key");
+				if (file_exists($tmpdir . "/" . $v_domain . ".key")) {
+					unlink($tmpdir . "/" . $v_domain . ".key");
+				}
 			}
 			if (!empty($_POST["v_ssl_ca"])) {
-				unlink($tmpdir . "/" . $v_domain . ".ca");
+				if (file_exists($tmpdir . "/" . $v_domain . ".ca")) {
+					unlink($tmpdir . "/" . $v_domain . ".ca");
+				}
 			}
 			rmdir($tmpdir);
 		}
+	}
+
+	// Regenerate LE certificate if the key algorithm changed (aliases
+	// are not user-editable for mail domains, unlike web domains, so
+	// this only needs to watch for algorithm changes)
+	if (
+		!empty($_POST["v_ssl"]) &&
+		$v_letsencrypt == "yes" &&
+		!empty($_POST["v_letsencrypt"]) &&
+		empty($_SESSION["error_msg"]) &&
+		$v_ssl_key_algo_post != $v_ssl_key_algo
+	) {
+		exec(
+			HESTIA_CMD .
+				"v-add-letsencrypt-domain " .
+				$user .
+				" " .
+				quoteshellarg($v_domain) .
+				" ' ' 'yes' " .
+				quoteshellarg($v_ssl_key_algo_post),
+			$output,
+			$return_var,
+		);
+		check_return_code($return_var, $output);
+		unset($output);
+		$v_ssl_key_algo = $v_ssl_key_algo_post;
+		$restart_mail = "yes";
+
+		exec(
+			HESTIA_CMD .
+				"v-list-mail-domain-ssl " .
+				$user .
+				" " .
+				quoteshellarg($v_domain) .
+				" json",
+			$output,
+			$return_var,
+		);
+		$ssl_str = json_decode(implode("", $output), true);
+		unset($output);
+		$v_ssl_crt = $ssl_str[$v_domain]["CRT"];
+		$v_ssl_key = $ssl_str[$v_domain]["KEY"];
+		$v_ssl_ca = $ssl_str[$v_domain]["CA"];
+		$v_ssl_subject = $ssl_str[$v_domain]["SUBJECT"];
+		$v_ssl_aliases = $ssl_str[$v_domain]["ALIASES"];
+		$v_ssl_not_before = $ssl_str[$v_domain]["NOT_BEFORE"];
+		$v_ssl_not_after = $ssl_str[$v_domain]["NOT_AFTER"];
+		$v_ssl_signature = $ssl_str[$v_domain]["SIGNATURE"];
+		$v_ssl_pub_key = $ssl_str[$v_domain]["PUB_KEY"];
+		$v_ssl_issuer = $ssl_str[$v_domain]["ISSUER"];
 	}
 
 	// Delete Lets Encrypt support
@@ -563,7 +674,8 @@ if (!empty($_POST["save"]) && !empty($_GET["domain"]) && empty($_GET["account"])
 				$user .
 				" " .
 				quoteshellarg($v_domain) .
-				" ' ' 'yes'",
+				" ' ' 'yes' " .
+				quoteshellarg($v_ssl_key_algo_post),
 			$output,
 			$return_var,
 		);
@@ -571,7 +683,31 @@ if (!empty($_POST["save"]) && !empty($_GET["domain"]) && empty($_GET["account"])
 		unset($output);
 		$v_letsencrypt = "yes";
 		$v_ssl = "yes";
+		$v_ssl_key_algo = $v_ssl_key_algo_post;
 		$restart_mail = "yes";
+
+		exec(
+			HESTIA_CMD .
+				"v-list-mail-domain-ssl " .
+				$user .
+				" " .
+				quoteshellarg($v_domain) .
+				" json",
+			$output,
+			$return_var,
+		);
+		$ssl_str = json_decode(implode("", $output), true);
+		unset($output);
+		$v_ssl_crt = $ssl_str[$v_domain]["CRT"];
+		$v_ssl_key = $ssl_str[$v_domain]["KEY"];
+		$v_ssl_ca = $ssl_str[$v_domain]["CA"];
+		$v_ssl_subject = $ssl_str[$v_domain]["SUBJECT"];
+		$v_ssl_aliases = $ssl_str[$v_domain]["ALIASES"];
+		$v_ssl_not_before = $ssl_str[$v_domain]["NOT_BEFORE"];
+		$v_ssl_not_after = $ssl_str[$v_domain]["NOT_AFTER"];
+		$v_ssl_signature = $ssl_str[$v_domain]["SIGNATURE"];
+		$v_ssl_pub_key = $ssl_str[$v_domain]["PUB_KEY"];
+		$v_ssl_issuer = $ssl_str[$v_domain]["ISSUER"];
 	}
 
 	// Add SSL certificate
@@ -663,13 +799,19 @@ if (!empty($_POST["save"]) && !empty($_GET["domain"]) && empty($_GET["account"])
 
 			// Cleanup certificate tempfiles
 			if (!empty($_POST["v_ssl_crt"])) {
-				unlink($tmpdir . "/" . $v_domain . ".crt");
+				if (file_exists($tmpdir . "/" . $v_domain . ".crt")) {
+					unlink($tmpdir . "/" . $v_domain . ".crt");
+				}
 			}
 			if (!empty($_POST["v_ssl_key"])) {
-				unlink($tmpdir . "/" . $v_domain . ".key");
+				if (file_exists($tmpdir . "/" . $v_domain . ".key")) {
+					unlink($tmpdir . "/" . $v_domain . ".key");
+				}
 			}
 			if (!empty($_POST["v_ssl_ca"])) {
-				unlink($tmpdir . "/" . $v_domain . ".ca");
+				if (file_exists($tmpdir . "/" . $v_domain . ".ca")) {
+					unlink($tmpdir . "/" . $v_domain . ".ca");
+				}
 			}
 			rmdir($tmpdir);
 		}
@@ -687,12 +829,16 @@ if (!empty($_POST["save"]) && !empty($_GET["domain"]) && empty($_GET["account"])
 				$v_smtp_relay = true;
 				$v_smtp_relay_host = quoteshellarg($_POST["v_smtp_relay_host"]);
 				$v_smtp_relay_user = quoteshellarg($_POST["v_smtp_relay_user"]);
-				$v_smtp_relay_pass = quoteshellarg($_POST["v_smtp_relay_pass"]);
 				if (!empty($_POST["v_smtp_relay_port"])) {
 					$v_smtp_relay_port = quoteshellarg($_POST["v_smtp_relay_port"]);
 				} else {
 					$v_smtp_relay_port = "587";
 				}
+				$v_smtp_relay_password = tempnam("/tmp", "vst");
+				$fp = fopen($v_smtp_relay_password, "w");
+				fwrite($fp, $_POST["v_smtp_relay_pass"] . "\n");
+				fclose($fp);
+
 				exec(
 					HESTIA_CMD .
 						"v-add-mail-domain-smtp-relay " .
@@ -704,7 +850,7 @@ if (!empty($_POST["save"]) && !empty($_GET["domain"]) && empty($_GET["account"])
 						" " .
 						$v_smtp_relay_user .
 						" " .
-						$v_smtp_relay_pass .
+						$v_smtp_relay_password .
 						" " .
 						$v_smtp_relay_port,
 					$output,
@@ -712,6 +858,9 @@ if (!empty($_POST["save"]) && !empty($_GET["domain"]) && empty($_GET["account"])
 				);
 				check_return_code($return_var, $output);
 				unset($output);
+				if (file_exists($v_smtp_relay_password)) {
+					unlink($v_smtp_relay_password);
+				}
 			}
 		}
 		if (!isset($_POST["v_smtp_relay"]) && $v_smtp_relay == true) {
@@ -738,7 +887,12 @@ if (!empty($_POST["save"]) && !empty($_GET["domain"]) && empty($_GET["account"])
 }
 
 // Check POST request for mail account
-if (!empty($_POST["save"]) && !empty($_GET["domain"]) && !empty($_GET["account"])) {
+if (
+	!empty($_POST["save"]) &&
+	!empty($_GET["domain"]) &&
+	!empty($_GET["account"]) &&
+	$read_only !== true
+) {
 	// Check token
 	verify_csrf($_POST);
 
@@ -792,7 +946,9 @@ if (!empty($_POST["save"]) && !empty($_GET["domain"]) && !empty($_GET["account"]
 			);
 			check_return_code($return_var, $output);
 			unset($output);
-			unlink($v_password);
+			if (file_exists($v_password)) {
+				unlink($v_password);
+			}
 			$v_password = quoteshellarg($_POST["v_password"]);
 		}
 	}

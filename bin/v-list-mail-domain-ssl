@@ -23,24 +23,30 @@ source $HESTIA/func/main.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
 # Additional argument formatting
 format_domain
 format_domain_idn
 
 # JSON list function
 json_list() {
+	json_escape() {
+		echo -n "$1" | sed -e 's/\\/\\\\/g' -e 's/"/\\"/g'
+	}
 	echo '{'
 	echo -e "\t\"$domain\": {"
 	echo "        \"CRT\": \"$crt\","
 	echo "        \"KEY\": \"$key\","
 	echo "        \"CA\": \"$ca\","
-	echo "        \"SUBJECT\": \"$subj\","
-	echo "        \"ALIASES\": \"$alt_dns\","
-	echo "        \"NOT_BEFORE\": \"$before\","
-	echo "        \"NOT_AFTER\": \"$after\","
-	echo "        \"SIGNATURE\": \"$signature\","
-	echo "        \"PUB_KEY\": \"$pub_key\","
-	echo "        \"ISSUER\": \"$issuer\""
+	echo "        \"SUBJECT\": \"$(json_escape "$subj")\","
+	echo "        \"ALIASES\": \"$(json_escape "$alt_dns")\","
+	echo "        \"NOT_BEFORE\": \"$(json_escape "$before")\","
+	echo "        \"NOT_AFTER\": \"$(json_escape "$after")\","
+	echo "        \"SIGNATURE\": \"$(json_escape "$signature")\","
+	echo "        \"PUB_KEY\": \"$(json_escape "$pub_key")\","
+	echo "        \"ISSUER\": \"$(json_escape "$issuer")\""
 	echo -e "\t}\n}"
 }
 
@@ -119,7 +125,7 @@ if [ -e "$USER_DATA/ssl/mail.$domain.crt" ]; then
 	crt=$(cat $USER_DATA/ssl/mail.$domain.crt | sed ':a;N;$!ba;s/\n/\\n/g')
 
 	info=$(openssl x509 -text -in $USER_DATA/ssl/mail.$domain.crt)
-	subj=$(echo "$info" | grep Subject: | sed -e "s/\"//g" -e "s/.*= //")
+	subj=$(openssl x509 -noout -nameopt multiline -subject -in $USER_DATA/ssl/mail.$domain.crt | sed -n 's/^ *commonName *= //p')
 	before=$(echo "$info" | grep Before: | sed -e "s/.*Before: //")
 	after=$(echo "$info" | grep "After :" | sed -e "s/.*After : //")
 	signature=$(echo "$info" | grep "Algorithm:" | head -n1)

@@ -1889,6 +1889,9 @@ is_cron_format_valid() {
 	if [ "$1" = '*' ]; then
 		check_format='ok'
 	fi
+	if [[ ! "$1" =~ ^[0-9*/,-]+$ ]]; then
+		check_result "$E_INVALID" "invalid $2 format :: $1"
+	fi
 	if [[ "$1" =~ ^[\*]+[/]+[0-9] ]]; then
 		if [ "$(echo $1 | cut -f 2 -d /)" -lt $limit ]; then
 			check_format='ok'

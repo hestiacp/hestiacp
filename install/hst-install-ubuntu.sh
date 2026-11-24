@@ -873,22 +873,17 @@ curl -s https://packages.sury.org/php/apt.gpg | gpg --dearmor | tee /usr/share/k
 cat > /etc/apt/apt.conf.d/60unattended-upgrades-hestia-php << 'EOF'
 Unattended-Upgrade::Origins-Pattern {
 	"origin=deb.sury.org";
-	"origin=LP-PPA-ondrej-php";
 };
 EOF
 
 # Installing sury Apache2 repo
-if [ "$apache" = 'yes' ] && [ "$release" = '22.04' ]; then
+if [ "$apache" = 'yes' ]; then
 	echo "[ * ] Apache2"
-	echo "deb http://ppa.launchpad.net/ondrej/apache2/ubuntu $codename main" > $apt/apache2.list
+	echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/apache2-keyring.gpg] https://packages.sury.org/apache2/ $codename main" > $apt/apache2.list
+	curl -s https://packages.sury.org/apache2/apt.gpg | gpg --dearmor | tee /usr/share/keyrings/apache2-keyring.gpg > /dev/null 2>&1
 
-	# Let unattended-upgrades install Apache updates from the repository
-	# above; the stock configuration only allows distribution repositories
-	cat > /etc/apt/apt.conf.d/60unattended-upgrades-hestia-apache2 << 'EOF'
-Unattended-Upgrade::Origins-Pattern {
-	"origin=LP-PPA-ondrej-apache2";
-};
-EOF
+# There is no need for a separate unattended-upgrades configuration for Apache,
+# as the existing PHP configuration already covers the Sury Apache repository.
 fi
 
 # Installing MariaDB repo

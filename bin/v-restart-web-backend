@@ -65,6 +65,17 @@ fi
 
 tmpfile=$(mktemp)
 
+# php-fpm refuses to start when a single pool is invalid (for example a pool
+# whose user no longer exists). Restarting it with such a pool takes down every
+# website that uses that PHP version, not only the one that changed. Test the
+# configuration first and, if it fails, keep the running master untouched.
+fpm_config_test() {
+	if [ -x "/usr/sbin/php-fpm$1" ]; then
+		"/usr/sbin/php-fpm$1" -t >> "$tmpfile" 2>&1
+	fi
+}
+
+failed=''
 if [ -z "$version" ]; then
 	# Substitute php-fpm service name formats
 	for version in $($BIN/v-list-sys-php plain); do
@@ -74,19 +85,31 @@ if [ -z "$version" ]; then
 			sed -i "s/9999/99${version//./}/g" "/etc/php/${version}/fpm/pool.d/dummy.conf"
 		fi
 
+		# A broken version must not stop the restart of the others
+		if ! fpm_config_test "$version"; then
+			failed="$failed $v_php(config)"
+			continue
+		fi
 		$BIN/v-restart-service "$v_php" "$restart"
 		if [ $? -ne 0 ]; then
-			send_email_report
-			check_result "$E_RESTART" "$v_php restart failed"
+			failed="$failed $v_php"
 		fi
 	done
 else
 	v_php="php$version-fpm"
-	$BIN/v-restart-service "$v_php" "$restart"
-	if [ $? -ne 0 ]; then
-		send_email_report
-		check_result "$E_RESTART" "$v_php restart failed"
+	if ! fpm_config_test "$version"; then
+		failed="$v_php(config)"
+	else
+		$BIN/v-restart-service "$v_php" "$restart"
+		if [ $? -ne 0 ]; then
+			failed="$v_php"
+		fi
 	fi
+fi
+
+if [ -n "$failed" ]; then
+	send_email_report
+	check_result "$E_RESTART" "restart failed:$failed"
 fi
 
 # Update restart queue

@@ -69,6 +69,33 @@ if [[ -f "$exim_conf" ]] \
 	fi
 fi
 
+# Replace MySQL database grants that used an unescaped database name.
+# "_" and "%" are wildcards in database-level grants, so a grant on "mys_l"
+# also covered the "mysql" system schema and "johnv_shop" covered "johnvxshop".
+if [ -f "$HESTIA/conf/mysql.conf" ]; then
+	echo "[ * ] Replacing wildcard MySQL database grants with exact grants"
+	(
+		source "$HESTIA/func/db.sh"
+		mysql_migrate_legacy_db_grants
+	)
+	add_upgrade_message "Security: MySQL database grants have been changed from wildcard to exact database names. If database users were created with a name like <user>_<db> where the pattern could match another database (for example the 'mysql' schema), please review existing MySQL accounts and stored routines for unexpected privileges."
+fi
+
+# Reinstall the phpMyAdmin SSO endpoint and rotate its keys.
+# The SSO token used to be signed with bcrypt (which ignores input past 72
+# bytes), allowing offline token forgery, and the host field reached a
+# root-run command unvalidated. A package update refreshes the template under
+# $HESTIA/install but NOT the already-deployed /usr/share/phpmyadmin/hestia-sso.php,
+# so existing installs keep the vulnerable verifier and a possibly-exposed key.
+# Reinstalling swaps in the fixed endpoint and generates a fresh PHPMYADMIN_KEY
+# and API key; previously issued SSO links stop working, which is intended.
+if [ -n "$PHPMYADMIN_KEY" ] || [ -f /usr/share/phpmyadmin/hestia-sso.php ]; then
+	echo "[ * ] Reinstalling phpMyAdmin SSO with a stronger token signature and fresh keys"
+	$HESTIA/bin/v-delete-sys-pma-sso quiet > /dev/null 2>&1
+	if ! $HESTIA/bin/v-add-sys-pma-sso quiet > /dev/null 2>&1; then
+		add_upgrade_message "phpMyAdmin Single Sign-On was disabled during the security update because it could not be reinstalled automatically. Re-enable it with 'v-add-sys-pma-sso' once phpMyAdmin and the API are available."
+	fi
+fi
 # SMTP relay configs contain the relay password and were created world-readable
 if [[ -f /etc/exim4/smtp_relay.conf ]]; then
 	echo "[ + ] Restricting permissions of SMTP relay configuration"

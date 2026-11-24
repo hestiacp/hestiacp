@@ -183,9 +183,20 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
 							<?php } ?>
 								<?php if ($data[$key]['TYPE'] == 'mysql' && isset($_SESSION['PHPMYADMIN_KEY']) && $_SESSION['PHPMYADMIN_KEY'] != '' && !ipUsed()) { $time = time(); ?>
 									<?php
-										$hestia_sso_token = password_hash(
-											$key . $user_plain . $_SESSION['user_combined_ip'] . $time . $_SESSION['PHPMYADMIN_KEY'],
-											PASSWORD_DEFAULT,
+										// Keyed signature over every field in the link, host included.
+										// Must stay in sync with verify_token() in hestia-sso.php.
+										// Not bcrypt: it ignores input past 72 bytes, which allowed
+										// offline token forgery (see hestia-sso.php).
+										$hestia_sso_token = hash_hmac(
+											'sha256',
+											implode("\0", [
+												$key,
+												$user_plain,
+												$_SESSION['user_combined_ip'],
+												(string) $time,
+												$data[$key]['HOST'],
+											]),
+											$_SESSION['PHPMYADMIN_KEY'],
 										);
 										$hestia_sso_url = $db_myadmin_link . "hestia-sso.php?" . http_build_query([
 											"host" => $data[$key]["HOST"],

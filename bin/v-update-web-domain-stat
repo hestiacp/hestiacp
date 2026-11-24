@@ -114,8 +114,8 @@ build_awstats() {
 		| user_exec tee -- "$dir/index.html" > /dev/null
 
 	# Creating navigation page
-	months=$(find $dir -type d | sed -e "s%$dir/%%g" -e "s%$dir%%g" \
-		| grep -v icon | sort -r)
+	months=$(user_exec find "$dir" -mindepth 1 -maxdepth 1 -type d -printf '%f\n' \
+		| grep -E '^[0-9]{4}-[0-9]{2}$' | sort -r)
 	for link in $months; do
 		year=$(echo $link | cut -f 1 -d \-)
 		month=$(echo $link | cut -f 2 -d \- | sed -e "s/^0//")

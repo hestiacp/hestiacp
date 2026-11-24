@@ -4,7 +4,7 @@
 
 <h2 align="center">Lightweight and powerful control panel for the modern web</h2>
 
-<p align="center"><strong>Latest stable release:</strong> Version 1.10.9 | <a href="https://github.com/hestiacp/hestiacp/blob/release/CHANGELOG.md">View Changelog</a></p>
+<p align="center"><strong>Latest stable release:</strong> Version 1.10.10 | <a href="https://github.com/hestiacp/hestiacp/blob/release/CHANGELOG.md">View Changelog</a></p>
 
 <p align="center">
 	<a href="https://hestiacp.com/">HestiaCP.com</a> |
@@ -45,7 +45,7 @@ Project infrastructure is partly provided by [infrahost](https://infrahost.ch/en
 
 ## Supported platforms and operating systems
 
-- **Debian:** 13, 12, 11
+- **Debian:** 13, 12
 - **Ubuntu:** 26.04 LTS, 24.04 LTS, 22.04 LTS
 
 **NOTES:**

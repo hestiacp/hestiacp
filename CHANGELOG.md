@@ -2,6 +2,53 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.10.10] - Service Release
+
+### Security
+
+- Prevent phpMyAdmin SSO token forgery: sign tokens with a stronger signature and validate the host field; the 1.10.10 upgrade reinstalls the SSO endpoint with fresh keys, so existing SSO links stop working
+- Grant MySQL database users access to the exact database name only; `_` and `%` were treated as wildcards, so a grant could cover other databases, including the `mysql` system schema. The 1.10.10 upgrade replaces existing wildcard grants
+- Prevent directory names created by the user in the web statistics folder from being run as `sed` commands by root
+- Run the `v-dump-site` archiver as the user, so a symlinked `public_html` or `web` directory can no longer add other files from the server to the archive
+- Validate the resolved document root path in `v-change-web-domain-docroot`, and reject spaces, so the path can no longer break out of the web server configuration
+- Create the Let's Encrypt ACME challenge files as the user instead of root
+- Validate the FTP path in `v-add-web-domain-ftp` and the cron time fields
+- Update hestia-nginx to 1.30.8 (CVE-2026-132779: excessive CPU usage with `ssl_early_data`) #6036
+- Create `smtp_relay.conf` without world read access, as it holds the relay password; the 1.10.10 upgrade fixes the permissions of existing files #6027
+- Reject symlinks and create missing `auth.log` files with mode 660 in `v-log-user-login`, and validate the login status argument #5991
+- Optionally delete a user's backups with `v-delete-user`, so backups of former users are no longer kept forever (new BACKUPS argument, default `no`) #6045
+
+### Features
+
+- Add support for PHP 8.6 #6017
+
+### Changes
+
+- Use the Sury repositories instead of the deprecated Launchpad PPAs for Apache2 and PHP on Ubuntu; the 1.10.10 upgrade migrates existing Apache2 sources #6048
+- Warn users whose password is still hashed with DES or MD5, which will no longer be supported for login #6039
+- Update SnappyMail to 3.1.4 #6056
+- Update Roundcube to 1.7.7 #6033
+- Update all non-major dependencies and jsdom to v31 #6028 #6029
+
+### Bug fixes
+
+- Test the php-fpm configuration before restarting it, so one broken pool no longer takes down every website using that PHP version, and a failing PHP version no longer prevents the restart of the others #6040
+- Remove php-fpm pools left behind by a deleted user #6040
+- Refuse to delete a PHP version with `v-delete-web-php` while web domains still use it or it is the default version #6043
+- Update the system PHP alternative before rebuilding domains in `v-change-sys-php`, so default-backend domains no longer stay on the previous PHP version #6038
+- Keep "force SSL", HSTS and the FastCGI cache when a web domain is suspended #6041 #6046
+- Accept IPv6 addresses in `v-log-user-login`, so IPv6 logins and failed logins are recorded #5991
+- Create the user's `conf` directory with mode 755, so DNS zones and mail load on systems with a hardened umask #6044
+- Remove the restore of a missing backup from the queue instead of retrying it forever #6042
+- Fix the per-domain Exim SMTP relay lookup for authenticated null-sender mail (read receipts, out-of-office replies); the 1.10.10 upgrade updates existing installations #5913
+- Add `mail_compress` to the Dovecot 2.4 global `mail_plugins` so `doveadm` works with compressed mail; the 1.10.10 upgrade updates existing installations #6032
+- Migrate PHP sources that still use the old `ppa.launchpad.net` hostname to Sury; the 1.10.6 migration only matched `ppa.launchpadcontent.net`, so servers installed on Ubuntu 20.04 or older were missed #6052
+- Fix web app quick installers failing when the server is behind NAT, by sending their requests to the internal IP instead of the public one #5994
+- Fix `v-list-sys-info` detecting Debian and Ubuntu systems with an `/etc/sysconfig` directory as Amazon Linux, and the Hestia version leaking into the OS version #6050
+- Fix `v-schedule-letsencrypt-domain` #6031
+- Fix the Flarum quick install for Flarum 2.x #6025
+- Don't build packages when a higher package revision is already available
+
 ## [1.10.9] - Service Release
 
 ### Changes

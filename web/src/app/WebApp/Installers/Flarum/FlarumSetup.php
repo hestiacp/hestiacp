@@ -33,7 +33,7 @@ class FlarumSetup extends BaseSetup
                 'template' => 'flarum-composer',
             ],
             'php' => [
-                'supported' => ['8.2', '8.3'],
+                'supported' => ['8.3', '8.4', '8.5'],
             ],
         ],
     ];
@@ -47,10 +47,12 @@ class FlarumSetup extends BaseSetup
 
         $this->appcontext->sendPostRequest($target->getUrl(), [
             'forumTitle' => $options['forum_title'],
-            'mysqlHost' => $target->database->host,
-            'mysqlDatabase' => $target->database->name,
-            'mysqlUsername' => $target->database->user,
-            'mysqlPassword' => $target->database->password,
+            'dbDriver' => 'mysql',
+            'dbHost' => $target->database->host,
+            'dbName' => $target->database->name,
+            'dbSchema' => '',
+            'dbUsername' => $target->database->user,
+            'dbPassword' => $target->database->password,
             'tablePrefix' => 'fl' . Util::generateString(5, false),
             'adminUsername' => $options['admin_username'],
             'adminEmail' => $options['admin_email'],

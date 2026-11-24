@@ -202,6 +202,11 @@ class HestiaApp
             curl_setopt($ch, CURLOPT_RESOLVE, [$resolve]);
         }
 
+        // The request goes to this same server, so the certificate
+        // may legitimately be self-signed or not issued yet.
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+
         curl_exec($ch);
 
         $error = curl_error($ch);
@@ -348,16 +353,48 @@ class HestiaApp
         }
     }
 
+    /**
+     * Hestia stores the public (NAT) IP in web.conf, but nginx/Apache listen on the
+     * internal one. Translate it back, as Hestia's get_real_ip() does.
+     */
+    public function getRealIp(string $ip): string
+    {
+        try {
+            $result = $this->run('v-list-sys-ips', ['json']);
+        } catch (ProcessFailedException) {
+            return $ip;
+        }
+
+        $sysIps = $result->getOutputJson();
+
+        // Already an internal/real system IP
+        if (isset($sysIps[$ip])) {
+            return $ip;
+        }
+
+        foreach ($sysIps as $internalIp => $data) {
+            if (($data['NAT'] ?? '') === $ip) {
+                return (string) $internalIp;
+            }
+        }
+
+        // No match: leave it untouched
+        return $ip;
+    }
+
     public function getWebDomain(string $domainName): WebDomain
     {
         try {
             $result = $this->runUser('v-list-web-domain', [$domainName, 'json']);
+            $domainInfo = $result->getOutputJson()[$domainName];
+
+            $ip = filter_var($domainInfo['IP'], FILTER_VALIDATE_IP);
 
             return new WebDomain(
                 $domainName,
                 Util::joinPaths($this->getUserHomeDir(), 'web', $domainName),
-                filter_var($result->getOutputJson()[$domainName]['IP'], FILTER_VALIDATE_IP),
-                $result->getOutputJson()[$domainName]['SSL'] === 'yes',
+                $ip !== false ? $this->getRealIp($ip) : $ip,
+                $domainInfo['SSL'] === 'yes',
             );
         } catch (ProcessFailedException) {
             throw new Exception('Cannot find domain for user');

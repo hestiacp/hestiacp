@@ -48,6 +48,8 @@ change_sys_value 'SMTP_RELAY_HOST' "$host"
 change_sys_value 'SMTP_RELAY_PORT' "$port"
 change_sys_value 'SMTP_RELAY_USER' "$username"
 
+# Contains the relay password, only root and exim may read it
+install -m 640 -o root -g Debian-exim /dev/null /etc/exim4/smtp_relay.conf
 cat > /etc/exim4/smtp_relay.conf << EOL
 host:$host
 port:$port

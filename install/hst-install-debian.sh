@@ -31,7 +31,7 @@ HESTIA_COMMON_DIR="$HESTIA/install/common"
 VERBOSE='no'
 
 # Define software versions
-HESTIA_INSTALL_VER='1.10.9'
+HESTIA_INSTALL_VER='1.10.10'
 
 # Build the full Hestia version
 # Split base version (1.10.0) from channel suffix (~alpha / ~beta), if present
@@ -58,7 +58,7 @@ esac
 HESTIA_INSTALL_BUILD="${HESTIA_BASE_VER}-1+${os_id}${HESTIA_CHANNEL}"
 
 # Supported PHP versions
-multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0" "8.1" "8.2" "8.3" "8.4" "8.5")
+multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0" "8.1" "8.2" "8.3" "8.4" "8.5" "8.6")
 # One of the following PHP versions is required for Roundcube / phpmyadmin
 multiphp_required=("8.1" "8.2" "8.3" "8.4" "8.5")
 # Default PHP version if none supplied
@@ -884,7 +884,6 @@ curl -s https://packages.sury.org/php/apt.gpg | gpg --dearmor | tee /usr/share/k
 cat > /etc/apt/apt.conf.d/60unattended-upgrades-hestia-php << 'EOF'
 Unattended-Upgrade::Origins-Pattern {
 	"origin=deb.sury.org";
-	"origin=LP-PPA-ondrej-php";
 };
 EOF
 
@@ -893,6 +892,9 @@ if [ "$apache" = 'yes' ]; then
 	echo "[ * ] Apache2"
 	echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/apache2-keyring.gpg] https://packages.sury.org/apache2/ $codename main" > $apt/apache2.list
 	curl -s https://packages.sury.org/apache2/apt.gpg | gpg --dearmor | tee /usr/share/keyrings/apache2-keyring.gpg > /dev/null 2>&1
+
+# There is no need for a separate unattended-upgrades configuration for Apache,
+# as the existing PHP configuration already covers the Sury Apache repository.
 fi
 
 # Installing MariaDB repo

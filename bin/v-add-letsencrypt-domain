@@ -360,9 +360,12 @@ for auth in $authz; do
 						| sed 's/;$//')/.well-known"
 				fi
 				acme_challenge="$well_known/acme-challenge"
-				mkdir -p $acme_challenge
-				echo "$token.$THUMB" > $acme_challenge/$token
-				chown -R $user:$user $well_known
+				# create folder as user instead of root
+				user_exec mkdir -p -- "$acme_challenge"
+				check_result $? "Unable to create $acme_challenge"
+				printf '%s\n' "$token.$THUMB" \
+					| user_exec tee -- "$acme_challenge/$token" > /dev/null
+				check_result $? "Unable to write the ACME challenge in $acme_challenge"
 			fi
 		else
 			if [ "$WEB_SYSTEM" = 'nginx' ] || [ "$PROXY_SYSTEM" = 'nginx' ]; then

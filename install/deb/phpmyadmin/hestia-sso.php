@@ -117,22 +117,37 @@ class Hestia_API {
 	}
 }
 
-function verify_token($database, $user, $ip, $time, $token) {
-	if (!password_verify($database . $user . $ip . $time . PHPMYADMIN_KEY, $token)) {
-		if (
-			!password_verify(
-				$database . $user . $_SERVER["SERVER_ADDR"] . "|" . $ip . $time . PHPMYADMIN_KEY,
-				$token,
-			)
-		) {
-			trigger_error(
-				"Access denied: There is a security token mismatch " . $time,
-				E_USER_WARNING,
-			);
-			session_invalid();
+/*
+ * Keyed signature over every field the request carries, including host.
+ *
+ * This must never fall back to bcrypt-based password hashing: bcrypt only
+ * considers the first 72 bytes of its input. With the key appended last, a long
+ * attacker-controlled field (e.g. an oversized "exp") could push the key past
+ * byte 72 so it was ignored, letting a token be forged offline without knowing
+ * the key. HMAC-SHA256 has no such length limit, covers the whole message, and
+ * is compared in constant time with hash_equals().
+ */
+function sso_expected_token($database, $user, $ip, $time, $host) {
+	return hash_hmac(
+		"sha256",
+		implode("\0", [$database, $user, $ip, (string) $time, $host]),
+		PHPMYADMIN_KEY,
+	);
+}
+
+function verify_token($database, $user, $ip, $time, $host, $token) {
+	if (!is_string($token)) {
+		$token = "";
+	}
+	// get_user_ip() may or may not prefix the server address, so accept both.
+	foreach ([$ip, $_SERVER["SERVER_ADDR"] . "|" . $ip] as $candidate_ip) {
+		$expected = sso_expected_token($database, $user, $candidate_ip, $time, $host);
+		if (hash_equals($expected, $token)) {
+			return;
 		}
 	}
-	return;
+	trigger_error("Access denied: There is a security token mismatch " . $time, E_USER_WARNING);
+	session_invalid();
 }
 /* Need to have cookie visible from parent directory */
 session_set_cookie_params(0, "/", "", true, true);
@@ -197,8 +212,14 @@ if (!empty($_GET)) {
 			$user = $_GET["user"];
 			$host = !empty($_GET["host"]) ? $_GET["host"] : "localhost";
 			$token = $_GET["hestia_token"];
-			if (is_numeric($_GET["exp"])) {
-				$time = $_GET["exp"];
+			// A plain Unix timestamp: digits only and short. Rejecting long
+			// values also stops "exp" being used to pad the signed message.
+			if (
+				isset($_GET["exp"]) &&
+				ctype_digit((string) $_GET["exp"]) &&
+				strlen((string) $_GET["exp"]) <= 12
+			) {
+				$time = (int) $_GET["exp"];
 			} else {
 				$time = 0;
 			}
@@ -206,7 +227,7 @@ if (!empty($_GET)) {
 			if ($time + 60 > time()) {
 				//note: Possible issues with cloudflare due to ip obfuscation
 				$ip = $api->get_user_ip();
-				verify_token($database, $user, $ip, $time, $token);
+				verify_token($database, $user, $ip, $time, $host, $token);
 				$id = session_id();
 				//create a new temp user
 				$data = $api->create_temp_user($database, $user, $host);

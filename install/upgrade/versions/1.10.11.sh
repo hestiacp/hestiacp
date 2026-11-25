@@ -32,3 +32,15 @@ if [ -f "$hestiaweb_cron" ] && grep -qE '^41 4 \* \* \* sudo /usr/local/hestia/b
 	hour=$(generate_password '123456' '1')
 	sed -i -E "s|^41 4 (\* \* \* sudo /usr/local/hestia/bin/v-update-sys-hestia-all)|$min $hour \1|" "$hestiaweb_cron"
 fi
+
+# Repair grants affected by the 1.10.10 migration on MySQL with partial_revokes.
+if [ -f "$HESTIA/conf/mysql.conf" ]; then
+	echo "[ * ] Repairing MySQL database grants"
+	if ! (
+		source "$HESTIA/func/db.sh"
+		mysql_migrate_legacy_db_grants
+	); then
+		echo "[ ! ] Some MySQL database grants could not be repaired; see the upgrade log"
+		add_upgrade_message "Some MySQL database grants could not be repaired. Check the upgrade log for affected databases and connection errors."
+	fi
+fi

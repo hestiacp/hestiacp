@@ -273,6 +273,81 @@ EOF
 	refute_output --partial 'GRANT ALL ON `johnv_shop`'
 }
 
+@test "MySQL grants: migration reports failures but continues with other databases" {
+	parse_object_kv_list() {
+		local kv
+		for kv in $1; do
+			kv=${kv//\'/}
+			printf -v "${kv%%=*}" '%s' "${kv#*=}"
+		done
+	}
+	mysql_connect() {
+		printf 'CONNECT %s\n' "$1" >> "$QUERY_LOG"
+		[ "$1" != broken ] || exit 1
+		mysql_fork=mysql mysql_ver=8.0.36
+	}
+	mysql_query_raw() {
+		[ "$HOST" != badsettings ] || return 1
+		printf 'partial_revokes\tON\n'
+	}
+	mysql_query() {
+		printf '%s\n' "$1" >> "$QUERY_LOG"
+		[[ "$1" != 'GRANT ALL ON `fail_db`'* && "$1" != 'REVOKE ALL ON `suspended'* ]]
+	}
+	FAKE_HESTIA="$(mktemp -d)"
+	HESTIA="$FAKE_HESTIA"
+	mkdir -p "$HESTIA/data/users/test"
+	cat > "$HESTIA/data/users/test/db.conf" << 'EOF'
+DB='fail_db' DBUSER='fail_user' HOST='db1' TYPE='mysql' SUSPENDED='no'
+DB='broken_db' DBUSER='broken_user' HOST='broken' TYPE='mysql' SUSPENDED='no'
+DB='settings_db' DBUSER='settings_user' HOST='badsettings' TYPE='mysql' SUSPENDED='no'
+DB='suspended' DBUSER='suspended_user' HOST='db1' TYPE='mysql' SUSPENDED='yes'
+DB='good_db' DBUSER='good_user' HOST='db2' TYPE='mysql' SUSPENDED='no'
+EOF
+	run mysql_migrate_legacy_db_grants
+	assert_failure
+	assert_output --partial 'unable to restore MySQL grants for fail_db on db1'
+	run cat "$QUERY_LOG"
+	assert_line 'GRANT ALL ON `fail_db`.* TO `fail_user`@`%`'
+	assert_line 'GRANT ALL ON `fail_db`.* TO `fail_user`@localhost'
+	assert_line 'CONNECT broken'
+	assert_line 'CONNECT badsettings'
+	refute_output --partial 'GRANT ALL ON `settings_db`'
+	refute_output --partial 'GRANT ALL ON `suspended`'
+	assert_line 'GRANT ALL ON `good_db`.* TO `good_user`@localhost'
+}
+
+@test "MySQL grants: 1.10.11 upgrade runs the migration and reports failure" {
+	FAKE_HESTIA="$(mktemp -d)"
+	HESTIA="$FAKE_HESTIA"
+	mkdir -p "$HESTIA/conf" "$HESTIA/func"
+	touch "$HESTIA/conf/mysql.conf"
+	cat > "$HESTIA/func/db.sh" << 'EOF'
+mysql_migrate_legacy_db_grants() {
+	echo 'MIGRATION' >> "$QUERY_LOG"
+	return "$MIGRATION_RESULT"
+}
+EOF
+	upgrade_config_set_value() { :; }
+	add_upgrade_message() { printf 'MESSAGE %s\n' "$1" >> "$QUERY_LOG"; }
+	for MIGRATION_RESULT in 0 1; do
+		: > "$QUERY_LOG"
+		source "$REPO_ROOT/install/upgrade/versions/1.10.11.sh"
+		run cat "$QUERY_LOG"
+		assert_line 'MIGRATION'
+		if [ "$MIGRATION_RESULT" -eq 1 ]; then
+			assert_output --partial 'MESSAGE Some MySQL database grants could not be repaired'
+		else
+			refute_output --partial 'MESSAGE '
+		fi
+	done
+	rm "$HESTIA/conf/mysql.conf"
+	: > "$QUERY_LOG"
+	source "$REPO_ROOT/install/upgrade/versions/1.10.11.sh"
+	run cat "$QUERY_LOG"
+	assert_output ''
+}
+
 #----------------------------------------------------------#
 #                 Source guard                             #
 #----------------------------------------------------------#

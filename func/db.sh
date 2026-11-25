@@ -164,7 +164,7 @@ mysql_revoke_db_grants() {
 # Replace obsolete grants with exact grants for every MySQL database in the
 # users' db.conf files. Suspended databases lose both forms of the grant.
 mysql_migrate_legacy_db_grants() {
-	local db_conf db_line
+	local db_conf db_line failed=0
 	for db_conf in "$HESTIA"/data/users/*/db.conf; do
 		[ -f "$db_conf" ] || continue
 		while IFS= read -r db_line; do
@@ -177,21 +177,29 @@ mysql_migrate_legacy_db_grants() {
 				db_user="$DBUSER"
 				db_suspended="$SUSPENDED"
 				if [ -z "$db_name" ] || [ -z "$db_user" ] || [ -z "$HOST" ]; then
-					exit 0
+					echo "Error: incomplete MySQL database configuration in $db_conf" >&2
+					exit 1
 				fi
 				mysql_connect "$HOST"
 				if [ "$db_suspended" = 'yes' ]; then
-					mysql_revoke_db_grants "$db_name" "$db_user"
+					# A missing grant makes REVOKE fail, including on repeat runs.
+					mysql_revoke_db_grants "$db_name" "$db_user" || true
 				else
 					db_grant=$(mysql_grant_db_name "$db_name")
 					check_result $? "Unable to determine grant syntax for database $db_name"
 					mysql_revoke_obsolete_db_grants "$db_name" "$db_user" "$db_grant"
-					mysql_query "GRANT ALL ON \`$db_grant\`.* TO \`$db_user\`@\`%\`" > /dev/null
-					mysql_query "GRANT ALL ON \`$db_grant\`.* TO \`$db_user\`@localhost" > /dev/null
+					grant_failed=0
+					mysql_query "GRANT ALL ON \`$db_grant\`.* TO \`$db_user\`@\`%\`" > /dev/null || grant_failed=1
+					mysql_query "GRANT ALL ON \`$db_grant\`.* TO \`$db_user\`@localhost" > /dev/null || grant_failed=1
+					if [ "$grant_failed" -ne 0 ]; then
+						echo "Error: unable to restore MySQL grants for $db_name on $HOST" >&2
+						exit 1
+					fi
 				fi
-			)
+			) || failed=1
 		done < "$db_conf"
 	done
+	return "$failed"
 }
 
 mysql_query() {

@@ -86,11 +86,15 @@ if [ ! -e "$BACKUP/$backup" ]; then
 		downloaded='yes'
 	fi
 	if [ -z "$downloaded" ]; then
+		# Deleting task from queue, it would be retried forever
+		sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
 		check_result "$E_NOTEXIST" "backup file $backup doesn't exist in '${BACKUP}' folder"
 	fi
 fi
 
 if [ ! -e "$BACKUP/$backup" ]; then
+	# Deleting task from queue, it would be retried forever
+	sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
 	check_result "$E_NOTEXIST" "backup file $backup doesn't exist in '${BACKUP}' folder"
 fi
 
@@ -281,6 +285,7 @@ if [ "$web" != 'no' ] && [ -n "$WEB_SYSTEM" ]; then
 				SSL_FORCE \
 				SSL_HOME \
 				SSL_HSTS \
+				SSL_HTTP3 \
 				STATS \
 				STATS_CRYPT \
 				STATS_USER \

@@ -113,7 +113,9 @@ fi
 setfacl -m "g:hestia-users:---" "$HOMEDIR/$user"
 
 # Building directory tree
-mkdir $HOMEDIR/$user/conf
+# Set the mode on creation: bind, exim and dovecot read files below conf/ as
+# their own users, so it must be traversable whatever the umask is
+mkdir -m 755 $HOMEDIR/$user/conf
 
 if [ -n "$WEB_SYSTEM" ]; then
 	# Set the modes on creation, never chmod a path below the home directory

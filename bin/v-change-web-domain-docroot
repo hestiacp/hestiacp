@@ -86,14 +86,17 @@ else
 	# Check for existence of specified directory under target domain's public_html folder
 	target_domain_directory="$HOMEDIR/$user/web/$target_domain"
 	if [ -n "$target_directory" ]; then
-		# Avoid special shell/sed characters in the target directory.
-		# Blacklist (not whitelist) so Unicode directory names
-		# (accents, kanji, cyrillic, etc.) keep working.
-		if [[ "$target_directory" == *[\'\"\\\|\&\;\`\$\(\)\<\>\~\#\*\?\[\]\{\}\!]* ]]; then
+		# Avoid special shell/sed characters in the target directory, plus a
+		# literal space: the value is written verbatim into the web server
+		# config (e.g. nginx `root %docroot%;`), where whitespace and these
+		# characters would break out of the directive. Blacklist (not
+		# whitelist) so Unicode directory names (accents, kanji, cyrillic,
+		# etc.) keep working.
+		if [[ "$target_directory" == *[\ \'\"\\\|\&\;\`\$\(\)\<\>\~\#\*\?\[\]\{\}\!]* ]]; then
 			check_result "$E_INVALID" "Directory '$target_directory' is not allowed."
 		fi
 
-		# Reject embedded control characters (newlines, etc.)
+		# Reject embedded control characters (newlines, tabs, etc.)
 		if [[ "$target_directory" =~ [[:cntrl:]] ]]; then
 			check_result "$E_INVALID" "Directory '$target_directory' is not allowed."
 		fi
@@ -102,9 +105,19 @@ else
 		real_target_directory="$(readlink -e "${target_domain_directory}/public_html/$target_directory/")"
 		if [ ! -e "$real_target_directory" ]; then
 			check_result "$E_NOTEXIST" "Directory $target_directory does not exist under $HOMEDIR/$user/web/$target_domain/public_html/."
-		elif [ -z "$(echo $real_target_directory | egrep "^$target_domain_directory\b")" ]; then
+		elif [ "$real_target_directory" != "$target_domain_directory" ] \
+			&& [ "${real_target_directory#"$target_domain_directory"/}" = "$real_target_directory" ]; then
 			check_result "$E_FORBIDEN" "Target dir outside of target domain dir"
 		else
+			# The typed name is validated above, but readlink -e follows
+			# symlinks: a clean name such as "lnk" can resolve to a directory
+			# chain whose component names carry config-breaking characters.
+			# The RESOLVED path is what gets stored and written into the web
+			# server config, so it must be validated too.
+			if [[ "$real_target_directory" == *[\ \'\"\\\|\&\;\`\$\(\)\<\>\~\#\*\?\[\]\{\}\!]* ]] \
+				|| [[ "$real_target_directory" =~ [[:cntrl:]] ]]; then
+				check_result "$E_INVALID" "Directory '$target_directory' resolves to a path with disallowed characters."
+			fi
 			CUSTOM_DOCROOT="$real_target_directory"
 			if [ -n "$php" ]; then
 				custom_phproot="${target_domain_directory}/public_html/"

@@ -121,6 +121,7 @@ for domain in "${domains[@]}"; do
 				SSL_FORCE \
 				SSL_HOME \
 				SSL_HSTS \
+				SSL_HTTP3 \
 				STATS \
 				STATS_CRYPT \
 				STATS_USER \

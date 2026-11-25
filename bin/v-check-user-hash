@@ -99,6 +99,12 @@ if [[ "$shadow" != "$hash" ]]; then
 	exit 9
 fi
 
+if [[ $method = 'des' || $method = 'md5' ]]; then
+	# Remove support for weak hash methods in the future 1.11 release
+	echo "Warning: user $user is using a weak hash method ($method)" >> $HESTIA/log/auth.log
+	"$BIN"/v-add-user-notification "$user" "Weak hash method ($method) detected" "Please change your password. So a stronger hash method is used."
+fi
+
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#

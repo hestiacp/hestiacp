@@ -1,7 +1,27 @@
 # Customisation
 
 ::: warning
-We currently only support changing the layout via CSS. You can customise HTML files and templates, but they **will** be overwritten during updates, so make sure to [set up hooks](#running-commands-before-and-after-updates) to restore your changes after an update.
+For user customisations, use custom CSS. You can customise HTML files and templates, but they **will** be overwritten during updates, so make sure to [set up hooks](#running-commands-before-and-after-updates) to restore your changes after an update.
+:::
+
+## Studio theme
+
+Studio is an optional built-in theme with sidebar navigation, light and dark appearances, seven accent palettes, an administrator overview, and 43 interface dictionaries. The default theme remains unchanged.
+
+1. Open your user profile (**Edit User**).
+2. Select **studio** in **Theme** and save.
+3. Reload the page. If necessary, perform a hard refresh.
+
+The server default in **Server settings → Basic Options → Theme** and the account preference are separate. An existing account's theme can override the server default. **Set as selected theme for all users** intentionally applies the server choice to all accounts; it is not needed to enable Studio for yourself. Theme changes remain subject to Hestia's existing account policies.
+
+Use the sidebar's **Light** / **Dark** buttons and the top bar's **Color palette** control. Appearance preferences are stored in the current browser. Translations, RTL layout and number/date formatting follow the effective account language. Arabic, Persian, Sorani Kurdish and Urdu use RTL layout.
+
+The administrator overview uses existing authenticated Hestia routes. Historical load average is shown in load units, memory in MiB, and live CPU in percent. The live sample and historical load average are different measurements. No additional service, database, external request or scheduled task is needed. Native forms, permissions and administration actions remain in place.
+
+To leave Studio, choose another installed theme in your profile. Built-in Studio files are part of Hestia's normal build and updates; do not edit generated files in `web/css/themes/` or `web/js/dist/` directly.
+
+::: warning Migrating from the standalone community theme
+The standalone Studio installer uses `css/themes/custom/studio.css` and `js/custom_scripts/studio.*` with a `studio-locales` directory. Do not run both integrations together. Before testing the built-in version, switch affected accounts and the server default to another theme, sign out of existing Studio sessions, and use the standalone project's documented uninstaller to remove its custom assets. Keep its backup. Do not remove unrelated custom scripts. Then select the built-in `studio` theme and reload. This migration is separate from a normal Hestia upgrade and has not been validated on a live installation.
 :::
 
 ## Adding a new theme

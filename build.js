@@ -16,17 +16,21 @@ const externalPackages = [
 
 // Build main bundle
 async function buildJS() {
-	const inputPath = './web/js/src/index.js';
+	const entryPoints = {
+		main: './web/js/src/index.js',
+		studio: './web/js/src/studio.js',
+	};
 	try {
 		await esbuild.build({
-			entryPoints: [inputPath],
-			outfile: './web/js/dist/main.min.js',
+			entryPoints,
+			outdir: './web/js/dist',
+			entryNames: '[name].min',
 			bundle: true,
 			minify: true,
 			sourcemap: true,
 			external: externalPackages,
 		});
-		console.log('✅ JavaScript build completed for', inputPath);
+		console.log('✅ JavaScript build completed for', Object.values(entryPoints));
 	} catch (error) {
 		console.error('❌ Error building JavaScript:', error);
 		process.exit(1);

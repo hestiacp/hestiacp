@@ -7,6 +7,39 @@ on:
       - main
 
 jobs:
+  studio:
+    name: Studio theme
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Setup Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: "lts/*"
+
+      - name: Install Node packages
+        run: npm ci --ignore-scripts
+
+      - name: Check PHP syntax
+        run: |
+          php -l web/templates/includes/studio.php
+          php -l web/templates/includes/js.php
+
+      - name: Test Studio theme contracts and native forms
+        run: npm run test:studio
+
+      - name: Build panel assets
+        run: npm run build
+
+      - name: Check built-in theme assets
+        run: |
+          test -s web/css/themes/studio.min.css
+          test -s web/js/dist/studio.min.js
+          test -s web/js/dist/main.min.js
+          node --check web/js/dist/studio.min.js
+
   docs:
     name: Docs site
     runs-on: ubuntu-latest

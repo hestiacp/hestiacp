@@ -13,6 +13,7 @@
 		"docs:serve": "vitepress serve docs",
 		"docs:test": "vitest run --config docs/.vitepress/vitest.config.js",
 		"build": "node build.js",
+		"test:studio": "node --test test/studio*.test.mjs",
 		"lint": "prettier --cache --check . && biome lint . && markdownlint-cli2 *.md docs/**/*.md",
 		"lint-staged": "lint-staged",
 		"format": "prettier --cache --write .",

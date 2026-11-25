@@ -27,6 +27,8 @@ source /etc/hestiacp/hestia.conf
 source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
+# shellcheck source=/usr/local/hestia/func/ip.sh
+source $HESTIA/func/ip.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
@@ -51,6 +53,14 @@ fi
 if ! is_nginx_http3_supported; then
 	check_result "$E_NOTEXIST" "nginx was built without HTTP/3 support (http_v3_module)"
 fi
+if [ "$PROXY_SYSTEM" = 'nginx' ]; then
+	quic_port="$PROXY_SSL_PORT"
+else
+	quic_port="$WEB_SSL_PORT"
+fi
+if ! is_quic_port_free "$(get_real_ip "$IP")" "$quic_port"; then
+	check_result "$E_INUSE" "UDP port $quic_port is used by another service"
+fi
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
@@ -70,18 +80,14 @@ write_web_http3_config "$user" "$domain" "$sconf"
 # A QUIC listener nginx can't load would stop every site on the next
 # restart: test first and roll back on failure
 if ! nginx_check=$(nginx -t 2>&1); then
-	rm -f "$HOMEDIR/$user/conf/web/$domain/nginx.ssl.conf_http3"
+	delete_web_http3_config "$user" "$domain"
 	update_object_value 'web' 'DOMAIN' "$domain" '$SSL_HTTP3' 'no'
 	echo "$nginx_check" | tail -n 3
 	check_result "$E_PARSING" "HTTP/3 could not be enabled, nginx configuration test failed"
 fi
 
 # HTTP/3 runs over UDP
-if [ "$PROXY_SYSTEM" = 'nginx' ]; then
-	add_web_http3_firewall_rule "$PROXY_SSL_PORT"
-else
-	add_web_http3_firewall_rule "$WEB_SSL_PORT"
-fi
+add_web_http3_firewall_rule "$quic_port"
 
 #----------------------------------------------------------#
 #                       Hestia                             #

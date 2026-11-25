@@ -840,6 +840,22 @@ function check_ip_not_banned(){
     fi
 }
 
+@test "Ip: HTTP/3 reuseport listener is set once per IP" {
+    if ! nginx -V 2>&1 | grep -q http_v3_module; then
+        skip "nginx without http_v3_module"
+    fi
+    local conf="/etc/nginx/conf.d/198.18.0.121.conf"
+    assert_file_contains "$conf" "listen 198.18.0.121:443 quic reuseport;"
+
+    # Not added a second time
+    source $HESTIA/func/domain.sh
+    process_quic_reuseport_ip "$conf"
+    run grep -c "quic reuseport;" "$conf"
+    assert_output "1"
+    run nginx -t
+    assert_success
+}
+
 @test "Ip: Delete ip 198.18.0.12" {
     local ip="198.18.0.12"
     run v-delete-sys-ip $ip
@@ -1124,6 +1140,13 @@ function check_ip_not_banned(){
     assert_success
     refute_output
     assert_file_not_exist "$HOMEDIR/$user/conf/web/$domain/nginx.ssl.conf_http3"
+
+    # A file written by the admin is kept
+    echo "# custom" > "$HOMEDIR/$user/conf/web/$domain/nginx.ssl.conf_http3"
+    run v-rebuild-web-domain $user $domain
+    assert_success
+    assert_file_contains "$HOMEDIR/$user/conf/web/$domain/nginx.ssl.conf_http3" "# custom"
+    rm -f "$HOMEDIR/$user/conf/web/$domain/nginx.ssl.conf_http3"
 
     run v-list-web-domain $user $domain json
     assert_output --partial '"SSL_HTTP3": "no"'

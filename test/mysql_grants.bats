@@ -102,13 +102,37 @@ teardown() {
 	refute_output --partial 'GRANT ALL'
 }
 
-@test "MySQL grants: temp user grant uses the escaped name" {
+@test "MySQL grants: temp user grant escapes wildcards when partial revokes are off or unavailable" {
 	host=localhost database="johnv_shop" dbuser="mysql_sso_johnv_shop_x"
 	mysql_fork=mysql mysql_ver=8.0.36
+	mysql_query_raw() { printf '%s' "$partial_revokes_result"; }
+	for partial_revokes_result in $'partial_revokes\tOFF' ''; do
+		: > "$QUERY_LOG"
+		add_mysql_database_temp_user
+		run cat "$QUERY_LOG"
+		assert_line 'GRANT ALL ON `johnv\_shop`.* TO `mysql_sso_johnv_shop_x`@`%`'
+		refute_output --partial 'GRANT ALL ON `johnv_shop`'
+	done
+}
+
+@test "MySQL grants: temp user grant uses the literal database name when partial revokes are on" {
+	host=localhost database="johnv_shop" dbuser="mysql_sso_johnv_shop_x"
+	mysql_fork=mysql mysql_ver=8.0.36
+	mysql_query_raw() { printf 'partial_revokes\tON\n'; }
 	add_mysql_database_temp_user
 	run cat "$QUERY_LOG"
-	assert_output --partial 'GRANT ALL ON `johnv\_shop`.* TO `mysql_sso_johnv_shop_x`@`%`'
-	refute_output --partial 'GRANT ALL ON `johnv_shop`'
+	assert_line 'GRANT ALL ON `johnv_shop`.* TO `mysql_sso_johnv_shop_x`@`%`'
+	refute_output --partial 'GRANT ALL ON `johnv\_shop`'
+}
+
+@test "MySQL grants: temp user is not created when checking partial revokes fails" {
+	host=localhost database="johnv_shop" dbuser="mysql_sso_johnv_shop_x"
+	mysql_fork=mysql mysql_ver=8.0.36
+	mysql_query_raw() { return 1; }
+	run add_mysql_database_temp_user
+	assert_failure
+	run cat "$QUERY_LOG"
+	assert_output 'CONNECT localhost'
 }
 
 @test "MySQL grants: temp user removal revokes both grant forms" {

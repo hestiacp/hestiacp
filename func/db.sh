@@ -454,20 +454,31 @@ add_pgsql_database() {
 }
 
 add_mysql_database_temp_user() {
+	local partial_revokes db_grant
 	mysql_connect $host
 
 	mysql_ver_sub=$(echo $mysql_ver | cut -d '.' -f1)
-	mysql_ver_sub_sub=$(echo $mysql_ver | cut -d '.' -f2)
 
 	dbpass_esc=$(mysql_sql_escape "$dbpass")
 
 	if [ "$mysql_fork" = "mysql" ] && [ "$mysql_ver_sub" -ge 8 ]; then
+		partial_revokes=$(mysql_query_raw "SHOW GLOBAL VARIABLES WHERE Variable_name = 'partial_revokes'") || return 1
+		if [ "$partial_revokes" = $'partial_revokes\tON' ]; then
+			# With partial revokes, MySQL treats both wildcards and backslashes as literal characters.
+			db_grant="$database"
+		else
+			db_grant=$(mysql_grant_db_name "$database")
+		fi
+
 		query="CREATE USER \`$dbuser\`@\`%\`
 			IDENTIFIED BY '$dbpass_esc'"
-		mysql_query "$query" > /dev/null
+		mysql_query "$query" > /dev/null || return 1
 
-		query="GRANT ALL ON \`$(mysql_grant_db_name "$database")\`.* TO \`$dbuser\`@\`%\`"
-		mysql_query "$query" > /dev/null
+		query="GRANT ALL ON \`$db_grant\`.* TO \`$dbuser\`@\`%\`"
+		if ! mysql_query "$query" > /dev/null; then
+			mysql_query "DROP USER '$dbuser'@'%'" > /dev/null
+			return 1
+		fi
 	else
 		query="GRANT ALL ON \`$(mysql_grant_db_name "$database")\`.* TO \`$dbuser\`@\`%\`
     		IDENTIFIED BY '$dbpass_esc'"

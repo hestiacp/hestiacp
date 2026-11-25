@@ -30,6 +30,9 @@ class Hestia_API {
 		$curl = curl_init();
 		curl_setopt($curl, CURLOPT_URL, $this->hostname);
 		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($curl, CURLOPT_FAILONERROR, true);
+		curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 5);
+		curl_setopt($curl, CURLOPT_TIMEOUT, 15);
 		curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
 		curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
 		curl_setopt($curl, CURLOPT_POST, true);
@@ -49,14 +52,18 @@ class Hestia_API {
 			"arg3" => "mysql",
 			"arg4" => $host,
 		];
-		$request = $this->request($post_request);
-		$json = json_decode($request);
-		if (json_last_error() == JSON_ERROR_NONE) {
-			return $json;
-		} else {
-			trigger_error("Unable to connect over API please check api connection", E_USER_WARNING);
+		$response = $this->request($post_request);
+		$data = is_string($response) ? json_decode($response) : null;
+		if (
+			!is_string($data->login->user ?? null) ||
+			$data->login->user === "" ||
+			!is_string($data->login->password ?? null) ||
+			$data->login->password === ""
+		) {
+			error_log("phpMyAdmin SSO could not obtain temporary database credentials from the Hestia API.");
 			return false;
 		}
+		return $data->login;
 	}
 
 	/* Delete an new temp user in mysql */
@@ -86,7 +93,7 @@ class Hestia_API {
 			$user_combined_ip[] = $_SERVER["REMOTE_ADDR"];
 		}
 		if (isset($_SERVER["HTTP_CLIENT_IP"])) {
-			$user_combined_ip .= "|" . $_SERVER["HTTP_CLIENT_IP"];
+			$user_combined_ip[] = $_SERVER["HTTP_CLIENT_IP"];
 		}
 		if (isset($_SERVER["HTTP_X_FORWARDED_FOR"])) {
 			if ($_SERVER["REMOTE_ADDR"] != $_SERVER["HTTP_X_FORWARDED_FOR"]) {
@@ -136,33 +143,67 @@ function sso_expected_token($database, $user, $ip, $time, $host) {
 }
 
 function verify_token($database, $user, $ip, $time, $host, $token) {
-	if (!is_string($token)) {
-		$token = "";
-	}
 	// get_user_ip() may or may not prefix the server address, so accept both.
 	foreach ([$ip, $_SERVER["SERVER_ADDR"] . "|" . $ip] as $candidate_ip) {
 		$expected = sso_expected_token($database, $user, $candidate_ip, $time, $host);
 		if (hash_equals($expected, $token)) {
-			return;
+			return true;
 		}
 	}
-	trigger_error("Access denied: There is a security token mismatch " . $time, E_USER_WARNING);
-	session_invalid();
+	return false;
 }
-/* Need to have cookie visible from parent directory */
-session_set_cookie_params(0, "/", "", true, true);
-/* Create signon session */
-$session_name = "SignonSession";
-session_name($session_name);
-@session_start();
 
-function session_invalid() {
-	global $session_name;
-	//delete all current sessions
-	session_destroy();
-	setcookie($session_name, null, -1, "/");
-	header("Location: " . dirname($_SERVER["PHP_SELF"]) . "/index.php");
-	die();
+function valid_panel_origin($origin): bool {
+	return
+		is_string($origin) &&
+		strlen($origin) <= 270 &&
+		preg_match('/\Ahttps:\/\/[a-z0-9][a-z0-9.-]*(?::([0-9]{1,5}))?\z/i', $origin, $parts) === 1 &&
+		(!isset($parts[1]) || ((int) $parts[1] > 0 && (int) $parts[1] <= 65535));
+}
+
+function authorize_panel_request(array $input): bool {
+	$origin = $_SERVER["HTTP_ORIGIN"] ?? null;
+	$token = $input["hestia_token"] ?? null;
+	$signature = $input["panel_signature"] ?? null;
+	if (
+		valid_panel_origin($origin) &&
+		is_string($token) && preg_match('/\A[a-f0-9]{64}\z/', $token) === 1 &&
+		is_string($signature) &&
+		hash_equals(
+			hash_hmac("sha256", "phpmyadmin-ajax\0" . $origin . "\0" . $token, PHPMYADMIN_KEY),
+			$signature,
+		)
+	) {
+		header("Access-Control-Allow-Origin: " . $origin);
+		header("Access-Control-Allow-Credentials: true");
+		return true;
+	}
+	return false;
+}
+
+function start_signon_session(): bool {
+	// The phpMyAdmin index must receive the same secure cookie as the sign-on endpoint.
+	session_set_cookie_params(0, "/", "", true, true);
+	session_name("SignonSession");
+	return @session_start(["use_strict_mode" => 1]);
+}
+
+function clear_signon_session() {
+	if (session_status() === PHP_SESSION_ACTIVE) {
+		$_SESSION = [];
+		session_destroy();
+	}
+	setcookie("SignonSession", "", 1, "/", "", true, true);
+}
+
+function signon_failure(string $reason, bool $ajax) {
+	if ($ajax) {
+		header("Content-Type: application/json");
+		echo json_encode(["error" => $reason]);
+	} else {
+		header("Location: index.php");
+	}
+	exit;
 }
 
 /* Find the phpMyAdmin server index in config.inc.php
@@ -195,77 +236,110 @@ function find_pma_server_id($host) {
 	return 1; // fallback: localhost
 }
 
+header("Cache-Control: no-store");
+$ajax = ($_SERVER["REQUEST_METHOD"] ?? "GET") === "POST";
+$input = $ajax ? $_POST : $_GET;
+if ($ajax) {
+	header("Vary: Origin");
+	if (!authorize_panel_request($input)) {
+		http_response_code(403);
+		exit;
+	}
+}
+
 $api = new Hestia_API();
-if (!empty($_GET)) {
-	if (isset($_GET["logout"])) {
+if (!$ajax && isset($_GET["logout"])) {
+	start_signon_session();
+	if (
+		isset(
+			$_SESSION["HESTIA_sso_database"],
+			$_SESSION["HESTIA_sso_user"],
+			$_SESSION["PMA_single_signon_user"],
+			$_SESSION["HESTIA_sso_host"],
+		)
+	) {
 		$api->delete_temp_user(
 			$_SESSION["HESTIA_sso_database"],
 			$_SESSION["HESTIA_sso_user"],
 			$_SESSION["PMA_single_signon_user"],
 			$_SESSION["HESTIA_sso_host"],
 		);
-		//remove session
-		session_invalid();
-	} else {
-		if (isset($_GET["user"]) && isset($_GET["hestia_token"])) {
-			$database = $_GET["database"];
-			$user = $_GET["user"];
-			$host = !empty($_GET["host"]) ? $_GET["host"] : "localhost";
-			$token = $_GET["hestia_token"];
-			// A plain Unix timestamp: digits only and short. Rejecting long
-			// values also stops "exp" being used to pad the signed message.
-			if (
-				isset($_GET["exp"]) &&
-				ctype_digit((string) $_GET["exp"]) &&
-				strlen((string) $_GET["exp"]) <= 12
-			) {
-				$time = (int) $_GET["exp"];
-			} else {
-				$time = 0;
-			}
-
-			if ($time + 60 > time()) {
-				//note: Possible issues with cloudflare due to ip obfuscation
-				$ip = $api->get_user_ip();
-				verify_token($database, $user, $ip, $time, $host, $token);
-				$id = session_id();
-				//create a new temp user
-				$data = $api->create_temp_user($database, $user, $host);
-				if ($data) {
-					$_SESSION["PMA_single_signon_user"] = $data->login->user;
-					$_SESSION["PMA_single_signon_password"] = $data->login->password;
-					$_SESSION["PMA_single_signon_host"] = $host;
-					//save database / username to be used for sending logout notification.
-					$_SESSION["HESTIA_sso_user"] = $user;
-					$_SESSION["HESTIA_sso_database"] = $database;
-					$_SESSION["HESTIA_sso_host"] = $host;
-
-					$server_id = find_pma_server_id($host);
-
-					@session_write_close();
-					setcookie($session_name, $id, 0, "/");
-					header(
-						"Location: " .
-							dirname($_SERVER["PHP_SELF"]) .
-							"/index.php?server=" .
-							$server_id,
-					);
-					die();
-				} else {
-					session_invalid();
-				}
-			} else {
-				trigger_error(
-					"Link has been expired: System time: " .
-						time() .
-						" / Time provided in link: " .
-						$time,
-					E_USER_WARNING,
-				);
-				session_invalid();
-			}
-		}
 	}
-} else {
-	session_invalid();
+	clear_signon_session();
+	header("Location: index.php");
+	exit;
 }
+
+if (
+	!$ajax &&
+	!isset($_GET["hestia_token"]) &&
+	!isset($_GET["user"]) &&
+	!isset($_GET["database"]) &&
+	!isset($_GET["exp"])
+) {
+	// phpMyAdmin redirects here with no parameters after rejecting sign-on.
+	start_signon_session();
+	if (isset($_SESSION["PMA_single_signon_error_message"])) {
+		clear_signon_session();
+		http_response_code(403);
+		header("Content-Type: text/plain; charset=UTF-8");
+		exit("Could not sign in to phpMyAdmin. Open phpMyAdmin again from Hestia.");
+	}
+	clear_signon_session();
+	header("Location: index.php");
+	exit;
+}
+
+$database = $input["database"] ?? null;
+$user = $input["user"] ?? null;
+$host = $input["host"] ?? "";
+$token = $input["hestia_token"] ?? null;
+$exp = $input["exp"] ?? null;
+foreach ([$database, $user, $host, $token, $exp] as $value) {
+	if (!is_string($value) || str_contains($value, "\0")) {
+		signon_failure("invalid", $ajax);
+	}
+}
+if ($database === "" || $user === "" || $token === "" || !ctype_digit($exp) || strlen($exp) > 12) {
+	signon_failure("invalid", $ajax);
+}
+$host = $host === "" ? "localhost" : $host;
+$time = (int) $exp;
+if ($time + 60 <= time()) {
+	signon_failure("expired", $ajax);
+}
+if (!verify_token($database, $user, $api->get_user_ip(), $time, $host, $token)) {
+	signon_failure("invalid", $ajax);
+}
+// The SSO-only configuration uses this flag while loading the server definitions.
+$_GET["hestia_token"] = $token;
+$server_id = (int) find_pma_server_id($host);
+$credentials = $api->create_temp_user($database, $user, $host);
+if ($credentials === false) {
+	signon_failure("credentials", $ajax);
+}
+if (!start_signon_session() || !session_regenerate_id(true)) {
+	$api->delete_temp_user($database, $user, $credentials->user, $host);
+	signon_failure("credentials", $ajax);
+}
+
+unset($_SESSION["PMA_single_signon_error_message"]);
+$_SESSION["PMA_single_signon_user"] = $credentials->user;
+$_SESSION["PMA_single_signon_password"] = $credentials->password;
+$_SESSION["PMA_single_signon_host"] = $host;
+$_SESSION["HESTIA_sso_user"] = $user;
+$_SESSION["HESTIA_sso_database"] = $database;
+$_SESSION["HESTIA_sso_host"] = $host;
+
+if (!session_write_close()) {
+	clear_signon_session();
+	$api->delete_temp_user($database, $user, $credentials->user, $host);
+	signon_failure("credentials", $ajax);
+}
+if ($ajax) {
+	header("Content-Type: application/json");
+	echo json_encode(["server" => $server_id]);
+	exit;
+}
+header("Location: index.php?server=" . $server_id);
+exit;

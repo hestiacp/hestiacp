@@ -2455,7 +2455,7 @@ function mysql_add_legacy_grant() {
     # (password_hash/password_verify) ignores input past 72 bytes, which let
     # the key be pushed out and the token forged offline.
     local sso="$HESTIA/install/deb/phpmyadmin/hestia-sso.php"
-    local gen="$HESTIA/web/templates/pages/list_db.php"
+    local gen="$HESTIA/web/inc/phpmyadmin-sso.php"
     assert_file_exist "$sso"
     assert_file_exist "$gen"
 

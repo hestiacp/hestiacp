@@ -20,6 +20,7 @@ import handleListSorting from './listSorting';
 import handleListUnitSelect from './listUnitSelect';
 import handleNameServerInput from './nameServerInput';
 import handlePasswordInput from './passwordInput';
+import handlePhpMyAdminSso from './phpmyadminSso';
 import initRrdCharts from './rrdCharts';
 import handleShortcuts from './shortcuts';
 import handleStickyToolbar from './stickyToolbar';
@@ -49,6 +50,7 @@ function initListeners() {
 	handleListUnitSelect();
 	handleNameServerInput();
 	handlePasswordInput();
+	handlePhpMyAdminSso();
 	handleStickyToolbar();
 	handleSyncEmailValues();
 	handleTabPanels();

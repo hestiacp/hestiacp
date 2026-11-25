@@ -618,6 +618,46 @@ upgrade_phppgadmin() {
 	fi
 }
 
+refresh_phpmyadmin_sso() {
+	local endpoint=/usr/share/phpmyadmin/hestia-sso.php
+	local template="$HESTIA/install/deb/phpmyadmin/hestia-sso.php"
+	local staged
+
+	[[ -f "$endpoint" ]] || return 0
+	staged=$(mktemp "${endpoint}.XXXXXX") || return 1
+	# Move only the four installed settings into the packaged template.
+	if ! awk '
+		FNR == NR {
+			if ($0 ~ /^define\("(PHPMYADMIN_KEY|API_HOST_NAME|API_HESTIA_PORT|API_KEY)", "[[:alnum:]_.:=-]+"\);$/) {
+				split($0, fields, "\"")
+				if (fields[2] in deployed) invalid = 1
+				deployed[fields[2]] = $0
+			}
+			next
+		}
+		/^define\("(PHPMYADMIN_KEY|API_HOST_NAME|API_HESTIA_PORT|API_KEY)", "%[A-Z_]+%"\);$/ {
+			split($0, fields, "\"")
+			if (!(fields[2] in deployed) || ++replaced[fields[2]] != 1) invalid = 1
+			print deployed[fields[2]]
+			count++
+			next
+		}
+		{ print }
+		END { if (invalid || count != 4) exit 1 }
+	' "$endpoint" "$template" > "$staged" ||
+		! "$HESTIA/php/bin/php" -l "$staged" > /dev/null 2>&1 ||
+		! chown root:hestiamail "$staged" || ! chmod 0640 "$staged"; then
+		rm -f -- "$staged"
+		return 1
+	fi
+	if cmp -s "$staged" "$endpoint"; then
+		rm -f -- "$staged"
+	elif ! mv -f -- "$staged" "$endpoint"; then
+		rm -f -- "$staged"
+		return 1
+	fi
+}
+
 upgrade_phpmyadmin() {
 	# Check if MariaDB/MySQL is installed on the server before attempting to install or upgrade phpMyAdmin
 	if [ -n "$(echo $DB_SYSTEM | grep -w 'mysql')" ]; then
@@ -672,6 +712,9 @@ upgrade_phpmyadmin() {
 			# Clean up source files
 			rm -fr phpMyAdmin-$pma_v-all-languages
 			rm -f phpMyAdmin-$pma_v-all-languages.tar.gz
+		fi
+		if ! refresh_phpmyadmin_sso; then
+			echo "[ ! ] Could not refresh the phpMyAdmin SSO handler. The installed handler was kept."
 		fi
 	fi
 }

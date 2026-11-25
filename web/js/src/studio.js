@@ -333,11 +333,9 @@
 		const swatches = el('div', 'studio-swatches');
 		const select = (color) => {
 			root.dataset.studioAccent = colors.includes(color) ? color : 'green';
-			swatches
-				.querySelectorAll('button')
-				.forEach((b) => {
-					b.setAttribute('aria-pressed', String(b.dataset.color === root.dataset.studioAccent));
-				});
+			swatches.querySelectorAll('button').forEach((b) => {
+				b.setAttribute('aria-pressed', String(b.dataset.color === root.dataset.studioAccent));
+			});
 			try {
 				localStorage.setItem('hestia-studio-accent', root.dataset.studioAccent);
 			} catch {}
@@ -405,15 +403,13 @@
 		if (metric !== 'la' && metric !== 'mem') throw Error('Unsupported series');
 		// HestiaCP 1.10.9 exports [LA * 100, processes]; RAM is already in MiB.
 		const divisor = metric === 'la' ? 100 : 1;
-		return payload.data
-			.slice(0, 4096)
-			.map((row, i) => ({
-				time: (start + i * step) * 1000,
-				value:
-					Array.isArray(row) && typeof row[0] === 'number' && Number.isFinite(row[0]) && row[0] >= 0
-						? row[0] / divisor
-						: null,
-			}));
+		return payload.data.slice(0, 4096).map((row, i) => ({
+			time: (start + i * step) * 1000,
+			value:
+				Array.isArray(row) && typeof row[0] === 'number' && Number.isFinite(row[0]) && row[0] >= 0
+					? row[0] / divisor
+					: null,
+		}));
 	}
 	function renderDashboard({ main, heading, ctx, t, card, usageValues, entries }) {
 		const hasWeb = entries.some((e) => e.key === 'web');
@@ -756,17 +752,13 @@
 		}
 		async function loadChart() {
 			const id = ++requestId;
-			tabs
-				.querySelectorAll('button')
-				.forEach((b) => {
-					b.setAttribute('aria-pressed', String(b.dataset.metric === chartMetric));
-				});
+			tabs.querySelectorAll('button').forEach((b) => {
+				b.setAttribute('aria-pressed', String(b.dataset.metric === chartMetric));
+			});
 			periods.hidden = chartMetric === 'cpu';
-			periods
-				.querySelectorAll('button')
-				.forEach((b) => {
-					b.setAttribute('aria-pressed', String(b.dataset.period === period));
-				});
+			periods.querySelectorAll('button').forEach((b) => {
+				b.setAttribute('aria-pressed', String(b.dataset.period === period));
+			});
 			if (chartMetric === 'cpu') {
 				series = livePoints;
 				draw();
@@ -967,11 +959,9 @@
 			try {
 				localStorage.setItem('hestia-studio-color', mode);
 			} catch {}
-			document
-				.querySelectorAll('[data-studio-mode]')
-				.forEach((b) => {
-					b.setAttribute('aria-pressed', String(b.dataset.studioMode === mode));
-				});
+			document.querySelectorAll('[data-studio-mode]').forEach((b) => {
+				b.setAttribute('aria-pressed', String(b.dataset.studioMode === mode));
+			});
 		}
 		setTheme(
 			['light', 'dark'].includes(stored)
@@ -1349,7 +1339,7 @@
 			main.classList.add('studio-overview');
 		}
 		installPalette(t, root);
-		enhanceNativeIcons(document, t);
+		enhanceNativeIcons(document);
 		installTooltips();
 		const search = el('button', 'studio-search-trigger');
 		search.type = 'button';

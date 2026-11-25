@@ -153,7 +153,9 @@ function is_twofa_trusted_device($user) {
 	return true;
 }
 
-function add_twofa_trusted_device($user) {
+// $since: time the login verification started; the device is not stored if
+// trusted devices were revoked (password or 2FA change) since then
+function add_twofa_trusted_device($user, $since) {
 	$days = (int) ($_SESSION["TWOFA_TRUSTED_DEVICE_DAYS"] ?? 0);
 	if ($days < 1) {
 		return;
@@ -164,7 +166,9 @@ function add_twofa_trusted_device($user) {
 			"v-add-user-2fa-trusted-device " .
 			quoteshellarg($user) .
 			" " .
-			hash("sha256", $token),
+			hash("sha256", $token) .
+			" " .
+			quoteshellarg((string) $since),
 		$output,
 		$return_var,
 	);
@@ -174,6 +178,7 @@ function add_twofa_trusted_device($user) {
 }
 
 function authenticate_user($user, $password, $twofa = "", $trust_device = false) {
+	$login_started = time();
 	unset($_SESSION["login"]);
 	if (verify_csrf($_POST, true)) {
 		$v_user = quoteshellarg($user);
@@ -390,7 +395,7 @@ function authenticate_user($user, $password, $twofa = "", $trust_device = false)
 
 				// 2FA token was accepted, remember this device if requested
 				if ($twofa_required && $trust_device) {
-					add_twofa_trusted_device($user);
+					add_twofa_trusted_device($user, $login_started);
 				}
 
 				// Define session user

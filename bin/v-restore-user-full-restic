@@ -82,9 +82,13 @@ restic_check_staged_tree "$tmpdir" "home/$user/backup"
 check_result $? "Unable to restore user data"
 
 cp "$tmpdir/home/$user/backup/hestia/user.conf" "$USER_DATA/"
-# Restored password / 2FA secret must not inherit current trusted devices
+# Restored password / 2FA secret must not inherit current trusted devices.
+# Revoke again on exit: rebuild_user_conf (also run by the web domain restore)
+# writes the restored password, and a login verified before that must not keep
+# a device it adds meanwhile.
 $BIN/v-delete-user-2fa-trusted-devices "$user"
 check_result $? "Unable to revoke 2FA trusted devices"
+trap '$BIN/v-delete-user-2fa-trusted-devices "$user" > /dev/null' EXIT
 cp -r "$tmpdir/home/$user/backup/hestia/ssl" "$USER_DATA/" > /dev/null 2>&1
 cp -r "$tmpdir/home/$user/backup/hestia/backup-excludes.conf" "$USER_DATA/" > /dev/null 2>&1
 

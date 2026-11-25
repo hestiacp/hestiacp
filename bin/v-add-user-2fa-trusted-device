@@ -1,11 +1,13 @@
 #!/bin/bash
 # info: add trusted device for user 2fa
-# options: USER HASH
+# options: USER HASH [SINCE]
 #
 # example: v-add-user-2fa-trusted-device admin 9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08
 #
 # This function stores the SHA-256 hash of a trusted device token, so the
 # device can skip the 2FA token prompt for TWOFA_TRUSTED_DEVICE_DAYS days.
+# SINCE is the Unix time the caller started verifying the login: the device is
+# not stored if trusted devices were revoked at or after that time.
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #
@@ -14,6 +16,7 @@
 # Argument definition
 user=$1
 hash=$2
+since=$3
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -27,11 +30,14 @@ source_conf "$HESTIA/conf/hestia.conf"
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'USER HASH'
+check_args '2' "$#" 'USER HASH [SINCE]'
 is_format_valid 'user'
 is_object_valid 'user' 'USER' "$user"
 if ! [[ "$hash" =~ ^[0-9a-f]{64}$ ]]; then
 	check_result "$E_INVALID" "invalid hash format :: $hash"
+fi
+if [ -n "$since" ] && ! [[ "$since" =~ ^[0-9]{1,12}$ ]]; then
+	check_result "$E_INVALID" "invalid time format :: $since"
 fi
 
 # Perform verification if read-only mode is enabled
@@ -62,6 +68,17 @@ check_result $? "Unable to create trusted devices lock file"
 umask "$old_umask"
 flock -w 30 9
 check_result $? "Unable to acquire trusted devices lock"
+
+# Refuse if the trusted devices were revoked (password or 2FA change) while the
+# caller was verifying the login
+revoked_file="$USER_DATA/2fa-trusted-devices.revoked"
+if [ -n "$since" ] && [ -f "$revoked_file" ]; then
+	revoked_at=$(cat "$revoked_file")
+	if ! [[ "$revoked_at" =~ ^[0-9]{1,12}$ ]] || [ $((10#$revoked_at)) -ge $((10#$since)) ]; then
+		echo "Error: Trusted devices were revoked during the login."
+		exit "$E_FORBIDEN"
+	fi
+fi
 
 conf="$USER_DATA/2fa-trusted-devices.conf"
 now=$(date +%s)

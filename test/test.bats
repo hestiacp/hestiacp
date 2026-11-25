@@ -434,6 +434,20 @@ function check_ip_not_banned(){
     run v-check-user-2fa-trusted-device "$user" "$hash1"
     assert_failure $E_NOTEXIST
 
+    # A login verified before the revocation can't add a device afterwards
+    since=$(($(date +%s) - 60))
+    run v-add-user-2fa-trusted-device "$user" "$hash1" "$since"
+    assert_failure $E_FORBIDEN
+    run v-check-user-2fa-trusted-device "$user" "$hash1"
+    assert_failure $E_NOTEXIST
+    run v-add-user-2fa-trusted-device "$user" "$hash1" "not-a-time"
+    assert_failure $E_INVALID
+    sleep 1
+    run v-add-user-2fa-trusted-device "$user" "$hash1" "$(date +%s)"
+    assert_success
+    run v-check-user-2fa-trusted-device "$user" "$hash1"
+    assert_success
+
     # Disabling 2FA revokes trusted devices
     run v-add-user-2fa-trusted-device "$user" "$hash2"
     assert_success

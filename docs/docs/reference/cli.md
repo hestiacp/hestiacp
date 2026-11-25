@@ -961,7 +961,7 @@ This function creates a new 2fa token for user.
 
 add trusted device for user 2fa
 
-**Options**: `USER` `HASH`
+**Options**: `USER` `HASH` `[SINCE]`
 
 **Examples**:
 
@@ -970,6 +970,7 @@ v-add-user-2fa-trusted-device admin 9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b
 ```
 
 This function stores the SHA-256 hash of a trusted device token, so the device can skip the 2FA token prompt for TWOFA_TRUSTED_DEVICE_DAYS days.
+SINCE is the Unix time the caller started verifying the login: the device is not stored if trusted devices were revoked at or after that time.
 
 ## v-add-user-composer
 

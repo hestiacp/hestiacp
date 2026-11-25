@@ -43,6 +43,14 @@ umask "$old_umask"
 flock -w 30 9
 check_result $? "Unable to acquire trusted devices lock"
 
+# Record the revocation time, so a login that was verified before it can't add
+# a device afterwards (see v-add-user-2fa-trusted-device)
+old_umask=$(umask)
+umask 077
+date +%s > "$USER_DATA/2fa-trusted-devices.revoked"
+marker_rc=$?
+umask "$old_umask"
+
 conf="$USER_DATA/2fa-trusted-devices.conf"
 if [ -f "$conf" ]; then
 	rm -f "$conf"
@@ -58,6 +66,8 @@ fi
 if [ "$revoked" = "yes" ]; then
 	$BIN/v-log-action "$user" "Warning" "Security" "Trusted devices for two-factor authentication revoked."
 fi
+# Devices are removed even if this failed, but report it
+check_result "$marker_rc" "Unable to record trusted devices revocation" "$E_DISK"
 log_event "$OK" "$ARGUMENTS"
 
 exit

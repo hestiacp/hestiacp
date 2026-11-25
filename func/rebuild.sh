@@ -841,7 +841,10 @@ rebuild_mail_domain_conf() {
 
 # Rebuild MySQL
 rebuild_mysql_database() {
+	local db_grant
 	mysql_connect $HOST
+	db_grant=$(mysql_grant_db_name "$DB")
+	check_result $? "Unable to determine grant syntax for database $DB"
 	mysql_query "CREATE DATABASE \`$DB\` CHARACTER SET $CHARSET" > /dev/null
 	if [ "$mysql_fork" = "mysql" ]; then
 		# mysql
@@ -885,9 +888,9 @@ rebuild_mysql_database() {
 			fi
 		fi
 	fi
-	mysql_revoke_legacy_db_grants "$DB" "$DBUSER"
-	mysql_query "GRANT ALL ON \`$(mysql_grant_db_name "$DB")\`.* TO \`$DBUSER\`@\`%\`" > /dev/null
-	mysql_query "GRANT ALL ON \`$(mysql_grant_db_name "$DB")\`.* TO \`$DBUSER\`@localhost" > /dev/null
+	mysql_revoke_obsolete_db_grants "$DB" "$DBUSER" "$db_grant"
+	mysql_query "GRANT ALL ON \`$db_grant\`.* TO \`$DBUSER\`@\`%\`" > /dev/null
+	mysql_query "GRANT ALL ON \`$db_grant\`.* TO \`$DBUSER\`@localhost" > /dev/null
 	mysql_query "$query" > /dev/null
 	if [ ! -z "$query2" ]; then
 		mysql_query "$query2" > /dev/null

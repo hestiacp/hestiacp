@@ -107,35 +107,62 @@ mysql_sql_escape() {
 	printf '%s' "$1" | sed -e 's/\\/\\\\/g' -e "s/'/''/g"
 }
 
-# Escape a database name for the database part of a MySQL GRANT/REVOKE.
-# In database-level privileges "_" and "%" are wildcards, so an unescaped
-# grant on "johnv_shop" also matches "johnvxshop", and "mys_l" matches
-# the "mysql" system schema.
-mysql_grant_db_name() {
+# Escape the wildcard syntax used in database-level grants by MariaDB and
+# by MySQL with partial_revokes disabled.
+mysql_escape_db_grant_name() {
 	printf '%s' "$1" | sed -e 's/\\/\\\\/g' -e 's/_/\\_/g' -e 's/%/\\%/g'
 }
 
-# Revoke grants created by older Hestia versions with an unescaped (wildcard)
-# database name. Usage: mysql_revoke_legacy_db_grants <database> <dbuser>
-mysql_revoke_legacy_db_grants() {
+# Return the exact database name for a GRANT on the connected server.
+mysql_grant_db_name() {
+	local partial_revokes
+	if [ "$mysql_fork" = 'mysql' ] && [ "${mysql_ver%%.*}" -ge 8 ]; then
+		partial_revokes=$(mysql_query_raw "SHOW GLOBAL VARIABLES WHERE Variable_name = 'partial_revokes'") || return 1
+		case "$partial_revokes" in
+			$'partial_revokes\tON')
+				# MySQL matches the name literally, including any backslashes.
+				printf '%s' "$1"
+				return
+				;;
+			$'partial_revokes\tOFF' | '') ;;
+			*) return 1 ;;
+		esac
+	fi
+	mysql_escape_db_grant_name "$1"
+}
+
+mysql_revoke_named_db_grants() {
 	mysql_query "REVOKE ALL ON \`$1\`.* FROM \`$2\`@\`%\`" > /dev/null
 	mysql_query "REVOKE ALL ON \`$1\`.* FROM \`$2\`@localhost" > /dev/null
+}
+
+# Remove the grant format that does not apply to the connected server. The
+# unescaped form is the correct grant when partial_revokes is enabled.
+# Usage: mysql_revoke_obsolete_db_grants <database> <dbuser> <current_grant_name>
+mysql_revoke_obsolete_db_grants() {
+	local obsolete_grant="$1"
+	if [ "$3" = "$1" ]; then
+		obsolete_grant=$(mysql_escape_db_grant_name "$1")
+	fi
+	if [ "$obsolete_grant" != "$3" ]; then
+		mysql_revoke_named_db_grants "$obsolete_grant" "$2"
+	fi
 }
 
 # Revoke all database-level grants of a user on a database, both the escaped
 # form and the legacy unescaped form.
 # Usage: mysql_revoke_db_grants <database> <dbuser>
 mysql_revoke_db_grants() {
-	local db_grant
-	db_grant=$(mysql_grant_db_name "$1")
-	mysql_query "REVOKE ALL ON \`$db_grant\`.* FROM \`$2\`@\`%\`" > /dev/null
-	mysql_query "REVOKE ALL ON \`$db_grant\`.* FROM \`$2\`@localhost" > /dev/null
-	mysql_revoke_legacy_db_grants "$1" "$2"
+	local escaped_grant
+	escaped_grant=$(mysql_escape_db_grant_name "$1")
+	mysql_revoke_named_db_grants "$escaped_grant" "$2"
+	if [ "$escaped_grant" != "$1" ]; then
+		mysql_revoke_named_db_grants "$1" "$2"
+	fi
 }
 
-# Replace grants made by older Hestia versions (unescaped database name) with
-# exact grants, for every MySQL database in the users' db.conf files.
-# Suspended databases only lose the legacy grant.
+# Replace obsolete grants with exact grants for every MySQL database in the
+# users' db.conf files. Suspended databases lose both forms of the grant.
 mysql_migrate_legacy_db_grants() {
 	local db_conf db_line
 	for db_conf in "$HESTIA"/data/users/*/db.conf; do
@@ -153,9 +180,12 @@ mysql_migrate_legacy_db_grants() {
 					exit 0
 				fi
 				mysql_connect "$HOST"
-				mysql_revoke_legacy_db_grants "$db_name" "$db_user"
-				if [ "$db_suspended" != 'yes' ]; then
+				if [ "$db_suspended" = 'yes' ]; then
+					mysql_revoke_db_grants "$db_name" "$db_user"
+				else
 					db_grant=$(mysql_grant_db_name "$db_name")
+					check_result $? "Unable to determine grant syntax for database $db_name"
+					mysql_revoke_obsolete_db_grants "$db_name" "$db_user" "$db_grant"
 					mysql_query "GRANT ALL ON \`$db_grant\`.* TO \`$db_user\`@\`%\`" > /dev/null
 					mysql_query "GRANT ALL ON \`$db_grant\`.* TO \`$db_user\`@localhost" > /dev/null
 				fi
@@ -359,7 +389,10 @@ decrease_dbhost_values() {
 
 # Create MySQL database
 add_mysql_database() {
+	local db_grant
 	mysql_connect $host
+	db_grant=$(mysql_grant_db_name "$database")
+	check_result $? "Unable to determine grant syntax for database $database"
 
 	mysql_ver_sub=$(echo $mysql_ver | cut -d '.' -f1)
 	mysql_ver_sub_sub=$(echo $mysql_ver | cut -d '.' -f2)
@@ -379,17 +412,17 @@ add_mysql_database() {
             IDENTIFIED BY '$dbpass_esc'"
 		mysql_query "$query" > /dev/null
 
-		query="GRANT ALL ON \`$(mysql_grant_db_name "$database")\`.* TO \`$dbuser\`@\`%\`"
+		query="GRANT ALL ON \`$db_grant\`.* TO \`$dbuser\`@\`%\`"
 		mysql_query "$query" > /dev/null
 
-		query="GRANT ALL ON \`$(mysql_grant_db_name "$database")\`.* TO \`$dbuser\`@localhost"
+		query="GRANT ALL ON \`$db_grant\`.* TO \`$dbuser\`@localhost"
 		mysql_query "$query" > /dev/null
 	else
-		query="GRANT ALL ON \`$(mysql_grant_db_name "$database")\`.* TO \`$dbuser\`@\`%\`
+		query="GRANT ALL ON \`$db_grant\`.* TO \`$dbuser\`@\`%\`
             IDENTIFIED BY '$dbpass_esc'"
 		mysql_query "$query" > /dev/null
 
-		query="GRANT ALL ON \`$(mysql_grant_db_name "$database")\`.* TO \`$dbuser\`@localhost
+		query="GRANT ALL ON \`$db_grant\`.* TO \`$dbuser\`@localhost
             IDENTIFIED BY '$dbpass_esc'"
 		mysql_query "$query" > /dev/null
 	fi
@@ -454,22 +487,15 @@ add_pgsql_database() {
 }
 
 add_mysql_database_temp_user() {
-	local partial_revokes db_grant
+	local db_grant
 	mysql_connect $host
+	db_grant=$(mysql_grant_db_name "$database") || return 1
 
 	mysql_ver_sub=$(echo $mysql_ver | cut -d '.' -f1)
 
 	dbpass_esc=$(mysql_sql_escape "$dbpass")
 
 	if [ "$mysql_fork" = "mysql" ] && [ "$mysql_ver_sub" -ge 8 ]; then
-		partial_revokes=$(mysql_query_raw "SHOW GLOBAL VARIABLES WHERE Variable_name = 'partial_revokes'") || return 1
-		if [ "$partial_revokes" = $'partial_revokes\tON' ]; then
-			# With partial revokes, MySQL treats both wildcards and backslashes as literal characters.
-			db_grant="$database"
-		else
-			db_grant=$(mysql_grant_db_name "$database")
-		fi
-
 		query="CREATE USER \`$dbuser\`@\`%\`
 			IDENTIFIED BY '$dbpass_esc'"
 		mysql_query "$query" > /dev/null || return 1
@@ -480,7 +506,7 @@ add_mysql_database_temp_user() {
 			return 1
 		fi
 	else
-		query="GRANT ALL ON \`$(mysql_grant_db_name "$database")\`.* TO \`$dbuser\`@\`%\`
+		query="GRANT ALL ON \`$db_grant\`.* TO \`$dbuser\`@\`%\`
     		IDENTIFIED BY '$dbpass_esc'"
 		mysql_query "$query" > /dev/null
 	fi
@@ -488,7 +514,7 @@ add_mysql_database_temp_user() {
 
 delete_mysql_database_temp_user() {
 	mysql_connect $host
-	query="REVOKE ALL ON \`$(mysql_grant_db_name "$database")\`.* FROM \`$dbuser\`@\`%\`"
+	query="REVOKE ALL ON \`$(mysql_escape_db_grant_name "$database")\`.* FROM \`$dbuser\`@\`%\`"
 	mysql_query "$query" > /dev/null
 	query="REVOKE ALL ON \`$database\`.* FROM \`$dbuser\`@\`%\`"
 	mysql_query "$query" > /dev/null
@@ -515,8 +541,11 @@ get_database_values() {
 
 # Change MySQL database password
 change_mysql_password() {
+	local db_grant
 	mysql_connect $HOST
-	mysql_revoke_legacy_db_grants "$database" "$DBUSER"
+	db_grant=$(mysql_grant_db_name "$database")
+	check_result $? "Unable to determine grant syntax for database $database"
+	mysql_revoke_obsolete_db_grants "$database" "$DBUSER" "$db_grant"
 
 	mysql_ver_sub=$(echo $mysql_ver | cut -d '.' -f1)
 	mysql_ver_sub_sub=$(echo $mysql_ver | cut -d '.' -f2)
@@ -533,21 +562,21 @@ change_mysql_password() {
 			mysql_query "$query" > /dev/null
 		else
 			# mysql < 8
-			query="GRANT ALL ON \`$(mysql_grant_db_name "$database")\`.* TO \`$DBUSER\`@\`%\`
+			query="GRANT ALL ON \`$db_grant\`.* TO \`$DBUSER\`@\`%\`
                   IDENTIFIED BY '$dbpass_esc'"
 			mysql_query "$query" > /dev/null
 
-			query="GRANT ALL ON \`$(mysql_grant_db_name "$database")\`.* TO \`$DBUSER\`@localhost
+			query="GRANT ALL ON \`$db_grant\`.* TO \`$DBUSER\`@localhost
                   IDENTIFIED BY '$dbpass_esc'"
 			mysql_query "$query" > /dev/null
 		fi
 	else
 		# mariadb
-		query="GRANT ALL ON \`$(mysql_grant_db_name "$database")\`.* TO \`$DBUSER\`@\`%\`
+		query="GRANT ALL ON \`$db_grant\`.* TO \`$DBUSER\`@\`%\`
               IDENTIFIED BY '$dbpass_esc'"
 		mysql_query "$query" > /dev/null
 
-		query="GRANT ALL ON \`$(mysql_grant_db_name "$database")\`.* TO \`$DBUSER\`@localhost
+		query="GRANT ALL ON \`$db_grant\`.* TO \`$DBUSER\`@localhost
               IDENTIFIED BY '$dbpass_esc'"
 		mysql_query "$query" > /dev/null
 	fi
@@ -684,11 +713,14 @@ suspend_pgsql_database() {
 
 # Unsuspend MySQL database
 unsuspend_mysql_database() {
+	local db_grant
 	mysql_connect $HOST
-	mysql_revoke_legacy_db_grants "$database" "$DBUSER"
-	query="GRANT ALL ON \`$(mysql_grant_db_name "$database")\`.* TO \`$DBUSER\`@\`%\`"
+	db_grant=$(mysql_grant_db_name "$database")
+	check_result $? "Unable to determine grant syntax for database $database"
+	mysql_revoke_obsolete_db_grants "$database" "$DBUSER" "$db_grant"
+	query="GRANT ALL ON \`$db_grant\`.* TO \`$DBUSER\`@\`%\`"
 	mysql_query "$query" > /dev/null
-	query="GRANT ALL ON \`$(mysql_grant_db_name "$database")\`.* TO \`$DBUSER\`@localhost"
+	query="GRANT ALL ON \`$db_grant\`.* TO \`$DBUSER\`@localhost"
 	mysql_query "$query" > /dev/null
 }
 

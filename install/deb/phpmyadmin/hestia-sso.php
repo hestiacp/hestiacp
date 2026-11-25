@@ -50,13 +50,24 @@ class Hestia_API {
 			"arg4" => $host,
 		];
 		$request = $this->request($post_request);
-		$json = json_decode($request);
-		if (json_last_error() == JSON_ERROR_NONE) {
-			return $json;
-		} else {
-			trigger_error("Unable to connect over API please check api connection", E_USER_WARNING);
+		// json_decode() returns null on parse failure. The credential check rejects
+		// that result and valid JSON responses that lack credentials.
+		$json = is_string($request) ? json_decode($request) : null;
+		if (
+			!is_string($json->login->user ?? null) ||
+			$json->login->user === "" ||
+			!is_string($json->login->password ?? null) ||
+			$json->login->password === ""
+		) {
+			if (!is_string($request) || json_last_error() !== JSON_ERROR_NONE) {
+				trigger_error(
+					"Unable to connect over API please check api connection",
+					E_USER_WARNING,
+				);
+			}
 			return false;
 		}
+		return $json;
 	}
 
 	/* Delete an new temp user in mysql */
@@ -135,19 +146,16 @@ function sso_expected_token($database, $user, $ip, $time, $host) {
 	);
 }
 
-function verify_token($database, $user, $ip, $time, $host, $token) {
-	if (!is_string($token)) {
-		$token = "";
-	}
+function verify_token($database, $user, $ip, $time, $host, $token): bool {
 	// get_user_ip() may or may not prefix the server address, so accept both.
 	foreach ([$ip, $_SERVER["SERVER_ADDR"] . "|" . $ip] as $candidate_ip) {
 		$expected = sso_expected_token($database, $user, $candidate_ip, $time, $host);
 		if (hash_equals($expected, $token)) {
-			return;
+			return true;
 		}
 	}
 	trigger_error("Access denied: There is a security token mismatch " . $time, E_USER_WARNING);
-	session_invalid();
+	return false;
 }
 /* Need to have cookie visible from parent directory */
 session_set_cookie_params(0, "/", "", true, true);
@@ -156,11 +164,45 @@ $session_name = "SignonSession";
 session_name($session_name);
 @session_start();
 
-function session_invalid() {
+function signon_failure(string $message): void {
+	http_response_code(403);
+	// Keep the signed URL out of referrer headers for assets on the error page.
+	header("Referrer-Policy: no-referrer");
+	// Load phpMyAdmin's renderer directly to avoid restarting authentication.
+	$constants = __DIR__ . "/libraries/constants.php";
+	if (is_readable($constants)) {
+		try {
+			define("ROOT_PATH", __DIR__ . DIRECTORY_SEPARATOR);
+			define("PHPMYADMIN", true);
+			require_once $constants;
+			if (defined("AUTOLOAD_FILE") && is_readable(AUTOLOAD_FILE)) {
+				require_once AUTOLOAD_FILE;
+				$GLOBALS["config"] = null;
+				$GLOBALS["cfg"] = ["environment" => "production"];
+				$GLOBALS["containerBuilder"] = \PhpMyAdmin\Core::getContainerBuilder();
+				// The sign-on tab needs the HTML page. The AJAX flag would select JSON.
+				unset($_REQUEST["ajax_request"]);
+				header("Content-Type: text/html; charset=UTF-8");
+				\PhpMyAdmin\Core::fatalError($message);
+			}
+		} catch (\Throwable) {
+			error_log("phpMyAdmin could not render the sign-in error page.");
+		}
+	}
+
+	// Keep the message visible if phpMyAdmin's renderer fails to load.
+	header("Content-Type: text/plain; charset=UTF-8");
+	exit($message);
+}
+
+function session_invalid(?string $message = null) {
 	global $session_name;
-	//delete all current sessions
+	// Clear the sign-on session and its root-path cookie to stop authentication retries.
 	session_destroy();
-	setcookie($session_name, null, -1, "/");
+	setcookie($session_name, "", 1, "/");
+	if ($message !== null) {
+		signon_failure($message);
+	}
 	header("Location: " . dirname($_SERVER["PHP_SELF"]) . "/index.php");
 	die();
 }
@@ -196,6 +238,7 @@ function find_pma_server_id($host) {
 }
 
 $api = new Hestia_API();
+$invalid_link = "The phpMyAdmin sign-in link is invalid. Open phpMyAdmin again from Databases.";
 if (!empty($_GET)) {
 	if (isset($_GET["logout"])) {
 		$api->delete_temp_user(
@@ -208,26 +251,29 @@ if (!empty($_GET)) {
 		session_invalid();
 	} else {
 		if (isset($_GET["user"]) && isset($_GET["hestia_token"])) {
-			$database = $_GET["database"];
+			$database = $_GET["database"] ?? null;
 			$user = $_GET["user"];
 			$host = !empty($_GET["host"]) ? $_GET["host"] : "localhost";
 			$token = $_GET["hestia_token"];
-			// A plain Unix timestamp: digits only and short. Rejecting long
-			// values also stops "exp" being used to pad the signed message.
-			if (
-				isset($_GET["exp"]) &&
-				ctype_digit((string) $_GET["exp"]) &&
-				strlen((string) $_GET["exp"]) <= 12
-			) {
-				$time = (int) $_GET["exp"];
-			} else {
-				$time = 0;
+			$exp = $_GET["exp"] ?? null;
+			// The HMAC uses NUL separators. Reject them in signed fields before verification.
+			foreach ([$database, $user, $host, $token, $exp] as $value) {
+				if (!is_string($value) || $value === "" || strpos($value, "\0") !== false) {
+					session_invalid($invalid_link);
+				}
 			}
+			// Distinguish malformed timestamps from links past their 60-second lifetime.
+			if (!ctype_digit($exp) || strlen($exp) > 12) {
+				session_invalid($invalid_link);
+			}
+			$time = (int) $exp;
 
 			if ($time + 60 > time()) {
 				//note: Possible issues with cloudflare due to ip obfuscation
 				$ip = $api->get_user_ip();
-				verify_token($database, $user, $ip, $time, $host, $token);
+				if (!verify_token($database, $user, $ip, $time, $host, $token)) {
+					session_invalid($invalid_link);
+				}
 				$id = session_id();
 				//create a new temp user
 				$data = $api->create_temp_user($database, $user, $host);
@@ -252,7 +298,9 @@ if (!empty($_GET)) {
 					);
 					die();
 				} else {
-					session_invalid();
+					session_invalid(
+						"Hestia could not prepare temporary access to this database for phpMyAdmin.",
+					);
 				}
 			} else {
 				trigger_error(
@@ -262,10 +310,21 @@ if (!empty($_GET)) {
 						$time,
 					E_USER_WARNING,
 				);
-				session_invalid();
+				session_invalid(
+					"The phpMyAdmin sign-in request expired. Open phpMyAdmin again from Databases.",
+				);
 			}
+		} else {
+			session_invalid($invalid_link);
 		}
 	}
 } else {
+	// phpMyAdmin stores the MySQL error before redirecting to SignonURL.
+	// Use the flag to identify the failure while keeping the connection details private.
+	if (isset($_SESSION["PMA_single_signon_error_message"])) {
+		session_invalid(
+			"phpMyAdmin could not connect using the temporary database credentials. Open phpMyAdmin again from Databases.",
+		);
+	}
 	session_invalid();
 }

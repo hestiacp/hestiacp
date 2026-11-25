@@ -9,17 +9,7 @@ if (!empty($_SESSION["DB_PMA_ALIAS"])) {
 if (!empty($_SESSION["DB_PGA_ALIAS"])) {
 	$db_pgadmin_link = "//" . $http_host . "/" . $_SESSION["DB_PGA_ALIAS"] . "/";
 }
-
-$pma_sso_enabled = !empty($_SESSION["PHPMYADMIN_KEY"]) && !ipUsed();
-if ($pma_sso_enabled) {
-	require_once $_SERVER["DOCUMENT_ROOT"] . "/inc/phpmyadmin-sso.php";
-}
 ?>
-
-<?php if ($pma_sso_enabled) { ?>
-	<div hidden data-pma-sso-token="<?= tohtml($_SESSION["token"]) ?>"
-		data-messages="<?= tohtml(json_encode(phpmyadmin_sso_messages())) ?>"></div>
-<?php } ?>
 
 <!-- Begin toolbar -->
 <div class="toolbar">
@@ -191,17 +181,40 @@ if ($pma_sso_enabled) {
 									</a>
 								</li>
 							<?php } ?>
-								<?php if ($data[$key]['TYPE'] == 'mysql' && $pma_sso_enabled) { ?>
-								<li class="units-table-row-action shortcut-enter" data-key-action="js">
-									<button
-										type="button"
-										class="units-table-row-action-link data-controls"
-										data-pma-sso-database="<?= tohtml($key) ?>"
-										title="phpMyAdmin"
+								<?php if ($data[$key]['TYPE'] == 'mysql' && isset($_SESSION['PHPMYADMIN_KEY']) && $_SESSION['PHPMYADMIN_KEY'] != '' && !ipUsed()) { $time = time(); ?>
+									<?php
+										// Keyed signature over every field in the link, host included.
+										// Must stay in sync with verify_token() in hestia-sso.php.
+										// Not bcrypt: it ignores input past 72 bytes, which allowed
+										// offline token forgery (see hestia-sso.php).
+										$hestia_sso_token = hash_hmac(
+											'sha256',
+											implode("\0", [
+												$key,
+												$user_plain,
+												$_SESSION['user_combined_ip'],
+												(string) $time,
+												$data[$key]['HOST'],
+											]),
+											$_SESSION['PHPMYADMIN_KEY'],
+										);
+										$hestia_sso_url = $db_myadmin_link . "hestia-sso.php?" . http_build_query([
+											"host" => $data[$key]["HOST"],
+											"database" => $key,
+											"user" => $user_plain,
+											"exp" => $time,
+											"hestia_token" => $hestia_sso_token,
+										]);
+									?>
+									<li class="units-table-row-action shortcut-enter" data-key-action="href">
+										<a
+											class="units-table-row-action-link"
+											href="<?= tohtml($hestia_sso_url) ?>"
+											title="phpMyAdmin" target="_blank"
 										>
 										<i class="fas fa-right-to-bracket icon-orange"></i>
 										<span class="u-hide-desktop">phpMyAdmin</span>
-									</button>
+									</a>
 								</li>
 							<?php } ?>
 							<li class="units-table-row-action shortcut-enter" data-key-action="href">

@@ -81,8 +81,6 @@ export function createConfirmationDialog({
 	message = 'Are you sure?',
 	targetUrl,
 	spinner = false,
-	newTab = false,
-	confirmText = 'OK',
 }) {
 	// Create the dialog
 	const dialog = document.createElement('dialog');
@@ -109,7 +107,7 @@ export function createConfirmationDialog({
 	const confirmButton = document.createElement('button');
 	confirmButton.type = 'submit';
 	confirmButton.classList.add('button');
-	confirmButton.textContent = confirmText;
+	confirmButton.textContent = 'OK';
 	optionsElement.append(confirmButton);
 
 	const cancelButton = document.createElement('button');
@@ -124,9 +122,7 @@ export function createConfirmationDialog({
 
 	// Define named functions to handle the event listeners
 	const handleConfirm = () => {
-		if (targetUrl && newTab) {
-			window.open(targetUrl, '_blank', 'noopener,noreferrer');
-		} else if (targetUrl) {
+		if (targetUrl) {
 			if (spinner) {
 				showSpinner();
 			}

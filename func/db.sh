@@ -464,13 +464,10 @@ add_mysql_database_temp_user() {
 	if [ "$mysql_fork" = "mysql" ] && [ "$mysql_ver_sub" -ge 8 ]; then
 		query="CREATE USER \`$dbuser\`@\`%\`
 			IDENTIFIED BY '$dbpass_esc'"
-		mysql_query "$query" > /dev/null || return 1
+		mysql_query "$query" > /dev/null
 
 		query="GRANT ALL ON \`$(mysql_grant_db_name "$database")\`.* TO \`$dbuser\`@\`%\`"
-		if ! mysql_query "$query" > /dev/null; then
-			mysql_query "DROP USER '$dbuser'@'%'" > /dev/null
-			return 1
-		fi
+		mysql_query "$query" > /dev/null
 	else
 		query="GRANT ALL ON \`$(mysql_grant_db_name "$database")\`.* TO \`$dbuser\`@\`%\`
     		IDENTIFIED BY '$dbpass_esc'"

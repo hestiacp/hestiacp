@@ -88,11 +88,15 @@ if [ ! -e "$BACKUP/$backup" ]; then
 		downloaded='yes'
 	fi
 	if [ -z "$downloaded" ]; then
+		# Deleting task from queue, it would be retried forever
+		sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
 		check_result "$E_NOTEXIST" "backup file $backup doesn't exist in '${BACKUP}' folder"
 	fi
 fi
 
 if [ ! -e "$BACKUP/$backup" ]; then
+	# Deleting task from queue, it would be retried forever
+	sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
 	check_result "$E_NOTEXIST" "backup file $backup doesn't exist in '${BACKUP}' folder"
 fi
 

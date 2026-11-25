@@ -620,6 +620,83 @@ function check_ip_not_banned(){
   chmod u-w /etc/shadow
 }
 
+@test "User: Log user login ipv4" {
+  session="bats$(random 12)"
+  run v-log-user-login $user 192.168.2.10 success "$session" "bats-agent"
+  assert_success
+  refute_output
+  assert_file_contains "$HESTIA/data/users/$user/auth.log" "IP='192.168.2.10' ACTION='login' STATUS='success' USER_AGENT='bats-agent' SESSION='$session' ACTIVE='yes'"
+}
+
+@test "User: Log user login ipv6" {
+  session="bats$(random 12)"
+  run v-log-user-login $user "21DA:D3:0:2F3B:2AA:FF:FE28:9C5A" success "$session" "bats-agent"
+  assert_success
+  refute_output
+  assert_file_contains "$HESTIA/data/users/$user/auth.log" "IP='21DA:D3:0:2F3B:2AA:FF:FE28:9C5A' ACTION='login' STATUS='success' USER_AGENT='bats-agent' SESSION='$session' ACTIVE='yes'"
+}
+
+@test "User: Log user login ipv6 failed with system auth.log" {
+  session="bats$(random 12)"
+  run v-log-user-login $user "2001:db8::1" failed "$session" "bats-agent" yes "bats-$session"
+  assert_success
+  refute_output
+  assert_file_contains "$HESTIA/data/users/$user/auth.log" "IP='2001:db8::1' ACTION='login' STATUS='failed' USER_AGENT='bats-agent' SESSION='$session' ACTIVE='no'"
+  assert_file_contains "$HESTIA/log/auth.log" "$user 2001:db8::1 failed to login (bats-$session)"
+}
+
+@test "User: Log user login invalid ip" {
+  run v-log-user-login $user 192.168.992.10 success "bats$(random 12)" "bats-agent"
+  assert_failure $E_INVALID
+  run v-log-user-login $user "21DA:D3:0:2F3B:ZZZ:FF:FE28:9C5A" success "bats$(random 12)" "bats-agent"
+  assert_failure $E_INVALID
+}
+
+@test "User: Log user login invalid status" {
+  run v-log-user-login $user 192.168.2.10 "success' INJECTED='1" "bats$(random 12)" "bats-agent"
+  assert_failure $E_INVALID
+  run v-log-user-login $user 192.168.2.10 $'success\nDATE=1' "bats$(random 12)" "bats-agent"
+  assert_failure $E_INVALID
+  refute grep -q "INJECTED" "$HESTIA/data/users/$user/auth.log"
+}
+
+@test "User: Log user login creates auth.log with mode 660" {
+  authlog="$HESTIA/data/users/$user/auth.log"
+  if [ -e "$authlog" ]; then mv "$authlog" "$authlog.bats"; fi
+  run v-log-user-login $user 192.168.2.10 success "bats$(random 12)" "bats-agent"
+  mode=$(stat -c '%a' "$authlog")
+  rm -f "$authlog"
+  if [ -e "$authlog.bats" ]; then mv "$authlog.bats" "$authlog"; fi
+  assert_success
+  [ "$mode" = "660" ]
+}
+
+@test "User: Log user login refuses symlinked user auth.log" {
+  authlog="$HESTIA/data/users/$user/auth.log"
+  target="$BATS_TEST_TMPDIR/auth.log.target"
+  touch "$target"
+  if [ -e "$authlog" ]; then mv "$authlog" "$authlog.bats"; fi
+  ln -s "$target" "$authlog"
+  run v-log-user-login $user 192.168.2.10 success "bats$(random 12)" "bats-agent"
+  rm -f "$authlog"
+  if [ -e "$authlog.bats" ]; then mv "$authlog.bats" "$authlog"; fi
+  assert_failure $E_FORBIDEN
+  assert_file_empty "$target"
+}
+
+@test "User: Log user login refuses symlinked system auth.log" {
+  authlog="$HESTIA/log/auth.log"
+  target="$BATS_TEST_TMPDIR/auth.log.target"
+  touch "$target"
+  if [ -e "$authlog" ]; then mv "$authlog" "$authlog.bats"; fi
+  ln -s "$target" "$authlog"
+  run v-log-user-login $user 192.168.2.10 failed "bats$(random 12)" "bats-agent" yes "bats"
+  rm -f "$authlog"
+  if [ -e "$authlog.bats" ]; then mv "$authlog.bats" "$authlog"; fi
+  assert_failure $E_FORBIDEN
+  assert_file_empty "$target"
+}
+
 #----------------------------------------------------------#
 #                         Cron                             #
 #----------------------------------------------------------#
@@ -983,6 +1060,94 @@ function check_ip_not_banned(){
     run v-rebuild-web-domains $user
     assert_success
     refute_output
+}
+
+@test "WEB: Dump site does not follow symlinks to root-owned files" {
+    # v-dump-site runs the archiver as root in the customer's web directory.
+    # A customer-owned symlink in public_html must be stored as a link, never
+    # followed, or the downloadable archive would leak the target's contents
+    # (e.g. /etc/shadow, mysql.conf, panel session files).
+    local pub="$HOMEDIR/$user/web/$domain/public_html"
+    ln -sf /etc/shadow "$pub/shadow_link"
+    chown -h $user:$user "$pub/shadow_link"
+
+    run v-dump-site $user $domain full
+    assert_success
+    local zip="$BACKUP/$(echo "$output" | head -1)"
+    assert_file_exist "$zip"
+
+    # The entry must be the symlink text, not the real shadow file
+    run unzip -p "$zip" public_html/shadow_link
+    assert_success
+    assert_output "/etc/shadow"
+    refute_output --partial 'root:'
+
+    rm -f "$pub/shadow_link" "$zip"
+}
+
+@test "WEB: Dump site does not follow a symlinked public_html" {
+    # public_html is inside the user owned domain directory, so the user can
+    # replace it with a symlink. The archiver must not follow it as root.
+    local dom_dir="$HOMEDIR/$user/web/$domain"
+    mv "$dom_dir/public_html" "$dom_dir/public_html.orig"
+    ln -s /etc "$dom_dir/public_html"
+    chown -h $user:$user "$dom_dir/public_html"
+
+    run v-dump-site $user $domain
+    local dump_output="$output"
+
+    # Restore before asserting so a failure doesn't break later tests
+    rm -f "$dom_dir/public_html"
+    mv "$dom_dir/public_html.orig" "$dom_dir/public_html"
+
+    local zip="$BACKUP/$(echo "$dump_output" | head -1)"
+    if [ -f "$zip" ]; then
+        run unzip -p "$zip" shadow
+        refute_output --partial 'root:'
+        rm -f "$zip"
+    fi
+}
+
+@test "WEB: Dump site full does not follow a swapped web directory" {
+    # The root owned web directory sits in the user owned home, so the user
+    # can rename it and put a symlinked domain directory in its place.
+    local home="$HOMEDIR/$user"
+    mv "$home/web" "$home/web.orig"
+    mkdir "$home/web"
+    ln -s /etc "$home/web/$domain"
+    chown -h $user:$user "$home/web" "$home/web/$domain"
+
+    run v-dump-site $user $domain full
+    local dump_output="$output"
+
+    # Restore before asserting so a failure doesn't break later tests
+    rm -f "$home/web/$domain"
+    rmdir "$home/web"
+    mv "$home/web.orig" "$home/web"
+
+    local zip="$BACKUP/$(echo "$dump_output" | head -1)"
+    if [ -f "$zip" ]; then
+        run unzip -p "$zip" shadow
+        refute_output --partial 'root:'
+        rm -f "$zip"
+    fi
+}
+
+@test "WEB: Dump site archives files the user can read" {
+    local pub="$HOMEDIR/$user/web/$domain/public_html"
+    echo "dump-site-check" > "$pub/dump_check.txt"
+    chown $user:$user "$pub/dump_check.txt"
+
+    run v-dump-site $user $domain full
+    assert_success
+    local zip="$BACKUP/$(echo "$output" | head -1)"
+    assert_file_exist "$zip"
+
+    run unzip -p "$zip" public_html/dump_check.txt
+    assert_success
+    assert_output "dump-site-check"
+
+    rm -f "$pub/dump_check.txt" "$zip"
 }
 
 @test "WEB: Use quick install app on web domain" {
@@ -1397,6 +1562,45 @@ function check_ip_not_banned(){
     echo -e '<?php\necho "doc1-root-".$_SERVER["HTTP_HOST"];' > "$HOMEDIR/$user/web/$docroot1_domain/public_html/php-test.php"
     validate_web_domain $user $docroot1_domain "doc1-root-${docroot1_domain}" 'php-test.php'
     rm "$HOMEDIR/$user/web/$docroot1_domain/public_html/php-test.php"
+}
+
+@test "Docroot: Reject a directory name with config-breaking characters" {
+    docroot1_domain="docroot1.${domain}"
+    local evil='x;}}} log_format hpwn escape=none $http_x_hpwn;#'
+    local evildir="$HOMEDIR/$user/web/$docroot1_domain/public_html/$evil"
+
+    mkdir -p "$evildir"
+    run v-change-web-domain-docroot $user "$docroot1_domain" "$docroot1_domain" "/$evil"
+    assert_failure
+    # The payload must never reach the web server config
+    refute grep -rqF 'log_format hpwn' /etc/nginx /usr/local/hestia/data/users/$user
+    rm -rf "$evildir"
+}
+
+@test "Docroot: Reject a clean symlink that resolves to a config-breaking path" {
+    # Reproduces GHSA: the typed name is clean, but readlink -e resolves the
+    # symlink to a directory chain whose component names break out of the
+    # nginx `root %docroot%;` directive.
+    docroot1_domain="docroot1.${domain}"
+    local pub="$HOMEDIR/$user/web/$docroot1_domain/public_html"
+    local evil='x;}}} log_format hpwn escape=none $http_x_hpwn; server{listen 198.18.0.125:80;server_name hpwn.test;access_log /etc/cron.d/hpwn hpwn;location /{location ~* x{#'
+
+    mkdir -p "$pub/$evil"
+    ln -sfn "$pub/$evil" "$pub/lnk"
+    chown -h $user:$user "$pub/lnk"
+
+    run v-change-web-domain-docroot $user "$docroot1_domain" "$docroot1_domain" "/lnk"
+    assert_failure
+
+    # Neither the stored config nor the generated nginx config may carry it,
+    # and no cron drop must have been written
+    run get_object_value 'web' 'DOMAIN' "$docroot1_domain" '$CUSTOM_DOCROOT'
+    refute_output --partial 'log_format'
+    refute grep -rqF 'log_format hpwn' /etc/nginx
+    assert_file_not_exist /etc/cron.d/hpwn
+
+    rm -f "$pub/lnk"
+    rm -rf "$pub/$evil"
 }
 
 @test "Docroot: Cleanup" {
@@ -2086,6 +2290,200 @@ function check_ip_not_banned(){
     assert_failure $E_NOTEXIST
 }
 
+#----------------------------------------------------------#
+#     DB grants: "_" must not act as a wildcard            #
+#----------------------------------------------------------#
+# A GRANT on `test-5285_wc_db`.* with an unescaped name also covers
+# `test-5285_wcxdb`, which stands in for a database of another customer
+# (GHSA-g95g-h6p5-m6c6). The "foreign" database is created as root, outside
+# Hestia, and the Hestia database user must never be able to use it.
+
+# Run a query as the MySQL admin user Hestia uses for localhost
+function mysql_root_query() {
+    (
+        source $HESTIA/func/db.sh
+        mysql_connect localhost
+        mysql_query_raw "$1"
+    )
+}
+
+# Succeeds when <dbuser> with <password> can USE <database>
+function mysql_user_can_use() {
+    local dbuser=$1 password=$2 db=$3 cnf cli=mysql rc
+    [ -x /usr/bin/mariadb ] && cli=mariadb
+    cnf=$(mktemp /tmp/mysql.XXXXXX)
+    chmod 600 "$cnf"
+    printf "[client]\nhost='localhost'\nuser='%s'\npassword='%s'\n" "$dbuser" "$password" > "$cnf"
+    echo "USE \`$db\`;" | $cli --defaults-file="$cnf" > /dev/null 2>&1
+    rc=$?
+    rm -f "$cnf"
+    return $rc
+}
+
+# Recreate the grants older Hestia versions made (unescaped database name)
+function mysql_add_legacy_grant() {
+    mysql_root_query "GRANT ALL ON \`$1\`.* TO \`$2\`@\`%\`"
+    mysql_root_query "GRANT ALL ON \`$1\`.* TO \`$2\`@localhost"
+}
+
+@test "MYSQL grants: Add database does not grant wildcard access" {
+    mysql_root_query "CREATE DATABASE IF NOT EXISTS \`${user}_wcxdb\`"
+
+    run v-add-database $user wc_db wcuser 1234abcd mysql
+    assert_success
+    refute_output
+
+    run mysql_user_can_use "${user}_wcuser" 1234abcd "${user}_wc_db"
+    assert_success
+    run mysql_user_can_use "${user}_wcuser" 1234abcd "${user}_wcxdb"
+    assert_failure
+
+    run mysql_root_query "SHOW GRANTS FOR \`${user}_wcuser\`@localhost"
+    assert_output --partial "${user}\\_wc\\_db"
+}
+
+@test "MYSQL grants: Rebuild database does not grant wildcard access" {
+    run v-rebuild-database $user "${user}_wc_db"
+    assert_success
+
+    run mysql_user_can_use "${user}_wcuser" 1234abcd "${user}_wc_db"
+    assert_success
+    run mysql_user_can_use "${user}_wcuser" 1234abcd "${user}_wcxdb"
+    assert_failure
+}
+
+@test "MYSQL grants: Change password does not grant wildcard access" {
+    run v-change-database-password $user "${user}_wc_db" 5678abcd
+    assert_success
+
+    run mysql_user_can_use "${user}_wcuser" 5678abcd "${user}_wc_db"
+    assert_success
+    run mysql_user_can_use "${user}_wcuser" 5678abcd "${user}_wcxdb"
+    assert_failure
+}
+
+@test "MYSQL grants: Legacy wildcard grant does reach the foreign database" {
+    # Sanity check that the setup reproduces the issue, so the other
+    # tests failing to reach the foreign database means something
+    mysql_add_legacy_grant "${user}_wc_db" "${user}_wcuser"
+
+    run mysql_user_can_use "${user}_wcuser" 5678abcd "${user}_wcxdb"
+    assert_success
+}
+
+@test "MYSQL grants: Suspend removes legacy wildcard grant" {
+    run v-suspend-database $user "${user}_wc_db"
+    assert_success
+
+    run mysql_user_can_use "${user}_wcuser" 5678abcd "${user}_wc_db"
+    assert_failure
+    run mysql_user_can_use "${user}_wcuser" 5678abcd "${user}_wcxdb"
+    assert_failure
+}
+
+@test "MYSQL grants: Unsuspend does not grant wildcard access" {
+    mysql_add_legacy_grant "${user}_wc_db" "${user}_wcuser"
+
+    run v-unsuspend-database $user "${user}_wc_db"
+    assert_success
+
+    run mysql_user_can_use "${user}_wcuser" 5678abcd "${user}_wc_db"
+    assert_success
+    run mysql_user_can_use "${user}_wcuser" 5678abcd "${user}_wcxdb"
+    assert_failure
+}
+
+@test "MYSQL grants: Upgrade migration replaces legacy wildcard grant" {
+    mysql_add_legacy_grant "${user}_wc_db" "${user}_wcuser"
+    run mysql_user_can_use "${user}_wcuser" 5678abcd "${user}_wcxdb"
+    assert_success
+
+    run bash -c 'source /etc/hestiacp/hestia.conf; source $HESTIA/func/main.sh; source $HESTIA/func/db.sh; mysql_migrate_legacy_db_grants'
+    assert_success
+
+    run mysql_user_can_use "${user}_wcuser" 5678abcd "${user}_wc_db"
+    assert_success
+    run mysql_user_can_use "${user}_wcuser" 5678abcd "${user}_wcxdb"
+    assert_failure
+}
+
+@test "MYSQL grants: Temp user does not get wildcard access" {
+    # TTL 0: no "at" job, the user is removed at the end of this test
+    run v-add-database-temp-user $user "${user}_wc_db" mysql localhost 0
+    assert_success
+    local tmpuser tmppass
+    tmpuser=$(echo "$output" | grep -o '"user": *"[^"]*"' | cut -d'"' -f4)
+    tmppass=$(echo "$output" | grep -o '"password": *"[^"]*"' | cut -d'"' -f4)
+    refute [ -z "$tmpuser" ]
+    refute [ -z "$tmppass" ]
+
+    run mysql_user_can_use "$tmpuser" "$tmppass" "${user}_wc_db"
+    assert_success
+    run mysql_user_can_use "$tmpuser" "$tmppass" "${user}_wcxdb"
+    assert_failure
+
+    run v-delete-database-temp-user $user "${user}_wc_db" "$tmpuser" mysql localhost
+    assert_success
+}
+
+@test "SSO temp user: rejects a host with shell metacharacters" {
+    # The host reaches a root-run "at" line; a value with shell metacharacters
+    # must be refused outright, never scheduled (GHSA SSO chain).
+    local payload="localhost';touch /tmp/hestia_sso_rce_\$\$;#"
+    rm -f /tmp/hestia_sso_rce_*
+    run v-add-database-temp-user $user "${user}_wc_db" mysql "$payload" 1
+    assert_failure
+    assert_output --partial "invalid host format"
+    # Nothing must have been scheduled with the payload
+    run bash -c "at -l >/dev/null 2>&1 && for j in \$(atq 2>/dev/null | awk '{print \$1}'); do at -c \"\$j\" 2>/dev/null; done | grep -c 'touch /tmp/hestia_sso_rce'"
+    assert_output "0"
+    assert_file_not_exist "/tmp/hestia_sso_rce_"
+}
+
+@test "SSO temp user: accepts a valid configured host" {
+    run v-add-database-temp-user $user "${user}_wc_db" mysql localhost 0
+    assert_success
+    local tmpuser
+    tmpuser=$(echo "$output" | grep -o '"user": *"[^"]*"' | cut -d'"' -f4)
+    refute [ -z "$tmpuser" ]
+    run v-delete-database-temp-user $user "${user}_wc_db" "$tmpuser" mysql localhost
+    assert_success
+}
+
+@test "SSO token: signed with keyed HMAC, not truncatable bcrypt" {
+    # The SSO token must be a keyed HMAC compared in constant time. bcrypt
+    # (password_hash/password_verify) ignores input past 72 bytes, which let
+    # the key be pushed out and the token forged offline.
+    local sso="$HESTIA/install/deb/phpmyadmin/hestia-sso.php"
+    local gen="$HESTIA/web/templates/pages/list_db.php"
+    assert_file_exist "$sso"
+    assert_file_exist "$gen"
+
+    # Verifier: HMAC + constant-time compare, and no bcrypt verify
+    run grep -q "hash_hmac" "$sso"; assert_success
+    run grep -q "hash_equals" "$sso"; assert_success
+    run grep -q "password_verify" "$sso"; assert_failure
+    # exp is bounded to a short digit string
+    run grep -q "ctype_digit" "$sso"; assert_success
+
+    # Generator: the SSO token line uses hash_hmac, not password_hash
+    run grep -q "hestia_sso_token = hash_hmac" "$gen"; assert_success
+    run bash -c "grep -A3 'hestia_sso_token =' '$gen' | grep -q 'password_hash'"; assert_failure
+}
+
+@test "MYSQL grants: Delete database removes all grants" {
+    mysql_add_legacy_grant "${user}_wc_db" "${user}_wcuser"
+
+    run v-delete-database $user "${user}_wc_db"
+    assert_success
+
+    # Neither the exact nor the legacy wildcard grant may survive
+    run mysql_root_query "SELECT COUNT(*) FROM mysql.db WHERE Db IN ('${user}_wc_db', '${user}\\\\_wc\\\\_db')"
+    assert_output "0"
+
+    mysql_root_query "DROP DATABASE IF EXISTS \`${user}_wcxdb\`"
+}
+
 @test "PGSQL: Add database invalid user" {
   if [ -z "$(echo $DB_SYSTEM | grep -w "pgsql")" ]; then
     skip "PostGreSQL is not installed"
@@ -2201,6 +2599,9 @@ function check_ip_not_banned(){
   assert_success
   refute_output
   assert_file_exist /etc/exim4/smtp_relay.conf
+
+  run stat -c '%a %U:%G' /etc/exim4/smtp_relay.conf
+  assert_output '640 root:Debian-exim'
 }
 
 @test "System: Delete SMTP relay" {

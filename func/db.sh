@@ -107,6 +107,63 @@ mysql_sql_escape() {
 	printf '%s' "$1" | sed -e 's/\\/\\\\/g' -e "s/'/''/g"
 }
 
+# Escape a database name for the database part of a MySQL GRANT/REVOKE.
+# In database-level privileges "_" and "%" are wildcards, so an unescaped
+# grant on "johnv_shop" also matches "johnvxshop", and "mys_l" matches
+# the "mysql" system schema.
+mysql_grant_db_name() {
+	printf '%s' "$1" | sed -e 's/\\/\\\\/g' -e 's/_/\\_/g' -e 's/%/\\%/g'
+}
+
+# Revoke grants created by older Hestia versions with an unescaped (wildcard)
+# database name. Usage: mysql_revoke_legacy_db_grants <database> <dbuser>
+mysql_revoke_legacy_db_grants() {
+	mysql_query "REVOKE ALL ON \`$1\`.* FROM \`$2\`@\`%\`" > /dev/null
+	mysql_query "REVOKE ALL ON \`$1\`.* FROM \`$2\`@localhost" > /dev/null
+}
+
+# Revoke all database-level grants of a user on a database, both the escaped
+# form and the legacy unescaped form.
+# Usage: mysql_revoke_db_grants <database> <dbuser>
+mysql_revoke_db_grants() {
+	local db_grant
+	db_grant=$(mysql_grant_db_name "$1")
+	mysql_query "REVOKE ALL ON \`$db_grant\`.* FROM \`$2\`@\`%\`" > /dev/null
+	mysql_query "REVOKE ALL ON \`$db_grant\`.* FROM \`$2\`@localhost" > /dev/null
+	mysql_revoke_legacy_db_grants "$1" "$2"
+}
+
+# Replace grants made by older Hestia versions (unescaped database name) with
+# exact grants, for every MySQL database in the users' db.conf files.
+# Suspended databases only lose the legacy grant.
+mysql_migrate_legacy_db_grants() {
+	local db_conf db_line
+	for db_conf in "$HESTIA"/data/users/*/db.conf; do
+		[ -f "$db_conf" ] || continue
+		while IFS= read -r db_line; do
+			[[ "$db_line" == *"TYPE='mysql'"* ]] || continue
+			# Subshell: parse_object_kv_list and mysql_connect overwrite
+			# globals (USER, HOST, ...) and mysql_connect may exit
+			(
+				parse_object_kv_list "$db_line"
+				db_name="$DB"
+				db_user="$DBUSER"
+				db_suspended="$SUSPENDED"
+				if [ -z "$db_name" ] || [ -z "$db_user" ] || [ -z "$HOST" ]; then
+					exit 0
+				fi
+				mysql_connect "$HOST"
+				mysql_revoke_legacy_db_grants "$db_name" "$db_user"
+				if [ "$db_suspended" != 'yes' ]; then
+					db_grant=$(mysql_grant_db_name "$db_name")
+					mysql_query "GRANT ALL ON \`$db_grant\`.* TO \`$db_user\`@\`%\`" > /dev/null
+					mysql_query "GRANT ALL ON \`$db_grant\`.* TO \`$db_user\`@localhost" > /dev/null
+				fi
+			)
+		done < "$db_conf"
+	done
+}
+
 mysql_query() {
 	sql_tmp=$(mktemp)
 	echo "$1" > $sql_tmp
@@ -322,17 +379,17 @@ add_mysql_database() {
             IDENTIFIED BY '$dbpass_esc'"
 		mysql_query "$query" > /dev/null
 
-		query="GRANT ALL ON \`$database\`.* TO \`$dbuser\`@\`%\`"
+		query="GRANT ALL ON \`$(mysql_grant_db_name "$database")\`.* TO \`$dbuser\`@\`%\`"
 		mysql_query "$query" > /dev/null
 
-		query="GRANT ALL ON \`$database\`.* TO \`$dbuser\`@localhost"
+		query="GRANT ALL ON \`$(mysql_grant_db_name "$database")\`.* TO \`$dbuser\`@localhost"
 		mysql_query "$query" > /dev/null
 	else
-		query="GRANT ALL ON \`$database\`.* TO \`$dbuser\`@\`%\`
+		query="GRANT ALL ON \`$(mysql_grant_db_name "$database")\`.* TO \`$dbuser\`@\`%\`
             IDENTIFIED BY '$dbpass_esc'"
 		mysql_query "$query" > /dev/null
 
-		query="GRANT ALL ON \`$database\`.* TO \`$dbuser\`@localhost
+		query="GRANT ALL ON \`$(mysql_grant_db_name "$database")\`.* TO \`$dbuser\`@localhost
             IDENTIFIED BY '$dbpass_esc'"
 		mysql_query "$query" > /dev/null
 	fi
@@ -409,10 +466,10 @@ add_mysql_database_temp_user() {
 			IDENTIFIED BY '$dbpass_esc'"
 		mysql_query "$query" > /dev/null
 
-		query="GRANT ALL ON \`$database\`.* TO \`$dbuser\`@\`%\`"
+		query="GRANT ALL ON \`$(mysql_grant_db_name "$database")\`.* TO \`$dbuser\`@\`%\`"
 		mysql_query "$query" > /dev/null
 	else
-		query="GRANT ALL ON \`$database\`.* TO \`$dbuser\`@\`%\`
+		query="GRANT ALL ON \`$(mysql_grant_db_name "$database")\`.* TO \`$dbuser\`@\`%\`
     		IDENTIFIED BY '$dbpass_esc'"
 		mysql_query "$query" > /dev/null
 	fi
@@ -420,6 +477,8 @@ add_mysql_database_temp_user() {
 
 delete_mysql_database_temp_user() {
 	mysql_connect $host
+	query="REVOKE ALL ON \`$(mysql_grant_db_name "$database")\`.* FROM \`$dbuser\`@\`%\`"
+	mysql_query "$query" > /dev/null
 	query="REVOKE ALL ON \`$database\`.* FROM \`$dbuser\`@\`%\`"
 	mysql_query "$query" > /dev/null
 	query="DROP USER '$dbuser'@'%'"
@@ -446,6 +505,7 @@ get_database_values() {
 # Change MySQL database password
 change_mysql_password() {
 	mysql_connect $HOST
+	mysql_revoke_legacy_db_grants "$database" "$DBUSER"
 
 	mysql_ver_sub=$(echo $mysql_ver | cut -d '.' -f1)
 	mysql_ver_sub_sub=$(echo $mysql_ver | cut -d '.' -f2)
@@ -462,21 +522,21 @@ change_mysql_password() {
 			mysql_query "$query" > /dev/null
 		else
 			# mysql < 8
-			query="GRANT ALL ON \`$database\`.* TO \`$DBUSER\`@\`%\`
+			query="GRANT ALL ON \`$(mysql_grant_db_name "$database")\`.* TO \`$DBUSER\`@\`%\`
                   IDENTIFIED BY '$dbpass_esc'"
 			mysql_query "$query" > /dev/null
 
-			query="GRANT ALL ON \`$database\`.* TO \`$DBUSER\`@localhost
+			query="GRANT ALL ON \`$(mysql_grant_db_name "$database")\`.* TO \`$DBUSER\`@localhost
                   IDENTIFIED BY '$dbpass_esc'"
 			mysql_query "$query" > /dev/null
 		fi
 	else
 		# mariadb
-		query="GRANT ALL ON \`$database\`.* TO \`$DBUSER\`@\`%\`
+		query="GRANT ALL ON \`$(mysql_grant_db_name "$database")\`.* TO \`$DBUSER\`@\`%\`
               IDENTIFIED BY '$dbpass_esc'"
 		mysql_query "$query" > /dev/null
 
-		query="GRANT ALL ON \`$database\`.* TO \`$DBUSER\`@localhost
+		query="GRANT ALL ON \`$(mysql_grant_db_name "$database")\`.* TO \`$DBUSER\`@localhost
               IDENTIFIED BY '$dbpass_esc'"
 		mysql_query "$query" > /dev/null
 	fi
@@ -532,11 +592,7 @@ delete_mysql_database() {
 	query="DROP DATABASE \`$database\`"
 	mysql_query "$query"
 
-	query="REVOKE ALL ON \`$database\`.* FROM \`$DBUSER\`@\`%\`"
-	mysql_query "$query" > /dev/null
-
-	query="REVOKE ALL ON \`$database\`.* FROM \`$DBUSER\`@localhost"
-	mysql_query "$query" > /dev/null
+	mysql_revoke_db_grants "$database" "$DBUSER"
 
 	if [ "$(grep "DBUSER='$DBUSER'" $USER_DATA/db.conf | wc -l)" -lt 2 ]; then
 		query="DROP USER '$DBUSER'@'%'"
@@ -605,10 +661,7 @@ is_dbhost_free() {
 # Suspend MySQL database
 suspend_mysql_database() {
 	mysql_connect $HOST
-	query="REVOKE ALL ON \`$database\`.* FROM \`$DBUSER\`@\`%\`"
-	mysql_query "$query" > /dev/null
-	query="REVOKE ALL ON \`$database\`.* FROM \`$DBUSER\`@localhost"
-	mysql_query "$query" > /dev/null
+	mysql_revoke_db_grants "$database" "$DBUSER"
 }
 
 # Suspend PostgreSQL database
@@ -621,9 +674,10 @@ suspend_pgsql_database() {
 # Unsuspend MySQL database
 unsuspend_mysql_database() {
 	mysql_connect $HOST
-	query="GRANT ALL ON \`$database\`.* TO \`$DBUSER\`@\`%\`"
+	mysql_revoke_legacy_db_grants "$database" "$DBUSER"
+	query="GRANT ALL ON \`$(mysql_grant_db_name "$database")\`.* TO \`$DBUSER\`@\`%\`"
 	mysql_query "$query" > /dev/null
-	query="GRANT ALL ON \`$database\`.* TO \`$DBUSER\`@localhost"
+	query="GRANT ALL ON \`$(mysql_grant_db_name "$database")\`.* TO \`$DBUSER\`@localhost"
 	mysql_query "$query" > /dev/null
 }
 
@@ -668,11 +722,7 @@ get_pgsql_disk_usage() {
 delete_mysql_user() {
 	mysql_connect $HOST
 
-	query="REVOKE ALL ON \`$database\`.* FROM \`$old_dbuser\`@\`%\`"
-	mysql_query "$query" > /dev/null
-
-	query="REVOKE ALL ON \`$database\`.* FROM \`$old_dbuser\`@localhost"
-	mysql_query "$query" > /dev/null
+	mysql_revoke_db_grants "$database" "$old_dbuser"
 
 	query="DROP USER '$old_dbuser'@'%'"
 	mysql_query "$query" > /dev/null

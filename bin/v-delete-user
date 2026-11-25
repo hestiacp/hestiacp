@@ -1,11 +1,13 @@
 #!/bin/bash
 # info: delete user
-# options: USER [RESTART]
+# options: USER [RESTART] [BACKUPS]
 #
 # example: v-delete-user whistler
+# example: v-delete-user whistler yes yes
 #
 # This function deletes a certain user and all his resources such as domains,
-# databases, cron jobs, etc.
+# databases, cron jobs, etc. With BACKUPS set to 'yes' the user's backups are
+# deleted too; by default they are kept, so a deleted user can be restored.
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #
@@ -14,6 +16,7 @@
 # Argument definition
 user=$1
 restart=$2
+backups=${3-no}
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -33,8 +36,11 @@ source_conf "$HESTIA/conf/hestia.conf"
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '1' "$#" 'USER [RESTART]'
+check_args '1' "$#" 'USER [RESTART] [BACKUPS]'
 is_format_valid 'user' 'restart'
+if [ "$backups" != 'yes' ] && [ "$backups" != 'no' ]; then
+	check_result "$E_INVALID" "invalid backups value: $backups (yes or no)"
+fi
 is_object_valid 'user' 'USER' "$user"
 if [ "$user" = "$ROOT_USER" ]; then
 	exit
@@ -95,6 +101,31 @@ for key_file in "$HESTIA/data/access-keys/"*; do
 		rm -f "$key_file"
 	fi
 done
+
+# Deleting php-fpm pools still owned by the user. Domain deletion removes the
+# pools of the domains Hestia knows about, but a pool left behind by an earlier
+# partial deletion would survive the user and make php-fpm fail to start for
+# every website once the user no longer exists.
+pools_deleted=''
+for pool_file in /etc/php/*/fpm/pool.d/*.conf; do
+	if [ -f "$pool_file" ] && grep -qE "^[[:space:]]*user[[:space:]]*=[[:space:]]*${user}[[:space:]]*$" "$pool_file"; then
+		rm -f "$pool_file"
+		pools_deleted='yes'
+	fi
+done
+if [ -n "$pools_deleted" ] && [ -n "$WEB_BACKEND" ] && [ "$WEB_BACKEND" != 'remote' ]; then
+	$BIN/v-restart-web-backend "$restart"
+fi
+
+# Deleting user backups, only when asked to. Without this the archives of a
+# deleted user stay in the backup storage forever, since nothing else lists
+# them once the user is gone.
+if [ "$backups" = 'yes' ] && [ -n "$BACKUP_SYSTEM" ] && [ -f "$USER_DATA/backup.conf" ]; then
+	for backup_name in $(grep -o "^BACKUP='[^']*'" "$USER_DATA/backup.conf" | cut -d "'" -f 2); do
+		$BIN/v-delete-user-backup "$user" "$backup_name"
+	done
+	rm -f "$BACKUP/$user.log"
+fi
 
 # Deleting system user
 /usr/sbin/userdel -f "$user" >> /dev/null 2>&1

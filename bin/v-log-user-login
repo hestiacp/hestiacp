@@ -8,7 +8,7 @@
 
 # Argument definition
 user=$1
-ip=$2
+ip46=$2
 status=$3
 session_id=$4
 user_agent=$5
@@ -33,7 +33,8 @@ source_conf "$HESTIA/conf/hestia.conf"
 #----------------------------------------------------------#
 
 check_args '2' "$#" 'USER IP SESSION_ID USER_AGENT [AUTHLOG] [REASON]'
-is_format_valid 'user' 'ip'
+is_format_valid 'user' 'ip46'
+is_common_format_valid "$status" "STATUS"
 is_common_format_valid "$session_id" "SESSION_ID"
 format_no_quotes "$user_agent" "USER_AGENT"
 is_common_format_valid "$authlog" "AUTHLOG"
@@ -46,18 +47,30 @@ time_n_date=$(date +'%T %F')
 time=$(echo "$time_n_date" | cut -f 1 -d \ )
 date=$(echo "$time_n_date" | cut -f 2 -d \ )
 
+if [ -L "$USER_DATA/auth.log" ]; then
+	check_result "$E_FORBIDEN" "$USER_DATA/auth.log is a symlink"
+fi
+
 if [ ! -f "$USER_DATA/auth.log" ]; then
-	touch "$USER_DATA/auth.log"
+	(umask 117 && touch "$USER_DATA/auth.log")
+	chmod 660 "$USER_DATA/auth.log"
 fi
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-echo "DATE='$date' TIME='$time' IP='$ip' ACTION='login' STATUS='$status' USER_AGENT='$user_agent' SESSION='$session_id' ACTIVE='$active'" >> "$USER_DATA/auth.log"
+echo "DATE='$date' TIME='$time' IP='$ip46' ACTION='login' STATUS='$status' USER_AGENT='$user_agent' SESSION='$session_id' ACTIVE='$active'" >> "$USER_DATA/auth.log"
 
 if [ "$authlog" = "yes" ]; then
-	echo "$date $time $user $ip failed to login ($reason)" >> "$HESTIA/log/auth.log"
+	if [ -L "$HESTIA/log/auth.log" ]; then
+		check_result "$E_FORBIDEN" "$HESTIA/log/auth.log is a symlink"
+	fi
+	if [ ! -f "$HESTIA/log/auth.log" ]; then
+		(umask 117 && touch "$HESTIA/log/auth.log")
+		chmod 660 "$HESTIA/log/auth.log"
+	fi
+	echo "$date $time $user $ip46 failed to login ($reason)" >> "$HESTIA/log/auth.log"
 fi
 
 #----------------------------------------------------------#

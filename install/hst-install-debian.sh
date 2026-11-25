@@ -31,7 +31,7 @@ HESTIA_COMMON_DIR="$HESTIA/install/common"
 VERBOSE='no'
 
 # Define software versions
-HESTIA_INSTALL_VER='1.10.9'
+HESTIA_INSTALL_VER='1.10.10'
 
 # Build the full Hestia version
 # Split base version (1.10.0) from channel suffix (~alpha / ~beta), if present
@@ -884,7 +884,6 @@ curl -s https://packages.sury.org/php/apt.gpg | gpg --dearmor | tee /usr/share/k
 cat > /etc/apt/apt.conf.d/60unattended-upgrades-hestia-php << 'EOF'
 Unattended-Upgrade::Origins-Pattern {
 	"origin=deb.sury.org";
-	"origin=LP-PPA-ondrej-php";
 };
 EOF
 
@@ -893,6 +892,9 @@ if [ "$apache" = 'yes' ]; then
 	echo "[ * ] Apache2"
 	echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/apache2-keyring.gpg] https://packages.sury.org/apache2/ $codename main" > $apt/apache2.list
 	curl -s https://packages.sury.org/apache2/apt.gpg | gpg --dearmor | tee /usr/share/keyrings/apache2-keyring.gpg > /dev/null 2>&1
+
+# There is no need for a separate unattended-upgrades configuration for Apache,
+# as the existing PHP configuration already covers the Sury Apache repository.
 fi
 
 # Installing MariaDB repo
@@ -2472,7 +2474,6 @@ echo "10 05 * * * sudo /usr/local/hestia/bin/v-backup-users" >> /var/spool/cron/
 echo "20 00 * * * sudo /usr/local/hestia/bin/v-update-user-stats" >> /var/spool/cron/crontabs/hestiaweb
 echo "*/5 * * * * sudo /usr/local/hestia/bin/v-update-sys-rrd" >> /var/spool/cron/crontabs/hestiaweb
 echo "$min $hour * * * sudo /usr/local/hestia/bin/v-update-letsencrypt-ssl" >> /var/spool/cron/crontabs/hestiaweb
-echo "41 4 * * * sudo /usr/local/hestia/bin/v-update-sys-hestia-all" >> /var/spool/cron/crontabs/hestiaweb
 
 chmod 600 /var/spool/cron/crontabs/hestiaweb
 chown hestiaweb:hestiaweb /var/spool/cron/crontabs/hestiaweb

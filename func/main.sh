@@ -2617,19 +2617,25 @@ delete_chroot_jail() {
 	local jail="/srv/jail/$user"
 	local path
 	local systemd
+	local unit_file
 
 	# Stop both the current and legacy mount before removing their unit files.
 	for path in "$jail/home/$user" "$jail/home"; do
 		systemd=$(systemd-escape -p --suffix=mount "$path") || return
-		systemctl stop "$systemd" > /dev/null 2>&1
+		unit_file="/etc/systemd/system/$systemd"
 		if mountpoint -q "$path"; then
-			return 1
+			systemctl stop "$systemd" > /dev/null 2>&1 || return
+			if mountpoint -q "$path"; then
+				return 1
+			fi
 		fi
-		systemctl disable "$systemd" > /dev/null 2>&1
-		rm -f "/etc/systemd/system/$systemd" || return
+		if [ -f "$unit_file" ]; then
+			systemctl disable "$systemd" > /dev/null 2>&1 || return
+			rm -f "$unit_file" || return
+		fi
 	done
 
-	systemctl daemon-reload > /dev/null 2>&1
+	systemctl daemon-reload > /dev/null 2>&1 || return
 	for path in "$jail/home/$user" "$jail/home" "$jail"; do
 		if [ -d "$path" ]; then
 			rmdir "$path" 2> /dev/null || return

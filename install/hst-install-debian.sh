@@ -2474,7 +2474,6 @@ echo "10 05 * * * sudo /usr/local/hestia/bin/v-backup-users" >> /var/spool/cron/
 echo "20 00 * * * sudo /usr/local/hestia/bin/v-update-user-stats" >> /var/spool/cron/crontabs/hestiaweb
 echo "*/5 * * * * sudo /usr/local/hestia/bin/v-update-sys-rrd" >> /var/spool/cron/crontabs/hestiaweb
 echo "$min $hour * * * sudo /usr/local/hestia/bin/v-update-letsencrypt-ssl" >> /var/spool/cron/crontabs/hestiaweb
-echo "41 4 * * * sudo /usr/local/hestia/bin/v-update-sys-hestia-all" >> /var/spool/cron/crontabs/hestiaweb
 
 chmod 600 /var/spool/cron/crontabs/hestiaweb
 chown hestiaweb:hestiaweb /var/spool/cron/crontabs/hestiaweb

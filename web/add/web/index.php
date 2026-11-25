@@ -71,14 +71,7 @@ if (!empty($_POST["ok"]) && $read_only !== true) {
 	// Add web domain
 	if (empty($_SESSION["error_msg"])) {
 		exec(
-			HESTIA_CMD .
-				"v-add-web-domain " .
-				$user .
-				" " .
-				quoteshellarg($v_domain) .
-				" " .
-				$v_ip .
-				" 'yes'",
+			HESTIA_CMD . "v-add-web-domain " . $user . " " . quoteshellarg($v_domain) . " " . $v_ip,
 			$output,
 			$return_var,
 		);

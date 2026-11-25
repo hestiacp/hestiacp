@@ -51,6 +51,12 @@ jobs:
       - name: Check formatting
         run: npx prettier --check .
 
+      - name: Show formatting differences
+        if: failure()
+        run: |
+          npx prettier --write .
+          git diff --exit-code
+
   biome:
     name: Biome
     runs-on: ubuntu-latest

@@ -1,7 +1,6 @@
 /* Hestia Studio 2.1.1 · GPL-3.0-or-later. Native forms and actions stay intact.
    Interface labels are supplied exclusively by studio.php and locale files. */
 (() => {
-	'use strict';
 	const icons = {
 		grid: '<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>',
 		globe: '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c5 5 5 13 0 18-5-5-5-13 0-18Z"/>',
@@ -79,12 +78,12 @@
 	});
 	const cellText = (n) => {
 		const c = n?.cloneNode(true);
-		c?.querySelectorAll('.u-hide-desktop,.studio-icon,.studio-native-icon').forEach((x) =>
-			x.remove(),
-		);
+		c?.querySelectorAll('.u-hide-desktop,.studio-icon,.studio-native-icon').forEach((x) => {
+			x.remove();
+		});
 		return clean(c);
 	};
-	function enhanceNativeIcons(scope, t) {
+	function enhanceNativeIcons(scope) {
 		const map = {
 			lock: 'shield',
 			'puzzle-piece': 'grid',
@@ -336,9 +335,9 @@
 			root.dataset.studioAccent = colors.includes(color) ? color : 'green';
 			swatches
 				.querySelectorAll('button')
-				.forEach((b) =>
-					b.setAttribute('aria-pressed', String(b.dataset.color === root.dataset.studioAccent)),
-				);
+				.forEach((b) => {
+					b.setAttribute('aria-pressed', String(b.dataset.color === root.dataset.studioAccent));
+				});
 			try {
 				localStorage.setItem('hestia-studio-accent', root.dataset.studioAccent);
 			} catch {}
@@ -602,7 +601,7 @@
 				if (up) running++;
 				const item = el('div', 'studio-service-item'),
 					text = el('div', 'studio-service-text');
-				let ico = /php/.test(name)
+				const ico = /php/.test(name)
 					? 'terminal'
 					: /mysql|maria|postgres/.test(name)
 						? 'database'
@@ -759,11 +758,15 @@
 			const id = ++requestId;
 			tabs
 				.querySelectorAll('button')
-				.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.metric === chartMetric)));
+				.forEach((b) => {
+					b.setAttribute('aria-pressed', String(b.dataset.metric === chartMetric));
+				});
 			periods.hidden = chartMetric === 'cpu';
 			periods
 				.querySelectorAll('button')
-				.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.period === period)));
+				.forEach((b) => {
+					b.setAttribute('aria-pressed', String(b.dataset.period === period));
+				});
 			if (chartMetric === 'cpu') {
 				series = livePoints;
 				draw();
@@ -832,7 +835,7 @@
 							link = el('a', 'studio-website-name', name),
 							nativeLink = row.children[1]?.querySelector('a');
 						const href = nativeLink?.getAttribute('href');
-						link.href = href && href.startsWith('/edit/web/?') ? href : '/list/web/';
+						link.href = href?.startsWith('/edit/web/?') ? href : '/list/web/';
 						const avatar = el(
 							'span',
 							'studio-domain-avatar',
@@ -931,7 +934,9 @@
 			() => {
 				disposed = true;
 				clearInterval(interval);
-				controllers.forEach((c) => c.abort());
+				controllers.forEach((c) => {
+					c.abort();
+				});
 			},
 			{ once: true },
 		);
@@ -964,7 +969,9 @@
 			} catch {}
 			document
 				.querySelectorAll('[data-studio-mode]')
-				.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.studioMode === mode)));
+				.forEach((b) => {
+					b.setAttribute('aria-pressed', String(b.dataset.studioMode === mode));
+				});
 		}
 		setTheme(
 			['light', 'dark'].includes(stored)
@@ -1102,7 +1109,9 @@
 		if (old) {
 			old.classList.add('studio-native-navigation');
 			old.inert = true;
-			old.querySelectorAll('.main-menu-item').forEach((n) => n.classList.remove('main-menu-item'));
+			old.querySelectorAll('.main-menu-item').forEach((n) => {
+				n.classList.remove('main-menu-item');
+			});
 		}
 		const panel = el('div', 'studio-navigation-panel'),
 			workspace = el('div', 'studio-workspace'),
@@ -1440,7 +1449,9 @@
 			)
 				shut();
 		});
-		nav.querySelectorAll('a').forEach((a) => a.addEventListener('click', shut));
+		nav.querySelectorAll('a').forEach((a) => {
+			a.addEventListener('click', shut);
+		});
 		mq.addEventListener('change', sync);
 		sync();
 	}

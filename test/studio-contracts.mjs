@@ -298,9 +298,11 @@ function dashboardFixture(ctx, serverLanguage) {
 		Date: LocaleDate,
 		Intl: {
 			getCanonicalLocales: Intl.getCanonicalLocales,
-			NumberFormat: function (locale, options) {
-				numberLocales.push(locale);
-				return new Intl.NumberFormat(locale, options);
+			NumberFormat: class extends Intl.NumberFormat {
+				constructor(locale, options) {
+					super(locale, options);
+					numberLocales.push(locale);
+				}
 			},
 		},
 		getComputedStyle: () => ({ getPropertyValue: () => "4" }),

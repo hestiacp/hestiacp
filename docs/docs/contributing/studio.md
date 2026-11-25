@@ -38,6 +38,8 @@ Use a disposable development VM for integration testing, following [Hestia's dev
 
 The standalone Studio 2.1.1 release was reported installed and working on Ubuntu 24.04 / HestiaCP 1.10.9 on 2026-11-24. That report covered all 46 installed theme files matching the release, corrected load-average scale and Turkish display. Earlier checks also covered appearance controls, the mobile menu and opening server settings.
 
+On 2026-11-25, the same operator reported upgrading HestiaCP to 1.10.10 while continuing to use standalone Studio 2.1.1, with no issues found in their testing so far. This is a user-reported compatibility observation, not a complete administration regression.
+
 Those results do not certify this built-in integration on the current Hestia development branch. Live account/server language mismatch checks, a complete administration regression, standalone-to-built-in migration, package upgrade and rollback remain integration-test work. First-install restoration in the standalone project does not establish upgrade rollback. No production data or screenshots are included in these tests.
 
 ## Translations

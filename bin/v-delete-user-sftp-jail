@@ -74,8 +74,10 @@ if [ -d "/home/$user" ]; then
 	chown $user:$user /home/$user
 fi
 
-# Deleting chroot jail for SFTP and FTP
-delete_chroot_jail $user
+# vsftpd still needs the filesystem jail when the user has an SSH shell.
+if ! vsftpd_uses_chroot_jail; then
+	delete_chroot_jail "$user"
+fi
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#

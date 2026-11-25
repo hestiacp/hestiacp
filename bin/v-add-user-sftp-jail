@@ -28,16 +28,31 @@ source_conf "$HESTIA/conf/hestia.conf"
 
 check_args '1' "$#" 'USER'
 is_format_valid 'user'
-check=$(is_object_valid 'user' 'USER' "$user")
-if [ $? -ne 0 ]; then
-	user_str=$(grep "^$user:" /etc/passwd | egrep "rssh|nologin")
-	#try to detect "owner" of the ftp_user if not found dont set it up
-	user_owner=$(echo $user_str | cut -f6 -d : | cut -f3 -d /)
+user_str=$(grep "^$user:" /etc/passwd)
+if [ -z "$user_str" ]; then
+	is_object_valid 'user' 'USER' "$user"
+	exit 0
+fi
+user_shell=${user_str##*:}
+if ! (is_object_valid 'user' 'USER' "$user") > /dev/null; then
+	# Additional FTP accounts belong to the Hestia user owning their home.
+	if [[ ! "$user_shell" =~ (rssh|nologin)$ ]]; then
+		is_object_valid 'user' 'USER' "$user"
+	fi
+	user_owner=$(cut -f6 -d : <<< "$user_str" | cut -f3 -d /)
 	is_object_valid 'user' 'USER' "$user_owner"
 fi
-user_str=$(grep "^$user:" /etc/passwd | egrep "rssh|nologin")
-if [ -z "$user_str" ]; then
-	exit
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+# FTP needs the filesystem jail even when SSH allows a login shell.
+if vsftpd_uses_chroot_jail; then
+	add_chroot_jail "$user"
+	check_result "$?" "could not mount the FTP jail for $user" "$E_FTP"
+fi
+if [[ ! "$user_shell" =~ (rssh|nologin)$ ]]; then
+	exit 0
 fi
 
 # Check whether SFTP jail is enabled before adding a user jail
@@ -58,12 +73,14 @@ if [[ "$match_string" =~ ,$user, ]]; then
 	exit
 fi
 
-# Perform verification if read-only mode is enabled
-check_hestia_demo_mode
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
+
+if ! vsftpd_uses_chroot_jail; then
+	add_chroot_jail "$user"
+	check_result "$?" "could not mount the SFTP jail for $user" "$E_FTP"
+fi
 
 # Add user to array
 users+=($user)
@@ -80,7 +97,6 @@ sed -i "s/$ssh_users/$users/g" /etc/ssh/sshd_config
 if [ -d "/home/$user" ]; then
 	chown root:root /home/$user
 fi
-add_chroot_jail "$user"
 
 #----------------------------------------------------------#
 #                       Hestia                             #

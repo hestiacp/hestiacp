@@ -94,6 +94,10 @@ sed -i "/ $user$/d" "$HESTIA/data/queue/traffic.pipe"
 
 # Deleting sftp jail
 $BIN/v-delete-user-sftp-jail "$user"
+if [ -d "/srv/jail/$user" ]; then
+	delete_chroot_jail "$user"
+	check_result "$?" "could not remove the file transfer jail for $user"
+fi
 
 # Deleting access keys
 for key_file in "$HESTIA/data/access-keys/"*; do

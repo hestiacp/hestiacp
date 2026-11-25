@@ -19,8 +19,9 @@ if ($_SESSION["userContext"] === "admin" && !empty($_GET["user"])) {
 
 if (!empty($_GET["domain"])) {
 	$v_domain = quoteshellarg($_GET["domain"]);
+	$restart = ($_SESSION["WEB_SYSTEM"] ?? "") === "nginx" ? "'reload'" : "'yes'";
 	exec(
-		HESTIA_CMD . "v-delete-web-domain " . $user . " " . $v_domain . " 'yes'",
+		HESTIA_CMD . "v-delete-web-domain " . $user . " " . $v_domain . " " . $restart,
 		$output,
 		$return_var,
 	);

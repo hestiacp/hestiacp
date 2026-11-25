@@ -845,7 +845,7 @@ function check_ip_not_banned(){
         skip "nginx without http_v3_module"
     fi
     local conf="/etc/nginx/conf.d/198.18.0.121.conf"
-    assert_file_contains "$conf" "listen 198.18.0.121:443 quic reuseport;"
+    assert_file_contains "$conf" "listen\s\+198.18.0.121:443 quic reuseport;"
 
     # Not added a second time
     source $HESTIA/func/domain.sh

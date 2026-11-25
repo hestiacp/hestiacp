@@ -50,7 +50,8 @@ class Hestia_API {
 			"arg4" => $host,
 		];
 		$request = $this->request($post_request);
-		// The API can return valid JSON even when it fails to issue credentials.
+		// json_decode() returns null on parse failure. The credential check rejects
+		// that result and valid JSON responses that lack credentials.
 		$json = is_string($request) ? json_decode($request) : null;
 		if (
 			!is_string($json->login->user ?? null) ||
@@ -58,6 +59,12 @@ class Hestia_API {
 			!is_string($json->login->password ?? null) ||
 			$json->login->password === ""
 		) {
+			if (!is_string($request) || json_last_error() !== JSON_ERROR_NONE) {
+				trigger_error(
+					"Unable to connect over API please check api connection",
+					E_USER_WARNING,
+				);
+			}
 			return false;
 		}
 		return $json;
@@ -140,7 +147,6 @@ function sso_expected_token($database, $user, $ip, $time, $host) {
 }
 
 function verify_token($database, $user, $ip, $time, $host, $token): bool {
-	// The caller uses the result to select the sign-in error message.
 	// get_user_ip() may or may not prefix the server address, so accept both.
 	foreach ([$ip, $_SERVER["SERVER_ADDR"] . "|" . $ip] as $candidate_ip) {
 		$expected = sso_expected_token($database, $user, $candidate_ip, $time, $host);
@@ -148,6 +154,7 @@ function verify_token($database, $user, $ip, $time, $host, $token): bool {
 			return true;
 		}
 	}
+	trigger_error("Access denied: There is a security token mismatch " . $time, E_USER_WARNING);
 	return false;
 }
 /* Need to have cookie visible from parent directory */
@@ -192,7 +199,7 @@ function session_invalid(?string $message = null) {
 	global $session_name;
 	// Clear the sign-on session and its root-path cookie to stop authentication retries.
 	session_destroy();
-	setcookie($session_name, "", 1, "/", "", true, true);
+	setcookie($session_name, "", 1, "/");
 	if ($message !== null) {
 		signon_failure($message);
 	}
@@ -296,6 +303,13 @@ if (!empty($_GET)) {
 					);
 				}
 			} else {
+				trigger_error(
+					"Link has been expired: System time: " .
+						time() .
+						" / Time provided in link: " .
+						$time,
+					E_USER_WARNING,
+				);
 				session_invalid(
 					"The phpMyAdmin sign-in request expired. Open phpMyAdmin again from Databases.",
 				);

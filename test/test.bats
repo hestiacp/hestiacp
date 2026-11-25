@@ -41,6 +41,16 @@ function setup() {
 
 function teardown() {
     rm -rf "${HESTIA:-/usr/local/hestia}/data/keys/apitestkey"*
+    rm -f /tmp/mfp-canary-test
+    if [ -f /tmp/mfp-policy-test-active ]; then
+        "$HESTIA/bin/v-change-sys-config-value" POLICY_USER_EXTERNAL_MAIL_FORWARD yes > /dev/null 2>&1 || true
+        for mfp_u in mfpuser1 mfpuser2 mfprst; do
+            if [ -f "$HESTIA/data/users/$mfp_u/user.conf" ]; then
+                "$HESTIA/bin/v-delete-user" "$mfp_u" > /dev/null 2>&1 || true
+            fi
+        done
+        rm -f /tmp/mfp-policy-test-active
+    fi
 }
 
 function validate_web_domain() {
@@ -3184,4 +3194,154 @@ EVIL='x'" > /tmp/backup_exclusions_unknownkey
     run v-check-api-key "$HESTIA/data/keys/$longkey"
     assert_failure
     rm -f "$HESTIA/data/keys/$longkey"
+}
+
+@test "Mail Forward Policy: v-change-sys-config-value validates enum and writes atomically" {
+    touch /tmp/mfp-policy-test-active
+    run v-change-sys-config-value POLICY_USER_EXTERNAL_MAIL_FORWARD invalid_val
+    assert_failure "$E_INVALID"
+
+    rm -f /tmp/updconf
+    run v-change-sys-config-value POLICY_USER_EXTERNAL_MAIL_FORWARD user
+    assert_success
+    assert [ ! -e /tmp/updconf ]
+
+    run v-change-sys-config-value POLICY_USER_EXTERNAL_MAIL_FORWARD yes
+    assert_success
+    rm -f /tmp/mfp-policy-test-active
+}
+
+@test "Mail Forward Policy: enforces user and server scope, admin FORCE, Dovecot Sieve, and aliases symlink guard" {
+    touch /tmp/mfp-policy-test-active
+    run v-change-sys-config-value POLICY_USER_EXTERNAL_MAIL_FORWARD user
+    assert_success
+
+    run v-add-user mfpuser1 "Mfp-P4ssw0rd-1" "mfpuser1@example.com" default "MFP One"
+    assert_success
+    run v-add-user mfpuser2 "Mfp-P4ssw0rd-2" "mfpuser2@example.com" default "MFP Two"
+    assert_success
+
+    run v-add-mail-domain mfpuser1 mfp1.example.com
+    assert_success
+    run v-add-mail-domain mfpuser2 mfp2.example.com
+    assert_success
+
+    run v-add-mail-account mfpuser1 mfp1.example.com alice "Mfp-Box-1"
+    assert_success
+    run v-add-mail-account mfpuser2 mfp2.example.com bob "Mfp-Box-2"
+    assert_success
+
+    assert_file_contains "$HOMEDIR/mfpuser1/conf/mail/mfp1.example.com/passwd" "userdb_sieve_max_redirects=0"
+
+    run v-add-mail-account-forward mfpuser1 mfp1.example.com alice ext@external-test.example
+    assert_failure "$E_FORBIDEN"
+    assert_output --partial "disabled by server policy"
+
+    run v-add-mail-account-forward mfpuser1 mfp1.example.com alice bob@mfp2.example.com
+    assert_failure "$E_FORBIDEN"
+
+    run v-add-mail-domain-catchall mfpuser1 mfp1.example.com ext@external-test.example
+    assert_failure "$E_FORBIDEN"
+
+    run v-add-mail-account-forward mfpuser1 mfp1.example.com alice own@mfp1.example.com
+    assert_success
+
+    run v-add-mail-account-forward mfpuser1 mfp1.example.com alice adm@external-test.example yes
+    assert_success
+
+    run v-change-sys-config-value POLICY_USER_EXTERNAL_MAIL_FORWARD server
+    assert_success
+
+    run v-add-mail-account-forward mfpuser1 mfp1.example.com alice bob@mfp2.example.com
+    assert_success
+
+    run v-suspend-mail-domain mfpuser2 mfp2.example.com
+    assert_success
+
+    run v-add-mail-account-forward mfpuser1 mfp1.example.com alice post@mfp2.example.com
+    assert_failure "$E_FORBIDEN"
+
+    printf 'CANARY\n' > /tmp/mfp-canary-test
+    rm -f "$HOMEDIR/mfpuser1/conf/mail/mfp1.example.com/aliases"
+    ln -s /tmp/mfp-canary-test "$HOMEDIR/mfpuser1/conf/mail/mfp1.example.com/aliases"
+    run v-add-mail-account-forward mfpuser1 mfp1.example.com alice sym@mfp1.example.com
+    assert_failure "$E_FORBIDEN"
+    assert_output --partial "symlink"
+    assert_equal "$(cat /tmp/mfp-canary-test)" "CANARY"
+    rm -f "$HOMEDIR/mfpuser1/conf/mail/mfp1.example.com/aliases" /tmp/mfp-canary-test
+    run v-rebuild-mail-domain mfpuser1 mfp1.example.com no
+    assert_success
+
+    run v-change-sys-config-value POLICY_USER_EXTERNAL_MAIL_FORWARD yes
+    assert_success
+    run grep -q "userdb_sieve_max_redirects=0" "$HOMEDIR/mfpuser1/conf/mail/mfp1.example.com/passwd"
+    assert_failure
+
+    run v-delete-user mfpuser1
+    assert_success
+    run v-delete-user mfpuser2
+    assert_success
+    rm -f /tmp/mfp-policy-test-active
+}
+
+@test "Mail Forward Policy: sanitize_restored_mail_forwards strips disallowed external targets" {
+    touch /tmp/mfp-policy-test-active
+    run v-change-sys-config-value POLICY_USER_EXTERNAL_MAIL_FORWARD yes
+    assert_success
+
+    run v-add-user mfprst "Mfp-P4ssw0rd-3" "mfprst@example.com" default "MFP Restore"
+    assert_success
+    run v-add-mail-domain mfprst mfprst1.example.com
+    assert_success
+    run v-add-mail-domain mfprst mfprst2.example.com
+    assert_success
+    run v-add-mail-account mfprst mfprst1.example.com alice "Mfp-Box-3"
+    assert_success
+    run v-add-mail-account-forward mfprst mfprst1.example.com alice ext@external-test.example yes
+    assert_success
+    run v-add-mail-account-forward mfprst mfprst1.example.com alice bob@mfprst2.example.com yes
+    assert_success
+    run v-add-mail-domain-catchall mfprst mfprst1.example.com ca-ext@external-test.example yes
+    assert_success
+
+    run v-change-sys-config-value POLICY_USER_EXTERNAL_MAIL_FORWARD user
+    assert_success
+
+    source "$HESTIA/func/domain.sh"
+    source_conf "$HESTIA/conf/hestia.conf"
+    run sanitize_restored_mail_forwards mfprst mfprst1.example.com
+    assert_success
+
+    run grep -q "ext@external-test.example" "$HESTIA/data/users/mfprst/mail/mfprst1.example.com.conf"
+    assert_failure
+    assert_file_contains "$HESTIA/data/users/mfprst/mail/mfprst1.example.com.conf" "bob@mfprst2.example.com"
+    assert_file_contains "$HESTIA/data/users/mfprst/mail.conf" "CATCHALL=''"
+
+    run v-change-sys-config-value POLICY_USER_EXTERNAL_MAIL_FORWARD yes
+    assert_success
+    run v-delete-user mfprst
+    assert_success
+    rm -f /tmp/mfp-policy-test-active
+}
+
+@test "Mail Forward Policy: PHP helper enforces fail-closed policy, catchall blackhole, and API checks" {
+    run "$HESTIA/php/bin/php" -d zend.assertions=1 -d assert.exception=1 -r '
+        define("HESTIA_DIR_BIN", getenv("HESTIA") . "/bin/");
+        define("HESTIA_MFP_TEST_MODE", true);
+        define("HESTIA_MFP_CMD_PREFIX", rtrim((string) getenv("HESTIA"), "/") . "/bin/");
+        if (!function_exists("_")) {
+            function _(string $s): string { return $s; }
+        }
+        require getenv("HESTIA") . "/web/inc/mail_forward_policy.php";
+        assert(hst_mfp_normalize_policy("bogus") === "user");
+        assert(hst_mfp_normalize_policy("") === "yes");
+        foreach (["", ".", "..", "user1 "] as $bad_u) {
+            $err = hst_validate_api_mail_forward_policy("v-add-mail-account-forward", ["user1", "ex.test", "a", "x@ex.test"], $bad_u, "admin", "user");
+            assert(is_string($err) && $err !== "");
+        }
+        assert(is_string(hst_validate_api_mail_forward_policy("v-add-mail-domain-catchall", ["user1", "ex.test", ":blackhole:"], "user1", "admin", "user")));
+        assert(is_string(hst_validate_api_mail_forward_policy("v-add-mail-account-forward", ["arg1" => "user1", "arg2" => "ex.test", "arg3" => "a", "arg4" => "b@ex.test", "arg5" => "yes"], "user1", "admin", "user")));
+        assert(is_string(hst_validate_api_mail_forward_policy("v-add-mail-account-forward", ["arg1" => "user1", "arg2" => "ex.test", "arg3" => "a", "arg5" => "evil@external.test"], "user1", "admin", "user")));
+    '
+    assert_success
 }

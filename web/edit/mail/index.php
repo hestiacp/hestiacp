@@ -205,6 +205,28 @@ if (
 	check_return_code_redirect($return_var, $output, "/list/mail/");
 	unset($output);
 
+	if (empty($_SESSION["error_msg"]) && isset($_POST["v_catchall"])) {
+		if (!is_string($_POST["v_catchall"])) {
+			$_SESSION["error_msg"] = _("Invalid catch-all email input.");
+		} else {
+			$mfp_curr_ca = trim((string) ($data[$v_domain]["CATCHALL"] ?? ($v_catchall ?? "")));
+			$mfp_post_ca = trim($_POST["v_catchall"]);
+			if ($mfp_post_ca !== "" && $mfp_post_ca !== $mfp_curr_ca) {
+				require_once dirname(__DIR__, 2) . "/inc/mail_forward_policy.php";
+				$mfp_error = hst_validate_mail_forward_policy(
+					[$mfp_post_ca],
+					trim((string) $user, "'\""),
+					"catchall",
+				);
+				if ($mfp_error !== null) {
+					$_SESSION["error_msg"] = $mfp_error;
+				}
+				unset($mfp_error);
+			}
+			unset($mfp_curr_ca, $mfp_post_ca);
+		}
+	}
+
 	// Delete antispam
 	if ($v_antispam == "yes" && empty($_POST["v_antispam"]) && empty($_SESSION["error_msg"])) {
 		exec(
@@ -397,6 +419,7 @@ if (
 	if (!empty($v_catchall) && !empty($_POST["v_catchall"]) && empty($_SESSION["error_msg"])) {
 		if ($v_catchall != $_POST["v_catchall"]) {
 			$v_catchall = quoteshellarg($_POST["v_catchall"]);
+			$mfp_force = ($_SESSION["userContext"] ?? "") === "admin" ? " yes" : "";
 			exec(
 				HESTIA_CMD .
 					"v-change-mail-domain-catchall " .
@@ -404,7 +427,8 @@ if (
 					" " .
 					quoteshellarg($v_domain) .
 					" " .
-					$v_catchall,
+					$v_catchall .
+					$mfp_force,
 				$output,
 				$return_var,
 			);
@@ -416,6 +440,7 @@ if (
 	// Add catchall
 	if (empty($v_catchall) && !empty($_POST["v_catchall"]) && empty($_SESSION["error_msg"])) {
 		$v_catchall = quoteshellarg($_POST["v_catchall"]);
+		$mfp_force = ($_SESSION["userContext"] ?? "") === "admin" ? " yes" : "";
 		exec(
 			HESTIA_CMD .
 				"v-add-mail-domain-catchall " .
@@ -423,7 +448,8 @@ if (
 				" " .
 				quoteshellarg($v_domain) .
 				" " .
-				$v_catchall,
+				$v_catchall .
+				$mfp_force,
 			$output,
 			$return_var,
 		);
@@ -922,6 +948,38 @@ if (
 	check_return_code_redirect($return_var, $output, "/list/mail/");
 	unset($output);
 
+	$mfp_acc_key = is_string($v_account ?? null) ? $v_account : "";
+	$mfp_acc_data = $data[$mfp_acc_key] ?? ($data[strtolower($mfp_acc_key)] ?? []);
+	$mfp_raw_fwd = (string) ($mfp_acc_data["FWD"] ?? "");
+	$vfwd = explode(",", $mfp_raw_fwd);
+	$mfp_curr_raw = trim($mfp_raw_fwd);
+	if (strtolower($mfp_curr_raw) === ":blackhole:") {
+		$mfp_curr_raw = "";
+	}
+
+	if (empty($_SESSION["error_msg"]) && empty($_POST["v_blackhole"]) && isset($_POST["v_fwd"])) {
+		if (!is_string($_POST["v_fwd"])) {
+			$_SESSION["error_msg"] = _("Invalid mail forwarding input.");
+		} else {
+			require_once dirname(__DIR__, 2) . "/inc/mail_forward_policy.php";
+			$mfp_posted = hst_mfp_parse_targets($_POST["v_fwd"]);
+			$mfp_existing = hst_mfp_parse_targets($mfp_curr_raw);
+			$mfp_added = array_values(array_diff($mfp_posted, $mfp_existing));
+			if (!empty($mfp_added)) {
+				$mfp_error = hst_validate_mail_forward_policy(
+					$mfp_added,
+					trim((string) $user, "'\""),
+					"forward",
+				);
+				if ($mfp_error !== null) {
+					$_SESSION["error_msg"] = $mfp_error;
+				}
+			}
+			unset($mfp_posted, $mfp_existing, $mfp_added, $mfp_error);
+		}
+	}
+	unset($mfp_acc_key, $mfp_acc_data, $mfp_raw_fwd, $mfp_curr_raw);
+
 	// Change password
 	if (!empty($_POST["v_password"]) && empty($_SESSION["error_msg"])) {
 		if (!validate_password($_POST["v_password"])) {
@@ -1123,6 +1181,7 @@ if (
 			}
 		}
 		$result = array_diff($fwd, $vfwd);
+		$mfp_force = ($_SESSION["userContext"] ?? "") === "admin" ? " yes" : "";
 		foreach ($result as $forward) {
 			if (empty($_SESSION["error_msg"]) && !empty($forward)) {
 				exec(
@@ -1134,7 +1193,8 @@ if (
 						" " .
 						quoteshellarg($v_account) .
 						" " .
-						quoteshellarg($forward),
+						quoteshellarg($forward) .
+						$mfp_force,
 					$output,
 					$return_var,
 				);

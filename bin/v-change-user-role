@@ -41,6 +41,12 @@ check_hestia_demo_mode
 
 $BIN/v-log-action "system" "Warning" "Security" "User privileges changed (User: $user, Role: $role, Previous: $ROLE)."
 update_user_value "$user" '$ROLE' "$role"
+if [[ "$MAIL_SYSTEM" =~ exim ]] && [ "$role" != "$ROLE" ] && [ -s "$HESTIA/data/users/$user/mail.conf" ]; then
+	mfp_norm=$(printf '%s' "${POLICY_USER_EXTERNAL_MAIL_FORWARD:-}" | tr '[:upper:]' '[:lower:]' | tr -d '[:space:]')
+	if [ -n "$mfp_norm" ] && [ "$mfp_norm" != "yes" ]; then
+		"$BIN/v-rebuild-mail-domains" "$user" > /dev/null 2>&1 || true
+	fi
+fi
 
 #----------------------------------------------------------#
 #                       Hestia                             #

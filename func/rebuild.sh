@@ -750,15 +750,19 @@ rebuild_mail_domain_conf() {
 			if [ "$QUOTA" = 'unlimited' ]; then
 				QUOTA=0
 			fi
+			local sieve_extra=""
+			if declare -F get_mail_sieve_policy_extra > /dev/null 2>&1; then
+				sieve_extra=$(get_mail_sieve_policy_extra "$user")
+			fi
 			dovecot_version="$(dovecot --version | cut -f -2 -d .)"
 			if [[ "$dovecot_version" = "2.4" ]]; then
-				str="$account:$MD5:$user:mail::$HOMEDIR/$user/mail/$domain/$account:${QUOTA}:userdb_quota_storage_size=${QUOTA}M"
-				echo $str >> $HOMEDIR/$user/conf/mail/$domain/passwd
+				str="$account:$MD5:$user:mail::$HOMEDIR/$user/mail/$domain/$account:${QUOTA}:userdb_quota_storage_size=${QUOTA}M${sieve_extra}"
+				echo "$str" >> "$HOMEDIR/$user/conf/mail/$domain/passwd"
 				userstr="$account:$account:$user:mail:$HOMEDIR/$user/mail/$domain/$account"
 				echo $userstr >> $HOMEDIR/$user/conf/mail/$domain/accounts
 			else
-				str="$account:$MD5:$user:mail::$HOMEDIR/$user:${QUOTA}:userdb_quota_rule=*:storage=${QUOTA}M"
-				echo $str >> $HOMEDIR/$user/conf/mail/$domain/passwd
+				str="$account:$MD5:$user:mail::$HOMEDIR/$user:${QUOTA}:userdb_quota_rule=*:storage=${QUOTA}M${sieve_extra}"
+				echo "$str" >> "$HOMEDIR/$user/conf/mail/$domain/passwd"
 				userstr="$account:$account:$user:mail:$HOMEDIR/$user"
 				echo $userstr >> $HOMEDIR/$user/conf/mail/$domain/accounts
 			fi

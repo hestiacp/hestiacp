@@ -1581,6 +1581,39 @@ if (!empty($_POST["save"])) {
 		}
 	}
 
+	// Change POLICY_USER_EXTERNAL_MAIL_FORWARD
+	if (empty($_SESSION["error_msg"]) && isset($_POST["v_policy_user_external_mail_forward"])) {
+		if (!is_string($_POST["v_policy_user_external_mail_forward"])) {
+			$_SESSION["error_msg"] = _("Invalid mail forwarding policy value.");
+		} else {
+			$v_policy_user_external_mail_forward = strtolower(
+				trim($_POST["v_policy_user_external_mail_forward"]),
+			);
+			if (!in_array($v_policy_user_external_mail_forward, ["yes", "server", "user"], true)) {
+				$_SESSION["error_msg"] = _("Invalid mail forwarding policy value.");
+			} elseif (
+				$v_policy_user_external_mail_forward !=
+				($_SESSION["POLICY_USER_EXTERNAL_MAIL_FORWARD"] ?? "yes")
+			) {
+				exec(
+					HESTIA_CMD .
+						"v-change-sys-config-value POLICY_USER_EXTERNAL_MAIL_FORWARD " .
+						quoteshellarg($v_policy_user_external_mail_forward),
+					$output,
+					$return_var,
+				);
+				check_return_code($return_var, $output);
+				unset($output);
+				if (empty($_SESSION["error_msg"])) {
+					$_SESSION[
+						"POLICY_USER_EXTERNAL_MAIL_FORWARD"
+					] = $v_policy_user_external_mail_forward;
+				}
+				$v_security_adv = "yes";
+			}
+		}
+	}
+
 	if (
 		$_POST["v_api_system"] != $_SESSION["API_SYSTEM"] ||
 		$_POST["v_api"] != $_SESSION["API"] ||

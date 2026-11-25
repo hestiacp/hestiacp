@@ -46,7 +46,7 @@ date=$(echo "$time_n_date" | cut -f 2 -d \ )
 # Define time somewhere at night
 if [ -z "$mode" ] || [ "$mode" = "apt" ]; then
 	min=$(generate_password '012345' '2')
-	hour=$(generate_password '1234567' '1')
+	hour=$(generate_password '123456' '1')
 	day='*'
 	month='*'
 	wday='*'

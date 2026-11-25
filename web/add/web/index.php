@@ -70,17 +70,8 @@ if (!empty($_POST["ok"]) && $read_only !== true) {
 
 	// Add web domain
 	if (empty($_SESSION["error_msg"])) {
-		$restart = ($_SESSION["WEB_SYSTEM"] ?? "") === "nginx" ? "'reload'" : "'yes'";
 		exec(
-			HESTIA_CMD .
-				"v-add-web-domain " .
-				$user .
-				" " .
-				quoteshellarg($v_domain) .
-				" " .
-				$v_ip .
-				" " .
-				$restart,
+			HESTIA_CMD . "v-add-web-domain " . $user . " " . quoteshellarg($v_domain) . " " . $v_ip,
 			$output,
 			$return_var,
 		);

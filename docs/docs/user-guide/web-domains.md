@@ -71,17 +71,21 @@ If your domain is an [internationalized domain name (IDN)](https://en.wikipedia.
 
 If you want to use your own SSL certificate you can enter the SSL certificate in the text area.
 
+If you are having issues with enabling Let’s Encrypt, please refer to our [SSL certificates](../server-administration/ssl-certificates) documentation.
+
 ### Enabling HTTP/3
 
 HTTP/3 makes pages load faster on mobile and lossy connections. To enable it, check **Enable HTTP/3 (QUIC)** under the SSL options and click **<i class="fas fa-fw fa-save"></i> Save**. It works with every template and needs SSL.
 
 HTTP/3 runs over UDP. When the Hestia firewall is enabled, UDP port 443 is opened automatically. If there is another firewall in front of the server (for example at your hosting provider), allow UDP port 443 there as well, otherwise browsers fall back to HTTP/2 after a QUIC error.
 
+When nginx supports HTTP/3, it listens on UDP port 443 on every IP address of the server, unless another service (a VPN for example) already uses that port. HTTP/3 can't be enabled in that case. Browsers only use HTTP/3 on domains that have it enabled.
+
+If you wrote `nginx.ssl.conf_http3` for a domain yourself, Hestia keeps your file.
+
 ::: info
 HTTP/3 needs nginx with the `http_v3_module`. The nginx packages Hestia installs include it.
 :::
-
-If you are having issues with enabling Let’s Encrypt, please refer to our [SSL certificates](../server-administration/ssl-certificates) documentation.
 
 ### Changing PHP version
 

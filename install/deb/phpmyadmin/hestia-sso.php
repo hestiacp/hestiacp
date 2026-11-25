@@ -50,6 +50,7 @@ class Hestia_API {
 			"arg4" => $host,
 		];
 		$request = $this->request($post_request);
+		// The API can return valid JSON even when it fails to issue credentials.
 		$json = is_string($request) ? json_decode($request) : null;
 		if (
 			!is_string($json->login->user ?? null) ||
@@ -139,6 +140,7 @@ function sso_expected_token($database, $user, $ip, $time, $host) {
 }
 
 function verify_token($database, $user, $ip, $time, $host, $token): bool {
+	// The caller uses the result to select the sign-in error message.
 	// get_user_ip() may or may not prefix the server address, so accept both.
 	foreach ([$ip, $_SERVER["SERVER_ADDR"] . "|" . $ip] as $candidate_ip) {
 		$expected = sso_expected_token($database, $user, $candidate_ip, $time, $host);
@@ -157,8 +159,9 @@ session_name($session_name);
 
 function signon_failure(string $message): void {
 	http_response_code(403);
+	// Keep the signed URL out of referrer headers for assets on the error page.
 	header("Referrer-Policy: no-referrer");
-	// phpMyAdmin sends sign-on failures back here through SignonURL.
+	// Load phpMyAdmin's renderer directly to avoid restarting authentication.
 	$constants = __DIR__ . "/libraries/constants.php";
 	if (is_readable($constants)) {
 		try {
@@ -170,6 +173,7 @@ function signon_failure(string $message): void {
 				$GLOBALS["config"] = null;
 				$GLOBALS["cfg"] = ["environment" => "production"];
 				$GLOBALS["containerBuilder"] = \PhpMyAdmin\Core::getContainerBuilder();
+				// The sign-on tab needs the HTML page. The AJAX flag would select JSON.
 				unset($_REQUEST["ajax_request"]);
 				header("Content-Type: text/html; charset=UTF-8");
 				\PhpMyAdmin\Core::fatalError($message);
@@ -179,13 +183,14 @@ function signon_failure(string $message): void {
 		}
 	}
 
+	// Keep the message visible if phpMyAdmin's renderer fails to load.
 	header("Content-Type: text/plain; charset=UTF-8");
 	exit($message);
 }
 
 function session_invalid(?string $message = null) {
 	global $session_name;
-	//delete all current sessions
+	// Clear the sign-on session and its root-path cookie to stop authentication retries.
 	session_destroy();
 	setcookie($session_name, "", 1, "/", "", true, true);
 	if ($message !== null) {
@@ -244,11 +249,13 @@ if (!empty($_GET)) {
 			$host = !empty($_GET["host"]) ? $_GET["host"] : "localhost";
 			$token = $_GET["hestia_token"];
 			$exp = $_GET["exp"] ?? null;
+			// The HMAC uses NUL separators. Reject them in signed fields before verification.
 			foreach ([$database, $user, $host, $token, $exp] as $value) {
 				if (!is_string($value) || $value === "" || strpos($value, "\0") !== false) {
 					session_invalid($invalid_link);
 				}
 			}
+			// Distinguish malformed timestamps from links past their 60-second lifetime.
 			if (!ctype_digit($exp) || strlen($exp) > 12) {
 				session_invalid($invalid_link);
 			}
@@ -298,6 +305,8 @@ if (!empty($_GET)) {
 		}
 	}
 } else {
+	// phpMyAdmin stores the MySQL error before redirecting to SignonURL.
+	// Use the flag to identify the failure while keeping the connection details private.
 	if (isset($_SESSION["PMA_single_signon_error_message"])) {
 		session_invalid(
 			"phpMyAdmin could not connect using the temporary database credentials. Open phpMyAdmin again from Databases.",

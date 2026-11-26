@@ -41,3 +41,57 @@ if [ "$WEB_SYSTEM" = "apache2" ] && ! grep -qs "^ProtectHome=no" /etc/systemd/sy
 	systemctl daemon-reload > /dev/null 2>&1
 	systemctl restart apache2 > /dev/null 2>&1
 fi
+
+# Ensure ProFTPD AppArmor local rules allow listing ~/web and capability chown (#6047)
+if [[ "$FTP_SYSTEM" =~ proftpd ]] && [[ -e /etc/apparmor.d/proftpd || -L /etc/apparmor.d/proftpd ]]; then
+	_proftpd_local="/etc/apparmor.d/local/proftpd"
+	if [[ -L /etc/apparmor.d/proftpd || -L /etc/apparmor.d/local || -L "$_proftpd_local" ]]; then
+		echo "[ ! ] Warning: Refusing to follow symlink under /etc/apparmor.d for proftpd" >&2
+	elif mkdir -p /etc/apparmor.d/local && [[ ! -L /etc/apparmor.d/local ]] && _proftpd_tmp="$(umask 077 && mktemp /etc/apparmor.d/local/.proftpd.XXXXXX)"; then
+		_proftpd_ok=true
+		if [[ -f "$_proftpd_local" ]]; then
+			if ! cat "$_proftpd_local" > "$_proftpd_tmp"; then
+				_proftpd_ok=false
+			elif [[ -s "$_proftpd_tmp" ]] && [[ -n "$(tail -c 1 "$_proftpd_tmp")" ]]; then
+				printf '\n' >> "$_proftpd_tmp" || _proftpd_ok=false
+			fi
+		fi
+		if [[ "$_proftpd_ok" = true ]] && ! grep -qxF "# Configuration added by Hestia" "$_proftpd_tmp"; then
+			printf '# Configuration added by Hestia\n' >> "$_proftpd_tmp" || _proftpd_ok=false
+		fi
+		for _proftpd_rule in \
+			"/usr/local/hestia/ssl/certificate.crt r," \
+			"/usr/local/hestia/ssl/certificate.key r," \
+			"/run/proftpd.sock rw," \
+			"@{HOME}/web/ r," \
+			"capability chown,"; do
+			if [[ "$_proftpd_ok" = true ]] && ! grep -qxF "$_proftpd_rule" "$_proftpd_tmp"; then
+				printf '%s\n' "$_proftpd_rule" >> "$_proftpd_tmp" || _proftpd_ok=false
+			fi
+		done
+		if [[ "$_proftpd_ok" = true ]] && chmod 644 "$_proftpd_tmp" && [[ ! -L "$_proftpd_local" ]]; then
+			if [[ ! -f "$_proftpd_local" ]] || ! cmp -s "$_proftpd_tmp" "$_proftpd_local"; then
+				if mv -f "$_proftpd_tmp" "$_proftpd_local"; then
+					echo "[ + ] Updating AppArmor rules for ProFTPd"
+					if command -v apparmor_parser > /dev/null 2>&1; then
+						apparmor_parser -r /etc/apparmor.d/proftpd > /dev/null 2>&1 || true
+					fi
+					if command -v systemctl > /dev/null 2>&1; then
+						systemctl restart proftpd > /dev/null 2>&1 || true
+					fi
+				else
+					rm -f "$_proftpd_tmp"
+					echo "[ ! ] Warning: Failed to update AppArmor rules for ProFTPd" >&2
+				fi
+			else
+				rm -f "$_proftpd_tmp"
+			fi
+		else
+			rm -f "$_proftpd_tmp"
+			echo "[ ! ] Warning: Failed to update AppArmor rules for ProFTPd" >&2
+		fi
+	else
+		echo "[ ! ] Warning: Failed to update AppArmor rules for ProFTPd" >&2
+	fi
+	unset _proftpd_local _proftpd_tmp _proftpd_rule _proftpd_ok
+fi

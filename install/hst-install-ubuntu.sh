@@ -1862,7 +1862,7 @@ if [ "$proftpd" = 'yes' ]; then
 
 	# In Ubuntu 26.04 we need to:
 	#   1.- Add modules.conf to proftpd.conf so tls mod is loaded.
-	#   2.- Add rules to AppArmor to allow ProFTPD to read the certificates and create the socket.
+	#   2.- Add rules to AppArmor to allow ProFTPD to read the certificates, create the socket, list ~/web, and drop capabilities cleanly (#6047).
 	ubuntu_major="${release%%.*}"
 	if [[ "$ubuntu_major" -ge 26 ]]; then
 		# Add modules.conf
@@ -1873,24 +1873,50 @@ if [ "$proftpd" = 'yes' ]; then
 		fi
 
 		# Add ruleset for AppArmor
-		mkdir -p /etc/apparmor.d/local
-		if [[ ! -f /etc/apparmor.d/local/proftpd ]]; then
-			cat > /etc/apparmor.d/local/proftpd << 'EOF'
-# Configuration added by Hestia
-/usr/local/hestia/ssl/certificate.crt r,
-/usr/local/hestia/ssl/certificate.key r,
-/run/proftpd.sock rw,
-EOF
-			apparmor_parser -r /etc/apparmor.d/proftpd 2> /dev/null
-		elif ! grep -qF "# Configuration added by Hestia" /etc/apparmor.d/local/proftpd; then
-			cat >> /etc/apparmor.d/local/proftpd << 'EOF'
-# Configuration added by Hestia
-/usr/local/hestia/ssl/certificate.crt r,
-/usr/local/hestia/ssl/certificate.key r,
-/run/proftpd.sock rw,
-EOF
-			apparmor_parser -r /etc/apparmor.d/proftpd 2> /dev/null
+		_proftpd_local="/etc/apparmor.d/local/proftpd"
+		if [[ -L /etc/apparmor.d/proftpd || -L /etc/apparmor.d/local || -L "$_proftpd_local" ]]; then
+			echo "[ ! ] Warning: Refusing to follow symlink under /etc/apparmor.d for proftpd" >> "$LOG"
+		elif mkdir -p /etc/apparmor.d/local && [[ ! -L /etc/apparmor.d/local ]] && _proftpd_tmp="$(umask 077 && mktemp /etc/apparmor.d/local/.proftpd.XXXXXX)"; then
+			_proftpd_ok=true
+			if [[ -f "$_proftpd_local" ]]; then
+				if ! cat "$_proftpd_local" > "$_proftpd_tmp"; then
+					_proftpd_ok=false
+				elif [[ -s "$_proftpd_tmp" ]] && [[ -n "$(tail -c 1 "$_proftpd_tmp")" ]]; then
+					printf '\n' >> "$_proftpd_tmp" || _proftpd_ok=false
+				fi
+			fi
+			if [[ "$_proftpd_ok" = true ]] && ! grep -qxF "# Configuration added by Hestia" "$_proftpd_tmp"; then
+				printf '# Configuration added by Hestia\n' >> "$_proftpd_tmp" || _proftpd_ok=false
+			fi
+			for _proftpd_rule in \
+				"/usr/local/hestia/ssl/certificate.crt r," \
+				"/usr/local/hestia/ssl/certificate.key r," \
+				"/run/proftpd.sock rw," \
+				"@{HOME}/web/ r," \
+				"capability chown,"; do
+				if [[ "$_proftpd_ok" = true ]] && ! grep -qxF "$_proftpd_rule" "$_proftpd_tmp"; then
+					printf '%s\n' "$_proftpd_rule" >> "$_proftpd_tmp" || _proftpd_ok=false
+				fi
+			done
+			if [[ "$_proftpd_ok" = true ]] && chmod 644 "$_proftpd_tmp" && [[ ! -L "$_proftpd_local" ]]; then
+				if [[ ! -f "$_proftpd_local" ]] || ! cmp -s "$_proftpd_tmp" "$_proftpd_local"; then
+					if mv -f "$_proftpd_tmp" "$_proftpd_local"; then
+						apparmor_parser -r /etc/apparmor.d/proftpd 2> /dev/null || true
+					else
+						rm -f "$_proftpd_tmp"
+						echo "[ ! ] Warning: Failed to update AppArmor rules for ProFTPd" >> "$LOG"
+					fi
+				else
+					rm -f "$_proftpd_tmp"
+				fi
+			else
+				rm -f "$_proftpd_tmp"
+				echo "[ ! ] Warning: Failed to update AppArmor rules for ProFTPd" >> "$LOG"
+			fi
+		else
+			echo "[ ! ] Warning: Failed to update AppArmor rules for ProFTPd" >> "$LOG"
 		fi
+		unset _proftpd_local _proftpd_tmp _proftpd_rule _proftpd_ok
 	fi
 
 	update-rc.d proftpd defaults > /dev/null 2>&1

@@ -56,6 +56,9 @@ check_result $? "Web restart failed" > /dev/null
 $BIN/v-restart-proxy "$restart"
 check_result $? "Proxy restart failed" > /dev/null
 
+$BIN/v-restart-web-backend "$restart"
+check_result $? "PHP restart failed" > /dev/null
+
 # Logging
 log_event "$OK" "$ARGUMENTS"
 

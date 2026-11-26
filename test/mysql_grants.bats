@@ -176,3 +176,76 @@ EOF
 		| grep -vE 'mysql_grant_db_name|\\\$db_grant'"
 	assert_output ''
 }
+
+
+
+#----------------------------------------------------------#
+#        Password-change query failure handling            #
+#----------------------------------------------------------#
+
+# mysql_query is stubbed in setup() to always succeed. These tests override it
+# to simulate MySQL rejecting a password (e.g. validate_password policy), and
+# check that change_mysql_password does not report a false success. The call is
+# wrapped in `set +e` because Bats runs with errexit, while the production
+# callers do not; the function itself must surface the failure via check_result.
+
+run_change_password_with_failing_query() {
+	local pattern="$1"
+	shift
+	HOST=localhost database="johnv_shop" DBUSER="johnv_shop"
+	mysql_fork="$1" mysql_ver="$2" mysql_ver_sub="$3" mysql_ver_sub_sub="$4"
+	dbpass='weakpass'
+	mysql_query() {
+		case "$1" in
+			$pattern) return 1 ;;
+		esac
+		return 0
+	}
+	check_result() {
+		if [ "$1" -ne 0 ]; then
+			echo "CHECK_RESULT_ERROR: $2" >> "$QUERY_LOG"
+		fi
+		return 0
+	}
+	set +e
+	change_mysql_password
+	set -e
+}
+
+@test "MySQL grants: change_mysql_password fails when SET PASSWORD is rejected" {
+	run_change_password_with_failing_query 'SET\ PASSWORD*' mysql 8.0.36 8 0
+	run cat "$QUERY_LOG"
+	assert_output --partial 'CHECK_RESULT_ERROR: Unable to change password for johnv_shop'
+}
+
+@test "MySQL grants: change_mysql_password fails when MariaDB GRANT is rejected" {
+	run_change_password_with_failing_query 'GRANT*' mariadb 10.11.0 10 11
+	run cat "$QUERY_LOG"
+	assert_output --partial 'CHECK_RESULT_ERROR: Unable to change password for johnv_shop'
+}
+
+@test "MySQL grants: add_mysql_database fails when CREATE USER is rejected" {
+	host=localhost database="johnv_shop" dbuser="johnv_shop"
+	charset=utf8 TPL=default
+	mysql_fork=mysql mysql_ver=8.0.36 mysql_ver_sub=8 mysql_ver_sub_sub=0
+	dbpass='weakpass'
+	mysql_query() {
+		case "$1" in
+			CREATE\ USER*) return 1 ;;
+		esac
+		return 0
+	}
+	check_result() {
+		if [ "$1" -ne 0 ]; then
+			echo "CHECK_RESULT_ERROR: $2" >> "$QUERY_LOG"
+		fi
+		return 0
+	}
+	mysql_connect() { printf 'CONNECT %s\n' "$1" >> "$QUERY_LOG"; }
+	mysql_sql_escape() { printf '%s' "$1"; }
+	set +e
+	add_mysql_database
+	set -e
+	run cat "$QUERY_LOG"
+	assert_output --partial 'CHECK_RESULT_ERROR: Unable to create database user for johnv_shop'
+}

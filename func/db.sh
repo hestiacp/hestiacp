@@ -374,24 +374,30 @@ add_mysql_database() {
 		query="CREATE USER \`$dbuser\`@\`%\`
             IDENTIFIED BY '$dbpass_esc'"
 		mysql_query "$query" > /dev/null
+		check_result $? "Unable to create database user for $database"
 
 		query="CREATE USER \`$dbuser\`@localhost
             IDENTIFIED BY '$dbpass_esc'"
 		mysql_query "$query" > /dev/null
+		check_result $? "Unable to create database user for $database"
 
 		query="GRANT ALL ON \`$(mysql_grant_db_name "$database")\`.* TO \`$dbuser\`@\`%\`"
 		mysql_query "$query" > /dev/null
+		check_result $? "Unable to grant privileges for $database"
 
 		query="GRANT ALL ON \`$(mysql_grant_db_name "$database")\`.* TO \`$dbuser\`@localhost"
 		mysql_query "$query" > /dev/null
+		check_result $? "Unable to grant privileges for $database"
 	else
 		query="GRANT ALL ON \`$(mysql_grant_db_name "$database")\`.* TO \`$dbuser\`@\`%\`
             IDENTIFIED BY '$dbpass_esc'"
 		mysql_query "$query" > /dev/null
+		check_result $? "Unable to grant privileges for $database"
 
 		query="GRANT ALL ON \`$(mysql_grant_db_name "$database")\`.* TO \`$dbuser\`@localhost
             IDENTIFIED BY '$dbpass_esc'"
 		mysql_query "$query" > /dev/null
+		check_result $? "Unable to grant privileges for $database"
 	fi
 
 	if [ "$mysql_fork" = "mysql" ]; then
@@ -518,27 +524,33 @@ change_mysql_password() {
 			# mysql >= 8
 			query="SET PASSWORD FOR \`$DBUSER\`@\`%\` = '$dbpass_esc'"
 			mysql_query "$query" > /dev/null
+			check_result $? "Unable to change password for $database"
 			query="SET PASSWORD FOR \`$DBUSER\`@localhost = '$dbpass_esc'"
 			mysql_query "$query" > /dev/null
+			check_result $? "Unable to change password for $database"
 		else
 			# mysql < 8
 			query="GRANT ALL ON \`$(mysql_grant_db_name "$database")\`.* TO \`$DBUSER\`@\`%\`
                   IDENTIFIED BY '$dbpass_esc'"
 			mysql_query "$query" > /dev/null
+			check_result $? "Unable to change password for $database"
 
 			query="GRANT ALL ON \`$(mysql_grant_db_name "$database")\`.* TO \`$DBUSER\`@localhost
                   IDENTIFIED BY '$dbpass_esc'"
 			mysql_query "$query" > /dev/null
+			check_result $? "Unable to change password for $database"
 		fi
 	else
 		# mariadb
 		query="GRANT ALL ON \`$(mysql_grant_db_name "$database")\`.* TO \`$DBUSER\`@\`%\`
               IDENTIFIED BY '$dbpass_esc'"
 		mysql_query "$query" > /dev/null
+		check_result $? "Unable to change password for $database"
 
 		query="GRANT ALL ON \`$(mysql_grant_db_name "$database")\`.* TO \`$DBUSER\`@localhost
               IDENTIFIED BY '$dbpass_esc'"
 		mysql_query "$query" > /dev/null
+		check_result $? "Unable to change password for $database"
 	fi
 
 	if [ "$mysql_fork" = "mysql" ]; then

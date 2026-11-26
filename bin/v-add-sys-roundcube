@@ -66,6 +66,13 @@ if [[ -d "/usr/share/roundcube" ]]; then
 	exit 2
 fi
 
+for rc_path in "$RC_INSTALL_DIR" "$RC_CONFIG_DIR" "$RC_LOG"; do
+	if [[ -L "$rc_path" ]]; then
+		echo "ERROR: $rc_path must not be a symlink" >&2
+		exit 2
+	fi
+done
+
 # Get current version
 if [[ -f "$RC_INSTALL_DIR/program/include/iniset.php" ]]; then
 	version="$(grep RCMAIL_VERSION "$RC_INSTALL_DIR/program/include/iniset.php" | cut -d "'" -f 4)"
@@ -87,17 +94,69 @@ if grep -q '^1\.7' <<< "$rc_v" &> /dev/null; then
 	fi
 fi
 
-# Check whether ROOT_USER has composer installed to update RC modules
-COMPOSER_ROOT_USER_BIN="$HOMEDIR/$ROOT_USER/.composer/composer"
-if [[ -x "$COMPOSER_ROOT_USER_BIN" ]] \
-	|| "$BIN"/v-add-user-composer "$ROOT_USER" &> /dev/null; then
-	composer_available=1
-else
-	composer_available=0
-fi
-
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
+
+RC_WORK_DIR="$(umask 077 && mktemp -d)" || {
+	echo "ERROR: Failed to create temporary working directory" >&2
+	exit 1
+}
+if [[ -L "$RC_WORK_DIR" || "$(stat -L -c '%u:%g:%a' "$RC_WORK_DIR" 2> /dev/null)" != "0:0:700" ]]; then
+	rm -rf "${RC_WORK_DIR:?}"
+	echo "ERROR: Invalid ownership or permissions on $RC_WORK_DIR" >&2
+	exit 1
+fi
+
+RC_COMPOSER_HOME="$RC_WORK_DIR/composer-home"
+if ! (umask 077 && mkdir -m 0700 "$RC_COMPOSER_HOME") \
+	|| [[ "$(stat -L -c '%u:%g:%a' "$RC_COMPOSER_HOME" 2> /dev/null)" != "0:0:700" ]]; then
+	rm -rf "${RC_WORK_DIR:?}"
+	echo "ERROR: Failed to create temporary Composer directory" >&2
+	exit 1
+fi
+
+RC_PHP_INI_DIR="$RC_WORK_DIR/php-ini"
+if ! (umask 077 && mkdir -m 0700 "$RC_PHP_INI_DIR") \
+	|| [[ "$(stat -L -c '%u:%g:%a' "$RC_PHP_INI_DIR" 2> /dev/null)" != "0:0:700" ]]; then
+	rm -rf "${RC_WORK_DIR:?}"
+	echo "ERROR: Failed to create temporary PHP INI directory" >&2
+	exit 1
+fi
+
+# shellcheck disable=SC2317
+cleanup() {
+	rm -rf "${RC_WORK_DIR:?}"
+	if [[ -d "$RC_INSTALL_DIR" && ! -L "$RC_INSTALL_DIR" ]]; then
+		rm -rf "${RC_INSTALL_DIR:?}/$RC_FILE" "${RC_INSTALL_DIR:?}/$RC_EXTRACT"
+	fi
+}
+trap cleanup EXIT
+
+# Check whether ROOT_USER has composer installed to update RC modules,
+# verifying the path stays inside ROOT_USER's home directory before staging
+# a root-owned copy in RC_WORK_DIR/bin.
+COMPOSER_ROOT_USER_DIR="$HOMEDIR/$ROOT_USER/.composer"
+COMPOSER_ROOT_USER_BIN="$COMPOSER_ROOT_USER_DIR/composer"
+RC_COMPOSER_BIN=""
+composer_available=0
+root_home_real="$(readlink -f "$HOMEDIR/$ROOT_USER" 2> /dev/null)"
+
+if [[ -n "$root_home_real" && ! -L "$HOMEDIR/$ROOT_USER" && ! -L "$COMPOSER_ROOT_USER_DIR" && ! -L "$COMPOSER_ROOT_USER_BIN" ]]; then
+	if [[ -x "$COMPOSER_ROOT_USER_BIN" ]] \
+		|| "$BIN"/v-add-user-composer "$ROOT_USER" &> /dev/null; then
+		composer_real="$(readlink -f "$COMPOSER_ROOT_USER_BIN" 2> /dev/null)"
+		if [[ -n "$composer_real" && "$composer_real" == "$root_home_real/"* && ! -L "$COMPOSER_ROOT_USER_DIR" && ! -L "$COMPOSER_ROOT_USER_BIN" && -f "$COMPOSER_ROOT_USER_BIN" && -x "$COMPOSER_ROOT_USER_BIN" ]] \
+			&& head -n 5 "$COMPOSER_ROOT_USER_BIN" 2> /dev/null | grep -q '<?php'; then
+			if (umask 077 && mkdir -m 0700 "$RC_WORK_DIR/bin") \
+				&& install -m 0700 -o root -g root "$COMPOSER_ROOT_USER_BIN" "$RC_WORK_DIR/bin/composer"; then
+				RC_COMPOSER_BIN="$RC_WORK_DIR/bin/composer"
+				composer_available=1
+			fi
+		fi
+	fi
+else
+	echo "Warning: Unsafe symlink detected on $COMPOSER_ROOT_USER_BIN, skipping Composer" >&2
+fi
 
 #----------------------------------------------------------#
 #                      Functions                           #
@@ -114,20 +173,40 @@ fail() {
 	exit 1
 }
 
+restore_rc_backup() {
+	if [[ -d "$RC_WORK_DIR/backup_install" && -d "$RC_INSTALL_DIR" && ! -L "$RC_INSTALL_DIR" ]]; then
+		find "$RC_INSTALL_DIR" -mindepth 1 -maxdepth 1 -exec rm -rf -- {} + 2> /dev/null || true
+		if ! cp -a "$RC_WORK_DIR/backup_install"/. "$RC_INSTALL_DIR"/; then
+			echo "Warning: Failed to restore $RC_INSTALL_DIR backup" >&2
+		fi
+	fi
+	if [[ -d "$RC_WORK_DIR/backup_config" && -d "$RC_CONFIG_DIR" && ! -L "$RC_CONFIG_DIR" ]]; then
+		find "$RC_CONFIG_DIR" -mindepth 1 -maxdepth 1 -exec rm -rf -- {} + 2> /dev/null || true
+		if ! cp -a "$RC_WORK_DIR/backup_config"/. "$RC_CONFIG_DIR"/; then
+			echo "Warning: Failed to restore $RC_CONFIG_DIR backup" >&2
+		fi
+	fi
+}
+
 download_rc() {
-	if [[ ! -f "$RC_INSTALL_DIR/$RC_FILE" ]]; then
-		if ! wget "$RC_URL" --retry-connrefused --quiet -O "$RC_INSTALL_DIR/$RC_FILE"; then
-			rm -f "${RC_INSTALL_DIR:?}/$RC_FILE"
+	local target_file="$RC_WORK_DIR/$RC_FILE"
+	if [[ -f "$RC_INSTALL_DIR/$RC_FILE" && ! -L "$RC_INSTALL_DIR/$RC_FILE" ]]; then
+		mv -f "$RC_INSTALL_DIR/$RC_FILE" "$target_file" \
+			|| cp -f "$RC_INSTALL_DIR/$RC_FILE" "$target_file"
+	fi
+	if [[ ! -f "$target_file" ]]; then
+		if ! wget "$RC_URL" --retry-connrefused --quiet -O "$target_file"; then
+			rm -f "$target_file"
 			fail "Failed to download $RC_URL"
 		fi
 	fi
 	# Empty file or HTML error page
-	if [[ ! -s "$RC_INSTALL_DIR/$RC_FILE" ]]; then
-		rm -f "${RC_INSTALL_DIR:?}/$RC_FILE"
+	if [[ ! -s "$target_file" ]]; then
+		rm -f "$target_file"
 		fail "Downloaded archive is empty: $RC_FILE"
 	fi
-	if ! tar tzf "$RC_INSTALL_DIR/$RC_FILE" &> /dev/null; then
-		rm -f "${RC_INSTALL_DIR:?}/$RC_FILE"
+	if ! tar tzf "$target_file" &> /dev/null; then
+		rm -f "$target_file"
 		fail "Downloaded archive is corrupted: $RC_FILE"
 	fi
 }
@@ -159,6 +238,7 @@ download_rc() {
 restore_vendor_marker() {
 	local autoload="$RC_INSTALL_DIR/vendor/autoload.php"
 	local vendor_dir="$RC_INSTALL_DIR/vendor"
+	local release_lock="${RC_EXTRACT_DIR:-$RC_INSTALL_DIR/$RC_EXTRACT}/composer.lock"
 
 	# Cheap early exits. The link count also matters: a hardlink to a
 	# root-owned file is writable by hestiamail through the shared inode, so
@@ -254,7 +334,7 @@ restore_vendor_marker() {
 
 		exit(0);
 	' "$RC_INSTALL_DIR/composer.json" "$vendor_dir/composer/installed.json" \
-		"$RC_INSTALL_DIR/$RC_EXTRACT/composer.lock" "$vendor_dir" 1>&2; then
+		"$release_lock" "$vendor_dir" 1>&2; then
 		return 0
 	fi
 
@@ -295,17 +375,20 @@ restore_vendor_marker() {
 }
 
 update_rc_modules() {
-	[[ "$composer_available" -eq 1 ]] || return 0
+	[[ "$composer_available" -eq 1 && -n "$RC_COMPOSER_BIN" ]] || return 0
 
-	# Use COMPOSER_ALLOW_SUPERUSER=1 to prevent composer from freezing
-	# when executed as root
+	# Use COMPOSER_ALLOW_SUPERUSER=1, COMPOSER_NO_INTERACTION=1, and COMPOSER_HOME
+	# so Composer runs cleanly as root under non-interactive dpkg/cron environments.
 	export COMPOSER_ALLOW_SUPERUSER=1
+	export COMPOSER_NO_INTERACTION=1
+	export COMPOSER_HOME="$RC_COMPOSER_HOME"
 
-	if ! "$PHP_CLI" "$ENABLE_PHP_FUNCTIONS" "$COMPOSER_ROOT_USER_BIN" \
-		--working-dir="$RC_INSTALL_DIR" update --no-dev --no-interaction --optimize-autoloader &> /dev/null; then
+	if ! "$PHP_CLI" "$ENABLE_PHP_FUNCTIONS" "$RC_COMPOSER_BIN" \
+		--working-dir="$RC_INSTALL_DIR" update --no-dev --no-interaction --optimize-autoloader > "$RC_WORK_DIR/composer.log" 2>&1; then
 		echo "Warning: Failed to update Roundcube modules"
+		tail -n 50 "$RC_WORK_DIR/composer.log" | sed 's/^/  /' >&2
 		echo "To investigate the issue, run:"
-		echo "COMPOSER_ALLOW_SUPERUSER=1 \"$PHP_CLI\" \"$ENABLE_PHP_FUNCTIONS\" \"$COMPOSER_ROOT_USER_BIN\" --working-dir=\"$RC_INSTALL_DIR\" update --no-dev --no-interaction --optimize-autoloader"
+		echo "COMPOSER_ALLOW_SUPERUSER=1 COMPOSER_NO_INTERACTION=1 \"$PHP_CLI\" \"$ENABLE_PHP_FUNCTIONS\" \"$COMPOSER_ROOT_USER_BIN\" --working-dir=\"$RC_INSTALL_DIR\" update --no-dev --no-interaction --optimize-autoloader"
 		return 1
 	fi
 
@@ -325,27 +408,28 @@ update_rc_modules() {
 # CLI php.ini that disables system() makes update.sh die with "Call to
 # undefined function system()". Add an extra ini dir, after the default one
 # (leading ":"), that clears disable_functions; PHP_INI_SCAN_DIR is inherited
-# by every PHP process spawned from here.
-php_ini_override="$(mktemp -d)" || fail "Cannot create a temporary directory"
-trap 'rm -rf "$php_ini_override"' EXIT
-echo "disable_functions =" > "$php_ini_override/zz-hestia-roundcube.ini"
-export PHP_INI_SCAN_DIR="${PHP_INI_SCAN_DIR:-}:$php_ini_override"
+# by every PHP process spawned from here and cleaned up via RC_WORK_DIR.
+echo "disable_functions =" > "$RC_PHP_INI_DIR/zz-hestia-roundcube.ini"
+export PHP_INI_SCAN_DIR="${PHP_INI_SCAN_DIR:-}:$RC_PHP_INI_DIR"
 
 if [[ "$UPDATE" == "no" ]]; then
+	cd "$RC_WORK_DIR" || fail "Cannot enter $RC_WORK_DIR"
+	download_rc
+
+	tar xzf "$RC_WORK_DIR/$RC_FILE" -C "$RC_WORK_DIR" || fail "Failed to extract $RC_FILE"
+	RC_EXTRACT_DIR="$RC_WORK_DIR/$RC_EXTRACT"
+	[[ -d "$RC_EXTRACT_DIR" ]] || fail "Extracted directory $RC_EXTRACT not found"
+
 	rm -rf "${RC_INSTALL_DIR:?}"
 	rm -rf "${RC_CONFIG_DIR:?}"
 
 	mkdir -p "$RC_INSTALL_DIR/" || fail "Cannot create $RC_INSTALL_DIR"
 	mkdir -p "$RC_CONFIG_DIR/" || fail "Cannot create $RC_CONFIG_DIR"
 
-	cd "$RC_INSTALL_DIR" || fail "Cannot enter $RC_INSTALL_DIR"
-	download_rc
-
-	tar xzf "$RC_FILE" || fail "Failed to extract $RC_FILE"
-	[[ -d "$RC_EXTRACT" ]] || fail "Extracted directory $RC_EXTRACT not found"
-	cp -rT "$RC_EXTRACT" "$RC_INSTALL_DIR" || fail "Failed to copy Roundcube files"
+	cp -rT "$RC_EXTRACT_DIR" "$RC_INSTALL_DIR" || fail "Failed to copy Roundcube files"
 	[[ -f "$RC_INSTALL_DIR/program/include/iniset.php" ]] \
 		|| fail "Roundcube core files missing after extraction"
+	cd "$RC_INSTALL_DIR" || fail "Cannot enter $RC_INSTALL_DIR"
 
 	# Delete old config folder
 	cp "$RC_INSTALL_DIR/config/defaults.inc.php" "$RC_CONFIG_DIR/defaults.inc.php" \
@@ -435,10 +519,8 @@ if [[ "$UPDATE" == "no" ]]; then
 		cp -f "$HESTIA/install/deb/logrotate/roundcube" /etc/logrotate.d/
 	fi
 
-	# Clean up
+	# Clean up installer directory if left behind in target installation
 	rm -rf "${RC_INSTALL_DIR:?}/installer"
-	rm -rf "${RC_INSTALL_DIR:?}/$RC_FILE"
-	rm -rf "${RC_INSTALL_DIR:?}/$RC_EXTRACT"
 
 	# Updating hestia.conf
 	if ! grep -q WEBMAIL_SYSTEM "$HESTIA/conf/hestia.conf"; then
@@ -461,11 +543,12 @@ else
 	command -v rsync &> /dev/null \
 		|| fail "rsync not installed, try install it"
 
-	cd "$RC_INSTALL_DIR" || fail "Cannot enter $RC_INSTALL_DIR"
+	cd "$RC_WORK_DIR" || fail "Cannot enter $RC_WORK_DIR"
 	download_rc
 
-	tar xzf "$RC_FILE" || fail "Failed to extract $RC_FILE"
-	[[ -x "$RC_INSTALL_DIR/$RC_EXTRACT/bin/installto.sh" ]] \
+	tar xzf "$RC_WORK_DIR/$RC_FILE" -C "$RC_WORK_DIR" || fail "Failed to extract $RC_FILE"
+	RC_EXTRACT_DIR="$RC_WORK_DIR/$RC_EXTRACT"
+	[[ -f "$RC_EXTRACT_DIR/bin/installto.sh" ]] \
 		|| fail "installto.sh not found in $RC_EXTRACT"
 
 	# rsync 3.5.0 introduced stricter security checks for destination symlinks owned
@@ -476,16 +559,32 @@ else
 	if rsync -h 2>&1 | grep -q 'insecure-links'; then
 		sed -i \
 			's/rsync -a --out-format=%n/rsync --insecure-links -a --out-format=%n/' \
-			"$RC_INSTALL_DIR/$RC_EXTRACT/bin/installto.sh"
+			"$RC_EXTRACT_DIR/bin/installto.sh"
 
 		sed -i \
 			's/rsync -aC --out-format=%n/rsync --insecure-links -aC --out-format=%n/' \
-			"$RC_INSTALL_DIR/$RC_EXTRACT/bin/installto.sh"
+			"$RC_EXTRACT_DIR/bin/installto.sh"
 	fi
 
-	# Use COMPOSER_ALLOW_SUPERUSER=1 to prevent update.sh script from freezing trying
-	# to execute composer as root to update roundcube dependencies
+	# Snapshot existing installation and config before modifying files in place so a
+	# mid-upgrade installto.sh/update.sh failure can restore a working previous state.
+	cp -a "$RC_INSTALL_DIR" "$RC_WORK_DIR/backup_install" \
+		|| fail "Failed to back up $RC_INSTALL_DIR before upgrade"
+	if [[ -d "$RC_CONFIG_DIR" ]]; then
+		cp -a "$RC_CONFIG_DIR" "$RC_WORK_DIR/backup_config" \
+			|| fail "Failed to back up $RC_CONFIG_DIR before upgrade"
+	fi
+
+	# Use COMPOSER_ALLOW_SUPERUSER=1, COMPOSER_NO_INTERACTION=1, and COMPOSER_HOME
+	# so Composer runs cleanly under non-interactive dpkg/cron environments.
 	export COMPOSER_ALLOW_SUPERUSER=1
+	export COMPOSER_NO_INTERACTION=1
+	export COMPOSER_HOME="$RC_COMPOSER_HOME"
+
+	rc_upgrade_path="$PATH"
+	if [[ "$composer_available" -eq 1 && -d "$RC_WORK_DIR/bin" ]]; then
+		rc_upgrade_path="$RC_WORK_DIR/bin:$PATH"
+	fi
 
 	# A vendor/ left behind by an earlier update_rc_modules() has no marker, so
 	# installto.sh would treat it as Composer-managed and skip it. Repair that
@@ -499,17 +598,22 @@ else
 	# reason for a failure, and the upgrade log is the only place an admin can
 	# see it. The tail is enough to identify the cause without filling the log
 	# with the file list rsync prints.
-	rc_log="$(mktemp)" || fail "Cannot create a temporary file"
-	if ! "$PHP_CLI" "$ENABLE_PHP_FUNCTIONS" "$RC_INSTALL_DIR/$RC_EXTRACT/bin/installto.sh" \
-		-y "$RC_INSTALL_DIR" > "$rc_log" 2>&1; then
-		tail -n 50 "$rc_log" | sed 's/^/  /'
-		rm -f "$rc_log"
+	if ! PATH="$rc_upgrade_path" "$PHP_CLI" "$ENABLE_PHP_FUNCTIONS" "$RC_EXTRACT_DIR/bin/installto.sh" \
+		-y "$RC_INSTALL_DIR" > "$RC_WORK_DIR/installto.log" 2>&1; then
+		tail -n 50 "$RC_WORK_DIR/installto.log" | sed 's/^/  /' >&2
+		restore_rc_backup
 		fail "installto.sh failed (Roundcube $version -> $rc_v)"
 	fi
-	rm -f "$rc_log"
 
-	"$PHP_CLI" "$ENABLE_PHP_FUNCTIONS" "$RC_INSTALL_DIR/bin/update.sh" --version "$version" > /dev/null 2>&1 \
-		|| fail "update.sh failed (Roundcube $version -> $rc_v)"
+	# Roundcube <1.7.6 installto.sh runs bin/update.sh without checking its exit code.
+	if ! grep -q 'rcube::raise_error.*errors' "$RC_EXTRACT_DIR/bin/installto.sh"; then
+		if ! PATH="$rc_upgrade_path" "$PHP_CLI" "$ENABLE_PHP_FUNCTIONS" "$RC_INSTALL_DIR/bin/update.sh" \
+			--version="$version" -y > "$RC_WORK_DIR/update.log" 2>&1; then
+			tail -n 50 "$RC_WORK_DIR/update.log" | sed 's/^/  /' >&2
+			restore_rc_backup
+			fail "update.sh failed (Roundcube $version -> $rc_v)"
+		fi
+	fi
 
 	# Non critical: only warn
 	"$PHP_CLI" "$ENABLE_PHP_FUNCTIONS" "$RC_INSTALL_DIR/bin/indexcontacts.sh" > /dev/null 2>&1 \
@@ -527,12 +631,10 @@ else
 		cp -f "$HESTIA/install/deb/logrotate/roundcube" /etc/logrotate.d/
 	fi
 
-	#clean up the mess
+	# Clean up installer directory if left behind in target installation
 	if [[ -d "$RC_INSTALL_DIR/installer" ]]; then
 		rm -rf "${RC_INSTALL_DIR:?}/installer"
 	fi
-	rm -rf "${RC_INSTALL_DIR:?}/$RC_FILE"
-	rm -rf "${RC_INSTALL_DIR:?}/$RC_EXTRACT"
 fi
 
 #----------------------------------------------------------#

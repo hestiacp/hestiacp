@@ -426,12 +426,12 @@ upgrade_start_backup() {
 			fi
 			cp -fr /etc/mysql/* $HESTIA_BACKUP/conf/mysql/
 		fi
-		if [[ "$DB_SYSTEM" =~ "pgsql" ]]; then
+		if [[ "$DB_SYSTEM" =~ "pgsql" ]] && [ -d "/etc/postgresql" ]; then
 			if [ "$DEBUG_MODE" = "true" ]; then
 				echo "      ---- pgsql"
 			fi
 			# config for postgresql is stored in /etc/postgresql/version/main/
-			cp -fr /etc/postgresql/* $HESTIA_BACKUP/conf/pgsql/
+			cp -fr /etc/postgresql/. "$HESTIA_BACKUP/conf/pgsql/"
 		fi
 	fi
 	if [ -n "$FTP_SYSTEM" ]; then

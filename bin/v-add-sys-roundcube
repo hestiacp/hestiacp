@@ -319,6 +319,18 @@ update_rc_modules() {
 #                       Action                             #
 #----------------------------------------------------------#
 
+# "-d disable_functions=" only affects the PHP process we start. Roundcube's
+# installto.sh runs bin/update.sh (and install-jsdeps.sh) itself through
+# system(PHP_BINARY ...), and those child processes read php.ini again, so a
+# CLI php.ini that disables system() makes update.sh die with "Call to
+# undefined function system()". Add an extra ini dir, after the default one
+# (leading ":"), that clears disable_functions; PHP_INI_SCAN_DIR is inherited
+# by every PHP process spawned from here.
+php_ini_override="$(mktemp -d)" || fail "Cannot create a temporary directory"
+trap 'rm -rf "$php_ini_override"' EXIT
+echo "disable_functions =" > "$php_ini_override/zz-hestia-roundcube.ini"
+export PHP_INI_SCAN_DIR="${PHP_INI_SCAN_DIR:-}:$php_ini_override"
+
 if [[ "$UPDATE" == "no" ]]; then
 	rm -rf "${RC_INSTALL_DIR:?}"
 	rm -rf "${RC_CONFIG_DIR:?}"

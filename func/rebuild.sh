@@ -885,8 +885,9 @@ rebuild_mysql_database() {
 			fi
 		fi
 	fi
-	mysql_query "GRANT ALL ON \`$DB\`.* TO \`$DBUSER\`@\`%\`" > /dev/null
-	mysql_query "GRANT ALL ON \`$DB\`.* TO \`$DBUSER\`@localhost" > /dev/null
+	mysql_revoke_legacy_db_grants "$DB" "$DBUSER"
+	mysql_query "GRANT ALL ON \`$(mysql_grant_db_name "$DB")\`.* TO \`$DBUSER\`@\`%\`" > /dev/null
+	mysql_query "GRANT ALL ON \`$(mysql_grant_db_name "$DB")\`.* TO \`$DBUSER\`@localhost" > /dev/null
 	mysql_query "$query" > /dev/null
 	if [ ! -z "$query2" ]; then
 		mysql_query "$query2" > /dev/null

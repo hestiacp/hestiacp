@@ -32,3 +32,12 @@ if [ -f "$hestiaweb_cron" ] && grep -qE '^41 4 \* \* \* sudo /usr/local/hestia/b
 	hour=$(generate_password '123456' '1')
 	sed -i -E "s|^41 4 (\* \* \* sudo /usr/local/hestia/bin/v-update-sys-hestia-all)|$min $hour \1|" "$hestiaweb_cron"
 fi
+
+# Override sury ProtectHome=read-only so Apache can write to /home
+if [ "$WEB_SYSTEM" = "apache2" ] && ! grep -qs "^ProtectHome=no" /etc/systemd/system/apache2.service.d/hestia.conf; then
+	echo "[ * ] Adding ProtectHome=no override to Apache2 service..."
+	mkdir -p /etc/systemd/system/apache2.service.d
+	echo -e "[Service]\nProtectHome=no" > /etc/systemd/system/apache2.service.d/hestia.conf
+	systemctl daemon-reload > /dev/null 2>&1
+	systemctl restart apache2 > /dev/null 2>&1
+fi

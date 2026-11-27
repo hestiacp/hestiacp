@@ -159,6 +159,12 @@ export const options = [
 		default: 'no',
 	},
 	{
+		flag: 'snappymail',
+		label: 'SnappyMail',
+		description: 'Lightweight, modern and fast webmail client',
+		default: 'no',
+	},
+	{
 		flag: 'clamav',
 		label: 'ClamAV',
 		description: 'Scans your email inbox for viruses',

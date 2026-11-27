@@ -93,6 +93,7 @@ To choose what software gets installed, you can provide flags to the installatio
 -x, --exim Install Exim [yes | no] default: yes
 -z, --dovecot Install Dovecot [yes | no] default: yes
 -Z, --sieve Install Sieve [yes | no] default: no
+-S, --snappymail Install SnappyMail [yes | no] default: no
 -c, --clamav Install ClamAV [yes | no] default: yes
 -t, --spamassassin Install SpamAssassin [yes | no] default: yes
 -i, --iptables Install iptables [yes | no] default: yes

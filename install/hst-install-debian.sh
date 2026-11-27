@@ -96,6 +96,7 @@ help() {
   -x, --exim              Install Exim          [yes|no]  default: yes
   -z, --dovecot           Install Dovecot       [yes|no]  default: yes
   -Z, --sieve             Install Sieve         [yes|no]  default: no
+  -S, --snappymail        Install SnappyMail    [yes|no]  default: no
   -c, --clamav            Install ClamAV        [yes|no]  default: yes
   -t, --spamassassin      Install SpamAssassin  [yes|no]  default: yes
   -i, --iptables          Install iptables      [yes|no]  default: yes
@@ -280,6 +281,7 @@ for arg; do
 		--exim) args="${args}-x " ;;
 		--dovecot) args="${args}-z " ;;
 		--sieve) args="${args}-Z " ;;
+		--snappymail) args="${args}-S " ;;
 		--clamav) args="${args}-c " ;;
 		--spamassassin) args="${args}-t " ;;
 		--iptables) args="${args}-i " ;;
@@ -308,7 +310,7 @@ done
 eval set -- "$args"
 
 # Parsing arguments
-while getopts "a:w:v:j:k:m:M:g:d:x:z:Z:c:t:i:b:r:o:q:L:l:y:s:u:e:p:W:D:fh" Option; do
+while getopts "a:w:v:j:k:m:M:g:d:x:z:Z:S:c:t:i:b:r:o:q:L:l:y:s:u:e:p:W:D:fh" Option; do
 	case $Option in
 		a) apache=$OPTARG ;;        # Apache
 		w) phpfpm=$OPTARG ;;        # PHP-FPM
@@ -322,6 +324,7 @@ while getopts "a:w:v:j:k:m:M:g:d:x:z:Z:c:t:i:b:r:o:q:L:l:y:s:u:e:p:W:D:fh" Optio
 		x) exim=$OPTARG ;;          # Exim
 		z) dovecot=$OPTARG ;;       # Dovecot
 		Z) sieve=$OPTARG ;;         # Sieve
+		S) snappymail=$OPTARG ;;    # SnappyMail
 		c) clamd=$OPTARG ;;         # ClamAV
 		t) spamd=$OPTARG ;;         # SpamAssassin
 		i) iptables=$OPTARG ;;      # Iptables
@@ -395,6 +398,7 @@ set_default_value 'postgresql' 'no'
 set_default_value 'exim' 'yes'
 set_default_value 'dovecot' 'yes'
 set_default_value 'sieve' 'no'
+set_default_value 'snappymail' 'no'
 if [ $memory -lt 1500000 ]; then
 	set_default_value 'clamd' 'no'
 	set_default_value 'spamd' 'no'
@@ -426,6 +430,7 @@ if [ "$exim" = 'no' ]; then
 fi
 if [ "$dovecot" = 'no' ]; then
 	sieve='no'
+	snappymail='no'
 fi
 if [ "$iptables" = 'no' ]; then
 	fail2ban='no'
@@ -687,6 +692,9 @@ if [ "$exim" = 'yes' ]; then
 		echo -n '   - Dovecot POP3/IMAP Server'
 		if [ "$sieve" = 'yes' ]; then
 			echo -n '+ Sieve'
+		fi
+		if [ "$snappymail" = 'yes' ]; then
+			echo -n ' + SnappyMail'
 		fi
 	fi
 fi
@@ -2257,6 +2265,18 @@ if ([ "$mysql" == 'yes' ] || [ "$mysql8" == 'yes' ]) && [ "$dovecot" == "yes" ];
 else
 	write_config_value "WEBMAIL_ALIAS" ""
 	write_config_value "WEBMAIL_SYSTEM" ""
+fi
+
+#----------------------------------------------------------#
+#                       Install SnappyMail                 #
+#----------------------------------------------------------#
+
+if ([ "$mysql" == 'yes' ] || [ "$mysql8" == 'yes' ]) && [ "$dovecot" == "yes" ] && [ "$snappymail" = 'yes' ]; then
+	echo "[ * ] Installing SnappyMail..."
+	$HESTIA/bin/v-add-sys-snappymail
+	if [ -z "$WEBMAIL_ALIAS" ]; then
+		write_config_value "WEBMAIL_ALIAS" "webmail"
+	fi
 fi
 
 #----------------------------------------------------------#

@@ -1,0 +1,73 @@
+#!/bin/bash
+# info: disable HTTP/3 (QUIC) for a web domain
+# options: USER DOMAIN [RESTART] [QUIET]
+#
+# example: v-delete-web-domain-ssl-http3 admin example.com
+#
+# This function disables HTTP/3 for a web domain: the QUIC listener and the
+# Alt-Svc header are removed. Templates with their own QUIC listener (such as
+# wordpress-http3) keep serving HTTP/3. The firewall rule for UDP is kept,
+# other domains may still use it.
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+domain=$2
+restart=$3
+quiet=$4
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
+source $HESTIA/func/domain.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '2' "$#" 'USER DOMAIN [RESTART] [QUIET]'
+is_format_valid 'user' 'domain' 'restart'
+is_object_valid 'user' 'USER' "$user"
+is_object_valid 'web' 'DOMAIN' "$domain"
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+parse_object_kv_list $(grep "DOMAIN='$domain'" $USER_DATA/web.conf)
+
+delete_web_http3_config "$user" "$domain"
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+if [ -n "$SSL_HTTP3" ]; then
+	update_object_value 'web' 'DOMAIN' "$domain" '$SSL_HTTP3' 'no'
+fi
+
+# Restart services if requested
+$BIN/v-restart-web "$restart"
+check_result $? "Web restart failed" > /dev/null
+
+$BIN/v-restart-proxy "$restart"
+check_result $? "Proxy restart failed" > /dev/null
+
+# Logging
+if [ "$quiet" != "yes" ]; then
+	$BIN/v-log-action "$user" "Info" "Web" "HTTP/3 disabled (Domain: $domain)."
+fi
+log_event "$OK" "$ARGUMENTS"
+
+exit

@@ -65,6 +65,7 @@ if (!empty($v_ssl)) {
 	$v_ssl_forcessl = $data[$v_domain]["SSL_FORCE"];
 	$v_ssl_hsts = $data[$v_domain]["SSL_HSTS"];
 }
+$v_ssl_http3 = $data[$v_domain]["SSL_HTTP3"] ?? "no";
 $v_letsencrypt = $data[$v_domain]["LETSENCRYPT"];
 if (empty($v_letsencrypt)) {
 	$v_letsencrypt = "no";
@@ -827,6 +828,7 @@ if (!empty($_POST["save"]) && $read_only !== true) {
 		$v_ssl = "no";
 		$v_ssl_forcessl = "no";
 		$v_ssl_hsts = "no";
+		$v_ssl_http3 = "no";
 		$restart_web = "yes";
 		$restart_proxy = "yes";
 	}
@@ -1066,6 +1068,41 @@ if (!empty($_POST["save"]) && $read_only !== true) {
 		check_return_code($return_var, $output);
 		unset($output);
 		$v_ssl_hsts = "no";
+		$restart_web = "yes";
+		$restart_proxy = "yes";
+	}
+
+	// Add HTTP/3
+	if (
+		!empty($_POST["v_ssl_http3"]) &&
+		!empty($_POST["v_ssl"]) &&
+		$v_ssl_http3 != "yes" &&
+		empty($_SESSION["error_msg"])
+	) {
+		exec(
+			HESTIA_CMD . "v-add-web-domain-ssl-http3 " . $user . " " . quoteshellarg($v_domain),
+			$output,
+			$return_var,
+		);
+		check_return_code($return_var, $output);
+		unset($output);
+		if ($return_var == 0) {
+			$v_ssl_http3 = "yes";
+		}
+		$restart_web = "yes";
+		$restart_proxy = "yes";
+	}
+
+	// Delete HTTP/3
+	if ($v_ssl_http3 == "yes" && empty($_POST["v_ssl_http3"]) && empty($_SESSION["error_msg"])) {
+		exec(
+			HESTIA_CMD . "v-delete-web-domain-ssl-http3 " . $user . " " . quoteshellarg($v_domain),
+			$output,
+			$return_var,
+		);
+		check_return_code($return_var, $output);
+		unset($output);
+		$v_ssl_http3 = "no";
 		$restart_web = "yes";
 		$restart_proxy = "yes";
 	}

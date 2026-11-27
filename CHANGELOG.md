@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Features
+
+- Add an HTTP/3 (QUIC) option for web domains with SSL (`v-add-web-domain-ssl-http3`, `v-delete-web-domain-ssl-http3`, and a checkbox in the web domain settings). It works with every nginx web and proxy template, including custom ones
+
+### Bugfixes
+
+- Open UDP port 443 in the firewall when HTTP/3 is used. Only TCP was open, so QUIC packets were dropped and browsers showed QUIC errors before falling back to HTTP/2
+- Set the nginx `quic reuseport` option once per IP address instead of in the first HTTP/3 domain, so HTTP/3 connections no longer stall when several domains share an IP or that domain is removed. nginx now listens on UDP 443 on every IP when it supports HTTP/3; browsers only use it on domains with HTTP/3 enabled #6021
+
 ## [1.10.10] - Service Release
 
 ### Security

@@ -39,6 +39,7 @@ json_list() {
         "SSL": "'$SSL'",
         "SSL_FORCE": "'$SSL_FORCE'",
         "SSL_HSTS": "'$SSL_HSTS'",
+        "SSL_HTTP3": "'$SSL_HTTP3'",
         "SSL_HOME": "'$SSL_HOME'",
         "SSL_KEY_ALGO": "'$SSL_KEY_ALGO'",
         "LETSENCRYPT_FAIL_COUNT": "'$LETSENCRYPT_FAIL_COUNT'",
@@ -77,6 +78,9 @@ shell_list() {
 		fi
 		if [ -n "$SSL_FORCE" ]; then
 			echo "SSL_FORCE:        $SSL_FORCE"
+		fi
+		if [ -n "$SSL_HTTP3" ]; then
+			echo "SSL_HTTP3:        $SSL_HTTP3"
 		fi
 		if [ -n "$SSL_HSTS" ]; then
 			echo "SSL_HSTS:         $SSL_HSTS"
@@ -125,7 +129,7 @@ shell_list() {
 
 # PLAIN list function
 plain_list() {
-	printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n' \
+	printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n' \
 		"$DOMAIN" \
 		"$IP" \
 		"$IP6" \
@@ -151,16 +155,17 @@ plain_list() {
 		"$PROXY_EXT" \
 		"$SUSPENDED" \
 		"$TIME" \
-		"$DATE"
+		"$DATE" \
+		"$SSL_HTTP3"
 }
 
 # CSV list function
 csv_list() {
 	printf '%s\n' \
-		"DOMAIN,IP,IP6,DOCROOT,U_DISK,U_BANDWIDTH,TPL,ALIAS,STATS,STATS_USER,SSL,SSL_FORCE,SSL_HSTS,SSL_HOME,SSL_KEY_ALGO,LETSENCRYPT,LETSENCRYPT_FAIL_COUNT,FTP_USER,FTP_PATH,AUTH_USER,BACKEND,PROXY,PROXY_EXT,SUSPENDED,TIME,DATE"
+		"DOMAIN,IP,IP6,DOCROOT,U_DISK,U_BANDWIDTH,TPL,ALIAS,STATS,STATS_USER,SSL,SSL_FORCE,SSL_HSTS,SSL_HOME,SSL_KEY_ALGO,LETSENCRYPT,LETSENCRYPT_FAIL_COUNT,FTP_USER,FTP_PATH,AUTH_USER,BACKEND,PROXY,PROXY_EXT,SUSPENDED,TIME,DATE,SSL_HTTP3"
 
 	printf '%s\n' \
-		"$DOMAIN,$IP,$IP6,$DOCROOT,$U_DISK,$U_BANDWIDTH,$TPL,$ALIAS,$STATS,$STATS_USER,$SSL,$SSL_FORCE,$SSL_HSTS,$SSL_HOME,$SSL_KEY_ALGO,$LETSENCRYPT,$LETSENCRYPT_FAIL_COUNT,$FTP_USER,$FTP_PATH,$AUTH_USER,$BACKEND,$PROXY,$PROXY_EXT,$SUSPENDED,$TIME,$DATE"
+		"$DOMAIN,$IP,$IP6,$DOCROOT,$U_DISK,$U_BANDWIDTH,$TPL,$ALIAS,$STATS,$STATS_USER,$SSL,$SSL_FORCE,$SSL_HSTS,$SSL_HOME,$SSL_KEY_ALGO,$LETSENCRYPT,$LETSENCRYPT_FAIL_COUNT,$FTP_USER,$FTP_PATH,$AUTH_USER,$BACKEND,$PROXY,$PROXY_EXT,$SUSPENDED,$TIME,$DATE,$SSL_HTTP3"
 }
 
 #----------------------------------------------------------#

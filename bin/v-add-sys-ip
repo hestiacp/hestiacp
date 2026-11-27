@@ -160,6 +160,7 @@ if [ -n "$WEB_SYSTEM" ]; then
 		cp -f $HESTIA_INSTALL_DIR/nginx/unassigned.inc "$web_conf"
 		sed -i 's/directIP/'$ip'/g' "$web_conf"
 		process_http2_directive "$web_conf"
+		process_quic_reuseport_ip "$web_conf"
 	fi
 
 	if [ "$WEB_SSL" = 'mod_ssl' ]; then
@@ -181,6 +182,7 @@ if [ -n "$PROXY_SYSTEM" ]; then
 			> /etc/$PROXY_SYSTEM/conf.d/$ip.conf
 
 	process_http2_directive "/etc/$PROXY_SYSTEM/conf.d/$ip.conf"
+	process_quic_reuseport_ip "/etc/$PROXY_SYSTEM/conf.d/$ip.conf"
 
 	# mod_extract_forwarded
 	fw_conf="/etc/$WEB_SYSTEM/conf.d/mod_extract_forwarded.conf"

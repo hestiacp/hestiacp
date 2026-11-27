@@ -196,7 +196,7 @@
 						<?= tohtml( _("Enable automatic HTTPS redirection")) ?>
 					</label>
 				</div>
-				<div class="form-check u-mb20">
+				<div class="form-check u-mb10">
 					<input class="form-check-input" type="checkbox" name="v_ssl_hsts" id="ssl_hsts" <?php if ($v_ssl_hsts == 'yes') echo 'checked' ?>>
 					<label for="ssl_hsts">
 						<?= tohtml( _("Enable HTTP Strict Transport Security (HSTS)")) ?>
@@ -205,6 +205,17 @@
 						</a>
 					</label>
 				</div>
+				<?php if ($_SESSION["PROXY_SYSTEM"] == "nginx" || $_SESSION["WEB_SYSTEM"] == "nginx") { ?>
+					<div class="form-check u-mb20">
+						<input class="form-check-input" type="checkbox" name="v_ssl_http3" id="ssl_http3" <?php if ($v_ssl_http3 == 'yes') echo 'checked' ?>>
+						<label for="ssl_http3">
+							<?= tohtml( _("Enable HTTP/3 (QUIC)")) ?>
+							<a href="https://en.wikipedia.org/wiki/HTTP/3" target="_blank">
+								<i class="fas fa-question-circle"></i>
+							</a>
+						</label>
+					</div>
+				<?php } ?>
 				<div x-cloak x-show="showCertificates" class="js-ssl-details">
 					<div class="u-mb10">
 						<label for="ssl_crt" class="form-label">

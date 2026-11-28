@@ -5,6 +5,13 @@
 			<a class="button button-secondary button-back js-button-back" href="/list/server/">
 				<i class="fas fa-arrow-left icon-blue"></i><?= tohtml( _("Back")) ?>
 			</a>
+			<?php if (!empty($v_php_versions) && count($v_php_versions) > 1) { ?>
+				<?php foreach ($v_php_versions as $php_version) { ?>
+					<a href="/edit/server/php/?<?= tohtml(http_build_query(["version" => $php_version])) ?>" class="button button-secondary<?php if ($php_version === ($v_php_version ?? "")) echo " active"; ?>">
+						<i class="fas fa-pencil icon-orange"></i>PHP <?= tohtml($php_version) ?>
+					</a>
+				<?php } ?>
+			<?php } ?>
 		</div>
 		<div class="toolbar-buttons">
 			<button type="submit" class="button" form="main-form">
@@ -20,9 +27,12 @@
 	<form id="main-form" name="v_configure_server" method="post">
 		<input type="hidden" name="token" value="<?= tohtml($_SESSION["token"]) ?>">
 		<input type="hidden" name="save" value="save">
+		<?php if (!empty($v_php_version)) { ?>
+			<input type="hidden" name="v_php_version" value="<?= tohtml($v_php_version) ?>">
+		<?php } ?>
 
 		<div class="form-container">
-			<h1 class="u-mb20"><?= tohtml( _("Configure Server")) ?>: PHP</h1>
+			<h1 class="u-mb20"><?= tohtml( _("Configure Server")) ?>: <?= tohtml($v_service_name ?? "PHP") ?></h1>
 			<?php show_alert_message($_SESSION); ?>
 			<div class="js-basic-options">
 				<div class="u-mb10">

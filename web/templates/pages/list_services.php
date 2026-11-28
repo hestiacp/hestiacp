@@ -122,10 +122,11 @@
 					$spnd_icon_class = 'icon-green';
 					$state_icon = 'fa-circle-minus icon-red';
 				}
-				if (in_array($key, $phpfpm)){
-					$edit_url="php";
+				if (in_array($key, $phpfpm)) {
+					$php_version = preg_replace('/^php([0-9]+\.[0-9]+)-fpm$/', '$1', $key);
+					$edit_href = "/edit/server/php/?" . http_build_query(["version" => $php_version]);
 				} else {
-					$edit_url=$key;
+					$edit_href = "/edit/server/" . $key . "/";
 				}
 
 				$cpu = $data[$key]['CPU'] / 10;
@@ -146,7 +147,7 @@
 				<div class="units-table-cell units-table-heading-cell u-text-bold">
 					<span class="u-hide-desktop"><?= tohtml( _("Service")) ?>:</span>
 					<i class="fas <?= tohtml($state_icon) ?> u-mr5"></i>
-					<a href="/edit/server/<? echo $edit_url ?>/" title="<?= tohtml( _("Edit")) ?>: <?= tohtml($key) ?>">
+					<a href="<?= tohtml($edit_href) ?>" title="<?= tohtml( _("Edit")) ?>: <?= tohtml($key) ?>">
 						<?= tohtml($key) ?>
 					</a>
 				</div>
@@ -155,7 +156,7 @@
 						<li class="units-table-row-action shortcut-enter" data-key-action="href">
 							<a
 								class="units-table-row-action-link"
-								href="/edit/server/<? echo $edit_url ?>/"
+								href="<?= tohtml($edit_href) ?>"
 								title="<?= tohtml( _("Edit")) ?>"
 							>
 								<i class="fas fa-pencil icon-orange"></i>

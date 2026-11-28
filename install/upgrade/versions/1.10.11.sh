@@ -43,4 +43,11 @@ if [ -f "$HESTIA/conf/mysql.conf" ]; then
 		echo "[ ! ] Some MySQL database grants could not be repaired; see the upgrade log"
 		add_upgrade_message "Some MySQL database grants could not be repaired. Check the upgrade log for affected databases and connection errors."
 	fi
+# Override sury ProtectHome=read-only so Apache can write to /home
+if [ "$WEB_SYSTEM" = "apache2" ] && ! grep -qs "^ProtectHome=no" /etc/systemd/system/apache2.service.d/hestia.conf; then
+	echo "[ * ] Adding ProtectHome=no override to Apache2 service..."
+	mkdir -p /etc/systemd/system/apache2.service.d
+	echo -e "[Service]\nProtectHome=no" > /etc/systemd/system/apache2.service.d/hestia.conf
+	systemctl daemon-reload > /dev/null 2>&1
+	systemctl restart apache2 > /dev/null 2>&1
 fi

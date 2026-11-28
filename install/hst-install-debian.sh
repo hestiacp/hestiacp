@@ -1728,8 +1728,13 @@ if [ "$apache" = 'yes' ]; then
 	# Prevent remote access to server-status page
 	sed -i '/Allow from all/d' /etc/apache2/mods-available/hestia-status.conf
 
+	# Override sury ProtectHome=read-only so Apache can write to /home
+	mkdir -p /etc/systemd/system/apache2.service.d
+	echo -e "[Service]\nProtectHome=no" > /etc/systemd/system/apache2.service.d/hestia.conf
+	systemctl daemon-reload > /dev/null 2>&1
+
 	update-rc.d apache2 defaults > /dev/null 2>&1
-	systemctl start apache2 >> $LOG
+	systemctl restart apache2 >> $LOG
 	check_result $? "apache2 start failed"
 else
 	update-rc.d apache2 disable > /dev/null 2>&1

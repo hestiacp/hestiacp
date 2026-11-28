@@ -51,19 +51,19 @@
 			?>
 			<div class="units-table-row <?php if ($status == 'suspended') echo 'disabled'; ?> js-unit">
 				<div class="units-table-cell units-table-heading-cell u-text-bold">
-					<span class="u-hide-desktop"><?= tohtml( _("Package Names")) ?>:</span>
+					<span class="u-hide-desktop"><?= tohtml( _("Package Names")) ?></span>
 					<?= tohtml($key) ?>
 				</div>
-				<div class="units-table-cell">
-					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Description")) ?>:</span>
+				<div class="units-table-cell units-table-cell-wide">
+					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Description")) ?></span>
 					<?= tohtml( _($data[$key]["DESCR"])) ?>
 				</div>
-				<div class="units-table-cell u-text-center-desktop">
-					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Version")) ?>:</span>
+				<div class="units-table-cell units-table-cell-wide u-text-center-desktop">
+					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Version")) ?></span>
 					<?= tohtml($data[$key]["VERSION"]) ?> (<?= tohtml($data[$key]["ARCH"]) ?>)
 				</div>
 				<div class="units-table-cell u-text-center-desktop">
-					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Status")) ?>:</span>
+					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Status")) ?></span>
 					<?php if ($data[$key]['UPDATED'] == 'no'): ?>
 						<i class="fas fa-triangle-exclamation icon-orange" title="<?= tohtml( _("Update available")) ?>"></i>
 					<?php elseif ($data[$key]['UPDATED'] == 'yes'): ?>

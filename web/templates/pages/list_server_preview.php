@@ -27,15 +27,15 @@
 				<i class="fas fa-gear icon-blue"></i>
 			</div>
 			<div class="units-table-cell units-table-heading-cell u-text-bold">
-				<span class="u-hide-desktop"><?= tohtml( _("Category")) ?>:</span>
+				<span class="u-hide-desktop"><?= tohtml( _("Category")) ?></span>
 				<?= tohtml( _("System")) ?>
 			</div>
-			<div class="units-table-cell u-text-bold">
-				<span class="u-hide-desktop"><?= tohtml( _("Name")) ?>:</span>
+			<div class="units-table-cell units-table-cell-wide u-text-bold">
+				<span class="u-hide-desktop"><?= tohtml( _("Name")) ?></span>
 				<?= tohtml( _("Policy")) ?>: <?= tohtml( _("Allow suspended users to log in with read-only access")) ?>
 			</div>
 			<div class="units-table-cell">
-				<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Status")) ?>:</span>
+				<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Status")) ?></span>
 				<?= tohtml( _("Partially implemented")) ?>
 			</div>
 		</div>

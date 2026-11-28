@@ -44,7 +44,7 @@
 
 <div class="container">
 	<h1 class="u-text-center u-hide-desktop u-mt20 u-pr30 u-mb20 u-pl30"><?= tohtml( _("Files")) ?></h1>
-	<div class="units-table js-units-container">
+	<div class="units-table units-table-stacked js-units-container">
 		<div class="units-table-header">
 			<div class="units-table-cell">
 				<input type="checkbox" class="js-toggle-all-checkbox" title="<?= tohtml( _("Select all")) ?>" <?= tohtml($display_mode) ?>>
@@ -69,7 +69,7 @@
 						<div class="units-table-cell">
 						</div>
 						<div class="units-table-cell">
-							<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Type")) ?>:</span>
+							<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Type")) ?></span>
 							<span class="u-text-bold">
 								Directory
 							</span>
@@ -116,13 +116,13 @@
 							<?php } ?>
 						</div>
 						<div class="units-table-cell">
-							<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Type")) ?>:</span>
+							<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Type")) ?></span>
 							<span class="u-text-bold">
 								<?= tohtml(getTransByType($file['type'])) ?>
 							</span>
 						</div>
 						<div class="units-table-cell">
-							<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Date / Time")) ?>:</span>
+							<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Date / Time")) ?></span>
 							<span class="u-text-bold">
 								<?= tohtml(convert_datetime($file['ctime'], 'Y-m-d  H:i:s')) ?>
 							</span>

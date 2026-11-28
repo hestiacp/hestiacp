@@ -201,7 +201,7 @@
 					</div>
 				</div>
 				<div class="units-table-cell units-table-heading-cell u-text-bold">
-					<span class="u-hide-desktop"><?= tohtml( _("Name")) ?>:</span>
+					<span class="u-hide-desktop"><?= tohtml( _("Name")) ?></span>
 					<?php if ($read_only === true) { ?>
 						<?= tohtml($key) ?>
 					<?php } else {
@@ -313,11 +313,11 @@
 					</ul>
 				</div>
 				<div class="units-table-cell u-text-center-desktop">
-					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("IP Address")) ?>:</span>
+					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("IP Address")) ?></span>
 					<?= tohtml(empty($ips[$data[$key]["IP"]]["NAT"]) ? $data[$key]["IP"] : "{$ips[$data[$key]["IP"]]["NAT"]}") ?>
 				</div>
 				<div class="units-table-cell u-text-center-desktop">
-					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Disk")) ?>:</span>
+					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Disk")) ?></span>
 					<span class="u-text-bold">
 						<?= tohtml(humanize_usage_size($data[$key]["U_DISK"])) ?>
 					</span>
@@ -326,7 +326,7 @@
 					</span>
 				</div>
 				<div class="units-table-cell u-text-center-desktop">
-					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Bandwidth")) ?>:</span>
+					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Bandwidth")) ?></span>
 					<span class="u-text-bold">
 						<?= tohtml(humanize_usage_size($data[$key]["U_BANDWIDTH"])) ?>
 					</span>
@@ -335,11 +335,11 @@
 					</span>
 				</div>
 				<div class="units-table-cell u-text-center-desktop">
-					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("SSL")) ?>:</span>
+					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("SSL")) ?></span>
 					<i class="fas <?= tohtml($icon_ssl) ?>" title="<?= tohtml($title_ssl) ?>"></i>
 				</div>
 				<div class="units-table-cell u-text-center-desktop">
-					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Statistics")) ?>:</span>
+					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Statistics")) ?></span>
 					<i class="fas <?= tohtml($icon_webstats) ?>" title="<?= tohtml($title_webstats) ?>"></i>
 				</div>
 			</div>

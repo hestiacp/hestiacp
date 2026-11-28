@@ -55,7 +55,7 @@
 					</div>
 				</div>
 				<div class="units-table-cell units-table-heading-cell u-text-bold">
-					<span class="u-hide-desktop"><?= tohtml( _("IP Address")) ?>:</span>
+					<span class="u-hide-desktop"><?= tohtml( _("IP Address")) ?></span>
 					<?= tohtml($ip) ?>
 				</div>
 				<div class="units-table-cell">
@@ -75,15 +75,15 @@
 					</ul>
 				</div>
 				<div class="units-table-cell u-text-center-desktop">
-					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Date")) ?>:</span>
+					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Date")) ?></span>
 					<time datetime="<?= tohtml( _($data[$key]["DATE"])) ?>"><?= tohtml( _($data[$key]["DATE"])) ?></time>
 				</div>
 				<div class="units-table-cell u-text-center-desktop">
-					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Time")) ?>:</span>
+					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Time")) ?></span>
 					<?= tohtml($data[$key]["TIME"]) ?>
 				</div>
 				<div class="units-table-cell u-text-bold u-text-center-desktop">
-					<span class="u-hide-desktop"><?= tohtml( _("Chain")) ?>:</span>
+					<span class="u-hide-desktop"><?= tohtml( _("Chain")) ?></span>
 					<?= tohtml( _($value["CHAIN"])) ?>
 				</div>
 			</div>

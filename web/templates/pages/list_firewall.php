@@ -122,18 +122,17 @@
 					</div>
 				</div>
 				<div class="units-table-cell units-table-heading-cell u-text-bold">
-					<span class="u-hide-desktop"><?= tohtml(_("Position")) ?>:</span>
+					<span class="u-hide-desktop"><?= tohtml(_("Position")) ?></span>
 					<a href="/edit/firewall/?<?= tohtml(http_build_query(["rule" => $key, "token" => $_SESSION["token"]])) ?>" title="<?= tohtml(_("Edit Firewall Rule")) ?>">
 						<?php $rule = $key; ?>
-						<?= tohtml($rule) ?>
+						<span class="u-hide-desktop">#</span><?= tohtml($rule) ?>
 					</a>
 				</div>
 				<div class="units-table-cell" style="padding-left: 0;padding-right: 0;">
 					<ul class="units-table-row-actions">
 						<li class="units-table-row-action shortcut-up" data-key-action="js">
 							<a
-								class="units-table-row-action-link data-controls js-confirm-action"
-								style="<?= tohtml($move_up_enabled ? "display:block!important" : "display:none!important") ?>"
+								class="units-table-row-action-link data-controls js-confirm-action<?= $move_up_enabled ? "" : " u-hidden" ?>"
 								href="/move/firewall/?<?= tohtml(http_build_query(["rule" => $key, "direction" => "up", "token" => $_SESSION["token"]])) ?>"
 								title="<?= tohtml(_("Move Firewall Rule Up")) ?>"
 								data-confirm-title="<?= tohtml(_("Move Up")) ?>"
@@ -144,8 +143,7 @@
 						</li>
 						<li class="units-table-row-action shortcut-down" data-key-action="js">
 							<a
-								class="units-table-row-action-link data-controls js-confirm-action"
-								style="<?= tohtml($move_down_enabled ? "display:block!important" : "display:none!important") ?>"
+								class="units-table-row-action-link data-controls js-confirm-action<?= $move_down_enabled ? "" : " u-hidden" ?>"
 								href="/move/firewall/?<?= tohtml(http_build_query(["rule" => $key, "direction" => "down", "token" => $_SESSION["token"]])) ?>"
 								title="<?= tohtml(_("Move Firewall Rule Down")) ?>"
 								data-confirm-title="<?= tohtml(_("Move Down")) ?>"
@@ -157,7 +155,7 @@
 					</ul>
 				</div>
 				<div class="units-table-cell units-table-heading-cell u-text-bold">
-					<span class="u-hide-desktop"><?= tohtml(_("Action")) ?>:</span>
+					<span class="u-hide-desktop"><?= tohtml(_("Action")) ?></span>
 					<a href="/edit/firewall/?<?= tohtml(http_build_query(["rule" => $key, "token" => $_SESSION["token"]])) ?>" title="<?= tohtml(_("Edit Firewall Rule")) ?>">
 						<?php
       $suspended = $data[$key]["SUSPENDED"] == "no";
@@ -207,21 +205,21 @@
 					</ul>
 				</div>
 				<div class="units-table-cell u-text-bold">
-					<span class="u-hide-desktop"><?= tohtml(_("Comment")) ?>:</span>
+					<span class="u-hide-desktop"><?= tohtml(_("Comment")) ?></span>
 					<?php if (!empty($data[$key]["COMMENT"])) {
      	echo tohtml($data[$key]["COMMENT"]);
      } ?>
 				</div>
 				<div class="units-table-cell u-text-center-desktop">
-					<span class="u-hide-desktop u-text-bold"><?= tohtml(_("Protocol")) ?>:</span>
+					<span class="u-hide-desktop u-text-bold"><?= tohtml(_("Protocol")) ?></span>
 					<?= tohtml(_($data[$key]["PROTOCOL"])) ?>
 				</div>
 				<div class="units-table-cell u-text-bold u-text-center-desktop">
-					<span class="u-hide-desktop"><?= tohtml(_("Port")) ?>:</span>
+					<span class="u-hide-desktop"><?= tohtml(_("Port")) ?></span>
 					<?= tohtml($data[$key]["PORT"]) ?>
 				</div>
 				<div class="units-table-cell u-text-center-desktop">
-					<span class="u-hide-desktop u-text-bold"><?= tohtml(_("IP Address")) ?>:</span>
+					<span class="u-hide-desktop u-text-bold"><?= tohtml(_("IP Address")) ?></span>
 					<?= tohtml($data[$key]["IP"]) ?>
 				</div>
 			</div>

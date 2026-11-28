@@ -111,7 +111,7 @@
 					<i class="fa <?= tohtml($icon) ?> icon-dim"></i>
 				</div>
 				<div class="units-table-cell u-text-center-desktop">
-					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Status")) ?>:</span>
+					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Status")) ?></span>
 					<?php if ($status === "active") { ?>
 						<i class="fas fa-circle-check icon-green"></i>
 					<?php } ?>
@@ -120,7 +120,7 @@
 					<?php } ?>
 				</div>
 				<div class="units-table-cell units-table-heading-cell u-text-bold">
-					<span class="u-hide-desktop"><?= tohtml( _("Search Results")) ?>:</span>
+					<span class="u-hide-desktop"><?= tohtml( _("Search Results")) ?></span>
 					<?php
 						$edit_query = [
 							"user" => $value["USER"],
@@ -163,13 +163,13 @@
 					?>
 				</div>
 				<div class="units-table-cell u-text-center-desktop">
-					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Date")) ?>:</span>
+					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Date")) ?></span>
 					<time datetime="<?= tohtml($value["DATE"]) ?>">
 						<?= tohtml(translate_date($value["DATE"])) ?>
 					</time>
 				</div>
 				<div class="units-table-cell u-text-bold u-text-center-desktop">
-					<span class="u-hide-desktop"><?= tohtml( _("Owner")) ?>:</span>
+					<span class="u-hide-desktop"><?= tohtml( _("Owner")) ?></span>
 					<a href="/search/?<?= tohtml(http_build_query(["q" => $_GET["q"], "u" => $value["USER"], "token" => $_SESSION["token"]])) ?>">
 						<?= tohtml($value["USER"]) ?>
 					</a>
@@ -181,7 +181,7 @@
 					<?php } ?>
 				</div>
 				<div class="units-table-cell u-text-center-desktop">
-					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Type")) ?>:</span>
+					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Type")) ?></span>
 					<?= tohtml( _($object)) ?>
 				</div>
 			</div>

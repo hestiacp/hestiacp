@@ -185,7 +185,7 @@
 					</div>
 				</div>
 				<div class="units-table-cell units-table-heading-cell u-text-bold">
-					<span class="u-hide-desktop"><?= tohtml( _("Name")) ?>:</span>
+					<span class="u-hide-desktop"><?= tohtml( _("Name")) ?></span>
 					<a href="?<?= tohtml(http_build_query(["domain" => $key, "token" => $_SESSION["token"]])) ?>" title="<?= tohtml( _("Mail Accounts")) ?>: <?= tohtml($key) ?>">
 						<?= tohtml($key) ?>
 					</a>
@@ -302,7 +302,7 @@
 					</ul>
 				</div>
 					<div class="units-table-cell u-text-center-desktop">
-						<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Accounts")) ?>:</span>
+						<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Accounts")) ?></span>
 						<?php
 							if ($data[$key]['ACCOUNTS']) {
 								$mail_accounts = $data[$key]['ACCOUNTS'];
@@ -313,7 +313,7 @@
 					<?= tohtml($mail_accounts) ?>
 				</div>
 				<div class="units-table-cell u-text-center-desktop">
-					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Disk")) ?>:</span>
+					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Disk")) ?></span>
 					<span class="u-text-bold">
 						<?= tohtml(humanize_usage_size($data[$key]["U_DISK"])) ?>
 					</span>
@@ -322,19 +322,19 @@
 					</span>
 				</div>
 				<div class="units-table-cell u-text-center-desktop">
-					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Anti-Virus")) ?>:</span>
+					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Anti-Virus")) ?></span>
 					<i class="fas <?= tohtml($antivirus_icon) ?>" title="<?= tohtml($antivirus_title) ?>"></i>
 				</div>
 				<div class="units-table-cell u-text-center-desktop">
-					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Spam Filter")) ?>:</span>
+					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Spam Filter")) ?></span>
 					<i class="fas <?= tohtml($antispam_icon) ?>" title="<?= tohtml($antispam_title) ?>"></i>
 				</div>
 				<div class="units-table-cell u-text-center-desktop">
-					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("DKIM")) ?>:</span>
+					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("DKIM")) ?></span>
 					<i class="fas <?= tohtml($dkim_icon) ?>" title="<?= tohtml($dkim_title) ?>"></i>
 				</div>
 				<div class="units-table-cell u-text-center-desktop">
-					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("SSL")) ?>:</span>
+					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("SSL")) ?></span>
 					<i class="fas <?= tohtml($ssl_icon) ?>" title="<?= tohtml($ssl_title) ?>"></i>
 				</div>
 			</div>

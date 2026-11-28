@@ -143,6 +143,33 @@ html {
 	}
 }
 
+/* Items per page: same size as the toolbar buttons, muted text */
+#pagination .select,
+#pagination select {
+	height: 32px;
+	font-size: 1rem; /* 16px also keeps iOS from zooming in on focus */
+}
+
+#pagination .select::after {
+	right: 0.8em;
+}
+
+#pagination select {
+	padding: 0 1.8em 0 0.6em;
+	border: 1px solid #26232c26;
+	border-radius: 6px;
+	background: #fff;
+	color: #757575;
+}
+
+@media (prefers-color-scheme: dark) {
+	#pagination select {
+		border-color: #222;
+		background: #222;
+		color: #a3a3a3;
+	}
+}
+
 /* ------------------------------ */
 
 /*     Folder and file icons    */
@@ -372,6 +399,333 @@ pre[class*="language-"] ::selection {
 		.navbar-menu.is-active a.navbar-item.is-active {
 			background: #172924 !important;
 			color: #34b891 !important;
+		}
+	}
+}
+
+/* ------------------------------ */
+/*        Phones (≤768px)        */
+/* ------------------------------ */
+
+@media screen and (width <= 768px) {
+	/* File list: compact rows instead of labelled cards */
+	.b-table .table.has-mobile-cards {
+		border-radius: 8px !important;
+	}
+
+	.b-table .table.has-mobile-cards tr.file-row {
+		display: grid !important;
+		grid-template-columns: 40px auto minmax(0, max-content) minmax(0, 1fr) 44px;
+		grid-template-areas:
+			"check name name name actions"
+			"check size time perms actions";
+		align-items: center;
+		column-gap: 6px;
+		row-gap: 1px;
+		margin: 0 !important;
+		padding: 7px 0 !important;
+		box-shadow: none !important;
+		border-bottom: 1px solid #0000001a;
+	}
+
+	.b-table .table.has-mobile-cards tr.file-row:not(:has(> td.checkbox-cell)) {
+		grid-template-columns: 0 auto minmax(0, max-content) minmax(0, 1fr) 44px;
+		padding-left: 10px !important;
+	}
+
+	.b-table .table.has-mobile-cards tr.file-row:last-child {
+		border-bottom: 0;
+	}
+
+	.b-table .table.has-mobile-cards tr.file-row td {
+		display: block !important;
+		min-width: 0;
+		padding: 0 !important;
+		border: 0 !important;
+		text-align: left !important;
+	}
+
+	.b-table .table.has-mobile-cards tr.file-row td::before {
+		display: none !important;
+	}
+
+	.b-table .table.has-mobile-cards tr.file-row td.checkbox-cell {
+		grid-area: check;
+		width: auto !important;
+		padding-left: 10px !important;
+		align-self: stretch;
+		display: flex !important;
+		align-items: center;
+	}
+
+	.b-table .table.has-mobile-cards tr.file-row td.checkbox-cell .check {
+		width: 20px !important;
+		height: 20px !important;
+	}
+
+	/* Cells: Name, Permissions (only with write/chmod), Size, Time, actions */
+	.b-table .table.has-mobile-cards tr.file-row td:has(a.name) {
+		grid-area: name;
+	}
+
+	.file-row a.name:not([data-v]) {
+		padding: 2px 0 !important;
+		overflow-wrap: anywhere;
+		line-height: 1.3;
+	}
+
+	.file-row a.name:not([data-v])::before {
+		padding: 0 6px 0 0 !important;
+	}
+
+	.b-table .table.has-mobile-cards tr.file-row td:nth-last-child(4):not(:has(a.name)),
+	.b-table .table.has-mobile-cards tr.file-row td:nth-last-child(3),
+	.b-table .table.has-mobile-cards tr.file-row td:nth-last-child(2) {
+		font-size: 0.75rem;
+		opacity: 0.65;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	.b-table .table.has-mobile-cards tr.file-row td:nth-last-child(4):not(:has(a.name)) {
+		grid-area: perms;
+	}
+
+	.b-table .table.has-mobile-cards tr.file-row td:nth-last-child(3) {
+		grid-area: size;
+	}
+
+	.b-table .table.has-mobile-cards tr.file-row td:nth-last-child(2) {
+		grid-area: time;
+	}
+
+	.b-table .table.has-mobile-cards tr.file-row td:nth-last-child(3)::after,
+	.b-table
+		.table.has-mobile-cards
+		tr.file-row
+		td:nth-last-child(4):not(:has(a.name))
+		~ td:nth-last-child(2)::after {
+		content: "·";
+		margin-left: 6px;
+	}
+
+	/* Less empty space around the navbar */
+	#dropzone > .container {
+		padding: 8px 12px !important;
+	}
+
+	#browser {
+		margin-top: 8px !important;
+		margin-bottom: 40px !important;
+	}
+
+	/* ".." row: name only */
+	.b-table
+		.table.has-mobile-cards
+		tr.file-row.type-back
+		td:nth-last-child(-n + 4):not(:last-child, :has(a.name)) {
+		display: none !important;
+	}
+
+	.b-table .table.has-mobile-cards tr.file-row td:last-child {
+		grid-area: actions;
+	}
+
+	#single-actions .dropdown-trigger .button {
+		width: 40px;
+		height: 40px;
+		padding: 0 !important;
+	}
+
+	/* Toolbar: bigger tap targets */
+	#browser .breadcrumb a:not([data-v]) {
+		display: inline-flex;
+		align-items: center;
+		min-height: 34px;
+		padding: 4px 10px !important;
+	}
+
+	#browser .breadcrumb {
+		margin-bottom: 10px !important;
+	}
+
+	#browser #search,
+	#browser #sitemap {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 40px;
+		height: 40px;
+		padding: 0 !important;
+	}
+
+	#multi-actions a:not([data-v], .dropdown-item),
+	#multi-actions .upload a:not([data-v]) {
+		display: inline-flex !important;
+		align-items: center;
+		gap: 6px;
+		height: 38px;
+	}
+
+	/* Selected-items actions (Download, Copy, Move, Zip, Delete): one line, sharing the full width */
+	#multi-actions > div:first-child {
+		display: flex;
+		flex: 1 1 auto;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 6px;
+	}
+
+	#multi-actions > div:first-child > a.is-inline-block:not(.add-new) {
+		flex: 1 1 0;
+		justify-content: center;
+		min-width: 0;
+		padding: 0 6px !important;
+		white-space: nowrap;
+	}
+
+	#multi-actions > div:first-child > *,
+	#multi-actions .upload,
+	#multi-actions .upload a {
+		margin: 0 !important;
+	}
+
+	/* Items per page: next to Add files / New in the same size; hidden while items are selected */
+	#multi-actions {
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 6px;
+	}
+
+	#multi-actions:has(> div:first-child > a.is-inline-block:not(.add-new)) #pagination {
+		display: none;
+	}
+
+	#pagination {
+		margin-left: auto;
+	}
+
+	#pagination .select,
+	#pagination select {
+		height: 38px;
+	}
+
+	/* Top row: logo, search and folder tree on the left; user and exit on the right (no hamburger) */
+	#dropzone > .container {
+		position: relative;
+	}
+
+	.navbar {
+		min-height: 48px !important;
+	}
+
+	.navbar-menu {
+		margin-left: 96px; /* room for the search and tree icons */
+	}
+
+	.navbar-item.profile {
+		display: block !important;
+		flex: 0 1 auto !important;
+		min-width: 0;
+		padding: 0 4px 0 8px !important;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		font-size: 0.85rem;
+		pointer-events: none;
+	}
+
+	.navbar-item.logout {
+		display: flex !important;
+		align-items: center;
+		justify-content: center;
+		flex: none;
+		width: 40px;
+		height: 40px;
+		padding: 0 !important;
+		font-size: 0;
+		border-radius: 6px;
+	}
+
+	.navbar-item.logout::before {
+		content: "\f2f5";
+		font-family: "Font Awesome 5 Free";
+		font-weight: 900;
+		font-size: 1.1rem;
+	}
+
+	#browser > .is-flex:first-child > div:last-child {
+		position: absolute;
+		z-index: 31;
+		top: 12px;
+		left: 70px;
+		display: flex;
+	}
+}
+
+/* Items per page does not fit next to Add files / New on the narrowest phones */
+@media screen and (width < 360px) {
+	#pagination {
+		display: none;
+	}
+}
+
+/* Icons only where the labels don't fit */
+@media screen and (width < 480px) {
+	#multi-actions > div:first-child > a.is-inline-block:not(.add-new) {
+		gap: 0;
+		padding: 0 !important;
+		font-size: 0;
+	}
+
+	#multi-actions > div:first-child > a.is-inline-block:not(.add-new) .icon {
+		margin: 0 !important;
+		font-size: 1rem;
+	}
+}
+
+/* ------------------------------ */
+/*    Tablets and phones (<1088px) */
+/* ------------------------------ */
+
+/* Bulma hides the user and exit links behind a hamburger here; keep them in the top bar as on desktop */
+@media screen and (width <= 1087px) {
+	.navbar {
+		display: flex !important;
+		align-items: center;
+	}
+
+	.navbar-burger {
+		display: none !important;
+	}
+
+	.navbar-menu {
+		display: flex !important;
+		flex: 1 1 auto;
+		min-width: 0;
+		padding: 0 !important;
+		background: transparent !important;
+		box-shadow: none !important;
+	}
+
+	.navbar-end {
+		display: flex;
+		align-items: center;
+		min-width: 0;
+		margin-left: auto;
+	}
+
+	.navbar-item.profile,
+	.navbar-item.logout {
+		display: flex;
+		align-items: center;
+	}
+
+	@media (prefers-color-scheme: dark) {
+		.navbar-item.profile,
+		.navbar-item.logout {
+			color: #dbdbdb !important;
 		}
 	}
 }

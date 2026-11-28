@@ -69,7 +69,7 @@
 
 	<h1 class="u-text-center u-hide-desktop u-mt20 u-pr30 u-mb20 u-pl30"><?= tohtml( _("Cron Jobs")) ?></h1>
 
-	<div class="units-table js-units-container">
+	<div class="units-table units-table-dense js-units-container">
 		<div class="units-table-header">
 			<div class="units-table-cell">
 				<input type="checkbox" class="js-toggle-all-checkbox" title="<?= tohtml( _("Select all")) ?>" <?= tohtml($display_mode) ?>>
@@ -113,7 +113,7 @@
 					</div>
 				</div>
 				<div class="units-table-cell units-table-heading-cell u-text-bold">
-					<span class="u-hide-desktop"><?= tohtml( _("Command")) ?>:</span>
+					<span class="u-hide-desktop"><?= tohtml( _("Command")) ?></span>
 					<?php if ($read_only === true || $data[$key]["SUSPENDED"] == "yes") { ?>
 						<?= tohtml($data[$key]["CMD"]) ?>
 					<?php } else { ?>
@@ -165,23 +165,23 @@
 					<?php } ?>
 				</div>
 				<div class="units-table-cell u-text-center-desktop">
-					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Minute")) ?>:</span>
+					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Minute")) ?></span>
 					<?= tohtml($data[$key]["MIN"]) ?>
 				</div>
 				<div class="units-table-cell u-text-center-desktop">
-					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Hour")) ?>:</span>
+					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Hour")) ?></span>
 					<?= tohtml($data[$key]["HOUR"]) ?>
 				</div>
 				<div class="units-table-cell u-text-center-desktop">
-					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Day")) ?>:</span>
+					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Day")) ?></span>
 					<?= tohtml($data[$key]["DAY"]) ?>
 				</div>
 				<div class="units-table-cell u-text-center-desktop">
-					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Month")) ?>:</span>
+					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Month")) ?></span>
 					<?= tohtml($data[$key]["MONTH"]) ?>
 				</div>
 				<div class="units-table-cell u-text-center-desktop">
-					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Day of Week")) ?>:</span>
+					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Day of Week")) ?></span>
 					<?= tohtml($data[$key]["WDAY"]) ?>
 				</div>
 			</div>

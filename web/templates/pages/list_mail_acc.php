@@ -165,7 +165,7 @@ if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
 					</div>
 				</div>
 				<div class="units-table-cell units-table-heading-cell u-text-bold">
-					<span class="u-hide-desktop"><?= tohtml( _("Name")) ?>:</span>
+					<span class="u-hide-desktop"><?= tohtml( _("Name")) ?></span>
 					<?php if ($read_only === true || $data[$key]["SUSPENDED"] == "yes") { ?>
 						<?= tohtml($key . "@" . $_GET["domain"]) ?>
 					<?php } else { ?>
@@ -247,7 +247,7 @@ if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
 					</ul>
 				</div>
 				<div class="units-table-cell u-text-center-desktop">
-					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Disk")) ?>:</span>
+					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Disk")) ?></span>
 					<span class="u-text-bold">
 						<?= tohtml(humanize_usage_size($data[$key]["U_DISK"])) ?>
 					</span>
@@ -256,7 +256,7 @@ if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
 					</span>
 				</div>
 				<div class="units-table-cell u-text-center-desktop">
-					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Quota")) ?>:</span>
+					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Quota")) ?></span>
 					<span class="u-text-bold">
 						<?= tohtml(humanize_usage_size($data[$key]["QUOTA"])) ?>
 					</span>
@@ -265,15 +265,15 @@ if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
 					</span>
 				</div>
 				<div class="units-table-cell u-text-center-desktop">
-					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Aliases")) ?>:</span>
+					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Aliases")) ?></span>
 					<i class="fas <?= tohtml($alias_icon) ?>" title="<?= tohtml($alias_title) ?>"></i>
 				</div>
 				<div class="units-table-cell u-text-center-desktop">
-					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Forwarding")) ?>:</span>
+					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Forwarding")) ?></span>
 					<i class="fas <?= tohtml($fwd_icon) ?>" title="<?= tohtml($fwd_title) ?>"></i>
 				</div>
 				<div class="units-table-cell u-text-center-desktop">
-					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Auto Reply")) ?>:</span>
+					<span class="u-hide-desktop u-text-bold"><?= tohtml( _("Auto Reply")) ?></span>
 					<i class="fas <?= tohtml($autoreply_icon) ?>" title="<?= tohtml($autoreply_title) ?>"></i>
 				</div>
 			</div>

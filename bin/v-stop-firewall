@@ -97,6 +97,11 @@ else
 	fi
 fi
 
+# Stopping IPv6 firewall
+if [ -x "$BIN/v-stop-firewall-ipv6" ]; then
+	"$BIN/v-stop-firewall-ipv6"
+fi
+
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#

@@ -243,6 +243,36 @@ prepare_web_domain_values() {
 	fi
 }
 
+# Prepare the addresses used for template substitution
+#   $local_ip  - IPv4 address of the domain (may be empty for IPv6-only domains)
+#   $1         - IPv6 address of the domain (may be empty)
+# Sets:
+#   tpl_ip     - value of %ip% (IPv4 address, or [IPv6] for IPv6-only domains)
+#   tpl_ipv6   - additional IPv6 address for dual-stack listen directives
+prepare_web_ip_values() {
+	tpl_ip="$local_ip"
+	tpl_ipv6="$1"
+	# Never render an IPv6 address that is not available on this server,
+	# otherwise the web server would fail to bind on startup
+	if [ -n "$tpl_ipv6" ] && [ ! -f "$HESTIA/data/ips/$tpl_ipv6" ]; then
+		tpl_ipv6=''
+	fi
+	if [ -z "$tpl_ip" ] && [ -n "$tpl_ipv6" ]; then
+		tpl_ip="[$tpl_ipv6]"
+		tpl_ipv6=''
+	fi
+}
+
+# Duplicate the IPv4 listen directives of a nginx config for the IPv6 address
+# (dual-stack). All listen parameters (ssl, quic, reuseport, ...) are kept.
+add_web_config_ipv6_listen() {
+	local conf="$1" ipv4="${2//./[.]}" ipv6="$3"
+	if [ -z "$ipv6" ] || [ -z "$2" ] || [[ "$2" == \[* ]]; then
+		return 0
+	fi
+	sed -i -E "s/^([[:space:]]*listen[[:space:]]+)${ipv4}:([0-9]+)(.*)$/&\n\1[${ipv6}]:\2\3/" "$conf"
+}
+
 # Add web config
 add_web_config() {
 	# Check if folder already exists
@@ -273,8 +303,10 @@ add_web_config() {
 	docroot_escaped="$(sed_escape_replacement "$docroot")"
 	sdocroot_escaped="$(sed_escape_replacement "$sdocroot")"
 
+	prepare_web_ip_values "${local_ipv6:-$IP6}"
+
 	cat "${WEBTPL_LOCATION}/$2" \
-		| sed -e "s|%ip%|$local_ip|g" \
+		| sed -e "s|%ip%|$tpl_ip|g" \
 			-e "s|%domain%|$domain|g" \
 			-e "s|%domain_idn%|$domain_idn|g" \
 			-e "s|%alias%|${aliases//,/ }|g" \
@@ -303,6 +335,7 @@ add_web_config() {
 			-e "s|%ssl_ca%|$ssl_ca|g" \
 			> $conf
 
+	add_web_config_ipv6_listen "$conf" "$tpl_ip" "$tpl_ipv6"
 	process_http2_directive "$conf"
 
 	chown root:$user $conf
@@ -349,8 +382,8 @@ add_web_config() {
 	trigger="${2/.*pl/.sh}"
 	if [ -x "${WEBTPL_LOCATION}/$trigger" ]; then
 		$WEBTPL_LOCATION/$trigger \
-			$user $domain $local_ip $HOMEDIR \
-			$HOMEDIR/$user/web/$domain/public_html
+			"$user" "$domain" "$tpl_ip" "$HOMEDIR" \
+			"$HOMEDIR/$user/web/$domain/public_html"
 	fi
 }
 
@@ -675,6 +708,68 @@ get_next_dnsrecord() {
 	fi
 }
 
+# Add AAAA records to the DNS template ($template_data) for every A record
+# that points to the server. Mail exchangers keep their A record only, because
+# Exim does not listen on IPv6. CNAME records (www, ftp, ...) follow their
+# target automatically. Zones without IPv4 address lose their A records.
+# Usage: add_dns_template_ipv6_records IP IPV6
+add_dns_template_ipv6_records() {
+	local ip="$1" ipv6="$2"
+	local mx_hosts record_id aaaa_records='' record_line record_name
+	if [ -z "$ipv6" ]; then
+		return 0
+	fi
+
+	mx_hosts=$(echo "$template_data" | grep "TYPE='MX'" | sed -n "s/.*VALUE='\([^.']*\)\.%domain%\.'.*/\1/p")
+	record_id=$(echo "$template_data" | sed -n "s/^ID='\([0-9]*\)'.*/\1/p" | sort -n | tail -n1)
+	while IFS= read -r record_line; do
+		if [[ "$record_line" != *"TYPE='A' "* ]] || [[ "$record_line" != *"VALUE='%ip%'"* ]]; then
+			continue
+		fi
+		record_name=$(echo "$record_line" | sed -n "s/.*RECORD='\([^']*\)'.*/\1/p")
+		if [ -n "$ip" ] && echo "$mx_hosts" | grep -qxF "$record_name"; then
+			continue
+		fi
+		record_id=$((record_id + 1))
+		aaaa_records="$aaaa_records"$'\n'"$(echo "$record_line" \
+			| sed -e "s/^ID='[0-9]*'/ID='$record_id'/" \
+				-e "s/TYPE='A' /TYPE='AAAA' /" \
+				-e "s/VALUE='%ip%'/VALUE='$ipv6'/")"
+	done <<< "$template_data"
+
+	# IPv6-only zone: drop the A records and the IPv4 SPF mechanism
+	if [ -z "$ip" ]; then
+		template_data=$(echo "$template_data" | grep -v "TYPE='A' .*VALUE='%ip%'" | sed "s/ ip4:%ip%//")
+	fi
+	template_data="$template_data$aaaa_records"
+}
+
+# Print "IP6=<address>" of the web domain of the user that serves NAME (as
+# domain or alias), nothing if NAME is not a web domain of the user
+# Usage: get_web_domain_ipv6 NAME
+get_web_domain_ipv6() {
+	[ -f "$USER_DATA/web.conf" ] || return 0
+	awk -v q="'" -v name="$1" '
+		function value(key, s) {
+			if (!match($0, "(^| )" key "=" q "[^" q "]*" q)) {
+				return ""
+			}
+			s = substr($0, RSTART, RLENGTH)
+			sub("^ ?" key "=" q, "", s)
+			sub(q "$", "", s)
+			return s
+		}
+		{
+			n = split(value("DOMAIN") "," value("ALIAS"), names, ",")
+			for (i = 1; i <= n; i++) {
+				if (names[i] == name) {
+					print "IP6=" value("IP6")
+					exit
+				}
+			}
+		}' "$USER_DATA/web.conf"
+}
+
 # Sort DNS records
 sort_dns_records() {
 	conf="$USER_DATA/dns/$domain.conf"
@@ -947,8 +1042,20 @@ add_webmail_config() {
 	#   -If possible custom templates should be automatically upgraded to use the new format
 	#   -Alternatively a depreciation period with proper notifications should be considered
 
+	# Webmail inherits the IPv6 address of the web domain, mail-only domains use
+	# the first IPv6 address available to the user
+	webmail_ipv6="$local_ipv6"
+	if [ -z "$webmail_ipv6" ]; then
+		if [ -n "$(grep "DOMAIN='$domain'" "$USER_DATA/web.conf" 2> /dev/null)" ]; then
+			webmail_ipv6=$(get_object_value 'web' 'DOMAIN' "$domain" '$IP6')
+		elif declare -F get_user_ip6s > /dev/null; then
+			webmail_ipv6=$(get_user_ip6s | head -n1)
+		fi
+	fi
+	prepare_web_ip_values "$webmail_ipv6"
+
 	cat $MAILTPL/$1/$2 \
-		| sed -e "s|%ip%|$local_ip|g" \
+		| sed -e "s|%ip%|$tpl_ip|g" \
 			-e "s|%domain%|$WEBMAIL_ALIAS.$domain|g" \
 			-e "s|%domain_idn%|$WEBMAIL_ALIAS.$domain_idn|g" \
 			-e "s|%root_domain%|$domain|g" \
@@ -977,6 +1084,7 @@ add_webmail_config() {
 			-e "s|%ssl_ca%|$ssl_ca|g" \
 			> $conf
 
+	add_web_config_ipv6_listen "$conf" "$tpl_ip" "$tpl_ipv6"
 	process_http2_directive "$conf"
 
 	chown root:$user $conf
@@ -1189,28 +1297,22 @@ is_base_domain_owner() {
 #----------------------------------------------------------#
 
 process_http2_directive() {
+	# Edit the matching lines in place, they can't be used as sed patterns
+	# since IPv6 addresses are written in brackets
+	local http2_listen='listen.*(\bssl\b(\s|.+){1,}\bhttp2\b|\bhttp2\b(\s|.+){1,}\bssl\b).*;'
 	if [ -e /etc/nginx/conf.d/http2-directive.conf ]; then
-		while IFS= read -r old_param; do
-			new_param="$(echo "$old_param" | sed 's/\shttp2//')"
-			sed -i "s/$old_param/$new_param/" "$1"
-		done < <(grep -E "listen.*(\bssl\b(\s|.+){1,}\bhttp2\b|\bhttp2\b(\s|.+){1,}\bssl\b).*;" "$1")
+		sed -i -E "/$http2_listen/ s/\shttp2//" "$1"
 	else
 		if version_ge "$(nginx -v 2>&1 | cut -d'/' -f2)" "1.25.1"; then
 			echo "http2 on;" > /etc/nginx/conf.d/http2-directive.conf
 
-			while IFS= read -r old_param; do
-				new_param="$(echo "$old_param" | sed 's/\shttp2//')"
-				sed -i "s/$old_param/$new_param/" "$1"
-			done < <(grep -E "listen.*(\bssl\b(\s|.+){1,}\bhttp2\b|\bhttp2\b(\s|.+){1,}\bssl\b).*;" "$1")
+			sed -i -E "/$http2_listen/ s/\shttp2//" "$1"
 		else
 			listen_ssl="$(grep -E "listen.*\s\bssl\b(?:\s)*.*;" "$1")"
-			listen_http2="$(grep -E "listen.*(\bssl\b(\s|.+){1,}\bhttp2\b|\bhttp2\b(\s|.+){1,}\bssl\b).*;" "$1")"
+			listen_http2="$(grep -E "$http2_listen" "$1")"
 
 			if [ -n "$listen_ssl" ] && [ -z "$listen_http2" ]; then
-				while IFS= read -r old_param; do
-					new_param="$(echo "$old_param" | sed 's/\sssl/ ssl http2/')"
-					sed -i "s/$old_param/$new_param/" "$1"
-				done < <(grep -E "listen.*\s\bssl\b(?:\s)*.*;" "$1")
+				sed -i -E '/listen.*\s\bssl\b\s*.*;/ s/\sssl/ ssl http2/' "$1"
 			fi
 		fi
 	fi

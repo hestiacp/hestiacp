@@ -89,7 +89,7 @@ if [ -n "$domain_ip" ]; then
 		ip=$nat_ip
 	fi
 else
-	get_user_ip
+	get_user_ip_if_available
 fi
 
 # Verify that webmail alias variable exists and create it if it does not

@@ -51,7 +51,7 @@ fi
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
-if [ "$DNS_CLUSTER_SYSTEM" != 'hestia-zone' ]; then
+if [ "$DNS_CLUSTER" = "yes" ] && [ "$DNS_CLUSTER_SYSTEM" != 'hestia-zone' ]; then
 	check_result "$E_DISABLED" "DNSSEC is not supported when DNS_CLUSTER_SYSTEM is not set to hestia-zone"
 fi
 

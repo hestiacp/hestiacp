@@ -27,6 +27,15 @@ source $HESTIA/func/backup.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
+escape_restic_glob() {
+	escaped_glob="$1"
+	escaped_glob="${escaped_glob//\\/\\\\}"
+	escaped_glob="${escaped_glob//\*/\\*}"
+	escaped_glob="${escaped_glob//\?/\\?}"
+	escaped_glob="${escaped_glob//\[/\\[}"
+	escaped_glob="${escaped_glob//\]/\\]}"
+}
+
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -71,9 +80,131 @@ fi
 
 # create backup of the user.conf an database
 $BIN/v-backup-user-config $user
+
+restic_excludes=()
+if [ -f "$USER_DATA/backup-excludes.conf" ] && [ ! -L "$USER_DATA/backup-excludes.conf" ]; then
+	# Preserve the exported USER environment variable when sourcing backup-excludes.conf,
+	# because its USER= key would otherwise inherit USER=root or overwrite USER for child processes.
+	orig_env_user="${USER-}"
+	orig_env_user_set="${USER+yes}"
+	WEB=''
+	MAIL=''
+	USER=''
+	source_conf "$USER_DATA/backup-excludes.conf"
+	web_excl="$WEB"
+	mail_excl="$MAIL"
+	user_excl="$USER"
+	if [ "$orig_env_user_set" = "yes" ]; then
+		USER="$orig_env_user"
+	else
+		unset USER
+	fi
+
+	if [ "$web_excl" = '*' ]; then
+		restic_excludes+=(--exclude "/home/$user/web/*")
+	elif [ -n "$web_excl" ]; then
+		IFS=',' read -ra web_entries <<< "$web_excl"
+		for entry in "${web_entries[@]}"; do
+			[ -z "$entry" ] && continue
+			IFS=':' read -ra parts <<< "$entry"
+			domain_part="${parts[0]}"
+			[ -z "$domain_part" ] && continue
+			if [ "$domain_part" = '*' ]; then
+				domain_escaped='*'
+			else
+				escape_restic_glob "$domain_part"
+				domain_escaped="$escaped_glob"
+			fi
+			if [ "${#parts[@]}" -eq 1 ]; then
+				restic_excludes+=(--exclude "/home/$user/web/$domain_escaped")
+			else
+				for ((i = 1; i < ${#parts[@]}; i++)); do
+					seg="${parts[$i]#/}"
+					seg="${seg%/}"
+					if [ -n "$seg" ]; then
+						escape_restic_glob "$seg"
+						restic_excludes+=(--exclude "/home/$user/web/$domain_escaped/$escaped_glob")
+					fi
+				done
+			fi
+		done
+	fi
+
+	if [ "$mail_excl" = '*' ]; then
+		restic_excludes+=(--exclude "/home/$user/mail/*")
+	elif [ -n "$mail_excl" ]; then
+		IFS=',' read -ra mail_entries <<< "$mail_excl"
+		for entry in "${mail_entries[@]}"; do
+			[ -z "$entry" ] && continue
+			IFS=':' read -ra parts <<< "$entry"
+			domain_part="${parts[0]}"
+			[ -z "$domain_part" ] && continue
+			if [ "$domain_part" = '*' ]; then
+				domain_escaped='*'
+			else
+				domain_idn="$domain_part"
+				format_domain_idn
+				domain_part="$domain_idn"
+				escape_restic_glob "$domain_part"
+				domain_escaped="$escaped_glob"
+			fi
+			if [ "${#parts[@]}" -eq 1 ]; then
+				restic_excludes+=(--exclude "/home/$user/mail/$domain_escaped")
+			else
+				for ((i = 1; i < ${#parts[@]}; i++)); do
+					seg="${parts[$i]#/}"
+					seg="${seg%/}"
+					if [ -n "$seg" ]; then
+						escape_restic_glob "$seg"
+						restic_excludes+=(--exclude "/home/$user/mail/$domain_escaped/$escaped_glob")
+					fi
+				done
+			fi
+		done
+	fi
+
+	user_wildcard=0
+	IFS=',' read -ra user_entries <<< "$user_excl"
+	for xpath in "${user_entries[@]}"; do
+		if [ "$xpath" = '*' ]; then
+			user_wildcard=1
+			break
+		fi
+	done
+
+	if [ "$user_excl" = '*' ] || [ "$user_wildcard" -eq 1 ]; then
+		had_nullglob=0
+		had_dotglob=0
+		shopt -q nullglob && had_nullglob=1
+		shopt -q dotglob && had_dotglob=1
+		shopt -s nullglob dotglob
+		for uentry in "/home/$user"/*; do
+			udir="${uentry#"/home/$user/"}"
+			case "$udir" in
+				'' | '.' | '..' | 'backup' | 'conf' | 'web' | 'dns' | 'tmp' | 'mail')
+					continue
+					;;
+			esac
+			escape_restic_glob "$udir"
+			restic_excludes+=(--exclude "/home/$user/$escaped_glob")
+		done
+		[ "$had_nullglob" -eq 0 ] && shopt -u nullglob
+		[ "$had_dotglob" -eq 0 ] && shopt -u dotglob
+	elif [ -n "$user_excl" ]; then
+		for xpath in "${user_entries[@]}"; do
+			xpath="${xpath#/}"
+			xpath="${xpath%/}"
+			if [ -n "$xpath" ]; then
+				escape_restic_glob "$xpath"
+				restic_excludes+=(--exclude "/home/$user/$escaped_glob")
+			fi
+		done
+	fi
+fi
+
 export GOMAXPROCS=2
 export RESTIC_READ_CONCURRENCY=2
-ionice -c2 -n7 nice -n 19 restic --repo "${REPO%/}/$user" --limit-upload 10240 --read-concurrency 2 --password-file $USER_DATA/restic.conf backup /home/$user
+ionice -c2 -n7 nice -n 19 restic --repo "${REPO%/}/$user" --limit-upload 10240 --read-concurrency 2 --password-file $USER_DATA/restic.conf backup "${restic_excludes[@]}" /home/$user
 
 if [ $? -ne 0 ]; then
 	echo "Unable to create the backup" | $SENDMAIL -s "$subj" "$email" "yes"

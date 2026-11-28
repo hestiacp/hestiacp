@@ -2,6 +2,8 @@
 # Dovecot conf file modified by Hestia #
 ########################################
 
+!include_try /etc/dovecot/conf.d/auth-hestia-password-upgrade.conf.ext
+
 passdb passwd-file {
   driver = passwd-file
   default_password_scheme = BLF-CRYPT

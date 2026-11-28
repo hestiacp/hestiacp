@@ -328,6 +328,31 @@ function authenticate_user($user, $password, $twofa = "") {
 					}
 				}
 
+				// Rehash only after all authentication checks, including 2FA.
+				if (
+					$method === "md5" &&
+					($_SESSION["POLICY_SYSTEM_UPGRADE_MD5"] ?? "no") === "yes"
+				) {
+					$fp = tmpfile();
+					if ($fp === false || fwrite($fp, $password . "\n") !== strlen($password) + 1) {
+						if ($fp !== false) {
+							fclose($fp);
+						}
+						return _("Invalid username or password");
+					}
+					$v_password = quoteshellarg(stream_get_meta_data($fp)["uri"]);
+					exec(
+						HESTIA_CMD . "v-upgrade-user-password-hash " . $v_user . " " . $v_password,
+						$output,
+						$return_var,
+					);
+					fclose($fp);
+					unset($output, $fp, $v_password);
+					if ($return_var !== 0) {
+						return _("Invalid username or password");
+					}
+				}
+
 				// Define session user
 				$_SESSION["user"] = key($data);
 				$v_user = $_SESSION["user"];

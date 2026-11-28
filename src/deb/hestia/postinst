@@ -101,6 +101,9 @@ upgrade_phppgadmin | tee -a $LOG
 # Upgrade blackblaze-cli-took if applicable
 upgrade_b2_tool | tee -a $LOG
 
+# Upgrade rclone
+upgrade_rclone | tee -a $LOG
+
 # update whitelabel logo's
 update_whitelabel_logo | tee -a $LOG
 

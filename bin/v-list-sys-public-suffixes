@@ -1,0 +1,21 @@
+#!/bin/bash
+# info: list cached public suffix rules
+# options:
+#
+# example: v-list-sys-public-suffixes
+#
+# Return the existing Public Suffix List to the panel without granting the
+# panel process direct access to the root-owned extensions directory.
+# This command does not download, refresh, or modify the cache.
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source "$HESTIA/func/main.sh"
+
+if [ ! -f "$HESTIA/data/extensions/public_suffix_list.dat" ]; then
+	check_result "$E_NOTEXIST" "public_suffix_list.dat not found"
+fi
+
+cat "$HESTIA/data/extensions/public_suffix_list.dat"

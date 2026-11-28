@@ -2,9 +2,8 @@
 #
 # Unit tests for MySQL database grant escaping (GHSA-g95g-h6p5-m6c6).
 #
-# In a database-level GRANT, "_" and "%" are wildcards. Hestia names databases
-# <user>_<name>, so an unescaped GRANT on `mys_l`.* also covered the `mysql`
-# system schema, and `johnv_y_shop`.* covered `johnvny_shop` of another user.
+# Hestia database names contain underscores. MySQL with partial_revokes
+# enabled matches these names literally. Other servers require escaping.
 #
 # These tests need no MySQL server: mysql_query is replaced by a stub that
 # records each query, so they also run outside the CI container.
@@ -16,11 +15,17 @@ setup() {
 	REPO_ROOT="$(cd "${BATS_TEST_DIRNAME}/.." && pwd)"
 	# shellcheck source=func/db.sh
 	source "${REPO_ROOT}/func/db.sh"
+	# shellcheck source=func/rebuild.sh
+	source "${REPO_ROOT}/func/rebuild.sh"
 
 	QUERY_LOG="$(mktemp)"
 	export QUERY_LOG
+	mysql_fork=mariadb
+	mysql_ver=10.11.0
 	mysql_query() { printf '%s\n' "$1" >> "$QUERY_LOG"; }
 	mysql_connect() { printf 'CONNECT %s\n' "$1" >> "$QUERY_LOG"; }
+	mysql_query_raw() { return 1; }
+	check_result() { if [ "$1" -ne 0 ]; then exit "$1"; fi; }
 }
 
 teardown() {
@@ -58,6 +63,16 @@ teardown() {
 	assert_output "plaindb"
 }
 
+@test "MySQL grants: MySQL escapes database names when partial revokes are off or unavailable" {
+	mysql_fork=mysql mysql_ver=8.0.36
+	mysql_query_raw() { printf '%s\n' "$partial_revokes_result"; }
+	for partial_revokes_result in $'partial_revokes\tOFF' ''; do
+		run mysql_grant_db_name 'johnv_shop'
+		assert_success
+		assert_output 'johnv\_shop'
+	done
+}
+
 #----------------------------------------------------------#
 #                 Revoke helpers                           #
 #----------------------------------------------------------#
@@ -71,8 +86,8 @@ teardown() {
 	assert_line 'REVOKE ALL ON `johnv_shop`.* FROM `johnv_user`@localhost'
 }
 
-@test "MySQL grants: legacy revoke only touches the unescaped grant" {
-	mysql_revoke_legacy_db_grants "johnv_shop" "johnv_user"
+@test "MySQL grants: with wildcard matching only the unescaped grant is obsolete" {
+	mysql_revoke_obsolete_db_grants 'johnv_shop' 'johnv_user' 'johnv\_shop'
 	run cat "$QUERY_LOG"
 	assert_line 'REVOKE ALL ON `johnv_shop`.* FROM `johnv_user`@`%`'
 	assert_line 'REVOKE ALL ON `johnv_shop`.* FROM `johnv_user`@localhost'
@@ -82,6 +97,42 @@ teardown() {
 #----------------------------------------------------------#
 #                 Database actions                         #
 #----------------------------------------------------------#
+
+@test "MySQL grants: regular database creation grants the literal name with partial revokes" {
+	host=db2 database=johnv_shop dbuser=johnv_user charset=UTF8MB4
+	mysql_fork=mysql mysql_ver=8.0.36
+	mysql_query_raw() { printf 'partial_revokes\tON\n'; }
+	add_mysql_database
+	run cat "$QUERY_LOG"
+	assert_line 'CONNECT db2'
+	assert_line 'CREATE DATABASE `johnv_shop` CHARACTER SET UTF8MB4'
+	assert_line 'GRANT ALL ON `johnv_shop`.* TO `johnv_user`@`%`'
+	assert_line 'GRANT ALL ON `johnv_shop`.* TO `johnv_user`@localhost'
+	refute_output --partial 'GRANT ALL ON `johnv\_shop`'
+}
+
+@test "MySQL grants: regular database creation escapes the name without partial revokes" {
+	host=db2 database=johnv_shop dbuser=johnv_user charset=UTF8MB4
+	mysql_fork=mysql mysql_ver=8.0.36
+	mysql_query_raw() { printf 'partial_revokes\tOFF\n'; }
+	add_mysql_database
+	run cat "$QUERY_LOG"
+	assert_line 'GRANT ALL ON `johnv\_shop`.* TO `johnv_user`@`%`'
+	assert_line 'GRANT ALL ON `johnv\_shop`.* TO `johnv_user`@localhost'
+	refute_output --partial 'GRANT ALL ON `johnv_shop`'
+}
+
+@test "MySQL grants: settings lookup failure stops database and temp user creation" {
+	host=db2 database=johnv_shop dbuser=johnv_user
+	mysql_fork=mysql mysql_ver=8.0.36
+	for action in add_mysql_database add_mysql_database_temp_user; do
+		: > "$QUERY_LOG"
+		run "$action"
+		assert_failure
+		run cat "$QUERY_LOG"
+		assert_output 'CONNECT db2'
+	done
+}
 
 @test "MySQL grants: unsuspend grants the escaped name and drops the legacy grant" {
 	HOST=localhost database="johnv_shop" DBUSER="johnv_user"
@@ -104,11 +155,35 @@ teardown() {
 
 @test "MySQL grants: temp user grant uses the escaped name" {
 	host=localhost database="johnv_shop" dbuser="mysql_sso_johnv_shop_x"
-	mysql_fork=mysql mysql_ver=8.0.36
 	add_mysql_database_temp_user
 	run cat "$QUERY_LOG"
 	assert_output --partial 'GRANT ALL ON `johnv\_shop`.* TO `mysql_sso_johnv_shop_x`@`%`'
 	refute_output --partial 'GRANT ALL ON `johnv_shop`'
+}
+
+@test "MySQL grants: temp user grant uses the literal name with partial revokes" {
+	host=db2 database=johnv_shop dbuser=mysql_sso_johnv_shop_x
+	mysql_fork=mysql mysql_ver=8.0.36
+	mysql_query_raw() { printf 'partial_revokes\tON\n'; }
+	add_mysql_database_temp_user
+	run cat "$QUERY_LOG"
+	assert_line 'GRANT ALL ON `johnv_shop`.* TO `mysql_sso_johnv_shop_x`@`%`'
+	refute_output --partial 'GRANT ALL ON `johnv\_shop`'
+}
+
+@test "MySQL grants: a failed grant removes the newly created temp user" {
+	host=db2 database=johnv_shop dbuser=mysql_sso_johnv_shop_x
+	mysql_fork=mysql mysql_ver=8.0.36
+	mysql_query_raw() { printf 'partial_revokes\tON\n'; }
+	mysql_query() {
+		printf '%s\n' "$1" >> "$QUERY_LOG"
+		[[ "$1" != 'GRANT ALL '* ]]
+	}
+	run add_mysql_database_temp_user
+	assert_failure
+	run cat "$QUERY_LOG"
+	assert_line 'GRANT ALL ON `johnv_shop`.* TO `mysql_sso_johnv_shop_x`@`%`'
+	assert_line "DROP USER 'mysql_sso_johnv_shop_x'@'%'"
 }
 
 @test "MySQL grants: temp user removal revokes both grant forms" {
@@ -117,6 +192,32 @@ teardown() {
 	run cat "$QUERY_LOG"
 	assert_line 'REVOKE ALL ON `johnv\_shop`.* FROM `mysql_sso_johnv_shop_x`@`%`'
 	assert_line 'REVOKE ALL ON `johnv_shop`.* FROM `mysql_sso_johnv_shop_x`@`%`'
+}
+
+@test "MySQL grants: password change preserves the literal grant with partial revokes" {
+	HOST=db2 database=johnv_shop DBUSER=johnv_user
+	mysql_fork=mysql mysql_ver=8.0.36
+	mysql_query_raw() { printf 'partial_revokes\tON\n'; }
+	change_mysql_password
+	run cat "$QUERY_LOG"
+	assert_line 'REVOKE ALL ON `johnv\_shop`.* FROM `johnv_user`@`%`'
+	refute_output --partial 'REVOKE ALL ON `johnv_shop`'
+	assert_output --partial 'SET PASSWORD FOR `johnv_user`@`%`'
+}
+
+@test "MySQL grants: rebuild and unsuspend replace the escaped grant with partial revokes" {
+	HOST=db2 DB=johnv_shop database=johnv_shop DBUSER=johnv_user CHARSET=UTF8MB4
+	mysql_fork=mysql mysql_ver=8.0.36
+	mysql_query_raw() { printf 'partial_revokes\tON\n'; }
+	for action in rebuild_mysql_database unsuspend_mysql_database; do
+		: > "$QUERY_LOG"
+		"$action"
+		run cat "$QUERY_LOG"
+		assert_line 'REVOKE ALL ON `johnv\_shop`.* FROM `johnv_user`@`%`'
+		refute_output --partial 'REVOKE ALL ON `johnv_shop`'
+		assert_line 'GRANT ALL ON `johnv_shop`.* TO `johnv_user`@`%`'
+		assert_line 'GRANT ALL ON `johnv_shop`.* TO `johnv_user`@localhost'
+	done
 }
 
 #----------------------------------------------------------#
@@ -131,6 +232,13 @@ teardown() {
 			kv=${kv//\'/}
 			printf -v "${kv%%=*}" '%s' "${kv#*=}"
 		done
+	}
+	mysql_query_raw() { printf 'partial_revokes\tON\n'; }
+	mysql_connect() {
+		printf 'CONNECT %s\n' "$1" >> "$QUERY_LOG"
+		if [ "$1" = db2 ]; then
+			mysql_fork=mysql mysql_ver=8.0.36
+		fi
 	}
 
 	FAKE_HESTIA="$(mktemp -d)"
@@ -151,16 +259,93 @@ EOF
 	assert_line 'REVOKE ALL ON `johnv_shop`.* FROM `johnv_shop`@`%`'
 	assert_line 'GRANT ALL ON `johnv\_shop`.* TO `johnv_shop`@`%`'
 	assert_line 'GRANT ALL ON `johnv\_shop`.* TO `johnv_shop`@localhost'
-	# Suspended database: legacy grant revoked, nothing granted
+	# Suspended database: both forms revoked, nothing granted
 	assert_line 'REVOKE ALL ON `johnv_old`.* FROM `johnv_old`@`%`'
-	refute_line --partial 'GRANT ALL ON `johnv\_old`'
+	assert_line 'REVOKE ALL ON `johnv\_old`.* FROM `johnv_old`@`%`'
+	refute_output --regexp 'GRANT ALL ON `johnv\\?_old`'
 	# PostgreSQL databases are left alone
 	refute_output --partial 'johnv_pg'
-	# Remote hosts are handled too
+	# The remote host uses literal grants
 	assert_line 'CONNECT db2'
-	assert_line 'GRANT ALL ON `other\_db`.* TO `other_u`@`%`'
-	# No wildcard grant is ever (re)created
-	refute_output --regexp 'GRANT ALL ON `[^`\\]*_'
+	assert_line 'REVOKE ALL ON `other\_db`.* FROM `other_u`@`%`'
+	assert_line 'GRANT ALL ON `other_db`.* TO `other_u`@`%`'
+	refute_output --partial 'REVOKE ALL ON `other_db`'
+	refute_output --partial 'GRANT ALL ON `johnv_shop`'
+}
+
+@test "MySQL grants: migration reports failures but continues with other databases" {
+	parse_object_kv_list() {
+		local kv
+		for kv in $1; do
+			kv=${kv//\'/}
+			printf -v "${kv%%=*}" '%s' "${kv#*=}"
+		done
+	}
+	mysql_connect() {
+		printf 'CONNECT %s\n' "$1" >> "$QUERY_LOG"
+		[ "$1" != broken ] || exit 1
+		mysql_fork=mysql mysql_ver=8.0.36
+	}
+	mysql_query_raw() {
+		[ "$HOST" != badsettings ] || return 1
+		printf 'partial_revokes\tON\n'
+	}
+	mysql_query() {
+		printf '%s\n' "$1" >> "$QUERY_LOG"
+		[[ "$1" != 'GRANT ALL ON `fail_db`'* && "$1" != 'REVOKE ALL ON `suspended'* ]]
+	}
+	FAKE_HESTIA="$(mktemp -d)"
+	HESTIA="$FAKE_HESTIA"
+	mkdir -p "$HESTIA/data/users/test"
+	cat > "$HESTIA/data/users/test/db.conf" << 'EOF'
+DB='fail_db' DBUSER='fail_user' HOST='db1' TYPE='mysql' SUSPENDED='no'
+DB='broken_db' DBUSER='broken_user' HOST='broken' TYPE='mysql' SUSPENDED='no'
+DB='settings_db' DBUSER='settings_user' HOST='badsettings' TYPE='mysql' SUSPENDED='no'
+DB='suspended' DBUSER='suspended_user' HOST='db1' TYPE='mysql' SUSPENDED='yes'
+DB='good_db' DBUSER='good_user' HOST='db2' TYPE='mysql' SUSPENDED='no'
+EOF
+	run mysql_migrate_legacy_db_grants
+	assert_failure
+	assert_output --partial 'unable to restore MySQL grants for fail_db on db1'
+	run cat "$QUERY_LOG"
+	assert_line 'GRANT ALL ON `fail_db`.* TO `fail_user`@`%`'
+	assert_line 'GRANT ALL ON `fail_db`.* TO `fail_user`@localhost'
+	assert_line 'CONNECT broken'
+	assert_line 'CONNECT badsettings'
+	refute_output --partial 'GRANT ALL ON `settings_db`'
+	refute_output --partial 'GRANT ALL ON `suspended`'
+	assert_line 'GRANT ALL ON `good_db`.* TO `good_user`@localhost'
+}
+
+@test "MySQL grants: 1.10.11 upgrade runs the migration and reports failure" {
+	FAKE_HESTIA="$(mktemp -d)"
+	HESTIA="$FAKE_HESTIA"
+	mkdir -p "$HESTIA/conf" "$HESTIA/func"
+	touch "$HESTIA/conf/mysql.conf"
+	cat > "$HESTIA/func/db.sh" << 'EOF'
+mysql_migrate_legacy_db_grants() {
+	echo 'MIGRATION' >> "$QUERY_LOG"
+	return "$MIGRATION_RESULT"
+}
+EOF
+	upgrade_config_set_value() { :; }
+	add_upgrade_message() { printf 'MESSAGE %s\n' "$1" >> "$QUERY_LOG"; }
+	for MIGRATION_RESULT in 0 1; do
+		: > "$QUERY_LOG"
+		source "$REPO_ROOT/install/upgrade/versions/1.10.11.sh"
+		run cat "$QUERY_LOG"
+		assert_line 'MIGRATION'
+		if [ "$MIGRATION_RESULT" -eq 1 ]; then
+			assert_output --partial 'MESSAGE Some MySQL database grants could not be repaired'
+		else
+			refute_output --partial 'MESSAGE '
+		fi
+	done
+	rm "$HESTIA/conf/mysql.conf"
+	: > "$QUERY_LOG"
+	source "$REPO_ROOT/install/upgrade/versions/1.10.11.sh"
+	run cat "$QUERY_LOG"
+	assert_output ''
 }
 
 #----------------------------------------------------------#

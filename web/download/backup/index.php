@@ -9,6 +9,18 @@ verify_csrf($_GET);
 
 $backup = $_GET["backup"];
 
+if (
+	!preg_match('/^[a-zA-Z0-9][-a-zA-Z0-9._]{0,128}[a-zA-Z0-9]$/', $backup) ||
+	str_contains($backup, "..")
+) {
+	$_SESSION["error_msg"] = implode("<br>", $output);
+	if (empty($_SESSION["error_msg"])) {
+		$_SESSION["error_msg"] = _("Invalid backup file name.");
+	}
+	header("Location: /list/backup/");
+	exit();
+}
+
 if (!file_exists("/backup/" . $backup)) {
 	$backup = quoteshellarg($_GET["backup"]);
 	exec(

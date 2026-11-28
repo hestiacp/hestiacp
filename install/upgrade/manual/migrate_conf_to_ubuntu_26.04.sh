@@ -250,5 +250,28 @@ EOF
 	fi
 fi
 
+#----------------------------------------------------------#
+#              FTP backup client configuration             #
+#----------------------------------------------------------#
+
+if [[ -f /etc/apparmor.d/tnftp ]]; then
+	echo
+	echo "[ * ] Checking AppArmor rules for ftp backups:"
+	backup_dir="${BACKUP:-/backup}"
+	backup_dir="${backup_dir%/}"
+	mkdir -p /etc/apparmor.d/local
+	if ! grep -qsF "# Configuration added by Hestia" /etc/apparmor.d/local/tnftp; then
+		echo "[ + ] Updating AppArmor rules for tnftp"
+		cat >> /etc/apparmor.d/local/tnftp << EOF
+# Configuration added by Hestia
+$backup_dir/ r,
+$backup_dir/** rw,
+EOF
+		apparmor_parser -r /etc/apparmor.d/tnftp 2> /dev/null
+	else
+		echo "[ - ] tnftp already configured, nothing to do"
+	fi
+fi
+
 echo
 echo "[ * ] Configuration finished!"

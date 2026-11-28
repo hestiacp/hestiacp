@@ -2542,6 +2542,19 @@ chown hestiaweb:hestiaweb $HESTIA/data/sessions
 mkdir -p /backup/
 chmod 755 /backup/
 
+# Allow the ftp client (tnftp AppArmor profile) to read/write backup archives
+if [ -f /etc/apparmor.d/tnftp ]; then
+	mkdir -p /etc/apparmor.d/local
+	if ! grep -qsF "# Configuration added by Hestia" /etc/apparmor.d/local/tnftp; then
+		cat >> /etc/apparmor.d/local/tnftp << 'EOF'
+# Configuration added by Hestia
+/backup/ r,
+/backup/** rw,
+EOF
+		apparmor_parser -r /etc/apparmor.d/tnftp > /dev/null 2>&1
+	fi
+fi
+
 # Create cronjob to generate ssl
 echo "@reboot root sleep 10 && rm /etc/cron.d/hestia-ssl && PATH='/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:' && /usr/local/hestia/bin/v-add-letsencrypt-host" > /etc/cron.d/hestia-ssl
 

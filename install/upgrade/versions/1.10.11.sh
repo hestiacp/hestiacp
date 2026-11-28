@@ -53,3 +53,19 @@ if [ "$WEB_SYSTEM" = "apache2" ] && ! grep -qs "^ProtectHome=no" /etc/systemd/sy
 	systemctl daemon-reload > /dev/null 2>&1
 	systemctl restart apache2 > /dev/null 2>&1
 fi
+
+# Allow the ftp client (tnftp AppArmor profile) to read/write backup archives
+if [ -f /etc/apparmor.d/tnftp ]; then
+	backup_dir="${BACKUP:-/backup}"
+	backup_dir="${backup_dir%/}"
+	mkdir -p /etc/apparmor.d/local
+	if ! grep -qsF "# Configuration added by Hestia" /etc/apparmor.d/local/tnftp; then
+		echo "[ * ] Adding AppArmor rules for ftp backups..."
+		cat >> /etc/apparmor.d/local/tnftp << EOF
+# Configuration added by Hestia
+$backup_dir/ r,
+$backup_dir/** rw,
+EOF
+		apparmor_parser -r /etc/apparmor.d/tnftp > /dev/null 2>&1
+	fi
+fi

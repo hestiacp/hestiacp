@@ -51,6 +51,13 @@ stop_php() {
 		--retry 5 --oknodo --exec $PHP_DAEMON
 }
 
+test_nginx_config() {
+	configtest_out=$("$NGINX_DAEMON" -t -c "$NGINX_CONF" 2>&1) || {
+		printf '%s\n' "$configtest_out" >&2
+		return 1
+	}
+}
+
 case "$1" in
 	start)
 		log_daemon_msg "Starting $NGINX_DESC" "$NGINX_NAME"
@@ -70,8 +77,12 @@ case "$1" in
 		log_end_msg $?
 		;;
 
-	restart | force-reload | reload | configtest | testconfig)
+	restart | force-reload | reload)
 		log_daemon_msg "Restarting $NGINX_DESC" "$NGINX_NAME"
+		if ! test_nginx_config; then
+			log_end_msg 1 || true
+			exit 1
+		fi
 		stop_nginx
 		stop_php
 		sleep 1
@@ -82,13 +93,17 @@ case "$1" in
 		log_end_msg $?
 		;;
 
+	configtest | testconfig)
+		"$NGINX_DAEMON" -t -c "$NGINX_CONF"
+		;;
+
 	status)
 		status_of_proc -p $NGINX_PID "$NGINX_DAEMON" hestia-nginx
 		status_of_proc -p $PHP_PID "$PHP_DAEMON" hestia-php
 		;;
 
 	*)
-		echo "Usage: hestia {start|stop|restart|status}" >&2
+		echo "Usage: hestia {start|stop|restart|reload|force-reload|configtest|status}" >&2
 		exit 1
 		;;
 esac

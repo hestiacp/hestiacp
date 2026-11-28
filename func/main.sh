@@ -2558,32 +2558,47 @@ search_command_arg_position() {
 	echo "$position"
 }
 
+vsftpd_uses_chroot_jail() {
+	[ "$FTP_SYSTEM" = 'vsftpd' ] && grep -qxF 'local_root=/srv/jail/%u' /etc/vsftpd.conf
+}
+
 add_chroot_jail() {
 	local user=$1
+	local jail="/srv/jail/$user"
+	local home
+	local systemd
 
-	mkdir -p /srv/jail/$user
-	chown 0:0 /srv /srv/jail /srv/jail/$user
-	chmod 755 /srv /srv/jail /srv/jail/$user
-	if [ ! -d /srv/jail/$user/home ]; then
-		mkdir -p /srv/jail/$user/home
-		chown 0:0 /srv/jail/$user/home
-		chmod 755 /srv/jail/$user/home
-	fi
-	if [ ! -d /srv/jail/$user/home/$user ]; then
-		mkdir -p /srv/jail/$user/home/$user
-		chown 0:0 /srv/jail/$user/home/$user
-		chmod 755 /srv/jail/$user/home/$user
+	# Older installations may mount the home directory one level higher.
+	if mountpoint -q "$jail/home" || mountpoint -q "$jail/home/$user"; then
+		return 0
 	fi
 
-	systemd=$(systemd-escape -p --suffix=mount "/srv/jail/$user/home/$user")
-	cat > "/etc/systemd/system/$systemd" << EOF
+	home=$(getent passwd "$user" | cut -f6 -d :)
+	[ -d "$home" ] || return 1
+
+	# Create missing parents with traversable permissions and preserve existing ones.
+	(
+		umask 022
+		mkdir -p "$jail"
+	) || return
+	chown 0:0 "$jail" || return
+	chmod 755 "$jail" || return
+	if [ ! -d "$jail/home" ]; then
+		install -d -o root -g root -m 755 "$jail/home" || return
+	fi
+	if [ ! -d "$jail/home/$user" ]; then
+		install -d -o root -g root -m 755 "$jail/home/$user" || return
+	fi
+
+	systemd=$(systemd-escape -p --suffix=mount "$jail/home/$user") || return
+	cat > "/etc/systemd/system/$systemd" << EOF || return
 [Unit]
 Description=Mount $user's home directory to the jail chroot
 Before=local-fs.target
 
 [Mount]
-What=$(getent passwd | awk -F: -v u="$user" '$1 == u {print $6}')
-Where=/srv/jail/$user/home/$user
+What=$home
+Where=$jail/home/$user
 Type=none
 Options=bind
 LazyUnmount=yes
@@ -2592,27 +2607,38 @@ LazyUnmount=yes
 RequiredBy=local-fs.target
 EOF
 
-	systemctl daemon-reload > /dev/null 2>&1
-	systemctl enable "$systemd" > /dev/null 2>&1
+	systemctl daemon-reload > /dev/null 2>&1 || return
+	systemctl enable "$systemd" > /dev/null 2>&1 || return
 	systemctl start "$systemd" > /dev/null 2>&1
 }
 
 delete_chroot_jail() {
 	local user=$1
+	local jail="/srv/jail/$user"
+	local path
+	local systemd
+	local unit_file
 
-	# Backwards compatibility with old style home jail
-	systemd=$(systemd-escape -p --suffix=mount "/srv/jail/$user/home")
-	systemctl stop "$systemd" > /dev/null 2>&1
-	systemctl disable "$systemd" > /dev/null 2>&1
-	rm -f "/etc/systemd/system/$systemd"
+	# Stop both the current and legacy mount before removing their unit files.
+	for path in "$jail/home/$user" "$jail/home"; do
+		systemd=$(systemd-escape -p --suffix=mount "$path") || return
+		unit_file="/etc/systemd/system/$systemd"
+		if mountpoint -q "$path"; then
+			systemctl stop "$systemd" > /dev/null 2>&1 || return
+			if mountpoint -q "$path"; then
+				return 1
+			fi
+		fi
+		if [ -f "$unit_file" ]; then
+			systemctl disable "$systemd" > /dev/null 2>&1 || return
+			rm -f "$unit_file" || return
+		fi
+	done
 
-	# Remove the new style home jail
-	systemd=$(systemd-escape -p --suffix=mount "/srv/jail/$user/home/$user")
-	systemctl stop "$systemd" > /dev/null 2>&1
-	systemctl disable "$systemd" > /dev/null 2>&1
-	rm -f "/etc/systemd/system/$systemd"
-
-	systemctl daemon-reload > /dev/null 2>&1
-	rm -r /srv/jail/$user/ > /dev/null 2>&1
-	rmdir /srv/jail/$user > /dev/null 2>&1
+	systemctl daemon-reload > /dev/null 2>&1 || return
+	for path in "$jail/home/$user" "$jail/home" "$jail"; do
+		if [ -d "$path" ]; then
+			rmdir "$path" 2> /dev/null || return
+		fi
+	done
 }

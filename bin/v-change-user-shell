@@ -41,8 +41,15 @@ check_hestia_demo_mode
 # Get shell full path
 shell_path=$(grep -w "$shell" /etc/shells | head -n1)
 
+# Ensure vsftpd can still log in after removing the SSH chroot restriction.
+if vsftpd_uses_chroot_jail; then
+	add_chroot_jail "$user"
+	check_result "$?" "could not mount the FTP jail for $user" "$E_FTP"
+fi
+
 # Changing passwd file
 /usr/bin/chsh -s "$shell_path" "$user" > /dev/null 2>&1
+check_result "$?" "could not change the login shell for $user"
 shell=$(basename "$shell_path")
 
 # Adding jailed sftp env

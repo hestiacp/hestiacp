@@ -421,8 +421,35 @@ function check_ip_not_banned(){
 
     run stat -c '%U' /home/$user
     assert_output --partial "$user"
-		mount_file=$(systemd-escape -p --suffix=mount "/srv/jail/$user/home")
-		assert_file_not_exist /etc/systemd/system/$mount_file
+
+    mount_file=$(systemd-escape -p --suffix=mount "/srv/jail/$user/home/$user")
+    if vsftpd_uses_chroot_jail; then
+        assert_file_exist "/etc/systemd/system/$mount_file"
+        run mountpoint -q "/srv/jail/$user/home/$user"
+        assert_success
+
+        run curl --silent --show-error --insecure --ssl-reqd --list-only --max-time 10 \
+            --user "$user:$userpass2" "ftp://127.0.0.1//home/$user/"
+        assert_success
+    else
+        assert_file_not_exist "/etc/systemd/system/$mount_file"
+    fi
+}
+
+@test "User: Restore a missing vsftpd jail for a user with Bash" {
+    if ! vsftpd_uses_chroot_jail; then
+        skip "requires Hestia's vsftpd jail configuration"
+    fi
+
+    delete_chroot_jail "$user"
+    assert_dir_not_exist "/srv/jail/$user"
+
+    run v-change-user-shell "$user" bash
+    assert_success
+    refute_output
+
+    run mountpoint -q "/srv/jail/$user/home/$user"
+    assert_success
 }
 
 @test "User: Change user invalid shell" {
@@ -3131,6 +3158,7 @@ EVIL='x'" > /tmp/backup_exclusions_unknownkey
     run v-delete-user $user
     assert_success
     refute_output
+    assert_dir_not_exist "/srv/jail/$user"
 }
 
 @test "Delete user2" {

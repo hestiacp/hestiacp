@@ -14,9 +14,11 @@ use function array_column;
 use function array_filter;
 use function basename;
 use function chmod;
+use function count;
 use function explode;
 use function in_array;
 use function realpath;
+use function rtrim;
 use function sprintf;
 use function str_contains;
 use function trigger_error;
@@ -66,6 +68,59 @@ class HestiaApp
             $result = $this->runUser('v-run-cli-cmd', ['ls', '-A', $path]);
 
             return array_filter(explode("\n", $result->output));
+        } catch (ProcessFailedException) {
+            throw new RuntimeException('Cannot list domain files');
+        }
+    }
+
+    /**
+     * List immediate entries in a directory keyed by basename with their lstat type ('f', 'd', 'l', etc.).
+     * Returns null when $path itself is not a real directory (for example, a symlink or regular file).
+     *
+     * @return array<string, string>|null
+     */
+    public function listDirectoryEntries(string $path): ?array
+    {
+        $normalizedPath = rtrim($path, '/\\');
+        if ($normalizedPath === '') {
+            $normalizedPath = '/';
+        }
+
+        try {
+            $result = $this->runUser('v-run-cli-cmd', [
+                'find',
+                '-P',
+                '--',
+                $normalizedPath,
+                '-maxdepth',
+                '1',
+                '-printf',
+                '%d:%y:%f\0',
+            ]);
+
+            $rootType = null;
+            $entries = [];
+            foreach (explode("\0", $result->output) as $record) {
+                if ($record === '') {
+                    continue;
+                }
+                $parts = explode(':', $record, 3);
+                if (count($parts) !== 3) {
+                    continue;
+                }
+                [$depth, $type, $name] = $parts;
+                if ($depth === '0') {
+                    $rootType = $type;
+                } elseif ($depth === '1' && $name !== '') {
+                    $entries[$name] = $type;
+                }
+            }
+
+            if ($rootType !== 'd') {
+                return null;
+            }
+
+            return $entries;
         } catch (ProcessFailedException) {
             throw new RuntimeException('Cannot list domain files');
         }

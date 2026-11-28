@@ -78,6 +78,13 @@ fi
 #                       Hestia                             #
 #----------------------------------------------------------#
 
+# Web domain applications run in their own slice with the same limits
+if [ -s "$USER_DATA/app.conf" ]; then
+	source "$HESTIA/func/app.sh"
+	write_app_slice "$user"
+	systemctl daemon-reload
+fi
+
 # Logging
 log_event "$OK" "$ARGUMENTS"
 

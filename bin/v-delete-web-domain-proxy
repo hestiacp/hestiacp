@@ -23,6 +23,8 @@ source /etc/hestiacp/hestia.conf
 source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
+# shellcheck source=/usr/local/hestia/func/app.sh
+source $HESTIA/func/app.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
@@ -40,6 +42,9 @@ is_format_valid 'user' 'domain' 'restart'
 is_system_enabled "$PROXY_SYSTEM" 'WEB_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_valid 'web' 'DOMAIN' "$domain"
+if app_exists "$user" "$domain" && grep -q "^DOMAIN='$domain' .* TPL_TYPE='proxy'" "$USER_DATA/app.conf"; then
+	check_result "$E_INUSE" "the application of $domain needs the proxy (v-delete-web-domain-app)"
+fi
 is_object_value_exist 'web' 'DOMAIN' "$domain" '$PROXY'
 
 # Perform verification if read-only mode is enabled

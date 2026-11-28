@@ -1,0 +1,87 @@
+#!/bin/bash
+# info: list web domain application environment
+# options: USER DOMAIN [FORMAT]
+#
+# example: v-list-web-domain-app-env admin example.com plain
+#
+# This function lists the environment variables of a web domain application.
+# The plain format prints KEY=VALUE lines that v-change-web-domain-app-env
+# accepts.
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+domain=$2
+format=${3-shell}
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/app.sh
+source $HESTIA/func/app.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+# JSON list function
+json_list() {
+	local i=0 line
+	echo '{'
+	while IFS= read -r line; do
+		[ "$i" -gt 0 ] && echo ','
+		echo -n "    \"${line%%=*}\": \"$(app_json_escape "${line#*=}")\""
+		i=$((i + 1))
+	done < <(print_app_env "$envfile")
+	[ "$i" -gt 0 ] && echo
+	echo '}'
+}
+
+# CSV list function
+csv_list() {
+	local line value
+	echo "KEY,VALUE"
+	while IFS= read -r line; do
+		value="${line#*=}"
+		echo "${line%%=*},\"${value//\"/\"\"}\""
+	done < <(print_app_env "$envfile")
+}
+
+# SHELL list function
+shell_list() {
+	echo "KEY^VALUE"
+	echo "---^-----"
+	print_app_env "$envfile" | sed 's/=/^/'
+}
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '2' "$#" 'USER DOMAIN [FORMAT]'
+is_format_valid 'user' 'domain'
+is_object_valid 'user' 'USER' "$user"
+is_object_valid 'web' 'DOMAIN' "$domain"
+is_app_valid "$domain"
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+envfile=$(app_env_file "$user" "$domain")
+
+case $format in
+	json) json_list ;;
+	plain) print_app_env "$envfile" ;;
+	csv) csv_list ;;
+	shell) shell_list | column -t -s '^' ;;
+esac
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+exit

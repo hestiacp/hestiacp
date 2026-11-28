@@ -33,6 +33,13 @@ check_hestia_demo_mode
 check_args '2' "$#" 'KEY VALUE'
 is_common_format_valid "$key" 'key'
 format_no_quotes "$value" 'value'
+if [ "$key" = "POLICY_USER_EXTERNAL_MAIL_FORWARD" ]; then
+	value=$(printf '%s' "$value" | tr '[:upper:]' '[:lower:]' | tr -d '[:space:]')
+	case "$value" in
+		yes | server | user | no) ;;
+		*) check_result "$E_INVALID" "Invalid POLICY_USER_EXTERNAL_MAIL_FORWARD value :: $value" ;;
+	esac
+fi
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -40,10 +47,23 @@ format_no_quotes "$value" 'value'
 change_sys_value "$key" "$value"
 
 # Sort configuration file in alphabetical order on change
-sort $HESTIA/conf/hestia.conf -o /tmp/updconf
-mv $HESTIA/conf/hestia.conf $HESTIA/conf/hestia.conf.bak
-mv /tmp/updconf $HESTIA/conf/hestia.conf
-rm -f $HESTIA/conf/hestia.conf.bak
+tmp_conf=$(umask 077 && mktemp "$HESTIA/conf/hestia.conf.XXXXXX") || check_result "$E_DISK" "Unable to create temporary hestia.conf"
+if ! sort "$HESTIA/conf/hestia.conf" -o "$tmp_conf"; then
+	rm -f "$tmp_conf"
+	check_result "$E_DISK" "Unable to sort $HESTIA/conf/hestia.conf"
+fi
+chmod 660 "$tmp_conf"
+mv -f "$tmp_conf" "$HESTIA/conf/hestia.conf"
+
+if [ "$key" = "POLICY_USER_EXTERNAL_MAIL_FORWARD" ] && [[ "$MAIL_SYSTEM" =~ exim ]]; then
+	for u_dir in "$HESTIA"/data/users/*/; do
+		[ -d "$u_dir" ] || continue
+		u_name=$(basename "$u_dir")
+		if [ -s "${u_dir}mail.conf" ]; then
+			"$BIN/v-rebuild-mail-domains" "$u_name" > /dev/null 2>&1 || true
+		fi
+	done
+fi
 
 # Check if the variable "$key" has the value "APP_NAME"
 if [ "$key" == "APP_NAME" ]; then

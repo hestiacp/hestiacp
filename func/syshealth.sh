@@ -451,6 +451,11 @@ function syshealth_repair_system_config() {
 		echo "[ ! ] Adding missing variable to hestia.conf: POLICY_USER_EDIT_WEB_TEMPLATES ('yes')"
 		$BIN/v-change-sys-config-value "POLICY_USER_EDIT_WEB_TEMPLATES" "yes"
 	fi
+	# Allow users to forward mail to external domains
+	if [[ -z $(check_key_exists 'POLICY_USER_EXTERNAL_MAIL_FORWARD') ]]; then
+		echo "[ ! ] Adding missing variable to hestia.conf: POLICY_USER_EXTERNAL_MAIL_FORWARD ('yes')"
+		$BIN/v-change-sys-config-value "POLICY_USER_EXTERNAL_MAIL_FORWARD" "yes"
+	fi
 	# View user logs
 	if [[ -z $(check_key_exists 'POLICY_USER_VIEW_LOGS') ]]; then
 		echo "[ ! ] Adding missing variable to hestia.conf: POLICY_USER_VIEW_LOGS ('yes')"

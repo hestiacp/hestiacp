@@ -59,6 +59,15 @@
 			<div class="u-mb10">
 				<label for="v_catchall" class="form-label"><?= tohtml( _("Catch-All Email")) ?></label>
 				<input type="email" class="form-control" name="v_catchall" id="v_catchall" value="<?= tohtml(trim($v_catchall, "'")) ?>">
+				<?php
+					$v_mfp_mode = strtolower(trim((string) ($_SESSION["POLICY_USER_EXTERNAL_MAIL_FORWARD"] ?? "yes"), "'"));
+					if ($_SESSION["userContext"] !== "admin" && in_array($v_mfp_mode, ["server", "user", "no"], true)) {
+						$v_mfp_hint = $v_mfp_mode === "server"
+							? _("External catch-all forwarding is restricted by server policy to mail domains hosted on this server.")
+							: _("External catch-all forwarding is restricted by server policy to your own mail domains.");
+						echo '<p class="hint u-mt5">' . tohtml($v_mfp_hint) . "</p>";
+					}
+				?>
 			</div>
 			<div class="u-mb20">
 				<label for="v_rate" class="form-label">

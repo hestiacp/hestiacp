@@ -273,6 +273,24 @@ if (!empty($_POST["ok_acc"]) && $read_only !== true) {
 		$v_adv = "yes";
 	}
 
+	if (empty($_SESSION["error_msg"]) && empty($_POST["v_blackhole"]) && isset($_POST["v_fwd"])) {
+		if (!is_string($_POST["v_fwd"])) {
+			$_SESSION["error_msg"] = _("Invalid mail forwarding input.");
+		} elseif ($_POST["v_fwd"] !== "") {
+			require_once dirname(__DIR__, 2) . "/inc/mail_forward_policy.php";
+			$mfp_targets = hst_mfp_parse_targets($_POST["v_fwd"]);
+			$mfp_error = hst_validate_mail_forward_policy(
+				$mfp_targets,
+				trim((string) $user, "'\""),
+				"forward",
+			);
+			if ($mfp_error !== null) {
+				$_SESSION["error_msg"] = $mfp_error;
+			}
+			unset($mfp_targets, $mfp_error);
+		}
+	}
+
 	// Add Mail Account
 	if (empty($_SESSION["error_msg"])) {
 		$v_password = tempnam("/tmp", "vst");
@@ -356,6 +374,7 @@ if (!empty($_POST["ok_acc"]) && $read_only !== true) {
 		$vfwd = preg_replace("/\s+/", " ", $vfwd);
 		$vfwd = trim($vfwd);
 		$fwd = explode(" ", $vfwd);
+		$mfp_force = ($_SESSION["userContext"] ?? "") === "admin" ? " yes" : "";
 		foreach ($fwd as $forward) {
 			$forward = quoteshellarg($forward);
 			if (empty($_SESSION["error_msg"])) {
@@ -368,7 +387,8 @@ if (!empty($_POST["ok_acc"]) && $read_only !== true) {
 						" " .
 						$v_account .
 						" " .
-						$forward,
+						$forward .
+						$mfp_force,
 					$output,
 					$return_var,
 				);

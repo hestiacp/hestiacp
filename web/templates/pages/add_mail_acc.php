@@ -88,6 +88,15 @@
 								<?= tohtml( _("Forward to")) ?> <span class="optional">(<?= tohtml( _("One or more email addresses")) ?>)</span>
 							</label>
 							<textarea class="form-control js-forward-to-textarea" name="v_fwd" id="v_fwd" <?php if ($v_blackhole == 'yes') echo "disabled"; ?>><?= tohtml(trim($v_fwd, "'")) ?></textarea>
+							<?php
+								$v_mfp_mode = strtolower(trim((string) ($_SESSION["POLICY_USER_EXTERNAL_MAIL_FORWARD"] ?? "yes"), "'"));
+								if ($_SESSION["userContext"] !== "admin" && in_array($v_mfp_mode, ["server", "user", "no"], true)) {
+									$v_mfp_hint = $v_mfp_mode === "server"
+										? _("External mail forwarding is restricted by server policy to mail domains hosted on this server. Connect via IMAP/SMTP instead.")
+										: _("External mail forwarding is restricted by server policy to your own mail domains. Connect via IMAP/SMTP instead.");
+									echo '<p class="hint u-mt5">' . tohtml($v_mfp_hint) . "</p>";
+								}
+							?>
 						</div>
 						<div class="form-check">
 							<input class="form-check-input js-discard-all-mail" type="checkbox" name="v_blackhole" id="v_blackhole" <?php if ($v_blackhole == 'yes') echo 'checked' ?>>

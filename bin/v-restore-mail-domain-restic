@@ -77,6 +77,7 @@ if [ "$check_exim_username" -eq 1 ]; then
 	exim_user="Debian-exim"
 fi
 
+restored_mail_domains=()
 for domain in "${domains[@]}"; do
 	if [[ ",$mail," == *",$domain,"* || "$mail" = '*' ]]; then
 		# Checking domain existance
@@ -241,8 +242,13 @@ for domain in "${domains[@]}"; do
 				-exec chown $exim_user {} \;
 		fi
 
-		$BIN/v-rebuild-mail-domain "$user" "$domain"
+		restored_mail_domains+=("$domain")
 	fi
+done
+
+for domain in "${restored_mail_domains[@]}"; do
+	sanitize_restored_mail_forwards "$user" "$domain"
+	$BIN/v-rebuild-mail-domain "$user" "$domain"
 done
 #----------------------------------------------------------#
 #                       Hestia                             #

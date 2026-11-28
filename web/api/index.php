@@ -237,6 +237,10 @@ function api_legacy(array $request_data) {
 		api_make_tmp_file($hst_cmd_args["arg2"] ?? "", $hst_cmd_args["arg1"] ?? "", $hst_return);
 		$return_var = 0;
 	} else {
+		require_once dirname(__DIR__) . "/inc/mail_forward_policy.php";
+		if (hst_mfp_is_protected_command($hst_cmd)) {
+			$hst_cmd_args = hst_mfp_apply_api_force_arg($hst_cmd, $hst_cmd_args, true);
+		}
 		// Prepare command
 		$cmdquery = HESTIA_CMD . escapeshellcmd($hst_cmd);
 
@@ -376,13 +380,34 @@ function api_connection(array $request_data) {
 	if (
 		$key_user != $root_user &&
 		$user_arg_position > 0 &&
-		$hst_cmd_args["arg{$user_arg_position}"] != $key_user
+		$hst_cmd_args["arg{$user_arg_position}"] !== $key_user
 	) {
 		api_error(
 			E_FORBIDDEN,
 			"Key $hst_access_key_id - the \"user\" argument doesn\'t match the key\'s user",
 			$hst_return,
 		);
+	}
+
+	require_once dirname(__DIR__) . "/inc/mail_forward_policy.php";
+	if (hst_mfp_is_protected_command($hst_cmd)) {
+		$mfp_is_admin = $key_user === $root_user || hst_mfp_is_admin_user((string) $key_user);
+		if ($mfp_is_admin) {
+			$hst_cmd_args = hst_mfp_apply_api_force_arg($hst_cmd, $hst_cmd_args, true);
+		} else {
+			$mfp_api_error = hst_validate_api_mail_forward_policy(
+				$hst_cmd,
+				$hst_cmd_args,
+				(string) $key_user,
+				(string) $root_user,
+				(string) ($settings["config"]["POLICY_USER_EXTERNAL_MAIL_FORWARD"] ?? "yes"),
+			);
+			if ($mfp_api_error !== null) {
+				api_error(E_FORBIDDEN, $mfp_api_error, $hst_return, true, (string) $key_user);
+			}
+			unset($mfp_api_error);
+		}
+		unset($mfp_is_admin);
 	}
 
 	// Prepare command

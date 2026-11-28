@@ -1215,3 +1215,293 @@ process_http2_directive() {
 		fi
 	fi
 }
+
+# Normalize external mail forwarding policy setting
+_normalize_mail_forward_policy() {
+	local raw norm
+	if [ "$#" -gt 0 ]; then
+		raw="$1"
+	else
+		raw="${POLICY_USER_EXTERNAL_MAIL_FORWARD:-}"
+	fi
+	norm=$(printf '%s' "$raw" | tr '[:upper:]' '[:lower:]' | tr -d '[:space:]')
+	case "$norm" in
+		"" | yes) printf 'yes' ;;
+		server) printf 'server' ;;
+		*) printf 'user' ;;
+	esac
+}
+
+# Check whether user holds the administrator role
+_is_mail_forward_user_admin() {
+	local clean_user="${1//\'/}"
+	clean_user="${clean_user//\"/}"
+	if [ -z "$clean_user" ] || [ "$clean_user" = "." ] || [ "$clean_user" = ".." ] || [[ ! "$clean_user" =~ ^[A-Za-z0-9._-]+$ ]]; then
+		return 1
+	fi
+
+	local user_conf="$HESTIA/data/users/$clean_user/user.conf"
+	if [ -f "$user_conf" ] && [ ! -L "$user_conf" ]; then
+		local user_role
+		user_role=$(grep "^ROLE=" "$user_conf" 2> /dev/null | head -n 1 | cut -d "'" -f 2)
+		if [ "$user_role" = "admin" ]; then
+			return 0
+		fi
+	fi
+	return 1
+}
+
+# Convert Unicode domain to lowercase Punycode when idn2 is available
+_idn2_to_ascii() {
+	local input="$1"
+	local out=""
+	if printf '%s' "$input" | LC_ALL=C grep -q '[^ -~]' && command -v idn2 > /dev/null 2>&1; then
+		out=$(LC_ALL=C.UTF-8 idn2 --quiet "$input" 2> /dev/null || idn2 --quiet "$input" 2> /dev/null || true)
+		if [ -n "$out" ]; then
+			printf '%s' "$out" | tr '[:upper:]' '[:lower:]'
+			return 0
+		fi
+	fi
+	printf '%s' "$input"
+}
+
+# Return 0 if target address is permitted by external mail forwarding policy, 1 otherwise
+_mail_forward_target_allowed() {
+	local target_user="$1"
+	local target_addr="$2"
+	local allow_blackhole="${3:-yes}"
+	local policy
+	if [ "$#" -ge 4 ] && [ -n "$4" ]; then
+		policy=$(_normalize_mail_forward_policy "$4")
+	else
+		policy=$(_normalize_mail_forward_policy)
+	fi
+
+	if [ "$policy" = "yes" ]; then
+		return 0
+	fi
+	if _is_mail_forward_user_admin "$target_user"; then
+		return 0
+	fi
+
+	local clean_user="${target_user//\'/}"
+	clean_user="${clean_user//\"/}"
+	if [ -z "$clean_user" ] || [ "$clean_user" = "." ] || [ "$clean_user" = ".." ] || [[ ! "$clean_user" =~ ^[A-Za-z0-9._-]+$ ]]; then
+		return 1
+	fi
+
+	local trimmed lower_trimmed
+	trimmed=$(printf '%s' "$target_addr" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
+	lower_trimmed=$(printf '%s' "$trimmed" | tr '[:upper:]' '[:lower:]')
+	if [ "$lower_trimmed" = ":blackhole:" ]; then
+		[ "$allow_blackhole" = "yes" ] && return 0
+		return 1
+	fi
+
+	case "$trimmed" in
+		"" | *[[:space:]]* | */* | *:* | *\|* | *\\*)
+			return 1
+			;;
+	esac
+	if printf '%s' "$trimmed" | LC_ALL=C grep -q '[[:cntrl:]]'; then
+		return 1
+	fi
+
+	local local_part="${trimmed%@*}"
+	local domain_raw="${trimmed#*@}"
+	if [ "$local_part" = "$trimmed" ] || [ -z "$local_part" ] || [ -z "$domain_raw" ] || [[ "$local_part" == *"@"* ]] || [[ "$domain_raw" == *"@"* ]]; then
+		return 1
+	fi
+
+	local domain_norm
+	domain_norm=$(printf '%s' "$domain_raw" | tr '[:upper:]' '[:lower:]')
+	while [[ "$domain_norm" == *. ]]; do
+		domain_norm="${domain_norm%.}"
+	done
+	if [ -z "$domain_norm" ]; then
+		return 1
+	fi
+
+	local domain_ascii
+	domain_ascii=$(_idn2_to_ascii "$domain_norm")
+
+	local conf_list=()
+	if [ "$policy" = "server" ]; then
+		local mc u_dir u_conf
+		for mc in "$HESTIA"/data/users/*/mail.conf; do
+			[ -f "$mc" ] && [ ! -L "$mc" ] || continue
+			u_dir="${mc%/mail.conf}"
+			u_conf="$u_dir/user.conf"
+			if [ -f "$u_conf" ] && [ ! -L "$u_conf" ] && grep -q "^SUSPENDED='yes'" "$u_conf" 2> /dev/null; then
+				continue
+			fi
+			conf_list+=("$mc")
+		done
+	else
+		local uc="$HESTIA/data/users/$clean_user/mail.conf"
+		if [ -f "$uc" ] && [ ! -L "$uc" ]; then
+			conf_list+=("$uc")
+		fi
+	fi
+
+	local mc_file line m_dom m_dom_norm m_dom_ascii
+	for mc_file in "${conf_list[@]}"; do
+		while IFS= read -r line || [ -n "$line" ]; do
+			[[ "$line" == *"SUSPENDED='yes'"* ]] && continue
+			case "$line" in
+				*DOMAIN=\'*\')
+					;;
+				*DOMAIN=\'*\'*)
+					;;
+				*)
+					continue
+					;;
+			esac
+			m_dom="${line#*DOMAIN=\'}"
+			m_dom="${m_dom%%\'*}"
+			m_dom_norm=$(printf '%s' "$m_dom" | tr '[:upper:]' '[:lower:]')
+			while [[ "$m_dom_norm" == *. ]]; do
+				m_dom_norm="${m_dom_norm%.}"
+			done
+			[ -z "$m_dom_norm" ] && continue
+			m_dom_ascii=$(_idn2_to_ascii "$m_dom_norm")
+			if [ "$m_dom_norm" = "$domain_norm" ] || [ "$m_dom_norm" = "$domain_ascii" ] || [ "$m_dom_ascii" = "$domain_norm" ] || [ "$m_dom_ascii" = "$domain_ascii" ]; then
+				return 0
+			fi
+		done < "$mc_file"
+	done
+
+	return 1
+}
+
+# Check external mail forwarding policy for non-admin accounts
+check_mail_forward_policy() {
+	local target_user="$1"
+	local target_addr="$2"
+	local force_policy="${3:-no}"
+	local allow_blackhole="${4:-yes}"
+	local policy
+
+	policy=$(_normalize_mail_forward_policy)
+	if [ "$policy" = "yes" ]; then
+		return 0
+	fi
+
+	if [ "$force_policy" != "yes" ] && [ "$force_policy" != "no" ]; then
+		check_result "$E_INVALID" "Invalid force parameter :: $force_policy"
+	fi
+
+	if [ "$force_policy" = "yes" ]; then
+		return 0
+	fi
+
+	if _mail_forward_target_allowed "$target_user" "$target_addr" "$allow_blackhole" "$policy"; then
+		return 0
+	fi
+
+	local trimmed lower_trimmed domain_raw domain_norm
+	trimmed=$(printf '%s' "$target_addr" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
+	lower_trimmed=$(printf '%s' "$trimmed" | tr '[:upper:]' '[:lower:]')
+	if [ "$allow_blackhole" != "yes" ] && [ "$lower_trimmed" = ":blackhole:" ]; then
+		check_result "$E_FORBIDEN" "External catch-all forwarding target ':blackhole:' is disabled by server policy to protect server mail deliverability"
+	fi
+
+	domain_raw="${trimmed#*@}"
+	domain_norm=$(printf '%s' "$domain_raw" | tr '[:upper:]' '[:lower:]')
+	while [[ "$domain_norm" == *. ]]; do
+		domain_norm="${domain_norm%.}"
+	done
+	if [ -n "$domain_norm" ] && [ "$domain_raw" != "$trimmed" ]; then
+		check_result "$E_FORBIDEN" "Forwarding to external domain '$domain_norm' is disabled by server policy to protect server mail deliverability"
+	fi
+
+	check_result "$E_FORBIDEN" "External mail forwarding is disabled by server policy to protect server mail deliverability"
+}
+
+# Return Dovecot userdb extra attributes restricting Sieve redirects when policy is active
+get_mail_sieve_policy_extra() {
+	local target_user="$1"
+	local policy
+	policy=$(_normalize_mail_forward_policy)
+	if [ "$policy" = "yes" ] || _is_mail_forward_user_admin "$target_user"; then
+		return 0
+	fi
+	printf ' userdb_sieve_max_redirects=0'
+}
+
+# Strip disallowed external forwards and catch-all targets during backup restore
+sanitize_restored_mail_forwards() {
+	local target_user="$1"
+	local target_domain="$2"
+	local policy
+	policy=$(_normalize_mail_forward_policy)
+	if [ "$policy" = "yes" ] || _is_mail_forward_user_admin "$target_user"; then
+		return 0
+	fi
+
+	local had_user_data=0 prev_user_data=""
+	if [ "${USER_DATA+set}" = "set" ]; then
+		had_user_data=1
+		prev_user_data="$USER_DATA"
+	fi
+	USER_DATA="$HESTIA/data/users/$target_user"
+
+	local catchall
+	catchall=$(get_object_value 'mail' 'DOMAIN' "$target_domain" '$CATCHALL')
+	if [ -n "$catchall" ] && ! _mail_forward_target_allowed "$target_user" "$catchall" "no" "$policy"; then
+		update_object_value 'mail' 'DOMAIN' "$target_domain" '$CATCHALL' ''
+		"$BIN/v-log-action" "$target_user" "Warning" "Mail" "Removed disallowed external catch-all during restore (Domain: $target_domain, Target: $catchall)." > /dev/null 2>&1 || true
+	fi
+
+	if [ -f "$USER_DATA/mail/$target_domain.conf" ] && [ ! -L "$USER_DATA/mail/$target_domain.conf" ]; then
+		local accounts acc fwd kept_list removed_list item fwd_only
+		local -a fwd_items kept_items removed_items
+		accounts=$(search_objects "mail/$target_domain" 'SUSPENDED' "*" 'ACCOUNT')
+		for acc in $accounts; do
+			fwd=$(get_object_value "mail/$target_domain" 'ACCOUNT' "$acc" '$FWD')
+			[ -z "$fwd" ] && continue
+			fwd_items=()
+			kept_items=()
+			removed_items=()
+			IFS=',' read -r -a fwd_items <<< "$fwd"
+			for item in "${fwd_items[@]}"; do
+				item="${item#"${item%%[![:space:]]*}"}"
+				item="${item%"${item##*[![:space:]]}"}"
+				[ -z "$item" ] && continue
+				if _mail_forward_target_allowed "$target_user" "$item" "yes" "$policy"; then
+					kept_items+=("$item")
+				else
+					removed_items+=("$item")
+				fi
+			done
+			if [ "${#removed_items[@]}" -gt 0 ]; then
+				kept_list=""
+				if [ "${#kept_items[@]}" -gt 0 ]; then
+					kept_list=$(
+						IFS=','
+						printf '%s' "${kept_items[*]}"
+					)
+				fi
+				removed_list=$(
+					IFS=','
+					printf '%s' "${removed_items[*]}"
+				)
+				update_object_value "mail/$target_domain" 'ACCOUNT' "$acc" '$FWD' "$kept_list"
+				if [ -z "$kept_list" ]; then
+					fwd_only=$(get_object_value "mail/$target_domain" 'ACCOUNT' "$acc" '$FWD_ONLY')
+					if [ "$fwd_only" = "yes" ]; then
+						update_object_value "mail/$target_domain" 'ACCOUNT' "$acc" '$FWD_ONLY' ''
+					fi
+				fi
+				"$BIN/v-log-action" "$target_user" "Warning" "Mail" "Removed disallowed external mail forward(s) during restore (Account: $acc@$target_domain, Removed: $removed_list)." > /dev/null 2>&1 || true
+			fi
+		done
+	fi
+
+	if [ "$had_user_data" -eq 1 ]; then
+		USER_DATA="$prev_user_data"
+	else
+		unset USER_DATA
+	fi
+	return 0
+}

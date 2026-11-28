@@ -1345,6 +1345,35 @@
 								</select>
 							</div>
 							<div class="u-mb10">
+								<label for="v_policy_user_external_mail_forward" class="form-label">
+									<?= tohtml( _("Allow users to forward mail to external domains")) ?>
+									<span class="hint">
+										<?= tohtml( _("Restricts non-admin accounts from forwarding mail to external domains to protect server mail deliverability.")) ?>
+									</span>
+								</label>
+								<?php
+									$v_policy_ext_fwd = strtolower(trim((string) ($_SESSION["POLICY_USER_EXTERNAL_MAIL_FORWARD"] ?? "yes"), "'"));
+									if ($v_policy_ext_fwd === "no") {
+										$v_policy_ext_fwd = "user";
+									}
+								?>
+								<select
+									class="form-select"
+									name="v_policy_user_external_mail_forward"
+									id="v_policy_user_external_mail_forward"
+								>
+									<option value="yes">
+										<?= tohtml( _("Yes")) ?>
+									</option>
+									<option value="server" <?= tohtml($v_policy_ext_fwd === "server" ? "selected" : "") ?>>
+										<?= tohtml( _("Server mail domains only")) ?>
+									</option>
+									<option value="user" <?= tohtml($v_policy_ext_fwd === "user" ? "selected" : "") ?>>
+										<?= tohtml( _("Own mail domains only")) ?>
+									</option>
+								</select>
+							</div>
+							<div class="u-mb10">
 								<label for="v_policy_user_view_logs" class="form-label">
 									<?= tohtml( _("Allow users to view action and login history logs")) ?>
 								</label>

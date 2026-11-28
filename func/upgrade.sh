@@ -568,6 +568,44 @@ upgrade_b2_tool() {
 	fi
 }
 
+upgrade_rclone() {
+	# Only upgrade rclone if it is already installed
+	command -v rclone > /dev/null 2>&1 || return
+
+	rclone_v=$(curl -fsS -m 30 https://downloads.rclone.org/version.txt 2> /dev/null)
+	rclone_v="${rclone_v#rclone v}"
+	if [ -z "$rclone_v" ]; then
+		echo "[ ! ] Error: Unable to get latest rclone version"
+		return
+	fi
+
+	rclone_version=$(rclone version 2> /dev/null | head -1)
+	rclone_version="${rclone_version#rclone v}"
+	if ! version_ge "$rclone_version" "$rclone_v"; then
+		echo "[ * ] Upgrading rclone to version $rclone_v..."
+		# The official rclone script handles both fresh installs and upgrades
+		rclone_installer=$(mktemp)
+		if ! curl -fsSL --retry 3 -m 30 -o "$rclone_installer" https://rclone.org/install.sh || [ ! -s "$rclone_installer" ]; then
+			echo "[ ! ] Error: Unable to download the rclone installer, skipping rclone upgrade..."
+			rm -f "$rclone_installer"
+			return
+		fi
+
+		bash "$rclone_installer" > /dev/null 2>&1
+		rclone_status=$?
+		rm -f "$rclone_installer"
+
+		case "$rclone_status" in
+			0)
+				rclone_version=$(rclone version 2> /dev/null | head -1)
+				echo "[ * ] Rclone has been upgraded to version ${rclone_version#rclone v}..."
+				;;
+			3) echo "[ * ] Rclone is already up to date..." ;;
+			*) echo "[ ! ] Error: Rclone upgrade failed (exit code $rclone_status)..." ;;
+		esac
+	fi
+}
+
 upgrade_cloudflare_ip() {
 	if [ "$WEB_SYSTEM" = "nginx" ] || [ "$PROXY_SYSTEM" = "nginx" ]; then
 		cf_ips="$(curl -fsLm5 --retry 2 https://api.cloudflare.com/client/v4/ips)"

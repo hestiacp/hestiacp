@@ -58,6 +58,17 @@ usage() {
 	echo "    --pkgrev <n>    Set the package revision number (default: 1)."
 	echo "                    Replaces the '-1' in the version suffix"
 	echo "                    (e.g. --pkgrev 2 → 1.0.0-2+deb12)."
+	echo "                    Applies to every package being built, unless"
+	echo "                    overridden individually below."
+	echo "    --pkgrev-hestia <n>"
+	echo "    --pkgrev-nginx <n>"
+	echo "    --pkgrev-php <n>"
+	echo "    --pkgrev-web-terminal <n>"
+	echo "                    Set the package revision number for just that one"
+	echo "                    package, overriding --pkgrev for it. Useful when"
+	echo "                    only one package needs a rebuild at a higher"
+	echo "                    revision while the others stay as they are"
+	echo "                    (e.g. --php --pkgrev-php 2)."
 	echo "    --release <id>  Set a release identifier appended to the package version"
 	echo "                    as '~<id>' (e.g. --release myci1 → 1.0.0-1+deb12~myci1)."
 	echo "                    Useful to distinguish custom or CI builds from official ones."
@@ -451,11 +462,39 @@ while [ $# -gt 0 ]; do
 			shift
 			pkg_rev="$1"
 			;;
+		--pkgrev-hestia)
+			shift
+			pkg_rev_hestia="$1"
+			;;
+		--pkgrev-nginx)
+			shift
+			pkg_rev_nginx="$1"
+			;;
+		--pkgrev-php)
+			shift
+			pkg_rev_php="$1"
+			;;
+		--pkgrev-web-terminal)
+			shift
+			pkg_rev_web_terminal="$1"
+			;;
 		--release=*)
 			release_tag="${1#*=}"
 			;;
 		--pkgrev=*)
 			pkg_rev="${1#*=}"
+			;;
+		--pkgrev-hestia=*)
+			pkg_rev_hestia="${1#*=}"
+			;;
+		--pkgrev-nginx=*)
+			pkg_rev_nginx="${1#*=}"
+			;;
+		--pkgrev-php=*)
+			pkg_rev_php="${1#*=}"
+			;;
+		--pkgrev-web-terminal=*)
+			pkg_rev_web_terminal="${1#*=}"
 			;;
 
 		--help | -h)
@@ -478,6 +517,18 @@ if [ -n "$pkg_rev" ] && ! [[ "$pkg_rev" =~ ^[0-9]+$ ]]; then
 	echo >&2 "[!] --pkgrev must be a number, got '$pkg_rev'"
 	exit 1
 fi
+
+for _pkgrev_opt_name in '--pkgrev-hestia:pkg_rev_hestia' '--pkgrev-nginx:pkg_rev_nginx' \
+	'--pkgrev-php:pkg_rev_php' '--pkgrev-web-terminal:pkg_rev_web_terminal'; do
+	_pkgrev_opt_flag="${_pkgrev_opt_name%%:*}"
+	_pkgrev_opt_var="${_pkgrev_opt_name#*:}"
+	_pkgrev_opt_val="${!_pkgrev_opt_var}"
+	if [ -n "$_pkgrev_opt_val" ] && ! [[ "$_pkgrev_opt_val" =~ ^[0-9]+$ ]]; then
+		echo >&2 "[!] $_pkgrev_opt_flag must be a number, got '$_pkgrev_opt_val'"
+		exit 1
+	fi
+done
+unset _pkgrev_opt_name _pkgrev_opt_flag _pkgrev_opt_var _pkgrev_opt_val
 
 if [ -z "$branch" ]; then
 	echo -n "Please enter the name of the branch to build from (e.g. main): "
@@ -515,6 +566,10 @@ fi
 [ "$HESTIA_DEBUG" = "true" ] && PKG_FLAGS="$PKG_FLAGS --debug"
 [ -n "$release_tag" ] && PKG_FLAGS="$PKG_FLAGS --release $release_tag"
 [ -n "$pkg_rev" ] && PKG_FLAGS="$PKG_FLAGS --pkgrev $pkg_rev"
+[ -n "$pkg_rev_hestia" ] && PKG_FLAGS="$PKG_FLAGS --pkgrev-hestia $pkg_rev_hestia"
+[ -n "$pkg_rev_nginx" ] && PKG_FLAGS="$PKG_FLAGS --pkgrev-nginx $pkg_rev_nginx"
+[ -n "$pkg_rev_php" ] && PKG_FLAGS="$PKG_FLAGS --pkgrev-php $pkg_rev_php"
+[ -n "$pkg_rev_web_terminal" ] && PKG_FLAGS="$PKG_FLAGS --pkgrev-web-terminal $pkg_rev_web_terminal"
 
 if [ "$NEEDS_CHROOT_BUILD" != "true" ]; then
 	echo >&2 "[!] No package selected to build."

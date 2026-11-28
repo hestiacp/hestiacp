@@ -1,0 +1,54 @@
+#!/bin/bash
+# info: delete exim blacklist entry
+# options: SENDER
+# example: v-delete-exim-blacklist-entry user@example.com
+
+set -euo pipefail
+
+# Ensure 'user' is defined to avoid "unbound variable" when main.sh checks it
+user="${ROOT_USER:-root}"
+
+# Default paths if not already set
+BIN="${BIN:-/usr/local/hestia/bin}"
+HESTIA="${HESTIA:-/usr/local/hestia}"
+
+if [ -z "$1" ]; then
+    echo "Error: sender argument required"
+    exit 1
+fi
+
+SENDER_RAW="$1"
+
+# Minimal: avoid sourcing Hestia helpers that may reference unset vars
+# Sanitize sender
+sender_sanitized=$(echo "$SENDER_RAW" | tr -d '\\r\\n' | sed -E 's/[^[:alnum:]@._%+-]//g' | cut -c1-256)
+
+BLACKLIST_FILE="/etc/exim4/blacklist"
+
+if [ ! -f "$BLACKLIST_FILE" ]; then
+    echo "No blacklist file found"
+    exit 0
+fi
+
+if [ -z "$sender_sanitized" ]; then
+    echo "Error: sanitized sender empty"
+    exit 1
+fi
+
+# Remove lines exactly matching sender (no persistent backup left behind)
+grep -Fxv -- "$sender_sanitized" "$BLACKLIST_FILE" > "${BLACKLIST_FILE}.tmp" || true
+mv -f "${BLACKLIST_FILE}.tmp" "$BLACKLIST_FILE"
+chmod 640 "$BLACKLIST_FILE"
+chown root:root "$BLACKLIST_FILE" || true
+
+if command -v systemctl >/dev/null 2>&1; then
+    systemctl restart exim4 || echo "Warning: failed to restart exim4"
+fi
+
+if [ -x "$BIN/v-log-action" ]; then
+    $BIN/v-log-action "system" "Info" "Mail" "Removed blacklist sender: $sender_sanitized"
+fi
+
+echo "Removed: $sender_sanitized"
+
+exit 0

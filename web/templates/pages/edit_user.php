@@ -184,6 +184,15 @@
 						<option value='name' <?php if ($v_sort_order === 'name') echo 'selected' ?>><?= tohtml( _("Name")) ?></option>
 					</select>
 				</div>
+				<?php if (($_SESSION["SUBDOMAIN_GROUPING"] ?? "no") === "yes") { ?>
+					<div class="u-mb10">
+						<label for="v_subdomain_grouping_pref" class="form-label"><?= tohtml( _("Group subdomains in the Web domain list")) ?></label>
+						<select class="form-select" name="v_subdomain_grouping_pref" id="v_subdomain_grouping_pref">
+							<option value='no' <?php if ($v_subdomain_grouping_pref !== 'yes') echo 'selected' ?>><?= tohtml( _("No")) ?></option>
+							<option value='yes' <?php if ($v_subdomain_grouping_pref === 'yes') echo 'selected' ?>><?= tohtml( _("Yes")) ?></option>
+						</select>
+					</div>
+				<?php } ?>
 			<?php if ($_SESSION['userContext'] === 'admin') { ?>
 				<div class="u-mb20">
 					<label for="v_package" class="form-label"><?= tohtml( _("Package")) ?></label>

@@ -50,8 +50,11 @@ rebuild_user_conf() {
 	if [ -z "${PREF_UI_SORT+x}" ]; then
 		sed -i "/NOTIFICATIONS/a PREF_UI_SORT='name'" $USER_DATA/user.conf
 	fi
+	if [ -z "${PREF_SUBDOMAIN_GROUPING+x}" ]; then
+		sed -i "/PREF_UI_SORT/a PREF_SUBDOMAIN_GROUPING='no'" $USER_DATA/user.conf
+	fi
 	if [ -z "${LOGIN_DISABLED+x}" ]; then
-		sed -i "/PREF_UI_SORT/a LOGIN_DISABLED=''" $USER_DATA/user.conf
+		sed -i "/PREF_SUBDOMAIN_GROUPING/a LOGIN_DISABLED=''" $USER_DATA/user.conf
 	fi
 	if [ -z "${LOGIN_USE_IPLIST+x}" ]; then
 		sed -i "/LOGIN_DISABLED/a LOGIN_USE_IPLIST=''" $USER_DATA/user.conf

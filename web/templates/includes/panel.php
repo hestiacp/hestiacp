@@ -348,6 +348,7 @@
 					<?php } ?>
 				<?php } ?>
 
+
 				<!-- DNS tab -->
 				<?php if (isset($_SESSION["DNS_SYSTEM"]) && !empty($_SESSION["DNS_SYSTEM"])) { ?>
 					<?php if ($panel[$user]["DNS_DOMAINS"] != "0") { ?>

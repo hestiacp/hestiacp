@@ -69,18 +69,24 @@ if [ -n "$interface" ]; then
 	fi
 fi
 
+ip_esc="${ip//./\\.}"
 # Deleting startup conf on Debian/Ubuntu
 if [ -f "/etc/netplan/60-hestia.yaml" ]; then
-	sed -i "/$ip\//d" /etc/netplan/60-hestia.yaml
+	sed -i -E "/^[[:space:]]*-[[:space:]]+${ip_esc}\//d" /etc/netplan/60-hestia.yaml
 	if ! grep -q '-' /etc/netplan/60-hestia.yaml; then
 		rm /etc/netplan/60-hestia.yaml
 	fi
 elif [ -e "/etc/network/interfaces" ]; then
-	ip_str="$(grep -n "$ip$" /etc/network/interfaces | cut -f1 -d:)"
-	if [ -n "$ip_str" ]; then
+	ip_str="$(grep -nE "^[[:space:]]*address[[:space:]]+${ip_esc}[[:space:]]*$" /etc/network/interfaces | cut -f1 -d: | tail -n1)"
+	if [ -n "$ip_str" ] && [ "$ip_str" -gt 3 ]; then
 		first_str="$((ip_str - 3))"
 		last_str="$((ip_str + 1))"
-		sed -i "$first_str,$last_str d" /etc/network/interfaces
+		if [ "$(sed -n "${first_str}p" /etc/network/interfaces)" = "# Added by Hestia Control Panel" ]; then
+			if [ "$first_str" -gt 1 ] && [ -z "$(sed -n "$((first_str - 1))p" /etc/network/interfaces)" ]; then
+				first_str="$((first_str - 1))"
+			fi
+			sed -i "${first_str},${last_str}d" /etc/network/interfaces
+		fi
 	fi
 fi
 

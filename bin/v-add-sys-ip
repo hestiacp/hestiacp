@@ -117,12 +117,17 @@ if [ -z "$sys_ip_check" ]; then
 		echo -e "$sys_ip" >> "$netplan_file"
 		unset IFS
 	else
-		sys_ip="\n# Added by Hestia Control Panel"
-		sys_ip="$sys_ip\nauto $iface"
-		sys_ip="$sys_ip\niface $iface inet static"
-		sys_ip="$sys_ip\naddress $ip"
-		sys_ip="$sys_ip\nnetmask $netmask"
-		echo -e $sys_ip >> /etc/network/interfaces
+		iface_esc="${iface//./\\.}"
+		alias_idx=0
+		while grep -qE "^[[:space:]]*(auto|allow-hotplug|iface)[[:space:]]+${iface_esc}:${alias_idx}([[:space:]]|$)" /etc/network/interfaces /etc/network/interfaces.d/* 2> /dev/null; do
+			((alias_idx++))
+		done
+		alias_iface="${iface}:${alias_idx}"
+		if [ "${#alias_iface}" -gt 15 ]; then
+			alias_iface="$iface"
+		fi
+		printf '\n# Added by Hestia Control Panel\nauto %s\niface %s inet static\naddress %s\nnetmask %s\n' \
+			"$alias_iface" "$alias_iface" "$ip" "$netmask" >> /etc/network/interfaces
 	fi
 fi
 

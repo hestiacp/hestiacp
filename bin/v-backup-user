@@ -751,7 +751,7 @@ if [[ "$errorcode" != "0" ]]; then
 		echo -e "$(date "+%F %T") *** Remote backup failed ***" \
 			| tee -a $BACKUP/$user.log
 
-		exit $error_code
+		exit "$errorcode"
 	fi
 fi
 # Calculation run time

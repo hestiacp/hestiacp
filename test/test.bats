@@ -3185,3 +3185,47 @@ EVIL='x'" > /tmp/backup_exclusions_unknownkey
     assert_failure
     rm -f "$HESTIA/data/keys/$longkey"
 }
+
+@test "AppArmor: local tnftp profile allows backup directory access" {
+    if [ ! -f /etc/apparmor.d/tnftp ]; then
+        skip "/etc/apparmor.d/tnftp not present"
+    fi
+
+    assert_file_exist "/etc/apparmor.d/local/tnftp"
+    run grep -Fx "capability dac_read_search," "/etc/apparmor.d/local/tnftp"
+    assert_success
+    run grep -Fx "capability dac_override," "/etc/apparmor.d/local/tnftp"
+    assert_success
+    run grep -Fx "/backup/ r," "/etc/apparmor.d/local/tnftp"
+    assert_success
+    run grep -Fx "/backup/** rwk," "/etc/apparmor.d/local/tnftp"
+    assert_success
+
+    if command -v apparmor_parser > /dev/null 2>&1; then
+        run apparmor_parser -Q -K /etc/apparmor.d/tnftp
+        assert_success
+    fi
+
+    mkdir -p /backup/bats-custom-backup
+    run v-change-sys-config-value BACKUP /backup/bats-custom-backup
+    assert_success
+    refute_output
+
+    run grep -Fx "/backup/bats-custom-backup/ r," "/etc/apparmor.d/local/tnftp"
+    assert_success
+    run grep -Fx "/backup/bats-custom-backup/** rwk," "/etc/apparmor.d/local/tnftp"
+    assert_success
+
+    if command -v apparmor_parser > /dev/null 2>&1; then
+        run apparmor_parser -Q -K /etc/apparmor.d/tnftp
+        assert_success
+    fi
+
+    run v-change-sys-config-value BACKUP /backup
+    assert_success
+    refute_output
+    rmdir /backup/bats-custom-backup
+
+    run grep -F "/backup/bats-custom-backup" "/etc/apparmor.d/local/tnftp"
+    assert_failure
+}

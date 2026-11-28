@@ -86,12 +86,18 @@ fi
 # per-user repo path is always built as "$REPO/$user" (see #5100)
 repo="${repo%/}"
 
-echo "REPO='$repo'" > /usr/local/hestia/conf/restic.conf
-echo "SNAPSHOTS='$snapshots'" >> /usr/local/hestia/conf/restic.conf
-echo "KEEP_DAILY='$daily'" >> /usr/local/hestia/conf/restic.conf
-echo "KEEP_WEEKLY='$weekly'" >> /usr/local/hestia/conf/restic.conf
-echo "KEEP_MONTHLY='$monthly'" >> /usr/local/hestia/conf/restic.conf
-echo "KEEP_YEARLY='$yearly'" >> /usr/local/hestia/conf/restic.conf
+# Create the file with its final mode: never readable by others, not even briefly
+(
+	umask 117
+	echo "REPO='$repo'" > /usr/local/hestia/conf/restic.conf
+	echo "SNAPSHOTS='$snapshots'" >> /usr/local/hestia/conf/restic.conf
+	echo "KEEP_DAILY='$daily'" >> /usr/local/hestia/conf/restic.conf
+	echo "KEEP_WEEKLY='$weekly'" >> /usr/local/hestia/conf/restic.conf
+	echo "KEEP_MONTHLY='$monthly'" >> /usr/local/hestia/conf/restic.conf
+	echo "KEEP_YEARLY='$yearly'" >> /usr/local/hestia/conf/restic.conf
+)
+# An existing file keeps its old mode, tighten it explicitly
+chmod 660 /usr/local/hestia/conf/restic.conf
 
 $BIN/v-change-sys-config-value 'BACKUP_INCREMENTAL' 'yes'
 

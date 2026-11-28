@@ -53,3 +53,14 @@ if [ "$WEB_SYSTEM" = "apache2" ] && ! grep -qs "^ProtectHome=no" /etc/systemd/sy
 	systemctl daemon-reload > /dev/null 2>&1
 	systemctl restart apache2 > /dev/null 2>&1
 fi
+
+# Restrict permissions of existing Restic configuration files (#5965)
+if [[ -f "$HESTIA/conf/restic.conf" ]] && [[ ! -L "$HESTIA/conf/restic.conf" ]]; then
+	chmod 660 -- "$HESTIA/conf/restic.conf"
+fi
+for restic_conf in "$HESTIA"/data/users/*/restic.conf; do
+	if [[ -f "$restic_conf" ]] && [[ ! -L "$restic_conf" ]]; then
+		chmod 600 -- "$restic_conf"
+	fi
+done
+unset restic_conf

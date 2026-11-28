@@ -1,7 +1,7 @@
 # DNS clusters and DNSSEC
 
 ::: info
-With the release of version 1.7.0, we have implemented support for DNSSEC. DNSSEC requires a Master -> Slave setup. IF the existing implementation is a Master <-> Master setup, it is not supported. DNSSEC also requires at least Ubuntu 22.04 or Debian 11!
+With the release of version 1.7.0, we have implemented support for DNSSEC. In a DNS cluster, DNSSEC requires a Master -> Slave setup. IF the existing implementation is a Master <-> Master setup, it is not supported. DNSSEC also requires at least Ubuntu 22.04 or Debian 11!
 :::
 
 ## Host DNS for your domain on Hestia

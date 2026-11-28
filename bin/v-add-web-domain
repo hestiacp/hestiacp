@@ -95,6 +95,9 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
+# Avoid running user_exec find from an unreadable root cwd (#5988)
+cd / || exit 1
+
 # Reading user values
 source_conf "$USER_DATA/user.conf"
 

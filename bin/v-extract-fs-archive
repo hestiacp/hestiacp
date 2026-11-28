@@ -174,9 +174,13 @@ if [ -n "$(echo "$archive_name" | grep -Ei '\.7z$')" ] && [ -z "$x" ]; then
 	x='yes'
 	user_exec mkdir -p "$dst_dir" > /dev/null 2>&1
 	# Rename to the cleaned file name so p7zip doesn't reject a leftover URL query string
-	user_exec mv "$src_file" "$dst_dir/$archive_name" > /dev/null 2>&1
-	(cd "$dst_dir" && user_exec p7zip -d -f "$dst_dir/$archive_name") > /dev/null 2>&1
-	rc=$?
+	if [ "$(readlink -f "$src_file")" = "$(readlink -f "$dst_dir/$archive_name")" ] \
+		|| user_exec mv "$src_file" "$dst_dir/$archive_name" > /dev/null 2>&1; then
+		(cd "$dst_dir" && user_exec p7zip -d -f "./$archive_name") > /dev/null 2>&1
+		rc=$?
+	else
+		rc=$?
+	fi
 fi
 
 # Extracting tared archive

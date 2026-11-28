@@ -39,13 +39,14 @@ if [ ! -z "$path" ]; then
 		echo "Error: invalid path $path"
 		exit 2
 	fi
+	path=$rpath
 else
 	path=$homedir
 fi
 
 # Listing directory
-user_exec find "$path" -maxdepth 1 \
-	-printf "%y|%m|%TY-%Tm-%Td|%TH:%TM|%u|%g|%s|%P\n" 2> /dev/null
+(cd / && user_exec find "$path" -maxdepth 1 \
+	-printf "%y|%m|%TY-%Tm-%Td|%TH:%TM|%u|%g|%s|%P\n" 2> /dev/null)
 
 # Exiting
 exit $?

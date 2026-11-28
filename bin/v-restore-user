@@ -202,6 +202,12 @@ old_user=$(cut -f 1 -d : $tmpdir/pam/passwd)
 old_uid=$(cut -f 3 -d : $tmpdir/pam/passwd)
 new_uid=$(grep "^$user:" /etc/passwd | cut -f 3 -d :)
 
+# Restoring certificates can replace selected keys or their IP SANs.
+check_hestia_demo_mode
+if [ "$web" != no ] || [ "$mail" != no ]; then
+	release_ip_default_ssl "$user"
+fi
+
 # Restoring web domains
 if [ "$web" != 'no' ] && [ -n "$WEB_SYSTEM" ]; then
 	echo -e "\n-- WEB --" | tee -a "$tmpdir/restore.log"
@@ -304,6 +310,9 @@ if [ "$web" != 'no' ] && [ -n "$WEB_SYSTEM" ]; then
 			done
 
 			# Checking IP address
+			if is_ipv4_web_name "$domain"; then
+				check_primary_web_ip "$domain" "$IP" "$user"
+			fi
 			check_ip=$(is_ip_valid $IP $user)
 			if [ -n "$check_ip" ]; then
 				local_ip=''
@@ -442,6 +451,7 @@ if [ "$web" != 'no' ] && [ -n "$WEB_SYSTEM" ]; then
 
 		# Rebuilding web config for the second time to make sure ftp users keep working
 		rebuild_web_domain_conf
+		sync_dedicated_ip_https || exit $?
 	done
 
 	# Adding user to traffic queue

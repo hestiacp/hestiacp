@@ -77,6 +77,7 @@ fi
 # Update config
 update_object_value 'web' 'DOMAIN' "$domain" '$PROXY' "$template"
 update_object_value 'web' 'DOMAIN' "$domain" '$PROXY_EXT' "$extensions"
+sync_dedicated_ip_https || exit $?
 
 # Restarting web server
 $BIN/v-restart-proxy "$restart"

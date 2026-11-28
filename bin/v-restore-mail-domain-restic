@@ -79,6 +79,8 @@ fi
 
 for domain in "${domains[@]}"; do
 	if [[ ",$mail," == *",$domain,"* || "$mail" = '*' ]]; then
+		check_hestia_demo_mode
+		release_ip_default_ssl "$user" "mail.$domain"
 		# Checking domain existance
 		check_config=$(grep "DOMAIN='$domain'" $USER_DATA/mail.conf)
 		if [ -z "$check_config" ]; then

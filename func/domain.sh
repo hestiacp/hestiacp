@@ -305,6 +305,21 @@ add_web_config() {
 
 	process_http2_directive "$conf"
 
+	if is_ipv4_web_name "$domain" && [[ "$1" = apache2 || "$1" = httpd ]] && [ "$PROXY_SYSTEM" = nginx ]; then
+		if [[ "$2" =~ stpl$ ]]; then
+			# Use a DNS-form name for backend TLS SNI, without changing HTTP Host.
+			sed -i "/^[[:space:]]*ServerName[[:space:]]/a\\    ServerAlias ip-site-${domain//./-}.invalid" "$conf"
+		else
+			primary_ip_http_fallback enable
+		fi
+	fi
+
+	if [ "$1" = nginx ] && [[ "$2" =~ stpl$ ]] \
+		&& grep -Fxq "DEFAULT_SSL_DOMAIN='$domain'" "$HESTIA/data/ips/$local_ip" \
+		&& grep -Fxq "DEFAULT_SSL_USER='$user'" "$HESTIA/data/ips/$local_ip"; then
+		prepare_ip_alias_backend_sni "$conf" "$domain_idn" "$aliases_idn"
+	fi
+
 	chown root:$user $conf
 	chmod 640 $conf
 
@@ -399,6 +414,8 @@ del_web_config() {
 	if [[ "$2" =~ stpl$ ]]; then
 		conf="$HOMEDIR/$user/conf/web/$domain/$1.ssl.conf"
 		confname="$domain.ssl.conf"
+	elif is_ipv4_web_name "$domain" && [[ "$1" = apache2 || "$1" = httpd ]] && [ "$PROXY_SYSTEM" = nginx ]; then
+		primary_ip_http_fallback disable
 	fi
 
 	# Clean up legacy configuration files

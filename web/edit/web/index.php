@@ -522,7 +522,7 @@ if (!empty($_POST["save"]) && $read_only !== true) {
 				check_return_code($return_var, $output);
 				unset($output);
 
-				if (empty($_SESSION["error_msg"])) {
+				if (empty($_SESSION["error_msg"]) && !filter_var($alias, FILTER_VALIDATE_IP)) {
 					exec(
 						HESTIA_CMD . "v-list-dns-domain " . $user . " " . quoteshellarg($v_domain),
 						$output,
@@ -569,7 +569,7 @@ if (!empty($_POST["save"]) && $read_only !== true) {
 				);
 				check_return_code($return_var, $output);
 				unset($output);
-				if (empty($_SESSION["error_msg"])) {
+				if (empty($_SESSION["error_msg"]) && !filter_var($alias, FILTER_VALIDATE_IP)) {
 					exec(
 						HESTIA_CMD . "v-list-dns-domain " . $user . " " . quoteshellarg($v_domain),
 						$output,

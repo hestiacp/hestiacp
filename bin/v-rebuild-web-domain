@@ -96,6 +96,7 @@ if [ -n "$WEB_BACKEND" ]; then
 fi
 
 rebuild_web_domain_conf
+sync_dedicated_ip_https || exit $?
 
 #----------------------------------------------------------#
 #                       Hestia                             #

@@ -1179,6 +1179,16 @@ function check_ip_not_banned(){
     assert_success
 }
 
+@test "WEB: Generate CSR with IP SAN" {
+    run v-generate-ssl-cert "testhestiacp.com" "info@testhestiacp.com" US CA "Orange County" HestiaCP IT "" shell ecdsa-256 "198.18.0.125"
+    assert_success
+
+    ssl_dir=$(echo "$output" | tail -n1 | awk '{print $2}')
+    run openssl req -text -noout -in "$ssl_dir/testhestiacp.com.csr"
+    assert_success
+    assert_output --partial "IP Address:198.18.0.125"
+}
+
 
 @test "WEB: Delete IDN domain idn-tést.eu" {
    run v-delete-web-domain $user idn-tést.eu

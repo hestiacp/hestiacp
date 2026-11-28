@@ -59,6 +59,16 @@ is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 is_package_full 'WEB_DOMAINS'
 
+if is_ipv4_web_name "$domain_idn"; then
+	[ "$domain" = "$domain_idn" ] || check_result "$E_INVALID" "Use the literal IPv4 address"
+	ip=${ip:-$domain}
+	check_primary_web_ip "$domain" "$ip" "$user"
+	[ "${PROXY_SYSTEM:-$WEB_SYSTEM}" = nginx ] || check_result "$E_DISABLED" "IP websites require an nginx frontend"
+	aliases=${aliases:-none}
+elif [[ "$domain" == *:* ]]; then
+	check_result "$E_INVALID" "IP websites require IPv4"
+fi
+
 if [ "$aliases" != "none" ]; then
 	ALIAS="$aliases"
 	is_package_full 'WEB_ALIASES'
@@ -71,10 +81,6 @@ if [ "$($BIN/v-list-web-domain $user $domain_idn plain | cut -f 1) " != "$domain
 	is_domain_new 'web' "$domain_idn,$aliases"
 else
 	is_domain_new 'web' "$domain,$aliases"
-fi
-if [ -z "$(is_ip_format_valid $domain)" ]; then
-	echo "Error: Invalid domain format. IP address detected as input."
-	exit 1
 fi
 
 is_dir_symlink "$HOMEDIR/$user/web"

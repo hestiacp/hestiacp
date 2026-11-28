@@ -49,6 +49,7 @@ if [ -n "$restart" ]; then
 	is_restart_format_valid "$restart" 'restart'
 fi
 is_web_domain_cert_valid
+check_ip_default_ssl_certificate
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
@@ -85,6 +86,7 @@ fi
 #----------------------------------------------------------#
 
 # Restarting web server
+sync_dedicated_ip_https || exit $?
 $BIN/v-restart-web "$restart"
 check_result $? "Web restart failed" > /dev/null
 

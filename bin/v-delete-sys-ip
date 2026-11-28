@@ -38,6 +38,7 @@ is_ip_key_empty '$U_SYS_USERS'
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
+release_ip_default_ssl_address "$ip"
 
 #----------------------------------------------------------#
 #                       Action                             #

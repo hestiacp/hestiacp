@@ -1202,6 +1202,19 @@
 									value="<?= tohtml(trim($_SESSION["INACTIVE_SESSION_TIMEOUT"], "'")) ?>"
 								>
 							</div>
+							<div class="u-mb20">
+								<label for="v_twofa_trusted_device_days" class="form-label">
+									<?= tohtml( _("Trust 2FA devices for")) ?> (<?= tohtml( _("Days")) ?>)
+									<span class="hint">(<?= tohtml( _("0 = disabled")) ?>)</span>
+								</label>
+								<input
+									type="text"
+									class="form-control"
+									name="v_twofa_trusted_device_days"
+									id="v_twofa_trusted_device_days"
+									value="<?= tohtml(trim($_SESSION["TWOFA_TRUSTED_DEVICE_DAYS"] ?? "0", "'")) ?>"
+								>
+							</div>
 							<div class="u-mb10">
 								<label for="v_policy_csrf_strictness" class="form-label">
 									<?= tohtml( _("Prevent CSRF")) ?>

@@ -1,0 +1,70 @@
+#!/bin/bash
+# info: check trusted device for user 2fa
+# options: USER HASH
+#
+# example: v-check-user-2fa-trusted-device admin 9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08
+#
+# This function checks if the SHA-256 hash of a device token belongs to a
+# trusted device of the user that has not expired yet.
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+hash=$2
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '2' "$#" 'USER HASH'
+is_format_valid 'user'
+is_object_valid 'user' 'USER' "$user"
+if ! [[ "$hash" =~ ^[0-9a-f]{64}$ ]]; then
+	check_result "$E_INVALID" "invalid hash format :: $hash"
+fi
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+source $USER_DATA/user.conf
+if [ -z "$TWOFA" ]; then
+	echo "Error: Two-factor authentication is not enabled."
+	exit "$E_NOTEXIST"
+fi
+
+# The lifetime is checked against the current setting, so lowering it
+# (or setting it to 0) also applies to devices trusted earlier
+days="${TWOFA_TRUSTED_DEVICE_DAYS:-0}"
+if ! [[ "$days" =~ ^[0-9]{1,3}$ ]] || [ $((10#$days)) -eq 0 ]; then
+	echo "Error: Trusted devices for 2FA are disabled."
+	exit "$E_DISABLED"
+fi
+days=$((10#$days))
+
+conf="$USER_DATA/2fa-trusted-devices.conf"
+created=""
+if [ -f "$conf" ]; then
+	created=$(grep -F "HASH='$hash' " "$conf" | head -n 1 | sed -n "s/.*CREATED='\([0-9]*\)'.*/\1/p")
+fi
+if [ -z "$created" ] || [ $((created + days * 86400)) -le "$(date +%s)" ]; then
+	echo "Error: Device is not trusted."
+	exit "$E_NOTEXIST"
+fi
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+exit

@@ -19,6 +19,18 @@
 <?php $_SESSION["unset_alerts"] = true; ?>
 
 <?php
+// Studio is opt-in and has its own bundle; other themes load no Studio code.
+if (
+	!empty($_SESSION["user"]) &&
+	isset($_SESSION["userContext"]) &&
+	(!empty($_SESSION["userTheme"]) ? $_SESSION["userTheme"] : ($_SESSION["THEME"] ?? "")) === "studio"
+) {
+	require __DIR__ . "/studio.php";
+	?>
+	<script defer src="/js/dist/studio.min.js?<?= JS_LATEST_UPDATE ?>"></script>
+	<?php
+}
+
 $customScriptDirectory = new DirectoryIterator($_SERVER["HESTIA"] . "/web/js/custom_scripts");
 foreach ($customScriptDirectory as $customScript) {
 	$extension = $customScript->getExtension();

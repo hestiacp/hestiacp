@@ -49,8 +49,10 @@ local_backup() {
 
 # FTP Functions
 # Defining ftp command function
+# Run the ftp client as hestiaweb: with AppArmor enabled the ftp client is
+# not allowed to open backup archives (owned by hestiaweb) when run as root.
 ftpc() {
-	/usr/bin/ftp -np $HOST $PORT << EOF
+	runuser -u hestiaweb -- /usr/bin/ftp -np $HOST $PORT << EOF
     quote USER $USERNAME
     quote PASS $PASSWORD
     binary
@@ -156,6 +158,8 @@ ftp_backup() {
 	else
 		cd $tmpdir
 		tar -cf $BACKUP/$user.$backup_new_date.tar .
+		chmod 640 $BACKUP/$user.$backup_new_date.tar
+		chown "hestiaweb":"$user" $BACKUP/$user.$backup_new_date.tar
 		cd $BACKUP/
 		if [ -z $BPATH ]; then
 			ftpc "put $user.$backup_new_date.tar"
@@ -172,12 +176,20 @@ ftp_download() {
 	if [ -z "$PORT" ]; then
 		PORT='21'
 	fi
-	cd $BACKUP
+	# ftp runs as hestiaweb, which can't write to $BACKUP directly
+	ftp_tmpdir=$(mktemp -p "$BACKUP" -d)
+	chown hestiaweb:hestiaweb "$ftp_tmpdir"
+	cd "$ftp_tmpdir"
 	if [ -z $BPATH ]; then
 		ftpc "get $1"
 	else
 		ftpc "cd $BPATH" "get $1"
 	fi
+	if [ -f "$ftp_tmpdir/$1" ]; then
+		mv "$ftp_tmpdir/$1" "$BACKUP/$1"
+	fi
+	cd $BACKUP
+	rm -rf "$ftp_tmpdir"
 }
 
 #FTP Delete function

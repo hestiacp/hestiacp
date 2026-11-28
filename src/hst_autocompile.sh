@@ -620,6 +620,7 @@ if [ "$NGINX_B" = true ]; then
 		./configure --prefix=/usr/local/hestia/nginx \
 			--with-http_v2_module \
 			--with-http_ssl_module \
+			--with-http_realip_module \
 			--with-openssl=../openssl-$OPENSSL_V \
 			--with-openssl-opt=enable-ec_nistp_64_gcc_128 \
 			--with-openssl-opt=no-nextprotoneg \
